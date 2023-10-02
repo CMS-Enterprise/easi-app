@@ -1,16 +1,14 @@
 import { TFunction } from 'i18next';
 
-import { SystemIntakeForm } from 'types/systemIntake';
-import {
-  getAcronymForComponent,
-  translateRequestType
-} from 'utils/systemIntake';
+import { SystemIntakeForCsv } from 'queries/types/SystemIntakeForCsv';
+import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
+import { translateRequestType } from 'utils/systemIntake';
 
 // Here is where the data can be modified and used appropriately for sorting.
 // Modifed data can then be configured with JSX components in column cell configuration
 
-const tableMap = (tableData: SystemIntakeForm[], t: TFunction) => {
-  return tableData.map((intake: SystemIntakeForm) => {
+const tableMap = (tableData: SystemIntakeForCsv[], t: TFunction) => {
+  return tableData.map((intake: SystemIntakeForCsv) => {
     const statusEnum = intake.status;
     let statusTranslation = '';
 
@@ -25,11 +23,11 @@ const tableMap = (tableData: SystemIntakeForm[], t: TFunction) => {
       statusTranslation = t(`intake:statusMap.${statusEnum}`);
     }
 
-    // Display both the requester name and the acronym of their component
-    // TODO: might be better to just save the component's acronym in the intake?
-    const requesterNameAndComponent = `${
-      intake.requester.name
-    }, ${getAcronymForComponent(intake.requester.component)}`;
+    /** Display both the requester name and the acronym of their component */
+    const requesterNameAndComponent = getPersonNameAndComponentAcronym(
+      intake.requester.name,
+      intake.requester.component
+    );
 
     // Override all applicable fields in intake to use i18n translations
     return {
