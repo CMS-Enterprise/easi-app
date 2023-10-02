@@ -66,6 +66,7 @@ import dateRangeSchema from 'validations/dateRangeSchema';
 import { ActiveStateType, TableStateContext } from 'views/TableStateWrapper';
 
 import csvHeaderMap from './csvHeaderMap';
+import csvPortfolioReportHeaderMap from './csvPortfolioReportHeaderMap';
 import tableMap from './tableMap';
 
 import './index.scss';
@@ -428,6 +429,7 @@ const RequestRepository = () => {
   rows.map(row => prepareRow(row));
 
   const csvHeaders = csvHeaderMap(t);
+  const csvPortfolioReportHeaders = csvPortfolioReportHeaderMap(t);
 
   const convertIntakesToCSV = (intakes: any[]) => {
     return intakes.map(intake => convertIntakeToCSV(intake));
@@ -531,7 +533,7 @@ const RequestRepository = () => {
               <CSVLink
                 data={convertIntakesToCSV(portfolioUpdateReport)}
                 filename="EASi-Portfolio-Update-Report.csv"
-                headers={csvHeaders}
+                headers={csvPortfolioReportHeaders}
                 onClick={() => setConfigReportModalOpen(false)}
                 className={classnames(
                   'usa-button margin-right-1 text-white text-no-underline',
