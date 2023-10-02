@@ -85,6 +85,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   const history = useHistory();
   const { showMessageOnNextPage } = useMessage();
 
+  const [sendEmail, setSendEmail] = useState(true);
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const {
@@ -136,11 +138,22 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
   /** Handles form validation and either completes action or triggers confirmation modal (if `modal` prop is defined) */
   const submitForm = handleSubmit(formData => {
+    const values = { ...formData };
+
+    // If not sending email, set recipient values
+    if (!sendEmail) {
+      values.notificationRecipients = {
+        regularRecipientEmails: [],
+        shouldNotifyITGovernance: false,
+        shouldNotifyITInvestment: false
+      };
+    }
+
     // If form validation passes, check for `modal` prop
     if (modal) {
       setModalIsOpen(true);
     } else {
-      completeAction(formData as TFieldValues);
+      completeAction(values as TFieldValues);
     }
   });
 
@@ -370,20 +383,15 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
               !recipientsSelected ||
               modalIsOpen,
             outline: false,
-            type: 'submit'
+            type: 'submit',
+            onClick: () => setSendEmail(true)
           }}
           // Complete action without sending email
           next={{
             text: t('completeActionWithoutEmail'),
             outline: true,
             disabled: disableSubmit || isSubmitting || modalIsOpen,
-            // Reset email recipients to prevent sending email
-            onClick: () =>
-              setValue('notificationRecipients', {
-                regularRecipientEmails: [],
-                shouldNotifyITGovernance: false,
-                shouldNotifyITInvestment: false
-              })
+            onClick: () => setSendEmail(false)
           }}
           taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
           saveExitText={t('cancelAction')}
