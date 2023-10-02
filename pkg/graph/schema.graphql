@@ -1025,7 +1025,6 @@ type SystemIntake {
   grtReviewEmailBody: String
   decidedAt: Time
   businessCaseId: UUID
-  lastAdminNote: LastAdminNote!
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
@@ -1407,14 +1406,6 @@ request
 input UpdateSystemIntakeAdminLeadInput {
   adminLead: String!
   id: UUID!
-}
-
-"""
-The most recent note added by an admin to a system request
-"""
-type LastAdminNote {
-  content: HTML
-  createdAt: Time
 }
 
 """
@@ -2657,6 +2648,8 @@ type Query {
   ): AccessibilityRequestsConnection
   requests(after: String, first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
+  systemIntakes: [SystemIntake!]!
+  @hasRole(role: EASI_GOVTEAM)
   systems(after: String, first: Int!): SystemConnection
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
@@ -2741,6 +2734,7 @@ directive @hasRole(role: Role!) on FIELD_DEFINITION
 directive @goModel(
   model: String
   models: [String!]
+  forceGenerate: Boolean
 ) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
 
 """

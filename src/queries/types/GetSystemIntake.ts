@@ -98,12 +98,6 @@ export interface GetSystemIntake_systemIntake_requester {
   name: string;
 }
 
-export interface GetSystemIntake_systemIntake_lastAdminNote {
-  __typename: "LastAdminNote";
-  content: HTML | null;
-  createdAt: Time | null;
-}
-
 export interface GetSystemIntake_systemIntake_documents_documentType {
   __typename: "SystemIntakeDocumentType";
   commonType: SystemIntakeDocumentCommonType;
@@ -162,7 +156,6 @@ export interface GetSystemIntake_systemIntake {
   createdAt: Time;
   archivedAt: Time | null;
   euaUserId: string;
-  lastAdminNote: GetSystemIntake_systemIntake_lastAdminNote;
   hasUiChanges: boolean | null;
   documents: GetSystemIntake_systemIntake_documents[];
   state: SystemIntakeState;
