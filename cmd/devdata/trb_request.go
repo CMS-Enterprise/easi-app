@@ -496,14 +496,26 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 			}
 		}
 
-		recommendation := &models.TRBAdviceLetterRecommendation{
+		// create two recommendations for testing manipulation of order of recommendations
+
+		recommendation1 := &models.TRBAdviceLetterRecommendation{
 			TRBRequestID:   trb.ID,
 			Title:          "Restart your computer",
 			Recommendation: "I recommend you restart your computer",
 			Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		}
+		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation1)
+		if err != nil {
+			return nil, err
+		}
 
-		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation)
+		recommendation2 := &models.TRBAdviceLetterRecommendation{
+			TRBRequestID:   trb.ID,
+			Title:          "Unplug it and plug it back in",
+			Recommendation: "I recommend you unplug your computer and plug it back in",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		}
+		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation2)
 		if err != nil {
 			return nil, err
 		}
