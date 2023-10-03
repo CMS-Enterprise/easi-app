@@ -172,7 +172,7 @@ function RequestEdits() {
                   'aria-describedby': 'feedbackMessage-hint',
                   'aria-labelledby': 'feedbackMessage-label'
                 }}
-                field={field}
+                field={{ ...field, value: field.value || '' }}
                 required={feedbackAction === TRBFeedbackAction.REQUEST_EDITS}
               />
             </FormGroup>

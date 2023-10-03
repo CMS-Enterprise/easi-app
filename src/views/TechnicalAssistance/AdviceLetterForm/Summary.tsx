@@ -169,7 +169,7 @@ const Summary = ({
                   'aria-describedby': 'meetingSummary-hint',
                   'aria-labelledby': 'meetingSummary-label'
                 }}
-                field={field}
+                field={{ ...field, value: field.value || '' }}
                 required
               />
             </FormGroup>

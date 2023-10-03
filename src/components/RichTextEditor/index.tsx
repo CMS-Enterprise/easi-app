@@ -266,7 +266,7 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
         hideModeSwitch
         // Match these against tags in `sanitizeHtmlOnContentChange()`
         toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
-        initialValue={field?.value || ''} // todo let callers handle this
+        initialValue={field?.value}
         linkAttributes={{
           target: '_blank',
           rel: 'noopener'

@@ -181,7 +181,7 @@ const NextSteps = ({
                   'aria-describedby': 'nextSteps-hint',
                   'aria-labelledby': 'nextSteps-label'
                 }}
-                field={field}
+                field={{ ...field, value: field.value || '' }}
                 required
               />
             </FormGroup>
