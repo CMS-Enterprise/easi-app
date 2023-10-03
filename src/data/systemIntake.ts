@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 
+import { SystemIntakeForTable } from 'components/RequestRepository/tableMap';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import {
@@ -244,11 +245,9 @@ export const prepareSystemIntakeForApp = (
   };
 };
 
-export const convertIntakeToCSV = (
-  intake: SystemIntakeForm & { requesterNameAndComponent: string }
-) => {
+export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
   const collaboratorTeams: any = {};
-  if (intake.governanceTeams.isPresent) {
+  if (intake.governanceTeams.isPresent && intake.governanceTeams.teams) {
     intake.governanceTeams.teams.forEach((team: any) => {
       switch (team.name) {
         case 'Technical Review Board':
@@ -266,26 +265,31 @@ export const convertIntakeToCSV = (
     });
   }
 
-  return cleanCSVData({
+  // Format contract dates
+  const hasContractDates = ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
+    intake.contract.hasContract || ''
+  );
+  const contractStartDate = hasContractDates
+    ? formatContractDate(intake.contract.startDate)
+    : '';
+  const contractEndDate = hasContractDates
+    ? formatContractDate(intake.contract.endDate)
+    : '';
+
+  const data = {
     ...intake,
     ...collaboratorTeams,
     lcidScope: intake.lcidScope,
-    contractStartDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
-      intake.contract.hasContract
-    )
-      ? formatContractDate(intake.contract.startDate)
-      : '',
-    contractEndDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
-      intake.contract.hasContract
-    )
-      ? formatContractDate(intake.contract.endDate)
-      : '',
+    contractStartDate,
+    contractEndDate,
     submittedAt: intake.submittedAt,
     updatedAt: intake.updatedAt,
     createdAt: intake.createdAt,
     decidedAt: intake.decidedAt,
     archivedAt: intake.archivedAt
-  });
+  };
+
+  return cleanCSVData(data);
 };
 
 /**

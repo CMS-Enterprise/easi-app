@@ -30,7 +30,7 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
-import { startCase } from 'lodash';
+import { lowerCase, startCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
@@ -50,15 +50,11 @@ import useCheckResponsiveScreen from 'hooks/checkMobile';
 import useTableState from 'hooks/useTableState';
 import GetSystemIntakesTableQuery from 'queries/GetSystemIntakesTableQuery';
 import { GetSystemIntakesTable } from 'queries/types/GetSystemIntakesTable';
-import { SystemIntakeForCsv } from 'queries/types/SystemIntakeForCsv';
-import {
-  SystemIntakeState,
-  SystemIntakeStatus
-} from 'types/graphql-global-types';
+import { SystemIntakeState } from 'types/graphql-global-types';
 import { fetchSystemIntakes } from 'types/routines';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
-import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import globalFilterCellText from 'utils/globalFilterCellText';
+import { translateStatus } from 'utils/systemIntake';
 import {
   getColumnSortStatus,
   getHeaderSortIcon,
@@ -69,13 +65,13 @@ import { ActiveStateType, TableStateContext } from 'views/TableStateWrapper';
 
 import csvHeaderMap from './csvHeaderMap';
 import csvPortfolioReportHeaderMap from './csvPortfolioReportHeaderMap';
-import tableMap from './tableMap';
+import tableMap, { SystemIntakeForTable } from './tableMap';
 
 import './index.scss';
 
 type SystemIntakesData = {
-  open: SystemIntakeForCsv[];
-  closed: SystemIntakeForCsv[];
+  open: SystemIntakeForTable[];
+  closed: SystemIntakeForTable[];
 };
 
 const RequestRepository = () => {
@@ -89,26 +85,28 @@ const RequestRepository = () => {
     GetSystemIntakesTableQuery
   );
 
-  /** Object containing system intakes split by `open` and `closed` status */
+  /** Object containing formatted system intakes split by `open` and `closed` status */
   const systemIntakes: SystemIntakesData = useMemo(() => {
     const intakes: SystemIntakesData = { open: [], closed: [] };
 
     if (!queryData?.systemIntakes) return intakes;
 
-    return queryData.systemIntakes.reduce<SystemIntakesData>((acc, intake) => {
-      // Checks both state and status to account for both IT Gov v1 and v2 fields
-      if (
-        intake.state === SystemIntakeState.CLOSED ||
-        intake.status === SystemIntakeStatus.LCID_ISSUED
-      ) {
-        acc.closed = [...acc.closed, intake];
-      } else {
-        acc.open = [...acc.open, intake];
-      }
+    // Return table data formatted for sorting and cell configuration
+    return tableMap(queryData?.systemIntakes, t).reduce<SystemIntakesData>(
+      (acc, intake) => {
+        /** State converted to lowercase */
+        const stateKey = lowerCase(
+          intake.state
+        ) as Lowercase<SystemIntakeState>;
 
-      return acc;
-    }, intakes);
-  }, [queryData]);
+        return {
+          ...acc,
+          [stateKey]: [...acc[stateKey], intake]
+        };
+      },
+      intakes
+    );
+  }, [queryData, t]);
 
   const { itGovAdmin } = useContext(TableStateContext);
 
@@ -164,7 +162,7 @@ const RequestRepository = () => {
   // to expand/unexpand the text
   const freeFormTextCharLimit = 25;
 
-  const submissionDateColumn: Column<SystemIntakeForCsv> = {
+  const submissionDateColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.submissionDate'),
     accessor: 'submittedAt',
     Cell: cell => {
@@ -176,13 +174,16 @@ const RequestRepository = () => {
     }
   };
 
-  const requestNameColumn: Column<SystemIntakeForCsv> = {
+  const requestNameColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.projectName'),
     accessor: 'requestName',
     Cell: ({
       row,
       value
-    }: CellProps<SystemIntakeForCsv, SystemIntakeForCsv['requestName']>) => {
+    }: CellProps<
+      SystemIntakeForTable,
+      SystemIntakeForTable['requestName']
+    >) => {
       return (
         <Link to={`/governance-review-team/${row.original.id}/intake-request`}>
           {value}
@@ -191,20 +192,18 @@ const RequestRepository = () => {
     }
   };
 
-  const requesterColumn: Column<SystemIntakeForCsv> = {
+  const requesterColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:contactDetails.requester'),
-    accessor: 'requester',
-    Cell: ({ value: requester }) =>
-      getPersonNameAndComponentAcronym(requester.name, requester.component)
+    accessor: 'requesterNameAndComponent'
   };
 
-  const adminLeadColumn: Column<SystemIntakeForCsv> = {
+  const adminLeadColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.adminLead'),
     accessor: ({ adminLead }) =>
       adminLead || t<string>('governanceReviewTeam:adminLeads.notAssigned'),
     Cell: ({
       value: adminLead
-    }: CellProps<SystemIntakeForCsv, SystemIntakeForCsv['adminLead']>) => {
+    }: CellProps<SystemIntakeForTable, SystemIntakeForTable['adminLead']>) => {
       if (adminLead === t('governanceReviewTeam:adminLeads.notAssigned')) {
         return (
           <div className="display-flex flex-align-center">
@@ -219,13 +218,13 @@ const RequestRepository = () => {
     }
   };
 
-  const grtDateColumn: Column<SystemIntakeForCsv> = {
+  const grtDateColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.grtDate'),
     accessor: 'grtDate',
     Cell: ({
       row,
       value
-    }: CellProps<SystemIntakeForCsv, SystemIntakeForCsv['grtDate']>) => {
+    }: CellProps<SystemIntakeForTable, SystemIntakeForTable['grtDate']>) => {
       if (!value) {
         return (
           <UswdsReactLink
@@ -240,13 +239,13 @@ const RequestRepository = () => {
     }
   };
 
-  const grbDateColumn: Column<SystemIntakeForCsv> = {
+  const grbDateColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.grbDate'),
     accessor: 'grbDate',
     Cell: ({
       row,
       value
-    }: CellProps<SystemIntakeForCsv, SystemIntakeForCsv['grbDate']>) => {
+    }: CellProps<SystemIntakeForTable, SystemIntakeForTable['grbDate']>) => {
       if (!value) {
         return (
           <UswdsReactLink
@@ -261,20 +260,20 @@ const RequestRepository = () => {
     }
   };
 
-  const statusColumn: Column<SystemIntakeForCsv> = {
+  const statusColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.status'),
     accessor: 'status',
     Cell: ({
       row,
       value
-    }: CellProps<SystemIntakeForCsv, SystemIntakeForCsv['status']>) => {
-      // Check if status is LCID_ISSUED (need to check for translation)
+    }: CellProps<SystemIntakeForTable, SystemIntakeForTable['status']>) => {
+      const statusText = translateStatus(value, row.original.lcid);
 
       // If LCID_ISSUED append LCID Scope to status
       if (value === `LCID: ${row.original.lcid}`) {
         return (
           <>
-            {value}
+            {statusText}
             <br />
             <TruncatedText
               id="lcid-scope"
@@ -289,11 +288,11 @@ const RequestRepository = () => {
       }
 
       // If any other value just display status
-      return value;
+      return statusText;
     }
   };
 
-  const lcidExpirationDateColumn: Column<SystemIntakeForCsv> = {
+  const lcidExpirationDateColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.lcidExpirationDate'),
     accessor: 'lcidExpiresAt',
     Cell: ({ value: lcidExpiresAt }) => {
@@ -310,37 +309,39 @@ const RequestRepository = () => {
    * TODO: Fix last admin note column
    */
 
-  // const lastAdminNoteColumn = {
-  //   Header: t('intake:fields.lastAdminNote'),
-  //   accessor: 'lastAdminNote',
-  //   Cell: ({ value }: { value: LastAdminNote }) => {
-  //     if (value !== null) {
-  //       return (
-  //         // Display admin note using truncated text field that
-  //         // will display note with expandable extra text (if applicable)
-  //         <>
-  //           {/* {formatDateLocal(value.createdAt!, 'MM/dd/yyyy')} */}
+  const lastAdminNoteColumn: Column<SystemIntakeForTable> = {
+    Header: t<string>('intake:fields.lastAdminNote'),
+    accessor: 'lastAdminNote',
+    Cell: ({
+      value: lastAdminNote
+    }: {
+      value: SystemIntakeForTable['lastAdminNote'];
+    }) => {
+      if (!lastAdminNote) return 'No Admin Notes';
 
-  //           <TruncatedText
-  //             id="last-admin-note"
-  //             label="less"
-  //             closeLabel="more"
-  //             text={value.content!}
-  //             charLimit={freeFormTextCharLimit}
-  //           />
-  //         </>
-  //       );
-  //     }
+      return (
+        // Display admin note using truncated text field that
+        // will display note with expandable extra text (if applicable)
+        <>
+          {formatDateLocal(lastAdminNote.createdAt, 'MM/dd/yyyy')}
 
-  //     // If no admin note exits, display 'No Admin Notes'
-  //     return 'No Admin Notes';
-  //   },
-  //   sortType: (a: Row<LastAdminNote>, b: Row<LastAdminNote>) =>
-  //     (a.values.lastAdminNote?.createdAt ?? '') >
-  //     (b.values.lastAdminNote?.createdAt ?? '')
-  //       ? 1
-  //       : -1
-  // };
+          <TruncatedText
+            id="last-admin-note"
+            label="less"
+            closeLabel="more"
+            text={lastAdminNote.content}
+            charLimit={freeFormTextCharLimit}
+          />
+        </>
+      );
+    }
+    // TODO: Sort type
+    // sortType: (a: Row<LastAdminNote>, b: Row<LastAdminNote>) =>
+    //   (a.values.lastAdminNote?.createdAt ?? '') >
+    //   (b.values.lastAdminNote?.createdAt ?? '')
+    //     ? 1
+    //     : -1
+  };
 
   const columns: any = useMemo(() => {
     if (activeTable === 'open') {
@@ -360,21 +361,19 @@ const RequestRepository = () => {
         requestNameColumn,
         requesterColumn,
         lcidExpirationDateColumn,
-        statusColumn
-        // lastAdminNoteColumn
+        statusColumn,
+        lastAdminNoteColumn
       ];
     }
     return [];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTable, t]);
 
-  // Modifying data for table sorting and prepping for Cell configuration
-  const data = useMemo(() => {
-    if (systemIntakes[activeTable]) {
-      return tableMap(systemIntakes[activeTable], t);
-    }
-    return [];
-  }, [systemIntakes, activeTable, t]);
+  // Set active table data
+  const data: SystemIntakeForTable[] = useMemo(
+    () => systemIntakes[activeTable],
+    [systemIntakes, activeTable]
+  );
 
   /** Portfolio Update Report data for CSV based on selected date range */
   const portfolioUpdateReport = useMemo(() => {
@@ -395,15 +394,8 @@ const RequestRepository = () => {
 
     //   return createdAt > dateRangeStart && createdAt < dateRangeEnd;
     // });
-    const filteredIntakes = systemIntakes.closed;
-
-    // If filter returns intakes, return formatted data
-    if (filteredIntakes.length > 0) {
-      return tableMap(filteredIntakes, t);
-    }
-
-    return [];
-  }, [systemIntakes.closed, dateRangeStart, dateRangeEnd, t]);
+    return systemIntakes.closed;
+  }, [systemIntakes.closed, dateRangeStart, dateRangeEnd]);
 
   useEffect(() => {
     dispatch(fetchSystemIntakes());
@@ -458,8 +450,10 @@ const RequestRepository = () => {
   const csvHeaders = csvHeaderMap(t);
   const csvPortfolioReportHeaders = csvPortfolioReportHeaderMap(t);
 
-  const convertIntakesToCSV = (intakes: any[]) => {
-    return intakes.map(intake => convertIntakeToCSV(intake));
+  const convertIntakesToCSV = (intakes: SystemIntakeForTable[]) => {
+    return intakes.map(intake => {
+      return convertIntakeToCSV(intake);
+    });
   };
 
   // Sets persisted table state and stores state on unmount
