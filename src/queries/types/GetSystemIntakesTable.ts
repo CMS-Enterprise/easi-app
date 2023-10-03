@@ -32,17 +32,6 @@ export interface GetSystemIntakesTable_systemIntakes_isso {
   name: string | null;
 }
 
-export interface GetSystemIntakesTable_systemIntakes_governanceTeams_teams {
-  __typename: "SystemIntakeCollaborator";
-  collaborator: string;
-}
-
-export interface GetSystemIntakesTable_systemIntakes_governanceTeams {
-  __typename: "SystemIntakeGovernanceTeam";
-  isPresent: boolean | null;
-  teams: GetSystemIntakesTable_systemIntakes_governanceTeams_teams[] | null;
-}
-
 export interface GetSystemIntakesTable_systemIntakes_fundingSources {
   __typename: "SystemIntakeFundingSource";
   source: string | null;
@@ -96,7 +85,9 @@ export interface GetSystemIntakesTable_systemIntakes {
   businessOwner: GetSystemIntakesTable_systemIntakes_businessOwner;
   productManager: GetSystemIntakesTable_systemIntakes_productManager;
   isso: GetSystemIntakesTable_systemIntakes_isso;
-  governanceTeams: GetSystemIntakesTable_systemIntakes_governanceTeams;
+  trbCollaboratorName: string | null;
+  oitSecurityCollaboratorName: string | null;
+  eaCollaboratorName: string | null;
   existingFunding: boolean | null;
   fundingSources: GetSystemIntakesTable_systemIntakes_fundingSources[];
   contract: GetSystemIntakesTable_systemIntakes_contract;

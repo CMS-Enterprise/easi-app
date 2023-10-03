@@ -245,26 +245,8 @@ export const prepareSystemIntakeForApp = (
   };
 };
 
+/** System intake converted to CSV format */
 export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
-  const collaboratorTeams: any = {};
-  if (intake.governanceTeams.isPresent && intake.governanceTeams.teams) {
-    intake.governanceTeams.teams.forEach((team: any) => {
-      switch (team.name) {
-        case 'Technical Review Board':
-          collaboratorTeams.trbCollaborator = team.collaborator;
-          break;
-        case "OIT's Security and Privacy Group":
-          collaboratorTeams.oitCollaborator = team.collaborator;
-          break;
-        case 'Enterprise Architecture':
-          collaboratorTeams.eaCollaborator = team.collaborator;
-          break;
-        default:
-          break;
-      }
-    });
-  }
-
   // Format contract dates
   const hasContractDates = ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
     intake.contract.hasContract || ''
@@ -278,11 +260,9 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
 
   const data = {
     ...intake,
-    ...collaboratorTeams,
     lcidScope: intake.lcidScope,
     contractStartDate,
     contractEndDate,
-    submittedAt: intake.submittedAt,
     updatedAt: intake.updatedAt,
     createdAt: intake.createdAt,
     decidedAt: intake.decidedAt,

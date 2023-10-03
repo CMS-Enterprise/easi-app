@@ -25,12 +25,9 @@ export default gql`
         name
       }
 
-      governanceTeams {
-        isPresent
-        teams {
-          collaborator
-        }
-      }
+      trbCollaboratorName
+      oitSecurityCollaboratorName
+      eaCollaboratorName
 
       existingFunding
       fundingSources {

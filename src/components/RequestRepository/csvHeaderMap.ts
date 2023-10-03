@@ -26,15 +26,15 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.isso')
   },
   {
-    key: 'trbCollaborator',
+    key: 'trbCollaboratorName',
     label: t('intake:csvHeadings.trbCollaborator')
   },
   {
-    key: 'oitCollaborator',
+    key: 'oitSecurityCollaboratorName',
     label: t('intake:csvHeadings.oitCollaborator')
   },
   {
-    key: 'eaCollaborator',
+    key: 'eaCollaboratorName',
     label: t('intake:csvHeadings.eaCollaborator')
   },
   {
