@@ -379,19 +379,12 @@ const RequestRepository = () => {
       return [];
     }
 
-    /**
-     * TODO: Filter by last admin note
-     */
+    // Return closed system intakes filtered by selected date range
+    return systemIntakes.closed.filter(({ filterDate }) => {
+      if (!filterDate) return false;
 
-    /** System intakes filtered by date of last admin note */
-    // const filteredIntakes = intakes.filter(({ lastAdminNote }) => {
-    //   if (!lastAdminNote) return false;
-
-    //   const { createdAt } = lastAdminNote;
-
-    //   return createdAt > dateRangeStart && createdAt < dateRangeEnd;
-    // });
-    return systemIntakes.closed;
+      return filterDate > dateRangeStart && filterDate < dateRangeEnd;
+    });
   }, [systemIntakes.closed, dateRangeStart, dateRangeEnd]);
 
   useEffect(() => {
