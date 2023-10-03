@@ -19,6 +19,7 @@ type OrderOfRecommendations struct {
 }
 
 // InsertNewRecommendationAtEnd returns a new ordering with the new recommendation ID added to the end (max of existing orders + 1)
+// per UX, new recommendations should be added to the end - see Zoe's comment on https://jiraent.cms.gov/browse/EASI-3140
 // TODO - might not need this, given that SQL query might handle it with MAX() of existing order values?
 // TODO - might be useful for modeling/testing, though
 func InsertNewRecommendationAtEnd(
@@ -40,8 +41,6 @@ func InsertNewRecommendationAtEnd(
 	ordering.OrderByRecommendationID[newRecommendationID] = maxExistingOrder + 1
 	return ordering
 }
-
-// TODO - implement InsertNewRecommendationAtStart()? Can probably do if needed, though it'll be more complicated due to having to shift existing orders
 
 // UpdateRecommendationsWithNewOrdering updates the order field of some recommendations based on a new ordering
 func UpdateRecommendationsWithNewOrdering(recommendations []*models.TRBAdviceLetterRecommendation, ordering OrderOfRecommendations) {
