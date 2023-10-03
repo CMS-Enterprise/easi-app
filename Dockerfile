@@ -4,8 +4,8 @@ WORKDIR /easi/
 
 COPY config/tls/*.crt /usr/local/share/ca-certificates/
 RUN update-ca-certificates && \
-    apt update && \
-    apt install -y tzdata && \
+    apt-get update && \
+    apt-get install -y tzdata && \
     rm -rf /var/lib/apt/lists/*
 
 COPY go.mod go.sum ./
