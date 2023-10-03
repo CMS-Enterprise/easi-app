@@ -932,6 +932,21 @@ export interface SystemIntakeRequesterWithComponentInput {
 }
 
 /**
+ * Input for updating an intake's LCID in IT Gov v2
+ */
+export interface SystemIntakeUpdateLCIDInput {
+  systemIntakeID: UUID;
+  expiresAt?: Time | null;
+  scope?: HTML | null;
+  nextSteps?: HTML | null;
+  costBaseline?: string | null;
+  reason?: HTML | null;
+  additionalInfo?: HTML | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * TRBRequestChanges represents the possible changes you can make to a TRB request when updating it.
  * Fields explicitly set with NULL will be unset, and omitted fields will be left unchanged.
  * https: // gqlgen.com/reference/changesets/
