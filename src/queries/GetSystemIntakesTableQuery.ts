@@ -5,7 +5,6 @@ const SystemIntakeForCsv = gql`
     id
     euaUserId
     requestName
-    requestType
     status
     state
 

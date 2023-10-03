@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeState } from "./../../types/graphql-global-types";
+import { SystemIntakeStatus, SystemIntakeState } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL fragment: SystemIntakeForCsv
@@ -90,7 +90,6 @@ export interface SystemIntakeForCsv {
   id: UUID;
   euaUserId: string;
   requestName: string | null;
-  requestType: SystemIntakeRequestType;
   status: SystemIntakeStatus;
   state: SystemIntakeState;
   requester: SystemIntakeForCsv_requester;
