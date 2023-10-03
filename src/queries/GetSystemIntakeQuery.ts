@@ -67,6 +67,7 @@ export default gql`
         fundingNumber
       }
       lcid
+      lcidIssuedAt
       lcidExpiresAt
       lcidScope
       lcidCostBaseline
