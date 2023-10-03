@@ -45,13 +45,13 @@ import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
-import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import useTableState from 'hooks/useTableState';
 import GetSystemIntakesTableQuery from 'queries/GetSystemIntakesTableQuery';
 import { GetSystemIntakesTable } from 'queries/types/GetSystemIntakesTable';
 import { SystemIntakeState } from 'types/graphql-global-types';
 import { fetchSystemIntakes } from 'types/routines';
+import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -440,9 +440,12 @@ const RequestRepository = () => {
   const csvHeaders = csvHeaderMap(t);
   const csvPortfolioReportHeaders = csvPortfolioReportHeaderMap(t);
 
-  const convertIntakesToCSV = (intakes: SystemIntakeForTable[]) => {
+  /** Convert selected intakes to CSV format */
+  const convertIntakesToCSV = (
+    intakes: SystemIntakeForTable[]
+  ): SystemIntakeForTable[] => {
     return intakes.map(intake => {
-      return convertIntakeToCSV(intake);
+      return cleanCSVData(intake);
     });
   };
 

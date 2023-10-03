@@ -1,14 +1,12 @@
 import { DateTime } from 'luxon';
 
-import { SystemIntakeForTable } from 'components/RequestRepository/tableMap';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
-import { cleanCSVData } from 'utils/csv';
-import { formatContractDate, parseAsUTC } from 'utils/date';
+import { parseAsUTC } from 'utils/date';
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
 export const initialSystemIntakeForm: SystemIntakeForm = {
@@ -243,13 +241,6 @@ export const prepareSystemIntakeForApp = (
     hasUiChanges:
       systemIntake.hasUiChanges === null ? null : systemIntake.hasUiChanges
   };
-};
-
-/** System intake converted to CSV format */
-export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
-  const data = intake;
-
-  return cleanCSVData(data);
 };
 
 /**
