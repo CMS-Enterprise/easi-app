@@ -154,14 +154,6 @@ const Summary = ({
                 {t('adviceLetterForm.meetingSummary')}{' '}
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-              {/*
-              <TextAreaField
-                id="meetingSummary"
-                {...field}
-                ref={null}
-                value={field.value || ''}
-              />
-              */}
               <RichTextEditor
                 editableProps={{
                   id: 'meetingSummary',

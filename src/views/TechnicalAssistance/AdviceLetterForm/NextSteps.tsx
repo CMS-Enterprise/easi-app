@@ -166,14 +166,6 @@ const NextSteps = ({
                 {t('adviceLetterForm.nextSteps')}
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-              {/*
-              <TextAreaField
-                id="nextSteps"
-                {...field}
-                ref={null}
-                value={field.value || ''}
-              />
-              */}
               <RichTextEditor
                 editableProps={{
                   id: 'nextSteps',

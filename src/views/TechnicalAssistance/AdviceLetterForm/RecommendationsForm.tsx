@@ -230,9 +230,6 @@ const RecommendationsForm = ({
                   {t('Description')}
                 </Label>
                 {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-                {/*
-                <TextAreaField id="recommendation" {...field} ref={null} />
-                */}
                 <RichTextEditor
                   editableProps={{
                     id: 'recommendation',
