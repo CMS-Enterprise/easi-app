@@ -58,9 +58,12 @@ const SystemIntakeForCsv = gql`
     businessSolution
     currentStage
     needsEaSupport
+    grtDate
+    grbDate
 
     lcid
     lcidScope
+    lcidExpiresAt
 
     adminLead
 

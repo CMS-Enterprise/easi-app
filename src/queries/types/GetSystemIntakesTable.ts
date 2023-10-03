@@ -104,8 +104,11 @@ export interface GetSystemIntakesTable_systemIntakes {
   businessSolution: string | null;
   currentStage: string | null;
   needsEaSupport: boolean | null;
+  grtDate: Time | null;
+  grbDate: Time | null;
   lcid: string | null;
   lcidScope: HTML | null;
+  lcidExpiresAt: Time | null;
   adminLead: string | null;
   notes: GetSystemIntakesTable_systemIntakes_notes[];
   actions: GetSystemIntakesTable_systemIntakes_actions[];

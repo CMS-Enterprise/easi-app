@@ -104,8 +104,11 @@ export interface SystemIntakeForCsv {
   businessSolution: string | null;
   currentStage: string | null;
   needsEaSupport: boolean | null;
+  grtDate: Time | null;
+  grbDate: Time | null;
   lcid: string | null;
   lcidScope: HTML | null;
+  lcidExpiresAt: Time | null;
   adminLead: string | null;
   notes: SystemIntakeForCsv_notes[];
   actions: SystemIntakeForCsv_actions[];
