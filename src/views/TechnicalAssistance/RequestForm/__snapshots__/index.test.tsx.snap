@@ -135,7 +135,7 @@ exports[`TRB Request Form Feedback > goes to and renders the feedback view 1`] =
         data-testid="grid"
       >
         <div
-          class="padding-3 bg-base-lightest line-height-body-5 text-pre-wrap"
+          class="padding-3 bg-base-lightest line-height-body-5"
         >
           <div
             class="easi-toast easi-toast-viewer"
@@ -202,7 +202,7 @@ exports[`TRB Request Form Feedback > goes to and renders the feedback view 1`] =
         data-testid="grid"
       >
         <div
-          class="padding-3 bg-base-lightest line-height-body-5 text-pre-wrap"
+          class="padding-3 bg-base-lightest line-height-body-5"
         >
           <div
             class="easi-toast easi-toast-viewer"
