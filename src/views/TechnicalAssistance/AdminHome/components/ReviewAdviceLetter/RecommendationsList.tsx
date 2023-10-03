@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import { RichTextViewer } from 'components/RichTextEditor';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations as TRBRecommendation } from 'queries/types/GetTrbAdviceLetter';
 
 import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
@@ -90,7 +91,8 @@ export default function RecommendationsList({
                 <h4 className="margin-bottom-1">{title}</h4>
               )}
 
-              <p className="margin-y-1">{description}</p>
+              {/* <p className="margin-y-1">{description}</p> */}
+              <RichTextViewer className="margin-y-1" value={description} />
 
               {links.length > 0 && (
                 <>

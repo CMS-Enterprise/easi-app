@@ -12,10 +12,11 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 
+import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
+// import TextAreaField from 'components/shared/TextAreaField';
 import {
   CreateTrbRecommendationQuery,
   GetTrbAdviceLetterQuery,
@@ -222,13 +223,26 @@ const RecommendationsForm = ({
               <FormGroup className="margin-top-3" error={!!error}>
                 <Label
                   className="text-normal"
+                  id="recommendation-label"
                   htmlFor="recommendation"
                   required
                 >
                   {t('Description')}
                 </Label>
                 {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
+                {/*
                 <TextAreaField id="recommendation" {...field} ref={null} />
+                */}
+                <RichTextEditor
+                  editableProps={{
+                    id: 'recommendation',
+                    'data-testid': 'recommendation',
+                    'aria-describedby': 'recommendation-hint',
+                    'aria-labelledby': 'recommendation-label'
+                  }}
+                  field={field}
+                  required
+                />
               </FormGroup>
             );
           }}
