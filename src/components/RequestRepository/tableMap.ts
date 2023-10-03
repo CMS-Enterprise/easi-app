@@ -20,6 +20,7 @@ export interface SystemIntakeForTable
   requesterNameAndComponent: string;
   lastAdminNote: SystemIntakeNote | null;
   status: string;
+  filterDate: string | null;
 }
 
 const getLastAdminNote = (
@@ -49,13 +50,25 @@ const tableMap = (
 
     const lastAdminNote = getLastAdminNote(intake.notes);
 
+    /** Filter date for portfolio update report - defaults to last admin note date */
+    let filterDate: string | null = lastAdminNote
+      ? lastAdminNote.createdAt
+      : null;
+
+    // If no admin notes, set `filterDate` to last admin action date
+    if (!filterDate) {
+      const sortedActions = sortBy(intake.actions, 'createdAt');
+      filterDate = sortedActions.length > 0 ? sortedActions[0].createdAt : null;
+    }
+
     // Override all applicable fields in intake to use i18n translations
     return {
       ...intake,
       requesterNameAndComponent,
       status: translateStatus(intake.status, intake.lcid),
       state,
-      lastAdminNote
+      lastAdminNote,
+      filterDate
     };
   });
 };
