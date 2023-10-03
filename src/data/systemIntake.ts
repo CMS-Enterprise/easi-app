@@ -247,27 +247,7 @@ export const prepareSystemIntakeForApp = (
 
 /** System intake converted to CSV format */
 export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
-  // Format contract dates
-  const hasContractDates = ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
-    intake.contract.hasContract || ''
-  );
-  const contractStartDate = hasContractDates
-    ? formatContractDate(intake.contract.startDate)
-    : '';
-  const contractEndDate = hasContractDates
-    ? formatContractDate(intake.contract.endDate)
-    : '';
-
-  const data = {
-    ...intake,
-    lcidScope: intake.lcidScope,
-    contractStartDate,
-    contractEndDate,
-    updatedAt: intake.updatedAt,
-    createdAt: intake.createdAt,
-    decidedAt: intake.decidedAt,
-    archivedAt: intake.archivedAt
-  };
+  const data = intake;
 
   return cleanCSVData(data);
 };

@@ -9,13 +9,15 @@ import {
   SystemIntakeState,
   SystemIntakeStatus
 } from 'types/graphql-global-types';
+import { formatContractDate } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import { translateStatus } from 'utils/systemIntake';
 
 // Here is where the data can be modified and used appropriately for sorting.
 // Modifed data can then be configured with JSX components in column cell configuration
 
-export interface SystemIntakeForTable extends Omit<SystemIntake, 'status'> {
+export interface SystemIntakeForTable
+  extends Omit<SystemIntake, 'status' | 'contract'> {
   /** String with requester name and component acronym */
   requesterNameAndComponent: string;
   /** Translated status string */
@@ -23,6 +25,15 @@ export interface SystemIntakeForTable extends Omit<SystemIntake, 'status'> {
   /** Filter date for portfolio update report */
   filterDate: string | null;
   lastAdminNote: AdminNote | null;
+  contract: {
+    hasContract: string | null;
+    contractor: string | null;
+    number: string | null;
+    /** Contract start date converted to string */
+    startDate: string;
+    /** Contract end date converted to string */
+    endDate: string;
+  };
 }
 
 const getLastAdminNote = (notes: AdminNote[]): AdminNote | null => {
@@ -38,10 +49,22 @@ const tableMap = (
   t: TFunction
 ): SystemIntakeForTable[] => {
   return tableData.map((intake: SystemIntake) => {
+    /** Append requester component acronym to name */
     const requesterNameAndComponent = getPersonNameAndComponentAcronym(
       intake.requester.name,
       intake.requester.component
     );
+
+    /* Convert contract dates to strings */
+    const hasContractDates = ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
+      intake.contract.hasContract || ''
+    );
+    const contractStartDate = hasContractDates
+      ? formatContractDate(intake.contract.startDate)
+      : '';
+    const contractEndDate = hasContractDates
+      ? formatContractDate(intake.contract.endDate)
+      : '';
 
     /**
      * Fix for handling legacy intakes once IT Gov v2 is released
@@ -69,6 +92,11 @@ const tableMap = (
     return {
       ...intake,
       requesterNameAndComponent,
+      contract: {
+        ...intake.contract,
+        startDate: contractStartDate,
+        endDate: contractEndDate
+      },
       status: translateStatus(intake.status, intake.lcid),
       state,
       lastAdminNote,
