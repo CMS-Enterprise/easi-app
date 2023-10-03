@@ -2,9 +2,9 @@ import { TFunction } from 'i18next';
 import { sortBy } from 'lodash';
 
 import {
-  SystemIntakeForCsv,
-  SystemIntakeForCsv_notes as SystemIntakeNote
-} from 'queries/types/SystemIntakeForCsv';
+  GetSystemIntakesTable_systemIntakes as SystemIntake,
+  GetSystemIntakesTable_systemIntakes_notes as AdminNote
+} from 'queries/types/GetSystemIntakesTable';
 import {
   SystemIntakeState,
   SystemIntakeStatus
@@ -15,34 +15,38 @@ import { translateStatus } from 'utils/systemIntake';
 // Here is where the data can be modified and used appropriately for sorting.
 // Modifed data can then be configured with JSX components in column cell configuration
 
-export interface SystemIntakeForTable
-  extends Omit<SystemIntakeForCsv, 'status'> {
+export interface SystemIntakeForTable extends Omit<SystemIntake, 'status'> {
+  /** String with requester name and component acronym */
   requesterNameAndComponent: string;
-  lastAdminNote: SystemIntakeNote | null;
+  /** Translated status string */
   status: string;
+  /** Filter date for portfolio update report */
   filterDate: string | null;
+  lastAdminNote: AdminNote | null;
 }
 
-const getLastAdminNote = (
-  notes: SystemIntakeForCsv['notes']
-): SystemIntakeNote | null => {
+const getLastAdminNote = (notes: AdminNote[]): AdminNote | null => {
   if (notes.length === 0) return null;
 
   const sortedNotes = sortBy(notes, 'createdAt');
   return sortedNotes[0];
 };
 
+/** Returns array of system intakes formatted for request table and CSV exports */
 const tableMap = (
-  tableData: SystemIntakeForCsv[],
+  tableData: SystemIntake[],
   t: TFunction
 ): SystemIntakeForTable[] => {
-  return tableData.map((intake: SystemIntakeForCsv) => {
-    /** Display both the requester name and the acronym of their component */
+  return tableData.map((intake: SystemIntake) => {
     const requesterNameAndComponent = getPersonNameAndComponentAcronym(
       intake.requester.name,
       intake.requester.component
     );
 
+    /**
+     * Fix for handling legacy intakes once IT Gov v2 is released
+     * Sets intake state to CLOSED if status is LCID_ISSUED
+     */
     let { state } = intake;
     if (intake.status === SystemIntakeStatus.LCID_ISSUED) {
       state = SystemIntakeState.CLOSED;
