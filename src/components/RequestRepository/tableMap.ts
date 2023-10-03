@@ -10,20 +10,24 @@ import {
   SystemIntakeStatus
 } from 'types/graphql-global-types';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
+import { translateStatus } from 'utils/systemIntake';
 
 // Here is where the data can be modified and used appropriately for sorting.
 // Modifed data can then be configured with JSX components in column cell configuration
 
-export interface SystemIntakeForTable extends SystemIntakeForCsv {
+export interface SystemIntakeForTable
+  extends Omit<SystemIntakeForCsv, 'status'> {
   requesterNameAndComponent: string;
   lastAdminNote: SystemIntakeNote | null;
+  status: string;
 }
 
-const getLastAdminNote = (notes: SystemIntakeForCsv['notes']) => {
+const getLastAdminNote = (
+  notes: SystemIntakeForCsv['notes']
+): SystemIntakeNote | null => {
   if (notes.length === 0) return null;
 
   const sortedNotes = sortBy(notes, 'createdAt');
-
   return sortedNotes[0];
 };
 
@@ -32,20 +36,6 @@ const tableMap = (
   t: TFunction
 ): SystemIntakeForTable[] => {
   return tableData.map((intake: SystemIntakeForCsv) => {
-    // const statusEnum = intake.status;
-    // let statusTranslation = '';
-
-    // // Translating status
-    // if (statusEnum === 'LCID_ISSUED') {
-    //   // if status is LCID_ISSUED, translate from enum to i18n and append LCID
-    //   statusTranslation = `${t(`intake:statusMap.${statusEnum}`)}: ${
-    //     intake.lcid
-    //   }`;
-    // } else {
-    //   // if not just translate from enum to i18n
-    //   statusTranslation = t(`intake:statusMap.${statusEnum}`);
-    // }
-
     /** Display both the requester name and the acronym of their component */
     const requesterNameAndComponent = getPersonNameAndComponentAcronym(
       intake.requester.name,
@@ -57,13 +47,15 @@ const tableMap = (
       state = SystemIntakeState.CLOSED;
     }
 
+    const lastAdminNote = getLastAdminNote(intake.notes);
+
     // Override all applicable fields in intake to use i18n translations
     return {
       ...intake,
       requesterNameAndComponent,
-      // status: statusTranslation,
+      status: translateStatus(intake.status, intake.lcid),
       state,
-      lastAdminNote: getLastAdminNote(intake.notes)
+      lastAdminNote
     };
   });
 };

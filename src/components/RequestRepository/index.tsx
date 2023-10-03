@@ -54,7 +54,6 @@ import { SystemIntakeState } from 'types/graphql-global-types';
 import { fetchSystemIntakes } from 'types/routines';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
-import { translateStatus } from 'utils/systemIntake';
 import {
   getColumnSortStatus,
   getHeaderSortIcon,
@@ -85,7 +84,7 @@ const RequestRepository = () => {
     GetSystemIntakesTableQuery
   );
 
-  /** Object containing formatted system intakes split by `open` and `closed` status */
+  /** Object containing formatted system intakes split by `open` and `closed` state */
   const systemIntakes: SystemIntakesData = useMemo(() => {
     const intakes: SystemIntakesData = { open: [], closed: [] };
 
@@ -267,13 +266,11 @@ const RequestRepository = () => {
       row,
       value
     }: CellProps<SystemIntakeForTable, SystemIntakeForTable['status']>) => {
-      const statusText = translateStatus(value, row.original.lcid);
-
       // If LCID_ISSUED append LCID Scope to status
       if (value === `LCID: ${row.original.lcid}`) {
         return (
           <>
-            {statusText}
+            {value}
             <br />
             <TruncatedText
               id="lcid-scope"
@@ -288,7 +285,7 @@ const RequestRepository = () => {
       }
 
       // If any other value just display status
-      return statusText;
+      return value;
     }
   };
 
