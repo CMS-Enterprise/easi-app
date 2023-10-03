@@ -711,10 +711,7 @@ const RequestRepository = () => {
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
                     aria-sort={getColumnSortStatus(column)}
-                    style={{
-                      minWidth: index === 0 ? '175px' : '150px',
-                      position: 'relative'
-                    }}
+                    style={{ position: 'relative' }}
                   >
                     <button
                       className="usa-button usa-button--unstyled"
