@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -116,7 +117,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Cont
 }
 
 // UpdateTRBAdviceLetterRecommendation updates an existing TRB advice letter recommendation record in the database
-// TODO - purposely does not update order_in_letter - will do that separately
+// This purposely does not update the order_in_letter field - to update that, use UpdateTRBAdviceLetterRecommendationOrder()
 func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recommendation *models.TRBAdviceLetterRecommendation) (*models.TRBAdviceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_advice_letter_recommendations
@@ -190,6 +191,51 @@ func (s *Store) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid
 	return &deleted, err
 }
 
-func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(ctx context.Context, trbAdviceLetterID uuid.UUID) ([]*models.TRBAdviceLetterRecommendation, error) {
-	panic("not yet implemented")
+// UpdateTRBAdviceLetterRecommendationOrder updates only the ranking of recommendations for a given advice letter
+func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
+	ctx context.Context,
+	trbAdviceLetterID uuid.UUID,
+	newRanks map[uuid.UUID]int,
+) ([]*models.TRBAdviceLetterRecommendation, error) {
+	// convert newRanks to JSON, which Postgres will turn into a table via json_to_recordset
+	newRanksSlice := []map[string]any{}
+	for recommendationID, newRank := range newRanks {
+		newEntry := map[string]any{
+			"id":   recommendationID,
+			"rank": newRank,
+		}
+		newRanksSlice = append(newRanksSlice, newEntry)
+	}
+	newRanksJSON, err := json.Marshal(newRanksSlice)
+	if err != nil {
+		return nil, err
+	}
+
+	stmt, err := s.db.PrepareNamed(`
+		WITH new_ranks AS (
+			SELECT *
+			FROM json_to_recordset(:newRanks)
+			AS new_ranks (id uuid, rank int)
+		)
+		UPDATE trb_advice_letter_recommendations AS recs
+		SET order_in_letter = new_ranks.rank
+		FROM new_ranks
+	`)
+	if err != nil {
+		// TODO - proper logging
+		return nil, err
+	}
+
+	updatedRecommendations := []*models.TRBAdviceLetterRecommendation{}
+	arg := map[string]interface{}{
+		"newRanks": string(newRanksJSON),
+	}
+
+	err = stmt.Select(&updatedRecommendations, arg)
+	if err != nil {
+		// TODO - proper logging
+		return nil, err
+	}
+
+	return updatedRecommendations, nil
 }
