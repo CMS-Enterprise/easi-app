@@ -3,10 +3,7 @@ FROM golang:1.21 AS base
 WORKDIR /easi/
 
 COPY config/tls/*.crt /usr/local/share/ca-certificates/
-RUN update-ca-certificates && \
-    apt-get update && \
-    apt-get install -y tzdata && \
-    rm -rf /var/lib/apt/lists/*
+RUN update-ca-certificates
 
 COPY go.mod go.sum ./
 RUN go mod download
@@ -23,14 +20,11 @@ COPY cmd/ ./cmd/
 COPY pkg/ ./pkg/
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/easi ./cmd/easi
 
-FROM scratch
+FROM gcr.io/distroless/base:latest
 
 WORKDIR /easi/
 
-
 COPY --from=base /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-#XXX: Does EASI need tzdata? If so, we'll need to copy the zoneinfo files
-COPY --from=base /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=build /easi/pkg/email/templates ./templates
 COPY --from=build /easi/bin/easi ./
 
