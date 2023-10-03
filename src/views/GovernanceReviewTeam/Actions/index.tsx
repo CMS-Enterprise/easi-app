@@ -159,12 +159,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
           {/* Manage LCID page */}
           <Route
             path="/governance-review-team/:systemId/manage-lcid/:subPage?"
-            render={() => (
-              <ManageLcid
-                systemIntakeId={systemIntake.id}
-                lcidStatus={lcidStatus}
-              />
-            )}
+            render={() => <ManageLcid systemIntake={systemIntake} />}
           />
 
           {/* Select action main page */}

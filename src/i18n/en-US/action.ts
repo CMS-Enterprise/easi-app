@@ -280,6 +280,30 @@ const action = {
     draftBusinessCase: 'draft business case',
     finalBusinessCase: 'final business case'
   },
+  lcidStatusTag: {
+    ISSUED: 'Active',
+    EXPIRED: 'Expired',
+    EXPIRING_SOON: 'Expiring soon',
+    RETIRED: 'Retired',
+    RETIRING_SOON: 'Retiring soon'
+  },
+  updateLcid: {
+    title: 'Updated Life Cycle ID',
+    helpText:
+      'You must fill out at least one field below. If you choose to send a notification email, the selected recipients will be notified of the changes to this LCID.',
+    scopeHelpText:
+      'Explain what is covered by this Life Cycle ID and what work it limits the project team to.',
+    reasonLabel: 'Why are you updating this Life Cycle ID?',
+    reasonHelpText: 'Include any additional context about this action.',
+    success: 'Life Cycle ID {{lcid}} has been updated.',
+    currentLcid: 'Current Life Cycle ID',
+    issueDate: 'Issue date',
+    currentExpirationDate: 'Current expiration date',
+    currentScope: 'Current scope',
+    currentCostBaseline: 'Current project cost baseline',
+    currentNextSteps: 'Current next steps',
+    emptyForm: 'Please fill out at least one field below'
+  },
   extendLcid: {
     back: 'Change',
     heading: 'Actions on request',
