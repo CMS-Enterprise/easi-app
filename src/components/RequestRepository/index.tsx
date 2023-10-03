@@ -5,6 +5,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
+  CellProps,
+  Column,
   Row,
   SortingRule,
   useFilters,
@@ -54,8 +56,8 @@ import {
   SystemIntakeStatus
 } from 'types/graphql-global-types';
 import { fetchSystemIntakes } from 'types/routines';
-import { SystemIntakeForm } from 'types/systemIntake';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
+import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
@@ -127,7 +129,11 @@ const RequestRepository = () => {
     dateStart: string;
     dateEnd: string;
   }>({
-    resolver: yupResolver(dateRangeSchema)
+    resolver: yupResolver(dateRangeSchema),
+    defaultValues: {
+      dateStart: '2023-09-01T05:00:00.000Z',
+      dateEnd: '2023-10-31T05:00:00.000Z'
+    }
   });
   const dateRangeStart = watch('dateStart');
   const dateRangeEnd = watch('dateEnd');
@@ -158,22 +164,25 @@ const RequestRepository = () => {
   // to expand/unexpand the text
   const freeFormTextCharLimit = 25;
 
-  const submissionDateColumn = {
-    Header: t('intake:fields.submissionDate'),
+  const submissionDateColumn: Column<SystemIntakeForCsv> = {
+    Header: t<string>('intake:fields.submissionDate'),
     accessor: 'submittedAt',
-    Cell: ({ value }: any) => {
-      if (value) {
-        return formatDateLocal(value, 'MM/dd/yyyy');
+    Cell: cell => {
+      if (cell.value) {
+        return formatDateLocal(cell.value, 'MM/dd/yyyy');
       }
 
       return t('requestRepository.table.submissionDate.null');
     }
   };
 
-  const requestNameColumn = {
-    Header: t('intake:fields.projectName'),
+  const requestNameColumn: Column<SystemIntakeForCsv> = {
+    Header: t<string>('intake:fields.projectName'),
     accessor: 'requestName',
-    Cell: ({ row, value }: any) => {
+    Cell: ({
+      row,
+      value
+    }: CellProps<SystemIntakeForCsv, SystemIntakeForCsv['requestName']>) => {
       return (
         <Link to={`/governance-review-team/${row.original.id}/intake-request`}>
           {value}
@@ -182,41 +191,41 @@ const RequestRepository = () => {
     }
   };
 
-  const requesterNameAndComponentColumn = {
-    Header: t('intake:contactDetails.requester'),
-    accessor: 'requesterNameAndComponent',
-    Cell: ({ value }: any) => {
-      return value;
-    }
+  const requesterColumn: Column<SystemIntakeForCsv> = {
+    Header: t<string>('intake:contactDetails.requester'),
+    accessor: 'requester',
+    Cell: ({ value: requester }) =>
+      getPersonNameAndComponentAcronym(requester.name, requester.component)
   };
 
-  const adminLeadColumn = {
-    Header: t('intake:fields.adminLead'),
-    accessor: (value: SystemIntakeForm) => {
-      if (value.adminLead) {
-        return value.adminLead;
-      }
-      return t('governanceReviewTeam:adminLeads.notAssigned');
-    },
-    Cell: ({ value }: any) => {
-      if (value === t('governanceReviewTeam:adminLeads.notAssigned')) {
+  const adminLeadColumn: Column<SystemIntakeForCsv> = {
+    Header: t<string>('intake:fields.adminLead'),
+    accessor: ({ adminLead }) =>
+      adminLead || t<string>('governanceReviewTeam:adminLeads.notAssigned'),
+    Cell: ({
+      value: adminLead
+    }: CellProps<SystemIntakeForCsv, SystemIntakeForCsv['adminLead']>) => {
+      if (adminLead === t('governanceReviewTeam:adminLeads.notAssigned')) {
         return (
           <div className="display-flex flex-align-center">
             {/* TODO: should probably make this a button that opens up the assign admin
                 lead automatically. Similar to the Dates functionality */}
             <IconError className="text-secondary margin-right-05" />
-            {value}
+            {adminLead}
           </div>
         );
       }
-      return value;
+      return adminLead;
     }
   };
 
-  const grtDateColumn = {
-    Header: t('intake:fields.grtDate'),
+  const grtDateColumn: Column<SystemIntakeForCsv> = {
+    Header: t<string>('intake:fields.grtDate'),
     accessor: 'grtDate',
-    Cell: ({ row, value }: any) => {
+    Cell: ({
+      row,
+      value
+    }: CellProps<SystemIntakeForCsv, SystemIntakeForCsv['grtDate']>) => {
       if (!value) {
         return (
           <UswdsReactLink
@@ -231,10 +240,13 @@ const RequestRepository = () => {
     }
   };
 
-  const grbDateColumn = {
-    Header: t('intake:fields.grbDate'),
+  const grbDateColumn: Column<SystemIntakeForCsv> = {
+    Header: t<string>('intake:fields.grbDate'),
     accessor: 'grbDate',
-    Cell: ({ row, value }: any) => {
+    Cell: ({
+      row,
+      value
+    }: CellProps<SystemIntakeForCsv, SystemIntakeForCsv['grbDate']>) => {
       if (!value) {
         return (
           <UswdsReactLink
@@ -249,10 +261,13 @@ const RequestRepository = () => {
     }
   };
 
-  const statusColumn = {
-    Header: t('intake:fields.status'),
+  const statusColumn: Column<SystemIntakeForCsv> = {
+    Header: t<string>('intake:fields.status'),
     accessor: 'status',
-    Cell: ({ row, value }: any) => {
+    Cell: ({
+      row,
+      value
+    }: CellProps<SystemIntakeForCsv, SystemIntakeForCsv['status']>) => {
       // Check if status is LCID_ISSUED (need to check for translation)
 
       // If LCID_ISSUED append LCID Scope to status
@@ -278,12 +293,12 @@ const RequestRepository = () => {
     }
   };
 
-  const lcidExpirationDateColumn = {
-    Header: t('intake:fields.lcidExpirationDate'),
+  const lcidExpirationDateColumn: Column<SystemIntakeForCsv> = {
+    Header: t<string>('intake:fields.lcidExpirationDate'),
     accessor: 'lcidExpiresAt',
-    Cell: ({ value }: any) => {
-      if (value) {
-        return formatDateUtc(value, 'MM/dd/yyyy');
+    Cell: ({ value: lcidExpiresAt }) => {
+      if (lcidExpiresAt) {
+        return formatDateUtc(lcidExpiresAt, 'MM/dd/yyyy');
       }
 
       // If no LCID Expiration exists, display 'No LCID Issued'
@@ -332,7 +347,7 @@ const RequestRepository = () => {
       return [
         submissionDateColumn,
         requestNameColumn,
-        requesterNameAndComponentColumn,
+        requesterColumn,
         adminLeadColumn,
         statusColumn,
         grtDateColumn,
@@ -343,7 +358,7 @@ const RequestRepository = () => {
       return [
         submissionDateColumn,
         requestNameColumn,
-        requesterNameAndComponentColumn,
+        requesterColumn,
         lcidExpirationDateColumn,
         statusColumn
         // lastAdminNoteColumn
