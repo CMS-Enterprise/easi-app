@@ -18,30 +18,6 @@ type OrderOfRecommendations struct {
 	OrderByRecommendationID map[uuid.UUID]int
 }
 
-// InsertNewRecommendationAtEnd returns a new ordering with the new recommendation ID added to the end (max of existing orders + 1)
-// per UX, new recommendations should be added to the end - see Zoe's comment on https://jiraent.cms.gov/browse/EASI-3140
-// TODO - might not need this, given that SQL query might handle it with MAX() of existing order values?
-// TODO - might be useful for modeling/testing, though
-func InsertNewRecommendationAtEnd(
-	ordering OrderOfRecommendations,
-	newRecommendationID uuid.UUID,
-) OrderOfRecommendations {
-	// TODO - assert that newRecommendationID isn't already in the map?
-
-	existingOrders := maps.Values(ordering.OrderByRecommendationID)
-
-	// have to write a manual implementation of maximum checking because the max() built-in doesn't allow spreading slice arguments with ...)
-	maxExistingOrder := InitialOrder
-	for _, existingOrder := range existingOrders {
-		if existingOrder > maxExistingOrder {
-			maxExistingOrder = existingOrder
-		}
-	}
-
-	ordering.OrderByRecommendationID[newRecommendationID] = maxExistingOrder + 1
-	return ordering
-}
-
 // UpdateRecommendationsWithNewOrdering updates the order field of some recommendations based on a new ordering
 func UpdateRecommendationsWithNewOrdering(recommendations []*models.TRBAdviceLetterRecommendation, ordering OrderOfRecommendations) {
 	// TODO - assertions (pre-conditions)?
