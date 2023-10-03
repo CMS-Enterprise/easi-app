@@ -76,6 +76,7 @@ export interface SystemIntakeForCsv_notes {
   __typename: "SystemIntakeNote";
   id: UUID;
   createdAt: Time;
+  content: HTML;
 }
 
 export interface SystemIntakeForCsv_actions {

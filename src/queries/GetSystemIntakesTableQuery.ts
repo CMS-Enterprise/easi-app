@@ -70,6 +70,7 @@ const SystemIntakeForCsv = gql`
     notes {
       id
       createdAt
+      content
     }
 
     actions {

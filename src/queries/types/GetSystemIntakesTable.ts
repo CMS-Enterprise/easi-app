@@ -76,6 +76,7 @@ export interface GetSystemIntakesTable_systemIntakes_notes {
   __typename: "SystemIntakeNote";
   id: UUID;
   createdAt: Time;
+  content: HTML;
 }
 
 export interface GetSystemIntakesTable_systemIntakes_actions {
