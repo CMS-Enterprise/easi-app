@@ -17,7 +17,7 @@ func GetUpdateLCIDAction(
 	userInfo models.UserInfo,
 ) models.Action {
 
-	action := getBaseLCIDAction(intake, expirationDate, nextSteps, scope, costBaseline, userInfo)
+	action := getBaseLCIDAction(intake, expirationDate, nextSteps, scope, costBaseline, userInfo, nil)
 	action.ActionType = models.ActionTypeUPDATELCID
 
 	return action
