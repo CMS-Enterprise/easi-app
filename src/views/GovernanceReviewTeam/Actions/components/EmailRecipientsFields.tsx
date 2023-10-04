@@ -117,8 +117,8 @@ const Recipient = ({
           <Label htmlFor="test" className="text-normal margin-y-05">
             {t('emailRecipients.recipientName')}
           </Label>
-          <HelpText className="margin-bottom-1">
-            {t('emailRecipients.verifyHelpText')}
+          <HelpText className="margin-bottom-1 margin-top-05">
+            {t('technicalAssistance:emailRecipientFields.newRecipientHelpText')}
           </HelpText>
           <CedarContactSelect
             id="IntakeForm-ContactCommonName"

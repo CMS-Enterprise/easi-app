@@ -15,6 +15,7 @@ import CedarContactSelect from 'components/CedarContactSelect';
 import Alert from 'components/shared/Alert';
 import CheckboxField from 'components/shared/CheckboxField';
 import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import Spinner from 'components/Spinner';
@@ -378,6 +379,11 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                                   >
                                     {t('emailRecipientFields.newRecipientName')}
                                   </Label>
+                                  <HelpText>
+                                    {t(
+                                      'emailRecipientFields.newRecipientHelpText'
+                                    )}
+                                  </HelpText>
                                   {error && (
                                     <ErrorMessage>{error.message}</ErrorMessage>
                                   )}
