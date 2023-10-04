@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"golang.org/x/exp/slices"
 
 	"go.uber.org/zap"
 
@@ -194,24 +195,27 @@ func (s *Store) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid
 	return &deleted, err
 }
 
-// UpdateTRBAdviceLetterRecommendationOrder only updates the ordering of recommendations for a given advice letter;
-// no other columns/fields are updated
+// UpdateTRBAdviceLetterRecommendationOrder updates the ordering of recommendations for a given advice letter,
+// using the order of the recommendation IDs passed in as newOrder. No other recommendation columns/fields are updated.
 func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 	ctx context.Context,
-	trbAdviceLetterID uuid.UUID,
-	newPositions map[uuid.UUID]int,
+	trbRequestID uuid.UUID,
+	newOrder []uuid.UUID,
 ) ([]*models.TRBAdviceLetterRecommendation, error) {
-	// convert newPositions to JSON, which Postgres will turn into a table via json_to_recordset
-	newPositionsSlice := []map[string]any{}
-	for recommendationID, newPosition := range newPositions {
+	// convert newOrder into a slice of maps with entries for recommendation ID and new position,
+	// which can then be passed to SQL as JSON, then used in the query with json_to_recordset()
+	newPositions := []map[string]any{}
+	for index, recommendationID := range newOrder {
 		newEntry := map[string]any{
-			"id":       recommendationID,
-			"position": newPosition,
+			// important to use the same keys as the columns in the SQL table, otherwise sqlx returns "missing destination name position" error
+			"id":                 recommendationID,
+			"position_in_letter": index,
 		}
-		newPositionsSlice = append(newPositionsSlice, newEntry)
+		newPositions = append(newPositions, newEntry)
 	}
-	newPositionsJSON, err := json.Marshal(newPositionsSlice)
+	newPositionsSerialized, err := json.Marshal(newPositions)
 	if err != nil {
+		// TODO - proper logging
 		return nil, err
 	}
 
@@ -219,11 +223,14 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 		WITH new_positions AS (
 			SELECT *
 			FROM json_to_recordset(:newPositions)
-			AS new_positions (id uuid, position int)
+			AS new_positions (id uuid, position_in_letter int)
 		)
-		UPDATE trb_advice_letter_recommendations AS recs
-		SET position_in_letter = new_positions.position
+		UPDATE trb_advice_letter_recommendations
+		SET position_in_letter = new_positions.position_in_letter
 		FROM new_positions
+		WHERE trb_advice_letter_recommendations.id = new_positions.id
+		AND trb_advice_letter_recommendations.trb_request_id = :trbRequestID
+		RETURNING *;
 	`)
 	if err != nil {
 		// TODO - proper logging
@@ -232,7 +239,8 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 
 	updatedRecommendations := []*models.TRBAdviceLetterRecommendation{}
 	arg := map[string]interface{}{
-		"newPositions": string(newPositionsJSON),
+		"newPositions": string(newPositionsSerialized),
+		"trbRequestID": trbRequestID.String(),
 	}
 
 	err = stmt.Select(&updatedRecommendations, arg)
@@ -240,6 +248,12 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 		// TODO - proper logging
 		return nil, err
 	}
+
+	// sort updated recommendations by position, return in correct order
+	// (easier to do this in Go than in SQL; doing it in SQL would require wrapping the whole UPDATE query in another CTE, then using ORDER BY on that)
+	slices.SortFunc(updatedRecommendations, func(recommendationA, recommendationB *models.TRBAdviceLetterRecommendation) int {
+		return recommendationA.PositionInLetter - recommendationB.PositionInLetter
+	})
 
 	return updatedRecommendations, nil
 }

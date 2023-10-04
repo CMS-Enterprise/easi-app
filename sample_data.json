@@ -1,28 +1,4 @@
-[
-  {
-    "id": "91bc39cc-0620-4b3a-92c1-680f85325d9e",
-    "rank": 1
-  },
-  {
-    "id": "763f53de-97d7-4533-ad24-b0120a90977d",
-    "rank": 2
-  },
-  {
-    "id": "46705d9a-4448-4a48-a212-cb26391e71ff",
-    "rank": 3
-  }
-]
 "To get on single line: jq -c '.' sample_data.json"
-[
-  {
-    "id": "815ee07d-b82d-4659-ad55-e5141760a73b",
-    "rank": 1
-  },
-  {
-    "id": "f47d8576-4043-42ea-ad47-69dceeead48b",
-    "rank": 2
-  }
-]
 [
   {
     "id": "815ee07d-b82d-4659-ad55-e5141760a73b",

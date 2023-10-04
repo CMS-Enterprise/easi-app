@@ -469,9 +469,10 @@ func (s *seederConfig) addTRBLead(ctx context.Context, trb *models.TRBRequest, l
 }
 
 func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBRequest, isDraft bool, shouldSend bool, isFollowUpRequested bool) (*models.TRBAdviceLetter, error) {
-	_, err := resolvers.CreateTRBAdviceLetter(ctx, s.store, trb.ID)
-	if err != nil {
-		return nil, err
+	// declare a separate err outside the scope of the (if !isDraft) block, so there's no lint issues from errors inside the block shadowing this err
+	_, outsideErr := resolvers.CreateTRBAdviceLetter(ctx, s.store, trb.ID)
+	if outsideErr != nil {
+		return nil, outsideErr
 	}
 
 	adviceLetterChanges := map[string]interface{}{
@@ -479,13 +480,14 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 		"meetingSummary":        "Talked about stuff",
 		"isFollowupRecommended": isFollowUpRequested,
 	}
-	letter, err := resolvers.UpdateTRBAdviceLetter(ctx, s.store, adviceLetterChanges)
-	if err != nil {
-		return nil, err
+	letter, outsideErr := resolvers.UpdateTRBAdviceLetter(ctx, s.store, adviceLetterChanges)
+	if outsideErr != nil {
+		return nil, outsideErr
 	}
 
 	if !isDraft {
-		_, err = resolvers.RequestReviewForTRBAdviceLetter(ctx, s.store, nil, mock.FetchUserInfoMock, letter.ID)
+		// declare a new err for use inside the (if !isDraft) block only
+		_, err := resolvers.RequestReviewForTRBAdviceLetter(ctx, s.store, nil, mock.FetchUserInfoMock, letter.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -505,10 +507,7 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 			Recommendation: "I recommend you restart your computer",
 			Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		}
-
-		// need to declare separately; using := on the next line with createdRec1 would cause a govet lint error due to shadowing `err`
-		var createdRec1 *models.TRBAdviceLetterRecommendation
-		createdRec1, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation1)
+		createdRec1, err := resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation1)
 		if err != nil {
 			return nil, err
 		}
@@ -519,32 +518,43 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 			Recommendation: "I recommend you unplug your computer and plug it back in",
 			Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		}
-
-		// need to declare separately; using := on the next line with createdRec2 would cause a govet lint error due to shadowing `err`
-		var createdRec2 *models.TRBAdviceLetterRecommendation
-		createdRec2, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation2)
+		createdRec2, err := resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation2)
 		if err != nil {
 			return nil, err
 		}
 
-		// TODO - remove?
-		// test reordering recommendations
+		// TODO - remove this testing?
+		// test recommendation ordering
 
 		// initial creation - recommendation1 should have position 0, recommendation2 should have position 1
-		if createdRec1 == nil || createdRec1.PositionInLetter != 0 {
-			fmt.Printf("Error - created recommendation %v has order %v, expected 0\n", createdRec1.ID, createdRec1.PositionInLetter)
-			panic("Recommendation 1 created with incorrect position")
+		if createdRec1.PositionInLetter != 0 {
+			return nil, fmt.Errorf("error creating TRB recommendations - created recommendation %v has position %v, expected 0", createdRec1.ID, createdRec1.PositionInLetter)
 		}
 
-		if createdRec2 == nil || createdRec2.PositionInLetter != 1 {
-			fmt.Printf("Error - created recommendation %v has order %v, expected 1\n", createdRec2.ID, createdRec2.PositionInLetter)
-			panic("Recommendation 2 created with incorrect position")
+		if createdRec2.PositionInLetter != 1 {
+			return nil, fmt.Errorf("error creating TRB recommendations - created recommendation %v has position %v, expected 1", createdRec2.ID, createdRec2.PositionInLetter)
+		}
+
+		// test recommendation reordering - recommendation1 should have position 1, recommendation2 should have position 0
+		// TODO - go through resolver instead of store
+		newOrder := []uuid.UUID{createdRec2.ID, createdRec1.ID}
+		updatedRecs, err := s.store.UpdateTRBAdviceLetterRecommendationOrder(ctx, trb.ID, newOrder)
+		if err != nil {
+			return nil, err
+		}
+
+		if updatedRecs[0].ID != createdRec2.ID || updatedRecs[0].PositionInLetter != 0 {
+			return nil, fmt.Errorf("error updating recommendation order - recommendation in position 0 has ID %v, expected %v", updatedRecs[0].ID, createdRec2.ID)
+		}
+
+		if updatedRecs[1].ID != createdRec1.ID || updatedRecs[1].PositionInLetter != 1 {
+			return nil, fmt.Errorf("error updating recommendation order - recommendation in position 1 has ID %v, expected %v", updatedRecs[1].ID, createdRec1.ID)
 		}
 	}
 
-	letter, err = resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, s.store, trb.ID)
-	if err != nil {
-		return nil, err
+	letter, outsideErr = resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, s.store, trb.ID)
+	if outsideErr != nil {
+		return nil, outsideErr
 	}
 
 	return letter, nil
