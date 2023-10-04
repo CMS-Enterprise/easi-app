@@ -12,14 +12,16 @@ type ActionType string
 
 // IT Gov v2 actions
 const (
-	ActionTypePROGRESSTONEWSTEP ActionType = "PROGRESS_TO_NEW_STEP"
-	ActionTypeEXPIRELCID        ActionType = "EXPIRE_LCID"
-	ActionTypeUPDATELCID        ActionType = "UPDATE_LCID"
-	ActionTypeCONFIRMLCID       ActionType = "CONFIRM_LCID"
-	ActionTypeREQUESTEDITS      ActionType = "REQUEST_EDITS"
-	ActionTypeCLOSEREQUEST      ActionType = "CLOSE_REQUEST"
-	ActionTypeREOPENREQUEST     ActionType = "REOPEN_REQUEST"
-	ActionTypeNOTITGOVREQUEST   ActionType = "NOT_GOVERNANCE"
+	ActionTypePROGRESSTONEWSTEP        ActionType = "PROGRESS_TO_NEW_STEP"
+	ActionTypeEXPIRELCID               ActionType = "EXPIRE_LCID"
+	ActionTypeUPDATELCID               ActionType = "UPDATE_LCID"
+	ActionTypeCONFIRMLCID              ActionType = "CONFIRM_LCID"
+	ActionTypeREQUESTEDITS             ActionType = "REQUEST_EDITS"
+	ActionTypeCLOSEREQUEST             ActionType = "CLOSE_REQUEST"
+	ActionTypeREOPENREQUEST            ActionType = "REOPEN_REQUEST"
+	ActionTypeNOTITGOVREQUEST          ActionType = "NOT_GOVERNANCE"
+	ActionTypeRETIRELCID               ActionType = "RETIRE_LCID"
+	ActionTypeCHANGELCIDRETIREMENTDATE ActionType = "CHANGE_LCID_RETIREMENT_DATE"
 )
 
 // v1/v2 actions - originally from v1, still used in IT Gov v2
@@ -85,4 +87,6 @@ type Action struct {
 	LCIDExpirationChangePreviousNextSteps    *HTML             `db:"lcid_expiration_change_previous_next_steps"`
 	LCIDExpirationChangeNewCostBaseline      null.String       `db:"lcid_expiration_change_new_cost_baseline"`
 	LCIDExpirationChangePreviousCostBaseline null.String       `db:"lcid_expiration_change_previous_cost_baseline"`
+	LCIDRetirementChangeNewDate              *time.Time        `json:"newRetirementDate" db:"lcid_retirement_change_new_date"`
+	LCIDRetirementChangePreviousDate         *time.Time        `json:"previousRetirementDate" db:"lcid_retirement_change_previous_date"`
 }

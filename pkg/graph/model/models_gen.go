@@ -493,14 +493,16 @@ type SystemEdge struct {
 
 // An action taken on a system intake, often resulting in a change in status.
 type SystemIntakeAction struct {
-	ID                   uuid.UUID                         `json:"id"`
-	SystemIntake         *models.SystemIntake              `json:"systemIntake"`
-	Type                 SystemIntakeActionType            `json:"type"`
-	Actor                *SystemIntakeActionActor          `json:"actor"`
-	Step                 *models.SystemIntakeStep          `json:"step,omitempty"`
-	Feedback             *models.HTML                      `json:"feedback,omitempty"`
-	LcidExpirationChange *SystemIntakeLCIDExpirationChange `json:"lcidExpirationChange,omitempty"`
-	CreatedAt            time.Time                         `json:"createdAt"`
+	ID                     uuid.UUID                         `json:"id"`
+	SystemIntake           *models.SystemIntake              `json:"systemIntake"`
+	Type                   SystemIntakeActionType            `json:"type"`
+	Actor                  *SystemIntakeActionActor          `json:"actor"`
+	Step                   *models.SystemIntakeStep          `json:"step,omitempty"`
+	Feedback               *models.HTML                      `json:"feedback,omitempty"`
+	LcidExpirationChange   *SystemIntakeLCIDExpirationChange `json:"lcidExpirationChange,omitempty"`
+	PreviousRetirementDate *time.Time                        `json:"previousRetirementDate,omitempty"`
+	NewRetirementDate      *time.Time                        `json:"newRetirementDate,omitempty"`
+	CreatedAt              time.Time                         `json:"createdAt"`
 }
 
 // The contact who is associated with an action being done to a system request
@@ -531,6 +533,15 @@ type SystemIntakeBusinessOwner struct {
 type SystemIntakeBusinessOwnerInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
+}
+
+// Input for changing an intake's LCID retirement date in IT Gov v2
+type SystemIntakeChangeLCIDRetirementDateInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	RetiresAt              time.Time                           `json:"retiresAt"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
 // Input for creating a Close Request Action in Admin Actions v2
@@ -679,8 +690,7 @@ type SystemIntakeIssueLCIDInput struct {
 	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
-// Contains the data needed to change the expiration date of a system request's
-// lifecycle ID
+// Contains the data about a change to the expiration date of a system request's lifecycle ID
 type SystemIntakeLCIDExpirationChange struct {
 	PreviousDate         time.Time    `json:"previousDate"`
 	NewDate              time.Time    `json:"newDate"`
@@ -778,6 +788,16 @@ type SystemIntakeRequesterInput struct {
 type SystemIntakeRequesterWithComponentInput struct {
 	Name      string `json:"name"`
 	Component string `json:"component"`
+}
+
+// Input for retiring an intake's LCID in IT Gov v2
+type SystemIntakeRetireLCIDInput struct {
+	SystemIntakeID         uuid.UUID                           `json:"systemIntakeID"`
+	RetiresAt              time.Time                           `json:"retiresAt"`
+	Reason                 *models.HTML                        `json:"reason,omitempty"`
+	AdditionalInfo         *models.HTML                        `json:"additionalInfo,omitempty"`
+	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
 // Input for updating an intake's LCID in IT Gov v2
@@ -1066,6 +1086,8 @@ const (
 	SystemIntakeActionTypeReopenRequest                  SystemIntakeActionType = "REOPEN_REQUEST"
 	SystemIntakeActionTypeUpdateLcid                     SystemIntakeActionType = "UPDATE_LCID"
 	SystemIntakeActionTypeConfirmLcid                    SystemIntakeActionType = "CONFIRM_LCID"
+	SystemIntakeActionTypeRetireLcid                     SystemIntakeActionType = "RETIRE_LCID"
+	SystemIntakeActionTypeChangeLcidRetirementDate       SystemIntakeActionType = "CHANGE_LCID_RETIREMENT_DATE"
 	SystemIntakeActionTypeIssueLcid                      SystemIntakeActionType = "ISSUE_LCID"
 	SystemIntakeActionTypeSubmitIntake                   SystemIntakeActionType = "SUBMIT_INTAKE"
 	SystemIntakeActionTypeReject                         SystemIntakeActionType = "REJECT"
@@ -1096,6 +1118,8 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 	SystemIntakeActionTypeReopenRequest,
 	SystemIntakeActionTypeUpdateLcid,
 	SystemIntakeActionTypeConfirmLcid,
+	SystemIntakeActionTypeRetireLcid,
+	SystemIntakeActionTypeChangeLcidRetirementDate,
 	SystemIntakeActionTypeIssueLcid,
 	SystemIntakeActionTypeSubmitIntake,
 	SystemIntakeActionTypeReject,
@@ -1119,7 +1143,7 @@ var AllSystemIntakeActionType = []SystemIntakeActionType{
 
 func (e SystemIntakeActionType) IsValid() bool {
 	switch e {
-	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeExpireLcid, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeUpdateLcid, SystemIntakeActionTypeConfirmLcid, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeSubmitIntake, SystemIntakeActionTypeReject, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase:
+	case SystemIntakeActionTypeProgressToNewStep, SystemIntakeActionTypeRequestEdits, SystemIntakeActionTypeExpireLcid, SystemIntakeActionTypeNotGovernance, SystemIntakeActionTypeCloseRequest, SystemIntakeActionTypeReopenRequest, SystemIntakeActionTypeUpdateLcid, SystemIntakeActionTypeConfirmLcid, SystemIntakeActionTypeRetireLcid, SystemIntakeActionTypeChangeLcidRetirementDate, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeSubmitIntake, SystemIntakeActionTypeReject, SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeExtendLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase:
 		return true
 	}
 	return false
@@ -1187,50 +1211,6 @@ func (e *SystemIntakeFormStep) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-// The possible statuses that an issued LCID can be in
-type SystemIntakeLCIDStatus string
-
-const (
-	SystemIntakeLCIDStatusIssued  SystemIntakeLCIDStatus = "ISSUED"
-	SystemIntakeLCIDStatusExpired SystemIntakeLCIDStatus = "EXPIRED"
-	SystemIntakeLCIDStatusRetired SystemIntakeLCIDStatus = "RETIRED"
-)
-
-var AllSystemIntakeLCIDStatus = []SystemIntakeLCIDStatus{
-	SystemIntakeLCIDStatusIssued,
-	SystemIntakeLCIDStatusExpired,
-	SystemIntakeLCIDStatusRetired,
-}
-
-func (e SystemIntakeLCIDStatus) IsValid() bool {
-	switch e {
-	case SystemIntakeLCIDStatusIssued, SystemIntakeLCIDStatusExpired, SystemIntakeLCIDStatusRetired:
-		return true
-	}
-	return false
-}
-
-func (e SystemIntakeLCIDStatus) String() string {
-	return string(e)
-}
-
-func (e *SystemIntakeLCIDStatus) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = SystemIntakeLCIDStatus(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid SystemIntakeLCIDStatus", str)
-	}
-	return nil
-}
-
-func (e SystemIntakeLCIDStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
