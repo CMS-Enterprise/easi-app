@@ -22,7 +22,6 @@ func getAlertRecipients(
 	intake models.SystemIntake,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 ) (*models.EmailNotificationRecipients, error) {
-
 	requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
 	var emailsToNotify []models.EmailAddress
 
@@ -84,18 +83,14 @@ func checkForLCIDExpiration(
 		nextSteps models.HTML,
 	) error,
 ) error {
-
-	// Fetch all system intakes
-	var result models.SystemIntakes
-	result, err := fetchSystemIntakes(ctx)
+	allIntakes, err := fetchSystemIntakes(ctx)
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to fetch system intakes for LCID Expiration check", zap.Error(err))
 		return err
 	}
 
-	for _, currIntake := range result {
-
+	for _, currIntake := range allIntakes {
 		// Skip intake if it doesn't have an LCID or if it has a status of "NO GOVERNANCE"
 		if currIntake.LifecycleExpiresAt == nil || currIntake.Status == models.SystemIntakeStatusNOGOVERNANCE {
 			continue
@@ -103,6 +98,11 @@ func checkForLCIDExpiration(
 
 		// skip intake if it doesn't have an EUA User ID set (and thus we can't find recipients to send to)
 		if currIntake.EUAUserID.IsZero() {
+			continue
+		}
+
+		// skip intake if it has an LCID retirement date set, regardless of whether that date's been reached or not
+		if currIntake.LifecycleRetiresAt != nil {
 			continue
 		}
 
@@ -115,13 +115,12 @@ func checkForLCIDExpiration(
 
 		// Check if intake's LCID will expire within 60 days (1440 hours) AND hasn't expired
 		if hoursUntilLCIDExpiration < 1440 && hoursUntilLCIDExpiration > 0 {
-
 			// Check if an alert has ever been sent
 			if currIntake.LifecycleExpirationAlertTS == nil {
-
 				// Alert has never been sent, send alert and set alert timestamp to now
 
-				// Get email alert recipients
+				// declare this separately because if we use := on next line, compiler thinks we're declaring a new err variable as well;
+				// this causes govet to flag it for shadowing the earlier declaration of err
 				var recipients *models.EmailNotificationRecipients
 				recipients, err = getAlertRecipients(ctx, currIntake, fetchUserInfo)
 
@@ -173,10 +172,10 @@ func checkForLCIDExpiration(
 
 				// Check if first alert was sent more then 14 days (336 hours) ago
 			} else if hoursSinceFirstAlert > 336 {
-
 				// Alert was sent more then 14 days ago, send a follow up alert and set alert timestamp to LCID expiration date
 
-				// Get email alert recipients
+				// declare this separately because if we use := on next line, compiler thinks we're declaring a new err variable as well;
+				// this causes govet to flag it for shadowing the earlier declaration of err
 				var recipients *models.EmailNotificationRecipients
 				recipients, err = getAlertRecipients(ctx, currIntake, fetchUserInfo)
 
@@ -228,10 +227,10 @@ func checkForLCIDExpiration(
 				}
 			}
 
-			// If intake's LCID doesn't expire in the 60 day window and it's alert has been set, reset alert timestamp to nil
-			// NOTE: this is to handle case where alert is sent, LCID expiration is extended, and the LCID re-enter's the 60 day window
+			// If intake's LCID doesn't expire in the 60 day window and its alert has been set, reset alert timestamp to nil
+			// NOTE: this is to handle the case where an alert is sent, then the LCID expiration is extended more than 60 days into the future
+			// NOTE: by clearing the alert timestamp, we make sure it will be re-checked and have an alert sent when the LCID re-enters the 60 day window
 		} else if currIntake.LifecycleExpirationAlertTS != nil {
-
 			updatedIntake := currIntake
 			updatedIntake.LifecycleExpirationAlertTS = nil
 
