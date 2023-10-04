@@ -22,6 +22,7 @@ import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as Au
 import { EmailRecipientsFieldsProps } from 'types/action';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
+import isExternalEmail from 'utils/externalEmail';
 import { RecipientLabel } from 'views/TechnicalAssistance/AdminHome/components/ActionFormWrapper/Recipients';
 
 type RecipientProps = {
@@ -200,6 +201,8 @@ export default ({
   // Requester object
   const { requester } = contacts;
 
+  const { regularRecipientEmails } = recipients;
+
   const contactsArray = useMemo(() => {
     return [
       contacts.businessOwner,
@@ -234,11 +237,16 @@ export default ({
     .flat()
     .filter(value => value).length;
 
+  /** Returns true if a recipient with an external email has been selected */
+  const externalRecipients: boolean = useMemo(
+    () => !!regularRecipientEmails.find(email => isExternalEmail(email)),
+    [regularRecipientEmails]
+  );
+
   /**
    * Updates email recipients in system intake
    */
   const updateRecipients = (value: string) => {
-    const { regularRecipientEmails } = recipients;
     let updatedRecipients = [];
 
     // Update recipients
@@ -529,6 +537,7 @@ export default ({
               systemIntakeId={systemIntakeId}
               activeContact={activeContact}
               setActiveContact={setActiveContact}
+              showExternalUsersWarning={externalRecipients}
               createContactCallback={createContactCallback}
               type="recipient"
               className="margin-top-3"

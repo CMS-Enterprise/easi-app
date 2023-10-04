@@ -4,6 +4,7 @@ import { Button, Dropdown, Label } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import CedarContactSelect from 'components/CedarContactSelect';
+import Alert from 'components/shared/Alert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Spinner from 'components/Spinner';
@@ -260,6 +261,8 @@ type AdditionalContactsProps = {
   activeContact: SystemIntakeContactProps | null;
   /** Set active contact */
   setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  /** Whether to show warning for selecting external users */
+  showExternalUsersWarning?: boolean;
   /** Function called after contact is created */
   createContactCallback?: (contact: AugmentedSystemIntakeContact) => any;
   /** Type of form - Recipient type does not display contacts */
@@ -276,6 +279,7 @@ export default function AdditionalContacts({
   contacts,
   activeContact,
   setActiveContact,
+  showExternalUsersWarning,
   createContactCallback,
   type = 'contact',
   className
@@ -448,6 +452,12 @@ export default function AdditionalContacts({
           </>
         )
       }
+
+      {showExternalUsersWarning && (
+        <Alert type="warning" className="margin-bottom-3" slim>
+          {t('action:selectExternalRecipientWarning')}
+        </Alert>
+      )}
 
       {
         /** Button to add additional contact */
