@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import {
@@ -12,6 +12,7 @@ import {
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import CedarContactSelect from 'components/CedarContactSelect';
+import Alert from 'components/shared/Alert';
 import CheckboxField from 'components/shared/CheckboxField';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
@@ -21,6 +22,7 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { CMS_TRB_EMAIL } from 'constants/externalUrls';
 import { TRBAttendee_userInfo as UserInfo } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
+import isExternalEmail from 'utils/externalEmail';
 import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
 import toggleArrayValue from 'utils/toggleArrayValue';
 
@@ -91,6 +93,23 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
   }>({
     name: 'recipients'
   });
+
+  const recipients = watch('recipients');
+  const selectedEuaIds = watch('notifyEuaIds');
+
+  /** Whether or not recipients array has user with external email */
+  const externalRecipients: boolean = useMemo(
+    () =>
+      !!recipients.find(
+        ({ userInfo }) =>
+          userInfo?.euaUserId &&
+          // Check if user is selected
+          selectedEuaIds.includes(userInfo.euaUserId) &&
+          // Check if user has external email
+          isExternalEmail(userInfo?.email)
+      ),
+    [recipients, selectedEuaIds]
+  );
 
   // Get initial first recipient as requester
   const requester: TrbRecipient | undefined = useRef(watch('recipients')[0])
@@ -463,19 +482,26 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                 />
               );
             })}
-          {!watch('recipients').find(({ id }) => !id) && (
-            <Button
-              type="button"
-              onClick={() => {
-                append(initialRecipient);
-                setRecipientFormOpen?.(true);
-              }}
-              className="margin-top-3"
-              outline
-            >
-              {t('emailRecipientFields.addAnotherRecipient')}
-            </Button>
-          )}
+          <>
+            {externalRecipients && (
+              <Alert type="warning" slim>
+                {t('action:selectExternalRecipientWarning')}
+              </Alert>
+            )}
+            {!watch('recipients').find(({ id }) => !id) && (
+              <Button
+                type="button"
+                onClick={() => {
+                  append(initialRecipient);
+                  setRecipientFormOpen?.(true);
+                }}
+                className="margin-top-3"
+                outline
+              >
+                {t('emailRecipientFields.addAnotherRecipient')}
+              </Button>
+            )}
+          </>
         </TruncatedContent>
       </ul>
     </FieldGroup>
