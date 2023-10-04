@@ -23,7 +23,10 @@ import { EmailRecipientsFieldsProps } from 'types/action';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 import isExternalEmail from 'utils/externalEmail';
-import { RecipientLabel } from 'views/TechnicalAssistance/AdminHome/components/ActionFormWrapper/Recipients';
+import {
+  ExternalRecipientAlert,
+  RecipientLabel
+} from 'views/TechnicalAssistance/AdminHome/components/ActionFormWrapper/Recipients';
 
 type RecipientProps = {
   contact: SystemIntakeContactProps;
@@ -132,6 +135,9 @@ const Recipient = ({
             }}
             autoSearch
           />
+
+          <ExternalRecipientAlert email={activeContact?.email} />
+
           <ButtonGroup className="margin-top-2">
             {/* Save recipient */}
             <Button
@@ -144,6 +150,7 @@ const Recipient = ({
                   setActiveContact(null);
                 });
               }}
+              className="margin-top-0"
             >
               {t('Save')}
             </Button>
@@ -156,6 +163,7 @@ const Recipient = ({
                 setActiveContact(null);
                 setActive(false);
               }}
+              className="margin-top-0"
             >
               {t('Cancel')}
             </Button>
@@ -237,7 +245,7 @@ export default ({
     .flat()
     .filter(value => value).length;
 
-  /** Whether or not a user with an external email has been selected */
+  /** Returns true if a recipient with an external email has been selected */
   const externalRecipients: boolean = useMemo(
     () => !!regularRecipientEmails.find(email => isExternalEmail(email)),
     [regularRecipientEmails]
