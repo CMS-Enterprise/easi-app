@@ -227,6 +227,11 @@ DOMPurify.addHook('afterSanitizeAttributes', node => {
   }
 });
 
+function extractTextContent(html: string) {
+  return new DOMParser().parseFromString(html, 'text/html').documentElement
+    .textContent;
+}
+
 /**
  * Toast rich text editor as a RHF controlled input field.
  * Set to WYSIWYG mode only.
@@ -276,6 +281,16 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
         }}
         onChange={() => {
           const val = editorRef.current?.getInstance().getHTML() || '';
+
+          // ToastEditor.setHTML('') which can happen in the content change callback
+          // will produce something like '<p><br></p>'.
+          // Get the text content and make sure to set an empty string properly
+          // so that text input validations work as expected.
+          if (extractTextContent(val) === '') {
+            field?.onChange('');
+            return;
+          }
+
           field?.onChange(val);
         }}
         {...props}
