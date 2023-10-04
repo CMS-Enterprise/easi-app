@@ -3,14 +3,16 @@ package reordering
 import (
 	"sort"
 
-	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/google/uuid"
 	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// TODO - should this be 0 or 1?
-const InitialOrder = 1
+// InitialOrder is the order that the first recommendation on an advice letter should have
+// 0-based ordering - this isn't exposed to frontend, and it's more natural for working with ordered arrays
+const InitialOrder = 0
 
 // TODO - do I need to have a struct wrapping the map and including the advice letter ID, or can this just be a type alias for the map?
 type OrderOfRecommendations struct {
@@ -60,8 +62,7 @@ func DeleteRecommendationFromOrdering(ordering OrderOfRecommendations, recommend
 	})
 
 	for i, recommendationID := range filteredRecommendationIDs {
-		// TODO - need i + 1 if InitialOrder is 1, but not if it's 0
-		newOrdering.OrderByRecommendationID[recommendationID] = i + 1
+		newOrdering.OrderByRecommendationID[recommendationID] = i
 	}
 
 	// TODO - assertions (post-conditions)?
