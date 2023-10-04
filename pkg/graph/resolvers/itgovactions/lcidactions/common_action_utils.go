@@ -9,12 +9,14 @@ import (
 )
 
 // getBaseLCIDAction returns an action with basic entries related to LCID operations set. Action type is handled by the calling action
-func getBaseLCIDAction(intake models.SystemIntake,
+func getBaseLCIDAction(
+	intake models.SystemIntake,
 	expirationDate *time.Time,
 	nextSteps *models.HTML,
 	scope *models.HTML,
 	costBaseline *string,
 	userInfo models.UserInfo,
+	retirementDate *time.Time,
 ) models.Action {
 
 	// action field values are set based on if the value was set or not. If not set, the new value and the old are the same.
@@ -37,6 +39,9 @@ func getBaseLCIDAction(intake models.SystemIntake,
 
 		LCIDExpirationChangeNewCostBaseline:      intake.LifecycleCostBaseline,
 		LCIDExpirationChangePreviousCostBaseline: intake.LifecycleCostBaseline,
+
+		LCIDRetirementChangeNewDate:      intake.LifecycleRetiresAt,
+		LCIDRetirementChangePreviousDate: intake.LifecycleRetiresAt,
 	}
 
 	if expirationDate != nil {
@@ -51,5 +56,9 @@ func getBaseLCIDAction(intake models.SystemIntake,
 	if costBaseline != nil {
 		action.LCIDExpirationChangeNewCostBaseline = null.StringFromPtr(costBaseline)
 	}
+	if retirementDate != nil {
+		action.LCIDRetirementChangeNewDate = retirementDate
+	}
+
 	return action
 }

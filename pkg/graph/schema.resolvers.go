@@ -1185,6 +1185,24 @@ func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Contex
 	}, err
 }
 
+// CreateSystemIntakeActionRetireLcid is the resolver for the createSystemIntakeActionRetireLCID field.
+func (r *mutationResolver) CreateSystemIntakeActionRetireLcid(ctx context.Context, input model.SystemIntakeRetireLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.RetireLCID(ctx, r.store, r.service.FetchUserInfo, input)
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+// CreateSystemIntakeActionChangeLCIDRetirementDate is the resolver for the createSystemIntakeActionChangeLCIDRetirementDate field.
+func (r *mutationResolver) CreateSystemIntakeActionChangeLCIDRetirementDate(ctx context.Context, input model.SystemIntakeChangeLCIDRetirementDateInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.ChangeLCIDRetirementDate(ctx, r.store, r.service.FetchUserInfo, input)
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
 // CreateSystemIntakeActionConfirmLcid is the resolver for the createSystemIntakeActionConfirmLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionConfirmLcid(ctx context.Context, input model.SystemIntakeConfirmLCIDInput) (*model.UpdateSystemIntakePayload, error) {
 	intake, err := resolvers.ConfirmLCID(ctx, r.store, r.service.FetchUserInfo, input)
@@ -2599,8 +2617,10 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 				Name:  action.ActorName,
 				Email: action.ActorEmail.String(),
 			},
-			Feedback:  action.Feedback,
-			CreatedAt: *action.CreatedAt,
+			Feedback:               action.Feedback,
+			CreatedAt:              *action.CreatedAt,
+			NewRetirementDate:      action.LCIDRetirementChangeNewDate,
+			PreviousRetirementDate: action.LCIDRetirementChangePreviousDate,
 		}
 
 		if action.LCIDExpirationChangeNewDate != nil && action.LCIDExpirationChangePreviousDate != nil {
@@ -2972,8 +2992,8 @@ func (r *systemIntakeResolver) StatusAdmin(ctx context.Context, obj *models.Syst
 }
 
 // LcidStatus is the resolver for the lcidStatus field.
-func (r *systemIntakeResolver) LcidStatus(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeLCIDStatus, error) {
-	return resolvers.CalculateSystemIntakeLCIDStatus(obj, time.Now()), nil
+func (r *systemIntakeResolver) LcidStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeLCIDStatus, error) {
+	return obj.LCIDStatus(time.Now()), nil
 }
 
 // DocumentType is the resolver for the documentType field.

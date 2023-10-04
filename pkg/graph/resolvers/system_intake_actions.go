@@ -504,8 +504,9 @@ func CreateSystemIntakeActionReopenRequest(
 	if err != nil {
 		return nil, err
 	}
-	// TODO: Send Notification Email (EASI-3109)
+
 	// input.Reason is currently not persisted and only sent in the notification email
+
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeREOPENREQUEST,
 		ActorName:      adminTakingAction.CommonName,
@@ -580,8 +581,9 @@ func CreateSystemIntakeActionCloseRequest(
 	if err != nil {
 		return nil, err
 	}
-	// TODO: Send Notification Email (EASI-3109)
+
 	// input.Reason is currently not persisted and only sent in the notification email
+
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeCLOSEREQUEST,
 		ActorName:      adminTakingAction.CommonName,
@@ -955,6 +957,185 @@ func ExpireLCID(
 	})
 
 	// save action (including additional info for email, if any), using record returned from GetExpireLCIDAction()
+	errGroup.Go(func() error {
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        input.AdminNote,
+			}
+
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
+}
+
+// RetireLCID handles a Retire LCID action on an intake as part of Admin Actions v2
+func RetireLCID(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeRetireLCIDInput,
+) (*models.SystemIntake, error) {
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = lcidactions.IsLCIDValidToRetire(intake)
+	if err != nil {
+		return nil, err
+	}
+
+	// create action record before updating intake, while we still have access to intake's previous retirement date
+	action := lcidactions.GetRetireLCIDAction(*intake, input.RetiresAt, *adminUserInfo)
+
+	// update intake
+	// not currently persisting input.Reason
+	intake.LifecycleRetiresAt = &input.RetiresAt
+
+	// TODO: EASI-3109 will send an email from this mutation
+
+	// save intake, action, admin note
+	// See Note [Database calls from resolvers aren't atomic]
+
+	errGroup := new(errgroup.Group)
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+
+	// save action (including additional info for email, if any), using record returned from GetRetireLCIDAction()
+	errGroup.Go(func() error {
+		if input.AdditionalInfo != nil {
+			action.Feedback = input.AdditionalInfo
+		}
+
+		_, errCreatingAction := store.CreateAction(ctx, &action)
+		if errCreatingAction != nil {
+			return errCreatingAction
+		}
+
+		return nil
+	})
+
+	// save admin note
+	if input.AdminNote != nil {
+		errGroup.Go(func() error {
+			adminNote := &models.SystemIntakeNote{
+				SystemIntakeID: input.SystemIntakeID,
+				AuthorEUAID:    adminEUAID,
+				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				Content:        input.AdminNote,
+			}
+
+			_, errCreateNote := store.CreateSystemIntakeNote(ctx, adminNote)
+			if errCreateNote != nil {
+				return errCreateNote
+			}
+
+			return nil
+		})
+	}
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return updatedIntake, nil
+}
+
+// ChangeLCIDRetirementDate handles a Change LCID Retirement Date action on an intake as part of Admin Actions v2
+func ChangeLCIDRetirementDate(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	input model.SystemIntakeChangeLCIDRetirementDateInput,
+) (*models.SystemIntake, error) {
+	adminEUAID := appcontext.Principal(ctx).ID()
+
+	adminUserInfo, err := fetchUserInfo(ctx, adminEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = lcidactions.IsLCIDValidToChangeRetirementDate(intake)
+	if err != nil {
+		return nil, err
+	}
+
+	// create action record before updating intake, while we still have access to intake's previous retirement date
+	action := lcidactions.GetChangeLCIDRetirementDateAction(*intake, input.RetiresAt, *adminUserInfo)
+
+	// update intake
+	intake.LifecycleRetiresAt = &input.RetiresAt
+
+	// TODO: EASI-3109 will send an email from this mutation
+
+	// save intake, action, admin note
+	// See Note [Database calls from resolvers aren't atomic]
+
+	errGroup := new(errgroup.Group)
+	var updatedIntake *models.SystemIntake // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	// save intake
+	errGroup.Go(func() error {
+		var errUpdateIntake error // declare this separately because if we use := on next line, compiler thinks we're declaring a new updatedIntake variable as well
+		updatedIntake, errUpdateIntake = store.UpdateSystemIntake(ctx, intake)
+		if errUpdateIntake != nil {
+			return errUpdateIntake
+		}
+
+		return nil
+	})
+
+	// save action (including additional info for email, if any), using record returned from GetRetireLCIDAction()
 	errGroup.Go(func() error {
 		if input.AdditionalInfo != nil {
 			action.Feedback = input.AdditionalInfo
