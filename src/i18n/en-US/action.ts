@@ -161,6 +161,10 @@ const action = {
   },
   itGovernance: 'IT Governance Mailbox',
   itInvestment: 'IT Investment Mailbox',
+  addExternalRecipientWarning:
+    'The selected individual is external to the CMS organization. Please be sure they should see the information in this notification email before proceeding.',
+  selectExternalRecipientWarning:
+    'One or more of the selected recipients are external to the CMS organization. Please be sure they should see the information in this notification email before proceeding.',
   completeAction: 'Complete action',
   completeActionWithoutEmail: 'Complete action without email',
   cancelAction: 'Cancel action and return to request',
