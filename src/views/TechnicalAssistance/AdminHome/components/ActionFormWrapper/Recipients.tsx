@@ -72,6 +72,23 @@ export const RecipientLabel = ({
   );
 };
 
+/** Warning when trying to add contact with external email */
+export const ExternalRecipientAlert = ({
+  email
+}: {
+  email: string | undefined;
+}) => {
+  const { t } = useTranslation('action');
+
+  if (!email || !isExternalEmail(email)) return null;
+
+  return (
+    <Alert type="warning" slim>
+      {t('addExternalRecipientWarning')}
+    </Alert>
+  );
+};
+
 /**
  * TRB email recipients field
  */
@@ -452,9 +469,15 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                               );
                             }}
                           />
+
+                          <ExternalRecipientAlert
+                            email={recipient.userInfo?.email}
+                          />
+
                           <ButtonGroup>
                             <Button
                               type="button"
+                              className="margin-top-2"
                               onClick={() => {
                                 remove(index);
                                 setRecipientFormOpen?.(false);
@@ -465,6 +488,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                             </Button>
                             <Button
                               type="button"
+                              className="margin-top-2"
                               onClick={() => addRecipient(index, recipient)}
                               disabled={
                                 !recipient.userInfo?.euaUserId ||
