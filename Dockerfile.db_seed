@@ -4,8 +4,7 @@ WORKDIR /easi/
 
 FROM base AS modules
 
-COPY go.mod ./
-COPY go.sum ./
+COPY go.mod go.sum ./
 RUN go mod download
 
 FROM modules AS build

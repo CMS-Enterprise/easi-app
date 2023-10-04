@@ -1,4 +1,4 @@
-ARG TAG=
+ARG TAG=9.10
 FROM flyway/flyway:${TAG}
 
 COPY migrations/ /flyway/sql
