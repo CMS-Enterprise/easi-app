@@ -2420,6 +2420,16 @@ input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]inter
 }
 
 """
+"""
+input UpdateTRBAdviceLetterRecommendationOrderInput {
+  trbRequestId: UUID!
+  """
+  List of the recommendation IDs in the order they should be displayed
+  """
+  newOrder: [UUID!]!
+}
+
+"""
 The input needed to close a TRB request
 """
 input CloseTRBRequestInput {
@@ -2666,6 +2676,8 @@ type Mutation {
   createTRBAdviceLetterRecommendation(input: CreateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
+    @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBAdviceLetterRecommendationOrder(input: UpdateTRBAdviceLetterRecommendationOrderInput!): [TRBAdviceLetterRecommendation!]!
     @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)

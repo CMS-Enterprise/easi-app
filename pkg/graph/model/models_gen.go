@@ -927,6 +927,12 @@ type UpdateSystemIntakeReviewDatesInput struct {
 	ID      uuid.UUID  `json:"id"`
 }
 
+type UpdateTRBAdviceLetterRecommendationOrderInput struct {
+	TrbRequestID uuid.UUID `json:"trbRequestId"`
+	// List of the recommendation IDs in the order they should be displayed
+	NewOrder []uuid.UUID `json:"newOrder"`
+}
+
 // Represents an EUA user who is included as an attendee for a TRB request
 type UpdateTRBRequestAttendeeInput struct {
 	ID        uuid.UUID         `json:"id"`
