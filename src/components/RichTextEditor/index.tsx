@@ -182,7 +182,6 @@ const httpsRe = /^https?:\/\//;
 // Do some field validation on the link popup's url field.
 // Another approach is to re-use toast's exec command to add a link but instead
 // we are going to use dompurify's hook that gets called after content change.
-// This hook is called after editor content changes
 // See sanitizeHtmlOnContentChange() -> DOMPurify.sanitize()
 DOMPurify.addHook('afterSanitizeAttributes', node => {
   // check all href attributes for validity
