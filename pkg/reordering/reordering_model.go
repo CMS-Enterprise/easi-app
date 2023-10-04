@@ -33,7 +33,7 @@ type recommendationOrderModel struct {
 // TODO - if model is expanded to multiple advice letters, this should be changed to getOrdersForLetters(); take a letter ID, return orders only for that letter
 func (m *recommendationOrderModel) getOrders() []int {
 	return lo.Map(m.recommendations, func(rec models.TRBAdviceLetterRecommendation, _ int) int {
-		return rec.OrderInLetter
+		return rec.PositionInLetter
 	})
 }
 
@@ -41,7 +41,7 @@ func (m *recommendationOrderModel) getOrders() []int {
 // TODO - if model is expanded to multiple advice letters, this should be changed to take a letter ID, return orders only for that letter (should also be renamed)
 func (m *recommendationOrderModel) getOrdersByRecommendationID() map[uuid.UUID]int {
 	return lo.SliceToMap(m.recommendations, func(rec models.TRBAdviceLetterRecommendation) (uuid.UUID, int) {
-		return rec.ID, rec.OrderInLetter
+		return rec.ID, rec.PositionInLetter
 	})
 }
 
@@ -64,7 +64,7 @@ func (m *recommendationOrderModel) checkInvariants() bool {
 	// check that the order for each recommendation is unique
 	// TODO - if model is expanded to multiple advice letters, this should check uniqueness within each letter
 	recsWithUniqueOrders := lo.UniqBy(m.recommendations, func(rec models.TRBAdviceLetterRecommendation) int {
-		return rec.OrderInLetter
+		return rec.PositionInLetter
 	})
 	if len(recsWithUniqueOrders) != len(m.recommendations) {
 		return false
@@ -76,12 +76,12 @@ func (m *recommendationOrderModel) checkInvariants() bool {
 	slices.Sort(orders)
 
 	// check that recommendation order starts at the correct number
-	if len(orders) > 0 && orders[0] != InitialOrder {
+	if len(orders) > 0 && orders[0] != InitialPosition {
 		return false
 	}
 
 	// check that recommendation orders are contiguous
-	contiguousOrders := lo.RangeFrom(InitialOrder, len(orders))
+	contiguousOrders := lo.RangeFrom(InitialPosition, len(orders))
 	//lint:ignore S1008 directly return false to continue the same pattern as the rest of the method
 	if !slices.Equal(orders, contiguousOrders) {
 		return false
@@ -131,9 +131,9 @@ func (m *recommendationOrderModel) insertNewRecommendation(
 	existingOrders := m.getOrders()
 
 	if len(existingOrders) == 0 {
-		newRecommendation.OrderInLetter = InitialOrder
+		newRecommendation.PositionInLetter = InitialPosition
 	} else {
-		newRecommendation.OrderInLetter = slices.Max(existingOrders) + 1
+		newRecommendation.PositionInLetter = slices.Max(existingOrders) + 1
 	}
 
 	m.recommendations = append(m.recommendations, newRecommendation)
@@ -171,7 +171,7 @@ func (m *recommendationOrderModel) updateRecommendationOrder(newOrder map[uuid.U
 		if !ok {
 			panic("not sure how to handle this, especially in production code")
 		}
-		recommendation.OrderInLetter = newOrder
+		recommendation.PositionInLetter = newOrder
 	}
 
 	return nil
@@ -220,7 +220,7 @@ func (m *recommendationOrderModel) deleteRecommendation(recommendationToDeleteID
 
 		// if deletedRecommendationFound {
 		if deletedRecommendation != nil {
-			recommendation.OrderInLetter--
+			recommendation.PositionInLetter--
 		}
 
 		newRecommendations = append(newRecommendations, recommendation)

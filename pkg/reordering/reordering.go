@@ -10,9 +10,9 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// InitialOrder is the order that the first recommendation on an advice letter should have
+// InitialPosition is the position that the first recommendation on an advice letter should have
 // 0-based ordering - this isn't exposed to frontend, and it's more natural for working with ordered arrays
-const InitialOrder = 0
+const InitialPosition = 0
 
 // TODO - do I need to have a struct wrapping the map and including the advice letter ID, or can this just be a type alias for the map?
 type OrderOfRecommendations struct {
@@ -34,7 +34,7 @@ func UpdateRecommendationsWithNewOrdering(recommendations []*models.TRBAdviceLet
 		if !ok {
 			panic("not sure how to handle this - assertions should probably prevent this from happening?")
 		}
-		recommendation.OrderInLetter = newOrderForRecommendation
+		recommendation.PositionInLetter = newOrderForRecommendation
 	}
 
 	// TODO - assertions (post-conditions) - use the preconditions that apply to `recommendations`?

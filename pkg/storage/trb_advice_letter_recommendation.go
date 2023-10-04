@@ -32,7 +32,7 @@ func (s *Store) CreateTRBAdviceLetterRecommendation(
 			title,
 			recommendation,
 			links,
-			order_in_letter,
+			position_in_letter,
 			created_by,
 			modified_by
 		)
@@ -42,7 +42,7 @@ func (s *Store) CreateTRBAdviceLetterRecommendation(
 			:title,
 			:recommendation,
 			:links,
-			:order_in_letter,
+			:position_in_letter,
 			:created_by,
 			:modified_by
 		)
@@ -117,7 +117,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Cont
 }
 
 // UpdateTRBAdviceLetterRecommendation updates an existing TRB advice letter recommendation record in the database
-// This purposely does not update the order_in_letter field - to update that, use UpdateTRBAdviceLetterRecommendationOrder()
+// This purposely does not update the position_in_letter column - to update that, use UpdateTRBAdviceLetterRecommendationOrder()
 func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recommendation *models.TRBAdviceLetterRecommendation) (*models.TRBAdviceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_advice_letter_recommendations
@@ -191,35 +191,36 @@ func (s *Store) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid
 	return &deleted, err
 }
 
-// UpdateTRBAdviceLetterRecommendationOrder updates only the ranking of recommendations for a given advice letter
+// UpdateTRBAdviceLetterRecommendationOrder only updates the ordering of recommendations for a given advice letter;
+// no other columns/fields are updated
 func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 	ctx context.Context,
 	trbAdviceLetterID uuid.UUID,
-	newRanks map[uuid.UUID]int,
+	newPositions map[uuid.UUID]int,
 ) ([]*models.TRBAdviceLetterRecommendation, error) {
-	// convert newRanks to JSON, which Postgres will turn into a table via json_to_recordset
-	newRanksSlice := []map[string]any{}
-	for recommendationID, newRank := range newRanks {
+	// convert newPositions to JSON, which Postgres will turn into a table via json_to_recordset
+	newPositionsSlice := []map[string]any{}
+	for recommendationID, newPosition := range newPositions {
 		newEntry := map[string]any{
-			"id":   recommendationID,
-			"rank": newRank,
+			"id":       recommendationID,
+			"position": newPosition,
 		}
-		newRanksSlice = append(newRanksSlice, newEntry)
+		newPositionsSlice = append(newPositionsSlice, newEntry)
 	}
-	newRanksJSON, err := json.Marshal(newRanksSlice)
+	newPositionsJSON, err := json.Marshal(newPositionsSlice)
 	if err != nil {
 		return nil, err
 	}
 
 	stmt, err := s.db.PrepareNamed(`
-		WITH new_ranks AS (
+		WITH new_positions AS (
 			SELECT *
-			FROM json_to_recordset(:newRanks)
-			AS new_ranks (id uuid, rank int)
+			FROM json_to_recordset(:newPositions)
+			AS new_positions (id uuid, position int)
 		)
 		UPDATE trb_advice_letter_recommendations AS recs
-		SET order_in_letter = new_ranks.rank
-		FROM new_ranks
+		SET position_in_letter = new_positions.position
+		FROM new_positions
 	`)
 	if err != nil {
 		// TODO - proper logging
@@ -228,7 +229,7 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 
 	updatedRecommendations := []*models.TRBAdviceLetterRecommendation{}
 	arg := map[string]interface{}{
-		"newRanks": string(newRanksJSON),
+		"newPositions": string(newPositionsJSON),
 	}
 
 	err = stmt.Select(&updatedRecommendations, arg)

@@ -13,6 +13,5 @@ type TRBAdviceLetterRecommendation struct {
 	Recommendation HTML           `json:"recommendation" db:"recommendation"`
 	Links          pq.StringArray `json:"links" db:"links"`
 
-	// TODO - should this just be a regular field? when inserting it, database is probably going to override it
-	OrderInLetter int `json:"orderInLetter" db:"order_in_letter"`
+	PositionInLetter int `json:"positionInLetter" db:"position_in_letter"`
 }
