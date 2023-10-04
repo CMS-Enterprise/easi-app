@@ -18,12 +18,11 @@ import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import Spinner from 'components/Spinner';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { CMS_TRB_EMAIL } from 'constants/externalUrls';
 import { TRBAttendee_userInfo as UserInfo } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
 import isExternalEmail from 'utils/externalEmail';
-import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
+import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import toggleArrayValue from 'utils/toggleArrayValue';
 
 type RecipientsProps = {
@@ -242,18 +241,14 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
 
                   const { commonName, euaUserId, email } = requester.userInfo;
 
-                  const component = cmsDivisionsAndOffices.find(
-                    value => value.name === requester?.component
-                  )?.acronym;
-
                   return (
                     <CheckboxField
                       id={`${field.name}.0`}
                       label={
                         <RecipientLabel
-                          name={`${getPersonNameAndComponentVal(
+                          name={`${getPersonNameAndComponentAcronym(
                             commonName,
-                            component
+                            requester?.component
                           )} (${t('Requester')})`}
                           email={email}
                         />
@@ -315,7 +310,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                       ...userField.value,
                       id: recipientField.id
                     };
-                    const { id, userInfo, role } = userField.value;
+                    const { id, userInfo, role, component } = userField.value;
 
                     if (id) {
                       return (
@@ -323,9 +318,10 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                           name="notifyEuaIds"
                           control={control}
                           render={({ field }) => {
-                            const nameAndRole = `${userInfo?.commonName} (${t(
-                              `attendees.contactRoles.${role}`
-                            )})`;
+                            const label = `${getPersonNameAndComponentAcronym(
+                              userInfo?.commonName || '',
+                              component
+                            )} (${t(`attendees.contactRoles.${role}`)})`;
 
                             const value = userInfo?.euaUserId || '';
 
@@ -334,7 +330,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                                 id={`${field.name}.${index + 1}`}
                                 label={
                                   <RecipientLabel
-                                    name={nameAndRole}
+                                    name={label}
                                     email={userInfo?.email}
                                   />
                                 }

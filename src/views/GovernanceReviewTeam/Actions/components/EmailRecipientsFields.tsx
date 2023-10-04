@@ -23,6 +23,7 @@ import { EmailRecipientsFieldsProps } from 'types/action';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
 import isExternalEmail from 'utils/externalEmail';
+import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import {
   ExternalRecipientAlert,
   RecipientLabel
@@ -72,7 +73,10 @@ const Recipient = ({
         name={`${euaUserId || 'contact'}-${role.replaceAll(' ', '')}`}
         label={
           <RecipientLabel
-            name={`${commonName}${component && `, ${component}`} (${role})`}
+            name={`${getPersonNameAndComponentAcronym(
+              commonName,
+              component
+            )} (${contact?.role})`}
             email={email}
           />
         }
@@ -392,7 +396,10 @@ export default ({
           name={`${requester?.euaUserId}-requester`}
           label={
             <RecipientLabel
-              name={`${requester?.commonName}, ${requester?.component} (Requester)`}
+              name={`${getPersonNameAndComponentAcronym(
+                requester.commonName,
+                requester.component
+              )} (Requester)`}
               email={requester.email}
             />
           }
@@ -515,9 +522,10 @@ export default ({
                       name={`${contact.euaUserId}-${contact.role}`}
                       label={
                         <RecipientLabel
-                          name={`${contact?.commonName}${
-                            contact?.component && `, ${contact.component}`
-                          } (${contact?.role})`}
+                          name={`${getPersonNameAndComponentAcronym(
+                            contact.commonName,
+                            contact.component
+                          )} (${contact?.role})`}
                           email={contact?.email}
                         />
                       }
