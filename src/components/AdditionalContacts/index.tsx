@@ -16,6 +16,7 @@ import {
   DeleteContactType,
   SystemIntakeContactProps
 } from 'types/systemIntake';
+import { ExternalRecipientAlert } from 'views/TechnicalAssistance/AdminHome/components/ActionFormWrapper/Recipients';
 
 import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
 
@@ -224,6 +225,8 @@ const ContactForm = ({
           ))}
         </Dropdown>
       </FieldGroup>
+
+      <ExternalRecipientAlert email={activeContact?.email} />
 
       {/* Action Buttons */}
       <div className="margin-top-2">
