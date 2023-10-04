@@ -108,9 +108,21 @@ const IndicatorsContainer = (
   );
 };
 
-/** Returns formatted contact label */
-const formatLabel = (contact: CedarContactProps) =>
+/** Returns formatted contact value */
+const formatValue = (contact: CedarContactProps) =>
   `${contact.commonName}${contact?.euaUserId && `, ${contact.euaUserId}`}`;
+
+const formatContactOption = ({
+  name,
+  euaUserId,
+  email
+}: {
+  name: string;
+  euaUserId?: string;
+  email?: string;
+}) => {
+  return `${name}${euaUserId && `, ${euaUserId}`}${email && ` (${email})`}`;
+};
 
 /**
  * Combobox to look up contact by name from CEDAR
@@ -128,7 +140,7 @@ export default function CedarContactSelect({
   const { t } = useTranslation();
   // If autoSearch, set name as initial search term
   const [searchTerm, setSearchTerm] = useState<string | undefined>(
-    value ? formatLabel(value) : undefined
+    value ? formatValue(value) : undefined
   );
   // If autoSearch, run initial query from name
   const { contacts, queryCedarContacts, loading } = useCedarContactLookup(
@@ -153,7 +165,7 @@ export default function CedarContactSelect({
   const updateContact = (contact?: CedarContactProps | null) => {
     onChange(contact || null);
     selectedContact.current = contact?.euaUserId;
-    queryContacts(contact ? formatLabel(contact) : '');
+    queryContacts(contact ? formatValue(contact) : '');
   };
 
   // React Select styles object
@@ -261,7 +273,11 @@ export default function CedarContactSelect({
       aria-label="Cedar-Users"
       components={{ Input, IndicatorsContainer, ClearIndicator, Option, Menu }}
       options={contacts.map(contact => ({
-        label: `${contact.commonName}, ${contact.euaUserId}`,
+        label: formatContactOption({
+          name: contact.commonName,
+          euaUserId: contact?.euaUserId,
+          email: contact?.email
+        }),
         value: contact
       }))}
       styles={customStyles}
@@ -275,7 +291,7 @@ export default function CedarContactSelect({
             }
           : undefined
       }
-      value={value ? { value, label: formatLabel(value) } : undefined}
+      value={value ? { value, label: formatValue(value) } : undefined}
       onChange={item => updateContact(item?.value || null)}
       onBlur={e => {
         // Automatically select on blur if search returns single result
