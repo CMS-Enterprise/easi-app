@@ -18,6 +18,7 @@ import Label from 'components/shared/Label';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import Spinner from 'components/Spinner';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import { CMS_TRB_EMAIL } from 'constants/externalUrls';
 import { TRBAttendee_userInfo as UserInfo } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
 import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
@@ -49,6 +50,24 @@ const initialRecipient: TrbRecipient = {
   },
   component: null,
   role: null
+};
+
+/** Formats recipient name and email for checkbox label */
+export const RecipientLabel = ({
+  name,
+  email
+}: {
+  /** First line of checkbox label */
+  name: string;
+  /** If email is defined, show on second line */
+  email?: string;
+}) => {
+  return (
+    <>
+      <span>{name}</span>
+      {email && <span className="display-block text-base-dark">{email}</span>}
+    </>
+  );
 };
 
 /**
@@ -185,21 +204,24 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                 render={({ field }) => {
                   if (!requester?.userInfo) return <></>;
 
-                  const { commonName, euaUserId } = requester.userInfo;
+                  const { commonName, euaUserId, email } = requester.userInfo;
 
                   const component = cmsDivisionsAndOffices.find(
                     value => value.name === requester?.component
                   )?.acronym;
 
-                  const label = `${getPersonNameAndComponentVal(
-                    commonName,
-                    component
-                  )} (${t('Requester')})`;
-
                   return (
                     <CheckboxField
                       id={`${field.name}.0`}
-                      label={label}
+                      label={
+                        <RecipientLabel
+                          name={`${getPersonNameAndComponentVal(
+                            commonName,
+                            component
+                          )} (${t('Requester')})`}
+                          email={email}
+                        />
+                      }
                       {...{ ...field, ref: null }}
                       onChange={e => {
                         field.onChange(
@@ -223,7 +245,12 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                 return (
                   <CheckboxField
                     id={field.name}
-                    label={t('emailRecipientFields.copyTrbMailbox')}
+                    label={
+                      <RecipientLabel
+                        name={t('emailRecipientFields.copyTrbMailbox')}
+                        email={CMS_TRB_EMAIL}
+                      />
+                    }
                     {...{ ...field, ref: null }}
                     value="true"
                     checked={!!field.value}
@@ -260,7 +287,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                           name="notifyEuaIds"
                           control={control}
                           render={({ field }) => {
-                            const label = `${userInfo?.commonName} (${t(
+                            const nameAndRole = `${userInfo?.commonName} (${t(
                               `attendees.contactRoles.${role}`
                             )})`;
 
@@ -269,7 +296,12 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                             return (
                               <CheckboxField
                                 id={`${field.name}.${index + 1}`}
-                                label={label}
+                                label={
+                                  <RecipientLabel
+                                    name={nameAndRole}
+                                    email={userInfo?.email}
+                                  />
+                                }
                                 {...{ ...field, ref: null }}
                                 onChange={e => {
                                   field.onChange(
