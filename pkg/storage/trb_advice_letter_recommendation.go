@@ -102,12 +102,17 @@ func (s *Store) GetTRBAdviceLetterRecommendationByID(ctx context.Context, id uui
 	return &recommendation, err
 }
 
-// GetTRBAdviceLetterRecommendationsByTRBRequestID queries the DB for all the TRB advice letter
-// recommendations records matching the given TRB request ID
+// GetTRBAdviceLetterRecommendationsByTRBRequestID queries the DB for all the TRB advice letter recommendations,
+// filtering by the given TRB request ID and ordered in the user-specified positions
 func (s *Store) GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBAdviceLetterRecommendation, error) {
 	results := []*models.TRBAdviceLetterRecommendation{}
 
-	err := s.db.Select(&results, `SELECT * FROM trb_advice_letter_recommendations WHERE trb_request_id = $1`, trbRequestID)
+	err := s.db.Select(&results, `
+		SELECT *
+		FROM trb_advice_letter_recommendations
+		WHERE trb_request_id = $1
+		ORDER BY position_in_letter ASC
+	`, trbRequestID)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		appcontext.ZLogger(ctx).Error("Failed to fetch TRB advice letter recommendations", zap.Error(err), zap.String("id", trbRequestID.String()))

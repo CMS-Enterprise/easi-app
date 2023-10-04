@@ -9686,6 +9686,9 @@ type TRBAdviceLetter {
   isFollowupRecommended: Boolean
   dateSent: Time
   followupPoint: String
+  """
+  List of recommendations in the order specified by users
+  """
   recommendations: [TRBAdviceLetterRecommendation!]!
   createdBy: String!
   createdAt: Time!

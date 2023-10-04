@@ -17,6 +17,9 @@ export interface GetTrbRecommendations_trbRequest_adviceLetter_recommendations {
 
 export interface GetTrbRecommendations_trbRequest_adviceLetter {
   __typename: "TRBAdviceLetter";
+  /**
+   * List of recommendations in the order specified by users
+   */
   recommendations: GetTrbRecommendations_trbRequest_adviceLetter_recommendations[];
 }
 

@@ -25,7 +25,8 @@ func CreateTRBAdviceLetterRecommendation(
 	return createdRecommendation, nil
 }
 
-// GetTRBAdviceLetterRecommendationsByTRBRequestID retrieves TRB request advice letter recommendations records for a given TRB request ID
+// GetTRBAdviceLetterRecommendationsByTRBRequestID retrieves TRB request advice letter recommendations records for a given TRB request ID,
+// ordering them in the user-specified positions
 func GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBAdviceLetterRecommendation, error) {
 	results, err := store.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, id)
 	if err != nil {
