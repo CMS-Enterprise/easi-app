@@ -25,6 +25,8 @@ func (s *Store) CreateTRBAdviceLetterRecommendation(
 		recommendation.ID = uuid.New()
 	}
 
+	// set position_in_letter to 1 + (the largeting existing position for this advice letter)
+	// defaulting to 0 if there are no existing recommendations for this advice letter
 	stmt, err := s.db.PrepareNamed(`
 		INSERT INTO trb_advice_letter_recommendations (
 			id,
@@ -32,20 +34,21 @@ func (s *Store) CreateTRBAdviceLetterRecommendation(
 			title,
 			recommendation,
 			links,
-			position_in_letter,
 			created_by,
-			modified_by
+			modified_by,
+			position_in_letter
 		)
-		VALUES (
+		SELECT
 			:id,
 			:trb_request_id,
 			:title,
 			:recommendation,
 			:links,
-			:position_in_letter,
 			:created_by,
-			:modified_by
-		)
+			:modified_by,
+			COALESCE(MAX(position_in_letter) + 1, 0)
+		FROM trb_advice_letter_recommendations
+		WHERE trb_request_id = :trb_request_id
 		RETURNING *;
 	`)
 

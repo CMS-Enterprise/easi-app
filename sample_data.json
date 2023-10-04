@@ -26,10 +26,10 @@
 [
   {
     "id": "815ee07d-b82d-4659-ad55-e5141760a73b",
-    "order_in_letter": 1
+    "position_in_letter": 1
   },
   {
     "id": "f47d8576-4043-42ea-ad47-69dceeead48b",
-    "order_in_letter": 2
+    "position_in_letter": 2
   }
 ]

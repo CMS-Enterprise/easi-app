@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"time"
@@ -504,7 +505,10 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 			Recommendation: "I recommend you restart your computer",
 			Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		}
-		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation1)
+
+		// need to declare separately; using := on the next line with createdRec1 would cause a govet lint error due to shadowing `err`
+		var createdRec1 *models.TRBAdviceLetterRecommendation
+		createdRec1, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation1)
 		if err != nil {
 			return nil, err
 		}
@@ -515,9 +519,26 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 			Recommendation: "I recommend you unplug your computer and plug it back in",
 			Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		}
-		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation2)
+
+		// need to declare separately; using := on the next line with createdRec2 would cause a govet lint error due to shadowing `err`
+		var createdRec2 *models.TRBAdviceLetterRecommendation
+		createdRec2, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation2)
 		if err != nil {
 			return nil, err
+		}
+
+		// TODO - remove?
+		// test reordering recommendations
+
+		// initial creation - recommendation1 should have position 0, recommendation2 should have position 1
+		if createdRec1 == nil || createdRec1.PositionInLetter != 0 {
+			fmt.Printf("Error - created recommendation %v has order %v, expected 0\n", createdRec1.ID, createdRec1.PositionInLetter)
+			panic("Recommendation 1 created with incorrect position")
+		}
+
+		if createdRec2 == nil || createdRec2.PositionInLetter != 1 {
+			fmt.Printf("Error - created recommendation %v has order %v, expected 1\n", createdRec2.ID, createdRec2.PositionInLetter)
+			panic("Recommendation 2 created with incorrect position")
 		}
 	}
 
