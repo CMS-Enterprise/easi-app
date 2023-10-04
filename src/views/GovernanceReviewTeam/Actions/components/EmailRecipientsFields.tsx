@@ -16,11 +16,13 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import TruncatedContent from 'components/shared/TruncatedContent';
+import { IT_GOV_EMAIL, IT_INVESTMENT_EMAIL } from 'constants/externalUrls';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
 import { EmailRecipientsFieldsProps } from 'types/action';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
+import { RecipientLabel } from 'views/TechnicalAssistance/AdminHome/components/ActionFormWrapper/Recipients';
 
 type RecipientProps = {
   contact: SystemIntakeContactProps;
@@ -64,7 +66,12 @@ const Recipient = ({
       <CheckboxField
         id={`${euaUserId || 'contact'}-${role.replaceAll(' ', '')}`}
         name={`${euaUserId || 'contact'}-${role.replaceAll(' ', '')}`}
-        label={`${commonName}, ${component} (${role})`}
+        label={
+          <RecipientLabel
+            name={`${commonName}${component && `, ${component}`} (${role})`}
+            email={email}
+          />
+        }
         value={email || ''}
         onChange={e => updateRecipients(e.target.value)}
         onBlur={() => null}
@@ -367,7 +374,12 @@ export default ({
         <CheckboxField
           id={`${requester?.euaUserId}-requester`}
           name={`${requester?.euaUserId}-requester`}
-          label={`${requester?.commonName}, ${requester?.component} (Requester)`}
+          label={
+            <RecipientLabel
+              name={`${requester?.commonName}, ${requester?.component} (Requester)`}
+              email={requester.email}
+            />
+          }
           value={requester?.email || ''}
           onChange={e => updateRecipients(e.target.value)}
           onBlur={() => null}
@@ -380,7 +392,9 @@ export default ({
 
         {/* IT Governance */}
         <CheckboxField
-          label="IT Governance Mailbox"
+          label={
+            <RecipientLabel name={t('itGovernance')} email={IT_GOV_EMAIL} />
+          }
           checked={recipients.shouldNotifyITGovernance}
           name="contact-itGovernanceMailbox"
           id="contact-itGovernanceMailbox"
@@ -397,7 +411,12 @@ export default ({
         {/* IT Investment - if default */}
         {defaultRecipients.shouldNotifyITInvestment && (
           <CheckboxField
-            label="IT Investment Mailbox"
+            label={
+              <RecipientLabel
+                name={t('itInvestment')}
+                email={IT_INVESTMENT_EMAIL}
+              />
+            }
             checked={recipients.shouldNotifyITInvestment}
             name="contact-itInvestmentMailbox"
             id="contact-itInvestmentMailbox"
@@ -450,7 +469,12 @@ export default ({
             {/* IT Investment - if not default */}
             {!defaultRecipients.shouldNotifyITInvestment && (
               <CheckboxField
-                label="IT Investment Mailbox"
+                label={
+                  <RecipientLabel
+                    name={t('itInvestment')}
+                    email={IT_INVESTMENT_EMAIL}
+                  />
+                }
                 checked={recipients.shouldNotifyITInvestment}
                 name="contact-itInvestmentMailbox"
                 id="contact-itInvestmentMailbox"
@@ -473,7 +497,14 @@ export default ({
                       key={`verified-${index}`} // eslint-disable-line react/no-array-index-key
                       id={contact.id}
                       name={`${contact.euaUserId}-${contact.role}`}
-                      label={`${contact?.commonName}, ${contact?.component} (${contact?.role})`}
+                      label={
+                        <RecipientLabel
+                          name={`${contact?.commonName}${
+                            contact?.component && `, ${contact.component}`
+                          } (${contact?.role})`}
+                          email={contact?.email}
+                        />
+                      }
                       value={contact?.email || ''}
                       onChange={e => updateRecipients(e.target.value)}
                       onBlur={() => null}

@@ -159,6 +159,8 @@ const action = {
       'You may add an admin note as a part of completing this action. This note will not be sent to recipients, but will be visible to Governance Team members and other EASi admin teams.',
     label: 'Note'
   },
+  itGovernance: 'IT Governance Mailbox',
+  itInvestment: 'IT Investment Mailbox',
   completeAction: 'Complete action',
   completeActionWithoutEmail: 'Complete action without email',
   cancelAction: 'Cancel action and return to request',
