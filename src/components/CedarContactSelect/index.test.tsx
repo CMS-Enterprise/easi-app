@@ -7,24 +7,26 @@ import GetCedarContactsQuery from 'queries/GetCedarContactsQuery';
 
 import CedarContactSelect from './index';
 
+const contact = {
+  commonName: 'Adeline Aarons',
+  email: 'adeline.aarons@local.fake',
+  euaUserId: 'ABCD'
+};
+
+const contactLabel = `${contact.commonName}, ${contact.euaUserId} (${contact.email})`;
+
 describe('CedarContactSelect', () => {
   // Cedar contacts query mock
   const cedarContactsQuery = {
     request: {
       query: GetCedarContactsQuery,
       variables: {
-        commonName: 'Adeline'
+        commonName: contact.commonName
       }
     },
     result: {
       data: {
-        cedarPersonsByCommonName: [
-          {
-            commonName: 'Adeline Aarons',
-            email: 'adeline.aarons@local.fake',
-            euaUserId: 'ABCD'
-          }
-        ]
+        cedarPersonsByCommonName: [contact]
       }
     }
   };
@@ -42,10 +44,10 @@ describe('CedarContactSelect', () => {
 
     // Type first name into select field input
     const input = getByTestId('cedar-contact-select');
-    userEvent.type(input, 'Adeline');
+    userEvent.type(input, contact.commonName);
 
     // Get mocked CEDAR result
-    const userOption = await findByText('Adeline Aarons, ABCD');
+    const userOption = await findByText(contactLabel);
     expect(userOption).toBeInTheDocument();
 
     // Check that component matches snapshot with expanded dropdown
@@ -55,6 +57,6 @@ describe('CedarContactSelect', () => {
     userEvent.click(userOption);
 
     // Check that select field displays correct value
-    expect(input).toHaveValue('Adeline Aarons, ABCD');
+    expect(input).toHaveValue(contactLabel);
   });
 });

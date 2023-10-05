@@ -3,7 +3,7 @@
 exports[`CedarContactSelect > selects contact from dropdown 1`] = `
 <DocumentFragment>
   <div
-    class="margin-top-1 cedar-contact-select usa-combo-box css-b62m3t-container"
+    class="margin-top-1 cedar-contact-select usa-combo-box maxw-none css-b62m3t-container"
     id="cedarContactSelect"
   >
     <span
@@ -22,7 +22,7 @@ exports[`CedarContactSelect > selects contact from dropdown 1`] = `
       <span
         id="aria-context"
       >
-        option Adeline Aarons, ABCD focused, 1 of 1. 1 result available for search term Adeline. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+        option Adeline Aarons, ABCD (adeline.aarons@local.fake) focused, 1 of 1. 1 result available for search term Adeline Aarons. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
       </span>
     </span>
     <div
@@ -33,7 +33,7 @@ exports[`CedarContactSelect > selects contact from dropdown 1`] = `
       >
         <div
           class="cedar-contact-select__input-container css-1pndypt-Input"
-          data-value="Adeline"
+          data-value="Adeline Aarons"
         >
           <input
             aria-autocomplete="list"
@@ -54,7 +54,7 @@ exports[`CedarContactSelect > selects contact from dropdown 1`] = `
             style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
             tabindex="0"
             type="text"
-            value="Adeline"
+            value="Adeline Aarons"
           />
         </div>
       </div>
@@ -96,7 +96,7 @@ exports[`CedarContactSelect > selects contact from dropdown 1`] = `
           id="react-select-cedarContactSelect-option-0"
           tabindex="-1"
         >
-          Adeline Aarons, ABCD
+          Adeline Aarons, ABCD (adeline.aarons@local.fake)
         </div>
       </div>
     </div>
