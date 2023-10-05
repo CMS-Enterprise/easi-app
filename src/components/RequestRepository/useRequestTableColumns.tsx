@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { CellProps, Column } from 'react-table';
+import { CellProps, Column, Row } from 'react-table';
 import { IconError } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -191,13 +191,12 @@ const useRequestTableColumns = (
           />
         </>
       );
-    }
-    // TODO: Sort type
-    // sortType: (a: Row<LastAdminNote>, b: Row<LastAdminNote>) =>
-    //   (a.values.lastAdminNote?.createdAt ?? '') >
-    //   (b.values.lastAdminNote?.createdAt ?? '')
-    //     ? 1
-    //     : -1
+    },
+    sortType: (a: Row<SystemIntakeForTable>, b: Row<SystemIntakeForTable>) =>
+      (a.values.lastAdminNote?.createdAt ?? '') >
+      (b.values.lastAdminNote?.createdAt ?? '')
+        ? 1
+        : -1
   };
 
   return useMemo(() => {
