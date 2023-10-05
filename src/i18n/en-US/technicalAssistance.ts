@@ -275,6 +275,8 @@ const technicalAssistance = {
     showFewer: 'Show {{number}} fewer recipient{{plural}}',
     addAnotherRecipient: 'Add another recipient',
     newRecipientName: 'New recipient name',
+    newRecipientHelpText:
+      'This field searches the EUA system. Please confirm that you have added the correct individual.',
     newRecipientComponent: 'New recipient component',
     newRecipientRole: 'New recipient role',
     addRecipient: 'Add recipient',

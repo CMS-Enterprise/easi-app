@@ -120,7 +120,14 @@ exports[`Email recipient fields component > renders recipients 1`] = `
                 class="usa-checkbox__label"
                 for="notifyEuaIds.0"
               >
-                Adeline Aarons, CMS (Requester)
+                <span>
+                  Adeline Aarons, CMS (Requester)
+                </span>
+                <span
+                  class="display-block text-base-dark"
+                >
+                  adeline.aarons@local.fake
+                </span>
               </label>
             </div>
           </li>
@@ -140,7 +147,14 @@ exports[`Email recipient fields component > renders recipients 1`] = `
                 class="usa-checkbox__label"
                 for="copyTrbMailbox"
               >
-                Copy TRB Mailbox
+                <span>
+                  Copy TRB Mailbox
+                </span>
+                <span
+                  class="display-block text-base-dark"
+                >
+                  cms-trb@cms.hhs.gov
+                </span>
               </label>
             </div>
           </li>
@@ -182,7 +196,14 @@ exports[`Email recipient fields component > renders recipients 1`] = `
               class="usa-checkbox__label"
               for="notifyEuaIds.2"
             >
-              Ally Anderson (Cloud Navigator)
+              <span>
+                Ally Anderson, CCSQ (Cloud Navigator)
+              </span>
+              <span
+                class="display-block text-base-dark"
+              >
+                ally.anderson@local.fake
+              </span>
             </label>
           </div>
           <div
@@ -199,7 +220,14 @@ exports[`Email recipient fields component > renders recipients 1`] = `
               class="usa-checkbox__label"
               for="notifyEuaIds.3"
             >
-              Audrey Abrams (Privacy Advisor)
+              <span>
+                Audrey Abrams, CM (Privacy Advisor)
+              </span>
+              <span
+                class="display-block text-base-dark"
+              >
+                audrey.abrams@local.fake
+              </span>
             </label>
           </div>
           <div
@@ -216,8 +244,29 @@ exports[`Email recipient fields component > renders recipients 1`] = `
               class="usa-checkbox__label"
               for="notifyEuaIds.4"
             >
-              Aaron Adams (System Maintainer)
+              <span>
+                Aaron Adams, CPI (System Maintainer)
+              </span>
+              <span
+                class="display-block text-base-dark"
+              >
+                aaron.adams@local.fake
+              </span>
             </label>
+          </div>
+          <div
+            class="usa-alert usa-alert--warning usa-alert--slim"
+            data-testid="alert"
+          >
+            <div
+              class="usa-alert__body"
+            >
+              <p
+                class="usa-alert__text"
+              >
+                One or more of the selected recipients are external to the CMS organization. Please be sure they should see the information in this notification email before proceeding.
+              </p>
+            </div>
           </div>
           <button
             class="usa-button usa-button--outline margin-top-3"

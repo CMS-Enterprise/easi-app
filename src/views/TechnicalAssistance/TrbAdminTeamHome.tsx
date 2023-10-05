@@ -35,7 +35,7 @@ import {
 } from 'types/technicalAssistance';
 import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal } from 'utils/date';
-import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
+import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
