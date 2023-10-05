@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers/trb/recommendations"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -63,6 +64,32 @@ func UpdateTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Sto
 	}
 
 	return updated, err
+}
+
+// UpdateTRBAdviceLetterRecommendationOrder updates the order that TRB advice letter recommendations are displayed in
+func UpdateTRBAdviceLetterRecommendationOrder(
+	ctx context.Context,
+	store *storage.Store,
+	trbRequestID uuid.UUID,
+	newOrder []uuid.UUID,
+) ([]*models.TRBAdviceLetterRecommendation, error) {
+	// extra database query is necessary for validation (messing up the recommendations' positions with an invalid order would be *bad*)
+	// but requiring an extra database call is unfortunate
+	currentRecommendations, err := store.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, trbRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = recommendations.IsNewRecommendationOrderValid(currentRecommendations, newOrder)
+	if err != nil {
+		return nil, err
+	}
+
+	updated, err := store.UpdateTRBAdviceLetterRecommendationOrder(ctx, trbRequestID, newOrder)
+	if err != nil {
+		return nil, err
+	}
+	return updated, nil
 }
 
 // DeleteTRBAdviceLetterRecommendation deletes a TRBAdviceLetterRecommendation record from the database

@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2174,7 +2173,7 @@ func (r *mutationResolver) UpdateTRBAdviceLetterRecommendation(ctx context.Conte
 
 // UpdateTRBAdviceLetterRecommendationOrder is the resolver for the updateTRBAdviceLetterRecommendationOrder field.
 func (r *mutationResolver) UpdateTRBAdviceLetterRecommendationOrder(ctx context.Context, input model.UpdateTRBAdviceLetterRecommendationOrderInput) ([]*models.TRBAdviceLetterRecommendation, error) {
-	panic(fmt.Errorf("not implemented: UpdateTRBAdviceLetterRecommendationOrder - updateTRBAdviceLetterRecommendationOrder"))
+	return resolvers.UpdateTRBAdviceLetterRecommendationOrder(ctx, r.store, input.TrbRequestID, input.NewOrder)
 }
 
 // DeleteTRBAdviceLetterRecommendation is the resolver for the deleteTRBAdviceLetterRecommendation field.
