@@ -40,7 +40,7 @@ export interface SystemIntakeForTable
 const getLastAdminNote = (notes: AdminNote[]): AdminNote | null => {
   if (notes.length === 0) return null;
 
-  const sortedNotes = sortBy(notes, 'createdAt');
+  const sortedNotes = sortBy(notes, 'createdAt').reverse();
 
   const lastAdminNote = { ...sortedNotes[0] };
 
@@ -96,7 +96,7 @@ const tableMap = (
 
     // If no admin notes, set `filterDate` to last admin action date
     if (!filterDate) {
-      const sortedActions = sortBy(intake.actions, 'createdAt');
+      const sortedActions = sortBy(intake.actions, 'createdAt').reverse();
       filterDate = sortedActions.length > 0 ? sortedActions[0].createdAt : null;
     }
 
