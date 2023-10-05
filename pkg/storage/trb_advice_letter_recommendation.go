@@ -210,6 +210,7 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 	// convert newOrder into a slice of maps with entries for recommendation ID and new position,
 	// which can then be passed to SQL as JSON, then used in the query with json_to_recordset()
 	newPositions := []map[string]any{}
+
 	for index, recommendationID := range newOrder {
 		newEntry := map[string]any{
 			// important to use the same keys as the columns in the SQL table, otherwise sqlx returns "missing destination name position" error
@@ -218,6 +219,7 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 		}
 		newPositions = append(newPositions, newEntry)
 	}
+
 	newPositionsSerialized, err := json.Marshal(newPositions)
 	if err != nil {
 		// TODO - proper logging
