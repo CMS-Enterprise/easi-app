@@ -8,7 +8,7 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.requesterComponent')
   },
   {
-    key: 'lastAdminNote',
+    key: 'lastAdminNote.content',
     label: t('intake:csvHeadings.lastAdminNote')
   },
   {

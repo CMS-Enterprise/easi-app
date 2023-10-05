@@ -110,7 +110,7 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.lcidScope')
   },
   {
-    key: 'lastAdminNote',
+    key: 'lastAdminNote.content',
     label: t('intake:csvHeadings.lastAdminNote')
   },
   {
