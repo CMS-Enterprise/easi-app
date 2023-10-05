@@ -113,6 +113,16 @@ func (step SystemIntakeStep) Humanize() string {
 	return strings.Join(wordSlice, " ")
 }
 
+// SystemIntakeLCIDStatus represents the possible statuses that an issued LCID can be in
+type SystemIntakeLCIDStatus string
+
+// possible values of SystemIntakeLCIDStatus - corresponds to SystemIntakeLCIDStatus enum in GraphQL schema
+const (
+	SystemIntakeLCIDStatusIssued  SystemIntakeLCIDStatus = "ISSUED"
+	SystemIntakeLCIDStatusExpired SystemIntakeLCIDStatus = "EXPIRED"
+	SystemIntakeLCIDStatusRetired SystemIntakeLCIDStatus = "RETIRED"
+)
+
 // SystemIntake is the model for the system intake form
 type SystemIntake struct {
 	ID                          uuid.UUID                    `json:"id"`
@@ -171,6 +181,7 @@ type SystemIntake struct {
 	LifecycleScope              *HTML                        `json:"lcidScope" db:"lcid_scope"`
 	LifecycleCostBaseline       null.String                  `json:"lcidCostBaseline" db:"lcid_cost_baseline"`
 	LifecycleExpirationAlertTS  *time.Time                   `json:"lcidExpirationAlertTS" db:"lcid_expiration_alert_ts"`
+	LifecycleRetiresAt          *time.Time                   `json:"lcidRetiresAt" db:"lcid_retires_at" gqlgen:"lcidRetiresAt"`
 	DecisionNextSteps           *HTML                        `json:"decisionNextSteps" db:"decision_next_steps"`
 	RejectionReason             *HTML                        `json:"rejectionReason" db:"rejection_reason"`
 	AdminLead                   null.String                  `json:"adminLead" db:"admin_lead"`
@@ -289,3 +300,28 @@ const (
 	TRBFRRecommendedButNotCritical SystemIntakeTRBFollowUp = "RECOMMENDED_BUT_NOT_CRITICAL"
 	TRBFRNotRecommended            SystemIntakeTRBFollowUp = "NOT_RECOMMENDED"
 )
+
+// LCIDStatus returns the status of this intake's LCID, if present
+func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatus {
+	// copies of the constants, declared as local variables instead of constants so we can get pointers to them,
+	// which we need so we can return a *SystemIntakeLCIDStatus that can be nil
+	issuedStatus := SystemIntakeLCIDStatusIssued
+	expiredStatus := SystemIntakeLCIDStatusExpired
+	retiredStatus := SystemIntakeLCIDStatusRetired
+
+	if si == nil || si.LifecycleID.ValueOrZero() == "" {
+		return nil
+	}
+
+	// check retirement date first - if both retirement date and expiration date have passed, retirement takes precedence
+	if si.LifecycleRetiresAt != nil && si.LifecycleRetiresAt.Before(currentTime) {
+		return &retiredStatus
+	}
+
+	// LifecycleExpiresAt should always be non-nil if an LCID has been issued; check just to avoid a panic if there's inconsistent data
+	if si.LifecycleExpiresAt != nil && si.LifecycleExpiresAt.Before(currentTime) {
+		return &expiredStatus
+	}
+
+	return &issuedStatus
+}

@@ -6,15 +6,13 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 FROM base AS modules
 
-COPY package.json ./
-COPY yarn.lock ./
+COPY package.json yarn.lock ./
 
 RUN yarn install --frozen-lockfile
 
 FROM modules AS src
 
-COPY tsconfig.json ./
-COPY .eslintrc ./
+COPY tsconfig.json .eslintrc ./
 COPY public ./public
 COPY src ./src
 
