@@ -56,11 +56,11 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.contractVehicle')
   },
   {
-    key: 'contractStartDate',
+    key: 'contract.startDate',
     label: t('intake:csvHeadings.contractStart')
   },
   {
-    key: 'contractEndDate',
+    key: 'contract.EndDate',
     label: t('intake:csvHeadings.contractEnd')
   },
   {
