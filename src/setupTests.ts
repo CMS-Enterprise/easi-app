@@ -10,6 +10,10 @@ configure({ adapter: new Adapter() });
 // Fill in some missing functions that aren't shimmed by jsdom.
 window.URL.createObjectURL = vi.fn();
 
+// Mock window.getComputedStyle for tests including rich text editor
+const { getComputedStyle } = window;
+window.getComputedStyle = elt => getComputedStyle(elt);
+
 // Fill in some missing functions for the Toast text editor.
 // These functions are triggered by typing interaction events on Toast's text field.
 
