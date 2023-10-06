@@ -428,7 +428,14 @@ exports[`Submit Action > renders additional contacts 1`] = `
                       class="usa-checkbox__label"
                       for="A11Y-requester"
                     >
-                      Ally Anderson, CMS Wide (Requester)
+                      <span>
+                        Ally Anderson, CMS Wide (Requester)
+                      </span>
+                      <span
+                        class="display-block text-base-dark"
+                      >
+                        ally.anderson@local.fake
+                      </span>
                     </label>
                   </div>
                   <div
@@ -446,7 +453,14 @@ exports[`Submit Action > renders additional contacts 1`] = `
                       class="usa-checkbox__label"
                       for="contact-itGovernanceMailbox"
                     >
-                      IT Governance Mailbox
+                      <span>
+                        IT Governance Mailbox
+                      </span>
+                      <span
+                        class="display-block text-base-dark"
+                      >
+                        IT_Governance@cms.hhs.gov
+                      </span>
                     </label>
                   </div>
                   <div
@@ -464,7 +478,14 @@ exports[`Submit Action > renders additional contacts 1`] = `
                       class="usa-checkbox__label"
                       for="contact-itInvestmentMailbox"
                     >
-                      IT Investment Mailbox
+                      <span>
+                        IT Investment Mailbox
+                      </span>
+                      <span
+                        class="display-block text-base-dark"
+                      >
+                        IT_Investment@cms.hhs.gov
+                      </span>
                     </label>
                   </div>
                   <div
@@ -486,7 +507,9 @@ exports[`Submit Action > renders additional contacts 1`] = `
                         class="usa-checkbox__label"
                         for="contact-ProductManager"
                       >
-                        Audrey Abrams, Office of Legislation (Product Manager)
+                        <span>
+                          Audrey Abrams, Office of Legislation (Product Manager)
+                        </span>
                       </label>
                     </div>
                     <div
@@ -505,12 +528,12 @@ exports[`Submit Action > renders additional contacts 1`] = `
                         Recipient Name
                       </label>
                       <div
-                        class="easi-help-text margin-bottom-1"
+                        class="easi-help-text margin-bottom-1 margin-top-05"
                       >
-                        Click in the field below to confirm this EUA contact
+                        This field searches the EUA system. Please confirm that you have added the correct individual.
                       </div>
                       <div
-                        class="margin-top-1 cedar-contact-select usa-combo-box cedar-contact-select__warning cedar-contact-select__loading css-b62m3t-container"
+                        class="margin-top-1 cedar-contact-select usa-combo-box maxw-none cedar-contact-select__warning cedar-contact-select__loading css-b62m3t-container"
                         id="IntakeForm-ContactCommonName"
                       >
                         <span
@@ -613,7 +636,7 @@ exports[`Submit Action > renders additional contacts 1`] = `
                           class="usa-button-group__item"
                         >
                           <button
-                            class="usa-button"
+                            class="usa-button margin-top-0"
                             data-testid="button"
                             disabled=""
                             type="button"
@@ -625,7 +648,7 @@ exports[`Submit Action > renders additional contacts 1`] = `
                           class="usa-button-group__item"
                         >
                           <button
-                            class="usa-button usa-button--outline"
+                            class="usa-button usa-button--outline margin-top-0"
                             data-testid="button"
                             type="button"
                           >
@@ -677,7 +700,14 @@ exports[`Submit Action > renders additional contacts 1`] = `
                         class="usa-checkbox__label"
                         for="systemIntakeContact-ABCD"
                       >
-                        Adeline Aarons, Center for Medicare (Business Owner)
+                        <span>
+                          Adeline Aarons, Center for Medicare (Business Owner)
+                        </span>
+                        <span
+                          class="display-block text-base-dark"
+                        >
+                          adeline.aarons@local.fake
+                        </span>
                       </label>
                     </div>
                     <div
@@ -694,12 +724,33 @@ exports[`Submit Action > renders additional contacts 1`] = `
                         class="usa-checkbox__label"
                         for="systemIntakeContact-ADMN"
                       >
-                        Aaron Adams, Office of Communications (ISSO)
+                        <span>
+                          Aaron Adams, Office of Communications (ISSO)
+                        </span>
+                        <span
+                          class="display-block text-base-dark"
+                        >
+                          aaron.adams@local.fake
+                        </span>
                       </label>
                     </div>
                     <div
                       class="system-intake-contacts margin-top-3"
                     >
+                      <div
+                        class="usa-alert usa-alert--warning usa-alert--slim margin-bottom-3"
+                        data-testid="alert"
+                      >
+                        <div
+                          class="usa-alert__body"
+                        >
+                          <p
+                            class="usa-alert__text"
+                          >
+                            One or more of the selected recipients are external to the CMS organization. Please be sure they should see the information in this notification email before proceeding.
+                          </p>
+                        </div>
+                      </div>
                       <button
                         class="usa-button usa-button--outline margin-top-0"
                         data-testid="button"

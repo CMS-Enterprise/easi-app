@@ -4,8 +4,10 @@ import { Button, Dropdown, Label } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import CedarContactSelect from 'components/CedarContactSelect';
+import Alert from 'components/shared/Alert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
 import Spinner from 'components/Spinner';
 import contactRoles from 'constants/enums/contactRoles';
 import { initialContactDetails } from 'constants/systemIntake';
@@ -15,6 +17,7 @@ import {
   DeleteContactType,
   SystemIntakeContactProps
 } from 'types/systemIntake';
+import { ExternalRecipientAlert } from 'views/TechnicalAssistance/AdminHome/components/ActionFormWrapper/Recipients';
 
 import cmsDivisionsAndOfficesOptions from './cmsDivisionsAndOfficesOptions';
 
@@ -161,6 +164,9 @@ const ContactForm = ({
         <Label className="text-normal" htmlFor="systemIntakeContact.commonName">
           {t('contactDetails.additionalContacts.name', { type })}
         </Label>
+        <HelpText className="margin-top-1">
+          {t('technicalAssistance:emailRecipientFields.newRecipientHelpText')}
+        </HelpText>
         <FieldErrorMsg>{errors.commonName}</FieldErrorMsg>
         <CedarContactSelect
           id="IntakeForm-ContactCommonName"
@@ -224,6 +230,8 @@ const ContactForm = ({
         </Dropdown>
       </FieldGroup>
 
+      <ExternalRecipientAlert email={activeContact?.email} />
+
       {/* Action Buttons */}
       <div className="margin-top-2">
         <Button
@@ -260,6 +268,8 @@ type AdditionalContactsProps = {
   activeContact: SystemIntakeContactProps | null;
   /** Set active contact */
   setActiveContact: (contact: SystemIntakeContactProps | null) => void;
+  /** Whether to show warning for selecting external users */
+  showExternalUsersWarning?: boolean;
   /** Function called after contact is created */
   createContactCallback?: (contact: AugmentedSystemIntakeContact) => any;
   /** Type of form - Recipient type does not display contacts */
@@ -276,6 +286,7 @@ export default function AdditionalContacts({
   contacts,
   activeContact,
   setActiveContact,
+  showExternalUsersWarning,
   createContactCallback,
   type = 'contact',
   className
@@ -448,6 +459,12 @@ export default function AdditionalContacts({
           </>
         )
       }
+
+      {showExternalUsersWarning && (
+        <Alert type="warning" className="margin-bottom-3" slim>
+          {t('action:selectExternalRecipientWarning')}
+        </Alert>
+      )}
 
       {
         /** Button to add additional contact */

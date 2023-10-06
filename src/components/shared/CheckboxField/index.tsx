@@ -5,7 +5,7 @@ type CheckboxFieldProps = {
   checked?: boolean;
   disabled?: boolean;
   id: string;
-  label: string;
+  label: React.ReactNode;
   name: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;

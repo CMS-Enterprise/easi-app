@@ -279,7 +279,7 @@ describe('Governance Review Team', () => {
       .type('Aaron A')
       .wait(1000)
       .type('{downArrow}{enter}')
-      .should('have.value', 'Aaron Adams, ADMN');
+      .should('have.value', 'Aaron Adams, ADMN (aaron.adams@local.fake)');
 
     cy.get('#IntakeForm-ContactComponent')
       .select('Center for Medicare')
