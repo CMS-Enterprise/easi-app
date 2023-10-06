@@ -22,6 +22,7 @@ import {
   GetSystemIntakeContacts,
   GetSystemIntakeContactsVariables
 } from 'queries/types/GetSystemIntakeContacts';
+import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'queries/types/GetSystemIntakesTable';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
   GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
@@ -289,6 +290,42 @@ export const initialSystemIntakeForm: SystemIntake = {
   businessNeed: '',
   businessSolution: '',
   currentStage: ''
+};
+
+export const systemIntakeForTable: TableSystemIntake = {
+  __typename: 'SystemIntake',
+  id: '1',
+  euaUserId: '',
+  requestName: '',
+  status: SystemIntakeStatus.INTAKE_SUBMITTED,
+  state: SystemIntakeState.OPEN,
+  requester: systemIntake.requester,
+  businessOwner: systemIntake.businessOwner,
+  productManager: systemIntake.productManager,
+  isso: systemIntake.isso,
+  trbCollaboratorName: '',
+  oitSecurityCollaboratorName: '',
+  eaCollaboratorName: '',
+  existingFunding: false,
+  fundingSources: [],
+  contract: systemIntake.contract,
+  businessNeed: systemIntake.businessNeed,
+  businessSolution: systemIntake.businessSolution,
+  currentStage: systemIntake.currentStage,
+  needsEaSupport: systemIntake.needsEaSupport,
+  grtDate: systemIntake.grtDate,
+  grbDate: systemIntake.grbDate,
+  lcid: null,
+  lcidScope: null,
+  lcidExpiresAt: null,
+  adminLead: null,
+  notes: [],
+  actions: [],
+  decidedAt: null,
+  submittedAt: null,
+  updatedAt: null,
+  createdAt: systemIntake.createdAt,
+  archivedAt: null
 };
 
 export const getSystemIntakeQuery = (

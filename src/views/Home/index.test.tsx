@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { systemIntake as mockSystemIntake } from 'data/mock/systemIntake';
+import { systemIntakeForTable } from 'data/mock/systemIntake';
 import {
   getRequestsQuery,
   getTrbAdminTeamHomeQuery
@@ -18,10 +18,7 @@ import {
   GetSystemIntakesTable,
   GetSystemIntakesTable_systemIntakes as SystemIntake
 } from 'queries/types/GetSystemIntakesTable';
-import {
-  SystemIntakeState,
-  SystemIntakeStatus
-} from 'types/graphql-global-types';
+import { SystemIntakeState } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -34,51 +31,15 @@ const adminStore = easiMockStore({
 });
 const userStore = easiMockStore({ groups: ['EASI_P_USER'] });
 
-const intakeForTable: SystemIntake = {
-  __typename: 'SystemIntake',
-  id: '1',
-  euaUserId: '',
-  requestName: '',
-  status: SystemIntakeStatus.INTAKE_SUBMITTED,
-  state: SystemIntakeState.OPEN,
-  requester: mockSystemIntake.requester,
-  businessOwner: mockSystemIntake.businessOwner,
-  productManager: mockSystemIntake.productManager,
-  isso: mockSystemIntake.isso,
-  trbCollaboratorName: '',
-  oitSecurityCollaboratorName: '',
-  eaCollaboratorName: '',
-  existingFunding: false,
-  fundingSources: [],
-  contract: mockSystemIntake.contract,
-  businessNeed: mockSystemIntake.businessNeed,
-  businessSolution: mockSystemIntake.businessSolution,
-  currentStage: mockSystemIntake.currentStage,
-  needsEaSupport: mockSystemIntake.needsEaSupport,
-  grtDate: mockSystemIntake.grtDate,
-  grbDate: mockSystemIntake.grbDate,
-  lcid: null,
-  lcidScope: null,
-  lcidExpiresAt: null,
-  adminLead: null,
-  notes: [],
-  actions: [],
-  decidedAt: null,
-  submittedAt: null,
-  updatedAt: null,
-  createdAt: mockSystemIntake.createdAt,
-  archivedAt: null
-};
-
 const mockOpenIntakes: SystemIntake[] = [
-  intakeForTable,
-  { ...intakeForTable, id: '2' }
+  systemIntakeForTable,
+  { ...systemIntakeForTable, id: '2' }
 ];
 
 const mockClosedIntakes: SystemIntake[] = [
-  { ...intakeForTable, id: '3', state: SystemIntakeState.CLOSED },
-  { ...intakeForTable, id: '4', state: SystemIntakeState.CLOSED },
-  { ...intakeForTable, id: '5', state: SystemIntakeState.CLOSED }
+  { ...systemIntakeForTable, id: '3', state: SystemIntakeState.CLOSED },
+  { ...systemIntakeForTable, id: '4', state: SystemIntakeState.CLOSED },
+  { ...systemIntakeForTable, id: '5', state: SystemIntakeState.CLOSED }
 ];
 
 const getSystemIntakesTable: MockedQuery<GetSystemIntakesTable> = {
