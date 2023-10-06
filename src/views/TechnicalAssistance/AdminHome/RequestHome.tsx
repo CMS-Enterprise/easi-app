@@ -17,7 +17,7 @@ import {
 import { TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPageProps } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
-import getPersonNameAndComponentVal from 'utils/getPersonNameAndComponentVal';
+import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 
 import InformationCard from './components/InformationCard';
 import TrbAdminWrapper from './components/TrbAdminWrapper';

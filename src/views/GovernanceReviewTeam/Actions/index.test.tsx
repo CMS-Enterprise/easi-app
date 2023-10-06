@@ -107,7 +107,7 @@ describe('IT Gov Actions', () => {
     // Requester is default recipient
     expect(
       screen.getByRole('checkbox', {
-        name: `${requester.commonName}, ${requester.component} (Requester)`
+        name: `${requester.commonName}, CMS (Requester) ${requester.email}`
       })
     ).toBeChecked();
   });
