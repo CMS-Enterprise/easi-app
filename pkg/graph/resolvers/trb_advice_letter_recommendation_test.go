@@ -14,13 +14,14 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 	ctx := context.Background()
 	anonEua := "ANON"
 	store := s.testConfigs.Store
-	trbRequest := models.NewTRBRequest(anonEua)
-	trbRequest.Type = models.TRBTNeedHelp
-	trbRequest.State = models.TRBRequestStateOpen
-	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
-	s.NoError(err)
 
 	s.Run("create/update/fetch TRB request feedback", func() {
+		trbRequest := models.NewTRBRequest(anonEua)
+		trbRequest.Type = models.TRBTNeedHelp
+		trbRequest.State = models.TRBRequestStateOpen
+		trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
+		s.NoError(err)
+
 		// Test creation of a recommendation
 		toCreate := models.TRBAdviceLetterRecommendation{
 			TRBRequestID:   trbRequest.ID,
@@ -64,5 +65,36 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		// Test deletion of a recommendation
 		_, err = DeleteTRBAdviceLetterRecommendation(ctx, store, created.ID)
 		s.NoError(err)
+	})
+
+	s.Run("deleting a recommendation updates other recommendations' positions to close any gaps", func() {
+		trbRequest := models.NewTRBRequest(anonEua)
+		trbRequest.Type = models.TRBTNeedHelp
+		trbRequest.State = models.TRBRequestStateOpen
+		trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
+		s.NoError(err)
+
+		createdRecommendations := []*models.TRBAdviceLetterRecommendation{}
+		for i := 0; i < 3; i++ {
+			toCreate := models.TRBAdviceLetterRecommendation{
+				TRBRequestID:   trbRequest.ID,
+				Title:          "Restart your computer",
+				Recommendation: "I recommend you restart your computer",
+				Links:          pq.StringArray{"google.com", "askjeeves.com"},
+			}
+			created, err := CreateTRBAdviceLetterRecommendation(ctx, store, &toCreate)
+			s.NoError(err)
+			s.EqualValues(i, created.PositionInLetter) // check that positions were ordered oldest-to-newest during creation
+			createdRecommendations = append(createdRecommendations, created)
+		}
+
+		// delete recommendation in the middle of the order
+		_, err = DeleteTRBAdviceLetterRecommendation(ctx, store, createdRecommendations[1].ID)
+		s.NoError(err)
+
+		// check that the last recommendation's position was adjusted from 2 to 1 to close the gap
+		lastRecommendationAfterDelete, err := store.GetTRBAdviceLetterRecommendationByID(ctx, createdRecommendations[2].ID)
+		s.NoError(err)
+		s.EqualValues(1, lastRecommendationAfterDelete.PositionInLetter)
 	})
 }
