@@ -300,7 +300,6 @@ const systemProfile = {
   systemTable: {
     title: 'All systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',
-    noResults: 'No systems found.',
     id: 'system-list',
     search: 'Search Table',
     header: {
