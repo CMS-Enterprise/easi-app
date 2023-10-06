@@ -1,46 +1,101 @@
 import React from 'react';
-import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { mount, ReactWrapper, shallow } from 'enzyme';
-import configureMockStore from 'redux-mock-store';
 
+import { systemIntake as mockSystemIntake } from 'data/mock/systemIntake';
 import {
   getRequestsQuery,
   getTrbAdminTeamHomeQuery
 } from 'data/mock/trbRequest';
-import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
+import GetSystemIntakesTableQuery from 'queries/GetSystemIntakesTableQuery';
+import {
+  GetSystemIntakesTable,
+  GetSystemIntakesTable_systemIntakes as SystemIntake
+} from 'queries/types/GetSystemIntakesTable';
+import {
+  SystemIntakeState,
+  SystemIntakeStatus
+} from 'types/graphql-global-types';
+import { MockedQuery } from 'types/util';
+import easiMockStore from 'utils/testing/easiMockStore';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
-import Table from 'views/MyRequests/Table';
 
 import AdminHome from './AdminHome';
 import Home from './index';
 
-vi.mock('@okta/okta-react', () => ({
-  useOktaAuth: () => {
-    return {
-      authState: {
-        isAuthenticated: true
-      },
-      oktaAuth: {
-        getAccessToken: () => Promise.resolve('test-access-token'),
-        getUser: () =>
-          Promise.resolve({
-            name: 'Jerry Seinfeld'
-          })
-      }
-    };
+const adminStore = easiMockStore({
+  groups: ['EASI_D_GOVTEAM']
+});
+const userStore = easiMockStore({ groups: ['EASI_P_USER'] });
+
+const intakeForTable: SystemIntake = {
+  __typename: 'SystemIntake',
+  id: '1',
+  euaUserId: '',
+  requestName: '',
+  status: SystemIntakeStatus.INTAKE_SUBMITTED,
+  state: SystemIntakeState.OPEN,
+  requester: mockSystemIntake.requester,
+  businessOwner: mockSystemIntake.businessOwner,
+  productManager: mockSystemIntake.productManager,
+  isso: mockSystemIntake.isso,
+  trbCollaboratorName: '',
+  oitSecurityCollaboratorName: '',
+  eaCollaboratorName: '',
+  existingFunding: false,
+  fundingSources: [],
+  contract: mockSystemIntake.contract,
+  businessNeed: mockSystemIntake.businessNeed,
+  businessSolution: mockSystemIntake.businessSolution,
+  currentStage: mockSystemIntake.currentStage,
+  needsEaSupport: mockSystemIntake.needsEaSupport,
+  grtDate: mockSystemIntake.grtDate,
+  grbDate: mockSystemIntake.grbDate,
+  lcid: null,
+  lcidScope: null,
+  lcidExpiresAt: null,
+  adminLead: null,
+  notes: [],
+  actions: [],
+  decidedAt: null,
+  submittedAt: null,
+  updatedAt: null,
+  createdAt: mockSystemIntake.createdAt,
+  archivedAt: null
+};
+
+const mockOpenIntakes: SystemIntake[] = [
+  intakeForTable,
+  { ...intakeForTable, id: '2' }
+];
+
+const mockClosedIntakes: SystemIntake[] = [
+  { ...intakeForTable, id: '3', state: SystemIntakeState.CLOSED },
+  { ...intakeForTable, id: '4', state: SystemIntakeState.CLOSED },
+  { ...intakeForTable, id: '5', state: SystemIntakeState.CLOSED }
+];
+
+const getSystemIntakesTable: MockedQuery<GetSystemIntakesTable> = {
+  request: {
+    query: GetSystemIntakesTableQuery,
+    variables: {}
+  },
+  result: {
+    data: {
+      systemIntakes: [...mockOpenIntakes, ...mockClosedIntakes]
+    }
   }
-}));
+};
 
 const mocks = [
   getRequestsQuery([], []),
+  getSystemIntakesTable,
   {
     request: {
       query: GetCedarSystemsQuery
@@ -63,111 +118,13 @@ const mocks = [
   }
 ];
 
-const mockOpenIntakes = [
-  {
-    ...initialSystemIntakeForm,
-    id: '2',
-    status: 'INTAKE_SUBMITTED'
-  },
-  {
-    ...initialSystemIntakeForm,
-    id: '4',
-    status: 'INTAKE_SUBMITTED',
-    businessCaseId: '1'
-  }
-];
-
-const mockClosedIntakes = [
-  {
-    ...initialSystemIntakeForm,
-    id: '4',
-    status: 'WITHDRAWN'
-  }
-];
-
 describe('The home page', () => {
   describe('not a grt review user', () => {
-    const mockAuthReducer = {
-      isUserSet: true,
-      groups: []
-    };
-
-    it('renders without crashing', () => {
-      const mockStore = configureMockStore();
-      const store = mockStore({ auth: mockAuthReducer });
-      const renderComponent = () =>
-        shallow(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <MessageProvider>
-                <Home />
-              </MessageProvider>
-            </Provider>
-          </MemoryRouter>
-        );
-      expect(renderComponent).not.toThrow();
-    });
-
-    describe('User is logged in', () => {
-      it('displays process options', async () => {
-        const mockStore = configureMockStore();
-        const store = mockStore({
-          auth: mockAuthReducer,
-          systemIntakes: {
-            systemIntakes: []
-          },
-          businessCases: {
-            businessCases: []
-          }
-        });
-        let component: any;
-
-        await act(async () => {
-          component = mount(
-            <MemoryRouter initialEntries={['/']} initialIndex={0}>
-              <MockedProvider mocks={mocks}>
-                <Provider store={store}>
-                  <MessageProvider>
-                    <Home />
-                  </MessageProvider>
-                </Provider>
-              </MockedProvider>
-            </MemoryRouter>
-          );
-          component.update();
-          expect(component.find('a[children="Start now"]').exists()).toEqual(
-            false
-          );
-
-          expect(
-            component.find('h3[children="IT Governance"]').exists()
-          ).toEqual(true);
-
-          expect(component.find('h3[children="Section 508"]').exists()).toEqual(
-            true
-          );
-
-          expect(component.find('hr').exists()).toBeTruthy();
-
-          expect(component.find(Table).exists()).toBeTruthy();
-        });
-      });
-    });
-  });
-
-  describe('is a grt reviewer', () => {
-    const mockAuthReducer = {
-      isUserSet: true,
-      groups: ['EASI_D_GOVTEAM']
-    };
-
-    const mountComponent = (mockedStore: any): ReactWrapper => {
-      const mockStore = configureMockStore();
-      const store = mockStore(mockedStore);
-      return mount(
+    it('displays process options', async () => {
+      render(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
           <MockedProvider mocks={mocks}>
-            <Provider store={store}>
+            <Provider store={userStore}>
               <MessageProvider>
                 <Home />
               </MessageProvider>
@@ -175,80 +132,55 @@ describe('The home page', () => {
           </MockedProvider>
         </MemoryRouter>
       );
-    };
 
-    it('renders without crashing', () => {
-      const mockStore = configureMockStore();
-      const store = mockStore({
-        auth: mockAuthReducer,
-        systemIntakes: mockOpenIntakes
-      });
-      const shallowComponent = () =>
-        shallow(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
+      expect(screen.getByRole('heading', { name: 'IT Governance' }));
+      expect(screen.getByRole('heading', { name: 'Section 508' }));
+
+      expect(screen.getByRole('heading', { name: 'My requests' }));
+      expect(screen.getByRole('heading', { name: 'All systems' }));
+    });
+  });
+
+  describe('is a grt reviewer', () => {
+    it('renders the open and closed requests', async () => {
+      render(
+        <MemoryRouter initialEntries={['/']} initialIndex={0}>
+          <MockedProvider mocks={mocks}>
+            <Provider store={adminStore}>
               <MessageProvider>
                 <Home />
               </MessageProvider>
             </Provider>
-          </MemoryRouter>
-        );
-      expect(shallowComponent).not.toThrow();
+          </MockedProvider>
+        </MemoryRouter>
+      );
+      // Check open requests count
+      expect(
+        await screen.findByText(
+          `There are ${mockOpenIntakes.length} open requests`
+        )
+      );
+
+      // Switch to closed requests tab
+      const closedTab = await screen.findByRole('button', {
+        name: 'Closed requests'
+      });
+      userEvent.click(closedTab);
+
+      // Check closed requests count
+      expect(
+        await screen.findByText(
+          `There are ${mockClosedIntakes.length} closed requests`
+        )
+      );
     });
 
-    it('renders the open requests table', async () => {
-      const homePage = mountComponent({
-        auth: mockAuthReducer,
-        systemIntakes: {
-          systemIntakes: mockOpenIntakes
-        },
-        businessCases: {
-          businessCases: []
-        }
-      });
-
-      await act(async () => {
-        homePage.update();
-        expect(homePage.text()).toContain('There are 2 open requests');
-      });
-    });
-
-    it('renders the closed requests table', async () => {
-      const homePage = mountComponent({
-        auth: mockAuthReducer,
-        systemIntakes: {
-          systemIntakes: mockClosedIntakes
-        },
-        businessCases: {
-          businessCases: []
-        }
-      });
-
-      homePage
-        .find('[data-testid="view-closed-intakes-btn"]')
-        .simulate('click');
-      await act(async () => {
-        homePage.update();
-        expect(homePage.text()).toContain('There is 1 closed request');
-      });
-    });
-  });
-
-  describe('Admin home view', () => {
     it('renders the select admin view dropdown', async () => {
       window.localStorage.clear();
-      const mockStore = configureMockStore();
-      const store = mockStore({
-        auth: {
-          isUserSet: true,
-          groups: ['EASI_D_GOVTEAM']
-        },
-        systemIntakes: mockOpenIntakes
-      });
 
       const { getByTestId, getByRole, findByRole } = render(
         <MemoryRouter>
-          <Provider store={store}>
+          <Provider store={adminStore}>
             <VerboseMockedProvider mocks={[...mocks, getTrbAdminTeamHomeQuery]}>
               <MessageProvider>
                 <AdminHome isGrtReviewer isTrbAdmin />
