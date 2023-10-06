@@ -125,6 +125,43 @@ func (s *Store) GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Cont
 	return results, nil
 }
 
+// GetTRBAdviceLetterRecommendationsSharingTRBRequestID queries the DB for all TRB advice letter recommendations with the same TRB request ID as the given recommendation
+func (s *Store) GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx context.Context, recommendationID uuid.UUID) ([]*models.TRBAdviceLetterRecommendation, error) {
+	stmt, err := s.db.PrepareNamed(`
+		SELECT *
+		FROM trb_advice_letter_recommendations
+		WHERE trb_request_id = (
+			SELECT trb_request_id
+			FROM trb_advice_letter_recommendations
+			WHERE id = :recommendationID
+		)
+	`)
+	if err != nil {
+		// TODO - proper logging
+		return nil, err
+	}
+
+	results := []*models.TRBAdviceLetterRecommendation{}
+	arg := map[string]interface{}{
+		"recommendationID": recommendationID.String(),
+	}
+	err = stmt.Select(&results, arg)
+
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to fetch TRB advice letter recommendations with error %s", err),
+			zap.Error(err),
+			zap.String("id", recommendationID.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBAdviceLetterRecommendation{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+	return results, nil
+}
+
 // UpdateTRBAdviceLetterRecommendation updates an existing TRB advice letter recommendation record in the database
 // This purposely does not update the position_in_letter column - to update that, use UpdateTRBAdviceLetterRecommendationOrder()
 func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recommendation *models.TRBAdviceLetterRecommendation) (*models.TRBAdviceLetterRecommendation, error) {

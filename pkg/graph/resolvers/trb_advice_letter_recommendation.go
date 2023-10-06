@@ -3,8 +3,10 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"slices"
 
 	"github.com/google/uuid"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/trb/recommendations"
@@ -94,9 +96,53 @@ func UpdateTRBAdviceLetterRecommendationOrder(
 
 // DeleteTRBAdviceLetterRecommendation deletes a TRBAdviceLetterRecommendation record from the database
 func DeleteTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
-	deleted, err := store.DeleteTRBAdviceLetterRecommendation(ctx, id)
+	// as well as deleting the record, we need to update the position of the remaining records so there aren't any gaps
+	// so query for them
+
+	allRecommendationsForRequest, err := store.GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	return deleted, nil
+
+	// sort recommendations by position, so we can loop over them to find the recommendations we need to update
+	slices.SortFunc(allRecommendationsForRequest, func(recommendationA, recommendationB *models.TRBAdviceLetterRecommendation) int {
+		return recommendationA.PositionInLetter - recommendationB.PositionInLetter
+	})
+
+	var trbRequestID uuid.UUID // will be set once we start looping over allRecommendationsForRequest
+	newOrder := []uuid.UUID{}  // updated positions
+
+	for _, recommendation := range allRecommendationsForRequest {
+		trbRequestID = recommendation.TRBRequestID // doesn't matter that we set this on every iteration, all recommendations will have the same request ID
+		if recommendation.ID != id {
+			newOrder = append(newOrder, recommendation.ID)
+		}
+	}
+
+	// deleting the given recommendation and updating the other recommendations can be done concurrently
+	// ideally, we'd do this in a single transaction, but our code doesn't support that at this time - see Note [Database calls from resolvers aren't atomic]
+	errGroup := new(errgroup.Group)
+	var deletedRecommendation *models.TRBAdviceLetterRecommendation // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	errGroup.Go(func() error {
+		deletedRecommendation, err = store.DeleteTRBAdviceLetterRecommendation(ctx, id)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
+	errGroup.Go(func() error {
+		_, err := store.UpdateTRBAdviceLetterRecommendationOrder(ctx, trbRequestID, newOrder)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return deletedRecommendation, nil
 }

@@ -523,6 +523,17 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 			return nil, err
 		}
 
+		recommendation3 := &models.TRBAdviceLetterRecommendation{
+			TRBRequestID:   trb.ID,
+			Title:          "Get a new computer",
+			Recommendation: "Your computer is broken, you need a new one",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		}
+		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation3)
+		if err != nil {
+			return nil, err
+		}
+
 		// TODO - remove this testing?
 		// test recommendation ordering
 
