@@ -9,7 +9,7 @@ import {
   SystemIntakeState,
   SystemIntakeStatus
 } from 'types/graphql-global-types';
-import { formatContractDate, formatDateLocal } from 'utils/date';
+import { formatContractDate } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import { translateStatus } from 'utils/systemIntake';
 
@@ -36,23 +36,12 @@ export interface SystemIntakeForTable
   };
 }
 
-/** Returns last admin note and appends createdAt date to content */
 const getLastAdminNote = (notes: AdminNote[]): AdminNote | null => {
   if (notes.length === 0) return null;
 
   const sortedNotes = sortBy(notes, 'createdAt').reverse();
 
-  const lastAdminNote = { ...sortedNotes[0] };
-
-  // Append createdAt date to content
-  if (lastAdminNote) {
-    lastAdminNote.content = `${lastAdminNote.content} (${formatDateLocal(
-      lastAdminNote.createdAt,
-      'MM/dd/yyyy'
-    )})`;
-  }
-
-  return lastAdminNote;
+  return sortedNotes[0];
 };
 
 /** Returns array of system intakes formatted for request table and CSV exports */

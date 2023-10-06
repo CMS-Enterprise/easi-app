@@ -44,6 +44,7 @@ import GetSystemIntakesTableQuery from 'queries/GetSystemIntakesTableQuery';
 import { GetSystemIntakesTable } from 'queries/types/GetSystemIntakesTable';
 import { SystemIntakeState } from 'types/graphql-global-types';
 import { cleanCSVData } from 'utils/csv';
+import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
@@ -145,7 +146,19 @@ const RequestRepository = () => {
     intakes: SystemIntakeForTable[]
   ): SystemIntakeForTable[] => {
     return intakes.map(intake => {
-      return cleanCSVData(intake);
+      const lastAdminNote = intake.lastAdminNote
+        ? { ...intake.lastAdminNote }
+        : null;
+
+      // Apppend lastAdminNote createdAt date to content
+      if (lastAdminNote) {
+        lastAdminNote.content = `${lastAdminNote.content} (${formatDateLocal(
+          lastAdminNote.createdAt,
+          'MM/dd/yyyy'
+        )})`;
+      }
+
+      return cleanCSVData({ ...intake, lastAdminNote });
     });
   };
 
