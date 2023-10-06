@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"os"
 	"path/filepath"
 	"time"
@@ -499,7 +498,7 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 			}
 		}
 
-		// create two recommendations for testing manipulation of order of recommendations
+		// create three recommendations for testing manipulation of recommendations' positions
 
 		recommendation1 := &models.TRBAdviceLetterRecommendation{
 			TRBRequestID:   trb.ID,
@@ -507,7 +506,7 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 			Recommendation: "I recommend you restart your computer",
 			Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		}
-		createdRec1, err := resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation1)
+		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation1)
 		if err != nil {
 			return nil, err
 		}
@@ -518,7 +517,7 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 			Recommendation: "I recommend you unplug your computer and plug it back in",
 			Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		}
-		createdRec2, err := resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation2)
+		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation2)
 		if err != nil {
 			return nil, err
 		}
@@ -532,34 +531,6 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation3)
 		if err != nil {
 			return nil, err
-		}
-
-		// TODO - remove this testing?
-		// test recommendation ordering
-
-		// initial creation - recommendation1 should have position 0, recommendation2 should have position 1
-		if createdRec1.PositionInLetter != 0 {
-			return nil, fmt.Errorf("error creating TRB recommendations - created recommendation %v has position %v, expected 0", createdRec1.ID, createdRec1.PositionInLetter)
-		}
-
-		if createdRec2.PositionInLetter != 1 {
-			return nil, fmt.Errorf("error creating TRB recommendations - created recommendation %v has position %v, expected 1", createdRec2.ID, createdRec2.PositionInLetter)
-		}
-
-		// test recommendation reordering - recommendation1 should have position 1, recommendation2 should have position 0
-		// TODO - go through resolver instead of store
-		newOrder := []uuid.UUID{createdRec2.ID, createdRec1.ID}
-		updatedRecs, err := s.store.UpdateTRBAdviceLetterRecommendationOrder(ctx, trb.ID, newOrder)
-		if err != nil {
-			return nil, err
-		}
-
-		if updatedRecs[0].ID != createdRec2.ID || updatedRecs[0].PositionInLetter != 0 {
-			return nil, fmt.Errorf("error updating recommendation order - recommendation in position 0 has ID %v, expected %v", updatedRecs[0].ID, createdRec2.ID)
-		}
-
-		if updatedRecs[1].ID != createdRec1.ID || updatedRecs[1].PositionInLetter != 1 {
-			return nil, fmt.Errorf("error updating recommendation order - recommendation in position 1 has ID %v, expected %v", updatedRecs[1].ID, createdRec1.ID)
 		}
 	}
 
