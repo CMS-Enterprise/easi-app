@@ -1,5 +1,6 @@
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
+import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
@@ -8,8 +9,11 @@ import {
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
 import {
+  GetGRTFeedback,
+  GetGRTFeedbackVariables
+} from 'queries/types/GetGRTFeedback';
+import {
   GetSystemIntake,
-  GetSystemIntake_systemIntake as SystemIntake,
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
 import {
@@ -20,6 +24,7 @@ import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
   GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
 } from 'queries/types/GetSystemIntakesWithLCIDS';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeContact } from 'queries/types/SystemIntakeContact';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import {
@@ -235,21 +240,73 @@ export const systemIntake: SystemIntake = {
   trbFollowUpRecommendation: null
 };
 
-export const getSystemIntakeQuery: MockedQuery<
-  GetSystemIntake,
-  GetSystemIntakeVariables
-> = {
-  request: {
-    query: GetSystemIntakeQuery,
-    variables: {
-      id: systemIntakeId
+/** System intake form that has NOT been started */
+export const initialSystemIntakeForm: SystemIntake = {
+  ...systemIntake,
+  requestName: '',
+  status: SystemIntakeStatus.INTAKE_DRAFT,
+  requester: {
+    ...systemIntake.requester,
+    component: ''
+  },
+  businessOwner: {
+    __typename: 'SystemIntakeBusinessOwner',
+    name: '',
+    component: ''
+  },
+  productManager: {
+    __typename: 'SystemIntakeProductManager',
+    name: '',
+    component: ''
+  },
+  isso: {
+    __typename: 'SystemIntakeISSO',
+    isPresent: null,
+    name: ''
+  },
+  contract: {
+    __typename: 'SystemIntakeContract',
+    hasContract: '',
+    contractor: '',
+    number: '',
+    vehicle: '',
+    startDate: {
+      __typename: 'ContractDate',
+      month: '',
+      day: '',
+      year: ''
+    },
+    endDate: {
+      __typename: 'ContractDate',
+      month: '',
+      day: '',
+      year: ''
     }
   },
-  result: {
-    data: {
-      systemIntake
+  businessNeed: '',
+  businessSolution: '',
+  currentStage: ''
+};
+
+export const getSystemIntakeQuery = (
+  intakeData?: Partial<SystemIntake>
+): MockedQuery<GetSystemIntake, GetSystemIntakeVariables> => {
+  return {
+    request: {
+      query: GetSystemIntakeQuery,
+      variables: {
+        id: intakeData?.id || systemIntakeId
+      }
+    },
+    result: {
+      data: {
+        systemIntake: {
+          ...systemIntake,
+          ...intakeData
+        }
+      }
     }
-  }
+  };
 };
 
 export const systemIntakeWithLcid: SystemIntakeWithLcid = {
@@ -339,6 +396,26 @@ export const getGovernanceTaskListQuery: MockedQuery<
         updatedAt: null,
         grtDate: null,
         grbDate: null
+      }
+    }
+  }
+};
+
+export const getGRTFeedbackQuery: MockedQuery<
+  GetGRTFeedback,
+  GetGRTFeedbackVariables
+> = {
+  request: {
+    query: GetGRTFeedbackQuery,
+    variables: {
+      intakeID: systemIntakeId
+    }
+  },
+  result: {
+    data: {
+      systemIntake: {
+        __typename: 'SystemIntake',
+        grtFeedbacks: []
       }
     }
   }
