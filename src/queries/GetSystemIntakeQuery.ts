@@ -66,6 +66,7 @@ export const SystemIntake = gql`
       fundingNumber
     }
     lcid
+    lcidIssuedAt
     lcidExpiresAt
     lcidScope
     lcidCostBaseline

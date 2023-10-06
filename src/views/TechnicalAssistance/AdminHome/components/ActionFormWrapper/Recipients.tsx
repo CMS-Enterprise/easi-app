@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import {
@@ -12,15 +12,18 @@ import {
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import CedarContactSelect from 'components/CedarContactSelect';
+import Alert from 'components/shared/Alert';
 import CheckboxField from 'components/shared/CheckboxField';
 import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import Spinner from 'components/Spinner';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import { CMS_TRB_EMAIL } from 'constants/externalUrls';
 import { TRBAttendee_userInfo as UserInfo } from 'queries/types/TRBAttendee';
 import { PersonRole } from 'types/graphql-global-types';
-import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
+import isExternalEmail from 'utils/externalEmail';
+import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import toggleArrayValue from 'utils/toggleArrayValue';
 
 type RecipientsProps = {
@@ -51,6 +54,41 @@ const initialRecipient: TrbRecipient = {
   role: null
 };
 
+/** Formats recipient name and email for checkbox label */
+export const RecipientLabel = ({
+  name,
+  email
+}: {
+  /** First line of checkbox label */
+  name: string;
+  /** If email is defined, show on second line */
+  email?: string;
+}) => {
+  return (
+    <>
+      <span>{name}</span>
+      {email && <span className="display-block text-base-dark">{email}</span>}
+    </>
+  );
+};
+
+/** Warning when trying to add contact with external email */
+export const ExternalRecipientAlert = ({
+  email
+}: {
+  email: string | undefined;
+}) => {
+  const { t } = useTranslation('action');
+
+  if (!email || !isExternalEmail(email)) return null;
+
+  return (
+    <Alert type="warning" slim>
+      {t('addExternalRecipientWarning')}
+    </Alert>
+  );
+};
+
 /**
  * TRB email recipients field
  */
@@ -72,6 +110,23 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
   }>({
     name: 'recipients'
   });
+
+  const recipients = watch('recipients');
+  const selectedEuaIds = watch('notifyEuaIds');
+
+  /** Whether or not recipients array has user with external email */
+  const externalRecipients: boolean = useMemo(
+    () =>
+      !!recipients.find(
+        ({ userInfo }) =>
+          userInfo?.euaUserId &&
+          // Check if user is selected
+          selectedEuaIds.includes(userInfo.euaUserId) &&
+          // Check if user has external email
+          isExternalEmail(userInfo?.email)
+      ),
+    [recipients, selectedEuaIds]
+  );
 
   // Get initial first recipient as requester
   const requester: TrbRecipient | undefined = useRef(watch('recipients')[0])
@@ -185,21 +240,20 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                 render={({ field }) => {
                   if (!requester?.userInfo) return <></>;
 
-                  const { commonName, euaUserId } = requester.userInfo;
-
-                  const component = cmsDivisionsAndOffices.find(
-                    value => value.name === requester?.component
-                  )?.acronym;
-
-                  const label = `${getPersonNameAndComponentVal(
-                    commonName,
-                    component
-                  )} (${t('Requester')})`;
+                  const { commonName, euaUserId, email } = requester.userInfo;
 
                   return (
                     <CheckboxField
                       id={`${field.name}.0`}
-                      label={label}
+                      label={
+                        <RecipientLabel
+                          name={`${getPersonNameAndComponentAcronym(
+                            commonName,
+                            requester?.component
+                          )} (${t('Requester')})`}
+                          email={email}
+                        />
+                      }
                       {...{ ...field, ref: null }}
                       onChange={e => {
                         field.onChange(
@@ -223,7 +277,12 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                 return (
                   <CheckboxField
                     id={field.name}
-                    label={t('emailRecipientFields.copyTrbMailbox')}
+                    label={
+                      <RecipientLabel
+                        name={t('emailRecipientFields.copyTrbMailbox')}
+                        email={CMS_TRB_EMAIL}
+                      />
+                    }
                     {...{ ...field, ref: null }}
                     value="true"
                     checked={!!field.value}
@@ -252,7 +311,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                       ...userField.value,
                       id: recipientField.id
                     };
-                    const { id, userInfo, role } = userField.value;
+                    const { id, userInfo, role, component } = userField.value;
 
                     if (id) {
                       return (
@@ -260,16 +319,22 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                           name="notifyEuaIds"
                           control={control}
                           render={({ field }) => {
-                            const label = `${userInfo?.commonName} (${t(
-                              `attendees.contactRoles.${role}`
-                            )})`;
+                            const label = `${getPersonNameAndComponentAcronym(
+                              userInfo?.commonName || '',
+                              component
+                            )} (${t(`attendees.contactRoles.${role}`)})`;
 
                             const value = userInfo?.euaUserId || '';
 
                             return (
                               <CheckboxField
                                 id={`${field.name}.${index + 1}`}
-                                label={label}
+                                label={
+                                  <RecipientLabel
+                                    name={label}
+                                    email={userInfo?.email}
+                                  />
+                                }
                                 {...{ ...field, ref: null }}
                                 onChange={e => {
                                   field.onChange(
@@ -314,6 +379,11 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                                   >
                                     {t('emailRecipientFields.newRecipientName')}
                                   </Label>
+                                  <HelpText>
+                                    {t(
+                                      'emailRecipientFields.newRecipientHelpText'
+                                    )}
+                                  </HelpText>
                                   {error && (
                                     <ErrorMessage>{error.message}</ErrorMessage>
                                   )}
@@ -401,9 +471,15 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                               );
                             }}
                           />
+
+                          <ExternalRecipientAlert
+                            email={recipient.userInfo?.email}
+                          />
+
                           <ButtonGroup>
                             <Button
                               type="button"
+                              className="margin-top-2"
                               onClick={() => {
                                 remove(index);
                                 setRecipientFormOpen?.(false);
@@ -414,6 +490,7 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                             </Button>
                             <Button
                               type="button"
+                              className="margin-top-2"
                               onClick={() => addRecipient(index, recipient)}
                               disabled={
                                 !recipient.userInfo?.euaUserId ||
@@ -431,19 +508,26 @@ const RecipientsForm = ({ setRecipientFormOpen }: RecipientsProps) => {
                 />
               );
             })}
-          {!watch('recipients').find(({ id }) => !id) && (
-            <Button
-              type="button"
-              onClick={() => {
-                append(initialRecipient);
-                setRecipientFormOpen?.(true);
-              }}
-              className="margin-top-3"
-              outline
-            >
-              {t('emailRecipientFields.addAnotherRecipient')}
-            </Button>
-          )}
+          <>
+            {externalRecipients && (
+              <Alert type="warning" slim>
+                {t('action:selectExternalRecipientWarning')}
+              </Alert>
+            )}
+            {!watch('recipients').find(({ id }) => !id) && (
+              <Button
+                type="button"
+                onClick={() => {
+                  append(initialRecipient);
+                  setRecipientFormOpen?.(true);
+                }}
+                className="margin-top-3"
+                outline
+              >
+                {t('emailRecipientFields.addAnotherRecipient')}
+              </Button>
+            )}
+          </>
         </TruncatedContent>
       </ul>
     </FieldGroup>

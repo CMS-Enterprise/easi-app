@@ -16,11 +16,18 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import TruncatedContent from 'components/shared/TruncatedContent';
+import { IT_GOV_EMAIL, IT_INVESTMENT_EMAIL } from 'constants/externalUrls';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
 import { EmailRecipientsFieldsProps } from 'types/action';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import { SystemIntakeContactProps } from 'types/systemIntake';
+import isExternalEmail from 'utils/externalEmail';
+import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
+import {
+  ExternalRecipientAlert,
+  RecipientLabel
+} from 'views/TechnicalAssistance/AdminHome/components/ActionFormWrapper/Recipients';
 
 type RecipientProps = {
   contact: SystemIntakeContactProps;
@@ -64,7 +71,15 @@ const Recipient = ({
       <CheckboxField
         id={`${euaUserId || 'contact'}-${role.replaceAll(' ', '')}`}
         name={`${euaUserId || 'contact'}-${role.replaceAll(' ', '')}`}
-        label={`${commonName}, ${component} (${role})`}
+        label={
+          <RecipientLabel
+            name={`${getPersonNameAndComponentAcronym(
+              commonName,
+              component
+            )} (${contact?.role})`}
+            email={email}
+          />
+        }
         value={email || ''}
         onChange={e => updateRecipients(e.target.value)}
         onBlur={() => null}
@@ -102,8 +117,8 @@ const Recipient = ({
           <Label htmlFor="test" className="text-normal margin-y-05">
             {t('emailRecipients.recipientName')}
           </Label>
-          <HelpText className="margin-bottom-1">
-            {t('emailRecipients.verifyHelpText')}
+          <HelpText className="margin-bottom-1 margin-top-05">
+            {t('technicalAssistance:emailRecipientFields.newRecipientHelpText')}
           </HelpText>
           <CedarContactSelect
             id="IntakeForm-ContactCommonName"
@@ -124,6 +139,9 @@ const Recipient = ({
             }}
             autoSearch
           />
+
+          <ExternalRecipientAlert email={activeContact?.email} />
+
           <ButtonGroup className="margin-top-2">
             {/* Save recipient */}
             <Button
@@ -136,6 +154,7 @@ const Recipient = ({
                   setActiveContact(null);
                 });
               }}
+              className="margin-top-0"
             >
               {t('Save')}
             </Button>
@@ -148,6 +167,7 @@ const Recipient = ({
                 setActiveContact(null);
                 setActive(false);
               }}
+              className="margin-top-0"
             >
               {t('Cancel')}
             </Button>
@@ -193,6 +213,8 @@ export default ({
   // Requester object
   const { requester } = contacts;
 
+  const { regularRecipientEmails } = recipients;
+
   const contactsArray = useMemo(() => {
     return [
       contacts.businessOwner,
@@ -227,11 +249,16 @@ export default ({
     .flat()
     .filter(value => value).length;
 
+  /** Returns true if a recipient with an external email has been selected */
+  const externalRecipients: boolean = useMemo(
+    () => !!regularRecipientEmails.find(email => isExternalEmail(email)),
+    [regularRecipientEmails]
+  );
+
   /**
    * Updates email recipients in system intake
    */
   const updateRecipients = (value: string) => {
-    const { regularRecipientEmails } = recipients;
     let updatedRecipients = [];
 
     // Update recipients
@@ -367,7 +394,15 @@ export default ({
         <CheckboxField
           id={`${requester?.euaUserId}-requester`}
           name={`${requester?.euaUserId}-requester`}
-          label={`${requester?.commonName}, ${requester?.component} (Requester)`}
+          label={
+            <RecipientLabel
+              name={`${getPersonNameAndComponentAcronym(
+                requester.commonName,
+                requester.component
+              )} (Requester)`}
+              email={requester.email}
+            />
+          }
           value={requester?.email || ''}
           onChange={e => updateRecipients(e.target.value)}
           onBlur={() => null}
@@ -380,7 +415,9 @@ export default ({
 
         {/* IT Governance */}
         <CheckboxField
-          label="IT Governance Mailbox"
+          label={
+            <RecipientLabel name={t('itGovernance')} email={IT_GOV_EMAIL} />
+          }
           checked={recipients.shouldNotifyITGovernance}
           name="contact-itGovernanceMailbox"
           id="contact-itGovernanceMailbox"
@@ -397,7 +434,12 @@ export default ({
         {/* IT Investment - if default */}
         {defaultRecipients.shouldNotifyITInvestment && (
           <CheckboxField
-            label="IT Investment Mailbox"
+            label={
+              <RecipientLabel
+                name={t('itInvestment')}
+                email={IT_INVESTMENT_EMAIL}
+              />
+            }
             checked={recipients.shouldNotifyITInvestment}
             name="contact-itInvestmentMailbox"
             id="contact-itInvestmentMailbox"
@@ -450,7 +492,12 @@ export default ({
             {/* IT Investment - if not default */}
             {!defaultRecipients.shouldNotifyITInvestment && (
               <CheckboxField
-                label="IT Investment Mailbox"
+                label={
+                  <RecipientLabel
+                    name={t('itInvestment')}
+                    email={IT_INVESTMENT_EMAIL}
+                  />
+                }
                 checked={recipients.shouldNotifyITInvestment}
                 name="contact-itInvestmentMailbox"
                 id="contact-itInvestmentMailbox"
@@ -473,7 +520,15 @@ export default ({
                       key={`verified-${index}`} // eslint-disable-line react/no-array-index-key
                       id={contact.id}
                       name={`${contact.euaUserId}-${contact.role}`}
-                      label={`${contact?.commonName}, ${contact?.component} (${contact?.role})`}
+                      label={
+                        <RecipientLabel
+                          name={`${getPersonNameAndComponentAcronym(
+                            contact.commonName,
+                            contact.component
+                          )} (${contact?.role})`}
+                          email={contact?.email}
+                        />
+                      }
                       value={contact?.email || ''}
                       onChange={e => updateRecipients(e.target.value)}
                       onBlur={() => null}
@@ -494,6 +549,7 @@ export default ({
               systemIntakeId={systemIntakeId}
               activeContact={activeContact}
               setActiveContact={setActiveContact}
+              showExternalUsersWarning={externalRecipients}
               createContactCallback={createContactCallback}
               type="recipient"
               className="margin-top-3"

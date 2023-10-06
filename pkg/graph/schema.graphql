@@ -1005,6 +1005,7 @@ type SystemIntake {
   lcidExpiresAt: Time
   lcidScope: HTML
   lcidCostBaseline: String
+  lcidRetiresAt: Time
   needsEaSupport: Boolean
   notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
@@ -1290,6 +1291,8 @@ enum SystemIntakeActionType {
   REOPEN_REQUEST
   UPDATE_LCID
   CONFIRM_LCID
+  RETIRE_LCID
+  CHANGE_LCID_RETIREMENT_DATE
 
   # v1/v2 actions - originally from v1, still used in v2
   ISSUE_LCID
@@ -1328,12 +1331,13 @@ type SystemIntakeAction {
   step: SystemIntakeStep
   feedback: HTML
   lcidExpirationChange: SystemIntakeLCIDExpirationChange
+  previousRetirementDate: Time # purposely nullable, unlike previousDate in lcidExpirationChange - not all intakes will have a retirement date
+  newRetirementDate: Time # purposely nullable, unlike newDate in lcidExpirationChange - not all intakes will have a retirement date
   createdAt: Time!
 }
 
 """
-Contains the data needed to change the expiration date of a system request's
-lifecycle ID
+Contains the data about a change to the expiration date of a system request's lifecycle ID
 """
 type SystemIntakeLCIDExpirationChange {
   previousDate: Time!
@@ -1576,6 +1580,29 @@ input SystemIntakeExpireLCIDInput {
   nextSteps: HTML
   notificationRecipients: EmailNotificationRecipients
   additionalInfo: HTML
+  adminNote: HTML
+}
+
+"""
+Input for retiring an intake's LCID in IT Gov v2
+"""
+input SystemIntakeRetireLCIDInput {
+  systemIntakeID: UUID!
+  retiresAt: Time!
+  reason: HTML
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
+  adminNote: HTML
+}
+
+"""
+Input for changing an intake's LCID retirement date in IT Gov v2
+"""
+input SystemIntakeChangeLCIDRetirementDateInput {
+  systemIntakeID: UUID!
+  retiresAt: Time!
+  additionalInfo: HTML
+  notificationRecipients: EmailNotificationRecipients
   adminNote: HTML
 }
 
@@ -2464,6 +2491,12 @@ type Mutation {
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionUpdateLCID(
     input: SystemIntakeUpdateLCIDInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionRetireLCID(
+    input: SystemIntakeRetireLCIDInput!
+  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionChangeLCIDRetirementDate(
+    input: SystemIntakeChangeLCIDRetirementDateInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionConfirmLCID(
     input: SystemIntakeConfirmLCIDInput!

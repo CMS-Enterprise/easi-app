@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "da6146ac-dee1-4e23-a9d3-042ca132620b",
+		"_postman_id": "1a11ee48-883a-4d97-9011-6fb404d77323",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "11253221"
+		"_exporter_id": "28498683"
 	},
 	"item": [
 		{
@@ -466,6 +466,53 @@
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionExpireLCID($input: SystemIntakeExpireLCIDInput!) {\r\n    createSystemIntakeActionExpireLCID(input: $input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            lcid\r\n            lcidExpiresAt\r\n            lcidStatus\r\n        }\r\n    }\r\n}",
 												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"reason\": \"Testing expiration LCID\",\r\n    \"nextSteps\": \"LCID expired; create a new LCID\",\r\n    \"additionalInfo\": \"im in ur intake, expiring ur lcid\",\r\n    \"adminNote\": \"look how I'm expiring this manually\"\r\n  }\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Retire LCID",
+							"item": [
+								{
+									"name": "Retire LCID",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation RetireLCID($input: SystemIntakeRetireLCIDInput!) {\r\n    createSystemIntakeActionRetireLCID(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            lcidStatus\r\n            lcidRetiresAt\r\n        }\r\n    }\r\n}\r\n",
+												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"retiresAt\": \"2024-10-01T00:00:00.000Z\",\r\n        \"reason\": \"Testing retirement of LCID\",\r\n        \"additionalInfo\": \"Time to retire\",\r\n        \"adminNote\": \"Intake now retired, don't worry about it\"\r\n    }\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Change LCID Retirement Date",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation ChangeLCIDRetirementDate($input: SystemIntakeChangeLCIDRetirementDateInput!) {\r\n    createSystemIntakeActionChangeLCIDRetirementDate(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            lcidStatus\r\n            lcidRetiresAt\r\n        }\r\n    }\r\n}\r\n",
+												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"retiresAt\": \"2015-10-01T00:00:00.000Z\",\r\n        \"additionalInfo\": \"Here's a new retirement date\",\r\n        \"adminNote\": \"changing retirement around\"\r\n    }\r\n}"
 											}
 										},
 										"url": {
@@ -1042,7 +1089,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    requestName\n    governanceRequestFeedbacks {\n      id\n      feedback\n      sourceAction\n      targetForm\n      type\n      author {\n          euaUserId\n          commonName\n          email\n      }\n    }\n    actions {\n        feedback\n        type\n        step\n        lcidExpirationChange{\n            previousDate\n            newDate\n            previousScope\n            newScope\n            previousNextSteps\n            newNextSteps\n            previousCostBaseline\n            newCostBaseline\n        }\n    }\n    notes {\n        content\n        author {\n            eua\n            name\n        }\n    }\n  }\n}",
+								"query": "query {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    requestName\n    governanceRequestFeedbacks {\n      id\n      feedback\n      sourceAction\n      targetForm\n      type\n      author {\n          euaUserId\n          commonName\n          email\n      }\n    }\n    actions {\n        feedback\n        type\n        step\n        previousRetirementDate\n        newRetirementDate\n        lcidExpirationChange{\n            previousDate\n            newDate\n            previousScope\n            newScope\n            previousNextSteps\n            newNextSteps\n            previousCostBaseline\n            newCostBaseline\n        }\n    }\n    notes {\n        content\n        author {\n            eua\n            name\n        }\n    }\n  }\n}",
 								"variables": "{\r\n    \"id\": \"{{systemIntakeID}}\"\r\n}"
 							}
 						},
@@ -1106,7 +1153,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    state\n    decisionState\n    decisionNextSteps\n    trbFollowUpRecommendation\n    lcid\n    lcidExpiresAt\n    lcidScope\n    lcidCostBaseline\n    lcidStatus\n    rejectionReason\n  }\n}",
+								"query": "query {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    state\n    decisionState\n    decisionNextSteps\n    trbFollowUpRecommendation\n    lcid\n    lcidExpiresAt\n    lcidScope\n    lcidCostBaseline\n    lcidStatus\n    rejectionReason\n    lcidRetiresAt\n  }\n}",
 								"variables": "{\r\n    \"id\": \"{{systemIntakeID}}\"\r\n}"
 							}
 						},
@@ -1664,7 +1711,7 @@
 		"apikey": [
 			{
 				"key": "value",
-				"value": "Local {\"EUAID\":\"{{EUAID}}\",\"jobCodes\":{{jobCodes}},\"favorLocalAuth\":true}",
+				"value": "{{authHeader}}",
 				"type": "string"
 			},
 			{
@@ -1706,6 +1753,11 @@
 			"type": "string"
 		},
 		{
+			"key": "authHeader",
+			"value": "Local {\"EUAID\":\"{{EUAID}}\",\"jobCodes\":{{jobCodes}},\"favorLocalAuth\":true}",
+			"type": "string"
+		},
+		{
 			"key": "trbAttendeeID",
 			"value": ""
 		},
@@ -1718,8 +1770,13 @@
 			"value": ""
 		},
 		{
+			"key": "host",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
 			"key": "url",
-			"value": "http://localhost:8080/api/graph/query",
+			"value": "{{host}}/api/graph/query",
 			"type": "string"
 		},
 		{
@@ -1732,7 +1789,7 @@
 		},
 		{
 			"key": "apiURL",
-			"value": "http://localhost:8080/api/v1",
+			"value": "{{host}}/api/v1",
 			"type": "string"
 		},
 		{

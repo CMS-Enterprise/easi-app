@@ -62,7 +62,7 @@ describe('The System Intake Form', () => {
     cy.get('#react-select-IntakeForm-BusinessOwnerName-input').should(
       'have.value',
       // Requester name shows as User E2E1 instead of "EndToEnd One" (their actual name) during testing
-      'User E2E1, E2E1'
+      'User E2E1, E2E1 (endtoend.one@local.fake)'
     );
     cy.get('#IntakeForm-BusinessOwnerEmail').should(
       'have.value',
@@ -134,7 +134,7 @@ describe('The System Intake Form', () => {
       .type('Rudolph')
       .wait(1000)
       .type('{downArrow}{enter}')
-      .should('have.value', 'Rudolph Pagac, POJG');
+      .should('have.value', 'Rudolph Pagac, POJG (rudolph.pagac@local.fake)');
 
     cy.get('#IntakeForm-IssoComponent')
       .select('Center for Program Integrity')
@@ -147,7 +147,10 @@ describe('The System Intake Form', () => {
       .type('Annetta Lockman')
       .wait(1000)
       .type('{downArrow}{enter}')
-      .should('have.value', 'Annetta Lockman, LW40');
+      .should(
+        'have.value',
+        'Annetta Lockman, LW40 (annetta.lockman@local.fake)'
+      );
 
     cy.get('#IntakeForm-ContactComponent')
       .select('Other')

@@ -170,6 +170,7 @@ export enum RequestType {
  */
 export enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES = "BIZ_CASE_NEEDS_CHANGES",
+  CHANGE_LCID_RETIREMENT_DATE = "CHANGE_LCID_RETIREMENT_DATE",
   CLOSE_REQUEST = "CLOSE_REQUEST",
   CONFIRM_LCID = "CONFIRM_LCID",
   CREATE_BIZ_CASE = "CREATE_BIZ_CASE",
@@ -191,6 +192,7 @@ export enum SystemIntakeActionType {
   REJECT = "REJECT",
   REOPEN_REQUEST = "REOPEN_REQUEST",
   REQUEST_EDITS = "REQUEST_EDITS",
+  RETIRE_LCID = "RETIRE_LCID",
   SEND_EMAIL = "SEND_EMAIL",
   SUBMIT_BIZ_CASE = "SUBMIT_BIZ_CASE",
   SUBMIT_FINAL_BIZ_CASE = "SUBMIT_FINAL_BIZ_CASE",
@@ -927,6 +929,21 @@ export interface SystemIntakeRequesterInput {
 export interface SystemIntakeRequesterWithComponentInput {
   name: string;
   component: string;
+}
+
+/**
+ * Input for updating an intake's LCID in IT Gov v2
+ */
+export interface SystemIntakeUpdateLCIDInput {
+  systemIntakeID: UUID;
+  expiresAt?: Time | null;
+  scope?: HTML | null;
+  nextSteps?: HTML | null;
+  costBaseline?: string | null;
+  reason?: HTML | null;
+  additionalInfo?: HTML | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
 }
 
 /**

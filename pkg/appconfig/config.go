@@ -192,12 +192,6 @@ const FlagSourceKey = "FLAG_SOURCE"
 // FlagValuesFileKey is the key for the environment variable with the file path to a LaunchDarkly flag values file
 const FlagValuesFileKey = "FLAGDATA_FILE"
 
-// LambdaEndpoint is the host to direct lambda requests to
-const LambdaEndpoint = "LAMBDA_ENDPOINT"
-
-// LambdaFunctionPrince is the name of the prince lambda function
-const LambdaFunctionPrince = "LAMBDA_FUNCTION_PRINCE"
-
 // LocalAuthEnabled is whether local auth should be enabled
 const LocalAuthEnabled = "LOCAL_AUTH_ENABLED"
 

@@ -11,6 +11,7 @@ import {
   systemIntakeWithLcid
 } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import { formatDateLocal } from 'utils/date';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import { EditsRequestedContext } from '..';
@@ -21,7 +22,9 @@ import IssueLcid from './IssueLcid';
 const checkFieldDefaults = () => {
   expect(
     screen.getByRole('textbox', { name: 'Expiration date *' })
-  ).toHaveValue('09/21/2024');
+  ).toHaveValue(
+    formatDateLocal(systemIntakeWithLcid.lcidExpiresAt || '', 'MM/dd/yyyy')
+  );
 
   expect(
     screen.getByRole('textbox', { name: 'Scope of Life Cycle ID *' })

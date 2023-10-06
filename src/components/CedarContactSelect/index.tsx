@@ -108,9 +108,13 @@ const IndicatorsContainer = (
   );
 };
 
-/** Returns formatted contact label */
-const formatLabel = (contact: CedarContactProps) =>
-  `${contact.commonName}${contact?.euaUserId && `, ${contact.euaUserId}`}`;
+/** Format contact label to include name, EUA, and email */
+const formatContactLabel = (contact: CedarContactProps) => {
+  const { commonName, euaUserId, email } = contact;
+  return `${commonName}${euaUserId && `, ${euaUserId}`}${
+    email && ` (${email})`
+  }`;
+};
 
 /**
  * Combobox to look up contact by name from CEDAR
@@ -128,7 +132,7 @@ export default function CedarContactSelect({
   const { t } = useTranslation();
   // If autoSearch, set name as initial search term
   const [searchTerm, setSearchTerm] = useState<string | undefined>(
-    value ? formatLabel(value) : undefined
+    value ? formatContactLabel(value) : undefined
   );
   // If autoSearch, run initial query from name
   const { contacts, queryCedarContacts, loading } = useCedarContactLookup(
@@ -153,7 +157,7 @@ export default function CedarContactSelect({
   const updateContact = (contact?: CedarContactProps | null) => {
     onChange(contact || null);
     selectedContact.current = contact?.euaUserId;
-    queryContacts(contact ? formatLabel(contact) : '');
+    queryContacts(contact ? formatContactLabel(contact) : '');
   };
 
   // React Select styles object
@@ -250,6 +254,7 @@ export default function CedarContactSelect({
         'margin-top-1',
         'cedar-contact-select',
         'usa-combo-box',
+        'maxw-none',
         { 'cedar-contact-select__warning': showWarning },
         { 'cedar-contact-select__loading': loading },
         { 'opacity-70': disabled },
@@ -261,7 +266,7 @@ export default function CedarContactSelect({
       aria-label="Cedar-Users"
       components={{ Input, IndicatorsContainer, ClearIndicator, Option, Menu }}
       options={contacts.map(contact => ({
-        label: `${contact.commonName}, ${contact.euaUserId}`,
+        label: formatContactLabel(contact),
         value: contact
       }))}
       styles={customStyles}
@@ -269,13 +274,18 @@ export default function CedarContactSelect({
         value
           ? {
               value,
-              label: `${value?.commonName}${
-                value?.euaUserId && `, ${value?.euaUserId}`
-              }`
+              label: formatContactLabel(value)
             }
           : undefined
       }
-      value={value ? { value, label: formatLabel(value) } : undefined}
+      value={
+        value
+          ? {
+              value,
+              label: formatContactLabel(value)
+            }
+          : undefined
+      }
       onChange={item => updateContact(item?.value || null)}
       onBlur={e => {
         // Automatically select on blur if search returns single result

@@ -134,6 +134,7 @@ export interface SystemIntake {
   existingFunding: boolean | null;
   fundingSources: SystemIntake_fundingSources[];
   lcid: string | null;
+  lcidIssuedAt: Time | null;
   lcidExpiresAt: Time | null;
   lcidScope: HTML | null;
   lcidCostBaseline: string | null;

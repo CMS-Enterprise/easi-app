@@ -8,8 +8,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db_migrations
-      args:
-        TAG: '9.10' # Multi arch tag, rather than '9.10-alpine'
     volumes:
       - ./migrations:/flyway/sql
   easi:
@@ -71,15 +69,6 @@ services:
   minio:
     volumes:
       - ./tmp/minio:/data
-  prince:
-    image: lambci/lambda:go1.x
-    ports:
-      - 9001:9001
-    environment:
-      - DOCKER_LAMBDA_STAY_OPEN=1
-      - LICENSE_KEY
-    volumes:
-      - ./../easi-infra-modules/lambda/prince/build:/var/task:ro,delegated
   email:
     ports:
       - 1025:1025

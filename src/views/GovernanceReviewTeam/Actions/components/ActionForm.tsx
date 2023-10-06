@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { ApolloError, FetchResult } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -43,12 +44,16 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   /** Success message to display on admin actions page after submission */
   successMessage?: string;
   /** Submit function runs after field validation passes */
-  onSubmit: (formData: TFieldValues) => Promise<void>;
+  onSubmit: (formData: TFieldValues) => Promise<FetchResult | void>;
   /** Optional confirmation modal title and content */
   modal?: {
     title: string;
     content: React.ReactNode;
   };
+  /** Show required fields text */
+  requiredFields?: boolean;
+  /** Disable form submit buttons */
+  disableSubmit?: boolean;
   children?: React.ReactNode;
   className?: string;
 } & Omit<JSX.IntrinsicElements['form'], 'onSubmit' | 'title'>;
@@ -70,6 +75,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   successMessage,
   onSubmit,
   modal,
+  requiredFields = true,
+  disableSubmit,
   children,
   className,
   ...formProps
@@ -77,6 +84,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   const { t } = useTranslation('action');
   const history = useHistory();
   const { showMessageOnNextPage } = useMessage();
+
+  const [sendEmail, setSendEmail] = useState(true);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -94,6 +103,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   ] = useState<SystemIntakeContactProps | null>(null);
 
   const {
+    control,
     setValue,
     watch,
     reset,
@@ -103,7 +113,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   } = useFormContext<SystemIntakeActionFields>();
 
   /** Execute `onSubmit` prop with success and error handling */
-  const completeAction = (formData: TFieldValues) =>
+  const completeAction = (formData: TFieldValues) => {
     onSubmit(formData)
       .then(() => {
         // Display success message
@@ -113,18 +123,37 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
         history.push(`/governance-review-team/${systemIntakeId}/actions`);
       })
-      .catch(() => {
+      .catch(e => {
         setModalIsOpen(false);
-        setError('root', { message: t('error') });
+
+        // If mutation fails, set root server error
+        if (e instanceof ApolloError) {
+          setError('root.server', { message: t('error') });
+        } else {
+          // If error is not ApolloError, set as general form error
+          setError('root.form', { message: e.message });
+        }
       });
+  };
 
   /** Handles form validation and either completes action or triggers confirmation modal (if `modal` prop is defined) */
   const submitForm = handleSubmit(formData => {
+    const values = { ...formData };
+
+    // If not sending email, set recipient values
+    if (!sendEmail) {
+      values.notificationRecipients = {
+        regularRecipientEmails: [],
+        shouldNotifyITGovernance: false,
+        shouldNotifyITInvestment: false
+      };
+    }
+
     // If form validation passes, check for `modal` prop
     if (modal) {
       setModalIsOpen(true);
     } else {
-      completeAction(formData as TFieldValues);
+      completeAction(values as TFieldValues);
     }
   });
 
@@ -185,9 +214,9 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
       {
         // Error message for server error
-        errors?.root?.message && (
+        errors?.root?.server?.message && (
           <Alert type="error" className="action-error margin-top-2">
-            {errors.root.message}
+            {errors.root.server.message}
           </Alert>
         )
       }
@@ -203,12 +232,14 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
         </p>
       )}
 
-      <p className="margin-top-1 text-base">
-        <Trans
-          i18nKey="action:fieldsMarkedRequired"
-          components={{ asterisk: <RequiredAsterisk /> }}
-        />
-      </p>
+      {requiredFields && (
+        <p className="margin-top-1 text-base">
+          <Trans
+            i18nKey="action:fieldsMarkedRequired"
+            components={{ asterisk: <RequiredAsterisk /> }}
+          />
+        </p>
+      )}
 
       {
         /** Display field errors */
@@ -245,7 +276,9 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
         {children}
 
         {/* Notification email */}
-        <h3 className=" margin-bottom-0">{t('notification.heading')}</h3>
+        <h3 className="margin-bottom-0 margin-top-6">
+          {t('notification.heading')}
+        </h3>
         <Alert type="info" slim>
           {t('notification.alert')}
         </Alert>
@@ -256,6 +289,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
         {/* Additional information */}
         <Controller
+          control={control}
           name="additionalInfo"
           render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
@@ -288,7 +322,8 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
         {/* Admin note */}
         <Controller
-          name="adminNotes"
+          control={control}
+          name="adminNote"
           render={({ field, fieldState: { error } }) => (
             <FormGroup
               error={!!error}
@@ -342,22 +377,21 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           // Complete action
           back={{
             text: t('completeAction'),
-            disabled: isSubmitting || !recipientsSelected || modalIsOpen,
+            disabled:
+              disableSubmit ||
+              isSubmitting ||
+              !recipientsSelected ||
+              modalIsOpen,
             outline: false,
-            type: 'submit'
+            type: 'submit',
+            onClick: () => setSendEmail(true)
           }}
           // Complete action without sending email
           next={{
             text: t('completeActionWithoutEmail'),
             outline: true,
-            disabled: isSubmitting || modalIsOpen,
-            // Reset email recipients to prevent sending email
-            onClick: () =>
-              setValue('notificationRecipients', {
-                regularRecipientEmails: [],
-                shouldNotifyITGovernance: false,
-                shouldNotifyITInvestment: false
-              })
+            disabled: disableSubmit || isSubmitting || modalIsOpen,
+            onClick: () => setSendEmail(false)
           }}
           taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
           saveExitText={t('cancelAction')}

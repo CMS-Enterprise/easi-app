@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
+import { systemIntake } from 'data/mock/systemIntake';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
@@ -51,6 +52,7 @@ const intakeQuery = (intakeData: any) => {
     result: {
       data: {
         systemIntake: {
+          ...systemIntake,
           id: INTAKE_ID,
           adminLead: '',
           businessNeed: '',

@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
@@ -224,6 +226,7 @@ export const systemIntake: SystemIntake = {
   grtDate: null,
   grtFeedbacks: [],
   lcid: null,
+  lcidIssuedAt: null,
   lcidExpiresAt: null,
   lcidScope: null,
   lcidCostBaseline: null,
@@ -314,7 +317,7 @@ export const systemIntakeWithLcid: SystemIntakeWithLcid = {
   id: '8be3f86d-a4d6-446b-8a56-dc9da77ed326',
   lcid: '123456',
   requestName: 'Test request name',
-  lcidExpiresAt: '2024-09-21T05:00:00.000Z',
+  lcidExpiresAt: DateTime.local().plus({ year: 1 }).toISO(),
   lcidScope: 'Test scope',
   decisionNextSteps: 'Test next steps',
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp.NOT_RECOMMENDED,
