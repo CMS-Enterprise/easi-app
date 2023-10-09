@@ -1,8 +1,13 @@
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { FormGroup } from '@trussworks/react-uswds';
 
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionExpireLcidQuery from 'queries/CreateSystemIntakeActionExpireLcidQuery';
 import {
   CreateSystemIntakeActionExpireLcid,
@@ -27,6 +32,8 @@ interface ExpireLcidProps extends ManageLcidProps {
 const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<ExpireLcidFields>();
+
+  const { control } = form;
 
   const [expireLcid] = useMutation<
     CreateSystemIntakeActionExpireLcid,
@@ -63,7 +70,51 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
           />
         }
       >
-        {/* Action fields here */}
+        <Controller
+          name="reason"
+          control={control}
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name} className="text-normal" required>
+                {t('expireLcid.reason')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('expireLcid.reasonHelpText')}
+              </HelpText>
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
+              <TextAreaField
+                {...field}
+                id={field.name}
+                value={field.value || ''}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
+        />
+        <Controller
+          name="nextSteps"
+          control={control}
+          render={({ field: { ref, ...field } }) => (
+            <FormGroup>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('expireLcid.nextSteps')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('expireLcid.nextStepsHelpText')}
+              </HelpText>
+              <TextAreaField
+                {...field}
+                id={field.name}
+                value={field.value || ''}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
+        />
       </ActionForm>
     </FormProvider>
   );
