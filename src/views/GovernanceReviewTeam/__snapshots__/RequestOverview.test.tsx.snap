@@ -1,0 +1,572 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Governance Review Team > renders GRT dates view 1`] = `
+<DocumentFragment>
+  <main
+    class="easi-main-content easi-grt"
+    data-testid="grt-request-overview"
+    id="main-content"
+    role="main"
+    tabindex="-1"
+  >
+    <section
+      class="easi-grt__request-summary"
+    >
+      <div
+        class="grid-container padding-bottom-2"
+      >
+        <nav
+          aria-label="Breadcrumbs"
+          class="usa-breadcrumb usa-breadcrumb--wrap bg-transparent text-white"
+        >
+          <ol
+            class="usa-breadcrumb__list"
+          >
+            <li
+              class="usa-breadcrumb__list-item"
+            >
+              <a
+                class="usa-breadcrumb__link"
+                href="/"
+              >
+                <span
+                  class="text-white"
+                >
+                  Home
+                </span>
+              </a>
+            </li>
+            <li
+              aria-current="page"
+              class="usa-breadcrumb__list-item usa-current"
+            >
+              Mock System Intake Request
+            </li>
+          </ol>
+        </nav>
+        <dl
+          class="easi-grt__request-info"
+        >
+          <div>
+            <dt>
+              Project name
+            </dt>
+            <dd>
+              Mock System Intake Request
+            </dd>
+          </div>
+          <div
+            class="easi-grt__request-info-col"
+          >
+            <div
+              class="easi-grt__description-group"
+            >
+              <dt>
+                Requester
+              </dt>
+              <dd>
+                Ally Anderson, CMS
+              </dd>
+            </div>
+            <div
+              class="easi-grt__description-group"
+            >
+              <dt>
+                Submission date
+              </dt>
+              <dd>
+                October 20, 2022
+              </dd>
+            </div>
+            <div
+              class="easi-grt__description-group"
+            >
+              <dt>
+                Request for
+              </dt>
+              <dd>
+                Add a new system or service
+              </dd>
+            </div>
+          </div>
+        </dl>
+      </div>
+      <div
+        class="easi-grt__status--open"
+      >
+        <div
+          class="grid-container overflow-auto"
+        >
+          <dl
+            class="easi-grt__status-group"
+          >
+            <div
+              class="easi-grt__status-info text-gray-90"
+            >
+              <dt
+                class="text-bold"
+              >
+                Status
+              </dt>
+               
+              <dd
+                class="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
+                data-testid="grt-status"
+              >
+                Open
+              </dd>
+              <dt
+                data-testid="grt-current-status"
+              >
+                Intake request received
+              </dt>
+            </div>
+            <div
+              class="display-flex text-gray-90"
+            >
+              <span
+                class="text-bold"
+              >
+                Admin Lead
+              </span>
+              <span
+                class="margin-x-1"
+                data-testid="admin-lead"
+              >
+                <div
+                  class="display-flex flex-align-center"
+                >
+                  <svg
+                    class="usa-icon text-secondary margin-right-05"
+                    focusable="false"
+                    height="1em"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                    />
+                  </svg>
+                  Not Assigned
+                </div>
+              </span>
+              <button
+                class="usa-button usa-button--unstyled"
+                data-testid="button"
+                type="button"
+              >
+                Change
+              </button>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+    <div
+      class="easi-grt__subNav-accordion"
+    >
+      <button
+        aria-controls="easi-grt__subNav"
+        aria-expanded="false"
+        class="usa-menu-btn easi-header__basic width-full"
+        type="button"
+      >
+        <h3
+          class="padding-left-1"
+        >
+          Intake Request
+        </h3>
+        <svg
+          class="usa-icon usa-icon--size-3"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+          />
+        </svg>
+      </button>
+    </div>
+    <section
+      class="grid-container margin-bottom-5 margin-top-7"
+    >
+      <div
+        class="grid-row grid-gap"
+        data-testid="grid"
+      >
+        <nav
+          class="desktop:grid-col-3 desktop:display-block display-none"
+        >
+          <ul
+            class="easi-grt__nav-list margin-top-0"
+          >
+            <li
+              class="margin-bottom-6 margin-top-0"
+            >
+              <a
+                class="display-flex flex-align-center hover:text-primary-dark"
+                href="/"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="usa-icon margin-right-1"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+                  />
+                </svg>
+                Back to all requests
+              </a>
+            </li>
+            <li
+              class=""
+            >
+              <a
+                aria-label="Open intake request"
+                class="easi-grt__nav-link"
+                data-testid="grt-nav-general:intake-link"
+                href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/intake-request"
+              >
+                Intake Request
+              </a>
+            </li>
+            <li
+              class=""
+            >
+              <a
+                aria-label="Open documents"
+                class="easi-grt__nav-link"
+                data-testid="grt-nav-intake:documents.uploadedDocuments-link"
+                href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/documents"
+              >
+                Uploaded documents
+              </a>
+            </li>
+            <li
+              class=""
+            >
+              <a
+                aria-label="Open business case"
+                class="easi-grt__nav-link"
+                data-testid="grt-nav-general:businessCase-link"
+                href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/business-case"
+              >
+                Business Case
+              </a>
+            </li>
+            <li
+              class=""
+            >
+              <a
+                aria-label="Open decision"
+                class="easi-grt__nav-link"
+                data-testid="grt-nav-decision.title-link"
+                href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/decision"
+              >
+                Decision
+              </a>
+            </li>
+            <li
+              class="easi-grt__nav-link--border"
+            >
+              <a
+                aria-label="Open LCID"
+                class="easi-grt__nav-link"
+                data-testid="grt-nav-lifecycleID.title-link"
+                href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/lcid"
+              >
+                Lifecycle ID
+              </a>
+            </li>
+            <li
+              class=""
+            >
+              <a
+                class="easi-grt__nav-link"
+                data-testid="grt-nav-actions-link"
+                href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions"
+              >
+                Actions
+              </a>
+            </li>
+            <li
+              class=""
+            >
+              <a
+                class="easi-grt__nav-link"
+                data-testid="grt-nav-notes.heading-link"
+                href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/notes"
+              >
+                Admin team notes
+              </a>
+            </li>
+            <li
+              class=""
+            >
+              <a
+                class="easi-grt__nav-link"
+                data-testid="grt-nav-dates.heading-link"
+                href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/dates"
+              >
+                Dates
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <section
+          class="desktop:grid-col-9"
+        >
+          <h1
+            aria-live="polite"
+            class="easi-h1"
+            data-testid="grt-dates-view"
+            tabindex="-1"
+          >
+            Dates
+          </h1>
+          <h2>
+            Add GRT and GRB dates
+          </h2>
+          <div
+            class="tablet:grid-col-6"
+          >
+            <div
+              class="usa-alert usa-alert--info usa-alert--slim"
+              data-testid="mandatory-fields-alert"
+            >
+              <div
+                class="usa-alert__body"
+              >
+                <p
+                  class="usa-alert__text"
+                >
+                  <span
+                    class="mandatory-fields-alert__text"
+                  >
+                    All fields are mandatory
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="tablet:grid-col-9 margin-bottom-7"
+          >
+            <form
+              action="#"
+            >
+              <div
+                class="usa-form-group"
+              >
+                <fieldset
+                  class="usa-fieldset margin-top-4"
+                >
+                  <legend
+                    class="usa-label margin-bottom-1"
+                  >
+                    GRT Date
+                  </legend>
+                  <div
+                    class="easi-help-text"
+                    id="TestDate-DateHelp"
+                  >
+                    For example 04 28 2020
+                  </div>
+                  <div
+                    class="usa-memorable-date"
+                  >
+                    <div
+                      class="usa-form-group usa-form-group--month"
+                    >
+                      <label
+                        class="usa-label"
+                        for="Dates-GrtDateMonth"
+                      >
+                        Month
+                      </label>
+                      <span
+                        class="usa-sr-only"
+                        id="DateMonthHelp"
+                      >
+                        Month, this field requires two digits. For example, zero three
+                      </span>
+                      <input
+                        aria-describedby="DateMonthHelp"
+                        class="usa-input usa-input--inline"
+                        id="Dates-GrtDateMonth"
+                        inputmode="numeric"
+                        maxlength="2"
+                        name="grtDateMonth"
+                        pattern="[0-9]*"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <div
+                      class="usa-form-group usa-form-group--day"
+                    >
+                      <label
+                        class="usa-label"
+                        for="Dates-GrtDateDay"
+                      >
+                        Day
+                      </label>
+                      <span
+                        class="usa-sr-only"
+                        id="DateDayHelp"
+                      >
+                        Day, this field requires two digits. For example, two three
+                      </span>
+                      <input
+                        aria-describedby="DateDayHelp"
+                        class="usa-input usa-input--inline"
+                        id="Dates-GrtDateDay"
+                        inputmode="numeric"
+                        maxlength="2"
+                        name="grtDateDay"
+                        pattern="[0-9]*"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <div
+                      class="usa-form-group usa-form-group--year"
+                    >
+                      <label
+                        class="usa-label"
+                        for="Dates-GrtDateYear"
+                      >
+                        Year
+                      </label>
+                      <span
+                        class="usa-sr-only"
+                        id="DateYearHelp"
+                      >
+                        Year, this field requires four digits. For example, two zero two one
+                      </span>
+                      <input
+                        aria-describedby="DateYearHelp"
+                        class="usa-input usa-input--inline"
+                        id="Dates-GrtDateYear"
+                        inputmode="numeric"
+                        maxlength="4"
+                        minlength="4"
+                        name="grtDateYear"
+                        pattern="[0-9]*"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+              <div
+                class="usa-form-group"
+              >
+                <fieldset
+                  class="usa-fieldset margin-top-4"
+                >
+                  <legend
+                    class="usa-label margin-bottom-1"
+                  >
+                    GRB Date
+                  </legend>
+                  <div
+                    class="usa-memorable-date"
+                  >
+                    <div
+                      class="usa-form-group usa-form-group--month"
+                    >
+                      <label
+                        class="usa-label"
+                        for="Dates-GrbDateMonth"
+                      >
+                        Month
+                      </label>
+                      <input
+                        class="usa-input"
+                        id="Dates-GrbDateMonth"
+                        maxlength="2"
+                        name="grbDateMonth"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <div
+                      class="usa-form-group usa-form-group--day"
+                    >
+                      <label
+                        class="usa-label"
+                        for="Dates-GrbDateDay"
+                      >
+                        Day
+                      </label>
+                      <input
+                        class="usa-input"
+                        id="Dates-GrbDateDay"
+                        maxlength="2"
+                        name="grbDateDay"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <div
+                      class="usa-form-group usa-form-group--year"
+                    >
+                      <label
+                        class="usa-label"
+                        for="Dates-GrbDateYear"
+                      >
+                        Year
+                      </label>
+                      <input
+                        class="usa-input"
+                        id="Dates-GrbDateYear"
+                        maxlength="4"
+                        name="grbDateYear"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+              <button
+                class="usa-button margin-top-2"
+                data-testid="button"
+                type="submit"
+              >
+                Save
+              </button>
+            </form>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</DocumentFragment>
+`;
