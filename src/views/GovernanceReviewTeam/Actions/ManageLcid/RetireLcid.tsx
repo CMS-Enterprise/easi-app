@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { FormGroup } from '@trussworks/react-uswds';
 
+import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
@@ -89,6 +90,10 @@ const RetireLcid = ({ systemIntakeId, lcidStatus, lcid }: RetireLcidProps) => {
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
               <DatePickerFormatted {...field} id={field.name} />
+
+              <Alert type="warning" slim>
+                {t('retireLcid.pastDateAlert')}
+              </Alert>
             </FormGroup>
           )}
         />
