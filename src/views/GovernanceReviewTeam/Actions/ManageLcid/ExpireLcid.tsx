@@ -2,6 +2,7 @@ import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
 
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -15,6 +16,7 @@ import {
 } from 'queries/types/CreateSystemIntakeActionExpireLcid';
 import { SystemIntakeExpireLCIDInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
+import { expireLcidSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
@@ -31,7 +33,9 @@ interface ExpireLcidProps extends ManageLcidProps {
 
 const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
   const { t } = useTranslation('action');
-  const form = useForm<ExpireLcidFields>();
+  const form = useForm<ExpireLcidFields>({
+    resolver: yupResolver(expireLcidSchema)
+  });
 
   const { control } = form;
 
