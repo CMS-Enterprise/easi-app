@@ -212,7 +212,7 @@ describe('Governance Review Team', () => {
     await waitForPageLoad('grt-dates-view');
   });
 
-  it('renders GRT dates view', async () => {
+  it('renders GRT decision view', async () => {
     render(
       <MemoryRouter
         initialEntries={[`/governance-review-team/${systemIntake.id}/decision`]}
