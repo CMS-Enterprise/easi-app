@@ -137,7 +137,11 @@ func (s *Store) GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx context
 		)
 	`)
 	if err != nil {
-		// TODO - proper logging
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to prepare SQL statement for GetTRBAdviceLetterRecommendationsSharingTRBRequestID() with error %s", err),
+			zap.Error(err),
+			zap.String("id", recommendationID.String()),
+		)
 		return nil, err
 	}
 
@@ -259,7 +263,12 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 
 	newPositionsSerialized, err := json.Marshal(newPositions)
 	if err != nil {
-		// TODO - proper logging
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to marshal the JSON for updating TRB recommendation advice letters with error %s", err),
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+
 		return nil, err
 	}
 
@@ -277,7 +286,11 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 		RETURNING *;
 	`)
 	if err != nil {
-		// TODO - proper logging
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to prepare SQL statement for UpdateTRBAdviceLetterRecommendationOrder() with error %s", err),
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
 		return nil, err
 	}
 
@@ -289,7 +302,11 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 
 	err = stmt.Select(&updatedRecommendations, arg)
 	if err != nil {
-		// TODO - proper logging
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to update the order of TRB recommendation advice letters with error %s", err),
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
 		return nil, err
 	}
 
