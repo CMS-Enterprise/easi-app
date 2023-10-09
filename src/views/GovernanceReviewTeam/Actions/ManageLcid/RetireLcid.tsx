@@ -1,8 +1,14 @@
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { FormGroup } from '@trussworks/react-uswds';
 
+import DatePickerFormatted from 'components/shared/DatePickerFormatted';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionRetireLcidQuery from 'queries/CreateSystemIntakeActionRetireLcidQuery';
 import {
   CreateSystemIntakeActionRetireLcid,
@@ -27,6 +33,8 @@ interface RetireLcidProps extends ManageLcidProps {
 const RetireLcid = ({ systemIntakeId, lcidStatus, lcid }: RetireLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<RetireLcidFields>();
+
+  const { control } = form;
 
   const [retireLcid] = useMutation<
     CreateSystemIntakeActionRetireLcid,
@@ -63,7 +71,49 @@ const RetireLcid = ({ systemIntakeId, lcidStatus, lcid }: RetireLcidProps) => {
           />
         }
       >
-        {/* Action fields here */}
+        <Controller
+          name="retiresAt"
+          control={control}
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name} className="text-normal" required>
+                {t('retireLcid.retirementDate')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('retireLcid.retirementDateHelpText')}
+              </HelpText>
+              <HelpText className="margin-top-1">
+                {t('retireLcid.format')}
+              </HelpText>
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
+              <DatePickerFormatted {...field} id={field.name} />
+            </FormGroup>
+          )}
+        />
+
+        <Controller
+          name="reason"
+          control={control}
+          render={({ field: { ref, ...field } }) => (
+            <FormGroup>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('retireLcid.reason')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('retireLcid.reasonHelpText')}
+              </HelpText>
+              <TextAreaField
+                {...field}
+                id={field.name}
+                value={field.value || ''}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
+        />
       </ActionForm>
     </FormProvider>
   );
