@@ -1,12 +1,21 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { MockedProvider } from '@apollo/react-testing';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import i18next from 'i18next';
 import { DateTime } from 'luxon';
 
-import { systemIntake as mockSystemIntake } from 'data/mock/systemIntake';
+import {
+  getSystemIntakeContactsQuery,
+  getSystemIntakeQuery,
+  systemIntake as mockSystemIntake
+} from 'data/mock/systemIntake';
+import { MessageProvider } from 'hooks/useMessage';
 import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 
 import LcidTitleBox from './LcidTitleBox';
+import RetireLcid from './RetireLcid';
 import ManageLcid from '.';
 
 const lcidExpiresAt = DateTime.local().plus({ year: 1 }).toISO();
@@ -96,6 +105,38 @@ describe('Manage LCID form', async () => {
 
     expect(
       screen.getByRole('link', { name: 'Change action' })
+    ).toBeInTheDocument();
+  });
+});
+
+describe('Retire LCID action', async () => {
+  it('Renders alert if date is in the past', async () => {
+    render(
+      <MemoryRouter>
+        <MockedProvider
+          mocks={[getSystemIntakeContactsQuery, getSystemIntakeQuery]}
+        >
+          <MessageProvider>
+            <RetireLcid
+              systemIntakeId={systemIntake.id}
+              lcidStatus={SystemIntakeLCIDStatus.ISSUED}
+              lcid="123456"
+            />
+          </MessageProvider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    const retireDateField = await screen.findByRole('textbox', {
+      name: 'Life Cycle ID retirement date *'
+    });
+
+    const dateInPast = '01/01/2023';
+
+    userEvent.type(retireDateField, dateInPast);
+
+    expect(
+      screen.getByText(i18next.t<string>('action:retireLcid.pastDateAlert'))
     ).toBeInTheDocument();
   });
 });
