@@ -69,10 +69,14 @@ const tableMap = (
 
     /**
      * Fix for handling legacy intakes once IT Gov v2 is released
-     * Sets intake state to CLOSED if status is LCID_ISSUED
+     * Sets intake state to CLOSED if status is LCID_ISSUED, NOT_IT_REQUEST, or NO_GOVERNANCE
      */
     let { state } = intake;
-    if (intake.status === SystemIntakeStatus.LCID_ISSUED) {
+    if (
+      intake.status === SystemIntakeStatus.LCID_ISSUED ||
+      intake.status === SystemIntakeStatus.NOT_IT_REQUEST ||
+      intake.status === SystemIntakeStatus.NO_GOVERNANCE
+    ) {
       state = SystemIntakeState.CLOSED;
     }
 
