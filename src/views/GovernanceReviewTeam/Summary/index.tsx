@@ -15,11 +15,12 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
 import { RequestType } from 'types/systemIntake';
 import { formatDateLocal } from 'utils/date';
+import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import {
   isIntakeClosed,
   isIntakeOpen,
@@ -29,10 +30,7 @@ import {
 
 type RequestSummaryProps = {
   id: string;
-  requester: {
-    name: string | null;
-    component: string | null;
-  };
+  requester: Requester;
   requestName: string;
   requestType: RequestType;
   status: string;
@@ -60,14 +58,6 @@ const RequestSummary = ({
       errorPolicy: 'all'
     }
   );
-
-  const component = cmsDivisionsAndOffices.find(
-    c => c.name === requester.component
-  );
-
-  const requesterNameAndComponent = component
-    ? `${requester.name}, ${component.acronym}`
-    : requester.name;
 
   // Get admin lead assigned to intake
   const getAdminLead = () => {
@@ -132,7 +122,12 @@ const RequestSummary = ({
           <div className="easi-grt__request-info-col">
             <div className="easi-grt__description-group">
               <dt>{t('intake:contactDetails.requester')}</dt>
-              <dd>{requesterNameAndComponent}</dd>
+              <dd>
+                {getPersonNameAndComponentAcronym(
+                  requester.name,
+                  requester?.component
+                )}
+              </dd>
             </div>
             <div className="easi-grt__description-group">
               <dt>{t('intake:fields.submissionDate')}</dt>
