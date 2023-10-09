@@ -20,7 +20,11 @@ type ExpireLcidFields = NonNullableProps<
   Omit<SystemIntakeExpireLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
 >;
 
-const ExpireLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
+interface ExpireLcidProps extends ManageLcidProps {
+  lcid: string | null;
+}
+
+const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<ExpireLcidFields>();
 
@@ -50,7 +54,7 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
     <FormProvider<ExpireLcidFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
-        successMessage=""
+        successMessage={t('expireLcid.success', { lcid })}
         onSubmit={onSubmit}
         title={
           <LcidTitleBox
