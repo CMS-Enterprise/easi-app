@@ -2,6 +2,7 @@ import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
@@ -18,6 +19,7 @@ import {
 } from 'queries/types/CreateSystemIntakeActionRetireLcid';
 import { SystemIntakeRetireLCIDInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
+import { retireLcidSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
@@ -41,7 +43,9 @@ interface RetireLcidProps extends ManageLcidProps {
 
 const RetireLcid = ({ systemIntakeId, lcidStatus, lcid }: RetireLcidProps) => {
   const { t } = useTranslation('action');
-  const form = useForm<RetireLcidFields>();
+  const form = useForm<RetireLcidFields>({
+    resolver: yupResolver(retireLcidSchema)
+  });
 
   const { control } = form;
 
