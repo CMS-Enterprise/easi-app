@@ -124,7 +124,7 @@ const RequestSummary = ({
               <dt>{t('intake:contactDetails.requester')}</dt>
               <dd>
                 {getPersonNameAndComponentAcronym(
-                  requester?.name,
+                  requester?.name || '',
                   requester?.component
                 )}
               </dd>
