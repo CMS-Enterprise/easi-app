@@ -301,7 +301,7 @@ const action = {
     nextSteps: 'Next steps',
     nextStepsHelpText:
       'Provide the team with actionable next steps for how to un-expire their Life Cycle ID, such as amending this Life Cycle ID or requesting a new one.',
-    success: 'Life Cycle ID {{lcid}} is not expired.'
+    success: 'Life Cycle ID {{lcid}} is now expired.'
   },
   updateLcid: {
     title: 'Updated Life Cycle ID',
