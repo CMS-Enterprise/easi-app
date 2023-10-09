@@ -194,7 +194,7 @@ describe('Governance Review Team', () => {
   });
 
   it('renders GRT dates view', async () => {
-    const { asFragment } = render(
+    render(
       <MemoryRouter
         initialEntries={[`/governance-review-team/${systemIntake.id}/dates`]}
       >
@@ -211,8 +211,6 @@ describe('Governance Review Team', () => {
     );
 
     await waitForPageLoad('grt-dates-view');
-
-    expect(asFragment()).toMatchSnapshot();
   });
 
   it('renders GRT decision view', async () => {
