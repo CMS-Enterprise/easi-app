@@ -1,7 +1,13 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from '@apollo/client';
 
+import CreateSystemIntakeActionExpireLcidQuery from 'queries/CreateSystemIntakeActionExpireLcidQuery';
+import {
+  CreateSystemIntakeActionExpireLcid,
+  CreateSystemIntakeActionExpireLcidVariables
+} from 'queries/types/CreateSystemIntakeActionExpireLcid';
 import { SystemIntakeExpireLCIDInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
@@ -18,15 +24,27 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<ExpireLcidFields>();
 
+  const [expireLcid] = useMutation<
+    CreateSystemIntakeActionExpireLcid,
+    CreateSystemIntakeActionExpireLcidVariables
+  >(CreateSystemIntakeActionExpireLcidQuery, {
+    refetchQueries: ['GetSystemIntake']
+  });
+
   /**
-   * Submit handler containing mutation logic
+   * Expire LCID on form submit
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: ExpireLcidFields) => {
-    // Execute mutation here
-    // mutate(formData);
-  };
+  const onSubmit = async (formData: ExpireLcidFields) =>
+    expireLcid({
+      variables: {
+        input: {
+          systemIntakeID: systemIntakeId,
+          ...formData
+        }
+      }
+    });
 
   return (
     <FormProvider<ExpireLcidFields> {...form}>
