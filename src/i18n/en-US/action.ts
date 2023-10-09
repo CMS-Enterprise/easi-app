@@ -293,6 +293,18 @@ const action = {
     RETIRED: 'Retired',
     RETIRING_SOON: 'Retiring soon'
   },
+  retireLcid: {
+    retirementDate: 'Life Cycle ID retirement date',
+    retirementDateHelpText:
+      'If you select a future date, this project team will not continue to recieve automatic updates about their Life Cycle ID, and the LCID will me marked as retired on the chosen date.',
+    format: 'Format: mm/dd/yyyy',
+    pastDateAlert:
+      "You've entered a date that is in the past. Please double-check to make sure this date is accurate.",
+    reason: 'Why are you retiring this Life Cycle ID? (optional)',
+    reasonHelpText:
+      'Provide any additional details as to why you are retiring this LCID.',
+    success: 'Life Cycle ID {{lcid}} is now retired.'
+  },
   updateLcid: {
     title: 'Updated Life Cycle ID',
     helpText:
