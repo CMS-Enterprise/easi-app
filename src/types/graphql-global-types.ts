@@ -932,6 +932,18 @@ export interface SystemIntakeRequesterWithComponentInput {
 }
 
 /**
+ * Input for retiring an intake's LCID in IT Gov v2
+ */
+export interface SystemIntakeRetireLCIDInput {
+  systemIntakeID: UUID;
+  retiresAt: Time;
+  reason?: HTML | null;
+  additionalInfo?: HTML | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * Input for updating an intake's LCID in IT Gov v2
  */
 export interface SystemIntakeUpdateLCIDInput {
