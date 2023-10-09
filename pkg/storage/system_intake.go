@@ -415,9 +415,7 @@ func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuse
 	query := `
 		SELECT
 			system_intakes.*,
-			business_cases.id as business_case_id,
-			intakes_and_notes.content AS last_admin_note_content,
-			intakes_and_notes.created_at AS last_admin_note_created_at
+			business_cases.id as business_case_id
 		FROM
 			(	SELECT
 					distinct ON (system_intakes.id) system_intakes.id, notes.content, notes.created_at
