@@ -105,8 +105,6 @@ const RequestOverview = () => {
     return <NotFound />;
   }
 
-  console.log(systemIntake);
-
   return (
     <MainContent className="easi-grt" data-testid="grt-request-overview">
       {systemIntake && !fullPageLayout && (

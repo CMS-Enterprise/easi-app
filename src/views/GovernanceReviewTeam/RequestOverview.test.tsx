@@ -193,7 +193,7 @@ describe('Governance Review Team', () => {
     await waitForPageLoad('grt-notes-view');
   });
 
-  it.only('renders GRT dates view', async () => {
+  it('renders GRT dates view', async () => {
     const { asFragment } = render(
       <MemoryRouter
         initialEntries={[`/governance-review-team/${systemIntake.id}/dates`]}

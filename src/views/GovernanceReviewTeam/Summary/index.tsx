@@ -95,6 +95,8 @@ const RequestSummary = ({
     returnObjects: true
   });
 
+  console.log(requester);
+
   return (
     <section className="easi-grt__request-summary">
       {mutationResult.error && (
