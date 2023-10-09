@@ -75,7 +75,7 @@ func UpdateTRBAdviceLetterRecommendationOrder(
 	trbRequestID uuid.UUID,
 	newOrder []uuid.UUID,
 ) ([]*models.TRBAdviceLetterRecommendation, error) {
-	// extra database query is necessary for validation (messing up the recommendations' positions with an invalid order would be *bad*)
+	// this extra database query is necessary for validation, so we don't mess up the recommendations' positions with an invalid order,
 	// but requiring an extra database call is unfortunate
 	currentRecommendations, err := store.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, trbRequestID)
 	if err != nil {
@@ -96,8 +96,7 @@ func UpdateTRBAdviceLetterRecommendationOrder(
 
 // DeleteTRBAdviceLetterRecommendation deletes a TRBAdviceLetterRecommendation record from the database
 func DeleteTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
-	// as well as deleting the record, we need to update the position of the remaining records so there aren't any gaps
-	// so query for them
+	// as well as deleting the recommendation, we need to update the position of the remaining recommendations for that TRB request, so there aren't any gaps in the ordering
 
 	allRecommendationsForRequest, err := store.GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx, id)
 	if err != nil {
@@ -114,7 +113,7 @@ func DeleteTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Sto
 
 	for _, recommendation := range allRecommendationsForRequest {
 		trbRequestID = recommendation.TRBRequestID // doesn't matter that we set this on every iteration, all recommendations will have the same request ID
-		if recommendation.ID != id {
+		if recommendation.ID != id {               // skip over the recommendation we want to delete
 			newOrder = append(newOrder, recommendation.ID)
 		}
 	}

@@ -17,7 +17,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// CreateTRBAdviceLetterRecommendation creates a new TRB advice letter recommendation record in the database
+// CreateTRBAdviceLetterRecommendation creates a new TRB advice letter recommendation record in the database.
+// This recommendation will be positioned at the end of the advice letter upon creation.
 func (s *Store) CreateTRBAdviceLetterRecommendation(
 	ctx context.Context,
 	recommendation *models.TRBAdviceLetterRecommendation,
@@ -26,7 +27,8 @@ func (s *Store) CreateTRBAdviceLetterRecommendation(
 		recommendation.ID = uuid.New()
 	}
 
-	// set position_in_letter to 1 + (the largeting existing position for this advice letter)
+	// besides the normal fields, set position_in_letter pased on the existing recommendations for this advice letter
+	// set position_in_letter to 1 + (the largeting existing position for this advice letter),
 	// defaulting to 0 if there are no existing recommendations for this advice letter
 	stmt, err := s.db.PrepareNamed(`
 		INSERT INTO trb_advice_letter_recommendations (
@@ -249,7 +251,7 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 	newOrder []uuid.UUID,
 ) ([]*models.TRBAdviceLetterRecommendation, error) {
 	// convert newOrder into a slice of maps with entries for recommendation ID and new position,
-	// which can then be passed to SQL as JSON, then used in the query with json_to_recordset()
+	// which can then be passed to SQL as JSON, then used in the query via json_to_recordset()
 	newPositions := []map[string]any{}
 
 	for index, recommendationID := range newOrder {
@@ -272,6 +274,9 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 		return nil, err
 	}
 
+	// json_to_recordset() lets us build a temporary table (new_positions) with the new positions for each recommendation,
+	// which we can use in a CTE (common table expression, denoted by the WITH keyword) to update the recommendations
+	// json_to_recordset() documentation - https://www.postgresql.org/docs/14/functions-json.html
 	stmt, err := s.db.PrepareNamed(`
 		WITH new_positions AS (
 			SELECT *

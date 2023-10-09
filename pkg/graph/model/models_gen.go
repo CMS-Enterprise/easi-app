@@ -929,7 +929,7 @@ type UpdateSystemIntakeReviewDatesInput struct {
 
 type UpdateTRBAdviceLetterRecommendationOrderInput struct {
 	TrbRequestID uuid.UUID `json:"trbRequestId"`
-	// List of the recommendation IDs in the order they should be displayed
+	// List of the recommendation IDs in the new order they should be displayed
 	NewOrder []uuid.UUID `json:"newOrder"`
 }
 

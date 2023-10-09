@@ -42,11 +42,11 @@ func IsNewRecommendationOrderValid(currentRecommendations []*models.TRBAdviceLet
 		newOrderIDs[newOrderID] = struct{}{}
 	}
 
-	// given:
+	// since we've checked that:
 	// * newOrder is exactly as long as currentRecommendations
 	// * all IDs in newOrder are present in currentRecommendations
 	// * all IDs in newOrder are distinct
-	// we know that all IDS in currentRecommendations are present in newOrder, so we don't have to check that
+	// this means that all IDs in currentRecommendations must be present in newOrder, so we don't have to explicitly check that
 
 	return nil
 }

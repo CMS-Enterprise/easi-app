@@ -27,7 +27,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: uuid.New(),
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 0,
+				PositionInLetter: 1,
 				Title:            "Currently at the end, will be reordered to the start",
 			},
 		}
@@ -68,7 +68,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 		trbRequestID := uuid.New()
 
 		// hardcoded IDs to make sure this test is deterministic and easily understandable
-		// we can set the leading hex digits arbitrarily, the "4" and "a" later on identify it as a v4 UUID
+		// we can set the leading hex digits arbitrarily; the "4" and "a" are necessary to identify these as v4 UUIDs
 		currentRecIDs := []uuid.UUID{
 			uuid.MustParse("10000000-0000-4000-a000-000000000000"),
 			uuid.MustParse("20000000-0000-4000-a000-000000000000"),
@@ -117,7 +117,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 		trbRequestID := uuid.New()
 
 		// hardcoded IDs to make sure this test is deterministic and easily understandable
-		// we can set the leading hex digits arbitrarily, the "4" and "a" later on identify it as a v4 UUID
+		// we can set the leading hex digits arbitrarily; the "4" and "a" are necessary to identify these as v4 UUIDs
 		currentRecIDs := []uuid.UUID{
 			uuid.MustParse("10000000-0000-4000-a000-000000000000"),
 			uuid.MustParse("20000000-0000-4000-a000-000000000000"),
@@ -154,7 +154,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 		newOrder := []uuid.UUID{
 			currentRecIDs[0],
 			currentRecIDs[1],
-			currentRecIDs[1], // duplicate - this should cause invalidity
+			currentRecIDs[1], // duplicate - this should make newOrder invalid
 		}
 
 		err := IsNewRecommendationOrderValid(currentRecs, newOrder)

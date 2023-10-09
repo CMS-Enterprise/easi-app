@@ -9781,7 +9781,7 @@ input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]inter
 input UpdateTRBAdviceLetterRecommendationOrderInput {
   trbRequestId: UUID!
   """
-  List of the recommendation IDs in the order they should be displayed
+  List of the recommendation IDs in the new order they should be displayed
   """
   newOrder: [UUID!]!
 }
