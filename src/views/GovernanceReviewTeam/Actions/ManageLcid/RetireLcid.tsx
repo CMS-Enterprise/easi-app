@@ -20,7 +20,11 @@ type RetireLcidFields = NonNullableProps<
   Omit<SystemIntakeRetireLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
 >;
 
-const RetireLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
+interface RetireLcidProps extends ManageLcidProps {
+  lcid: string | null;
+}
+
+const RetireLcid = ({ systemIntakeId, lcidStatus, lcid }: RetireLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<RetireLcidFields>();
 
@@ -50,7 +54,7 @@ const RetireLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
     <FormProvider<RetireLcidFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
-        successMessage=""
+        successMessage={t('retireLcid.success', { lcid })}
         onSubmit={onSubmit}
         title={
           <LcidTitleBox
