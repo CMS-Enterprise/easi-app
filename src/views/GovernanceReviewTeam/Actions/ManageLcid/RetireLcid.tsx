@@ -1,7 +1,13 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from '@apollo/client';
 
+import CreateSystemIntakeActionRetireLcidQuery from 'queries/CreateSystemIntakeActionRetireLcidQuery';
+import {
+  CreateSystemIntakeActionRetireLcid,
+  CreateSystemIntakeActionRetireLcidVariables
+} from 'queries/types/CreateSystemIntakeActionRetireLcid';
 import { SystemIntakeRetireLCIDInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
@@ -18,15 +24,27 @@ const RetireLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<RetireLcidFields>();
 
+  const [retireLcid] = useMutation<
+    CreateSystemIntakeActionRetireLcid,
+    CreateSystemIntakeActionRetireLcidVariables
+  >(CreateSystemIntakeActionRetireLcidQuery, {
+    refetchQueries: ['GetSystemIntake']
+  });
+
   /**
-   * Submit handler containing mutation logic
+   * Retire LCID on form submit
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: RetireLcidFields) => {
-    // Execute mutation here
-    // mutate(formData);
-  };
+  const onSubmit = async (formData: RetireLcidFields) =>
+    retireLcid({
+      variables: {
+        input: {
+          systemIntakeID: systemIntakeId,
+          ...formData
+        }
+      }
+    });
 
   return (
     <FormProvider<RetireLcidFields> {...form}>
