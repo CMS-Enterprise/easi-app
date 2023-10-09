@@ -305,7 +305,13 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 		AdditionalInfo: &additionalInfo,
 	}
 
-	updatedIntake, err := RejectIntakeAsNotApproved(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
+	updatedIntake, err := RejectIntakeAsNotApproved(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		s.testConfigs.EmailClient,
+		s.fetchUserInfoStub,
+		input,
+	)
 	s.NoError(err)
 
 	// check workflow state
@@ -336,7 +342,13 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 
 	// check that rejecting the same intake twice is valid
 	input.Reason = "further rejection testing"
-	_, err = RejectIntakeAsNotApproved(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
+	_, err = RejectIntakeAsNotApproved(
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		s.testConfigs.EmailClient,
+		s.fetchUserInfoStub,
+		input,
+	)
 	s.NoError(err)
 }
 
@@ -873,6 +885,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 				actionedIntake, err := CreateSystemIntakeActionNotITGovRequest(
 					ctx,
 					s.testConfigs.Store,
+					s.testConfigs.EmailClient,
 					s.fetchUserInfoStub,
 					model.SystemIntakeNotITGovReqInput{
 						SystemIntakeID: intake.ID,
@@ -911,6 +924,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		actionedIntake, err := CreateSystemIntakeActionNotITGovRequest(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeNotITGovReqInput{
 				SystemIntakeID: intake.ID,
@@ -945,6 +959,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		actionedIntake, err := CreateSystemIntakeActionNotITGovRequest(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeNotITGovReqInput{
 				SystemIntakeID: intake.ID,
@@ -977,6 +992,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		actionedIntake, err := CreateSystemIntakeActionNotITGovRequest(
 			ctx,
 			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
 			model.SystemIntakeNotITGovReqInput{
 				SystemIntakeID: intake.ID,
