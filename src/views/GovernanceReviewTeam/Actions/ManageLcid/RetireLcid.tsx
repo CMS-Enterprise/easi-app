@@ -3,6 +3,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { FormGroup } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
 
 import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
@@ -26,6 +27,13 @@ import { ManageLcidProps } from '.';
 type RetireLcidFields = NonNullableProps<
   Omit<SystemIntakeRetireLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
 >;
+
+const isDateInPast = (date: string | null): boolean => {
+  if (!date || date.length === 0) return false;
+
+  const startOfDay = DateTime.local().startOf('day').toISO();
+  return startOfDay > date;
+};
 
 interface RetireLcidProps extends ManageLcidProps {
   lcid: string | null;
@@ -91,9 +99,14 @@ const RetireLcid = ({ systemIntakeId, lcidStatus, lcid }: RetireLcidProps) => {
               )}
               <DatePickerFormatted {...field} id={field.name} />
 
-              <Alert type="warning" slim>
-                {t('retireLcid.pastDateAlert')}
-              </Alert>
+              {
+                // If past date is selected, show alert
+                isDateInPast(field.value) && (
+                  <Alert type="warning" slim>
+                    {t('retireLcid.pastDateAlert')}
+                  </Alert>
+                )
+              }
             </FormGroup>
           )}
         />
