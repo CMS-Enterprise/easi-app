@@ -2,12 +2,17 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { SystemIntakeExpireLCIDInput } from 'types/graphql-global-types';
+import { NonNullableProps } from 'types/util';
+
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
 import LcidTitleBox from './LcidTitleBox';
 import { ManageLcidProps } from '.';
 
-interface ExpireLcidFields extends SystemIntakeActionFields {}
+type ExpireLcidFields = NonNullableProps<
+  Omit<SystemIntakeExpireLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
+>;
 
 const ExpireLcid = ({ systemIntakeId, lcidStatus }: ManageLcidProps) => {
   const { t } = useTranslation('action');
