@@ -1,12 +1,14 @@
 import { DateTime } from 'luxon';
 
+import { SystemIntakeForTable } from 'components/RequestRepository/tableMap';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
-import { parseAsUTC } from 'utils/date';
+import { cleanCSVData } from 'utils/csv';
+import { formatDateLocal, parseAsUTC } from 'utils/date';
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
 export const initialSystemIntakeForm: SystemIntakeForm = {
@@ -241,6 +243,38 @@ export const prepareSystemIntakeForApp = (
     hasUiChanges:
       systemIntake.hasUiChanges === null ? null : systemIntake.hasUiChanges
   };
+};
+
+export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
+  const lastAdminNote = intake.lastAdminNote
+    ? { ...intake.lastAdminNote }
+    : null;
+
+  // Apppend lastAdminNote createdAt date to content
+  if (lastAdminNote) {
+    lastAdminNote.content = `${lastAdminNote.content} (${formatDateLocal(
+      lastAdminNote.createdAt,
+      'MM/dd/yyyy'
+    )})`;
+  }
+
+  // Format dates to MM/dd/yyyy
+  const createdAt = formatDateLocal(intake.createdAt, 'MM/dd/yyyy');
+  const submittedAt =
+    intake?.submittedAt && formatDateLocal(intake.submittedAt, 'MM/dd/yyyy');
+  const updatedAt =
+    intake?.updatedAt && formatDateLocal(intake.updatedAt, 'MM/dd/yyyy');
+  const archivedAt =
+    intake?.archivedAt && formatDateLocal(intake.archivedAt, 'MM/dd/yyyy');
+
+  return cleanCSVData({
+    ...intake,
+    lastAdminNote,
+    createdAt,
+    submittedAt,
+    updatedAt,
+    archivedAt
+  });
 };
 
 /**

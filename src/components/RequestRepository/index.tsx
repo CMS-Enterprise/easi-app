@@ -38,13 +38,12 @@ import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
+import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import useTableState from 'hooks/useTableState';
 import GetSystemIntakesTableQuery from 'queries/GetSystemIntakesTableQuery';
 import { GetSystemIntakesTable } from 'queries/types/GetSystemIntakesTable';
 import { SystemIntakeState } from 'types/graphql-global-types';
-import { cleanCSVData } from 'utils/csv';
-import { formatDateLocal } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
@@ -144,23 +143,7 @@ const RequestRepository = () => {
   /** Convert selected intakes to CSV format */
   const convertIntakesToCSV = (
     intakes: SystemIntakeForTable[]
-  ): SystemIntakeForTable[] => {
-    return intakes.map(intake => {
-      const lastAdminNote = intake.lastAdminNote
-        ? { ...intake.lastAdminNote }
-        : null;
-
-      // Apppend lastAdminNote createdAt date to content
-      if (lastAdminNote) {
-        lastAdminNote.content = `${lastAdminNote.content} (${formatDateLocal(
-          lastAdminNote.createdAt,
-          'MM/dd/yyyy'
-        )})`;
-      }
-
-      return cleanCSVData({ ...intake, lastAdminNote });
-    });
-  };
+  ): SystemIntakeForTable[] => intakes.map(convertIntakeToCSV);
 
   const csvHeaders = csvHeaderMap(t);
   const csvPortfolioReportHeaders = csvPortfolioReportHeaderMap(t);
