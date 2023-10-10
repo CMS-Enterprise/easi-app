@@ -121,6 +121,7 @@ describe('Retire LCID action', async () => {
               systemIntakeId={systemIntake.id}
               lcidStatus={SystemIntakeLCIDStatus.ISSUED}
               lcid="123456"
+              lcidRetiresAt={null}
             />
           </MessageProvider>
         </MockedProvider>

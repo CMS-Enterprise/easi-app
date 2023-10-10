@@ -39,9 +39,15 @@ const isDateInPast = (date: string | null): boolean => {
 
 interface RetireLcidProps extends ManageLcidProps {
   lcid: string | null;
+  lcidRetiresAt: string | null;
 }
 
-const RetireLcid = ({ systemIntakeId, lcidStatus, lcid }: RetireLcidProps) => {
+const RetireLcid = ({
+  systemIntakeId,
+  lcidStatus,
+  lcid,
+  lcidRetiresAt
+}: RetireLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<RetireLcidFields>({
     resolver: yupResolver(retireLcidSchema)
