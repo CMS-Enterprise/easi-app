@@ -82,6 +82,12 @@ func UpdateTRBAdviceLetterRecommendationOrder(
 		return nil, err
 	}
 
+	// querying, checking validity, then updating introduces the potential for time-of-check/time-of-use issues:
+	// the data in the database might be updated between querying and updating, in which case this validity check won't reflect the latest data
+	// This code doesn't currently worry about that, because we don't think it's likely to happen,
+	// due to the low likelihood of multiple users concurrently editing the same advice letter.
+	// There are issues that could occur in theory, though, such as a recommendation getting deleted between when this function queries and when it updates;
+	// that could lead to a `newOrder` with more elements than there are recommendations being accepted, which would throw off the recs' positions.
 	err = recommendations.IsNewRecommendationOrderValid(currentRecommendations, newOrder)
 	if err != nil {
 		return nil, err
