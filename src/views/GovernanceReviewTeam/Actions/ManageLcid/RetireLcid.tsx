@@ -50,7 +50,10 @@ const RetireLcid = ({
 }: RetireLcidProps) => {
   const { t } = useTranslation('action');
   const form = useForm<RetireLcidFields>({
-    resolver: yupResolver(retireLcidSchema)
+    resolver: yupResolver(retireLcidSchema),
+    defaultValues: {
+      retiresAt: lcidRetiresAt || ''
+    }
   });
 
   const { control } = form;
