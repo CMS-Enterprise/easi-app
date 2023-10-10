@@ -47,17 +47,28 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
     action: LcidAction;
   }>();
 
+  /**
+   * LCID status context for displaying options and translation text
+   *
+   * If `lcidRetiresAt` is set, should return RETIRED. Otherwise, return `lcidStatus`.
+   */
+  const lcidStatusContext = useMemo(
+    () => (lcidRetiresAt ? SystemIntakeLCIDStatus.RETIRED : lcidStatus),
+    [lcidStatus, lcidRetiresAt]
+  );
+
+  /** Available action options based on the lcidStatusContext */
   const actionOptions = useMemo(() => {
-    if (!lcidStatus) return [];
+    if (!lcidStatusContext) return [];
 
     const options = ['retire', 'update'];
 
-    if (lcidStatus === SystemIntakeLCIDStatus.ISSUED) {
+    if (lcidStatusContext === SystemIntakeLCIDStatus.ISSUED) {
       options.push('expire');
     }
 
     return options;
-  }, [lcidStatus]);
+  }, [lcidStatusContext]);
 
   // Show page not found if no LCID or action is not available
   if (!lcid || !lcidStatus || (subPage && !actionOptions.includes(subPage))) {
@@ -106,7 +117,7 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
 
           <p className="line-height-body-5 font-body-lg text-light margin-0">
             {t('manageLcid.description', {
-              context: lcidStatus
+              context: lcidStatusContext
             })}
           </p>
 
@@ -153,7 +164,7 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
                           value={action}
                           checked={field.value === action}
                           label={t(`manageLcid.${action}`, {
-                            context: lcidStatus
+                            context: lcidStatusContext
                           })}
                           id={`grt-lcid-action__${action}`}
                         />
