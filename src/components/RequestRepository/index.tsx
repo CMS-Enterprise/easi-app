@@ -304,7 +304,11 @@ const RequestRepository = () => {
                       {t('home:adminHome.GRT.configureReport.error')}
                     </FieldErrorMsg>
                   )}
-                  <DatePickerFormatted {...field} id={field.name} />
+                  <DatePickerFormatted
+                    {...field}
+                    id={field.name}
+                    format={dt => dt.toUTC().startOf('day').toISO()}
+                  />
                 </FormGroup>
               )}
             />
@@ -322,7 +326,11 @@ const RequestRepository = () => {
                       {t('home:adminHome.GRT.configureReport.error')}
                     </FieldErrorMsg>
                   )}
-                  <DatePickerFormatted {...field} id={field.name} />
+                  <DatePickerFormatted
+                    {...field}
+                    id={field.name}
+                    format={dt => dt.toUTC().endOf('day').toISO()}
+                  />
                 </FormGroup>
               )}
             />
