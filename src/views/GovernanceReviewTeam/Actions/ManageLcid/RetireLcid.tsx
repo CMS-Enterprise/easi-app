@@ -12,7 +12,12 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import CreateSystemIntakeActionChangeLcidRetirementDateQuery from 'queries/CreateSystemIntakeActionChangeLcidRetirementDateQuery';
 import CreateSystemIntakeActionRetireLcidQuery from 'queries/CreateSystemIntakeActionRetireLcidQuery';
+import {
+  CreateSystemIntakeActionChangeLcidRetirementDate,
+  CreateSystemIntakeActionChangeLcidRetirementDateVariables
+} from 'queries/types/CreateSystemIntakeActionChangeLcidRetirementDate';
 import {
   CreateSystemIntakeActionRetireLcid,
   CreateSystemIntakeActionRetireLcidVariables
@@ -65,13 +70,23 @@ const RetireLcid = ({
     refetchQueries: ['GetSystemIntake']
   });
 
+  const [updateRetireDate] = useMutation<
+    CreateSystemIntakeActionChangeLcidRetirementDate,
+    CreateSystemIntakeActionChangeLcidRetirementDateVariables
+  >(CreateSystemIntakeActionChangeLcidRetirementDateQuery, {
+    refetchQueries: ['GetSystemIntake']
+  });
+
   /**
    * Retire LCID on form submit
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: RetireLcidFields) =>
-    retireLcid({
+  const onSubmit = async (formData: RetireLcidFields) => {
+    /** Returns mutation based on whether retirement date is set */
+    const mutate = lcidRetiresAt ? updateRetireDate : retireLcid;
+
+    mutate({
       variables: {
         input: {
           systemIntakeID: systemIntakeId,
@@ -79,6 +94,7 @@ const RetireLcid = ({
         }
       }
     });
+  };
 
   return (
     <FormProvider<RetireLcidFields> {...form}>
