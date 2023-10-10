@@ -75,6 +75,8 @@ export default gql`
         createdAt
       }
 
+      hasUiChanges
+
       decidedAt
       submittedAt
       updatedAt

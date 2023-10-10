@@ -325,7 +325,8 @@ export const systemIntakeForTable: TableSystemIntake = {
   submittedAt: null,
   updatedAt: null,
   createdAt: systemIntake.createdAt,
-  archivedAt: null
+  archivedAt: null,
+  hasUiChanges: null
 };
 
 export const getSystemIntakeQuery = (

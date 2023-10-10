@@ -103,6 +103,7 @@ export interface GetSystemIntakesTable_systemIntakes {
   adminLead: string | null;
   notes: GetSystemIntakesTable_systemIntakes_notes[];
   actions: GetSystemIntakesTable_systemIntakes_actions[];
+  hasUiChanges: boolean | null;
   decidedAt: Time | null;
   submittedAt: Time | null;
   updatedAt: Time | null;
