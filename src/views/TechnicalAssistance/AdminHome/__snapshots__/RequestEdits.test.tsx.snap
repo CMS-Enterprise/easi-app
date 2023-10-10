@@ -156,7 +156,14 @@ exports[`Trb Admin: Action: Request Edits > submits a feedback message 1`] = `
                 class="usa-checkbox__label"
                 for="notifyEuaIds.0"
               >
-                Adeline Aarons, CMS (Requester)
+                <span>
+                  Adeline Aarons, CMS (Requester)
+                </span>
+                <span
+                  class="display-block text-base-dark"
+                >
+                  adeline.aarons@local.fake
+                </span>
               </label>
             </div>
           </li>
@@ -176,7 +183,14 @@ exports[`Trb Admin: Action: Request Edits > submits a feedback message 1`] = `
                 class="usa-checkbox__label"
                 for="copyTrbMailbox"
               >
-                Copy TRB Mailbox
+                <span>
+                  Copy TRB Mailbox
+                </span>
+                <span
+                  class="display-block text-base-dark"
+                >
+                  cms-trb@cms.hhs.gov
+                </span>
               </label>
             </div>
           </li>

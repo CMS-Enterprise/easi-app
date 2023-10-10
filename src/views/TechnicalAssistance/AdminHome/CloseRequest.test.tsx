@@ -18,6 +18,15 @@ import CloseRequest from './CloseRequest';
 import TRBRequestInfoWrapper from './RequestContext';
 import AdminHome from '.';
 
+const userInfo = {
+  __typename: 'UserInfo',
+  commonName: 'Jerry Seinfeld',
+  email: 'jerry.seinfeld@local.fake',
+  euaUserId: 'SF13'
+};
+
+const requesterLabel = `${userInfo.commonName}, OEOCR (Requester) ${userInfo.email}`;
+
 describe('Trb Admin: Action: Close & Re-open Request', () => {
   const store = easiMockStore({
     euaUserId: 'SF13',
@@ -43,12 +52,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
               __typename: 'TRBRequestAttendee',
               id: '91a14322-34a8-4838-bde3-17b1d483fb63',
               trbRequestId: id,
-              userInfo: {
-                __typename: 'UserInfo',
-                commonName: 'Jerry Seinfeld',
-                email: 'jerry.seinfeld@local.fake',
-                euaUserId: 'SF13'
-              },
+              userInfo,
               component: 'Office of Equal Opportunity and Civil Rights',
               role: PersonRole.PRODUCT_OWNER,
               createdAt: '2023-01-05T07:26:16.036618Z'
@@ -152,7 +156,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     );
 
     const requester = await findByRole('checkbox', {
-      name: 'Jerry Seinfeld, OEOCR (Requester)'
+      name: requesterLabel
     });
     expect(requester).toBeChecked();
 
@@ -343,7 +347,7 @@ describe('Trb Admin: Action: Close & Re-open Request', () => {
     );
 
     const requester = await findByRole('checkbox', {
-      name: 'Jerry Seinfeld, OEOCR (Requester)'
+      name: requesterLabel
     });
     expect(requester).toBeChecked();
 

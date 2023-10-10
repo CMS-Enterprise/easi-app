@@ -159,6 +159,12 @@ const action = {
       'You may add an admin note as a part of completing this action. This note will not be sent to recipients, but will be visible to Governance Team members and other EASi admin teams.',
     label: 'Note'
   },
+  itGovernance: 'IT Governance Mailbox',
+  itInvestment: 'IT Investment Mailbox',
+  addExternalRecipientWarning:
+    'The selected individual is external to the CMS organization. Please be sure they should see the information in this notification email before proceeding.',
+  selectExternalRecipientWarning:
+    'One or more of the selected recipients are external to the CMS organization. Please be sure they should see the information in this notification email before proceeding.',
   completeAction: 'Complete action',
   completeActionWithoutEmail: 'Complete action without email',
   cancelAction: 'Cancel action and return to request',
