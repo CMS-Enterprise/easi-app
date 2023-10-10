@@ -7,6 +7,7 @@ import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
+import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal, parseAsUTC } from 'utils/date';
 // On the frontend, the field is now "requestName", but the backend API
@@ -267,9 +268,20 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
   const archivedAt =
     intake?.archivedAt && formatDateLocal(intake.archivedAt, 'MM/dd/yyyy');
 
+  // Translate booleans to yes/no
+  const existingFunding = convertBoolToYesNo(intake?.existingFunding);
+  const needsEaSupport = convertBoolToYesNo(intake?.needsEaSupport);
+  const hasUiChanges = convertBoolToYesNo(intake?.hasUiChanges);
+
+  // Override all applicable fields with CSV formatting
   return cleanCSVData({
     ...intake,
     lastAdminNote,
+    // Formatted booleans
+    existingFunding,
+    needsEaSupport,
+    hasUiChanges,
+    // Formatted dates
     createdAt,
     submittedAt,
     updatedAt,
