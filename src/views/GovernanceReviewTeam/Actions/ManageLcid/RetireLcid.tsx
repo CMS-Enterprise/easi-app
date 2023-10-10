@@ -105,7 +105,9 @@ const RetireLcid = ({
         title={
           <LcidTitleBox
             systemIntakeId={systemIntakeId}
-            title={t('manageLcid.retire', { context: lcidStatus })}
+            title={t('manageLcid.retire', {
+              context: lcidRetiresAt && 'RETIRED'
+            })}
           />
         }
       >
