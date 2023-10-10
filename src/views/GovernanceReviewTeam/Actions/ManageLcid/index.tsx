@@ -5,10 +5,12 @@ import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import { Form, Grid } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import Label from 'components/shared/Label';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
+import { formatDateLocal } from 'utils/date';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
@@ -17,7 +19,7 @@ import ActionsSummary from '../components/ActionsSummary';
 import { ActionsProps } from '..';
 
 import ExpireLcid from './ExpireLcid';
-import RetireLcid from './RetireLcid';
+import RetireLcid, { retireDateInPast } from './RetireLcid';
 import UpdateLcid from './UpdateLcid';
 
 export interface ManageLcidProps {
@@ -31,7 +33,7 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
 
-  const { id: systemIntakeId, lcidStatus, lcid } = systemIntake;
+  const { id: systemIntakeId, lcidStatus, lcid, lcidRetiresAt } = systemIntake;
 
   const { subPage } = useParams<{
     subPage?: string;
@@ -135,6 +137,14 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
                       >
                         {t('manageLcid.label')}
                       </Label>
+
+                      {lcidRetiresAt && !retireDateInPast(lcidRetiresAt) && (
+                        <Alert type="warning" slim>
+                          {t('manageLcid.retireDateWarning', {
+                            date: formatDateLocal(lcidRetiresAt, 'MM/dd/yyyy')
+                          })}
+                        </Alert>
+                      )}
 
                       {actionOptions.map(action => (
                         <RadioField

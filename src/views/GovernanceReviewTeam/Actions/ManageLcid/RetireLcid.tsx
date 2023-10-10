@@ -35,11 +35,11 @@ type RetireLcidFields = NonNullableProps<
   Omit<SystemIntakeRetireLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
 >;
 
-const isDateInPast = (date: string | null): boolean => {
-  if (!date || date.length === 0) return false;
+export const retireDateInPast = (lcidRetiresAt: string | null): boolean => {
+  if (!lcidRetiresAt || lcidRetiresAt.length === 0) return false;
 
   const startOfDay = DateTime.local().startOf('day').toISO();
-  return startOfDay > date;
+  return startOfDay > lcidRetiresAt;
 };
 
 interface RetireLcidProps extends ManageLcidProps {
@@ -130,7 +130,7 @@ const RetireLcid = ({
 
               {
                 // If past date is selected, show alert
-                isDateInPast(field.value) && (
+                retireDateInPast(field.value) && (
                   <Alert type="warning" slim>
                     {t('retireLcid.pastDateAlert')}
                   </Alert>
@@ -140,27 +140,32 @@ const RetireLcid = ({
           )}
         />
 
-        <Controller
-          name="reason"
-          control={control}
-          render={({ field: { ref, ...field } }) => (
-            <FormGroup>
-              <Label htmlFor={field.name} className="text-normal">
-                {t('retireLcid.reason')}
-              </Label>
-              <HelpText className="margin-top-1">
-                {t('retireLcid.reasonHelpText')}
-              </HelpText>
-              <TextAreaField
-                {...field}
-                id={field.name}
-                value={field.value || ''}
-                size="sm"
-                characterCounter={false}
-              />
-            </FormGroup>
-          )}
-        />
+        {
+          // Hide reason if changing retirement date
+          !lcidRetiresAt && (
+            <Controller
+              name="reason"
+              control={control}
+              render={({ field: { ref, ...field } }) => (
+                <FormGroup>
+                  <Label htmlFor={field.name} className="text-normal">
+                    {t('retireLcid.reason')}
+                  </Label>
+                  <HelpText className="margin-top-1">
+                    {t('retireLcid.reasonHelpText')}
+                  </HelpText>
+                  <TextAreaField
+                    {...field}
+                    id={field.name}
+                    value={field.value || ''}
+                    size="sm"
+                    characterCounter={false}
+                  />
+                </FormGroup>
+              )}
+            />
+          )
+        }
       </ActionForm>
     </FormProvider>
   );

@@ -84,6 +84,8 @@ const action = {
     retire_RETIRED: 'Change retirement date',
     update: 'Update a Life Cycle ID',
     expire: 'Expire a Life Cycle ID',
+    retireDateWarning:
+      'This Life Cycle ID is currently scheduled to retire on {{- date}}. If this is incorrect, please choose the  "Change retirement date" action below.',
     summary: {
       title: 'Available LCID actions',
       retire: 'Retire',
