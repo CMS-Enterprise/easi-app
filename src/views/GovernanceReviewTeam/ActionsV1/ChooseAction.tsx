@@ -84,7 +84,7 @@ const ChooseAction = ({ systemIntake, businessCase }: ChooseActionProps) => {
   const IssueLifecycleId = (
     <ActionRadioOption
       key={issueLifecycleIdRoute}
-      label="Issue Lifecycle Id"
+      label="Issue Life Cycle ID"
       route={issueLifecycleIdRoute}
     />
   );

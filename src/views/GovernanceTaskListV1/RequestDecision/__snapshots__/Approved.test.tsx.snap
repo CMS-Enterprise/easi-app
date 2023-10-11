@@ -13,7 +13,7 @@ exports[`Business owner task list approved view > matches the snapshot 1`] = `
     </h2>
     <dl>
       <dt>
-        Project Lifecycle ID
+        Project Life Cycle ID
       </dt>
       <dd
         className="margin-left-0 font-body-xl text-bold"
@@ -22,7 +22,7 @@ exports[`Business owner task list approved view > matches the snapshot 1`] = `
       </dd>
     </dl>
     <h3>
-      Lifecycle ID Scope
+      Life Cycle ID Scope
     </h3>
     <p
       className="text-pre-wrap"

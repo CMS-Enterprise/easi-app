@@ -109,7 +109,7 @@ export const lifecycleIdSchema = sharedLifecycleIdSchema.shape({
   notificationRecipients,
   feedback: skippableEmail,
   newLifecycleId: Yup.boolean().required(
-    'Choose if you need a new Lifecycle ID or if you will use an existing Lifecycle ID'
+    'Choose if you need a new Life Cycle ID or if you will use an existing Life Cycle ID'
   ),
   lifecycleId: Yup.string().when('newLifecycleId', {
     is: false,
@@ -119,7 +119,7 @@ export const lifecycleIdSchema = sharedLifecycleIdSchema.shape({
         /^[A-Za-z]?[0-9]{6}$/,
         'Must be 6 digits with optional preceding letter'
       )
-      .required('Please enter the existing Lifecycle ID')
+      .required('Please enter the existing Life Cycle ID')
   })
 });
 
@@ -160,7 +160,7 @@ export const issueLcidSchema = confirmLcidSchema.shape({
   useExistingLcid: Yup.boolean().required('Please make a selection'),
   lcid: Yup.string().when('useExistingLcid', {
     is: true,
-    then: Yup.string().required('Please select the existing Lifecycle ID')
+    then: Yup.string().required('Please select the existing Life Cycle ID')
   })
 });
 

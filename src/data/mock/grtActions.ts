@@ -219,11 +219,11 @@ export const grtActions = {
     view: 'grt-submit-action-view'
   },
   'issue-lcid': {
-    heading: 'Approve request and issue Lifecycle ID',
+    heading: 'Approve request and issue Life Cycle ID',
     view: 'issue-lcid'
   },
   'extend-lcid': {
-    heading: 'Extend Lifecycle ID',
+    heading: 'Extend Life Cycle ID',
     view: 'extend-lcid'
   },
   'not-approved': {

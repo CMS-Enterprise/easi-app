@@ -368,7 +368,7 @@ const Notes = () => {
             ).toLocaleString(DateTime.TIME_SIMPLE)}`}</NoteByline>
             {lcidExpirationChange && (
               <dl>
-                <dt>Lifecycle ID</dt>
+                <dt>Life Cycle ID</dt>
                 <dd>{data.systemIntake?.lcid}</dd>
                 <dt>{t('notes.extendLcid.newExpirationDate')}</dt>
                 <dd>

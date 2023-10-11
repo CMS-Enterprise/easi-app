@@ -78,7 +78,7 @@ describe('The GRT Review page', () => {
     ).toBeInTheDocument();
   });
 
-  it('shows lifecycle id if it exists', async () => {
+  it('shows Life Cycle ID if it exists', async () => {
     render(
       <MemoryRouter>
         <MockedProvider>
@@ -101,7 +101,7 @@ describe('The GRT Review page', () => {
 
     expect(
       within(screen.getByTestId('grt-current-status')).getByText(
-        'Lifecycle ID issued: 123456'
+        'Life Cycle ID issued: 123456'
       )
     ).toBeInTheDocument();
   });

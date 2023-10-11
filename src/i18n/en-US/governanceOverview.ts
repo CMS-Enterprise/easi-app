@@ -8,7 +8,7 @@ const governanceOverview = {
     intro: 'Working through this step-by-step process will help you:',
     listItems: [
       'work with Subject Matter Experts (SMEs) to refine your Business Case',
-      'get a Lifecycle ID',
+      'get a Life Cycle ID',
       'get approval for your request to then seek funding'
     ],
     timeline:
@@ -61,7 +61,7 @@ const governanceOverview = {
     {
       heading: 'Decision and next steps',
       content:
-        'If your Business Case is approved, you will receive a unique Lifecycle ID. If it is not approved, you will recieve documented next steps or concerns to address in order to proceed.'
+        'If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will recieve documented next steps or concerns to address in order to proceed.'
     }
   ],
   processExists: {
