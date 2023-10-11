@@ -13,6 +13,10 @@ import (
 	"github.com/google/uuid"
 )
 
+type TRBAdminNoteAdditionalData interface {
+	IsTRBAdminNoteAdditionalData()
+}
+
 // Denotes type of a document that is attached to a 508/accessibility request,
 // which can be one of a number of common types, or another user-specified type
 type AccessibilityRequestDocumentType struct {
@@ -240,6 +244,17 @@ type CreateTRBAdminNoteInput struct {
 	TrbRequestID uuid.UUID                   `json:"trbRequestId"`
 	Category     models.TRBAdminNoteCategory `json:"category"`
 	NoteText     models.HTML                 `json:"noteText"`
+	// Categories
+	//   GENERAL_REQUEST
+	//   INITIAL_REQUEST_FORM
+	//   SUPPORTING_DOCUMENTS
+	//   CONSULT_SESSION
+	//   ADVICE_LETTER
+	AppliesToBasicRequestDetails *bool       `json:"appliesToBasicRequestDetails,omitempty"`
+	AppliesToSubjectAreas        *bool       `json:"appliesToSubjectAreas,omitempty"`
+	AppliesToAttendees           *bool       `json:"appliesToAttendees,omitempty"`
+	DocumentIDs                  []uuid.UUID `json:"documentIDs,omitempty"`
+	SectionNames                 []*string   `json:"sectionNames,omitempty"`
 }
 
 // The input required to add a recommendation & links to a TRB advice letter
@@ -812,6 +827,38 @@ type SystemIntakeUpdateLCIDInput struct {
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
+
+type TRBAdminNoteAdviceLetterAdditionalData struct {
+	Sections []string `json:"sections"`
+}
+
+func (TRBAdminNoteAdviceLetterAdditionalData) IsTRBAdminNoteAdditionalData() {}
+
+type TRBAdminNoteConsultSessionAdditionalData struct {
+	Placeholder *string `json:"placeholder,omitempty"`
+}
+
+func (TRBAdminNoteConsultSessionAdditionalData) IsTRBAdminNoteAdditionalData() {}
+
+type TRBAdminNoteGeneralRequestAdditionalData struct {
+	Placeholder *string `json:"placeholder,omitempty"`
+}
+
+func (TRBAdminNoteGeneralRequestAdditionalData) IsTRBAdminNoteAdditionalData() {}
+
+type TRBAdminNoteInitialRequestFormAdditionalData struct {
+	AppliesToBasicRequestDetails bool `json:"appliesToBasicRequestDetails"`
+	AppliesToSubjectAreas        bool `json:"appliesToSubjectAreas"`
+	AppliesToAttendees           bool `json:"appliesToAttendees"`
+}
+
+func (TRBAdminNoteInitialRequestFormAdditionalData) IsTRBAdminNoteAdditionalData() {}
+
+type TRBAdminNoteSupportingDocumentsAdditionalData struct {
+	DocumentNames []string `json:"documentNames"`
+}
+
+func (TRBAdminNoteSupportingDocumentsAdditionalData) IsTRBAdminNoteAdditionalData() {}
 
 // Denotes the type of a document attached to a TRB request,
 // which can be one of a number of common types, or a free-text user-specified type

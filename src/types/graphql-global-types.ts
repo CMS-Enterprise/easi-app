@@ -601,6 +601,11 @@ export interface CreateTRBAdminNoteInput {
   trbRequestId: UUID;
   category: TRBAdminNoteCategory;
   noteText: HTML;
+  appliesToBasicRequestDetails?: boolean | null;
+  appliesToSubjectAreas?: boolean | null;
+  appliesToAttendees?: boolean | null;
+  documentIDs?: UUID[] | null;
+  sectionNames?: (string | null)[] | null;
 }
 
 /**

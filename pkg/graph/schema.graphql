@@ -2310,6 +2310,32 @@ enum TRBAdminNoteCategory {
   ADVICE_LETTER
 }
 
+type TRBAdminNoteGeneralRequestAdditionalData {
+  placeholder: String
+# Intentionally empty
+}
+
+type TRBAdminNoteInitialRequestFormAdditionalData {
+  appliesToBasicRequestDetails: Boolean!
+  appliesToSubjectAreas: Boolean!
+  appliesToAttendees: Boolean!
+}
+
+type TRBAdminNoteSupportingDocumentsAdditionalData {
+  documentNames: [String!]! # TODO - placeholder for proper type
+}
+
+type TRBAdminNoteConsultSessionAdditionalData {
+# Intentionally empty
+placeholder: String
+}
+
+type TRBAdminNoteAdviceLetterAdditionalData {
+  sections: [String!]! # TODO - placeholder for proper type
+}
+
+union TRBAdminNoteAdditionalData = TRBAdminNoteGeneralRequestAdditionalData | TRBAdminNoteInitialRequestFormAdditionalData | TRBAdminNoteSupportingDocumentsAdditionalData | TRBAdminNoteConsultSessionAdditionalData | TRBAdminNoteAdviceLetterAdditionalData
+
 """
 Represents an admin note attached to a TRB request
 """
@@ -2320,6 +2346,7 @@ type TRBAdminNote {
   noteText: HTML!
   author: UserInfo!
   isArchived: Boolean!
+  additionalData: TRBAdminNoteAdditionalData!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2355,6 +2382,26 @@ input CreateTRBAdminNoteInput {
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
   noteText: HTML!
+
+  """
+  Categories
+    GENERAL_REQUEST
+    INITIAL_REQUEST_FORM
+    SUPPORTING_DOCUMENTS
+    CONSULT_SESSION
+    ADVICE_LETTER
+  """
+
+  # Initial Request Form
+  appliesToBasicRequestDetails: Boolean
+  appliesToSubjectAreas: Boolean
+  appliesToAttendees: Boolean
+
+  # Supporting Documents
+  documentIDs: [UUID!]
+
+  # Advice Letter
+  sectionNames: [String]
 }
 
 """

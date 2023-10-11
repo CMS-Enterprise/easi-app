@@ -897,16 +897,39 @@ type ComplexityRoot struct {
 	}
 
 	TRBAdminNote struct {
-		Author       func(childComplexity int) int
-		Category     func(childComplexity int) int
-		CreatedAt    func(childComplexity int) int
-		CreatedBy    func(childComplexity int) int
-		ID           func(childComplexity int) int
-		IsArchived   func(childComplexity int) int
-		ModifiedAt   func(childComplexity int) int
-		ModifiedBy   func(childComplexity int) int
-		NoteText     func(childComplexity int) int
-		TRBRequestID func(childComplexity int) int
+		AdditionalData func(childComplexity int) int
+		Author         func(childComplexity int) int
+		Category       func(childComplexity int) int
+		CreatedAt      func(childComplexity int) int
+		CreatedBy      func(childComplexity int) int
+		ID             func(childComplexity int) int
+		IsArchived     func(childComplexity int) int
+		ModifiedAt     func(childComplexity int) int
+		ModifiedBy     func(childComplexity int) int
+		NoteText       func(childComplexity int) int
+		TRBRequestID   func(childComplexity int) int
+	}
+
+	TRBAdminNoteAdviceLetterAdditionalData struct {
+		Sections func(childComplexity int) int
+	}
+
+	TRBAdminNoteConsultSessionAdditionalData struct {
+		Placeholder func(childComplexity int) int
+	}
+
+	TRBAdminNoteGeneralRequestAdditionalData struct {
+		Placeholder func(childComplexity int) int
+	}
+
+	TRBAdminNoteInitialRequestFormAdditionalData struct {
+		AppliesToAttendees           func(childComplexity int) int
+		AppliesToBasicRequestDetails func(childComplexity int) int
+		AppliesToSubjectAreas        func(childComplexity int) int
+	}
+
+	TRBAdminNoteSupportingDocumentsAdditionalData struct {
+		DocumentNames func(childComplexity int) int
 	}
 
 	TRBAdviceLetter struct {
@@ -1441,6 +1464,8 @@ type SystemIntakeNoteResolver interface {
 }
 type TRBAdminNoteResolver interface {
 	Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error)
+
+	AdditionalData(ctx context.Context, obj *models.TRBAdminNote) (model.TRBAdminNoteAdditionalData, error)
 }
 type TRBAdviceLetterResolver interface {
 	Author(ctx context.Context, obj *models.TRBAdviceLetter) (*models.UserInfo, error)
@@ -6129,6 +6154,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeRequester.Name(childComplexity), true
 
+	case "TRBAdminNote.additionalData":
+		if e.complexity.TRBAdminNote.AdditionalData == nil {
+			break
+		}
+
+		return e.complexity.TRBAdminNote.AdditionalData(childComplexity), true
+
 	case "TRBAdminNote.author":
 		if e.complexity.TRBAdminNote.Author == nil {
 			break
@@ -6198,6 +6230,55 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBAdminNote.TRBRequestID(childComplexity), true
+
+	case "TRBAdminNoteAdviceLetterAdditionalData.sections":
+		if e.complexity.TRBAdminNoteAdviceLetterAdditionalData.Sections == nil {
+			break
+		}
+
+		return e.complexity.TRBAdminNoteAdviceLetterAdditionalData.Sections(childComplexity), true
+
+	case "TRBAdminNoteConsultSessionAdditionalData.placeholder":
+		if e.complexity.TRBAdminNoteConsultSessionAdditionalData.Placeholder == nil {
+			break
+		}
+
+		return e.complexity.TRBAdminNoteConsultSessionAdditionalData.Placeholder(childComplexity), true
+
+	case "TRBAdminNoteGeneralRequestAdditionalData.placeholder":
+		if e.complexity.TRBAdminNoteGeneralRequestAdditionalData.Placeholder == nil {
+			break
+		}
+
+		return e.complexity.TRBAdminNoteGeneralRequestAdditionalData.Placeholder(childComplexity), true
+
+	case "TRBAdminNoteInitialRequestFormAdditionalData.appliesToAttendees":
+		if e.complexity.TRBAdminNoteInitialRequestFormAdditionalData.AppliesToAttendees == nil {
+			break
+		}
+
+		return e.complexity.TRBAdminNoteInitialRequestFormAdditionalData.AppliesToAttendees(childComplexity), true
+
+	case "TRBAdminNoteInitialRequestFormAdditionalData.appliesToBasicRequestDetails":
+		if e.complexity.TRBAdminNoteInitialRequestFormAdditionalData.AppliesToBasicRequestDetails == nil {
+			break
+		}
+
+		return e.complexity.TRBAdminNoteInitialRequestFormAdditionalData.AppliesToBasicRequestDetails(childComplexity), true
+
+	case "TRBAdminNoteInitialRequestFormAdditionalData.appliesToSubjectAreas":
+		if e.complexity.TRBAdminNoteInitialRequestFormAdditionalData.AppliesToSubjectAreas == nil {
+			break
+		}
+
+		return e.complexity.TRBAdminNoteInitialRequestFormAdditionalData.AppliesToSubjectAreas(childComplexity), true
+
+	case "TRBAdminNoteSupportingDocumentsAdditionalData.documentNames":
+		if e.complexity.TRBAdminNoteSupportingDocumentsAdditionalData.DocumentNames == nil {
+			break
+		}
+
+		return e.complexity.TRBAdminNoteSupportingDocumentsAdditionalData.DocumentNames(childComplexity), true
 
 	case "TRBAdviceLetter.author":
 		if e.complexity.TRBAdviceLetter.Author == nil {
@@ -9664,6 +9745,32 @@ enum TRBAdminNoteCategory {
   ADVICE_LETTER
 }
 
+type TRBAdminNoteGeneralRequestAdditionalData {
+  placeholder: String
+# Intentionally empty
+}
+
+type TRBAdminNoteInitialRequestFormAdditionalData {
+  appliesToBasicRequestDetails: Boolean!
+  appliesToSubjectAreas: Boolean!
+  appliesToAttendees: Boolean!
+}
+
+type TRBAdminNoteSupportingDocumentsAdditionalData {
+  documentNames: [String!]! # TODO - placeholder for proper type
+}
+
+type TRBAdminNoteConsultSessionAdditionalData {
+# Intentionally empty
+placeholder: String
+}
+
+type TRBAdminNoteAdviceLetterAdditionalData {
+  sections: [String!]! # TODO - placeholder for proper type
+}
+
+union TRBAdminNoteAdditionalData = TRBAdminNoteGeneralRequestAdditionalData | TRBAdminNoteInitialRequestFormAdditionalData | TRBAdminNoteSupportingDocumentsAdditionalData | TRBAdminNoteConsultSessionAdditionalData | TRBAdminNoteAdviceLetterAdditionalData
+
 """
 Represents an admin note attached to a TRB request
 """
@@ -9674,6 +9781,7 @@ type TRBAdminNote {
   noteText: HTML!
   author: UserInfo!
   isArchived: Boolean!
+  additionalData: TRBAdminNoteAdditionalData!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -9709,6 +9817,26 @@ input CreateTRBAdminNoteInput {
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
   noteText: HTML!
+
+  """
+  Categories
+    GENERAL_REQUEST
+    INITIAL_REQUEST_FORM
+    SUPPORTING_DOCUMENTS
+    CONSULT_SESSION
+    ADVICE_LETTER
+  """
+
+  # Initial Request Form
+  appliesToBasicRequestDetails: Boolean
+  appliesToSubjectAreas: Boolean
+  appliesToAttendees: Boolean
+
+  # Supporting Documents
+  documentIDs: [UUID!]
+
+  # Advice Letter
+  sectionNames: [String]
 }
 
 """
@@ -32043,6 +32171,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBAdminNote(ctx context
 				return ec.fieldContext_TRBAdminNote_author(ctx, field)
 			case "isArchived":
 				return ec.fieldContext_TRBAdminNote_isArchived(ctx, field)
+			case "additionalData":
+				return ec.fieldContext_TRBAdminNote_additionalData(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
 			case "createdAt":
@@ -32144,6 +32274,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBAdminNote(ctx context
 				return ec.fieldContext_TRBAdminNote_author(ctx, field)
 			case "isArchived":
 				return ec.fieldContext_TRBAdminNote_isArchived(ctx, field)
+			case "additionalData":
+				return ec.fieldContext_TRBAdminNote_additionalData(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
 			case "createdAt":
@@ -32245,6 +32377,8 @@ func (ec *executionContext) fieldContext_Mutation_setTRBAdminNoteArchived(ctx co
 				return ec.fieldContext_TRBAdminNote_author(ctx, field)
 			case "isArchived":
 				return ec.fieldContext_TRBAdminNote_isArchived(ctx, field)
+			case "additionalData":
+				return ec.fieldContext_TRBAdminNote_additionalData(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
 			case "createdAt":
@@ -35807,6 +35941,8 @@ func (ec *executionContext) fieldContext_Query_trbAdminNote(ctx context.Context,
 				return ec.fieldContext_TRBAdminNote_author(ctx, field)
 			case "isArchived":
 				return ec.fieldContext_TRBAdminNote_isArchived(ctx, field)
+			case "additionalData":
+				return ec.fieldContext_TRBAdminNote_additionalData(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
 			case "createdAt":
@@ -43347,6 +43483,50 @@ func (ec *executionContext) fieldContext_TRBAdminNote_isArchived(ctx context.Con
 	return fc, nil
 }
 
+func (ec *executionContext) _TRBAdminNote_additionalData(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdminNote) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNote_additionalData(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.TRBAdminNote().AdditionalData(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.TRBAdminNoteAdditionalData)
+	fc.Result = res
+	return ec.marshalNTRBAdminNoteAdditionalData2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBAdminNoteAdditionalData(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdminNote_additionalData(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdminNote",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type TRBAdminNoteAdditionalData does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _TRBAdminNote_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdminNote) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
 	if err != nil {
@@ -43512,6 +43692,308 @@ func (ec *executionContext) fieldContext_TRBAdminNote_modifiedAt(ctx context.Con
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdminNoteAdviceLetterAdditionalData_sections(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteAdviceLetterAdditionalData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteAdviceLetterAdditionalData_sections(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Sections, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdminNoteAdviceLetterAdditionalData_sections(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdminNoteAdviceLetterAdditionalData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdminNoteConsultSessionAdditionalData_placeholder(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteConsultSessionAdditionalData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteConsultSessionAdditionalData_placeholder(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Placeholder, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdminNoteConsultSessionAdditionalData_placeholder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdminNoteConsultSessionAdditionalData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdminNoteGeneralRequestAdditionalData_placeholder(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteGeneralRequestAdditionalData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteGeneralRequestAdditionalData_placeholder(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Placeholder, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdminNoteGeneralRequestAdditionalData_placeholder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdminNoteGeneralRequestAdditionalData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdminNoteInitialRequestFormAdditionalData_appliesToBasicRequestDetails(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteInitialRequestFormAdditionalData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteInitialRequestFormAdditionalData_appliesToBasicRequestDetails(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AppliesToBasicRequestDetails, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdminNoteInitialRequestFormAdditionalData_appliesToBasicRequestDetails(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdminNoteInitialRequestFormAdditionalData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdminNoteInitialRequestFormAdditionalData_appliesToSubjectAreas(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteInitialRequestFormAdditionalData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteInitialRequestFormAdditionalData_appliesToSubjectAreas(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AppliesToSubjectAreas, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdminNoteInitialRequestFormAdditionalData_appliesToSubjectAreas(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdminNoteInitialRequestFormAdditionalData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdminNoteInitialRequestFormAdditionalData_appliesToAttendees(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteInitialRequestFormAdditionalData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteInitialRequestFormAdditionalData_appliesToAttendees(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AppliesToAttendees, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdminNoteInitialRequestFormAdditionalData_appliesToAttendees(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdminNoteInitialRequestFormAdditionalData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdminNoteSupportingDocumentsAdditionalData_documentNames(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteSupportingDocumentsAdditionalData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteSupportingDocumentsAdditionalData_documentNames(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DocumentNames, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdminNoteSupportingDocumentsAdditionalData_documentNames(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdminNoteSupportingDocumentsAdditionalData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -45874,6 +46356,8 @@ func (ec *executionContext) fieldContext_TRBRequest_adminNotes(ctx context.Conte
 				return ec.fieldContext_TRBAdminNote_author(ctx, field)
 			case "isArchived":
 				return ec.fieldContext_TRBAdminNote_isArchived(ctx, field)
+			case "additionalData":
+				return ec.fieldContext_TRBAdminNote_additionalData(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
 			case "createdAt":
@@ -52505,7 +52989,7 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteInput(ctx context.Co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "category", "noteText"}
+	fieldsInOrder := [...]string{"trbRequestId", "category", "noteText", "appliesToBasicRequestDetails", "appliesToSubjectAreas", "appliesToAttendees", "documentIDs", "sectionNames"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -52539,6 +53023,51 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteInput(ctx context.Co
 				return it, err
 			}
 			it.NoteText = data
+		case "appliesToBasicRequestDetails":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToBasicRequestDetails"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AppliesToBasicRequestDetails = data
+		case "appliesToSubjectAreas":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToSubjectAreas"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AppliesToSubjectAreas = data
+		case "appliesToAttendees":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToAttendees"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AppliesToAttendees = data
+		case "documentIDs":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("documentIDs"))
+			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DocumentIDs = data
+		case "sectionNames":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sectionNames"))
+			data, err := ec.unmarshalOString2ᚕᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SectionNames = data
 		}
 	}
 
@@ -55966,6 +56495,50 @@ func (ec *executionContext) unmarshalInputUpdateTestDateInput(ctx context.Contex
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
+
+func (ec *executionContext) _TRBAdminNoteAdditionalData(ctx context.Context, sel ast.SelectionSet, obj model.TRBAdminNoteAdditionalData) graphql.Marshaler {
+	switch obj := (obj).(type) {
+	case nil:
+		return graphql.Null
+	case model.TRBAdminNoteGeneralRequestAdditionalData:
+		return ec._TRBAdminNoteGeneralRequestAdditionalData(ctx, sel, &obj)
+	case *model.TRBAdminNoteGeneralRequestAdditionalData:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._TRBAdminNoteGeneralRequestAdditionalData(ctx, sel, obj)
+	case model.TRBAdminNoteInitialRequestFormAdditionalData:
+		return ec._TRBAdminNoteInitialRequestFormAdditionalData(ctx, sel, &obj)
+	case *model.TRBAdminNoteInitialRequestFormAdditionalData:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._TRBAdminNoteInitialRequestFormAdditionalData(ctx, sel, obj)
+	case model.TRBAdminNoteSupportingDocumentsAdditionalData:
+		return ec._TRBAdminNoteSupportingDocumentsAdditionalData(ctx, sel, &obj)
+	case *model.TRBAdminNoteSupportingDocumentsAdditionalData:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._TRBAdminNoteSupportingDocumentsAdditionalData(ctx, sel, obj)
+	case model.TRBAdminNoteConsultSessionAdditionalData:
+		return ec._TRBAdminNoteConsultSessionAdditionalData(ctx, sel, &obj)
+	case *model.TRBAdminNoteConsultSessionAdditionalData:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._TRBAdminNoteConsultSessionAdditionalData(ctx, sel, obj)
+	case model.TRBAdminNoteAdviceLetterAdditionalData:
+		return ec._TRBAdminNoteAdviceLetterAdditionalData(ctx, sel, &obj)
+	case *model.TRBAdminNoteAdviceLetterAdditionalData:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._TRBAdminNoteAdviceLetterAdditionalData(ctx, sel, obj)
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
 
 // endregion ************************** interface.gotpl ***************************
 
@@ -66107,6 +66680,42 @@ func (ec *executionContext) _TRBAdminNote(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
+		case "additionalData":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBAdminNote_additionalData(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "createdBy":
 			out.Values[i] = ec._TRBAdminNote_createdBy(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -66121,6 +66730,205 @@ func (ec *executionContext) _TRBAdminNote(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._TRBAdminNote_modifiedBy(ctx, field, obj)
 		case "modifiedAt":
 			out.Values[i] = ec._TRBAdminNote_modifiedAt(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var tRBAdminNoteAdviceLetterAdditionalDataImplementors = []string{"TRBAdminNoteAdviceLetterAdditionalData", "TRBAdminNoteAdditionalData"}
+
+func (ec *executionContext) _TRBAdminNoteAdviceLetterAdditionalData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteAdviceLetterAdditionalData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteAdviceLetterAdditionalDataImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TRBAdminNoteAdviceLetterAdditionalData")
+		case "sections":
+			out.Values[i] = ec._TRBAdminNoteAdviceLetterAdditionalData_sections(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var tRBAdminNoteConsultSessionAdditionalDataImplementors = []string{"TRBAdminNoteConsultSessionAdditionalData", "TRBAdminNoteAdditionalData"}
+
+func (ec *executionContext) _TRBAdminNoteConsultSessionAdditionalData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteConsultSessionAdditionalData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteConsultSessionAdditionalDataImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TRBAdminNoteConsultSessionAdditionalData")
+		case "placeholder":
+			out.Values[i] = ec._TRBAdminNoteConsultSessionAdditionalData_placeholder(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var tRBAdminNoteGeneralRequestAdditionalDataImplementors = []string{"TRBAdminNoteGeneralRequestAdditionalData", "TRBAdminNoteAdditionalData"}
+
+func (ec *executionContext) _TRBAdminNoteGeneralRequestAdditionalData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteGeneralRequestAdditionalData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteGeneralRequestAdditionalDataImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TRBAdminNoteGeneralRequestAdditionalData")
+		case "placeholder":
+			out.Values[i] = ec._TRBAdminNoteGeneralRequestAdditionalData_placeholder(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var tRBAdminNoteInitialRequestFormAdditionalDataImplementors = []string{"TRBAdminNoteInitialRequestFormAdditionalData", "TRBAdminNoteAdditionalData"}
+
+func (ec *executionContext) _TRBAdminNoteInitialRequestFormAdditionalData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteInitialRequestFormAdditionalData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteInitialRequestFormAdditionalDataImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TRBAdminNoteInitialRequestFormAdditionalData")
+		case "appliesToBasicRequestDetails":
+			out.Values[i] = ec._TRBAdminNoteInitialRequestFormAdditionalData_appliesToBasicRequestDetails(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "appliesToSubjectAreas":
+			out.Values[i] = ec._TRBAdminNoteInitialRequestFormAdditionalData_appliesToSubjectAreas(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "appliesToAttendees":
+			out.Values[i] = ec._TRBAdminNoteInitialRequestFormAdditionalData_appliesToAttendees(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var tRBAdminNoteSupportingDocumentsAdditionalDataImplementors = []string{"TRBAdminNoteSupportingDocumentsAdditionalData", "TRBAdminNoteAdditionalData"}
+
+func (ec *executionContext) _TRBAdminNoteSupportingDocumentsAdditionalData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteSupportingDocumentsAdditionalData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteSupportingDocumentsAdditionalDataImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TRBAdminNoteSupportingDocumentsAdditionalData")
+		case "documentNames":
+			out.Values[i] = ec._TRBAdminNoteSupportingDocumentsAdditionalData_documentNames(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -70934,6 +71742,16 @@ func (ec *executionContext) marshalNTRBAdminNote2ᚖgithubᚗcomᚋcmsgovᚋeasi
 	return ec._TRBAdminNote(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNTRBAdminNoteAdditionalData2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBAdminNoteAdditionalData(ctx context.Context, sel ast.SelectionSet, v model.TRBAdminNoteAdditionalData) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._TRBAdminNoteAdditionalData(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNTRBAdminNoteCategory2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx context.Context, v interface{}) (models.TRBAdminNoteCategory, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.TRBAdminNoteCategory(tmp)
@@ -72702,6 +73520,38 @@ func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel
 		if e == graphql.Null {
 			return graphql.Null
 		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) unmarshalOString2ᚕᚖstring(ctx context.Context, v interface{}) ([]*string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalOString2ᚖstring(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOString2ᚕᚖstring(ctx context.Context, sel ast.SelectionSet, v []*string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalOString2ᚖstring(ctx, sel, v[i])
 	}
 
 	return ret

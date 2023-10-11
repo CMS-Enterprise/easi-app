@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -3068,6 +3069,11 @@ func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminN
 	}
 
 	return authorInfo, nil
+}
+
+// AdditionalData is the resolver for the additionalData field.
+func (r *tRBAdminNoteResolver) AdditionalData(ctx context.Context, obj *models.TRBAdminNote) (model.TRBAdminNoteAdditionalData, error) {
+	panic(fmt.Errorf("not implemented: AdditionalData - additionalData"))
 }
 
 // Author is the resolver for the author field.
