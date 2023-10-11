@@ -266,10 +266,10 @@ const action = {
     trbFollowup: {
       label:
         'Should this team consult with the Technical Review Board (TRB) as a part of their next steps?',
-      stronglyRecommended: 'Yes, strongly recommend',
-      recommendedNotCritical:
+      STRONGLY_RECOMMENDED: 'Yes, strongly recommend',
+      RECOMMENDED_BUT_NOT_CRITICAL:
         'Yes, it’s not critical but the TRB could provide useful feedback',
-      notRecommended: 'No, they may if they wish but it’s not necessary'
+      NOT_RECOMMENDED: 'No, they may if they wish but it’s not necessary'
     },
     success:
       'Life Cycle ID {{lcid}} is issued for this request. This request is now closed. You may continue to manage this Life Cycle ID using the "Manage a Life Cycle ID" action.',
