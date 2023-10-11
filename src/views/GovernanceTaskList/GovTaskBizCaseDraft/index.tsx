@@ -16,7 +16,8 @@ const GovTaskBizCaseDraft = ({
   itGovTaskStatuses: { bizCaseDraftStatus },
   bizCaseDraftSubmittedAt,
   bizCaseDraftUpdatedAt,
-  governanceRequestFeedbacks
+  governanceRequestFeedbacks,
+  businessCase
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'bizCaseDraft';
   const { t } = useTranslation('itGov');
@@ -94,7 +95,11 @@ const GovTaskBizCaseDraft = ({
 
         {statusButtonText.has(bizCaseDraftStatus) && (
           <div className="margin-top-2">
-            <UswdsReactLink variant="unstyled" className="usa-button" to="./">
+            <UswdsReactLink
+              variant="unstyled"
+              className="usa-button"
+              to={`/business/${businessCase?.id || 'new'}/general-request-info`}
+            >
               {t(`button.${statusButtonText.get(bizCaseDraftStatus)}`)}
             </UswdsReactLink>
           </div>
@@ -114,7 +119,7 @@ const GovTaskBizCaseDraft = ({
         {(bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.SUBMITTED ||
           bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.DONE) && (
           <div className="margin-top-2">
-            <UswdsReactLink to="./">
+            <UswdsReactLink to={`/business/${businessCase?.id}/view`}>
               {t(`taskList.step.${stepKey}.viewSubmittedDraftBusinessCase`)}
             </UswdsReactLink>
           </div>
