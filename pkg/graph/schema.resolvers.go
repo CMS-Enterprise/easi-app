@@ -2171,6 +2171,11 @@ func (r *mutationResolver) UpdateTRBAdviceLetterRecommendation(ctx context.Conte
 	return resolvers.UpdateTRBAdviceLetterRecommendation(ctx, r.store, input)
 }
 
+// UpdateTRBAdviceLetterRecommendationOrder is the resolver for the updateTRBAdviceLetterRecommendationOrder field.
+func (r *mutationResolver) UpdateTRBAdviceLetterRecommendationOrder(ctx context.Context, input model.UpdateTRBAdviceLetterRecommendationOrderInput) ([]*models.TRBAdviceLetterRecommendation, error) {
+	return resolvers.UpdateTRBAdviceLetterRecommendationOrder(ctx, r.store, input.TrbRequestID, input.NewOrder)
+}
+
 // DeleteTRBAdviceLetterRecommendation is the resolver for the deleteTRBAdviceLetterRecommendation field.
 func (r *mutationResolver) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
 	return resolvers.DeleteTRBAdviceLetterRecommendation(ctx, r.store, id)
