@@ -77,7 +77,7 @@ func TestGetExpireLCIDAction(t *testing.T) {
 		EuaUserID:  "TEST",
 	}
 
-	action := GetExpireLCIDAction(intake, mockCurrentTime, newNextSteps, userInfo)
+	action := GetExpireLCIDAction(intake, mockCurrentTime, &newNextSteps, userInfo)
 
 	// all "Previous" fields should match the intake's fields
 	// (using EqualValues() is ok for comparing two pointers; the assert library will compare the values they point to)
