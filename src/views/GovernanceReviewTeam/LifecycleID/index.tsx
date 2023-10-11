@@ -22,7 +22,9 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
 
   const Issued = () => (
     <>
-      <PageHeading>{t('governanceReviewTeam:lifecycleID.title')}</PageHeading>
+      <PageHeading className="margin-top-0">
+        {t('governanceReviewTeam:lifecycleID.title')}
+      </PageHeading>
       <DescriptionList
         title={t('governanceReviewTeam:decision.decisionSectionTitle')}
       >

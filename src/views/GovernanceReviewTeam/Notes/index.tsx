@@ -491,7 +491,7 @@ const Notes = () => {
 
   return (
     <>
-      <PageHeading data-testid="grt-notes-view">
+      <PageHeading data-testid="grt-notes-view" className="margin-top-0">
         {t('notes.heading')}
       </PageHeading>
       {archiveMutationResult.error && (
