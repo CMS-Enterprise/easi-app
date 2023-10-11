@@ -68,7 +68,8 @@ const action = {
     nextSteps: 'Next steps',
     trbFollowUp: 'TRB follow-up',
     intakeFormStep: 'Which form needs edits?',
-    emailFeedback: 'What changes are needed?'
+    emailFeedback: 'What changes are needed?',
+    reason: 'Why are you expiring this Life Cycle ID?'
   },
   manageLcid: {
     title: 'Manage a Life Cycle ID (LCID)',
@@ -292,6 +293,15 @@ const action = {
     EXPIRING_SOON: 'Expiring soon',
     RETIRED: 'Retired',
     RETIRING_SOON: 'Retiring soon'
+  },
+  expireLcid: {
+    reason: 'Why are you expiring this Life Cycle ID?',
+    reasonHelpText:
+      'Provide any additional details as to why you are manually marking this LCID as expired.',
+    nextSteps: 'Next steps',
+    nextStepsHelpText:
+      'Provide the team with actionable next steps for how to un-expire their Life Cycle ID, such as amending this Life Cycle ID or requesting a new one.',
+    success: 'Life Cycle ID {{lcid}} is now expired.'
   },
   updateLcid: {
     title: 'Updated Life Cycle ID',
