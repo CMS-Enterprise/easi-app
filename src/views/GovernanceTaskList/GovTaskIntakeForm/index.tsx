@@ -96,7 +96,7 @@ const GovTaskIntakeForm = ({
           ITGovIntakeFormStatus.COMPLETED &&
           submittedAt && (
             <div className="margin-top-2">
-              <UswdsReactLink to="./">
+              <UswdsReactLink to={`/system/${id}/view`}>
                 {t(`taskList.step.${stepKey}.viewSubmittedRequestForm`)}
               </UswdsReactLink>
             </div>
