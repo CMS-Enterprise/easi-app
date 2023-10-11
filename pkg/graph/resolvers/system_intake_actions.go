@@ -983,7 +983,7 @@ func ExpireLCID(
 	)
 
 	// create action record before updating intake, while we still have access to intake's previous expiration date/next step
-	action := lcidactions.GetExpireLCIDAction(*intake, expirationDate, *input.NextSteps, *adminUserInfo)
+	action := lcidactions.GetExpireLCIDAction(*intake, expirationDate, input.NextSteps, *adminUserInfo)
 
 	intake.LifecycleExpiresAt = &expirationDate
 	intake.DecisionNextSteps = input.NextSteps
