@@ -10,6 +10,7 @@ import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
 
 const GovTaskIntakeForm = ({
+  id,
   itGovTaskStatuses,
   intakeFormPctComplete,
   governanceRequestFeedbacks,
@@ -76,7 +77,11 @@ const GovTaskIntakeForm = ({
         {/* Button to the intake form */}
         {statusButtonText.has(itGovTaskStatuses.intakeFormStatus) && (
           <div className="margin-top-2">
-            <UswdsReactLink variant="unstyled" className="usa-button" to="./">
+            <UswdsReactLink
+              variant="unstyled"
+              className="usa-button"
+              to={`/system/${id}/contact-details`}
+            >
               {t(
                 `button.${statusButtonText.get(
                   itGovTaskStatuses.intakeFormStatus
