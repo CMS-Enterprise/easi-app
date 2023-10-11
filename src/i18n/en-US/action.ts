@@ -75,11 +75,13 @@ const action = {
     breadcrumb: 'Manage a Life Cycle ID',
     label: 'Action',
     description:
-      'Update the status or details of a previously-issued Life Cycle ID by expiring it, retiring it, or updating it (Change the expiration date, scope, next steps, or project cost baseline).',
+      'Update the status or details of a previously-issued Life Cycle ID by expiring it, retiring it, or updating it (change the expiration date, scope, next steps, or project cost baseline).',
     description_EXPIRED:
       'Update the status or details of an expired Life Cycle ID by retiring it or updating it (change the expiration date, scope, next steps, or project cost baseline).',
     description_RETIRED:
-      'Update the status or details of a retired Life Cycle ID by Changing the retirement date or updating it (change the expiration date, scope, next steps, or project cost baseline).',
+      'Update the status or details of a retired Life Cycle ID by changing the retirement date or updating the LCID (changing the expiration date, scope, next steps, or project cost baseline).',
+    description_FUTURE_RETIRE_DATE:
+      'Update the status or details of a Life Cycle ID that is marked for retirement by changing the retirement date or updating the LCID (changing the expiration date, scope, next steps, or project cost baseline).',
     retire: 'Retire a Life Cycle ID',
     retire_RETIRED: 'Change retirement date',
     update: 'Update a Life Cycle ID',

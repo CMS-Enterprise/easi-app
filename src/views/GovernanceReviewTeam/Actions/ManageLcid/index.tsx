@@ -47,6 +47,10 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
     action: LcidAction;
   }>();
 
+  // Returns true if LCID is marked for future retirement
+  const hasFutureRetireDate =
+    lcidStatus === SystemIntakeLCIDStatus.ISSUED && !!lcidRetiresAt;
+
   /**
    * LCID status context for displaying options and translation text
    *
@@ -117,7 +121,9 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
 
           <p className="line-height-body-5 font-body-lg text-light margin-0">
             {t('manageLcid.description', {
-              context: lcidStatusContext
+              context: hasFutureRetireDate
+                ? 'FUTURE_RETIRE_DATE'
+                : lcidStatusContext
             })}
           </p>
 
