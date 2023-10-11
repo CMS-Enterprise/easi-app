@@ -8,6 +8,7 @@ import { ITGovDecisionStatus } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 
 const GovTaskDecisionAndNextSteps = ({
+  id,
   itGovTaskStatuses: { decisionAndNextStepsStatus },
   decisionAndNextStepsSubmittedAt
 }: ItGovTaskSystemIntakeWithMockData) => {
@@ -35,7 +36,11 @@ const GovTaskDecisionAndNextSteps = ({
         {/* Button read the decision */}
         {decisionAndNextStepsStatus === ITGovDecisionStatus.COMPLETED && (
           <div className="margin-top-2">
-            <UswdsReactLink variant="unstyled" className="usa-button" to="./">
+            <UswdsReactLink
+              variant="unstyled"
+              className="usa-button"
+              to={`/governance-task-list/${id}/request-decision`}
+            >
               {t(`taskList.step.${stepKey}.button`)}
             </UswdsReactLink>
           </div>
