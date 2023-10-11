@@ -25,6 +25,11 @@ export interface GetGovernanceTaskList_systemIntake_governanceRequestFeedbacks {
   id: UUID;
 }
 
+export interface GetGovernanceTaskList_systemIntake_businessCase {
+  __typename: "BusinessCase";
+  id: UUID;
+}
+
 export interface GetGovernanceTaskList_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
@@ -34,6 +39,7 @@ export interface GetGovernanceTaskList_systemIntake {
   updatedAt: Time | null;
   grtDate: Time | null;
   grbDate: Time | null;
+  businessCase: GetGovernanceTaskList_systemIntake_businessCase | null;
 }
 
 export interface GetGovernanceTaskList {

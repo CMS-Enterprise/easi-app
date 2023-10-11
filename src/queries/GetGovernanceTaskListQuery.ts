@@ -20,6 +20,10 @@ export default gql`
       updatedAt
       grtDate
       grbDate
+
+      businessCase {
+        id
+      }
     }
   }
 `;
