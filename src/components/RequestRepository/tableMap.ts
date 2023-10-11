@@ -1,6 +1,7 @@
 import { TFunction } from 'i18next';
 import { sortBy } from 'lodash';
 
+import contractStatus from 'constants/enums/contractStatus';
 import {
   GetSystemIntakesTable_systemIntakes as SystemIntake,
   GetSystemIntakesTable_systemIntakes_notes as AdminNote
@@ -70,12 +71,10 @@ const tableMap = (
       : '';
 
     // Translate `hasContract` value
-    if (
-      ['HAVE_CONTRACT', 'IN_PROGRESS', 'NOT_STARTED', 'NOT_NEEDED'].includes(
-        hasContract || ''
-      )
-    ) {
-      hasContract = t(`intake:hasContract.${hasContract}`);
+    if (hasContract) {
+      hasContract = contractStatus[hasContract]
+        ? t(contractStatus[hasContract])
+        : hasContract;
     }
 
     /**
