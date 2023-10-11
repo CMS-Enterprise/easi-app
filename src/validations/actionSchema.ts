@@ -174,3 +174,8 @@ export const lcidActionSchema = (type: 'issue' | 'confirm') => {
 export const updateLcidSchema = Yup.object().shape({
   expiresAt: validExpirationDate()
 });
+
+export const expireLcidSchema = Yup.object().shape({
+  reason: Yup.string().required('Please fill in the blank'),
+  nextSteps: Yup.string()
+});
