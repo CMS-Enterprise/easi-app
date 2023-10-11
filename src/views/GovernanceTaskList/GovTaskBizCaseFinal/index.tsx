@@ -12,6 +12,7 @@ import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
 
 const GovTaskBizCaseFinal = ({
+  id,
   itGovTaskStatuses: { bizCaseFinalStatus },
   bizCaseFinalPctComplete,
   bizCaseFinalSubmittedAt,
@@ -107,7 +108,10 @@ const GovTaskBizCaseFinal = ({
         {/* Link to view feedback */}
         {hasFeedback && (
           <div className="margin-top-2">
-            <UswdsReactLink to="./">{t(`button.viewFeedback`)}</UswdsReactLink>
+            {/* TODO: EASI-3088 - update feedback link */}
+            <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
+              {t(`button.viewFeedback`)}
+            </UswdsReactLink>
           </div>
         )}
 

@@ -10,6 +10,7 @@ import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { formatDateUtc } from 'utils/date';
 
 const GovTaskGrtMeeting = ({
+  id,
   itGovTaskStatuses: { grtMeetingStatus },
   governanceRequestFeedbacks,
   grtDate
@@ -58,7 +59,10 @@ const GovTaskGrtMeeting = ({
         {/* Link to view feedback */}
         {hasFeedback && (
           <div className="margin-top-2">
-            <UswdsReactLink to="./">{t(`button.viewFeedback`)}</UswdsReactLink>
+            {/* TODO: EASI-3088 - update feedback link */}
+            <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
+              {t(`button.viewFeedback`)}
+            </UswdsReactLink>
           </div>
         )}
 
