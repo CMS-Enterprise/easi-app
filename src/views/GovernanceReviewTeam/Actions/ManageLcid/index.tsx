@@ -19,7 +19,7 @@ import ActionsSummary from '../components/ActionsSummary';
 import { ActionsProps } from '..';
 
 import ExpireLcid from './ExpireLcid';
-import RetireLcid, { retireDateInPast } from './RetireLcid';
+import RetireLcid from './RetireLcid';
 import UpdateLcid from './UpdateLcid';
 
 export interface ManageLcidProps {
@@ -155,10 +155,11 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
                         {t('manageLcid.label')}
                       </Label>
 
-                      {lcidRetiresAt && !retireDateInPast(lcidRetiresAt) && (
+                      {lcidRetiresAt && (
                         <Alert type="warning" slim>
                           {t('manageLcid.retireDateWarning', {
-                            date: formatDateLocal(lcidRetiresAt, 'MM/dd/yyyy')
+                            date: formatDateLocal(lcidRetiresAt, 'MM/dd/yyyy'),
+                            context: lcidStatus
                           })}
                         </Alert>
                       )}
