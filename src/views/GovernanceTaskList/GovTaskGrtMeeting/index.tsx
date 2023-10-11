@@ -50,7 +50,12 @@ const GovTaskGrtMeeting = ({
         {(grtMeetingStatus === ITGovGRTStatus.READY_TO_SCHEDULE ||
           grtMeetingStatus === ITGovGRTStatus.SCHEDULED) && (
           <div className="margin-top-2">
-            <UswdsReactLink variant="unstyled" className="usa-button" to="./">
+            <UswdsReactLink
+              variant="unstyled"
+              className="usa-button"
+              to="/help/it-governance/prepare-for-grt"
+              target="_blank"
+            >
               {t(`taskList.step.${stepKey}.button`)}
             </UswdsReactLink>
           </div>
@@ -72,7 +77,10 @@ const GovTaskGrtMeeting = ({
           grtMeetingStatus === ITGovGRTStatus.AWAITING_DECISION ||
           grtMeetingStatus === ITGovGRTStatus.COMPLETED) && (
           <div className="margin-top-2">
-            <UswdsReactLink to="./">
+            <UswdsReactLink
+              to="/help/it-governance/prepare-for-grt"
+              target="_blank"
+            >
               {t(`taskList.step.${stepKey}.link`)}
             </UswdsReactLink>
           </div>
