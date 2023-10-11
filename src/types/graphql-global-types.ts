@@ -859,6 +859,18 @@ export interface SystemIntakeCostsInput {
 }
 
 /**
+ * Input for expiring an intake's LCID in IT Gov v2
+ */
+export interface SystemIntakeExpireLCIDInput {
+  systemIntakeID: UUID;
+  reason: HTML;
+  nextSteps?: HTML | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  additionalInfo?: HTML | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * Represents the source of funding for a system
  */
 export interface SystemIntakeFundingSourceInput {

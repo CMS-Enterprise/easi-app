@@ -47,11 +47,11 @@ func IsIntakeValidToExpireLCID(intake *models.SystemIntake, currentTime time.Tim
 func GetExpireLCIDAction(
 	intake models.SystemIntake,
 	newExpirationDate time.Time,
-	newNextSteps models.HTML,
+	newNextSteps *models.HTML,
 	userInfo models.UserInfo,
 ) models.Action {
 	// pass in nil for scope and cost baseline because those aren't changed by this action
-	action := getBaseLCIDAction(intake, &newExpirationDate, &newNextSteps, nil, nil, userInfo, nil)
+	action := getBaseLCIDAction(intake, &newExpirationDate, newNextSteps, nil, nil, userInfo, nil)
 	action.ActionType = models.ActionTypeEXPIRELCID
 
 	return action

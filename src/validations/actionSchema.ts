@@ -182,3 +182,8 @@ export const retireLcidSchema = Yup.object().shape({
     .typeError('Please enter a valid date'),
   reason: Yup.string()
 });
+
+export const expireLcidSchema = Yup.object().shape({
+  reason: Yup.string().required('Please fill in the blank'),
+  nextSteps: Yup.string()
+});
