@@ -114,7 +114,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
               <ErrorAlert
                 testId="system-intake-errors"
                 classNames="margin-top-3"
-                heading="Please check and fix the following"
+                heading={t('form:inputError.checkFix')}
               >
                 {Object.keys(flatErrors).map(key => {
                   return (
