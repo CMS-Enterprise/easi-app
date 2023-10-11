@@ -265,7 +265,7 @@ const ExtendLifecycleId = ({
               <h3 className="margin-top-5 margin-bottom-2">
                 {t('extendLcid.newLcid')}
               </h3>
-              <MandatoryFieldsAlert textClassName="font-body-md" />
+              <MandatoryFieldsAlert />
               <Form>
                 <FieldGroup scrollElement="validDate">
                   <fieldset className="usa-fieldset margin-top-4">

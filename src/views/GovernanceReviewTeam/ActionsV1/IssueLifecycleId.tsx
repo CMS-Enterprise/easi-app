@@ -203,7 +203,7 @@ const IssueLifecycleId = ({ refetch }: IssueLifecycleIdProps) => {
             <h3 className="margin-top-3 margin-bottom-2">
               {t('issueLCID.lifecycleId')}
             </h3>
-            <MandatoryFieldsAlert textClassName="font-body-md" />
+            <MandatoryFieldsAlert />
             <div className="margin-bottom-7">
               <Form
                 onSubmit={e => {
