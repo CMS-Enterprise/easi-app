@@ -17,7 +17,8 @@ const GovTaskBizCaseFinal = ({
   bizCaseFinalPctComplete,
   bizCaseFinalSubmittedAt,
   bizCaseFinalUpdatedAt,
-  governanceRequestFeedbacks
+  governanceRequestFeedbacks,
+  businessCase
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'bizCaseFinal';
   const { t } = useTranslation('itGov');
@@ -99,7 +100,11 @@ const GovTaskBizCaseFinal = ({
 
         {statusButtonText.has(bizCaseFinalStatus) && (
           <div className="margin-top-2">
-            <UswdsReactLink variant="unstyled" className="usa-button" to="./">
+            <UswdsReactLink
+              variant="unstyled"
+              className="usa-button"
+              to={`/business/${businessCase?.id}/general-request-info`}
+            >
               {t(`button.${statusButtonText.get(bizCaseFinalStatus)}`)}
             </UswdsReactLink>
           </div>
@@ -119,7 +124,7 @@ const GovTaskBizCaseFinal = ({
         {(bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.SUBMITTED ||
           bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.DONE) && (
           <div className="margin-top-2">
-            <UswdsReactLink to="./">
+            <UswdsReactLink to={`/business/${businessCase?.id}/view`}>
               {t(`taskList.step.${stepKey}.viewSubmittedFinalBusinessCase`)}
             </UswdsReactLink>
           </div>
