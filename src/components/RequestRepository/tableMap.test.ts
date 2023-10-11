@@ -1,4 +1,4 @@
-import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 import { systemIntakeForTable } from 'data/mock/systemIntake';
 import { GetSystemIntakesTable_systemIntakes_notes as AdminNote } from 'queries/types/GetSystemIntakesTable';
@@ -8,6 +8,18 @@ import {
 } from 'types/graphql-global-types';
 
 import tableMap from './tableMap';
+
+// Mock useTranslation
+vi.mock('react-i18next', () => ({
+  useTranslation: () => {
+    return {
+      t: (str: String) => str,
+      i18n: {
+        changeLanguage: () => new Promise(() => {})
+      }
+    };
+  }
+}));
 
 const note = (count: number): AdminNote => {
   return {
@@ -60,8 +72,9 @@ const intakes: Array<typeof systemIntakeForTable> = [
 ];
 
 describe('System intake request table map', () => {
+  const { t } = useTranslation();
   it('references correct admin note or action for filter date', () => {
-    const formattedIntakes = tableMap(intakes, i18next.t);
+    const formattedIntakes = tableMap(intakes, t);
 
     const intake = formattedIntakes[0];
 
@@ -87,7 +100,7 @@ describe('System intake request table map', () => {
 
   // Tests that `tableMap` converts legacy intake statuses to `CLOSED` state
   test.each(
-    tableMap(closedIntakes, i18next.t).map((intake, index) => ({
+    tableMap(closedIntakes, t).map((intake, index) => ({
       ...intake,
       testStatus: closedIntakes[index].status
     }))
