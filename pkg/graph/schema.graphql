@@ -2338,6 +2338,9 @@ type TRBAdviceLetter {
   isFollowupRecommended: Boolean
   dateSent: Time
   followupPoint: String
+  """
+  List of recommendations in the order specified by users
+  """
   recommendations: [TRBAdviceLetterRecommendation!]!
   createdBy: String!
   createdAt: Time!
@@ -2417,6 +2420,16 @@ input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]inter
   title: String
   recommendation: HTML
   links: [String!]
+}
+
+"""
+"""
+input UpdateTRBAdviceLetterRecommendationOrderInput {
+  trbRequestId: UUID!
+  """
+  List of the recommendation IDs in the new order they should be displayed
+  """
+  newOrder: [UUID!]!
 }
 
 """
@@ -2666,6 +2679,8 @@ type Mutation {
   createTRBAdviceLetterRecommendation(input: CreateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
+    @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBAdviceLetterRecommendationOrder(input: UpdateTRBAdviceLetterRecommendationOrderInput!): [TRBAdviceLetterRecommendation!]!
     @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
