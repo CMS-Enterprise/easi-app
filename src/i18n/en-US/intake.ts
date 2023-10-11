@@ -139,6 +139,12 @@ const intake = {
     archivedAt: 'Archived At',
     adminLead: 'Admin Lead'
   },
+  hasContract: {
+    HAVE_CONTRACT: 'Yes',
+    IN_PROGRESS: 'In progress',
+    NOT_STARTED: 'Not started',
+    NOT_NEEDED: 'Not needed'
+  },
   requestTypeForm: {
     heading: 'Make a Request',
     subheading: 'What is this request for?',

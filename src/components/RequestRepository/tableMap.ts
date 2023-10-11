@@ -56,9 +56,11 @@ const tableMap = (
       intake.requester.component
     );
 
+    let { hasContract } = intake.contract;
+
     /* Convert contract dates to strings */
     const hasContractDates = ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
-      intake.contract.hasContract || ''
+      hasContract || ''
     );
     const contractStartDate = hasContractDates
       ? formatContractDate(intake.contract.startDate)
@@ -66,6 +68,15 @@ const tableMap = (
     const contractEndDate = hasContractDates
       ? formatContractDate(intake.contract.endDate)
       : '';
+
+    // Translate `hasContract` value
+    if (
+      ['HAVE_CONTRACT', 'IN_PROGRESS', 'NOT_STARTED', 'NOT_NEEDED'].includes(
+        hasContract || ''
+      )
+    ) {
+      hasContract = t(`intake:hasContract.${hasContract}`);
+    }
 
     /**
      * Fix for handling legacy intakes once IT Gov v2 is released
@@ -99,6 +110,7 @@ const tableMap = (
       requesterNameAndComponent,
       contract: {
         ...intake.contract,
+        hasContract,
         startDate: contractStartDate,
         endDate: contractEndDate
       },
