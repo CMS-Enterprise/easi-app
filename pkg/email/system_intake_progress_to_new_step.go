@@ -74,19 +74,7 @@ func (sie systemIntakeEmails) SendProgressToNewStepNotification(
 	if requestName == "" {
 		requestName = "Draft System Intake"
 	}
-	newStepMap := map[model.SystemIntakeStepToProgressTo]models.SystemIntakeStep{
-		model.SystemIntakeStepToProgressToDraftBusinessCase: models.SystemIntakeStepDRAFTBIZCASE,
-		model.SystemIntakeStepToProgressToFinalBusinessCase: models.SystemIntakeStepFINALBIZCASE,
-		model.SystemIntakeStepToProgressToGrbMeeting:        models.SystemIntakeStepGRBMEETING,
-		model.SystemIntakeStepToProgressToGrtMeeting:        models.SystemIntakeStepGRTMEETING,
-	}
-	step := newStepMap[newStep]
-	if step == "" {
-		return &apperrors.NotificationError{
-			Err:             errors.New("invalid step to progress to"),
-			DestinationType: apperrors.DestinationTypeEmail,
-		}
-	}
+	step := models.SystemIntakeStep(newStep)
 	subject := fmt.Sprintf("%s is ready for a %s", requestName, step.Humanize())
 	body, err := sie.systemIntakeProgressToNewStepBody(systemIntakeID, requestName, step, requesterName, feedback, additionalInfo)
 	if err != nil {

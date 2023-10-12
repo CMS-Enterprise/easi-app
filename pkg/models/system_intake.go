@@ -103,6 +103,9 @@ const (
 
 // Humanize replaces underscores with spaces and converts an uppercased word to a capitalized one
 func (step SystemIntakeStep) Humanize() string {
+	if step == "" {
+		return ""
+	}
 	upperStepSlice := strings.Split(string(step), "_")
 	var wordSlice []string
 	for _, word := range upperStepSlice {

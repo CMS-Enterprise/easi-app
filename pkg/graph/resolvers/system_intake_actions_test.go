@@ -434,9 +434,9 @@ func (s *ResolverSuite) TestIssueLCID() {
 		// - using the .Equal() method from time.Time doesn't work, because input.ExpiresAt has more precision than updatedIntake.LifecycleExpiresAt
 		// - using EqualValues() with input.ExpiresAt.Date() and updatedIntake.LifecycleExpiresAt.Date() doesn't work, because those functions both return triples
 		// we just care about the date, so check that, and check year/month/day individually
-		s.EqualValues(input.ExpiresAt.Year(), updatedIntake.LifecycleExpiresAt.Year())
-		s.EqualValues(input.ExpiresAt.Month(), updatedIntake.LifecycleExpiresAt.Month())
-		s.EqualValues(input.ExpiresAt.Day(), updatedIntake.LifecycleExpiresAt.Day())
+		s.EqualValues(input.ExpiresAt.UTC().Year(), updatedIntake.LifecycleExpiresAt.Year())
+		s.EqualValues(input.ExpiresAt.UTC().Month(), updatedIntake.LifecycleExpiresAt.Month())
+		s.EqualValues(input.ExpiresAt.UTC().Day(), updatedIntake.LifecycleExpiresAt.Day())
 
 		// should create action
 		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, updatedIntake.ID)
