@@ -126,10 +126,6 @@ const intakeQuery = (intakeData: any) => {
           createdAt: '2021-09-21T20:06:29Z',
           archivedAt: null,
           euaUserId: 'ASDF',
-          lastAdminNote: {
-            content: null,
-            createdAt: null
-          },
           hasUiChanges: null,
           documents: [],
           state: SystemIntakeState.OPEN,

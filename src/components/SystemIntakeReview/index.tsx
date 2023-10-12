@@ -10,7 +10,7 @@ import {
 import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeStatus } from 'types/graphql-global-types';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
