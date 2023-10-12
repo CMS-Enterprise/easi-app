@@ -3,8 +3,9 @@ package email
 import (
 	"fmt"
 
+	"context"
+
 	"github.com/google/uuid"
-	"golang.org/x/net/context"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 )

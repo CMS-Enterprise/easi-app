@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"time"
 
+	"context"
+
 	"github.com/google/uuid"
-	"golang.org/x/net/context"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 )
