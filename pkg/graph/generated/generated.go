@@ -9889,6 +9889,19 @@ input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   category: TRBAdminNoteCategory
   noteText: HTML
+
+  # General Request category - no additional data
+
+  # Initial Request Form category
+  initialRequestFormData: TRBAdminNoteInitialRequestFormInput
+
+  # Supporting Documents category
+  supportingDocumentsData: TRBAdminNoteSupportingDocumentsInput
+
+  # Consult Session category - no additional data
+
+  # Advice Letter category
+  adviceLetterData: TRBAdminNoteAdviceLetterInput
 }
 
 """
