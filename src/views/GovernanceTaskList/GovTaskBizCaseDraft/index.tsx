@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link } from '@trussworks/react-uswds';
+import { useHistory } from 'react-router-dom';
+import { Button, Link } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -21,6 +22,7 @@ const GovTaskBizCaseDraft = ({
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'bizCaseDraft';
   const { t } = useTranslation('itGov');
+  const history = useHistory();
 
   const statusButtonText = new Map<ITGovDraftBusinessCaseStatus, string>([
     [ITGovDraftBusinessCaseStatus.READY, 'start'],
@@ -95,13 +97,23 @@ const GovTaskBizCaseDraft = ({
 
         {statusButtonText.has(bizCaseDraftStatus) && (
           <div className="margin-top-2">
-            <UswdsReactLink
-              variant="unstyled"
+            <Button
               className="usa-button"
-              to={`/business/${businessCase?.id || 'new'}/general-request-info`}
+              type="button"
+              onClick={() => {
+                history.push({
+                  pathname: `/business/${
+                    businessCase?.id || 'new'
+                  }/general-request-info`,
+                  state: {
+                    systemIntakeId: id
+                  }
+                });
+              }}
+              unstyled
             >
               {t(`button.${statusButtonText.get(bizCaseDraftStatus)}`)}
-            </UswdsReactLink>
+            </Button>
           </div>
         )}
 
