@@ -68,6 +68,7 @@ export const SystemIntake = gql`
     lcid
     lcidIssuedAt
     lcidExpiresAt
+    lcidRetiresAt
     lcidScope
     lcidCostBaseline
     lcidStatus

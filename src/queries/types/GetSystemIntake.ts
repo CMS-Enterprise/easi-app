@@ -136,6 +136,7 @@ export interface GetSystemIntake_systemIntake {
   lcid: string | null;
   lcidIssuedAt: Time | null;
   lcidExpiresAt: Time | null;
+  lcidRetiresAt: Time | null;
   lcidScope: HTML | null;
   lcidCostBaseline: string | null;
   /**
