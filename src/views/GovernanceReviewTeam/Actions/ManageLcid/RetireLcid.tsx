@@ -61,7 +61,10 @@ const RetireLcid = ({
     }
   });
 
-  const { control } = form;
+  const {
+    control,
+    formState: { isValid }
+  } = form;
 
   const [retireLcid] = useMutation<
     CreateSystemIntakeActionRetireLcid,
@@ -102,6 +105,7 @@ const RetireLcid = ({
         systemIntakeId={systemIntakeId}
         successMessage={t('retireLcid.success', { lcid })}
         onSubmit={onSubmit}
+        disableSubmit={!isValid}
         title={
           <LcidTitleBox
             systemIntakeId={systemIntakeId}
