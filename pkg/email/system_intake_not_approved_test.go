@@ -1,9 +1,8 @@
 package email
 
 import (
-	"fmt"
-
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 

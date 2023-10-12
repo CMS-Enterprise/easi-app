@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"context"
-
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/models"
