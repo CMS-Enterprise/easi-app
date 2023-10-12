@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -3073,7 +3072,38 @@ func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminN
 
 // AdditionalData is the resolver for the additionalData field.
 func (r *tRBAdminNoteResolver) AdditionalData(ctx context.Context, obj *models.TRBAdminNote) (model.TRBAdminNoteAdditionalData, error) {
-	panic(fmt.Errorf("not implemented: AdditionalData - additionalData"))
+	// placeholder mock data for the various category-specific fields
+
+	var additionalData model.TRBAdminNoteAdditionalData
+
+	switch obj.Category {
+	case models.TRBAdminNoteCategoryGeneralRequest:
+		additionalData = model.TRBAdminNoteGeneralRequestAdditionalData{
+			PlaceholderField: true,
+		}
+	case models.TRBAdminNoteCategoryInitialRequestForm:
+		additionalData = model.TRBAdminNoteInitialRequestFormAdditionalData{
+			AppliesToBasicRequestDetails: true,
+			AppliesToSubjectAreas:        true,
+			AppliesToAttendees:           false,
+		}
+	case models.TRBAdminNoteCategorySupportingDocuments:
+		additionalData = model.TRBAdminNoteSupportingDocumentsAdditionalData{
+			Documents: []*models.TRBRequestDocument{},
+		}
+	case models.TRBAdminNoteCategoryConsultSession:
+		additionalData = model.TRBAdminNoteConsultSessionAdditionalData{
+			PlaceholderField: true,
+		}
+	case models.TRBAdminNoteCategoryAdviceLetter:
+		additionalData = model.TRBAdminNoteAdviceLetterAdditionalData{
+			AppliesToMeetingSummary: true,
+			AppliesToNextSteps:      false,
+			Recommendations:         []*models.TRBAdviceLetterRecommendation{},
+		}
+	}
+
+	return additionalData, nil
 }
 
 // Author is the resolver for the author field.
