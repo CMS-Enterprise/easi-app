@@ -5,10 +5,12 @@ import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import { Form, Grid } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import Label from 'components/shared/Label';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
+import { formatDateLocal } from 'utils/date';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
@@ -31,7 +33,7 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
   const { t } = useTranslation('action');
   const history = useHistory();
 
-  const { id: systemIntakeId, lcidStatus, lcid } = systemIntake;
+  const { id: systemIntakeId, lcidStatus, lcid, lcidRetiresAt } = systemIntake;
 
   const { subPage } = useParams<{
     subPage?: string;
@@ -45,17 +47,32 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
     action: LcidAction;
   }>();
 
+  // Returns true if LCID is marked for future retirement
+  const hasFutureRetireDate =
+    lcidStatus === SystemIntakeLCIDStatus.ISSUED && !!lcidRetiresAt;
+
+  /**
+   * LCID status context for displaying options and translation text
+   *
+   * If `lcidRetiresAt` is set, should return RETIRED. Otherwise, return `lcidStatus`.
+   */
+  const lcidStatusContext = useMemo(
+    () => (lcidRetiresAt ? SystemIntakeLCIDStatus.RETIRED : lcidStatus),
+    [lcidStatus, lcidRetiresAt]
+  );
+
+  /** Available action options based on the lcidStatusContext */
   const actionOptions = useMemo(() => {
-    if (!lcidStatus) return [];
+    if (!lcidStatusContext) return [];
 
     const options = ['retire', 'update'];
 
-    if (lcidStatus === SystemIntakeLCIDStatus.ISSUED) {
+    if (lcidStatusContext === SystemIntakeLCIDStatus.ISSUED) {
       options.push('expire');
     }
 
     return options;
-  }, [lcidStatus]);
+  }, [lcidStatusContext]);
 
   // Show page not found if no LCID or action is not available
   if (!lcid || !lcidStatus || (subPage && !actionOptions.includes(subPage))) {
@@ -86,8 +103,6 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
             {...systemIntake}
             lcid={lcid}
             systemIntakeId={systemIntakeId}
-            // TODO EASI-3185: Remove to use actual value
-            lcidRetiresAt=""
           />
         </Route>
         <Route path="/governance-review-team/:sytemId/manage-lcid/expire">
@@ -106,7 +121,9 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
 
           <p className="line-height-body-5 font-body-lg text-light margin-0">
             {t('manageLcid.description', {
-              context: lcidStatus
+              context: hasFutureRetireDate
+                ? 'FUTURE_RETIRE_DATE'
+                : lcidStatusContext
             })}
           </p>
 
@@ -138,6 +155,15 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
                         {t('manageLcid.label')}
                       </Label>
 
+                      {lcidRetiresAt && (
+                        <Alert type="warning" slim>
+                          {t('manageLcid.retireDateWarning', {
+                            date: formatDateLocal(lcidRetiresAt, 'MM/dd/yyyy'),
+                            context: lcidStatus
+                          })}
+                        </Alert>
+                      )}
+
                       {actionOptions.map(action => (
                         <RadioField
                           {...field}
@@ -145,7 +171,7 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
                           value={action}
                           checked={field.value === action}
                           label={t(`manageLcid.${action}`, {
-                            context: lcidStatus
+                            context: lcidStatusContext
                           })}
                           id={`grt-lcid-action__${action}`}
                         />
