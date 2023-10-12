@@ -2310,9 +2310,14 @@ enum TRBAdminNoteCategory {
   ADVICE_LETTER
 }
 
+"""
+This type doesn't contain any actual data
+"""
 type TRBAdminNoteGeneralRequestAdditionalData {
-  placeholder: String
-# Intentionally empty
+  """
+  Placeholder field so this type is non-empty, always true
+  """
+  placeholderField: Boolean! # Necessary because gqlgen doesn't support empty types
 }
 
 type TRBAdminNoteInitialRequestFormAdditionalData {
@@ -2322,16 +2327,23 @@ type TRBAdminNoteInitialRequestFormAdditionalData {
 }
 
 type TRBAdminNoteSupportingDocumentsAdditionalData {
-  documentNames: [String!]! # TODO - placeholder for proper type
+  documents: [TRBRequestDocument!]!
 }
 
+"""
+This type doesn't contain any actual data
+"""
 type TRBAdminNoteConsultSessionAdditionalData {
-# Intentionally empty
-placeholder: String
+  """
+  Placeholder field so this type is non-empty, always true
+  """
+  placeholderField: Boolean! # Necessary because gqlgen doesn't support empty types
 }
 
 type TRBAdminNoteAdviceLetterAdditionalData {
-  sections: [String!]! # TODO - placeholder for proper type
+  appliesToMeetingSummary: Boolean!
+  appliesToNextSteps: Boolean!
+  recommendations: [TRBAdviceLetterRecommendation!]!
 }
 
 union TRBAdminNoteAdditionalData = TRBAdminNoteGeneralRequestAdditionalData | TRBAdminNoteInitialRequestFormAdditionalData | TRBAdminNoteSupportingDocumentsAdditionalData | TRBAdminNoteConsultSessionAdditionalData | TRBAdminNoteAdviceLetterAdditionalData
@@ -2375,33 +2387,45 @@ type TRBAdviceLetter {
   modifiedAt: Time
 }
 
+input TRBAdminNoteInitialRequestFormInput {
+  appliesToBasicRequestDetails: Boolean!
+  appliesToSubjectAreas: Boolean!
+  appliesToAttendees: Boolean!
+}
+
+input TRBAdminNoteSupportingDocumentsInput {
+  documentIDs: [UUID!]!
+}
+
+input TRBAdminNoteAdviceLetterInput {
+  appliesToMeetingSummary: Boolean!
+  appliesToNextSteps: Boolean!
+  recommendationIDs: [UUID!]!
+}
+
 """
 The data needed to create a TRB admin note
+For category-specific data, rather than five separate mutations with their own input types,
+this type has nullable fields for all the categories that can have category-specific data.
+At most one of these fields should have a value.
 """
 input CreateTRBAdminNoteInput {
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
   noteText: HTML!
 
-  """
-  Categories
-    GENERAL_REQUEST
-    INITIAL_REQUEST_FORM
-    SUPPORTING_DOCUMENTS
-    CONSULT_SESSION
-    ADVICE_LETTER
-  """
+  # General Request category - no additional data
 
-  # Initial Request Form
-  appliesToBasicRequestDetails: Boolean
-  appliesToSubjectAreas: Boolean
-  appliesToAttendees: Boolean
+  # Initial Request Form category
+  initialRequestFormData: TRBAdminNoteInitialRequestFormInput
 
-  # Supporting Documents
-  documentIDs: [UUID!]
+  # Supporting Documents category
+  supportingDocumentsData: TRBAdminNoteSupportingDocumentsInput
 
-  # Advice Letter
-  sectionNames: [String]
+  # Consult Session category - no additional data
+
+  # Advice Letter category
+  adviceLetterData: TRBAdminNoteAdviceLetterInput
 }
 
 """

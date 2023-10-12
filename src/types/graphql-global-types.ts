@@ -596,16 +596,17 @@ export interface CreateSystemIntakeNoteInput {
 
 /**
  * The data needed to create a TRB admin note
+ * For category-specific data, rather than five separate mutations with their own input types,
+ * this type has nullable fields for all the categories that can have category-specific data.
+ * At most one of these fields should have a value.
  */
 export interface CreateTRBAdminNoteInput {
   trbRequestId: UUID;
   category: TRBAdminNoteCategory;
   noteText: HTML;
-  appliesToBasicRequestDetails?: boolean | null;
-  appliesToSubjectAreas?: boolean | null;
-  appliesToAttendees?: boolean | null;
-  documentIDs?: UUID[] | null;
-  sectionNames?: (string | null)[] | null;
+  initialRequestFormData?: TRBAdminNoteInitialRequestFormInput | null;
+  supportingDocumentsData?: TRBAdminNoteSupportingDocumentsInput | null;
+  adviceLetterData?: TRBAdminNoteAdviceLetterInput | null;
 }
 
 /**
@@ -961,6 +962,22 @@ export interface SystemIntakeUpdateLCIDInput {
   additionalInfo?: HTML | null;
   notificationRecipients?: EmailNotificationRecipients | null;
   adminNote?: HTML | null;
+}
+
+export interface TRBAdminNoteAdviceLetterInput {
+  appliesToMeetingSummary: boolean;
+  appliesToNextSteps: boolean;
+  recommendationIDs: UUID[];
+}
+
+export interface TRBAdminNoteInitialRequestFormInput {
+  appliesToBasicRequestDetails: boolean;
+  appliesToSubjectAreas: boolean;
+  appliesToAttendees: boolean;
+}
+
+export interface TRBAdminNoteSupportingDocumentsInput {
+  documentIDs: UUID[];
 }
 
 /**

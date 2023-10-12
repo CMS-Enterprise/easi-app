@@ -240,21 +240,16 @@ type CreateSystemIntakeNoteInput struct {
 }
 
 // The data needed to create a TRB admin note
+// For category-specific data, rather than five separate mutations with their own input types,
+// this type has nullable fields for all the categories that can have category-specific data.
+// At most one of these fields should have a value.
 type CreateTRBAdminNoteInput struct {
-	TrbRequestID uuid.UUID                   `json:"trbRequestId"`
-	Category     models.TRBAdminNoteCategory `json:"category"`
-	NoteText     models.HTML                 `json:"noteText"`
-	// Categories
-	//   GENERAL_REQUEST
-	//   INITIAL_REQUEST_FORM
-	//   SUPPORTING_DOCUMENTS
-	//   CONSULT_SESSION
-	//   ADVICE_LETTER
-	AppliesToBasicRequestDetails *bool       `json:"appliesToBasicRequestDetails,omitempty"`
-	AppliesToSubjectAreas        *bool       `json:"appliesToSubjectAreas,omitempty"`
-	AppliesToAttendees           *bool       `json:"appliesToAttendees,omitempty"`
-	DocumentIDs                  []uuid.UUID `json:"documentIDs,omitempty"`
-	SectionNames                 []*string   `json:"sectionNames,omitempty"`
+	TrbRequestID            uuid.UUID                             `json:"trbRequestId"`
+	Category                models.TRBAdminNoteCategory           `json:"category"`
+	NoteText                models.HTML                           `json:"noteText"`
+	InitialRequestFormData  *TRBAdminNoteInitialRequestFormInput  `json:"initialRequestFormData,omitempty"`
+	SupportingDocumentsData *TRBAdminNoteSupportingDocumentsInput `json:"supportingDocumentsData,omitempty"`
+	AdviceLetterData        *TRBAdminNoteAdviceLetterInput        `json:"adviceLetterData,omitempty"`
 }
 
 // The input required to add a recommendation & links to a TRB advice letter
@@ -829,19 +824,31 @@ type SystemIntakeUpdateLCIDInput struct {
 }
 
 type TRBAdminNoteAdviceLetterAdditionalData struct {
-	Sections []string `json:"sections"`
+	AppliesToMeetingSummary bool                                    `json:"appliesToMeetingSummary"`
+	AppliesToNextSteps      bool                                    `json:"appliesToNextSteps"`
+	Recommendations         []*models.TRBAdviceLetterRecommendation `json:"recommendations"`
 }
 
 func (TRBAdminNoteAdviceLetterAdditionalData) IsTRBAdminNoteAdditionalData() {}
 
+type TRBAdminNoteAdviceLetterInput struct {
+	AppliesToMeetingSummary bool        `json:"appliesToMeetingSummary"`
+	AppliesToNextSteps      bool        `json:"appliesToNextSteps"`
+	RecommendationIDs       []uuid.UUID `json:"recommendationIDs"`
+}
+
+// This type doesn't contain any actual data
 type TRBAdminNoteConsultSessionAdditionalData struct {
-	Placeholder *string `json:"placeholder,omitempty"`
+	// Placeholder field so this type is non-empty, always true
+	PlaceholderField bool `json:"placeholderField"`
 }
 
 func (TRBAdminNoteConsultSessionAdditionalData) IsTRBAdminNoteAdditionalData() {}
 
+// This type doesn't contain any actual data
 type TRBAdminNoteGeneralRequestAdditionalData struct {
-	Placeholder *string `json:"placeholder,omitempty"`
+	// Placeholder field so this type is non-empty, always true
+	PlaceholderField bool `json:"placeholderField"`
 }
 
 func (TRBAdminNoteGeneralRequestAdditionalData) IsTRBAdminNoteAdditionalData() {}
@@ -854,11 +861,21 @@ type TRBAdminNoteInitialRequestFormAdditionalData struct {
 
 func (TRBAdminNoteInitialRequestFormAdditionalData) IsTRBAdminNoteAdditionalData() {}
 
+type TRBAdminNoteInitialRequestFormInput struct {
+	AppliesToBasicRequestDetails bool `json:"appliesToBasicRequestDetails"`
+	AppliesToSubjectAreas        bool `json:"appliesToSubjectAreas"`
+	AppliesToAttendees           bool `json:"appliesToAttendees"`
+}
+
 type TRBAdminNoteSupportingDocumentsAdditionalData struct {
-	DocumentNames []string `json:"documentNames"`
+	Documents []*models.TRBRequestDocument `json:"documents"`
 }
 
 func (TRBAdminNoteSupportingDocumentsAdditionalData) IsTRBAdminNoteAdditionalData() {}
+
+type TRBAdminNoteSupportingDocumentsInput struct {
+	DocumentIDs []uuid.UUID `json:"documentIDs"`
+}
 
 // Denotes the type of a document attached to a TRB request,
 // which can be one of a number of common types, or a free-text user-specified type
