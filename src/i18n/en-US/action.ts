@@ -64,6 +64,7 @@ const action = {
     useExistingLcid: 'Life Cycle ID',
     lcid: 'Life Cycle ID',
     expiresAt: 'Expiration date',
+    retiresAt: 'Retirement date',
     scope: 'Scope of Life Cycle ID',
     nextSteps: 'Next steps',
     trbFollowUp: 'TRB follow-up',
