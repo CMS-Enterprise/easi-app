@@ -1141,7 +1141,13 @@ func (r *mutationResolver) UpdateAccessibilityRequestCedarSystem(ctx context.Con
 
 // CreateSystemIntakeActionProgressToNewStep is the resolver for the createSystemIntakeActionProgressToNewStep field.
 func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error) {
-	updatedIntake, err := resolvers.ProgressIntake(ctx, r.store, r.service.FetchUserInfo, input)
+	updatedIntake, err := resolvers.ProgressIntake(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		input,
+	)
 
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
@@ -1223,7 +1229,13 @@ func (r *mutationResolver) CreateSystemIntakeActionIssueLcid(ctx context.Context
 
 // CreateSystemIntakeActionRejectIntake is the resolver for the createSystemIntakeActionRejectIntake field.
 func (r *mutationResolver) CreateSystemIntakeActionRejectIntake(ctx context.Context, input model.SystemIntakeRejectIntakeInput) (*model.UpdateSystemIntakePayload, error) {
-	updatedIntake, err := resolvers.RejectIntakeAsNotApproved(ctx, r.store, r.service.FetchUserInfo, input)
+	updatedIntake, err := resolvers.RejectIntakeAsNotApproved(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		input,
+	)
 
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
@@ -1263,6 +1275,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNotITGovRequest(ctx context.C
 	intake, err := resolvers.CreateSystemIntakeActionNotITGovRequest(
 		ctx,
 		r.store,
+		r.emailClient,
 		r.service.FetchUserInfo,
 		input,
 	)

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1a11ee48-883a-4d97-9011-6fb404d77323",
+		"_postman_id": "be4f3cd4-40e1-4f77-b29e-870063fe2b2d",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "28498683"
@@ -110,7 +110,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation RejectIntake($input: SystemIntakeRejectIntakeInput!) {\r\n    createSystemIntakeActionRejectIntake(input:$input) {\r\n        userErrors {\r\n            message \r\n            path\r\n        }\r\n        systemIntake {\r\n            step\r\n            state\r\n            decisionState\r\n            rejectionReason\r\n            decisionNextSteps\r\n            trbFollowUpRecommendation\r\n            updatedAt\r\n            actions {\r\n                actor {\r\n                    name\r\n                    email\r\n                }\r\n                feedback\r\n                type\r\n            }\r\n            notes {\r\n                author {\r\n                    name\r\n                    eua\r\n                }\r\n                content\r\n            }\r\n\r\n        }\r\n    }\r\n}",
-												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"reason\": \"insufficiently reticulated splines\",\r\n        \"nextSteps\": \"reticulate splines more\",\r\n        \"trbFollowUp\": \"STRONGLY_RECOMMENDED\",\r\n        \"additionalInfo\": \"some info for the email\",\r\n        \"adminNote\": \"lol look how unreticulated this is\"\r\n    }\r\n}\r\n"
+												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"lee.warrick@oddball.io\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"reason\": \"insufficiently reticulated splines\",\r\n        \"nextSteps\": \"reticulate splines more\",\r\n        \"trbFollowUp\": \"STRONGLY_RECOMMENDED\",\r\n        \"additionalInfo\": \"some info for the email\",\r\n        \"adminNote\": \"lol look how unreticulated this is\"\r\n    }\r\n}\r\n"
 											}
 										},
 										"url": {
@@ -136,7 +136,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {\r\n    createSystemIntakeActionProgressToNewStep(input: $input) {\r\n        systemIntake {\r\n            step\r\n            grtDate\r\n        }\r\n    }\r\n}\r\n",
-												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"newStep\": \"GRT_MEETING\",\r\n        \"adminNote\": \"Without a date specified in this query, if the existing date is in the past, the existing date will be cleared (a date in the future will be preserved)\"\r\n    }\r\n}"
+												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"lee.warrick@oddball.io\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"newStep\": \"GRT_MEETING\",\r\n        \"feedback\": \"this is feedback\",\r\n        \"additionalInfo\": \"add'l info\",\r\n        \"adminNote\": \"Without a date specified in this query, if the existing date is in the past, the existing date will be cleared (a date in the future will be preserved)\"\r\n    }\r\n}"
 											}
 										},
 										"url": {
@@ -157,7 +157,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {\r\n    createSystemIntakeActionProgressToNewStep(input: $input) {\r\n        systemIntake {\r\n            step\r\n            grtDate\r\n        }\r\n    }\r\n}\r\n",
-												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"newStep\": \"GRT_MEETING\",\r\n        \"meetingDate\": \"2022-07-28T20:12:31.703Z\"\r\n    }\r\n}"
+												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"lee.warrick@oddball.io\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"newStep\": \"GRT_MEETING\",\r\n        \"meetingDate\": \"2022-07-28T20:12:31.703Z\",\r\n        \"feedback\": \"\",\r\n        \"additionalInfo\": \"add'l info\"\r\n    }\r\n}"
 											}
 										},
 										"url": {
@@ -178,7 +178,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {\r\n    createSystemIntakeActionProgressToNewStep(input: $input) {\r\n        systemIntake {\r\n            step\r\n            grtDate\r\n        }\r\n    }\r\n}\r\n",
-												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"newStep\": \"GRT_MEETING\",\r\n        \"meetingDate\": \"2030-07-28T20:12:31.703Z\"\r\n    }\r\n}"
+												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"lee.warrick@oddball.io\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"newStep\": \"GRT_MEETING\",\r\n        \"meetingDate\": \"2030-07-28T20:12:31.703Z\",\r\n        \"feedback\": \"this is more feedback\",\r\n        \"additionalInfo\": \"add'l info\"\r\n    }\r\n}"
 											}
 										},
 										"url": {
@@ -199,7 +199,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {\r\n    createSystemIntakeActionProgressToNewStep(input: $input) {\r\n        systemIntake {\r\n            step\r\n        }\r\n    }\r\n}\r\n",
-												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"newStep\": \"DRAFT_BUSINESS_CASE\"\r\n    }\r\n}"
+												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"lee.warrick@oddball.io\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"newStep\": \"DRAFT_BUSINESS_CASE\",\r\n        \"feedback\": \"\",\r\n        \"additionalInfo\": \"add'l info\",\r\n        \"grbRecommendations\": \"\",\r\n        \"adminNote\": \"admin note\"\r\n    }\r\n}"
 											}
 										},
 										"url": {
@@ -220,7 +220,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {\r\n    createSystemIntakeActionProgressToNewStep(input: $input) {\r\n        systemIntake {\r\n            step\r\n            governanceRequestFeedbacks {\r\n                id\r\n                feedback\r\n                sourceAction\r\n                targetForm\r\n                type\r\n                author {\r\n                    euaUserId\r\n                    commonName\r\n                    email\r\n                }\r\n            }\r\n            actions {\r\n                feedback\r\n                type\r\n            }\r\n            notes {\r\n                content\r\n                author {\r\n                    eua\r\n                    name\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
-												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"newStep\": \"FINAL_BUSINESS_CASE\",\r\n        \"feedback\": \"You're doing good!\",\r\n        \"additionalInfo\": \"This is a note in the email\",\r\n        \"adminNote\": \"Team - make sure this looks ready to go\",\r\n        \"grbRecommendations\": \"Make sure to ask the business owner how they plan to reverse the polarity of the neutron flow\"\r\n    }\r\n}"
+												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"lee.warrick@oddball.io\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"newStep\": \"FINAL_BUSINESS_CASE\",\r\n        \"feedback\": \"You're doing good!\",\r\n        \"additionalInfo\": \"This is a note in the email\",\r\n        \"adminNote\": \"Team - make sure this looks ready to go\",\r\n        \"grbRecommendations\": \"Make sure to ask the business owner how they plan to reverse the polarity of the neutron flow\"\r\n    }\r\n}"
 											}
 										},
 										"url": {
@@ -387,7 +387,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionNotITGovRequest (\r\n    $input: SystemIntakeNotITGovReqInput!\r\n    ) {\r\n    createSystemIntakeActionNotITGovRequest(input: $input) {\r\n        systemIntake {\r\n            id\r\n            state\r\n            step\r\n            decisionNextSteps\r\n            decisionState\r\n            updatedAt\r\n        }\r\n    }\r\n}",
-												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"reason\": \"email reason goes here\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNote\": \"my admin note\"\r\n  }\r\n}"
+												"variables": "{\r\n  \"input\": {\r\n    \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n    \"notificationRecipients\": {\r\n        \"regularRecipientEmails\": [\r\n            \"lee.warrick@oddball.io\"\r\n        ],\r\n        \"shouldNotifyITGovernance\": false,\r\n        \"shouldNotifyITInvestment\": false\r\n    },\r\n    \"reason\": \"This is the reason\",\r\n    \"additionalInfo\": \"additional info\",\r\n    \"adminNote\": \"my admin note\"\r\n  }\r\n}"
 											}
 										},
 										"url": {
