@@ -94,7 +94,7 @@ describe('IT Gov Actions', () => {
     renderActionPage({
       action: 'request-edits',
       mocks: [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         getGovernanceTaskListQuery
       ]
@@ -116,7 +116,7 @@ describe('IT Gov Actions', () => {
     renderActionPage({
       action: 'request-edits',
       mocks: [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         getGovernanceTaskListQuery,
         {
@@ -188,7 +188,7 @@ describe('IT Gov Actions', () => {
     renderActionPage({
       action: 'request-edits',
       mocks: [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         getGovernanceTaskListQuery
       ]

@@ -1,13 +1,15 @@
 import { DateTime } from 'luxon';
 
+import { SystemIntakeForTable } from 'components/RequestRepository/tableMap';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
+import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { cleanCSVData } from 'utils/csv';
-import { formatContractDate, formatDateLocal, parseAsUTC } from 'utils/date';
+import { formatDateLocal, parseAsUTC } from 'utils/date';
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
 export const initialSystemIntakeForm: SystemIntakeForm = {
@@ -77,7 +79,6 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   grtDate: null,
   grbDate: null,
   adminLead: '',
-  lastAdminNote: null,
   lcidCostBaseline: '',
   requesterNameAndComponent: '',
   hasUiChanges: null
@@ -237,12 +238,7 @@ export const prepareSystemIntakeForApp = (
     grtDate: systemIntake.grtDate,
     grbDate: systemIntake.grbDate,
     adminLead: systemIntake.adminLead || '',
-    lastAdminNote: systemIntake.lastAdminNoteContent
-      ? {
-          content: systemIntake.lastAdminNoteContent,
-          createdAt: systemIntake.lastAdminNoteCreatedAt
-        }
-      : null,
+
     lcidCostBaseline: '',
     requesterNameAndComponent: '',
     hasUiChanges:
@@ -250,53 +246,46 @@ export const prepareSystemIntakeForApp = (
   };
 };
 
-export const convertIntakeToCSV = (
-  intake: SystemIntakeForm & { requesterNameAndComponent: string }
-) => {
-  const collaboratorTeams: any = {};
-  if (intake.governanceTeams.isPresent) {
-    intake.governanceTeams.teams.forEach((team: any) => {
-      switch (team.name) {
-        case 'Technical Review Board':
-          collaboratorTeams.trbCollaborator = team.collaborator;
-          break;
-        case "OIT's Security and Privacy Group":
-          collaboratorTeams.oitCollaborator = team.collaborator;
-          break;
-        case 'Enterprise Architecture':
-          collaboratorTeams.eaCollaborator = team.collaborator;
-          break;
-        default:
-          break;
-      }
-    });
+export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
+  const lastAdminNote = intake.lastAdminNote
+    ? { ...intake.lastAdminNote }
+    : null;
+
+  // Apppend lastAdminNote createdAt date to content
+  if (lastAdminNote) {
+    lastAdminNote.content = `${lastAdminNote.content} (${formatDateLocal(
+      lastAdminNote.createdAt,
+      'MM/dd/yyyy'
+    )})`;
   }
 
+  // Format dates to MM/dd/yyyy
+  const createdAt = formatDateLocal(intake.createdAt, 'MM/dd/yyyy');
+  const submittedAt =
+    intake?.submittedAt && formatDateLocal(intake.submittedAt, 'MM/dd/yyyy');
+  const updatedAt =
+    intake?.updatedAt && formatDateLocal(intake.updatedAt, 'MM/dd/yyyy');
+  const archivedAt =
+    intake?.archivedAt && formatDateLocal(intake.archivedAt, 'MM/dd/yyyy');
+
+  // Translate booleans to yes/no
+  const existingFunding = convertBoolToYesNo(intake?.existingFunding);
+  const needsEaSupport = convertBoolToYesNo(intake?.needsEaSupport);
+  const hasUiChanges = convertBoolToYesNo(intake?.hasUiChanges);
+
+  // Override all applicable fields with CSV formatting
   return cleanCSVData({
     ...intake,
-    ...collaboratorTeams,
-    lastAdminNote: intake.lastAdminNote
-      ? `${intake.lastAdminNote.content} (${formatDateLocal(
-          intake.lastAdminNote.createdAt,
-          'MMMM d, yyyy'
-        )})`
-      : null,
-    lcidScope: intake.lcidScope,
-    contractStartDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
-      intake.contract.hasContract
-    )
-      ? formatContractDate(intake.contract.startDate)
-      : '',
-    contractEndDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
-      intake.contract.hasContract
-    )
-      ? formatContractDate(intake.contract.endDate)
-      : '',
-    submittedAt: intake.submittedAt,
-    updatedAt: intake.updatedAt,
-    createdAt: intake.createdAt,
-    decidedAt: intake.decidedAt,
-    archivedAt: intake.archivedAt
+    lastAdminNote,
+    // Formatted booleans
+    existingFunding,
+    needsEaSupport,
+    hasUiChanges,
+    // Formatted dates
+    createdAt,
+    submittedAt,
+    updatedAt,
+    archivedAt
   });
 };
 

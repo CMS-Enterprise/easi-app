@@ -10,11 +10,17 @@ import {
 } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
-import { systemIntake } from 'data/mock/systemIntake';
-import { initialSystemIntakeForm } from 'data/systemIntake';
+import {
+  getGRTFeedbackQuery,
+  getSystemIntakeQuery,
+  initialSystemIntakeForm,
+  systemIntake
+} from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
-import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
-import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import {
+  SystemIntakeRequestType,
+  SystemIntakeStatus
+} from 'types/graphql-global-types';
 
 import GovernanceTaskList from './index';
 
@@ -40,125 +46,6 @@ const waitForPageLoad = async () => {
 };
 
 describe('The Goveranance Task List', () => {
-  const INTAKE_ID = '1be65d1a-af87-4e6c-89b2-d2e86f1ee784';
-  const grtFeedback = {
-    request: {
-      query: GetGRTFeedbackQuery,
-      variables: {
-        intakeID: INTAKE_ID
-      }
-    },
-    result: {
-      data: {
-        systemIntake: {
-          grtFeedbacks: []
-        }
-      }
-    }
-  };
-
-  const intakeQuery = (intakeData: any) => {
-    return {
-      request: {
-        query: GetSystemIntakeQuery,
-        variables: {
-          id: INTAKE_ID
-        }
-      },
-      result: {
-        data: {
-          systemIntake: {
-            ...systemIntake,
-            id: INTAKE_ID,
-            adminLead: '',
-            businessNeed: '',
-            businessSolution: '',
-            businessOwner: {
-              component: '',
-              name: ''
-            },
-            contract: {
-              contractor: null,
-              endDate: {
-                day: null,
-                month: null,
-                year: null
-              },
-              hasContract: '',
-              startDate: {
-                day: null,
-                month: null,
-                year: null
-              },
-              vehicle: null,
-              number: null
-            },
-            annualSpending: {
-              currentAnnualSpending: null,
-              plannedYearOneSpending: null
-            },
-            costs: {
-              isExpectingIncrease: null,
-              expectedIncreaseAmount: null
-            },
-            currentStage: null,
-            decisionNextSteps: null,
-            grbDate: null,
-            grtDate: null,
-            grtFeedbacks: [],
-            governanceTeams: {
-              isPresent: null,
-              teams: null
-            },
-            isso: {
-              isPresent: null,
-              name: null
-            },
-            existingFunding: null,
-            fundingSources: [],
-            lcid: null,
-            lcidExpiresAt: null,
-            lcidScope: null,
-            lcidCostBaseline: null,
-            needsEaSupport: null,
-            productManager: {
-              component: null,
-              name: null
-            },
-            rejectionReason: null,
-            requester: {
-              component: null,
-              email: null,
-              name: null
-            },
-            requestName: null,
-            requestType: 'NEW',
-            status: 'INTAKE_DRAFT',
-            grtReviewEmailBody: null,
-            decidedAt: null,
-            businessCaseId: null,
-            submittedAt: null,
-            updatedAt: '2021-09-22T18:25:59Z',
-            createdAt: '2021-09-21T20:06:29Z',
-            archivedAt: null,
-            euaUserId: 'ASDF',
-            lastAdminNote: {
-              content: null,
-              createdAt: null
-            },
-            hasUiChanges: null,
-            documents: [],
-            state: 'OPEN',
-            decisionState: 'NO_DECISION',
-            lcidStatus: null,
-            trbFollowUpRecommendation: null,
-            ...intakeData
-          }
-        }
-      }
-    };
-  };
-
   it('renders without crashing', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
@@ -167,9 +54,11 @@ describe('The Goveranance Task List', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+      <MemoryRouter
+        initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+      >
         <MockedProvider
-          mocks={[intakeQuery({}), grtFeedback]}
+          mocks={[getSystemIntakeQuery(), getGRTFeedbackQuery]}
           addTypename={false}
         >
           <Provider store={store}>
@@ -197,9 +86,11 @@ describe('The Goveranance Task List', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+      <MemoryRouter
+        initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+      >
         <MockedProvider
-          mocks={[intakeQuery({}), grtFeedback]}
+          mocks={[getSystemIntakeQuery(), getGRTFeedbackQuery]}
           addTypename={false}
         >
           <Provider store={store}>
@@ -222,24 +113,23 @@ describe('The Goveranance Task List', () => {
       const mockStore = configureMockStore();
       const store = mockStore({
         systemIntake: {
-          systemIntake: {
-            ...initialSystemIntakeForm,
-            requestName: 'Easy Access to System Information',
-            requestType: 'RECOMPETE'
-          }
+          systemIntake
         },
         businessCase: { form: {} }
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
+              getSystemIntakeQuery({
                 requestName: 'Easy Access to System Information',
-                requestType: 'RECOMPETE'
+                status: SystemIntakeStatus.INTAKE_DRAFT,
+                requestType: SystemIntakeRequestType.RECOMPETE
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -274,14 +164,16 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
+              getSystemIntakeQuery({
                 requestName: 'Easy Access to System Information',
-                requestType: 'RECOMPETE'
+                requestType: SystemIntakeRequestType.RECOMPETE
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -323,15 +215,17 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
+              getSystemIntakeQuery({
                 requestName: 'Easy Access to System Information',
-                requestType: 'RECOMPETE',
-                status: 'LCID_ISSUED'
+                requestType: SystemIntakeRequestType.RECOMPETE,
+                status: SystemIntakeStatus.LCID_ISSUED
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -376,7 +270,7 @@ describe('The Goveranance Task List', () => {
       const store = mockStore({
         systemIntake: {
           systemIntake: {
-            ...initialSystemIntakeForm,
+            ...systemIntake,
             requestName: 'Easy Access to System Information'
           }
         },
@@ -384,13 +278,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
+              getSystemIntakeQuery({
                 requestName: 'Easy Access to System Information'
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -424,9 +320,14 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
-            mocks={[intakeQuery({}), grtFeedback]}
+            mocks={[
+              getSystemIntakeQuery(initialSystemIntakeForm),
+              getGRTFeedbackQuery
+            ]}
             addTypename={false}
           >
             <Provider store={store}>
@@ -466,13 +367,13 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'INTAKE_DRAFT'
-              }),
-              grtFeedback
+              getSystemIntakeQuery(initialSystemIntakeForm),
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -510,13 +411,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'INTAKE_SUBMITTED'
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.INTAKE_SUBMITTED
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -559,13 +462,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'NEED_BIZ_CASE'
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.NEED_BIZ_CASE
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -613,13 +518,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'BIZ_CASE_DRAFT'
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.BIZ_CASE_DRAFT
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -667,14 +574,16 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'BIZ_CASE_DRAFT_SUBMITTED',
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.BIZ_CASE_DRAFT_SUBMITTED,
                 businessCaseId: 'ac94c1d7-48ca-4c49-9045-371b4d3062b4'
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -723,13 +632,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'BIZ_CASE_CHANGES_NEEDED'
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.BIZ_CASE_CHANGES_NEEDED
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -779,13 +690,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'READY_FOR_GRT'
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.READY_FOR_GRT
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -852,13 +765,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'BIZ_CASE_FINAL_NEEDED'
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.BIZ_CASE_FINAL_NEEDED
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -920,13 +835,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'BIZ_CASE_FINAL_SUBMITTED'
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.BIZ_CASE_FINAL_SUBMITTED
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -989,13 +906,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'READY_FOR_GRB'
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.READY_FOR_GRB
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -1055,13 +974,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'LCID_ISSUED'
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.LCID_ISSUED
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -1127,13 +1048,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'NO_GOVERNANCE'
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.NO_GOVERNANCE
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -1185,13 +1108,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'NOT_IT_REQUEST'
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.NOT_IT_REQUEST
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -1247,14 +1172,16 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
+              getSystemIntakeQuery({
                 lcid: '123456',
-                status: 'READY_FOR_GRB'
+                status: SystemIntakeStatus.READY_FOR_GRB
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -1315,13 +1242,15 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
-                status: 'READY_FOR_GRB'
+              getSystemIntakeQuery({
+                status: SystemIntakeStatus.READY_FOR_GRB
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -1387,14 +1316,16 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
+              getSystemIntakeQuery({
                 lcid: '123456',
-                status: 'LCID_ISSUED'
+                status: SystemIntakeStatus.LCID_ISSUED
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >
@@ -1466,14 +1397,16 @@ describe('The Goveranance Task List', () => {
       });
 
       render(
-        <MemoryRouter initialEntries={[`/governance-task-list/${INTAKE_ID}`]}>
+        <MemoryRouter
+          initialEntries={[`/governance-task-list/${systemIntake.id}`]}
+        >
           <MockedProvider
             mocks={[
-              intakeQuery({
+              getSystemIntakeQuery({
                 lcid: '123456',
-                status: 'NOT_APPROVED'
+                status: SystemIntakeStatus.NOT_APPROVED
               }),
-              grtFeedback
+              getGRTFeedbackQuery
             ]}
             addTypename={false}
           >

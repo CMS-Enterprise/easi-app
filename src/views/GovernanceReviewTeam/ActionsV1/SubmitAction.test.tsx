@@ -151,7 +151,7 @@ describe('Renders action pages', () => {
   ];
 
   test.each(actionsList)('%j', async action => {
-    renderActionPage(action, [getSystemIntakeQuery]);
+    renderActionPage(action, [getSystemIntakeQuery()]);
     await waitForPageLoad(grtActions[action as keyof typeof grtActions].view);
     expect(
       screen.getByRole('button', { name: /send email/i })
@@ -165,7 +165,7 @@ describe('Renders action pages', () => {
 describe('Submit Action', () => {
   it('renders formik validation errors', async () => {
     // Random route; doesn't really matter
-    renderActionPage('not-it-request', [getSystemIntakeQuery]);
+    renderActionPage('not-it-request', [getSystemIntakeQuery()]);
     await waitForPageLoad();
 
     screen.getByRole('button', { name: /send email/i }).click();
@@ -182,7 +182,7 @@ describe('Submit Action', () => {
       findByText,
       getByRole
     } = renderActionPage('not-it-request', [
-      getSystemIntakeQuery,
+      getSystemIntakeQuery(),
       getCedarContactsQuery,
       getSystemIntakeContactsQuery
     ]);
@@ -254,7 +254,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('not-it-request', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         notITRequestMutation
       ]);
@@ -317,7 +317,7 @@ describe('Submit Action', () => {
         }
       };
       renderActionPage('not-it-request', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         notITRequestMutation
       ]);
       await waitForPageLoad();
@@ -356,7 +356,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('need-biz-case', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         needBizCaseMutation
       ]);
@@ -414,7 +414,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('ready-for-grt', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         readyForGRTMutation
       ]);
@@ -470,7 +470,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('biz-case-needs-changes', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         needsChangesMutation
       ]);
@@ -530,7 +530,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('no-governance', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         noGovernanceMutation
       ]);
@@ -592,7 +592,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('send-email', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         sendEmailMutation
       ]);
@@ -646,7 +646,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('guide-received-close', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         guideReceivedCloseMutation
       ]);
@@ -704,7 +704,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('not-responding-close', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         notRespondingCloseMutation
       ]);
