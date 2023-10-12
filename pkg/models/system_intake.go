@@ -188,8 +188,6 @@ type SystemIntake struct {
 	DecisionNextSteps           *HTML                        `json:"decisionNextSteps" db:"decision_next_steps"`
 	RejectionReason             *HTML                        `json:"rejectionReason" db:"rejection_reason"`
 	AdminLead                   null.String                  `json:"adminLead" db:"admin_lead"`
-	LastAdminNoteContent        *HTML                        `json:"lastAdminNoteContent" db:"last_admin_note_content"`      // TODO break this out into it's own resolver, as this isn't actually a stored column in the DB
-	LastAdminNoteCreatedAt      *time.Time                   `json:"lastAdminNoteCreatedAt" db:"last_admin_note_created_at"` // TODO break this out into it's own resolver, as this isn't actually a stored column in the DB
 	CedarSystemID               null.String                  `json:"cedarSystemId" db:"cedar_system_id"`
 	ExistingFunding             null.Bool                    `json:"existingFunding" db:"existing_funding"`
 	FundingSource               null.String                  `json:"fundingSource" db:"funding_source"`

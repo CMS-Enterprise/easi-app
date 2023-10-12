@@ -5,7 +5,7 @@ import { Button } from '@trussworks/react-uswds';
 import UswdsReactLink from 'components/LinkWrapper';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import { isIntakeOpen } from 'utils/systemIntake';
 
 import './index.scss';

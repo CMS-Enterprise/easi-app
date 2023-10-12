@@ -4,7 +4,7 @@ import renderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 import Approved from './Approved';

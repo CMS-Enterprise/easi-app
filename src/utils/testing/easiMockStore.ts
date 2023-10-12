@@ -1,12 +1,13 @@
 import configureMockStore from 'redux-mock-store';
 
+import { JobCode } from 'constants/jobCodes';
 import users, { MockEuaUserId } from 'data/mock/users';
 
 type EasiMockStoreProps =
   | {
       euaUserId?: MockEuaUserId;
       isUserSet?: boolean;
-      groups?: string[];
+      groups?: JobCode[];
     }
   | undefined;
 

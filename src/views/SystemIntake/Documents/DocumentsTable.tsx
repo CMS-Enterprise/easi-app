@@ -15,11 +15,11 @@ import {
   DeleteSystemIntakeDocument,
   DeleteSystemIntakeDocumentVariables
 } from 'queries/types/DeleteSystemIntakeDocument';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import {
   GetSystemIntakeDocumentUrls,
   GetSystemIntakeDocumentUrlsVariables
 } from 'queries/types/GetSystemIntakeDocumentUrls';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeDocument } from 'queries/types/SystemIntakeDocument';
 import {
   SystemIntakeDocumentCommonType,
