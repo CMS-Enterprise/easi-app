@@ -985,7 +985,7 @@ type SystemIntake {
   contract: SystemIntakeContract!
   costs: SystemIntakeCosts
   annualSpending: SystemIntakeAnnualSpending
-  createdAt: Time
+  createdAt: Time # TODO - This should probably not be nullable, but some data in IMPL & PROD has it nulled out. We should fix this in the future.
   currentStage: String
   decisionNextSteps: HTML
   eaCollaborator: String
