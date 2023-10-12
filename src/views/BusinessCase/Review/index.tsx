@@ -22,6 +22,7 @@ const Review = ({ businessCase }: ReviewProps) => {
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
   // TODO: This should use systemIntake.SystemIntakeStep=FINAL_BUSINESS_CASE instead of the overall system intake status=FINAL_BUSINESS_CASE
   // This means this cmoponent will probably need that step passed in as a prop (or the entire intake, whichever makes more sense)
+  // https://jiraent.cms.gov/browse/EASI-3440
   const actionType =
     businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
       ? 'SUBMIT_FINAL_BIZ_CASE'
