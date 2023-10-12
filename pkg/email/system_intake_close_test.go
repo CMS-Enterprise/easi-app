@@ -1,6 +1,7 @@
 package email
 
 import (
+	"context"
 	"fmt"
 	"time"
 
