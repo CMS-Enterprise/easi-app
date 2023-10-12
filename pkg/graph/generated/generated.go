@@ -532,11 +532,6 @@ type ComplexityRoot struct {
 		IntakeFormStatus                func(childComplexity int) int
 	}
 
-	LastAdminNote struct {
-		Content   func(childComplexity int) int
-		CreatedAt func(childComplexity int) int
-	}
-
 	LaunchDarklySettings struct {
 		SignedHash func(childComplexity int) int
 		UserKey    func(childComplexity int) int
@@ -623,6 +618,7 @@ type ComplexityRoot struct {
 		UpdateTRBAdminNote                               func(childComplexity int, input map[string]interface{}) int
 		UpdateTRBAdviceLetter                            func(childComplexity int, input map[string]interface{}) int
 		UpdateTRBAdviceLetterRecommendation              func(childComplexity int, input map[string]interface{}) int
+		UpdateTRBAdviceLetterRecommendationOrder         func(childComplexity int, input model.UpdateTRBAdviceLetterRecommendationOrderInput) int
 		UpdateTRBRequest                                 func(childComplexity int, id uuid.UUID, changes map[string]interface{}) int
 		UpdateTRBRequestAttendee                         func(childComplexity int, input model.UpdateTRBRequestAttendeeInput) int
 		UpdateTRBRequestConsultMeetingTime               func(childComplexity int, input model.UpdateTRBRequestConsultMeetingTimeInput) int
@@ -652,6 +648,7 @@ type ComplexityRoot struct {
 		Roles                    func(childComplexity int, cedarSystemID string, roleTypeID *string) int
 		SystemIntake             func(childComplexity int, id uuid.UUID) int
 		SystemIntakeContacts     func(childComplexity int, id uuid.UUID) int
+		SystemIntakes            func(childComplexity int) int
 		SystemIntakesWithLcids   func(childComplexity int) int
 		Systems                  func(childComplexity int, after *string, first int) int
 		TrbAdminNote             func(childComplexity int, id uuid.UUID) int
@@ -733,7 +730,6 @@ type ComplexityRoot struct {
 		ID                          func(childComplexity int) int
 		Isso                        func(childComplexity int) int
 		ItGovTaskStatuses           func(childComplexity int) int
-		LastAdminNote               func(childComplexity int) int
 		Lcid                        func(childComplexity int) int
 		LcidCostBaseline            func(childComplexity int) int
 		LcidIssuedAt                func(childComplexity int) int
@@ -1330,6 +1326,7 @@ type MutationResolver interface {
 	SendTRBAdviceLetter(ctx context.Context, input model.SendTRBAdviceLetterInput) (*models.TRBAdviceLetter, error)
 	CreateTRBAdviceLetterRecommendation(ctx context.Context, input model.CreateTRBAdviceLetterRecommendationInput) (*models.TRBAdviceLetterRecommendation, error)
 	UpdateTRBAdviceLetterRecommendation(ctx context.Context, input map[string]interface{}) (*models.TRBAdviceLetterRecommendation, error)
+	UpdateTRBAdviceLetterRecommendationOrder(ctx context.Context, input model.UpdateTRBAdviceLetterRecommendationOrderInput) ([]*models.TRBAdviceLetterRecommendation, error)
 	DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error)
 	CloseTRBRequest(ctx context.Context, input model.CloseTRBRequestInput) (*models.TRBRequest, error)
 	ReopenTrbRequest(ctx context.Context, input model.ReopenTRBRequestInput) (*models.TRBRequest, error)
@@ -1341,6 +1338,7 @@ type QueryResolver interface {
 	AccessibilityRequests(ctx context.Context, after *string, first int) (*model.AccessibilityRequestsConnection, error)
 	Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error)
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
+	SystemIntakes(ctx context.Context) ([]*models.SystemIntake, error)
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 	SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error)
 	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
@@ -1411,7 +1409,6 @@ type SystemIntakeResolver interface {
 
 	GrtReviewEmailBody(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
-	LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error)
 	CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error)
 	HasUIChanges(ctx context.Context, obj *models.SystemIntake) (*bool, error)
@@ -3669,20 +3666,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ITGovTaskStatuses.IntakeFormStatus(childComplexity), true
 
-	case "LastAdminNote.content":
-		if e.complexity.LastAdminNote.Content == nil {
-			break
-		}
-
-		return e.complexity.LastAdminNote.Content(childComplexity), true
-
-	case "LastAdminNote.createdAt":
-		if e.complexity.LastAdminNote.CreatedAt == nil {
-			break
-		}
-
-		return e.complexity.LastAdminNote.CreatedAt(childComplexity), true
-
 	case "LaunchDarklySettings.signedHash":
 		if e.complexity.LaunchDarklySettings.SignedHash == nil {
 			break
@@ -4657,6 +4640,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateTRBAdviceLetterRecommendation(childComplexity, args["input"].(map[string]interface{})), true
 
+	case "Mutation.updateTRBAdviceLetterRecommendationOrder":
+		if e.complexity.Mutation.UpdateTRBAdviceLetterRecommendationOrder == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateTRBAdviceLetterRecommendationOrder_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateTRBAdviceLetterRecommendationOrder(childComplexity, args["input"].(model.UpdateTRBAdviceLetterRecommendationOrderInput)), true
+
 	case "Mutation.updateTRBRequest":
 		if e.complexity.Mutation.UpdateTRBRequest == nil {
 			break
@@ -4948,6 +4943,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.SystemIntakeContacts(childComplexity, args["id"].(uuid.UUID)), true
+
+	case "Query.systemIntakes":
+		if e.complexity.Query.SystemIntakes == nil {
+			break
+		}
+
+		return e.complexity.Query.SystemIntakes(childComplexity), true
 
 	case "Query.systemIntakesWithLcids":
 		if e.complexity.Query.SystemIntakesWithLcids == nil {
@@ -5393,13 +5395,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.ItGovTaskStatuses(childComplexity), true
-
-	case "SystemIntake.lastAdminNote":
-		if e.complexity.SystemIntake.LastAdminNote == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.LastAdminNote(childComplexity), true
 
 	case "SystemIntake.lcid":
 		if e.complexity.SystemIntake.Lcid == nil {
@@ -7235,6 +7230,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateSystemIntakeNoteInput,
 		ec.unmarshalInputUpdateSystemIntakeRequestDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeReviewDatesInput,
+		ec.unmarshalInputUpdateTRBAdviceLetterRecommendationOrderInput,
 		ec.unmarshalInputUpdateTRBRequestAttendeeInput,
 		ec.unmarshalInputUpdateTRBRequestConsultMeetingTimeInput,
 		ec.unmarshalInputUpdateTRBRequestFundingSourcesInput,
@@ -8365,7 +8361,6 @@ type SystemIntake {
   grtReviewEmailBody: String
   decidedAt: Time
   businessCaseId: UUID
-  lastAdminNote: LastAdminNote!
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
@@ -8750,14 +8745,6 @@ request
 input UpdateSystemIntakeAdminLeadInput {
   adminLead: String!
   id: UUID!
-}
-
-"""
-The most recent note added by an admin to a system request
-"""
-type LastAdminNote {
-  content: HTML
-  createdAt: Time
 }
 
 """
@@ -9677,6 +9664,9 @@ type TRBAdviceLetter {
   isFollowupRecommended: Boolean
   dateSent: Time
   followupPoint: String
+  """
+  List of recommendations in the order specified by users
+  """
   recommendations: [TRBAdviceLetterRecommendation!]!
   createdBy: String!
   createdAt: Time!
@@ -9756,6 +9746,16 @@ input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]inter
   title: String
   recommendation: HTML
   links: [String!]
+}
+
+"""
+"""
+input UpdateTRBAdviceLetterRecommendationOrderInput {
+  trbRequestId: UUID!
+  """
+  List of the recommendation IDs in the new order they should be displayed
+  """
+  newOrder: [UUID!]!
 }
 
 """
@@ -10006,6 +10006,8 @@ type Mutation {
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBAdviceLetterRecommendationOrder(input: UpdateTRBAdviceLetterRecommendationOrderInput!): [TRBAdviceLetterRecommendation!]!
+    @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
@@ -10029,6 +10031,8 @@ type Query {
   ): AccessibilityRequestsConnection
   requests(after: String, first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
+  systemIntakes: [SystemIntake!]!
+  @hasRole(role: EASI_GOVTEAM)
   systems(after: String, first: Int!): SystemConnection
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
@@ -10113,6 +10117,7 @@ directive @hasRole(role: Role!) on FIELD_DEFINITION
 directive @goModel(
   model: String
   models: [String!]
+  forceGenerate: Boolean
 ) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
 
 """
@@ -11620,6 +11625,21 @@ func (ec *executionContext) field_Mutation_updateTRBAdminNote_args(ctx context.C
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateTRBAdminNoteInput2map(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateTRBAdviceLetterRecommendationOrder_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateTRBAdviceLetterRecommendationOrderInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateTRBAdviceLetterRecommendationOrderInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBAdviceLetterRecommendationOrderInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -15089,8 +15109,6 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_decidedAt(ctx, field)
 			case "businessCaseId":
 				return ec.fieldContext_SystemIntake_businessCaseId(ctx, field)
-			case "lastAdminNote":
-				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
@@ -23973,8 +23991,6 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_decidedAt(ctx, field)
 			case "businessCaseId":
 				return ec.fieldContext_SystemIntake_businessCaseId(ctx, field)
-			case "lastAdminNote":
-				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
@@ -26098,88 +26114,6 @@ func (ec *executionContext) fieldContext_ITGovTaskStatuses_decisionAndNextStepsS
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ITGovDecisionStatus does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _LastAdminNote_content(ctx context.Context, field graphql.CollectedField, obj *model.LastAdminNote) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_LastAdminNote_content(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Content, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.HTML)
-	fc.Result = res
-	return ec.marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_LastAdminNote_content(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "LastAdminNote",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type HTML does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _LastAdminNote_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.LastAdminNote) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_LastAdminNote_createdAt(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_LastAdminNote_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "LastAdminNote",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -29046,8 +28980,6 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_decidedAt(ctx, field)
 			case "businessCaseId":
 				return ec.fieldContext_SystemIntake_businessCaseId(ctx, field)
-			case "lastAdminNote":
-				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
@@ -32856,6 +32788,107 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBAdviceLetterRecommend
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_updateTRBAdviceLetterRecommendationOrder(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateTRBAdviceLetterRecommendationOrder(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateTRBAdviceLetterRecommendationOrder(rctx, fc.Args["input"].(model.UpdateTRBAdviceLetterRecommendationOrderInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*models.TRBAdviceLetterRecommendation); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cmsgov/easi-app/pkg/models.TRBAdviceLetterRecommendation`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.TRBAdviceLetterRecommendation)
+	fc.Result = res
+	return ec.marshalNTRBAdviceLetterRecommendation2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterRecommendationᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateTRBAdviceLetterRecommendationOrder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_id(ctx, field)
+			case "trbRequestId":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_trbRequestId(ctx, field)
+			case "title":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_title(ctx, field)
+			case "recommendation":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_recommendation(ctx, field)
+			case "links":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_links(ctx, field)
+			case "author":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_author(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TRBAdviceLetterRecommendation", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateTRBAdviceLetterRecommendationOrder_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_deleteTRBAdviceLetterRecommendation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_deleteTRBAdviceLetterRecommendation(ctx, field)
 	if err != nil {
@@ -33703,8 +33736,6 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_decidedAt(ctx, field)
 			case "businessCaseId":
 				return ec.fieldContext_SystemIntake_businessCaseId(ctx, field)
-			case "lastAdminNote":
-				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
@@ -33747,6 +33778,206 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 	if fc.Args, err = ec.field_Query_systemIntake_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_systemIntakes(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_systemIntakes(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().SystemIntakes(rctx)
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*models.SystemIntake); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cmsgov/easi-app/pkg/models.SystemIntake`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntake)
+	fc.Result = res
+	return ec.marshalNSystemIntake2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "actions":
+				return ec.fieldContext_SystemIntake_actions(ctx, field)
+			case "adminLead":
+				return ec.fieldContext_SystemIntake_adminLead(ctx, field)
+			case "archivedAt":
+				return ec.fieldContext_SystemIntake_archivedAt(ctx, field)
+			case "businessCase":
+				return ec.fieldContext_SystemIntake_businessCase(ctx, field)
+			case "businessNeed":
+				return ec.fieldContext_SystemIntake_businessNeed(ctx, field)
+			case "businessOwner":
+				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
+			case "businessSolution":
+				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "contract":
+				return ec.fieldContext_SystemIntake_contract(ctx, field)
+			case "costs":
+				return ec.fieldContext_SystemIntake_costs(ctx, field)
+			case "annualSpending":
+				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
+			case "currentStage":
+				return ec.fieldContext_SystemIntake_currentStage(ctx, field)
+			case "decisionNextSteps":
+				return ec.fieldContext_SystemIntake_decisionNextSteps(ctx, field)
+			case "eaCollaborator":
+				return ec.fieldContext_SystemIntake_eaCollaborator(ctx, field)
+			case "eaCollaboratorName":
+				return ec.fieldContext_SystemIntake_eaCollaboratorName(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_SystemIntake_euaUserId(ctx, field)
+			case "existingFunding":
+				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
+			case "fundingSources":
+				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+			case "governanceRequestFeedbacks":
+				return ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
+			case "governanceTeams":
+				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
+			case "grbDate":
+				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
+			case "grtDate":
+				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "grtFeedbacks":
+				return ec.fieldContext_SystemIntake_grtFeedbacks(ctx, field)
+			case "id":
+				return ec.fieldContext_SystemIntake_id(ctx, field)
+			case "isso":
+				return ec.fieldContext_SystemIntake_isso(ctx, field)
+			case "lcid":
+				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidIssuedAt":
+				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
+			case "lcidExpiresAt":
+				return ec.fieldContext_SystemIntake_lcidExpiresAt(ctx, field)
+			case "lcidScope":
+				return ec.fieldContext_SystemIntake_lcidScope(ctx, field)
+			case "lcidCostBaseline":
+				return ec.fieldContext_SystemIntake_lcidCostBaseline(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
+			case "needsEaSupport":
+				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
+			case "notes":
+				return ec.fieldContext_SystemIntake_notes(ctx, field)
+			case "oitSecurityCollaborator":
+				return ec.fieldContext_SystemIntake_oitSecurityCollaborator(ctx, field)
+			case "oitSecurityCollaboratorName":
+				return ec.fieldContext_SystemIntake_oitSecurityCollaboratorName(ctx, field)
+			case "productManager":
+				return ec.fieldContext_SystemIntake_productManager(ctx, field)
+			case "projectAcronym":
+				return ec.fieldContext_SystemIntake_projectAcronym(ctx, field)
+			case "rejectionReason":
+				return ec.fieldContext_SystemIntake_rejectionReason(ctx, field)
+			case "requestName":
+				return ec.fieldContext_SystemIntake_requestName(ctx, field)
+			case "requestType":
+				return ec.fieldContext_SystemIntake_requestType(ctx, field)
+			case "requester":
+				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "status":
+				return ec.fieldContext_SystemIntake_status(ctx, field)
+			case "state":
+				return ec.fieldContext_SystemIntake_state(ctx, field)
+			case "step":
+				return ec.fieldContext_SystemIntake_step(ctx, field)
+			case "submittedAt":
+				return ec.fieldContext_SystemIntake_submittedAt(ctx, field)
+			case "trbCollaborator":
+				return ec.fieldContext_SystemIntake_trbCollaborator(ctx, field)
+			case "trbCollaboratorName":
+				return ec.fieldContext_SystemIntake_trbCollaboratorName(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_SystemIntake_updatedAt(ctx, field)
+			case "grtReviewEmailBody":
+				return ec.fieldContext_SystemIntake_grtReviewEmailBody(ctx, field)
+			case "decidedAt":
+				return ec.fieldContext_SystemIntake_decidedAt(ctx, field)
+			case "businessCaseId":
+				return ec.fieldContext_SystemIntake_businessCaseId(ctx, field)
+			case "cedarSystemId":
+				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
+			case "documents":
+				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "hasUiChanges":
+				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "itGovTaskStatuses":
+				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
+			case "requestFormState":
+				return ec.fieldContext_SystemIntake_requestFormState(ctx, field)
+			case "draftBusinessCaseState":
+				return ec.fieldContext_SystemIntake_draftBusinessCaseState(ctx, field)
+			case "grtMeetingState":
+				return ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
+			case "finalBusinessCaseState":
+				return ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
+			case "grbMeetingState":
+				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
+			case "decisionState":
+				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
+			case "statusRequester":
+				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+			case "lcidStatus":
+				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
+			case "trbFollowUpRecommendation":
+				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
+		},
 	}
 	return fc, nil
 }
@@ -33948,8 +34179,6 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_decidedAt(ctx, field)
 			case "businessCaseId":
 				return ec.fieldContext_SystemIntake_businessCaseId(ctx, field)
-			case "lastAdminNote":
-				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
@@ -35153,8 +35382,6 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_decidedAt(ctx, field)
 			case "businessCaseId":
 				return ec.fieldContext_SystemIntake_businessCaseId(ctx, field)
-			case "lastAdminNote":
-				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
@@ -38872,56 +39099,6 @@ func (ec *executionContext) fieldContext_SystemIntake_businessCaseId(ctx context
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntake_lastAdminNote(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().LastAdminNote(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.LastAdminNote)
-	fc.Result = res
-	return ec.marshalNLastAdminNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLastAdminNote(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntake_lastAdminNote(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "content":
-				return ec.fieldContext_LastAdminNote_content(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_LastAdminNote_createdAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type LastAdminNote", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _SystemIntake_cedarSystemId(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 	if err != nil {
@@ -39741,8 +39918,6 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_decidedAt(ctx, field)
 			case "businessCaseId":
 				return ec.fieldContext_SystemIntake_businessCaseId(ctx, field)
-			case "lastAdminNote":
-				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
@@ -48304,8 +48479,6 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_decidedAt(ctx, field)
 			case "businessCaseId":
 				return ec.fieldContext_SystemIntake_businessCaseId(ctx, field)
-			case "lastAdminNote":
-				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
@@ -49541,8 +49714,6 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_decidedAt(ctx, field)
 			case "businessCaseId":
 				return ec.fieldContext_SystemIntake_businessCaseId(ctx, field)
-			case "lastAdminNote":
-				return ec.fieldContext_SystemIntake_lastAdminNote(ctx, field)
 			case "cedarSystemId":
 				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
 			case "documents":
@@ -55520,6 +55691,44 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeReviewDatesInput(ctx
 				return it, err
 			}
 			it.ID = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateTRBAdviceLetterRecommendationOrderInput(ctx context.Context, obj interface{}) (model.UpdateTRBAdviceLetterRecommendationOrderInput, error) {
+	var it model.UpdateTRBAdviceLetterRecommendationOrderInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"trbRequestId", "newOrder"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "trbRequestId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.TrbRequestID = data
+		case "newOrder":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("newOrder"))
+			data, err := ec.unmarshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.NewOrder = data
 		}
 	}
 
@@ -61744,44 +61953,6 @@ func (ec *executionContext) _ITGovTaskStatuses(ctx context.Context, sel ast.Sele
 	return out
 }
 
-var lastAdminNoteImplementors = []string{"LastAdminNote"}
-
-func (ec *executionContext) _LastAdminNote(ctx context.Context, sel ast.SelectionSet, obj *model.LastAdminNote) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, lastAdminNoteImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("LastAdminNote")
-		case "content":
-			out.Values[i] = ec._LastAdminNote_content(ctx, field, obj)
-		case "createdAt":
-			out.Values[i] = ec._LastAdminNote_createdAt(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
 var launchDarklySettingsImplementors = []string{"LaunchDarklySettings"}
 
 func (ec *executionContext) _LaunchDarklySettings(ctx context.Context, sel ast.SelectionSet, obj *model.LaunchDarklySettings) graphql.Marshaler {
@@ -62236,6 +62407,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "updateTRBAdviceLetterRecommendationOrder":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateTRBAdviceLetterRecommendationOrder(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "deleteTRBAdviceLetterRecommendation":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteTRBAdviceLetterRecommendation(ctx, field)
@@ -62380,6 +62558,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_systemIntake(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "systemIntakes":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_systemIntakes(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
 				return res
 			}
 
@@ -64351,42 +64551,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._SystemIntake_decidedAt(ctx, field, obj)
 		case "businessCaseId":
 			out.Values[i] = ec._SystemIntake_businessCaseId(ctx, field, obj)
-		case "lastAdminNote":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_lastAdminNote(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "cedarSystemId":
 			field := field
 
@@ -69652,20 +69816,6 @@ func (ec *executionContext) unmarshalNIssueLifecycleIdInput2githubᚗcomᚋcmsgo
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNLastAdminNote2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLastAdminNote(ctx context.Context, sel ast.SelectionSet, v model.LastAdminNote) graphql.Marshaler {
-	return ec._LastAdminNote(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNLastAdminNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLastAdminNote(ctx context.Context, sel ast.SelectionSet, v *model.LastAdminNote) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._LastAdminNote(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalNLaunchDarklySettings2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐLaunchDarklySettings(ctx context.Context, sel ast.SelectionSet, v *model.LaunchDarklySettings) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -71561,6 +71711,38 @@ func (ec *executionContext) marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx
 	return res
 }
 
+func (ec *executionContext) unmarshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx context.Context, v interface{}) ([]uuid.UUID, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]uuid.UUID, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx context.Context, sel ast.SelectionSet, v []uuid.UUID) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) unmarshalNUpdateSystemIntakeAdminLeadInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeAdminLeadInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeAdminLeadInput, error) {
 	res, err := ec.unmarshalInputUpdateSystemIntakeAdminLeadInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -71616,6 +71798,11 @@ func (ec *executionContext) unmarshalNUpdateTRBAdviceLetterInput2map(ctx context
 
 func (ec *executionContext) unmarshalNUpdateTRBAdviceLetterRecommendationInput2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
 	return v.(map[string]interface{}), nil
+}
+
+func (ec *executionContext) unmarshalNUpdateTRBAdviceLetterRecommendationOrderInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBAdviceLetterRecommendationOrderInput(ctx context.Context, v interface{}) (model.UpdateTRBAdviceLetterRecommendationOrderInput, error) {
+	res, err := ec.unmarshalInputUpdateTRBAdviceLetterRecommendationOrderInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNUpdateTRBRequestAttendeeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBRequestAttendeeInput(ctx context.Context, v interface{}) (model.UpdateTRBRequestAttendeeInput, error) {

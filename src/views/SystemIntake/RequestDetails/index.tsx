@@ -25,7 +25,7 @@ import HelpText from 'components/shared/HelpText';
 import processStages from 'constants/enums/processStages';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'queries/SystemIntakeQueries';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import {
   UpdateSystemIntakeRequestDetails,
   UpdateSystemIntakeRequestDetailsVariables

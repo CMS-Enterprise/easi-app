@@ -21,7 +21,7 @@ const renderComponent = (lcidRetiresAt?: string) =>
   render(
     <MemoryRouter>
       <MockedProvider
-        mocks={[getSystemIntakeContactsQuery, getSystemIntakeQuery]}
+        mocks={[getSystemIntakeContactsQuery, getSystemIntakeQuery()]}
       >
         <MessageProvider>
           <RetireLcid

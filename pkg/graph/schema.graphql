@@ -1026,7 +1026,6 @@ type SystemIntake {
   grtReviewEmailBody: String
   decidedAt: Time
   businessCaseId: UUID
-  lastAdminNote: LastAdminNote!
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
@@ -1411,14 +1410,6 @@ request
 input UpdateSystemIntakeAdminLeadInput {
   adminLead: String!
   id: UUID!
-}
-
-"""
-The most recent note added by an admin to a system request
-"""
-type LastAdminNote {
-  content: HTML
-  createdAt: Time
 }
 
 """
@@ -2338,6 +2329,9 @@ type TRBAdviceLetter {
   isFollowupRecommended: Boolean
   dateSent: Time
   followupPoint: String
+  """
+  List of recommendations in the order specified by users
+  """
   recommendations: [TRBAdviceLetterRecommendation!]!
   createdBy: String!
   createdAt: Time!
@@ -2417,6 +2411,16 @@ input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]inter
   title: String
   recommendation: HTML
   links: [String!]
+}
+
+"""
+"""
+input UpdateTRBAdviceLetterRecommendationOrderInput {
+  trbRequestId: UUID!
+  """
+  List of the recommendation IDs in the new order they should be displayed
+  """
+  newOrder: [UUID!]!
 }
 
 """
@@ -2667,6 +2671,8 @@ type Mutation {
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
+  updateTRBAdviceLetterRecommendationOrder(input: UpdateTRBAdviceLetterRecommendationOrderInput!): [TRBAdviceLetterRecommendation!]!
+    @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
     @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
@@ -2690,6 +2696,8 @@ type Query {
   ): AccessibilityRequestsConnection
   requests(after: String, first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
+  systemIntakes: [SystemIntake!]!
+  @hasRole(role: EASI_GOVTEAM)
   systems(after: String, first: Int!): SystemConnection
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
@@ -2774,6 +2782,7 @@ directive @hasRole(role: Role!) on FIELD_DEFINITION
 directive @goModel(
   model: String
   models: [String!]
+  forceGenerate: Boolean
 ) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
 
 """

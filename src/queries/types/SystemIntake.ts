@@ -6,59 +6,59 @@
 import { GRTFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp } from "./../../types/graphql-global-types";
 
 // ====================================================
-// GraphQL query operation: GetSystemIntake
+// GraphQL fragment: SystemIntake
 // ====================================================
 
-export interface GetSystemIntake_systemIntake_businessOwner {
+export interface SystemIntake_businessOwner {
   __typename: "SystemIntakeBusinessOwner";
   component: string | null;
   name: string | null;
 }
 
-export interface GetSystemIntake_systemIntake_contract_endDate {
+export interface SystemIntake_contract_endDate {
   __typename: "ContractDate";
   day: string | null;
   month: string | null;
   year: string | null;
 }
 
-export interface GetSystemIntake_systemIntake_contract_startDate {
+export interface SystemIntake_contract_startDate {
   __typename: "ContractDate";
   day: string | null;
   month: string | null;
   year: string | null;
 }
 
-export interface GetSystemIntake_systemIntake_contract {
+export interface SystemIntake_contract {
   __typename: "SystemIntakeContract";
   contractor: string | null;
-  endDate: GetSystemIntake_systemIntake_contract_endDate;
+  endDate: SystemIntake_contract_endDate;
   hasContract: string | null;
-  startDate: GetSystemIntake_systemIntake_contract_startDate;
+  startDate: SystemIntake_contract_startDate;
   vehicle: string | null;
   number: string | null;
 }
 
-export interface GetSystemIntake_systemIntake_costs {
+export interface SystemIntake_costs {
   __typename: "SystemIntakeCosts";
   isExpectingIncrease: string | null;
   expectedIncreaseAmount: string | null;
 }
 
-export interface GetSystemIntake_systemIntake_annualSpending {
+export interface SystemIntake_annualSpending {
   __typename: "SystemIntakeAnnualSpending";
   currentAnnualSpending: string | null;
   plannedYearOneSpending: string | null;
 }
 
-export interface GetSystemIntake_systemIntake_grtFeedbacks {
+export interface SystemIntake_grtFeedbacks {
   __typename: "GRTFeedback";
   feedback: HTML | null;
   feedbackType: GRTFeedbackType | null;
   createdAt: Time;
 }
 
-export interface GetSystemIntake_systemIntake_governanceTeams_teams {
+export interface SystemIntake_governanceTeams_teams {
   __typename: "SystemIntakeCollaborator";
   acronym: string;
   collaborator: string;
@@ -67,46 +67,46 @@ export interface GetSystemIntake_systemIntake_governanceTeams_teams {
   name: string;
 }
 
-export interface GetSystemIntake_systemIntake_governanceTeams {
+export interface SystemIntake_governanceTeams {
   __typename: "SystemIntakeGovernanceTeam";
   isPresent: boolean | null;
-  teams: GetSystemIntake_systemIntake_governanceTeams_teams[] | null;
+  teams: SystemIntake_governanceTeams_teams[] | null;
 }
 
-export interface GetSystemIntake_systemIntake_isso {
+export interface SystemIntake_isso {
   __typename: "SystemIntakeISSO";
   isPresent: boolean | null;
   name: string | null;
 }
 
-export interface GetSystemIntake_systemIntake_fundingSources {
+export interface SystemIntake_fundingSources {
   __typename: "SystemIntakeFundingSource";
   source: string | null;
   fundingNumber: string | null;
 }
 
-export interface GetSystemIntake_systemIntake_productManager {
+export interface SystemIntake_productManager {
   __typename: "SystemIntakeProductManager";
   component: string | null;
   name: string | null;
 }
 
-export interface GetSystemIntake_systemIntake_requester {
+export interface SystemIntake_requester {
   __typename: "SystemIntakeRequester";
   component: string | null;
   email: string | null;
   name: string;
 }
 
-export interface GetSystemIntake_systemIntake_documents_documentType {
+export interface SystemIntake_documents_documentType {
   __typename: "SystemIntakeDocumentType";
   commonType: SystemIntakeDocumentCommonType;
   otherTypeDescription: string | null;
 }
 
-export interface GetSystemIntake_systemIntake_documents {
+export interface SystemIntake_documents {
   __typename: "SystemIntakeDocument";
-  documentType: GetSystemIntake_systemIntake_documents_documentType;
+  documentType: SystemIntake_documents_documentType;
   id: UUID;
   fileName: string;
   status: SystemIntakeDocumentStatus;
@@ -114,25 +114,25 @@ export interface GetSystemIntake_systemIntake_documents {
   url: string;
 }
 
-export interface GetSystemIntake_systemIntake {
+export interface SystemIntake {
   __typename: "SystemIntake";
   id: UUID;
   adminLead: string | null;
   businessNeed: string | null;
   businessSolution: string | null;
-  businessOwner: GetSystemIntake_systemIntake_businessOwner;
-  contract: GetSystemIntake_systemIntake_contract;
-  costs: GetSystemIntake_systemIntake_costs | null;
-  annualSpending: GetSystemIntake_systemIntake_annualSpending | null;
+  businessOwner: SystemIntake_businessOwner;
+  contract: SystemIntake_contract;
+  costs: SystemIntake_costs | null;
+  annualSpending: SystemIntake_annualSpending | null;
   currentStage: string | null;
   decisionNextSteps: HTML | null;
   grbDate: Time | null;
   grtDate: Time | null;
-  grtFeedbacks: GetSystemIntake_systemIntake_grtFeedbacks[];
-  governanceTeams: GetSystemIntake_systemIntake_governanceTeams;
-  isso: GetSystemIntake_systemIntake_isso;
+  grtFeedbacks: SystemIntake_grtFeedbacks[];
+  governanceTeams: SystemIntake_governanceTeams;
+  isso: SystemIntake_isso;
   existingFunding: boolean | null;
-  fundingSources: GetSystemIntake_systemIntake_fundingSources[];
+  fundingSources: SystemIntake_fundingSources[];
   lcid: string | null;
   lcidIssuedAt: Time | null;
   lcidExpiresAt: Time | null;
@@ -144,9 +144,9 @@ export interface GetSystemIntake_systemIntake {
    */
   lcidStatus: SystemIntakeLCIDStatus | null;
   needsEaSupport: boolean | null;
-  productManager: GetSystemIntake_systemIntake_productManager;
+  productManager: SystemIntake_productManager;
   rejectionReason: HTML | null;
-  requester: GetSystemIntake_systemIntake_requester;
+  requester: SystemIntake_requester;
   requestName: string | null;
   requestType: SystemIntakeRequestType;
   status: SystemIntakeStatus;
@@ -159,16 +159,8 @@ export interface GetSystemIntake_systemIntake {
   archivedAt: Time | null;
   euaUserId: string;
   hasUiChanges: boolean | null;
-  documents: GetSystemIntake_systemIntake_documents[];
+  documents: SystemIntake_documents[];
   state: SystemIntakeState;
   decisionState: SystemIntakeDecisionState;
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp | null;
-}
-
-export interface GetSystemIntake {
-  systemIntake: GetSystemIntake_systemIntake | null;
-}
-
-export interface GetSystemIntakeVariables {
-  id: UUID;
 }

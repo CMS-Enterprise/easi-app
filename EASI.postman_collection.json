@@ -1311,7 +1311,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query trbRequests{\n  \n  trbRequests(archived: true){\n    id\n    name\n    archived\n    type\n    status\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n    \n    \n  }\n  \n  \n}",
+										"query": "query trbRequests{\n  \n  trbRequests(archived: false){\n    id\n    name\n    archived\n    type\n    status\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n    \n    \n  }\n  \n  \n}",
 										"variables": ""
 									}
 								},
@@ -1558,6 +1558,95 @@
 										"api",
 										"graph",
 										"query"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TRB Advice Letter and Recommendations",
+					"item": [
+						{
+							"name": "Get Recommendations for Advice Letter",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query {\r\n    trbRequest(id: \"{{trbRequestID}}\") {\r\n        id\r\n        name\r\n        adviceLetter {\r\n            id\r\n            recommendations {\r\n                id\r\n                title\r\n                recommendation\r\n                links\r\n            }\r\n        }\r\n    }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Recommendation",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation CreateRecommendation($input: CreateTRBAdviceLetterRecommendationInput!) {\r\n    createTRBAdviceLetterRecommendation(input: $input) {\r\n        id\r\n        title\r\n        recommendation\r\n    }\r\n}",
+										"variables": "{\r\n    \"input\": {\r\n        \"trbRequestId\": \"{{trbRequestID}}\",\r\n        \"title\": \"manuallyCreatedRec1\",\r\n        \"recommendation\": \"testing 1\",\r\n        \"links\": []\r\n    }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Recommendation Order",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation UpdateRecommendationOrder($input: UpdateTRBAdviceLetterRecommendationOrderInput!) {\r\n    updateTRBAdviceLetterRecommendationOrder(input: $input) {\r\n        id\r\n        title\r\n        recommendation\r\n    }\r\n}",
+										"variables": "{\r\n    \"input\": {\r\n        \"trbRequestId\": \"{{trbRequestID}}\",\r\n        \"newOrder\": [\r\n            \"0a277d1c-0c64-4a5b-9d22-2d8c01e98fa6\",\r\n            \"898065c3-0ade-4309-bb9d-21ee9911acff\",\r\n            \"52de3093-86c0-4076-9410-6333345a8bbf\"\r\n        ]\r\n    }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Recommendation",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation {\r\n    deleteTRBAdviceLetterRecommendation(id:\"db4f0bb0-1352-4428-92b1-eeab8131d379\") {\r\n        id\r\n        trbRequestId\r\n        title\r\n        recommendation\r\n    }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
 									]
 								}
 							},

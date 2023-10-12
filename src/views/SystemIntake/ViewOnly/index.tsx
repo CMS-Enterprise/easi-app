@@ -3,7 +3,7 @@ import React from 'react';
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import SystemIntakeReview from 'components/SystemIntakeReview';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 
 type SystemIntakeViewOnlyProps = {
   systemIntake: SystemIntake;

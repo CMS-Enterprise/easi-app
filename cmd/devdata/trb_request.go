@@ -468,9 +468,10 @@ func (s *seederConfig) addTRBLead(ctx context.Context, trb *models.TRBRequest, l
 }
 
 func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBRequest, isDraft bool, shouldSend bool, isFollowUpRequested bool) (*models.TRBAdviceLetter, error) {
-	_, err := resolvers.CreateTRBAdviceLetter(ctx, s.store, trb.ID)
-	if err != nil {
-		return nil, err
+	// declare a separate err outside the scope of the (if !isDraft) block, so there's no lint issues from errors inside the block shadowing this err
+	_, outsideErr := resolvers.CreateTRBAdviceLetter(ctx, s.store, trb.ID)
+	if outsideErr != nil {
+		return nil, outsideErr
 	}
 
 	adviceLetterChanges := map[string]interface{}{
@@ -478,13 +479,14 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 		"meetingSummary":        "Talked about stuff",
 		"isFollowupRecommended": isFollowUpRequested,
 	}
-	letter, err := resolvers.UpdateTRBAdviceLetter(ctx, s.store, adviceLetterChanges)
-	if err != nil {
-		return nil, err
+	letter, outsideErr := resolvers.UpdateTRBAdviceLetter(ctx, s.store, adviceLetterChanges)
+	if outsideErr != nil {
+		return nil, outsideErr
 	}
 
 	if !isDraft {
-		_, err = resolvers.RequestReviewForTRBAdviceLetter(ctx, s.store, nil, mock.FetchUserInfoMock, letter.ID)
+		// declare a new err for use inside the (if !isDraft) block only
+		_, err := resolvers.RequestReviewForTRBAdviceLetter(ctx, s.store, nil, mock.FetchUserInfoMock, letter.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -496,22 +498,45 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 			}
 		}
 
-		recommendation := &models.TRBAdviceLetterRecommendation{
+		// create three recommendations for testing manipulation of recommendations' positions
+
+		recommendation1 := &models.TRBAdviceLetterRecommendation{
 			TRBRequestID:   trb.ID,
 			Title:          "Restart your computer",
 			Recommendation: "I recommend you restart your computer",
 			Links:          pq.StringArray{"google.com", "askjeeves.com"},
 		}
+		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation1)
+		if err != nil {
+			return nil, err
+		}
 
-		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation)
+		recommendation2 := &models.TRBAdviceLetterRecommendation{
+			TRBRequestID:   trb.ID,
+			Title:          "Unplug it and plug it back in",
+			Recommendation: "I recommend you unplug your computer and plug it back in",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		}
+		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation2)
+		if err != nil {
+			return nil, err
+		}
+
+		recommendation3 := &models.TRBAdviceLetterRecommendation{
+			TRBRequestID:   trb.ID,
+			Title:          "Get a new computer",
+			Recommendation: "Your computer is broken, you need a new one",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		}
+		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation3)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	letter, err = resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, s.store, trb.ID)
-	if err != nil {
-		return nil, err
+	letter, outsideErr = resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, s.store, trb.ID)
+	if outsideErr != nil {
+		return nil, outsideErr
 	}
 
 	return letter, nil

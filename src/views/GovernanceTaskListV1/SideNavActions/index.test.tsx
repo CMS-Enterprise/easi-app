@@ -4,7 +4,7 @@ import { shallow } from 'enzyme';
 
 import Modal from 'components/Modal';
 import { initialSystemIntakeForm } from 'data/systemIntake';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 import SideNavActions from './index';

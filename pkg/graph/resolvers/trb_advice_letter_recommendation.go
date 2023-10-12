@@ -3,10 +3,13 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"slices"
 
 	"github.com/google/uuid"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers/trb/recommendations"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -25,7 +28,8 @@ func CreateTRBAdviceLetterRecommendation(
 	return createdRecommendation, nil
 }
 
-// GetTRBAdviceLetterRecommendationsByTRBRequestID retrieves TRB request advice letter recommendations records for a given TRB request ID
+// GetTRBAdviceLetterRecommendationsByTRBRequestID retrieves TRB request advice letter recommendations records for a given TRB request ID,
+// ordering them in the user-specified positions
 func GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBAdviceLetterRecommendation, error) {
 	results, err := store.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, id)
 	if err != nil {
@@ -64,11 +68,86 @@ func UpdateTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Sto
 	return updated, err
 }
 
-// DeleteTRBAdviceLetterRecommendation deletes a TRBAdviceLetterRecommendation record from the database
-func DeleteTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
-	deleted, err := store.DeleteTRBAdviceLetterRecommendation(ctx, id)
+// UpdateTRBAdviceLetterRecommendationOrder updates the order that TRB advice letter recommendations are displayed in
+func UpdateTRBAdviceLetterRecommendationOrder(
+	ctx context.Context,
+	store *storage.Store,
+	trbRequestID uuid.UUID,
+	newOrder []uuid.UUID,
+) ([]*models.TRBAdviceLetterRecommendation, error) {
+	// this extra database query is necessary for validation, so we don't mess up the recommendations' positions with an invalid order,
+	// but requiring an extra database call is unfortunate
+	currentRecommendations, err := store.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, trbRequestID)
 	if err != nil {
 		return nil, err
 	}
-	return deleted, nil
+
+	// querying, checking validity, then updating introduces the potential for time-of-check/time-of-use issues:
+	// the data in the database might be updated between querying and updating, in which case this validity check won't reflect the latest data
+	// This code doesn't currently worry about that, because we don't think it's likely to happen,
+	// due to the low likelihood of multiple users concurrently editing the same advice letter.
+	// There are issues that could occur in theory, though, such as a recommendation getting deleted between when this function queries and when it updates;
+	// that could lead to a `newOrder` with more elements than there are recommendations being accepted, which would throw off the recs' positions.
+	err = recommendations.IsNewRecommendationOrderValid(currentRecommendations, newOrder)
+	if err != nil {
+		return nil, err
+	}
+
+	updated, err := store.UpdateTRBAdviceLetterRecommendationOrder(ctx, trbRequestID, newOrder)
+	if err != nil {
+		return nil, err
+	}
+	return updated, nil
+}
+
+// DeleteTRBAdviceLetterRecommendation deletes a TRBAdviceLetterRecommendation record from the database
+func DeleteTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
+	// as well as deleting the recommendation, we need to update the position of the remaining recommendations for that TRB request, so there aren't any gaps in the ordering
+
+	allRecommendationsForRequest, err := store.GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	// sort recommendations by position, so we can loop over them to find the recommendations we need to update
+	slices.SortFunc(allRecommendationsForRequest, func(recommendationA, recommendationB *models.TRBAdviceLetterRecommendation) int {
+		return recommendationA.PositionInLetter - recommendationB.PositionInLetter
+	})
+
+	var trbRequestID uuid.UUID // will be set once we start looping over allRecommendationsForRequest
+	newOrder := []uuid.UUID{}  // updated positions
+
+	for _, recommendation := range allRecommendationsForRequest {
+		trbRequestID = recommendation.TRBRequestID // doesn't matter that we set this on every iteration, all recommendations will have the same request ID
+		if recommendation.ID != id {               // skip over the recommendation we want to delete
+			newOrder = append(newOrder, recommendation.ID)
+		}
+	}
+
+	// deleting the given recommendation and updating the other recommendations can be done concurrently
+	// ideally, we'd do this in a single transaction, but our code doesn't support that at this time - see Note [Database calls from resolvers aren't atomic]
+	errGroup := new(errgroup.Group)
+	var deletedRecommendation *models.TRBAdviceLetterRecommendation // declare this outside the function we pass to errGroup.Go() so we can return it
+
+	errGroup.Go(func() error {
+		deletedRecommendation, err = store.DeleteTRBAdviceLetterRecommendation(ctx, id)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
+	errGroup.Go(func() error {
+		_, err := store.UpdateTRBAdviceLetterRecommendationOrder(ctx, trbRequestID, newOrder)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
+	if err := errGroup.Wait(); err != nil {
+		return nil, err
+	}
+
+	return deletedRecommendation, nil
 }
