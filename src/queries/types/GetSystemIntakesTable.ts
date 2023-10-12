@@ -107,7 +107,7 @@ export interface GetSystemIntakesTable_systemIntakes {
   decidedAt: Time | null;
   submittedAt: Time | null;
   updatedAt: Time | null;
-  createdAt: Time;
+  createdAt: Time | null;
   archivedAt: Time | null;
 }
 

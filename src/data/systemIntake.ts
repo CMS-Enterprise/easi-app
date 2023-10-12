@@ -260,7 +260,8 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
   }
 
   // Format dates to MM/dd/yyyy
-  const createdAt = formatDateLocal(intake.createdAt, 'MM/dd/yyyy');
+  const createdAt =
+    intake?.createdAt && formatDateLocal(intake.createdAt, 'MM/dd/yyyy');
   const submittedAt =
     intake?.submittedAt && formatDateLocal(intake.submittedAt, 'MM/dd/yyyy');
   const updatedAt =
