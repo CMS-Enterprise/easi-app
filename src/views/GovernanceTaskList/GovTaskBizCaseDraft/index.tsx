@@ -98,7 +98,6 @@ const GovTaskBizCaseDraft = ({
         {statusButtonText.has(bizCaseDraftStatus) && (
           <div className="margin-top-2">
             <Button
-              className="usa-button"
               type="button"
               onClick={() => {
                 history.push({
@@ -110,7 +109,6 @@ const GovTaskBizCaseDraft = ({
                   }
                 });
               }}
-              unstyled
             >
               {t(`button.${statusButtonText.get(bizCaseDraftStatus)}`)}
             </Button>
