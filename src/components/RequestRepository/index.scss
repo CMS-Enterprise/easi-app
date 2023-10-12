@@ -1,5 +1,9 @@
 @use 'uswds-core' as *;
 
+.usa-button-group.trb-admin-team-home-actions {
+  row-gap: .5rem;
+}
+
 .easi-request-repo {
   &__tab-list {
     display: flex;

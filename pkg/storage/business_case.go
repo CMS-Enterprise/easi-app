@@ -28,7 +28,7 @@ const ValidStatusMsg = "pq: invalid input value for enum business_case_status: "
 const UniqueIntakeMsg = "pq: duplicate key value violates unique constraint \"unique_intake_per_biz_case\""
 
 // FetchBusinessCaseByID queries the DB for a business case matching the given ID
-func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
+func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.UUID) (*models.BusinessCase, error) {
 	businessCase := models.BusinessCase{}
 	const fetchBusinessCaseSQL = `
 		SELECT
@@ -45,14 +45,46 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 
 	// Unsafe() is used to avoid errors from the initial_submitted_at and last_submitted_at columns that are in the database, but not in the Go model
 	// see https://jiraent.cms.gov/browse/EASI-1693
-	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, id)
+	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, businessCaseID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business case %s", err),
-			zap.String("id", id.String()),
+			zap.String("id", businessCaseID.String()),
 		)
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
+		}
+		return nil, err
+	}
+	return &businessCase, nil
+}
+
+// FetchBusinessCaseBySystemIntakeID queries the DB for a business case matching the given ID of the System Intake
+func (s *Store) FetchBusinessCaseBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.BusinessCase, error) {
+	businessCase := models.BusinessCase{}
+	const fetchBusinessCaseSQL = `
+		SELECT
+			business_cases.*,
+			json_agg(estimated_lifecycle_costs) as lifecycle_cost_lines,
+			system_intakes.status as system_intake_status
+		FROM
+			business_cases
+			LEFT JOIN estimated_lifecycle_costs ON business_cases.id = estimated_lifecycle_costs.business_case
+			JOIN system_intakes ON business_cases.system_intake = system_intakes.id
+		WHERE
+			business_cases.system_intake = $1
+		GROUP BY estimated_lifecycle_costs.business_case, business_cases.id, system_intakes.id`
+
+	// Unsafe() is used to avoid errors from the initial_submitted_at and last_submitted_at columns that are in the database, but not in the Go model
+	// see https://jiraent.cms.gov/browse/EASI-1693
+	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, systemIntakeID)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to fetch business case by SystemIntakeID %s", err),
+			zap.String("systemIntakeId", systemIntakeID.String()),
+		)
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
 		}
 		return nil, err
 	}

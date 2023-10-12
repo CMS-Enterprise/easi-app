@@ -398,15 +398,24 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 	return intakes, nil
 }
 
+// FetchAllIntakes queries the DB for all system intakes
+func (s *Store) FetchAllIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
+	intakes := []*models.SystemIntake{}
+	err := s.db.Select(&intakes, "SELECT * FROM system_intakes")
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
+		return []*models.SystemIntake{}, err
+	}
+	return intakes, nil
+}
+
 // FetchSystemIntakesByStatuses queries the DB for all system intakes matching a status filter
 func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
 	var intakes models.SystemIntakes
 	query := `
 		SELECT
 			system_intakes.*,
-			business_cases.id as business_case_id,
-			intakes_and_notes.content AS last_admin_note_content,
-			intakes_and_notes.created_at AS last_admin_note_created_at
+			business_cases.id as business_case_id
 		FROM
 			(	SELECT
 					distinct ON (system_intakes.id) system_intakes.id, notes.content, notes.created_at

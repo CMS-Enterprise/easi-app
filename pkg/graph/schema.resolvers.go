@@ -2303,6 +2303,11 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 	return intake, nil
 }
 
+// SystemIntakes is the resolver for the systemIntakes field.
+func (r *queryResolver) SystemIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
+	return r.store.FetchAllIntakes(ctx)
+}
+
 // Systems is the resolver for the systems field.
 func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
 	systems, err := r.store.ListSystems(ctx)
@@ -2652,10 +2657,7 @@ func (r *systemIntakeResolver) AdminLead(ctx context.Context, obj *models.System
 
 // BusinessCase is the resolver for the businessCase field.
 func (r *systemIntakeResolver) BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error) {
-	if obj.BusinessCaseID == nil {
-		return nil, nil
-	}
-	return r.store.FetchBusinessCaseByID(ctx, *obj.BusinessCaseID)
+	return r.store.FetchBusinessCaseBySystemIntakeID(ctx, obj.ID)
 }
 
 // BusinessNeed is the resolver for the businessNeed field.
@@ -2954,14 +2956,6 @@ func (r *systemIntakeResolver) TrbCollaboratorName(ctx context.Context, obj *mod
 // GrtReviewEmailBody is the resolver for the grtReviewEmailBody field.
 func (r *systemIntakeResolver) GrtReviewEmailBody(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.GrtReviewEmailBody.Ptr(), nil
-}
-
-// LastAdminNote is the resolver for the lastAdminNote field.
-func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error) {
-	return &model.LastAdminNote{
-		Content:   obj.LastAdminNoteContent,
-		CreatedAt: obj.LastAdminNoteCreatedAt,
-	}, nil
 }
 
 // CedarSystemID is the resolver for the cedarSystemId field.
