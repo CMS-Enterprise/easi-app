@@ -1,11 +1,11 @@
 package email
 
 import (
+	"context"
 	"fmt"
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/net/context"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 )
