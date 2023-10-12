@@ -155,7 +155,7 @@ export interface GetSystemIntake_systemIntake {
   businessCaseId: UUID | null;
   submittedAt: Time | null;
   updatedAt: Time | null;
-  createdAt: Time;
+  createdAt: Time | null;
   archivedAt: Time | null;
   euaUserId: string;
   hasUiChanges: boolean | null;
