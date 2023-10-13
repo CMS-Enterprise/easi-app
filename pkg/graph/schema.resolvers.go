@@ -2317,8 +2317,12 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 }
 
 // SystemIntakes is the resolver for the systemIntakes field.
-func (r *queryResolver) SystemIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
-	return r.store.FetchIntakesForAdmins(ctx)
+func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error) {
+	// var intakes []*models.SystemIntake
+	if openRequests {
+		r.store.FetchSystemIntakesByStatuses(ctx)
+	}
+	// return r.store.FetchIntakesForAdmins(ctx)
 }
 
 // Systems is the resolver for the systems field.
