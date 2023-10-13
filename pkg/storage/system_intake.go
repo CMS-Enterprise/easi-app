@@ -398,11 +398,13 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 	return intakes, nil
 }
 
-// FetchAllNonDraftIntakes queries the DB for all system intakes not in the INTAKE_DRAFT status.
-// This is useful for the admin home page which intends to show admins all intakes that requesters have submitted
-func (s *Store) FetchAllNonDraftIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
+// FetchIntakesForAdmins queries the DB for all system intakes not in the INTAKE_DRAFT, APPROVED, or CLOSED statuses.
+// This is useful for the admin home page which intends to show admins all intakes that requesters have submitted.
+// This is a bit of a hold-over, and should be simplified when we start to filter based on IT Gov v2 states, which should be
+// much simpler to use
+func (s *Store) FetchIntakesForAdmins(ctx context.Context) ([]*models.SystemIntake, error) {
 	intakes := []*models.SystemIntake{}
-	err := s.db.Select(&intakes, "SELECT * FROM system_intakes WHERE status != 'INTAKE_DRAFT'")
+	err := s.db.Select(&intakes, "SELECT * FROM system_intakes WHERE status NOT IN ('INTAKE_DRAFT','APPROVED','CLOSED')")
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
 		return []*models.SystemIntake{}, err

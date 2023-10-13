@@ -2318,7 +2318,7 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *queryResolver) SystemIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
-	return r.store.FetchAllNonDraftIntakes(ctx)
+	return r.store.FetchIntakesForAdmins(ctx)
 }
 
 // Systems is the resolver for the systems field.
