@@ -123,14 +123,10 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
       </button>
     </form>
     <div
-      class="margin-bottom-4"
+      class="margin-bottom-4 display-flex flex-align-center"
       data-testid="page-results"
     >
-      <span>
-        <div>
-          Showing 1-4 of 4 results 
-        </div>
-      </span>
+      Showing 1-4 of 4 results 
     </div>
     <div
       class="usa-table-container--scrollable"

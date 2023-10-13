@@ -2318,7 +2318,7 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *queryResolver) SystemIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
-	return r.store.FetchAllIntakes(ctx)
+	return r.store.FetchIntakesForAdmins(ctx)
 }
 
 // Systems is the resolver for the systems field.
@@ -2944,7 +2944,7 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 			return requesterWithoutEmail, nil
 		}
 
-		// error we can't handle, like being unable to communicate with CEDAR
+		// error we can't handle, like being unable to communicate with Okta
 		return nil, err
 	}
 
@@ -2954,6 +2954,16 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		Email:     &email,
 		Name:      obj.Requester,
 	}, nil
+}
+
+// RequesterName is the resolver for the requesterName field.
+func (r *systemIntakeResolver) RequesterName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return &obj.Requester, nil
+}
+
+// RequesterComponent is the resolver for the requesterComponent field.
+func (r *systemIntakeResolver) RequesterComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.Component.Ptr(), nil
 }
 
 // TrbCollaborator is the resolver for the trbCollaborator field.

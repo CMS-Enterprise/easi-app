@@ -1,5 +1,10 @@
 import { gql } from '@apollo/client';
 
+/**
+ * For use on requests table
+ *
+ * Returns all system intakes that have a submitted intake request form
+ */
 export default gql`
   query GetSystemIntakesTable {
     systemIntakes {
@@ -9,10 +14,11 @@ export default gql`
       status
       state
 
-      requester {
-        name
-        component
-      }
+      # Uses requesterName and requesterComponent instead of full requester object
+      # to prevent multiple calls to Okta
+      requesterName
+      requesterComponent
+
       businessOwner {
         name
         component

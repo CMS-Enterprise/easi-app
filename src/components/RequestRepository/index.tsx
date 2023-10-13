@@ -92,7 +92,7 @@ const RequestRepository = () => {
   const dateRangeEnd = watch('dateEnd');
 
   // GQL query to get all system intakes
-  const { data: queryData } = useQuery<GetSystemIntakesTable>(
+  const { data: queryData, loading } = useQuery<GetSystemIntakesTable>(
     GetSystemIntakesTableQuery
   );
 
@@ -451,6 +451,7 @@ const RequestRepository = () => {
           filteredRowLength={page.length}
           rowLength={data.length}
           className="margin-bottom-4"
+          loading={loading}
         />
 
         {/* This is the only table that expands past the USWDS desktop dimensions.  Only convert to scrollable when in tablet/mobile */}
