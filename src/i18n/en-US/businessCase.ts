@@ -7,6 +7,9 @@ const businessCase = {
       taskListCta: 'Go back to Governance Task List'
     }
   },
+  generalRequest: 'General request information',
+  requestDescription: 'Request description',
+  alternatives: 'Alternatives analysis',
   grtFeedback: {
     header: 'Recommendations',
     grbSubhead: 'GRT recommendations to the GRB',
