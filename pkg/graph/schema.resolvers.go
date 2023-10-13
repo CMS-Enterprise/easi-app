@@ -2937,14 +2937,14 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		return requesterWithoutEmail, nil
 	}
 
-	user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID.ValueOrZero())
+	user, err := dataloaders.GetUserInfo(ctx, obj.EUAUserID.ValueOrZero())
 	if err != nil {
 		// check if the EUA ID is just invalid in CEDAR LDAP (i.e. the requester no longer has an active EUA account)
 		if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
 			return requesterWithoutEmail, nil
 		}
 
-		// error we can't handle, like being unable to communicate with CEDAR
+		// error we can't handle, like being unable to communicate with Okta
 		return nil, err
 	}
 
