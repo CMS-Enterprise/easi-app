@@ -398,10 +398,11 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 	return intakes, nil
 }
 
-// FetchAllIntakes queries the DB for all system intakes
-func (s *Store) FetchAllIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
+// FetchAllNonDraftIntakes queries the DB for all system intakes not in the INTAKE_DRAFT status.
+// This is useful for the admin home page which intends to show admins all intakes that requesters have submitted
+func (s *Store) FetchAllNonDraftIntakes(ctx context.Context) ([]*models.SystemIntake, error) {
 	intakes := []*models.SystemIntake{}
-	err := s.db.Select(&intakes, "SELECT * FROM system_intakes")
+	err := s.db.Select(&intakes, "SELECT * FROM system_intakes WHERE status != 'INTAKE_DRAFT'")
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
 		return []*models.SystemIntake{}, err
