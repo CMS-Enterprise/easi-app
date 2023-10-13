@@ -5,7 +5,7 @@ import { Button } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import { isIntakeStarted } from 'data/systemIntake';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 
 // CTA for Task List Intake Draft
 export const IntakeDraftCta = ({ intake }: { intake: SystemIntake }) => {

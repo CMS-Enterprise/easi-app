@@ -809,6 +809,17 @@ export interface SystemIntakeBusinessOwnerInput {
 }
 
 /**
+ * Input for changing an intake's LCID retirement date in IT Gov v2
+ */
+export interface SystemIntakeChangeLCIDRetirementDateInput {
+  systemIntakeID: UUID;
+  retiresAt: Time;
+  additionalInfo?: HTML | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * The input data used to add an OIT collaborator for a system request
  */
 export interface SystemIntakeCollaboratorInput {
@@ -947,6 +958,18 @@ export interface SystemIntakeRequesterInput {
 export interface SystemIntakeRequesterWithComponentInput {
   name: string;
   component: string;
+}
+
+/**
+ * Input for retiring an intake's LCID in IT Gov v2
+ */
+export interface SystemIntakeRetireLCIDInput {
+  systemIntakeID: UUID;
+  retiresAt: Time;
+  reason?: HTML | null;
+  additionalInfo?: HTML | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
 }
 
 /**

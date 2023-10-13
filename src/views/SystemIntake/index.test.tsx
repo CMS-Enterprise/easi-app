@@ -44,7 +44,7 @@ describe('The System Intake page', () => {
       <MemoryRouter
         initialEntries={[`/system/${systemIntake.id}/contact-details`]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery]}>
+        <MockedProvider mocks={[getSystemIntakeQuery()]}>
           <Route path="/system/:systemId/:formPage">
             <SystemIntake />
           </Route>
@@ -61,7 +61,7 @@ describe('The System Intake page', () => {
       <MemoryRouter
         initialEntries={[`/system/${systemIntake.id}/request-details`]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery]}>
+        <MockedProvider mocks={[getSystemIntakeQuery()]}>
           <Route path="/system/:systemId/:formPage">
             <SystemIntake />
           </Route>
@@ -80,7 +80,7 @@ describe('The System Intake page', () => {
       <MemoryRouter
         initialEntries={[`/system/${systemIntake.id}/contract-details`]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery]}>
+        <MockedProvider mocks={[getSystemIntakeQuery()]}>
           <Route path="/system/:systemId/:formPage">
             <SystemIntake />
           </Route>
@@ -97,21 +97,7 @@ describe('The System Intake page', () => {
   it('renders document upload', async () => {
     render(
       <MemoryRouter initialEntries={[`/system/${systemIntake.id}/documents`]}>
-        <MockedProvider
-          mocks={[
-            {
-              ...getSystemIntakeQuery,
-              result: {
-                data: {
-                  systemIntake: {
-                    ...systemIntake,
-                    documents
-                  }
-                }
-              }
-            }
-          ]}
-        >
+        <MockedProvider mocks={[getSystemIntakeQuery({ documents })]}>
           <MessageProvider>
             <Route path="/system/:systemId/:formPage">
               <SystemIntake />
@@ -152,7 +138,7 @@ describe('The System Intake page', () => {
     });
     render(
       <MemoryRouter initialEntries={[`/system/${systemIntake.id}/review`]}>
-        <MockedProvider mocks={[getSystemIntakeQuery]}>
+        <MockedProvider mocks={[getSystemIntakeQuery()]}>
           <Provider store={store}>
             <MessageProvider>
               <Route path="/system/:systemId/:formPage">
@@ -177,7 +163,7 @@ describe('The System Intake page', () => {
       <MemoryRouter
         initialEntries={[`/system/${systemIntake.id}/confirmation`]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery]}>
+        <MockedProvider mocks={[getSystemIntakeQuery()]}>
           <Route path="/system/:systemId/:formPage">
             <SystemIntake />
           </Route>
@@ -197,7 +183,7 @@ describe('The System Intake page', () => {
   it('renders intake view page', async () => {
     render(
       <MemoryRouter initialEntries={[`/system/${systemIntake.id}/view`]}>
-        <MockedProvider mocks={[getSystemIntakeQuery]}>
+        <MockedProvider mocks={[getSystemIntakeQuery()]}>
           <MessageProvider>
             <Route path="/system/:systemId/:formPage">
               <SystemIntake />
@@ -219,7 +205,7 @@ describe('The System Intake page', () => {
   it('renders not found page for unrecognized route', async () => {
     render(
       <MemoryRouter initialEntries={[`/system/${systemIntake.id}/mumbo-jumbo`]}>
-        <MockedProvider mocks={[getSystemIntakeQuery]}>
+        <MockedProvider mocks={[getSystemIntakeQuery()]}>
           <Route path="/system/:systemId/:formPage">
             <SystemIntake />
           </Route>

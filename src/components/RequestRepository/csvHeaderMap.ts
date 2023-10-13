@@ -26,15 +26,15 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.isso')
   },
   {
-    key: 'trbCollaborator',
+    key: 'trbCollaboratorName',
     label: t('intake:csvHeadings.trbCollaborator')
   },
   {
-    key: 'oitCollaborator',
+    key: 'oitSecurityCollaboratorName',
     label: t('intake:csvHeadings.oitCollaborator')
   },
   {
-    key: 'eaCollaborator',
+    key: 'eaCollaboratorName',
     label: t('intake:csvHeadings.eaCollaborator')
   },
   {
@@ -94,11 +94,11 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.contractVehicle')
   },
   {
-    key: 'contractStartDate',
+    key: 'contract.startDate',
     label: t('intake:csvHeadings.contractStart')
   },
   {
-    key: 'contractEndDate',
+    key: 'contract.endDate',
     label: t('intake:csvHeadings.contractEnd')
   },
   {
@@ -110,7 +110,7 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.lcidScope')
   },
   {
-    key: 'lastAdminNote',
+    key: 'lastAdminNote.content',
     label: t('intake:csvHeadings.lastAdminNote')
   },
   {

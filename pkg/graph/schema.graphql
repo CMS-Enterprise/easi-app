@@ -985,7 +985,7 @@ type SystemIntake {
   contract: SystemIntakeContract!
   costs: SystemIntakeCosts
   annualSpending: SystemIntakeAnnualSpending
-  createdAt: Time!
+  createdAt: Time # TODO - This should probably not be nullable, but some data in IMPL & PROD has it nulled out. We should fix this in the future.
   currentStage: String
   decisionNextSteps: HTML
   eaCollaborator: String
@@ -1016,6 +1016,11 @@ type SystemIntake {
   requestName: String
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
+  # Both of these fields only really exist because the `requester` type (above) always calls Okta to get the `email` field, and the
+  # 2 below (requesterName & requesterComponent) are just fields right from the system intakes table
+  # TODO Remove them when email is not always fetched on the `requester` type
+  requesterName: String
+  requesterComponent: String
   status: SystemIntakeStatus!
   state: SystemIntakeState!
   step: SystemIntakeStep!
@@ -1026,7 +1031,6 @@ type SystemIntake {
   grtReviewEmailBody: String
   decidedAt: Time
   businessCaseId: UUID
-  lastAdminNote: LastAdminNote!
   cedarSystemId: String
   documents: [SystemIntakeDocument!]!
   hasUiChanges: Boolean
@@ -1411,14 +1415,6 @@ request
 input UpdateSystemIntakeAdminLeadInput {
   adminLead: String!
   id: UUID!
-}
-
-"""
-The most recent note added by an admin to a system request
-"""
-type LastAdminNote {
-  content: HTML
-  createdAt: Time
 }
 
 """
@@ -2789,6 +2785,8 @@ type Query {
   ): AccessibilityRequestsConnection
   requests(after: String, first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
+  systemIntakes: [SystemIntake!]!
+  @hasRole(role: EASI_GOVTEAM)
   systems(after: String, first: Int!): SystemConnection
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
@@ -2873,6 +2871,7 @@ directive @hasRole(role: Role!) on FIELD_DEFINITION
 directive @goModel(
   model: String
   models: [String!]
+  forceGenerate: Boolean
 ) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
 
 """

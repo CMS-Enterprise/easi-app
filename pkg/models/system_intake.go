@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -100,6 +101,21 @@ const (
 	SystemIntakeStepDECISION SystemIntakeStep = "DECISION_AND_NEXT_STEPS"
 )
 
+// Humanize replaces underscores with spaces and converts an uppercased word to a capitalized one
+func (step SystemIntakeStep) Humanize() string {
+	if step == "" {
+		return ""
+	}
+	upperStepSlice := strings.Split(string(step), "_")
+	var wordSlice []string
+	for _, word := range upperStepSlice {
+		word = strings.ToLower(word)
+		upperWord := strings.ToUpper(string(word[0])) + word[1:]
+		wordSlice = append(wordSlice, upperWord)
+	}
+	return strings.Join(wordSlice, " ")
+}
+
 // SystemIntakeLCIDStatus represents the possible statuses that an issued LCID can be in
 type SystemIntakeLCIDStatus string
 
@@ -172,8 +188,6 @@ type SystemIntake struct {
 	DecisionNextSteps           *HTML                        `json:"decisionNextSteps" db:"decision_next_steps"`
 	RejectionReason             *HTML                        `json:"rejectionReason" db:"rejection_reason"`
 	AdminLead                   null.String                  `json:"adminLead" db:"admin_lead"`
-	LastAdminNoteContent        *HTML                        `json:"lastAdminNoteContent" db:"last_admin_note_content"`      // TODO break this out into it's own resolver, as this isn't actually a stored column in the DB
-	LastAdminNoteCreatedAt      *time.Time                   `json:"lastAdminNoteCreatedAt" db:"last_admin_note_created_at"` // TODO break this out into it's own resolver, as this isn't actually a stored column in the DB
 	CedarSystemID               null.String                  `json:"cedarSystemId" db:"cedar_system_id"`
 	ExistingFunding             null.Bool                    `json:"existingFunding" db:"existing_funding"`
 	FundingSource               null.String                  `json:"fundingSource" db:"funding_source"`

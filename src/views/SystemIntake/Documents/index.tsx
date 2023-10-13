@@ -6,7 +6,7 @@ import { Button } from '@trussworks/react-uswds';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import useMessage from 'hooks/useMessage';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import DocumentsTable from './DocumentsTable';

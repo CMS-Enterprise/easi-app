@@ -28,7 +28,7 @@ describe('The GRT intake review view', () => {
     render(
       <MemoryRouter>
         <MockedProvider
-          mocks={[getSystemIntakeQuery, getSystemIntakeContactsQuery]}
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
         >
           <MessageProvider>
             <IntakeReview systemIntake={systemIntake} />
@@ -47,7 +47,7 @@ describe('The GRT intake review view', () => {
         ]}
       >
         <MockedProvider
-          mocks={[getSystemIntakeQuery, getSystemIntakeContactsQuery]}
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
         >
           <Route path={['/governance-review-team/:systemId/intake-request']}>
             <MessageProvider>

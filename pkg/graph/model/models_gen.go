@@ -399,12 +399,6 @@ type IssueLifecycleIDInput struct {
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 }
 
-// The most recent note added by an admin to a system request
-type LastAdminNote struct {
-	Content   *models.HTML `json:"content,omitempty"`
-	CreatedAt *time.Time   `json:"createdAt,omitempty"`
-}
-
 // The current user's Launch Darkly key
 type LaunchDarklySettings struct {
 	UserKey    string `json:"userKey"`

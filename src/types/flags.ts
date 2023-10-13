@@ -10,6 +10,7 @@ export type Flags = {
   cedar508Requests: boolean;
   technicalAssistance: boolean;
   hide508Workflow: boolean;
+  portfolioUpdateReport: boolean;
 };
 
 export type FlagsState = {

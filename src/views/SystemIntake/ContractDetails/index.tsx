@@ -31,7 +31,7 @@ import HelpText from 'components/shared/HelpText';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import {
   UpdateSystemIntakeContractDetails,
   UpdateSystemIntakeContractDetailsVariables
