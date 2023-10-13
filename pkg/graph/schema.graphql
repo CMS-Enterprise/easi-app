@@ -1016,6 +1016,8 @@ type SystemIntake {
   requestName: String
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
+  requesterName: String # Remove this when requester (above) doesn't _always_ call to Okta for the email field
+  requesterComponent: String # TODO
   status: SystemIntakeStatus!
   state: SystemIntakeState!
   step: SystemIntakeStep!

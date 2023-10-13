@@ -2937,7 +2937,7 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		return requesterWithoutEmail, nil
 	}
 
-	user, err := dataloaders.GetUserInfo(ctx, obj.EUAUserID.ValueOrZero())
+	user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID.ValueOrZero())
 	if err != nil {
 		// check if the EUA ID is just invalid in CEDAR LDAP (i.e. the requester no longer has an active EUA account)
 		if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
@@ -2954,6 +2954,16 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		Email:     &email,
 		Name:      obj.Requester,
 	}, nil
+}
+
+// RequesterName is the resolver for the requesterName field.
+func (r *systemIntakeResolver) RequesterName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return &obj.Requester, nil
+}
+
+// RequesterComponent is the resolver for the requesterComponent field.
+func (r *systemIntakeResolver) RequesterComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.Component.Ptr(), nil
 }
 
 // TrbCollaborator is the resolver for the trbCollaborator field.
