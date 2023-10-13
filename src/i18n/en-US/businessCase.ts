@@ -51,7 +51,9 @@ const businessCase = {
     addRelatedCost: 'Add a related cost',
     newRelatedCost: 'What is your related cost?',
     removeCategory: 'Remove category'
-  }
+  },
+  checkAnswers: 'Check your answers before sending',
+  sendBusinessCase: 'Send my business case'
 };
 
 export default businessCase;
