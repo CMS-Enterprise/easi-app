@@ -2337,8 +2337,8 @@ func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([
 	// The store method above returns a slice of structs, but we need to return a slice of struct pointers
 	intakePointers := []*models.SystemIntake{}
 	for _, i := range intakes {
-		intake := &i
-		intakePointers = append(intakePointers, intake)
+		intake := i
+		intakePointers = append(intakePointers, &intake)
 	}
 	return intakePointers, nil
 }
