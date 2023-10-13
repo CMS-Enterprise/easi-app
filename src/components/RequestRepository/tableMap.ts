@@ -53,8 +53,8 @@ const tableMap = (
   return tableData.map((intake: SystemIntake) => {
     /** Append requester component acronym to name */
     const requesterNameAndComponent = getPersonNameAndComponentAcronym(
-      intake.requester.name,
-      intake.requester.component
+      intake.requesterName || '',
+      intake.requesterComponent
     );
 
     let { hasContract } = intake.contract;
