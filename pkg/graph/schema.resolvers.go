@@ -3087,41 +3087,41 @@ func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminN
 	return authorInfo, nil
 }
 
-// AdditionalData is the resolver for the additionalData field.
-func (r *tRBAdminNoteResolver) AdditionalData(ctx context.Context, obj *models.TRBAdminNote) (model.TRBAdminNoteAdditionalData, error) {
+// CategorySpecificData is the resolver for the categorySpecificData field.
+func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *models.TRBAdminNote) (model.TRBAdminNoteCategorySpecificData, error) {
 	// placeholder mock data for the various category-specific fields
 	// fetching the actual data will be implemented in EASI-3362 - https://jiraent.cms.gov/browse/EASI-3362
 
-	var additionalData model.TRBAdminNoteAdditionalData
+	var categorySpecificData model.TRBAdminNoteCategorySpecificData
 
 	switch obj.Category {
 	case models.TRBAdminNoteCategoryGeneralRequest:
-		additionalData = model.TRBAdminNoteGeneralRequestCategoryData{
+		categorySpecificData = model.TRBAdminNoteGeneralRequestCategoryData{
 			PlaceholderField: true,
 		}
 	case models.TRBAdminNoteCategoryInitialRequestForm:
-		additionalData = model.TRBAdminNoteInitialRequestFormCategoryData{
+		categorySpecificData = model.TRBAdminNoteInitialRequestFormCategoryData{
 			AppliesToBasicRequestDetails: true,
 			AppliesToSubjectAreas:        true,
 			AppliesToAttendees:           false,
 		}
 	case models.TRBAdminNoteCategorySupportingDocuments:
-		additionalData = model.TRBAdminNoteSupportingDocumentsCategoryData{
+		categorySpecificData = model.TRBAdminNoteSupportingDocumentsCategoryData{
 			Documents: []*models.TRBRequestDocument{},
 		}
 	case models.TRBAdminNoteCategoryConsultSession:
-		additionalData = model.TRBAdminNoteConsultSessionCategoryData{
+		categorySpecificData = model.TRBAdminNoteConsultSessionCategoryData{
 			PlaceholderField: true,
 		}
 	case models.TRBAdminNoteCategoryAdviceLetter:
-		additionalData = model.TRBAdminNoteAdviceLetterCategoryData{
+		categorySpecificData = model.TRBAdminNoteAdviceLetterCategoryData{
 			AppliesToMeetingSummary: true,
 			AppliesToNextSteps:      false,
 			Recommendations:         []*models.TRBAdviceLetterRecommendation{},
 		}
 	}
 
-	return additionalData, nil
+	return categorySpecificData, nil
 }
 
 // Author is the resolver for the author field.

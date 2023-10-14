@@ -894,17 +894,17 @@ type ComplexityRoot struct {
 	}
 
 	TRBAdminNote struct {
-		AdditionalData func(childComplexity int) int
-		Author         func(childComplexity int) int
-		Category       func(childComplexity int) int
-		CreatedAt      func(childComplexity int) int
-		CreatedBy      func(childComplexity int) int
-		ID             func(childComplexity int) int
-		IsArchived     func(childComplexity int) int
-		ModifiedAt     func(childComplexity int) int
-		ModifiedBy     func(childComplexity int) int
-		NoteText       func(childComplexity int) int
-		TRBRequestID   func(childComplexity int) int
+		Author               func(childComplexity int) int
+		Category             func(childComplexity int) int
+		CategorySpecificData func(childComplexity int) int
+		CreatedAt            func(childComplexity int) int
+		CreatedBy            func(childComplexity int) int
+		ID                   func(childComplexity int) int
+		IsArchived           func(childComplexity int) int
+		ModifiedAt           func(childComplexity int) int
+		ModifiedBy           func(childComplexity int) int
+		NoteText             func(childComplexity int) int
+		TRBRequestID         func(childComplexity int) int
 	}
 
 	TRBAdminNoteAdviceLetterCategoryData struct {
@@ -1466,7 +1466,7 @@ type SystemIntakeNoteResolver interface {
 type TRBAdminNoteResolver interface {
 	Author(ctx context.Context, obj *models.TRBAdminNote) (*models.UserInfo, error)
 
-	AdditionalData(ctx context.Context, obj *models.TRBAdminNote) (model.TRBAdminNoteAdditionalData, error)
+	CategorySpecificData(ctx context.Context, obj *models.TRBAdminNote) (model.TRBAdminNoteCategorySpecificData, error)
 }
 type TRBAdviceLetterResolver interface {
 	Author(ctx context.Context, obj *models.TRBAdviceLetter) (*models.UserInfo, error)
@@ -6155,13 +6155,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeRequester.Name(childComplexity), true
 
-	case "TRBAdminNote.additionalData":
-		if e.complexity.TRBAdminNote.AdditionalData == nil {
-			break
-		}
-
-		return e.complexity.TRBAdminNote.AdditionalData(childComplexity), true
-
 	case "TRBAdminNote.author":
 		if e.complexity.TRBAdminNote.Author == nil {
 			break
@@ -6175,6 +6168,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBAdminNote.Category(childComplexity), true
+
+	case "TRBAdminNote.categorySpecificData":
+		if e.complexity.TRBAdminNote.CategorySpecificData == nil {
+			break
+		}
+
+		return e.complexity.TRBAdminNote.CategorySpecificData(childComplexity), true
 
 	case "TRBAdminNote.createdAt":
 		if e.complexity.TRBAdminNote.CreatedAt == nil {
@@ -9806,7 +9806,7 @@ type TRBAdminNoteAdviceLetterCategoryData {
   recommendations: [TRBAdviceLetterRecommendation!]!
 }
 
-union TRBAdminNoteAdditionalData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteAdviceLetterCategoryData
+union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteAdviceLetterCategoryData
 
 """
 Represents an admin note attached to a TRB request
@@ -9818,7 +9818,7 @@ type TRBAdminNote {
   noteText: HTML!
   author: UserInfo!
   isArchived: Boolean!
-  additionalData: TRBAdminNoteAdditionalData!
+  categorySpecificData: TRBAdminNoteCategorySpecificData!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -9902,6 +9902,7 @@ input CreateTRBAdminNoteInput {
 The data needed for updating a TRB admin note
 """
 input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
+  # Common fields for notes of all categories
   id: UUID!
   category: TRBAdminNoteCategory
   noteText: HTML
@@ -32170,8 +32171,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBAdminNote(ctx context
 				return ec.fieldContext_TRBAdminNote_author(ctx, field)
 			case "isArchived":
 				return ec.fieldContext_TRBAdminNote_isArchived(ctx, field)
-			case "additionalData":
-				return ec.fieldContext_TRBAdminNote_additionalData(ctx, field)
+			case "categorySpecificData":
+				return ec.fieldContext_TRBAdminNote_categorySpecificData(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
 			case "createdAt":
@@ -32273,8 +32274,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBAdminNote(ctx context
 				return ec.fieldContext_TRBAdminNote_author(ctx, field)
 			case "isArchived":
 				return ec.fieldContext_TRBAdminNote_isArchived(ctx, field)
-			case "additionalData":
-				return ec.fieldContext_TRBAdminNote_additionalData(ctx, field)
+			case "categorySpecificData":
+				return ec.fieldContext_TRBAdminNote_categorySpecificData(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
 			case "createdAt":
@@ -32376,8 +32377,8 @@ func (ec *executionContext) fieldContext_Mutation_setTRBAdminNoteArchived(ctx co
 				return ec.fieldContext_TRBAdminNote_author(ctx, field)
 			case "isArchived":
 				return ec.fieldContext_TRBAdminNote_isArchived(ctx, field)
-			case "additionalData":
-				return ec.fieldContext_TRBAdminNote_additionalData(ctx, field)
+			case "categorySpecificData":
+				return ec.fieldContext_TRBAdminNote_categorySpecificData(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
 			case "createdAt":
@@ -36150,8 +36151,8 @@ func (ec *executionContext) fieldContext_Query_trbAdminNote(ctx context.Context,
 				return ec.fieldContext_TRBAdminNote_author(ctx, field)
 			case "isArchived":
 				return ec.fieldContext_TRBAdminNote_isArchived(ctx, field)
-			case "additionalData":
-				return ec.fieldContext_TRBAdminNote_additionalData(ctx, field)
+			case "categorySpecificData":
+				return ec.fieldContext_TRBAdminNote_categorySpecificData(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
 			case "createdAt":
@@ -43723,8 +43724,8 @@ func (ec *executionContext) fieldContext_TRBAdminNote_isArchived(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBAdminNote_additionalData(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdminNote) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBAdminNote_additionalData(ctx, field)
+func (ec *executionContext) _TRBAdminNote_categorySpecificData(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdminNote) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNote_categorySpecificData(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -43737,7 +43738,7 @@ func (ec *executionContext) _TRBAdminNote_additionalData(ctx context.Context, fi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.TRBAdminNote().AdditionalData(rctx, obj)
+		return ec.resolvers.TRBAdminNote().CategorySpecificData(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -43749,19 +43750,19 @@ func (ec *executionContext) _TRBAdminNote_additionalData(ctx context.Context, fi
 		}
 		return graphql.Null
 	}
-	res := resTmp.(model.TRBAdminNoteAdditionalData)
+	res := resTmp.(model.TRBAdminNoteCategorySpecificData)
 	fc.Result = res
-	return ec.marshalNTRBAdminNoteAdditionalData2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBAdminNoteAdditionalData(ctx, field.Selections, res)
+	return ec.marshalNTRBAdminNoteCategorySpecificData2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBAdminNoteCategorySpecificData(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBAdminNote_additionalData(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBAdminNote_categorySpecificData(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "TRBAdminNote",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type TRBAdminNoteAdditionalData does not have child fields")
+			return nil, errors.New("field of type TRBAdminNoteCategorySpecificData does not have child fields")
 		},
 	}
 	return fc, nil
@@ -46726,8 +46727,8 @@ func (ec *executionContext) fieldContext_TRBRequest_adminNotes(ctx context.Conte
 				return ec.fieldContext_TRBAdminNote_author(ctx, field)
 			case "isArchived":
 				return ec.fieldContext_TRBAdminNote_isArchived(ctx, field)
-			case "additionalData":
-				return ec.fieldContext_TRBAdminNote_additionalData(ctx, field)
+			case "categorySpecificData":
+				return ec.fieldContext_TRBAdminNote_categorySpecificData(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
 			case "createdAt":
@@ -56975,7 +56976,7 @@ func (ec *executionContext) unmarshalInputUpdateTestDateInput(ctx context.Contex
 
 // region    ************************** interface.gotpl ***************************
 
-func (ec *executionContext) _TRBAdminNoteAdditionalData(ctx context.Context, sel ast.SelectionSet, obj model.TRBAdminNoteAdditionalData) graphql.Marshaler {
+func (ec *executionContext) _TRBAdminNoteCategorySpecificData(ctx context.Context, sel ast.SelectionSet, obj model.TRBAdminNoteCategorySpecificData) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
@@ -67170,7 +67171,7 @@ func (ec *executionContext) _TRBAdminNote(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
-		case "additionalData":
+		case "categorySpecificData":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -67179,7 +67180,7 @@ func (ec *executionContext) _TRBAdminNote(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._TRBAdminNote_additionalData(ctx, field, obj)
+				res = ec._TRBAdminNote_categorySpecificData(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -67243,7 +67244,7 @@ func (ec *executionContext) _TRBAdminNote(ctx context.Context, sel ast.Selection
 	return out
 }
 
-var tRBAdminNoteAdviceLetterCategoryDataImplementors = []string{"TRBAdminNoteAdviceLetterCategoryData", "TRBAdminNoteAdditionalData"}
+var tRBAdminNoteAdviceLetterCategoryDataImplementors = []string{"TRBAdminNoteAdviceLetterCategoryData", "TRBAdminNoteCategorySpecificData"}
 
 func (ec *executionContext) _TRBAdminNoteAdviceLetterCategoryData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteAdviceLetterCategoryData) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteAdviceLetterCategoryDataImplementors)
@@ -67292,7 +67293,7 @@ func (ec *executionContext) _TRBAdminNoteAdviceLetterCategoryData(ctx context.Co
 	return out
 }
 
-var tRBAdminNoteConsultSessionCategoryDataImplementors = []string{"TRBAdminNoteConsultSessionCategoryData", "TRBAdminNoteAdditionalData"}
+var tRBAdminNoteConsultSessionCategoryDataImplementors = []string{"TRBAdminNoteConsultSessionCategoryData", "TRBAdminNoteCategorySpecificData"}
 
 func (ec *executionContext) _TRBAdminNoteConsultSessionCategoryData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteConsultSessionCategoryData) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteConsultSessionCategoryDataImplementors)
@@ -67331,7 +67332,7 @@ func (ec *executionContext) _TRBAdminNoteConsultSessionCategoryData(ctx context.
 	return out
 }
 
-var tRBAdminNoteGeneralRequestCategoryDataImplementors = []string{"TRBAdminNoteGeneralRequestCategoryData", "TRBAdminNoteAdditionalData"}
+var tRBAdminNoteGeneralRequestCategoryDataImplementors = []string{"TRBAdminNoteGeneralRequestCategoryData", "TRBAdminNoteCategorySpecificData"}
 
 func (ec *executionContext) _TRBAdminNoteGeneralRequestCategoryData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteGeneralRequestCategoryData) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteGeneralRequestCategoryDataImplementors)
@@ -67370,7 +67371,7 @@ func (ec *executionContext) _TRBAdminNoteGeneralRequestCategoryData(ctx context.
 	return out
 }
 
-var tRBAdminNoteInitialRequestFormCategoryDataImplementors = []string{"TRBAdminNoteInitialRequestFormCategoryData", "TRBAdminNoteAdditionalData"}
+var tRBAdminNoteInitialRequestFormCategoryDataImplementors = []string{"TRBAdminNoteInitialRequestFormCategoryData", "TRBAdminNoteCategorySpecificData"}
 
 func (ec *executionContext) _TRBAdminNoteInitialRequestFormCategoryData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteInitialRequestFormCategoryData) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteInitialRequestFormCategoryDataImplementors)
@@ -67419,7 +67420,7 @@ func (ec *executionContext) _TRBAdminNoteInitialRequestFormCategoryData(ctx cont
 	return out
 }
 
-var tRBAdminNoteSupportingDocumentsCategoryDataImplementors = []string{"TRBAdminNoteSupportingDocumentsCategoryData", "TRBAdminNoteAdditionalData"}
+var tRBAdminNoteSupportingDocumentsCategoryDataImplementors = []string{"TRBAdminNoteSupportingDocumentsCategoryData", "TRBAdminNoteCategorySpecificData"}
 
 func (ec *executionContext) _TRBAdminNoteSupportingDocumentsCategoryData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteSupportingDocumentsCategoryData) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteSupportingDocumentsCategoryDataImplementors)
@@ -72234,16 +72235,6 @@ func (ec *executionContext) marshalNTRBAdminNote2ᚖgithubᚗcomᚋcmsgovᚋeasi
 	return ec._TRBAdminNote(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNTRBAdminNoteAdditionalData2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBAdminNoteAdditionalData(ctx context.Context, sel ast.SelectionSet, v model.TRBAdminNoteAdditionalData) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._TRBAdminNoteAdditionalData(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNTRBAdminNoteCategory2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx context.Context, v interface{}) (models.TRBAdminNoteCategory, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.TRBAdminNoteCategory(tmp)
@@ -72258,6 +72249,16 @@ func (ec *executionContext) marshalNTRBAdminNoteCategory2githubᚗcomᚋcmsgov�
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNTRBAdminNoteCategorySpecificData2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBAdminNoteCategorySpecificData(ctx context.Context, sel ast.SelectionSet, v model.TRBAdminNoteCategorySpecificData) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._TRBAdminNoteCategorySpecificData(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNTRBAdviceLetter2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetter(ctx context.Context, sel ast.SelectionSet, v models.TRBAdviceLetter) graphql.Marshaler {

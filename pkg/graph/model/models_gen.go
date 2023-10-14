@@ -13,8 +13,8 @@ import (
 	"github.com/google/uuid"
 )
 
-type TRBAdminNoteAdditionalData interface {
-	IsTRBAdminNoteAdditionalData()
+type TRBAdminNoteCategorySpecificData interface {
+	IsTRBAdminNoteCategorySpecificData()
 }
 
 // Denotes type of a document that is attached to a 508/accessibility request,
@@ -824,7 +824,7 @@ type TRBAdminNoteAdviceLetterCategoryData struct {
 	Recommendations         []*models.TRBAdviceLetterRecommendation `json:"recommendations"`
 }
 
-func (TRBAdminNoteAdviceLetterCategoryData) IsTRBAdminNoteAdditionalData() {}
+func (TRBAdminNoteAdviceLetterCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Data needed to create a TRB admin note with the Advice Letter category
 type TRBAdminNoteAdviceLetterInput struct {
@@ -840,7 +840,7 @@ type TRBAdminNoteConsultSessionCategoryData struct {
 	PlaceholderField bool `json:"placeholderField"`
 }
 
-func (TRBAdminNoteConsultSessionCategoryData) IsTRBAdminNoteAdditionalData() {}
+func (TRBAdminNoteConsultSessionCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Data specific to admin notes in the General Request category
 // This type doesn't contain any actual data
@@ -849,7 +849,7 @@ type TRBAdminNoteGeneralRequestCategoryData struct {
 	PlaceholderField bool `json:"placeholderField"`
 }
 
-func (TRBAdminNoteGeneralRequestCategoryData) IsTRBAdminNoteAdditionalData() {}
+func (TRBAdminNoteGeneralRequestCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Data specific to admin notes in the Initial Request Form category
 type TRBAdminNoteInitialRequestFormCategoryData struct {
@@ -858,7 +858,7 @@ type TRBAdminNoteInitialRequestFormCategoryData struct {
 	AppliesToAttendees           bool `json:"appliesToAttendees"`
 }
 
-func (TRBAdminNoteInitialRequestFormCategoryData) IsTRBAdminNoteAdditionalData() {}
+func (TRBAdminNoteInitialRequestFormCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Data needed to create a TRB admin note with the Initial Request Form category
 type TRBAdminNoteInitialRequestFormInput struct {
@@ -872,7 +872,7 @@ type TRBAdminNoteSupportingDocumentsCategoryData struct {
 	Documents []*models.TRBRequestDocument `json:"documents"`
 }
 
-func (TRBAdminNoteSupportingDocumentsCategoryData) IsTRBAdminNoteAdditionalData() {}
+func (TRBAdminNoteSupportingDocumentsCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Data needed to create a TRB admin note with the Supporting Documents category
 type TRBAdminNoteSupportingDocumentsInput struct {

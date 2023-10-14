@@ -2353,7 +2353,7 @@ type TRBAdminNoteAdviceLetterCategoryData {
   recommendations: [TRBAdviceLetterRecommendation!]!
 }
 
-union TRBAdminNoteAdditionalData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteAdviceLetterCategoryData
+union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteAdviceLetterCategoryData
 
 """
 Represents an admin note attached to a TRB request
@@ -2365,7 +2365,7 @@ type TRBAdminNote {
   noteText: HTML!
   author: UserInfo!
   isArchived: Boolean!
-  additionalData: TRBAdminNoteAdditionalData!
+  categorySpecificData: TRBAdminNoteCategorySpecificData!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2449,6 +2449,7 @@ input CreateTRBAdminNoteInput {
 The data needed for updating a TRB admin note
 """
 input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
+  # Common fields for notes of all categories
   id: UUID!
   category: TRBAdminNoteCategory
   noteText: HTML

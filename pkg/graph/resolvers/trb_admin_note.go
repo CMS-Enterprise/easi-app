@@ -14,6 +14,8 @@ import (
 
 // CreateTRBAdminNote creates a new TRB admin note in the database
 func CreateTRBAdminNote(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID, category models.TRBAdminNoteCategory, noteText models.HTML) (*models.TRBAdminNote, error) {
+	// TODO - EASI-3362 - update with category-specific data (validate, then save in database)
+
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: trbRequestID,
 		Category:     category,
@@ -58,6 +60,8 @@ func GetTRBAdminNotesByTRBRequestID(ctx context.Context, store *storage.Store, t
 
 // UpdateTRBAdminNote handles general updates to a TRB admin note
 func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdminNote, error) {
+	// TODO - EASI-3362 - update with category-specific data (validate, then save in database)
+
 	idStr, idFound := input["id"]
 	if !idFound {
 		return nil, errors.New("missing required property id")
