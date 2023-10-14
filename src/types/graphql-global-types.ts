@@ -987,18 +987,27 @@ export interface SystemIntakeUpdateLCIDInput {
   adminNote?: HTML | null;
 }
 
+/**
+ * Data needed to create a TRB admin note with the Advice Letter category
+ */
 export interface TRBAdminNoteAdviceLetterInput {
   appliesToMeetingSummary: boolean;
   appliesToNextSteps: boolean;
   recommendationIDs: UUID[];
 }
 
+/**
+ * Data needed to create a TRB admin note with the Initial Request Form category
+ */
 export interface TRBAdminNoteInitialRequestFormInput {
   appliesToBasicRequestDetails: boolean;
   appliesToSubjectAreas: boolean;
   appliesToAttendees: boolean;
 }
 
+/**
+ * Data needed to create a TRB admin note with the Supporting Documents category
+ */
 export interface TRBAdminNoteSupportingDocumentsInput {
   documentIDs: UUID[];
 }

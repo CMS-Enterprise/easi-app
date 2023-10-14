@@ -3090,30 +3090,31 @@ func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminN
 // AdditionalData is the resolver for the additionalData field.
 func (r *tRBAdminNoteResolver) AdditionalData(ctx context.Context, obj *models.TRBAdminNote) (model.TRBAdminNoteAdditionalData, error) {
 	// placeholder mock data for the various category-specific fields
+	// fetching the actual data will be implemented in EASI-3362 - https://jiraent.cms.gov/browse/EASI-3362
 
 	var additionalData model.TRBAdminNoteAdditionalData
 
 	switch obj.Category {
 	case models.TRBAdminNoteCategoryGeneralRequest:
-		additionalData = model.TRBAdminNoteGeneralRequestAdditionalData{
+		additionalData = model.TRBAdminNoteGeneralRequestCategoryData{
 			PlaceholderField: true,
 		}
 	case models.TRBAdminNoteCategoryInitialRequestForm:
-		additionalData = model.TRBAdminNoteInitialRequestFormAdditionalData{
+		additionalData = model.TRBAdminNoteInitialRequestFormCategoryData{
 			AppliesToBasicRequestDetails: true,
 			AppliesToSubjectAreas:        true,
 			AppliesToAttendees:           false,
 		}
 	case models.TRBAdminNoteCategorySupportingDocuments:
-		additionalData = model.TRBAdminNoteSupportingDocumentsAdditionalData{
+		additionalData = model.TRBAdminNoteSupportingDocumentsCategoryData{
 			Documents: []*models.TRBRequestDocument{},
 		}
 	case models.TRBAdminNoteCategoryConsultSession:
-		additionalData = model.TRBAdminNoteConsultSessionAdditionalData{
+		additionalData = model.TRBAdminNoteConsultSessionCategoryData{
 			PlaceholderField: true,
 		}
 	case models.TRBAdminNoteCategoryAdviceLetter:
-		additionalData = model.TRBAdminNoteAdviceLetterAdditionalData{
+		additionalData = model.TRBAdminNoteAdviceLetterCategoryData{
 			AppliesToMeetingSummary: true,
 			AppliesToNextSteps:      false,
 			Recommendations:         []*models.TRBAdviceLetterRecommendation{},

@@ -2307,42 +2307,53 @@ enum TRBAdminNoteCategory {
 }
 
 """
+Data specific to admin notes in the General Request category
 This type doesn't contain any actual data
 """
-type TRBAdminNoteGeneralRequestAdditionalData {
+type TRBAdminNoteGeneralRequestCategoryData {
   """
   Placeholder field so this type is non-empty, always true
   """
   placeholderField: Boolean! # Necessary because gqlgen doesn't support empty types
 }
 
-type TRBAdminNoteInitialRequestFormAdditionalData {
+"""
+Data specific to admin notes in the Initial Request Form category
+"""
+type TRBAdminNoteInitialRequestFormCategoryData {
   appliesToBasicRequestDetails: Boolean!
   appliesToSubjectAreas: Boolean!
   appliesToAttendees: Boolean!
 }
 
-type TRBAdminNoteSupportingDocumentsAdditionalData {
+"""
+Data specific to admin notes in the Supporting Documents category
+"""
+type TRBAdminNoteSupportingDocumentsCategoryData {
   documents: [TRBRequestDocument!]!
 }
 
 """
+Data specific to admin notes in the Consult Session category
 This type doesn't contain any actual data
 """
-type TRBAdminNoteConsultSessionAdditionalData {
+type TRBAdminNoteConsultSessionCategoryData {
   """
   Placeholder field so this type is non-empty, always true
   """
   placeholderField: Boolean! # Necessary because gqlgen doesn't support empty types
 }
 
-type TRBAdminNoteAdviceLetterAdditionalData {
+"""
+Data specific to admin notes in the Advice Letter category
+"""
+type TRBAdminNoteAdviceLetterCategoryData {
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
   recommendations: [TRBAdviceLetterRecommendation!]!
 }
 
-union TRBAdminNoteAdditionalData = TRBAdminNoteGeneralRequestAdditionalData | TRBAdminNoteInitialRequestFormAdditionalData | TRBAdminNoteSupportingDocumentsAdditionalData | TRBAdminNoteConsultSessionAdditionalData | TRBAdminNoteAdviceLetterAdditionalData
+union TRBAdminNoteAdditionalData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteAdviceLetterCategoryData
 
 """
 Represents an admin note attached to a TRB request
@@ -2383,16 +2394,25 @@ type TRBAdviceLetter {
   modifiedAt: Time
 }
 
+"""
+Data needed to create a TRB admin note with the Initial Request Form category
+"""
 input TRBAdminNoteInitialRequestFormInput {
   appliesToBasicRequestDetails: Boolean!
   appliesToSubjectAreas: Boolean!
   appliesToAttendees: Boolean!
 }
 
+"""
+Data needed to create a TRB admin note with the Supporting Documents category
+"""
 input TRBAdminNoteSupportingDocumentsInput {
   documentIDs: [UUID!]!
 }
 
+"""
+Data needed to create a TRB admin note with the Advice Letter category
+"""
 input TRBAdminNoteAdviceLetterInput {
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
@@ -2406,6 +2426,7 @@ this type has nullable fields for all the categories that can have category-spec
 At most one of these fields should have a value.
 """
 input CreateTRBAdminNoteInput {
+  # Common fields for notes of all categories
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
   noteText: HTML!

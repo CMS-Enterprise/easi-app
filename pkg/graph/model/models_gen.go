@@ -817,56 +817,64 @@ type SystemIntakeUpdateLCIDInput struct {
 	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
-type TRBAdminNoteAdviceLetterAdditionalData struct {
+// Data specific to admin notes in the Advice Letter category
+type TRBAdminNoteAdviceLetterCategoryData struct {
 	AppliesToMeetingSummary bool                                    `json:"appliesToMeetingSummary"`
 	AppliesToNextSteps      bool                                    `json:"appliesToNextSteps"`
 	Recommendations         []*models.TRBAdviceLetterRecommendation `json:"recommendations"`
 }
 
-func (TRBAdminNoteAdviceLetterAdditionalData) IsTRBAdminNoteAdditionalData() {}
+func (TRBAdminNoteAdviceLetterCategoryData) IsTRBAdminNoteAdditionalData() {}
 
+// Data needed to create a TRB admin note with the Advice Letter category
 type TRBAdminNoteAdviceLetterInput struct {
 	AppliesToMeetingSummary bool        `json:"appliesToMeetingSummary"`
 	AppliesToNextSteps      bool        `json:"appliesToNextSteps"`
 	RecommendationIDs       []uuid.UUID `json:"recommendationIDs"`
 }
 
+// Data specific to admin notes in the Consult Session category
 // This type doesn't contain any actual data
-type TRBAdminNoteConsultSessionAdditionalData struct {
+type TRBAdminNoteConsultSessionCategoryData struct {
 	// Placeholder field so this type is non-empty, always true
 	PlaceholderField bool `json:"placeholderField"`
 }
 
-func (TRBAdminNoteConsultSessionAdditionalData) IsTRBAdminNoteAdditionalData() {}
+func (TRBAdminNoteConsultSessionCategoryData) IsTRBAdminNoteAdditionalData() {}
 
+// Data specific to admin notes in the General Request category
 // This type doesn't contain any actual data
-type TRBAdminNoteGeneralRequestAdditionalData struct {
+type TRBAdminNoteGeneralRequestCategoryData struct {
 	// Placeholder field so this type is non-empty, always true
 	PlaceholderField bool `json:"placeholderField"`
 }
 
-func (TRBAdminNoteGeneralRequestAdditionalData) IsTRBAdminNoteAdditionalData() {}
+func (TRBAdminNoteGeneralRequestCategoryData) IsTRBAdminNoteAdditionalData() {}
 
-type TRBAdminNoteInitialRequestFormAdditionalData struct {
+// Data specific to admin notes in the Initial Request Form category
+type TRBAdminNoteInitialRequestFormCategoryData struct {
 	AppliesToBasicRequestDetails bool `json:"appliesToBasicRequestDetails"`
 	AppliesToSubjectAreas        bool `json:"appliesToSubjectAreas"`
 	AppliesToAttendees           bool `json:"appliesToAttendees"`
 }
 
-func (TRBAdminNoteInitialRequestFormAdditionalData) IsTRBAdminNoteAdditionalData() {}
+func (TRBAdminNoteInitialRequestFormCategoryData) IsTRBAdminNoteAdditionalData() {}
 
+// Data needed to create a TRB admin note with the Initial Request Form category
 type TRBAdminNoteInitialRequestFormInput struct {
 	AppliesToBasicRequestDetails bool `json:"appliesToBasicRequestDetails"`
 	AppliesToSubjectAreas        bool `json:"appliesToSubjectAreas"`
 	AppliesToAttendees           bool `json:"appliesToAttendees"`
 }
 
-type TRBAdminNoteSupportingDocumentsAdditionalData struct {
+// Data specific to admin notes in the Supporting Documents category
+type TRBAdminNoteSupportingDocumentsCategoryData struct {
 	Documents []*models.TRBRequestDocument `json:"documents"`
 }
 
-func (TRBAdminNoteSupportingDocumentsAdditionalData) IsTRBAdminNoteAdditionalData() {}
+func (TRBAdminNoteSupportingDocumentsCategoryData) IsTRBAdminNoteAdditionalData() {}
 
+// Data needed to create a TRB admin note with the Supporting Documents category
 type TRBAdminNoteSupportingDocumentsInput struct {
 	DocumentIDs []uuid.UUID `json:"documentIDs"`
 }

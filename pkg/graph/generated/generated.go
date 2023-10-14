@@ -907,27 +907,27 @@ type ComplexityRoot struct {
 		TRBRequestID   func(childComplexity int) int
 	}
 
-	TRBAdminNoteAdviceLetterAdditionalData struct {
+	TRBAdminNoteAdviceLetterCategoryData struct {
 		AppliesToMeetingSummary func(childComplexity int) int
 		AppliesToNextSteps      func(childComplexity int) int
 		Recommendations         func(childComplexity int) int
 	}
 
-	TRBAdminNoteConsultSessionAdditionalData struct {
+	TRBAdminNoteConsultSessionCategoryData struct {
 		PlaceholderField func(childComplexity int) int
 	}
 
-	TRBAdminNoteGeneralRequestAdditionalData struct {
+	TRBAdminNoteGeneralRequestCategoryData struct {
 		PlaceholderField func(childComplexity int) int
 	}
 
-	TRBAdminNoteInitialRequestFormAdditionalData struct {
+	TRBAdminNoteInitialRequestFormCategoryData struct {
 		AppliesToAttendees           func(childComplexity int) int
 		AppliesToBasicRequestDetails func(childComplexity int) int
 		AppliesToSubjectAreas        func(childComplexity int) int
 	}
 
-	TRBAdminNoteSupportingDocumentsAdditionalData struct {
+	TRBAdminNoteSupportingDocumentsCategoryData struct {
 		Documents func(childComplexity int) int
 	}
 
@@ -6232,68 +6232,68 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBAdminNote.TRBRequestID(childComplexity), true
 
-	case "TRBAdminNoteAdviceLetterAdditionalData.appliesToMeetingSummary":
-		if e.complexity.TRBAdminNoteAdviceLetterAdditionalData.AppliesToMeetingSummary == nil {
+	case "TRBAdminNoteAdviceLetterCategoryData.appliesToMeetingSummary":
+		if e.complexity.TRBAdminNoteAdviceLetterCategoryData.AppliesToMeetingSummary == nil {
 			break
 		}
 
-		return e.complexity.TRBAdminNoteAdviceLetterAdditionalData.AppliesToMeetingSummary(childComplexity), true
+		return e.complexity.TRBAdminNoteAdviceLetterCategoryData.AppliesToMeetingSummary(childComplexity), true
 
-	case "TRBAdminNoteAdviceLetterAdditionalData.appliesToNextSteps":
-		if e.complexity.TRBAdminNoteAdviceLetterAdditionalData.AppliesToNextSteps == nil {
+	case "TRBAdminNoteAdviceLetterCategoryData.appliesToNextSteps":
+		if e.complexity.TRBAdminNoteAdviceLetterCategoryData.AppliesToNextSteps == nil {
 			break
 		}
 
-		return e.complexity.TRBAdminNoteAdviceLetterAdditionalData.AppliesToNextSteps(childComplexity), true
+		return e.complexity.TRBAdminNoteAdviceLetterCategoryData.AppliesToNextSteps(childComplexity), true
 
-	case "TRBAdminNoteAdviceLetterAdditionalData.recommendations":
-		if e.complexity.TRBAdminNoteAdviceLetterAdditionalData.Recommendations == nil {
+	case "TRBAdminNoteAdviceLetterCategoryData.recommendations":
+		if e.complexity.TRBAdminNoteAdviceLetterCategoryData.Recommendations == nil {
 			break
 		}
 
-		return e.complexity.TRBAdminNoteAdviceLetterAdditionalData.Recommendations(childComplexity), true
+		return e.complexity.TRBAdminNoteAdviceLetterCategoryData.Recommendations(childComplexity), true
 
-	case "TRBAdminNoteConsultSessionAdditionalData.placeholderField":
-		if e.complexity.TRBAdminNoteConsultSessionAdditionalData.PlaceholderField == nil {
+	case "TRBAdminNoteConsultSessionCategoryData.placeholderField":
+		if e.complexity.TRBAdminNoteConsultSessionCategoryData.PlaceholderField == nil {
 			break
 		}
 
-		return e.complexity.TRBAdminNoteConsultSessionAdditionalData.PlaceholderField(childComplexity), true
+		return e.complexity.TRBAdminNoteConsultSessionCategoryData.PlaceholderField(childComplexity), true
 
-	case "TRBAdminNoteGeneralRequestAdditionalData.placeholderField":
-		if e.complexity.TRBAdminNoteGeneralRequestAdditionalData.PlaceholderField == nil {
+	case "TRBAdminNoteGeneralRequestCategoryData.placeholderField":
+		if e.complexity.TRBAdminNoteGeneralRequestCategoryData.PlaceholderField == nil {
 			break
 		}
 
-		return e.complexity.TRBAdminNoteGeneralRequestAdditionalData.PlaceholderField(childComplexity), true
+		return e.complexity.TRBAdminNoteGeneralRequestCategoryData.PlaceholderField(childComplexity), true
 
-	case "TRBAdminNoteInitialRequestFormAdditionalData.appliesToAttendees":
-		if e.complexity.TRBAdminNoteInitialRequestFormAdditionalData.AppliesToAttendees == nil {
+	case "TRBAdminNoteInitialRequestFormCategoryData.appliesToAttendees":
+		if e.complexity.TRBAdminNoteInitialRequestFormCategoryData.AppliesToAttendees == nil {
 			break
 		}
 
-		return e.complexity.TRBAdminNoteInitialRequestFormAdditionalData.AppliesToAttendees(childComplexity), true
+		return e.complexity.TRBAdminNoteInitialRequestFormCategoryData.AppliesToAttendees(childComplexity), true
 
-	case "TRBAdminNoteInitialRequestFormAdditionalData.appliesToBasicRequestDetails":
-		if e.complexity.TRBAdminNoteInitialRequestFormAdditionalData.AppliesToBasicRequestDetails == nil {
+	case "TRBAdminNoteInitialRequestFormCategoryData.appliesToBasicRequestDetails":
+		if e.complexity.TRBAdminNoteInitialRequestFormCategoryData.AppliesToBasicRequestDetails == nil {
 			break
 		}
 
-		return e.complexity.TRBAdminNoteInitialRequestFormAdditionalData.AppliesToBasicRequestDetails(childComplexity), true
+		return e.complexity.TRBAdminNoteInitialRequestFormCategoryData.AppliesToBasicRequestDetails(childComplexity), true
 
-	case "TRBAdminNoteInitialRequestFormAdditionalData.appliesToSubjectAreas":
-		if e.complexity.TRBAdminNoteInitialRequestFormAdditionalData.AppliesToSubjectAreas == nil {
+	case "TRBAdminNoteInitialRequestFormCategoryData.appliesToSubjectAreas":
+		if e.complexity.TRBAdminNoteInitialRequestFormCategoryData.AppliesToSubjectAreas == nil {
 			break
 		}
 
-		return e.complexity.TRBAdminNoteInitialRequestFormAdditionalData.AppliesToSubjectAreas(childComplexity), true
+		return e.complexity.TRBAdminNoteInitialRequestFormCategoryData.AppliesToSubjectAreas(childComplexity), true
 
-	case "TRBAdminNoteSupportingDocumentsAdditionalData.documents":
-		if e.complexity.TRBAdminNoteSupportingDocumentsAdditionalData.Documents == nil {
+	case "TRBAdminNoteSupportingDocumentsCategoryData.documents":
+		if e.complexity.TRBAdminNoteSupportingDocumentsCategoryData.Documents == nil {
 			break
 		}
 
-		return e.complexity.TRBAdminNoteSupportingDocumentsAdditionalData.Documents(childComplexity), true
+		return e.complexity.TRBAdminNoteSupportingDocumentsCategoryData.Documents(childComplexity), true
 
 	case "TRBAdviceLetter.author":
 		if e.complexity.TRBAdviceLetter.Author == nil {
@@ -9760,42 +9760,53 @@ enum TRBAdminNoteCategory {
 }
 
 """
+Data specific to admin notes in the General Request category
 This type doesn't contain any actual data
 """
-type TRBAdminNoteGeneralRequestAdditionalData {
+type TRBAdminNoteGeneralRequestCategoryData {
   """
   Placeholder field so this type is non-empty, always true
   """
   placeholderField: Boolean! # Necessary because gqlgen doesn't support empty types
 }
 
-type TRBAdminNoteInitialRequestFormAdditionalData {
+"""
+Data specific to admin notes in the Initial Request Form category
+"""
+type TRBAdminNoteInitialRequestFormCategoryData {
   appliesToBasicRequestDetails: Boolean!
   appliesToSubjectAreas: Boolean!
   appliesToAttendees: Boolean!
 }
 
-type TRBAdminNoteSupportingDocumentsAdditionalData {
+"""
+Data specific to admin notes in the Supporting Documents category
+"""
+type TRBAdminNoteSupportingDocumentsCategoryData {
   documents: [TRBRequestDocument!]!
 }
 
 """
+Data specific to admin notes in the Consult Session category
 This type doesn't contain any actual data
 """
-type TRBAdminNoteConsultSessionAdditionalData {
+type TRBAdminNoteConsultSessionCategoryData {
   """
   Placeholder field so this type is non-empty, always true
   """
   placeholderField: Boolean! # Necessary because gqlgen doesn't support empty types
 }
 
-type TRBAdminNoteAdviceLetterAdditionalData {
+"""
+Data specific to admin notes in the Advice Letter category
+"""
+type TRBAdminNoteAdviceLetterCategoryData {
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
   recommendations: [TRBAdviceLetterRecommendation!]!
 }
 
-union TRBAdminNoteAdditionalData = TRBAdminNoteGeneralRequestAdditionalData | TRBAdminNoteInitialRequestFormAdditionalData | TRBAdminNoteSupportingDocumentsAdditionalData | TRBAdminNoteConsultSessionAdditionalData | TRBAdminNoteAdviceLetterAdditionalData
+union TRBAdminNoteAdditionalData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteAdviceLetterCategoryData
 
 """
 Represents an admin note attached to a TRB request
@@ -9836,16 +9847,25 @@ type TRBAdviceLetter {
   modifiedAt: Time
 }
 
+"""
+Data needed to create a TRB admin note with the Initial Request Form category
+"""
 input TRBAdminNoteInitialRequestFormInput {
   appliesToBasicRequestDetails: Boolean!
   appliesToSubjectAreas: Boolean!
   appliesToAttendees: Boolean!
 }
 
+"""
+Data needed to create a TRB admin note with the Supporting Documents category
+"""
 input TRBAdminNoteSupportingDocumentsInput {
   documentIDs: [UUID!]!
 }
 
+"""
+Data needed to create a TRB admin note with the Advice Letter category
+"""
 input TRBAdminNoteAdviceLetterInput {
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
@@ -9859,6 +9879,7 @@ this type has nullable fields for all the categories that can have category-spec
 At most one of these fields should have a value.
 """
 input CreateTRBAdminNoteInput {
+  # Common fields for notes of all categories
   trbRequestId: UUID!
   category: TRBAdminNoteCategory!
   noteText: HTML!
@@ -43916,8 +43937,8 @@ func (ec *executionContext) fieldContext_TRBAdminNote_modifiedAt(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBAdminNoteAdviceLetterAdditionalData_appliesToMeetingSummary(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteAdviceLetterAdditionalData) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBAdminNoteAdviceLetterAdditionalData_appliesToMeetingSummary(ctx, field)
+func (ec *executionContext) _TRBAdminNoteAdviceLetterCategoryData_appliesToMeetingSummary(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteAdviceLetterCategoryData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteAdviceLetterCategoryData_appliesToMeetingSummary(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -43947,9 +43968,9 @@ func (ec *executionContext) _TRBAdminNoteAdviceLetterAdditionalData_appliesToMee
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBAdminNoteAdviceLetterAdditionalData_appliesToMeetingSummary(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBAdminNoteAdviceLetterCategoryData_appliesToMeetingSummary(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBAdminNoteAdviceLetterAdditionalData",
+		Object:     "TRBAdminNoteAdviceLetterCategoryData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -43960,8 +43981,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteAdviceLetterAdditionalData_
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBAdminNoteAdviceLetterAdditionalData_appliesToNextSteps(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteAdviceLetterAdditionalData) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBAdminNoteAdviceLetterAdditionalData_appliesToNextSteps(ctx, field)
+func (ec *executionContext) _TRBAdminNoteAdviceLetterCategoryData_appliesToNextSteps(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteAdviceLetterCategoryData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteAdviceLetterCategoryData_appliesToNextSteps(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -43991,9 +44012,9 @@ func (ec *executionContext) _TRBAdminNoteAdviceLetterAdditionalData_appliesToNex
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBAdminNoteAdviceLetterAdditionalData_appliesToNextSteps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBAdminNoteAdviceLetterCategoryData_appliesToNextSteps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBAdminNoteAdviceLetterAdditionalData",
+		Object:     "TRBAdminNoteAdviceLetterCategoryData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -44004,8 +44025,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteAdviceLetterAdditionalData_
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBAdminNoteAdviceLetterAdditionalData_recommendations(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteAdviceLetterAdditionalData) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBAdminNoteAdviceLetterAdditionalData_recommendations(ctx, field)
+func (ec *executionContext) _TRBAdminNoteAdviceLetterCategoryData_recommendations(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteAdviceLetterCategoryData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteAdviceLetterCategoryData_recommendations(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -44035,9 +44056,9 @@ func (ec *executionContext) _TRBAdminNoteAdviceLetterAdditionalData_recommendati
 	return ec.marshalNTRBAdviceLetterRecommendation2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterRecommendationᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBAdminNoteAdviceLetterAdditionalData_recommendations(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBAdminNoteAdviceLetterCategoryData_recommendations(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBAdminNoteAdviceLetterAdditionalData",
+		Object:     "TRBAdminNoteAdviceLetterCategoryData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -44070,8 +44091,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteAdviceLetterAdditionalData_
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBAdminNoteConsultSessionAdditionalData_placeholderField(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteConsultSessionAdditionalData) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBAdminNoteConsultSessionAdditionalData_placeholderField(ctx, field)
+func (ec *executionContext) _TRBAdminNoteConsultSessionCategoryData_placeholderField(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteConsultSessionCategoryData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteConsultSessionCategoryData_placeholderField(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -44101,9 +44122,9 @@ func (ec *executionContext) _TRBAdminNoteConsultSessionAdditionalData_placeholde
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBAdminNoteConsultSessionAdditionalData_placeholderField(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBAdminNoteConsultSessionCategoryData_placeholderField(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBAdminNoteConsultSessionAdditionalData",
+		Object:     "TRBAdminNoteConsultSessionCategoryData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -44114,8 +44135,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteConsultSessionAdditionalDat
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBAdminNoteGeneralRequestAdditionalData_placeholderField(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteGeneralRequestAdditionalData) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBAdminNoteGeneralRequestAdditionalData_placeholderField(ctx, field)
+func (ec *executionContext) _TRBAdminNoteGeneralRequestCategoryData_placeholderField(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteGeneralRequestCategoryData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteGeneralRequestCategoryData_placeholderField(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -44145,9 +44166,9 @@ func (ec *executionContext) _TRBAdminNoteGeneralRequestAdditionalData_placeholde
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBAdminNoteGeneralRequestAdditionalData_placeholderField(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBAdminNoteGeneralRequestCategoryData_placeholderField(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBAdminNoteGeneralRequestAdditionalData",
+		Object:     "TRBAdminNoteGeneralRequestCategoryData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -44158,8 +44179,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteGeneralRequestAdditionalDat
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBAdminNoteInitialRequestFormAdditionalData_appliesToBasicRequestDetails(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteInitialRequestFormAdditionalData) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBAdminNoteInitialRequestFormAdditionalData_appliesToBasicRequestDetails(ctx, field)
+func (ec *executionContext) _TRBAdminNoteInitialRequestFormCategoryData_appliesToBasicRequestDetails(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteInitialRequestFormCategoryData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteInitialRequestFormCategoryData_appliesToBasicRequestDetails(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -44189,9 +44210,9 @@ func (ec *executionContext) _TRBAdminNoteInitialRequestFormAdditionalData_applie
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBAdminNoteInitialRequestFormAdditionalData_appliesToBasicRequestDetails(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBAdminNoteInitialRequestFormCategoryData_appliesToBasicRequestDetails(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBAdminNoteInitialRequestFormAdditionalData",
+		Object:     "TRBAdminNoteInitialRequestFormCategoryData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -44202,8 +44223,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteInitialRequestFormAdditiona
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBAdminNoteInitialRequestFormAdditionalData_appliesToSubjectAreas(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteInitialRequestFormAdditionalData) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBAdminNoteInitialRequestFormAdditionalData_appliesToSubjectAreas(ctx, field)
+func (ec *executionContext) _TRBAdminNoteInitialRequestFormCategoryData_appliesToSubjectAreas(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteInitialRequestFormCategoryData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteInitialRequestFormCategoryData_appliesToSubjectAreas(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -44233,9 +44254,9 @@ func (ec *executionContext) _TRBAdminNoteInitialRequestFormAdditionalData_applie
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBAdminNoteInitialRequestFormAdditionalData_appliesToSubjectAreas(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBAdminNoteInitialRequestFormCategoryData_appliesToSubjectAreas(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBAdminNoteInitialRequestFormAdditionalData",
+		Object:     "TRBAdminNoteInitialRequestFormCategoryData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -44246,8 +44267,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteInitialRequestFormAdditiona
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBAdminNoteInitialRequestFormAdditionalData_appliesToAttendees(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteInitialRequestFormAdditionalData) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBAdminNoteInitialRequestFormAdditionalData_appliesToAttendees(ctx, field)
+func (ec *executionContext) _TRBAdminNoteInitialRequestFormCategoryData_appliesToAttendees(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteInitialRequestFormCategoryData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteInitialRequestFormCategoryData_appliesToAttendees(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -44277,9 +44298,9 @@ func (ec *executionContext) _TRBAdminNoteInitialRequestFormAdditionalData_applie
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBAdminNoteInitialRequestFormAdditionalData_appliesToAttendees(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBAdminNoteInitialRequestFormCategoryData_appliesToAttendees(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBAdminNoteInitialRequestFormAdditionalData",
+		Object:     "TRBAdminNoteInitialRequestFormCategoryData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -44290,8 +44311,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteInitialRequestFormAdditiona
 	return fc, nil
 }
 
-func (ec *executionContext) _TRBAdminNoteSupportingDocumentsAdditionalData_documents(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteSupportingDocumentsAdditionalData) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TRBAdminNoteSupportingDocumentsAdditionalData_documents(ctx, field)
+func (ec *executionContext) _TRBAdminNoteSupportingDocumentsCategoryData_documents(ctx context.Context, field graphql.CollectedField, obj *model.TRBAdminNoteSupportingDocumentsCategoryData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdminNoteSupportingDocumentsCategoryData_documents(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -44321,9 +44342,9 @@ func (ec *executionContext) _TRBAdminNoteSupportingDocumentsAdditionalData_docum
 	return ec.marshalNTRBRequestDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestDocumentᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_TRBAdminNoteSupportingDocumentsAdditionalData_documents(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_TRBAdminNoteSupportingDocumentsCategoryData_documents(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "TRBAdminNoteSupportingDocumentsAdditionalData",
+		Object:     "TRBAdminNoteSupportingDocumentsCategoryData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -56958,41 +56979,41 @@ func (ec *executionContext) _TRBAdminNoteAdditionalData(ctx context.Context, sel
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
-	case model.TRBAdminNoteGeneralRequestAdditionalData:
-		return ec._TRBAdminNoteGeneralRequestAdditionalData(ctx, sel, &obj)
-	case *model.TRBAdminNoteGeneralRequestAdditionalData:
+	case model.TRBAdminNoteGeneralRequestCategoryData:
+		return ec._TRBAdminNoteGeneralRequestCategoryData(ctx, sel, &obj)
+	case *model.TRBAdminNoteGeneralRequestCategoryData:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._TRBAdminNoteGeneralRequestAdditionalData(ctx, sel, obj)
-	case model.TRBAdminNoteInitialRequestFormAdditionalData:
-		return ec._TRBAdminNoteInitialRequestFormAdditionalData(ctx, sel, &obj)
-	case *model.TRBAdminNoteInitialRequestFormAdditionalData:
+		return ec._TRBAdminNoteGeneralRequestCategoryData(ctx, sel, obj)
+	case model.TRBAdminNoteInitialRequestFormCategoryData:
+		return ec._TRBAdminNoteInitialRequestFormCategoryData(ctx, sel, &obj)
+	case *model.TRBAdminNoteInitialRequestFormCategoryData:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._TRBAdminNoteInitialRequestFormAdditionalData(ctx, sel, obj)
-	case model.TRBAdminNoteSupportingDocumentsAdditionalData:
-		return ec._TRBAdminNoteSupportingDocumentsAdditionalData(ctx, sel, &obj)
-	case *model.TRBAdminNoteSupportingDocumentsAdditionalData:
+		return ec._TRBAdminNoteInitialRequestFormCategoryData(ctx, sel, obj)
+	case model.TRBAdminNoteSupportingDocumentsCategoryData:
+		return ec._TRBAdminNoteSupportingDocumentsCategoryData(ctx, sel, &obj)
+	case *model.TRBAdminNoteSupportingDocumentsCategoryData:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._TRBAdminNoteSupportingDocumentsAdditionalData(ctx, sel, obj)
-	case model.TRBAdminNoteConsultSessionAdditionalData:
-		return ec._TRBAdminNoteConsultSessionAdditionalData(ctx, sel, &obj)
-	case *model.TRBAdminNoteConsultSessionAdditionalData:
+		return ec._TRBAdminNoteSupportingDocumentsCategoryData(ctx, sel, obj)
+	case model.TRBAdminNoteConsultSessionCategoryData:
+		return ec._TRBAdminNoteConsultSessionCategoryData(ctx, sel, &obj)
+	case *model.TRBAdminNoteConsultSessionCategoryData:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._TRBAdminNoteConsultSessionAdditionalData(ctx, sel, obj)
-	case model.TRBAdminNoteAdviceLetterAdditionalData:
-		return ec._TRBAdminNoteAdviceLetterAdditionalData(ctx, sel, &obj)
-	case *model.TRBAdminNoteAdviceLetterAdditionalData:
+		return ec._TRBAdminNoteConsultSessionCategoryData(ctx, sel, obj)
+	case model.TRBAdminNoteAdviceLetterCategoryData:
+		return ec._TRBAdminNoteAdviceLetterCategoryData(ctx, sel, &obj)
+	case *model.TRBAdminNoteAdviceLetterCategoryData:
 		if obj == nil {
 			return graphql.Null
 		}
-		return ec._TRBAdminNoteAdviceLetterAdditionalData(ctx, sel, obj)
+		return ec._TRBAdminNoteAdviceLetterCategoryData(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -67222,29 +67243,29 @@ func (ec *executionContext) _TRBAdminNote(ctx context.Context, sel ast.Selection
 	return out
 }
 
-var tRBAdminNoteAdviceLetterAdditionalDataImplementors = []string{"TRBAdminNoteAdviceLetterAdditionalData", "TRBAdminNoteAdditionalData"}
+var tRBAdminNoteAdviceLetterCategoryDataImplementors = []string{"TRBAdminNoteAdviceLetterCategoryData", "TRBAdminNoteAdditionalData"}
 
-func (ec *executionContext) _TRBAdminNoteAdviceLetterAdditionalData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteAdviceLetterAdditionalData) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteAdviceLetterAdditionalDataImplementors)
+func (ec *executionContext) _TRBAdminNoteAdviceLetterCategoryData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteAdviceLetterCategoryData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteAdviceLetterCategoryDataImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	deferred := make(map[string]*graphql.FieldSet)
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("TRBAdminNoteAdviceLetterAdditionalData")
+			out.Values[i] = graphql.MarshalString("TRBAdminNoteAdviceLetterCategoryData")
 		case "appliesToMeetingSummary":
-			out.Values[i] = ec._TRBAdminNoteAdviceLetterAdditionalData_appliesToMeetingSummary(ctx, field, obj)
+			out.Values[i] = ec._TRBAdminNoteAdviceLetterCategoryData_appliesToMeetingSummary(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
 		case "appliesToNextSteps":
-			out.Values[i] = ec._TRBAdminNoteAdviceLetterAdditionalData_appliesToNextSteps(ctx, field, obj)
+			out.Values[i] = ec._TRBAdminNoteAdviceLetterCategoryData_appliesToNextSteps(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
 		case "recommendations":
-			out.Values[i] = ec._TRBAdminNoteAdviceLetterAdditionalData_recommendations(ctx, field, obj)
+			out.Values[i] = ec._TRBAdminNoteAdviceLetterCategoryData_recommendations(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -67271,19 +67292,19 @@ func (ec *executionContext) _TRBAdminNoteAdviceLetterAdditionalData(ctx context.
 	return out
 }
 
-var tRBAdminNoteConsultSessionAdditionalDataImplementors = []string{"TRBAdminNoteConsultSessionAdditionalData", "TRBAdminNoteAdditionalData"}
+var tRBAdminNoteConsultSessionCategoryDataImplementors = []string{"TRBAdminNoteConsultSessionCategoryData", "TRBAdminNoteAdditionalData"}
 
-func (ec *executionContext) _TRBAdminNoteConsultSessionAdditionalData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteConsultSessionAdditionalData) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteConsultSessionAdditionalDataImplementors)
+func (ec *executionContext) _TRBAdminNoteConsultSessionCategoryData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteConsultSessionCategoryData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteConsultSessionCategoryDataImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	deferred := make(map[string]*graphql.FieldSet)
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("TRBAdminNoteConsultSessionAdditionalData")
+			out.Values[i] = graphql.MarshalString("TRBAdminNoteConsultSessionCategoryData")
 		case "placeholderField":
-			out.Values[i] = ec._TRBAdminNoteConsultSessionAdditionalData_placeholderField(ctx, field, obj)
+			out.Values[i] = ec._TRBAdminNoteConsultSessionCategoryData_placeholderField(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -67310,19 +67331,19 @@ func (ec *executionContext) _TRBAdminNoteConsultSessionAdditionalData(ctx contex
 	return out
 }
 
-var tRBAdminNoteGeneralRequestAdditionalDataImplementors = []string{"TRBAdminNoteGeneralRequestAdditionalData", "TRBAdminNoteAdditionalData"}
+var tRBAdminNoteGeneralRequestCategoryDataImplementors = []string{"TRBAdminNoteGeneralRequestCategoryData", "TRBAdminNoteAdditionalData"}
 
-func (ec *executionContext) _TRBAdminNoteGeneralRequestAdditionalData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteGeneralRequestAdditionalData) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteGeneralRequestAdditionalDataImplementors)
+func (ec *executionContext) _TRBAdminNoteGeneralRequestCategoryData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteGeneralRequestCategoryData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteGeneralRequestCategoryDataImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	deferred := make(map[string]*graphql.FieldSet)
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("TRBAdminNoteGeneralRequestAdditionalData")
+			out.Values[i] = graphql.MarshalString("TRBAdminNoteGeneralRequestCategoryData")
 		case "placeholderField":
-			out.Values[i] = ec._TRBAdminNoteGeneralRequestAdditionalData_placeholderField(ctx, field, obj)
+			out.Values[i] = ec._TRBAdminNoteGeneralRequestCategoryData_placeholderField(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -67349,29 +67370,29 @@ func (ec *executionContext) _TRBAdminNoteGeneralRequestAdditionalData(ctx contex
 	return out
 }
 
-var tRBAdminNoteInitialRequestFormAdditionalDataImplementors = []string{"TRBAdminNoteInitialRequestFormAdditionalData", "TRBAdminNoteAdditionalData"}
+var tRBAdminNoteInitialRequestFormCategoryDataImplementors = []string{"TRBAdminNoteInitialRequestFormCategoryData", "TRBAdminNoteAdditionalData"}
 
-func (ec *executionContext) _TRBAdminNoteInitialRequestFormAdditionalData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteInitialRequestFormAdditionalData) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteInitialRequestFormAdditionalDataImplementors)
+func (ec *executionContext) _TRBAdminNoteInitialRequestFormCategoryData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteInitialRequestFormCategoryData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteInitialRequestFormCategoryDataImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	deferred := make(map[string]*graphql.FieldSet)
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("TRBAdminNoteInitialRequestFormAdditionalData")
+			out.Values[i] = graphql.MarshalString("TRBAdminNoteInitialRequestFormCategoryData")
 		case "appliesToBasicRequestDetails":
-			out.Values[i] = ec._TRBAdminNoteInitialRequestFormAdditionalData_appliesToBasicRequestDetails(ctx, field, obj)
+			out.Values[i] = ec._TRBAdminNoteInitialRequestFormCategoryData_appliesToBasicRequestDetails(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
 		case "appliesToSubjectAreas":
-			out.Values[i] = ec._TRBAdminNoteInitialRequestFormAdditionalData_appliesToSubjectAreas(ctx, field, obj)
+			out.Values[i] = ec._TRBAdminNoteInitialRequestFormCategoryData_appliesToSubjectAreas(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
 		case "appliesToAttendees":
-			out.Values[i] = ec._TRBAdminNoteInitialRequestFormAdditionalData_appliesToAttendees(ctx, field, obj)
+			out.Values[i] = ec._TRBAdminNoteInitialRequestFormCategoryData_appliesToAttendees(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -67398,19 +67419,19 @@ func (ec *executionContext) _TRBAdminNoteInitialRequestFormAdditionalData(ctx co
 	return out
 }
 
-var tRBAdminNoteSupportingDocumentsAdditionalDataImplementors = []string{"TRBAdminNoteSupportingDocumentsAdditionalData", "TRBAdminNoteAdditionalData"}
+var tRBAdminNoteSupportingDocumentsCategoryDataImplementors = []string{"TRBAdminNoteSupportingDocumentsCategoryData", "TRBAdminNoteAdditionalData"}
 
-func (ec *executionContext) _TRBAdminNoteSupportingDocumentsAdditionalData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteSupportingDocumentsAdditionalData) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteSupportingDocumentsAdditionalDataImplementors)
+func (ec *executionContext) _TRBAdminNoteSupportingDocumentsCategoryData(ctx context.Context, sel ast.SelectionSet, obj *model.TRBAdminNoteSupportingDocumentsCategoryData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tRBAdminNoteSupportingDocumentsCategoryDataImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	deferred := make(map[string]*graphql.FieldSet)
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("TRBAdminNoteSupportingDocumentsAdditionalData")
+			out.Values[i] = graphql.MarshalString("TRBAdminNoteSupportingDocumentsCategoryData")
 		case "documents":
-			out.Values[i] = ec._TRBAdminNoteSupportingDocumentsAdditionalData_documents(ctx, field, obj)
+			out.Values[i] = ec._TRBAdminNoteSupportingDocumentsCategoryData_documents(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
