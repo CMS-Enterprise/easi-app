@@ -216,7 +216,7 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="grt-current-status"]')
       .invoke('text')
       .then(text => {
-        expect(text.length).to.equal(27);
+        expect(text.length).to.equal(28);
       });
     cy.contains('dt', 'Life Cycle ID issued');
 
