@@ -230,6 +230,15 @@ const RequestRepository = () => {
     data
   );
 
+  /** Returns query loading state based on active table */
+  const resultsLoading = useMemo(() => {
+    if (activeTable === 'closed') {
+      return loadingClosed;
+    }
+
+    return loadingOpen;
+  }, [loadingOpen, loadingClosed, activeTable]);
+
   return (
     <>
       <GridContainer className="margin-top-1 margin-bottom-2">
@@ -454,7 +463,7 @@ const RequestRepository = () => {
           filteredRowLength={page.length}
           rowLength={data.length}
           className="margin-bottom-4"
-          loading={loadingOpen || loadingClosed}
+          loading={resultsLoading}
         />
 
         {/* This is the only table that expands past the USWDS desktop dimensions.  Only convert to scrollable when in tablet/mobile */}
