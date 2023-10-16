@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
@@ -16,6 +16,7 @@ import { SystemIntakeNotITGovReqInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
+import { EditsRequestedContext } from '..';
 
 import ResolutionTitleBox from './ResolutionTitleBox';
 import { ResolutionProps } from '.';
@@ -42,6 +43,9 @@ const NotGovernance = ({
     refetchQueries: ['GetSystemIntake']
   });
 
+  /** Edits requested form key for confirmation modal */
+  const editsRequestedKey = useContext(EditsRequestedContext);
+
   /**
    * Mark as not IT Gov request on form submit
    *
@@ -63,6 +67,7 @@ const NotGovernance = ({
         systemIntakeId={systemIntakeId}
         successMessage={t('notItGovRequest.success')}
         onSubmit={onSubmit}
+        requiredFields={false}
         title={
           <ResolutionTitleBox
             title={t('resolutions.summary.notItRequest')}
@@ -70,6 +75,15 @@ const NotGovernance = ({
             state={state}
             decisionState={decisionState}
           />
+        }
+        // Show confirmation modal if edits have been requested
+        modal={
+          editsRequestedKey && {
+            title: t('decisionModal.title'),
+            content: t('decisionModal.content', {
+              action: t(`decisionModal.${editsRequestedKey}`)
+            })
+          }
         }
       >
         <Controller
