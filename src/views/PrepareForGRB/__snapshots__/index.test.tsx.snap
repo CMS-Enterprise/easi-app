@@ -157,7 +157,7 @@ exports[`The prepare for GRB info page > matches the snapshot 1`] = `
           className="usa-list usa-list--unstyled list-style-none line-height-body-5 margin-top-1 padding-y-0"
         >
           <li>
-            If the request is approved, the Board will issue you a Lifecycle ID. You need this ID to request funding and complete contract actions. The Board will also approve the performance measures and have regular reviews with you.
+            If the request is approved, the Board will issue you a Life Cycle ID. You need this ID to request funding and complete contract actions. The Board will also approve the performance measures and have regular reviews with you.
           </li>
           <li>
             If two or more Board members voice concerns about the project, a Lifceycle ID won’t be issued. The request will not be approved until all concerns are addressed or withdrawn. 

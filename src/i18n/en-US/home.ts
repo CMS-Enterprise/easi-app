@@ -59,7 +59,7 @@ const home = {
     ITGov: {
       heading: 'IT Governance',
       body:
-        'Includes processes for applying for a Lifecycle ID and decomissioning a system.',
+        'Includes processes for applying for a Life Cycle ID and decomissioning a system.',
       learnMore: 'Learn more about IT Governance',
       link: '/system/making-a-request',
       button: 'Start an IT Governance request',

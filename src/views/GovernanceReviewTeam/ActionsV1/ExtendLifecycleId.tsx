@@ -145,7 +145,7 @@ const ExtendLifecycleId = ({
       variables.input.notificationRecipients = notificationRecipients;
     }
 
-    // GQL mutation to extend lifecycle ID
+    // GQL mutation to extend Life Cycle ID
     extendLifecycleID({
       variables
     })
@@ -233,7 +233,7 @@ const ExtendLifecycleId = ({
               <h3 className="margin-top-3 margin-bottom-2">
                 {t('extendLcid.currentLcid')}
               </h3>
-              <dl title="Existing Lifecycle ID" className="margin-bottom-5">
+              <dl title="Existing Life Cycle ID" className="margin-bottom-5">
                 <dt className="text-bold">{t('extendLcid.lifecycleId')}</dt>
                 <dd className="margin-left-0 margin-bottom-2 line-height-body-5">
                   {lcid}
@@ -265,7 +265,7 @@ const ExtendLifecycleId = ({
               <h3 className="margin-top-5 margin-bottom-2">
                 {t('extendLcid.newLcid')}
               </h3>
-              <MandatoryFieldsAlert textClassName="font-body-md" />
+              <MandatoryFieldsAlert />
               <Form>
                 <FieldGroup scrollElement="validDate">
                   <fieldset className="usa-fieldset margin-top-4">

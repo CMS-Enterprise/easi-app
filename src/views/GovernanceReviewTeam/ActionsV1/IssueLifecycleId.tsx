@@ -125,7 +125,7 @@ const IssueLifecycleId = ({ refetch }: IssueLifecycleIdProps) => {
       variables.input.notificationRecipients = notificationRecipients;
     }
 
-    // GQL mutation to issue lifecycle ID
+    // GQL mutation to issue Life Cycle ID
     mutate({
       variables
     })
@@ -197,13 +197,13 @@ const IssueLifecycleId = ({ refetch }: IssueLifecycleIdProps) => {
             </PageHeading>
             <h3>{t('issueLCID.subheading')}</h3>
             <p data-testid="grtSelectedAction">
-              Approve request and issue Lifecycle ID{' '}
+              Approve request and issue Life Cycle ID{' '}
               <Link to={backLink}>Change</Link>
             </p>
             <h3 className="margin-top-3 margin-bottom-2">
               {t('issueLCID.lifecycleId')}
             </h3>
-            <MandatoryFieldsAlert textClassName="font-body-md" />
+            <MandatoryFieldsAlert />
             <div className="margin-bottom-7">
               <Form
                 onSubmit={e => {
