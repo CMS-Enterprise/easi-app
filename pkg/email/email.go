@@ -66,6 +66,9 @@ type templates struct {
 	systemIntakeRequestEdits                   templateCaller
 	systemIntakeCloseRequest                   templateCaller
 	systemIntakeReopenRequest                  templateCaller
+	systemIntakeProgressToNewStep              templateCaller
+	systemIntakeNotITGovRequest                templateCaller
+	systemIntakeNotApproved                    templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -331,6 +334,27 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(systemIntakeReopenRequestTemplateName)
 	}
 	appTemplates.systemIntakeReopenRequest = systemIntakeReopenRequest
+
+	systemIntakeProgressToNewStepTemplateName := "system_intake_progress_to_new_step.gohtml"
+	systemIntakeProgressToNewStep := rawTemplates.Lookup(systemIntakeProgressToNewStepTemplateName)
+	if systemIntakeProgressToNewStep == nil {
+		return Client{}, templateError(systemIntakeProgressToNewStepTemplateName)
+	}
+	appTemplates.systemIntakeProgressToNewStep = systemIntakeProgressToNewStep
+
+	systemIntakeNotITGovRequestTemplateName := "system_intake_not_it_gov_request.gohtml"
+	systemIntakeNotITGovRequest := rawTemplates.Lookup(systemIntakeNotITGovRequestTemplateName)
+	if systemIntakeNotITGovRequest == nil {
+		return Client{}, templateError(systemIntakeNotITGovRequestTemplateName)
+	}
+	appTemplates.systemIntakeNotITGovRequest = systemIntakeNotITGovRequest
+
+	systemIntakeNotApprovedTemplateName := "system_intake_not_approved.gohtml"
+	systemIntakeNotApproved := rawTemplates.Lookup(systemIntakeNotApprovedTemplateName)
+	if systemIntakeNotApproved == nil {
+		return Client{}, templateError(systemIntakeNotApprovedTemplateName)
+	}
+	appTemplates.systemIntakeNotApproved = systemIntakeNotApproved
 
 	client := Client{
 		config:    config,

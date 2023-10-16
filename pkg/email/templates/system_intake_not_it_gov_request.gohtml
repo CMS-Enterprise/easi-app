@@ -1,6 +1,6 @@
 {{template "easi_header.gohtml"}}
 
-<p>The IT Governance Request titled {{.RequestName}}{{if .SubmittedAt}}, submitted on {{.SubmittedAt}},{{else}}{{end}} has been closed in EASi.</p>
+<p>The Governance Review Team has determined that this request, {{.RequestName}}, is not an IT Governance request. This request is now closed.</p>
 
 {{if .Reason}}<p>Reason: {{.Reason}}</p>{{else}}{{end}}
 
@@ -16,4 +16,4 @@ If you have questions about your request, please contact the Governance Team at 
 {{if .AdditionalInfo}}<hr><p><strong>Additional information from the Governance Team:</strong> {{.AdditionalInfo}} </p>{{else}}{{end}}
 <hr>
 
-<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
+<p>Depending on the request, the Governance Team may follow up with this project at a later date.</p>

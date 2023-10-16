@@ -985,7 +985,7 @@ type SystemIntake {
   contract: SystemIntakeContract!
   costs: SystemIntakeCosts
   annualSpending: SystemIntakeAnnualSpending
-  createdAt: Time!
+  createdAt: Time # TODO - This should probably not be nullable, but some data in IMPL & PROD has it nulled out. We should fix this in the future.
   currentStage: String
   decisionNextSteps: HTML
   eaCollaborator: String
@@ -1016,6 +1016,11 @@ type SystemIntake {
   requestName: String
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
+  # Both of these fields only really exist because the `requester` type (above) always calls Okta to get the `email` field, and the
+  # 2 below (requesterName & requesterComponent) are just fields right from the system intakes table
+  # TODO Remove them when email is not always fetched on the `requester` type
+  requesterName: String
+  requesterComponent: String
   status: SystemIntakeStatus!
   state: SystemIntakeState!
   step: SystemIntakeStep!

@@ -9,12 +9,6 @@ import { SystemIntakeStatus, SystemIntakeState } from "./../../types/graphql-glo
 // GraphQL query operation: GetSystemIntakesTable
 // ====================================================
 
-export interface GetSystemIntakesTable_systemIntakes_requester {
-  __typename: "SystemIntakeRequester";
-  name: string;
-  component: string | null;
-}
-
 export interface GetSystemIntakesTable_systemIntakes_businessOwner {
   __typename: "SystemIntakeBusinessOwner";
   name: string | null;
@@ -81,7 +75,8 @@ export interface GetSystemIntakesTable_systemIntakes {
   requestName: string | null;
   status: SystemIntakeStatus;
   state: SystemIntakeState;
-  requester: GetSystemIntakesTable_systemIntakes_requester;
+  requesterName: string | null;
+  requesterComponent: string | null;
   businessOwner: GetSystemIntakesTable_systemIntakes_businessOwner;
   productManager: GetSystemIntakesTable_systemIntakes_productManager;
   isso: GetSystemIntakesTable_systemIntakes_isso;
@@ -107,7 +102,7 @@ export interface GetSystemIntakesTable_systemIntakes {
   decidedAt: Time | null;
   submittedAt: Time | null;
   updatedAt: Time | null;
-  createdAt: Time;
+  createdAt: Time | null;
   archivedAt: Time | null;
 }
 

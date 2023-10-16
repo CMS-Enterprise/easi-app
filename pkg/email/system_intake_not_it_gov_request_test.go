@@ -3,19 +3,19 @@ package email
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s *EmailTestSuite) TestCloseIntakeRequestNotification() {
+func (s *EmailTestSuite) TestSendNotITGovRequestNotification() {
+
 	ctx := context.Background()
-	intakeID := uuid.MustParse("24dd7736-e4c2-4f67-8844-51187de49069")
-	requestName := "Hotdog/Not Hotdog Program"
-	requester := "Dr Fishopolis"
-	submittedAt := time.Now()
+	intakeID := uuid.MustParse("27883155-46ad-4c30-b3b0-30e8d093756e")
+	requestName := "Test Request"
+	requester := "Sir Requester"
+	additionalInfo := models.HTMLPointer("additional info") // empty info is left out
 	requestLink := fmt.Sprintf(
 		"%s://%s/governance-task-list/%s",
 		s.config.URLScheme,
@@ -29,9 +29,8 @@ func (s *EmailTestSuite) TestCloseIntakeRequestNotification() {
 		intakeID.String(),
 	)
 	ITGovInboxAddress := s.config.GRTEmail.String()
-	additionalInfo := models.HTMLPointer("An apple a day keeps the doctor away.")
 
-	reason := models.HTMLPointer("reasons")
+	reason := models.HTML("inumerable reasons, literally so many reasons")
 
 	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")
@@ -42,9 +41,9 @@ func (s *EmailTestSuite) TestCloseIntakeRequestNotification() {
 	}
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
-	err = client.SystemIntake.SendCloseRequestNotification(ctx, recipients, intakeID, requestName, requester, reason, &submittedAt, additionalInfo)
+	err = client.SystemIntake.SendNotITGovRequestNotification(ctx, recipients, intakeID, requestName, requester, &reason, additionalInfo)
 	s.NoError(err)
-	expectedSubject := fmt.Sprintf("The Governance Team has closed %s in EASi", requestName)
+	expectedSubject := fmt.Sprintf("%s is not an IT Governance request", requestName)
 	s.Equal(expectedSubject, sender.subject)
 
 	expectedEmail := fmt.Sprintf(
@@ -52,7 +51,7 @@ func (s *EmailTestSuite) TestCloseIntakeRequestNotification() {
 
 <span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
 
-<p>The IT Governance Request titled %s, submitted on %s, has been closed in EASi.</p>
+<p>The Governance Review Team has determined that this request, %s, is not an IT Governance request. This request is now closed.</p>
 
 <p>Reason: %s</p>
 
@@ -68,11 +67,10 @@ If you have questions about your request, please contact the Governance Team at 
 <hr><p><strong>Additional information from the Governance Team:</strong> %s </p>
 <hr>
 
-<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
+<p>Depending on the request, the Governance Team may follow up with this project at a later date.</p>
 `,
 		requestName,
-		submittedAt.Format("01/02/2006"),
-		*reason.StringPointer(),
+		reason,
 		requester,
 		requestLink,
 		adminLink,
@@ -88,14 +86,14 @@ If you have questions about your request, please contact the Governance Team at 
 		}
 		s.ElementsMatch(sender.toAddresses, allRecipients)
 	})
-	err = client.SystemIntake.SendCloseRequestNotification(ctx, recipients, intakeID, requestName, requester, nil, &submittedAt, additionalInfo)
+	err = client.SystemIntake.SendNotITGovRequestNotification(ctx, recipients, intakeID, requestName, requester, nil, additionalInfo)
 	s.NoError(err)
 	expectedEmail = fmt.Sprintf(
 		`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
 
 <span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
 
-<p>The IT Governance Request titled %s, submitted on %s, has been closed in EASi.</p>
+<p>The Governance Review Team has determined that this request, %s, is not an IT Governance request. This request is now closed.</p>
 
 
 
@@ -111,10 +109,9 @@ If you have questions about your request, please contact the Governance Team at 
 <hr><p><strong>Additional information from the Governance Team:</strong> %s </p>
 <hr>
 
-<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
+<p>Depending on the request, the Governance Team may follow up with this project at a later date.</p>
 `,
 		requestName,
-		submittedAt.Format("01/02/2006"),
 		requester,
 		requestLink,
 		adminLink,
@@ -127,14 +124,14 @@ If you have questions about your request, please contact the Governance Team at 
 	s.Run("Should omit reason if absent", func() {
 		s.Equal(expectedEmail, sender.body)
 	})
-	err = client.SystemIntake.SendCloseRequestNotification(ctx, recipients, intakeID, requestName, requester, reason, &submittedAt, nil)
+	err = client.SystemIntake.SendNotITGovRequestNotification(ctx, recipients, intakeID, requestName, requester, &reason, nil)
 	s.NoError(err)
 	expectedEmail = fmt.Sprintf(
 		`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
 
 <span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
 
-<p>The IT Governance Request titled %s, submitted on %s, has been closed in EASi.</p>
+<p>The Governance Review Team has determined that this request, %s, is not an IT Governance request. This request is now closed.</p>
 
 <p>Reason: %s</p>
 
@@ -150,10 +147,9 @@ If you have questions about your request, please contact the Governance Team at 
 
 <hr>
 
-<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
+<p>Depending on the request, the Governance Team may follow up with this project at a later date.</p>
 `,
 		requestName,
-		submittedAt.Format("01/02/2006"),
 		*reason.StringPointer(),
 		requester,
 		requestLink,
@@ -166,5 +162,4 @@ If you have questions about your request, please contact the Governance Team at 
 	s.Run("Should omit additional info if absent", func() {
 		s.Equal(expectedEmail, sender.body)
 	})
-
 }
