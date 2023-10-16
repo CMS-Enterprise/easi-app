@@ -26,7 +26,7 @@ const action = {
         'Mark this project as not approved, or close this request for another reason.',
       description_NOT_APPROVED:
         'Issue a Life Cycle ID, or close this request for another reason.',
-      description_NO_GOVERNANCE:
+      description_NOT_GOVERNANCE:
         'Issue a Life Cycle ID, mark this project as not approved, or close this request for another reason.',
       accordion_NO_DECISION:
         'Use this action when you are ready to issue a decision or if you would like to close this request. You will be able to select the resolution for this request.',
@@ -42,7 +42,7 @@ const action = {
         'Mark this project as not approved, or re-open this closed request.',
       description_NOT_APPROVED:
         'Issue a Life Cycle ID, or re-open this closed request.',
-      description_NO_GOVERNANCE:
+      description_NOT_GOVERNANCE:
         'Issue a Life Cycle ID, mark this project as not approved, or re-open this closed request.',
       accordion_NO_DECISION:
         'Use this action when you are ready to issue a decision or if you would like to re-open this request. You will be able to select the resolution for this request.',
@@ -122,7 +122,7 @@ const action = {
       'Mark that this request was not approved by the Governance Review Board (GRB), mark that this request is not an IT Governance request, or {{descriptionAction}}.',
     description_NOT_APPROVED:
       'Issue a Life Cycle ID, mark that this request is not an IT Governance request, or {{descriptionAction}}.',
-    description_NO_GOVERNANCE:
+    description_NOT_GOVERNANCE:
       'Issue a Life Cycle ID, mark that this request was not approved by the Governance Review Board (GRB), or {{descriptionAction}}.',
     descriptionAction_CLOSED: 're-open this closed request',
     descriptionAction_OPEN: 'close this request for another reason',
