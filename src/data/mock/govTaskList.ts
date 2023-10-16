@@ -1,4 +1,5 @@
 import {
+  GovernanceRequestFeedbackTargetForm,
   ITGovDecisionStatus,
   ITGovDraftBusinessCaseStatus,
   ITGovFeedbackStatus,
@@ -100,6 +101,7 @@ export const taskListState: {
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
+          targetForm: GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST,
           id
         }
       ],
@@ -127,6 +129,7 @@ export const taskListState: {
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
+          targetForm: GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST,
           id
         }
       ],
@@ -222,6 +225,7 @@ export const taskListState: {
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
+          targetForm: GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST,
           id
         }
       ],
@@ -250,6 +254,7 @@ export const taskListState: {
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
+          targetForm: GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST,
           id
         }
       ],
@@ -397,6 +402,7 @@ export const taskListState: {
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
+          targetForm: GovernanceRequestFeedbackTargetForm.DRAFT_BUSINESS_CASE,
           id
         }
       ],
@@ -429,6 +435,7 @@ export const taskListState: {
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
+          targetForm: GovernanceRequestFeedbackTargetForm.DRAFT_BUSINESS_CASE,
           id
         }
       ],
@@ -461,6 +468,7 @@ export const taskListState: {
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
+          targetForm: GovernanceRequestFeedbackTargetForm.DRAFT_BUSINESS_CASE,
           id
         }
       ],
@@ -656,6 +664,7 @@ export const taskListState: {
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
+          targetForm: GovernanceRequestFeedbackTargetForm.DRAFT_BUSINESS_CASE,
           id
         }
       ],
@@ -849,6 +858,7 @@ export const taskListState: {
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
+          targetForm: GovernanceRequestFeedbackTargetForm.FINAL_BUSINESS_CASE,
           id
         }
       ],
@@ -883,6 +893,7 @@ export const taskListState: {
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
+          targetForm: GovernanceRequestFeedbackTargetForm.FINAL_BUSINESS_CASE,
           id
         }
       ],
@@ -917,6 +928,7 @@ export const taskListState: {
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
+          targetForm: GovernanceRequestFeedbackTargetForm.FINAL_BUSINESS_CASE,
           id
         }
       ],
