@@ -212,10 +212,6 @@ const action = {
         '<p>If you request changes to the {{formName}}, the requester will be able to make updates to any field within that form. While they are completing those changes, they will be unable to work on any other part of the process. You will receive an email notification once the requester has resubmitted their form.</p><p>If you progress this request to a new step before they have resubmitted their form, they will lose the ability to make the requested changes.</p>'
     }
   },
-  nextStep: {
-    title: 'Action: next steps'
-  },
-
   actions: {
     notItRequest: 'Not an IT governance request',
     needBizCase: 'Request a draft business case',
@@ -368,6 +364,16 @@ const action = {
       'Enter the current cost baseline for the project for the first two planned fisical years of the project. This information will be included in your email to the Requester.',
     submissionInfo:
       'The content for this email is automatically generated to notify the Requester of the new expiration date.'
+  },
+  nextStep: {
+    title: 'Action: next steps'
+  },
+  notItGovRequest: {
+    reason: 'Why is this not an IT Governance request? (optional)',
+    reasonHelpText:
+      'Describe why you arrived at this decision and what process the requester should start, if applicable.',
+    success:
+      'This request is marked as Not an IT Governance request. This request is now closed.'
   },
   rejectIntake: {
     backLink: 'Change',
