@@ -1,8 +1,12 @@
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { FormGroup } from '@trussworks/react-uswds';
 
+import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionNotITGovRequestQuery from 'queries/CreateSystemIntakeActionNotITGovRequestQuery';
 import {
   CreateSystemIntakeActionNotITGovRequest,
@@ -28,6 +32,8 @@ const NotGovernance = ({
 }: ResolutionProps) => {
   const { t } = useTranslation('action');
   const form = useForm<NotGovernanceFields>();
+
+  const { control } = form;
 
   const [mutate] = useMutation<
     CreateSystemIntakeActionNotITGovRequest,
@@ -66,7 +72,27 @@ const NotGovernance = ({
           />
         }
       >
-        {/* Action fields here */}
+        <Controller
+          name="reason"
+          control={control}
+          render={({ field: { ref, ...field } }) => (
+            <FormGroup>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('notItGovRequest.reason')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('notItGovRequest.reasonHelpText')}
+              </HelpText>
+              <TextAreaField
+                {...field}
+                id={field.name}
+                value={field.value || ''}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
+        />
       </ActionForm>
     </FormProvider>
   );
