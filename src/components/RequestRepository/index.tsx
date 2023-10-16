@@ -11,7 +11,6 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
@@ -25,7 +24,7 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
-import { lowerCase, startCase } from 'lodash';
+import { startCase } from 'lodash';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -40,10 +39,13 @@ import TablePagination from 'components/TablePagination';
 import TableResults from 'components/TableResults';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
+import useCacheQuery from 'hooks/useCacheQuery';
 import useTableState from 'hooks/useTableState';
 import GetSystemIntakesTableQuery from 'queries/GetSystemIntakesTableQuery';
-import { GetSystemIntakesTable } from 'queries/types/GetSystemIntakesTable';
-import { SystemIntakeState } from 'types/graphql-global-types';
+import {
+  GetSystemIntakesTable,
+  GetSystemIntakesTableVariables
+} from 'queries/types/GetSystemIntakesTable';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
@@ -91,33 +93,34 @@ const RequestRepository = () => {
   const dateRangeStart = watch('dateStart');
   const dateRangeEnd = watch('dateEnd');
 
-  // GQL query to get all system intakes
-  const { data: queryData, loading } = useQuery<GetSystemIntakesTable>(
-    GetSystemIntakesTableQuery
-  );
+  // GQL query to get all OPEN system intakes
+  const { data: openIntakes, loading: loadingOpen } = useCacheQuery<
+    GetSystemIntakesTable,
+    GetSystemIntakesTableVariables
+  >(GetSystemIntakesTableQuery, {
+    variables: { openRequests: true }
+  });
+
+  // GQL query to get all CLOSED system intakes
+  const { data: closedIntakes, loading: loadingClosed } = useCacheQuery<
+    GetSystemIntakesTable,
+    GetSystemIntakesTableVariables
+  >(GetSystemIntakesTableQuery, {
+    variables: { openRequests: false }
+  });
 
   /** Object containing formatted system intakes split by `open` and `closed` state */
-  const systemIntakes: SystemIntakesData = useMemo(() => {
-    const intakes: SystemIntakesData = { open: [], closed: [] };
-
-    if (!queryData?.systemIntakes) return intakes;
-
-    // Return table data formatted for sorting and cell configuration
-    return tableMap(queryData?.systemIntakes, t).reduce<SystemIntakesData>(
-      (acc, intake) => {
-        /** State converted to lowercase */
-        const stateKey = lowerCase(
-          intake.state
-        ) as Lowercase<SystemIntakeState>;
-
-        return {
-          ...acc,
-          [stateKey]: [...acc[stateKey], intake]
-        };
-      },
-      intakes
-    );
-  }, [queryData, t]);
+  const systemIntakes: SystemIntakesData = useMemo(
+    () => ({
+      open: openIntakes?.systemIntakes
+        ? tableMap(openIntakes.systemIntakes, t)
+        : [],
+      closed: closedIntakes?.systemIntakes
+        ? tableMap(closedIntakes.systemIntakes, t)
+        : []
+    }),
+    [openIntakes, closedIntakes, t]
+  );
 
   // Returns array of intakes based on active table
   const data: SystemIntakeForTable[] = useMemo(
@@ -451,7 +454,7 @@ const RequestRepository = () => {
           filteredRowLength={page.length}
           rowLength={data.length}
           className="margin-bottom-4"
-          loading={loading}
+          loading={loadingOpen || loadingClosed}
         />
 
         {/* This is the only table that expands past the USWDS desktop dimensions.  Only convert to scrollable when in tablet/mobile */}

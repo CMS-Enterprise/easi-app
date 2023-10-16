@@ -2,10 +2,7 @@ import { useTranslation } from 'react-i18next';
 
 import { systemIntakeForTable } from 'data/mock/systemIntake';
 import { GetSystemIntakesTable_systemIntakes_notes as AdminNote } from 'queries/types/GetSystemIntakesTable';
-import {
-  SystemIntakeState,
-  SystemIntakeStatus
-} from 'types/graphql-global-types';
+import { SystemIntakeState } from 'types/graphql-global-types';
 
 import tableMap from './tableMap';
 
@@ -90,25 +87,5 @@ describe('System intake request table map', () => {
     const intakeWithNoNotes = formattedIntakes[2];
     const lastAdminAction = intakeWithNoNotes.actions[1];
     expect(intakeWithNoNotes.filterDate).toEqual(lastAdminAction.createdAt);
-  });
-
-  const closedIntakes = [
-    { ...systemIntakeForTable, status: SystemIntakeStatus.NOT_IT_REQUEST },
-    { ...systemIntakeForTable, status: SystemIntakeStatus.NO_GOVERNANCE },
-    { ...systemIntakeForTable, status: SystemIntakeStatus.NOT_IT_REQUEST }
-  ];
-
-  // Tests that `tableMap` converts legacy intake statuses to `CLOSED` state
-  test.each(
-    tableMap(closedIntakes, t).map((intake, index) => ({
-      ...intake,
-      testStatus: closedIntakes[index].status
-    }))
-  )('converts legacy closed status $testStatus', ({ status, state }) => {
-    // Translated status for table
-    expect(status).toEqual('Closed');
-
-    // Converts legacy status to `CLOSED` state property
-    expect(state).toEqual(SystemIntakeState.CLOSED);
   });
 });

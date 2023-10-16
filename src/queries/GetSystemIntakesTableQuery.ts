@@ -6,8 +6,8 @@ import { gql } from '@apollo/client';
  * Returns all system intakes that have a submitted intake request form
  */
 export default gql`
-  query GetSystemIntakesTable {
-    systemIntakes {
+  query GetSystemIntakesTable($openRequests: Boolean!) {
+    systemIntakes(openRequests: $openRequests) {
       id
       euaUserId
       requestName
