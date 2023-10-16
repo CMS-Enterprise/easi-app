@@ -1,8 +1,8 @@
 const csvHeaderMap = (t: any) => [
   { key: 'euaUserId', label: t('intake:csvHeadings.euaId') },
-  { key: 'requester.name', label: t('intake:csvHeadings.requesterName') },
+  { key: 'requesterName', label: t('intake:csvHeadings.requesterName') },
   {
-    key: 'requester.component',
+    key: 'requesterComponent',
     label: t('intake:csvHeadings.requesterComponent')
   },
   {
