@@ -2,12 +2,18 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { SystemIntakeNotITGovReqInput } from 'types/graphql-global-types';
+import { NonNullableProps } from 'types/util';
+
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
 import ResolutionTitleBox from './ResolutionTitleBox';
 import { ResolutionProps } from '.';
 
-interface NotGovernanceFields extends SystemIntakeActionFields {}
+type NotGovernanceFields = NonNullableProps<
+  Omit<SystemIntakeNotITGovReqInput, 'systemIntakeID'> &
+    SystemIntakeActionFields
+>;
 
 const NotGovernance = ({
   systemIntakeId,
