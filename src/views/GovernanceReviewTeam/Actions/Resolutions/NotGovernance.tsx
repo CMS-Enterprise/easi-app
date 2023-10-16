@@ -1,7 +1,13 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from '@apollo/client';
 
+import CreateSystemIntakeActionNotITGovRequestQuery from 'queries/CreateSystemIntakeActionNotITGovRequestQuery';
+import {
+  CreateSystemIntakeActionNotITGovRequest,
+  CreateSystemIntakeActionNotITGovRequestVariables
+} from 'queries/types/CreateSystemIntakeActionNotITGovRequest';
 import { SystemIntakeNotITGovReqInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
@@ -23,15 +29,27 @@ const NotGovernance = ({
   const { t } = useTranslation('action');
   const form = useForm<NotGovernanceFields>();
 
+  const [mutate] = useMutation<
+    CreateSystemIntakeActionNotITGovRequest,
+    CreateSystemIntakeActionNotITGovRequestVariables
+  >(CreateSystemIntakeActionNotITGovRequestQuery, {
+    refetchQueries: ['GetSystemIntake']
+  });
+
   /**
-   * Submit handler containing mutation logic
+   * Mark as not IT Gov request on form submit
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: NotGovernanceFields) => {
-    // Execute mutation here
-    // mutate(formData);
-  };
+  const onSubmit = async (formData: NotGovernanceFields) =>
+    mutate({
+      variables: {
+        input: {
+          systemIntakeID: systemIntakeId,
+          ...formData
+        }
+      }
+    });
 
   return (
     <FormProvider<NotGovernanceFields> {...form}>
