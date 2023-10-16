@@ -35,8 +35,8 @@ const GovTaskFeedbackFromInitialReview = ({
     };
 
   const hasFeedback = useMemo(() => {
-    // If initial feedback step is NOT completed, return false
-    if (feedbackFromInitialReviewStatus !== ITGovFeedbackStatus.COMPLETED)
+    // If initial feedback step has not been started, return false
+    if (feedbackFromInitialReviewStatus === ITGovFeedbackStatus.CANT_START)
       return false;
 
     // Return true if request has feedback on intake request
