@@ -1,11 +1,11 @@
 package email
 
 import (
+	"context"
 	"fmt"
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/net/context"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -56,7 +56,7 @@ func (s *EmailTestSuite) TestCloseIntakeRequestNotification() {
 
 <p>Reason: %s</p>
 
-<p>View this request in EASi:
+<p>View this closed request in EASi:
 <ul>
 <li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
 <li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
@@ -99,7 +99,7 @@ If you have questions about your request, please contact the Governance Team at 
 
 
 
-<p>View this request in EASi:
+<p>View this closed request in EASi:
 <ul>
 <li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
 <li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
@@ -138,7 +138,7 @@ If you have questions about your request, please contact the Governance Team at 
 
 <p>Reason: %s</p>
 
-<p>View this request in EASi:
+<p>View this closed request in EASi:
 <ul>
 <li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
 <li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>

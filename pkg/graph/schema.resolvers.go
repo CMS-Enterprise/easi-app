@@ -1141,7 +1141,13 @@ func (r *mutationResolver) UpdateAccessibilityRequestCedarSystem(ctx context.Con
 
 // CreateSystemIntakeActionProgressToNewStep is the resolver for the createSystemIntakeActionProgressToNewStep field.
 func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error) {
-	updatedIntake, err := resolvers.ProgressIntake(ctx, r.store, r.service.FetchUserInfo, input)
+	updatedIntake, err := resolvers.ProgressIntake(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		input,
+	)
 
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
@@ -1223,7 +1229,13 @@ func (r *mutationResolver) CreateSystemIntakeActionIssueLcid(ctx context.Context
 
 // CreateSystemIntakeActionRejectIntake is the resolver for the createSystemIntakeActionRejectIntake field.
 func (r *mutationResolver) CreateSystemIntakeActionRejectIntake(ctx context.Context, input model.SystemIntakeRejectIntakeInput) (*model.UpdateSystemIntakePayload, error) {
-	updatedIntake, err := resolvers.RejectIntakeAsNotApproved(ctx, r.store, r.service.FetchUserInfo, input)
+	updatedIntake, err := resolvers.RejectIntakeAsNotApproved(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		input,
+	)
 
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
@@ -1263,6 +1275,7 @@ func (r *mutationResolver) CreateSystemIntakeActionNotITGovRequest(ctx context.C
 	intake, err := resolvers.CreateSystemIntakeActionNotITGovRequest(
 		ctx,
 		r.store,
+		r.emailClient,
 		r.service.FetchUserInfo,
 		input,
 	)
@@ -2303,6 +2316,33 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 	return intake, nil
 }
 
+// SystemIntakes is the resolver for the systemIntakes field.
+func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error) {
+	var statusFilter models.SystemIntakeStatusFilter
+	if openRequests {
+		statusFilter = models.SystemIntakeStatusFilterOPEN
+	} else {
+		statusFilter = models.SystemIntakeStatusFilterCLOSED
+	}
+	allowedStatuses, err := models.GetStatusesByFilter(statusFilter)
+	if err != nil {
+		return nil, err
+	}
+
+	intakes, err := r.store.FetchSystemIntakesByStatuses(ctx, allowedStatuses)
+	if err != nil {
+		return nil, err
+	}
+
+	// The store method above returns a slice of structs, but we need to return a slice of struct pointers
+	intakePointers := []*models.SystemIntake{}
+	for _, i := range intakes {
+		intake := i
+		intakePointers = append(intakePointers, &intake)
+	}
+	return intakePointers, nil
+}
+
 // Systems is the resolver for the systems field.
 func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
 	systems, err := r.store.ListSystems(ctx)
@@ -2652,10 +2692,7 @@ func (r *systemIntakeResolver) AdminLead(ctx context.Context, obj *models.System
 
 // BusinessCase is the resolver for the businessCase field.
 func (r *systemIntakeResolver) BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error) {
-	if obj.BusinessCaseID == nil {
-		return nil, nil
-	}
-	return r.store.FetchBusinessCaseByID(ctx, *obj.BusinessCaseID)
+	return r.store.FetchBusinessCaseBySystemIntakeID(ctx, obj.ID)
 }
 
 // BusinessNeed is the resolver for the businessNeed field.
@@ -2929,7 +2966,7 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 			return requesterWithoutEmail, nil
 		}
 
-		// error we can't handle, like being unable to communicate with CEDAR
+		// error we can't handle, like being unable to communicate with Okta
 		return nil, err
 	}
 
@@ -2939,6 +2976,16 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		Email:     &email,
 		Name:      obj.Requester,
 	}, nil
+}
+
+// RequesterName is the resolver for the requesterName field.
+func (r *systemIntakeResolver) RequesterName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return &obj.Requester, nil
+}
+
+// RequesterComponent is the resolver for the requesterComponent field.
+func (r *systemIntakeResolver) RequesterComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.Component.Ptr(), nil
 }
 
 // TrbCollaborator is the resolver for the trbCollaborator field.
@@ -2954,14 +3001,6 @@ func (r *systemIntakeResolver) TrbCollaboratorName(ctx context.Context, obj *mod
 // GrtReviewEmailBody is the resolver for the grtReviewEmailBody field.
 func (r *systemIntakeResolver) GrtReviewEmailBody(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.GrtReviewEmailBody.Ptr(), nil
-}
-
-// LastAdminNote is the resolver for the lastAdminNote field.
-func (r *systemIntakeResolver) LastAdminNote(ctx context.Context, obj *models.SystemIntake) (*model.LastAdminNote, error) {
-	return &model.LastAdminNote{
-		Content:   obj.LastAdminNoteContent,
-		CreatedAt: obj.LastAdminNoteCreatedAt,
-	}, nil
 }
 
 // CedarSystemID is the resolver for the cedarSystemId field.

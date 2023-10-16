@@ -128,7 +128,7 @@ describe('Governance Review Team', () => {
           `/governance-review-team/${systemIntake.id}/intake-request`
         ]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery]} addTypename={false}>
+        <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/governance-review-team/:systemId/intake-request">
@@ -152,7 +152,7 @@ describe('Governance Review Team', () => {
           `/governance-review-team/${systemIntake.id}/business-case`
         ]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery]} addTypename={false}>
+        <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/governance-review-team/:systemId/business-case">
@@ -174,9 +174,9 @@ describe('Governance Review Team', () => {
         {/* TODO: There shouldn't need to be three mocked queries; only 2 */}
         <MockedProvider
           mocks={[
-            getSystemIntakeQuery,
+            getSystemIntakeQuery(),
             adminNotesAndActionsQuery,
-            getSystemIntakeQuery
+            getSystemIntakeQuery()
           ]}
           addTypename={false}
         >
@@ -198,7 +198,7 @@ describe('Governance Review Team', () => {
       <MemoryRouter
         initialEntries={[`/governance-review-team/${systemIntake.id}/dates`]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery]} addTypename={false}>
+        <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/governance-review-team/:systemId/dates">
@@ -209,15 +209,16 @@ describe('Governance Review Team', () => {
         </MockedProvider>
       </MemoryRouter>
     );
+
     await waitForPageLoad('grt-dates-view');
   });
 
-  it('renders GRT dates view', async () => {
+  it('renders GRT decision view', async () => {
     render(
       <MemoryRouter
         initialEntries={[`/governance-review-team/${systemIntake.id}/decision`]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery]} addTypename={false}>
+        <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/governance-review-team/:systemId/decision">
@@ -236,7 +237,7 @@ describe('Governance Review Team', () => {
       <MemoryRouter
         initialEntries={[`/governance-review-team/${systemIntake.id}/actions`]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery]} addTypename={false}>
+        <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
               <Route path="/governance-review-team/:systemId/actions">
@@ -258,7 +259,7 @@ describe('Governance Review Team', () => {
             `/governance-review-team/${systemIntake.id}/actions/${slug}`
           ]}
         >
-          <MockedProvider mocks={[getSystemIntakeQuery]} addTypename={false}>
+          <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
             <Provider store={defaultStore}>
               <MessageProvider>
                 <Route path="/governance-review-team/:systemId/actions/:activePage">

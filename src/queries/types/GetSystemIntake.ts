@@ -98,12 +98,6 @@ export interface GetSystemIntake_systemIntake_requester {
   name: string;
 }
 
-export interface GetSystemIntake_systemIntake_lastAdminNote {
-  __typename: "LastAdminNote";
-  content: HTML | null;
-  createdAt: Time | null;
-}
-
 export interface GetSystemIntake_systemIntake_documents_documentType {
   __typename: "SystemIntakeDocumentType";
   commonType: SystemIntakeDocumentCommonType;
@@ -142,6 +136,7 @@ export interface GetSystemIntake_systemIntake {
   lcid: string | null;
   lcidIssuedAt: Time | null;
   lcidExpiresAt: Time | null;
+  lcidRetiresAt: Time | null;
   lcidScope: HTML | null;
   lcidCostBaseline: string | null;
   /**
@@ -160,10 +155,9 @@ export interface GetSystemIntake_systemIntake {
   businessCaseId: UUID | null;
   submittedAt: Time | null;
   updatedAt: Time | null;
-  createdAt: Time;
+  createdAt: Time | null;
   archivedAt: Time | null;
   euaUserId: string;
-  lastAdminNote: GetSystemIntake_systemIntake_lastAdminNote;
   hasUiChanges: boolean | null;
   documents: GetSystemIntake_systemIntake_documents[];
   state: SystemIntakeState;

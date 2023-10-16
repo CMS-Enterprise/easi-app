@@ -64,6 +64,7 @@ const action = {
     useExistingLcid: 'Life Cycle ID',
     lcid: 'Life Cycle ID',
     expiresAt: 'Expiration date',
+    retiresAt: 'Retirement date',
     scope: 'Scope of Life Cycle ID',
     nextSteps: 'Next steps',
     trbFollowUp: 'TRB follow-up',
@@ -76,15 +77,21 @@ const action = {
     breadcrumb: 'Manage a Life Cycle ID',
     label: 'Action',
     description:
-      'Update the status or details of a previously-issued Life Cycle ID by expiring it, retiring it, or updating it (Change the expiration date, scope, next steps, or project cost baseline).',
+      'Update the status or details of a previously-issued Life Cycle ID by expiring it, retiring it, or updating it (change the expiration date, scope, next steps, or project cost baseline).',
     description_EXPIRED:
       'Update the status or details of an expired Life Cycle ID by retiring it or updating it (change the expiration date, scope, next steps, or project cost baseline).',
     description_RETIRED:
-      'Update the status or details of a retired Life Cycle ID by Changing the retirement date or updating it (change the expiration date, scope, next steps, or project cost baseline).',
+      'Update the status or details of a retired Life Cycle ID by changing the retirement date or updating the LCID (changing the expiration date, scope, next steps, or project cost baseline).',
+    description_FUTURE_RETIRE_DATE:
+      'Update the status or details of a Life Cycle ID that is marked for retirement by changing the retirement date or updating the LCID (changing the expiration date, scope, next steps, or project cost baseline).',
     retire: 'Retire a Life Cycle ID',
     retire_RETIRED: 'Change retirement date',
     update: 'Update a Life Cycle ID',
     expire: 'Expire a Life Cycle ID',
+    retireDateWarning:
+      'This Life Cycle ID is currently scheduled to retire on {{- date}}. If this is incorrect, please choose the  "Change retirement date" action below.',
+    retireDateWarning_RETIRED:
+      'This Life Cycle ID was retired on {{- date}}. If this is incorrect, please choose the  "Change retirement date" action below.',
     summary: {
       title: 'Available LCID actions',
       retire: 'Retire',
@@ -293,6 +300,18 @@ const action = {
     EXPIRING_SOON: 'Expiring soon',
     RETIRED: 'Retired',
     RETIRING_SOON: 'Retiring soon'
+  },
+  retireLcid: {
+    retirementDate: 'Life Cycle ID retirement date',
+    retirementDateHelpText:
+      'If you select a future date, this project team will not continue to recieve automatic updates about their Life Cycle ID, and the LCID will me marked as retired on the chosen date.',
+    format: 'Format: mm/dd/yyyy',
+    pastDateAlert:
+      "You've entered a date that is in the past. Please double-check to make sure this date is accurate.",
+    reason: 'Why are you retiring this Life Cycle ID? (optional)',
+    reasonHelpText:
+      'Provide any additional details as to why you are retiring this LCID.',
+    success: 'Life Cycle ID {{lcid}} is now retired.'
   },
   expireLcid: {
     reason: 'Why are you expiring this Life Cycle ID?',

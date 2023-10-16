@@ -398,15 +398,28 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 	return intakes, nil
 }
 
+// FetchIntakesForAdmins queries the DB for all system intakes not in the INTAKE_DRAFT, APPROVED, or CLOSED statuses.
+// This is useful for the admin home page which intends to show admins all intakes that requesters have submitted.
+// This is a bit of a hold-over, and should be simplified when we start to filter based on IT Gov v2 states, which should be
+// much simpler to use
+// TODO: Modify with https://jiraent.cms.gov/browse/EASI-3440
+func (s *Store) FetchIntakesForAdmins(ctx context.Context) ([]*models.SystemIntake, error) {
+	intakes := []*models.SystemIntake{}
+	err := s.db.Select(&intakes, "SELECT * FROM system_intakes WHERE status NOT IN ('INTAKE_DRAFT','APPROVED','CLOSED')")
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
+		return []*models.SystemIntake{}, err
+	}
+	return intakes, nil
+}
+
 // FetchSystemIntakesByStatuses queries the DB for all system intakes matching a status filter
 func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
 	var intakes models.SystemIntakes
 	query := `
 		SELECT
 			system_intakes.*,
-			business_cases.id as business_case_id,
-			intakes_and_notes.content AS last_admin_note_content,
-			intakes_and_notes.created_at AS last_admin_note_created_at
+			business_cases.id as business_case_id
 		FROM
 			(	SELECT
 					distinct ON (system_intakes.id) system_intakes.id, notes.content, notes.created_at
