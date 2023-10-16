@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
+import {
+  GovernanceRequestFeedbackTargetForm,
+  ITGovIntakeFormStatus
+} from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
 
@@ -50,7 +53,14 @@ const GovTaskIntakeForm = ({
       value: submittedAt
     };
 
-  const hasFeedback = governanceRequestFeedbacks.length > 0;
+  const hasFeedback = useMemo(
+    () =>
+      !!governanceRequestFeedbacks.find(
+        ({ targetForm }) =>
+          targetForm === GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST
+      ),
+    [governanceRequestFeedbacks]
+  );
 
   return (
     <TaskListItem

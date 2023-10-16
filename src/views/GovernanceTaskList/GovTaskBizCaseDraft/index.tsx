@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Link } from '@trussworks/react-uswds';
@@ -8,7 +8,10 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
-import { ITGovDraftBusinessCaseStatus } from 'types/graphql-global-types';
+import {
+  GovernanceRequestFeedbackTargetForm,
+  ITGovDraftBusinessCaseStatus
+} from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
 
@@ -55,7 +58,14 @@ const GovTaskBizCaseDraft = ({
       value: bizCaseDraftSubmittedAt
     };
 
-  const hasFeedback = governanceRequestFeedbacks.length > 0;
+  const hasFeedback = useMemo(
+    () =>
+      !!governanceRequestFeedbacks.find(
+        ({ targetForm }) =>
+          targetForm === GovernanceRequestFeedbackTargetForm.DRAFT_BUSINESS_CASE
+      ),
+    [governanceRequestFeedbacks]
+  );
 
   return (
     <TaskListItem
