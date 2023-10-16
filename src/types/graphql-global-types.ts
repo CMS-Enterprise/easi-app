@@ -546,7 +546,7 @@ export interface CreateCedarSystemBookmarkInput {
 }
 
 /**
- * Input data for extending a system request's Life Cycle ID
+ * Input data for extending a system request's lifecycle ID
  */
 export interface CreateSystemIntakeActionExtendLifecycleIdInput {
   id: UUID;
@@ -704,7 +704,7 @@ export interface GeneratePresignedUploadURLInput {
 }
 
 /**
- * The input data required to issue a Life Cycle ID for a system's IT governance
+ * The input data required to issue a lifecycle ID for a system's IT governance
  * request
  */
 export interface IssueLifecycleIdInput {
