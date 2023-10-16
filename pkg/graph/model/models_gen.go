@@ -241,15 +241,25 @@ type CreateSystemIntakeNoteInput struct {
 
 // The data needed to create a TRB admin note
 // For category-specific data, rather than five separate mutations with their own input types,
-// this type has nullable fields for all the categories that can have category-specific data.
-// At most one of these fields should have a value.
+// this type has nullable fields for all the category-specific data.
 type CreateTRBAdminNoteInput struct {
-	TrbRequestID            uuid.UUID                             `json:"trbRequestId"`
-	Category                models.TRBAdminNoteCategory           `json:"category"`
-	NoteText                models.HTML                           `json:"noteText"`
-	InitialRequestFormData  *TRBAdminNoteInitialRequestFormInput  `json:"initialRequestFormData,omitempty"`
-	SupportingDocumentsData *TRBAdminNoteSupportingDocumentsInput `json:"supportingDocumentsData,omitempty"`
-	AdviceLetterData        *TRBAdminNoteAdviceLetterInput        `json:"adviceLetterData,omitempty"`
+	TrbRequestID uuid.UUID                   `json:"trbRequestId"`
+	Category     models.TRBAdminNoteCategory `json:"category"`
+	NoteText     models.HTML                 `json:"noteText"`
+	// Required for notes on the Initial Request Form
+	AppliesToBasicRequestDetails *bool `json:"appliesToBasicRequestDetails,omitempty"`
+	// Required for notes on the Initial Request Form
+	AppliesToSubjectAreas *bool `json:"appliesToSubjectAreas,omitempty"`
+	// Required for notes on the Initial Request Form
+	AppliesToAttendees *bool `json:"appliesToAttendees,omitempty"`
+	// Required for notes on Supporting Documents (can be empty, but should not be null)
+	DocumentIDs []uuid.UUID `json:"documentIDs,omitempty"`
+	// Required for notes on the Advice Letter
+	AppliesToMeetingSummary *bool `json:"appliesToMeetingSummary,omitempty"`
+	// Required for notes on the Advice Letter
+	AppliesToNextSteps *bool `json:"appliesToNextSteps,omitempty"`
+	// Required for notes on the Advice Letter (can be empty, but should not be null)
+	RecommendationIDs []uuid.UUID `json:"recommendationIDs,omitempty"`
 }
 
 // The input required to add a recommendation & links to a TRB advice letter
@@ -826,13 +836,6 @@ type TRBAdminNoteAdviceLetterCategoryData struct {
 
 func (TRBAdminNoteAdviceLetterCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
-// Data needed to create a TRB admin note with the Advice Letter category
-type TRBAdminNoteAdviceLetterInput struct {
-	AppliesToMeetingSummary bool        `json:"appliesToMeetingSummary"`
-	AppliesToNextSteps      bool        `json:"appliesToNextSteps"`
-	RecommendationIDs       []uuid.UUID `json:"recommendationIDs"`
-}
-
 // Data specific to admin notes in the Consult Session category
 // This type doesn't contain any actual data
 type TRBAdminNoteConsultSessionCategoryData struct {
@@ -860,24 +863,12 @@ type TRBAdminNoteInitialRequestFormCategoryData struct {
 
 func (TRBAdminNoteInitialRequestFormCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
-// Data needed to create a TRB admin note with the Initial Request Form category
-type TRBAdminNoteInitialRequestFormInput struct {
-	AppliesToBasicRequestDetails bool `json:"appliesToBasicRequestDetails"`
-	AppliesToSubjectAreas        bool `json:"appliesToSubjectAreas"`
-	AppliesToAttendees           bool `json:"appliesToAttendees"`
-}
-
 // Data specific to admin notes in the Supporting Documents category
 type TRBAdminNoteSupportingDocumentsCategoryData struct {
 	Documents []*models.TRBRequestDocument `json:"documents"`
 }
 
 func (TRBAdminNoteSupportingDocumentsCategoryData) IsTRBAdminNoteCategorySpecificData() {}
-
-// Data needed to create a TRB admin note with the Supporting Documents category
-type TRBAdminNoteSupportingDocumentsInput struct {
-	DocumentIDs []uuid.UUID `json:"documentIDs"`
-}
 
 // Denotes the type of a document attached to a TRB request,
 // which can be one of a number of common types, or a free-text user-specified type

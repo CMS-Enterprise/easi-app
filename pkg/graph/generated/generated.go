@@ -7334,9 +7334,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeRequesterWithComponentInput,
 		ec.unmarshalInputSystemIntakeRetireLCIDInput,
 		ec.unmarshalInputSystemIntakeUpdateLCIDInput,
-		ec.unmarshalInputTRBAdminNoteAdviceLetterInput,
-		ec.unmarshalInputTRBAdminNoteInitialRequestFormInput,
-		ec.unmarshalInputTRBAdminNoteSupportingDocumentsInput,
 		ec.unmarshalInputUpdateAccessibilityRequestCedarSystemInput,
 		ec.unmarshalInputUpdateAccessibilityRequestStatus,
 		ec.unmarshalInputUpdateSystemIntakeAdminLeadInput,
@@ -9848,35 +9845,9 @@ type TRBAdviceLetter {
 }
 
 """
-Data needed to create a TRB admin note with the Initial Request Form category
-"""
-input TRBAdminNoteInitialRequestFormInput {
-  appliesToBasicRequestDetails: Boolean!
-  appliesToSubjectAreas: Boolean!
-  appliesToAttendees: Boolean!
-}
-
-"""
-Data needed to create a TRB admin note with the Supporting Documents category
-"""
-input TRBAdminNoteSupportingDocumentsInput {
-  documentIDs: [UUID!]!
-}
-
-"""
-Data needed to create a TRB admin note with the Advice Letter category
-"""
-input TRBAdminNoteAdviceLetterInput {
-  appliesToMeetingSummary: Boolean!
-  appliesToNextSteps: Boolean!
-  recommendationIDs: [UUID!]!
-}
-
-"""
 The data needed to create a TRB admin note
 For category-specific data, rather than five separate mutations with their own input types,
-this type has nullable fields for all the categories that can have category-specific data.
-At most one of these fields should have a value.
+this type has nullable fields for all the category-specific data.
 """
 input CreateTRBAdminNoteInput {
   # Common fields for notes of all categories
@@ -9884,22 +9855,49 @@ input CreateTRBAdminNoteInput {
   category: TRBAdminNoteCategory!
   noteText: HTML!
 
+
+  # Category-specific data; only the fields associated with this note's category should have values set
+
   # General Request category - no additional data
 
-  # Initial Request Form category
-  initialRequestFormData: TRBAdminNoteInitialRequestFormInput
+  """
+  Required for notes on the Initial Request Form
+  """
+  appliesToBasicRequestDetails: Boolean
+  """
+  Required for notes on the Initial Request Form
+  """
+  appliesToSubjectAreas: Boolean
+  """
+  Required for notes on the Initial Request Form
+  """
+  appliesToAttendees: Boolean
 
-  # Supporting Documents category
-  supportingDocumentsData: TRBAdminNoteSupportingDocumentsInput
+  """
+  Required for notes on Supporting Documents (can be empty, but should not be null)
+  """
+  documentIDs: [UUID!]
 
   # Consult Session category - no additional data
 
-  # Advice Letter category
-  adviceLetterData: TRBAdminNoteAdviceLetterInput
+  """
+  Required for notes on the Advice Letter
+  """
+  appliesToMeetingSummary: Boolean
+  """
+  Required for notes on the Advice Letter
+  """
+  appliesToNextSteps: Boolean
+  """
+  Required for notes on the Advice Letter (can be empty, but should not be null)
+  """
+  recommendationIDs: [UUID!]
 }
 
 """
 The data needed for updating a TRB admin note
+For category-specific data, rather than five separate mutations with their own input types,
+this type has nullable fields for all the category-specific data.
 """
 input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   # Common fields for notes of all categories
@@ -9907,18 +9905,43 @@ input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   category: TRBAdminNoteCategory
   noteText: HTML
 
+
+  # Category-specific data; only the fields associated with this note's category should have values set
+
   # General Request category - no additional data
 
-  # Initial Request Form category
-  initialRequestFormData: TRBAdminNoteInitialRequestFormInput
+  """
+  Required for notes on the Initial Request Form
+  """
+  appliesToBasicRequestDetails: Boolean
+  """
+  Required for notes on the Initial Request Form
+  """
+  appliesToSubjectAreas: Boolean
+  """
+  Required for notes on the Initial Request Form
+  """
+  appliesToAttendees: Boolean
 
-  # Supporting Documents category
-  supportingDocumentsData: TRBAdminNoteSupportingDocumentsInput
+  """
+  Required for notes on Supporting Documents (can be empty, but should not be null)
+  """
+  documentIDs: [UUID!]
 
   # Consult Session category - no additional data
 
-  # Advice Letter category
-  adviceLetterData: TRBAdminNoteAdviceLetterInput
+  """
+  Required for notes on the Advice Letter
+  """
+  appliesToMeetingSummary: Boolean
+  """
+  Required for notes on the Advice Letter
+  """
+  appliesToNextSteps: Boolean
+  """
+  Required for notes on the Advice Letter (can be empty, but should not be null)
+  """
+  recommendationIDs: [UUID!]
 }
 
 """
@@ -53364,7 +53387,7 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteInput(ctx context.Co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"trbRequestId", "category", "noteText", "initialRequestFormData", "supportingDocumentsData", "adviceLetterData"}
+	fieldsInOrder := [...]string{"trbRequestId", "category", "noteText", "appliesToBasicRequestDetails", "appliesToSubjectAreas", "appliesToAttendees", "documentIDs", "appliesToMeetingSummary", "appliesToNextSteps", "recommendationIDs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -53398,33 +53421,69 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteInput(ctx context.Co
 				return it, err
 			}
 			it.NoteText = data
-		case "initialRequestFormData":
+		case "appliesToBasicRequestDetails":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("initialRequestFormData"))
-			data, err := ec.unmarshalOTRBAdminNoteInitialRequestFormInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBAdminNoteInitialRequestFormInput(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToBasicRequestDetails"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.InitialRequestFormData = data
-		case "supportingDocumentsData":
+			it.AppliesToBasicRequestDetails = data
+		case "appliesToSubjectAreas":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supportingDocumentsData"))
-			data, err := ec.unmarshalOTRBAdminNoteSupportingDocumentsInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBAdminNoteSupportingDocumentsInput(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToSubjectAreas"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.SupportingDocumentsData = data
-		case "adviceLetterData":
+			it.AppliesToSubjectAreas = data
+		case "appliesToAttendees":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adviceLetterData"))
-			data, err := ec.unmarshalOTRBAdminNoteAdviceLetterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBAdminNoteAdviceLetterInput(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToAttendees"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.AdviceLetterData = data
+			it.AppliesToAttendees = data
+		case "documentIDs":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("documentIDs"))
+			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.DocumentIDs = data
+		case "appliesToMeetingSummary":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToMeetingSummary"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AppliesToMeetingSummary = data
+		case "appliesToNextSteps":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToNextSteps"))
+			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AppliesToNextSteps = data
+		case "recommendationIDs":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendationIDs"))
+			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RecommendationIDs = data
 		}
 	}
 
@@ -55972,129 +56031,6 @@ func (ec *executionContext) unmarshalInputSystemIntakeUpdateLCIDInput(ctx contex
 				return it, err
 			}
 			it.AdminNote = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputTRBAdminNoteAdviceLetterInput(ctx context.Context, obj interface{}) (model.TRBAdminNoteAdviceLetterInput, error) {
-	var it model.TRBAdminNoteAdviceLetterInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"appliesToMeetingSummary", "appliesToNextSteps", "recommendationIDs"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "appliesToMeetingSummary":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToMeetingSummary"))
-			data, err := ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.AppliesToMeetingSummary = data
-		case "appliesToNextSteps":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToNextSteps"))
-			data, err := ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.AppliesToNextSteps = data
-		case "recommendationIDs":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendationIDs"))
-			data, err := ec.unmarshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RecommendationIDs = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputTRBAdminNoteInitialRequestFormInput(ctx context.Context, obj interface{}) (model.TRBAdminNoteInitialRequestFormInput, error) {
-	var it model.TRBAdminNoteInitialRequestFormInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"appliesToBasicRequestDetails", "appliesToSubjectAreas", "appliesToAttendees"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "appliesToBasicRequestDetails":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToBasicRequestDetails"))
-			data, err := ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.AppliesToBasicRequestDetails = data
-		case "appliesToSubjectAreas":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToSubjectAreas"))
-			data, err := ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.AppliesToSubjectAreas = data
-		case "appliesToAttendees":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("appliesToAttendees"))
-			data, err := ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.AppliesToAttendees = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputTRBAdminNoteSupportingDocumentsInput(ctx context.Context, obj interface{}) (model.TRBAdminNoteSupportingDocumentsInput, error) {
-	var it model.TRBAdminNoteSupportingDocumentsInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"documentIDs"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "documentIDs":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("documentIDs"))
-			data, err := ec.unmarshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.DocumentIDs = data
 		}
 	}
 
@@ -74255,14 +74191,6 @@ func (ec *executionContext) marshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcm
 	return res
 }
 
-func (ec *executionContext) unmarshalOTRBAdminNoteAdviceLetterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBAdminNoteAdviceLetterInput(ctx context.Context, v interface{}) (*model.TRBAdminNoteAdviceLetterInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputTRBAdminNoteAdviceLetterInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalOTRBAdminNoteCategory2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx context.Context, v interface{}) (*models.TRBAdminNoteCategory, error) {
 	if v == nil {
 		return nil, nil
@@ -74278,22 +74206,6 @@ func (ec *executionContext) marshalOTRBAdminNoteCategory2ᚖgithubᚗcomᚋcmsgo
 	}
 	res := graphql.MarshalString(string(*v))
 	return res
-}
-
-func (ec *executionContext) unmarshalOTRBAdminNoteInitialRequestFormInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBAdminNoteInitialRequestFormInput(ctx context.Context, v interface{}) (*model.TRBAdminNoteInitialRequestFormInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputTRBAdminNoteInitialRequestFormInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalOTRBAdminNoteSupportingDocumentsInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTRBAdminNoteSupportingDocumentsInput(ctx context.Context, v interface{}) (*model.TRBAdminNoteSupportingDocumentsInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputTRBAdminNoteSupportingDocumentsInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOTRBAdviceLetter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetter(ctx context.Context, sel ast.SelectionSet, v *models.TRBAdviceLetter) graphql.Marshaler {

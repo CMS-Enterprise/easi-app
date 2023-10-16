@@ -2395,35 +2395,9 @@ type TRBAdviceLetter {
 }
 
 """
-Data needed to create a TRB admin note with the Initial Request Form category
-"""
-input TRBAdminNoteInitialRequestFormInput {
-  appliesToBasicRequestDetails: Boolean!
-  appliesToSubjectAreas: Boolean!
-  appliesToAttendees: Boolean!
-}
-
-"""
-Data needed to create a TRB admin note with the Supporting Documents category
-"""
-input TRBAdminNoteSupportingDocumentsInput {
-  documentIDs: [UUID!]!
-}
-
-"""
-Data needed to create a TRB admin note with the Advice Letter category
-"""
-input TRBAdminNoteAdviceLetterInput {
-  appliesToMeetingSummary: Boolean!
-  appliesToNextSteps: Boolean!
-  recommendationIDs: [UUID!]!
-}
-
-"""
 The data needed to create a TRB admin note
 For category-specific data, rather than five separate mutations with their own input types,
-this type has nullable fields for all the categories that can have category-specific data.
-At most one of these fields should have a value.
+this type has nullable fields for all the category-specific data.
 """
 input CreateTRBAdminNoteInput {
   # Common fields for notes of all categories
@@ -2431,22 +2405,49 @@ input CreateTRBAdminNoteInput {
   category: TRBAdminNoteCategory!
   noteText: HTML!
 
+
+  # Category-specific data; only the fields associated with this note's category should have values set
+
   # General Request category - no additional data
 
-  # Initial Request Form category
-  initialRequestFormData: TRBAdminNoteInitialRequestFormInput
+  """
+  Required for notes on the Initial Request Form
+  """
+  appliesToBasicRequestDetails: Boolean
+  """
+  Required for notes on the Initial Request Form
+  """
+  appliesToSubjectAreas: Boolean
+  """
+  Required for notes on the Initial Request Form
+  """
+  appliesToAttendees: Boolean
 
-  # Supporting Documents category
-  supportingDocumentsData: TRBAdminNoteSupportingDocumentsInput
+  """
+  Required for notes on Supporting Documents (can be empty, but should not be null)
+  """
+  documentIDs: [UUID!]
 
   # Consult Session category - no additional data
 
-  # Advice Letter category
-  adviceLetterData: TRBAdminNoteAdviceLetterInput
+  """
+  Required for notes on the Advice Letter
+  """
+  appliesToMeetingSummary: Boolean
+  """
+  Required for notes on the Advice Letter
+  """
+  appliesToNextSteps: Boolean
+  """
+  Required for notes on the Advice Letter (can be empty, but should not be null)
+  """
+  recommendationIDs: [UUID!]
 }
 
 """
 The data needed for updating a TRB admin note
+For category-specific data, rather than five separate mutations with their own input types,
+this type has nullable fields for all the category-specific data.
 """
 input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   # Common fields for notes of all categories
@@ -2454,18 +2455,43 @@ input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   category: TRBAdminNoteCategory
   noteText: HTML
 
+
+  # Category-specific data; only the fields associated with this note's category should have values set
+
   # General Request category - no additional data
 
-  # Initial Request Form category
-  initialRequestFormData: TRBAdminNoteInitialRequestFormInput
+  """
+  Required for notes on the Initial Request Form
+  """
+  appliesToBasicRequestDetails: Boolean
+  """
+  Required for notes on the Initial Request Form
+  """
+  appliesToSubjectAreas: Boolean
+  """
+  Required for notes on the Initial Request Form
+  """
+  appliesToAttendees: Boolean
 
-  # Supporting Documents category
-  supportingDocumentsData: TRBAdminNoteSupportingDocumentsInput
+  """
+  Required for notes on Supporting Documents (can be empty, but should not be null)
+  """
+  documentIDs: [UUID!]
 
   # Consult Session category - no additional data
 
-  # Advice Letter category
-  adviceLetterData: TRBAdminNoteAdviceLetterInput
+  """
+  Required for notes on the Advice Letter
+  """
+  appliesToMeetingSummary: Boolean
+  """
+  Required for notes on the Advice Letter
+  """
+  appliesToNextSteps: Boolean
+  """
+  Required for notes on the Advice Letter (can be empty, but should not be null)
+  """
+  recommendationIDs: [UUID!]
 }
 
 """
