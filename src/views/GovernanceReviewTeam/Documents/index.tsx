@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageHeading from 'components/PageHeading';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
 type DocumentsProps = {

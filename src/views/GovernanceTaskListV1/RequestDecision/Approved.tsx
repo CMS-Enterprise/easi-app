@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 import { formatDateUtc } from 'utils/date';
 
 type ApprovedProps = {

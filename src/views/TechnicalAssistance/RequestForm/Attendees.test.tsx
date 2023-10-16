@@ -101,7 +101,7 @@ describe('Trb Request form: Attendees', () => {
 
     // Check that requester name and EUA matches mocked query results
     expect(requesterContactSelect).toHaveValue(
-      `${requester.userInfo?.commonName}, ${requester.userInfo?.euaUserId}`
+      `${requester.userInfo?.commonName}, ${requester.userInfo?.euaUserId} (${requester.userInfo?.email})`
     );
 
     const requesterComponentField = getByTestId('trb-requester-component');

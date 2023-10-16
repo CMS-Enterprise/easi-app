@@ -1,4 +1,4 @@
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 
 export type TagEnum = 'COMPLETED' | 'CANNOT_START_YET' | 'NOT_NEEDED';
 

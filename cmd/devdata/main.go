@@ -383,7 +383,7 @@ func makeSystemIntakeWithProgressToNextStep(
 	}
 
 	// this will move the intake to the new step and save it to the database, save the feedback, and save a record of the action
-	must(resolvers.ProgressIntake(ctx, store, mock.FetchUserInfoMock, input))
+	must(resolvers.ProgressIntake(ctx, store, nil, mock.FetchUserInfoMock, input))
 }
 
 func makeSystemIntakeWithEditsRequested(

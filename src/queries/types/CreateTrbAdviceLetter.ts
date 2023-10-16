@@ -29,6 +29,9 @@ export interface CreateTrbAdviceLetter_createTRBAdviceLetter {
   isFollowupRecommended: boolean | null;
   dateSent: Time | null;
   followupPoint: string | null;
+  /**
+   * List of recommendations in the order specified by users
+   */
   recommendations: CreateTrbAdviceLetter_createTRBAdviceLetter_recommendations[];
   author: CreateTrbAdviceLetter_createTRBAdviceLetter_author;
   createdAt: Time;

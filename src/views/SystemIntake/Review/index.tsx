@@ -7,11 +7,11 @@ import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
 import { SubmitIntake as SubmitIntakeQuery } from 'queries/SystemIntakeQueries';
-import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import {
   SubmitIntake,
   SubmitIntakeVariables
 } from 'queries/types/SubmitIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
 
 type ReviewProps = {
   systemIntake: SystemIntake;

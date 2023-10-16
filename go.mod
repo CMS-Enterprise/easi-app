@@ -3,9 +3,9 @@ module github.com/cmsgov/easi-app
 go 1.21
 
 require (
-	github.com/99designs/gqlgen v0.17.38
+	github.com/99designs/gqlgen v0.17.39
 	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
-	github.com/aws/aws-sdk-go v1.45.19
+	github.com/aws/aws-sdk-go v1.45.24
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-openapi/errors v0.20.4
 	github.com/go-openapi/runtime v0.26.0
@@ -25,16 +25,22 @@ require (
 	github.com/pquerna/otp v1.4.0
 	github.com/samber/lo v1.38.1
 	github.com/spf13/cobra v1.7.0
-	github.com/spf13/viper v1.16.0
+	github.com/spf13/viper v1.17.0
 	github.com/stretchr/testify v1.8.4
 	github.com/vektah/gqlparser/v2 v2.5.10
 	go.uber.org/zap v1.26.0
-	golang.org/x/sync v0.3.0
+	golang.org/x/sync v0.4.0
 	gopkg.in/launchdarkly/go-sdk-common.v2 v2.5.1
 	gopkg.in/launchdarkly/go-server-sdk.v5 v5.10.1
 )
 
-require github.com/hashicorp/golang-lru/v2 v2.0.3 // indirect
+require (
+	github.com/hashicorp/golang-lru/v2 v2.0.3 // indirect
+	github.com/sagikazarmark/locafero v0.3.0 // indirect
+	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
+	github.com/sosodev/duration v1.1.0 // indirect
+	github.com/sourcegraph/conc v0.3.0 // indirect
+)
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
@@ -44,7 +50,7 @@ require (
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.25
-	golang.org/x/net v0.15.0
+	golang.org/x/net v0.16.0 // indirect
 )
 
 require (
@@ -52,7 +58,7 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
@@ -84,27 +90,26 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/okta/okta-sdk-golang/v2 v2.20.0
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
-	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
+	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/spf13/afero v1.9.5 // indirect
+	github.com/spf13/afero v1.10.0 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
-	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/subosito/gotenv v1.4.2 // indirect
+	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/urfave/cli/v2 v2.25.5 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	go.mongodb.org/mongo-driver v1.11.3 // indirect
 	go.opentelemetry.io/otel v1.14.0 // indirect
 	go.opentelemetry.io/otel/trace v1.14.0 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
-	golang.org/x/crypto v0.13.0 // indirect
-	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
-	golang.org/x/mod v0.10.0 // indirect
-	golang.org/x/sys v0.12.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
+	golang.org/x/mod v0.12.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
-	golang.org/x/tools v0.9.3 // indirect
+	golang.org/x/tools v0.13.0 // indirect
 	gopkg.in/ghodss/yaml.v1 v1.0.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/launchdarkly/go-jsonstream.v1 v1.0.1 // indirect

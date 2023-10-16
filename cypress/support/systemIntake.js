@@ -9,7 +9,7 @@ cy.systemIntake = {
         .type('Audrey')
         .wait(1000)
         .type('{downarrow}{enter}')
-        .should('have.value', 'Audrey Abrams, ADMI');
+        .should('have.value', 'Audrey Abrams, ADMI (audrey.abrams@local.fake)');
 
       cy.get('#IntakeForm-BusinessOwnerEmail').should(
         'have.value',
@@ -24,7 +24,7 @@ cy.systemIntake = {
         .type('Delphia')
         .wait(1000)
         .type('{downArrow}{enter}')
-        .should('have.value', 'Delphia Green, GBRG');
+        .should('have.value', 'Delphia Green, GBRG (delphia.green@local.fake)');
 
       cy.get('#IntakeForm-ProductManagerEmail').should(
         'have.value',

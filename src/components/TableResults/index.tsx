@@ -3,6 +3,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import { FilterValue } from 'react-table';
 import classnames from 'classnames';
 
+import Spinner from 'components/Spinner';
+
 type TableResultsProps = {
   className?: string;
   globalFilter: FilterValue;
@@ -10,6 +12,7 @@ type TableResultsProps = {
   pageSize: number;
   filteredRowLength: number;
   rowLength: number;
+  loading?: boolean;
 };
 
 const displayResult = (searchTerm: FilterValue) =>
@@ -28,7 +31,8 @@ const TableResults = ({
   pageIndex,
   pageSize,
   filteredRowLength,
-  rowLength
+  rowLength,
+  loading
 }: TableResultsProps) => {
   const { t } = useTranslation('tableAndPagination');
 
@@ -40,25 +44,43 @@ const TableResults = ({
   // If data or filter results are less than 10 (page size) - then default to the number of returned rows
   const pageRange: number = rows < 10 ? rows : (pageIndex + 1) * pageSize;
 
+  const Result = () => {
+    if (loading) {
+      return (
+        <>
+          <Spinner className="margin-right-1" />
+          {t('general:loadingResults')}
+        </>
+      );
+    }
+
+    if (rows === 0) {
+      return (
+        <>
+          {t('tableAndPagination:results.noResults')}{' '}
+          {/* Displays the search input even if there are no results */}
+          {displayResult(globalFilter)}
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Trans i18nKey="tableAndPagination:results.results">
+          indexZero {{ currentPage }} indexOne {{ pageRange }} indexTwo{' '}
+          {{ rows }}
+        </Trans>
+        {displayResult(globalFilter)}
+      </>
+    );
+  };
+
   return (
-    <div className={classnames(className)} data-testid="page-results">
-      <span>
-        {rows === 0 ? (
-          <div>
-            {t('tableAndPagination:results.noResults')}{' '}
-            {/* Displays the search input even if there are no results */}
-            {displayResult(globalFilter)}
-          </div>
-        ) : (
-          <div>
-            <Trans i18nKey="tableAndPagination:results.results">
-              indexZero {{ currentPage }} indexOne {{ pageRange }} indexTwo{' '}
-              {{ rows }}
-            </Trans>
-            {displayResult(globalFilter)}
-          </div>
-        )}
-      </span>
+    <div
+      className={classnames(className, 'display-flex flex-align-center')}
+      data-testid="page-results"
+    >
+      <Result />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { render, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { CMS_TRB_EMAIL } from 'constants/externalUrls';
 import {
   attendees,
   getTRBRequestAttendeesQuery,
@@ -75,11 +76,13 @@ describe('Email recipient fields component', () => {
     expect(getAllByRole('checkbox').length).toBe(2);
 
     const requesterCheckbox = getByRole('checkbox', {
-      name: `${requester.userInfo?.commonName}, CMS (Requester)`
+      name: `${requester.userInfo?.commonName}, CMS (Requester) ${requester.userInfo?.email}`
     });
     expect(requesterCheckbox).toBeChecked();
 
-    expect(getByRole('checkbox', { name: 'Copy TRB Mailbox' })).toBeChecked();
+    expect(
+      getByRole('checkbox', { name: `Copy TRB Mailbox ${CMS_TRB_EMAIL}` })
+    ).toBeChecked();
 
     // Expand recipients list
     userEvent.click(
@@ -132,7 +135,7 @@ describe('Email recipient fields component', () => {
 
     userEvent.click(
       await findByText(
-        `${newAttendee.userInfo?.commonName}, ${newAttendee.userInfo?.euaUserId}`
+        `${newAttendee.userInfo?.commonName}, ${newAttendee.userInfo?.euaUserId} (${newAttendee.userInfo?.email})`
       )
     );
 

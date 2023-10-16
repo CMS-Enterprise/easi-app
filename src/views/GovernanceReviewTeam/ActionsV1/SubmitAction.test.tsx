@@ -6,6 +6,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
+import { IT_GOV_EMAIL, IT_INVESTMENT_EMAIL } from 'constants/externalUrls';
 import { businessCaseInitialData } from 'data/businessCase';
 import { grtActions } from 'data/mock/grtActions';
 import {
@@ -109,6 +110,10 @@ const defaultStore = mockStore({
   }
 });
 
+const requesterLabel = `${requester.commonName}, ${requester.component} (Requester) ${requester.email}`;
+const itGovLabel = `IT Governance Mailbox ${IT_GOV_EMAIL}`;
+const itInvestmentLabel = `IT Investment Mailbox ${IT_INVESTMENT_EMAIL}`;
+
 const renderActionPage = (slug: string, mocks: any[]) => {
   return render(
     <MemoryRouter
@@ -146,7 +151,7 @@ describe('Renders action pages', () => {
   ];
 
   test.each(actionsList)('%j', async action => {
-    renderActionPage(action, [getSystemIntakeQuery]);
+    renderActionPage(action, [getSystemIntakeQuery()]);
     await waitForPageLoad(grtActions[action as keyof typeof grtActions].view);
     expect(
       screen.getByRole('button', { name: /send email/i })
@@ -160,7 +165,7 @@ describe('Renders action pages', () => {
 describe('Submit Action', () => {
   it('renders formik validation errors', async () => {
     // Random route; doesn't really matter
-    renderActionPage('not-it-request', [getSystemIntakeQuery]);
+    renderActionPage('not-it-request', [getSystemIntakeQuery()]);
     await waitForPageLoad();
 
     screen.getByRole('button', { name: /send email/i }).click();
@@ -177,7 +182,7 @@ describe('Submit Action', () => {
       findByText,
       getByRole
     } = renderActionPage('not-it-request', [
-      getSystemIntakeQuery,
+      getSystemIntakeQuery(),
       getCedarContactsQuery,
       getSystemIntakeContactsQuery
     ]);
@@ -198,7 +203,7 @@ describe('Submit Action', () => {
     const contactSelect = getByTestId('cedar-contact-select');
     expect(contactSelect).toHaveValue(productManager.commonName);
 
-    const contactLabel = `${productManager.commonName}, ${productManager.euaUserId}`;
+    const contactLabel = `${productManager.commonName}, ${productManager.euaUserId} (${productManager.email})`;
 
     // Check that select field loads mock CEDAR contact
     userEvent.click(contactSelect);
@@ -249,7 +254,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('not-it-request', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         notITRequestMutation
       ]);
@@ -262,18 +267,22 @@ describe('Submit Action', () => {
       // Check requester is set as default recipient
       expect(
         screen.getByRole('checkbox', {
-          name: `${requester.commonName}, ${requester.component} (Requester)`
+          name: requesterLabel
         })
       ).toBeChecked();
 
       // Check IT Governance is set as default recipient
       expect(
-        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
+        screen.getByRole('checkbox', {
+          name: itGovLabel
+        })
       ).toBeChecked();
 
       // Check IT Investment is set as default recipient
       expect(
-        screen.getByRole('checkbox', { name: 'IT Investment Mailbox' })
+        screen.getByRole('checkbox', {
+          name: itInvestmentLabel
+        })
       ).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
@@ -308,7 +317,7 @@ describe('Submit Action', () => {
         }
       };
       renderActionPage('not-it-request', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         notITRequestMutation
       ]);
       await waitForPageLoad();
@@ -347,7 +356,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('need-biz-case', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         needBizCaseMutation
       ]);
@@ -360,14 +369,12 @@ describe('Submit Action', () => {
       // Check requester is set as default recipient
       expect(
         screen.getByRole('checkbox', {
-          name: `${requester.commonName}, ${requester.component} (Requester)`
+          name: requesterLabel
         })
       ).toBeChecked();
 
       // Check IT Governance is set as default recipient
-      expect(
-        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
-      ).toBeChecked();
+      expect(screen.getByRole('checkbox', { name: itGovLabel })).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
@@ -407,7 +414,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('ready-for-grt', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         readyForGRTMutation
       ]);
@@ -418,14 +425,12 @@ describe('Submit Action', () => {
       // Check requester is set as default recipient
       expect(
         screen.getByRole('checkbox', {
-          name: `${requester.commonName}, ${requester.component} (Requester)`
+          name: requesterLabel
         })
       ).toBeChecked();
 
       // Check IT Governance is set as default recipient
-      expect(
-        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
-      ).toBeChecked();
+      expect(screen.getByRole('checkbox', { name: itGovLabel })).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
@@ -465,7 +470,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('biz-case-needs-changes', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         needsChangesMutation
       ]);
@@ -480,14 +485,12 @@ describe('Submit Action', () => {
       // Check requester is set as default recipient
       expect(
         screen.getByRole('checkbox', {
-          name: `${requester.commonName}, ${requester.component} (Requester)`
+          name: requesterLabel
         })
       ).toBeChecked();
 
       // Check IT Governance is set as default recipient
-      expect(
-        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
-      ).toBeChecked();
+      expect(screen.getByRole('checkbox', { name: itGovLabel })).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
@@ -527,7 +530,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('no-governance', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         noGovernanceMutation
       ]);
@@ -538,18 +541,16 @@ describe('Submit Action', () => {
       // Check requester is set as default recipient
       expect(
         screen.getByRole('checkbox', {
-          name: `${requester.commonName}, ${requester.component} (Requester)`
+          name: requesterLabel
         })
       ).toBeChecked();
 
       // Check IT Governance is set as default recipient
-      expect(
-        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
-      ).toBeChecked();
+      expect(screen.getByRole('checkbox', { name: itGovLabel })).toBeChecked();
 
       // Check IT Investment is set as default recipient
       expect(
-        screen.getByRole('checkbox', { name: 'IT Investment Mailbox' })
+        screen.getByRole('checkbox', { name: itInvestmentLabel })
       ).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
@@ -591,7 +592,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('send-email', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         sendEmailMutation
       ]);
@@ -600,14 +601,12 @@ describe('Submit Action', () => {
       // Check requester is set as default recipient
       expect(
         screen.getByRole('checkbox', {
-          name: `${requester.commonName}, ${requester.component} (Requester)`
+          name: requesterLabel
         })
       ).toBeChecked();
 
       // Check IT Governance is set as default recipient
-      expect(
-        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
-      ).toBeChecked();
+      expect(screen.getByRole('checkbox', { name: itGovLabel })).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
@@ -647,7 +646,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('guide-received-close', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         guideReceivedCloseMutation
       ]);
@@ -660,14 +659,12 @@ describe('Submit Action', () => {
       // Check requester is set as default recipient
       expect(
         screen.getByRole('checkbox', {
-          name: `${requester.commonName}, ${requester.component} (Requester)`
+          name: requesterLabel
         })
       ).toBeChecked();
 
       // Check IT Governance is set as default recipient
-      expect(
-        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
-      ).toBeChecked();
+      expect(screen.getByRole('checkbox', { name: itGovLabel })).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');
@@ -707,7 +704,7 @@ describe('Submit Action', () => {
       };
 
       renderActionPage('not-responding-close', [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         notRespondingCloseMutation
       ]);
@@ -720,14 +717,12 @@ describe('Submit Action', () => {
       // Check requester is set as default recipient
       expect(
         screen.getByRole('checkbox', {
-          name: `${requester.commonName}, ${requester.component} (Requester)`
+          name: requesterLabel
         })
       ).toBeChecked();
 
       // Check IT Governance is set as default recipient
-      expect(
-        screen.getByRole('checkbox', { name: 'IT Governance Mailbox' })
-      ).toBeChecked();
+      expect(screen.getByRole('checkbox', { name: itGovLabel })).toBeChecked();
 
       const emailField = screen.getByRole('textbox', { name: /email/i });
       userEvent.type(emailField, 'Test email');

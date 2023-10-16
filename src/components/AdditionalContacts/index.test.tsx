@@ -138,7 +138,7 @@ describe('Additional contacts component', () => {
     // Check that contact select field displays correct value
     const cedarContactSelectInput = await findByTestId('cedar-contact-select');
     expect(cedarContactSelectInput).toHaveValue(
-      `${activeContact.commonName}, ${activeContact.euaUserId}`
+      `${activeContact.commonName}, ${activeContact.euaUserId} (${activeContact.email})`
     );
 
     // Check that component field displays correct value

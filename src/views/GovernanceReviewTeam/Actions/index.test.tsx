@@ -94,7 +94,7 @@ describe('IT Gov Actions', () => {
     renderActionPage({
       action: 'request-edits',
       mocks: [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         getGovernanceTaskListQuery
       ]
@@ -107,7 +107,7 @@ describe('IT Gov Actions', () => {
     // Requester is default recipient
     expect(
       screen.getByRole('checkbox', {
-        name: `${requester.commonName}, ${requester.component} (Requester)`
+        name: `${requester.commonName}, CMS (Requester) ${requester.email}`
       })
     ).toBeChecked();
   });
@@ -116,7 +116,7 @@ describe('IT Gov Actions', () => {
     renderActionPage({
       action: 'request-edits',
       mocks: [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         getGovernanceTaskListQuery,
         {
@@ -188,7 +188,7 @@ describe('IT Gov Actions', () => {
     renderActionPage({
       action: 'request-edits',
       mocks: [
-        getSystemIntakeQuery,
+        getSystemIntakeQuery(),
         getSystemIntakeContactsQuery,
         getGovernanceTaskListQuery
       ]

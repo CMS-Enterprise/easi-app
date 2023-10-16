@@ -9,7 +9,8 @@ const general = {
   },
   edit: 'Edit',
   remove: 'Remove',
-  pageLoading: 'Loading the page'
+  pageLoading: 'Loading the page',
+  loadingResults: 'Loading results'
 };
 
 export default general;

@@ -7,10 +7,6 @@ describe('Governance Review Team', () => {
   const futureDateYear = futureDatetime.year;
 
   beforeEach(() => {
-    cy.intercept('GET', '/api/v1/system_intakes?status=open').as(
-      'getOpenIntakes'
-    );
-
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'GetSystemIntake') {
         req.alias = 'getSystemIntake';
@@ -21,7 +17,6 @@ describe('Governance Review Team', () => {
     });
 
     cy.localLogin({ name: 'E2E2', role: 'EASI_D_GOVTEAM' });
-    cy.wait('@getOpenIntakes').its('response.statusCode').should('eq', 200);
   });
 
   it('can assign Admin Lead', () => {
@@ -91,7 +86,6 @@ describe('Governance Review Team', () => {
     cy.get('#Dates-GrbDateYear').should('have.value', '2020');
 
     cy.visit('/');
-    cy.wait('@getOpenIntakes').its('response.statusCode').should('eq', 200);
 
     cy.get('[data-testid="af7a3924-3ff7-48ec-8a54-b8b4bc95610b-row"]').contains(
       'td',
@@ -279,7 +273,7 @@ describe('Governance Review Team', () => {
       .type('Aaron A')
       .wait(1000)
       .type('{downArrow}{enter}')
-      .should('have.value', 'Aaron Adams, ADMN');
+      .should('have.value', 'Aaron Adams, ADMN (aaron.adams@local.fake)');
 
     cy.get('#IntakeForm-ContactComponent')
       .select('Center for Medicare')
@@ -296,10 +290,6 @@ describe('Governance Review Team', () => {
   });
 
   it('can extend a Lifecycle ID', () => {
-    cy.intercept('GET', '/api/v1/system_intakes?status=closed').as(
-      'getClosedRequests'
-    );
-
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'GetAdminNotesAndActions') {
         req.alias = 'getAdminNotesAndActions';
@@ -307,8 +297,6 @@ describe('Governance Review Team', () => {
     });
 
     cy.get('button').contains('Closed requests').click();
-
-    cy.wait('@getClosedRequests').its('response.statusCode').should('eq', 200);
 
     // Navigate to intake and select action
     cy.governanceReviewTeam.grtActions.selectAction({
@@ -345,10 +333,6 @@ describe('Governance Review Team', () => {
   });
 
   it('can extend a Lifecycle ID with no Cost Baseline', () => {
-    cy.intercept('GET', '/api/v1/system_intakes?status=closed').as(
-      'getClosedRequests'
-    );
-
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'GetAdminNotesAndActions') {
         req.alias = 'getAdminNotesAndActions';
@@ -356,8 +340,6 @@ describe('Governance Review Team', () => {
     });
 
     cy.get('button').contains('Closed requests').click();
-
-    cy.wait('@getClosedRequests').its('response.statusCode').should('eq', 200);
 
     // Navigate to intake and select action
     cy.governanceReviewTeam.grtActions.selectAction({

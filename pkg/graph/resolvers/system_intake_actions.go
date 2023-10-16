@@ -22,6 +22,7 @@ import (
 func ProgressIntake(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeProgressToNewStepsInput,
 ) (*models.SystemIntake, error) {
@@ -147,6 +148,23 @@ func ProgressIntake(
 			return nil
 		})
 	}
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		errGroup.Go(func() error {
+			err = emailClient.SystemIntake.SendProgressToNewStepNotification(ctx,
+				*input.NotificationRecipients,
+				intake.ID,
+				input.NewStep,
+				intake.ProjectName.ValueOrZero(),
+				intake.Requester,
+				input.Feedback,
+				input.AdditionalInfo,
+			)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
+	}
 
 	if err := errGroup.Wait(); err != nil {
 		return nil, err
@@ -260,6 +278,7 @@ func CreateSystemIntakeActionRequestEdits(
 func RejectIntakeAsNotApproved(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeRejectIntakeInput,
 ) (*models.SystemIntake, error) {
@@ -347,6 +366,24 @@ func RejectIntakeAsNotApproved(
 				return errCreateNote
 			}
 
+			return nil
+		})
+	}
+
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		errGroup.Go(func() error {
+			err = emailClient.SystemIntake.SendNotApprovedNotification(ctx,
+				*input.NotificationRecipients,
+				intake.ID,
+				intake.ProjectName.ValueOrZero(),
+				intake.Requester,
+				input.Reason,
+				input.NextSteps,
+				input.AdditionalInfo,
+			)
+			if err != nil {
+				return err
+			}
 			return nil
 		})
 	}
@@ -629,6 +666,7 @@ func CreateSystemIntakeActionCloseRequest(
 func CreateSystemIntakeActionNotITGovRequest(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeNotITGovReqInput,
 ) (*models.SystemIntake, error) {
@@ -676,6 +714,19 @@ func CreateSystemIntakeActionNotITGovRequest(
 			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
 			Content:        input.AdminNote,
 		})
+		if err != nil {
+			return nil, err
+		}
+	}
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		err = emailClient.SystemIntake.SendNotITGovRequestNotification(ctx,
+			*input.NotificationRecipients,
+			intake.ID,
+			intake.ProjectName.ValueOrZero(),
+			intake.Requester,
+			input.Reason,
+			input.AdditionalInfo,
+		)
 		if err != nil {
 			return nil, err
 		}
@@ -932,7 +983,7 @@ func ExpireLCID(
 	)
 
 	// create action record before updating intake, while we still have access to intake's previous expiration date/next step
-	action := lcidactions.GetExpireLCIDAction(*intake, expirationDate, *input.NextSteps, *adminUserInfo)
+	action := lcidactions.GetExpireLCIDAction(*intake, expirationDate, input.NextSteps, *adminUserInfo)
 
 	intake.LifecycleExpiresAt = &expirationDate
 	intake.DecisionNextSteps = input.NextSteps

@@ -36,7 +36,12 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
               New contact name
             </label>
             <div
-              class="margin-top-1 cedar-contact-select usa-combo-box css-b62m3t-container"
+              class="easi-help-text margin-top-1"
+            >
+              This field searches the EUA system. Please confirm that you have added the correct individual.
+            </div>
+            <div
+              class="margin-top-1 cedar-contact-select usa-combo-box maxw-none css-b62m3t-container"
               id="IntakeForm-ContactCommonName"
             >
               <span
@@ -57,7 +62,7 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 >
                   <div
                     class="cedar-contact-select__input-container css-1pndypt-Input"
-                    data-value="Jerry Seinfeld, SF13"
+                    data-value="Jerry Seinfeld, SF13 (jerry.seinfeld@local.fake)"
                   >
                     <input
                       aria-autocomplete="list"
@@ -75,7 +80,7 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                       style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
                       tabindex="0"
                       type="text"
-                      value="Jerry Seinfeld, SF13"
+                      value="Jerry Seinfeld, SF13 (jerry.seinfeld@local.fake)"
                     />
                   </div>
                 </div>
@@ -345,6 +350,20 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 Other
               </option>
             </select>
+          </div>
+          <div
+            class="usa-alert usa-alert--warning usa-alert--slim"
+            data-testid="alert"
+          >
+            <div
+              class="usa-alert__body"
+            >
+              <p
+                class="usa-alert__text"
+              >
+                The selected individual is external to the CMS organization. Please be sure they should see the information in this notification email before proceeding.
+              </p>
+            </div>
           </div>
           <div
             class="margin-top-2"
