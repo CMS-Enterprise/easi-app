@@ -368,7 +368,7 @@ const Notes = () => {
             ).toLocaleString(DateTime.TIME_SIMPLE)}`}</NoteByline>
             {lcidExpirationChange && (
               <dl>
-                <dt>Lifecycle ID</dt>
+                <dt>Life Cycle ID</dt>
                 <dd>{data.systemIntake?.lcid}</dd>
                 <dt>{t('notes.extendLcid.newExpirationDate')}</dt>
                 <dd>
@@ -491,7 +491,7 @@ const Notes = () => {
 
   return (
     <>
-      <PageHeading data-testid="grt-notes-view">
+      <PageHeading data-testid="grt-notes-view" className="margin-top-0">
         {t('notes.heading')}
       </PageHeading>
       {archiveMutationResult.error && (

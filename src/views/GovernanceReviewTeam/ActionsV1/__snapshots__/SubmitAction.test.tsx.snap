@@ -299,7 +299,7 @@ exports[`Submit Action > renders additional contacts 1`] = `
                 data-testid="grt-nav-lifecycleID.title-link"
                 href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/lcid"
               >
-                Lifecycle ID
+                Life Cycle ID
               </a>
             </li>
             <li
