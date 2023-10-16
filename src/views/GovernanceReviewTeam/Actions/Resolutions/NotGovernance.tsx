@@ -55,7 +55,7 @@ const NotGovernance = ({
     <FormProvider<NotGovernanceFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
-        successMessage=""
+        successMessage={t('notItGovRequest.success')}
         onSubmit={onSubmit}
         title={
           <ResolutionTitleBox
