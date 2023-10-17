@@ -79,21 +79,24 @@ export default function RecommendationsList({
 
           return (
             <li key={id} className="margin-bottom-3">
-              <div className="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4">
-                <h3 className="margin-bottom-05">{title}</h3>
+              <div className="bg-base-lightest padding-4 padding-top-1 display-flex">
+                <div className="margin-right-2">1</div>
+                <div className="width-full">
+                  <h3 className="margin-top-0 margin-bottom-05">{title}</h3>
 
-                <p className="margin-top-05 margin-bottom-0 font-body-md line-height-body-4">
-                  {description}
-                </p>
+                  <p className="margin-top-05 margin-bottom-0 font-body-md line-height-body-4">
+                    {description}
+                  </p>
 
-                {links.length > 0 && (
-                  <>
-                    <p className="text-bold margin-bottom-0 margin-top-2">
-                      {t('adviceLetter.resources')}
-                    </p>
-                    <RecommendationLinks links={links} />
-                  </>
-                )}
+                  {links.length > 0 && (
+                    <>
+                      <p className="text-bold margin-bottom-0 margin-top-2">
+                        {t('adviceLetter.resources')}
+                      </p>
+                      <RecommendationLinks links={links} />
+                    </>
+                  )}
+                </div>
               </div>
 
               {
