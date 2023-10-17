@@ -219,7 +219,7 @@ const action = {
     readyForGrb: 'Mark as ready for GRB',
     provideFeedbackNeedBizCase:
       'Provide GRT Feedback and progress to business case',
-    issueLcid: 'Issue Lifecycle ID with no further governance',
+    issueLcid: 'Issue Life Cycle ID with no further governance',
     bizCaseNeedsChanges: 'Business case needs changes and is not ready for GRT',
     provideGrtFeedbackKeepDraft:
       'Provide GRT feedback and keep working on draft business case',
@@ -230,20 +230,20 @@ const action = {
     sendEmail: 'Send email',
     guideReceivedClose: 'Decomission guide received. Close the request',
     notRespondingClose: 'Project team not responding. Close the request',
-    extendLifecycleID: 'Extend Lifecycle ID'
+    extendLifecycleID: 'Extend Life Cycle ID'
   },
   issueLCID: {
     backLink: 'Change',
     heading: 'Actions on request',
     subheading: 'How to proceed?',
-    lifecycleId: 'Lifecycle ID',
+    lifecycleId: 'Life Cycle ID',
     feedbackLabel: 'This email will be sent to recipients',
     nextStepsLabel: 'Next steps',
     nextStepsHelpText:
       'Provide the team with recommendations on how best to continue the process and stay on track with their project. For example “start your ATO” or “complete acquisition planning”.',
     scopeLabel: 'Scope of Life Cycle ID',
     scopeHelpText:
-      'Tell the requester what is covered by this Lifecycle ID and what work it limits the project team to.',
+      'Tell the requester what is covered by this Life Cycle ID and what work it limits the project team to.',
     costBaselineLabel: 'Project cost baseline',
     costBaselineHelpText:
       'Include the cost baseline for the first two planned fiscal years of the project.',
@@ -269,10 +269,10 @@ const action = {
     trbFollowup: {
       label:
         'Should this team consult with the Technical Review Board (TRB) as a part of their next steps?',
-      stronglyRecommended: 'Yes, strongly recommend',
-      recommendedNotCritical:
+      STRONGLY_RECOMMENDED: 'Yes, strongly recommend',
+      RECOMMENDED_BUT_NOT_CRITICAL:
         'Yes, it’s not critical but the TRB could provide useful feedback',
-      notRecommended: 'No, they may if they wish but it’s not necessary'
+      NOT_RECOMMENDED: 'No, they may if they wish but it’s not necessary'
     },
     success:
       'Life Cycle ID {{lcid}} is issued for this request. This request is now closed. You may continue to manage this Life Cycle ID using the "Manage a Life Cycle ID" action.',
@@ -340,11 +340,11 @@ const action = {
     heading: 'Actions on request',
     subheading: 'How to proceed?',
     selectedAction: 'Selected action',
-    action: 'Extend Lifecycle ID',
-    lifecycleId: 'Lifecycle ID',
-    currentLcid: 'Current Lifecycle ID',
+    action: 'Extend Life Cycle ID',
+    lifecycleId: 'Life Cycle ID',
+    currentLcid: 'Current Life Cycle ID',
     currentLcidExpiration: 'Current expiration date',
-    newLcid: 'New Lifecycle ID',
+    newLcid: 'New Life Cycle ID',
     expirationDate: {
       label: 'Expiration date',
       helpText: 'For example 08 02 1776',
@@ -357,9 +357,9 @@ const action = {
     currentCostBaseline: 'Current Project Cost Baseline',
     noCostBaseline: 'There is no Cost Baseline associated with this LCID',
     scopeHelpText:
-      'Tell the Requester what is covered by this Lifecycle ID and what work it limits the project team to. This information will be included in your email to the Requester.',
+      'Tell the Requester what is covered by this Life Cycle ID and what work it limits the project team to. This information will be included in your email to the Requester.',
     nextStepsHelpText:
-      'Provide the Requester with some recommendations on how to continue their process. For example, “Begin your ATO” or “Update your System Profile”. This will help the requester stay on track after they receive their Lifecycle ID. This information will be included in your email to the Requester.',
+      'Provide the Requester with some recommendations on how to continue their process. For example, “Begin your ATO” or “Update your System Profile”. This will help the requester stay on track after they receive their Life Cycle ID. This information will be included in your email to the Requester.',
     costBaselineHelpText:
       'Enter the current cost baseline for the project for the first two planned fisical years of the project. This information will be included in your email to the Requester.',
     submissionInfo:

@@ -77,7 +77,7 @@ describe('The GRT Review page', () => {
     ).toBeInTheDocument();
   });
 
-  it('shows lifecycle id if it exists', async () => {
+  it('shows life cycle id if it exists', async () => {
     const lcid = '123456';
 
     render(
@@ -94,7 +94,7 @@ describe('The GRT Review page', () => {
 
     expect(
       within(screen.getByTestId('grt-current-status')).getByText(
-        `Lifecycle ID issued: ${lcid}`
+        `Life Cycle ID issued: ${lcid}`
       )
     ).toBeInTheDocument();
   });

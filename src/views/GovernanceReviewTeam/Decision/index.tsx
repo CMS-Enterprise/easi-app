@@ -103,7 +103,7 @@ const Decision = ({ systemIntake }: DecisionProps) => {
 
   return (
     <>
-      <PageHeading data-testid="grt-decision-view">
+      <PageHeading data-testid="grt-decision-view" className="margin-top-0">
         {t('governanceReviewTeam:decision.title')}
       </PageHeading>
       <p>{t('governanceReviewTeam:decision.noDecision')}</p>

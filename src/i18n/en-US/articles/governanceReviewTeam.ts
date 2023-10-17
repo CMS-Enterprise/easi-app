@@ -79,7 +79,7 @@ const governanceReviewTeam = {
     intake_not_found: 'System intake with ID: {{intakeId}} was not found',
     next_steps: 'Next steps',
     how_to_proceed: 'How to proceed?',
-    approved_label: 'Issue Lifecycle ID with no further governance',
+    approved_label: 'Issue Life Cycle ID with no further governance',
     accepted_label: 'Governance review process needed',
     closed_label: 'Governance not needed (close this request)',
     radio_help:
@@ -142,8 +142,8 @@ const governanceReviewTeam = {
       READY_FOR_GRB: 'Marked as ready for GRB',
       PROVIDE_FEEDBACK_NEED_BIZ_CASE:
         'Provided GRT Feedback and progressed to business case',
-      ISSUE_LCID: 'Issued Lifecycle ID with no further governance',
-      EXTEND_LCID: 'Lifecycle ID extended',
+      ISSUE_LCID: 'Issued Life Cycle ID with no further governance',
+      EXTEND_LCID: 'Life Cycle ID extended',
       BIZ_CASE_NEEDS_CHANGES:
         'Requested business case changes (not ready for GRT)',
       PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT:
@@ -199,10 +199,10 @@ const governanceReviewTeam = {
     allRequests: 'Back to all requests'
   },
   lifecycleID: {
-    title: 'Lifecycle ID',
-    noLCID: 'No Lifecycle ID has been issued',
-    expiration: 'Lifecycle ID Expiration',
-    scope: 'Lifecycle ID Scope',
+    title: 'Life Cycle ID',
+    noLCID: 'No Life Cycle ID has been issued',
+    expiration: 'Life Cycle ID Expiration',
+    scope: 'Life Cycle ID Scope',
     nextSteps: 'Next Steps',
     costBaseline: 'Project Cost Baseline'
   },
@@ -212,7 +212,7 @@ const governanceReviewTeam = {
     titleRejected: 'Decision - Rejected',
     titleClosed: 'Decision - Closed',
     lcidIssued:
-      'LCID issued, see Lifecycle ID tab for more detailed information',
+      'LCID issued, see Life Cycle ID tab for more detailed information',
     nextSteps: 'Next Steps',
     rejectionReason: 'Rejection Reason',
     decisionSectionTitle: 'Decision Details',

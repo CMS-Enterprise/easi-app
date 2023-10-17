@@ -7,6 +7,9 @@ const businessCase = {
       taskListCta: 'Go back to Governance Task List'
     }
   },
+  generalRequest: 'General request information',
+  requestDescription: 'Request description',
+  alternatives: 'Alternatives analysis',
   grtFeedback: {
     header: 'Recommendations',
     grbSubhead: 'GRT recommendations to the GRB',
@@ -51,7 +54,9 @@ const businessCase = {
     addRelatedCost: 'Add a related cost',
     newRelatedCost: 'What is your related cost?',
     removeCategory: 'Remove category'
-  }
+  },
+  checkAnswers: 'Check your answers before sending',
+  sendBusinessCase: 'Send my business case'
 };
 
 export default businessCase;
