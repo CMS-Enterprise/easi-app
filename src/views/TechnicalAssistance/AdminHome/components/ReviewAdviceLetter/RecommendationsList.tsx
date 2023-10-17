@@ -140,7 +140,7 @@ export default function RecommendationsList({
 
           return (
             <li key={id} className="margin-bottom-3">
-              <div className="bg-base-lightest padding-4 padding-top-1 display-flex">
+              <div className="bg-base-lightest padding-y-2 padding-left-105 padding-right-3 display-flex">
                 <div className="margin-right-2 display-flex flex-column flex-align-center line-height-body-1">
                   {/* TODO: reorder button accessibility */}
                   <Button
@@ -162,7 +162,7 @@ export default function RecommendationsList({
                     <IconArrowDropDown size={3} className="text-primary" />
                   </Button>
                 </div>
-                <div className="width-full">
+                <div className="width-full padding-y-105">
                   <h3 className="margin-top-0 margin-bottom-05">{title}</h3>
 
                   <p className="margin-top-05 margin-bottom-0 font-body-md line-height-body-4">
