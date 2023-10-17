@@ -72,6 +72,8 @@ const InternalReview = ({
         adviceLetter={adviceLetter}
         className="margin-top-5 margin-bottom-4"
         recommendationActions={{
+          setReorderError: error =>
+            setFormAlert(error ? { type: 'error', message: error } : null),
           edit: {
             onClick: recommendation =>
               history.push(`/trb/${trbRequestId}/advice/recommendations/form`, {

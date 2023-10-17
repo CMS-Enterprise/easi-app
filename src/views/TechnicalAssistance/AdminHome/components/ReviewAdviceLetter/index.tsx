@@ -19,6 +19,7 @@ type ReviewAdviceLetterProps = {
   recommendationActions?: {
     edit?: EditRecommendationProp;
     remove?: RemoveRecommendationProp;
+    setReorderError?: (error: string | null) => void;
   };
   showDateSent?: boolean;
   showSectionBorders?: boolean;
