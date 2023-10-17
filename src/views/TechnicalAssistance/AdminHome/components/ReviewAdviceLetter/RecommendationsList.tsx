@@ -151,7 +151,7 @@ export default function RecommendationsList({
                   >
                     <IconArrowDropUp size={3} className="text-primary" />
                   </Button>
-                  <span>1</span>
+                  <span>{index + 1}</span>
                   {/* TODO: reorder button accessibility */}
                   <Button
                     type="button"
