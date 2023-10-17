@@ -2125,35 +2125,35 @@ func (r *mutationResolver) CreateTRBAdminNote(ctx context.Context, input model.C
 // CreateTRBAdminNoteGeneralRequest is the resolver for the createTRBAdminNoteGeneralRequest field.
 func (r *mutationResolver) CreateTRBAdminNoteGeneralRequest(ctx context.Context, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
 	// placeholder implementation that frontend can call, doesn't set category-specific data
-	// TODO - EASI-3362 - implement this properly
+	// TODO - EASI-3362 - implement this properly with its own resolver that saves category-specific data
 	return resolvers.CreateTRBAdminNote(ctx, r.store, input.CommonFields.TrbRequestID, models.TRBAdminNoteCategoryGeneralRequest, input.CommonFields.NoteText)
 }
 
 // CreateTRBAdminNoteInitialRequestForm is the resolver for the createTRBAdminNoteInitialRequestForm field.
 func (r *mutationResolver) CreateTRBAdminNoteInitialRequestForm(ctx context.Context, input model.CreateTRBAdminNoteInitialRequestFormInput) (*models.TRBAdminNote, error) {
 	// placeholder implementation that frontend can call, doesn't set category-specific data
-	// TODO - EASI-3362 - implement this properly
+	// TODO - EASI-3362 - implement this properly with its own resolver that saves category-specific data
 	return resolvers.CreateTRBAdminNote(ctx, r.store, input.CommonFields.TrbRequestID, models.TRBAdminNoteCategoryInitialRequestForm, input.CommonFields.NoteText)
 }
 
 // CreateTRBAdminNoteSupportingDocuments is the resolver for the createTRBAdminNoteSupportingDocuments field.
 func (r *mutationResolver) CreateTRBAdminNoteSupportingDocuments(ctx context.Context, input model.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error) {
 	// placeholder implementation that frontend can call, doesn't set category-specific data
-	// TODO - EASI-3362 - implement this properly
+	// TODO - EASI-3362 - implement this properly with its own resolver that saves category-specific data
 	return resolvers.CreateTRBAdminNote(ctx, r.store, input.CommonFields.TrbRequestID, models.TRBAdminNoteCategorySupportingDocuments, input.CommonFields.NoteText)
 }
 
 // CreateTRBAdminNoteConsultSession is the resolver for the createTRBAdminNoteConsultSession field.
 func (r *mutationResolver) CreateTRBAdminNoteConsultSession(ctx context.Context, input model.CreateTRBAdminNoteConsultSessionInput) (*models.TRBAdminNote, error) {
 	// placeholder implementation that frontend can call, doesn't set category-specific data
-	// TODO - EASI-3362 - implement this properly
+	// TODO - EASI-3362 - implement this properly with its own resolver that saves category-specific data
 	return resolvers.CreateTRBAdminNote(ctx, r.store, input.CommonFields.TrbRequestID, models.TRBAdminNoteCategoryConsultSession, input.CommonFields.NoteText)
 }
 
 // CreateTRBAdminNoteAdviceLetter is the resolver for the createTRBAdminNoteAdviceLetter field.
 func (r *mutationResolver) CreateTRBAdminNoteAdviceLetter(ctx context.Context, input model.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error) {
 	// placeholder implementation that frontend can call, doesn't set category-specific data
-	// TODO - EASI-3362 - implement this properly
+	// TODO - EASI-3362 - implement this properly with its own resolver that saves category-specific data
 	return resolvers.CreateTRBAdminNote(ctx, r.store, input.CommonFields.TrbRequestID, models.TRBAdminNoteCategoryAdviceLetter, input.CommonFields.NoteText)
 }
 

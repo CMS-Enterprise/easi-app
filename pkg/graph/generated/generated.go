@@ -9926,7 +9926,7 @@ type TRBAdviceLetter {
 }
 
 """
-The data needed to create a TRB admin note, without any category-specific data
+The data needed to create any category of TRB admin note, without any category-specific data
 TODO - EASI-3458 - remove
 """
 input CreateTRBAdminNoteInput {
@@ -9996,7 +9996,6 @@ If updating admin notes needs to handle category-specific data, break it up into
 similar to the different CreateTRBAdminNote* inputs.
 """
 input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
-  # Common fields for notes of all categories
   id: UUID!
   category: TRBAdminNoteCategory
   noteText: HTML
