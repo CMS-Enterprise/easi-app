@@ -106,6 +106,18 @@ export const UpdateTrbRecommendationQuery = gql`
   }
 `;
 
+/** Reorder advice letters */
+export const UpdateTrbRecommendationOrderQuery = gql`
+  ${TRBRecommendation}
+  mutation UpdateTrbRecommendationOrder(
+    $input: UpdateTRBAdviceLetterRecommendationOrderInput!
+  ) {
+    updateTRBAdviceLetterRecommendationOrder(input: $input) {
+      ...TRBRecommendation
+    }
+  }
+`;
+
 /** Delete advice letter recommendation */
 export const DeleteTrbRecommendationQuery = gql`
   ${TRBRecommendation}
