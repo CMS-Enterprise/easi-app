@@ -219,6 +219,8 @@ const technicalAssistance = {
     addAnotherRecommendation: 'Add another recommendation',
     noRecommendations:
       'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
+    reorderRecommendations:
+      'Use the arrows on the left side of each recommendation to reorder your Advice Letter recommendations.',
     continueWithoutAdding: 'Continue without adding recommendations',
     addResourceLink: 'Add a resource link',
     addAnotherResourceLink: 'Add another resource link',

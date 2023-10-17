@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@trussworks/react-uswds';
 
 import { Alert } from 'components/shared/Alert';
+import Divider from 'components/shared/Divider';
 import {
   DeleteTrbRecommendationQuery,
   GetTrbAdviceLetterQuery
@@ -105,6 +106,12 @@ const Recommendations = ({
                 : 'adviceLetterForm.addRecommendation'
             )}
           </Button>
+
+          <Divider className="margin-top-2 margin-bottom-4" />
+
+          <Alert type="info" slim>
+            {t('adviceLetterForm.reorderRecommendations')}
+          </Alert>
 
           {
             /* No recommendations message */
