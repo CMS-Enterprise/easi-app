@@ -140,32 +140,46 @@ export default function RecommendationsList({
 
           return (
             <li key={id} className="margin-bottom-3">
-              <div className="bg-base-lightest padding-y-2 padding-left-105 padding-right-3 display-flex">
-                {/* Reorder control buttons */}
-                <div className="margin-right-2 display-flex flex-column flex-align-center line-height-body-1">
-                  <Button
-                    type="button"
-                    onClick={() => sort(id, index - 1)}
-                    className="height-3"
-                    aria-label="Increase recommendation sort order"
-                    unstyled
-                  >
-                    <IconArrowDropUp size={3} className="text-primary" />
-                  </Button>
-                  <span>{index + 1}</span>
-                  <Button
-                    type="button"
-                    onClick={() => sort(id, index + 1)}
-                    className="height-3"
-                    aria-label="Decrease recommendation sort order"
-                    unstyled
-                  >
-                    <IconArrowDropDown size={3} className="text-primary" />
-                  </Button>
-                </div>
+              <div
+                className={classNames(
+                  'bg-base-lightest padding-y-2 padding-left-105 padding-right-3 display-flex',
+                  { 'padding-x-4': !editable }
+                )}
+              >
+                {
+                  /* Reorder control buttons */
+                  editable && (
+                    <div className="margin-right-2 display-flex flex-column flex-align-center line-height-body-1">
+                      <Button
+                        type="button"
+                        onClick={() => sort(id, index - 1)}
+                        className="height-3"
+                        aria-label="Increase recommendation sort order"
+                        unstyled
+                      >
+                        <IconArrowDropUp size={3} className="text-primary" />
+                      </Button>
+                      <span>{index + 1}</span>
+                      <Button
+                        type="button"
+                        onClick={() => sort(id, index + 1)}
+                        className="height-3"
+                        aria-label="Decrease recommendation sort order"
+                        unstyled
+                      >
+                        <IconArrowDropDown size={3} className="text-primary" />
+                      </Button>
+                    </div>
+                  )
+                }
 
                 {/* Recommendation content */}
-                <div className="width-full padding-y-105">
+                <div
+                  className={classNames(
+                    'width-full padding-bottom-2',
+                    editable ? 'padding-top-105' : 'padding-top-1'
+                  )}
+                >
                   <h3 className="margin-top-0 margin-bottom-05">{title}</h3>
 
                   <p className="margin-top-05 margin-bottom-0 font-body-md line-height-body-4">
