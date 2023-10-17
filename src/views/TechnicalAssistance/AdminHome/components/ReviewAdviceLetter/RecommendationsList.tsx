@@ -21,6 +21,7 @@ export type RemoveRecommendationProp = {
 
 type RecommendationsListProps = {
   recommendations: TRBRecommendation[];
+  editable?: boolean;
   edit?: EditRecommendationProp;
   remove?: RemoveRecommendationProp;
   className?: string;
@@ -28,6 +29,7 @@ type RecommendationsListProps = {
 
 export default function RecommendationsList({
   recommendations,
+  editable = true,
   edit,
   remove,
   className
@@ -88,7 +90,7 @@ export default function RecommendationsList({
 
               {
                 // Show action buttons if edit or remove onClick props are provided
-                (edit || remove) && (
+                (edit || remove) && editable && (
                   <ButtonGroup>
                     {edit && (
                       <Button
