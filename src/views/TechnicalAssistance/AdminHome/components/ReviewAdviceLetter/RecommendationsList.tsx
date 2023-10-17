@@ -62,9 +62,12 @@ export default function RecommendationsList({
         </RemoveRecommendationModal>
       )}
 
-      <Alert type="info" slim className="margin-bottom-4">
-        {t('adviceLetterForm.reorderRecommendations')}
-      </Alert>
+      {recommendations.length > 0 && editable && (
+        <Alert type="info" slim className="margin-bottom-4">
+          {t('adviceLetterForm.reorderRecommendations')}
+        </Alert>
+      )}
+
       <ul className={classNames('usa-list usa-list--unstyled', className)}>
         {recommendations.map(recommendation => {
           const {
