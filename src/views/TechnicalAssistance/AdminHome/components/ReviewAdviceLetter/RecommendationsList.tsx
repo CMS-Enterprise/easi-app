@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -9,7 +10,12 @@ import {
 import classNames from 'classnames';
 
 import Alert from 'components/shared/Alert';
+import { UpdateTrbRecommendationOrderQuery } from 'queries/TrbAdviceLetterQueries';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations as TRBRecommendation } from 'queries/types/GetTrbAdviceLetter';
+import {
+  UpdateTrbRecommendationOrder,
+  UpdateTrbRecommendationOrderVariables
+} from 'queries/types/UpdateTrbRecommendationOrder';
 
 import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
 
@@ -44,10 +50,26 @@ export default function RecommendationsList({
 }: RecommendationsListProps) {
   const { t } = useTranslation('technicalAssistance');
 
+  const [updateOrder] = useMutation<
+    UpdateTrbRecommendationOrder,
+    UpdateTrbRecommendationOrderVariables
+  >(UpdateTrbRecommendationOrderQuery);
+
   const [
     recommendationToRemove,
     setRecommendationToRemove
   ] = useState<TRBRecommendation | null>(null);
+
+  const sort = (id: string) => {
+    updateOrder({
+      variables: {
+        input: {
+          trbRequestId,
+          newOrder: recommendations.map(rec => rec.id)
+        }
+      }
+    });
+  };
 
   return (
     <>
@@ -91,7 +113,7 @@ export default function RecommendationsList({
                   {/* TODO: reorder button accessibility */}
                   <Button
                     type="button"
-                    onClick={() => null}
+                    onClick={() => sort(id)}
                     className="height-3"
                     unstyled
                   >
@@ -101,7 +123,7 @@ export default function RecommendationsList({
                   {/* TODO: reorder button accessibility */}
                   <Button
                     type="button"
-                    onClick={() => null}
+                    onClick={() => sort(id)}
                     className="height-3"
                     unstyled
                   >
