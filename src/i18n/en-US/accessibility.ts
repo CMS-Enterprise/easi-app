@@ -155,7 +155,8 @@ const accessibility = {
     fields: {
       project: {
         label: "Choose the application you'd like to test",
-        helpText: 'Start typing the name of the application or the Lifecycle ID'
+        helpText:
+          'Start typing the name of the application or the Life Cycle ID'
       }
     },
     info:
@@ -165,9 +166,9 @@ const accessibility = {
       '508 testing request created. We have sent you a confirmation email.',
     helpAndGuidance: {
       lifecycleIdAccordion: {
-        header: 'What if I cannot find my application or Lifecycle ID?',
+        header: 'What if I cannot find my application or Life Cycle ID?',
         description:
-          'Your application might not have a Lifecycle ID. A Lifecycle ID is your unique reference number that lets you operate your application. This ID is issued by the IT Governance team as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your application.'
+          'Your application might not have a Life Cycle ID. A Life Cycle ID is your unique reference number that lets you operate your application. This ID is issued by the IT Governance team as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your application.'
       }
     },
     cedar: {
@@ -189,7 +190,7 @@ const accessibility = {
   removeAccessibilityRequest: {
     reason: 'Reason for removal',
     INCORRECT_APPLICATION_AND_LIFECYCLE_ID:
-      'Incorrect application and Lifecycle ID selected',
+      'Incorrect application and Life Cycle ID selected',
     NO_TESTING_NEEDED: 'No testing needed',
     OTHER: 'Other'
   },
@@ -278,11 +279,11 @@ const accessibility = {
       'For requests related to testing COTS products, GOTS products, review of documents and training please email the Section 508 team at <1>CMS_Section508@cms.hhs.gov</1>.',
     beforeYouStart: 'Before you start',
     needLcid:
-      'To use this service, you’ll need the Lifecycle ID of the application you’d like to test. Once you make the request, someone from the 508 team will email you with the next steps.',
+      'To use this service, you’ll need the Life Cycle ID of the application you’d like to test. Once you make the request, someone from the 508 team will email you with the next steps.',
     continueButton: 'Continue to steps involved',
-    noLcidHeader: 'What if I don’t have a Lifecycle ID?',
+    noLcidHeader: 'What if I don’t have a Life Cycle ID?',
     noLcidBody:
-      'A Lifecycle ID is your unique reference number that lets you operate your application. The IT governance team issues the Lifecycle ID as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your system.',
+      'A Life Cycle ID is your unique reference number that lets you operate your application. The IT governance team issues the Life Cycle ID as a part of the GRT/GRB process. Contact the IT Governance team at <1>IT_Governance@cms.hhs.gov</1> with information about your system.',
     cedar: {
       request508TestingBullet: 'request 508 testing for your system'
     },

@@ -423,7 +423,7 @@ const IssueLcid = ({
                 {...field}
                 id="stronglyRecommended"
                 value={SystemIntakeTRBFollowUp.STRONGLY_RECOMMENDED}
-                label={t('issueLCID.trbFollowup.stronglyRecommended')}
+                label={t('issueLCID.trbFollowup.STRONGLY_RECOMMENDED')}
                 checked={
                   field.value === SystemIntakeTRBFollowUp.STRONGLY_RECOMMENDED
                 }
@@ -432,7 +432,7 @@ const IssueLcid = ({
                 {...field}
                 id="recommendedNotCritical"
                 value={SystemIntakeTRBFollowUp.RECOMMENDED_BUT_NOT_CRITICAL}
-                label={t('issueLCID.trbFollowup.recommendedNotCritical')}
+                label={t('issueLCID.trbFollowup.RECOMMENDED_BUT_NOT_CRITICAL')}
                 checked={
                   field.value ===
                   SystemIntakeTRBFollowUp.RECOMMENDED_BUT_NOT_CRITICAL
@@ -442,7 +442,7 @@ const IssueLcid = ({
                 {...field}
                 id="notRecommended"
                 value={SystemIntakeTRBFollowUp.NOT_RECOMMENDED}
-                label={t('issueLCID.trbFollowup.notRecommended')}
+                label={t('issueLCID.trbFollowup.NOT_RECOMMENDED')}
                 checked={
                   field.value === SystemIntakeTRBFollowUp.NOT_RECOMMENDED
                 }

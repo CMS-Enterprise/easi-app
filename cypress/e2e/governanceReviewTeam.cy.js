@@ -167,7 +167,7 @@ describe('Governance Review Team', () => {
     });
   });
 
-  it('can issue a Lifecycle ID', () => {
+  it('can issue a Life Cycle ID', () => {
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
     cy.governanceReviewTeam.grtActions.selectAction({
@@ -206,7 +206,7 @@ describe('Governance Review Team', () => {
 
     cy.get('[data-testid="action-note"]')
       .first()
-      .contains('Issued Lifecycle ID with no further governance');
+      .contains('Issued Life Cycle ID with no further governance');
 
     cy.get(
       'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/decision"]'
@@ -216,17 +216,17 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="grt-current-status"]')
       .invoke('text')
       .then(text => {
-        expect(text.length).to.equal(27);
+        expect(text.length).to.equal(28);
       });
-    cy.contains('dt', 'Lifecycle ID issued');
+    cy.contains('dt', 'Life Cycle ID issued');
 
     cy.get(
       'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/lcid"]'
     ).click();
-    cy.contains('dt', 'Lifecycle ID Expiration')
+    cy.contains('dt', 'Life Cycle ID Expiration')
       .siblings('dd')
       .contains(`December 25, ${futureDateYear}`);
-    cy.contains('dt', 'Lifecycle ID Scope').siblings('dd').contains('Scope');
+    cy.contains('dt', 'Life Cycle ID Scope').siblings('dd').contains('Scope');
     cy.contains('dt', 'Next Steps').siblings('dd').contains('Next steps');
   });
 
@@ -289,7 +289,7 @@ describe('Governance Review Team', () => {
     cy.get('input[value="aaron.adams@local.fake"]').should('be.checked');
   });
 
-  it('can extend a Lifecycle ID', () => {
+  it('can extend a Life Cycle ID', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'GetAdminNotesAndActions') {
         req.alias = 'getAdminNotesAndActions';
@@ -332,7 +332,7 @@ describe('Governance Review Team', () => {
     cy.get('h1').contains('Admin team notes');
   });
 
-  it('can extend a Lifecycle ID with no Cost Baseline', () => {
+  it('can extend a Life Cycle ID with no Cost Baseline', () => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'GetAdminNotesAndActions') {
         req.alias = 'getAdminNotesAndActions';

@@ -114,7 +114,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
               <ErrorAlert
                 testId="system-intake-errors"
                 classNames="margin-top-3"
-                heading="Please check and fix the following"
+                heading={t('form:inputError.checkFix')}
               >
                 {Object.keys(flatErrors).map(key => {
                   return (
@@ -135,7 +135,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                 />
               </ErrorAlert>
             )}
-            <PageHeading data-testid="grt-dates-view">
+            <PageHeading data-testid="grt-dates-view" className="margin-top-0">
               {t('governanceReviewTeam:dates.heading')}
             </PageHeading>
             <h2>{t('governanceReviewTeam:dates.subheading')}</h2>
