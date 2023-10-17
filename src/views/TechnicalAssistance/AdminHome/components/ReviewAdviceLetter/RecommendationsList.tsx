@@ -141,6 +141,7 @@ export default function RecommendationsList({
           return (
             <li key={id} className="margin-bottom-3">
               <div className="bg-base-lightest padding-y-2 padding-left-105 padding-right-3 display-flex">
+                {/* Reorder control buttons */}
                 <div className="margin-right-2 display-flex flex-column flex-align-center line-height-body-1">
                   {/* TODO: reorder button accessibility */}
                   <Button
@@ -162,6 +163,8 @@ export default function RecommendationsList({
                     <IconArrowDropDown size={3} className="text-primary" />
                   </Button>
                 </div>
+
+                {/* Recommendation content */}
                 <div className="width-full padding-y-105">
                   <h3 className="margin-top-0 margin-bottom-05">{title}</h3>
 
@@ -181,7 +184,7 @@ export default function RecommendationsList({
               </div>
 
               {
-                // Show action buttons if edit or remove onClick props are provided
+                /* Action buttons if `editable` is true and edit or remove onClick props are provided */
                 (edit || remove) && editable && (
                   <ButtonGroup>
                     {edit && (
