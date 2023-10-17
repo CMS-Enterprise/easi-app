@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import {
@@ -97,6 +97,11 @@ export default function RecommendationsList({
       // TODO: Error handling
       .catch(() => null);
   };
+
+  // Update sortedRecommendations state when query is refetched
+  useEffect(() => {
+    setSortedRecommendations(recommendations);
+  }, [recommendations]);
 
   return (
     <>
