@@ -1,5 +1,6 @@
 const form = {
   dropdownInitialSelect: '- Select -',
+  allFieldsMandatory: 'All fields are mandatory',
   // Copied from technicalAssistance
   // todo cleanup technicalAssistance and use this text namepace
   inputError: {

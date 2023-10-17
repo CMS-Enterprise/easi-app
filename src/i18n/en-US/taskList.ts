@@ -11,15 +11,15 @@ const taskList = {
   decision: {
     bizCaseApproved: 'Your business case has been approved.',
     bizCaseRejected: 'Your business case has been rejected.',
-    aboutThisLcid: 'About this Lifecycle ID',
+    aboutThisLcid: 'About this Life Cycle ID',
     tempLcidExplanation:
-      'You have been issued a Lifecycle ID, but you still have more steps to complete before your business case is fully approved.',
+      'You have been issued a Life Cycle ID, but you still have more steps to complete before your business case is fully approved.',
     tempLcidNextSteps:
-      'Even though you have been issued a Lifecycle ID, you have some remaining tasks before your request is complete. After reviewing the information on this page, please return to the task list to continue your request.',
+      'Even though you have been issued a Life Cycle ID, you have some remaining tasks before your request is complete. After reviewing the information on this page, please return to the task list to continue your request.',
     notItRequest: 'Not an IT Request',
     noGovernanceNeeded: 'No further governance needed',
-    lcid: 'Project Lifecycle ID',
-    lcidScope: 'Lifecycle ID Scope',
+    lcid: 'Project Life Cycle ID',
+    lcidScope: 'Life Cycle ID Scope',
     lcidExpiration: 'This ID expires on {{date}}',
     costBaseline: 'Project Cost Baseline',
     reasons: 'Reasons',
@@ -53,7 +53,7 @@ const taskList = {
     descriptiveDate: 'Feedback given on {{date}}'
   },
   lcidAlert: {
-    heading: 'Lifecycle ID Information',
+    heading: 'Life Cycle ID Information',
     label: 'LCID:',
     link: 'Read about this LCID'
   },
@@ -94,7 +94,7 @@ const taskList = {
   decisionNextSteps: {
     heading: 'Decision and next steps',
     description:
-      'If your Business Case is approved you will receive a unique Lifecycle ID. If it is not approved, you would need to address the concerns to proceed.'
+      'If your Business Case is approved you will receive a unique Life Cycle ID. If it is not approved, you would need to address the concerns to proceed.'
   },
   cta: {
     viewSubmittedRequest: 'View submitted request form',

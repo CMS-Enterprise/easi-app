@@ -458,7 +458,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               role="cell"
               style="width: 200px; padding-left: 0px;"
             >
-              Lifecycle ID issued: A123456: A123456
+              Life Cycle ID issued: A123456: A123456
             </td>
             <td
               role="cell"

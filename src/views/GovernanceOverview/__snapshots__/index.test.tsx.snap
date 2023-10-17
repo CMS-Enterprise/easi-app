@@ -99,7 +99,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
         <li
           className="margin-y-1"
         >
-          get a Lifecycle ID
+          get a Life Cycle ID
         </li>
         <li
           className="margin-y-1"
@@ -263,7 +263,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
           <p
             className="margin-bottom-1"
           >
-            If your Business Case is approved, you will receive a unique Lifecycle ID. If it is not approved, you will recieve documented next steps or concerns to address in order to proceed.
+            If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will recieve documented next steps or concerns to address in order to proceed.
           </p>
         </li>
       </ol>
@@ -413,7 +413,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
         <li
           className="margin-y-1"
         >
-          get a Lifecycle ID
+          get a Life Cycle ID
         </li>
         <li
           className="margin-y-1"
@@ -577,7 +577,7 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
           <p
             className="margin-bottom-1"
           >
-            If your Business Case is approved, you will receive a unique Lifecycle ID. If it is not approved, you will recieve documented next steps or concerns to address in order to proceed.
+            If your Business Case is approved, you will receive a unique Life Cycle ID. If it is not approved, you will recieve documented next steps or concerns to address in order to proceed.
           </p>
         </li>
       </ol>

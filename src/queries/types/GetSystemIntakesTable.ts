@@ -109,3 +109,7 @@ export interface GetSystemIntakesTable_systemIntakes {
 export interface GetSystemIntakesTable {
   systemIntakes: GetSystemIntakesTable_systemIntakes[];
 }
+
+export interface GetSystemIntakesTableVariables {
+  openRequests: boolean;
+}

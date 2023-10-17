@@ -1,6 +1,6 @@
 import { sharedLifecycleIdSchema } from './actionSchema';
 
-describe('extend lifecycle ID schema', () => {
+describe('extend Life Cycle ID schema', () => {
   const defaultValues = {
     expirationDateDay: '15',
     expirationDateMonth: '2',

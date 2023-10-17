@@ -34,5 +34,7 @@ export const cleanCSVData = (data: any): any => {
    * fairly confident this should be typecast as a string by now
    * basically, just chuck a backslash in front of any + or = characters
    */
-  return (data as string).replace(/[+|=]/g, match => `\\${match}`);
+  return (data as string)
+    .replace(/[+|=]/g, match => `\\${match}`)
+    .replace(/"/g, '""');
 };
