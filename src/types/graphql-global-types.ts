@@ -920,6 +920,17 @@ export interface SystemIntakeIssueLCIDInput {
 }
 
 /**
+ * Input for creating a Not an IT Governance Request Action in Admin Actions v2
+ */
+export interface SystemIntakeNotITGovReqInput {
+  systemIntakeID: UUID;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  reason?: HTML | null;
+  additionalInfo?: HTML | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * The input data used to set the CMS product manager/lead of a system
  */
 export interface SystemIntakeProductManagerInput {
