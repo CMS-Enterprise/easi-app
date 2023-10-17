@@ -23,7 +23,7 @@ type ReviewAdviceLetterProps = {
   };
   showDateSent?: boolean;
   showSectionBorders?: boolean;
-  publicForm?: boolean;
+  editable?: boolean;
   className?: string;
 };
 
@@ -37,7 +37,7 @@ const ReviewAdviceLetter = ({
   recommendationActions,
   showDateSent = true,
   showSectionBorders = true,
-  publicForm = false,
+  editable = true,
   className
 }: ReviewAdviceLetterProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -112,6 +112,7 @@ const ReviewAdviceLetter = ({
               recommendations={recommendations}
               trbRequestId={trbRequestId}
               className="margin-top-4"
+              editable={editable}
               {...recommendationActions}
             />
           )
