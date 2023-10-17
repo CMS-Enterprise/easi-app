@@ -13,6 +13,7 @@ import (
 )
 
 // CreateTRBAdminNote creates a new TRB admin note in the database
+// TODO - EASI-3458 - remove
 func CreateTRBAdminNote(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID, category models.TRBAdminNoteCategory, noteText models.HTML) (*models.TRBAdminNote, error) {
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: trbRequestID,
