@@ -110,6 +110,7 @@ const ReviewAdviceLetter = ({
             <RecommendationsList
               recommendations={recommendations}
               trbRequestId={trbRequestId}
+              className="margin-top-4"
               {...recommendationActions}
             />
           )

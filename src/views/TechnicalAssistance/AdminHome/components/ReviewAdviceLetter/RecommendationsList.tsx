@@ -111,7 +111,7 @@ export default function RecommendationsList({
   }, []);
 
   return (
-    <>
+    <div className={className}>
       {remove && (
         <RemoveRecommendationModal
           modalProps={{
@@ -136,7 +136,7 @@ export default function RecommendationsList({
         </Alert>
       )}
 
-      <ul className={classNames('usa-list usa-list--unstyled', className)}>
+      <ul className="usa-list usa-list--unstyled">
         {sortedRecommendations.map((recommendation, index) => {
           const {
             title,
@@ -238,6 +238,6 @@ export default function RecommendationsList({
           );
         })}
       </ul>
-    </>
+    </div>
   );
 }
