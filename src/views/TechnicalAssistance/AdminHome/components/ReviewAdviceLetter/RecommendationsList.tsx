@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, ButtonGroup } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import Alert from 'components/shared/Alert';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations as TRBRecommendation } from 'queries/types/GetTrbAdviceLetter';
 
 import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
@@ -60,6 +61,10 @@ export default function RecommendationsList({
           </p>
         </RemoveRecommendationModal>
       )}
+
+      <Alert type="info" slim className="margin-bottom-4">
+        {t('adviceLetterForm.reorderRecommendations')}
+      </Alert>
       <ul className={classNames('usa-list usa-list--unstyled', className)}>
         {recommendations.map(recommendation => {
           const {

@@ -109,10 +109,6 @@ const Recommendations = ({
 
           <Divider className="margin-top-2 margin-bottom-4" />
 
-          <Alert type="info" slim className="margin-bottom-4">
-            {t('adviceLetterForm.reorderRecommendations')}
-          </Alert>
-
           {
             /* No recommendations message */
             !hasRecommendations ? (
