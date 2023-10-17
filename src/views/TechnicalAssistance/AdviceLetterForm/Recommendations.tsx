@@ -121,7 +121,6 @@ const Recommendations = ({
               </Alert>
             ) : (
               <RecommendationsList
-                type="form"
                 recommendations={recommendations}
                 edit={{
                   onClick: recommendation => {

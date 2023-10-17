@@ -108,7 +108,6 @@ const ReviewAdviceLetter = ({
             <p className="margin-top-4">{t('adviceLetter.notSpecified')}</p>
           ) : (
             <RecommendationsList
-              type={!publicForm ? 'form' : 'admin'}
               recommendations={recommendations}
               {...recommendationActions}
             />

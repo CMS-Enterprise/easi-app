@@ -20,7 +20,6 @@ export type RemoveRecommendationProp = {
 };
 
 type RecommendationsListProps = {
-  type: 'form' | 'admin';
   recommendations: TRBRecommendation[];
   edit?: EditRecommendationProp;
   remove?: RemoveRecommendationProp;
@@ -28,7 +27,6 @@ type RecommendationsListProps = {
 };
 
 export default function RecommendationsList({
-  type,
   recommendations,
   edit,
   remove,
@@ -60,13 +58,7 @@ export default function RecommendationsList({
           </p>
         </RemoveRecommendationModal>
       )}
-      <ul
-        className={classNames(
-          'usa-list usa-list--unstyled',
-          { 'grid-row grid-gap-lg': type === 'form' },
-          className
-        )}
-      >
+      <ul className={classNames('usa-list usa-list--unstyled', className)}>
         {recommendations.map(recommendation => {
           const {
             title,
@@ -78,27 +70,17 @@ export default function RecommendationsList({
           return (
             <li
               key={id}
-              className={classNames({
-                'desktop:grid-col-6': type === 'form',
-                'bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3':
-                  type === 'admin'
-              })}
+              className="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3"
             >
-              {type === 'admin' ? (
-                <h3 className="margin-bottom-1">{title}</h3>
-              ) : (
-                <h4 className="margin-bottom-1">{title}</h4>
-              )}
+              <h3 className="margin-bottom-1">{title}</h3>
 
               <p className="margin-y-1">{description}</p>
 
               {links.length > 0 && (
                 <>
-                  {type === 'admin' && (
-                    <p className="text-bold margin-bottom-0 margin-top-3">
-                      {t('adviceLetter.resources')}
-                    </p>
-                  )}
+                  <p className="text-bold margin-bottom-0 margin-top-3">
+                    {t('adviceLetter.resources')}
+                  </p>
                   <RecommendationLinks links={links} />
                 </>
               )}
