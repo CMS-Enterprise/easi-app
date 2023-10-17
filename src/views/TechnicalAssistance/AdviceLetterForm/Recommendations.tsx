@@ -118,7 +118,7 @@ const Recommendations = ({
                 recommendations={recommendations}
                 trbRequestId={trbRequestId}
                 setReorderError={error =>
-                  setFormAlert({ type: 'error', message: error })
+                  setFormAlert(error ? { type: 'error', message: error } : null)
                 }
                 edit={{
                   onClick: recommendation => {
@@ -166,6 +166,7 @@ const Recommendations = ({
             back={{
               outline: true,
               onClick: () => {
+                setFormAlert(null);
                 history.push(`/trb/${trbRequestId}/advice/summary`);
               }
             }}
@@ -182,6 +183,7 @@ const Recommendations = ({
                 ) {
                   setStepsCompleted([...stepsCompleted, 'recommendations']);
                 }
+                setFormAlert(null);
                 history.push(`/trb/${trbRequestId}/advice/next-steps`);
               },
               outline: !hasRecommendations

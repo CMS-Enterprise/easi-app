@@ -34,7 +34,7 @@ export type RemoveRecommendationProp = {
 type RecommendationsListProps = {
   recommendations: TRBRecommendation[];
   trbRequestId: string;
-  setReorderError?: (error: string) => void;
+  setReorderError?: (error: string | null) => void;
   editable?: boolean;
   edit?: EditRecommendationProp;
   remove?: RemoveRecommendationProp;
@@ -103,6 +103,12 @@ export default function RecommendationsList({
   useEffect(() => {
     setSortedRecommendations(recommendations);
   }, [recommendations]);
+
+  // Clear error on initial render
+  useEffect(() => {
+    setReorderError?.(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
