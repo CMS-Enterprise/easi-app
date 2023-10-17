@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, ButtonGroup } from '@trussworks/react-uswds';
+import {
+  Button,
+  ButtonGroup,
+  IconArrowDropDown,
+  IconArrowDropUp
+} from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import Alert from 'components/shared/Alert';
@@ -80,7 +85,27 @@ export default function RecommendationsList({
           return (
             <li key={id} className="margin-bottom-3">
               <div className="bg-base-lightest padding-4 padding-top-1 display-flex">
-                <div className="margin-right-2">1</div>
+                <div className="margin-right-2 display-flex flex-column flex-align-center line-height-body-1">
+                  {/* TODO: reorder button accessibility */}
+                  <Button
+                    type="button"
+                    onClick={() => null}
+                    className="height-3"
+                    unstyled
+                  >
+                    <IconArrowDropUp size={3} className="text-primary" />
+                  </Button>
+                  <span>1</span>
+                  {/* TODO: reorder button accessibility */}
+                  <Button
+                    type="button"
+                    onClick={() => null}
+                    className="height-3"
+                    unstyled
+                  >
+                    <IconArrowDropDown size={3} className="text-primary" />
+                  </Button>
+                </div>
                 <div className="width-full">
                   <h3 className="margin-top-0 margin-bottom-05">{title}</h3>
 
