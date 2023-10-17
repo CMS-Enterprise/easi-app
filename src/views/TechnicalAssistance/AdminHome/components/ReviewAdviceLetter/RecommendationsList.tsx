@@ -68,27 +68,28 @@ export default function RecommendationsList({
           } = recommendation;
 
           return (
-            <li
-              key={id}
-              className="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4 margin-bottom-3"
-            >
-              <h3 className="margin-bottom-1">{title}</h3>
+            <li key={id} className="margin-bottom-3">
+              <div className="bg-base-lightest padding-x-4 padding-y-1 padding-bottom-4">
+                <h3 className="margin-bottom-05">{title}</h3>
 
-              <p className="margin-y-1">{description}</p>
+                <p className="margin-top-05 margin-bottom-0 font-body-md line-height-body-4">
+                  {description}
+                </p>
 
-              {links.length > 0 && (
-                <>
-                  <p className="text-bold margin-bottom-0 margin-top-3">
-                    {t('adviceLetter.resources')}
-                  </p>
-                  <RecommendationLinks links={links} />
-                </>
-              )}
+                {links.length > 0 && (
+                  <>
+                    <p className="text-bold margin-bottom-0 margin-top-2">
+                      {t('adviceLetter.resources')}
+                    </p>
+                    <RecommendationLinks links={links} />
+                  </>
+                )}
+              </div>
 
               {
                 // Show action buttons if edit or remove onClick props are provided
                 (edit || remove) && (
-                  <ButtonGroup className="margin-top-2">
+                  <ButtonGroup>
                     {edit && (
                       <Button
                         type="button"

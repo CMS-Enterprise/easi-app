@@ -30,7 +30,6 @@ export default function RecommendationLinks({
               aria-label={`Open ${link} in a new tab`}
               target="_blank"
               rel="noopener noreferrer"
-              className="display-block margin-top-05"
               // If EASi url, link to relative path
               href={isExternal ? url.href : url.pathname}
               // Display external link icon if not EASi url
