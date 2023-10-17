@@ -109,6 +109,7 @@ const ReviewAdviceLetter = ({
           ) : (
             <RecommendationsList
               recommendations={recommendations}
+              trbRequestId={trbRequestId}
               {...recommendationActions}
             />
           )

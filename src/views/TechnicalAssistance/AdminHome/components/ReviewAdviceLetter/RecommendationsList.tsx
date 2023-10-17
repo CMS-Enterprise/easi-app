@@ -27,6 +27,7 @@ export type RemoveRecommendationProp = {
 
 type RecommendationsListProps = {
   recommendations: TRBRecommendation[];
+  trbRequestId: string;
   editable?: boolean;
   edit?: EditRecommendationProp;
   remove?: RemoveRecommendationProp;
@@ -35,6 +36,7 @@ type RecommendationsListProps = {
 
 export default function RecommendationsList({
   recommendations,
+  trbRequestId,
   editable = true,
   edit,
   remove,

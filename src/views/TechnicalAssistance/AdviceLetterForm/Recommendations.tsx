@@ -36,7 +36,7 @@ const defaultValues: AdviceLetterRecommendationFields = {
 
 const Recommendations = ({
   trbRequestId,
-  adviceLetter,
+  adviceLetter: { recommendations },
   setIsStepSubmitting,
   setFormAlert,
   stepsCompleted,
@@ -45,8 +45,6 @@ const Recommendations = ({
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
   const history = useHistory();
-
-  const { recommendations } = adviceLetter;
 
   /** Whether recommendations have been added to the request */
   const hasRecommendations: boolean = recommendations.length > 0;
@@ -118,6 +116,7 @@ const Recommendations = ({
             ) : (
               <RecommendationsList
                 recommendations={recommendations}
+                trbRequestId={trbRequestId}
                 edit={{
                   onClick: recommendation => {
                     // Set form field values for editing
