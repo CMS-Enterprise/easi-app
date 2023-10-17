@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import classNames from 'classnames';
 
 import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
@@ -24,78 +26,74 @@ const BusinessCaseReview = ({
   grtFeedbacks,
   helpArticle = false
 }: BusinessCaseReviewProps) => {
+  const { t } = useTranslation('businessCase');
+
   const filename = `Business case for ${values.requestName}.pdf`;
+
   return (
-    <div className="margin-top-neg-1">
+    <div
+      className={classNames('margin-top-neg-1', {
+        'grid-container': !helpArticle
+      })}
+    >
       <PDFExport
         title="Business Case"
         filename={filename}
         label="Download Business Case as PDF"
         linkPosition={helpArticle ? 'top' : 'bottom'}
       >
-        <div className={helpArticle ? '' : 'grid-container'}>
-          <SectionWrapper
-            borderBottom={!!helpArticle}
-            borderTop={!!helpArticle}
-            className={
-              helpArticle ? 'request-information-wrapper margin-top-4' : ''
-            }
-          >
-            <h2 className="font-heading-xl margin-top-4">
-              General request information
-            </h2>
-            <GeneralRequestInfoReview
-              values={{
-                requestName: values.requestName,
-                businessOwner: {
-                  name: values.businessOwner.name
-                },
-                requester: {
-                  name: values.requester.name,
-                  phoneNumber: values.requester.phoneNumber
-                }
-              }}
-            />
-          </SectionWrapper>
-
-          <SectionWrapper
-            borderBottom={!!helpArticle}
-            className={helpArticle ? 'padding-bottom-3' : ''}
-          >
-            <h2 className="font-heading-xl margin-top-4">
-              Request description
-            </h2>
-            <RequestDescriptionReview
-              values={{
-                businessNeed: values.businessNeed,
-                currentSolutionSummary: values.currentSolutionSummary,
-                cmsBenefit: values.cmsBenefit,
-                priorityAlignment: values.priorityAlignment,
-                successIndicators: values.successIndicators
-              }}
-            />
-          </SectionWrapper>
-        </div>
-
-        <div className={helpArticle ? '' : 'grid-container'}>
-          <h2 className="font-heading-xl margin-top-4 easi-no-print">
-            Alternatives analysis
-          </h2>
-        </div>
-        <div className="alternative-analysis-wrapper">
-          <div className={helpArticle ? '' : 'grid-container'}>
-            <AlternativeAnalysisReview
-              fiscalYear={
-                values.createdAt
-                  ? getFiscalYear(parseAsUTC(values.createdAt))
-                  : new Date().getFullYear()
+        <SectionWrapper
+          borderBottom={!!helpArticle}
+          borderTop={!!helpArticle}
+          className={
+            helpArticle ? 'request-information-wrapper margin-top-4' : ''
+          }
+        >
+          <h2>{t('generalRequest')}</h2>
+          <GeneralRequestInfoReview
+            values={{
+              requestName: values.requestName,
+              businessOwner: {
+                name: values.businessOwner.name
+              },
+              requester: {
+                name: values.requester.name,
+                phoneNumber: values.requester.phoneNumber
               }
-              preferredSolution={values.preferredSolution}
-              alternativeA={values.alternativeA}
-              alternativeB={values.alternativeB}
-            />
-          </div>
+            }}
+          />
+        </SectionWrapper>
+
+        <SectionWrapper
+          borderBottom={!!helpArticle}
+          className={helpArticle ? 'padding-bottom-3' : ''}
+        >
+          <h2>{t('requestDescription')}</h2>
+          <RequestDescriptionReview
+            values={{
+              businessNeed: values.businessNeed,
+              currentSolutionSummary: values.currentSolutionSummary,
+              cmsBenefit: values.cmsBenefit,
+              priorityAlignment: values.priorityAlignment,
+              successIndicators: values.successIndicators
+            }}
+          />
+        </SectionWrapper>
+
+        <h2 className="easi-no-print">{t('alternatives')}</h2>
+        <div className="alternative-analysis-wrapper">
+          <AlternativeAnalysisReview
+            fiscalYear={
+              values.createdAt
+                ? getFiscalYear(parseAsUTC(values.createdAt))
+                : new Date().getFullYear()
+            }
+            preferredSolution={values.preferredSolution}
+            alternativeA={values.alternativeA}
+            alternativeB={values.alternativeB}
+          />
         </div>
+
         {grtFeedbacks && grtFeedbacks.length > 0 && (
           <div className="bg-gray-10 margin-top-3 padding-x-3 padding-top-3 padding-bottom-1">
             <div className="grid-container">

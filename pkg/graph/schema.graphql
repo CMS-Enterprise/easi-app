@@ -2833,7 +2833,7 @@ type Query {
   ): AccessibilityRequestsConnection
   requests(after: String, first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
-  systemIntakes: [SystemIntake!]!
+  systemIntakes(openRequests: Boolean!): [SystemIntake!]!
   @hasRole(role: EASI_GOVTEAM)
   systems(after: String, first: Int!): SystemConnection
   systemIntakesWithLcids: [SystemIntake!]!

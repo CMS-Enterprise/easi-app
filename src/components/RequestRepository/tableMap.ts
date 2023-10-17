@@ -6,10 +6,6 @@ import {
   GetSystemIntakesTable_systemIntakes as SystemIntake,
   GetSystemIntakesTable_systemIntakes_notes as AdminNote
 } from 'queries/types/GetSystemIntakesTable';
-import {
-  SystemIntakeState,
-  SystemIntakeStatus
-} from 'types/graphql-global-types';
 import { formatContractDate } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import { translateStatus } from 'utils/systemIntake';
@@ -77,19 +73,6 @@ const tableMap = (
         : hasContract;
     }
 
-    /**
-     * Fix for handling legacy intakes once IT Gov v2 is released
-     * Sets intake state to CLOSED if status is LCID_ISSUED, NOT_IT_REQUEST, or NO_GOVERNANCE
-     */
-    let { state } = intake;
-    if (
-      intake.status === SystemIntakeStatus.LCID_ISSUED ||
-      intake.status === SystemIntakeStatus.NOT_IT_REQUEST ||
-      intake.status === SystemIntakeStatus.NO_GOVERNANCE
-    ) {
-      state = SystemIntakeState.CLOSED;
-    }
-
     const lastAdminNote = getLastAdminNote(intake.notes);
 
     /** Filter date for portfolio update report - defaults to last admin note date */
@@ -114,7 +97,6 @@ const tableMap = (
         endDate: contractEndDate
       },
       status: translateStatus(intake.status, intake.lcid),
-      state,
       lastAdminNote,
       filterDate
     };

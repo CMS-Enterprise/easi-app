@@ -648,7 +648,7 @@ type ComplexityRoot struct {
 		Roles                    func(childComplexity int, cedarSystemID string, roleTypeID *string) int
 		SystemIntake             func(childComplexity int, id uuid.UUID) int
 		SystemIntakeContacts     func(childComplexity int, id uuid.UUID) int
-		SystemIntakes            func(childComplexity int) int
+		SystemIntakes            func(childComplexity int, openRequests bool) int
 		SystemIntakesWithLcids   func(childComplexity int) int
 		Systems                  func(childComplexity int, after *string, first int) int
 		TrbAdminNote             func(childComplexity int, id uuid.UUID) int
@@ -1365,7 +1365,7 @@ type QueryResolver interface {
 	AccessibilityRequests(ctx context.Context, after *string, first int) (*model.AccessibilityRequestsConnection, error)
 	Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error)
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
-	SystemIntakes(ctx context.Context) ([]*models.SystemIntake, error)
+	SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error)
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 	SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error)
 	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
@@ -4980,7 +4980,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Query.SystemIntakes(childComplexity), true
+		args, err := ec.field_Query_systemIntakes_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SystemIntakes(childComplexity, args["openRequests"].(bool)), true
 
 	case "Query.systemIntakesWithLcids":
 		if e.complexity.Query.SystemIntakesWithLcids == nil {
@@ -10283,7 +10288,7 @@ type Query {
   ): AccessibilityRequestsConnection
   requests(after: String, first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
-  systemIntakes: [SystemIntake!]!
+  systemIntakes(openRequests: Boolean!): [SystemIntake!]!
   @hasRole(role: EASI_GOVTEAM)
   systems(after: String, first: Int!): SystemConnection
   systemIntakesWithLcids: [SystemIntake!]!
@@ -12335,6 +12340,21 @@ func (ec *executionContext) field_Query_systemIntake_args(ctx context.Context, r
 		}
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_systemIntakes_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 bool
+	if tmp, ok := rawArgs["openRequests"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("openRequests"))
+		arg0, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["openRequests"] = arg0
 	return args, nil
 }
 
@@ -34071,7 +34091,7 @@ func (ec *executionContext) _Query_systemIntakes(ctx context.Context, field grap
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().SystemIntakes(rctx)
+			return ec.resolvers.Query().SystemIntakes(rctx, fc.Args["openRequests"].(bool))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -34256,6 +34276,17 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_systemIntakes_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }

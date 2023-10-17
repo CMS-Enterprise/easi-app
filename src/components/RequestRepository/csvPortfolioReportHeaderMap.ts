@@ -4,7 +4,7 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.projectName')
   },
   {
-    key: 'requester.component',
+    key: 'requesterComponent',
     label: t('intake:csvHeadings.requesterComponent')
   },
   {
