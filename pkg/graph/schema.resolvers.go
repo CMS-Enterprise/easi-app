@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2120,6 +2121,31 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 // CreateTRBAdminNote is the resolver for the createTRBAdminNote field.
 func (r *mutationResolver) CreateTRBAdminNote(ctx context.Context, input model.CreateTRBAdminNoteInput) (*models.TRBAdminNote, error) {
 	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, input.Category, input.NoteText)
+}
+
+// CreateTRBAdminNoteGeneralRequest is the resolver for the createTRBAdminNoteGeneralRequest field.
+func (r *mutationResolver) CreateTRBAdminNoteGeneralRequest(ctx context.Context, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
+	panic(fmt.Errorf("not implemented: CreateTRBAdminNoteGeneralRequest - createTRBAdminNoteGeneralRequest"))
+}
+
+// CreateTRBAdminNoteInitialRequestForm is the resolver for the createTRBAdminNoteInitialRequestForm field.
+func (r *mutationResolver) CreateTRBAdminNoteInitialRequestForm(ctx context.Context, input model.CreateTRBAdminNoteInitialRequestFormInput) (*models.TRBAdminNote, error) {
+	panic(fmt.Errorf("not implemented: CreateTRBAdminNoteInitialRequestForm - createTRBAdminNoteInitialRequestForm"))
+}
+
+// CreateTRBAdminNoteSupportingDocuments is the resolver for the createTRBAdminNoteSupportingDocuments field.
+func (r *mutationResolver) CreateTRBAdminNoteSupportingDocuments(ctx context.Context, input model.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error) {
+	panic(fmt.Errorf("not implemented: CreateTRBAdminNoteSupportingDocuments - createTRBAdminNoteSupportingDocuments"))
+}
+
+// CreateTRBAdminNoteConsultSession is the resolver for the createTRBAdminNoteConsultSession field.
+func (r *mutationResolver) CreateTRBAdminNoteConsultSession(ctx context.Context, input model.CreateTRBAdminNoteConsultSessionInput) (*models.TRBAdminNote, error) {
+	panic(fmt.Errorf("not implemented: CreateTRBAdminNoteConsultSession - createTRBAdminNoteConsultSession"))
+}
+
+// CreateTRBAdminNoteAdviceLetter is the resolver for the createTRBAdminNoteAdviceLetter field.
+func (r *mutationResolver) CreateTRBAdminNoteAdviceLetter(ctx context.Context, input model.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error) {
+	panic(fmt.Errorf("not implemented: CreateTRBAdminNoteAdviceLetter - createTRBAdminNoteAdviceLetter"))
 }
 
 // UpdateTRBAdminNote is the resolver for the updateTRBAdminNote field.

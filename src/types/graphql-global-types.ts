@@ -595,21 +595,13 @@ export interface CreateSystemIntakeNoteInput {
 }
 
 /**
- * The data needed to create a TRB admin note
- * For category-specific data, rather than five separate mutations with their own input types,
- * this type has nullable fields for all the category-specific data.
+ * The data needed to create a TRB admin note, without any category-specific data
+ * TODO - EASI-3458 - remove
  */
 export interface CreateTRBAdminNoteInput {
   trbRequestId: UUID;
   category: TRBAdminNoteCategory;
   noteText: HTML;
-  appliesToBasicRequestDetails?: boolean | null;
-  appliesToSubjectAreas?: boolean | null;
-  appliesToAttendees?: boolean | null;
-  documentIDs?: UUID[] | null;
-  appliesToMeetingSummary?: boolean | null;
-  appliesToNextSteps?: boolean | null;
-  recommendationIDs?: UUID[] | null;
 }
 
 /**
