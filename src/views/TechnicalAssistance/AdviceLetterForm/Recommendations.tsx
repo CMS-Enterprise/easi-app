@@ -117,6 +117,9 @@ const Recommendations = ({
               <RecommendationsList
                 recommendations={recommendations}
                 trbRequestId={trbRequestId}
+                setReorderError={error =>
+                  setFormAlert({ type: 'error', message: error })
+                }
                 edit={{
                   onClick: recommendation => {
                     // Set form field values for editing

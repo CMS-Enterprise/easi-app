@@ -34,6 +34,7 @@ export type RemoveRecommendationProp = {
 type RecommendationsListProps = {
   recommendations: TRBRecommendation[];
   trbRequestId: string;
+  setReorderError?: (error: string) => void;
   editable?: boolean;
   edit?: EditRecommendationProp;
   remove?: RemoveRecommendationProp;
@@ -43,6 +44,7 @@ type RecommendationsListProps = {
 export default function RecommendationsList({
   recommendations,
   trbRequestId,
+  setReorderError,
   editable = true,
   edit,
   remove,
@@ -94,8 +96,7 @@ export default function RecommendationsList({
           setSortedRecommendations(updatedRecommendations);
         }
       })
-      // TODO: Error handling
-      .catch(() => null);
+      .catch(() => setReorderError?.(t('adviceLetterForm.reorderError')));
   };
 
   // Update sortedRecommendations state when query is refetched
