@@ -42,6 +42,8 @@ export default function RecommendationsList({
 }: RecommendationsListProps) {
   const { t } = useTranslation('technicalAssistance');
 
+  const enableReorderControls: boolean = editable && recommendations.length > 1;
+
   const [
     recommendationToRemove,
     setRecommendationToRemove
@@ -120,7 +122,7 @@ export default function RecommendationsList({
         </RemoveRecommendationModal>
       )}
 
-      {sortedRecommendations.length > 0 && editable && (
+      {recommendations.length > 0 && editable && (
         <Alert type="info" slim className="margin-bottom-4">
           {t('adviceLetterForm.reorderRecommendations')}
         </Alert>
@@ -143,13 +145,13 @@ export default function RecommendationsList({
             >
               <div
                 className={classNames(
-                  'bg-base-lightest padding-y-2 padding-left-105 padding-right-3 display-flex',
-                  { 'padding-x-4': !editable }
+                  'bg-base-lightest padding-top-2 padding-bottom-105 padding-left-105 padding-right-3 display-flex',
+                  { 'padding-x-5': !enableReorderControls }
                 )}
               >
                 {
                   /* Reorder control buttons */
-                  editable && (
+                  enableReorderControls && (
                     <div
                       data-testid="reorder-controls"
                       className="margin-right-2 display-flex flex-column flex-align-center line-height-body-1"
@@ -181,7 +183,7 @@ export default function RecommendationsList({
                 <div
                   className={classNames(
                     'width-full padding-bottom-2',
-                    editable ? 'padding-top-105' : 'padding-top-1'
+                    enableReorderControls ? 'padding-top-105' : 'padding-top-1'
                   )}
                 >
                   <h3 className="margin-top-0 margin-bottom-05">{title}</h3>
@@ -195,7 +197,10 @@ export default function RecommendationsList({
                       <p className="text-bold margin-bottom-0 margin-top-2">
                         {t('adviceLetter.resources')}
                       </p>
-                      <RecommendationLinks links={links} />
+                      <RecommendationLinks
+                        links={links}
+                        className="margin-bottom-05"
+                      />
                     </>
                   )}
                 </div>
