@@ -44,8 +44,12 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.fundingNumber')
   },
   {
-    key: 'costs.expectedIncreaseAmount',
-    label: t('intake:csvHeadings.expectedIncreaseAmount')
+    key: 'annualSpending.currentAnnualSpending',
+    label: t('intake:csvHeadings.currentAnnualSpend')
+  },
+  {
+    key: 'annualSpending.plannedYearOneSpending',
+    label: t('intake:csvHeadings.plannedAnnualSpend')
   },
   {
     key: 'contract.contractor',
