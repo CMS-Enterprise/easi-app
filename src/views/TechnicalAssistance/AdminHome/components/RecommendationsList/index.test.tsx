@@ -15,6 +15,8 @@ describe('TRB recommendations list', () => {
         <RecommendationsList
           recommendations={recommendations}
           trbRequestId={trbRequest.id}
+          edit={() => null}
+          remove={() => null}
         />
       </VerboseMockedProvider>
     );
@@ -35,5 +37,10 @@ describe('TRB recommendations list', () => {
 
     const links = within(recOne).getAllByRole('link');
     expect(links.length).toEqual(recommendations[0].links.length);
+
+    expect(within(recOne).getByRole('button', { name: 'Edit recommendation' }));
+    expect(
+      within(recOne).getByRole('button', { name: 'Remove recommendation' })
+    );
   });
 });
