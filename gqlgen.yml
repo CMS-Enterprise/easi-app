@@ -63,3 +63,7 @@ models:
   EmailAddress:
     model:
       - github.com/cmsgov/easi-app/pkg/models.EmailAddress
+  SystemIntake:
+    fields:
+      fundingSources:
+        resolver: true
