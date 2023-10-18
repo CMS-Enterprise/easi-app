@@ -1,24 +1,31 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link } from '@trussworks/react-uswds';
+import { useHistory } from 'react-router-dom';
+import { Button, Link } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
-import { ITGovDraftBusinessCaseStatus } from 'types/graphql-global-types';
+import {
+  GovernanceRequestFeedbackTargetForm,
+  ITGovDraftBusinessCaseStatus
+} from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
 
 const GovTaskBizCaseDraft = ({
+  id,
   itGovTaskStatuses: { bizCaseDraftStatus },
   bizCaseDraftSubmittedAt,
   bizCaseDraftUpdatedAt,
-  governanceRequestFeedbacks
+  governanceRequestFeedbacks,
+  businessCase
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'bizCaseDraft';
   const { t } = useTranslation('itGov');
+  const history = useHistory();
 
   const statusButtonText = new Map<ITGovDraftBusinessCaseStatus, string>([
     [ITGovDraftBusinessCaseStatus.READY, 'start'],
@@ -51,7 +58,14 @@ const GovTaskBizCaseDraft = ({
       value: bizCaseDraftSubmittedAt
     };
 
-  const hasFeedback = governanceRequestFeedbacks.length > 0;
+  const hasFeedback = useMemo(
+    () =>
+      !!governanceRequestFeedbacks.find(
+        ({ targetForm }) =>
+          targetForm === GovernanceRequestFeedbackTargetForm.DRAFT_BUSINESS_CASE
+      ),
+    [governanceRequestFeedbacks]
+  );
 
   return (
     <TaskListItem
@@ -93,16 +107,31 @@ const GovTaskBizCaseDraft = ({
 
         {statusButtonText.has(bizCaseDraftStatus) && (
           <div className="margin-top-2">
-            <UswdsReactLink variant="unstyled" className="usa-button" to="./">
+            <Button
+              type="button"
+              onClick={() => {
+                history.push({
+                  pathname: `/business/${
+                    businessCase?.id || 'new'
+                  }/general-request-info`,
+                  state: {
+                    systemIntakeId: id
+                  }
+                });
+              }}
+            >
               {t(`button.${statusButtonText.get(bizCaseDraftStatus)}`)}
-            </UswdsReactLink>
+            </Button>
           </div>
         )}
 
         {/* Link to view feedback */}
         {hasFeedback && (
           <div className="margin-top-2">
-            <UswdsReactLink to="./">{t(`button.viewFeedback`)}</UswdsReactLink>
+            {/* TODO: EASI-3088 - update feedback link */}
+            <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
+              {t(`button.viewFeedback`)}
+            </UswdsReactLink>
           </div>
         )}
 
@@ -110,7 +139,7 @@ const GovTaskBizCaseDraft = ({
         {(bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.SUBMITTED ||
           bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.DONE) && (
           <div className="margin-top-2">
-            <UswdsReactLink to="./">
+            <UswdsReactLink to={`/business/${businessCase?.id}/view`}>
               {t(`taskList.step.${stepKey}.viewSubmittedDraftBusinessCase`)}
             </UswdsReactLink>
           </div>

@@ -45,7 +45,12 @@ const GovTaskGrbMeeting = ({
         {(grbMeetingStatus === ITGovGRBStatus.READY_TO_SCHEDULE ||
           grbMeetingStatus === ITGovGRBStatus.SCHEDULED) && (
           <div className="margin-top-2">
-            <UswdsReactLink variant="unstyled" className="usa-button" to="./">
+            <UswdsReactLink
+              variant="unstyled"
+              className="usa-button"
+              to="/help/it-governance/prepare-for-grb"
+              target="_blank"
+            >
               {t(`taskList.step.${stepKey}.button`)}
             </UswdsReactLink>
           </div>
@@ -57,7 +62,10 @@ const GovTaskGrbMeeting = ({
           grbMeetingStatus === ITGovGRBStatus.AWAITING_DECISION ||
           grbMeetingStatus === ITGovGRBStatus.COMPLETED) && (
           <div className="margin-top-2">
-            <UswdsReactLink to="./">
+            <UswdsReactLink
+              to="/help/it-governance/prepare-for-grb"
+              target="_blank"
+            >
               {t(`taskList.step.${stepKey}.link`)}
             </UswdsReactLink>
           </div>

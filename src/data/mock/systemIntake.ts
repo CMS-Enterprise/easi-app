@@ -438,7 +438,8 @@ export const getGovernanceTaskListQuery: MockedQuery<
         submittedAt: null,
         updatedAt: null,
         grtDate: null,
-        grbDate: null
+        grbDate: null,
+        businessCase: null
       }
     }
   }

@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
+import {
+  GovernanceRequestFeedbackTargetForm,
+  ITGovIntakeFormStatus
+} from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
 
 const GovTaskIntakeForm = ({
+  id,
   itGovTaskStatuses,
   intakeFormPctComplete,
   governanceRequestFeedbacks,
@@ -49,7 +53,14 @@ const GovTaskIntakeForm = ({
       value: submittedAt
     };
 
-  const hasFeedback = governanceRequestFeedbacks.length > 0;
+  const hasFeedback = useMemo(
+    () =>
+      !!governanceRequestFeedbacks.find(
+        ({ targetForm }) =>
+          targetForm === GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST
+      ),
+    [governanceRequestFeedbacks]
+  );
 
   return (
     <TaskListItem
@@ -76,7 +87,11 @@ const GovTaskIntakeForm = ({
         {/* Button to the intake form */}
         {statusButtonText.has(itGovTaskStatuses.intakeFormStatus) && (
           <div className="margin-top-2">
-            <UswdsReactLink variant="unstyled" className="usa-button" to="./">
+            <UswdsReactLink
+              variant="unstyled"
+              className="usa-button"
+              to={`/system/${id}/contact-details`}
+            >
               {t(
                 `button.${statusButtonText.get(
                   itGovTaskStatuses.intakeFormStatus
@@ -91,7 +106,7 @@ const GovTaskIntakeForm = ({
           ITGovIntakeFormStatus.COMPLETED &&
           submittedAt && (
             <div className="margin-top-2">
-              <UswdsReactLink to="./">
+              <UswdsReactLink to={`/system/${id}/view`}>
                 {t(`taskList.step.${stepKey}.viewSubmittedRequestForm`)}
               </UswdsReactLink>
             </div>
@@ -100,7 +115,10 @@ const GovTaskIntakeForm = ({
         {/* Link to view feedback */}
         {hasFeedback && (
           <div className="margin-top-2">
-            <UswdsReactLink to="./">{t(`button.viewFeedback`)}</UswdsReactLink>
+            {/* TODO: EASI-3088 - update feedback link */}
+            <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
+              {t(`button.viewFeedback`)}
+            </UswdsReactLink>
           </div>
         )}
       </TaskListDescription>
