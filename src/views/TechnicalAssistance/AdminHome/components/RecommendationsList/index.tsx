@@ -146,7 +146,11 @@ export default function RecommendationsList({
           } = recommendation;
 
           return (
-            <li key={id} className="margin-bottom-3">
+            <li
+              data-testid="recommendations_list-item"
+              key={id}
+              className="margin-bottom-3"
+            >
               <div
                 className={classNames(
                   'bg-base-lightest padding-y-2 padding-left-105 padding-right-3 display-flex',
