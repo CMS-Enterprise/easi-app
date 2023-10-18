@@ -45,6 +45,7 @@ export default gql`
         hasContract
         contractor
         number
+        vehicle
         startDate {
           day
           month
