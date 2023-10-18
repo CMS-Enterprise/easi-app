@@ -2312,9 +2312,9 @@ This type doesn't contain any actual data
 """
 type TRBAdminNoteGeneralRequestCategoryData {
   """
-  Placeholder field so this type is non-empty, always true
+  Placeholder field so this type is non-empty, always null
   """
-  placeholderField: Boolean! # Necessary because gqlgen doesn't support empty types
+  placeholderField: Boolean # Necessary because gqlgen doesn't support empty types
 }
 
 """
@@ -2339,9 +2339,9 @@ This type doesn't contain any actual data
 """
 type TRBAdminNoteConsultSessionCategoryData {
   """
-  Placeholder field so this type is non-empty, always true
+  Placeholder field so this type is non-empty, always null
   """
-  placeholderField: Boolean! # Necessary because gqlgen doesn't support empty types
+  placeholderField: Boolean # Necessary because gqlgen doesn't support empty types
 }
 
 """

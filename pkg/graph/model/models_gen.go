@@ -861,8 +861,8 @@ func (TRBAdminNoteAdviceLetterCategoryData) IsTRBAdminNoteCategorySpecificData()
 // Data specific to admin notes in the Consult Session category
 // This type doesn't contain any actual data
 type TRBAdminNoteConsultSessionCategoryData struct {
-	// Placeholder field so this type is non-empty, always true
-	PlaceholderField bool `json:"placeholderField"`
+	// Placeholder field so this type is non-empty, always null
+	PlaceholderField *bool `json:"placeholderField,omitempty"`
 }
 
 func (TRBAdminNoteConsultSessionCategoryData) IsTRBAdminNoteCategorySpecificData() {}
@@ -870,8 +870,8 @@ func (TRBAdminNoteConsultSessionCategoryData) IsTRBAdminNoteCategorySpecificData
 // Data specific to admin notes in the General Request category
 // This type doesn't contain any actual data
 type TRBAdminNoteGeneralRequestCategoryData struct {
-	// Placeholder field so this type is non-empty, always true
-	PlaceholderField bool `json:"placeholderField"`
+	// Placeholder field so this type is non-empty, always null
+	PlaceholderField *bool `json:"placeholderField,omitempty"`
 }
 
 func (TRBAdminNoteGeneralRequestCategoryData) IsTRBAdminNoteCategorySpecificData() {}

@@ -3154,7 +3154,7 @@ func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *mo
 	switch obj.Category {
 	case models.TRBAdminNoteCategoryGeneralRequest:
 		categorySpecificData = model.TRBAdminNoteGeneralRequestCategoryData{
-			PlaceholderField: true,
+			PlaceholderField: nil,
 		}
 	case models.TRBAdminNoteCategoryInitialRequestForm:
 		categorySpecificData = model.TRBAdminNoteInitialRequestFormCategoryData{
@@ -3168,7 +3168,7 @@ func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *mo
 		}
 	case models.TRBAdminNoteCategoryConsultSession:
 		categorySpecificData = model.TRBAdminNoteConsultSessionCategoryData{
-			PlaceholderField: true,
+			PlaceholderField: nil,
 		}
 	case models.TRBAdminNoteCategoryAdviceLetter:
 		categorySpecificData = model.TRBAdminNoteAdviceLetterCategoryData{

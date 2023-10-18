@@ -9842,9 +9842,9 @@ This type doesn't contain any actual data
 """
 type TRBAdminNoteGeneralRequestCategoryData {
   """
-  Placeholder field so this type is non-empty, always true
+  Placeholder field so this type is non-empty, always null
   """
-  placeholderField: Boolean! # Necessary because gqlgen doesn't support empty types
+  placeholderField: Boolean # Necessary because gqlgen doesn't support empty types
 }
 
 """
@@ -9869,9 +9869,9 @@ This type doesn't contain any actual data
 """
 type TRBAdminNoteConsultSessionCategoryData {
   """
-  Placeholder field so this type is non-empty, always true
+  Placeholder field so this type is non-empty, always null
   """
-  placeholderField: Boolean! # Necessary because gqlgen doesn't support empty types
+  placeholderField: Boolean # Necessary because gqlgen doesn't support empty types
 }
 
 """
@@ -44809,14 +44809,11 @@ func (ec *executionContext) _TRBAdminNoteConsultSessionCategoryData_placeholderF
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(*bool)
 	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBAdminNoteConsultSessionCategoryData_placeholderField(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -44853,14 +44850,11 @@ func (ec *executionContext) _TRBAdminNoteGeneralRequestCategoryData_placeholderF
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(*bool)
 	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBAdminNoteGeneralRequestCategoryData_placeholderField(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -68140,9 +68134,6 @@ func (ec *executionContext) _TRBAdminNoteConsultSessionCategoryData(ctx context.
 			out.Values[i] = graphql.MarshalString("TRBAdminNoteConsultSessionCategoryData")
 		case "placeholderField":
 			out.Values[i] = ec._TRBAdminNoteConsultSessionCategoryData_placeholderField(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -68179,9 +68170,6 @@ func (ec *executionContext) _TRBAdminNoteGeneralRequestCategoryData(ctx context.
 			out.Values[i] = graphql.MarshalString("TRBAdminNoteGeneralRequestCategoryData")
 		case "placeholderField":
 			out.Values[i] = ec._TRBAdminNoteGeneralRequestCategoryData_placeholderField(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
