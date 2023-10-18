@@ -91,7 +91,6 @@ export default function RecommendationsList({
                 <h4 className="margin-bottom-1">{title}</h4>
               )}
 
-              {/* <p className="margin-y-1">{description}</p> */}
               <RichTextViewer className="margin-y-1" value={description} />
 
               {links.length > 0 && (
