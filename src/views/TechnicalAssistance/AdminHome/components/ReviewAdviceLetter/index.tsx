@@ -10,7 +10,7 @@ import { formatDateLocal } from 'utils/date';
 import RecommendationsList, {
   EditRecommendationProp,
   RemoveRecommendationProp
-} from './RecommendationsList';
+} from '../RecommendationsList';
 
 type ReviewAdviceLetterProps = {
   adviceLetter: AdviceLetter;

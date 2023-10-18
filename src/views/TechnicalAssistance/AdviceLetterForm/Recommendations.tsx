@@ -22,7 +22,7 @@ import {
 } from 'types/technicalAssistance';
 import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
 
-import RecommendationsList from '../AdminHome/components/ReviewAdviceLetter/RecommendationsList';
+import RecommendationsList from '../AdminHome/components/RecommendationsList';
 import Pager from '../RequestForm/Pager';
 
 import RecommendationsForm from './RecommendationsForm';
