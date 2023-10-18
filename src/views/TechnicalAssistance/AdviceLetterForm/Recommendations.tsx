@@ -120,42 +120,39 @@ const Recommendations = ({
                 setReorderError={error =>
                   setFormAlert(error ? { type: 'error', message: error } : null)
                 }
-                edit={{
-                  onClick: recommendation => {
-                    // Set form field values for editing
-                    reset({
-                      ...recommendation,
-                      // Revert link strings to object for form array field
-                      links: recommendation.links.map(link => ({ link }))
-                    });
+                edit={recommendation => {
+                  // Set form field values for editing
+                  reset({
+                    ...recommendation,
+                    // Revert link strings to object for form array field
+                    links: recommendation.links.map(link => ({ link }))
+                  });
 
-                    history.push(
-                      `/trb/${trbRequestId}/advice/recommendations/form`
-                    );
-                  }
+                  history.push(
+                    `/trb/${trbRequestId}/advice/recommendations/form`
+                  );
                 }}
-                remove={{
-                  onClick: recommendation =>
-                    remove({ variables: { id: recommendation.id } })
-                      .then(() => {
-                        setFormAlert({
-                          type: 'success',
-                          message: t('adviceLetterForm.removeSuccess', {
-                            action: 'removing',
-                            type: 'recommendation'
-                          })
-                        });
-                      })
-                      .catch(() =>
-                        setFormAlert({
-                          type: 'error',
-                          message: t('adviceLetterForm.error', {
-                            action: 'removing',
-                            type: 'recommendation'
-                          })
+                remove={recommendation =>
+                  remove({ variables: { id: recommendation.id } })
+                    .then(() => {
+                      setFormAlert({
+                        type: 'success',
+                        message: t('adviceLetterForm.removeSuccess', {
+                          action: 'removing',
+                          type: 'recommendation'
                         })
-                      )
-                }}
+                      });
+                    })
+                    .catch(() =>
+                      setFormAlert({
+                        type: 'error',
+                        message: t('adviceLetterForm.error', {
+                          action: 'removing',
+                          type: 'recommendation'
+                        })
+                      })
+                    )
+                }
               />
             )
           }

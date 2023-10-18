@@ -5,20 +5,18 @@ import classNames from 'classnames';
 import UswdsReactLink from 'components/LinkWrapper';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
+import { TRBRecommendation } from 'queries/types/TRBRecommendation';
 import { formatDateLocal } from 'utils/date';
 
-import RecommendationsList, {
-  EditRecommendationProp,
-  RemoveRecommendationProp
-} from '../RecommendationsList';
+import RecommendationsList from '../RecommendationsList';
 
 type ReviewAdviceLetterProps = {
   adviceLetter: AdviceLetter;
   trbRequestId: string;
   showSectionEditLinks?: boolean;
   recommendationActions?: {
-    edit?: EditRecommendationProp;
-    remove?: RemoveRecommendationProp;
+    edit?: (recommendation: TRBRecommendation) => void;
+    remove?: (recommendation: TRBRecommendation) => void;
     setReorderError?: (error: string | null) => void;
   };
   showDateSent?: boolean;

@@ -11,7 +11,7 @@ import classNames from 'classnames';
 
 import Alert from 'components/shared/Alert';
 import { UpdateTrbRecommendationOrderQuery } from 'queries/TrbAdviceLetterQueries';
-import { GetTrbAdviceLetter_trbRequest_adviceLetter_recommendations as TRBRecommendation } from 'queries/types/GetTrbAdviceLetter';
+import { TRBRecommendation } from 'queries/types/TRBRecommendation';
 import {
   UpdateTrbRecommendationOrder,
   UpdateTrbRecommendationOrderVariables
@@ -21,23 +21,13 @@ import RemoveRecommendationModal from '../RemoveRecommendationModal/Index';
 
 import RecommendationLinks from './RecommendationLinks';
 
-export type EditRecommendationProp = {
-  onClick: (recommendation: TRBRecommendation) => void;
-  text?: string;
-};
-
-export type RemoveRecommendationProp = {
-  onClick: (recommendation: TRBRecommendation) => void;
-  text?: string;
-};
-
 type RecommendationsListProps = {
   recommendations: TRBRecommendation[];
   trbRequestId: string;
   setReorderError?: (error: string | null) => void;
   editable?: boolean;
-  edit?: EditRecommendationProp;
-  remove?: RemoveRecommendationProp;
+  edit?: (recommendation: TRBRecommendation) => void;
+  remove?: (recommendation: TRBRecommendation) => void;
   className?: string;
 };
 
@@ -119,7 +109,7 @@ export default function RecommendationsList({
             closeModal: () => setRecommendationToRemove(null)
           }}
           handleDelete={() =>
-            recommendationToRemove && remove.onClick(recommendationToRemove)
+            recommendationToRemove && remove(recommendationToRemove)
           }
         >
           <p>
@@ -215,10 +205,10 @@ export default function RecommendationsList({
                     {edit && (
                       <Button
                         type="button"
-                        onClick={() => edit.onClick(recommendation)}
+                        onClick={() => edit(recommendation)}
                         unstyled
                       >
-                        {t(edit.text || 'adviceLetterForm.editRecommendation')}
+                        {t('adviceLetterForm.editRecommendation')}
                       </Button>
                     )}
                     {remove && (
@@ -230,9 +220,7 @@ export default function RecommendationsList({
                         }
                         unstyled
                       >
-                        {t(
-                          remove.text || 'adviceLetterForm.removeRecommendation'
-                        )}
+                        {t('adviceLetterForm.removeRecommendation')}
                       </Button>
                     )}
                   </ButtonGroup>
