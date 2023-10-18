@@ -150,7 +150,10 @@ export default function RecommendationsList({
                 {
                   /* Reorder control buttons */
                   editable && (
-                    <div className="margin-right-2 display-flex flex-column flex-align-center line-height-body-1">
+                    <div
+                      data-testid="reorder-controls"
+                      className="margin-right-2 display-flex flex-column flex-align-center line-height-body-1"
+                    >
                       <Button
                         type="button"
                         onClick={() => sort(id, index - 1)}
@@ -160,7 +163,7 @@ export default function RecommendationsList({
                       >
                         <IconArrowDropUp size={3} className="text-primary" />
                       </Button>
-                      <span>{index + 1}</span>
+                      <span data-testid="order-index">{index + 1}</span>
                       <Button
                         type="button"
                         onClick={() => sort(id, index + 1)}
