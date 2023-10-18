@@ -5,7 +5,7 @@
  * where we want to hook into and tweak existing behavior.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ControllerRenderProps } from 'react-hook-form';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ToastuiEditor from '@toast-ui/editor';
@@ -17,6 +17,8 @@ import {
 } from '@toast-ui/react-editor';
 import classNames from 'classnames';
 import DOMPurify from 'dompurify';
+
+import ExternalLinkModal from 'components/shared/ExternalLinkModal';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import '@toast-ui/editor/dist/toastui-editor.css';
@@ -333,4 +335,44 @@ export function RichTextViewer({
       />
     </div>
   );
+}
+
+/**
+ * Hook to attach an `ExternalLinkModal` to links from `RichTextViewer` instances.
+ * Make sure to only use this once per page view.
+ */
+export function useRichTextViewerLinkModal() {
+  const [url, setUrl] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  function linkHandler(event: MouseEvent) {
+    const a = (event.target as HTMLElement)?.closest(
+      '.toastui-editor-contents a'
+    );
+    if (a) {
+      event.preventDefault();
+      const href = a.getAttribute('href');
+      if (href) {
+        setUrl(href);
+        setIsOpen(true);
+      }
+    }
+  }
+
+  useEffect(() => {
+    window.document.addEventListener('click', linkHandler);
+    return () => {
+      window.document.removeEventListener('click', linkHandler);
+    };
+  }, []);
+
+  return {
+    externalLinkModal: (
+      <ExternalLinkModal
+        isOpen={isOpen}
+        url={url}
+        closeModal={() => setIsOpen(false)}
+      />
+    )
+  };
 }
