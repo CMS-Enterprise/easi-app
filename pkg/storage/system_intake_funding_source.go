@@ -73,3 +73,20 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 
 	return fundingSources, nil
 }
+
+// FetchSystemIntakeFundingSourcesByIntakeID fetches all funding sources for a system intake
+func (s *Store) FetchSystemIntakeFundingSourcesByIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeFundingSource, error) {
+	sources := []*models.SystemIntakeFundingSource{}
+	err := s.db.Select(&sources, `
+		SELECT *
+		FROM system_intake_funding_sources
+		WHERE system_intake_id=$1
+	`, systemIntakeID)
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch funding sources, error %s", err))
+		return sources, err
+	}
+
+	return sources, nil
+}
