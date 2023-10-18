@@ -31,7 +31,7 @@ const ExternalLinkModal = ({
     <Modal
       isOpen={isOpen}
       closeModal={closeModal}
-      // className="external-link-modal maxw-mobile-lg"
+      overlayClassName="external-link-modal maxw-mobile-lg"
     >
       <PageHeading
         headingLevel="h3"
