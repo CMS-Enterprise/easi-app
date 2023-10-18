@@ -32,6 +32,12 @@ export interface GetSystemIntakesTable_systemIntakes_fundingSources {
   fundingNumber: string | null;
 }
 
+export interface GetSystemIntakesTable_systemIntakes_annualSpending {
+  __typename: "SystemIntakeAnnualSpending";
+  currentAnnualSpending: string | null;
+  plannedYearOneSpending: string | null;
+}
+
 export interface GetSystemIntakesTable_systemIntakes_contract_startDate {
   __typename: "ContractDate";
   day: string | null;
@@ -86,6 +92,7 @@ export interface GetSystemIntakesTable_systemIntakes {
   eaCollaboratorName: string | null;
   existingFunding: boolean | null;
   fundingSources: GetSystemIntakesTable_systemIntakes_fundingSources[];
+  annualSpending: GetSystemIntakesTable_systemIntakes_annualSpending | null;
   contract: GetSystemIntakesTable_systemIntakes_contract;
   businessNeed: string | null;
   businessSolution: string | null;

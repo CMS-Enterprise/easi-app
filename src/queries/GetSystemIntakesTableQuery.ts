@@ -41,6 +41,11 @@ export default gql`
         fundingNumber
       }
 
+      annualSpending {
+        currentAnnualSpending
+        plannedYearOneSpending
+      }
+
       contract {
         hasContract
         contractor
