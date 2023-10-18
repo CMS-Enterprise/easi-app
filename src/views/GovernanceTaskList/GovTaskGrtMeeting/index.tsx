@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-import { ITGovGRTStatus } from 'types/graphql-global-types';
+import {
+  GovernanceRequestFeedbackTargetForm,
+  ITGovGRTStatus
+} from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { formatDateUtc } from 'utils/date';
 
 const GovTaskGrtMeeting = ({
+  id,
   itGovTaskStatuses: { grtMeetingStatus },
   governanceRequestFeedbacks,
   grtDate
@@ -17,7 +21,16 @@ const GovTaskGrtMeeting = ({
   const stepKey = 'grtMeeting';
   const { t } = useTranslation('itGov');
 
-  const hasFeedback = governanceRequestFeedbacks.length > 0;
+  const hasFeedback = useMemo(() => {
+    // If GRT meeting is NOT completed, return false
+    if (grtMeetingStatus !== ITGovGRTStatus.COMPLETED) return false;
+
+    // Return true if request has feedback on draft business case
+    return !!governanceRequestFeedbacks.find(
+      ({ targetForm }) =>
+        targetForm === GovernanceRequestFeedbackTargetForm.DRAFT_BUSINESS_CASE
+    );
+  }, [governanceRequestFeedbacks, grtMeetingStatus]);
 
   return (
     <TaskListItem
@@ -49,7 +62,12 @@ const GovTaskGrtMeeting = ({
         {(grtMeetingStatus === ITGovGRTStatus.READY_TO_SCHEDULE ||
           grtMeetingStatus === ITGovGRTStatus.SCHEDULED) && (
           <div className="margin-top-2">
-            <UswdsReactLink variant="unstyled" className="usa-button" to="./">
+            <UswdsReactLink
+              variant="unstyled"
+              className="usa-button"
+              to="/help/it-governance/prepare-for-grt"
+              target="_blank"
+            >
               {t(`taskList.step.${stepKey}.button`)}
             </UswdsReactLink>
           </div>
@@ -58,7 +76,10 @@ const GovTaskGrtMeeting = ({
         {/* Link to view feedback */}
         {hasFeedback && (
           <div className="margin-top-2">
-            <UswdsReactLink to="./">{t(`button.viewFeedback`)}</UswdsReactLink>
+            {/* TODO: EASI-3088 - update feedback link */}
+            <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
+              {t(`button.viewFeedback`)}
+            </UswdsReactLink>
           </div>
         )}
 
@@ -68,7 +89,10 @@ const GovTaskGrtMeeting = ({
           grtMeetingStatus === ITGovGRTStatus.AWAITING_DECISION ||
           grtMeetingStatus === ITGovGRTStatus.COMPLETED) && (
           <div className="margin-top-2">
-            <UswdsReactLink to="./">
+            <UswdsReactLink
+              to="/help/it-governance/prepare-for-grt"
+              target="_blank"
+            >
               {t(`taskList.step.${stepKey}.link`)}
             </UswdsReactLink>
           </div>
