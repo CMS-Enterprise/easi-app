@@ -28,11 +28,7 @@ const ExternalLinkModal = ({
   const hostname = url !== '' && new URL(url).hostname;
 
   return (
-    <Modal
-      isOpen={isOpen}
-      closeModal={closeModal}
-      overlayClassName="external-link-modal maxw-mobile-lg"
-    >
+    <Modal isOpen={isOpen} closeModal={closeModal}>
       <PageHeading
         headingLevel="h3"
         className="margin-top-neg-2 margin-bottom-2"
