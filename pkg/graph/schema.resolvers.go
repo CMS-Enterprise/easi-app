@@ -2810,6 +2810,11 @@ func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.
 	return obj.ExistingFunding.Ptr(), nil
 }
 
+// FundingSources is the resolver for the fundingSources field.
+func (r *systemIntakeResolver) FundingSources(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeFundingSource, error) {
+	return r.store.FetchSystemIntakeFundingSourcesByIntakeID(ctx, obj.ID)
+}
+
 // GovernanceRequestFeedbacks is the resolver for the governanceRequestFeedbacks field.
 func (r *systemIntakeResolver) GovernanceRequestFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GovernanceRequestFeedback, error) {
 	return resolvers.GetGovernanceRequestFeedbacksByIntakeID(ctx, r.store, obj.ID)
