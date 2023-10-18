@@ -124,6 +124,8 @@ const intake = {
     hasUiChanges: 'Interface Component/Changes',
     isExpectingCostIncrease: 'Expecting Cost Increase',
     expectedIncreaseAmount: 'Expected Increase Amount',
+    currentAnnualSpend: 'Current Annual Spend',
+    plannedAnnualSpend: 'Planned Annual Spend',
     existingContract: 'Existing Contract',
     contractors: 'Contractor(s)',
     contractVehicle: 'Contract Vehicle',
