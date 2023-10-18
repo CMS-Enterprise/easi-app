@@ -3,10 +3,7 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
-import {
-  RichTextViewer,
-  useRichTextViewerLinkModal
-} from 'components/RichTextEditor';
+import { RichTextViewer } from 'components/RichTextEditor';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
 import { formatDateLocal } from 'utils/date';
@@ -44,8 +41,6 @@ const ReviewAdviceLetter = ({
   className
 }: ReviewAdviceLetterProps) => {
   const { t } = useTranslation('technicalAssistance');
-
-  const { externalLinkModal } = useRichTextViewerLinkModal();
 
   const { recommendations } = adviceLetter;
 
@@ -167,7 +162,6 @@ const ReviewAdviceLetter = ({
             : t('adviceLetterForm.notNecessary')}
         </p>
       </SectionWrapper>
-      {externalLinkModal}
     </div>
   );
 };

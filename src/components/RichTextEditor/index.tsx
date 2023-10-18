@@ -5,7 +5,7 @@
  * where we want to hook into and tweak existing behavior.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ControllerRenderProps } from 'react-hook-form';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ToastuiEditor from '@toast-ui/editor';
@@ -319,8 +319,13 @@ export function RichTextViewer({
   value,
   ...props
 }: RichTextViewerProps) {
+  const { externalLinkModal, modalScopeRef } = useRichTextViewerLinkModal();
+
   return (
-    <div className={classNames('easi-toast easi-toast-viewer', className)}>
+    <div
+      ref={modalScopeRef}
+      className={classNames('easi-toast easi-toast-viewer', className)}
+    >
       <Viewer
         usageStatistics={false}
         // Setting link attributes here just to match Editor options, but it doesn't actually have an effect
@@ -333,17 +338,19 @@ export function RichTextViewer({
         initialValue={value}
         {...props}
       />
+      {externalLinkModal}
     </div>
   );
 }
 
 /**
  * Hook to attach an `ExternalLinkModal` to links from `RichTextViewer` instances.
- * Make sure to only use this once per page view.
  */
 export function useRichTextViewerLinkModal() {
   const [url, setUrl] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const modalScopeRef = useRef<HTMLDivElement>(null);
 
   function linkHandler(event: MouseEvent) {
     const a = (event.target as HTMLElement)?.closest(
@@ -360,13 +367,15 @@ export function useRichTextViewerLinkModal() {
   }
 
   useEffect(() => {
-    window.document.addEventListener('click', linkHandler);
+    const eventEl = modalScopeRef.current;
+    eventEl?.addEventListener('click', linkHandler);
     return () => {
-      window.document.removeEventListener('click', linkHandler);
+      eventEl?.removeEventListener('click', linkHandler);
     };
   }, []);
 
   return {
+    modalScopeRef,
     externalLinkModal: (
       <ExternalLinkModal
         isOpen={isOpen}
