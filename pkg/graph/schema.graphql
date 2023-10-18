@@ -2405,26 +2405,25 @@ input CreateTRBAdminNoteInput {
 }
 
 """
-The data needed by all TRB admin notes, regardless of category
-"""
-input CreateTRBAdminNoteCommonFields {
-  trbRequestId: UUID!
-  noteText: HTML!
-}
-
-"""
 The data needed to create a TRB admin note with the General Request category
 """
 input CreateTRBAdminNoteGeneralRequestInput {
-  commonFields: CreateTRBAdminNoteCommonFields!
-  # no additional data for this category
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # no category-specific data for this category
 }
 
 """
 The data needed to create a TRB admin note with the Initial Request Form category
 """
 input CreateTRBAdminNoteInitialRequestFormInput {
-  commonFields: CreateTRBAdminNoteCommonFields!
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # category-specific data
   appliesToBasicRequestDetails: Boolean!
   appliesToSubjectAreas: Boolean!
   appliesToAttendees: Boolean!
@@ -2434,7 +2433,11 @@ input CreateTRBAdminNoteInitialRequestFormInput {
 The data needed to create a TRB admin note with the Supporting Documents category
 """
 input CreateTRBAdminNoteSupportingDocumentsInput {
-  commonFields: CreateTRBAdminNoteCommonFields!
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # category-specific data
   documentIDs: [UUID!]!
 }
 
@@ -2442,15 +2445,22 @@ input CreateTRBAdminNoteSupportingDocumentsInput {
 The data needed to create a TRB admin note with the Consult Session category
 """
 input CreateTRBAdminNoteConsultSessionInput {
-  commonFields: CreateTRBAdminNoteCommonFields!
-  # no additional data for this category
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # no category-specific data for this category
 }
 
 """
 The data needed to create a TRB admin note with the Advice Letter category
 """
 input CreateTRBAdminNoteAdviceLetterInput {
-  commonFields: CreateTRBAdminNoteCommonFields!
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # category-specific data
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
   recommendationIDs: [UUID!]!

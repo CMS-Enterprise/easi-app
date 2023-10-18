@@ -7364,7 +7364,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateSystemIntakeInput,
 		ec.unmarshalInputCreateSystemIntakeNoteInput,
 		ec.unmarshalInputCreateTRBAdminNoteAdviceLetterInput,
-		ec.unmarshalInputCreateTRBAdminNoteCommonFields,
 		ec.unmarshalInputCreateTRBAdminNoteConsultSessionInput,
 		ec.unmarshalInputCreateTRBAdminNoteGeneralRequestInput,
 		ec.unmarshalInputCreateTRBAdminNoteInitialRequestFormInput,
@@ -9936,26 +9935,25 @@ input CreateTRBAdminNoteInput {
 }
 
 """
-The data needed by all TRB admin notes, regardless of category
-"""
-input CreateTRBAdminNoteCommonFields {
-  trbRequestId: UUID!
-  noteText: HTML!
-}
-
-"""
 The data needed to create a TRB admin note with the General Request category
 """
 input CreateTRBAdminNoteGeneralRequestInput {
-  commonFields: CreateTRBAdminNoteCommonFields!
-  # no additional data for this category
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # no category-specific data for this category
 }
 
 """
 The data needed to create a TRB admin note with the Initial Request Form category
 """
 input CreateTRBAdminNoteInitialRequestFormInput {
-  commonFields: CreateTRBAdminNoteCommonFields!
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # category-specific data
   appliesToBasicRequestDetails: Boolean!
   appliesToSubjectAreas: Boolean!
   appliesToAttendees: Boolean!
@@ -9965,7 +9963,11 @@ input CreateTRBAdminNoteInitialRequestFormInput {
 The data needed to create a TRB admin note with the Supporting Documents category
 """
 input CreateTRBAdminNoteSupportingDocumentsInput {
-  commonFields: CreateTRBAdminNoteCommonFields!
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # category-specific data
   documentIDs: [UUID!]!
 }
 
@@ -9973,15 +9975,22 @@ input CreateTRBAdminNoteSupportingDocumentsInput {
 The data needed to create a TRB admin note with the Consult Session category
 """
 input CreateTRBAdminNoteConsultSessionInput {
-  commonFields: CreateTRBAdminNoteCommonFields!
-  # no additional data for this category
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # no category-specific data for this category
 }
 
 """
 The data needed to create a TRB admin note with the Advice Letter category
 """
 input CreateTRBAdminNoteAdviceLetterInput {
-  commonFields: CreateTRBAdminNoteCommonFields!
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # category-specific data
   appliesToMeetingSummary: Boolean!
   appliesToNextSteps: Boolean!
   recommendationIDs: [UUID!]!
@@ -54051,22 +54060,31 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteAdviceLetterInput(ct
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"commonFields", "appliesToMeetingSummary", "appliesToNextSteps", "recommendationIDs"}
+	fieldsInOrder := [...]string{"trbRequestId", "noteText", "appliesToMeetingSummary", "appliesToNextSteps", "recommendationIDs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "commonFields":
+		case "trbRequestId":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("commonFields"))
-			data, err := ec.unmarshalNCreateTRBAdminNoteCommonFields2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBAdminNoteCommonFields(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.CommonFields = data
+			it.TrbRequestID = data
+		case "noteText":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("noteText"))
+			data, err := ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.NoteText = data
 		case "appliesToMeetingSummary":
 			var err error
 
@@ -54100,8 +54118,8 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteAdviceLetterInput(ct
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateTRBAdminNoteCommonFields(ctx context.Context, obj interface{}) (model.CreateTRBAdminNoteCommonFields, error) {
-	var it model.CreateTRBAdminNoteCommonFields
+func (ec *executionContext) unmarshalInputCreateTRBAdminNoteConsultSessionInput(ctx context.Context, obj interface{}) (model.CreateTRBAdminNoteConsultSessionInput, error) {
+	var it model.CreateTRBAdminNoteConsultSessionInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -54138,35 +54156,6 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteCommonFields(ctx con
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateTRBAdminNoteConsultSessionInput(ctx context.Context, obj interface{}) (model.CreateTRBAdminNoteConsultSessionInput, error) {
-	var it model.CreateTRBAdminNoteConsultSessionInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"commonFields"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "commonFields":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("commonFields"))
-			data, err := ec.unmarshalNCreateTRBAdminNoteCommonFields2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBAdminNoteCommonFields(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.CommonFields = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputCreateTRBAdminNoteGeneralRequestInput(ctx context.Context, obj interface{}) (model.CreateTRBAdminNoteGeneralRequestInput, error) {
 	var it model.CreateTRBAdminNoteGeneralRequestInput
 	asMap := map[string]interface{}{}
@@ -54174,22 +54163,31 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteGeneralRequestInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"commonFields"}
+	fieldsInOrder := [...]string{"trbRequestId", "noteText"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "commonFields":
+		case "trbRequestId":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("commonFields"))
-			data, err := ec.unmarshalNCreateTRBAdminNoteCommonFields2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBAdminNoteCommonFields(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.CommonFields = data
+			it.TrbRequestID = data
+		case "noteText":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("noteText"))
+			data, err := ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.NoteText = data
 		}
 	}
 
@@ -54203,22 +54201,31 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteInitialRequestFormIn
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"commonFields", "appliesToBasicRequestDetails", "appliesToSubjectAreas", "appliesToAttendees"}
+	fieldsInOrder := [...]string{"trbRequestId", "noteText", "appliesToBasicRequestDetails", "appliesToSubjectAreas", "appliesToAttendees"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "commonFields":
+		case "trbRequestId":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("commonFields"))
-			data, err := ec.unmarshalNCreateTRBAdminNoteCommonFields2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBAdminNoteCommonFields(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.CommonFields = data
+			it.TrbRequestID = data
+		case "noteText":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("noteText"))
+			data, err := ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.NoteText = data
 		case "appliesToBasicRequestDetails":
 			var err error
 
@@ -54306,22 +54313,31 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteSupportingDocumentsI
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"commonFields", "documentIDs"}
+	fieldsInOrder := [...]string{"trbRequestId", "noteText", "documentIDs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "commonFields":
+		case "trbRequestId":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("commonFields"))
-			data, err := ec.unmarshalNCreateTRBAdminNoteCommonFields2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBAdminNoteCommonFields(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.CommonFields = data
+			it.TrbRequestID = data
+		case "noteText":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("noteText"))
+			data, err := ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.NoteText = data
 		case "documentIDs":
 			var err error
 
@@ -71533,11 +71549,6 @@ func (ec *executionContext) unmarshalNCreateSystemIntakeNoteInput2githubᚗcom�
 func (ec *executionContext) unmarshalNCreateTRBAdminNoteAdviceLetterInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBAdminNoteAdviceLetterInput(ctx context.Context, v interface{}) (model.CreateTRBAdminNoteAdviceLetterInput, error) {
 	res, err := ec.unmarshalInputCreateTRBAdminNoteAdviceLetterInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNCreateTRBAdminNoteCommonFields2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBAdminNoteCommonFields(ctx context.Context, v interface{}) (*model.CreateTRBAdminNoteCommonFields, error) {
-	res, err := ec.unmarshalInputCreateTRBAdminNoteCommonFields(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNCreateTRBAdminNoteConsultSessionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBAdminNoteConsultSessionInput(ctx context.Context, v interface{}) (model.CreateTRBAdminNoteConsultSessionInput, error) {

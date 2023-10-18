@@ -241,34 +241,32 @@ type CreateSystemIntakeNoteInput struct {
 
 // The data needed to create a TRB admin note with the Advice Letter category
 type CreateTRBAdminNoteAdviceLetterInput struct {
-	CommonFields            *CreateTRBAdminNoteCommonFields `json:"commonFields"`
-	AppliesToMeetingSummary bool                            `json:"appliesToMeetingSummary"`
-	AppliesToNextSteps      bool                            `json:"appliesToNextSteps"`
-	RecommendationIDs       []uuid.UUID                     `json:"recommendationIDs"`
-}
-
-// The data needed by all TRB admin notes, regardless of category
-type CreateTRBAdminNoteCommonFields struct {
-	TrbRequestID uuid.UUID   `json:"trbRequestId"`
-	NoteText     models.HTML `json:"noteText"`
+	TrbRequestID            uuid.UUID   `json:"trbRequestId"`
+	NoteText                models.HTML `json:"noteText"`
+	AppliesToMeetingSummary bool        `json:"appliesToMeetingSummary"`
+	AppliesToNextSteps      bool        `json:"appliesToNextSteps"`
+	RecommendationIDs       []uuid.UUID `json:"recommendationIDs"`
 }
 
 // The data needed to create a TRB admin note with the Consult Session category
 type CreateTRBAdminNoteConsultSessionInput struct {
-	CommonFields *CreateTRBAdminNoteCommonFields `json:"commonFields"`
+	TrbRequestID uuid.UUID   `json:"trbRequestId"`
+	NoteText     models.HTML `json:"noteText"`
 }
 
 // The data needed to create a TRB admin note with the General Request category
 type CreateTRBAdminNoteGeneralRequestInput struct {
-	CommonFields *CreateTRBAdminNoteCommonFields `json:"commonFields"`
+	TrbRequestID uuid.UUID   `json:"trbRequestId"`
+	NoteText     models.HTML `json:"noteText"`
 }
 
 // The data needed to create a TRB admin note with the Initial Request Form category
 type CreateTRBAdminNoteInitialRequestFormInput struct {
-	CommonFields                 *CreateTRBAdminNoteCommonFields `json:"commonFields"`
-	AppliesToBasicRequestDetails bool                            `json:"appliesToBasicRequestDetails"`
-	AppliesToSubjectAreas        bool                            `json:"appliesToSubjectAreas"`
-	AppliesToAttendees           bool                            `json:"appliesToAttendees"`
+	TrbRequestID                 uuid.UUID   `json:"trbRequestId"`
+	NoteText                     models.HTML `json:"noteText"`
+	AppliesToBasicRequestDetails bool        `json:"appliesToBasicRequestDetails"`
+	AppliesToSubjectAreas        bool        `json:"appliesToSubjectAreas"`
+	AppliesToAttendees           bool        `json:"appliesToAttendees"`
 }
 
 // The data needed to create any category of TRB admin note, without any category-specific data
@@ -281,8 +279,9 @@ type CreateTRBAdminNoteInput struct {
 
 // The data needed to create a TRB admin note with the Supporting Documents category
 type CreateTRBAdminNoteSupportingDocumentsInput struct {
-	CommonFields *CreateTRBAdminNoteCommonFields `json:"commonFields"`
-	DocumentIDs  []uuid.UUID                     `json:"documentIDs"`
+	TrbRequestID uuid.UUID   `json:"trbRequestId"`
+	NoteText     models.HTML `json:"noteText"`
+	DocumentIDs  []uuid.UUID `json:"documentIDs"`
 }
 
 // The input required to add a recommendation & links to a TRB advice letter
