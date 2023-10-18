@@ -220,7 +220,7 @@ const technicalAssistance = {
     noRecommendations:
       'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
     reorderRecommendations:
-      'Use the arrows on the left side of each recommendation to reorder your Advice Letter recommendations.',
+      'If you have two or more recommendations, you can use arrows on the left side of each recommendation to reorder them.',
     reorderError:
       'There was an issue saving your recommendation. Please try again, and if the problem persists, try again later.',
     continueWithoutAdding: 'Continue without adding recommendations',
