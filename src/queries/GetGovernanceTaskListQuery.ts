@@ -15,11 +15,16 @@ export default gql`
       }
       governanceRequestFeedbacks {
         id
+        targetForm
       }
       submittedAt
       updatedAt
       grtDate
       grbDate
+
+      businessCase {
+        id
+      }
     }
   }
 `;

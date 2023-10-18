@@ -66,6 +66,16 @@ export enum GRTFeedbackType {
 }
 
 /**
+ * Represents the possible forms on a governance request that can receive feedback
+ */
+export enum GovernanceRequestFeedbackTargetForm {
+  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
+  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
+  INTAKE_REQUEST = "INTAKE_REQUEST",
+  NO_TARGET_PROVIDED = "NO_TARGET_PROVIDED",
+}
+
+/**
  * The requester view of the IT gov Decision step status
  */
 export enum ITGovDecisionStatus {
