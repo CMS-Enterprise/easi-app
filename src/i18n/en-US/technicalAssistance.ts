@@ -1039,6 +1039,11 @@ const technicalAssistance = {
         appliesToBasicRequestDetails: 'Basic request details',
         appliesToSubjectAreas: 'Subject areas',
         appliesToAttendees: 'Attendees'
+      },
+      supportingDocuments: {
+        document: 'Which document?',
+        documentHelpText: 'Select all that apply',
+        selectedDocuments: 'Selected documents'
       }
     },
     categories: {

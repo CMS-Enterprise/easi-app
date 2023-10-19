@@ -22,6 +22,7 @@ import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
@@ -345,6 +346,46 @@ const AddNote = ({
                   />
                 </FieldGroup>
               </FormGroup>
+            )}
+
+            {category === TRBAdminNoteCategory.SUPPORTING_DOCUMENTS && (
+              <Controller
+                control={control}
+                name="documentIDs"
+                render={({ field: { ref, ...field } }) => (
+                  <FormGroup>
+                    <Label htmlFor={field.name} className="text-normal">
+                      {t('notes.labels.supportingDocuments.document')}
+                    </Label>
+
+                    <HelpText className="margin-y-1">
+                      {t('notes.labels.supportingDocuments.documentHelpText')}
+                    </HelpText>
+                    <MultiSelect
+                      {...field}
+                      id={field.name}
+                      selectedLabel={t(
+                        'notes.labels.supportingDocuments.selectedDocuments'
+                      )}
+                      options={[
+                        // TODO: Populate document options with actual values
+                        {
+                          label: 'document1.pdf',
+                          value: '1c9c4bb8-2591-4bab-af77-75321e5a718e'
+                        },
+                        {
+                          label: 'document2.pdf',
+                          value: '89aee73c-13d5-4a8a-9555-8d38bab66968'
+                        },
+                        {
+                          label: 'document3.pdf',
+                          value: '3c0edb5c-f464-40f8-995e-e03ffb1b2bd7'
+                        }
+                      ]}
+                    />
+                  </FormGroup>
+                )}
+              />
             )}
 
             {/* Note Text */}
