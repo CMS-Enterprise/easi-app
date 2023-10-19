@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
@@ -25,13 +25,20 @@ import Label from 'components/shared/Label';
 import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import TextAreaField from 'components/shared/TextAreaField';
+import Spinner from 'components/Spinner';
+import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
 import { TRBAdminNoteFragment } from 'queries/GetTrbAdminNotesQuery';
+import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import {
   CreateTrbAdminNote as CreateTrbAdminNoteType,
   CreateTrbAdminNoteVariables
 } from 'queries/types/CreateTrbAdminNote';
+import {
+  GetTrbRequestDocuments,
+  GetTrbRequestDocumentsVariables
+} from 'queries/types/GetTrbRequestDocuments';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 
 import Breadcrumbs from '../Breadcrumbs';
@@ -79,9 +86,21 @@ const AddNote = ({
 }) => {
   const { t } = useTranslation('technicalAssistance');
 
+  /** Used to get request ID if `trbRequestId` is undefined */
   const { id } = useParams<{
     id: string;
   }>();
+
+  const documentsQuery = useCacheQuery<
+    GetTrbRequestDocuments,
+    GetTrbRequestDocumentsVariables
+  >(GetTrbRequestDocumentsQuery, {
+    variables: { id: trbRequestId || id }
+  });
+
+  const documents = useMemo(() => documentsQuery.data?.trbRequest.documents, [
+    documentsQuery.data
+  ]);
 
   const history = useHistory();
 
@@ -343,6 +362,7 @@ const AddNote = ({
             )}
 
             {category === TRBAdminNoteCategory.SUPPORTING_DOCUMENTS && (
+              // TODO: State for no available documents
               <Controller
                 control={control}
                 name="documentIDs"
@@ -355,26 +375,20 @@ const AddNote = ({
                     <HelpText className="margin-y-1">
                       {t('notes.labels.selectHelpText')}
                     </HelpText>
-                    <MultiSelect
-                      {...field}
-                      id={field.name}
-                      selectedLabel={t('notes.labels.selectedDocuments')}
-                      options={[
-                        // TODO: Populate document options with actual values
-                        {
-                          label: 'document1.pdf',
-                          value: '1c9c4bb8-2591-4bab-af77-75321e5a718e'
-                        },
-                        {
-                          label: 'document2.pdf',
-                          value: '89aee73c-13d5-4a8a-9555-8d38bab66968'
-                        },
-                        {
-                          label: 'document3.pdf',
-                          value: '3c0edb5c-f464-40f8-995e-e03ffb1b2bd7'
-                        }
-                      ]}
-                    />
+
+                    {documentsQuery.loading ? (
+                      <Spinner />
+                    ) : (
+                      <MultiSelect
+                        {...field}
+                        id={field.name}
+                        selectedLabel={t('notes.labels.selectedDocuments')}
+                        options={(documents || []).map(doc => ({
+                          label: doc.fileName,
+                          value: doc.id
+                        }))}
+                      />
+                    )}
                   </FormGroup>
                 )}
               />
