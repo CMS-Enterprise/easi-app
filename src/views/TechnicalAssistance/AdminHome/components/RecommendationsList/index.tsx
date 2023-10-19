@@ -42,27 +42,24 @@ export default function RecommendationsList({
 }: RecommendationsListProps) {
   const { t } = useTranslation('technicalAssistance');
 
-  const enableReorderControls: boolean = editable && recommendations.length > 1;
-
   const [
     recommendationToRemove,
     setRecommendationToRemove
   ] = useState<TRBRecommendation | null>(null);
 
-  // Sorted recommendations array
-  const [sortedRecommendations, setSortedRecommendations] = useState(
-    recommendations
-  );
-
   const [updateOrder] = useMutation<
     UpdateTrbRecommendationOrder,
     UpdateTrbRecommendationOrderVariables
-  >(UpdateTrbRecommendationOrderQuery);
+  >(UpdateTrbRecommendationOrderQuery, {
+    refetchQueries: ['GetTrbAdviceLetter']
+  });
 
-  /** Sort recommendations and update sortedRecommendations state */
+  const enableReorderControls: boolean = editable && recommendations.length > 1;
+
+  /** Sort recommendations and execute updateOrder mutation */
   const sort = (id: string, newIndex: number) => {
     /** Updated sort order array */
-    const newOrder: string[] = sortedRecommendations
+    const newOrder: string[] = recommendations
       // Get just rec IDs
       .map(rec => rec.id)
       // Filter out rec ID to be sorted
@@ -78,23 +75,8 @@ export default function RecommendationsList({
           newOrder
         }
       }
-    })
-      .then(response => {
-        const updatedRecommendations =
-          response?.data?.updateTRBAdviceLetterRecommendationOrder;
-
-        // Update sortedRecommendations state with new order
-        if (updatedRecommendations) {
-          setSortedRecommendations(updatedRecommendations);
-        }
-      })
-      .catch(() => setReorderError?.(t('adviceLetterForm.reorderError')));
+    }).catch(() => setReorderError?.(t('adviceLetterForm.reorderError')));
   };
-
-  // Update sortedRecommendations state when query is refetched
-  useEffect(() => {
-    setSortedRecommendations(recommendations);
-  }, [recommendations]);
 
   // Clear error on initial render
   useEffect(() => {
@@ -129,7 +111,7 @@ export default function RecommendationsList({
       )}
 
       <ul className="usa-list usa-list--unstyled">
-        {sortedRecommendations.map((recommendation, index) => {
+        {recommendations.map((recommendation, index) => {
           const {
             title,
             id,
