@@ -1032,19 +1032,19 @@ const technicalAssistance = {
       categoryHelpText:
         'Certain categories below will display an extra field to allow for additional specificity.',
       noteText: 'Note',
-      initialRequestForm: {
-        section: 'Which section?',
-        sectionHelpText:
-          'Select all that apply if this note is about specific sections of the initial request form. If this is a note about supporting documents, please select “Supporting documents” in the dropdown above.',
-        appliesToBasicRequestDetails: 'Basic request details',
-        appliesToSubjectAreas: 'Subject areas',
-        appliesToAttendees: 'Attendees'
-      },
-      supportingDocuments: {
-        document: 'Which document?',
-        documentHelpText: 'Select all that apply',
-        selectedDocuments: 'Selected documents'
-      }
+      section: 'Which section?',
+      selectedSections: 'Selected sections',
+      selectHelpText: 'Select all that apply',
+      sectionHelpText:
+        'Select all that apply if this note is about specific sections of the initial request form. If this is a note about supporting documents, please select “Supporting documents” in the dropdown above.',
+      appliesToBasicRequestDetails: 'Basic request details',
+      appliesToSubjectAreas: 'Subject areas',
+      appliesToAttendees: 'Attendees',
+      whichDocument: 'Which document?',
+      selectedDocuments: 'Selected documents',
+      meetingSummary: 'Meeting summary',
+      nextSteps: 'Next steps',
+      recommendation: 'Recommendation ({{title}})'
     },
     categories: {
       ADVICE_LETTER: 'Advice letter',

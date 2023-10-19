@@ -51,7 +51,7 @@ type AddNoteInitialRequestFormFields = {
 } & AddNoteCommonFields<TRBAdminNoteCategory.INITIAL_REQUEST_FORM>;
 
 type AddNoteAdviceLetterFields = {
-  section: 'Meeting summary' | 'Recommendation | Next steps';
+  section: 'appliesToMeetingSummary' | 'appliesToNextSteps' | string;
   recommendationIDs: string[];
 } & AddNoteCommonFields<TRBAdminNoteCategory.ADVICE_LETTER>;
 
@@ -289,11 +289,11 @@ const AddNote = ({
                   htmlFor="initialRequestFormSection"
                   className="text-normal"
                 >
-                  {t('notes.labels.initialRequestForm.section')}
+                  {t('notes.labels.section')}
                 </Label>
 
                 <HelpText className="margin-top-1">
-                  {t('notes.labels.initialRequestForm.sectionHelpText')}
+                  {t('notes.labels.sectionHelpText')}
                 </HelpText>
 
                 <FieldGroup
@@ -308,9 +308,7 @@ const AddNote = ({
                         {...field}
                         id={field.name}
                         value={field.name}
-                        label={t(
-                          `notes.labels.initialRequestForm.${field.name}`
-                        )}
+                        label={t(`notes.labels.${field.name}`)}
                       />
                     )}
                   />
@@ -323,9 +321,7 @@ const AddNote = ({
                         {...field}
                         id={field.name}
                         value={field.name}
-                        label={t(
-                          `notes.labels.initialRequestForm.${field.name}`
-                        )}
+                        label={t(`notes.labels.${field.name}`)}
                       />
                     )}
                   />
@@ -338,9 +334,7 @@ const AddNote = ({
                         {...field}
                         id={field.name}
                         value={field.name}
-                        label={t(
-                          `notes.labels.initialRequestForm.${field.name}`
-                        )}
+                        label={t(`notes.labels.${field.name}`)}
                       />
                     )}
                   />
@@ -355,18 +349,16 @@ const AddNote = ({
                 render={({ field: { ref, ...field } }) => (
                   <FormGroup>
                     <Label htmlFor={field.name} className="text-normal">
-                      {t('notes.labels.supportingDocuments.document')}
+                      {t('notes.labels.whichDocument')}
                     </Label>
 
                     <HelpText className="margin-y-1">
-                      {t('notes.labels.supportingDocuments.documentHelpText')}
+                      {t('notes.labels.selectHelpText')}
                     </HelpText>
                     <MultiSelect
                       {...field}
                       id={field.name}
-                      selectedLabel={t(
-                        'notes.labels.supportingDocuments.selectedDocuments'
-                      )}
+                      selectedLabel={t('notes.labels.selectedDocuments')}
                       options={[
                         // TODO: Populate document options with actual values
                         {
@@ -380,6 +372,52 @@ const AddNote = ({
                         {
                           label: 'document3.pdf',
                           value: '3c0edb5c-f464-40f8-995e-e03ffb1b2bd7'
+                        }
+                      ]}
+                    />
+                  </FormGroup>
+                )}
+              />
+            )}
+
+            {category === TRBAdminNoteCategory.ADVICE_LETTER && (
+              <Controller
+                control={control}
+                name="section"
+                render={({ field: { ref, ...field } }) => (
+                  <FormGroup>
+                    <Label htmlFor={field.name} className="text-normal">
+                      {t('notes.labels.section')}
+                    </Label>
+
+                    <HelpText className="margin-y-1">
+                      {t('notes.labels.selectHelpText')}
+                    </HelpText>
+                    <MultiSelect
+                      {...field}
+                      id={field.name}
+                      selectedLabel={t('notes.labels.selectedSections')}
+                      options={[
+                        {
+                          label: t('notes.labels.meetingSummary'),
+                          value: 'appliesToMeetingSummary'
+                        },
+                        {
+                          label: t('notes.labels.nextSteps'),
+                          value: 'appliesToNextSteps'
+                        },
+                        // TODO: Populate recommendation options with actual values
+                        {
+                          label: t('notes.labels.recommendation', {
+                            title: 'AWS migration'
+                          }),
+                          value: '3c0edb5c-f464-40f8-995e-e03ffb1b2bd7'
+                        },
+                        {
+                          label: t('notes.labels.recommendation', {
+                            title: 'DevOps tooling'
+                          }),
+                          value: '6ce35520-6358-4b53-b253-0ea8ab5fc966'
                         }
                       ]}
                     />
