@@ -31,10 +31,15 @@ import useMessage from 'hooks/useMessage';
 import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
 import { TRBAdminNoteFragment } from 'queries/GetTrbAdminNotesQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
+import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
 import {
   CreateTrbAdminNote as CreateTrbAdminNoteType,
   CreateTrbAdminNoteVariables
 } from 'queries/types/CreateTrbAdminNote';
+import {
+  GetTrbRecommendations,
+  GetTrbRecommendationsVariables
+} from 'queries/types/GetTrbRecommendations';
 import {
   GetTrbRequestDocuments,
   GetTrbRequestDocumentsVariables
@@ -98,9 +103,23 @@ const AddNote = ({
     variables: { id: trbRequestId || id }
   });
 
-  const documents = useMemo(() => documentsQuery.data?.trbRequest.documents, [
-    documentsQuery.data
-  ]);
+  const documents = useMemo(
+    () => documentsQuery.data?.trbRequest.documents || [],
+    [documentsQuery.data]
+  );
+
+  const recommendationsQuery = useCacheQuery<
+    GetTrbRecommendations,
+    GetTrbRecommendationsVariables
+  >(GetTrbRecommendationsQuery, {
+    variables: { id: trbRequestId || id }
+  });
+
+  const recommendations = useMemo(
+    () =>
+      recommendationsQuery.data?.trbRequest.adviceLetter?.recommendations || [],
+    [recommendationsQuery.data]
+  );
 
   const history = useHistory();
 
@@ -383,7 +402,7 @@ const AddNote = ({
                         {...field}
                         id={field.name}
                         selectedLabel={t('notes.labels.selectedDocuments')}
-                        options={(documents || []).map(doc => ({
+                        options={documents.map(doc => ({
                           label: doc.fileName,
                           value: doc.id
                         }))}
@@ -407,34 +426,31 @@ const AddNote = ({
                     <HelpText className="margin-y-1">
                       {t('notes.labels.selectHelpText')}
                     </HelpText>
-                    <MultiSelect
-                      {...field}
-                      id={field.name}
-                      selectedLabel={t('notes.labels.selectedSections')}
-                      options={[
-                        {
-                          label: t('notes.labels.meetingSummary'),
-                          value: 'appliesToMeetingSummary'
-                        },
-                        {
-                          label: t('notes.labels.nextSteps'),
-                          value: 'appliesToNextSteps'
-                        },
-                        // TODO: Populate recommendation options with actual values
-                        {
-                          label: t('notes.labels.recommendation', {
-                            title: 'AWS migration'
-                          }),
-                          value: '3c0edb5c-f464-40f8-995e-e03ffb1b2bd7'
-                        },
-                        {
-                          label: t('notes.labels.recommendation', {
-                            title: 'DevOps tooling'
-                          }),
-                          value: '6ce35520-6358-4b53-b253-0ea8ab5fc966'
-                        }
-                      ]}
-                    />
+                    {recommendationsQuery.loading ? (
+                      <Spinner />
+                    ) : (
+                      <MultiSelect
+                        {...field}
+                        id={field.name}
+                        selectedLabel={t('notes.labels.selectedSections')}
+                        options={[
+                          {
+                            label: t('notes.labels.meetingSummary'),
+                            value: 'appliesToMeetingSummary'
+                          },
+                          {
+                            label: t('notes.labels.nextSteps'),
+                            value: 'appliesToNextSteps'
+                          },
+                          ...recommendations.map(rec => ({
+                            label: t('notes.labels.recommendation', {
+                              title: rec.title
+                            }),
+                            value: rec.id
+                          }))
+                        ]}
+                      />
+                    )}
                   </FormGroup>
                 )}
               />
