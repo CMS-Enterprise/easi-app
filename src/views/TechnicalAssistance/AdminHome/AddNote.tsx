@@ -164,6 +164,36 @@ const AddNote = ({
 
   const category = watch('category');
 
+  const submit = handleSubmit(formData => {
+    mutate({
+      variables: {
+        input: {
+          trbRequestId: trbRequestId || id, // Get id from prop(modal) or url param
+          category: formData.category,
+          noteText: formData.noteText
+        }
+      }
+    })
+      .then(result => {
+        if (!setModalView) {
+          showMessageOnNextPage(t('notes.status.success'), {
+            type: 'success',
+            className: 'margin-top-3'
+          });
+          history.push(requestUrl);
+        } else if (setModalView && setModalMessage) {
+          setModalView('viewNotes');
+          setModalMessage(t('notes.status.success'));
+        }
+      })
+      .catch(err => {
+        showMessage(t('notes.status.error'), {
+          type: 'error',
+          className: 'margin-top-3'
+        });
+      });
+  });
+
   const hasErrors: boolean = Object.keys(errors).length > 0;
 
   useEffect(() => {
@@ -197,35 +227,8 @@ const AddNote = ({
       )}
 
       <Form
-        onSubmit={handleSubmit(formData => {
-          mutate({
-            variables: {
-              input: {
-                trbRequestId: trbRequestId || id, // Get id from prop(modal) or url param
-                category: formData.category,
-                noteText: formData.noteText
-              }
-            }
-          })
-            .then(result => {
-              if (!setModalView) {
-                showMessageOnNextPage(t('notes.status.success'), {
-                  type: 'success',
-                  className: 'margin-top-3'
-                });
-                history.push(requestUrl);
-              } else if (setModalView && setModalMessage) {
-                setModalView('viewNotes');
-                setModalMessage(t('notes.status.success'));
-              }
-            })
-            .catch(err => {
-              showMessage(t('notes.status.error'), {
-                type: 'error',
-                className: 'margin-top-3'
-              });
-            });
-        })}
+        // onSubmit={submit}
+        onSubmit={submit}
         className={classNames('maxw-full', {
           'desktop:grid-col-6': !setModalView
         })}
