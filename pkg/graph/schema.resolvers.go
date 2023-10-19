@@ -3168,18 +3168,28 @@ func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *mo
 			AppliesToAttendees:           false,
 		}
 	case models.TRBAdminNoteCategorySupportingDocuments:
+		docsFromDB, err := r.store.GetTRBRequestDocumentsByRequestID(ctx, obj.TRBRequestID)
+		if err != nil {
+			return nil, err
+		}
+
 		categorySpecificData = model.TRBAdminNoteSupportingDocumentsCategoryData{
-			Documents: []*models.TRBRequestDocument{},
+			Documents: docsFromDB,
 		}
 	case models.TRBAdminNoteCategoryConsultSession:
 		categorySpecificData = model.TRBAdminNoteConsultSessionCategoryData{
 			PlaceholderField: nil,
 		}
 	case models.TRBAdminNoteCategoryAdviceLetter:
+		recsFromDB, err := r.store.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, obj.TRBRequestID)
+		if err != nil {
+			return nil, err
+		}
+
 		categorySpecificData = model.TRBAdminNoteAdviceLetterCategoryData{
 			AppliesToMeetingSummary: true,
 			AppliesToNextSteps:      false,
-			Recommendations:         []*models.TRBAdviceLetterRecommendation{},
+			Recommendations:         recsFromDB,
 		}
 	}
 
