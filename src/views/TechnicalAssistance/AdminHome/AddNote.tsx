@@ -28,15 +28,37 @@ import {
   CreateTrbAdminNote as CreateTrbAdminNoteType,
   CreateTrbAdminNoteVariables
 } from 'queries/types/CreateTrbAdminNote';
-import {
-  CreateTRBAdminNoteInput,
-  TRBAdminNoteCategory
-} from 'types/graphql-global-types';
+import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 
 import Breadcrumbs from '../Breadcrumbs';
 
 import { ModalViewType } from './components/NoteModal';
 import { TRBRequestContext } from './RequestContext';
+
+type AddNoteCommonFields<T extends TRBAdminNoteCategory> = {
+  category: T;
+  noteText: string;
+};
+
+type AddNoteInitialRequestFormFields = {
+  section: 'Basic request details' | 'Subject areas' | 'Attendees';
+} & AddNoteCommonFields<TRBAdminNoteCategory.INITIAL_REQUEST_FORM>;
+
+type AddNoteAdviceLetterFields = {
+  section: 'Meeting summary' | 'Recommendation | Next steps';
+  recommendationIDs: string[];
+} & AddNoteCommonFields<TRBAdminNoteCategory.ADVICE_LETTER>;
+
+type AddNoteSupportingDocumentsFields = {
+  documentIDs: string[];
+} & AddNoteCommonFields<TRBAdminNoteCategory.SUPPORTING_DOCUMENTS>;
+
+type AddNoteFields =
+  | AddNoteInitialRequestFormFields
+  | AddNoteAdviceLetterFields
+  | AddNoteSupportingDocumentsFields
+  | AddNoteCommonFields<TRBAdminNoteCategory.GENERAL_REQUEST>
+  | AddNoteCommonFields<TRBAdminNoteCategory.CONSULT_SESSION>;
 
 const AddNote = ({
   trbRequestId,
@@ -84,18 +106,16 @@ const AddNote = ({
     }
   });
 
-  const defaultValues: Omit<CreateTRBAdminNoteInput, 'trbRequestId'> = {
-    category: defaultSelect || ('' as TRBAdminNoteCategory),
-    noteText: ''
-  };
-
   const {
     control,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting }
-  } = useForm({
-    defaultValues
+  } = useForm<AddNoteFields>({
+    defaultValues: {
+      category: defaultSelect || ('' as TRBAdminNoteCategory),
+      noteText: ''
+    }
   });
 
   const hasErrors: boolean = Object.keys(errors).length > 0;
