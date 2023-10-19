@@ -65,8 +65,6 @@ func GetTRBAdminNotesByTRBRequestID(ctx context.Context, store *storage.Store, t
 // If updating admin notes requires handling category-specific data, see note on UpdateTRBAdminNoteInput;
 // break this up into separate resolvers
 func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdminNote, error) {
-	// TODO - EASI-3362 - update with category-specific data (validate, then save in database)
-
 	idStr, idFound := input["id"]
 	if !idFound {
 		return nil, errors.New("missing required property id")
