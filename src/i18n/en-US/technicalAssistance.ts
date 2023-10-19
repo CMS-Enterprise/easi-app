@@ -1029,7 +1029,15 @@ const technicalAssistance = {
     },
     labels: {
       category: 'What is this note about?',
-      noteText: 'Note'
+      noteText: 'Note',
+      initialRequestForm: {
+        section: 'Which section?',
+        sectionHelpText:
+          'Select all that apply if this note is about specific sections of the initial request form. If this is a note about supporting documents, please select “Supporting documents” in the dropdown above.',
+        appliesToBasicRequestDetails: 'Basic request details',
+        appliesToSubjectAreas: 'Subject areas',
+        appliesToAttendees: 'Attendees'
+      }
     },
     categories: {
       ADVICE_LETTER: 'Advice letter',

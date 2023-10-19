@@ -18,7 +18,10 @@ import classNames from 'classnames';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
@@ -41,7 +44,9 @@ type AddNoteCommonFields<T extends TRBAdminNoteCategory> = {
 };
 
 type AddNoteInitialRequestFormFields = {
-  section: 'Basic request details' | 'Subject areas' | 'Attendees';
+  appliesToBasicRequestDetails: boolean;
+  appliesToSubjectAreas: boolean;
+  appliesToAttendees: boolean;
 } & AddNoteCommonFields<TRBAdminNoteCategory.INITIAL_REQUEST_FORM>;
 
 type AddNoteAdviceLetterFields = {
@@ -117,6 +122,8 @@ const AddNote = ({
       noteText: ''
     }
   });
+
+  const category = watch('category');
 
   const hasErrors: boolean = Object.keys(errors).length > 0;
 
@@ -275,6 +282,71 @@ const AddNote = ({
                 </FormGroup>
               )}
             />
+
+            {category === TRBAdminNoteCategory.INITIAL_REQUEST_FORM && (
+              <FormGroup>
+                <Label
+                  htmlFor="initialRequestFormSection"
+                  className="text-normal"
+                >
+                  {t('notes.labels.initialRequestForm.section')}
+                </Label>
+
+                <HelpText className="margin-top-1">
+                  {t('notes.labels.initialRequestForm.sectionHelpText')}
+                </HelpText>
+
+                <FieldGroup
+                  id="initialRequestFormSection"
+                  className="margin-top-1"
+                >
+                  <Controller
+                    control={control}
+                    name="appliesToBasicRequestDetails"
+                    render={({ field: { ref, ...field } }) => (
+                      <CheckboxField
+                        {...field}
+                        id={field.name}
+                        value={field.name}
+                        label={t(
+                          `notes.labels.initialRequestForm.${field.name}`
+                        )}
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    control={control}
+                    name="appliesToSubjectAreas"
+                    render={({ field: { ref, ...field } }) => (
+                      <CheckboxField
+                        {...field}
+                        id={field.name}
+                        value={field.name}
+                        label={t(
+                          `notes.labels.initialRequestForm.${field.name}`
+                        )}
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    control={control}
+                    name="appliesToAttendees"
+                    render={({ field: { ref, ...field } }) => (
+                      <CheckboxField
+                        {...field}
+                        id={field.name}
+                        value={field.name}
+                        label={t(
+                          `notes.labels.initialRequestForm.${field.name}`
+                        )}
+                      />
+                    )}
+                  />
+                </FieldGroup>
+              </FormGroup>
+            )}
 
             {/* Note Text */}
             <Controller
