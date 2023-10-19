@@ -14,7 +14,7 @@ import { translateStatus } from 'utils/systemIntake';
 // Modifed data can then be configured with JSX components in column cell configuration
 
 export interface SystemIntakeForTable
-  extends Omit<SystemIntake, 'status' | 'contract'> {
+  extends Omit<SystemIntake, 'status' | 'contract' | 'fundingSources'> {
   /** String with requester name and component acronym */
   requesterNameAndComponent: string;
   /** Translated status string */
@@ -22,10 +22,12 @@ export interface SystemIntakeForTable
   /** Filter date for portfolio update report */
   filterDate: string | null;
   lastAdminNote: AdminNote | null;
+  fundingSources: string;
   contract: {
     hasContract: string | null;
     contractor: string | null;
     number: string | null;
+    vehicle: string | null;
     /** Contract start date converted to string */
     startDate: string;
     /** Contract end date converted to string */
@@ -39,6 +41,35 @@ const getLastAdminNote = (notes: AdminNote[]): AdminNote | null => {
   const sortedNotes = sortBy(notes, 'createdAt').reverse();
 
   return sortedNotes[0];
+};
+
+/**
+ * Return funding sources object as string
+ *
+ * Format: 123456 (source one, source two), 654321 (source three)
+ */
+export const formatFundingSources = (
+  fundingSources: SystemIntake['fundingSources']
+): string => {
+  /** Formats sources into {fundingNumber: [keys]} object */
+  const sourcesObject = fundingSources.reduce<{
+    [index: string]: Array<string>;
+  }>((acc, { fundingNumber, source }) => {
+    if (!fundingNumber || !source) return acc;
+
+    return {
+      ...acc,
+      [fundingNumber]: [...(acc[fundingNumber] || []), source]
+    };
+  }, {});
+
+  /** Returns array of formatted funding source strings */
+  const stringsArray = Object.keys(sourcesObject).map(
+    number => `${number} (${sourcesObject[number].join(', ')})`
+  );
+
+  // returns `stringsArray` as comma separated list
+  return stringsArray.join(', ');
 };
 
 /** Returns array of system intakes formatted for request table and CSV exports */
@@ -90,6 +121,7 @@ const tableMap = (
     return {
       ...intake,
       requesterNameAndComponent,
+      fundingSources: formatFundingSources(intake.fundingSources),
       contract: {
         ...intake.contract,
         hasContract,

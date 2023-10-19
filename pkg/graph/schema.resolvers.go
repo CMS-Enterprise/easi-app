@@ -2122,6 +2122,41 @@ func (r *mutationResolver) CreateTRBAdminNote(ctx context.Context, input model.C
 	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, input.Category, input.NoteText)
 }
 
+// CreateTRBAdminNoteGeneralRequest is the resolver for the createTRBAdminNoteGeneralRequest field.
+func (r *mutationResolver) CreateTRBAdminNoteGeneralRequest(ctx context.Context, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
+	// placeholder implementation that frontend can call, doesn't set category-specific data
+	// TODO - EASI-3362 - implement this properly with its own resolver that saves category-specific data
+	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, models.TRBAdminNoteCategoryGeneralRequest, input.NoteText)
+}
+
+// CreateTRBAdminNoteInitialRequestForm is the resolver for the createTRBAdminNoteInitialRequestForm field.
+func (r *mutationResolver) CreateTRBAdminNoteInitialRequestForm(ctx context.Context, input model.CreateTRBAdminNoteInitialRequestFormInput) (*models.TRBAdminNote, error) {
+	// placeholder implementation that frontend can call, doesn't set category-specific data
+	// TODO - EASI-3362 - implement this properly with its own resolver that saves category-specific data
+	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, models.TRBAdminNoteCategoryInitialRequestForm, input.NoteText)
+}
+
+// CreateTRBAdminNoteSupportingDocuments is the resolver for the createTRBAdminNoteSupportingDocuments field.
+func (r *mutationResolver) CreateTRBAdminNoteSupportingDocuments(ctx context.Context, input model.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error) {
+	// placeholder implementation that frontend can call, doesn't set category-specific data
+	// TODO - EASI-3362 - implement this properly with its own resolver that saves category-specific data
+	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, models.TRBAdminNoteCategorySupportingDocuments, input.NoteText)
+}
+
+// CreateTRBAdminNoteConsultSession is the resolver for the createTRBAdminNoteConsultSession field.
+func (r *mutationResolver) CreateTRBAdminNoteConsultSession(ctx context.Context, input model.CreateTRBAdminNoteConsultSessionInput) (*models.TRBAdminNote, error) {
+	// placeholder implementation that frontend can call, doesn't set category-specific data
+	// TODO - EASI-3362 - implement this properly with its own resolver that saves category-specific data
+	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, models.TRBAdminNoteCategoryConsultSession, input.NoteText)
+}
+
+// CreateTRBAdminNoteAdviceLetter is the resolver for the createTRBAdminNoteAdviceLetter field.
+func (r *mutationResolver) CreateTRBAdminNoteAdviceLetter(ctx context.Context, input model.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error) {
+	// placeholder implementation that frontend can call, doesn't set category-specific data
+	// TODO - EASI-3362 - implement this properly with its own resolver that saves category-specific data
+	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, models.TRBAdminNoteCategoryAdviceLetter, input.NoteText)
+}
+
 // UpdateTRBAdminNote is the resolver for the updateTRBAdminNote field.
 func (r *mutationResolver) UpdateTRBAdminNote(ctx context.Context, input map[string]interface{}) (*models.TRBAdminNote, error) {
 	return resolvers.UpdateTRBAdminNote(ctx, r.store, input)
@@ -2810,6 +2845,11 @@ func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.
 	return obj.ExistingFunding.Ptr(), nil
 }
 
+// FundingSources is the resolver for the fundingSources field.
+func (r *systemIntakeResolver) FundingSources(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeFundingSource, error) {
+	return r.store.FetchSystemIntakeFundingSourcesByIntakeID(ctx, obj.ID)
+}
+
 // GovernanceRequestFeedbacks is the resolver for the governanceRequestFeedbacks field.
 func (r *systemIntakeResolver) GovernanceRequestFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GovernanceRequestFeedback, error) {
 	return resolvers.GetGovernanceRequestFeedbacksByIntakeID(ctx, r.store, obj.ID)
@@ -3107,6 +3147,43 @@ func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminN
 	}
 
 	return authorInfo, nil
+}
+
+// CategorySpecificData is the resolver for the categorySpecificData field.
+func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *models.TRBAdminNote) (model.TRBAdminNoteCategorySpecificData, error) {
+	// placeholder mock data for the various category-specific fields
+	// fetching the actual data will be implemented in EASI-3362 - https://jiraent.cms.gov/browse/EASI-3362
+
+	var categorySpecificData model.TRBAdminNoteCategorySpecificData
+
+	switch obj.Category {
+	case models.TRBAdminNoteCategoryGeneralRequest:
+		categorySpecificData = model.TRBAdminNoteGeneralRequestCategoryData{
+			PlaceholderField: nil,
+		}
+	case models.TRBAdminNoteCategoryInitialRequestForm:
+		categorySpecificData = model.TRBAdminNoteInitialRequestFormCategoryData{
+			AppliesToBasicRequestDetails: true,
+			AppliesToSubjectAreas:        true,
+			AppliesToAttendees:           false,
+		}
+	case models.TRBAdminNoteCategorySupportingDocuments:
+		categorySpecificData = model.TRBAdminNoteSupportingDocumentsCategoryData{
+			Documents: []*models.TRBRequestDocument{},
+		}
+	case models.TRBAdminNoteCategoryConsultSession:
+		categorySpecificData = model.TRBAdminNoteConsultSessionCategoryData{
+			PlaceholderField: nil,
+		}
+	case models.TRBAdminNoteCategoryAdviceLetter:
+		categorySpecificData = model.TRBAdminNoteAdviceLetterCategoryData{
+			AppliesToMeetingSummary: true,
+			AppliesToNextSteps:      false,
+			Recommendations:         []*models.TRBAdviceLetterRecommendation{},
+		}
+	}
+
+	return categorySpecificData, nil
 }
 
 // Author is the resolver for the author field.
