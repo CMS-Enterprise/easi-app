@@ -158,8 +158,12 @@ const AddNote = ({
   } = useForm<AddNoteFields>({
     shouldUnregister: true,
     defaultValues: {
-      category: defaultSelect || ('' as TRBAdminNoteCategory),
-      noteText: ''
+      appliesToAttendees: false,
+      appliesToBasicRequestDetails: false,
+      appliesToSubjectAreas: false,
+      documentIDs: [],
+      noteText: '',
+      ...(defaultSelect ? { category: defaultSelect } : {})
     }
   });
 
