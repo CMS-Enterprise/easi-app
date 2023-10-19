@@ -10,8 +10,7 @@ import {
   Form,
   FormGroup,
   Grid,
-  IconArrowBack,
-  Label
+  IconArrowBack
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
@@ -22,6 +21,7 @@ import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
@@ -244,14 +244,13 @@ const AddNote = ({
               rules={{ required: true }}
               render={({ field, fieldState: { error } }) => (
                 <FormGroup error={!!error}>
-                  <Label
-                    htmlFor="category"
-                    className="text-normal"
-                    error={!!error}
-                  >
-                    {t('notes.labels.category')}{' '}
-                    <span className="text-red">*</span>
+                  <Label htmlFor="category" className="text-normal" required>
+                    {t('notes.labels.category')}
                   </Label>
+
+                  <HelpText className="margin-top-1">
+                    {t('notes.labels.categoryHelpText')}
+                  </HelpText>
 
                   {error && (
                     <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>
@@ -354,9 +353,8 @@ const AddNote = ({
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <FormGroup>
-                  <Label htmlFor="noteText" className="text-normal">
+                  <Label htmlFor="noteText" className="text-normal" required>
                     {t('notes.labels.noteText')}
-                    <span className="text-red">*</span>
                   </Label>
 
                   <TextAreaField

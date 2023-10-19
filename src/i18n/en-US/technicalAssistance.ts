@@ -1029,6 +1029,8 @@ const technicalAssistance = {
     },
     labels: {
       category: 'What is this note about?',
+      categoryHelpText:
+        'Certain categories below will display an extra field to allow for additional specificity.',
       noteText: 'Note',
       initialRequestForm: {
         section: 'Which section?',
