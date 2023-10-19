@@ -59,7 +59,7 @@ const home = {
     ITGov: {
       heading: 'IT Governance',
       body:
-        'Includes processes for applying for a Lifecycle ID and decomissioning a system.',
+        'Includes processes for applying for a Life Cycle ID and decomissioning a system.',
       learnMore: 'Learn more about IT Governance',
       link: '/system/making-a-request',
       button: 'Start an IT Governance request',
@@ -136,7 +136,7 @@ const home = {
         link: "What's included in the Portfolio Update Report?",
         heading: 'About the Portfolio Update Report',
         content:
-          '<p>Downloading the Portfolio Update Report will generate and download a csv file of all IT Governance requests within the date range you select. The dates selected are based on the last admin note date.</p><p>The Report contains the following fields: Project name, Requester component, Last admin note, Project Manager name, Business Owner name, Business Owner component, Business need, Business solution, Process status, Funding source, Funding number, Expected increase amount, Contractor(s), Contract vehicle, Period of performance start, Period of performance end, Status, LCID scope, Admin lead, Updated at, and Submitted at.</p>'
+          '<p>Downloading the Portfolio Update Report will generate and download a csv file of all IT Governance requests within the date range you select. The dates selected are based on the last admin note date.</p><p>The Report contains the following fields: Project name, Requester component, Last admin note, Project Manager name, Business Owner name, Business Owner component, Business need, Business solution, Process status, Funding source and number, Current annual spend, Planned annual spend, Contractor(s), Contract vehicle, Period of performance start, Period of performance end, Status, LCID scope, Admin lead, Updated at, and Submitted at.</p>'
       },
       configureReport: {
         button: 'Configure Portfolio Update Report',

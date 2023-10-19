@@ -66,6 +66,16 @@ export enum GRTFeedbackType {
 }
 
 /**
+ * Represents the possible forms on a governance request that can receive feedback
+ */
+export enum GovernanceRequestFeedbackTargetForm {
+  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
+  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
+  INTAKE_REQUEST = "INTAKE_REQUEST",
+  NO_TARGET_PROVIDED = "NO_TARGET_PROVIDED",
+}
+
+/**
  * The requester view of the IT gov Decision step status
  */
 export enum ITGovDecisionStatus {
@@ -595,18 +605,13 @@ export interface CreateSystemIntakeNoteInput {
 }
 
 /**
- * The data needed to create a TRB admin note
- * For category-specific data, rather than five separate mutations with their own input types,
- * this type has nullable fields for all the categories that can have category-specific data.
- * At most one of these fields should have a value.
+ * The data needed to create any category of TRB admin note, without any category-specific data
+ * TODO - EASI-3458 - remove
  */
 export interface CreateTRBAdminNoteInput {
   trbRequestId: UUID;
   category: TRBAdminNoteCategory;
   noteText: HTML;
-  initialRequestFormData?: TRBAdminNoteInitialRequestFormInput | null;
-  supportingDocumentsData?: TRBAdminNoteSupportingDocumentsInput | null;
-  adviceLetterData?: TRBAdminNoteAdviceLetterInput | null;
 }
 
 /**
@@ -925,6 +930,17 @@ export interface SystemIntakeIssueLCIDInput {
 }
 
 /**
+ * Input for creating a Not an IT Governance Request Action in Admin Actions v2
+ */
+export interface SystemIntakeNotITGovReqInput {
+  systemIntakeID: UUID;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  reason?: HTML | null;
+  additionalInfo?: HTML | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * The input data used to set the CMS product manager/lead of a system
  */
 export interface SystemIntakeProductManagerInput {
@@ -985,31 +1001,6 @@ export interface SystemIntakeUpdateLCIDInput {
   additionalInfo?: HTML | null;
   notificationRecipients?: EmailNotificationRecipients | null;
   adminNote?: HTML | null;
-}
-
-/**
- * Data needed to create a TRB admin note with the Advice Letter category
- */
-export interface TRBAdminNoteAdviceLetterInput {
-  appliesToMeetingSummary: boolean;
-  appliesToNextSteps: boolean;
-  recommendationIDs: UUID[];
-}
-
-/**
- * Data needed to create a TRB admin note with the Initial Request Form category
- */
-export interface TRBAdminNoteInitialRequestFormInput {
-  appliesToBasicRequestDetails: boolean;
-  appliesToSubjectAreas: boolean;
-  appliesToAttendees: boolean;
-}
-
-/**
- * Data needed to create a TRB admin note with the Supporting Documents category
- */
-export interface TRBAdminNoteSupportingDocumentsInput {
-  documentIDs: UUID[];
 }
 
 /**

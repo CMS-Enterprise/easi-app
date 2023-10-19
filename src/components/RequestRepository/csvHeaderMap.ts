@@ -1,8 +1,8 @@
 const csvHeaderMap = (t: any) => [
   { key: 'euaUserId', label: t('intake:csvHeadings.euaId') },
-  { key: 'requester.name', label: t('intake:csvHeadings.requesterName') },
+  { key: 'requesterName', label: t('intake:csvHeadings.requesterName') },
   {
-    key: 'requester.component',
+    key: 'requesterComponent',
     label: t('intake:csvHeadings.requesterComponent')
   },
   {
@@ -46,12 +46,8 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.existingFunding')
   },
   {
-    key: 'fundingSource.source',
+    key: 'fundingSources',
     label: t('intake:csvHeadings.fundingSource')
-  },
-  {
-    key: 'fundingSource.fundingNumber',
-    label: t('intake:csvHeadings.fundingNumber')
   },
   {
     key: 'businessNeed',
@@ -74,12 +70,12 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.hasUiChanges')
   },
   {
-    key: 'costs.isExpectingIncrease',
-    label: t('intake:csvHeadings.isExpectingCostIncrease')
+    key: 'annualSpending.currentAnnualSpending',
+    label: t('intake:csvHeadings.currentAnnualSpend')
   },
   {
-    key: 'costs.expectedIncreaseAmount',
-    label: t('intake:csvHeadings.expectedIncreaseAmount')
+    key: 'annualSpending.plannedYearOneSpending',
+    label: t('intake:csvHeadings.plannedAnnualSpend')
   },
   {
     key: 'contract.hasContract',

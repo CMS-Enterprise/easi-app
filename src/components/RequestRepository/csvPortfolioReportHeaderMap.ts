@@ -4,7 +4,7 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.projectName')
   },
   {
-    key: 'requester.component',
+    key: 'requesterComponent',
     label: t('intake:csvHeadings.requesterComponent')
   },
   {
@@ -36,16 +36,16 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.currentStage')
   },
   {
-    key: 'fundingSource.source',
+    key: 'fundingSources',
     label: t('intake:csvHeadings.fundingSource')
   },
   {
-    key: 'fundingSource.fundingNumber',
-    label: t('intake:csvHeadings.fundingNumber')
+    key: 'annualSpending.currentAnnualSpending',
+    label: t('intake:csvHeadings.currentAnnualSpend')
   },
   {
-    key: 'costs.expectedIncreaseAmount',
-    label: t('intake:csvHeadings.expectedIncreaseAmount')
+    key: 'annualSpending.plannedYearOneSpending',
+    label: t('intake:csvHeadings.plannedAnnualSpend')
   },
   {
     key: 'contract.contractor',
@@ -60,7 +60,7 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.contractStart')
   },
   {
-    key: 'contract.EndDate',
+    key: 'contract.endDate',
     label: t('intake:csvHeadings.contractEnd')
   },
   {

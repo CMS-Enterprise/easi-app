@@ -310,6 +310,11 @@ export const systemIntakeForTable: TableSystemIntake = {
   eaCollaboratorName: '',
   existingFunding: false,
   fundingSources: [],
+  annualSpending: {
+    __typename: 'SystemIntakeAnnualSpending',
+    currentAnnualSpending: 'Current annual spending',
+    plannedYearOneSpending: 'Planned year one spending'
+  },
   contract: systemIntake.contract,
   businessNeed: systemIntake.businessNeed,
   businessSolution: systemIntake.businessSolution,
@@ -438,7 +443,8 @@ export const getGovernanceTaskListQuery: MockedQuery<
         submittedAt: null,
         updatedAt: null,
         grtDate: null,
-        grbDate: null
+        grbDate: null,
+        businessCase: null
       }
     }
   }

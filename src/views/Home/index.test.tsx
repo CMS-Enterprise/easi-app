@@ -16,7 +16,8 @@ import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import GetSystemIntakesTableQuery from 'queries/GetSystemIntakesTableQuery';
 import {
   GetSystemIntakesTable,
-  GetSystemIntakesTable_systemIntakes as SystemIntake
+  GetSystemIntakesTable_systemIntakes as SystemIntake,
+  GetSystemIntakesTableVariables
 } from 'queries/types/GetSystemIntakesTable';
 import { SystemIntakeState } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
@@ -42,21 +43,39 @@ const mockClosedIntakes: SystemIntake[] = [
   { ...systemIntakeForTable, id: '5', state: SystemIntakeState.CLOSED }
 ];
 
-const getSystemIntakesTable: MockedQuery<GetSystemIntakesTable> = {
+const getOpenSystemIntakesTable: MockedQuery<
+  GetSystemIntakesTable,
+  GetSystemIntakesTableVariables
+> = {
   request: {
     query: GetSystemIntakesTableQuery,
-    variables: {}
+    variables: { openRequests: true }
   },
   result: {
     data: {
-      systemIntakes: [...mockOpenIntakes, ...mockClosedIntakes]
+      systemIntakes: mockOpenIntakes
+    }
+  }
+};
+const getClosedSystemIntakesTable: MockedQuery<
+  GetSystemIntakesTable,
+  GetSystemIntakesTableVariables
+> = {
+  request: {
+    query: GetSystemIntakesTableQuery,
+    variables: { openRequests: false }
+  },
+  result: {
+    data: {
+      systemIntakes: mockClosedIntakes
     }
   }
 };
 
 const mocks = [
   getRequestsQuery([], []),
-  getSystemIntakesTable,
+  getOpenSystemIntakesTable,
+  getClosedSystemIntakesTable,
   {
     request: {
       query: GetCedarSystemsQuery

@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
 
 import { systemIntakeForTable } from 'data/mock/systemIntake';
-import { GetSystemIntakesTable_systemIntakes_notes as AdminNote } from 'queries/types/GetSystemIntakesTable';
 import {
-  SystemIntakeState,
-  SystemIntakeStatus
-} from 'types/graphql-global-types';
+  GetSystemIntakesTable_systemIntakes as TableSystemIntake,
+  GetSystemIntakesTable_systemIntakes_notes as AdminNote
+} from 'queries/types/GetSystemIntakesTable';
+import { SystemIntakeState } from 'types/graphql-global-types';
 
 import tableMap from './tableMap';
 
@@ -21,6 +21,34 @@ vi.mock('react-i18next', () => ({
   }
 }));
 
+const fundingSources: TableSystemIntake['fundingSources'] = [
+  {
+    __typename: 'SystemIntakeFundingSource',
+    source: 'Research',
+    fundingNumber: '123456'
+  },
+  {
+    __typename: 'SystemIntakeFundingSource',
+    source: 'HITECH Medicaid',
+    fundingNumber: '123456'
+  },
+  {
+    __typename: 'SystemIntakeFundingSource',
+    source: 'DARPA',
+    fundingNumber: '789012'
+  },
+  {
+    __typename: 'SystemIntakeFundingSource',
+    source: 'Recovery Audit Contractors',
+    fundingNumber: '789012'
+  },
+  {
+    __typename: 'SystemIntakeFundingSource',
+    source: 'Prog Ops',
+    fundingNumber: '654321'
+  }
+];
+
 const note = (count: number): AdminNote => {
   return {
     __typename: 'SystemIntakeNote',
@@ -30,7 +58,7 @@ const note = (count: number): AdminNote => {
   };
 };
 
-const intakes: Array<typeof systemIntakeForTable> = [
+const intakes: Array<TableSystemIntake> = [
   {
     ...systemIntakeForTable,
     state: SystemIntakeState.CLOSED,
@@ -92,23 +120,16 @@ describe('System intake request table map', () => {
     expect(intakeWithNoNotes.filterDate).toEqual(lastAdminAction.createdAt);
   });
 
-  const closedIntakes = [
-    { ...systemIntakeForTable, status: SystemIntakeStatus.NOT_IT_REQUEST },
-    { ...systemIntakeForTable, status: SystemIntakeStatus.NO_GOVERNANCE },
-    { ...systemIntakeForTable, status: SystemIntakeStatus.NOT_IT_REQUEST }
-  ];
+  it('formats funding sources into string', () => {
+    const intakeWithFundingSources = {
+      ...systemIntakeForTable,
+      fundingSources
+    };
 
-  // Tests that `tableMap` converts legacy intake statuses to `CLOSED` state
-  test.each(
-    tableMap(closedIntakes, t).map((intake, index) => ({
-      ...intake,
-      testStatus: closedIntakes[index].status
-    }))
-  )('converts legacy closed status $testStatus', ({ status, state }) => {
-    // Translated status for table
-    expect(status).toEqual('Closed');
+    const [intake] = tableMap([intakeWithFundingSources], t);
 
-    // Converts legacy status to `CLOSED` state property
-    expect(state).toEqual(SystemIntakeState.CLOSED);
+    expect(intake.fundingSources).toEqual(
+      '123456 (Research, HITECH Medicaid), 654321 (Prog Ops), 789012 (DARPA, Recovery Audit Contractors)'
+    );
   });
 });

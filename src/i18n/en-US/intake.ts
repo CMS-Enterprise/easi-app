@@ -46,7 +46,7 @@ const intake = {
       taskListCta: 'Go back to Governance Task List'
     }
   },
-  lifecycleId: 'Lifecycle ID',
+  lifecycleId: 'Life Cycle ID',
   statusMap: {
     INTAKE_DRAFT: 'Intake draft',
     INTAKE_SUBMITTED: 'Intake request received',
@@ -58,7 +58,7 @@ const intake = {
     BIZ_CASE_FINAL_SUBMITTED: 'Final business case received',
     READY_FOR_GRT: 'Ready for GRT meeting',
     READY_FOR_GRB: 'Ready for GRB meeting',
-    LCID_ISSUED: 'Lifecycle ID issued',
+    LCID_ISSUED: 'Life Cycle ID issued',
     WITHDRAWN: 'Withdrawn',
     NOT_IT_REQUEST: 'Closed',
     NOT_APPROVED: 'Business case not approved',
@@ -115,8 +115,7 @@ const intake = {
     eaCollaborator: 'EA Collaborator Name',
     projectName: 'Project Name',
     existingFunding: 'Existing Funding',
-    fundingSource: 'Funding Source',
-    fundingNumber: 'Funding Number',
+    fundingSource: 'Funding Number and Source',
     businessNeed: 'Business Need',
     businessSolution: 'Business Solution',
     currentStage: 'Process Status',
@@ -124,6 +123,8 @@ const intake = {
     hasUiChanges: 'Interface Component/Changes',
     isExpectingCostIncrease: 'Expecting Cost Increase',
     expectedIncreaseAmount: 'Expected Increase Amount',
+    currentAnnualSpend: 'Current Annual Spend',
+    plannedAnnualSpend: 'Planned Annual Spend',
     existingContract: 'Existing Contract',
     contractors: 'Contractor(s)',
     contractVehicle: 'Contract Vehicle',
@@ -164,7 +165,7 @@ const intake = {
   },
   contactDetails: {
     intakeProcessDescription:
-      'The EASi System Intake process can guide you through all stages of your procurement/project, connecting you with the resources, people and services that you need. Please complete and submit this CMS IT Intake form to engage with the CMS IT Governance review process. This is the first step to receive a CMS IT LifeCycle ID. Upon submission, you will receive an email promptly from the IT_Governance mailbox, and an IT Governance Team member will reach out regarding next steps.',
+      'The EASi System Intake process can guide you through all stages of your procurement/project, connecting you with the resources, people and services that you need. Please complete and submit this CMS IT Intake form to engage with the CMS IT Governance review process. This is the first step to receive a CMS IT Life Cycle ID. Upon submission, you will receive an email promptly from the IT_Governance mailbox, and an IT Governance Team member will reach out regarding next steps.',
     heading: 'Contact details',
     requester: 'Requester',
     requesterComponent: 'Requester Component',
