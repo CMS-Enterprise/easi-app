@@ -24,13 +24,19 @@ import RecommendationLinks from './RecommendationLinks';
 type RecommendationsListProps = {
   recommendations: TRBRecommendation[];
   trbRequestId: string;
+  /** Optional function to set error message if order mutation fails */
   setReorderError?: (error: string | null) => void;
+  /** If false, hides edit/remove buttons and reorder controls */
   editable?: boolean;
   edit?: (recommendation: TRBRecommendation) => void;
   remove?: (recommendation: TRBRecommendation) => void;
   className?: string;
 };
 
+/**
+ * Displays list of TRB advice letter recommendations
+ * with optional buttons to edit, remove, and order recommendations
+ */
 export default function RecommendationsList({
   recommendations,
   trbRequestId,
