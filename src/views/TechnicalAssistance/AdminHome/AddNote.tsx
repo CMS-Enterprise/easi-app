@@ -156,6 +156,7 @@ const AddNote = ({
     watch,
     formState: { errors, isSubmitting }
   } = useForm<AddNoteFields>({
+    shouldUnregister: true,
     defaultValues: {
       category: defaultSelect || ('' as TRBAdminNoteCategory),
       noteText: ''
