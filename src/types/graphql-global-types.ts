@@ -605,7 +605,8 @@ export interface CreateSystemIntakeNoteInput {
 }
 
 /**
- * The data needed to create a TRB admin note
+ * The data needed to create any category of TRB admin note, without any category-specific data
+ * TODO - EASI-3458 - remove
  */
 export interface CreateTRBAdminNoteInput {
   trbRequestId: UUID;

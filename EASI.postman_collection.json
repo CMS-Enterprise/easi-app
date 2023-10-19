@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "be4f3cd4-40e1-4f77-b29e-870063fe2b2d",
+		"_postman_id": "d4e6f976-5c1e-4889-a2ce-0b372144c090",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "28498683"
@@ -1239,16 +1239,9 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/api/graph/query",
-									"protocol": "http",
+									"raw": "{{url}}",
 									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"graph",
-										"query"
+										"{{url}}"
 									]
 								}
 							},
@@ -1641,6 +1634,74 @@
 									"graphql": {
 										"query": "mutation {\r\n    deleteTRBAdviceLetterRecommendation(id:\"db4f0bb0-1352-4428-92b1-eeab8131d379\") {\r\n        id\r\n        trbRequestId\r\n        title\r\n        recommendation\r\n    }\r\n}",
 										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TRB Admin Notes",
+					"item": [
+						{
+							"name": "Get Admin Notes, with category-specific fields",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query {\r\n    trbRequest(id:\"{{trbRequestID}}\") {\r\n        adminNotes {\r\n            id\r\n            category\r\n            noteText\r\n            categorySpecificData {\r\n                ... on TRBAdminNoteGeneralRequestCategoryData {\r\n                    placeholderField\r\n                }\r\n                ... on TRBAdminNoteInitialRequestFormCategoryData {\r\n                    appliesToBasicRequestDetails\r\n                    appliesToSubjectAreas\r\n                    appliesToAttendees\r\n                }\r\n                ... on TRBAdminNoteSupportingDocumentsCategoryData {\r\n                    documents {\r\n                        id\r\n                        fileName\r\n                    }\r\n                }\r\n                ... on TRBAdminNoteConsultSessionCategoryData {\r\n                    placeholderField\r\n                }\r\n                ... on TRBAdminNoteAdviceLetterCategoryData {\r\n                    appliesToMeetingSummary\r\n                    appliesToNextSteps\r\n                    recommendations {\r\n                        id\r\n                        title\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update TRB Admin Note (no category-specific fields)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation UpdateNote($input: UpdateTRBAdminNoteInput!) {\r\n    updateTRBAdminNote(input: $input) {\r\n        id\r\n        category\r\n        noteText\r\n    }\r\n}",
+										"variables": "{\r\n    \"input\": {\r\n        \"id\": \"71fb32c1-52f5-47a1-8350-c7349caf2770\",\r\n        \"category\": \"INITIAL_REQUEST_FORM\",\r\n        \"noteText\": \"test note 1 - edit1\"\r\n    }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create TRB Admin Note (no category-specific fields)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation CreateTRBNote($input:CreateTRBAdminNoteInput!) {\r\n    createTRBAdminNote(input: $input) {\r\n        id\r\n    }\r\n}",
+										"variables": "{\r\n    \"input\": {\r\n        \"trbRequestId\": \"{{trbRequestID}}\",\r\n        \"category\": \"GENERAL_REQUEST\",\r\n        \"noteText\": \"test note 1\"\r\n    }\r\n}"
 									}
 								},
 								"url": {

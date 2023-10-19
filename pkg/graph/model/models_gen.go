@@ -13,6 +13,10 @@ import (
 	"github.com/google/uuid"
 )
 
+type TRBAdminNoteCategorySpecificData interface {
+	IsTRBAdminNoteCategorySpecificData()
+}
+
 // Denotes type of a document that is attached to a 508/accessibility request,
 // which can be one of a number of common types, or another user-specified type
 type AccessibilityRequestDocumentType struct {
@@ -235,11 +239,49 @@ type CreateSystemIntakeNoteInput struct {
 	IntakeID   uuid.UUID   `json:"intakeId"`
 }
 
-// The data needed to create a TRB admin note
+// The data needed to create a TRB admin note with the Advice Letter category
+type CreateTRBAdminNoteAdviceLetterInput struct {
+	TrbRequestID            uuid.UUID   `json:"trbRequestId"`
+	NoteText                models.HTML `json:"noteText"`
+	AppliesToMeetingSummary bool        `json:"appliesToMeetingSummary"`
+	AppliesToNextSteps      bool        `json:"appliesToNextSteps"`
+	RecommendationIDs       []uuid.UUID `json:"recommendationIDs"`
+}
+
+// The data needed to create a TRB admin note with the Consult Session category
+type CreateTRBAdminNoteConsultSessionInput struct {
+	TrbRequestID uuid.UUID   `json:"trbRequestId"`
+	NoteText     models.HTML `json:"noteText"`
+}
+
+// The data needed to create a TRB admin note with the General Request category
+type CreateTRBAdminNoteGeneralRequestInput struct {
+	TrbRequestID uuid.UUID   `json:"trbRequestId"`
+	NoteText     models.HTML `json:"noteText"`
+}
+
+// The data needed to create a TRB admin note with the Initial Request Form category
+type CreateTRBAdminNoteInitialRequestFormInput struct {
+	TrbRequestID                 uuid.UUID   `json:"trbRequestId"`
+	NoteText                     models.HTML `json:"noteText"`
+	AppliesToBasicRequestDetails bool        `json:"appliesToBasicRequestDetails"`
+	AppliesToSubjectAreas        bool        `json:"appliesToSubjectAreas"`
+	AppliesToAttendees           bool        `json:"appliesToAttendees"`
+}
+
+// The data needed to create any category of TRB admin note, without any category-specific data
+// TODO - EASI-3458 - remove
 type CreateTRBAdminNoteInput struct {
 	TrbRequestID uuid.UUID                   `json:"trbRequestId"`
 	Category     models.TRBAdminNoteCategory `json:"category"`
 	NoteText     models.HTML                 `json:"noteText"`
+}
+
+// The data needed to create a TRB admin note with the Supporting Documents category
+type CreateTRBAdminNoteSupportingDocumentsInput struct {
+	TrbRequestID uuid.UUID   `json:"trbRequestId"`
+	NoteText     models.HTML `json:"noteText"`
+	DocumentIDs  []uuid.UUID `json:"documentIDs"`
 }
 
 // The input required to add a recommendation & links to a TRB advice letter
@@ -806,6 +848,49 @@ type SystemIntakeUpdateLCIDInput struct {
 	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
 	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
+
+// Data specific to admin notes in the Advice Letter category
+type TRBAdminNoteAdviceLetterCategoryData struct {
+	AppliesToMeetingSummary bool                                    `json:"appliesToMeetingSummary"`
+	AppliesToNextSteps      bool                                    `json:"appliesToNextSteps"`
+	Recommendations         []*models.TRBAdviceLetterRecommendation `json:"recommendations"`
+}
+
+func (TRBAdminNoteAdviceLetterCategoryData) IsTRBAdminNoteCategorySpecificData() {}
+
+// Data specific to admin notes in the Consult Session category
+// This type doesn't contain any actual data
+type TRBAdminNoteConsultSessionCategoryData struct {
+	// Placeholder field so this type is non-empty, always null
+	PlaceholderField *bool `json:"placeholderField,omitempty"`
+}
+
+func (TRBAdminNoteConsultSessionCategoryData) IsTRBAdminNoteCategorySpecificData() {}
+
+// Data specific to admin notes in the General Request category
+// This type doesn't contain any actual data
+type TRBAdminNoteGeneralRequestCategoryData struct {
+	// Placeholder field so this type is non-empty, always null
+	PlaceholderField *bool `json:"placeholderField,omitempty"`
+}
+
+func (TRBAdminNoteGeneralRequestCategoryData) IsTRBAdminNoteCategorySpecificData() {}
+
+// Data specific to admin notes in the Initial Request Form category
+type TRBAdminNoteInitialRequestFormCategoryData struct {
+	AppliesToBasicRequestDetails bool `json:"appliesToBasicRequestDetails"`
+	AppliesToSubjectAreas        bool `json:"appliesToSubjectAreas"`
+	AppliesToAttendees           bool `json:"appliesToAttendees"`
+}
+
+func (TRBAdminNoteInitialRequestFormCategoryData) IsTRBAdminNoteCategorySpecificData() {}
+
+// Data specific to admin notes in the Supporting Documents category
+type TRBAdminNoteSupportingDocumentsCategoryData struct {
+	Documents []*models.TRBRequestDocument `json:"documents"`
+}
+
+func (TRBAdminNoteSupportingDocumentsCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Denotes the type of a document attached to a TRB request,
 // which can be one of a number of common types, or a free-text user-specified type

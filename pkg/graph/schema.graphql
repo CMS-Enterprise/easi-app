@@ -2307,6 +2307,55 @@ enum TRBAdminNoteCategory {
 }
 
 """
+Data specific to admin notes in the General Request category
+This type doesn't contain any actual data
+"""
+type TRBAdminNoteGeneralRequestCategoryData {
+  """
+  Placeholder field so this type is non-empty, always null
+  """
+  placeholderField: Boolean # Necessary because gqlgen doesn't support empty types
+}
+
+"""
+Data specific to admin notes in the Initial Request Form category
+"""
+type TRBAdminNoteInitialRequestFormCategoryData {
+  appliesToBasicRequestDetails: Boolean!
+  appliesToSubjectAreas: Boolean!
+  appliesToAttendees: Boolean!
+}
+
+"""
+Data specific to admin notes in the Supporting Documents category
+"""
+type TRBAdminNoteSupportingDocumentsCategoryData {
+  documents: [TRBRequestDocument!]!
+}
+
+"""
+Data specific to admin notes in the Consult Session category
+This type doesn't contain any actual data
+"""
+type TRBAdminNoteConsultSessionCategoryData {
+  """
+  Placeholder field so this type is non-empty, always null
+  """
+  placeholderField: Boolean # Necessary because gqlgen doesn't support empty types
+}
+
+"""
+Data specific to admin notes in the Advice Letter category
+"""
+type TRBAdminNoteAdviceLetterCategoryData {
+  appliesToMeetingSummary: Boolean!
+  appliesToNextSteps: Boolean!
+  recommendations: [TRBAdviceLetterRecommendation!]!
+}
+
+union TRBAdminNoteCategorySpecificData = TRBAdminNoteGeneralRequestCategoryData | TRBAdminNoteInitialRequestFormCategoryData | TRBAdminNoteSupportingDocumentsCategoryData | TRBAdminNoteConsultSessionCategoryData | TRBAdminNoteAdviceLetterCategoryData
+
+"""
 Represents an admin note attached to a TRB request
 """
 type TRBAdminNote {
@@ -2316,6 +2365,7 @@ type TRBAdminNote {
   noteText: HTML!
   author: UserInfo!
   isArchived: Boolean!
+  categorySpecificData: TRBAdminNoteCategorySpecificData!
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2345,7 +2395,8 @@ type TRBAdviceLetter {
 }
 
 """
-The data needed to create a TRB admin note
+The data needed to create any category of TRB admin note, without any category-specific data
+TODO - EASI-3458 - remove
 """
 input CreateTRBAdminNoteInput {
   trbRequestId: UUID!
@@ -2354,7 +2405,74 @@ input CreateTRBAdminNoteInput {
 }
 
 """
-The data needed for updating a TRB admin note
+The data needed to create a TRB admin note with the General Request category
+"""
+input CreateTRBAdminNoteGeneralRequestInput {
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # no category-specific data for this category
+}
+
+"""
+The data needed to create a TRB admin note with the Initial Request Form category
+"""
+input CreateTRBAdminNoteInitialRequestFormInput {
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # category-specific data
+  appliesToBasicRequestDetails: Boolean!
+  appliesToSubjectAreas: Boolean!
+  appliesToAttendees: Boolean!
+}
+
+"""
+The data needed to create a TRB admin note with the Supporting Documents category
+"""
+input CreateTRBAdminNoteSupportingDocumentsInput {
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # category-specific data
+  documentIDs: [UUID!]!
+}
+
+"""
+The data needed to create a TRB admin note with the Consult Session category
+"""
+input CreateTRBAdminNoteConsultSessionInput {
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # no category-specific data for this category
+}
+
+"""
+The data needed to create a TRB admin note with the Advice Letter category
+"""
+input CreateTRBAdminNoteAdviceLetterInput {
+  # common fields used by all TRB admin notes
+  trbRequestId: UUID!
+  noteText: HTML!
+
+  # category-specific data
+  appliesToMeetingSummary: Boolean!
+  appliesToNextSteps: Boolean!
+  recommendationIDs: [UUID!]!
+}
+
+"""
+The data needed for updating a TRB admin note, not including any category-specific data
+As of 10/17/2023, this mutation isn't being used anywhere within EASi
+Creating and reading admin notes with category-specific data was added in https://jiraent.cms.gov/browse/EASI-3277
+
+If updating admin notes needs to handle category-specific data, break it up into five separate mutations with their own input types,
+similar to the different CreateTRBAdminNote* inputs.
 """
 input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
   id: UUID!
@@ -2658,8 +2776,23 @@ type Mutation {
     @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
+
+  # Retained to support existing queries while support for category-specific notes is added
+  # TODO - EASI-3458 - remove
   createTRBAdminNote(input: CreateTRBAdminNoteInput!): TRBAdminNote!
+
+  # separate mutations for each category of admin note
+  createTRBAdminNoteGeneralRequest(input: CreateTRBAdminNoteGeneralRequestInput!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteInitialRequestForm(input: CreateTRBAdminNoteInitialRequestFormInput!): TRBAdminNote!
+    @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteSupportingDocuments(input: CreateTRBAdminNoteSupportingDocumentsInput!): TRBAdminNote!
+    @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteConsultSession(input: CreateTRBAdminNoteConsultSessionInput!): TRBAdminNote!
+    @hasRole(role: EASI_TRB_ADMIN)
+  createTRBAdminNoteAdviceLetter(input: CreateTRBAdminNoteAdviceLetterInput!): TRBAdminNote!
+    @hasRole(role: EASI_TRB_ADMIN)
+
   updateTRBAdminNote(input: UpdateTRBAdminNoteInput!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!

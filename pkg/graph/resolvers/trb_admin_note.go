@@ -13,7 +13,12 @@ import (
 )
 
 // CreateTRBAdminNote creates a new TRB admin note in the database
+// TODO - EASI-3458 - remove
 func CreateTRBAdminNote(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID, category models.TRBAdminNoteCategory, noteText models.HTML) (*models.TRBAdminNote, error) {
+	// TODO - EASI-3362 - potentially set category-specific fields for the note's category to the default values for existing data
+	// i.e., if category is Initial Request Form, set all the checkboxes for that category to false
+	// that way admin notes created before we fully deploy this feature will have the correct default values
+
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: trbRequestID,
 		Category:     category,
@@ -56,7 +61,9 @@ func GetTRBAdminNotesByTRBRequestID(ctx context.Context, store *storage.Store, t
 	return notes, nil
 }
 
-// UpdateTRBAdminNote handles general updates to a TRB admin note
+// UpdateTRBAdminNote handles general updates to a TRB admin note, without handling category-specific data
+// If updating admin notes requires handling category-specific data, see note on UpdateTRBAdminNoteInput;
+// break this up into separate resolvers
 func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdminNote, error) {
 	idStr, idFound := input["id"]
 	if !idFound {
