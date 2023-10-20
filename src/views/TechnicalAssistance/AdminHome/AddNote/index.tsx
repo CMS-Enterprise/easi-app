@@ -351,6 +351,7 @@ const AddNote = ({
                           {...field}
                           id={field.name}
                           selectedLabel={t('notes.labels.selectedDocuments')}
+                          disabled={documents.length === 0}
                           options={documents.map(doc => ({
                             label: doc.fileName,
                             value: doc.id
