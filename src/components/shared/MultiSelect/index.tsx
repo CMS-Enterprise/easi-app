@@ -130,6 +130,7 @@ const MultiSelect = ({
   options,
   onChange,
   initialValues,
+  disabled,
   className
 }: {
   id?: string;
@@ -139,6 +140,7 @@ const MultiSelect = ({
   options: MultiSelectOptionProps[];
   onChange: (values: string[]) => void;
   initialValues?: string[];
+  disabled?: boolean;
   className?: string;
 }) => {
   const [
@@ -236,6 +238,7 @@ const MultiSelect = ({
         controlShouldRenderValue={false}
         placeholder={`${selected?.length || 0} selected`}
         styles={customStyles}
+        isDisabled={disabled}
       />
       {selected && selected.length > 0 && (
         <div className="easi-multiselect--selected">
