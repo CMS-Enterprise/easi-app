@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
 import {
   Button,
   Dropdown,
@@ -29,34 +28,7 @@ import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
-import {
-  CreateTrbAdminNoteAdviceLetterQuery,
-  CreateTrbAdminNoteConsultSessionQuery,
-  CreateTrbAdminNoteGeneralRequestQuery,
-  CreateTrbAdminNoteInitialRequestFormQuery,
-  CreateTrbAdminNoteSupportingDocumentsQuery
-} from 'queries/TrbAdminNoteQueries';
 import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
-import {
-  CreateTRBAdminNoteAdviceLetter,
-  CreateTRBAdminNoteAdviceLetterVariables
-} from 'queries/types/CreateTRBAdminNoteAdviceLetter';
-import {
-  CreateTRBAdminNoteConsultSession,
-  CreateTRBAdminNoteConsultSessionVariables
-} from 'queries/types/CreateTRBAdminNoteConsultSession';
-import {
-  CreateTRBAdminNoteGeneralRequest,
-  CreateTRBAdminNoteGeneralRequestVariables
-} from 'queries/types/CreateTRBAdminNoteGeneralRequest';
-import {
-  CreateTRBAdminNoteInitialRequestForm,
-  CreateTRBAdminNoteInitialRequestFormVariables
-} from 'queries/types/CreateTRBAdminNoteInitialRequestForm';
-import {
-  CreateTRBAdminNoteSupportingDocuments,
-  CreateTRBAdminNoteSupportingDocumentsVariables
-} from 'queries/types/CreateTRBAdminNoteSupportingDocuments';
 import {
   GetTrbRecommendations,
   GetTrbRecommendationsVariables
@@ -67,37 +39,11 @@ import {
 } from 'queries/types/GetTrbRequestDocuments';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 
-import Breadcrumbs from '../Breadcrumbs';
+import Breadcrumbs from '../../Breadcrumbs';
+import { ModalViewType } from '../components/NoteModal';
+import { TRBRequestContext } from '../RequestContext';
 
-import { ModalViewType } from './components/NoteModal';
-import { TRBRequestContext } from './RequestContext';
-
-type AddNoteCommonFields<T extends TRBAdminNoteCategory> = {
-  category: T;
-  noteText: string;
-};
-
-type AddNoteInitialRequestFormFields = {
-  appliesToBasicRequestDetails: boolean;
-  appliesToSubjectAreas: boolean;
-  appliesToAttendees: boolean;
-} & AddNoteCommonFields<TRBAdminNoteCategory.INITIAL_REQUEST_FORM>;
-
-type AddNoteAdviceLetterFields = {
-  section: 'appliesToMeetingSummary' | 'appliesToNextSteps' | string;
-  recommendationIDs: string[];
-} & AddNoteCommonFields<TRBAdminNoteCategory.ADVICE_LETTER>;
-
-type AddNoteSupportingDocumentsFields = {
-  documentIDs: string[];
-} & AddNoteCommonFields<TRBAdminNoteCategory.SUPPORTING_DOCUMENTS>;
-
-type AddNoteFields =
-  | AddNoteInitialRequestFormFields
-  | AddNoteAdviceLetterFields
-  | AddNoteSupportingDocumentsFields
-  | AddNoteCommonFields<TRBAdminNoteCategory.GENERAL_REQUEST>
-  | AddNoteCommonFields<TRBAdminNoteCategory.CONSULT_SESSION>;
+import useAddNote, { AddNoteFields } from './useAddNote';
 
 const AddNote = ({
   trbRequestId,
@@ -155,31 +101,6 @@ const AddNote = ({
 
   const requestUrl: string = `/trb/${id}/notes`;
 
-  const [createNoteGeneralRequest] = useMutation<
-    CreateTRBAdminNoteGeneralRequest,
-    CreateTRBAdminNoteGeneralRequestVariables
-  >(CreateTrbAdminNoteGeneralRequestQuery);
-
-  const [createNoteInitialRequestForm] = useMutation<
-    CreateTRBAdminNoteInitialRequestForm,
-    CreateTRBAdminNoteInitialRequestFormVariables
-  >(CreateTrbAdminNoteInitialRequestFormQuery);
-
-  const [createNoteSupportingDocuments] = useMutation<
-    CreateTRBAdminNoteSupportingDocuments,
-    CreateTRBAdminNoteSupportingDocumentsVariables
-  >(CreateTrbAdminNoteSupportingDocumentsQuery);
-
-  const [createNoteConsultSession] = useMutation<
-    CreateTRBAdminNoteConsultSession,
-    CreateTRBAdminNoteConsultSessionVariables
-  >(CreateTrbAdminNoteConsultSessionQuery);
-
-  const [createNoteAdviceLetter] = useMutation<
-    CreateTRBAdminNoteAdviceLetter,
-    CreateTRBAdminNoteAdviceLetterVariables
-  >(CreateTrbAdminNoteAdviceLetterQuery);
-
   const {
     control,
     handleSubmit,
@@ -197,66 +118,9 @@ const AddNote = ({
     }
   });
 
-  const submit = handleSubmit(formData => {
-    if (formData.category === TRBAdminNoteCategory.GENERAL_REQUEST) {
-      const { category, ...values } = formData;
-      createNoteGeneralRequest({
-        variables: {
-          input: {
-            trbRequestId: trbRequestId || id,
-            ...values
-          }
-        }
-      });
-    } else if (
-      formData.category === TRBAdminNoteCategory.INITIAL_REQUEST_FORM
-    ) {
-      const { category, ...values } = formData;
-      createNoteInitialRequestForm({
-        variables: {
-          input: {
-            trbRequestId: trbRequestId || id,
-            ...values
-          }
-        }
-      });
-    } else if (
-      formData.category === TRBAdminNoteCategory.SUPPORTING_DOCUMENTS
-    ) {
-      const { category, ...values } = formData;
-      createNoteSupportingDocuments({
-        variables: {
-          input: {
-            trbRequestId: trbRequestId || id,
-            ...values
-          }
-        }
-      });
-    } else if (formData.category === TRBAdminNoteCategory.CONSULT_SESSION) {
-      const { category, ...values } = formData;
-      createNoteConsultSession({
-        variables: {
-          input: {
-            trbRequestId: trbRequestId || id,
-            ...values
-          }
-        }
-      });
-    } else if (formData.category === TRBAdminNoteCategory.ADVICE_LETTER) {
-      createNoteAdviceLetter({
-        variables: {
-          input: {
-            trbRequestId: trbRequestId || id,
-            noteText: formData.noteText,
-            appliesToMeetingSummary:
-              formData.section === 'appliesToMeetingSummary',
-            appliesToNextSteps: formData.section === 'appliesToNextSteps',
-            recommendationIDs: formData.recommendationIDs
-          }
-        }
-      });
-    }
-  });
+  const createNote = useAddNote(trbRequestId || id);
+
+  const submit = handleSubmit(formData => createNote(formData));
 
   const category = watch('category');
 

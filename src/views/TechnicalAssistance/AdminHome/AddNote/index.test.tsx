@@ -22,9 +22,10 @@ import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 
-import AddNote from './AddNote';
-import TRBRequestInfoWrapper from './RequestContext';
-import AdminHome from '.';
+import TRBRequestInfoWrapper from '../RequestContext';
+import AdminHome from '..';
+
+import AddNote from '.';
 
 const createTrbAdminNoteQuery: MockedQuery<
   CreateTrbAdminNoteType,
