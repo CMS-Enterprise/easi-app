@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   Button,
   Dropdown,
@@ -88,16 +88,12 @@ const AddNote = ({
     [recommendationsQuery.data]
   );
 
-  // const history = useHistory();
+  const history = useHistory();
 
   // TRB request information to render name in breadcrumbs
   const { data } = useContext(TRBRequestContext);
 
-  const {
-    Message
-    // showMessage,
-    // showMessageOnNextPage
-  } = useMessage();
+  const { Message, showMessage, showMessageOnNextPage } = useMessage();
 
   const requestUrl: string = `/trb/${id}/notes`;
 
@@ -120,7 +116,27 @@ const AddNote = ({
 
   const createNote = useAddNote(trbRequestId || id);
 
-  const submit = handleSubmit(formData => createNote(formData));
+  const submit = handleSubmit(formData =>
+    createNote(formData)
+      .then(result => {
+        if (!setModalView) {
+          showMessageOnNextPage(t('notes.status.success'), {
+            type: 'success',
+            className: 'margin-top-3'
+          });
+          history.push(requestUrl);
+        } else if (setModalView && setModalMessage) {
+          setModalView('viewNotes');
+          setModalMessage(t('notes.status.success'));
+        }
+      })
+      .catch(err => {
+        showMessage(t('notes.status.error'), {
+          type: 'error',
+          className: 'margin-top-3'
+        });
+      })
+  );
 
   const category = watch('category');
 
