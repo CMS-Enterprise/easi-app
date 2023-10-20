@@ -61,24 +61,32 @@ const Notes = ({
     <TrbAdminWrapper
       activePage="notes"
       trbRequestId={trbRequestId}
-      title={t('adminHome.notes')}
-      description={t('notes.description')}
       disableStep={adminActionDisabled}
       adminActionProps={{
         status: trbRequest?.status || TRBRequestStatus.NEW,
         state: trbRequest?.state || TRBRequestState.OPEN
       }}
+      // Only pass title and description if NOT modal view
+      {...(!setModalView
+        ? { title: t('adminHome.notes'), description: t('notes.description') }
+        : {})}
     >
       {setModalView ? (
-        <Button
-          type="button"
-          className="margin-bottom-4"
-          onClick={() => {
-            setModalView('addNote');
-          }}
-        >
-          {t('notes.addNote')}
-        </Button>
+        <>
+          <h1 className="margin-y-05">{t('adminHome.notes')}</h1>
+          <p className="line-height-body-4 font-body-md text-light margin-top-05">
+            {t('notes.description')}
+          </p>
+          <Button
+            type="button"
+            className="margin-bottom-4"
+            onClick={() => {
+              setModalView('addNote');
+            }}
+          >
+            {t('notes.addNote')}
+          </Button>
+        </>
       ) : (
         <UswdsReactLink
           to={`/trb/${trbRequestId}/notes/add-note`}
@@ -104,7 +112,7 @@ const Notes = ({
           {t('notes.noNotes')}
         </Alert>
       ) : (
-        <div className="margin-top-2">
+        <div className="margin-top-1">
           {/* Show most recent notes first */}
           {[...notes] // TODO: BE will implement filter to ensure correct ordering
             .sort((a, b) => {
