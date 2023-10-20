@@ -114,6 +114,7 @@ const AddNote = ({
     }
   });
 
+  /** Create TRB admin note mutation */
   const createNote = useAddNote(trbRequestId || id);
 
   const submit = handleSubmit(formData =>

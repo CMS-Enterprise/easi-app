@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { FetchResult, useMutation } from '@apollo/client';
 
 import {
   CreateTrbAdminNoteAdviceLetterQuery,
@@ -49,6 +49,7 @@ type AddNoteSupportingDocumentsFields = {
   documentIDs: string[];
 } & AddNoteCommonFields<TRBAdminNoteCategory.SUPPORTING_DOCUMENTS>;
 
+/** Add note fields based on category */
 export type AddNoteFields =
   | AddNoteInitialRequestFormFields
   | AddNoteAdviceLetterFields
@@ -56,6 +57,9 @@ export type AddNoteFields =
   | AddNoteCommonFields<TRBAdminNoteCategory.GENERAL_REQUEST>
   | AddNoteCommonFields<TRBAdminNoteCategory.CONSULT_SESSION>;
 
+/**
+ * Returns create TRB admin note mutation based on category field value
+ */
 const useAddNote = (trbRequestId: string) => {
   const [createNoteGeneralRequest] = useMutation<
     CreateTRBAdminNoteGeneralRequest,
@@ -82,7 +86,7 @@ const useAddNote = (trbRequestId: string) => {
     CreateTRBAdminNoteAdviceLetterVariables
   >(CreateTrbAdminNoteAdviceLetterQuery);
 
-  const submit = (formData: AddNoteFields) => {
+  const createNote = (formData: AddNoteFields): Promise<FetchResult> => {
     if (formData.category === TRBAdminNoteCategory.INITIAL_REQUEST_FORM) {
       const { category, ...values } = formData;
       return createNoteInitialRequestForm({
@@ -145,7 +149,7 @@ const useAddNote = (trbRequestId: string) => {
     });
   };
 
-  return submit;
+  return createNote;
 };
 
 export default useAddNote;
