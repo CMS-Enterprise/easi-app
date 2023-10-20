@@ -1046,6 +1046,7 @@ const technicalAssistance = {
       nextSteps: 'Next steps',
       recommendation: 'Recommendation ({{title}})'
     },
+    noDocuments: 'There are no documents uploaded for this request.',
     categories: {
       ADVICE_LETTER: 'Advice letter',
       CONSULT_SESSION: 'Consult session',

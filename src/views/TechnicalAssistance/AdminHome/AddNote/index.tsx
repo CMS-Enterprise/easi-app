@@ -330,7 +330,6 @@ const AddNote = ({
             )}
 
             {category === TRBAdminNoteCategory.SUPPORTING_DOCUMENTS && (
-              // TODO: State for no available documents
               <Controller
                 control={control}
                 name="documentIDs"
@@ -347,15 +346,22 @@ const AddNote = ({
                     {documentsQuery.loading ? (
                       <Spinner />
                     ) : (
-                      <MultiSelect
-                        {...field}
-                        id={field.name}
-                        selectedLabel={t('notes.labels.selectedDocuments')}
-                        options={documents.map(doc => ({
-                          label: doc.fileName,
-                          value: doc.id
-                        }))}
-                      />
+                      <>
+                        <MultiSelect
+                          {...field}
+                          id={field.name}
+                          selectedLabel={t('notes.labels.selectedDocuments')}
+                          options={documents.map(doc => ({
+                            label: doc.fileName,
+                            value: doc.id
+                          }))}
+                        />
+                        {documents.length === 0 && (
+                          <Alert type="info" className="margin-top-1" slim>
+                            {t('notes.noDocuments')}
+                          </Alert>
+                        )}
+                      </>
                     )}
                   </FormGroup>
                 )}
