@@ -3168,6 +3168,10 @@ func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *mo
 			AppliesToAttendees:           false,
 		}
 	case models.TRBAdminNoteCategorySupportingDocuments:
+		// NOTE - this resolver only needs to populate the fields/sub-fields that don't have resolvers in this file;
+		// we can populate the model.TRBAdminNoteSupportingDocumentsCategoryData value with partially-populated models.TRBRequestDocument values
+		// this resolver can load field values from the database when possible, then the resolvers for the Status/URL fields will be called _as needed_
+
 		docsFromDB, err := r.store.GetTRBRequestDocumentsByRequestID(ctx, obj.TRBRequestID)
 		if err != nil {
 			return nil, err
@@ -3181,6 +3185,10 @@ func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *mo
 			PlaceholderField: nil,
 		}
 	case models.TRBAdminNoteCategoryAdviceLetter:
+		// NOTE - this resolver only needs to populate the fields/sub-fields that don't have resolvers in this file;
+		// we can populate the model.TRBAdminNoteAdviceLetterCategoryData value with partially-populated models.TRBAdviceLetterDocumentation values
+		// this resolver can load field values from the database when possible, then the resolvers for the Links/Author fields will be called _as needed_
+
 		recsFromDB, err := r.store.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, obj.TRBRequestID)
 		if err != nil {
 			return nil, err
