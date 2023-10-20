@@ -113,7 +113,10 @@ const adminNotes: GetTrbAdminNotes['trbRequest']['adminNotes'] = [
       __typename: 'UserInfo',
       commonName: requester.userInfo.commonName
     },
-    createdAt: '2024-03-28T13:20:37.852099Z'
+    createdAt: '2024-03-28T13:20:37.852099Z',
+    categorySpecificData: {
+      __typename: 'TRBAdminNoteGeneralRequestCategoryData'
+    }
   }
 ];
 

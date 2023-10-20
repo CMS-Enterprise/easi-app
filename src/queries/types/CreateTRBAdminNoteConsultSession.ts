@@ -14,6 +14,41 @@ export interface CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSessi
   commonName: string;
 }
 
+export interface CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteGeneralRequestCategoryData {
+  __typename: "TRBAdminNoteGeneralRequestCategoryData" | "TRBAdminNoteConsultSessionCategoryData";
+}
+
+export interface CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteInitialRequestFormCategoryData {
+  __typename: "TRBAdminNoteInitialRequestFormCategoryData";
+  appliesToBasicRequestDetails: boolean;
+  appliesToSubjectAreas: boolean;
+  appliesToAttendees: boolean;
+}
+
+export interface CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData_documents {
+  __typename: "TRBRequestDocument";
+  fileName: string;
+}
+
+export interface CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData {
+  __typename: "TRBAdminNoteSupportingDocumentsCategoryData";
+  documents: CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData_documents[];
+}
+
+export interface CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData_recommendations {
+  __typename: "TRBAdviceLetterRecommendation";
+  title: string;
+}
+
+export interface CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData {
+  __typename: "TRBAdminNoteAdviceLetterCategoryData";
+  appliesToMeetingSummary: boolean;
+  appliesToNextSteps: boolean;
+  recommendations: CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData_recommendations[];
+}
+
+export type CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData = CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteGeneralRequestCategoryData | CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteInitialRequestFormCategoryData | CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData | CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData;
+
 export interface CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession {
   __typename: "TRBAdminNote";
   id: UUID;
@@ -22,6 +57,7 @@ export interface CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSessi
   noteText: HTML;
   author: CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_author;
   createdAt: Time;
+  categorySpecificData: CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData;
 }
 
 export interface CreateTRBAdminNoteConsultSession {

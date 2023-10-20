@@ -16,7 +16,10 @@ const note: NoteType = {
     commonName: 'Jerry Seinfeld'
   },
   createdAt: '2023-03-28T13:20:37.852099Z',
-  __typename: 'TRBAdminNote'
+  __typename: 'TRBAdminNote',
+  categorySpecificData: {
+    __typename: 'TRBAdminNoteGeneralRequestCategoryData'
+  }
 };
 
 describe('TRB Admin Note', () => {

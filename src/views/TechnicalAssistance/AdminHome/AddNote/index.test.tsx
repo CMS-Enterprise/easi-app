@@ -53,6 +53,9 @@ const createTrbAdminNoteQuery: MockedQuery<
         author: {
           __typename: 'UserInfo',
           commonName: requester.userInfo.commonName
+        },
+        categorySpecificData: {
+          __typename: 'TRBAdminNoteGeneralRequestCategoryData'
         }
       }
     }
