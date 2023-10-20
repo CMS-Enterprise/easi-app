@@ -61,3 +61,38 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLink(
 
 	return &retLink, nil
 }
+
+func (s *Store) DeleteTRBAdminNoteTRBRecommendationLink(ctx context.Context, id uuid.UUID) (*models.TRBAdminNoteTRBAdviceLetterRecommendationLink, error) {
+	const trbAdminNoteTRBRecommendationLinkDeleteSQL = `
+		DELETE FROM trb_admin_notes_trb_admin_note_recommendations_link
+		WHERE id = :id
+		RETURNING *;
+	`
+
+	stmt, err := s.db.PrepareNamed(trbAdminNoteTRBRecommendationLinkDeleteSQL)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to prepare SQL statement for deleting link between TRB admin note and TRB recommendation with error %s", err),
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
+		return nil, err
+	}
+
+	arg := map[string]interface{}{
+		"id": id,
+	}
+	retLink := models.TRBAdminNoteTRBAdviceLetterRecommendationLink{}
+
+	err = stmt.Get(&retLink, arg)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to delete link between TRB admin note and TRB recommendation with error %s", err),
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
+		return nil, err
+	}
+
+	return &retLink, nil
+}
