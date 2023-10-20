@@ -1,4 +1,4 @@
-CREATE TABLE trb_admin_notes_trb_admin_note_recommendations_link (
+CREATE TABLE trb_admin_notes_trb_admin_note_recommendations_links (
     id UUID PRIMARY KEY NOT NULL,
     trb_admin_note_id uuid NOT NULL REFERENCES trb_admin_notes(id),
     trb_advice_letter_recommendation_id uuid NOT NULL REFERENCES trb_advice_letter_recommendations(id),

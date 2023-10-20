@@ -1,4 +1,4 @@
-CREATE TABLE trb_admin_notes_trb_request_documents_link (
+CREATE TABLE trb_admin_notes_trb_request_documents_links (
     id UUID PRIMARY KEY NOT NULL,
     trb_admin_note_id uuid NOT NULL REFERENCES trb_admin_notes(id),
     trb_request_document_id uuid NOT NULL REFERENCES trb_request_documents(id),
