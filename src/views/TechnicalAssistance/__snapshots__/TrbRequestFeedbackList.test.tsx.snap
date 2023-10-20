@@ -43,9 +43,26 @@ exports[`TrbRequestFeedbackList > renders 1`] = `
       data-testid="grid"
     >
       <div
-        class="padding-3 bg-base-lightest line-height-body-5 text-pre-wrap"
+        class="padding-3 bg-base-lightest line-height-body-5"
       >
-        Please
+        <div
+          class="easi-toast easi-toast-viewer"
+        >
+          <div>
+            <div
+              class="toastui-editor-contents"
+              style="overflow-wrap: break-word;"
+            >
+              <p
+                data-nodeid="1"
+              >
+                Please
+              </p>
+              
+
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -93,9 +110,26 @@ exports[`TrbRequestFeedbackList > renders 1`] = `
       data-testid="grid"
     >
       <div
-        class="padding-3 bg-base-lightest line-height-body-5 text-pre-wrap"
+        class="padding-3 bg-base-lightest line-height-body-5"
       >
-        Thank you
+        <div
+          class="easi-toast easi-toast-viewer"
+        >
+          <div>
+            <div
+              class="toastui-editor-contents"
+              style="overflow-wrap: break-word;"
+            >
+              <p
+                data-nodeid="3"
+              >
+                Thank you
+              </p>
+              
+
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

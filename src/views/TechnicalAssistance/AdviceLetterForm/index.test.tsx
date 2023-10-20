@@ -27,6 +27,7 @@ import {
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
+import typeRichText from 'utils/testing/typeRichText';
 
 import AdviceLetterForm from '.';
 
@@ -169,11 +170,11 @@ describe('TRB Advice Letter Form', () => {
     expect(titleInput).toHaveValue(mockRecommendation.title);
 
     // Description field
-    const descriptionInput = await findByRole('textbox', {
-      name: 'Description *'
-    });
-    userEvent.type(descriptionInput, mockRecommendation.recommendation);
-    expect(descriptionInput).toHaveValue(mockRecommendation.recommendation);
+    const descriptionInput = await screen.findByTestId('recommendation');
+    await typeRichText(descriptionInput, mockRecommendation.recommendation);
+    expect(descriptionInput).toContainHTML(
+      `<p>${mockRecommendation.recommendation!}</p>`
+    );
 
     // Add resource link
     const addLinkButton = await findByRole('button', {
@@ -202,13 +203,11 @@ describe('TRB Advice Letter Form', () => {
   });
 
   it('renders the Next Steps form', async () => {
-    const { findByRole, getByRole } = renderForm('next-steps');
+    const { getByRole } = renderForm('next-steps');
 
-    const nextStepsInput = await findByRole('textbox', {
-      name: 'Next steps *'
-    });
+    const nextStepsInput = await screen.findByTestId('nextSteps');
 
-    expect(nextStepsInput).toHaveValue(adviceLetter.nextSteps);
+    expect(nextStepsInput).toContainHTML(`<p>${adviceLetter.nextSteps!}</p>`);
 
     expect(
       getByRole('radio', {

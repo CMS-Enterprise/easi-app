@@ -13,9 +13,10 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 
+import RichTextEditor from 'components/RichTextEditor';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
+// import TextAreaField from 'components/shared/TextAreaField';
 import useEasiForm from 'hooks/useEasiForm';
 import { UpdateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
@@ -156,15 +157,24 @@ const NextSteps = ({
         render={({ field, fieldState: { error } }) => {
           return (
             <FormGroup error={!!error}>
-              <Label className="text-normal" htmlFor="nextSteps" required>
+              <Label
+                className="text-normal"
+                id="nextSteps-label"
+                htmlFor="nextSteps"
+                required
+              >
                 {t('adviceLetterForm.nextSteps')}
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-              <TextAreaField
-                id="nextSteps"
-                {...field}
-                ref={null}
-                value={field.value || ''}
+              <RichTextEditor
+                editableProps={{
+                  id: 'nextSteps',
+                  'data-testid': 'nextSteps',
+                  'aria-describedby': 'nextSteps-hint',
+                  'aria-labelledby': 'nextSteps-label'
+                }}
+                field={{ ...field, value: field.value || '' }}
+                required
               />
             </FormGroup>
           );
