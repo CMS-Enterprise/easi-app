@@ -82,31 +82,29 @@ const Notes = ({ note }: NoteProps) => {
   };
 
   return (
-    <Grid row className="margin-bottom-4">
-      <Grid desktop={{ col: 6 }}>
+    <dl className="grid-row margin-bottom-3 margin-top-0 padding-bottom-3 border-bottom-1px border-base-light line-height-body-5">
+      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
         <dt className="text-bold">{t('notes.date')}</dt>
-        <dd className="margin-left-0 margin-bottom-2 line-height-body-5">
+        <dd className="margin-left-0">
           {formatDateLocal(note.createdAt, 'MMMM d, yyyy')}
         </dd>
       </Grid>
 
-      <Grid desktop={{ col: 6 }}>
+      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
         <dt className="text-bold">{t('notes.author')}</dt>
-        <dd className="margin-left-0 margin-bottom-2 line-height-body-5">
-          {note.author.commonName}
-        </dd>
+        <dd className="margin-left-0">{note.author.commonName}</dd>
       </Grid>
 
-      <Grid desktop={{ col: 12 }} className="margin-top-1">
-        <div className="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3">
-          <p className="margin-bottom-0 text-bold">{t('notes.about')}</p>
+      <Grid
+        desktop={{ col: 12 }}
+        className="bg-base-lightest padding-x-3 padding-y-205"
+      >
+        <dt className="text-bold">{t('notes.about')}</dt>
+        <dd className="margin-left-0">{categoryString()}</dd>
 
-          <p className="margin-top-0">{categoryString()}</p>
-
-          <p>{note.noteText}</p>
-        </div>
+        <dd className="margin-left-0 margin-top-2">{note.noteText}</dd>
       </Grid>
-    </Grid>
+    </dl>
   );
 };
 
