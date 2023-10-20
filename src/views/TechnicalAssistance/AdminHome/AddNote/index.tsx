@@ -3,17 +3,14 @@ import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import {
-  Button,
   Dropdown,
   ErrorMessage,
   Form,
   FormGroup,
-  Grid,
-  IconArrowBack
+  Grid
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import CheckboxField from 'components/shared/CheckboxField';
@@ -38,6 +35,7 @@ import {
   GetTrbRequestDocumentsVariables
 } from 'queries/types/GetTrbRequestDocuments';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import Breadcrumbs from '../../Breadcrumbs';
 import { ModalViewType } from '../components/NoteModal';
@@ -188,15 +186,15 @@ const AddNote = ({
             >
               {t('notes.addNote')}
             </PageHeading>
-            <div className="line-height-body-5 font-body-lg text-light">
+            <p className="line-height-body-5 text-light margin-y-0">
               {t('notes.addNoteDescription')}
-            </div>
-            <div className="margin-top-1 margin-bottom-2 text-base">
+            </p>
+            <p className="margin-top-1 margin-bottom-2 text-base">
               <Trans
                 i18nKey="action:fieldsMarkedRequired"
                 components={{ asterisk: <RequiredAsterisk /> }}
               />
-            </div>
+            </p>
 
             {!setModalView && <Message />}
 
@@ -434,36 +432,25 @@ const AddNote = ({
           </Grid>
         </Grid>
 
-        <div className="margin-top-3">
-          {setModalView && (
-            <Button
-              type="button"
-              className="usa-button--outline"
-              onClick={() => {
-                setModalView('viewNotes');
-              }}
-            >
-              {t('notes.cancel')}
-            </Button>
-          )}
-          <Button
-            type="submit"
-            name={t('notes.saveNote')}
-            disabled={isSubmitting || !watch('category') || !watch('noteText')}
-          >
-            {t('notes.saveNote')}
-          </Button>
-        </div>
+        <Pager
+          next={{
+            text: t('notes.saveNote'),
+            disabled: isSubmitting || !watch('category') || !watch('noteText')
+          }}
+          back={
+            !!setModalView && {
+              text: t('notes.cancel'),
+              onClick: () => setModalView('viewNotes')
+            }
+          }
+          className="margin-top-2"
+          taskListUrl={requestUrl}
+          saveExitHidden={!!setModalView}
+          saveExitText={t('actionRequestEdits.cancelAndReturn')}
+          border={false}
+          submitDisabled
+        />
       </Form>
-
-      {!setModalView && (
-        <div className="margin-top-2">
-          <UswdsReactLink to={requestUrl}>
-            <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
-            {t('actionRequestEdits.cancelAndReturn')}
-          </UswdsReactLink>
-        </div>
-      )}
     </div>
   );
 };
