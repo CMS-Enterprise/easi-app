@@ -29,7 +29,10 @@ import {
   CreateTRBAdminNoteSupportingDocumentsVariables
 } from 'queries/types/CreateTRBAdminNoteSupportingDocuments';
 import { TRBAdminNoteFragment as TRBAdminNote } from 'queries/types/TRBAdminNoteFragment';
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+import {
+  CreateTRBAdminNoteAdviceLetterInput,
+  TRBAdminNoteCategory
+} from 'types/graphql-global-types';
 
 type AddNoteCommonFields<T extends TRBAdminNoteCategory> = {
   category: T;
@@ -43,8 +46,7 @@ type AddNoteInitialRequestFormFields = {
 } & AddNoteCommonFields<TRBAdminNoteCategory.INITIAL_REQUEST_FORM>;
 
 type AddNoteAdviceLetterFields = {
-  section: 'appliesToMeetingSummary' | 'appliesToNextSteps' | string;
-  recommendationIDs: string[];
+  sections: Array<'appliesToMeetingSummary' | 'appliesToNextSteps' | string>;
 } & AddNoteCommonFields<TRBAdminNoteCategory.ADVICE_LETTER>;
 
 type AddNoteSupportingDocumentsFields = {
@@ -159,16 +161,33 @@ const useAddNote = (trbRequestId: string) => {
     }
 
     if (formData.category === TRBAdminNoteCategory.ADVICE_LETTER) {
+      /** Default input values */
+      const input: CreateTRBAdminNoteAdviceLetterInput = {
+        trbRequestId,
+        noteText: formData.noteText,
+        appliesToMeetingSummary: false,
+        appliesToNextSteps: false,
+        recommendationIDs: []
+      };
+
+      // Set input values based on sections array
+      formData.sections.forEach(value => {
+        switch (value) {
+          case 'appliesToMeetingSummary':
+            input.appliesToMeetingSummary = true;
+            break;
+          case 'appliesToNextSteps':
+            input.appliesToNextSteps = true;
+            break;
+          default:
+            input.recommendationIDs.push(value);
+            break;
+        }
+      });
+
       return createNoteAdviceLetter({
         variables: {
-          input: {
-            trbRequestId,
-            noteText: formData.noteText,
-            appliesToMeetingSummary:
-              formData.section === 'appliesToMeetingSummary',
-            appliesToNextSteps: formData.section === 'appliesToNextSteps',
-            recommendationIDs: formData.recommendationIDs
-          }
+          input
         }
       });
     }

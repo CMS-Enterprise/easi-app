@@ -370,7 +370,7 @@ const AddNote = ({
             {category === TRBAdminNoteCategory.ADVICE_LETTER && (
               <Controller
                 control={control}
-                name="section"
+                name="sections"
                 render={({ field: { ref, ...field } }) => (
                   <FormGroup>
                     <Label htmlFor={field.name} className="text-normal">
