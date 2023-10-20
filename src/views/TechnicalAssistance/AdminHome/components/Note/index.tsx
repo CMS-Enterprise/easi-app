@@ -43,10 +43,8 @@ const Notes = ({ note }: NoteProps) => {
     recommendations
   }: AdviceLetterCategoryData) =>
     [
-      ...(appliesToMeetingSummary
-        ? [t('notes.labels.appliesToMeetingSummary')]
-        : []),
-      ...(appliesToNextSteps ? [t('notes.labels.appliesToNextSteps')] : []),
+      ...(appliesToMeetingSummary ? [t('notes.labels.meetingSummary')] : []),
+      ...(appliesToNextSteps ? [t('notes.labels.nextSteps')] : []),
       recommendations.map(rec =>
         t('notes.labels.recommendation', { title: rec.title })
       )
