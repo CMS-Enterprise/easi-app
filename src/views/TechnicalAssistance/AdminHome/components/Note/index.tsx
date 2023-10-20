@@ -45,7 +45,7 @@ const Notes = ({ note }: NoteProps) => {
     [
       ...(appliesToMeetingSummary ? [t('notes.labels.meetingSummary')] : []),
       ...(appliesToNextSteps ? [t('notes.labels.nextSteps')] : []),
-      recommendations.map(rec =>
+      ...recommendations.map(rec =>
         t('notes.labels.recommendation', { title: rec.title })
       )
     ].join(', ');
