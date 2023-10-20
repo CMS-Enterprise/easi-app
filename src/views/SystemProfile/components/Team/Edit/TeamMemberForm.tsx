@@ -207,7 +207,6 @@ const TeamMemberForm = ({
               )}
               <MultiSelect
                 {...{ ...field, ref: null }}
-                className="margin-top-1 maxw-none"
                 name={field.name}
                 options={(data?.roleTypes || []).map(role => ({
                   value: role.id,

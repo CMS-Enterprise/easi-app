@@ -219,13 +219,13 @@ const MultiSelect = ({
   };
 
   return (
-    <div>
+    <>
       <Select
         id={id}
         inputId={inputId}
         name={name}
         className={classNames(
-          'easi-multiselect usa-combo-box maxw-none',
+          'easi-multiselect usa-combo-box maxw-none margin-top-1',
           className
         )}
         isClearable
@@ -273,7 +273,7 @@ const MultiSelect = ({
           </ul>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

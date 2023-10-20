@@ -339,7 +339,7 @@ const AddNote = ({
                       {t('notes.labels.whichDocument')}
                     </Label>
 
-                    <HelpText className="margin-y-1">
+                    <HelpText className="margin-top-1">
                       {t('notes.labels.selectHelpText')}
                     </HelpText>
 
@@ -379,7 +379,7 @@ const AddNote = ({
                       {t('notes.labels.section')}
                     </Label>
 
-                    <HelpText className="margin-y-1">
+                    <HelpText className="margin-top-1">
                       {t('notes.labels.selectHelpText')}
                     </HelpText>
                     {recommendationsQuery.loading ? (
