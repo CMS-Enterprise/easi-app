@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Button,
@@ -28,14 +28,35 @@ import TextAreaField from 'components/shared/TextAreaField';
 import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
-import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
-import { TRBAdminNoteFragment } from 'queries/GetTrbAdminNotesQuery';
 import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
+import {
+  CreateTrbAdminNoteAdviceLetterQuery,
+  CreateTrbAdminNoteConsultSessionQuery,
+  CreateTrbAdminNoteGeneralRequestQuery,
+  CreateTrbAdminNoteInitialRequestFormQuery,
+  CreateTrbAdminNoteSupportingDocumentsQuery
+} from 'queries/TrbAdminNoteQueries';
 import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
 import {
-  CreateTrbAdminNote as CreateTrbAdminNoteType,
-  CreateTrbAdminNoteVariables
-} from 'queries/types/CreateTrbAdminNote';
+  CreateTRBAdminNoteAdviceLetter,
+  CreateTRBAdminNoteAdviceLetterVariables
+} from 'queries/types/CreateTRBAdminNoteAdviceLetter';
+import {
+  CreateTRBAdminNoteConsultSession,
+  CreateTRBAdminNoteConsultSessionVariables
+} from 'queries/types/CreateTRBAdminNoteConsultSession';
+import {
+  CreateTRBAdminNoteGeneralRequest,
+  CreateTRBAdminNoteGeneralRequestVariables
+} from 'queries/types/CreateTRBAdminNoteGeneralRequest';
+import {
+  CreateTRBAdminNoteInitialRequestForm,
+  CreateTRBAdminNoteInitialRequestFormVariables
+} from 'queries/types/CreateTRBAdminNoteInitialRequestForm';
+import {
+  CreateTRBAdminNoteSupportingDocuments,
+  CreateTRBAdminNoteSupportingDocumentsVariables
+} from 'queries/types/CreateTRBAdminNoteSupportingDocuments';
 import {
   GetTrbRecommendations,
   GetTrbRecommendationsVariables
@@ -121,34 +142,43 @@ const AddNote = ({
     [recommendationsQuery.data]
   );
 
-  const history = useHistory();
+  // const history = useHistory();
 
   // TRB request information to render name in breadcrumbs
   const { data } = useContext(TRBRequestContext);
 
-  const { Message, showMessage, showMessageOnNextPage } = useMessage();
+  const {
+    Message
+    // showMessage,
+    // showMessageOnNextPage
+  } = useMessage();
 
   const requestUrl: string = `/trb/${id}/notes`;
 
-  const [mutate] = useMutation<
-    CreateTrbAdminNoteType,
-    CreateTrbAdminNoteVariables
-  >(CreateTrbAdminNote, {
-    update(cache, { data: modifiedData }) {
-      cache.modify({
-        id: cache.identify({ __typename: 'TRBRequest', id }),
-        fields: {
-          adminNotes(existingNotes = []) {
-            const newNote = cache.writeFragment({
-              data: modifiedData?.createTRBAdminNote,
-              fragment: TRBAdminNoteFragment
-            });
-            return [...existingNotes, newNote];
-          }
-        }
-      });
-    }
-  });
+  const [createNoteGeneralRequest] = useMutation<
+    CreateTRBAdminNoteGeneralRequest,
+    CreateTRBAdminNoteGeneralRequestVariables
+  >(CreateTrbAdminNoteGeneralRequestQuery);
+
+  const [createNoteInitialRequestForm] = useMutation<
+    CreateTRBAdminNoteInitialRequestForm,
+    CreateTRBAdminNoteInitialRequestFormVariables
+  >(CreateTrbAdminNoteInitialRequestFormQuery);
+
+  const [createNoteSupportingDocuments] = useMutation<
+    CreateTRBAdminNoteSupportingDocuments,
+    CreateTRBAdminNoteSupportingDocumentsVariables
+  >(CreateTrbAdminNoteSupportingDocumentsQuery);
+
+  const [createNoteConsultSession] = useMutation<
+    CreateTRBAdminNoteConsultSession,
+    CreateTRBAdminNoteConsultSessionVariables
+  >(CreateTrbAdminNoteConsultSessionQuery);
+
+  const [createNoteAdviceLetter] = useMutation<
+    CreateTRBAdminNoteAdviceLetter,
+    CreateTRBAdminNoteAdviceLetterVariables
+  >(CreateTrbAdminNoteAdviceLetterQuery);
 
   const {
     control,
@@ -167,37 +197,68 @@ const AddNote = ({
     }
   });
 
-  const category = watch('category');
-
   const submit = handleSubmit(formData => {
-    mutate({
-      variables: {
-        input: {
-          trbRequestId: trbRequestId || id, // Get id from prop(modal) or url param
-          category: formData.category,
-          noteText: formData.noteText
+    if (formData.category === TRBAdminNoteCategory.GENERAL_REQUEST) {
+      const { category, ...values } = formData;
+      createNoteGeneralRequest({
+        variables: {
+          input: {
+            trbRequestId: trbRequestId || id,
+            ...values
+          }
         }
-      }
-    })
-      .then(result => {
-        if (!setModalView) {
-          showMessageOnNextPage(t('notes.status.success'), {
-            type: 'success',
-            className: 'margin-top-3'
-          });
-          history.push(requestUrl);
-        } else if (setModalView && setModalMessage) {
-          setModalView('viewNotes');
-          setModalMessage(t('notes.status.success'));
-        }
-      })
-      .catch(err => {
-        showMessage(t('notes.status.error'), {
-          type: 'error',
-          className: 'margin-top-3'
-        });
       });
+    } else if (
+      formData.category === TRBAdminNoteCategory.INITIAL_REQUEST_FORM
+    ) {
+      const { category, ...values } = formData;
+      createNoteInitialRequestForm({
+        variables: {
+          input: {
+            trbRequestId: trbRequestId || id,
+            ...values
+          }
+        }
+      });
+    } else if (
+      formData.category === TRBAdminNoteCategory.SUPPORTING_DOCUMENTS
+    ) {
+      const { category, ...values } = formData;
+      createNoteSupportingDocuments({
+        variables: {
+          input: {
+            trbRequestId: trbRequestId || id,
+            ...values
+          }
+        }
+      });
+    } else if (formData.category === TRBAdminNoteCategory.CONSULT_SESSION) {
+      const { category, ...values } = formData;
+      createNoteConsultSession({
+        variables: {
+          input: {
+            trbRequestId: trbRequestId || id,
+            ...values
+          }
+        }
+      });
+    } else if (formData.category === TRBAdminNoteCategory.ADVICE_LETTER) {
+      createNoteAdviceLetter({
+        variables: {
+          input: {
+            trbRequestId: trbRequestId || id,
+            noteText: formData.noteText,
+            appliesToMeetingSummary:
+              formData.section === 'appliesToMeetingSummary',
+            appliesToNextSteps: formData.section === 'appliesToNextSteps',
+            recommendationIDs: formData.recommendationIDs
+          }
+        }
+      });
+    }
   });
+
+  const category = watch('category');
 
   const hasErrors: boolean = Object.keys(errors).length > 0;
 
@@ -232,7 +293,6 @@ const AddNote = ({
       )}
 
       <Form
-        // onSubmit={submit}
         onSubmit={submit}
         className={classNames('maxw-full', {
           'desktop:grid-col-6': !setModalView
