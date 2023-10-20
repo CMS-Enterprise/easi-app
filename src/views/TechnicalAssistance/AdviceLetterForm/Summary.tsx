@@ -6,9 +6,10 @@ import { ApolloError, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage, Form, FormGroup } from '@trussworks/react-uswds';
 
+import RichTextEditor from 'components/RichTextEditor';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
+// import TextAreaField from 'components/shared/TextAreaField';
 import useEasiForm from 'hooks/useEasiForm';
 import { UpdateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
@@ -137,21 +138,31 @@ const Summary = ({
       </HelpText>
 
       {/* Meeting summary field */}
+
       <Controller
         name="meetingSummary"
         control={control}
         render={({ field, fieldState: { error } }) => {
           return (
             <FormGroup error={!!error}>
-              <Label className="text-normal" htmlFor="meetingSummary" required>
+              <Label
+                className="text-normal"
+                id="meetingSummary-label"
+                htmlFor="meetingSummary"
+                required
+              >
                 {t('adviceLetterForm.meetingSummary')}{' '}
               </Label>
               {error && <ErrorMessage>{t('errors.fillBlank')}</ErrorMessage>}
-              <TextAreaField
-                id="meetingSummary"
-                {...field}
-                ref={null}
-                value={field.value || ''}
+              <RichTextEditor
+                editableProps={{
+                  id: 'meetingSummary',
+                  'data-testid': 'meetingSummary',
+                  'aria-describedby': 'meetingSummary-hint',
+                  'aria-labelledby': 'meetingSummary-label'
+                }}
+                field={{ ...field, value: field.value || '' }}
+                required
               />
             </FormGroup>
           );

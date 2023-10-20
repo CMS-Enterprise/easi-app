@@ -27,11 +27,24 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
       >
         Meeting summary
       </p>
-      <p
-        class="margin-top-1 line-height-body-5"
+      <div
+        class="easi-toast easi-toast-viewer margin-top-1"
       >
-        Meeting summary text
-      </p>
+        <div>
+          <div
+            class="toastui-editor-contents"
+            style="overflow-wrap: break-word;"
+          >
+            <p
+              data-nodeid="1"
+            >
+              Meeting summary text
+            </p>
+            
+
+          </div>
+        </div>
+      </div>
     </div>
     <div
       class="easi-section easi-section__border-top margin-top-6 padding-top-1"
@@ -53,11 +66,24 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
           >
             Recommendation 1
           </h4>
-          <p
-            class="margin-y-1"
+          <div
+            class="easi-toast easi-toast-viewer margin-y-1"
           >
-            This is the recommendation text
-          </p>
+            <div>
+              <div
+                class="toastui-editor-contents"
+                style="overflow-wrap: break-word;"
+              >
+                <p
+                  data-nodeid="3"
+                >
+                  This is the recommendation text
+                </p>
+                
+
+              </div>
+            </div>
+          </div>
           <ul
             class="usa-list usa-list--unstyled"
           >
@@ -93,11 +119,24 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
           >
             Recommendation 2
           </h4>
-          <p
-            class="margin-y-1"
+          <div
+            class="easi-toast easi-toast-viewer margin-y-1"
           >
-            This is the recommendation text
-          </p>
+            <div>
+              <div
+                class="toastui-editor-contents"
+                style="overflow-wrap: break-word;"
+              >
+                <p
+                  data-nodeid="5"
+                >
+                  This is the recommendation text
+                </p>
+                
+
+              </div>
+            </div>
+          </div>
           <ul
             class="usa-list usa-list--unstyled"
           >
@@ -141,11 +180,24 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
       >
         Next steps
       </p>
-      <p
-        class="margin-top-1 line-height-body-5"
+      <div
+        class="easi-toast easi-toast-viewer margin-top-1"
       >
-        These are the next steps
-      </p>
+        <div>
+          <div
+            class="toastui-editor-contents"
+            style="overflow-wrap: break-word;"
+          >
+            <p
+              data-nodeid="7"
+            >
+              These are the next steps
+            </p>
+            
+
+          </div>
+        </div>
+      </div>
       <p
         class="text-bold margin-top-3 margin-bottom-1"
       >

@@ -188,11 +188,24 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
         >
           Meeting summary
         </p>
-        <p
-          class="margin-top-1 line-height-body-5"
+        <div
+          class="easi-toast easi-toast-viewer margin-top-1"
         >
-          Talked about stuff
-        </p>
+          <div>
+            <div
+              class="toastui-editor-contents"
+              style="overflow-wrap: break-word;"
+            >
+              <p
+                data-nodeid="1"
+              >
+                Talked about stuff
+              </p>
+              
+
+            </div>
+          </div>
+        </div>
       </div>
       <div
         class="easi-section margin-top-5"
@@ -214,11 +227,24 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
             >
               Restart your computer
             </h3>
-            <p
-              class="margin-y-1"
+            <div
+              class="easi-toast easi-toast-viewer margin-y-1"
             >
-              I recommend you restart your computer
-            </p>
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="3"
+                  >
+                    I recommend you restart your computer
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
             <p
               class="text-bold margin-bottom-0 margin-top-3"
             >
@@ -426,11 +452,24 @@ exports[`Trb Public Advice Letter > renders from task list link 1`] = `
         >
           Meeting summary
         </p>
-        <p
-          class="margin-top-1 line-height-body-5"
+        <div
+          class="easi-toast easi-toast-viewer margin-top-1"
         >
-          Talked about stuff
-        </p>
+          <div>
+            <div
+              class="toastui-editor-contents"
+              style="overflow-wrap: break-word;"
+            >
+              <p
+                data-nodeid="5"
+              >
+                Talked about stuff
+              </p>
+              
+
+            </div>
+          </div>
+        </div>
       </div>
       <div
         class="easi-section margin-top-5"
@@ -452,11 +491,24 @@ exports[`Trb Public Advice Letter > renders from task list link 1`] = `
             >
               Restart your computer
             </h3>
-            <p
-              class="margin-y-1"
+            <div
+              class="easi-toast easi-toast-viewer margin-y-1"
             >
-              I recommend you restart your computer
-            </p>
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="7"
+                  >
+                    I recommend you restart your computer
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
             <p
               class="text-bold margin-bottom-0 margin-top-3"
             >
