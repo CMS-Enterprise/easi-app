@@ -83,7 +83,7 @@ func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.S
 	}
 	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
 
-	// ideally, we'd create the admin note and any links to documents in a single transaction, but we don't currently have the ability to do that
+	// ideally, we'd create the admin note and any links to documents in a single transaction, but we don't currently have that capability
 	// see Note [Database calls from resolvers aren't atomic]
 
 	// create the admin note itself (and get the result, with the generated ID)
@@ -120,8 +120,8 @@ func CreateTRBAdminNoteConsultSession(ctx context.Context, store *storage.Store,
 }
 
 func CreateTRBAdminNoteAdviceLetter(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error) {
-	// it's valid for input.RecommendationIDs to be empty, we don't need to do any validation checks
-	// see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
+	// it's valid for input.RecommendationIDs to be empty; see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
+	// don't need to check that all referenced recommendations belong to the same request; database checks that
 
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,
@@ -133,13 +133,22 @@ func CreateTRBAdminNoteAdviceLetter(ctx context.Context, store *storage.Store, i
 	}
 	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
 
+	// ideally, we'd create the admin note and any links to recommendations in a single transaction, but we don't currently have that capability
+	// see Note [Database calls from resolvers aren't atomic]
+
+	// create the admin note itself (and get the result, with the generated ID)
 	createdNote, err := store.CreateTRBAdminNote(ctx, &noteToCreate)
 	if err != nil {
 		return nil, err
 	}
 
-	// TODO - create links to recommendations
-	// TODO - reference note on wanting to wrap this in transaction
+	// create links to recommendations referenced the by the admin note (if any are present)
+	if len(input.RecommendationIDs) > 0 {
+		_, err = store.CreateTRBAdminNoteTRBRecommendationLinks(ctx, input.TrbRequestID, createdNote.ID, input.RecommendationIDs)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	return createdNote, nil
 }

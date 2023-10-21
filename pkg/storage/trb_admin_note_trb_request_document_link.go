@@ -11,7 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// CreateTRBAdminNoteTRBDocumentLinks creates multiple link records relating a single TRB admin note to all TRB documents it references
+// Creates multiple link records relating a single TRB admin note to all TRB documents it references
 func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 	ctx context.Context,
 	trbRequestID uuid.UUID,
@@ -37,15 +37,15 @@ func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 	const trbAdminNoteTRBDocumentLinkCreateSQL = `
 		INSERT INTO trb_admin_notes_trb_request_documents_links (
 			id,
+			trb_request_id,
 			trb_admin_note_id,
 			trb_request_document_id,
-			trb_request_id,
 			created_by
 		) VALUES (
 			:id,
+			:trb_request_id,
 			:trb_admin_note_id,
 			:trb_request_document_id,
-			:trb_request_id,
 			:created_by
 		) RETURNING *;
 	`
@@ -57,7 +57,7 @@ func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 	createdLinkRows, err := s.db.NamedQuery(trbAdminNoteTRBDocumentLinkCreateSQL, links)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to create links between TRB admin note and TRB recommendation with error %s", err),
+			fmt.Sprintf("Failed to create links between TRB admin note and TRB documents with error %s", err),
 			zap.Error(err),
 			zap.String("user", creatingUserEUAID),
 			zap.String("trbAdminNoteID", trbAdminNoteID.String()),
@@ -65,14 +65,14 @@ func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 		return nil, err
 	}
 
-	// loop through the sqlx.Rows value returned from NameQuery(), scan the results back into structs
+	// loop through the sqlx.Rows value returned from NamedQuery(), scan the results back into structs
 	createdLinks := []*models.TRBAdminNoteTRBRequestDocumentLink{}
 	for createdLinkRows.Next() {
 		var createdLink models.TRBAdminNoteTRBRequestDocumentLink
 		err = createdLinkRows.StructScan(&createdLink)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(
-				fmt.Sprintf("Failed to read results from creating links between TRB admin note and TRB recommendation with error %s", err),
+				fmt.Sprintf("Failed to read results from creating links between TRB admin note and TRB documents with error %s", err),
 				zap.Error(err),
 				zap.String("user", creatingUserEUAID),
 				zap.String("trbAdminNoteID", trbAdminNoteID.String()),

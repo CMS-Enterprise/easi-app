@@ -11,88 +11,73 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// CreateTRBAdminNoteTRBRecommendationLink creates a new record in the database representing a link between a TRB admin note and a TRB recommendation
-func (s *Store) CreateTRBAdminNoteTRBRecommendationLink(
+// Creates multiple link records relating a single TRB admin note to all TRB advice letter recommendations it references
+func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 	ctx context.Context,
-	trbAdminNoteRecommendationLink *models.TRBAdminNoteTRBAdviceLetterRecommendationLink,
-) (*models.TRBAdminNoteTRBAdviceLetterRecommendationLink, error) {
-	if trbAdminNoteRecommendationLink.ID == uuid.Nil {
-		trbAdminNoteRecommendationLink.ID = uuid.New()
+	trbRequestID uuid.UUID,
+	trbAdminNoteID uuid.UUID,
+	trbAdviceLetterRecommendationIDs []uuid.UUID,
+) ([]*models.TRBAdminNoteTRBAdviceLetterRecommendationLink, error) {
+	creatingUserEUAID := appcontext.Principal(ctx).ID()
+
+	links := []*models.TRBAdminNoteTRBAdviceLetterRecommendationLink{}
+
+	for _, recommendationID := range trbAdviceLetterRecommendationIDs {
+		link := models.TRBAdminNoteTRBAdviceLetterRecommendationLink{
+			TRBRequestID:                    trbRequestID,
+			TRBAdminNoteID:                  trbAdminNoteID,
+			TRBAdviceLetterRecommendationID: recommendationID,
+		}
+		link.ID = uuid.New()
+		link.CreatedBy = creatingUserEUAID
+
+		links = append(links, &link)
 	}
 
 	const trbAdminNoteRecommendationLinkCreateSQL = `
-		INSERT INTO trb_admin_notes_trb_admin_note_recommendations_link (
+		INSERT INTO trb_admin_notes_trb_admin_note_recommendations_links (
 			id,
+			trb_request_id,
 			trb_admin_note_id,
 			trb_advice_letter_recommendation_id,
 			created_by
 		) VALUES (
 			:id,
+			:trb_request_id,
 			:trb_admin_note_id,
 			:trb_advice_letter_recommendation_id,
 			:created_by
 		) RETURNING *;
 	`
-	stmt, err := s.db.PrepareNamed(trbAdminNoteRecommendationLinkCreateSQL)
+
+	createdLinkRows, err := s.db.NamedQuery(trbAdminNoteRecommendationLinkCreateSQL, links)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to prepare SQL statement for creating link between TRB admin note and TRB recommendation with error %s", err),
+			fmt.Sprintf("Failed to create links between TRB admin note and TRB advice letter recommendations with error %s", err),
 			zap.Error(err),
-			zap.String("user", trbAdminNoteRecommendationLink.CreatedBy),
-			zap.String("trbAdminNoteID", trbAdminNoteRecommendationLink.TRBAdminNoteID.String()),
-			zap.String("trbAdviceLetterRecommendationID", trbAdminNoteRecommendationLink.TRBAdviceLetterRecommendationID.String()),
+			zap.String("user", creatingUserEUAID),
+			zap.String("trbAdminNoteID", trbAdminNoteID.String()),
 		)
 		return nil, err
 	}
 
-	retLink := models.TRBAdminNoteTRBAdviceLetterRecommendationLink{}
+	// loop through the sqlx.Rows value returned from NamedQuery(), scan the results back into structs
+	createdLinks := []*models.TRBAdminNoteTRBAdviceLetterRecommendationLink{}
+	for createdLinkRows.Next() {
+		var createdLink models.TRBAdminNoteTRBAdviceLetterRecommendationLink
+		err = createdLinkRows.StructScan(&createdLink)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to read results from creating links between TRB admin note and TRB advice letter recommendations with error %s", err),
+				zap.Error(err),
+				zap.String("user", creatingUserEUAID),
+				zap.String("trbAdminNoteID", trbAdminNoteID.String()),
+			)
+			return nil, err
+		}
 
-	err = stmt.Get(&retLink, trbAdminNoteRecommendationLink)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to create link between TRB admin note and TRB recommendation with error %s", err),
-			zap.Error(err),
-			zap.String("user", trbAdminNoteRecommendationLink.CreatedBy),
-			zap.String("trbAdminNoteID", trbAdminNoteRecommendationLink.TRBAdminNoteID.String()),
-			zap.String("trbAdviceLetterRecommendationID", trbAdminNoteRecommendationLink.TRBAdviceLetterRecommendationID.String()),
-		)
-		return nil, err
+		createdLinks = append(createdLinks, &createdLink)
 	}
 
-	return &retLink, nil
-}
-
-func (s *Store) DeleteTRBAdminNoteTRBRecommendationLink(ctx context.Context, id uuid.UUID) (*models.TRBAdminNoteTRBAdviceLetterRecommendationLink, error) {
-	const trbAdminNoteTRBRecommendationLinkDeleteSQL = `
-		DELETE FROM trb_admin_notes_trb_admin_note_recommendations_link
-		WHERE id = :id
-		RETURNING *;
-	`
-
-	stmt, err := s.db.PrepareNamed(trbAdminNoteTRBRecommendationLinkDeleteSQL)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to prepare SQL statement for deleting link between TRB admin note and TRB recommendation with error %s", err),
-			zap.Error(err),
-			zap.String("id", id.String()),
-		)
-		return nil, err
-	}
-
-	arg := map[string]interface{}{
-		"id": id,
-	}
-	retLink := models.TRBAdminNoteTRBAdviceLetterRecommendationLink{}
-
-	err = stmt.Get(&retLink, arg)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to delete link between TRB admin note and TRB recommendation with error %s", err),
-			zap.Error(err),
-			zap.String("id", id.String()),
-		)
-		return nil, err
-	}
-
-	return &retLink, nil
+	return createdLinks, nil
 }

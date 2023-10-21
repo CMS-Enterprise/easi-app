@@ -124,7 +124,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 		s.NotNil(createdDoc2)
 		documentID2 := createdDoc2.ID
 
-		// create admin note referencing the document
+		// create admin note referencing the documents
 		input := model.CreateTRBAdminNoteSupportingDocumentsInput{
 			TrbRequestID: trbRequest.ID,
 			NoteText:     "test TRB admin note - supporting documents",
@@ -234,17 +234,44 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 		s.NoError(err)
 		s.NotNil(trbRequest)
 
-		// TODO - set up advice letter and recommendation
+		// set up advice letter
+		createdAdviceLetter, err := CreateTRBAdviceLetter(ctx, store, trbRequest.ID)
+		s.NoError(err)
+		s.NotNil(createdAdviceLetter)
 
-		// create admin note referencing the recommendation
+		// set up recommendations
+		recToCreate1 := &models.TRBAdviceLetterRecommendation{
+			TRBRequestID:   trbRequest.ID,
+			Title:          "Admin Note Test Recommendation 1",
+			Recommendation: "Keep testing rec1",
+			Links:          []string{},
+		}
+		createdRec1, err := CreateTRBAdviceLetterRecommendation(ctx, store, recToCreate1)
+		s.NoError(err)
+		s.NotNil(createdRec1)
+		recommendationID1 := createdRec1.ID
+
+		recToCreate2 := &models.TRBAdviceLetterRecommendation{
+			TRBRequestID:   trbRequest.ID,
+			Title:          "Admin Note Test Recommendation 2",
+			Recommendation: "Keep testing rec2",
+			Links:          []string{},
+		}
+		createdRec2, err := CreateTRBAdviceLetterRecommendation(ctx, store, recToCreate2)
+		s.NoError(err)
+		s.NotNil(createdRec2)
+		recommendationID2 := createdRec2.ID
+
+		// create admin note referencing the recommendations
 		input := model.CreateTRBAdminNoteAdviceLetterInput{
 			TrbRequestID:            trbRequest.ID,
 			NoteText:                "test TRB admin note - advice letter",
 			AppliesToMeetingSummary: true,
 			AppliesToNextSteps:      false,
-
-			// TODO - add recommendation ID
-			RecommendationIDs: []uuid.UUID{},
+			RecommendationIDs: []uuid.UUID{
+				recommendationID1,
+				recommendationID2,
+			},
 		}
 		createdNote, err := CreateTRBAdminNoteAdviceLetter(ctx, store, input)
 		s.NoError(err)
@@ -268,5 +295,48 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 		s.Nil(createdNote.AppliesToAttendees.Ptr())
 
 		// TODO - check that links to recommendations were created
+	})
+
+	s.Run("Creating Admin Note referencing advice letter recommendations attached to a *different* TRB request fails", func() {
+		// create request 1 - admin note will be attached to this
+		trbRequestForNote, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		s.NoError(err)
+		s.NotNil(trbRequestForNote)
+
+		// create request 2 - advice letter and recommendation will be attached to this
+		trbRequestForRecommendation, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		s.NoError(err)
+		s.NotNil(trbRequestForRecommendation)
+
+		// create advice letter for request 2
+		createdAdviceLetter, err := CreateTRBAdviceLetter(ctx, store, trbRequestForRecommendation.ID)
+		s.NoError(err)
+		s.NotNil(createdAdviceLetter)
+
+		// create recommendation attached to advice letter for request 2
+		recToCreate := &models.TRBAdviceLetterRecommendation{
+			TRBRequestID:   trbRequestForRecommendation.ID,
+			Title:          "Admin Note Test Recommendation - Different Request",
+			Recommendation: "Make sure this fails",
+			Links:          []string{},
+		}
+		createdRec, err := CreateTRBAdviceLetterRecommendation(ctx, store, recToCreate)
+		s.NoError(err)
+		s.NotNil(createdRec)
+
+		// try to create an admin note referencing the recommendation
+		// should fail due to database constraints, because the referenced recommendation belongs to a different TRB request
+		recommendationID := createdRec.ID
+		input := model.CreateTRBAdminNoteAdviceLetterInput{
+			TrbRequestID:            trbRequestForNote.ID,
+			NoteText:                "test TRB admin note - advice letter",
+			AppliesToMeetingSummary: false,
+			AppliesToNextSteps:      false,
+			RecommendationIDs: []uuid.UUID{
+				recommendationID,
+			},
+		}
+		_, err = CreateTRBAdminNoteAdviceLetter(ctx, store, input)
+		s.Error(err)
 	})
 }
