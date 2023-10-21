@@ -43,6 +43,10 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGeneralRequest() {
 	})
 }
 
+func (s *ResolverSuite) TestCreateTRBAdminNoteInitialRequestForm() {
+	// TODO - implement
+}
+
 func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 	ctx := s.testConfigs.Context
 	store := s.testConfigs.Store
@@ -135,4 +139,42 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 		_, err = CreateTRBAdminNoteSupportingDocuments(ctx, store, input)
 		s.Error(err)
 	})
+}
+
+func (s *ResolverSuite) TestCreateTRBAdminNoteConsultSession() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+
+	s.Run("Creating Admin Note with General Request category works", func() {
+		// set up request
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		s.NoError(err)
+		s.NotNil(trbRequest)
+
+		// create admin note
+		input := model.CreateTRBAdminNoteConsultSessionInput{
+			TrbRequestID: trbRequest.ID,
+			NoteText:     "test TRB admin note - consult session",
+		}
+
+		createdNote, err := CreateTRBAdminNoteConsultSession(ctx, store, input)
+		s.NoError(err)
+		s.NotNil(createdNote)
+
+		// check that createdNote has the right field values
+		s.EqualValues(models.TRBAdminNoteCategoryConsultSession, createdNote.Category)
+		s.EqualValues(input.NoteText, createdNote.NoteText)
+
+		// all these should be null because they don't apply to notes in the Consult Session category
+		s.Nil(createdNote.AppliesToBasicRequestDetails.Ptr())
+		s.Nil(createdNote.AppliesToSubjectAreas.Ptr())
+		s.Nil(createdNote.AppliesToAttendees.Ptr())
+		s.Nil(createdNote.AppliesToMeetingSummary.Ptr())
+		s.Nil(createdNote.AppliesToNextSteps.Ptr())
+	})
+
+}
+
+func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
+	// TODO
 }
