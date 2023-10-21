@@ -5,6 +5,7 @@ import (
 )
 
 // TruncateAllTablesDANGEROUS is a function to reset all tables in the DB. It should only be called within test code.
+// this list of tables should match the list of tables in scripts/dev's db:clean task
 func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	tables := `
 	cedar_system_bookmarks,
