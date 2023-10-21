@@ -157,7 +157,7 @@ func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.S
 	}
 	noteToCreate.CreatedBy = adminEUAID
 
-	// ideally, we'd create the admin note and any links to documents in a single transaction, but we don't currently have code for that
+	// ideally, we'd create the admin note and any links to documents in a single transaction, but we don't currently have the ability to do that
 	// see Note [Database calls from resolvers aren't atomic]
 
 	createdNote, err := store.CreateTRBAdminNote(ctx, &noteToCreate)
@@ -261,7 +261,9 @@ func GetTRBAdminNotesByTRBRequestID(ctx context.Context, store *storage.Store, t
 // UpdateTRBAdminNote handles general updates to a TRB admin note, without handling category-specific data
 // If updating admin notes requires handling category-specific data, see note on UpdateTRBAdminNoteInput in GraphQL schema;
 // break this up into separate resolvers
-// Also, if updating with category-specific data allows changing a note's category, the resolvers will need to null out any previous category-specific data
+// Also, if updating with category-specific data allows changing a note's category, the resolvers will need to null out any previous category-specific data;
+// as well as updating the fields on the admin note record, many-to-many links to documents/recommendations may need to be deleted
+// (which would require implementing storage methods to delete those records)
 func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdminNote, error) {
 	idStr, idFound := input["id"]
 	if !idFound {
