@@ -50,6 +50,8 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 		) RETURNING *;
 	`
 
+	// insert all links and return the created rows immediately
+	// see Note [Use NamedQuery to insert multiple records]
 	createdLinkRows, err := s.db.NamedQuery(trbAdminNoteRecommendationLinkCreateSQL, links)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(

@@ -50,10 +50,8 @@ func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 		) RETURNING *;
 	`
 
-	// we use NamedQuery() here to insert multiple rows and get the results in a single query
-	// we could also use NamedExec() to insert multiple rows, but we'd have to do a separate SELECT to get the results
-	// Select() doesn't work with inserting multiple values with named arguments
-	// PrepareNamed() doesn't work when inserting multiple values
+	// insert all links and return the created rows immediately
+	// see Note [Use NamedQuery to insert multiple records]
 	createdLinkRows, err := s.db.NamedQuery(trbAdminNoteTRBDocumentLinkCreateSQL, links)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
@@ -85,3 +83,10 @@ func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 
 	return createdLinks, nil
 }
+
+// Note [Use NamedQuery to insert multiple records]
+// There are several potential options for inserting multiple records at once;
+// Using NamedQuery() allows inserting multiple rows and getting the created rows in a single query, though we have to scan the results back into structs
+// We could use NamedExec() to insert multiple rows, but we'd have to do a separate SELECT query to get the results
+// Select() doesn't work with inserting multiple values with named arguments
+// PrepareNamed() doesn't work when inserting multiple values
