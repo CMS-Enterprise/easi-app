@@ -36,75 +36,6 @@ func CreateTRBAdminNote(ctx context.Context, store *storage.Store, trbRequestID 
 	return createdNote, nil
 }
 
-// functions to convert inputs to models.TRBAdminNote
-// TODO - is there an easy way to abstract the logic in these, then use in the public resolvers? (if not, delete this code)
-// TODO - maybe move that common logic into a business logic package
-// TODO - if I extract that logic, instead of passing in context, just pass createdBy as string param?
-
-/*
-func convertGeneralRequestInputToAdminNote(ctx context.Context, input model.CreateTRBAdminNoteGeneralRequestInput) models.TRBAdminNote {
-	noteToCreate := models.TRBAdminNote{
-		TRBRequestID: input.TrbRequestID,
-		Category:     models.TRBAdminNoteCategoryGeneralRequest,
-		NoteText:     input.NoteText,
-	}
-	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
-
-	return noteToCreate
-}
-
-func convertInitialRequestFormInputToAdminNote(ctx context.Context, input model.CreateTRBAdminNoteInitialRequestFormInput) models.TRBAdminNote {
-	noteToCreate := models.TRBAdminNote{
-		TRBRequestID: input.TrbRequestID,
-		Category:     models.TRBAdminNoteCategoryInitialRequestForm,
-		NoteText:     input.NoteText,
-
-		AppliesToBasicRequestDetails: null.BoolFrom(input.AppliesToBasicRequestDetails),
-		AppliesToSubjectAreas:        null.BoolFrom(input.AppliesToSubjectAreas),
-		AppliesToAttendees:           null.BoolFrom(input.AppliesToAttendees),
-	}
-	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
-
-	return noteToCreate
-}
-
-func convertSupportingDocumentsInputToAdminNote(ctx context.Context, input model.CreateTRBAdminNoteSupportingDocumentsInput) models.TRBAdminNote {
-	noteToCreate := models.TRBAdminNote{
-		TRBRequestID: input.TrbRequestID,
-		Category:     models.TRBAdminNoteCategorySupportingDocuments,
-		NoteText:     input.NoteText,
-	}
-	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
-
-	return noteToCreate
-}
-
-func convertAdviceLetterInputToAdminNote(ctx context.Context, input model.CreateTRBAdminNoteAdviceLetterInput) models.TRBAdminNote {
-	noteToCreate := models.TRBAdminNote{
-		TRBRequestID: input.TrbRequestID,
-		Category:     models.TRBAdminNoteCategoryAdviceLetter,
-		NoteText:     input.NoteText,
-
-		AppliesToMeetingSummary: null.BoolFrom(input.AppliesToMeetingSummary),
-		AppliesToNextSteps:      null.BoolFrom(input.AppliesToNextSteps),
-	}
-	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
-
-	return noteToCreate
-}
-
-func convertConsultSessionInputToAdminNote(ctx context.Context, input model.CreateTRBAdminNoteConsultSessionInput) models.TRBAdminNote {
-	noteToCreate := models.TRBAdminNote{
-		TRBRequestID: input.TrbRequestID,
-		Category:     models.TRBAdminNoteCategoryConsultSession,
-		NoteText:     input.NoteText,
-	}
-	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
-
-	return noteToCreate
-}
-*/
-
 func CreateTRBAdminNoteGeneralRequest(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,
@@ -209,20 +140,6 @@ func CreateTRBAdminNoteAdviceLetter(ctx context.Context, store *storage.Store, i
 
 	// TODO - create links to recommendations
 	// TODO - reference note on wanting to wrap this in transaction
-
-	return createdNote, nil
-}
-
-func CreateTRBAdminNoteWithCategorySpecificData(ctx context.Context, store *storage.Store) (*models.TRBAdminNote, error) {
-	// universal function for saving notes in all categories, called by five separate resolvers
-	// TODO - does this work?
-	// TODO - probably want separate functions; at the least, Supporting Documents and Advice Letter need their own code
-
-	var noteModel *models.TRBAdminNote
-	createdNote, err := store.CreateTRBAdminNote(ctx, noteModel)
-	if err != nil {
-		return nil, err
-	}
 
 	return createdNote, nil
 }
