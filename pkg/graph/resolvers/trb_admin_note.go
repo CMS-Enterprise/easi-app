@@ -165,40 +165,13 @@ func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.S
 		return nil, err
 	}
 
-	_, err = store.CreateTRBAdminNoteTRBDocumentLinks(ctx, createdNote.ID, input.DocumentIDs)
-	if err != nil {
-		return nil, err
+	// create links to documents referenced by the admin note (if any are present)
+	if len(input.DocumentIDs) > 0 {
+		_, err = store.CreateTRBAdminNoteTRBDocumentLinks(ctx, createdNote.ID, input.DocumentIDs)
+		if err != nil {
+			return nil, err
+		}
 	}
-
-	// create links to documents
-
-	// // concurrency from errgroup isn't necessary, but it's a potential speedup;
-	// // one alternative would be to have a storage method that creates multiple links at once
-	// errGroup := new(errgroup.Group)
-	// for _, documentID := range input.DocumentIDs {
-	// 	// necessary to avoid issues with closing over loop variable
-	// 	// should be unnecessary starting with Go 1.22 - see https://go.dev/blog/loopvar-preview
-	// 	documentID := documentID
-
-	// 	link := models.TRBAdminNoteTRBRequestDocumentLink{
-	// 		TRBAdminNoteID:       createdNote.ID,
-	// 		TRBRequestDocumentID: documentID,
-	// 	}
-	// 	link.CreatedBy = adminEUAID
-
-	// 	errGroup.Go(func() error {
-	// 		// declare new error variable to avoid potential issues with scoping and closed-over variables
-	// 		_, createLinkErr := store.CreateTRBAdminNoteTRBDocumentLink(ctx, &link)
-	// 		if createLinkErr != nil {
-	// 			return createLinkErr
-	// 		}
-	// 		return nil
-	// 	})
-	// }
-
-	// if err := errGroup.Wait(); err != nil {
-	// 	return nil, err
-	// }
 
 	return createdNote, nil
 }
