@@ -142,6 +142,9 @@ func CreateTRBAdminNoteInitialRequestForm(ctx context.Context, store *storage.St
 }
 
 func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error) {
+	// it's valid for input.DocumentIDs to be empty, we don't need to do any validation checks
+	// see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
+
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,
 		Category:     models.TRBAdminNoteCategorySupportingDocuments,
@@ -177,6 +180,9 @@ func CreateTRBAdminNoteConsultSession(ctx context.Context, store *storage.Store,
 }
 
 func CreateTRBAdminNoteAdviceLetter(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error) {
+	// it's valid for input.RecommendationIDs to be empty, we don't need to do any validation checks
+	// see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
+
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,
 		Category:     models.TRBAdminNoteCategoryAdviceLetter,
@@ -240,8 +246,9 @@ func GetTRBAdminNotesByTRBRequestID(ctx context.Context, store *storage.Store, t
 }
 
 // UpdateTRBAdminNote handles general updates to a TRB admin note, without handling category-specific data
-// If updating admin notes requires handling category-specific data, see note on UpdateTRBAdminNoteInput;
+// If updating admin notes requires handling category-specific data, see note on UpdateTRBAdminNoteInput in GraphQL schema;
 // break this up into separate resolvers
+// Also, if updating with category-specific data allows changing a note's category, the resolvers will need to null out any previous category-specific data
 func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdminNote, error) {
 	idStr, idFound := input["id"]
 	if !idFound {
