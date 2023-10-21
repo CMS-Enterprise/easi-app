@@ -7,6 +7,42 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+// TODO - combine tests into one test suite, with each category grouped under an s.Run()?
+// TODO - abstract out repeated setup code (like creating a TRB request? though that's pretty short)
+
+func (s *ResolverSuite) TestCreateTRBAdminNoteGeneralRequest() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+
+	s.Run("Creating Admin Note with General Request category works", func() {
+		// set up request
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		s.NoError(err)
+		s.NotNil(trbRequest)
+
+		// create admin note
+		input := model.CreateTRBAdminNoteGeneralRequestInput{
+			TrbRequestID: trbRequest.ID,
+			NoteText:     "test TRB admin note - general request",
+		}
+
+		createdNote, err := CreateTRBAdminNoteGeneralRequest(ctx, store, input)
+		s.NoError(err)
+		s.NotNil(createdNote)
+
+		// check that createdNote has the right field values
+		s.EqualValues(models.TRBAdminNoteCategoryGeneralRequest, createdNote.Category)
+		s.EqualValues(input.NoteText, createdNote.NoteText)
+
+		// all these should be null because they don't apply to notes in the General Request category
+		s.Nil(createdNote.AppliesToBasicRequestDetails.Ptr())
+		s.Nil(createdNote.AppliesToSubjectAreas.Ptr())
+		s.Nil(createdNote.AppliesToAttendees.Ptr())
+		s.Nil(createdNote.AppliesToMeetingSummary.Ptr())
+		s.Nil(createdNote.AppliesToNextSteps.Ptr())
+	})
+}
+
 func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 	ctx := s.testConfigs.Context
 	store := s.testConfigs.Store
@@ -17,11 +53,10 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequest)
-		trbRequestID := trbRequest.ID
 
 		// just create the database record for the document; don't go through the resolver so we don't need to set up a file upload
 		documentToCreate := &models.TRBRequestDocument{
-			TRBRequestID:       trbRequestID,
+			TRBRequestID:       trbRequest.ID,
 			CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
 			FileName:           "create_and_get.pdf",
 			Bucket:             "bukkit",
@@ -34,10 +69,10 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 		s.NotNil(createdDoc)
 		documentID := createdDoc.ID
 
-		// try to create an admin note referencing the document
+		// create admin note referencing the document
 		input := model.CreateTRBAdminNoteSupportingDocumentsInput{
-			TrbRequestID: trbRequestID,
-			NoteText:     "test TRB admin note",
+			TrbRequestID: trbRequest.ID,
+			NoteText:     "test TRB admin note - supporting documents",
 			DocumentIDs: []uuid.UUID{
 				documentID,
 			},
@@ -90,7 +125,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 		// try to create an admin note referencing the document
 		input := model.CreateTRBAdminNoteSupportingDocumentsInput{
 			TrbRequestID: trbRequestForNote.ID,
-			NoteText:     "test TRB admin note",
+			NoteText:     "test TRB admin note - supporting documents",
 			DocumentIDs: []uuid.UUID{
 				documentID,
 			},
