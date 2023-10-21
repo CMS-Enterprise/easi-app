@@ -7,9 +7,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// TODO - combine tests into one test suite, with each category grouped under an s.Run()?
-// TODO - abstract out repeated setup code (like creating a TRB request? though that's pretty short)
-
 func (s *ResolverSuite) TestCreateTRBAdminNoteGeneralRequest() {
 	ctx := s.testConfigs.Context
 	store := s.testConfigs.Store
