@@ -14,6 +14,7 @@ import (
 // CreateTRBAdminNoteTRBDocumentLinks creates multiple link records relating a single TRB admin note to all TRB documents it references
 func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 	ctx context.Context,
+	trbRequestID uuid.UUID,
 	trbAdminNoteID uuid.UUID,
 	trbRequestDocumentIDs []uuid.UUID,
 ) ([]*models.TRBAdminNoteTRBRequestDocumentLink, error) {
@@ -23,6 +24,7 @@ func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 
 	for _, documentID := range trbRequestDocumentIDs {
 		link := models.TRBAdminNoteTRBRequestDocumentLink{
+			TRBRequestID:         trbRequestID,
 			TRBAdminNoteID:       trbAdminNoteID,
 			TRBRequestDocumentID: documentID,
 		}
@@ -37,11 +39,13 @@ func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 			id,
 			trb_admin_note_id,
 			trb_request_document_id,
+			trb_request_id,
 			created_by
 		) VALUES (
 			:id,
 			:trb_admin_note_id,
 			:trb_request_document_id,
+			:trb_request_id,
 			:created_by
 		) RETURNING *;
 	`

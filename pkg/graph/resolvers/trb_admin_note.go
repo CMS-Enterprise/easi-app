@@ -142,24 +142,20 @@ func CreateTRBAdminNoteInitialRequestForm(ctx context.Context, store *storage.St
 }
 
 func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error) {
-	// it's valid for input.DocumentIDs to be empty, we don't need to do any validation checks
-	// see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
-
-	// TODO - should we validate that documents belong to the same request?
-	// would require querying the database for documents, unless we changed the GQL schema to include the request ID for each document
-
-	adminEUAID := appcontext.Principal(ctx).ID()
+	// it's valid for input.DocumentIDs to be empty; see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
+	// don't need to check that all referenced documents belong to the same request; database checks that
 
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,
 		Category:     models.TRBAdminNoteCategorySupportingDocuments,
 		NoteText:     input.NoteText,
 	}
-	noteToCreate.CreatedBy = adminEUAID
+	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
 
 	// ideally, we'd create the admin note and any links to documents in a single transaction, but we don't currently have the ability to do that
 	// see Note [Database calls from resolvers aren't atomic]
 
+	// create the admin note itself (and get the result, with the generated ID)
 	createdNote, err := store.CreateTRBAdminNote(ctx, &noteToCreate)
 	if err != nil {
 		return nil, err
@@ -167,7 +163,7 @@ func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.S
 
 	// create links to documents referenced by the admin note (if any are present)
 	if len(input.DocumentIDs) > 0 {
-		_, err = store.CreateTRBAdminNoteTRBDocumentLinks(ctx, createdNote.ID, input.DocumentIDs)
+		_, err = store.CreateTRBAdminNoteTRBDocumentLinks(ctx, input.TrbRequestID, createdNote.ID, input.DocumentIDs)
 		if err != nil {
 			return nil, err
 		}
