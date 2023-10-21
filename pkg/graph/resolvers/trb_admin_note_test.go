@@ -90,32 +90,47 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 	creatingUserEUAID := s.testConfigs.Principal.EUAID
 
 	s.Run("Creating Supporting Documents Admin Note referencing documents attached to the same TRB request works", func() {
-		// set up request and a document
+		// set up request and two documents
 		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequest)
 
-		// just create the database record for the document; don't go through the resolver so we don't need to set up a file upload
-		documentToCreate := &models.TRBRequestDocument{
+		// just create the database record for the documents; don't go through the resolver so we don't need to set up file uploads
+		documentToCreate1 := &models.TRBRequestDocument{
 			TRBRequestID:       trbRequest.ID,
 			CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
-			FileName:           "create_and_get.pdf",
+			FileName:           "admin_note_test_1.pdf",
 			Bucket:             "bukkit",
 			S3Key:              uuid.NewString(),
 		}
-		documentToCreate.CreatedBy = creatingUserEUAID // have to manually set this because we're calling store method instead of resolver
+		documentToCreate1.CreatedBy = creatingUserEUAID // have to manually set this because we're calling store method instead of resolver
 
-		createdDoc, err := store.CreateTRBRequestDocument(ctx, documentToCreate)
+		createdDoc1, err := store.CreateTRBRequestDocument(ctx, documentToCreate1)
 		s.NoError(err)
-		s.NotNil(createdDoc)
-		documentID := createdDoc.ID
+		s.NotNil(createdDoc1)
+		documentID1 := createdDoc1.ID
+
+		documentToCreate2 := &models.TRBRequestDocument{
+			TRBRequestID:       trbRequest.ID,
+			CommonDocumentType: models.TRBRequestDocumentCommonTypeBusinessCase,
+			FileName:           "admin_note_test_2.pdf",
+			Bucket:             "bukkit",
+			S3Key:              uuid.NewString(),
+		}
+		documentToCreate2.CreatedBy = creatingUserEUAID // have to manually set this because we're calling store method instead of resolver
+
+		createdDoc2, err := store.CreateTRBRequestDocument(ctx, documentToCreate2)
+		s.NoError(err)
+		s.NotNil(createdDoc2)
+		documentID2 := createdDoc2.ID
 
 		// create admin note referencing the document
 		input := model.CreateTRBAdminNoteSupportingDocumentsInput{
 			TrbRequestID: trbRequest.ID,
 			NoteText:     "test TRB admin note - supporting documents",
 			DocumentIDs: []uuid.UUID{
-				documentID,
+				documentID1,
+				documentID2,
 			},
 		}
 		createdNote, err := CreateTRBAdminNoteSupportingDocuments(ctx, store, input)
