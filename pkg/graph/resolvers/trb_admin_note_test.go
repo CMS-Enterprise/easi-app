@@ -89,7 +89,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 	store := s.testConfigs.Store
 	creatingUserEUAID := s.testConfigs.Principal.EUAID
 
-	s.Run("Creating Admin Note referencing supporting documents attached to the same TRB request works", func() {
+	s.Run("Creating Supporting Documents Admin Note referencing documents attached to the same TRB request works", func() {
 		// set up request and a document
 		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
 		s.NoError(err)
@@ -210,5 +210,48 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteConsultSession() {
 }
 
 func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
-	// TODO
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+
+	s.Run("Creating Advice Letter Admin Note referencing recommendations attached to the same TRB request works", func() {
+		// set up request
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		s.NoError(err)
+		s.NotNil(trbRequest)
+
+		// TODO - set up advice letter and recommendation
+
+		// create admin note referencing the recommendation
+		input := model.CreateTRBAdminNoteAdviceLetterInput{
+			TrbRequestID:            trbRequest.ID,
+			NoteText:                "test TRB admin note - advice letter",
+			AppliesToMeetingSummary: true,
+			AppliesToNextSteps:      false,
+
+			// TODO - add recommendation ID
+			RecommendationIDs: []uuid.UUID{},
+		}
+		createdNote, err := CreateTRBAdminNoteAdviceLetter(ctx, store, input)
+		s.NoError(err)
+		s.NotNil(createdNote)
+
+		// check that createdNote has the right field values
+		s.EqualValues(models.TRBAdminNoteCategoryAdviceLetter, createdNote.Category)
+		s.EqualValues(input.NoteText, createdNote.NoteText)
+
+		// these two fields should be non-null - they should _always_ have values for Advice Letter notes
+		s.NotNil(createdNote.AppliesToMeetingSummary.Ptr())
+		s.NotNil(createdNote.AppliesToNextSteps.Ptr())
+
+		// check that they have the correct values, as well
+		s.EqualValues(input.AppliesToMeetingSummary, createdNote.AppliesToMeetingSummary.Bool)
+		s.EqualValues(input.AppliesToNextSteps, createdNote.AppliesToNextSteps.Bool)
+
+		// all these should be null because they don't apply to Advice Letter notes
+		s.Nil(createdNote.AppliesToBasicRequestDetails.Ptr())
+		s.Nil(createdNote.AppliesToSubjectAreas.Ptr())
+		s.Nil(createdNote.AppliesToAttendees.Ptr())
+
+		// TODO - check that links to recommendations were created
+	})
 }
