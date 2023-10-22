@@ -16,8 +16,20 @@ func (s *EmailTestSuite) TestSendRequestEditsNotification() {
 	formName := "Cool Form Name"
 	requestName := "Test Request"
 	requester := "Sir Requester"
-	additionalInfo := models.HTMLPointer("") // empty info is left out
-	// additionalInfo := models.HTMLPointer("additional info")
+	additionalInfo := models.HTMLPointer("additional info")
+	requestLink := fmt.Sprintf(
+		"%s://%s/governance-task-list/%s",
+		s.config.URLScheme,
+		s.config.URLHost,
+		intakeID.String(),
+	)
+	adminLink := fmt.Sprintf(
+		"%s://%s/governance-review-team/%s/intake-request",
+		s.config.URLScheme,
+		s.config.URLHost,
+		intakeID.String(),
+	)
+	ITGovInboxAddress := s.config.GRTEmail.String()
 
 	feedback := models.HTML("feedback")
 
@@ -35,26 +47,83 @@ func (s *EmailTestSuite) TestSendRequestEditsNotification() {
 	expectedSubject := fmt.Sprintf("Updates requested for the %s for %s", formName, requestName)
 	s.Equal(expectedSubject, sender.subject)
 
-	expectedEmail := `<h1 style="margin-bottom: 0.5rem;">EASi</h1>` + "\n\n" +
-		`<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>` + "\n\n" +
-		`<p>The GRT has requested updates to the ` + formName + ` for ` + requestName + ` before the request can proceed further in the Governance Review process.</p>` + "\n\n" +
-		`<p>Updates needed: ` + feedback.ValueOrEmptyString() + `</p>` + "\n\n\n" +
-		`<p>View this request in EASi:` + "\n" +
-		`<ul>` + "\n" +
-		`<li>The person who initially submitted this request, ` + requester + `, may <a href="http://localhost:3000/governance-task-list/` + intakeID.String() + `">click here</a> to view the request task list.</li>` + "\n" +
-		`<li>Governance Team members may <a href="http://localhost:3000/governance-review-team/` + intakeID.String() + `/intake-request">click here</a> to view the request details.</li>` + "\n" +
-		`<li>Others should contact ` + requester + ` or the Governance Team for more information about this request.</li>` + "\n" +
-		`</ul>` +
-		`</p>` + "\n\n" +
-		`If you have questions about your request, please contact the Governance Team at <a href="mailto:` + s.config.GRTEmail.String() + `">` + s.config.GRTEmail.String() + `</a>.` + "\n\n\n\n" +
-		`<hr>` + "\n\n" +
-		`<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>`
+	expectedEmail := fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+
+<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+
+<p>The GRT has requested updates to the %s for %s before the request can proceed further in the Governance Review process.</p>
+
+<p>Updates needed: %s</p>
+
+<p>View this request in EASi:
+<ul>
+<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
+<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
+<li>Others should contact %s or the Governance Team for more information about this request.</li>
+</ul></p>
+
+If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
+
+<hr><p><strong>Additional information from the Governance Team:</strong></p><p>additional info</p>
+<hr>
+
+<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
+`,
+		formName,
+		requestName,
+		feedback,
+		requester,
+		requestLink,
+		adminLink,
+		requester,
+		ITGovInboxAddress,
+		ITGovInboxAddress,
+	)
 	s.Equal(expectedEmail, sender.body)
 	s.Run("Recipient is correct", func() {
 		allRecipients := []models.EmailAddress{
 			recipient,
 		}
 		s.ElementsMatch(sender.toAddresses, allRecipients)
+	})
+
+	err = client.SystemIntake.SendRequestEditsNotification(ctx, recipients, intakeID, formName, requestName, requester, feedback, nil)
+	s.NoError(err)
+	expectedEmail = fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+
+<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+
+<p>The GRT has requested updates to the %s for %s before the request can proceed further in the Governance Review process.</p>
+
+<p>Updates needed: %s</p>
+
+<p>View this request in EASi:
+<ul>
+<li>The person who initially submitted this request, %s, may <a href="%s">click here</a> to view the request task list.</li>
+<li>Governance Team members may <a href="%s">click here</a> to view the request details.</li>
+<li>Others should contact %s or the Governance Team for more information about this request.</li>
+</ul></p>
+
+If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
+
+
+<hr>
+
+<p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
+`,
+		formName,
+		requestName,
+		feedback,
+		requester,
+		requestLink,
+		adminLink,
+		requester,
+		ITGovInboxAddress,
+		ITGovInboxAddress,
+	)
+
+	s.Run("Should omit additional info if absent", func() {
+		s.Equal(expectedEmail, sender.body)
 	})
 
 }
