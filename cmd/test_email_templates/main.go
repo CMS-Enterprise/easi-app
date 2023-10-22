@@ -162,6 +162,11 @@ func main() {
 
 func sendITGovEmails(ctx context.Context, client *email.Client) {
 	intakeID := uuid.New()
+	lifecycleID := "123456"
+	lifecycleExpiresAt := time.Now().AddDate(30, 0, 0)
+	lifecycleRetiresAt := time.Now().AddDate(3, 0, 0)
+	lifecycleScope := models.HTMLPointer("<em>This is a scope</em>")
+	lifecycleCostBaseline := "a baseline"
 	submittedAt := time.Now()
 	requesterEmail := models.NewEmailAddress("TEST@local.fake")
 	emailNotificationRecipients := models.EmailNotificationRecipients{
@@ -250,9 +255,14 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		ctx,
 		emailNotificationRecipients,
 		intakeID,
-		"Super Secret Bonus Form",
 		"Mounds",
-		reason,
+		lifecycleID,
+		&lifecycleExpiresAt,
+		*lifecycleScope,
+		lifecycleCostBaseline,
+		*nextSteps,
+		models.TRBFRNotRecommended,
+		"George of the Jungle",
 		additionalInfo,
 	)
 	noErr(err)
@@ -261,9 +271,14 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		ctx,
 		emailNotificationRecipients,
 		intakeID,
-		"Super Secret Bonus Form",
 		"Butterfinger",
-		reason,
+		lifecycleID,
+		&lifecycleExpiresAt,
+		*lifecycleScope,
+		lifecycleCostBaseline,
+		*nextSteps,
+		models.TRBFRStronglyRecommended,
+		"Marvin the Martian",
 		additionalInfo,
 	)
 	noErr(err)
@@ -271,10 +286,13 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	err = client.SystemIntake.SendRetireLCIDNotification(
 		ctx,
 		emailNotificationRecipients,
-		intakeID,
-		"Super Secret Bonus Form",
-		"Milky Way",
+		lifecycleID,
+		&lifecycleRetiresAt,
+		&lifecycleExpiresAt,
+		*lifecycleScope,
+		lifecycleCostBaseline,
 		reason,
+		*nextSteps,
 		additionalInfo,
 	)
 	noErr(err)
@@ -282,10 +300,12 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	err = client.SystemIntake.SendExpireLCIDNotification(
 		ctx,
 		emailNotificationRecipients,
-		intakeID,
-		"Super Secret Bonus Form",
-		"Three Musketeers",
-		reason,
+		lifecycleID,
+		&lifecycleExpiresAt,
+		*lifecycleScope,
+		lifecycleCostBaseline,
+		*reason,
+		nextSteps,
 		additionalInfo,
 	)
 	noErr(err)
@@ -293,9 +313,16 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	err = client.SystemIntake.SendUpdateLCIDNotification(
 		ctx,
 		emailNotificationRecipients,
-		intakeID,
-		"Super Secret Bonus Form",
-		"Toblerone",
+		lifecycleID,
+		&lifecycleExpiresAt,
+		&lifecycleExpiresAt,
+		lifecycleScope,
+		lifecycleScope,
+		lifecycleCostBaseline,
+		lifecycleCostBaseline,
+		nextSteps,
+		nextSteps,
+		time.Now(),
 		reason,
 		additionalInfo,
 	)
@@ -303,10 +330,12 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	err = client.SystemIntake.SendChangeLCIDRetirementDateNotification(
 		ctx,
 		emailNotificationRecipients,
-		intakeID,
-		"Super Secret Bonus Form",
-		"Baby Ruth",
-		reason,
+		lifecycleID,
+		&lifecycleRetiresAt,
+		&lifecycleExpiresAt,
+		*lifecycleScope,
+		lifecycleCostBaseline,
+		*nextSteps,
 		additionalInfo,
 	)
 	noErr(err)
