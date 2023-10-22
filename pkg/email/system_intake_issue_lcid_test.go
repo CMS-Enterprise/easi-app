@@ -16,6 +16,7 @@ func (s *EmailTestSuite) TestIntakeIssueLCIDNotification() {
 	requestName := "Hotdog/Not Hotdog Program"
 	requester := "Dr Fishopolis"
 	lifecycleID := "123456"
+	lifecycleIssuedAt := time.Now()
 	lifecycleScope := models.HTMLPointer("<em>things</em>")
 	lifecycleCostBaseline := "100bux"
 	expiresAt := time.Now().AddDate(1, 0, 0)
@@ -55,6 +56,7 @@ func (s *EmailTestSuite) TestIntakeIssueLCIDNotification() {
 		intakeID,
 		requestName,
 		lifecycleID,
+		lifecycleIssuedAt,
 		&expiresAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
@@ -74,6 +76,7 @@ func (s *EmailTestSuite) TestIntakeIssueLCIDNotification() {
 <p>The Governance Team has issued a Life Cycle ID (LCID) for %s</p>
 
 <p><strong>Lifecycle ID:</strong> %s<br>
+<strong>Date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s<br>
@@ -98,6 +101,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 `,
 		requestName,
 		lifecycleID,
+		lifecycleIssuedAt.Format("01/02/2006"),
 		expiresAt.Format("01/02/2006"),
 		*lifecycleScope.StringPointer(),
 		lifecycleCostBaseline,
@@ -125,6 +129,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		intakeID,
 		requestName,
 		lifecycleID,
+		lifecycleIssuedAt,
 		&expiresAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
@@ -141,6 +146,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 <p>The Governance Team has issued a Life Cycle ID (LCID) for %s</p>
 
 <p><strong>Lifecycle ID:</strong> %s<br>
+<strong>Date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s<br>
@@ -165,6 +171,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 `,
 		requestName,
 		lifecycleID,
+		lifecycleIssuedAt.Format("01/02/2006"),
 		expiresAt.Format("01/02/2006"),
 		*lifecycleScope.StringPointer(),
 		lifecycleCostBaseline,
@@ -189,6 +196,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 			intakeID,
 			requestName,
 			lifecycleID,
+			lifecycleIssuedAt,
 			&expiresAt,
 			*lifecycleScope,
 			lifecycleCostBaseline,
@@ -205,6 +213,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 <p>The Governance Team has issued a Life Cycle ID (LCID) for %s</p>
 
 <p><strong>Lifecycle ID:</strong> %s<br>
+<strong>Date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s<br>
@@ -229,6 +238,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 `,
 			requestName,
 			lifecycleID,
+			lifecycleIssuedAt.Format("01/02/2006"),
 			expiresAt.Format("01/02/2006"),
 			*lifecycleScope.StringPointer(),
 			lifecycleCostBaseline,

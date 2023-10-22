@@ -442,6 +442,7 @@ func IssueLCID(
 	// update other fields
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
+	// TODO: Store updatedTime as LCID issued date on the intake (EASI-3319)
 
 	// save intake, action, admin note
 	// see Note [Database calls from resolvers aren't atomic]
@@ -508,6 +509,7 @@ func IssueLCID(
 				intake.ID,
 				intake.ProjectName.ValueOrZero(),
 				newLCID,
+				updatedTime,
 				&input.ExpiresAt,
 				input.Scope,
 				*input.CostBaseline,

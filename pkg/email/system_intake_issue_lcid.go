@@ -18,6 +18,7 @@ import (
 type systemIntakeIssueLCIDEmailParameters struct {
 	RequestName              string
 	LifecycleID              string
+	LifecycleIssuedAt        string
 	LifecycleExpiresAt       string
 	LifecycleScope           template.HTML
 	LifecycleCostBaseline    string
@@ -34,6 +35,7 @@ func (sie systemIntakeEmails) SystemIntakeIssueLCIDBody(
 	systemIntakeID uuid.UUID,
 	requestName string,
 	lifecycleID string,
+	lifecycleIssuedAt time.Time,
 	lifecycleExpiresAt *time.Time,
 	lifecycleScope models.HTML,
 	lifecycleCostBaseline string,
@@ -65,6 +67,7 @@ func (sie systemIntakeEmails) SystemIntakeIssueLCIDBody(
 	data := systemIntakeIssueLCIDEmailParameters{
 		RequestName:              requestName,
 		LifecycleID:              lifecycleID,
+		LifecycleIssuedAt:        lifecycleIssuedAt.Format("01/02/2006"),
 		LifecycleExpiresAt:       expiresAt,
 		LifecycleScope:           lifecycleScope.ToTemplate(),
 		LifecycleCostBaseline:    lifecycleCostBaseline,
@@ -95,6 +98,7 @@ func (sie systemIntakeEmails) SendIssueLCIDNotification(
 	systemIntakeID uuid.UUID,
 	requestName string,
 	lifecycleID string,
+	lifecycleIssuedAt time.Time,
 	lifecycleExpiresAt *time.Time,
 	lifecycleScope models.HTML,
 	lifecycleCostBaseline string,
@@ -112,6 +116,7 @@ func (sie systemIntakeEmails) SendIssueLCIDNotification(
 		systemIntakeID,
 		requestName,
 		lifecycleID,
+		lifecycleIssuedAt,
 		lifecycleExpiresAt,
 		lifecycleScope,
 		lifecycleCostBaseline,

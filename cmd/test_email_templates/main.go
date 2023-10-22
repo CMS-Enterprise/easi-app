@@ -257,6 +257,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		intakeID,
 		"Mounds",
 		lifecycleID,
+		time.Now(),
 		&lifecycleExpiresAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,

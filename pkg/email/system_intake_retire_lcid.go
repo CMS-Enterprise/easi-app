@@ -65,6 +65,7 @@ func (sie systemIntakeEmails) SystemIntakeRetireLCIDBody(
 	return b.String(), nil
 }
 
+// TODO: add date LCID was issued (EASI-3319)
 // SendRetireLCIDNotification notifies user-selected recipients that a system intake form needs edits
 func (sie systemIntakeEmails) SendRetireLCIDNotification(
 	ctx context.Context,
