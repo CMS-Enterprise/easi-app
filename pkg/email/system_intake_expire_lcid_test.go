@@ -59,8 +59,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 <strong>Lifecycle ID:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
-<strong>Project Cost Baseline:</strong> %s<br>
-<strong>Next steps:</strong> %s</p>
+<strong>Project Cost Baseline:</strong> %s</p>
 
 <hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
 <hr>
@@ -76,7 +75,6 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		expiresAt.Format("01/02/2006"),
 		*lifecycleScope.StringPointer(),
 		lifecycleCostBaseline,
-		*decisionNextSteps.StringPointer(),
 		*additionalInfo.StringPointer(),
 	)
 	s.Equal(expectedEmail, sender.body)
@@ -114,8 +112,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 <strong>Lifecycle ID:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
-<strong>Project Cost Baseline:</strong> %s<br>
-<strong>Next steps:</strong> %s</p>
+<strong>Project Cost Baseline:</strong> %s</p>
 
 
 <hr>
@@ -131,7 +128,6 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		expiresAt.Format("01/02/2006"),
 		*lifecycleScope.StringPointer(),
 		lifecycleCostBaseline,
-		*decisionNextSteps.StringPointer(),
 	)
 
 	s.Run("Should omit additional info if absent", func() {
