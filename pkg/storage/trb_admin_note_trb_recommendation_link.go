@@ -8,6 +8,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -82,4 +83,47 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 	}
 
 	return createdLinks, nil
+}
+
+// GetTRBRecommendationsByAdminNoteID fetches all TRB advice letter documents linked to a TRB admin note
+func (s *Store) GetTRBRecommendationsByAdminNoteID(ctx context.Context, adminNoteID uuid.UUID) ([]*models.TRBAdviceLetterRecommendation, error) {
+	const trbRequestRecommendationsGetByAdminNoteIDSQL = `
+		SELECT trb_advice_letter_recommendations.*
+		FROM trb_advice_letter_recommendations
+		INNER JOIN trb_admin_notes_trb_admin_note_recommendations_links
+			ON trb_advice_letter_recommendations.id = trb_admin_notes_trb_admin_note_recommendations_links.trb_advice_letter_recommendation_id
+		WHERE trb_admin_notes_trb_admin_note_recommendations_links.trb_admin_note_id = :admin_note_id
+	`
+
+	stmt, err := s.db.PrepareNamed(trbRequestRecommendationsGetByAdminNoteIDSQL)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB advice letter recommendations by admin note ID with error %s", err),
+			zap.Error(err),
+			zap.String("adminNoteID", adminNoteID.String()),
+		)
+		return nil, err
+	}
+
+	arg := map[string]interface{}{
+		"admin_note_id": adminNoteID,
+	}
+
+	recommendations := []*models.TRBAdviceLetterRecommendation{}
+	err = stmt.Select(&recommendations, arg)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to fetch TRB advice letter recommendations by admin note ID with error %s", err),
+			zap.Error(err),
+			zap.String("adminNoteID", adminNoteID.String()),
+		)
+
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBAdviceLetterRecommendation{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return recommendations, nil
 }

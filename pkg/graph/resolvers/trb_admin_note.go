@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -178,6 +179,51 @@ func GetTRBAdminNotesByTRBRequestID(ctx context.Context, store *storage.Store, t
 	}
 
 	return notes, nil
+}
+
+// GetTRBAdminNoteCategorySpecificData returns the category-specific data for TRB admin notes that can be loaded from the database;
+// fields that require querying other data sources (such as documents' Status and URL fields, which require querying S3) are handled by other resolvers if they're requested
+func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Store, note *models.TRBAdminNote) (model.TRBAdminNoteCategorySpecificData, error) {
+	// TODO - do I want to split out some/all of these into private functions, especially if I add validation checks?
+	switch note.Category {
+	case models.TRBAdminNoteCategoryGeneralRequest:
+		return model.TRBAdminNoteGeneralRequestCategoryData{
+			PlaceholderField: nil,
+		}, nil
+	case models.TRBAdminNoteCategoryInitialRequestForm:
+		// TODO - validate that `note` has valid values for these fields?
+		return model.TRBAdminNoteInitialRequestFormCategoryData{
+			AppliesToBasicRequestDetails: note.AppliesToBasicRequestDetails.Bool,
+			AppliesToSubjectAreas:        note.AppliesToSubjectAreas.Bool,
+			AppliesToAttendees:           note.AppliesToAttendees.Bool,
+		}, nil
+	case models.TRBAdminNoteCategorySupportingDocuments:
+		documents, err := store.GetTRBRequestDocumentsByAdminNoteID(ctx, note.ID)
+		if err != nil {
+			return nil, err
+		}
+		return model.TRBAdminNoteSupportingDocumentsCategoryData{
+			Documents: documents,
+		}, nil
+	case models.TRBAdminNoteCategoryConsultSession:
+		return model.TRBAdminNoteConsultSessionCategoryData{
+			PlaceholderField: nil,
+		}, nil
+	case models.TRBAdminNoteCategoryAdviceLetter:
+		// TODO - validate that `note` has valid values for AppliesTo* fields?
+		recommendations, err := store.GetTRBRecommendationsByAdminNoteID(ctx, note.ID)
+		if err != nil {
+			return nil, err
+		}
+		return model.TRBAdminNoteAdviceLetterCategoryData{
+			AppliesToMeetingSummary: note.AppliesToMeetingSummary.Bool,
+			AppliesToNextSteps:      note.AppliesToNextSteps.Bool,
+			Recommendations:         recommendations,
+		}, nil
+	}
+
+	// this should never happen, all five categories should be handled, but in case it does, error and alert on it
+	return nil, apperrors.NewInvalidEnumError(fmt.Errorf("admin note has an unrecognized category"), note.Category, "TRBAdminNoteCategory")
 }
 
 // UpdateTRBAdminNote handles general updates to a TRB admin note, without handling category-specific data

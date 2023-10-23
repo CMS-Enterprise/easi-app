@@ -8,6 +8,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -82,6 +83,49 @@ func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 	}
 
 	return createdLinks, nil
+}
+
+// GetTRBRequestDocumentsByAdminNoteID fetches all TRB request documents linked to a TRB admin note
+func (s *Store) GetTRBRequestDocumentsByAdminNoteID(ctx context.Context, adminNoteID uuid.UUID) ([]*models.TRBRequestDocument, error) {
+	const trbRequestDocumentsGetByAdminNoteIDSQL = `
+		SELECT trb_request_documents.*
+		FROM trb_request_documents
+		INNER JOIN trb_admin_notes_trb_request_documents_links
+			ON trb_request_documents.id = trb_admin_notes_trb_request_documents_links.trb_request_document_id
+		WHERE trb_admin_notes_trb_request_documents_links.trb_admin_note_id = :admin_note_id
+	`
+
+	stmt, err := s.db.PrepareNamed(trbRequestDocumentsGetByAdminNoteIDSQL)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to prepare SQL statement for fetching TRB request documents by admin note ID with error %s", err),
+			zap.Error(err),
+			zap.String("adminNoteID", adminNoteID.String()),
+		)
+		return nil, err
+	}
+
+	arg := map[string]interface{}{
+		"admin_note_id": adminNoteID,
+	}
+
+	documents := []*models.TRBRequestDocument{}
+	err = stmt.Select(&documents, arg)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to fetch TRB request documents by admin note ID with error %s", err),
+			zap.Error(err),
+			zap.String("adminNoteID", adminNoteID.String()),
+		)
+
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBRequestDocument{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return documents, nil
 }
 
 // Note [Use NamedQuery to insert multiple records]
