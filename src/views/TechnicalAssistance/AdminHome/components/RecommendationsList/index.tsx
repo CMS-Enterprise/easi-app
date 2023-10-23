@@ -177,7 +177,10 @@ export default function RecommendationsList({
                 >
                   <h3 className="margin-top-0 margin-bottom-05">{title}</h3>
 
-                  <RichTextViewer className="margin-y-1" value={description} />
+                  <RichTextViewer
+                    className="margin-top-1"
+                    value={description}
+                  />
 
                   {links.length > 0 && (
                     <>
