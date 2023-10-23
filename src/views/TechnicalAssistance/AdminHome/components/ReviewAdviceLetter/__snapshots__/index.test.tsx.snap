@@ -65,90 +65,26 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
           <div
             class="usa-alert__body"
           >
-            Recommendation 1
-          </h4>
-          <div
-            class="easi-toast easi-toast-viewer margin-y-1"
-          >
-            <div>
-              <div
-                class="toastui-editor-contents"
-                style="overflow-wrap: break-word;"
-              >
-                <p
-                  data-nodeid="3"
-                >
-                  This is the recommendation text
-                </p>
-                
-
-              </div>
-            </div>
+            <p
+              class="usa-alert__text"
+            >
+              If you have two or more recommendations, you can use arrows on the left side of each recommendation to reorder them.
+            </p>
           </div>
-          <ul
-            class="usa-list usa-list--unstyled"
-          >
-            <li>
-              <a
-                aria-label="Open easi.cms.gov in a new tab"
-                class="usa-link display-block margin-top-05"
-                href="/"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                easi.cms.gov
-              </a>
-            </li>
-            <li>
-              <a
-                aria-label="Open https://google.com in a new tab"
-                class="usa-link usa-link--external display-block margin-top-05"
-                href="https://google.com/"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                google.com
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li
-          class="desktop:grid-col-6"
+        </div>
+        <ul
+          class="usa-list usa-list--unstyled"
         >
           <li
             class="margin-bottom-3"
             data-testid="recommendations_list-item"
           >
-            Recommendation 2
-          </h4>
-          <div
-            class="easi-toast easi-toast-viewer margin-y-1"
-          >
-            <div>
+            <div
+              class="bg-base-lightest padding-top-2 padding-bottom-105 padding-left-105 padding-right-3 display-flex"
+            >
               <div
-                class="toastui-editor-contents"
-                style="overflow-wrap: break-word;"
-              >
-                <p
-                  data-nodeid="5"
-                >
-                  This is the recommendation text
-                </p>
-                
-
-              </div>
-            </div>
-          </div>
-          <ul
-            class="usa-list usa-list--unstyled"
-          >
-            <li>
-              <a
-                aria-label="Open easi.cms.gov in a new tab"
-                class="usa-link display-block margin-top-05"
-                href="/"
-                rel="noopener noreferrer"
-                target="_blank"
+                class="margin-right-2 display-flex flex-column flex-align-center line-height-body-1"
+                data-testid="reorder-controls"
               >
                 <button
                   aria-label="Increase recommendation sort order"
@@ -212,11 +148,24 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                 >
                   Recommendation 1
                 </h3>
-                <p
-                  class="margin-top-05 margin-bottom-0 font-body-md line-height-body-4"
+                <div
+                  class="easi-toast easi-toast-viewer margin-y-1"
                 >
-                  This is the recommendation text
-                </p>
+                  <div>
+                    <div
+                      class="toastui-editor-contents"
+                      style="overflow-wrap: break-word;"
+                    >
+                      <p
+                        data-nodeid="3"
+                      >
+                        This is the recommendation text
+                      </p>
+                      
+
+                    </div>
+                  </div>
+                </div>
                 <p
                   class="text-bold margin-bottom-0 margin-top-2"
                 >
@@ -324,11 +273,24 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                 >
                   Recommendation 2
                 </h3>
-                <p
-                  class="margin-top-05 margin-bottom-0 font-body-md line-height-body-4"
+                <div
+                  class="easi-toast easi-toast-viewer margin-y-1"
                 >
-                  This is the recommendation text
-                </p>
+                  <div>
+                    <div
+                      class="toastui-editor-contents"
+                      style="overflow-wrap: break-word;"
+                    >
+                      <p
+                        data-nodeid="5"
+                      >
+                        This is the recommendation text
+                      </p>
+                      
+
+                    </div>
+                  </div>
+                </div>
                 <p
                   class="text-bold margin-bottom-0 margin-top-2"
                 >
@@ -436,11 +398,24 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                 >
                   Recommendation 3
                 </h3>
-                <p
-                  class="margin-top-05 margin-bottom-0 font-body-md line-height-body-4"
+                <div
+                  class="easi-toast easi-toast-viewer margin-y-1"
                 >
-                  This is the recommendation text
-                </p>
+                  <div>
+                    <div
+                      class="toastui-editor-contents"
+                      style="overflow-wrap: break-word;"
+                    >
+                      <p
+                        data-nodeid="7"
+                      >
+                        This is the recommendation text
+                      </p>
+                      
+
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </li>
@@ -470,7 +445,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
             style="overflow-wrap: break-word;"
           >
             <p
-              data-nodeid="7"
+              data-nodeid="9"
             >
               These are the next steps
             </p>
