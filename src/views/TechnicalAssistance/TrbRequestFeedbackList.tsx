@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 
+import { RichTextViewer } from 'components/RichTextEditor';
 import Divider from 'components/shared/Divider';
 import { TrbRequestFeedback } from 'types/technicalAssistance';
 import { formatDateLocal } from 'utils/date';
@@ -33,8 +34,8 @@ function TrbRequestFeedbackList({ feedback }: TrbRequestFeedbackListProps) {
               </dl>
             </Grid>
             <Grid col={12}>
-              <div className="padding-3 bg-base-lightest line-height-body-5 text-pre-wrap">
-                {item.feedbackMessage}
+              <div className="padding-3 bg-base-lightest line-height-body-5">
+                <RichTextViewer value={item.feedbackMessage} />
               </div>
             </Grid>
           </Grid>

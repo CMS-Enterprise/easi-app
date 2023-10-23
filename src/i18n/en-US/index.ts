@@ -15,6 +15,7 @@ import auth from './auth';
 import businessCase from './businessCase';
 import cookies from './cookies';
 import error from './error';
+import externalLinkModal from './externalLinkModal';
 import footer from './footer';
 import form from './form';
 import general from './general';
@@ -39,6 +40,7 @@ const enUS = {
   businessCase,
   cookies,
   error,
+  externalLinkModal,
   footer,
   form,
   general,

@@ -27,11 +27,24 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
       >
         Meeting summary
       </p>
-      <p
-        class="margin-top-1 line-height-body-5"
+      <div
+        class="easi-toast easi-toast-viewer margin-top-1"
       >
-        Meeting summary text
-      </p>
+        <div>
+          <div
+            class="toastui-editor-contents"
+            style="overflow-wrap: break-word;"
+          >
+            <p
+              data-nodeid="1"
+            >
+              Meeting summary text
+            </p>
+            
+
+          </div>
+        </div>
+      </div>
     </div>
     <div
       class="easi-section easi-section__border-top margin-top-6 padding-top-1"
@@ -52,26 +65,90 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
           <div
             class="usa-alert__body"
           >
-            <p
-              class="usa-alert__text"
-            >
-              If you have two or more recommendations, you can use arrows on the left side of each recommendation to reorder them.
-            </p>
+            Recommendation 1
+          </h4>
+          <div
+            class="easi-toast easi-toast-viewer margin-y-1"
+          >
+            <div>
+              <div
+                class="toastui-editor-contents"
+                style="overflow-wrap: break-word;"
+              >
+                <p
+                  data-nodeid="3"
+                >
+                  This is the recommendation text
+                </p>
+                
+
+              </div>
+            </div>
           </div>
-        </div>
-        <ul
-          class="usa-list usa-list--unstyled"
+          <ul
+            class="usa-list usa-list--unstyled"
+          >
+            <li>
+              <a
+                aria-label="Open easi.cms.gov in a new tab"
+                class="usa-link display-block margin-top-05"
+                href="/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                easi.cms.gov
+              </a>
+            </li>
+            <li>
+              <a
+                aria-label="Open https://google.com in a new tab"
+                class="usa-link usa-link--external display-block margin-top-05"
+                href="https://google.com/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                google.com
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li
+          class="desktop:grid-col-6"
         >
           <li
             class="margin-bottom-3"
             data-testid="recommendations_list-item"
           >
-            <div
-              class="bg-base-lightest padding-top-2 padding-bottom-105 padding-left-105 padding-right-3 display-flex"
-            >
+            Recommendation 2
+          </h4>
+          <div
+            class="easi-toast easi-toast-viewer margin-y-1"
+          >
+            <div>
               <div
-                class="margin-right-2 display-flex flex-column flex-align-center line-height-body-1"
-                data-testid="reorder-controls"
+                class="toastui-editor-contents"
+                style="overflow-wrap: break-word;"
+              >
+                <p
+                  data-nodeid="5"
+                >
+                  This is the recommendation text
+                </p>
+                
+
+              </div>
+            </div>
+          </div>
+          <ul
+            class="usa-list usa-list--unstyled"
+          >
+            <li>
+              <a
+                aria-label="Open easi.cms.gov in a new tab"
+                class="usa-link display-block margin-top-05"
+                href="/"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 <button
                   aria-label="Increase recommendation sort order"
@@ -384,11 +461,24 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
       >
         Next steps
       </p>
-      <p
-        class="margin-top-1 line-height-body-5"
+      <div
+        class="easi-toast easi-toast-viewer margin-top-1"
       >
-        These are the next steps
-      </p>
+        <div>
+          <div
+            class="toastui-editor-contents"
+            style="overflow-wrap: break-word;"
+          >
+            <p
+              data-nodeid="7"
+            >
+              These are the next steps
+            </p>
+            
+
+          </div>
+        </div>
+      </div>
       <p
         class="text-bold margin-top-3 margin-bottom-1"
       >

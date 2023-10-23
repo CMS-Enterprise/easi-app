@@ -9,6 +9,7 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import { UpdateTrbRecommendationOrderQuery } from 'queries/TrbAdviceLetterQueries';
 import { TRBRecommendation } from 'queries/types/TRBRecommendation';
@@ -176,9 +177,7 @@ export default function RecommendationsList({
                 >
                   <h3 className="margin-top-0 margin-bottom-05">{title}</h3>
 
-                  <p className="margin-top-05 margin-bottom-0 font-body-md line-height-body-4">
-                    {description}
-                  </p>
+                  <RichTextViewer className="margin-y-1" value={description} />
 
                   {links.length > 0 && (
                     <>

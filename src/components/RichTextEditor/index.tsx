@@ -5,7 +5,7 @@
  * where we want to hook into and tweak existing behavior.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ControllerRenderProps } from 'react-hook-form';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ToastuiEditor from '@toast-ui/editor';
@@ -17,6 +17,8 @@ import {
 } from '@toast-ui/react-editor';
 import classNames from 'classnames';
 import DOMPurify from 'dompurify';
+
+import ExternalLinkModal from 'components/shared/ExternalLinkModal';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import '@toast-ui/editor/dist/toastui-editor.css';
@@ -176,6 +178,27 @@ function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor) {
   });
 }
 
+const mailtoRe = /^mailto:/;
+const httpsRe = /^https?:\/\//;
+
+// Do some field validation on the link popup's url field.
+// Another approach is to re-use toast's exec command to add a link but instead
+// we are going to use dompurify's hook that gets called after content change.
+// See sanitizeHtmlOnContentChange() -> DOMPurify.sanitize()
+DOMPurify.addHook('afterSanitizeAttributes', node => {
+  // check all href attributes for validity
+  if (node.hasAttribute('href')) {
+    const href = node.getAttribute('href');
+    if (href === null) return;
+    // Allow `mailto:` urls
+    if (href.match(mailtoRe)) return;
+    // Ensure url has a `https://` prefix
+    if (!href.match(httpsRe)) {
+      node.setAttribute('href', `https://${href}`);
+    }
+  }
+});
+
 /**
  * Show the current link in the pop up when editing
  * https://github.com/nhn/tui.editor/issues/1256
@@ -207,25 +230,10 @@ function showLinkUnderSelection(toastEditor: ToastuiEditor) {
   });
 }
 
-const mailtoRe = /^mailto:/;
-const httpsRe = /^https?:\/\//;
-
-// Do some field validation on the link popup's url field.
-// Another approach is to re-use toast's exec command to add a link but instead
-// we are going to use dompurify's hook that gets called after content change.
-DOMPurify.addHook('afterSanitizeAttributes', node => {
-  // check all href attributes for validity
-  if (node.hasAttribute('href')) {
-    const href = node.getAttribute('href');
-    if (href === null) return;
-    // Allow `mailto:` urls
-    if (href.match(mailtoRe)) return;
-    // Ensure url has a `https://` prefix
-    if (!href.match(httpsRe)) {
-      node.setAttribute('href', `https://${href}`);
-    }
-  }
-});
+function extractTextContent(html: string) {
+  return new DOMParser().parseFromString(html, 'text/html').documentElement
+    .textContent;
+}
 
 /**
  * Toast rich text editor as a RHF controlled input field.
@@ -276,6 +284,16 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
         }}
         onChange={() => {
           const val = editorRef.current?.getInstance().getHTML() || '';
+
+          // ToastEditor.setHTML('') which can happen in the content change callback
+          // will produce something like '<p><br></p>'.
+          // Get the text content and make sure to set an empty string properly
+          // so that text input validations work as expected.
+          if (extractTextContent(val) === '') {
+            field?.onChange('');
+            return;
+          }
+
           field?.onChange(val);
         }}
         {...props}
@@ -301,8 +319,13 @@ export function RichTextViewer({
   value,
   ...props
 }: RichTextViewerProps) {
+  const { externalLinkModal, modalScopeRef } = useRichTextViewerLinkModal();
+
   return (
-    <div className={classNames('easi-toast easi-toast-viewer', className)}>
+    <div
+      ref={modalScopeRef}
+      className={classNames('easi-toast easi-toast-viewer', className)}
+    >
       <Viewer
         usageStatistics={false}
         // Setting link attributes here just to match Editor options, but it doesn't actually have an effect
@@ -315,6 +338,50 @@ export function RichTextViewer({
         initialValue={value}
         {...props}
       />
+      {externalLinkModal}
     </div>
   );
+}
+
+/**
+ * Hook to attach an `ExternalLinkModal` to links from `RichTextViewer` instances.
+ */
+export function useRichTextViewerLinkModal() {
+  const [url, setUrl] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const modalScopeRef = useRef<HTMLDivElement>(null);
+
+  function linkHandler(event: MouseEvent) {
+    const a = (event.target as HTMLElement)?.closest(
+      '.toastui-editor-contents a'
+    );
+    if (a) {
+      event.preventDefault();
+      const href = a.getAttribute('href');
+      if (href) {
+        setUrl(href);
+        setIsOpen(true);
+      }
+    }
+  }
+
+  useEffect(() => {
+    const eventEl = modalScopeRef.current;
+    eventEl?.addEventListener('click', linkHandler);
+    return () => {
+      eventEl?.removeEventListener('click', linkHandler);
+    };
+  }, []);
+
+  return {
+    modalScopeRef,
+    externalLinkModal: (
+      <ExternalLinkModal
+        isOpen={isOpen}
+        url={url}
+        closeModal={() => setIsOpen(false)}
+      />
+    )
+  };
 }
