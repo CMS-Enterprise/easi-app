@@ -149,7 +149,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                   Recommendation 1
                 </h3>
                 <div
-                  class="easi-toast easi-toast-viewer margin-y-1"
+                  class="easi-toast easi-toast-viewer margin-top-1"
                 >
                   <div>
                     <div
@@ -274,7 +274,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                   Recommendation 2
                 </h3>
                 <div
-                  class="easi-toast easi-toast-viewer margin-y-1"
+                  class="easi-toast easi-toast-viewer margin-top-1"
                 >
                   <div>
                     <div
@@ -399,7 +399,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
                   Recommendation 3
                 </h3>
                 <div
-                  class="easi-toast easi-toast-viewer margin-y-1"
+                  class="easi-toast easi-toast-viewer margin-top-1"
                 >
                   <div>
                     <div

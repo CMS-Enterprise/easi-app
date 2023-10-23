@@ -238,7 +238,7 @@ exports[`Trb Public Advice Letter > renders from email link 1`] = `
                     Restart your computer
                   </h3>
                   <div
-                    class="easi-toast easi-toast-viewer margin-y-1"
+                    class="easi-toast easi-toast-viewer margin-top-1"
                   >
                     <div>
                       <div
@@ -515,7 +515,7 @@ exports[`Trb Public Advice Letter > renders from task list link 1`] = `
                     Restart your computer
                   </h3>
                   <div
-                    class="easi-toast easi-toast-viewer margin-y-1"
+                    class="easi-toast easi-toast-viewer margin-top-1"
                   >
                     <div>
                       <div
