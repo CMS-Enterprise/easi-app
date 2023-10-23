@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@trussworks/react-uswds';
 
 import { Alert } from 'components/shared/Alert';
+import Divider from 'components/shared/Divider';
 import {
   DeleteTrbRecommendationQuery,
   GetTrbAdviceLetterQuery
@@ -21,7 +22,7 @@ import {
 } from 'types/technicalAssistance';
 import { adviceRecommendationSchema } from 'validations/trbRequestSchema';
 
-import RecommendationsList from '../AdminHome/components/ReviewAdviceLetter/RecommendationsList';
+import RecommendationsList from '../AdminHome/components/RecommendationsList';
 import Pager from '../RequestForm/Pager';
 
 import RecommendationsForm from './RecommendationsForm';
@@ -35,7 +36,7 @@ const defaultValues: AdviceLetterRecommendationFields = {
 
 const Recommendations = ({
   trbRequestId,
-  adviceLetter,
+  adviceLetter: { recommendations },
   setIsStepSubmitting,
   setFormAlert,
   stepsCompleted,
@@ -44,8 +45,6 @@ const Recommendations = ({
   const { t } = useTranslation('technicalAssistance');
   const { path, url } = useRouteMatch();
   const history = useHistory();
-
-  const { recommendations } = adviceLetter;
 
   /** Whether recommendations have been added to the request */
   const hasRecommendations: boolean = recommendations.length > 0;
@@ -106,6 +105,8 @@ const Recommendations = ({
             )}
           </Button>
 
+          <Divider className="margin-top-2 margin-bottom-4" />
+
           {
             /* No recommendations message */
             !hasRecommendations ? (
@@ -114,44 +115,44 @@ const Recommendations = ({
               </Alert>
             ) : (
               <RecommendationsList
-                type="form"
                 recommendations={recommendations}
-                edit={{
-                  onClick: recommendation => {
-                    // Set form field values for editing
-                    reset({
-                      ...recommendation,
-                      // Revert link strings to object for form array field
-                      links: recommendation.links.map(link => ({ link }))
-                    });
+                trbRequestId={trbRequestId}
+                setReorderError={error =>
+                  setFormAlert(error ? { type: 'error', message: error } : null)
+                }
+                edit={recommendation => {
+                  // Set form field values for editing
+                  reset({
+                    ...recommendation,
+                    // Revert link strings to object for form array field
+                    links: recommendation.links.map(link => ({ link }))
+                  });
 
-                    history.push(
-                      `/trb/${trbRequestId}/advice/recommendations/form`
-                    );
-                  }
+                  history.push(
+                    `/trb/${trbRequestId}/advice/recommendations/form`
+                  );
                 }}
-                remove={{
-                  onClick: recommendation =>
-                    remove({ variables: { id: recommendation.id } })
-                      .then(() => {
-                        setFormAlert({
-                          type: 'success',
-                          message: t('adviceLetterForm.removeSuccess', {
-                            action: 'removing',
-                            type: 'recommendation'
-                          })
-                        });
-                      })
-                      .catch(() =>
-                        setFormAlert({
-                          type: 'error',
-                          message: t('adviceLetterForm.error', {
-                            action: 'removing',
-                            type: 'recommendation'
-                          })
+                remove={recommendation =>
+                  remove({ variables: { id: recommendation.id } })
+                    .then(() => {
+                      setFormAlert({
+                        type: 'success',
+                        message: t('adviceLetterForm.removeSuccess', {
+                          action: 'removing',
+                          type: 'recommendation'
                         })
-                      )
-                }}
+                      });
+                    })
+                    .catch(() =>
+                      setFormAlert({
+                        type: 'error',
+                        message: t('adviceLetterForm.error', {
+                          action: 'removing',
+                          type: 'recommendation'
+                        })
+                      })
+                    )
+                }
               />
             )
           }
@@ -162,6 +163,7 @@ const Recommendations = ({
             back={{
               outline: true,
               onClick: () => {
+                setFormAlert(null);
                 history.push(`/trb/${trbRequestId}/advice/summary`);
               }
             }}
@@ -178,6 +180,7 @@ const Recommendations = ({
                 ) {
                   setStepsCompleted([...stepsCompleted, 'recommendations']);
                 }
+                setFormAlert(null);
                 history.push(`/trb/${trbRequestId}/advice/next-steps`);
               },
               outline: !hasRecommendations

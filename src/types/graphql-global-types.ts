@@ -1127,6 +1127,11 @@ export interface UpdateTRBAdviceLetterRecommendationInput {
   links?: string[] | null;
 }
 
+export interface UpdateTRBAdviceLetterRecommendationOrderInput {
+  trbRequestId: UUID;
+  newOrder: UUID[];
+}
+
 /**
  * Represents an EUA user who is included as an attendee for a TRB request
  */

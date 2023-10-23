@@ -386,6 +386,13 @@ export const adviceLetter: NonNullable<
       title: 'Recommendation 2',
       recommendation: 'This is the recommendation text',
       links: ['easi.cms.gov', 'cms.gov']
+    },
+    {
+      __typename: 'TRBAdviceLetterRecommendation',
+      id: 'e73fefbd-0d1a-4345-a217-2ce1ebe64d4f',
+      title: 'Recommendation 3',
+      recommendation: 'This is the recommendation text',
+      links: []
     }
   ],
   author: {
