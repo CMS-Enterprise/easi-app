@@ -1,23 +1,44 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
+import selectEvent from 'react-select-event';
 import { MockedProvider } from '@apollo/client/testing';
-import { act, render } from '@testing-library/react';
+import {
+  act,
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 
 import {
+  adviceLetter,
   getTRBRequestAttendeesQuery,
   getTrbRequestSummaryQuery,
   requester
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
+import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
+import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
 import {
   CreateTrbAdminNote as CreateTrbAdminNoteType,
   CreateTrbAdminNoteVariables
 } from 'queries/types/CreateTrbAdminNote';
-import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+import {
+  GetTrbRecommendations,
+  GetTrbRecommendationsVariables
+} from 'queries/types/GetTrbRecommendations';
+import {
+  GetTrbRequestDocuments,
+  GetTrbRequestDocumentsVariables
+} from 'queries/types/GetTrbRequestDocuments';
+import {
+  TRBAdminNoteCategory,
+  TRBDocumentCommonType,
+  TRBRequestDocumentStatus
+} from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
@@ -26,6 +47,31 @@ import TRBRequestInfoWrapper from '../RequestContext';
 import AdminHome from '..';
 
 import AddNote from '.';
+
+const { recommendations } = adviceLetter;
+
+const getTrbRecommendationsQuery: MockedQuery<
+  GetTrbRecommendations,
+  GetTrbRecommendationsVariables
+> = {
+  request: {
+    query: GetTrbRecommendationsQuery,
+    variables: {
+      id: mockTrbRequestId
+    }
+  },
+  result: {
+    data: {
+      trbRequest: {
+        __typename: 'TRBRequest',
+        adviceLetter: {
+          __typename: 'TRBAdviceLetter',
+          recommendations
+        }
+      }
+    }
+  }
+};
 
 const createTrbAdminNoteQuery: MockedQuery<
   CreateTrbAdminNoteType,
@@ -62,10 +108,125 @@ const createTrbAdminNoteQuery: MockedQuery<
   }
 };
 
+const documents: GetTrbRequestDocuments['trbRequest']['documents'] = [
+  {
+    __typename: 'TRBRequestDocument',
+    fileName: 'documentOne.pdf',
+    id: '9339ab0b-ef94-4d22-be9b-d40aa7f42e7e',
+    documentType: {
+      __typename: 'TRBRequestDocumentType',
+      commonType: TRBDocumentCommonType.BUSINESS_CASE,
+      otherTypeDescription: null
+    },
+    status: TRBRequestDocumentStatus.AVAILABLE,
+    uploadedAt: ''
+  },
+  {
+    __typename: 'TRBRequestDocument',
+    fileName: 'documentTwo.pdf',
+    id: 'a2229d41-7f80-4fa6-a08c-cf69e5275580',
+    documentType: {
+      __typename: 'TRBRequestDocumentType',
+      commonType: TRBDocumentCommonType.ARCHITECTURE_DIAGRAM,
+      otherTypeDescription: null
+    },
+    status: TRBRequestDocumentStatus.AVAILABLE,
+    uploadedAt: ''
+  }
+];
+
+const getTrbRequestDocumentsQuery: MockedQuery<
+  GetTrbRequestDocuments,
+  GetTrbRequestDocumentsVariables
+> = {
+  request: {
+    query: GetTrbRequestDocumentsQuery,
+    variables: { id: mockTrbRequestId }
+  },
+  result: {
+    data: {
+      trbRequest: {
+        __typename: 'TRBRequest',
+        id: mockTrbRequestId,
+        documents
+      }
+    }
+  }
+};
+
 describe('Trb Admin Notes: Add Note', () => {
   Element.prototype.scrollIntoView = vi.fn();
 
   const store = easiMockStore();
+
+  it('renders conditional category fields', async () => {
+    render(
+      <MockedProvider
+        defaultOptions={{
+          watchQuery: { fetchPolicy: 'no-cache' },
+          query: { fetchPolicy: 'no-cache' }
+        }}
+        mocks={[getTrbRequestDocumentsQuery, getTrbRecommendationsQuery]}
+      >
+        <MemoryRouter
+          initialEntries={[`/trb/${mockTrbRequestId}/notes/add-note`]}
+        >
+          <TRBRequestInfoWrapper>
+            <MessageProvider>
+              <Route exact path="/trb/:id/notes/add-note">
+                <AddNote />
+              </Route>
+            </MessageProvider>
+          </TRBRequestInfoWrapper>
+        </MemoryRouter>
+      </MockedProvider>
+    );
+
+    const categorySelect = screen.getByRole('combobox', {
+      name: 'What is this note about? *'
+    });
+
+    /* Initial request form */
+
+    userEvent.selectOptions(categorySelect, ['Initial request form']);
+
+    expect(screen.getByText('Which section?'));
+    expect(screen.getByRole('checkbox', { name: 'Basic request details' }));
+    expect(screen.getByRole('checkbox', { name: 'Subject areas' }));
+    expect(screen.getByRole('checkbox', { name: 'Attendees' }));
+
+    /* Supporting documents */
+
+    userEvent.selectOptions(categorySelect, ['Supporting documents']);
+    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
+
+    const documentSelect = screen.getByRole('combobox', {
+      name: 'Which document?'
+    });
+
+    selectEvent.openMenu(documentSelect);
+    expect(screen.getByRole('checkbox', { name: documents[0].fileName }));
+    expect(screen.getByRole('checkbox', { name: documents[1].fileName }));
+
+    /* Advice letter */
+
+    userEvent.selectOptions(categorySelect, ['Advice letter']);
+    const adviceLetterSectionSelect = screen.getByRole('combobox', {
+      name: 'Which section?'
+    });
+
+    selectEvent.openMenu(adviceLetterSectionSelect);
+    expect(
+      screen.getByRole('checkbox', {
+        name: `Recommendation (${recommendations[0].title})`
+      })
+    );
+    expect(
+      screen.getByRole('checkbox', {
+        name: `Recommendation (${recommendations[1].title})`
+      })
+    );
+  });
 
   it('submits successfully ', async () => {
     await act(async () => {

@@ -347,7 +347,7 @@ const AddNote = ({
                       <>
                         <MultiSelect
                           {...field}
-                          id={field.name}
+                          inputId={field.name}
                           selectedLabel={t('notes.labels.selectedDocuments')}
                           disabled={documents.length === 0}
                           options={documents.map(doc => ({
@@ -385,7 +385,7 @@ const AddNote = ({
                     ) : (
                       <MultiSelect
                         {...field}
-                        id={field.name}
+                        inputId={field.name}
                         selectedLabel={t('notes.labels.selectedSections')}
                         options={[
                           {

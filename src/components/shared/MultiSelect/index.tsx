@@ -24,6 +24,7 @@ const Option = (props: OptionProps<MultiSelectOptionProps, true>) => {
   return (
     <div
       {...innerProps}
+      id={`${innerProps.id}_container`}
       ref={innerRef}
       className={classNames('usa-combo-box__list-option', {
         'usa-combo-box__list-option--focused': isFocused
