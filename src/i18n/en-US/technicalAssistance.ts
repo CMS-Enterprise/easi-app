@@ -219,6 +219,10 @@ const technicalAssistance = {
     addAnotherRecommendation: 'Add another recommendation',
     noRecommendations:
       'No recommendations have been added yet. Use the button above to add one, or click next if you have no recommendations to add.',
+    reorderRecommendations:
+      'If you have two or more recommendations, you can use arrows on the left side of each recommendation to reorder them.',
+    reorderError:
+      'There was an issue saving your recommendation. Please try again, and if the problem persists, try again later.',
     continueWithoutAdding: 'Continue without adding recommendations',
     addResourceLink: 'Add a resource link',
     addAnotherResourceLink: 'Add another resource link',
