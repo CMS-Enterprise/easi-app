@@ -1,0 +1,104 @@
+package email
+
+import (
+	"bytes"
+	"context"
+	"errors"
+	"fmt"
+	"html/template"
+	"time"
+
+	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
+)
+
+type systemIntakeChangeLCIDRetirementDateEmailParameters struct {
+	LifecycleID              string
+	LifecycleRetiresAt       string
+	LifecycleExpiresAt       string
+	LifecycleScope           template.HTML
+	LifecycleCostBaseline    string
+	DecisionNextSteps        template.HTML
+	ITGovernanceInboxAddress string
+	AdditionalInfo           template.HTML
+}
+
+func (sie systemIntakeEmails) SystemIntakeChangeLCIDRetirementDateBody(
+	lifecycleID string,
+	lifecycleRetiresAt *time.Time,
+	lifecycleExpiresAt *time.Time,
+	lifecycleScope models.HTML,
+	lifecycleCostBaseline string,
+	decisionNextSteps models.HTML,
+	additionalInfo *models.HTML,
+) (string, error) {
+	var retiresAt string
+	if lifecycleRetiresAt != nil {
+		retiresAt = lifecycleRetiresAt.Format("01/02/2006")
+	}
+	var expiresAt string
+	if lifecycleExpiresAt != nil {
+		expiresAt = lifecycleExpiresAt.Format("01/02/2006")
+	}
+	data := systemIntakeChangeLCIDRetirementDateEmailParameters{
+		LifecycleID:              lifecycleID,
+		LifecycleRetiresAt:       retiresAt,
+		LifecycleExpiresAt:       expiresAt,
+		LifecycleScope:           lifecycleScope.ToTemplate(),
+		LifecycleCostBaseline:    lifecycleCostBaseline,
+		DecisionNextSteps:        decisionNextSteps.ToTemplate(),
+		ITGovernanceInboxAddress: sie.client.config.GRTEmail.String(),
+		AdditionalInfo:           additionalInfo.ToTemplate(),
+	}
+
+	var b bytes.Buffer
+	if sie.client.templates.systemIntakeChangeLCIDRetirementDate == nil {
+		return "", errors.New("change lcid retirement date template is nil")
+	}
+	err := sie.client.templates.systemIntakeChangeLCIDRetirementDate.Execute(&b, data)
+	if err != nil {
+		return "", err
+	}
+	return b.String(), nil
+}
+
+// TODO: add date LCID was issued (EASI-3319)
+// SendChangeLCIDRetirementDateNotification notifies user-selected recipients that a system intake form needs edits
+func (sie systemIntakeEmails) SendChangeLCIDRetirementDateNotification(
+	ctx context.Context,
+	recipients models.EmailNotificationRecipients,
+	lifecycleID string,
+	lifecycleRetiresAt *time.Time,
+	lifecycleExpiresAt *time.Time,
+	lifecycleScope models.HTML,
+	lifecycleCostBaseline string,
+	decisionNextSteps models.HTML,
+	additionalInfo *models.HTML,
+) error {
+
+	subject := fmt.Sprintf("The retirement date for a Life Cycle ID (%s) has been changed", lifecycleID)
+	body, err := sie.SystemIntakeChangeLCIDRetirementDateBody(
+		lifecycleID,
+		lifecycleRetiresAt,
+		lifecycleExpiresAt,
+		lifecycleScope,
+		lifecycleCostBaseline,
+		decisionNextSteps,
+		additionalInfo,
+	)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+
+	err = sie.client.sender.Send(
+		ctx,
+		sie.client.listAllRecipients(recipients),
+		nil,
+		subject,
+		body,
+	)
+	if err != nil {
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+	}
+	return nil
+}
