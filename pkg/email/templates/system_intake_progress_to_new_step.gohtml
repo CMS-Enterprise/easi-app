@@ -4,7 +4,7 @@
 
 <p>Next step: {{.Step}}</p>
 
-{{if .Feedback}}<p>Feedback about your request: {{.Feedback}}</p>{{else}}{{end}}
+{{if .Feedback}}<p>Feedback about your request: {{.Feedback}}</p>{{end}}
 
 <p>View this request in EASi:
 <ul>
@@ -15,7 +15,7 @@
 
 If you have questions about your request, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.
 
-{{if .AdditionalInfo}}<hr><p><strong>Additional information from the Governance Team:</strong> {{.AdditionalInfo}} </p>{{else}}{{end}}
+{{if .AdditionalInfo}}<hr><p><strong>Additional information from the Governance Team:</strong></p><p>{{.AdditionalInfo}}</p>{{end}}
 <hr>
 
 <p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>

@@ -1,8 +1,15 @@
 {{template "easi_header.gohtml"}}
 
-<p>The IT Governance Request titled {{.RequestName}}{{if .SubmittedAt}}, submitted on {{.SubmittedAt}},{{end}} has been closed in EASi.</p>
+<p>The Governance Team has confirmed a Life Cycle ID (LCID) for {{.RequestName}}</p>
 
-{{if .Reason}}<p>Reason: {{.Reason}}</p>{{end}}
+<p><strong>Lifecycle ID:</strong> {{.LifecycleID}}<br>
+<strong>Expiration date:</strong> {{.LifecycleExpiresAt}}<br>
+<strong>Scope:</strong> {{.LifecycleScope}}<br>
+<strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}<br>
+<strong>Next steps:</strong> {{.DecisionNextSteps}}</p>
+
+<p>Technical Review Board (TRB) Consultation:<br>
+As a part of your next steps, the Governance Team {{.TRBRecommendation}}.</p>
 
 <p>View this closed request in EASi:
 <ul>
@@ -11,7 +18,7 @@
 <li>Others should contact {{.RequesterName}} or the Governance Team for more information about this request.</li>
 </ul></p>
 
-If you have questions about your request, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.
+If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.
 
 {{if .AdditionalInfo}}<hr><p><strong>Additional information from the Governance Team:</strong></p><p>{{.AdditionalInfo}}</p>{{end}}
 <hr>

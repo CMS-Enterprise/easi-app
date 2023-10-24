@@ -369,7 +369,13 @@ func (s *ResolverSuite) TestIssueLCID() {
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 		}
 
-		updatedIntake, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
+		updatedIntake, err := IssueLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			input,
+		)
 		s.NoError(err)
 
 		s.EqualValues(providedLCID, updatedIntake.LifecycleID.ValueOrZero())
@@ -389,7 +395,13 @@ func (s *ResolverSuite) TestIssueLCID() {
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 		}
 
-		updatedIntake, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
+		updatedIntake, err := IssueLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			input,
+		)
 		s.NoError(err)
 
 		s.NotEmpty(updatedIntake.LifecycleID.ValueOrZero())
@@ -415,7 +427,13 @@ func (s *ResolverSuite) TestIssueLCID() {
 			AdditionalInfo: &additionalInfo,
 		}
 
-		updatedIntake, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
+		updatedIntake, err := IssueLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			input,
+		)
 		s.NoError(err)
 
 		// check workflow state
@@ -459,7 +477,13 @@ func (s *ResolverSuite) TestIssueLCID() {
 
 		// check that issuing an LCID twice is not valid
 		input.NextSteps = "issuing again will work, right?" // input still refers to the same intake
-		_, err = IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, input)
+		_, err = IssueLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			input,
+		)
 		s.Error(err)
 	})
 }
@@ -1026,9 +1050,14 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
 		s.NoError(err)
-		_, err2 := UpdateLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeUpdateLCIDInput{
-			SystemIntakeID: intakeNoLCID.ID,
-		})
+		_, err2 := UpdateLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			model.SystemIntakeUpdateLCIDInput{
+				SystemIntakeID: intakeNoLCID.ID,
+			})
 		s.Error(err2)
 
 	})
@@ -1047,12 +1076,17 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 		additionalInfo := models.HTMLPointer("My test info")
 		costBaseline := "the original costBaseline"
 
-		updatedIntakeLCID, err := UpdateLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeUpdateLCIDInput{
-			SystemIntakeID: intakeWLCID.ID,
-			Scope:          scope,
-			AdditionalInfo: additionalInfo,
-			CostBaseline:   &costBaseline,
-		})
+		updatedIntakeLCID, err := UpdateLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			model.SystemIntakeUpdateLCIDInput{
+				SystemIntakeID: intakeWLCID.ID,
+				Scope:          scope,
+				AdditionalInfo: additionalInfo,
+				CostBaseline:   &costBaseline,
+			})
 		s.NoError(err)
 		s.EqualValues(scope, updatedIntakeLCID.LifecycleScope)
 		s.EqualValues(null.StringFrom(costBaseline), updatedIntakeLCID.LifecycleCostBaseline)
@@ -1076,12 +1110,17 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 
 			updatedScope := models.HTMLPointer("A really great new scope")
 			additionalInfoUpdate := models.HTMLPointer("My feedback for second update")
-			secondUpdateIntake, err := UpdateLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeUpdateLCIDInput{
-				SystemIntakeID: updatedIntakeLCID.ID,
-				Scope:          updatedScope,
-				AdditionalInfo: additionalInfoUpdate,
-				AdminNote:      &adminNote,
-			})
+			secondUpdateIntake, err := UpdateLCID(
+				s.testConfigs.Context,
+				s.testConfigs.Store,
+				s.testConfigs.EmailClient,
+				s.fetchUserInfoStub,
+				model.SystemIntakeUpdateLCIDInput{
+					SystemIntakeID: updatedIntakeLCID.ID,
+					Scope:          updatedScope,
+					AdditionalInfo: additionalInfoUpdate,
+					AdminNote:      &adminNote,
+				})
 			s.NoError(err)
 			s.EqualValues(updatedScope, secondUpdateIntake.LifecycleScope)
 			s.EqualValues(null.StringFrom(costBaseline), secondUpdateIntake.LifecycleCostBaseline) // This should not be updated since it wasn't included
@@ -1115,9 +1154,14 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 			Step:        models.SystemIntakeStepINITIALFORM,
 		})
 		s.NoError(err)
-		_, err2 := ConfirmLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeConfirmLCIDInput{
-			SystemIntakeID: intakeNoLCID.ID,
-		})
+		_, err2 := ConfirmLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			model.SystemIntakeConfirmLCIDInput{
+				SystemIntakeID: intakeNoLCID.ID,
+			})
 		s.Error(err2)
 
 	})
@@ -1139,15 +1183,20 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 		nextSteps := models.HTML("My next steps")
 		trbFollowUp := models.TRBFRNotRecommended
 
-		confirmedIntakeLCID, err := ConfirmLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeConfirmLCIDInput{
-			SystemIntakeID: intakeWLCID.ID,
-			ExpiresAt:      expiresAt,
-			Scope:          scope,
-			NextSteps:      nextSteps,
-			TrbFollowUp:    trbFollowUp,
-			AdditionalInfo: additionalInfo,
-			CostBaseline:   &costBaseline,
-		})
+		confirmedIntakeLCID, err := ConfirmLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			model.SystemIntakeConfirmLCIDInput{
+				SystemIntakeID: intakeWLCID.ID,
+				ExpiresAt:      expiresAt,
+				Scope:          scope,
+				NextSteps:      nextSteps,
+				TrbFollowUp:    trbFollowUp,
+				AdditionalInfo: additionalInfo,
+				CostBaseline:   &costBaseline,
+			})
 		s.NoError(err)
 		s.EqualValues(&scope, confirmedIntakeLCID.LifecycleScope)
 		s.EqualValues(null.StringFrom(costBaseline), confirmedIntakeLCID.LifecycleCostBaseline)
@@ -1175,15 +1224,20 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 			nextSteps := models.HTML("My next steps")
 			trbFollowUp := models.TRBFRNotRecommended
 
-			secondconfirmIntake, err := ConfirmLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, model.SystemIntakeConfirmLCIDInput{
-				SystemIntakeID: confirmedIntakeLCID.ID,
-				ExpiresAt:      expiresAt,
-				Scope:          confirmedScope,
-				NextSteps:      nextSteps,
-				TrbFollowUp:    trbFollowUp,
-				AdditionalInfo: additionalInfoconfirm,
-				AdminNote:      &adminNote,
-			})
+			secondconfirmIntake, err := ConfirmLCID(
+				s.testConfigs.Context,
+				s.testConfigs.Store,
+				s.testConfigs.EmailClient,
+				s.fetchUserInfoStub,
+				model.SystemIntakeConfirmLCIDInput{
+					SystemIntakeID: confirmedIntakeLCID.ID,
+					ExpiresAt:      expiresAt,
+					Scope:          confirmedScope,
+					NextSteps:      nextSteps,
+					TrbFollowUp:    trbFollowUp,
+					AdditionalInfo: additionalInfoconfirm,
+					AdminNote:      &adminNote,
+				})
 			s.NoError(err)
 			s.EqualValues(&confirmedScope, secondconfirmIntake.LifecycleScope)
 			s.EqualValues(null.StringFrom(costBaseline), secondconfirmIntake.LifecycleCostBaseline) // This should not be confirmd since it wasn't included
@@ -1220,7 +1274,13 @@ func (s *ResolverSuite) TestExpireLCID() {
 			NextSteps:      "test next steps after issuing LCID, before expiring",
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 		}
-		updatedIntake, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, issueLCIDInput)
+		updatedIntake, err := IssueLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			issueLCIDInput,
+		)
 		s.NoError(err)
 
 		// expire the LCID
@@ -1235,7 +1295,13 @@ func (s *ResolverSuite) TestExpireLCID() {
 			AdditionalInfo: models.HTMLPointer("test additional info for expiring LCID"),
 		}
 
-		expiredIntake, err := ExpireLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, expireLCIDInput)
+		expiredIntake, err := ExpireLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			expireLCIDInput,
+		)
 		s.NoError(err)
 
 		// check calculated LCID status
@@ -1285,7 +1351,13 @@ func (s *ResolverSuite) TestRetireLCID() {
 			NextSteps:      "test next steps after issuing LCID, before expiring",
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 		}
-		updatedIntake, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, issueLCIDInput)
+		updatedIntake, err := IssueLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			issueLCIDInput,
+		)
 		s.NoError(err)
 
 		// retire the LCID
@@ -1300,7 +1372,13 @@ func (s *ResolverSuite) TestRetireLCID() {
 			AdditionalInfo: models.HTMLPointer("test additional info for retiring LCID"),
 		}
 
-		retiredIntake, err := RetireLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, retireLCIDInput)
+		retiredIntake, err := RetireLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			retireLCIDInput,
+		)
 		s.NoError(err)
 
 		// check calculated LCID status
@@ -1346,7 +1424,13 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 			NextSteps:      "test next steps after issuing LCID, before retiring",
 			TrbFollowUp:    models.TRBFRStronglyRecommended,
 		}
-		intakeWithLCID, err := IssueLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, issueLCIDInput)
+		intakeWithLCID, err := IssueLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			issueLCIDInput,
+		)
 		s.NoError(err)
 
 		// retire the LCID
@@ -1355,7 +1439,13 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 			SystemIntakeID: intakeWithLCID.ID,
 			RetiresAt:      originalRetirementDate,
 		}
-		retiredIntake, err := RetireLCID(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, retireLCIDInput)
+		retiredIntake, err := RetireLCID(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			retireLCIDInput,
+		)
 		s.NoError(err)
 
 		// change the LCID's retirement date
@@ -1369,7 +1459,13 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 			AdditionalInfo: models.HTMLPointer("test additional info for changing LCID retirement date"),
 		}
 
-		lcidWithUpdatedRetirementDate, err := ChangeLCIDRetirementDate(s.testConfigs.Context, s.testConfigs.Store, s.fetchUserInfoStub, changeRetirementDateInput)
+		lcidWithUpdatedRetirementDate, err := ChangeLCIDRetirementDate(
+			s.testConfigs.Context,
+			s.testConfigs.Store,
+			s.testConfigs.EmailClient,
+			s.fetchUserInfoStub,
+			changeRetirementDateInput,
+		)
 		s.NoError(err)
 
 		// check retirement date
