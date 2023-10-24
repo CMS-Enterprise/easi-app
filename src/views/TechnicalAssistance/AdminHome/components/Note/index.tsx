@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import { GetTrbAdminNotes_trbRequest_adminNotes as NoteType } from 'queries/types/GetTrbAdminNotes';
 import {
@@ -13,9 +14,11 @@ import { formatDateLocal } from 'utils/date';
 
 type NoteProps = {
   note: NoteType;
+  className?: string;
+  border?: boolean;
 };
 
-const Notes = ({ note }: NoteProps) => {
+const Note = ({ note, className, border = true }: NoteProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   const { categorySpecificData } = note;
@@ -82,7 +85,13 @@ const Notes = ({ note }: NoteProps) => {
   };
 
   return (
-    <dl className="grid-row margin-bottom-3 margin-top-0 padding-bottom-3 border-bottom-1px border-base-light line-height-body-5">
+    <dl
+      className={classNames(
+        'grid-row margin-bottom-3 margin-top-0 line-height-body-5',
+        { 'border-bottom-1px border-base-light padding-bottom-3': border },
+        className
+      )}
+    >
       <Grid desktop={{ col: 6 }} className="margin-bottom-2">
         <dt className="text-bold">{t('notes.date')}</dt>
         <dd className="margin-left-0">
@@ -108,4 +117,4 @@ const Notes = ({ note }: NoteProps) => {
   );
 };
 
-export default Notes;
+export default Note;

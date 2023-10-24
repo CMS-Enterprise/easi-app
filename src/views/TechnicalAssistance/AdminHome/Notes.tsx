@@ -119,9 +119,17 @@ const Notes = ({
               return a.createdAt < b.createdAt ? 1 : -1;
             })
             .filter((note, index) => index < noteCount)
-            .map(note => (
-              <Note note={note} key={note.id} />
-            ))}
+            .map((note, index, array) => {
+              const isLastNote = index === array.length - 1;
+              return (
+                <Note
+                  note={note}
+                  border={!isLastNote}
+                  key={note.id}
+                  {...(isLastNote ? { className: 'margin-bottom-0' } : {})}
+                />
+              );
+            })}
 
           {notes.length > 5 && !(noteCount > notes.length) && (
             <Button
