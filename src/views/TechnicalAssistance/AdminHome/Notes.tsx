@@ -134,7 +134,7 @@ const Notes = ({
           {notes.length > 5 && !(noteCount > notes.length) && (
             <Button
               type="button"
-              className="usa-button usa-button--unstyled"
+              className="usa-button usa-button--unstyled margin-top-3"
               onClick={() => {
                 setNoteCount(noteCount + 5);
               }}
