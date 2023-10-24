@@ -50,6 +50,15 @@ import AddNote from '.';
 
 const { recommendations } = adviceLetter;
 
+/** TODO EASI-3467: Remove with `trbAdminNoteUpdates` flag */
+vi.mock('launchdarkly-react-client-sdk', () => ({
+  useFlags: () => {
+    return {
+      trbAdminNoteUpdates: true
+    };
+  }
+}));
+
 const getTrbRecommendationsQuery: MockedQuery<
   GetTrbRecommendations,
   GetTrbRecommendationsVariables

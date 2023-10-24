@@ -461,7 +461,7 @@ const AddNote = ({
 };
 
 /**
- * TODO EASI-3467: remove export with feature flag when flag is removed
+ * TODO EASI-3467: update export when `trbAdminNoteUpdates` feature flag is removed
  */
 export default (props: AddNoteProps) => {
   const flags = useFlags();

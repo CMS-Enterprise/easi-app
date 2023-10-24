@@ -114,7 +114,7 @@ const Note = ({ note, className, border = true }: NoteProps) => {
         <dt className="text-bold">{t('notes.about')}</dt>
         <dd className="margin-left-0">
           {
-            // TODO EASI-3467: Remove conditional logic when feature flag is removed
+            // TODO EASI-3467: Remove conditional logic with `trbAdminNoteUpdates` flag
             flags.trbAdminNoteUpdates ? categoryString() : categoryLabel
           }
         </dd>
