@@ -48,7 +48,7 @@ func (s *EmailTestSuite) TestIntakeChangeLCIDRetirementDateNotification() {
 
 <span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
 
-<p>The Governance Team has updated the retirement data for a previously-issued Life Cycle ID (LCID).</p>
+<p>The Governance Team has updated the retirement date for a previously-issued Life Cycle ID (LCID).</p>
 
 <p>New retirement date: %s</p>
 
@@ -97,7 +97,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 
 <span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
 
-<p>The Governance Team has updated the retirement data for a previously-issued Life Cycle ID (LCID).</p>
+<p>The Governance Team has updated the retirement date for a previously-issued Life Cycle ID (LCID).</p>
 
 <p>New retirement date: %s</p>
 
