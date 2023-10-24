@@ -172,6 +172,7 @@ const AddNote = ({
       )}
 
       <Form
+        id="trbAddNote"
         onSubmit={submit}
         className={classNames('maxw-full', {
           'desktop:grid-col-6': !setModalView
