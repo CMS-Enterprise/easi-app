@@ -266,6 +266,7 @@ func NewUpdateLifecycleFields(
 		existing.UpdatedAt = &updatedTime
 		existing.LifecycleID = intake.LifecycleID
 		existing.LifecycleExpiresAt = intake.LifecycleExpiresAt
+		existing.LifecycleIssuedAt = &updatedTime
 		existing.LifecycleScope = intake.LifecycleScope
 		existing.DecisionNextSteps = intake.DecisionNextSteps
 		existing.LifecycleCostBaseline = intake.LifecycleCostBaseline
