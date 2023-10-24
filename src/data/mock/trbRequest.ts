@@ -426,10 +426,9 @@ export const getTrbAdviceLetterQuery: MockedQuery<
   }
 };
 
-export const getTrbAdminNotesQuery: MockedQuery<
-  GetTrbAdminNotes,
-  GetTrbAdminNotesVariables
-> = {
+export const getTrbAdminNotesQuery = (
+  notes: GetTrbAdminNotes['trbRequest']['adminNotes'] = adminNotes
+): MockedQuery<GetTrbAdminNotes, GetTrbAdminNotesVariables> => ({
   request: {
     query: GetTrbAdminNotesQuery,
     variables: {
@@ -441,11 +440,11 @@ export const getTrbAdminNotesQuery: MockedQuery<
       trbRequest: {
         __typename: 'TRBRequest',
         id: trbRequestId,
-        adminNotes
+        adminNotes: notes
       }
     }
   }
-};
+});
 
 export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
   {
