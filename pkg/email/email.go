@@ -69,6 +69,12 @@ type templates struct {
 	systemIntakeProgressToNewStep              templateCaller
 	systemIntakeNotITGovRequest                templateCaller
 	systemIntakeNotApproved                    templateCaller
+	systemIntakeIssueLCID                      templateCaller
+	systemIntakeConfirmLCID                    templateCaller
+	systemIntakeRetireLCID                     templateCaller
+	systemIntakeExpireLCID                     templateCaller
+	systemIntakeUpdateLCID                     templateCaller
+	systemIntakeChangeLCIDRetirementDate       templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -355,6 +361,48 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(systemIntakeNotApprovedTemplateName)
 	}
 	appTemplates.systemIntakeNotApproved = systemIntakeNotApproved
+
+	systemIntakeIssueLCIDTemplateName := "system_intake_issue_lcid.gohtml"
+	systemIntakeIssueLCID := rawTemplates.Lookup(systemIntakeIssueLCIDTemplateName)
+	if systemIntakeIssueLCID == nil {
+		return Client{}, templateError(systemIntakeIssueLCIDTemplateName)
+	}
+	appTemplates.systemIntakeIssueLCID = systemIntakeIssueLCID
+
+	systemIntakeConfirmLCIDTemplateName := "system_intake_confirm_lcid.gohtml"
+	systemIntakeConfirmLCID := rawTemplates.Lookup(systemIntakeConfirmLCIDTemplateName)
+	if systemIntakeConfirmLCID == nil {
+		return Client{}, templateError(systemIntakeConfirmLCIDTemplateName)
+	}
+	appTemplates.systemIntakeConfirmLCID = systemIntakeConfirmLCID
+
+	systemIntakeRetireLCIDTemplateName := "system_intake_retire_lcid.gohtml"
+	systemIntakeRetireLCID := rawTemplates.Lookup(systemIntakeRetireLCIDTemplateName)
+	if systemIntakeRetireLCID == nil {
+		return Client{}, templateError(systemIntakeRetireLCIDTemplateName)
+	}
+	appTemplates.systemIntakeRetireLCID = systemIntakeRetireLCID
+
+	systemIntakeExpireLCIDTemplateName := "system_intake_expire_lcid.gohtml"
+	systemIntakeExpireLCID := rawTemplates.Lookup(systemIntakeExpireLCIDTemplateName)
+	if systemIntakeExpireLCID == nil {
+		return Client{}, templateError(systemIntakeExpireLCIDTemplateName)
+	}
+	appTemplates.systemIntakeExpireLCID = systemIntakeExpireLCID
+
+	systemIntakeUpdateLCIDTemplateName := "system_intake_update_lcid.gohtml"
+	systemIntakeUpdateLCID := rawTemplates.Lookup(systemIntakeUpdateLCIDTemplateName)
+	if systemIntakeUpdateLCID == nil {
+		return Client{}, templateError(systemIntakeUpdateLCIDTemplateName)
+	}
+	appTemplates.systemIntakeUpdateLCID = systemIntakeUpdateLCID
+
+	systemIntakeChangeLCIDRetirementDateTemplateName := "system_intake_change_lcid_retirement_date.gohtml"
+	systemIntakeChangeLCIDRetirementDate := rawTemplates.Lookup(systemIntakeChangeLCIDRetirementDateTemplateName)
+	if systemIntakeChangeLCIDRetirementDate == nil {
+		return Client{}, templateError(systemIntakeChangeLCIDRetirementDateTemplateName)
+	}
+	appTemplates.systemIntakeChangeLCIDRetirementDate = systemIntakeChangeLCIDRetirementDate
 
 	client := Client{
 		config:    config,
