@@ -4,6 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { GetTrbAdminNotes_trbRequest_adminNotes as NoteType } from 'queries/types/GetTrbAdminNotes';
 import {
@@ -20,8 +21,11 @@ type NoteProps = {
 
 const Note = ({ note, className, border = true }: NoteProps) => {
   const { t } = useTranslation('technicalAssistance');
+  const flags = useFlags();
 
-  const { categorySpecificData } = note;
+  const { categorySpecificData, category } = note;
+
+  const categoryLabel = t(`notes.categories.${category}`);
 
   /** Converts initial request form category data into string */
   const initialRequestFormCategory = ({
@@ -55,8 +59,6 @@ const Note = ({ note, className, border = true }: NoteProps) => {
 
   /** Returns note category label with category specific data as string */
   const categoryString = () => {
-    const categoryLabel = t(`notes.categories.${note.category}`);
-
     /** Category specific data converted to string */
     let categorySpecificDataString: string | undefined;
 
@@ -110,7 +112,12 @@ const Note = ({ note, className, border = true }: NoteProps) => {
         className="bg-base-lightest padding-x-3 padding-y-205"
       >
         <dt className="text-bold">{t('notes.about')}</dt>
-        <dd className="margin-left-0">{categoryString()}</dd>
+        <dd className="margin-left-0">
+          {
+            // TODO EASI-3467: Remove conditional logic when feature flag is removed
+            flags.trbAdminNoteUpdates ? categoryString() : categoryLabel
+          }
+        </dd>
 
         <dd className="margin-left-0 margin-top-2">{note.noteText}</dd>
       </Grid>
