@@ -72,27 +72,25 @@ const InternalReview = ({
         adviceLetter={adviceLetter}
         className="margin-top-5 margin-bottom-4"
         recommendationActions={{
-          edit: {
-            onClick: recommendation =>
-              history.push(`/trb/${trbRequestId}/advice/recommendations/form`, {
-                recommendation: {
-                  ...recommendation,
-                  links: recommendation.links.map(link => ({ link }))
-                }
-              })
-          },
-          remove: {
-            onClick: recommendation =>
-              remove({ variables: { id: recommendation.id } }).catch(() =>
-                setFormAlert({
-                  type: 'error',
-                  message: t('adviceLetterForm.error', {
-                    action: 'removing',
-                    type: 'recommendation'
-                  })
+          setReorderError: error =>
+            setFormAlert(error ? { type: 'error', message: error } : null),
+          edit: recommendation =>
+            history.push(`/trb/${trbRequestId}/advice/recommendations/form`, {
+              recommendation: {
+                ...recommendation,
+                links: recommendation.links.map(link => ({ link }))
+              }
+            }),
+          remove: recommendation =>
+            remove({ variables: { id: recommendation.id } }).catch(() =>
+              setFormAlert({
+                type: 'error',
+                message: t('adviceLetterForm.error', {
+                  action: 'removing',
+                  type: 'recommendation'
                 })
-              )
-          }
+              })
+            )
         }}
         showSectionEditLinks
       />

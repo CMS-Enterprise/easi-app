@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import {
   Button,
   Grid,
@@ -13,6 +12,7 @@ import { isEqual } from 'lodash';
 import PageLoading from 'components/PageLoading';
 import { Alert } from 'components/shared/Alert';
 import StepHeader from 'components/StepHeader';
+import useCacheQuery from 'hooks/useCacheQuery';
 import { GetTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
   GetTrbAdviceLetter,
@@ -94,7 +94,7 @@ const AdviceLetterForm = () => {
   }>();
 
   // TRB request query
-  const { data, loading } = useQuery<
+  const { data, loading } = useCacheQuery<
     GetTrbAdviceLetter,
     GetTrbAdviceLetterVariables
   >(GetTrbAdviceLetterQuery, {
