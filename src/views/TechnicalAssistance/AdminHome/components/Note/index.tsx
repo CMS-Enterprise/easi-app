@@ -86,6 +86,7 @@ const Note = ({ note, className, border = true }: NoteProps) => {
 
   return (
     <dl
+      data-testid="trb-note"
       className={classNames(
         'grid-row margin-bottom-3 margin-top-0 line-height-body-5',
         { 'border-bottom-1px border-base-light padding-bottom-3': border },

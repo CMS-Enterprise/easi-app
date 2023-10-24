@@ -1,43 +1,147 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
-import configureMockStore from 'redux-mock-store';
 
+import {
+  getTrbAdminNotesQuery,
+  getTRBRequestAttendeesQuery,
+  getTrbRequestSummaryQuery
+} from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
-import GetTrbRequestSummaryQuery from 'queries/GetTrbRequestSummaryQuery';
-import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
+import { TRBAdminNoteFragment } from 'queries/types/TRBAdminNoteFragment';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+import { formatDateLocal } from 'utils/date';
+import easiMockStore from 'utils/testing/easiMockStore';
+import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import Notes from './Notes';
 import TRBRequestInfoWrapper from './RequestContext';
 
+const adminNotes: TRBAdminNoteFragment[] = [
+  {
+    __typename: 'TRBAdminNote',
+    id: '727cd90e-216f-4037-9160-b674f0a97eb5',
+    isArchived: false,
+    category: TRBAdminNoteCategory.INITIAL_REQUEST_FORM,
+    noteText: 'Initial Request Form Note',
+    author: {
+      __typename: 'UserInfo',
+      commonName: 'Jerry Seinfeld'
+    },
+    categorySpecificData: {
+      __typename: 'TRBAdminNoteInitialRequestFormCategoryData',
+      appliesToBasicRequestDetails: true,
+      appliesToSubjectAreas: true,
+      appliesToAttendees: false
+    },
+    createdAt: '2024-03-28T13:20:37.852099Z'
+  },
+  {
+    __typename: 'TRBAdminNote',
+    id: '40970bd6-2984-475f-a879-a05ed0517843',
+    isArchived: false,
+    category: TRBAdminNoteCategory.SUPPORTING_DOCUMENTS,
+    noteText: 'Supporting Documents Note',
+    author: {
+      __typename: 'UserInfo',
+      commonName: 'Jerry Seinfeld'
+    },
+    categorySpecificData: {
+      __typename: 'TRBAdminNoteSupportingDocumentsCategoryData',
+      documents: [
+        { __typename: 'TRBRequestDocument', fileName: 'documentOne.pdf' },
+        { __typename: 'TRBRequestDocument', fileName: 'documentTwo.pdf' }
+      ]
+    },
+    createdAt: '2024-03-27T13:20:37.852099Z'
+  },
+  {
+    __typename: 'TRBAdminNote',
+    id: 'badd3c6c-86f2-40fd-af1b-4ab46c4f8c34',
+    isArchived: false,
+    category: TRBAdminNoteCategory.ADVICE_LETTER,
+    noteText: 'Advice Letter Note',
+    author: {
+      __typename: 'UserInfo',
+      commonName: 'Jerry Seinfeld'
+    },
+    categorySpecificData: {
+      __typename: 'TRBAdminNoteAdviceLetterCategoryData',
+      appliesToMeetingSummary: true,
+      appliesToNextSteps: false,
+      recommendations: [
+        {
+          __typename: 'TRBAdviceLetterRecommendation',
+          title: 'Recommendation One'
+        },
+        {
+          __typename: 'TRBAdviceLetterRecommendation',
+          title: 'Recommendation Two'
+        }
+      ]
+    },
+    createdAt: '2024-03-26T13:20:37.852099Z'
+  },
+  {
+    __typename: 'TRBAdminNote',
+    id: 'e067cfb6-59ab-44f4-893e-8f63e54ef081',
+    isArchived: false,
+    category: TRBAdminNoteCategory.GENERAL_REQUEST,
+    noteText: 'General Request Note',
+    author: {
+      __typename: 'UserInfo',
+      commonName: 'Jerry Seinfeld'
+    },
+    categorySpecificData: {
+      __typename: 'TRBAdminNoteGeneralRequestCategoryData'
+    },
+    createdAt: '2024-03-25T13:20:37.852099Z'
+  },
+  {
+    __typename: 'TRBAdminNote',
+    id: 'da4c4734-4414-4cd0-bd3d-da7b5554df0e',
+    isArchived: false,
+    category: TRBAdminNoteCategory.GENERAL_REQUEST,
+    noteText: 'General Request Note',
+    author: {
+      __typename: 'UserInfo',
+      commonName: 'Jerry Seinfeld'
+    },
+    categorySpecificData: {
+      __typename: 'TRBAdminNoteGeneralRequestCategoryData'
+    },
+    createdAt: '2024-03-24T13:20:37.852099Z'
+  },
+  {
+    __typename: 'TRBAdminNote',
+    id: 'dc1ea2b1-3868-4a11-b1ba-dd326fefa0b7',
+    isArchived: false,
+    category: TRBAdminNoteCategory.GENERAL_REQUEST,
+    noteText: 'Hidden note',
+    author: {
+      __typename: 'UserInfo',
+      commonName: 'Jerry Seinfeld'
+    },
+    categorySpecificData: {
+      __typename: 'TRBAdminNoteGeneralRequestCategoryData'
+    },
+    createdAt: '2024-03-23T13:20:37.852099Z'
+  }
+];
+
+const getTrbAdminNotes = getTrbAdminNotesQuery(adminNotes);
+
 describe('Trb Admin Notes: View Notes', () => {
   Element.prototype.scrollIntoView = vi.fn();
 
-  const mockStore = configureMockStore();
-  const store = mockStore({
-    auth: {
-      euaId: 'ABCD',
-      name: 'Jerry Seinfeld',
-      isUserSet: true,
-      groups: ['EASI_TRB_ADMIN_D']
-    }
-  });
-  const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
+  const store = easiMockStore();
 
   it('renders successfully ', async () => {
-    const {
-      getByText,
-      asFragment,
-      findByText,
-      findByRole,
-      queryByText
-    } = render(
+    const { asFragment } = render(
       <Provider store={store}>
         <VerboseMockedProvider
           defaultOptions={{
@@ -45,153 +149,16 @@ describe('Trb Admin Notes: View Notes', () => {
             query: { fetchPolicy: 'no-cache' }
           }}
           mocks={[
-            {
-              request: {
-                query: GetTrbAdminNotesQuery,
-                variables: {
-                  id: trbRequestId
-                }
-              },
-              result: {
-                data: {
-                  trbRequest: {
-                    id: trbRequestId,
-                    adminNotes: [
-                      {
-                        id: '861fa6c5-c9af-4cda-a559-0995b7b76855',
-                        isArchived: false,
-                        category: TRBAdminNoteCategory.GENERAL_REQUEST,
-                        noteText: 'My cute original note',
-                        author: {
-                          __typename: 'UserInfo',
-                          commonName: 'Jerry Seinfeld'
-                        },
-                        createdAt: '2024-03-28T13:20:37.852099Z',
-                        __typename: 'TRBAdminNote'
-                      },
-                      {
-                        id: '123123-c9af-4cda-a559-0995b7b76856',
-                        isArchived: false,
-                        category: TRBAdminNoteCategory.GENERAL_REQUEST,
-                        noteText: 'My cute note2',
-                        author: {
-                          __typename: 'UserInfo',
-                          commonName: 'Jerry Who'
-                        },
-                        createdAt: '2023-05-29T13:20:37.852099Z',
-                        __typename: 'TRBAdminNote'
-                      },
-                      {
-                        id: '345345-c9af-4cda-a559-0995b7b76857',
-                        isArchived: false,
-                        category: TRBAdminNoteCategory.GENERAL_REQUEST,
-                        noteText: 'My cute note3',
-                        author: {
-                          __typename: 'UserInfo',
-                          commonName: 'Jerry Who'
-                        },
-                        createdAt: '2023-05-29T13:20:37.852099Z',
-                        __typename: 'TRBAdminNote'
-                      },
-                      {
-                        id: '353734-c9af-4cda-a559-0995b7b76858',
-                        isArchived: false,
-                        category: TRBAdminNoteCategory.GENERAL_REQUEST,
-                        noteText: 'My cute note4',
-                        author: {
-                          __typename: 'UserInfo',
-                          commonName: 'Jerry Who'
-                        },
-                        createdAt: '2023-05-29T13:20:37.852099Z',
-                        __typename: 'TRBAdminNote'
-                      },
-                      {
-                        id: '567567-c9af-4cda-a559-0995b7b76859',
-                        isArchived: false,
-                        category: TRBAdminNoteCategory.GENERAL_REQUEST,
-                        noteText: 'My cute note5',
-                        author: {
-                          __typename: 'UserInfo',
-                          commonName: 'Jerry Who'
-                        },
-                        createdAt: '2023-05-29T13:20:37.852099Z',
-                        __typename: 'TRBAdminNote'
-                      },
-                      {
-                        id: '6789678-c9af-4cda-a559-0995b7b76850',
-                        isArchived: false,
-                        category: TRBAdminNoteCategory.GENERAL_REQUEST,
-                        noteText: 'My cute note more',
-                        author: {
-                          __typename: 'UserInfo',
-                          commonName: 'Jerry Who'
-                        },
-                        createdAt: '2021-05-29T13:20:37.852099Z',
-                        __typename: 'TRBAdminNote'
-                      }
-                    ]
-                  }
-                }
-              }
-            },
-            {
-              request: {
-                query: GetTrbRequestSummaryQuery,
-                variables: {
-                  id: trbRequestId
-                }
-              },
-              result: {
-                data: {
-                  trbRequest: {
-                    id: trbRequestId,
-                    name: 'Draft',
-                    type: 'NEED_HELP',
-                    state: 'OPEN',
-                    trbLead: null,
-                    trbLeadInfo: {
-                      commonName: 'John Doe'
-                    },
-                    createdAt: '2023-02-16T15:21:34.156885Z',
-                    taskStatuses: {
-                      formStatus: 'IN_PROGRESS',
-                      feedbackStatus: 'EDITS_REQUESTED',
-                      consultPrepStatus: 'CANNOT_START_YET',
-                      attendConsultStatus: 'CANNOT_START_YET',
-                      adviceLetterStatus: 'IN_PROGRESS',
-                      __typename: 'TRBTaskStatuses'
-                    },
-                    adminNotes: [
-                      { id: '861fa6c5-c9af-4cda-a559-0995b7b76855' }
-                    ],
-                    __typename: 'TRBRequest'
-                  }
-                }
-              }
-            },
-            {
-              request: {
-                query: GetTRBRequestAttendeesQuery,
-                variables: {
-                  id: trbRequestId
-                }
-              },
-              result: {
-                data: {
-                  trbRequest: {
-                    id: trbRequestId,
-                    attendees: []
-                  }
-                }
-              }
-            }
+            getTrbAdminNotes,
+            getTrbRequestSummaryQuery,
+            getTRBRequestAttendeesQuery
           ]}
         >
-          <MemoryRouter initialEntries={[`/trb/${trbRequestId}/notes`]}>
+          <MemoryRouter initialEntries={[`/trb/${mockTrbRequestId}/notes`]}>
             <TRBRequestInfoWrapper>
               <MessageProvider>
                 <Route exact path="/trb/:id/:activePage">
-                  <Notes trbRequestId={trbRequestId} />
+                  <Notes trbRequestId={mockTrbRequestId} />
                 </Route>
               </MessageProvider>
             </TRBRequestInfoWrapper>
@@ -200,33 +167,45 @@ describe('Trb Admin Notes: View Notes', () => {
       </Provider>
     );
 
-    getByText(i18next.t<string>('technicalAssistance:notes.description'));
+    screen.getByText(
+      i18next.t<string>('technicalAssistance:notes.description')
+    );
+
+    const notes = await screen.findAllByTestId('trb-note');
+
+    // Only 5 notes should render before "view more notes" button
+    expect(notes.length).toEqual(5);
+
+    const renderedNote = within(notes[0]);
+    const noteData = adminNotes[0];
 
     // Note component successfully passed query data and rendered
-    const submissionDate = await findByText('March 28, 2024');
-    expect(submissionDate).toBeInTheDocument();
+    expect(
+      renderedNote.getByText(
+        formatDateLocal(noteData.createdAt, 'MMMM d, yyyy')
+      )
+    ).toBeInTheDocument();
 
-    const author = await findByText('Jerry Seinfeld');
-    expect(author).toBeInTheDocument();
+    expect(
+      renderedNote.getByText(noteData.author.commonName)
+    ).toBeInTheDocument();
 
-    const noteText = await findByText('My cute original note');
-    expect(noteText).toBeInTheDocument();
+    expect(renderedNote.getByText(noteData.noteText)).toBeInTheDocument();
 
-    const noteTextMore = queryByText('My cute note more');
-    expect(noteTextMore).not.toBeInTheDocument();
+    const hiddenNote = screen.queryByText(adminNotes[5].noteText);
+    expect(hiddenNote).not.toBeInTheDocument();
 
-    const moreNotes = await findByRole('button', {
+    const moreNotes = await screen.findByRole('button', {
       name: i18next.t<string>(
         i18next.t<string>('technicalAssistance:notes.viewMore')
       )
     });
 
     userEvent.click(moreNotes);
-
     expect(moreNotes).not.toBeInTheDocument();
 
-    const noteTextMore2 = await findByText('My cute note more');
-    expect(noteTextMore2).toBeInTheDocument();
+    const hiddenNote2 = screen.queryByText(adminNotes[5].noteText);
+    expect(hiddenNote2).toBeInTheDocument();
 
     expect(asFragment()).toMatchSnapshot();
   });
