@@ -1,12 +1,80 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
-import { GetTrbAdminNotes_trbRequest_adminNotes as NoteType } from 'queries/types/GetTrbAdminNotes';
+import { TRBAdminNoteFragment } from 'queries/types/TRBAdminNoteFragment';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+import { formatDateLocal } from 'utils/date';
 
 import Note from '.';
 
-const note: NoteType = {
+const noteInitialRequestForm: TRBAdminNoteFragment = {
+  __typename: 'TRBAdminNote',
+  id: '727cd90e-216f-4037-9160-b674f0a97eb5',
+  isArchived: false,
+  category: TRBAdminNoteCategory.INITIAL_REQUEST_FORM,
+  noteText: 'Initial Request Form Note',
+  author: {
+    __typename: 'UserInfo',
+    commonName: 'Jerry Seinfeld'
+  },
+  categorySpecificData: {
+    __typename: 'TRBAdminNoteInitialRequestFormCategoryData',
+    appliesToBasicRequestDetails: true,
+    appliesToSubjectAreas: true,
+    appliesToAttendees: false
+  },
+  createdAt: '2024-03-28T13:20:37.852099Z'
+};
+
+const noteSupportingDocuments: TRBAdminNoteFragment = {
+  __typename: 'TRBAdminNote',
+  id: '40970bd6-2984-475f-a879-a05ed0517843',
+  isArchived: false,
+  category: TRBAdminNoteCategory.SUPPORTING_DOCUMENTS,
+  noteText: 'Supporting Documents Note',
+  author: {
+    __typename: 'UserInfo',
+    commonName: 'Jerry Seinfeld'
+  },
+  categorySpecificData: {
+    __typename: 'TRBAdminNoteSupportingDocumentsCategoryData',
+    documents: [
+      { __typename: 'TRBRequestDocument', fileName: 'documentOne.pdf' },
+      { __typename: 'TRBRequestDocument', fileName: 'documentTwo.pdf' }
+    ]
+  },
+  createdAt: '2024-03-27T13:20:37.852099Z'
+};
+
+const noteAdviceLetter: TRBAdminNoteFragment = {
+  __typename: 'TRBAdminNote',
+  id: 'badd3c6c-86f2-40fd-af1b-4ab46c4f8c34',
+  isArchived: false,
+  category: TRBAdminNoteCategory.ADVICE_LETTER,
+  noteText: 'Advice Letter Note',
+  author: {
+    __typename: 'UserInfo',
+    commonName: 'Jerry Seinfeld'
+  },
+  categorySpecificData: {
+    __typename: 'TRBAdminNoteAdviceLetterCategoryData',
+    appliesToMeetingSummary: true,
+    appliesToNextSteps: false,
+    recommendations: [
+      {
+        __typename: 'TRBAdviceLetterRecommendation',
+        title: 'Recommendation One'
+      },
+      {
+        __typename: 'TRBAdviceLetterRecommendation',
+        title: 'Recommendation Two'
+      }
+    ]
+  },
+  createdAt: '2024-03-26T13:20:37.852099Z'
+};
+
+const noteGeneralRequest: TRBAdminNoteFragment = {
   id: '861fa6c5-c9af-4cda-a559-0995b7b76855',
   isArchived: false,
   category: TRBAdminNoteCategory.GENERAL_REQUEST,
@@ -23,18 +91,52 @@ const note: NoteType = {
 };
 
 describe('TRB Admin Note', () => {
-  it('Renders correct note information', async () => {
-    const { findByText, asFragment } = render(<Note note={note} />);
+  it('Renders correct note information', () => {
+    const note = noteGeneralRequest;
+    const { asFragment } = render(<Note note={note} />);
 
-    const submissionDate = await findByText('March 28, 2023');
-    expect(submissionDate).toBeInTheDocument();
+    const submissionDate = formatDateLocal(note.createdAt, 'MMMM d, yyyy');
+    expect(screen.getByText(submissionDate)).toBeInTheDocument();
 
-    const author = await findByText('Jerry Seinfeld');
-    expect(author).toBeInTheDocument();
+    expect(screen.getByText(note.author.commonName)).toBeInTheDocument();
 
-    const noteText = await findByText('My cute note');
-    expect(noteText).toBeInTheDocument();
+    expect(
+      screen.getByText('General note about this request')
+    ).toBeInTheDocument();
+
+    expect(screen.getByText(note.noteText)).toBeInTheDocument();
 
     expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('Renders category specific data - initial request form', () => {
+    const note = noteInitialRequestForm;
+    render(<Note note={note} />);
+
+    expect(
+      screen.getByText(
+        'Initial request form: Basic request details, Subject areas'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('Renders category specific data - supporting documents', () => {
+    const note = noteSupportingDocuments;
+    render(<Note note={note} />);
+
+    expect(
+      screen.getByText('Supporting documents: documentOne.pdf, documentTwo.pdf')
+    ).toBeInTheDocument();
+  });
+
+  it('Renders category specific data - advice letter', () => {
+    const note = noteAdviceLetter;
+    render(<Note note={note} />);
+
+    expect(
+      screen.getByText(
+        'Advice letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)'
+      )
+    ).toBeInTheDocument();
   });
 });
