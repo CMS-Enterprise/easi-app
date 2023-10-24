@@ -43,17 +43,19 @@ import { TRBRequestContext } from '../RequestContext';
 
 import useAddNote, { AddNoteFields } from './useAddNote';
 
+type AddNoteProps = {
+  trbRequestId?: string;
+  setModalView?: React.Dispatch<React.SetStateAction<ModalViewType>>;
+  setModalMessage?: React.Dispatch<React.SetStateAction<string>>;
+  defaultSelect?: TRBAdminNoteCategory;
+};
+
 const AddNote = ({
   trbRequestId,
   setModalView, // prop used to conditionall render text/links/etc specifically for modal
   setModalMessage,
   defaultSelect
-}: {
-  trbRequestId?: string;
-  setModalView?: React.Dispatch<React.SetStateAction<ModalViewType>>;
-  setModalMessage?: React.Dispatch<React.SetStateAction<string>>;
-  defaultSelect?: TRBAdminNoteCategory;
-}) => {
+}: AddNoteProps) => {
   const { t } = useTranslation('technicalAssistance');
 
   /** Used to get request ID if `trbRequestId` is undefined */
