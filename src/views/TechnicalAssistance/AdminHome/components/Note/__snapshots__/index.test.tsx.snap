@@ -4,6 +4,7 @@ exports[`TRB Admin Note > Renders correct note information 1`] = `
 <DocumentFragment>
   <dl
     class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 border-bottom-1px border-base-light padding-bottom-3"
+    data-testid="trb-note"
   >
     <div
       class="desktop:grid-col-6 margin-bottom-2"
