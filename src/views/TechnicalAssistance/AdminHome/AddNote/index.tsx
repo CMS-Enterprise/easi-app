@@ -112,7 +112,7 @@ const AddNote = ({
       appliesToSubjectAreas: false,
       documentIDs: [],
       noteText: '',
-      ...(defaultSelect ? { category: defaultSelect } : {})
+      category: defaultSelect || ('' as TRBAdminNoteCategory)
     }
   });
 
@@ -251,7 +251,6 @@ const AddNote = ({
                     id="category"
                     data-testid="note-category"
                     {...field}
-                    defaultValue={defaultSelect || ''}
                     ref={null}
                   >
                     <option key="default-select" disabled value="">
