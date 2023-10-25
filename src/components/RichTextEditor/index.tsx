@@ -162,11 +162,16 @@ function setEditableElementProps(
  * Allow linebreak tags (p, br) from the editor and also match the tags set in toolbar items.
  */
 function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor, id: string) {
+  console.log('elid', id);
+
   const editorElement = document
     .getElementById(id)
-    ?.closest('.easi-toast easi-toast-editor div');
+    ?.closest('.easi-toast.easi-toast-editor div');
 
-  editorElement?.addEventListener('blur', () => {
+  console.log('editorElement', editorElement);
+
+  const contentHandler = () => {
+    console.log('contentHandler hit');
     const html = toastEditor.getHTML();
     // NOTE make sure to update the allowed policy on the backend when it is updated here as well
     // It is created in pkg/sanitization/html.go in createHTMLPolicy
@@ -176,10 +181,14 @@ function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor, id: string) {
     // Only set again if something if sanitized value was different,
     // which should just be on copy and paste.
     // Setting it on every change will jump the text cursor to the end of content.
+    console.log('html:', html, 'sanitized:', sanitized, html !== sanitized);
     if (html !== sanitized) {
       toastEditor.setHTML(sanitized, false);
     }
-  });
+  };
+
+  editorElement?.addEventListener('input', contentHandler);
+  editorElement?.addEventListener('paste', contentHandler);
 }
 
 const mailtoRe = /^mailto:/;
@@ -258,16 +267,20 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
     setEditableElementProps(el, props);
     initLinkPopup(el);
     showLinkUnderSelection(toast);
+
+    sanitizeHtmlOnContentChange(editor.getInstance(), props.editableProps!.id!);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // This component re-renders on content changes and loses the on change callback
   // Bind it again each time
+  /*
   useEffect(() => {
     const editor = editorRef.current;
     if (!editor || !props.editableProps?.id) return;
     sanitizeHtmlOnContentChange(editor.getInstance(), props.editableProps.id);
   }, [editorRef, props.editableProps?.id]);
+  */
 
   return (
     <div className={classNames('easi-toast easi-toast-editor', className)}>
