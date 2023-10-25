@@ -162,7 +162,7 @@ function setEditableElementProps(
  * Allow linebreak tags (p, br) from the editor and also match the tags set in toolbar items.
  */
 function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor) {
-  toastEditor.eventEmitter.listen('change', () => {
+  toastEditor.eventEmitter.listen('blur', () => {
     const html = toastEditor.getHTML();
     // NOTE make sure to update the allowed policy on the backend when it is updated here as well
     // It is created in pkg/sanitization/html.go in createHTMLPolicy
@@ -173,7 +173,7 @@ function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor) {
     // which should just be on copy and paste.
     // Setting it on every change will jump the text cursor to the end of content.
     if (html !== sanitized) {
-      toastEditor.setHTML(sanitized);
+      toastEditor.setHTML(sanitized, false);
     }
   });
 }
