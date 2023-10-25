@@ -59,7 +59,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 
 <p><u>Summary of expired Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> %s<br>
-<strong>Date Issued:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s</p>
@@ -115,7 +115,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 
 <p><u>Summary of expired Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> %s<br>
-<strong>Date Issued:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s</p>

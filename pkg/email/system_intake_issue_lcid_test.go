@@ -76,7 +76,7 @@ func (s *EmailTestSuite) TestIntakeIssueLCIDNotification() {
 <p>The Governance Team has issued a Life Cycle ID (LCID) for %s</p>
 
 <p><strong>Lifecycle ID:</strong> %s<br>
-<strong>Date issued:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s<br>
@@ -146,7 +146,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 <p>The Governance Team has issued a Life Cycle ID (LCID) for %s</p>
 
 <p><strong>Lifecycle ID:</strong> %s<br>
-<strong>Date issued:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s<br>
@@ -213,7 +213,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 <p>The Governance Team has issued a Life Cycle ID (LCID) for %s</p>
 
 <p><strong>Lifecycle ID:</strong> %s<br>
-<strong>Date issued:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s<br>
