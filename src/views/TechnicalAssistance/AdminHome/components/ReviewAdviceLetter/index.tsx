@@ -3,26 +3,26 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import { RichTextViewer } from 'components/RichTextEditor';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import { GetTrbAdviceLetter_trbRequest_adviceLetter as AdviceLetter } from 'queries/types/GetTrbAdviceLetter';
+import { TRBRecommendation } from 'queries/types/TRBRecommendation';
 import { formatDateLocal } from 'utils/date';
 
-import RecommendationsList, {
-  EditRecommendationProp,
-  RemoveRecommendationProp
-} from './RecommendationsList';
+import RecommendationsList from '../RecommendationsList';
 
 type ReviewAdviceLetterProps = {
   adviceLetter: AdviceLetter;
   trbRequestId: string;
   showSectionEditLinks?: boolean;
   recommendationActions?: {
-    edit?: EditRecommendationProp;
-    remove?: RemoveRecommendationProp;
+    edit?: (recommendation: TRBRecommendation) => void;
+    remove?: (recommendation: TRBRecommendation) => void;
+    setReorderError?: (error: string | null) => void;
   };
   showDateSent?: boolean;
   showSectionBorders?: boolean;
-  publicForm?: boolean;
+  editable?: boolean;
   className?: string;
 };
 
@@ -36,7 +36,7 @@ const ReviewAdviceLetter = ({
   recommendationActions,
   showDateSent = true,
   showSectionBorders = true,
-  publicForm = false,
+  editable = true,
   className
 }: ReviewAdviceLetterProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -79,9 +79,12 @@ const ReviewAdviceLetter = ({
         <p className="text-bold margin-top-4 margin-bottom-0">
           {t('adviceLetter.meetingSummary')}
         </p>
-        <p className="margin-top-1 line-height-body-5">
-          {adviceLetter.meetingSummary}
-        </p>
+        {adviceLetter.meetingSummary && (
+          <RichTextViewer
+            className="margin-top-1"
+            value={adviceLetter.meetingSummary}
+          />
+        )}
       </SectionWrapper>
 
       {/* Recommendations */}
@@ -108,8 +111,10 @@ const ReviewAdviceLetter = ({
             <p className="margin-top-4">{t('adviceLetter.notSpecified')}</p>
           ) : (
             <RecommendationsList
-              type={!publicForm ? 'form' : 'admin'}
               recommendations={recommendations}
+              trbRequestId={trbRequestId}
+              className="margin-top-4"
+              editable={editable}
               {...recommendationActions}
             />
           )
@@ -137,9 +142,16 @@ const ReviewAdviceLetter = ({
         <p className="text-bold margin-top-4 margin-bottom-1">
           {t('adviceLetter.nextSteps')}
         </p>
-        <p className="margin-top-1 line-height-body-5">
-          {adviceLetter.nextSteps || t('adviceLetter.notSpecified')}
-        </p>
+        {adviceLetter.nextSteps ? (
+          <RichTextViewer
+            className="margin-top-1"
+            value={adviceLetter.nextSteps}
+          />
+        ) : (
+          <p className="margin-top-1 line-height-body-5">
+            {t('adviceLetter.notSpecified')}
+          </p>
+        )}
 
         {/* Follow up */}
         <p className="text-bold margin-top-3 margin-bottom-1">

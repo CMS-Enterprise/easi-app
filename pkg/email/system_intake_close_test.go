@@ -65,7 +65,7 @@ func (s *EmailTestSuite) TestCloseIntakeRequestNotification() {
 
 If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
 
-<hr><p><strong>Additional information from the Governance Team:</strong> %s </p>
+<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
 <hr>
 
 <p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
@@ -108,7 +108,7 @@ If you have questions about your request, please contact the Governance Team at 
 
 If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
 
-<hr><p><strong>Additional information from the Governance Team:</strong> %s </p>
+<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
 <hr>
 
 <p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>

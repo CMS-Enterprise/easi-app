@@ -69,7 +69,7 @@ func (s *EmailTestSuite) TestSendProgressToNewStepNotification() {
 
 If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
 
-<hr><p><strong>Additional information from the Governance Team:</strong> %s </p>
+<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
 <hr>
 
 <p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>
@@ -115,7 +115,7 @@ If you have questions about your request, please contact the Governance Team at 
 
 If you have questions about your request, please contact the Governance Team at <a href="mailto:%s">%s</a>.
 
-<hr><p><strong>Additional information from the Governance Team:</strong> %s </p>
+<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
 <hr>
 
 <p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>

@@ -1173,6 +1173,7 @@ func (r *mutationResolver) CreateSystemIntakeActionExpireLcid(ctx context.Contex
 	intake, err := resolvers.ExpireLCID(
 		ctx,
 		r.store,
+		r.emailClient,
 		r.service.FetchUserInfo,
 		input,
 	)
@@ -1184,7 +1185,13 @@ func (r *mutationResolver) CreateSystemIntakeActionExpireLcid(ctx context.Contex
 
 // CreateSystemIntakeActionUpdateLcid is the resolver for the createSystemIntakeActionUpdateLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Context, input model.SystemIntakeUpdateLCIDInput) (*model.UpdateSystemIntakePayload, error) {
-	intake, err := resolvers.UpdateLCID(ctx, r.store, r.service.FetchUserInfo, input)
+	intake, err := resolvers.UpdateLCID(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		input,
+	)
 
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -1193,7 +1200,13 @@ func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Contex
 
 // CreateSystemIntakeActionRetireLcid is the resolver for the createSystemIntakeActionRetireLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionRetireLcid(ctx context.Context, input model.SystemIntakeRetireLCIDInput) (*model.UpdateSystemIntakePayload, error) {
-	intake, err := resolvers.RetireLCID(ctx, r.store, r.service.FetchUserInfo, input)
+	intake, err := resolvers.RetireLCID(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		input,
+	)
 
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -1202,7 +1215,13 @@ func (r *mutationResolver) CreateSystemIntakeActionRetireLcid(ctx context.Contex
 
 // CreateSystemIntakeActionChangeLCIDRetirementDate is the resolver for the createSystemIntakeActionChangeLCIDRetirementDate field.
 func (r *mutationResolver) CreateSystemIntakeActionChangeLCIDRetirementDate(ctx context.Context, input model.SystemIntakeChangeLCIDRetirementDateInput) (*model.UpdateSystemIntakePayload, error) {
-	intake, err := resolvers.ChangeLCIDRetirementDate(ctx, r.store, r.service.FetchUserInfo, input)
+	intake, err := resolvers.ChangeLCIDRetirementDate(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		input,
+	)
 
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -1211,7 +1230,13 @@ func (r *mutationResolver) CreateSystemIntakeActionChangeLCIDRetirementDate(ctx 
 
 // CreateSystemIntakeActionConfirmLcid is the resolver for the createSystemIntakeActionConfirmLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionConfirmLcid(ctx context.Context, input model.SystemIntakeConfirmLCIDInput) (*model.UpdateSystemIntakePayload, error) {
-	intake, err := resolvers.ConfirmLCID(ctx, r.store, r.service.FetchUserInfo, input)
+	intake, err := resolvers.ConfirmLCID(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		input,
+	)
 
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: intake,
@@ -1220,7 +1245,13 @@ func (r *mutationResolver) CreateSystemIntakeActionConfirmLcid(ctx context.Conte
 
 // CreateSystemIntakeActionIssueLcid is the resolver for the createSystemIntakeActionIssueLCID field.
 func (r *mutationResolver) CreateSystemIntakeActionIssueLcid(ctx context.Context, input model.SystemIntakeIssueLCIDInput) (*model.UpdateSystemIntakePayload, error) {
-	updatedIntake, err := resolvers.IssueLCID(ctx, r.store, r.service.FetchUserInfo, input)
+	updatedIntake, err := resolvers.IssueLCID(
+		ctx,
+		r.store,
+		r.emailClient,
+		r.service.FetchUserInfo,
+		input,
+	)
 
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
