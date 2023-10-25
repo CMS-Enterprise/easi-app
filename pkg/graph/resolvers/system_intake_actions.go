@@ -887,6 +887,7 @@ func UpdateLCID(
 			err = emailClient.SystemIntake.SendUpdateLCIDNotification(ctx,
 				*input.NotificationRecipients,
 				intake.LifecycleID.ValueOrZero(),
+				intake.LifecycleIssuedAt,
 				prevExpiration,
 				input.ExpiresAt,
 				prevScope,

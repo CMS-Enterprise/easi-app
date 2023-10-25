@@ -14,6 +14,7 @@ import (
 
 type systemIntakeUpdateLCIDEmailParameters struct {
 	LifecycleID               string
+	LifecycleIssuedAt         string
 	LifecycleExpiresAtPrev    string
 	LifecycleExpiresAtNew     string
 	LifecycleScopePrev        template.HTML
@@ -30,6 +31,7 @@ type systemIntakeUpdateLCIDEmailParameters struct {
 
 func (sie systemIntakeEmails) SystemIntakeUpdateLCIDBody(
 	lifecycleID string,
+	lifecycleIssuedAt *time.Time,
 	lifecycleExpiresAtPrev *time.Time,
 	lifecycleExpiresAtNew *time.Time,
 	lifecycleScopePrev *models.HTML,
@@ -51,9 +53,14 @@ func (sie systemIntakeEmails) SystemIntakeUpdateLCIDBody(
 	if lifecycleExpiresAtNew != nil {
 		expiresAtNew = lifecycleExpiresAtNew.Format("01/02/2006")
 	}
+	var issuedAt string
+	if lifecycleIssuedAt != nil {
+		issuedAt = lifecycleIssuedAt.Format("01/02/2006")
+	}
 
 	data := systemIntakeUpdateLCIDEmailParameters{
 		LifecycleID:               lifecycleID,
+		LifecycleIssuedAt:         issuedAt,
 		LifecycleExpiresAtPrev:    expiresAtPrev,
 		LifecycleExpiresAtNew:     expiresAtNew,
 		LifecycleScopePrev:        lifecycleScopePrev.ToTemplate(),
@@ -85,6 +92,7 @@ func (sie systemIntakeEmails) SendUpdateLCIDNotification(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	lifecycleID string,
+	lifecycleIssuedAt *time.Time,
 	lifecycleExpiresAtPrev *time.Time,
 	lifecycleExpiresAtNew *time.Time,
 	lifecycleScopePrev *models.HTML,
@@ -101,6 +109,7 @@ func (sie systemIntakeEmails) SendUpdateLCIDNotification(
 	subject := fmt.Sprintf("A Life Cycle ID (%s) has been updated", lifecycleID)
 	body, err := sie.SystemIntakeUpdateLCIDBody(
 		lifecycleID,
+		lifecycleIssuedAt,
 		lifecycleExpiresAtPrev,
 		lifecycleExpiresAtNew,
 		lifecycleScopePrev,
