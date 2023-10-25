@@ -3,6 +3,9 @@
 <p>The Governance Team has confirmed a Life Cycle ID (LCID) for {{.RequestName}}</p>
 
 <p><strong>Lifecycle ID:</strong> {{.LifecycleID}}<br>
+{{ if .LifecycleIssuedAt -}}
+<strong>Original date issued:</strong> {{.LifecycleIssuedAt}}<br>
+{{ end -}}
 <strong>Expiration date:</strong> {{.LifecycleExpiresAt}}<br>
 <strong>Scope:</strong> {{.LifecycleScope}}<br>
 <strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}<br>

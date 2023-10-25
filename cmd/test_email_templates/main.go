@@ -276,6 +276,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		"Butterfinger",
 		lifecycleID,
 		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*nextSteps,
