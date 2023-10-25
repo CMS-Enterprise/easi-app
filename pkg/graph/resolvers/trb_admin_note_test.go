@@ -1,6 +1,8 @@
 package resolvers
 
 import (
+	"slices"
+
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/graph/model"
@@ -145,7 +147,21 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 		s.Nil(createdNote.AppliesToMeetingSummary.Ptr())
 		s.Nil(createdNote.AppliesToNextSteps.Ptr())
 
-		// TODO - check that links to documents were created
+		// check that links to documents were created
+		fetchedDocuments, err := store.GetTRBRequestDocumentsByAdminNoteID(ctx, createdNote.ID)
+		s.NoError(err)
+
+		s.Len(fetchedDocuments, 2)
+
+		document1Fetched := slices.ContainsFunc(fetchedDocuments, func(doc *models.TRBRequestDocument) bool {
+			return doc.ID == documentID1
+		})
+		s.True(document1Fetched)
+
+		document2Fetched := slices.ContainsFunc(fetchedDocuments, func(doc *models.TRBRequestDocument) bool {
+			return doc.ID == documentID2
+		})
+		s.True(document2Fetched)
 	})
 
 	s.Run("Creating Admin Note referencing supporting documents attached to a *different* TRB request fails", func() {
@@ -291,7 +307,21 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 		s.Nil(createdNote.AppliesToSubjectAreas.Ptr())
 		s.Nil(createdNote.AppliesToAttendees.Ptr())
 
-		// TODO - check that links to recommendations were created
+		// check that links to recommendations were created
+		fetchedRecommendations, err := store.GetTRBRecommendationsByAdminNoteID(ctx, createdNote.ID)
+		s.NoError(err)
+
+		s.Len(fetchedRecommendations, 2)
+
+		recommendation1Fetched := slices.ContainsFunc(fetchedRecommendations, func(rec *models.TRBAdviceLetterRecommendation) bool {
+			return rec.ID == recommendationID1
+		})
+		s.True(recommendation1Fetched)
+
+		recommendation2Fetched := slices.ContainsFunc(fetchedRecommendations, func(rec *models.TRBAdviceLetterRecommendation) bool {
+			return rec.ID == recommendationID2
+		})
+		s.True(recommendation2Fetched)
 	})
 
 	s.Run("Creating Admin Note referencing advice letter recommendations attached to a *different* TRB request fails", func() {
