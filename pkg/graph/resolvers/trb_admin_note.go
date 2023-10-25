@@ -29,6 +29,19 @@ func CreateTRBAdminNote(ctx context.Context, store *storage.Store, trbRequestID 
 	}
 	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
 
+	// set category-specific fields to default values for that data, so the created data/SQL records a still valid
+	switch category {
+	case models.TRBAdminNoteCategoryInitialRequestForm:
+		noteToCreate.AppliesToBasicRequestDetails = null.BoolFrom(false)
+		noteToCreate.AppliesToSubjectAreas = null.BoolFrom(false)
+		noteToCreate.AppliesToAttendees = null.BoolFrom(false)
+	case models.TRBAdminNoteCategoryAdviceLetter:
+		noteToCreate.AppliesToMeetingSummary = null.BoolFrom(false)
+		noteToCreate.AppliesToNextSteps = null.BoolFrom(false)
+	case models.TRBAdminNoteCategoryGeneralRequest, models.TRBAdminNoteCategorySupportingDocuments, models.TRBAdminNoteCategoryConsultSession:
+		// intentional no-op - no fields to set
+	}
+
 	createdNote, err := store.CreateTRBAdminNote(ctx, &noteToCreate)
 	if err != nil {
 		return nil, err
