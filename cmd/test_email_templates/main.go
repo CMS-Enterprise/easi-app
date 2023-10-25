@@ -164,6 +164,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	intakeID := uuid.New()
 	lifecycleID := "123456"
 	lifecycleExpiresAt := time.Now().AddDate(30, 0, 0)
+	lifecycleIssuedAt := time.Now()
 	lifecycleRetiresAt := time.Now().AddDate(3, 0, 0)
 	lifecycleScope := models.HTMLPointer("<em>This is a scope</em>")
 	lifecycleCostBaseline := "a baseline"
@@ -290,6 +291,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		lifecycleID,
 		&lifecycleRetiresAt,
 		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		reason,
