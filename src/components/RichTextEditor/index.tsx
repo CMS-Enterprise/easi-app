@@ -270,6 +270,7 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
       <Editor
         ref={editorRef}
         usageStatistics={false}
+        autofocus={false}
         initialEditType="wysiwyg"
         hideModeSwitch
         // Match these against tags in `sanitizeHtmlOnContentChange()`
