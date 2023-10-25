@@ -16,6 +16,7 @@ type systemIntakeChangeLCIDRetirementDateEmailParameters struct {
 	LifecycleID              string
 	LifecycleRetiresAt       string
 	LifecycleExpiresAt       string
+	LifecycleIssuedAt        string
 	LifecycleScope           template.HTML
 	LifecycleCostBaseline    string
 	DecisionNextSteps        template.HTML
@@ -27,6 +28,7 @@ func (sie systemIntakeEmails) SystemIntakeChangeLCIDRetirementDateBody(
 	lifecycleID string,
 	lifecycleRetiresAt *time.Time,
 	lifecycleExpiresAt *time.Time,
+	lifecycleIssuedAt *time.Time,
 	lifecycleScope models.HTML,
 	lifecycleCostBaseline string,
 	decisionNextSteps models.HTML,
@@ -40,10 +42,15 @@ func (sie systemIntakeEmails) SystemIntakeChangeLCIDRetirementDateBody(
 	if lifecycleExpiresAt != nil {
 		expiresAt = lifecycleExpiresAt.Format("01/02/2006")
 	}
+	var issuedAt string
+	if lifecycleIssuedAt != nil {
+		issuedAt = lifecycleIssuedAt.Format("01/02/2006")
+	}
 	data := systemIntakeChangeLCIDRetirementDateEmailParameters{
 		LifecycleID:              lifecycleID,
 		LifecycleRetiresAt:       retiresAt,
 		LifecycleExpiresAt:       expiresAt,
+		LifecycleIssuedAt:        issuedAt,
 		LifecycleScope:           lifecycleScope.ToTemplate(),
 		LifecycleCostBaseline:    lifecycleCostBaseline,
 		DecisionNextSteps:        decisionNextSteps.ToTemplate(),
@@ -70,6 +77,7 @@ func (sie systemIntakeEmails) SendChangeLCIDRetirementDateNotification(
 	lifecycleID string,
 	lifecycleRetiresAt *time.Time,
 	lifecycleExpiresAt *time.Time,
+	lifecycleIssuedAt *time.Time,
 	lifecycleScope models.HTML,
 	lifecycleCostBaseline string,
 	decisionNextSteps models.HTML,
@@ -81,6 +89,7 @@ func (sie systemIntakeEmails) SendChangeLCIDRetirementDateNotification(
 		lifecycleID,
 		lifecycleRetiresAt,
 		lifecycleExpiresAt,
+		lifecycleIssuedAt,
 		lifecycleScope,
 		lifecycleCostBaseline,
 		decisionNextSteps,

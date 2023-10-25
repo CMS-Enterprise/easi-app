@@ -1369,6 +1369,7 @@ func ChangeLCIDRetirementDate(
 				intake.LifecycleID.ValueOrZero(),
 				&input.RetiresAt,
 				intake.LifecycleExpiresAt,
+				intake.LifecycleIssuedAt,
 				*intake.LifecycleScope,
 				intake.LifecycleCostBaseline.ValueOrZero(),
 				*intake.DecisionNextSteps,

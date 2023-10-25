@@ -338,6 +338,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		lifecycleID,
 		&lifecycleRetiresAt,
 		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*nextSteps,
