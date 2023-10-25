@@ -1145,6 +1145,7 @@ func ExpireLCID(
 				*input.NotificationRecipients,
 				intake.LifecycleID.ValueOrZero(),
 				intake.LifecycleExpiresAt,
+				intake.LifecycleIssuedAt,
 				*intake.LifecycleScope,
 				intake.LifecycleCostBaseline.ValueOrZero(),
 				input.Reason,

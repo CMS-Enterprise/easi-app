@@ -305,6 +305,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		emailNotificationRecipients,
 		lifecycleID,
 		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*reason,
