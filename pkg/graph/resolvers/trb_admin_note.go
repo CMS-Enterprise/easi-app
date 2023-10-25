@@ -193,14 +193,12 @@ func GetTRBAdminNotesByTRBRequestID(ctx context.Context, store *storage.Store, t
 // GetTRBAdminNoteCategorySpecificData returns the category-specific data for TRB admin notes that can be loaded from the database;
 // fields that require querying other data sources (such as documents' Status and URL fields, which require querying S3) are handled by other resolvers if they're requested
 func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Store, note *models.TRBAdminNote) (model.TRBAdminNoteCategorySpecificData, error) {
-	// TODO - do I want to split out some/all of these into private functions, especially if I add validation checks?
 	switch note.Category {
 	case models.TRBAdminNoteCategoryGeneralRequest:
 		return model.TRBAdminNoteGeneralRequestCategoryData{
 			PlaceholderField: nil,
 		}, nil
 	case models.TRBAdminNoteCategoryInitialRequestForm:
-		// TODO - validate that `note` has valid values for these fields?
 		return model.TRBAdminNoteInitialRequestFormCategoryData{
 			AppliesToBasicRequestDetails: note.AppliesToBasicRequestDetails.Bool,
 			AppliesToSubjectAreas:        note.AppliesToSubjectAreas.Bool,
@@ -219,7 +217,6 @@ func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Sto
 			PlaceholderField: nil,
 		}, nil
 	case models.TRBAdminNoteCategoryAdviceLetter:
-		// TODO - validate that `note` has valid values for AppliesTo* fields?
 		recommendations, err := store.GetTRBRecommendationsByAdminNoteID(ctx, note.ID)
 		if err != nil {
 			return nil, err
