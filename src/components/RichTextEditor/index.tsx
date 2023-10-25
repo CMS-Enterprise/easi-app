@@ -161,8 +161,12 @@ function setEditableElementProps(
  * Sanitize the html on the editor change event.
  * Allow linebreak tags (p, br) from the editor and also match the tags set in toolbar items.
  */
-function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor) {
-  toastEditor.eventEmitter.listen('blur', () => {
+function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor, id: string) {
+  const editorElement = document
+    .getElementById(id)
+    ?.closest('.easi-toast easi-toast-editor div');
+
+  editorElement?.addEventListener('blur', () => {
     const html = toastEditor.getHTML();
     // NOTE make sure to update the allowed policy on the backend when it is updated here as well
     // It is created in pkg/sanitization/html.go in createHTMLPolicy
@@ -261,9 +265,9 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
   // Bind it again each time
   useEffect(() => {
     const editor = editorRef.current;
-    if (!editor) return;
-    sanitizeHtmlOnContentChange(editor.getInstance());
-  }, [editorRef]);
+    if (!editor || !props.editableProps?.id) return;
+    sanitizeHtmlOnContentChange(editor.getInstance(), props.editableProps.id);
+  }, [editorRef, props.editableProps?.id]);
 
   return (
     <div className={classNames('easi-toast easi-toast-editor', className)}>
