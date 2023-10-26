@@ -250,6 +250,12 @@ function extractTextContent(html: string) {
     .textContent;
 }
 
+// Link attributes should match pkg/sanitization/html.go#createHTMLPolicy()
+const linkAttributes = {
+  target: '_blank',
+  rel: 'nofollow noreferrer noopener'
+};
+
 /**
  * Toast rich text editor as a RHF controlled input field.
  * Set to WYSIWYG mode only.
@@ -284,10 +290,12 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
         // Match these against tags in `sanitizeInput()`
         toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
         initialValue={field?.value}
-        linkAttributes={{
-          target: '_blank',
-          rel: 'noopener'
-        }}
+        // Noting link attributes here to reflect the html content that is
+        // stored for the field in the backend and then displayed again when rendered.
+        // `sanitizeInput()` will strip some of these attributes but it's not a significant effect,
+        // since field html values are parsed again in the backend.
+        // linkAttributes={linkAttributes}
+
         onBlur={() => {
           field?.onBlur();
         }}
@@ -339,11 +347,8 @@ export function RichTextViewer({
     >
       <Viewer
         usageStatistics={false}
-        // Setting link attributes here just to match Editor options, but it doesn't actually have an effect
-        linkAttributes={{
-          target: '_blank',
-          rel: 'noopener'
-        }}
+        // Setting link attributes in the viewer again for safety, in case backend didn't parse properly.
+        linkAttributes={linkAttributes}
         // `initialValue` does not update. Change the `key` prop so that this re-renders with `value`.
         key={value}
         initialValue={value}
