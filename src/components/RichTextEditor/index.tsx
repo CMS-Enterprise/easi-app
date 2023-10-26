@@ -279,6 +279,29 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // The toast component only takes an initial value.
+  // Relay changes passed in from the `field.value` prop to the toast api
+  // so that value property updates work as expected.
+  useEffect(() => {
+    const editor = editorRef.current;
+
+    if (
+      editor &&
+      field?.value &&
+      // Skip the update if the passed in `field.value` already matches the instance contents.
+      // Essentially makes sure this is only called when the passed value prop is updated,
+      // since changes from within the editor instance will also update `field.value`.
+      // Also prevents the cursor from jumping to the end.
+      field.value !== editor.getInstance().getHTML()
+    ) {
+      editor.getInstance().setHTML(field.value);
+    }
+
+    // Only catch changes to the field value
+    // Ignore editorRef changes because they will lead to the same dom element
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [field?.value]);
+
   return (
     <div className={classNames('easi-toast easi-toast-editor', className)}>
       <Editor
