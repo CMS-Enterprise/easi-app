@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 )
 
 // IBaseStruct is an interface that all models must implement
@@ -48,4 +49,13 @@ func (b BaseStruct) GetModifiedBy() *string {
 // GetCreatedBy implements the CreatedBy property
 func (b BaseStruct) GetCreatedBy() string {
 	return b.CreatedBy
+}
+
+// ContainsAllIDs checks if the IDs from a slice of BaseStructs contain all the given IDs
+func ContainsAllIDs[BS IBaseStruct](models []BS, ids []uuid.UUID) bool {
+	allModelIDs := lo.Map(models, func(model BS, _ int) uuid.UUID {
+		return model.GetID()
+	})
+
+	return lo.Every(allModelIDs, ids)
 }

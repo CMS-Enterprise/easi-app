@@ -7,7 +7,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
-	"github.com/samber/lo"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -94,12 +93,8 @@ func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.S
 	if err != nil {
 		return nil, err
 	}
-	allDocsOnRequestIDs := lo.Map(allDocsOnRequest, func(doc *models.TRBRequestDocument, _ int) uuid.UUID {
-		return doc.ID
-	})
 
-	areDocsFromInputAllOnRequest := lo.Every(allDocsOnRequestIDs, input.DocumentIDs)
-	if !areDocsFromInputAllOnRequest {
+	if !models.ContainsAllIDs(allDocsOnRequest, input.DocumentIDs) {
 		return nil, &apperrors.BadRequestError{
 			Err: errors.New("all documents referenced in admin note must belong to the same TRB request as the admin note"),
 		}
@@ -160,12 +155,7 @@ func CreateTRBAdminNoteAdviceLetter(ctx context.Context, store *storage.Store, i
 		return nil, err
 	}
 
-	allRecommendationsOnRequestIDs := lo.Map(allRecommendationsOnRequest, func(rec *models.TRBAdviceLetterRecommendation, _ int) uuid.UUID {
-		return rec.ID
-	})
-
-	areRecommendationsFromInputAllOnRequest := lo.Every(allRecommendationsOnRequestIDs, input.RecommendationIDs)
-	if !areRecommendationsFromInputAllOnRequest {
+	if !models.ContainsAllIDs(allRecommendationsOnRequest, input.RecommendationIDs) {
 		return nil, &apperrors.BadRequestError{
 			Err: errors.New("all recommendations referenced in admin note must belong to the same TRB request as the admin note"),
 		}
