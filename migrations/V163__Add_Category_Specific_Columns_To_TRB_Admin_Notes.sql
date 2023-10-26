@@ -1,12 +1,18 @@
 ALTER TABLE trb_admin_notes
-  -- columns for Initial Request Form category
   ADD COLUMN applies_to_basic_request_details BOOLEAN,
   ADD COLUMN applies_to_subject_areas BOOLEAN,
-  ADD COLUMN applies_to_attendees BOOLEAN,
+  ADD COLUMN applies_to_attendees BOOLEAN;
 
-  -- columns for Advice Letter category
+COMMENT ON COLUMN trb_admin_notes.applies_to_basic_request_details IS 'Used for the Initial Request Form category';
+COMMENT ON COLUMN trb_admin_notes.applies_to_subject_areas IS 'Used for the Initial Request Form category';
+COMMENT ON COLUMN trb_admin_notes.applies_to_attendees IS 'Used for the Initial Request Form category';
+
+ALTER TABLE trb_admin_notes
   ADD COLUMN applies_to_meeting_summary BOOLEAN,
   ADD COLUMN applies_to_next_steps BOOLEAN;
+
+COMMENT ON COLUMN trb_admin_notes.applies_to_meeting_summary IS 'Used for the Advice Letter category';
+COMMENT ON COLUMN trb_admin_notes.applies_to_next_steps IS 'Used for the Advice Letter category';
 
 -- populate columns for existing admin notes
 UPDATE trb_admin_notes

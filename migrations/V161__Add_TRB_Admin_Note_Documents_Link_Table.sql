@@ -13,8 +13,7 @@ CREATE TABLE trb_admin_notes_trb_request_documents_links (
 
     UNIQUE(trb_admin_note_id, trb_request_document_id),
 
-    -- these constraints check that the referenced admin notes and the referenced documents belong to the same TRB request as this record,
-    -- which ensures that the admin note and document both belong to the same TRB request
+    -- ensure that the admin note and document both belong to the same TRB request
     CONSTRAINT fk_admin_notes_have_same_request_id_as_doc_link
         FOREIGN KEY (trb_admin_note_id, trb_request_id)
         REFERENCES trb_admin_notes(id, trb_request_id),
@@ -23,3 +22,13 @@ CREATE TABLE trb_admin_notes_trb_request_documents_links (
         FOREIGN KEY (trb_request_document_id, trb_request_id)
         REFERENCES trb_request_documents(id, trb_request_id)
 );
+
+COMMENT ON COLUMN trb_admin_notes_trb_request_documents_links.trb_request_id IS 
+    'Having this column allows creating the foreign key constraints that make sure the admin notes and documents both belong to the same TRB request';
+
+COMMENT ON CONSTRAINT fk_admin_notes_have_same_request_id_as_doc_link ON trb_admin_notes_trb_request_documents_links IS
+    'This checks that the referenced admin note belongs to the same TRB request as this record';
+COMMENT ON CONSTRAINT fk_documents_have_same_request_id_as_doc_link ON trb_admin_notes_trb_request_documents_links IS
+    'This checks that the referenced document belongs to the same TRB request as this record';
+COMMENT ON TABLE trb_admin_notes_trb_request_documents_links IS
+    'The combination of the two foreign key constraints on this table ensures that for each link, the admin note and document both belong to the same TRB request as the link record, and thus both belong to the same TRB request';
