@@ -157,6 +157,13 @@ function setEditableElementProps(
   }
 }
 
+function sanitizeInput(html: string): string {
+  const sanitized = DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ol', 'ul', 'li', 'a']
+  });
+  return sanitized;
+}
+
 /**
  * Sanitize the html on the editor change event.
  * Allow linebreak tags (p, br) from the editor and also match the tags set in toolbar items.
@@ -170,9 +177,7 @@ function registerPasteEventHandler(toastEditor: ToastuiEditor, id: string) {
     const html = toastEditor.getHTML();
     // NOTE make sure to update the allowed policy on the backend when it is updated here as well
     // It is created in pkg/sanitization/html.go in createHTMLPolicy
-    const sanitized = DOMPurify.sanitize(html, {
-      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ol', 'ul', 'li', 'a']
-    });
+    const sanitized = sanitizeInput(html);
     // Only set again if something if sanitized value was different,
     // which should just be on copy and paste.
     // Setting it on every change will jump the text cursor to the end of content.
@@ -295,9 +300,8 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
             return;
           }
 
-          const sanitized = DOMPurify.sanitize(val, {
-            ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ol', 'ul', 'li', 'a']
-          });
+          // Sanitize input before calling onChange
+          const sanitized = sanitizeInput(val);
           field?.onChange(sanitized);
         }}
         {...props}
