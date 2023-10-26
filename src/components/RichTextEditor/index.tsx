@@ -156,8 +156,12 @@ function setEditableElementProps(
     });
   }
 }
-
+/**
+ * Allow linebreak tags (p, br) from the editor and also match the tags set in toolbar items.
+ */
 function sanitizeInput(html: string): string {
+  // NOTE make sure to update the allowed policy on the backend when it is updated here as well
+  // It is created in pkg/sanitization/html.go in createHTMLPolicy
   const sanitized = DOMPurify.sanitize(html, {
     ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ol', 'ul', 'li', 'a']
   });
@@ -165,8 +169,10 @@ function sanitizeInput(html: string): string {
 }
 
 /**
- * Sanitize the html on the editor change event.
- * Allow linebreak tags (p, br) from the editor and also match the tags set in toolbar items.
+ * Sanitize the html on clipboard pastes into the editor.
+ * Html tags that are not allowed by `sanitizeInput()` can be circumvented
+ * by pasting into the editor. Sanitize the input from the event so that
+ * only allowed tags appear in the editor wysiwyg.
  */
 function registerPasteEventHandler(toastEditor: ToastuiEditor) {
   const editorElement = toastEditor
@@ -175,8 +181,6 @@ function registerPasteEventHandler(toastEditor: ToastuiEditor) {
 
   const contentHandler = () => {
     const html = toastEditor.getHTML();
-    // NOTE make sure to update the allowed policy on the backend when it is updated here as well
-    // It is created in pkg/sanitization/html.go in createHTMLPolicy
     const sanitized = sanitizeInput(html);
     // Only set again if something if sanitized value was different,
     // which should just be on copy and paste.
@@ -195,7 +199,7 @@ const httpsRe = /^https?:\/\//;
 // Do some field validation on the link popup's url field.
 // Another approach is to re-use toast's exec command to add a link but instead
 // we are going to use dompurify's hook that gets called after content change.
-// See registerPasteEventHandler() -> DOMPurify.sanitize()
+// See sanitizeInput() -> DOMPurify.sanitize()
 DOMPurify.addHook('afterSanitizeAttributes', node => {
   // check all href attributes for validity
   if (node.hasAttribute('href')) {
@@ -265,7 +269,6 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
     setEditableElementProps(el, props);
     initLinkPopup(el);
     showLinkUnderSelection(toast);
-
     registerPasteEventHandler(toast);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -278,7 +281,7 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
         autofocus={false}
         initialEditType="wysiwyg"
         hideModeSwitch
-        // Match these against tags in `registerPasteEventHandler()`
+        // Match these against tags in `sanitizeInput()`
         toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
         initialValue={field?.value}
         linkAttributes={{
