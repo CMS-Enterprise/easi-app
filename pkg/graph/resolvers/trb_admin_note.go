@@ -95,6 +95,7 @@ func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.S
 
 	// ideally, we'd create the admin note and any links to documents in a single transaction, but we don't currently have that capability
 	// see Note [Database calls from resolvers aren't atomic]
+	// as it is, there's a potential bug if the documents are invalid; the record for the admin note will be created even though this returns an error
 
 	// create the admin note itself (and get the result, with the generated ID)
 	createdNote, err := store.CreateTRBAdminNote(ctx, &noteToCreate)
