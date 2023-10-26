@@ -168,10 +168,10 @@ function sanitizeInput(html: string): string {
  * Sanitize the html on the editor change event.
  * Allow linebreak tags (p, br) from the editor and also match the tags set in toolbar items.
  */
-function registerPasteEventHandler(toastEditor: ToastuiEditor, id: string) {
-  const editorElement = document
-    .getElementById(id)
-    ?.closest('.easi-toast.easi-toast-editor div');
+function registerPasteEventHandler(toastEditor: ToastuiEditor) {
+  const editorElement = toastEditor
+    .getEditorElements()
+    .wwEditor.querySelector('div[contenteditable]');
 
   const contentHandler = () => {
     const html = toastEditor.getHTML();
@@ -266,7 +266,7 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
     initLinkPopup(el);
     showLinkUnderSelection(toast);
 
-    registerPasteEventHandler(editor.getInstance(), props.editableProps!.id!);
+    registerPasteEventHandler(toast);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
