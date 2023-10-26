@@ -161,17 +161,12 @@ function setEditableElementProps(
  * Sanitize the html on the editor change event.
  * Allow linebreak tags (p, br) from the editor and also match the tags set in toolbar items.
  */
-function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor, id: string) {
-  console.log('elid', id);
-
+function registerPasteEventHandler(toastEditor: ToastuiEditor, id: string) {
   const editorElement = document
     .getElementById(id)
     ?.closest('.easi-toast.easi-toast-editor div');
 
-  console.log('editorElement', editorElement);
-
   const contentHandler = () => {
-    console.log('contentHandler hit');
     const html = toastEditor.getHTML();
     // NOTE make sure to update the allowed policy on the backend when it is updated here as well
     // It is created in pkg/sanitization/html.go in createHTMLPolicy
@@ -181,13 +176,11 @@ function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor, id: string) {
     // Only set again if something if sanitized value was different,
     // which should just be on copy and paste.
     // Setting it on every change will jump the text cursor to the end of content.
-    console.log('html:', html, 'sanitized:', sanitized, html !== sanitized);
     if (html !== sanitized) {
       toastEditor.setHTML(sanitized, false);
     }
   };
 
-  editorElement?.addEventListener('input', contentHandler);
   editorElement?.addEventListener('paste', contentHandler);
 }
 
@@ -197,7 +190,7 @@ const httpsRe = /^https?:\/\//;
 // Do some field validation on the link popup's url field.
 // Another approach is to re-use toast's exec command to add a link but instead
 // we are going to use dompurify's hook that gets called after content change.
-// See sanitizeHtmlOnContentChange() -> DOMPurify.sanitize()
+// See registerPasteEventHandler() -> DOMPurify.sanitize()
 DOMPurify.addHook('afterSanitizeAttributes', node => {
   // check all href attributes for validity
   if (node.hasAttribute('href')) {
@@ -268,19 +261,9 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
     initLinkPopup(el);
     showLinkUnderSelection(toast);
 
-    sanitizeHtmlOnContentChange(editor.getInstance(), props.editableProps!.id!);
+    registerPasteEventHandler(editor.getInstance(), props.editableProps!.id!);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // This component re-renders on content changes and loses the on change callback
-  // Bind it again each time
-  /*
-  useEffect(() => {
-    const editor = editorRef.current;
-    if (!editor || !props.editableProps?.id) return;
-    sanitizeHtmlOnContentChange(editor.getInstance(), props.editableProps.id);
-  }, [editorRef, props.editableProps?.id]);
-  */
 
   return (
     <div className={classNames('easi-toast easi-toast-editor', className)}>
@@ -290,7 +273,7 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
         autofocus={false}
         initialEditType="wysiwyg"
         hideModeSwitch
-        // Match these against tags in `sanitizeHtmlOnContentChange()`
+        // Match these against tags in `registerPasteEventHandler()`
         toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
         initialValue={field?.value}
         linkAttributes={{
@@ -312,7 +295,10 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
             return;
           }
 
-          field?.onChange(val);
+          const sanitized = DOMPurify.sanitize(val, {
+            ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ol', 'ul', 'li', 'a']
+          });
+          field?.onChange(sanitized);
         }}
         {...props}
         // Ensure the height prop is overridden after argument assignments
