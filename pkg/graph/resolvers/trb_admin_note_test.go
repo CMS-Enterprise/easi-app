@@ -164,7 +164,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 		s.True(document2Fetched)
 	})
 
-	s.Run("Creating Admin Note referencing supporting documents attached to a *different* TRB request fails", func() {
+	s.Run("Creating Admin Note referencing supporting documents attached to a *different* TRB request fails and does *not* create an admin note", func() {
 		// create request 1 - admin note will be attached to this
 		trbRequestForNote, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
 		s.NoError(err)
@@ -201,6 +201,11 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 		}
 		_, err = CreateTRBAdminNoteSupportingDocuments(ctx, store, input)
 		s.Error(err)
+
+		// check that admin note didn't get created at all
+		createdNotes, err := GetTRBAdminNotesByTRBRequestID(ctx, store, trbRequestForNote.ID)
+		s.NoError(err)
+		s.Len(createdNotes, 0)
 	})
 }
 
@@ -365,5 +370,10 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 		}
 		_, err = CreateTRBAdminNoteAdviceLetter(ctx, store, input)
 		s.Error(err)
+
+		// check that admin note didn't get created at all
+		createdNotes, err := GetTRBAdminNotesByTRBRequestID(ctx, store, trbRequestForNote.ID)
+		s.NoError(err)
+		s.Len(createdNotes, 0)
 	})
 }

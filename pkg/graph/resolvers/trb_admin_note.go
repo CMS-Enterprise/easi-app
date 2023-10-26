@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+	"github.com/samber/lo"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -84,7 +85,25 @@ func CreateTRBAdminNoteInitialRequestForm(ctx context.Context, store *storage.St
 
 func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error) {
 	// it's valid for input.DocumentIDs to be empty; see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
-	// don't need to check that all referenced documents belong to the same request; database checks that
+
+	// check that the documents belong to the same TRB request
+	// database constraints will prevent links being created to docs on a different request
+	// but if we don't check, we'll still create an (invalid) admin note record
+
+	allDocsOnRequest, err := store.GetTRBRequestDocumentsByRequestID(ctx, input.TrbRequestID)
+	if err != nil {
+		return nil, err
+	}
+	allDocsOnRequestIDs := lo.Map(allDocsOnRequest, func(doc *models.TRBRequestDocument, _ int) uuid.UUID {
+		return doc.ID
+	})
+
+	areDocsFromInputAllOnRequest := lo.Every(allDocsOnRequestIDs, input.DocumentIDs)
+	if !areDocsFromInputAllOnRequest {
+		return nil, &apperrors.BadRequestError{
+			Err: errors.New("all documents referenced in admin note must belong to the same TRB request as the admin note"),
+		}
+	}
 
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,
@@ -95,7 +114,6 @@ func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.S
 
 	// ideally, we'd create the admin note and any links to documents in a single transaction, but we don't currently have that capability
 	// see Note [Database calls from resolvers aren't atomic]
-	// as it is, there's a potential bug if the documents are invalid; the record for the admin note will be created even though this returns an error
 
 	// create the admin note itself (and get the result, with the generated ID)
 	createdNote, err := store.CreateTRBAdminNote(ctx, &noteToCreate)
@@ -132,7 +150,26 @@ func CreateTRBAdminNoteConsultSession(ctx context.Context, store *storage.Store,
 
 func CreateTRBAdminNoteAdviceLetter(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error) {
 	// it's valid for input.RecommendationIDs to be empty; see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
-	// don't need to check that all referenced recommendations belong to the same request; database checks that
+
+	// check that the recommendations belong to the same TRB request
+	// database constraints will prevent links being created to recommendations on a different request
+	// but if we don't check, we'll still create an (invalid) admin note record
+
+	allRecommendationsOnRequest, err := store.GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx, input.TrbRequestID)
+	if err != nil {
+		return nil, err
+	}
+
+	allRecommendationsOnRequestIDs := lo.Map(allRecommendationsOnRequest, func(rec *models.TRBAdviceLetterRecommendation, _ int) uuid.UUID {
+		return rec.ID
+	})
+
+	areRecommendationsFromInputAllOnRequest := lo.Every(allRecommendationsOnRequestIDs, input.RecommendationIDs)
+	if !areRecommendationsFromInputAllOnRequest {
+		return nil, &apperrors.BadRequestError{
+			Err: errors.New("all recommendations referenced in admin note must belong to the same TRB request as the admin note"),
+		}
+	}
 
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,
