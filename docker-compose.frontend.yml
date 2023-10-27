@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  easi_client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+      target: local_dev
+    image: easi_client:latest
+    environment:
+      - VITE_APP_ENV
+      - VITE_API_ADDRESS
+      - VITE_GRAPHQL_ADDRESS
+      - VITE_OKTA_CLIENT_ID
+      - VITE_OKTA_DOMAIN
+      - VITE_OKTA_ISSUER
+      - VITE_OKTA_REDIRECT_URI
+      - VITE_OKTA_SERVER_ID
+      - VITE_LD_ENV_USER
+      - VITE_LD_USER_HASH
+      - VITE_LD_CLIENT_ID
+      - VITE_LOCAL_AUTH_ENABLED
+      - CHOKIDAR_USEPOLLING=true
+      - ESLINT_NO_DEV_ERRORS=true
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+      - /app/node_modules

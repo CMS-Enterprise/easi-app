@@ -1,0 +1,133 @@
+version: '3.7'
+services:
+  db:
+    ports:
+      - 5432:5432
+    image: postgres:14.7
+    command: ['postgres', '-c', 'log_statement=all', '-c', 'max_connections=25']
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+  db_migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.db_migrations
+    volumes:
+      - ./migrations:/flyway/sql
+    image: easi-db-migrate:latest
+    environment:
+      - FLYWAY_USER=postgres
+      - FLYWAY_PASSWORD=mysecretpassword
+      - FLYWAY_URL=jdbc:postgresql://db/postgres
+      - FLYWAY_PLACEHOLDERS_APP_USER_PASSWORD=supersecretapp # Keep this around for legacy migration V88__Add_app_user.sql
+    depends_on:
+      - db
+  easi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    entrypoint: air ${AIR_CONFIG}
+    image: easi-backend:latest
+    ports:
+      - 8080:8080
+      - 2345:2345 #for dlv debugging
+    environment:
+      - CEDAR_API_KEY
+      - CEDAR_API_URL
+      - CEDAR_CORE_API_VERSION
+      - CEDAR_CACHE_INTERVAL
+      - CEDAR_EMAIL_ADDRESS
+      - HTTP_PROXY
+      - HTTPS_PROXY
+      - APP_ENV
+      - APPLICATION_VERSION
+      - APPLICATION_DATETIME
+      - APPLICATION_TS
+      - CLIENT_PROTOCOL
+      - CLIENT_DOMAIN
+      - CLIENT_PORT
+      - CLIENT_HOSTNAME
+      - CLIENT_ADDRESS
+      - API_PORT
+      - OKTA_CLIENT_ID
+      - OKTA_ISSUER
+      - GRT_EMAIL
+      - IT_INVESTMENT_EMAIL
+      - ACCESSIBILITY_TEAM_EMAIL
+      - EASI_HELP_EMAIL
+      - TRB_EMAIL
+      - EMAIL_TEMPLATE_DIR
+      - AWS_REGION
+      - AWS_SES_SOURCE
+      - AWS_SES_SOURCE_ARN
+      - AWS_S3_FILE_UPLOAD_BUCKET
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - PGHOST=db # We need to override this to point to the docker-compose service name, rather than `localhost`
+      - PGPORT=5432 # We also need to override this, as docker-compose networking uses the container port, not the host port
+      - PGDATABASE
+      - PGUSER
+      - PGPASS
+      - PGSSLMODE
+      - DB_MAX_CONNECTIONS
+      - FLAG_SOURCE
+      - FLAGDATA_FILE
+      - LD_SDK_KEY
+      - LD_TIMEOUT_SECONDS
+      - LD_ENV_USER
+      - MINIO_ACCESS_KEY
+      - MINIO_SECRET_KEY
+      - MINIO_ADDRESS=http://minio:9005 # We need to override this, as docker-compose networking uses the container name and port
+      - SERVER_CERT
+      - SERVER_KEY
+      - USE_TLS
+      - ALT_JOB_CODES
+      - OKTA_API_URL
+      - OKTA_API_TOKEN
+      - USE_OKTA_API
+      - LOCAL_AUTH_ENABLED
+    volumes:
+      # Volume mounting the entire './' directory is dangerous, as it mounts OS-specific folders (and things like .git)
+      # So instead, only volume mount things we need!
+      #
+      # Note, however, that MOST of the files that we care about are copied in the Dockerfile for us, we only really need to copy over the things that
+      # we want to be able to change on the fly in local developmement, like our ./pkg/ directory & Air configs.
+      # This means that editing things like your go.mod/go.sum and ./cmd/ directory WILL require a rebuild of the image, and won't hot reload with Air.
+      - ./pkg/:/easi/pkg/
+      - ./cmd/:/easi/cmd/ # Go build uses ./cmd as well
+      - ./.air.conf:/easi/.air.conf
+      - ./.airDebug.conf:/easi/.airDebug.conf
+      - ./.airDebugWait.conf:/easi/.airDebugWait.conf
+      - /easi/tmp/air/ # This should match .air.conf's tmp_dir. Note that this isn't a volume mount to a local file/folder, but just an empty volume for Air to use.
+      # The only reason we need to mount Cypress here is because the `flagdata.json` (used when FLAG_SOURCE=FILE) happens to live in the ./cypress/ directory.
+      # This is not ideal (perhaps it should be in the root directory?), but for now we just volume mount cypress as a workaround.
+      # NOTE: This is only really the case if you set FLAG_SOURCE=FILE locally, or (more importantly) in ./docker-compose-cypress_ci.yml
+      - ./cypress/:/easi/cypress/
+    depends_on:
+      db_migrate:
+        condition: service_completed_successfully # Only start if migrations completed successfully
+  minio:
+    restart: always
+    image: minio/minio:latest
+    entrypoint: minio server /data
+    volumes:
+      - ./tmp/minio:/data
+    ports:
+    - '9000:9000'
+  minio_mc:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    volumes:
+      - ./minio_config.json:/root/.mc/config.json
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc rb --force local/easi-app-file-uploads/;
+      /usr/bin/mc mb --quiet local/easi-app-file-uploads/;
+      /usr/bin/mc policy set public local/easi-app-file-uploads;
+      "
+  email:
+    image: dockage/mailcatcher:0.8.2
+    ports:
+      - 1025:1025
+      - 1080:1080
