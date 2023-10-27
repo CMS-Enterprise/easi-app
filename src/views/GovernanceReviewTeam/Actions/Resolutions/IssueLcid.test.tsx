@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen /* , waitFor */ } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {
@@ -19,7 +19,7 @@ import { EditsRequestedContext } from '..';
 import IssueLcid from './IssueLcid';
 
 /** Checks field default values when lcid is selected */
-const checkFieldDefaults = () => {
+const checkFieldDefaults = async () => {
   expect(
     screen.getByRole('textbox', { name: 'Expiration date *' })
   ).toHaveValue(
@@ -29,6 +29,11 @@ const checkFieldDefaults = () => {
   expect(
     screen.getByRole('textbox', { name: 'Scope of Life Cycle ID *' })
   ).toHaveValue(systemIntakeWithLcid.lcidScope);
+  // await waitFor(() => {
+  //   expect(screen.getByTestId('scope')).toContainHTML(
+  //     systemIntakeWithLcid.lcidScope!
+  //   );
+  // });
 
   expect(screen.getByRole('textbox', { name: 'Next steps *' })).toHaveValue(
     systemIntakeWithLcid.decisionNextSteps
@@ -78,7 +83,7 @@ describe('Issue LCID form', async () => {
     userEvent.selectOptions(selectLcid, [systemIntakeWithLcid.lcid!]);
     expect(selectLcid).toHaveValue(systemIntakeWithLcid.lcid);
 
-    checkFieldDefaults();
+    await checkFieldDefaults();
   });
 
   it('Displays confirmation modal when edits are requested', async () => {
