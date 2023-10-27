@@ -70,7 +70,8 @@ const action = {
     trbFollowUp: 'TRB follow-up',
     intakeFormStep: 'Which form needs edits?',
     emailFeedback: 'What changes are needed?',
-    reason: 'Why are you expiring this Life Cycle ID?'
+    reason: 'Why are you expiring this Life Cycle ID?',
+    reason_notApproved: 'Reason'
   },
   manageLcid: {
     title: 'Manage a Life Cycle ID (LCID)',

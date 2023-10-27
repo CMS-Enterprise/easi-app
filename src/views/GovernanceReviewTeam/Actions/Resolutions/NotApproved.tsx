@@ -73,6 +73,7 @@ const NotApproved = ({
         systemIntakeId={systemIntakeId}
         successMessage={t('notApproved.success')}
         onSubmit={onSubmit}
+        errorKeyContext="notApproved"
         title={
           <ResolutionTitleBox
             title={t('resolutions.summary.notApproved')}
