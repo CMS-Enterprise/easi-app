@@ -1,37 +1,21 @@
-FROM node:16.14.0 AS base
+# This Dockerfile is used to help ensure that all developers are using the same
+# version of Node.js, yarn, and node_modules.
+#
+# Note, this image purposefully does NOT copy the source code into the image,
+# because the source code is mounted as a volume in the docker-compose.frontend.yml file.
+# This allows the image to be cached far more easily, and only needs to be rebuilt
+# when the dependencies change.
+
+# Start with the official Node.js image to install dependencies
+FROM node:16.14.0-alpine AS modules
 
 WORKDIR /app
+# ENV PATH /app/node_modules/.bin:$PATH
 
-ENV PATH /app/node_modules/.bin:$PATH
-
-FROM base AS modules
-
+# Copy in package.json and yarn.lock to install dependencies
 COPY package.json yarn.lock ./
+RUN yarn install --immutable
 
-RUN yarn install --frozen-lockfile
+FROM modules AS local_dev
 
-FROM modules AS src
-
-COPY tsconfig.json .eslintrc ./
-COPY public ./public
-COPY src ./src
-
-FROM src AS build
-
-ARG VITE_APP_ENV
-ARG VITE_API_ADDRESS
-ARG VITE_GRAPHQL_ADDRESS
-ARG VITE_OKTA_CLIENT_ID
-ARG VITE_OKTA_DOMAIN
-ARG VITE_OKTA_ISSUER
-ARG VITE_OKTA_REDIRECT_URI
-ARG VITE_OKTA_SERVER_ID
-ARG VITE_LOCAL_AUTH_ENABLED
-
-RUN yarn run build
-
-FROM node:16.14.0 as srv
-
-RUN yarn global add serve
-WORKDIR /app
-COPY --from=build /app/build .
+ENTRYPOINT ["yarn", "start"]
