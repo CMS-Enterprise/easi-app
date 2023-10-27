@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/google/uuid"
@@ -102,7 +103,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 			Bucket:             "bukkit",
 			S3Key:              uuid.NewString(),
 		}
-		documentToCreate1.CreatedBy = creatingUserEUAID // have to manually set this because we're calling store method instead of resolver
+		documentToCreate1.CreatedBy = creatingUserEUAID // have to manually set this because we're calling the store method instead of the resolver
 
 		createdDoc1, err := store.CreateTRBRequestDocument(ctx, documentToCreate1)
 		s.NoError(err)
@@ -116,7 +117,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 			Bucket:             "bukkit",
 			S3Key:              uuid.NewString(),
 		}
-		documentToCreate2.CreatedBy = creatingUserEUAID // have to manually set this because we're calling store method instead of resolver
+		documentToCreate2.CreatedBy = creatingUserEUAID // have to manually set this because we're calling the store method instead of the resolver
 
 		createdDoc2, err := store.CreateTRBRequestDocument(ctx, documentToCreate2)
 		s.NoError(err)
@@ -183,7 +184,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 			Bucket:             "bukkit",
 			S3Key:              uuid.NewString(),
 		}
-		documentToCreate.CreatedBy = creatingUserEUAID // have to manually set this because we're calling store method instead of resolver
+		documentToCreate.CreatedBy = creatingUserEUAID // have to manually set this because we're calling the store method instead of the resolver
 
 		createdDoc, err := store.CreateTRBRequestDocument(ctx, documentToCreate)
 		s.NoError(err)
@@ -375,5 +376,82 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 		createdNotes, err := GetTRBAdminNotesByTRBRequestID(ctx, store, trbRequestForNote.ID)
 		s.NoError(err)
 		s.Len(createdNotes, 0)
+	})
+}
+
+func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
+	// General Request, Initial Request Form, and Consult session don't have tests; their resolver code is trivial
+
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+
+	s.Run("Supporting Documents notes return related documents for the note's category-specific data", func() {
+		// set up request
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		s.NoError(err)
+		s.NotNil(trbRequest)
+
+		// set up three documents and attach two to the note
+		// we can check that the resolver returns multiple docs, and check that not all docs on the request are returned
+		documentIDs := []uuid.UUID{}
+		for i := 0; i < 3; i++ {
+			// just create the database record for the documents; don't go through the resolver so we don't need to set up file uploads
+			documentToCreate := &models.TRBRequestDocument{
+				TRBRequestID:       trbRequest.ID,
+				CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
+				FileName:           fmt.Sprintf("admin_note_test_%v.pdf", i),
+				Bucket:             "bukkit",
+				S3Key:              uuid.NewString(),
+			}
+			documentToCreate.CreatedBy = s.testConfigs.Principal.EUAID // have to manually set this because we're calling the store method instead of the resolver
+
+			createdDoc, errCreatingDoc := store.CreateTRBRequestDocument(ctx, documentToCreate)
+			s.NoError(errCreatingDoc)
+			s.NotNil(createdDoc)
+			documentIDs = append(documentIDs, createdDoc.ID)
+		}
+
+		// set up admin note referencing the documents
+		input := model.CreateTRBAdminNoteSupportingDocumentsInput{
+			TrbRequestID: trbRequest.ID,
+			NoteText:     "test TRB admin note - supporting documents",
+			DocumentIDs: []uuid.UUID{
+				documentIDs[0],
+				documentIDs[1],
+			},
+		}
+		createdNote, err := CreateTRBAdminNoteSupportingDocuments(ctx, store, input)
+		s.NoError(err)
+		s.NotNil(createdNote)
+
+		// check that resolver returns the right documents
+		categorySpecificData, err := GetTRBAdminNoteCategorySpecificData(ctx, store, createdNote)
+		s.NoError(err)
+
+		supportingDocumentsData, ok := categorySpecificData.(model.TRBAdminNoteSupportingDocumentsCategoryData)
+		s.True(ok)
+
+		returnedDocuments := supportingDocumentsData.Documents
+		s.Len(returnedDocuments, 2)
+
+		document0Returned := slices.ContainsFunc(returnedDocuments, func(doc *models.TRBRequestDocument) bool {
+			return doc.ID == documentIDs[0]
+		})
+		s.True(document0Returned)
+
+		document1Returned := slices.ContainsFunc(returnedDocuments, func(doc *models.TRBRequestDocument) bool {
+			return doc.ID == documentIDs[1]
+		})
+		s.True(document1Returned)
+
+		// test that the third document (that wasn't attached to the note) *isn't* returned
+		document2Returned := slices.ContainsFunc(returnedDocuments, func(doc *models.TRBRequestDocument) bool {
+			return doc.ID == documentIDs[2]
+		})
+		s.False(document2Returned)
+	})
+
+	s.Run("Advice Letter notes return related recommendations for the note's category-specific data", func() {
+		// don't need to test AppliesToMeetingSummary/AppliesToNextSteps fields - code is trivial, just accessing fields on the note model
 	})
 }
