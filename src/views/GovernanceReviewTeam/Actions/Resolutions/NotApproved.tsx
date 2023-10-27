@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup, Radio } from '@trussworks/react-uswds';
 
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -18,6 +19,7 @@ import {
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
+import { notApprovedSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 import { EditsRequestedContext } from '..';
@@ -45,7 +47,9 @@ const NotApproved = ({
     CreateSystemIntakeActionRejectIntakeVariables
   >(CreateSystemIntakeActionRejectIntakeQuery);
 
-  const form = useForm<NotApprovedFields>();
+  const form = useForm<NotApprovedFields>({
+    resolver: yupResolver(notApprovedSchema)
+  });
   const { control } = form;
 
   /**
