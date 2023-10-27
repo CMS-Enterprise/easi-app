@@ -380,7 +380,9 @@ const action = {
     reasonHelpText:
       'Provide the reasons why this request, in its current state, was not approved. Include any concerns raised about it.',
     nextStepsHelpText:
-      'Provide the requester with clear, actionable next steps for how to proceed and if or when and how they should return to the IT Governance process.'
+      'Provide the requester with clear, actionable next steps for how to proceed and if or when and how they should return to the IT Governance process.',
+    success:
+      'This request was not approved by the GRB. This request is now closed.'
   },
   rejectIntake: {
     backLink: 'Change',

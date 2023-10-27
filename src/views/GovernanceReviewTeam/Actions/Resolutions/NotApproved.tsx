@@ -63,7 +63,7 @@ const NotApproved = ({
     <FormProvider<NotApprovedFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
-        successMessage=""
+        successMessage={t('notApproved.success')}
         onSubmit={onSubmit}
         title={
           <ResolutionTitleBox
