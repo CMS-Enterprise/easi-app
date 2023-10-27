@@ -1,4 +1,3 @@
----
 version: '3.7'
 services:
   db:
@@ -50,6 +49,9 @@ services:
         - VITE_OKTA_REDIRECT_URI
         - VITE_OKTA_SERVER_ID
         - VITE_LOCAL_AUTH_ENABLED=true
+    volumes:
+      - .:/app
+      - /app/node_modules
     environment:
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
     entrypoint: ['serve', '-s', '-l', '3000']
