@@ -1,7 +1,13 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from '@apollo/client';
 
+import CreateSystemIntakeActionRejectIntakeQuery from 'queries/CreateSystemIntakeActionRejectIntakeQuery';
+import {
+  CreateSystemIntakeActionRejectIntake,
+  CreateSystemIntakeActionRejectIntakeVariables
+} from 'queries/types/CreateSystemIntakeActionRejectIntake';
 import { SystemIntakeRejectIntakeInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
@@ -23,15 +29,25 @@ const NotApproved = ({
   const { t } = useTranslation('action');
   const form = useForm<NotApprovedFields>();
 
+  const [rejectIntake] = useMutation<
+    CreateSystemIntakeActionRejectIntake,
+    CreateSystemIntakeActionRejectIntakeVariables
+  >(CreateSystemIntakeActionRejectIntakeQuery);
+
   /**
-   * Submit handler containing mutation logic
+   * Reject intake on form submit
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: NotApprovedFields) => {
-    // Execute mutation here
-    // mutate(formData);
-  };
+  const onSubmit = async (formData: NotApprovedFields) =>
+    rejectIntake({
+      variables: {
+        input: {
+          systemIntakeID: systemIntakeId,
+          ...formData
+        }
+      }
+    });
 
   return (
     <FormProvider<NotApprovedFields> {...form}>
