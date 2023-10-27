@@ -5,8 +5,8 @@ docker-compose files exist to support different use cases and environments.
 
 | File                          | Description                                                                                                                       |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| [docker-compose.yml](/docker-compose.yml)            | Base configuration for `db`, `db_migrate`, `easi` and `easi_client` services                                                      |
-| [docker-compose.override.yml](/docker-compose.override.yml)   | Additional configuration for running the above services locally. Also adds configuration for `minio` service |
+| [docker-compose.backend.yml](/docker-compose.yml)            | Base configuration for `db`, `db_migrate`, `easi` services - The Backend!
+| [docker-compose.yml](/docker-compose.yml)            | Base configuration for `easi_client` services - The Frontend!                                                |
 | [docker-compose.cypress_ci.yml](/docker-compose.cypress_ci.yml) | Additional configuration for running end-to-end Cypress tests in Github Actions                                                   |
 | [docker-compose.cypress_local.yml](/docker-compose.cypress_local.yml)      | Additional configuration for running end-to-end Cypress tests locally                                                             |
 | [docker-compose.tailscale.yml](/docker-compose.tailscale.yml) | Additional configuration for using Tailscale to expose a locally-running application to other computers
