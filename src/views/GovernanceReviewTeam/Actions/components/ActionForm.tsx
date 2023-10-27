@@ -15,12 +15,12 @@ import {
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
-import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
@@ -293,16 +293,22 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           name="additionalInfo"
           render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal">
+              <Label
+                id={`${field.name}-label`}
+                htmlFor={field.name}
+                className="text-normal"
+              >
                 {t('notification.additionalInformation')}
               </Label>
               {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <TextAreaField
-                {...field}
-                ref={null}
-                id={field.name}
-                size="sm"
-                characterCounter={false}
+              <RichTextEditor
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
+                field={{ ...field, value: field.value || '' }}
               />
             </FormGroup>
           )}
@@ -333,16 +339,22 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
               <p className="line-height-body-5 margin-y-1">
                 {t('adminNote.description')}
               </p>
-              <Label htmlFor={field.name} className="text-normal margin-top-2">
+              <Label
+                id={`${field.name}-label`}
+                htmlFor={field.name}
+                className="text-normal margin-top-2"
+              >
                 {t('adminNote.label')}
               </Label>
               {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <TextAreaField
-                {...field}
-                ref={null}
-                id={field.name}
-                size="sm"
-                characterCounter={false}
+              <RichTextEditor
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
+                field={{ ...field, value: field.value || '' }}
               />
             </FormGroup>
           )}
