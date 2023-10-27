@@ -15,6 +15,7 @@ import (
 type systemIntakeExpireLCIDEmailParameters struct {
 	LifecycleID              string
 	LifecycleExpiresAt       string
+	LifecycleIssuedAt        string
 	LifecycleScope           template.HTML
 	LifecycleCostBaseline    string
 	Reason                   template.HTML
@@ -26,6 +27,7 @@ type systemIntakeExpireLCIDEmailParameters struct {
 func (sie systemIntakeEmails) SystemIntakeExpireLCIDBody(
 	lifecycleID string,
 	lifecycleExpiresAt *time.Time,
+	lifecycleIssuedAt *time.Time,
 	lifecycleScope models.HTML,
 	lifecycleCostBaseline string,
 	reason models.HTML,
@@ -36,9 +38,14 @@ func (sie systemIntakeEmails) SystemIntakeExpireLCIDBody(
 	if lifecycleExpiresAt != nil {
 		expiresAt = lifecycleExpiresAt.Format("01/02/2006")
 	}
+	var issuedAt string
+	if lifecycleIssuedAt != nil {
+		issuedAt = lifecycleIssuedAt.Format("01/02/2006")
+	}
 	data := systemIntakeExpireLCIDEmailParameters{
 		LifecycleID:              lifecycleID,
 		LifecycleExpiresAt:       expiresAt,
+		LifecycleIssuedAt:        issuedAt,
 		LifecycleScope:           lifecycleScope.ToTemplate(),
 		LifecycleCostBaseline:    lifecycleCostBaseline,
 		Reason:                   reason.ToTemplate(),
@@ -58,13 +65,13 @@ func (sie systemIntakeEmails) SystemIntakeExpireLCIDBody(
 	return b.String(), nil
 }
 
-// TODO: add date LCID was issued (EASI-3319)
 // SendExpireLCIDNotification notifies user-selected recipients that a system intake form needs edits
 func (sie systemIntakeEmails) SendExpireLCIDNotification(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	lifecycleID string,
 	lifecycleExpiresAt *time.Time,
+	lifecycleIssuedAt *time.Time,
 	lifecycleScope models.HTML,
 	lifecycleCostBaseline string,
 	reason models.HTML,
@@ -76,6 +83,7 @@ func (sie systemIntakeEmails) SendExpireLCIDNotification(
 	body, err := sie.SystemIntakeExpireLCIDBody(
 		lifecycleID,
 		lifecycleExpiresAt,
+		lifecycleIssuedAt,
 		lifecycleScope,
 		lifecycleCostBaseline,
 		reason,
