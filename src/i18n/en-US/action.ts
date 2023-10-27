@@ -283,7 +283,7 @@ const action = {
       'After you confirm this decision, you may continue to modify this LCID using any of the “Manage a Life Cycle ID” actions.'
   },
   decisionModal: {
-    title: 'Are you sure you want to complete this action?',
+    title: 'Are you sure you want to complete this decision action?',
     content:
       'You previously requested that the team make changes to their {{action}}. Completing this decision action will remove the “Edits requested” status from that form, and the requester will no longer be able to make any changes.',
     intakeRequest: 'intake request form',
