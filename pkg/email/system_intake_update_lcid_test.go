@@ -11,9 +11,10 @@ import (
 func (s *EmailTestSuite) TestIntakeUpdateLCIDNotification() {
 	ctx := context.Background()
 	lifecycleID := "123456"
+	issuedAt := time.Now()
 	expiresAtPrev := time.Now().AddDate(1, 0, 0)
 	expiresAtNew := time.Now().AddDate(100, 0, 0)
-	amendmentDate := time.Now()
+	amendmentDate := time.Now().AddDate(0, 0, 1)
 	lifecycleScopePrev := models.HTMLPointer("<em>previous things</em>")
 	lifecycleScopeNew := models.HTMLPointer("<em>new things</em>")
 	lifecycleCostBaselinePrev := "100bux"
@@ -37,6 +38,7 @@ func (s *EmailTestSuite) TestIntakeUpdateLCIDNotification() {
 		ctx,
 		recipients,
 		lifecycleID,
+		&issuedAt,
 		&expiresAtPrev,
 		&expiresAtNew,
 		lifecycleScopePrev,
@@ -83,6 +85,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 
 <p><u>Summary of updated Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Amendment date:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
@@ -107,6 +110,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ITGovInboxAddress,
 		ITGovInboxAddress,
 		lifecycleID,
+		issuedAt.Format("01/02/2006"),
 		amendmentDate.Format("01/02/2006"),
 		expiresAtNew.Format("01/02/2006"),
 		*lifecycleScopeNew.StringPointer(),
@@ -126,6 +130,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ctx,
 		recipients,
 		lifecycleID,
+		&issuedAt,
 		&expiresAtPrev,
 		&expiresAtNew,
 		lifecycleScopePrev,
@@ -169,6 +174,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 
 <p><u>Summary of updated Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Amendment date:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
@@ -193,6 +199,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ITGovInboxAddress,
 		ITGovInboxAddress,
 		lifecycleID,
+		issuedAt.Format("01/02/2006"),
 		amendmentDate.Format("01/02/2006"),
 		expiresAtNew.Format("01/02/2006"),
 		*lifecycleScopeNew.StringPointer(),
@@ -208,6 +215,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ctx,
 		recipients,
 		lifecycleID,
+		&issuedAt,
 		&expiresAtPrev,
 		nil,
 		lifecycleScopePrev,
@@ -248,6 +256,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 
 <p><u>Summary of updated Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Amendment date:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
@@ -270,6 +279,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ITGovInboxAddress,
 		ITGovInboxAddress,
 		lifecycleID,
+		issuedAt.Format("01/02/2006"),
 		amendmentDate.Format("01/02/2006"),
 		expiresAtPrev.Format("01/02/2006"),
 		*lifecycleScopeNew.StringPointer(),
@@ -285,6 +295,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ctx,
 		recipients,
 		lifecycleID,
+		&issuedAt,
 		&expiresAtPrev,
 		&expiresAtNew,
 		lifecycleScopePrev,
@@ -325,6 +336,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 
 <p><u>Summary of updated Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Amendment date:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
@@ -347,6 +359,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ITGovInboxAddress,
 		ITGovInboxAddress,
 		lifecycleID,
+		issuedAt.Format("01/02/2006"),
 		amendmentDate.Format("01/02/2006"),
 		expiresAtNew.Format("01/02/2006"),
 		*lifecycleScopePrev.StringPointer(),
@@ -362,6 +375,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ctx,
 		recipients,
 		lifecycleID,
+		&issuedAt,
 		&expiresAtPrev,
 		&expiresAtNew,
 		lifecycleScopePrev,
@@ -402,6 +416,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 
 <p><u>Summary of updated Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Amendment date:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
@@ -424,6 +439,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ITGovInboxAddress,
 		ITGovInboxAddress,
 		lifecycleID,
+		issuedAt.Format("01/02/2006"),
 		amendmentDate.Format("01/02/2006"),
 		expiresAtNew.Format("01/02/2006"),
 		*lifecycleScopeNew.StringPointer(),
@@ -439,6 +455,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ctx,
 		recipients,
 		lifecycleID,
+		&issuedAt,
 		&expiresAtPrev,
 		&expiresAtNew,
 		lifecycleScopePrev,
@@ -479,6 +496,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 
 <p><u>Summary of updated Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Amendment date:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
@@ -501,6 +519,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ITGovInboxAddress,
 		ITGovInboxAddress,
 		lifecycleID,
+		issuedAt.Format("01/02/2006"),
 		amendmentDate.Format("01/02/2006"),
 		expiresAtNew.Format("01/02/2006"),
 		*lifecycleScopeNew.StringPointer(),
@@ -516,6 +535,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ctx,
 		recipients,
 		lifecycleID,
+		nil,
 		&expiresAtPrev,
 		&expiresAtNew,
 		lifecycleScopePrev,
@@ -589,7 +609,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		*decisionNextStepsNew.StringPointer(),
 	)
 
-	s.Run("Should omit reason if absent", func() {
+	s.Run("Should omit reason and issuedAt if absent", func() {
 		s.Equal(expectedEmail, sender.body)
 	})
 

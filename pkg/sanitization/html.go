@@ -36,7 +36,7 @@ func createHTMLPolicy() *bluemonday.Policy {
 
 	policy := bluemonday.NewPolicy()
 	// NOTE make sure to update the allowed policy on the frontend when it is updated here as well
-	// This is set up in src/components/RichTextEditor/index.tsx as ALLOWED_TAGS in function sanitizeHtmlOnContentChange()
+	// This is set up in src/components/RichTextEditor/index.tsx as ALLOWED_TAGS in function sanitizeInput()
 	policy.AllowElements("p", "br", "strong", "em", "ol", "ul", "li", "a")
 
 	// Rules for links

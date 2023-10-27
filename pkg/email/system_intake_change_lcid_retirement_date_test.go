@@ -13,6 +13,7 @@ func (s *EmailTestSuite) TestIntakeChangeLCIDRetirementDateNotification() {
 	lifecycleID := "123456"
 	lifecycleScope := models.HTMLPointer("<em>things</em>")
 	lifecycleCostBaseline := "100bux"
+	issuedAt := time.Now()
 	retiresAt := time.Now().AddDate(2, 0, 0)
 	expiresAt := time.Now().AddDate(1, 0, 0)
 	ITGovInboxAddress := s.config.GRTEmail.String()
@@ -35,6 +36,7 @@ func (s *EmailTestSuite) TestIntakeChangeLCIDRetirementDateNotification() {
 		lifecycleID,
 		&retiresAt,
 		&expiresAt,
+		&issuedAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*decisionNextSteps,
@@ -56,6 +58,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 
 <p><u>Summary of retired Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s<br>
@@ -67,6 +70,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ITGovInboxAddress,
 		ITGovInboxAddress,
 		lifecycleID,
+		issuedAt.Format("01/02/2006"),
 		expiresAt.Format("01/02/2006"),
 		*lifecycleScope.StringPointer(),
 		lifecycleCostBaseline,
@@ -87,6 +91,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		lifecycleID,
 		&retiresAt,
 		&expiresAt,
+		nil,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*decisionNextSteps,
@@ -122,7 +127,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		*decisionNextSteps.StringPointer(),
 	)
 
-	s.Run("Should omit additional info if absent", func() {
+	s.Run("Should omit additional info and issuedAt if absent", func() {
 		s.Equal(expectedEmail, sender.body)
 	})
 

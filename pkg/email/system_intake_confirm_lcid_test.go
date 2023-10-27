@@ -18,6 +18,7 @@ func (s *EmailTestSuite) TestIntakeConfirmLCIDNotification() {
 	lifecycleID := "123456"
 	lifecycleScope := models.HTMLPointer("<em>things</em>")
 	lifecycleCostBaseline := "100bux"
+	issuedAt := time.Now()
 	expiresAt := time.Now().AddDate(1, 0, 0)
 	requestLink := fmt.Sprintf(
 		"%s://%s/governance-task-list/%s",
@@ -56,6 +57,7 @@ func (s *EmailTestSuite) TestIntakeConfirmLCIDNotification() {
 		requestName,
 		lifecycleID,
 		&expiresAt,
+		&issuedAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*decisionNextSteps,
@@ -74,6 +76,7 @@ func (s *EmailTestSuite) TestIntakeConfirmLCIDNotification() {
 <p>The Governance Team has confirmed a Life Cycle ID (LCID) for %s</p>
 
 <p><strong>Lifecycle ID:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s<br>
@@ -98,6 +101,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 `,
 		requestName,
 		lifecycleID,
+		issuedAt.Format("01/02/2006"),
 		expiresAt.Format("01/02/2006"),
 		*lifecycleScope.StringPointer(),
 		lifecycleCostBaseline,
@@ -126,6 +130,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		requestName,
 		lifecycleID,
 		&expiresAt,
+		nil,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*decisionNextSteps,
@@ -178,7 +183,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ITGovInboxAddress,
 	)
 
-	s.Run("Should omit additional info if absent", func() {
+	s.Run("Should omit additional info and issuedAt if absent", func() {
 		s.Equal(expectedEmail, sender.body)
 	})
 
@@ -190,6 +195,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 			requestName,
 			lifecycleID,
 			&expiresAt,
+			&issuedAt,
 			*lifecycleScope,
 			lifecycleCostBaseline,
 			*decisionNextSteps,
@@ -205,6 +211,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 <p>The Governance Team has confirmed a Life Cycle ID (LCID) for %s</p>
 
 <p><strong>Lifecycle ID:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s<br>
@@ -229,6 +236,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 `,
 			requestName,
 			lifecycleID,
+			issuedAt.Format("01/02/2006"),
 			expiresAt.Format("01/02/2006"),
 			*lifecycleScope.StringPointer(),
 			lifecycleCostBaseline,
