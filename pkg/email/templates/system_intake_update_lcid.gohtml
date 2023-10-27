@@ -1,0 +1,42 @@
+{{template "easi_header.gohtml"}}
+
+<p>The Governance Team has updated a previously-issued a Life Cycle ID (LCID).</p>
+
+<p><u>Changes to this LCID</u><br>
+{{if .LifecycleExpiresAtNew}}
+<strong>New Expiration Date:</strong> {{.LifecycleExpiresAtNew}}<br>
+<strong>Previous Expiration Date:</strong> {{.LifecycleExpiresAtPrev}}<br><br>
+{{end}}
+{{if .LifecycleScopeNew}}
+<strong>New Scope:</strong> {{.LifecycleScopeNew}}<br>
+<strong>Previous Scope:</strong> {{.LifecycleScopePrev}}<br><br>
+{{end}}
+{{if .LifecycleCostBaselineNew}}
+<strong>New Project Cost Baseline:</strong> {{.LifecycleCostBaselineNew}}<br>
+<strong>Previous Project Cost Baseline:</strong> {{.LifecycleCostBaselinePrev}}<br><br>
+{{end}}
+{{if .DecisionNextStepsNew}}
+<strong>New Next steps:</strong> {{.DecisionNextStepsNew}}<br>
+<strong>Previous Next steps:</strong> {{.DecisionNextStepsPrev}}<br><br>
+{{end}}</p>
+
+{{if .Reason}}<p>Reason: {{.Reason}}</p>{{end}}
+
+If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.
+
+<p><u>Summary of updated Life Cycle ID</u><br>
+<strong>Lifecycle ID:</strong> {{.LifecycleID}}<br>
+{{ if .LifecycleIssuedAt -}}
+<strong>Original date issued:</strong> {{.LifecycleIssuedAt}}<br>
+{{ end -}}
+<strong>Amendment date:</strong> {{.AmendmentDate}}<br>
+<strong>Expiration date:</strong> {{if .LifecycleExpiresAtNew}}{{.LifecycleExpiresAtNew}}{{else}}{{.LifecycleExpiresAtPrev}}{{end}}<br>
+<strong>Scope:</strong> {{if .LifecycleScopeNew}}{{.LifecycleScopeNew}}{{else}}{{.LifecycleScopePrev}}{{end}}<br>
+<strong>Project Cost Baseline:</strong> {{if .LifecycleCostBaselineNew}}{{.LifecycleCostBaselineNew}}{{else}}{{.LifecycleCostBaselinePrev}}{{end}}<br>
+<strong>Next Steps:</strong> {{if .DecisionNextStepsNew}}{{.DecisionNextStepsNew}}{{else}}{{.DecisionNextStepsPrev}}{{end}}</p>
+
+{{if .AdditionalInfo}}<hr><p><strong>Additional information from the Governance Team:</strong></p><p>{{.AdditionalInfo}}</p>{{end}}
+<hr>
+
+<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
+

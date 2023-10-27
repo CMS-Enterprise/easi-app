@@ -13,6 +13,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/email"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
 
@@ -161,6 +162,12 @@ func main() {
 
 func sendITGovEmails(ctx context.Context, client *email.Client) {
 	intakeID := uuid.New()
+	lifecycleID := "123456"
+	lifecycleExpiresAt := time.Now().AddDate(30, 0, 0)
+	lifecycleIssuedAt := time.Now()
+	lifecycleRetiresAt := time.Now().AddDate(3, 0, 0)
+	lifecycleScope := models.HTMLPointer("<em>This is a scope</em>")
+	lifecycleCostBaseline := "a baseline"
 	submittedAt := time.Now()
 	requesterEmail := models.NewEmailAddress("TEST@local.fake")
 	emailNotificationRecipients := models.EmailNotificationRecipients{
@@ -169,14 +176,175 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		ShouldNotifyITInvestment: false,
 	}
 	reason := models.HTMLPointer("<strong>Reasons</strong>")
+	feedback := models.HTMLPointer("<strong>Feedback goes here</strong>")
+	newStep := model.SystemIntakeStepToProgressToDraftBusinessCase
+	nextSteps := models.HTMLPointer("<ul><li>Do this,</li><li>then that!</li></ul>")
 	additionalInfo := models.HTMLPointer("Here is additional info <ul><li>fill out the form again</li><li>fill it out better than the first time</li></ul>")
 
-	err := client.SystemIntake.SendRequestEditsNotification(ctx, emailNotificationRecipients, intakeID, "Super Secret Bonus Form", "Form Update Initiative", "Mr. Good Bar", " <strong> Great Job! </strong>", additionalInfo)
+	err := client.SystemIntake.SendRequestEditsNotification(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Super Secret Bonus Form",
+		"Form Update Initiative",
+		"Mr. Good Bar",
+		" <strong> Great Job! </strong>",
+		additionalInfo,
+	)
 	noErr(err)
 
-	err = client.SystemIntake.SendCloseRequestNotification(ctx, emailNotificationRecipients, intakeID, "Super Secret Bonus Form", "Snickers", reason, &submittedAt, additionalInfo)
+	err = client.SystemIntake.SendCloseRequestNotification(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Super Secret Bonus Form",
+		"Snickers",
+		reason,
+		&submittedAt,
+		additionalInfo,
+	)
 	noErr(err)
 
-	err = client.SystemIntake.SendReopenRequestNotification(ctx, emailNotificationRecipients, intakeID, "Super Secret Bonus Form", "Heath Bar", reason, &submittedAt, additionalInfo)
+	err = client.SystemIntake.SendReopenRequestNotification(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Super Secret Bonus Form",
+		"Heath Bar",
+		reason,
+		&submittedAt,
+		additionalInfo,
+	)
 	noErr(err)
+
+	err = client.SystemIntake.SendProgressToNewStepNotification(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		newStep,
+		"Super Secret Bonus Form",
+		"Whatchamacallit",
+		feedback,
+		additionalInfo,
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendNotApprovedNotification(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Super Secret Bonus Form",
+		"Zero Bar",
+		*reason,
+		*nextSteps,
+		additionalInfo,
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendNotITGovRequestNotification(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Super Secret Bonus Form",
+		"Heath Bar",
+		reason,
+		additionalInfo,
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendIssueLCIDNotification(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Mounds",
+		lifecycleID,
+		lifecycleIssuedAt,
+		&lifecycleExpiresAt,
+		*lifecycleScope,
+		lifecycleCostBaseline,
+		*nextSteps,
+		models.TRBFRNotRecommended,
+		"George of the Jungle",
+		additionalInfo,
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendConfirmLCIDNotification(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Butterfinger",
+		lifecycleID,
+		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
+		*lifecycleScope,
+		lifecycleCostBaseline,
+		*nextSteps,
+		models.TRBFRStronglyRecommended,
+		"Marvin the Martian",
+		additionalInfo,
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendRetireLCIDNotification(
+		ctx,
+		emailNotificationRecipients,
+		lifecycleID,
+		&lifecycleRetiresAt,
+		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
+		*lifecycleScope,
+		lifecycleCostBaseline,
+		reason,
+		*nextSteps,
+		additionalInfo,
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendExpireLCIDNotification(
+		ctx,
+		emailNotificationRecipients,
+		lifecycleID,
+		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
+		*lifecycleScope,
+		lifecycleCostBaseline,
+		*reason,
+		nextSteps,
+		additionalInfo,
+	)
+	noErr(err)
+
+	err = client.SystemIntake.SendUpdateLCIDNotification(
+		ctx,
+		emailNotificationRecipients,
+		lifecycleID,
+		&lifecycleIssuedAt,
+		&lifecycleExpiresAt,
+		&lifecycleExpiresAt,
+		lifecycleScope,
+		lifecycleScope,
+		lifecycleCostBaseline,
+		lifecycleCostBaseline,
+		nextSteps,
+		nextSteps,
+		time.Now(),
+		reason,
+		additionalInfo,
+	)
+	noErr(err)
+	err = client.SystemIntake.SendChangeLCIDRetirementDateNotification(
+		ctx,
+		emailNotificationRecipients,
+		lifecycleID,
+		&lifecycleRetiresAt,
+		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
+		*lifecycleScope,
+		lifecycleCostBaseline,
+		*nextSteps,
+		additionalInfo,
+	)
+	noErr(err)
+
 }

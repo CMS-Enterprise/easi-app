@@ -1,0 +1,23 @@
+{{template "easi_header.gohtml"}}
+
+<p>A previously-issued Life Cycle ID (LCID) has expired.</p>
+
+<p>Reason: {{.Reason}}<br>
+{{if .DecisionNextSteps}}Next steps: {{.DecisionNextSteps}}{{end}}</p>
+
+If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.
+
+<p><u>Summary of expired Life Cycle ID</u><br>
+<strong>Lifecycle ID:</strong> {{.LifecycleID}}<br>
+{{ if .LifecycleIssuedAt -}}
+<strong>Original date issued:</strong> {{.LifecycleIssuedAt}}<br>
+{{ end -}}
+<strong>Expiration date:</strong> {{.LifecycleExpiresAt}}<br>
+<strong>Scope:</strong> {{.LifecycleScope}}<br>
+<strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}</p>
+
+{{if .AdditionalInfo}}<hr><p><strong>Additional information from the Governance Team:</strong></p><p>{{.AdditionalInfo}}</p>{{end}}
+<hr>
+
+<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>
+

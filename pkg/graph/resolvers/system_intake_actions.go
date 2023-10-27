@@ -399,6 +399,7 @@ func RejectIntakeAsNotApproved(
 func IssueLCID(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeIssueLCIDInput,
 ) (*models.SystemIntake, error) {
@@ -425,6 +426,9 @@ func IssueLCID(
 		return nil, err
 	}
 
+	// get current time
+	currTime := time.Now()
+
 	// update workflow state
 	intake.Step = models.SystemIntakeStepDECISION
 	intake.State = models.SystemIntakeStateCLOSED
@@ -433,14 +437,14 @@ func IssueLCID(
 	// update LCID-related fields
 	intake.LifecycleID = null.StringFrom(newLCID)
 	intake.LifecycleExpiresAt = &input.ExpiresAt
+	intake.LifecycleIssuedAt = &currTime
 	intake.LifecycleScope = &input.Scope
 	intake.DecisionNextSteps = &input.NextSteps
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 
 	// update other fields
-	updatedTime := time.Now()
-	intake.UpdatedAt = &updatedTime
+	intake.UpdatedAt = &currTime
 
 	// save intake, action, admin note
 	// see Note [Database calls from resolvers aren't atomic]
@@ -496,6 +500,29 @@ func IssueLCID(
 				return errCreateNote
 			}
 
+			return nil
+		})
+	}
+
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		errGroup.Go(func() error {
+			err = emailClient.SystemIntake.SendIssueLCIDNotification(ctx,
+				*input.NotificationRecipients,
+				intake.ID,
+				intake.ProjectName.ValueOrZero(),
+				newLCID,
+				currTime,
+				&input.ExpiresAt,
+				input.Scope,
+				*input.CostBaseline,
+				input.NextSteps,
+				input.TrbFollowUp,
+				intake.Requester,
+				input.AdditionalInfo,
+			)
+			if err != nil {
+				return err
+			}
 			return nil
 		})
 	}
@@ -738,6 +765,7 @@ func CreateSystemIntakeActionNotITGovRequest(
 func UpdateLCID(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeUpdateLCIDInput,
 ) (*models.SystemIntake, error) {
@@ -769,6 +797,26 @@ func UpdateLCID(
 	intake.State = models.SystemIntakeStateCLOSED
 	intake.DecisionState = models.SIDSLcidIssued
 
+	// Capture current LCID data for email notification
+	var prevExpiration *time.Time
+	var prevScope *models.HTML
+	var prevSteps *models.HTML
+	var prevCostBaseline string
+	var newCostBaseline string
+	if intake.LifecycleScope != nil {
+		scope := *intake.LifecycleScope
+		prevScope = &scope
+	}
+	if intake.LifecycleExpiresAt != nil {
+		expirationTime := *intake.LifecycleExpiresAt
+		prevExpiration = &expirationTime
+	}
+	if intake.DecisionNextSteps != nil {
+		steps := *intake.DecisionNextSteps
+		prevSteps = &steps
+	}
+	prevCostBaseline = intake.LifecycleCostBaseline.ValueOrZero()
+
 	// update LCID-related fields when they are set
 	if input.ExpiresAt != nil {
 		intake.LifecycleExpiresAt = input.ExpiresAt
@@ -780,6 +828,7 @@ func UpdateLCID(
 		intake.DecisionNextSteps = input.NextSteps
 	}
 	if input.CostBaseline != nil {
+		newCostBaseline = *input.CostBaseline
 		intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 	}
 
@@ -832,6 +881,32 @@ func UpdateLCID(
 			return nil
 		})
 	}
+
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		errGroup.Go(func() error {
+			err = emailClient.SystemIntake.SendUpdateLCIDNotification(ctx,
+				*input.NotificationRecipients,
+				intake.LifecycleID.ValueOrZero(),
+				intake.LifecycleIssuedAt,
+				prevExpiration,
+				input.ExpiresAt,
+				prevScope,
+				input.Scope,
+				prevCostBaseline,
+				newCostBaseline,
+				prevSteps,
+				input.NextSteps,
+				updatedTime,
+				input.Reason,
+				input.AdditionalInfo,
+			)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
+	}
+
 	if err := errGroup.Wait(); err != nil {
 		return nil, err
 	}
@@ -842,6 +917,7 @@ func UpdateLCID(
 // ConfirmLCID is used to confirm the choices of an already issued LCID. All fields are required, and should come back pre-populated by the front end with the previous answer
 func ConfirmLCID(ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeConfirmLCIDInput,
 ) (*models.SystemIntake, error) {
@@ -932,6 +1008,30 @@ func ConfirmLCID(ctx context.Context,
 			return nil
 		})
 	}
+
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		errGroup.Go(func() error {
+			err = emailClient.SystemIntake.SendConfirmLCIDNotification(ctx,
+				*input.NotificationRecipients,
+				intake.ID,
+				intake.ProjectName.ValueOrZero(),
+				intake.LifecycleID.ValueOrZero(),
+				&input.ExpiresAt,
+				intake.LifecycleIssuedAt,
+				input.Scope,
+				*input.CostBaseline,
+				input.NextSteps,
+				input.TrbFollowUp,
+				intake.Requester,
+				input.AdditionalInfo,
+			)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
+	}
+
 	if err := errGroup.Wait(); err != nil {
 		return nil, err
 	}
@@ -943,6 +1043,7 @@ func ConfirmLCID(ctx context.Context,
 func ExpireLCID(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeExpireLCIDInput,
 ) (*models.SystemIntake, error) {
@@ -1040,6 +1141,26 @@ func ExpireLCID(
 		})
 	}
 
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		errGroup.Go(func() error {
+			err = emailClient.SystemIntake.SendExpireLCIDNotification(ctx,
+				*input.NotificationRecipients,
+				intake.LifecycleID.ValueOrZero(),
+				intake.LifecycleExpiresAt,
+				intake.LifecycleIssuedAt,
+				*intake.LifecycleScope,
+				intake.LifecycleCostBaseline.ValueOrZero(),
+				input.Reason,
+				input.NextSteps,
+				input.AdditionalInfo,
+			)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
+	}
+
 	if err := errGroup.Wait(); err != nil {
 		return nil, err
 	}
@@ -1051,6 +1172,7 @@ func ExpireLCID(
 func RetireLCID(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeRetireLCIDInput,
 ) (*models.SystemIntake, error) {
@@ -1130,6 +1252,27 @@ func RetireLCID(
 		})
 	}
 
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		errGroup.Go(func() error {
+			err = emailClient.SystemIntake.SendRetireLCIDNotification(ctx,
+				*input.NotificationRecipients,
+				intake.LifecycleID.ValueOrZero(),
+				&input.RetiresAt,
+				intake.LifecycleExpiresAt,
+				intake.LifecycleIssuedAt,
+				*intake.LifecycleScope,
+				intake.LifecycleCostBaseline.ValueOrZero(),
+				input.Reason,
+				*intake.DecisionNextSteps,
+				input.AdditionalInfo,
+			)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
+	}
+
 	if err := errGroup.Wait(); err != nil {
 		return nil, err
 	}
@@ -1141,6 +1284,7 @@ func RetireLCID(
 func ChangeLCIDRetirementDate(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input model.SystemIntakeChangeLCIDRetirementDateInput,
 ) (*models.SystemIntake, error) {
@@ -1215,6 +1359,26 @@ func ChangeLCIDRetirementDate(
 				return errCreateNote
 			}
 
+			return nil
+		})
+	}
+
+	if emailClient != nil && input.NotificationRecipients != nil { // Don't email if no recipients are provided or there isn't an email client
+		errGroup.Go(func() error {
+			err = emailClient.SystemIntake.SendChangeLCIDRetirementDateNotification(ctx,
+				*input.NotificationRecipients,
+				intake.LifecycleID.ValueOrZero(),
+				&input.RetiresAt,
+				intake.LifecycleExpiresAt,
+				intake.LifecycleIssuedAt,
+				*intake.LifecycleScope,
+				intake.LifecycleCostBaseline.ValueOrZero(),
+				*intake.DecisionNextSteps,
+				input.AdditionalInfo,
+			)
+			if err != nil {
+				return err
+			}
 			return nil
 		})
 	}
