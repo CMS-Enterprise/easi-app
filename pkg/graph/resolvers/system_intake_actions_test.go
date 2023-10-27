@@ -447,7 +447,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.EqualValues(input.TrbFollowUp, *updatedIntake.TRBFollowUpRecommendation)
 		s.EqualValues(*input.CostBaseline, updatedIntake.LifecycleCostBaseline.ValueOrZero())
 
-		// expiration date requires some special test code;
+		// expiration date and issued date require some special test code;
 		// - EqualValues() doesn't necessarily work, because the timezones might be different
 		// - using the .Equal() method from time.Time doesn't work, because input.ExpiresAt has more precision than updatedIntake.LifecycleExpiresAt
 		// - using EqualValues() with input.ExpiresAt.Date() and updatedIntake.LifecycleExpiresAt.Date() doesn't work, because those functions both return triples
@@ -455,6 +455,9 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.EqualValues(input.ExpiresAt.UTC().Year(), updatedIntake.LifecycleExpiresAt.Year())
 		s.EqualValues(input.ExpiresAt.UTC().Month(), updatedIntake.LifecycleExpiresAt.Month())
 		s.EqualValues(input.ExpiresAt.UTC().Day(), updatedIntake.LifecycleExpiresAt.Day())
+		s.EqualValues(time.Now().UTC().Year(), updatedIntake.LifecycleIssuedAt.Year())
+		s.EqualValues(time.Now().UTC().Month(), updatedIntake.LifecycleIssuedAt.Month())
+		s.EqualValues(time.Now().UTC().Day(), updatedIntake.LifecycleIssuedAt.Day())
 
 		// should create action
 		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, updatedIntake.ID)

@@ -8,6 +8,9 @@ If you have questions, please contact the Governance Team at <a href="mailto:{{.
 
 <p><u>Summary of retired Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> {{.LifecycleID}}<br>
+{{ if .LifecycleIssuedAt -}}
+<strong>Original date issued:</strong> {{.LifecycleIssuedAt}}<br>
+{{ end -}}
 <strong>Expiration date:</strong> {{.LifecycleExpiresAt}}<br>
 <strong>Scope:</strong> {{.LifecycleScope}}<br>
 <strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}<br>
