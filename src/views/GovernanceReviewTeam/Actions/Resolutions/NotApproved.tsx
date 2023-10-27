@@ -50,7 +50,10 @@ const NotApproved = ({
   const form = useForm<NotApprovedFields>({
     resolver: yupResolver(notApprovedSchema)
   });
-  const { control } = form;
+  const {
+    control,
+    formState: { isValid }
+  } = form;
 
   /**
    * Reject intake on form submit
@@ -74,6 +77,7 @@ const NotApproved = ({
         successMessage={t('notApproved.success')}
         onSubmit={onSubmit}
         errorKeyContext="notApproved"
+        disableSubmit={!isValid}
         title={
           <ResolutionTitleBox
             title={t('resolutions.summary.notApproved')}
