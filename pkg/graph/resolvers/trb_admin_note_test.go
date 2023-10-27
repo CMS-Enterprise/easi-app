@@ -392,7 +392,8 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		s.NotNil(trbRequest)
 
 		// set up three documents and attach two to the note
-		// we can check that the resolver returns multiple docs, and check that not all docs on the request are returned
+		// we can test that the resolver returns multiple docs
+		// and test that not all docs on the request are returned
 		documentIDs := []uuid.UUID{}
 		for i := 0; i < 3; i++ {
 			// just create the database record for the documents; don't go through the resolver so we don't need to set up file uploads
@@ -411,7 +412,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 			documentIDs = append(documentIDs, createdDoc.ID)
 		}
 
-		// set up admin note referencing the documents
+		// set up admin note referencing two of the documents
 		input := model.CreateTRBAdminNoteSupportingDocumentsInput{
 			TrbRequestID: trbRequest.ID,
 			NoteText:     "test TRB admin note - supporting documents",
@@ -424,13 +425,14 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		s.NoError(err)
 		s.NotNil(createdNote)
 
-		// check that resolver returns the right documents
+		// call the resolver we're testing
 		categorySpecificData, err := GetTRBAdminNoteCategorySpecificData(ctx, store, createdNote)
 		s.NoError(err)
-
+		s.NotNil(categorySpecificData)
 		supportingDocumentsData, ok := categorySpecificData.(model.TRBAdminNoteSupportingDocumentsCategoryData)
-		s.True(ok)
+		s.True(ok) // test that categorySpecificData is of the right type
 
+		// test that resolver returns the right documents
 		returnedDocuments := supportingDocumentsData.Documents
 		s.Len(returnedDocuments, 2)
 
@@ -453,5 +455,76 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 
 	s.Run("Advice Letter notes return related recommendations for the note's category-specific data", func() {
 		// don't need to test AppliesToMeetingSummary/AppliesToNextSteps fields - code is trivial, just accessing fields on the note model
+
+		// set up request
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		s.NoError(err)
+		s.NotNil(trbRequest)
+
+		// set up advice letter
+		createdAdviceLetter, err := CreateTRBAdviceLetter(ctx, store, trbRequest.ID)
+		s.NoError(err)
+		s.NotNil(createdAdviceLetter)
+
+		// set up three recommendations and attach two to the note
+		// we can test that the resolver returns multiple recommendations
+		// and test that not all recommendations on the request are returned
+		recommendationIDs := []uuid.UUID{}
+		for i := 0; i < 3; i++ {
+			recToCreate := &models.TRBAdviceLetterRecommendation{
+				TRBRequestID:   trbRequest.ID,
+				Title:          fmt.Sprintf("Admin Note Test Recommendation %v", i),
+				Recommendation: "Testing category-specific data query resolver",
+				Links:          []string{},
+			}
+			createdRec, errCreatingRec := CreateTRBAdviceLetterRecommendation(ctx, store, recToCreate)
+			s.NoError(errCreatingRec)
+			s.NotNil(createdRec)
+			recommendationIDs = append(recommendationIDs, createdRec.ID)
+		}
+
+		// set up admin note referencing two of the recommendations
+		input := model.CreateTRBAdminNoteAdviceLetterInput{
+			TrbRequestID: trbRequest.ID,
+			NoteText:     "test TRB admin note - advice letter",
+			RecommendationIDs: []uuid.UUID{
+				recommendationIDs[0],
+				recommendationIDs[1],
+			},
+
+			// values don't matter, we're not testing then
+			AppliesToMeetingSummary: false,
+			AppliesToNextSteps:      false,
+		}
+		createdNote, err := CreateTRBAdminNoteAdviceLetter(ctx, store, input)
+		s.NoError(err)
+		s.NotNil(createdNote)
+
+		// call the resolver we're testing
+		categorySpecificData, err := GetTRBAdminNoteCategorySpecificData(ctx, store, createdNote)
+		s.NoError(err)
+		s.NotNil(categorySpecificData)
+		adviceLetterData, ok := categorySpecificData.(model.TRBAdminNoteAdviceLetterCategoryData)
+		s.True(ok) // test that categorySpecificData is of the right type
+
+		// test that resolver returns the right recommendations
+		returnedRecommendations := adviceLetterData.Recommendations
+		s.Len(returnedRecommendations, 2)
+
+		recommendation0Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBAdviceLetterRecommendation) bool {
+			return rec.ID == recommendationIDs[0]
+		})
+		s.True(recommendation0Returned)
+
+		recommendation1Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBAdviceLetterRecommendation) bool {
+			return rec.ID == recommendationIDs[1]
+		})
+		s.True(recommendation1Returned)
+
+		// test that the third recommendation (that wasn't attached to the note) *isn't* returned
+		recommendation2Returned := slices.ContainsFunc(returnedRecommendations, func(rec *models.TRBAdviceLetterRecommendation) bool {
+			return rec.ID == recommendationIDs[2]
+		})
+		s.False(recommendation2Returned)
 	})
 }
