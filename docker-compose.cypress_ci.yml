@@ -22,6 +22,7 @@ services:
       - MINIO_SECRET_KEY=minioadmin
   easi:
     image: '${ECR_REGISTRY}/easi-backend:${GIT_HASH}'
+    entrypoint: /easi/easi
     environment:
       - APP_ENV=test
       - EMAIL_TEMPLATE_DIR=/easi/templates
