@@ -24,9 +24,7 @@ func TestAuthorizationTestSuite(t *testing.T) {
 		logger: zap.NewNop(),
 	}
 
-	if false && !testing.Short() {
-		suite.Run(t, testSuite)
-	}
+	suite.Run(t, testSuite)
 }
 
 func (s *AuthorizationTestSuite) TestAllowsAuthenticatedRequests() {
@@ -35,30 +33,30 @@ func (s *AuthorizationTestSuite) TestAllowsAuthenticatedRequests() {
 	req = req.WithContext(appcontext.WithPrincipal(req.Context(), &principal))
 
 	rr := httptest.NewRecorder()
-	handlerRun := false
+	hasHandlerRun := false
 	testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handlerRun = true
+		hasHandlerRun = true
 	})
 
 	middleware := requirePrincipalMiddleware(testHandler)
 	middleware.ServeHTTP(rr, req)
 
-	s.True(handlerRun)
+	s.True(hasHandlerRun) // middleware should have accepted the authenticated request and called testHandler
 }
 
 func (s *AuthorizationTestSuite) TestRejectsAnonymousRequests() {
 	req := httptest.NewRequest("GET", "/", nil)
 
 	rr := httptest.NewRecorder()
-	handlerRun := false
+	hasHandlerRun := false
 	testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		handlerRun = true
+		hasHandlerRun = true
 	})
 
 	middleware := requirePrincipalMiddleware(testHandler)
 	middleware.ServeHTTP(rr, req)
 
-	s.False(handlerRun)
+	s.False(hasHandlerRun) // middleware should have rejected the anonymous request and responded without calling testHandler
 
 	var payload struct {
 		Errors []struct {
@@ -68,7 +66,7 @@ func (s *AuthorizationTestSuite) TestRejectsAnonymousRequests() {
 
 	result := rr.Result()
 
-	s.Equal(403, result.Status)
+	s.Equal(http.StatusUnauthorized, result.StatusCode)
 
 	decoder := json.NewDecoder(result.Body)
 	decodeErr := decoder.Decode(&payload)
