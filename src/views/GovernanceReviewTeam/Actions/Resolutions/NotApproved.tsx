@@ -45,7 +45,9 @@ const NotApproved = ({
   const [rejectIntake] = useMutation<
     CreateSystemIntakeActionRejectIntake,
     CreateSystemIntakeActionRejectIntakeVariables
-  >(CreateSystemIntakeActionRejectIntakeQuery);
+  >(CreateSystemIntakeActionRejectIntakeQuery, {
+    refetchQueries: ['GetSystemIntake']
+  });
 
   const form = useForm<NotApprovedFields>({
     resolver: yupResolver(notApprovedSchema)
