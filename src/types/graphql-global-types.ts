@@ -996,6 +996,19 @@ export interface SystemIntakeProductManagerInput {
 }
 
 /**
+ * Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
+ */
+export interface SystemIntakeRejectIntakeInput {
+  systemIntakeID: UUID;
+  reason: HTML;
+  nextSteps: HTML;
+  trbFollowUp: SystemIntakeTRBFollowUp;
+  additionalInfo?: HTML | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * Input for creating a Request Edits Action in Admin Actions v2
  */
 export interface SystemIntakeRequestEditsInput {

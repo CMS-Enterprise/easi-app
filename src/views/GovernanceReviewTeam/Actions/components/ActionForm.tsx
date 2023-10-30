@@ -54,6 +54,12 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   requiredFields?: boolean;
   /** Disable form submit buttons */
   disableSubmit?: boolean;
+  /**
+   * Prefix for field error translation keys
+   *
+   * Used to get correct error text if field keys are already being used in another form
+   */
+  errorKeyContext?: string;
   children?: React.ReactNode;
   className?: string;
 } & Omit<JSX.IntrinsicElements['form'], 'onSubmit' | 'title'>;
@@ -77,6 +83,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   modal,
   requiredFields = true,
   disableSubmit,
+  errorKeyContext,
   children,
   className,
   ...formProps
@@ -251,7 +258,9 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
             slim={false}
           >
             {fieldErrorKeys.map(fieldName => {
-              const label = t(`errorLabels.${fieldName}`);
+              const label = t(`errorLabels.${fieldName}`, {
+                context: errorKeyContext
+              });
               const error = errors[fieldName as keyof typeof errors]?.message;
 
               const message = `${label}: ${t(error || '')}`;
