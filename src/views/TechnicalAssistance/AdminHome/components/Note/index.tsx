@@ -56,7 +56,12 @@ const Note = ({ note, className, border = true }: NoteProps) => {
       ...(appliesToMeetingSummary ? [t('notes.labels.meetingSummary')] : []),
       ...(appliesToNextSteps ? [t('notes.labels.nextSteps')] : []),
       ...recommendations.map(rec =>
-        t('notes.labels.recommendation', { title: rec.title })
+        t(
+          `notes.labels.${
+            rec.deletedAt ? 'removedRecommendation' : 'recommendation'
+          }`,
+          { title: rec.title }
+        )
       )
     ].join(', ');
 
