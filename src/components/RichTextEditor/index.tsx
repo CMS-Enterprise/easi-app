@@ -17,6 +17,7 @@ import {
 } from '@toast-ui/react-editor';
 import classNames from 'classnames';
 import DOMPurify from 'dompurify';
+import { FieldAttributes } from 'formik';
 
 import ExternalLinkModal from 'components/shared/ExternalLinkModal';
 
@@ -39,6 +40,8 @@ interface RichTextEditorProps extends EditorProps {
   /** RHF controlled input field */
   field?: ControllerRenderProps<any, any>;
   required?: boolean;
+  onChange?: (v: any) => void;
+  value?: any;
 }
 
 /**
@@ -261,8 +264,15 @@ const linkAttributes = {
  * Set to WYSIWYG mode only.
  * The input value is HTML.
  */
-function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
+function RichTextEditor({
+  className,
+  field,
+  onChange,
+  ...props
+}: RichTextEditorProps) {
   const editorRef = React.createRef<Editor>();
+
+  console.log('rte field', field);
 
   // Make sure to apply mods only once
   useEffect(() => {
@@ -296,8 +306,8 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
         // since field html values are parsed again in the backend.
         // linkAttributes={linkAttributes}
 
-        onBlur={() => {
-          field?.onBlur();
+        onBlur={e => {
+          // field?.onBlur();
         }}
         onChange={() => {
           const val = editorRef.current?.getInstance().getHTML() || '';
@@ -307,13 +317,16 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
           // Get the text content and make sure to set an empty string properly
           // so that text input validations work as expected.
           if (extractTextContent(val) === '') {
-            field?.onChange('');
+            if (onChange) onChange('');
+            else field?.onChange('');
             return;
           }
 
           // Sanitize input before calling onChange
           const sanitized = sanitizeInput(val);
-          field?.onChange(sanitized);
+          // console.log('valu', sanitized, field);
+          if (onChange) onChange(sanitized);
+          else field?.onChange(sanitized);
         }}
         {...props}
         // Ensure the height prop is overridden after argument assignments
@@ -325,6 +338,35 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
 }
 
 export default RichTextEditor;
+
+export function FormikRichTextEditor({
+  field,
+  form,
+  ...props
+}: FieldAttributes<any>) {
+  console.log('field', field, form, props);
+
+  const onChange = (value: any) => {
+    form.setFieldValue(field.name, value);
+  };
+
+  const value = props.value ? props.value : field.value;
+
+  // form.rah();
+  return (
+    <RichTextEditor
+      // editableProps={{
+      //   id: field.name,
+      //   'data-testid': field.name,
+      //   'aria-describedby': `${field.name}-hint`,
+      //   'aria-labelledby': `${field.name}-label`
+      // }}
+      // field={{ ...field, value: field.value || '' }}
+      field={{ ...field, value: value || '' }}
+      onChange={onChange}
+    />
+  );
+}
 
 interface RichTextViewerProps extends Omit<ViewerProps, 'initialValue'> {
   /** Wrapper div classname */

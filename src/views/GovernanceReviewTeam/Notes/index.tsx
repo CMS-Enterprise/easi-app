@@ -15,12 +15,12 @@ import {
   NotesList
 } from 'components/NotesList';
 import PageHeading from 'components/PageHeading';
+import { FormikRichTextEditor } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
 import TruncatedText from 'components/shared/TruncatedText';
 import CreateSystemIntakeNoteQuery from 'queries/CreateSystemIntakeNoteQuery';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
@@ -223,6 +223,24 @@ const Notes = () => {
                     {t('notes.editModal.contentLabel')}
                   </Label>
                   <Field
+                    // as={FormikRichTextEditor}
+                    component={FormikRichTextEditor}
+                    id="GovernanceReviewTeam-EditNote"
+                    name="editNote"
+                    className="easi-grt__note-textarea margin-bottom-4"
+                    onChange={(e: { target: { value: any } }) => {
+                      setupNoteModal({
+                        ...noteModal,
+                        ...{
+                          content: e.target.value
+                        }
+                      });
+                    }}
+                    value={noteModal.content}
+                    onBlur={() => {}}
+                  />
+                  {/*
+                  <Field
                     as={TextAreaField}
                     id="GovernanceReviewTeam-EditNote"
                     name="editNote"
@@ -238,6 +256,7 @@ const Notes = () => {
                     value={noteModal.content}
                     onBlur={() => {}}
                   />
+                  */}
                   <Button
                     type="button"
                     id="GovernanceReviewTeam-SaveEditsButton"
@@ -507,6 +526,7 @@ const Notes = () => {
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {(formikProps: FormikProps<NoteForm>) => {
           const { values, handleSubmit } = formikProps;
+          console.log('values', values);
           return (
             <div className="tablet:grid-col-9 margin-bottom-7">
               {createMutationResult && createMutationResult.error && (
@@ -528,12 +548,22 @@ const Notes = () => {
                     {t('notes.addNote')}
                   </Label>
                   <Field
+                    // as={FormikRichTextEditor}
+                    component={FormikRichTextEditor}
+                    id="GovernanceReviewTeam-Note"
+                    maxLength={2000}
+                    name="note"
+                    className="easi-grt__note-field"
+                  />
+                  {/*
+                  <Field
                     as={TextAreaField}
                     id="GovernanceReviewTeam-Note"
                     maxLength={2000}
                     name="note"
                     className="easi-grt__note-field"
                   />
+                  */}
                 </FieldGroup>
                 <Button
                   className="margin-top-2"
