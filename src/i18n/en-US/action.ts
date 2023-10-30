@@ -70,7 +70,8 @@ const action = {
     trbFollowUp: 'TRB follow-up',
     intakeFormStep: 'Which form needs edits?',
     emailFeedback: 'What changes are needed?',
-    reason: 'Why are you expiring this Life Cycle ID?'
+    reason: 'Why are you expiring this Life Cycle ID?',
+    reason_notApproved: 'Reason'
   },
   manageLcid: {
     title: 'Manage a Life Cycle ID (LCID)',
@@ -283,7 +284,7 @@ const action = {
       'After you confirm this decision, you may continue to modify this LCID using any of the “Manage a Life Cycle ID” actions.'
   },
   decisionModal: {
-    title: 'Are you sure you want to complete this action?',
+    title: 'Are you sure you want to complete this decision action?',
     content:
       'You previously requested that the team make changes to their {{action}}. Completing this decision action will remove the “Edits requested” status from that form, and the requester will no longer be able to make any changes.',
     intakeRequest: 'intake request form',
@@ -374,6 +375,15 @@ const action = {
       'Describe why you arrived at this decision and what process the requester should start, if applicable.',
     success:
       'This request is marked as Not an IT Governance request. This request is now closed.'
+  },
+  notApproved: {
+    reason: 'Reason',
+    reasonHelpText:
+      'Provide the reasons why this request, in its current state, was not approved. Include any concerns raised about it.',
+    nextStepsHelpText:
+      'Provide the requester with clear, actionable next steps for how to proceed and if or when and how they should return to the IT Governance process.',
+    success:
+      'This request was not approved by the GRB. This request is now closed.'
   },
   rejectIntake: {
     backLink: 'Change',

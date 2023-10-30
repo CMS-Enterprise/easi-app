@@ -113,7 +113,10 @@ const adminNotes: GetTrbAdminNotes['trbRequest']['adminNotes'] = [
       __typename: 'UserInfo',
       commonName: requester.userInfo.commonName
     },
-    createdAt: '2024-03-28T13:20:37.852099Z'
+    createdAt: '2024-03-28T13:20:37.852099Z',
+    categorySpecificData: {
+      __typename: 'TRBAdminNoteGeneralRequestCategoryData'
+    }
   }
 ];
 
@@ -430,10 +433,9 @@ export const getTrbAdviceLetterQuery: MockedQuery<
   }
 };
 
-export const getTrbAdminNotesQuery: MockedQuery<
-  GetTrbAdminNotes,
-  GetTrbAdminNotesVariables
-> = {
+export const getTrbAdminNotesQuery = (
+  notes: GetTrbAdminNotes['trbRequest']['adminNotes'] = adminNotes
+): MockedQuery<GetTrbAdminNotes, GetTrbAdminNotesVariables> => ({
   request: {
     query: GetTrbAdminNotesQuery,
     variables: {
@@ -445,11 +447,11 @@ export const getTrbAdminNotesQuery: MockedQuery<
       trbRequest: {
         __typename: 'TRBRequest',
         id: trbRequestId,
-        adminNotes
+        adminNotes: notes
       }
     }
   }
-};
+});
 
 export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
   {

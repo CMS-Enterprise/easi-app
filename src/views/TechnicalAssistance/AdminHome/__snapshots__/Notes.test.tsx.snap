@@ -21,7 +21,7 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
           Notes
         </h1>
         <p
-          class="line-height-body-5 font-body-md margin-top-0 mnargin-bottom-1"
+          class="line-height-body-4 text-light font-body-md margin-top-0"
         >
           Admin notes are internal TRB notes to communicate with other TRB members about this request. They will not be visible to the requester.
         </p>
@@ -29,19 +29,19 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
     </div>
     <a
       class="usa-button margin-bottom-4"
-      href="/trb/449ea115-8bfa-48c3-b1dd-5a613d79fbae/notes/add-note"
+      href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/notes/add-note"
     >
       Add a note
     </a>
     <div
-      class="margin-top-2"
+      class="margin-top-1"
     >
-      <div
-        class="grid-row margin-bottom-4"
-        data-testid="grid"
+      <dl
+        class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 border-bottom-1px border-base-light padding-bottom-3"
+        data-testid="trb-note"
       >
         <div
-          class="desktop:grid-col-6"
+          class="desktop:grid-col-6 margin-bottom-2"
           data-testid="grid"
         >
           <dt
@@ -50,13 +50,13 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
             Date
           </dt>
           <dd
-            class="margin-left-0 margin-bottom-2 line-height-body-5"
+            class="margin-left-0"
           >
             March 28, 2024
           </dd>
         </div>
         <div
-          class="desktop:grid-col-6"
+          class="desktop:grid-col-6 margin-bottom-2"
           data-testid="grid"
         >
           <dt
@@ -65,40 +65,38 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
             Note author
           </dt>
           <dd
-            class="margin-left-0 margin-bottom-2 line-height-body-5"
+            class="margin-left-0"
           >
             Jerry Seinfeld
           </dd>
         </div>
         <div
-          class="desktop:grid-col-12 margin-top-1"
+          class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
           data-testid="grid"
         >
-          <div
-            class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+          <dt
+            class="text-bold"
           >
-            <p
-              class="margin-bottom-0 text-bold"
-            >
-              What is this note about?
-            </p>
-            <p
-              class="margin-top-0"
-            >
-              General note about this request
-            </p>
-            <p>
-              My cute original note
-            </p>
-          </div>
+            What is this note about?
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            Initial request form: Basic request details, Subject areas
+          </dd>
+          <dd
+            class="margin-left-0 margin-top-2"
+          >
+            Initial Request Form Note
+          </dd>
         </div>
-      </div>
-      <div
-        class="grid-row margin-bottom-4"
-        data-testid="grid"
+      </dl>
+      <dl
+        class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 border-bottom-1px border-base-light padding-bottom-3"
+        data-testid="trb-note"
       >
         <div
-          class="desktop:grid-col-6"
+          class="desktop:grid-col-6 margin-bottom-2"
           data-testid="grid"
         >
           <dt
@@ -107,13 +105,13 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
             Date
           </dt>
           <dd
-            class="margin-left-0 margin-bottom-2 line-height-body-5"
+            class="margin-left-0"
           >
-            May 29, 2023
+            March 27, 2024
           </dd>
         </div>
         <div
-          class="desktop:grid-col-6"
+          class="desktop:grid-col-6 margin-bottom-2"
           data-testid="grid"
         >
           <dt
@@ -122,40 +120,38 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
             Note author
           </dt>
           <dd
-            class="margin-left-0 margin-bottom-2 line-height-body-5"
+            class="margin-left-0"
           >
-            Jerry Who
+            Jerry Seinfeld
           </dd>
         </div>
         <div
-          class="desktop:grid-col-12 margin-top-1"
+          class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
           data-testid="grid"
         >
-          <div
-            class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+          <dt
+            class="text-bold"
           >
-            <p
-              class="margin-bottom-0 text-bold"
-            >
-              What is this note about?
-            </p>
-            <p
-              class="margin-top-0"
-            >
-              General note about this request
-            </p>
-            <p>
-              My cute note5
-            </p>
-          </div>
+            What is this note about?
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            Supporting documents: documentOne.pdf, documentTwo.pdf
+          </dd>
+          <dd
+            class="margin-left-0 margin-top-2"
+          >
+            Supporting Documents Note
+          </dd>
         </div>
-      </div>
-      <div
-        class="grid-row margin-bottom-4"
-        data-testid="grid"
+      </dl>
+      <dl
+        class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 border-bottom-1px border-base-light padding-bottom-3"
+        data-testid="trb-note"
       >
         <div
-          class="desktop:grid-col-6"
+          class="desktop:grid-col-6 margin-bottom-2"
           data-testid="grid"
         >
           <dt
@@ -164,13 +160,13 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
             Date
           </dt>
           <dd
-            class="margin-left-0 margin-bottom-2 line-height-body-5"
+            class="margin-left-0"
           >
-            May 29, 2023
+            March 26, 2024
           </dd>
         </div>
         <div
-          class="desktop:grid-col-6"
+          class="desktop:grid-col-6 margin-bottom-2"
           data-testid="grid"
         >
           <dt
@@ -179,40 +175,38 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
             Note author
           </dt>
           <dd
-            class="margin-left-0 margin-bottom-2 line-height-body-5"
+            class="margin-left-0"
           >
-            Jerry Who
+            Jerry Seinfeld
           </dd>
         </div>
         <div
-          class="desktop:grid-col-12 margin-top-1"
+          class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
           data-testid="grid"
         >
-          <div
-            class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+          <dt
+            class="text-bold"
           >
-            <p
-              class="margin-bottom-0 text-bold"
-            >
-              What is this note about?
-            </p>
-            <p
-              class="margin-top-0"
-            >
-              General note about this request
-            </p>
-            <p>
-              My cute note4
-            </p>
-          </div>
+            What is this note about?
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            Advice letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)
+          </dd>
+          <dd
+            class="margin-left-0 margin-top-2"
+          >
+            Advice Letter Note
+          </dd>
         </div>
-      </div>
-      <div
-        class="grid-row margin-bottom-4"
-        data-testid="grid"
+      </dl>
+      <dl
+        class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 border-bottom-1px border-base-light padding-bottom-3"
+        data-testid="trb-note"
       >
         <div
-          class="desktop:grid-col-6"
+          class="desktop:grid-col-6 margin-bottom-2"
           data-testid="grid"
         >
           <dt
@@ -221,13 +215,13 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
             Date
           </dt>
           <dd
-            class="margin-left-0 margin-bottom-2 line-height-body-5"
+            class="margin-left-0"
           >
-            May 29, 2023
+            March 25, 2024
           </dd>
         </div>
         <div
-          class="desktop:grid-col-6"
+          class="desktop:grid-col-6 margin-bottom-2"
           data-testid="grid"
         >
           <dt
@@ -236,40 +230,38 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
             Note author
           </dt>
           <dd
-            class="margin-left-0 margin-bottom-2 line-height-body-5"
+            class="margin-left-0"
           >
-            Jerry Who
+            Jerry Seinfeld
           </dd>
         </div>
         <div
-          class="desktop:grid-col-12 margin-top-1"
+          class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
           data-testid="grid"
         >
-          <div
-            class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+          <dt
+            class="text-bold"
           >
-            <p
-              class="margin-bottom-0 text-bold"
-            >
-              What is this note about?
-            </p>
-            <p
-              class="margin-top-0"
-            >
-              General note about this request
-            </p>
-            <p>
-              My cute note3
-            </p>
-          </div>
+            What is this note about?
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            General note about this request
+          </dd>
+          <dd
+            class="margin-left-0 margin-top-2"
+          >
+            General Request Note
+          </dd>
         </div>
-      </div>
-      <div
-        class="grid-row margin-bottom-4"
-        data-testid="grid"
+      </dl>
+      <dl
+        class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 border-bottom-1px border-base-light padding-bottom-3"
+        data-testid="trb-note"
       >
         <div
-          class="desktop:grid-col-6"
+          class="desktop:grid-col-6 margin-bottom-2"
           data-testid="grid"
         >
           <dt
@@ -278,13 +270,13 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
             Date
           </dt>
           <dd
-            class="margin-left-0 margin-bottom-2 line-height-body-5"
+            class="margin-left-0"
           >
-            May 29, 2023
+            March 24, 2024
           </dd>
         </div>
         <div
-          class="desktop:grid-col-6"
+          class="desktop:grid-col-6 margin-bottom-2"
           data-testid="grid"
         >
           <dt
@@ -293,40 +285,38 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
             Note author
           </dt>
           <dd
-            class="margin-left-0 margin-bottom-2 line-height-body-5"
+            class="margin-left-0"
           >
-            Jerry Who
+            Jerry Seinfeld
           </dd>
         </div>
         <div
-          class="desktop:grid-col-12 margin-top-1"
+          class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
           data-testid="grid"
         >
-          <div
-            class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+          <dt
+            class="text-bold"
           >
-            <p
-              class="margin-bottom-0 text-bold"
-            >
-              What is this note about?
-            </p>
-            <p
-              class="margin-top-0"
-            >
-              General note about this request
-            </p>
-            <p>
-              My cute note2
-            </p>
-          </div>
+            What is this note about?
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            General note about this request
+          </dd>
+          <dd
+            class="margin-left-0 margin-top-2"
+          >
+            General Request Note
+          </dd>
         </div>
-      </div>
-      <div
-        class="grid-row margin-bottom-4"
-        data-testid="grid"
+      </dl>
+      <dl
+        class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 margin-bottom-0"
+        data-testid="trb-note"
       >
         <div
-          class="desktop:grid-col-6"
+          class="desktop:grid-col-6 margin-bottom-2"
           data-testid="grid"
         >
           <dt
@@ -335,13 +325,13 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
             Date
           </dt>
           <dd
-            class="margin-left-0 margin-bottom-2 line-height-body-5"
+            class="margin-left-0"
           >
-            May 29, 2021
+            March 23, 2024
           </dd>
         </div>
         <div
-          class="desktop:grid-col-6"
+          class="desktop:grid-col-6 margin-bottom-2"
           data-testid="grid"
         >
           <dt
@@ -350,34 +340,32 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
             Note author
           </dt>
           <dd
-            class="margin-left-0 margin-bottom-2 line-height-body-5"
+            class="margin-left-0"
           >
-            Jerry Who
+            Jerry Seinfeld
           </dd>
         </div>
         <div
-          class="desktop:grid-col-12 margin-top-1"
+          class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
           data-testid="grid"
         >
-          <div
-            class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+          <dt
+            class="text-bold"
           >
-            <p
-              class="margin-bottom-0 text-bold"
-            >
-              What is this note about?
-            </p>
-            <p
-              class="margin-top-0"
-            >
-              General note about this request
-            </p>
-            <p>
-              My cute note more
-            </p>
-          </div>
+            What is this note about?
+          </dt>
+          <dd
+            class="margin-left-0"
+          >
+            General note about this request
+          </dd>
+          <dd
+            class="margin-left-0 margin-top-2"
+          >
+            Hidden note
+          </dd>
         </div>
-      </div>
+      </dl>
     </div>
   </div>
 </DocumentFragment>
