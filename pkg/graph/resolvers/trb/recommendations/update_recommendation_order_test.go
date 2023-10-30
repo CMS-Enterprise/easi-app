@@ -9,6 +9,10 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+func intPointer(i int) *int {
+	return &i
+}
+
 func TestIsNewRecommendationOrderValid(t *testing.T) {
 	t.Run("happy path - valid new order for the existing recommendations", func(t *testing.T) {
 		trbRequestID := uuid.New()
@@ -19,7 +23,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: uuid.New(),
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 0,
+				PositionInLetter: intPointer(0),
 				Title:            "Currently at the start, will be reordered to the end",
 			},
 			{
@@ -27,7 +31,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: uuid.New(),
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 1,
+				PositionInLetter: intPointer(1),
 				Title:            "Currently at the end, will be reordered to the start",
 			},
 		}
@@ -54,7 +58,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: uuid.New(),
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 0,
+				PositionInLetter: intPointer(0),
 				Title:            "A single current recommendation",
 			},
 		}
@@ -81,7 +85,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: currentRecIDs[0],
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 0,
+				PositionInLetter: intPointer(0),
 				Title:            "Current recommendation 0",
 			},
 			{
@@ -89,7 +93,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: currentRecIDs[1],
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 1,
+				PositionInLetter: intPointer(1),
 				Title:            "Current recommendation 1",
 			},
 			{
@@ -97,7 +101,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: currentRecIDs[2],
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 2,
+				PositionInLetter: intPointer(2),
 				Title:            "Current recommendation 2",
 			},
 		}
@@ -130,7 +134,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: currentRecIDs[0],
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 0,
+				PositionInLetter: intPointer(0),
 				Title:            "Current recommendation 0",
 			},
 			{
@@ -138,7 +142,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: currentRecIDs[1],
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 1,
+				PositionInLetter: intPointer(1),
 				Title:            "Current recommendation 1",
 			},
 			{
@@ -146,7 +150,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: currentRecIDs[2],
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 2,
+				PositionInLetter: intPointer(2),
 				Title:            "Current recommendation 2",
 			},
 		}
