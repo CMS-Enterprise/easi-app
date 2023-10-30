@@ -294,7 +294,7 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
       // Also prevents the cursor from jumping to the end.
       field.value !== editor.getInstance().getHTML()
     ) {
-      editor.getInstance().setHTML(field.value);
+      editor.getInstance().setHTML(field.value, false);
     }
 
     // Only catch changes to the field value
