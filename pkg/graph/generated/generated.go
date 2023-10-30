@@ -1016,6 +1016,7 @@ type ComplexityRoot struct {
 	}
 
 	TRBRequestDocument struct {
+		DeletedAt    func(childComplexity int) int
 		DocumentType func(childComplexity int) int
 		FileName     func(childComplexity int) int
 		ID           func(childComplexity int) int
@@ -6817,6 +6818,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequestAttendee.UserInfo(childComplexity), true
 
+	case "TRBRequestDocument.deletedAt":
+		if e.complexity.TRBRequestDocument.DeletedAt == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestDocument.DeletedAt(childComplexity), true
+
 	case "TRBRequestDocument.documentType":
 		if e.complexity.TRBRequestDocument.DocumentType == nil {
 			break
@@ -9334,7 +9342,7 @@ type TRBRequest {
   status: TRBRequestStatus!
   attendees: [TRBRequestAttendee!]!
   feedback: [TRBRequestFeedback!]!
-  documents: [TRBRequestDocument!]!
+  documents: [TRBRequestDocument!]! # This query will not return deleted documents -- see pkg/storage/trb_request_document.go ` + "`" + `GetTRBRequestDocumentsByRequestID` + "`" + `
   form: TRBRequestForm!
   adviceLetter: TRBAdviceLetter
   taskStatuses: TRBTaskStatuses!
@@ -9467,6 +9475,7 @@ type TRBRequestDocument {
   status: TRBRequestDocumentStatus!
   uploadedAt: Time!
   url: String!
+  deletedAt: Time
 }
 
 """
@@ -24659,6 +24668,8 @@ func (ec *executionContext) fieldContext_CreateTRBRequestDocumentPayload_documen
 				return ec.fieldContext_TRBRequestDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_TRBRequestDocument_url(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBRequestDocument_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequestDocument", field.Name)
 		},
@@ -25143,6 +25154,8 @@ func (ec *executionContext) fieldContext_DeleteTRBRequestDocumentPayload_documen
 				return ec.fieldContext_TRBRequestDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_TRBRequestDocument_url(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBRequestDocument_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequestDocument", field.Name)
 		},
@@ -45052,6 +45065,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteSupportingDocumentsCategory
 				return ec.fieldContext_TRBRequestDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_TRBRequestDocument_url(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBRequestDocument_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequestDocument", field.Name)
 		},
@@ -46874,6 +46889,8 @@ func (ec *executionContext) fieldContext_TRBRequest_documents(ctx context.Contex
 				return ec.fieldContext_TRBRequestDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_TRBRequestDocument_url(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBRequestDocument_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequestDocument", field.Name)
 		},
@@ -48345,6 +48362,47 @@ func (ec *executionContext) fieldContext_TRBRequestDocument_url(ctx context.Cont
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestDocument_deletedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestDocument_deletedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DeletedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestDocument_deletedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestDocument",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -69393,6 +69451,8 @@ func (ec *executionContext) _TRBRequestDocument(ctx context.Context, sel ast.Sel
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "deletedAt":
+			out.Values[i] = ec._TRBRequestDocument_deletedAt(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

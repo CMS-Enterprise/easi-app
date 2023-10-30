@@ -1805,7 +1805,7 @@ type TRBRequest {
   status: TRBRequestStatus!
   attendees: [TRBRequestAttendee!]!
   feedback: [TRBRequestFeedback!]!
-  documents: [TRBRequestDocument!]!
+  documents: [TRBRequestDocument!]! # This query will not return deleted documents -- see pkg/storage/trb_request_document.go `GetTRBRequestDocumentsByRequestID`
   form: TRBRequestForm!
   adviceLetter: TRBAdviceLetter
   taskStatuses: TRBTaskStatuses!
@@ -1938,6 +1938,7 @@ type TRBRequestDocument {
   status: TRBRequestDocumentStatus!
   uploadedAt: Time!
   url: String!
+  deletedAt: Time
 }
 
 """
