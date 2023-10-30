@@ -85,6 +85,7 @@ func NewSubmitSystemIntake(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	submitToCEDAR func(context.Context, *models.SystemIntake) (string, error),
 	saveAction func(context.Context, *models.Action) error,
+	emailRequester func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
 	emailReviewer func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
@@ -140,9 +141,13 @@ func NewSubmitSystemIntake(
 		}
 
 		// only send an email when everything went ok
+		err = emailRequester(ctx, intake.ProjectName.String, intake.ID)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error("Submit Intake email reviewer failed to send: ", zap.Error(err))
+		}
 		err = emailReviewer(ctx, intake.ProjectName.String, intake.ID)
 		if err != nil {
-			appcontext.ZLogger(ctx).Error("Submit Intake email failed to send: ", zap.Error(err))
+			appcontext.ZLogger(ctx).Error("Submit Intake email requester failed to send: ", zap.Error(err))
 		}
 
 		return nil
@@ -159,7 +164,8 @@ func NewSubmitBusinessCase(
 	saveAction func(context.Context, *models.Action) error,
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
-	sendEmail func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
+	emailRequester func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
+	emailReviewer func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
 	submitToCEDAR func(ctx context.Context, bc models.BusinessCase) error,
 	newIntakeStatus models.SystemIntakeStatus,
 ) ActionExecuter {
@@ -229,7 +235,11 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		err = sendEmail(ctx, businessCase.ProjectName.String, businessCase.SystemIntakeID)
+		err = emailRequester(ctx, businessCase.ProjectName.String, businessCase.SystemIntakeID)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error("Submit Business Case email failed to send: ", zap.Error(err))
+		}
+		err = emailReviewer(ctx, businessCase.ProjectName.String, businessCase.SystemIntakeID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("Submit Business Case email failed to send: ", zap.Error(err))
 		}

@@ -32,49 +32,51 @@ type templateCaller interface {
 // templates stores typed templates
 // since the template.Template uses string access
 type templates struct {
-	systemIntakeSubmissionTemplate             templateCaller
-	businessCaseSubmissionTemplate             templateCaller
-	intakeReviewTemplate                       templateCaller
-	namedRequestWithdrawTemplate               templateCaller
-	unnamedRequestWithdrawTemplate             templateCaller
-	issueLCIDTemplate                          templateCaller
-	extendLCIDTemplate                         templateCaller
-	lcidExpirationAlertTemplate                templateCaller
-	rejectRequestTemplate                      templateCaller
-	newAccessibilityRequestTemplate            templateCaller
-	newAccessibilityRequestToRequesterTemplate templateCaller
-	removedAccessibilityRequestTemplate        templateCaller
-	newDocumentTemplate                        templateCaller
-	changeAccessibilityRequestStatus           templateCaller
-	newAccessibilityRequestNote                templateCaller
-	helpSendFeedback                           templateCaller
-	helpCantFindSomething                      templateCaller
-	helpReportAProblem                         templateCaller
-	trbRequestConsultMeeting                   templateCaller
-	trbRequestTRBLeadAdmin                     templateCaller
-	trbRequestTRBLeadAssignee                  templateCaller
-	trbAdviceLetterInternalReview              templateCaller
-	trbFormSubmittedAdmin                      templateCaller
-	trbFormSubmittedRequester                  templateCaller
-	trbAttendeeAdded                           templateCaller
-	trbReadyForConsult                         templateCaller
-	trbEditsNeededOnForm                       templateCaller
-	trbRequestReopened                         templateCaller
-	trbAdviceLetterSubmitted                   templateCaller
-	trbRequestClosed                           templateCaller
-	cedarRolesChanged                          templateCaller
-	systemIntakeRequestEdits                   templateCaller
-	systemIntakeCloseRequest                   templateCaller
-	systemIntakeReopenRequest                  templateCaller
-	systemIntakeProgressToNewStep              templateCaller
-	systemIntakeNotITGovRequest                templateCaller
-	systemIntakeNotApproved                    templateCaller
-	systemIntakeIssueLCID                      templateCaller
-	systemIntakeConfirmLCID                    templateCaller
-	systemIntakeRetireLCID                     templateCaller
-	systemIntakeExpireLCID                     templateCaller
-	systemIntakeUpdateLCID                     templateCaller
-	systemIntakeChangeLCIDRetirementDate       templateCaller
+	intakeReviewTemplate                            templateCaller
+	namedRequestWithdrawTemplate                    templateCaller
+	unnamedRequestWithdrawTemplate                  templateCaller
+	issueLCIDTemplate                               templateCaller
+	extendLCIDTemplate                              templateCaller
+	lcidExpirationAlertTemplate                     templateCaller
+	rejectRequestTemplate                           templateCaller
+	newAccessibilityRequestTemplate                 templateCaller
+	newAccessibilityRequestToRequesterTemplate      templateCaller
+	removedAccessibilityRequestTemplate             templateCaller
+	newDocumentTemplate                             templateCaller
+	changeAccessibilityRequestStatus                templateCaller
+	newAccessibilityRequestNote                     templateCaller
+	helpSendFeedback                                templateCaller
+	helpCantFindSomething                           templateCaller
+	helpReportAProblem                              templateCaller
+	trbRequestConsultMeeting                        templateCaller
+	trbRequestTRBLeadAdmin                          templateCaller
+	trbRequestTRBLeadAssignee                       templateCaller
+	trbAdviceLetterInternalReview                   templateCaller
+	trbFormSubmittedAdmin                           templateCaller
+	trbFormSubmittedRequester                       templateCaller
+	trbAttendeeAdded                                templateCaller
+	trbReadyForConsult                              templateCaller
+	trbEditsNeededOnForm                            templateCaller
+	trbRequestReopened                              templateCaller
+	trbAdviceLetterSubmitted                        templateCaller
+	trbRequestClosed                                templateCaller
+	cedarRolesChanged                               templateCaller
+	systemIntakeSubmitInitialFormRequesterTemplate  templateCaller
+	systemIntakeSubmitInitialFormReviewerTemplate   templateCaller
+	systemIntakeSubmitBusinessCaseRequesterTemplate templateCaller
+	systemIntakeSubmitBusinessCaseReviewerTemplate  templateCaller
+	systemIntakeRequestEdits                        templateCaller
+	systemIntakeCloseRequest                        templateCaller
+	systemIntakeReopenRequest                       templateCaller
+	systemIntakeProgressToNewStep                   templateCaller
+	systemIntakeNotITGovRequest                     templateCaller
+	systemIntakeNotApproved                         templateCaller
+	systemIntakeIssueLCID                           templateCaller
+	systemIntakeConfirmLCID                         templateCaller
+	systemIntakeRetireLCID                          templateCaller
+	systemIntakeExpireLCID                          templateCaller
+	systemIntakeUpdateLCID                          templateCaller
+	systemIntakeChangeLCIDRetirementDate            templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -102,20 +104,6 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, err
 	}
 	appTemplates := templates{}
-
-	systemIntakeSubmissionTemplateName := "system_intake_submission.gohtml"
-	systemIntakeSubmissionTemplate := rawTemplates.Lookup(systemIntakeSubmissionTemplateName)
-	if systemIntakeSubmissionTemplate == nil {
-		return Client{}, templateError(systemIntakeSubmissionTemplateName)
-	}
-	appTemplates.systemIntakeSubmissionTemplate = systemIntakeSubmissionTemplate
-
-	businessCaseSubmissionTemplateName := "business_case_submission.gohtml"
-	businessCaseSubmissionTemplate := rawTemplates.Lookup(businessCaseSubmissionTemplateName)
-	if businessCaseSubmissionTemplate == nil {
-		return Client{}, templateError(businessCaseSubmissionTemplateName)
-	}
-	appTemplates.businessCaseSubmissionTemplate = businessCaseSubmissionTemplate
 
 	intakeReviewTemplateName := "system_intake_review.gohtml"
 	intakeReviewTemplate := rawTemplates.Lookup(intakeReviewTemplateName)
@@ -152,7 +140,7 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.extendLCIDTemplate = extendLCIDTemplate
 
-	lcidExpirationAlertTemplateName := "lcid_expiration_alert.gohtml"
+	lcidExpirationAlertTemplateName := "system_intake_lcid_expiration_alert.gohtml"
 	lcidExpirationAlertTemplate := rawTemplates.Lookup(lcidExpirationAlertTemplateName)
 	if lcidExpirationAlertTemplate == nil {
 		return Client{}, templateError(lcidExpirationAlertTemplateName)
@@ -319,6 +307,34 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(cedarRolesChangedTemplateName)
 	}
 	appTemplates.cedarRolesChanged = cedarRolesChanged
+
+	sisInitialFormRequesterTemplateName := "system_intake_submit_initial_form_requester.gohtml"
+	sisInitialFormRequesterTemplate := rawTemplates.Lookup(sisInitialFormRequesterTemplateName)
+	if sisInitialFormRequesterTemplate == nil {
+		return Client{}, templateError(sisInitialFormRequesterTemplateName)
+	}
+	appTemplates.systemIntakeSubmitInitialFormRequesterTemplate = sisInitialFormRequesterTemplate
+
+	sisInitialFormReviewerTemplateName := "system_intake_submit_initial_form_reviewer.gohtml"
+	sisInitialFormReviewerTemplate := rawTemplates.Lookup(sisInitialFormReviewerTemplateName)
+	if sisInitialFormReviewerTemplate == nil {
+		return Client{}, templateError(sisInitialFormReviewerTemplateName)
+	}
+	appTemplates.systemIntakeSubmitInitialFormReviewerTemplate = sisInitialFormReviewerTemplate
+
+	sisBusinessCaseRequesterTemplateName := "system_intake_submit_business_case_requester.gohtml"
+	sisBusinessCaseRequesterTemplate := rawTemplates.Lookup(sisBusinessCaseRequesterTemplateName)
+	if sisBusinessCaseRequesterTemplate == nil {
+		return Client{}, templateError(sisBusinessCaseRequesterTemplateName)
+	}
+	appTemplates.systemIntakeSubmitBusinessCaseRequesterTemplate = sisBusinessCaseRequesterTemplate
+
+	sisBusinessCaseReviewerTemplateName := "system_intake_submit_business_case_reviewer.gohtml"
+	sisBusinessCaseReviewerTemplate := rawTemplates.Lookup(sisBusinessCaseReviewerTemplateName)
+	if sisBusinessCaseReviewerTemplate == nil {
+		return Client{}, templateError(sisBusinessCaseReviewerTemplateName)
+	}
+	appTemplates.systemIntakeSubmitBusinessCaseReviewerTemplate = sisBusinessCaseReviewerTemplate
 
 	systemIntakeRequestEditsTemplateName := "system_intake_request_edits_on_form.gohtml"
 	systemIntakeRequestEdits := rawTemplates.Lookup(systemIntakeRequestEditsTemplateName)

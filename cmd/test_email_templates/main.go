@@ -346,5 +346,6 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		additionalInfo,
 	)
 	noErr(err)
+	panic("Add the submit emails!")
 
 }
