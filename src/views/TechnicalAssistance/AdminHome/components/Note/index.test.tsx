@@ -48,8 +48,16 @@ const noteSupportingDocuments: TRBAdminNoteFragment = {
   categorySpecificData: {
     __typename: 'TRBAdminNoteSupportingDocumentsCategoryData',
     documents: [
-      { __typename: 'TRBRequestDocument', fileName: 'documentOne.pdf' },
-      { __typename: 'TRBRequestDocument', fileName: 'documentTwo.pdf' }
+      {
+        __typename: 'TRBRequestDocument',
+        fileName: 'documentOne.pdf',
+        deletedAt: null
+      },
+      {
+        __typename: 'TRBRequestDocument',
+        fileName: 'documentTwo.pdf',
+        deletedAt: null
+      }
     ]
   },
   createdAt: '2024-03-27T13:20:37.852099Z'

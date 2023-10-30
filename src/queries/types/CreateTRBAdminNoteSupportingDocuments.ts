@@ -28,6 +28,7 @@ export interface CreateTRBAdminNoteSupportingDocuments_createTRBAdminNoteSupport
 export interface CreateTRBAdminNoteSupportingDocuments_createTRBAdminNoteSupportingDocuments_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData_documents {
   __typename: "TRBRequestDocument";
   fileName: string;
+  deletedAt: Time | null;
 }
 
 export interface CreateTRBAdminNoteSupportingDocuments_createTRBAdminNoteSupportingDocuments_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData {
