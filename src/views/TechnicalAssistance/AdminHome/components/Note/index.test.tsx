@@ -146,6 +146,29 @@ describe('TRB Admin Note', () => {
     ).toBeInTheDocument();
   });
 
+  it('Renders label for removed document', () => {
+    const note: TRBAdminNoteFragment = {
+      ...noteSupportingDocuments,
+      categorySpecificData: {
+        __typename: 'TRBAdminNoteSupportingDocumentsCategoryData',
+        documents: [
+          {
+            __typename: 'TRBRequestDocument',
+            fileName: 'documentOne.pdf',
+            deletedAt: '2023-03-28T13:20:37.852099Z'
+          }
+        ]
+      }
+    };
+    render(<Note note={note} />);
+
+    expect(
+      screen.getByText(
+        'Supporting documents: Removed document (documentOne.pdf)'
+      )
+    ).toBeInTheDocument();
+  });
+
   it('Renders category specific data - advice letter', () => {
     const note = noteAdviceLetter;
     render(<Note note={note} />);
