@@ -57,7 +57,7 @@ const CloseRequest = ({
     <FormProvider<CloseRequestFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
-        successMessage=""
+        successMessage={t('closeRequest.success')}
         onSubmit={onSubmit}
         title={
           <ResolutionTitleBox

@@ -385,6 +385,9 @@ const action = {
     success:
       'This request was not approved by the GRB. This request is now closed.'
   },
+  closeRequest: {
+    success: 'This request is now closed.'
+  },
   rejectIntake: {
     backLink: 'Change',
     heading: 'Actions on request',
