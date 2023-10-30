@@ -199,3 +199,8 @@
 .usa-modal-wrapper .usa-modal.trb-assign-lead-modal .usa-modal__main {
   margin: 0;
 }
+
+/* Reset bottom margin for Add Note form labels */
+.technical-assistance .usa-form#trbAddNote .usa-form-group .usa-label {
+  margin-bottom: 0;
+}
