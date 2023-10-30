@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
@@ -12,10 +12,14 @@ import {
   CreateSystemIntakeActionCloseRequest,
   CreateSystemIntakeActionCloseRequestVariables
 } from 'queries/types/CreateSystemIntakeActionCloseRequest';
-import { SystemIntakeCloseRequestInput } from 'types/graphql-global-types';
+import {
+  SystemIntakeCloseRequestInput,
+  SystemIntakeLCIDStatus
+} from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
+import { EditsRequestedContext } from '..';
 
 import ResolutionTitleBox from './ResolutionTitleBox';
 import { ResolutionProps } from '.';
@@ -25,12 +29,22 @@ type CloseRequestFields = NonNullableProps<
     SystemIntakeActionFields
 >;
 
+interface CloseRequestProps extends ResolutionProps {
+  lcid: string | null;
+  lcidStatus: SystemIntakeLCIDStatus | null;
+}
+
 const CloseRequest = ({
   systemIntakeId,
   state,
-  decisionState
-}: ResolutionProps) => {
+  decisionState,
+  lcid,
+  lcidStatus
+}: CloseRequestProps) => {
   const { t } = useTranslation('action');
+
+  /** Edits requested form key for confirmation modal */
+  const editsRequestedKey = useContext(EditsRequestedContext);
 
   const [closeRequest] = useMutation<
     CreateSystemIntakeActionCloseRequest,
@@ -57,6 +71,27 @@ const CloseRequest = ({
       }
     });
 
+  /** Returns modal props if edits are requested or lcid has been issued */
+  const modal = useMemo(() => {
+    if (editsRequestedKey) {
+      return {
+        title: t('decisionModal.title'),
+        content: t('decisionModal.content', {
+          action: t(`decisionModal.${editsRequestedKey}`)
+        })
+      };
+    }
+
+    if (lcidStatus === SystemIntakeLCIDStatus.ISSUED) {
+      return {
+        title: t('closeRequest.modal.title', { lcid }),
+        content: t('closeRequest.modal.content')
+      };
+    }
+
+    return undefined;
+  }, [editsRequestedKey, lcid, lcidStatus, t]);
+
   return (
     <FormProvider<CloseRequestFields> {...form}>
       <ActionForm
@@ -72,6 +107,7 @@ const CloseRequest = ({
             decisionState={decisionState}
           />
         }
+        modal={modal}
       >
         <Controller
           name="reason"
