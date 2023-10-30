@@ -872,6 +872,17 @@ export interface SystemIntakeChangeLCIDRetirementDateInput {
 }
 
 /**
+ * Input for creating a Close Request Action in Admin Actions v2
+ */
+export interface SystemIntakeCloseRequestInput {
+  systemIntakeID: UUID;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  reason?: HTML | null;
+  additionalInfo?: HTML | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * The input data used to add an OIT collaborator for a system request
  */
 export interface SystemIntakeCollaboratorInput {
