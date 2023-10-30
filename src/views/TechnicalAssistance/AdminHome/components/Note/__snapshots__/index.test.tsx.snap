@@ -2,12 +2,12 @@
 
 exports[`TRB Admin Note > Renders correct note information 1`] = `
 <DocumentFragment>
-  <div
-    class="grid-row margin-bottom-4"
-    data-testid="grid"
+  <dl
+    class="grid-row margin-bottom-3 margin-top-0 line-height-body-5 border-bottom-1px border-base-light padding-bottom-3"
+    data-testid="trb-note"
   >
     <div
-      class="desktop:grid-col-6"
+      class="desktop:grid-col-6 margin-bottom-2"
       data-testid="grid"
     >
       <dt
@@ -16,13 +16,13 @@ exports[`TRB Admin Note > Renders correct note information 1`] = `
         Date
       </dt>
       <dd
-        class="margin-left-0 margin-bottom-2 line-height-body-5"
+        class="margin-left-0"
       >
         March 28, 2023
       </dd>
     </div>
     <div
-      class="desktop:grid-col-6"
+      class="desktop:grid-col-6 margin-bottom-2"
       data-testid="grid"
     >
       <dt
@@ -31,33 +31,31 @@ exports[`TRB Admin Note > Renders correct note information 1`] = `
         Note author
       </dt>
       <dd
-        class="margin-left-0 margin-bottom-2 line-height-body-5"
+        class="margin-left-0"
       >
         Jerry Seinfeld
       </dd>
     </div>
     <div
-      class="desktop:grid-col-12 margin-top-1"
+      class="desktop:grid-col-12 bg-base-lightest padding-x-3 padding-y-205"
       data-testid="grid"
     >
-      <div
-        class="bg-base-lightest padding-x-4 padding-y-1 margin-bottom-3"
+      <dt
+        class="text-bold"
       >
-        <p
-          class="margin-bottom-0 text-bold"
-        >
-          What is this note about?
-        </p>
-        <p
-          class="margin-top-0"
-        >
-          General note about this request
-        </p>
-        <p>
-          My cute note
-        </p>
-      </div>
+        What is this note about?
+      </dt>
+      <dd
+        class="margin-left-0"
+      >
+        General note about this request
+      </dd>
+      <dd
+        class="margin-left-0 margin-top-2"
+      >
+        My cute note
+      </dd>
     </div>
-  </div>
+  </dl>
 </DocumentFragment>
 `;

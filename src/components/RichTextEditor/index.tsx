@@ -156,26 +156,41 @@ function setEditableElementProps(
     });
   }
 }
-
 /**
- * Sanitize the html on the editor change event.
  * Allow linebreak tags (p, br) from the editor and also match the tags set in toolbar items.
  */
-function sanitizeHtmlOnContentChange(toastEditor: ToastuiEditor) {
-  toastEditor.eventEmitter.listen('change', () => {
+function sanitizeInput(html: string): string {
+  // NOTE make sure to update the allowed policy on the backend when it is updated here as well
+  // It is created in pkg/sanitization/html.go in createHTMLPolicy
+  const sanitized = DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ol', 'ul', 'li', 'a']
+  });
+  return sanitized;
+}
+
+/**
+ * Sanitize the html on clipboard pastes into the editor.
+ * Html tags that are not allowed by `sanitizeInput()` can be circumvented
+ * by pasting into the editor. Sanitize the input from the event so that
+ * only allowed tags appear in the editor wysiwyg.
+ */
+function registerPasteEventHandler(toastEditor: ToastuiEditor) {
+  const editorElement = toastEditor
+    .getEditorElements()
+    .wwEditor.querySelector('div[contenteditable]');
+
+  const contentHandler = () => {
     const html = toastEditor.getHTML();
-    // NOTE make sure to update the allowed policy on the backend when it is updated here as well
-    // It is created in pkg/sanitization/html.go in createHTMLPolicy
-    const sanitized = DOMPurify.sanitize(html, {
-      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ol', 'ul', 'li', 'a']
-    });
+    const sanitized = sanitizeInput(html);
     // Only set again if something if sanitized value was different,
     // which should just be on copy and paste.
     // Setting it on every change will jump the text cursor to the end of content.
     if (html !== sanitized) {
-      toastEditor.setHTML(sanitized);
+      toastEditor.setHTML(sanitized, false);
     }
-  });
+  };
+
+  editorElement?.addEventListener('paste', contentHandler);
 }
 
 const mailtoRe = /^mailto:/;
@@ -184,7 +199,7 @@ const httpsRe = /^https?:\/\//;
 // Do some field validation on the link popup's url field.
 // Another approach is to re-use toast's exec command to add a link but instead
 // we are going to use dompurify's hook that gets called after content change.
-// See sanitizeHtmlOnContentChange() -> DOMPurify.sanitize()
+// See sanitizeInput() -> DOMPurify.sanitize()
 DOMPurify.addHook('afterSanitizeAttributes', node => {
   // check all href attributes for validity
   if (node.hasAttribute('href')) {
@@ -235,6 +250,12 @@ function extractTextContent(html: string) {
     .textContent;
 }
 
+// Link attributes should match pkg/sanitization/html.go#createHTMLPolicy()
+const linkAttributes = {
+  target: '_blank',
+  rel: 'nofollow noreferrer noopener'
+};
+
 /**
  * Toast rich text editor as a RHF controlled input field.
  * Set to WYSIWYG mode only.
@@ -254,31 +275,50 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
     setEditableElementProps(el, props);
     initLinkPopup(el);
     showLinkUnderSelection(toast);
+    registerPasteEventHandler(toast);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // This component re-renders on content changes and loses the on change callback
-  // Bind it again each time
+  // The toast component only takes an initial value.
+  // Relay changes passed in from the `field.value` prop to the toast api
+  // so that value property updates work as expected.
   useEffect(() => {
     const editor = editorRef.current;
-    if (!editor) return;
-    sanitizeHtmlOnContentChange(editor.getInstance());
-  }, [editorRef]);
+
+    if (
+      editor &&
+      field?.value &&
+      // Skip the update if the passed in `field.value` already matches the instance contents.
+      // Essentially makes sure this is only called when the passed value prop is updated,
+      // since changes from within the editor instance will also update `field.value`.
+      // Also prevents the cursor from jumping to the end.
+      field.value !== editor.getInstance().getHTML()
+    ) {
+      editor.getInstance().setHTML(field.value, false);
+    }
+
+    // Only catch changes to the field value
+    // Ignore editorRef changes because they will lead to the same dom element
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [field?.value]);
 
   return (
     <div className={classNames('easi-toast easi-toast-editor', className)}>
       <Editor
         ref={editorRef}
         usageStatistics={false}
+        autofocus={false}
         initialEditType="wysiwyg"
         hideModeSwitch
-        // Match these against tags in `sanitizeHtmlOnContentChange()`
+        // Match these against tags in `sanitizeInput()`
         toolbarItems={[['bold', 'italic'], ['ol', 'ul'], ['link']]}
         initialValue={field?.value}
-        linkAttributes={{
-          target: '_blank',
-          rel: 'noopener'
-        }}
+        // Noting link attributes here to reflect the html content that is
+        // stored for the field in the backend and then displayed again when rendered.
+        // `sanitizeInput()` will strip some of these attributes but it's not a significant effect,
+        // since field html values are parsed again in the backend.
+        // linkAttributes={linkAttributes}
+
         onBlur={() => {
           field?.onBlur();
         }}
@@ -294,7 +334,9 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
             return;
           }
 
-          field?.onChange(val);
+          // Sanitize input before calling onChange
+          const sanitized = sanitizeInput(val);
+          field?.onChange(sanitized);
         }}
         {...props}
         // Ensure the height prop is overridden after argument assignments
@@ -328,11 +370,8 @@ export function RichTextViewer({
     >
       <Viewer
         usageStatistics={false}
-        // Setting link attributes here just to match Editor options, but it doesn't actually have an effect
-        linkAttributes={{
-          target: '_blank',
-          rel: 'noopener'
-        }}
+        // Setting link attributes in the viewer again for safety, in case backend didn't parse properly.
+        linkAttributes={linkAttributes}
         // `initialValue` does not update. Change the `key` prop so that this re-renders with `value`.
         key={value}
         initialValue={value}

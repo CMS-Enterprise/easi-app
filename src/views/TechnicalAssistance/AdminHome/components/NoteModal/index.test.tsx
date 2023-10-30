@@ -4,28 +4,80 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import i18next from 'i18next';
-import configureMockStore from 'redux-mock-store';
 
+import { getTrbAdminNotesQuery } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
-import GetTrbAdminNotesQuery from 'queries/GetTrbAdminNotesQuery';
+import {
+  CreateTrbAdminNote as CreateTrbAdminNoteType,
+  CreateTrbAdminNoteVariables
+} from 'queries/types/CreateTrbAdminNote';
+import { TRBAdminNoteFragment } from 'queries/types/TRBAdminNoteFragment';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
+import { MockedQuery } from 'types/util';
+import easiMockStore from 'utils/testing/easiMockStore';
+import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 
 import NotesModal from '.';
+
+const adminNotes: TRBAdminNoteFragment[] = [
+  {
+    __typename: 'TRBAdminNote',
+    id: 'e067cfb6-59ab-44f4-893e-8f63e54ef081',
+    isArchived: false,
+    category: TRBAdminNoteCategory.GENERAL_REQUEST,
+    noteText: 'General request note text 1',
+    author: {
+      __typename: 'UserInfo',
+      commonName: 'Jerry Seinfeld'
+    },
+    categorySpecificData: {
+      __typename: 'TRBAdminNoteGeneralRequestCategoryData'
+    },
+    createdAt: '2024-03-25T13:20:37.852099Z'
+  },
+  {
+    __typename: 'TRBAdminNote',
+    id: 'da4c4734-4414-4cd0-bd3d-da7b5554df0e',
+    isArchived: false,
+    category: TRBAdminNoteCategory.GENERAL_REQUEST,
+    noteText: 'General request note text 2',
+    author: {
+      __typename: 'UserInfo',
+      commonName: 'Jerry Seinfeld'
+    },
+    categorySpecificData: {
+      __typename: 'TRBAdminNoteGeneralRequestCategoryData'
+    },
+    createdAt: '2024-03-24T13:20:37.852099Z'
+  }
+];
+
+const createAdminNoteQuery: MockedQuery<
+  CreateTrbAdminNoteType,
+  CreateTrbAdminNoteVariables
+> = {
+  request: {
+    query: CreateTrbAdminNote,
+    variables: {
+      input: {
+        trbRequestId: mockTrbRequestId,
+        category: adminNotes[1].category,
+        noteText: adminNotes[1].noteText
+      }
+    }
+  },
+  result: {
+    data: {
+      createTRBAdminNote: adminNotes[1]
+    }
+  }
+};
 
 describe('Trb Admin Notes: Modal Component', () => {
   Element.prototype.scrollIntoView = vi.fn();
 
-  const mockStore = configureMockStore();
-  const store = mockStore({
-    auth: {
-      euaId: 'ABCD',
-      name: 'Jerry Seinfeld',
-      isUserSet: true,
-      groups: ['EASI_TRB_ADMIN_D']
-    }
-  });
-  const trbRequestId = '449ea115-8bfa-48c3-b1dd-5a613d79fbae';
+  const store = easiMockStore();
 
   it('renders Notes successfully on modal open', async () => {
     Element.prototype.scrollIntoView = vi.fn();
@@ -36,69 +88,22 @@ describe('Trb Admin Notes: Modal Component', () => {
 
     const { findByText } = render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
+        <MemoryRouter initialEntries={[`/trb/${mockTrbRequestId}/request`]}>
           <MockedProvider
             defaultOptions={{
               watchQuery: { fetchPolicy: 'no-cache' },
               query: { fetchPolicy: 'no-cache' }
             }}
             mocks={[
-              {
-                request: {
-                  query: GetTrbAdminNotesQuery,
-                  variables: {
-                    id: trbRequestId
-                  }
-                },
-                result: {
-                  data: {
-                    trbRequest: {
-                      id: trbRequestId,
-                      adminNotes: [
-                        {
-                          id: '861fa6c5-c9af-4cda-a559-0995b7b76855',
-                          isArchived: false,
-                          category: TRBAdminNoteCategory.GENERAL_REQUEST,
-                          noteText: 'My cute note',
-                          author: {
-                            __typename: 'UserInfo',
-                            commonName: 'Jerry Seinfeld'
-                          },
-                          createdAt: '2023-03-28T13:20:37.852099Z',
-                          __typename: 'TRBAdminNote'
-                        }
-                      ]
-                    }
-                  }
-                }
-              },
-              {
-                request: {
-                  query: CreateTrbAdminNote,
-                  variables: {
-                    input: {
-                      trbRequestId,
-                      category: '' as TRBAdminNoteCategory,
-                      noteText: ''
-                    }
-                  }
-                },
-                result: {
-                  data: {
-                    updateTRBRequestConsultMeetingTime: {
-                      id: 'd35a1f08-e04e-48f9-8d58-7f2409bae8fe',
-                      __typename: 'TRBRequest'
-                    }
-                  }
-                }
-              }
+              getTrbAdminNotesQuery([adminNotes[0]]),
+              createAdminNoteQuery
             ]}
           >
             <MessageProvider>
               <Route path="/trb/:id/:activePage?">
                 <NotesModal
                   isOpen
-                  trbRequestId={trbRequestId}
+                  trbRequestId={mockTrbRequestId}
                   openModal={() => null}
                   addNote={false}
                 />
@@ -110,7 +115,7 @@ describe('Trb Admin Notes: Modal Component', () => {
     );
 
     // Notes component successfully rendered from modal
-    const submissionDate = await findByText('March 28, 2023');
+    const submissionDate = await findByText(adminNotes[0].noteText);
     expect(submissionDate).toBeInTheDocument();
   });
 
@@ -123,40 +128,19 @@ describe('Trb Admin Notes: Modal Component', () => {
 
     const { getByText } = render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/trb/${trbRequestId}/request`]}>
+        <MemoryRouter initialEntries={[`/trb/${mockTrbRequestId}/request`]}>
           <MockedProvider
             defaultOptions={{
               watchQuery: { fetchPolicy: 'no-cache' },
               query: { fetchPolicy: 'no-cache' }
             }}
-            mocks={[
-              {
-                request: {
-                  query: CreateTrbAdminNote,
-                  variables: {
-                    input: {
-                      trbRequestId,
-                      category: '' as TRBAdminNoteCategory,
-                      noteText: ''
-                    }
-                  }
-                },
-                result: {
-                  data: {
-                    updateTRBRequestConsultMeetingTime: {
-                      id: 'd35a1f08-e04e-48f9-8d58-7f2409bae8fe',
-                      __typename: 'TRBRequest'
-                    }
-                  }
-                }
-              }
-            ]}
+            mocks={[createAdminNoteQuery]}
           >
             <MessageProvider>
               <Route path="/trb/:id/:activePage?">
                 <NotesModal
                   isOpen
-                  trbRequestId={trbRequestId}
+                  trbRequestId={mockTrbRequestId}
                   openModal={() => null}
                   addNote
                 />

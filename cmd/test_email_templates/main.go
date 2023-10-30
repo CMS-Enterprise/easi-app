@@ -164,6 +164,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	intakeID := uuid.New()
 	lifecycleID := "123456"
 	lifecycleExpiresAt := time.Now().AddDate(30, 0, 0)
+	lifecycleIssuedAt := time.Now()
 	lifecycleRetiresAt := time.Now().AddDate(3, 0, 0)
 	lifecycleScope := models.HTMLPointer("<em>This is a scope</em>")
 	lifecycleCostBaseline := "a baseline"
@@ -257,7 +258,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		intakeID,
 		"Mounds",
 		lifecycleID,
-		time.Now(),
+		lifecycleIssuedAt,
 		&lifecycleExpiresAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
@@ -275,6 +276,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		"Butterfinger",
 		lifecycleID,
 		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*nextSteps,
@@ -290,6 +292,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		lifecycleID,
 		&lifecycleRetiresAt,
 		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		reason,
@@ -303,6 +306,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		emailNotificationRecipients,
 		lifecycleID,
 		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*reason,
@@ -315,6 +319,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		ctx,
 		emailNotificationRecipients,
 		lifecycleID,
+		&lifecycleIssuedAt,
 		&lifecycleExpiresAt,
 		&lifecycleExpiresAt,
 		lifecycleScope,
@@ -334,6 +339,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		lifecycleID,
 		&lifecycleRetiresAt,
 		&lifecycleExpiresAt,
+		&lifecycleIssuedAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*nextSteps,

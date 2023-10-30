@@ -24,6 +24,7 @@ const Option = (props: OptionProps<MultiSelectOptionProps, true>) => {
   return (
     <div
       {...innerProps}
+      id={`${innerProps.id}_container`}
       ref={innerRef}
       className={classNames('usa-combo-box__list-option', {
         'usa-combo-box__list-option--focused': isFocused
@@ -130,6 +131,7 @@ const MultiSelect = ({
   options,
   onChange,
   initialValues,
+  disabled,
   className
 }: {
   id?: string;
@@ -139,6 +141,7 @@ const MultiSelect = ({
   options: MultiSelectOptionProps[];
   onChange: (values: string[]) => void;
   initialValues?: string[];
+  disabled?: boolean;
   className?: string;
 }) => {
   const [
@@ -173,13 +176,15 @@ const MultiSelect = ({
       '&:hover': {
         borderColor: color('base-dark'),
         cursor: 'text'
-      }
+      },
+      ...(disabled ? { backgroundColor: color('gray-20') } : {})
     }),
     dropdownIndicator: provided => ({
       ...provided,
-      color: color('base'),
+      color: color('base-dark'),
+      padding: '6px',
       '&:hover': {
-        color: color('base'),
+        color: color('base-dark'),
         cursor: 'pointer'
       },
       '> svg': {
@@ -190,7 +195,7 @@ const MultiSelect = ({
     clearIndicator: provided => ({
       ...provided,
       color: color('base-dark'),
-      padding: '8px 6px',
+      padding: '6px',
       '&:hover': {
         color: color('base-dark'),
         cursor: 'pointer'
@@ -202,8 +207,7 @@ const MultiSelect = ({
     }),
     indicatorSeparator: provided => ({
       ...provided,
-      marginTop: '10px',
-      marginBottom: '10px'
+      backgroundColor: color('base-light')
     }),
     menu: provided => ({
       ...provided,
@@ -216,12 +220,15 @@ const MultiSelect = ({
   };
 
   return (
-    <div>
+    <>
       <Select
         id={id}
         inputId={inputId}
         name={name}
-        className={classNames('easi-multiselect usa-combo-box', className)}
+        className={classNames(
+          'easi-multiselect usa-combo-box maxw-none margin-top-1',
+          className
+        )}
         isClearable
         options={options}
         components={{ ClearIndicator, Option }}
@@ -234,8 +241,9 @@ const MultiSelect = ({
         }}
         value={selected}
         controlShouldRenderValue={false}
-        placeholder={`${selected?.length || 0} selected`}
+        placeholder={!disabled && `${selected?.length || 0} selected`}
         styles={customStyles}
+        isDisabled={disabled}
       />
       {selected && selected.length > 0 && (
         <div className="easi-multiselect--selected">
@@ -266,7 +274,7 @@ const MultiSelect = ({
           </ul>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

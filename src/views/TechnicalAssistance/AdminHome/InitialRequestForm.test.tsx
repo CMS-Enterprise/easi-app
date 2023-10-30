@@ -40,7 +40,7 @@ describe('Trb Admin Initial Request Form', () => {
           getTrbRequestSummaryQuery,
           getTRBRequestAttendeesQuery,
           getTrbRequestDocumentsQuery,
-          getTrbAdminNotesQuery
+          getTrbAdminNotesQuery()
         ]}
       >
         <Provider store={store}>

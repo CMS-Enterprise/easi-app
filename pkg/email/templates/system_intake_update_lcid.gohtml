@@ -26,6 +26,9 @@ If you have questions, please contact the Governance Team at <a href="mailto:{{.
 
 <p><u>Summary of updated Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> {{.LifecycleID}}<br>
+{{ if .LifecycleIssuedAt -}}
+<strong>Original date issued:</strong> {{.LifecycleIssuedAt}}<br>
+{{ end -}}
 <strong>Amendment date:</strong> {{.AmendmentDate}}<br>
 <strong>Expiration date:</strong> {{if .LifecycleExpiresAtNew}}{{.LifecycleExpiresAtNew}}{{else}}{{.LifecycleExpiresAtPrev}}{{end}}<br>
 <strong>Scope:</strong> {{if .LifecycleScopeNew}}{{.LifecycleScopeNew}}{{else}}{{.LifecycleScopePrev}}{{end}}<br>

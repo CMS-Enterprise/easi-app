@@ -737,10 +737,10 @@ type ComplexityRoot struct {
 		ItGovTaskStatuses           func(childComplexity int) int
 		Lcid                        func(childComplexity int) int
 		LcidCostBaseline            func(childComplexity int) int
-		LcidIssuedAt                func(childComplexity int) int
 		LcidScope                   func(childComplexity int) int
 		LcidStatus                  func(childComplexity int) int
 		LifecycleExpiresAt          func(childComplexity int) int
+		LifecycleIssuedAt           func(childComplexity int) int
 		LifecycleRetiresAt          func(childComplexity int) int
 		NeedsEaSupport              func(childComplexity int) int
 		Notes                       func(childComplexity int) int
@@ -1425,7 +1425,6 @@ type SystemIntakeResolver interface {
 
 	Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error)
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	LcidIssuedAt(ctx context.Context, obj *models.SystemIntake) (*time.Time, error)
 
 	LcidScope(ctx context.Context, obj *models.SystemIntake) (*models.HTML, error)
 	LcidCostBaseline(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -5516,13 +5515,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.LcidCostBaseline(childComplexity), true
 
-	case "SystemIntake.lcidIssuedAt":
-		if e.complexity.SystemIntake.LcidIssuedAt == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.LcidIssuedAt(childComplexity), true
-
 	case "SystemIntake.lcidScope":
 		if e.complexity.SystemIntake.LcidScope == nil {
 			break
@@ -5543,6 +5535,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.LifecycleExpiresAt(childComplexity), true
+
+	case "SystemIntake.lcidIssuedAt":
+		if e.complexity.SystemIntake.LifecycleIssuedAt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.LifecycleIssuedAt(childComplexity), true
 
 	case "SystemIntake.lcidRetiresAt":
 		if e.complexity.SystemIntake.LifecycleRetiresAt == nil {
@@ -38993,7 +38992,7 @@ func (ec *executionContext) _SystemIntake_lcidIssuedAt(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().LcidIssuedAt(rctx, obj)
+		return obj.LifecycleIssuedAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -39011,8 +39010,8 @@ func (ec *executionContext) fieldContext_SystemIntake_lcidIssuedAt(ctx context.C
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntake",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Time does not have child fields")
 		},
@@ -65931,38 +65930,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "lcidIssuedAt":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_lcidIssuedAt(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._SystemIntake_lcidIssuedAt(ctx, field, obj)
 		case "lcidExpiresAt":
 			out.Values[i] = ec._SystemIntake_lcidExpiresAt(ctx, field, obj)
 		case "lcidScope":

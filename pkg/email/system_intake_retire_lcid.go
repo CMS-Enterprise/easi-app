@@ -16,6 +16,7 @@ type systemIntakeRetireLCIDEmailParameters struct {
 	LifecycleID              string
 	LifecycleRetiresAt       string
 	LifecycleExpiresAt       string
+	LifecycleIssuedAt        string
 	LifecycleScope           template.HTML
 	LifecycleCostBaseline    string
 	Reason                   template.HTML
@@ -28,6 +29,7 @@ func (sie systemIntakeEmails) SystemIntakeRetireLCIDBody(
 	lifecycleID string,
 	lifecycleRetiresAt *time.Time,
 	lifecycleExpiresAt *time.Time,
+	lifecycleIssuedAt *time.Time,
 	lifecycleScope models.HTML,
 	lifecycleCostBaseline string,
 	reason *models.HTML,
@@ -42,10 +44,15 @@ func (sie systemIntakeEmails) SystemIntakeRetireLCIDBody(
 	if lifecycleExpiresAt != nil {
 		expiresAt = lifecycleExpiresAt.Format("01/02/2006")
 	}
+	var issuedAt string
+	if lifecycleIssuedAt != nil {
+		issuedAt = lifecycleIssuedAt.Format("01/02/2006")
+	}
 	data := systemIntakeRetireLCIDEmailParameters{
 		LifecycleID:              lifecycleID,
 		LifecycleRetiresAt:       retiresAt,
 		LifecycleExpiresAt:       expiresAt,
+		LifecycleIssuedAt:        issuedAt,
 		LifecycleScope:           lifecycleScope.ToTemplate(),
 		LifecycleCostBaseline:    lifecycleCostBaseline,
 		Reason:                   reason.ToTemplate(),
@@ -65,7 +72,6 @@ func (sie systemIntakeEmails) SystemIntakeRetireLCIDBody(
 	return b.String(), nil
 }
 
-// TODO: add date LCID was issued (EASI-3319)
 // SendRetireLCIDNotification notifies user-selected recipients that a system intake form needs edits
 func (sie systemIntakeEmails) SendRetireLCIDNotification(
 	ctx context.Context,
@@ -73,6 +79,7 @@ func (sie systemIntakeEmails) SendRetireLCIDNotification(
 	lifecycleID string,
 	lifecycleRetiresAt *time.Time,
 	lifecycleExpiresAt *time.Time,
+	lifecycleIssuedAt *time.Time,
 	lifecycleScope models.HTML,
 	lifecycleCostBaseline string,
 	reason *models.HTML,
@@ -85,6 +92,7 @@ func (sie systemIntakeEmails) SendRetireLCIDNotification(
 		lifecycleID,
 		lifecycleRetiresAt,
 		lifecycleExpiresAt,
+		lifecycleIssuedAt,
 		lifecycleScope,
 		lifecycleCostBaseline,
 		reason,
