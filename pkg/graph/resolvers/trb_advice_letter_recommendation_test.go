@@ -122,7 +122,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 			}
 			created, err := CreateTRBAdviceLetterRecommendation(ctx, store, &toCreate)
 			s.NoError(err)
-			s.EqualValues(i, *created.PositionInLetter) // check that positions were ordered oldest-to-newest during creation
+			s.EqualValues(i, created.PositionInLetter.ValueOrZero()) // check that positions were ordered oldest-to-newest during creation
 			createdRecommendations = append(createdRecommendations, created)
 		}
 
@@ -133,6 +133,6 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		// check that the last recommendation's position was adjusted from 2 to 1 to close the gap
 		lastRecommendationAfterDelete, err := store.GetTRBAdviceLetterRecommendationByID(ctx, createdRecommendations[2].ID)
 		s.NoError(err)
-		s.EqualValues(1, *lastRecommendationAfterDelete.PositionInLetter)
+		s.EqualValues(1, lastRecommendationAfterDelete.PositionInLetter.ValueOrZero)
 	})
 }

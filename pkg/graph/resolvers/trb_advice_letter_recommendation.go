@@ -113,7 +113,7 @@ func DeleteTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Sto
 
 	// sort recommendations by position, so we can loop over them to find the recommendations we need to update
 	slices.SortFunc(allRecommendationsForRequest, func(recommendationA, recommendationB *models.TRBAdviceLetterRecommendation) int {
-		return *recommendationA.PositionInLetter - *recommendationB.PositionInLetter
+		return int(recommendationA.PositionInLetter.ValueOrZero()) - int(recommendationB.PositionInLetter.ValueOrZero())
 	})
 
 	var trbRequestID uuid.UUID // will be set once we start looping over allRecommendationsForRequest

@@ -141,7 +141,7 @@ func (s *Store) CreateTRBRequestDocument(ctx context.Context, document *models.T
 // DeleteTRBRequestDocument sets the deleted_at property on an existing TRBRequestDocument, given its ID
 func (s *Store) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*models.TRBRequestDocument, error) {
 	const trbRequestDocumentDeleteSQL = `
-		UPDATE trb_request_documents SET deleted_at = NOW()
+		UPDATE trb_request_documents SET deleted_at = CURRENT_TIMESTAMP
 		WHERE id = :id
 		RETURNING
 			id,

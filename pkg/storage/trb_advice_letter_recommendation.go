@@ -216,7 +216,7 @@ func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recomme
 func (s *Store) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_advice_letter_recommendations
-		SET deleted_at = NOW(), position_in_letter = NULL
+		SET deleted_at = CURRENT_TIMESTAMP, position_in_letter = NULL
 		WHERE id = :id
 		RETURNING *;`)
 
@@ -322,7 +322,7 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 	// sort updated recommendations by position, return in correct order
 	// (easier to do this in Go than in SQL; doing it in SQL would require wrapping the whole UPDATE query in another CTE, then using ORDER BY on that)
 	slices.SortFunc(updatedRecommendations, func(recommendationA, recommendationB *models.TRBAdviceLetterRecommendation) int {
-		return *recommendationA.PositionInLetter - *recommendationB.PositionInLetter
+		return int(recommendationA.PositionInLetter.ValueOrZero()) - int(recommendationB.PositionInLetter.ValueOrZero())
 	})
 
 	return updatedRecommendations, nil
