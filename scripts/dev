@@ -350,6 +350,7 @@ namespace :db do
     `echo "select pg_terminate_backend(pg_stat_activity.pid) from pg_stat_activity where datname='postgres' AND state='idle'" | psql`
   end
 
+  # Make sure this list of tables matches the list in pkg/storage/truncate.go
   desc "Deletes all rows from all tables"
   task :clean do
     tables = %w{
@@ -371,6 +372,8 @@ namespace :db do
       system_intake_funding_sources
       system_intake_documents
       system_intakes
+      trb_admin_notes_trb_request_documents_links
+      trb_admin_notes_trb_admin_note_recommendations_links
       trb_lead_options
       trb_request_documents
       trb_request_forms
