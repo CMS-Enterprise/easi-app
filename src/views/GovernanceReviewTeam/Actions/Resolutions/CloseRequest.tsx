@@ -2,12 +2,20 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { SystemIntakeCloseRequestInput } from 'types/graphql-global-types';
+import { NonNullableProps } from 'types/util';
+
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
 import ResolutionTitleBox from './ResolutionTitleBox';
 import { ResolutionProps } from '.';
 
-interface CloseRequestFields extends SystemIntakeActionFields {}
+type CloseRequestFields = NonNullableProps<
+  Omit<SystemIntakeCloseRequestInput, 'systemIntakeID'> &
+    SystemIntakeActionFields
+> & {
+  useExistingLcid: boolean;
+};
 
 const CloseRequest = ({
   systemIntakeId,
