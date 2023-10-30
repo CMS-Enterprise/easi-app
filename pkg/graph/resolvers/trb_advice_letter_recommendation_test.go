@@ -67,6 +67,44 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		s.NoError(err)
 	})
 
+	s.Run("cannot update deleted TRB recommendation", func() {
+		trbRequest := models.NewTRBRequest(anonEua)
+		trbRequest.Type = models.TRBTNeedHelp
+		trbRequest.State = models.TRBRequestStateOpen
+		trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
+		s.NoError(err)
+
+		// Test creation of a recommendation
+		toCreate := models.TRBAdviceLetterRecommendation{
+			TRBRequestID:   trbRequest.ID,
+			Title:          "Restart your computer",
+			Recommendation: "I recommend you restart your computer",
+			Links:          pq.StringArray{"google.com", "askjeeves.com"},
+		}
+
+		// Create a recommendation
+		created, err := CreateTRBAdviceLetterRecommendation(ctx, store, &toCreate)
+		s.NoError(err)
+
+		// Delete the recommendation
+		_, err = DeleteTRBAdviceLetterRecommendation(ctx, store, created.ID)
+		s.NoError(err)
+
+		// Attempt to update the recommendation
+		linksChanges := []string{"bing.com", "yahoo.com", "pets.com"}
+		changes := map[string]interface{}{
+			"id":             created.ID.String(),
+			"trbRequestId":   trbRequest.ID.String(),
+			"title":          "Restart your PC",
+			"recommendation": "I recommend you restart your PC",
+			"links":          linksChanges,
+		}
+
+		// This update should fail, since the resolver won't be able to fetch the row
+		_, err = UpdateTRBAdviceLetterRecommendation(ctx, store, changes)
+		s.Error(err)
+	})
+
 	s.Run("deleting a recommendation updates other recommendations' positions to close any gaps", func() {
 		trbRequest := models.NewTRBRequest(anonEua)
 		trbRequest.Type = models.TRBTNeedHelp

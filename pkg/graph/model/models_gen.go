@@ -886,6 +886,7 @@ type TRBAdminNoteInitialRequestFormCategoryData struct {
 func (TRBAdminNoteInitialRequestFormCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Data specific to admin notes in the Supporting Documents category
+// The "documents" property _will_ return deleted documents so that UI can reference the document name
 type TRBAdminNoteSupportingDocumentsCategoryData struct {
 	Documents []*models.TRBRequestDocument `json:"documents"`
 }
