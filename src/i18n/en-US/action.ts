@@ -386,7 +386,10 @@ const action = {
       'This request was not approved by the GRB. This request is now closed.'
   },
   closeRequest: {
-    success: 'This request is now closed.'
+    success: 'This request is now closed.',
+    reason: 'Why are you closing this request? (optional)',
+    reasonHelpText:
+      'Provide any additional details as to why you are closing this request.'
   },
   rejectIntake: {
     backLink: 'Change',

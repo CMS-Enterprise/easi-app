@@ -1,8 +1,12 @@
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { FormGroup } from '@trussworks/react-uswds';
 
+import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionCloseRequestQuery from 'queries/CreateSystemIntakeActionCloseRequestQuery';
 import {
   CreateSystemIntakeActionCloseRequest,
@@ -29,7 +33,6 @@ const CloseRequest = ({
   decisionState
 }: ResolutionProps) => {
   const { t } = useTranslation('action');
-  const form = useForm<CloseRequestFields>();
 
   const [closeRequest] = useMutation<
     CreateSystemIntakeActionCloseRequest,
@@ -37,6 +40,9 @@ const CloseRequest = ({
   >(CreateSystemIntakeActionCloseRequestQuery, {
     refetchQueries: ['GetSystemIntake']
   });
+
+  const form = useForm<CloseRequestFields>();
+  const { control } = form;
 
   /**
    * Close request on form submit
@@ -59,6 +65,7 @@ const CloseRequest = ({
         systemIntakeId={systemIntakeId}
         successMessage={t('closeRequest.success')}
         onSubmit={onSubmit}
+        requiredFields={false}
         title={
           <ResolutionTitleBox
             title={t('resolutions.summary.closeRequest')}
@@ -68,7 +75,27 @@ const CloseRequest = ({
           />
         }
       >
-        {/* Action fields here */}
+        <Controller
+          name="reason"
+          control={control}
+          render={({ field: { ref, ...field } }) => (
+            <FormGroup>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('closeRequest.reason')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('closeRequest.reasonHelpText')}
+              </HelpText>
+              <TextAreaField
+                {...field}
+                id={field.name}
+                value={field.value || ''}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
+        />
       </ActionForm>
     </FormProvider>
   );
