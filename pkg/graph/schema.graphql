@@ -2388,7 +2388,7 @@ type TRBAdviceLetter {
   """
   List of recommendations in the order specified by users
   """
-  recommendations: [TRBAdviceLetterRecommendation!]!
+  recommendations: [TRBAdviceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_advice_letter_recommendation.go `GetTRBAdviceLetterRecommendationsByTRBRequestID`
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2515,6 +2515,7 @@ type TRBAdviceLetterRecommendation {
   createdAt: Time!
   modifiedBy: String
   modifiedAt: Time
+  deletedAt: Time
 }
 
 """
