@@ -79,13 +79,15 @@ func (s *Store) FetchBusinessCaseBySystemIntakeID(ctx context.Context, systemInt
 	// see https://jiraent.cms.gov/browse/EASI-1693
 	err := s.db.Unsafe().Get(&businessCase, fetchBusinessCaseSQL, systemIntakeID)
 	if err != nil {
+		// This function, unlike a few others in this file, does NOT error out if there is no business case, since it's
+		// totally valid to have a system intake without a business case, so we check the error type BEFORE logging
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business case by SystemIntakeID %s", err),
 			zap.String("systemIntakeId", systemIntakeID.String()),
 		)
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
-		}
 		return nil, err
 	}
 	return &businessCase, nil

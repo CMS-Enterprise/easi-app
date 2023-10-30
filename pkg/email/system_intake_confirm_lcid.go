@@ -19,6 +19,7 @@ type systemIntakeConfirmLCIDEmailParameters struct {
 	RequestName              string
 	LifecycleID              string
 	LifecycleExpiresAt       string
+	LifecycleIssuedAt        string
 	LifecycleScope           template.HTML
 	LifecycleCostBaseline    string
 	DecisionNextSteps        template.HTML
@@ -35,6 +36,7 @@ func (sie systemIntakeEmails) SystemIntakeConfirmLCIDBody(
 	requestName string,
 	lifecycleID string,
 	lifecycleExpiresAt *time.Time,
+	lifecycleIssuedAt *time.Time,
 	lifecycleScope models.HTML,
 	lifecycleCostBaseline string,
 	decisionNextSteps models.HTML,
@@ -48,6 +50,10 @@ func (sie systemIntakeEmails) SystemIntakeConfirmLCIDBody(
 	var expiresAt string
 	if lifecycleExpiresAt != nil {
 		expiresAt = lifecycleExpiresAt.Format("01/02/2006")
+	}
+	var issuedAt string
+	if lifecycleIssuedAt != nil {
+		issuedAt = lifecycleIssuedAt.Format("01/02/2006")
 	}
 
 	var trbFollowUpReadable string
@@ -66,6 +72,7 @@ func (sie systemIntakeEmails) SystemIntakeConfirmLCIDBody(
 		RequestName:              requestName,
 		LifecycleID:              lifecycleID,
 		LifecycleExpiresAt:       expiresAt,
+		LifecycleIssuedAt:        issuedAt,
 		LifecycleScope:           lifecycleScope.ToTemplate(),
 		LifecycleCostBaseline:    lifecycleCostBaseline,
 		DecisionNextSteps:        decisionNextSteps.ToTemplate(),
@@ -88,7 +95,6 @@ func (sie systemIntakeEmails) SystemIntakeConfirmLCIDBody(
 	return b.String(), nil
 }
 
-// TODO: add date LCID was issued (EASI-3319)
 // SendConfirmLCIDNotification notifies user-selected recipients that a system intake form needs edits
 func (sie systemIntakeEmails) SendConfirmLCIDNotification(
 	ctx context.Context,
@@ -97,6 +103,7 @@ func (sie systemIntakeEmails) SendConfirmLCIDNotification(
 	requestName string,
 	lifecycleID string,
 	lifecycleExpiresAt *time.Time,
+	lifecycleIssuedAt *time.Time,
 	lifecycleScope models.HTML,
 	lifecycleCostBaseline string,
 	decisionNextSteps models.HTML,
@@ -114,6 +121,7 @@ func (sie systemIntakeEmails) SendConfirmLCIDNotification(
 		requestName,
 		lifecycleID,
 		lifecycleExpiresAt,
+		lifecycleIssuedAt,
 		lifecycleScope,
 		lifecycleCostBaseline,
 		decisionNextSteps,

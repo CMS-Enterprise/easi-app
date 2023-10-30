@@ -426,6 +426,9 @@ func IssueLCID(
 		return nil, err
 	}
 
+	// get current time
+	currTime := time.Now()
+
 	// update workflow state
 	intake.Step = models.SystemIntakeStepDECISION
 	intake.State = models.SystemIntakeStateCLOSED
@@ -434,15 +437,14 @@ func IssueLCID(
 	// update LCID-related fields
 	intake.LifecycleID = null.StringFrom(newLCID)
 	intake.LifecycleExpiresAt = &input.ExpiresAt
+	intake.LifecycleIssuedAt = &currTime
 	intake.LifecycleScope = &input.Scope
 	intake.DecisionNextSteps = &input.NextSteps
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 	intake.LifecycleCostBaseline = null.StringFromPtr(input.CostBaseline)
 
 	// update other fields
-	updatedTime := time.Now()
-	intake.UpdatedAt = &updatedTime
-	// TODO: Store updatedTime as LCID issued date on the intake (EASI-3319)
+	intake.UpdatedAt = &currTime
 
 	// save intake, action, admin note
 	// see Note [Database calls from resolvers aren't atomic]
@@ -509,7 +511,7 @@ func IssueLCID(
 				intake.ID,
 				intake.ProjectName.ValueOrZero(),
 				newLCID,
-				updatedTime,
+				currTime,
 				&input.ExpiresAt,
 				input.Scope,
 				*input.CostBaseline,
@@ -885,6 +887,7 @@ func UpdateLCID(
 			err = emailClient.SystemIntake.SendUpdateLCIDNotification(ctx,
 				*input.NotificationRecipients,
 				intake.LifecycleID.ValueOrZero(),
+				intake.LifecycleIssuedAt,
 				prevExpiration,
 				input.ExpiresAt,
 				prevScope,
@@ -1014,6 +1017,7 @@ func ConfirmLCID(ctx context.Context,
 				intake.ProjectName.ValueOrZero(),
 				intake.LifecycleID.ValueOrZero(),
 				&input.ExpiresAt,
+				intake.LifecycleIssuedAt,
 				input.Scope,
 				*input.CostBaseline,
 				input.NextSteps,
@@ -1143,6 +1147,7 @@ func ExpireLCID(
 				*input.NotificationRecipients,
 				intake.LifecycleID.ValueOrZero(),
 				intake.LifecycleExpiresAt,
+				intake.LifecycleIssuedAt,
 				*intake.LifecycleScope,
 				intake.LifecycleCostBaseline.ValueOrZero(),
 				input.Reason,
@@ -1254,6 +1259,7 @@ func RetireLCID(
 				intake.LifecycleID.ValueOrZero(),
 				&input.RetiresAt,
 				intake.LifecycleExpiresAt,
+				intake.LifecycleIssuedAt,
 				*intake.LifecycleScope,
 				intake.LifecycleCostBaseline.ValueOrZero(),
 				input.Reason,
@@ -1364,6 +1370,7 @@ func ChangeLCIDRetirementDate(
 				intake.LifecycleID.ValueOrZero(),
 				&input.RetiresAt,
 				intake.LifecycleExpiresAt,
+				intake.LifecycleIssuedAt,
 				*intake.LifecycleScope,
 				intake.LifecycleCostBaseline.ValueOrZero(),
 				*intake.DecisionNextSteps,

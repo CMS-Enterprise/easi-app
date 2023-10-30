@@ -14,6 +14,7 @@ func (s *EmailTestSuite) TestIntakeExpireLCIDNotification() {
 	lifecycleScope := models.HTMLPointer("<em>things</em>")
 	lifecycleCostBaseline := "100bux"
 	expiresAt := time.Now().AddDate(1, 0, 0)
+	issuedAt := time.Now()
 	ITGovInboxAddress := s.config.GRTEmail.String()
 	reason := models.HTMLPointer("<strong>This LCID is TERRIBLE anyway</strong>")
 	additionalInfo := models.HTMLPointer("An apple a day keeps the doctor away.")
@@ -34,6 +35,7 @@ func (s *EmailTestSuite) TestIntakeExpireLCIDNotification() {
 		recipients,
 		lifecycleID,
 		&expiresAt,
+		&issuedAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*reason,
@@ -57,6 +59,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 
 <p><u>Summary of expired Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s</p>
@@ -72,6 +75,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ITGovInboxAddress,
 		ITGovInboxAddress,
 		lifecycleID,
+		issuedAt.Format("01/02/2006"),
 		expiresAt.Format("01/02/2006"),
 		*lifecycleScope.StringPointer(),
 		lifecycleCostBaseline,
@@ -90,6 +94,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		recipients,
 		lifecycleID,
 		&expiresAt,
+		&issuedAt,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*reason,
@@ -110,6 +115,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 
 <p><u>Summary of expired Life Cycle ID</u><br>
 <strong>Lifecycle ID:</strong> %s<br>
+<strong>Original date issued:</strong> %s<br>
 <strong>Expiration date:</strong> %s<br>
 <strong>Scope:</strong> %s<br>
 <strong>Project Cost Baseline:</strong> %s</p>
@@ -125,6 +131,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		ITGovInboxAddress,
 		ITGovInboxAddress,
 		lifecycleID,
+		issuedAt.Format("01/02/2006"),
 		expiresAt.Format("01/02/2006"),
 		*lifecycleScope.StringPointer(),
 		lifecycleCostBaseline,
@@ -139,6 +146,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		recipients,
 		lifecycleID,
 		&expiresAt,
+		nil,
 		*lifecycleScope,
 		lifecycleCostBaseline,
 		*reason,
@@ -178,7 +186,7 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		lifecycleCostBaseline,
 	)
 
-	s.Run("Should omit next steps if absent", func() {
+	s.Run("Should omit next steps and issuedAt if absent", func() {
 		s.Equal(expectedEmail, sender.body)
 	})
 }
