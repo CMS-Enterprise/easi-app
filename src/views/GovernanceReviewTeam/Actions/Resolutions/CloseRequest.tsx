@@ -23,9 +23,7 @@ import { ResolutionProps } from '.';
 type CloseRequestFields = NonNullableProps<
   Omit<SystemIntakeCloseRequestInput, 'systemIntakeID'> &
     SystemIntakeActionFields
-> & {
-  useExistingLcid: boolean;
-};
+>;
 
 const CloseRequest = ({
   systemIntakeId,
