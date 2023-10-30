@@ -148,6 +148,17 @@ describe('TRB Admin Note', () => {
     ).toBeInTheDocument();
   });
 
+  it('Renders category specific data - advice letter', () => {
+    const note = noteAdviceLetter;
+    render(<Note note={note} />);
+
+    expect(
+      screen.getByText(
+        'Advice letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)'
+      )
+    ).toBeInTheDocument();
+  });
+
   it('Renders label for removed document', () => {
     const note: TRBAdminNoteFragment = {
       ...noteSupportingDocuments,
@@ -171,13 +182,27 @@ describe('TRB Admin Note', () => {
     ).toBeInTheDocument();
   });
 
-  it('Renders category specific data - advice letter', () => {
-    const note = noteAdviceLetter;
+  it('Renders label for removed recommendation', () => {
+    const note: TRBAdminNoteFragment = {
+      ...noteAdviceLetter,
+      categorySpecificData: {
+        __typename: 'TRBAdminNoteAdviceLetterCategoryData',
+        appliesToMeetingSummary: true,
+        appliesToNextSteps: false,
+        recommendations: [
+          {
+            __typename: 'TRBAdviceLetterRecommendation',
+            title: 'Recommendation One',
+            deletedAt: '2023-03-28T13:20:37.852099Z'
+          }
+        ]
+      }
+    };
     render(<Note note={note} />);
 
     expect(
       screen.getByText(
-        'Advice letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)'
+        'Advice letter: Meeting summary, Removed recommendation (Recommendation One)'
       )
     ).toBeInTheDocument();
   });
