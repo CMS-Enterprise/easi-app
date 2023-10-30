@@ -61,24 +61,32 @@ const Notes = ({
     <TrbAdminWrapper
       activePage="notes"
       trbRequestId={trbRequestId}
-      title={t('adminHome.notes')}
-      description={t('notes.description')}
       disableStep={adminActionDisabled}
       adminActionProps={{
         status: trbRequest?.status || TRBRequestStatus.NEW,
         state: trbRequest?.state || TRBRequestState.OPEN
       }}
+      // Only pass title and description if NOT modal view
+      {...(!setModalView
+        ? { title: t('adminHome.notes'), description: t('notes.description') }
+        : {})}
     >
       {setModalView ? (
-        <Button
-          type="button"
-          className="margin-bottom-4"
-          onClick={() => {
-            setModalView('addNote');
-          }}
-        >
-          {t('notes.addNote')}
-        </Button>
+        <>
+          <h1 className="margin-y-05">{t('adminHome.notes')}</h1>
+          <p className="line-height-body-4 font-body-md text-light margin-top-05">
+            {t('notes.description')}
+          </p>
+          <Button
+            type="button"
+            className="margin-bottom-4"
+            onClick={() => {
+              setModalView('addNote');
+            }}
+          >
+            {t('notes.addNote')}
+          </Button>
+        </>
       ) : (
         <UswdsReactLink
           to={`/trb/${trbRequestId}/notes/add-note`}
@@ -104,21 +112,29 @@ const Notes = ({
           {t('notes.noNotes')}
         </Alert>
       ) : (
-        <div className="margin-top-2">
+        <div className="margin-top-1">
           {/* Show most recent notes first */}
           {[...notes] // TODO: BE will implement filter to ensure correct ordering
             .sort((a, b) => {
               return a.createdAt < b.createdAt ? 1 : -1;
             })
             .filter((note, index) => index < noteCount)
-            .map(note => (
-              <Note note={note} key={note.id} />
-            ))}
+            .map((note, index, array) => {
+              const isLastNote = index === array.length - 1;
+              return (
+                <Note
+                  note={note}
+                  border={!isLastNote}
+                  key={note.id}
+                  {...(isLastNote ? { className: 'margin-bottom-0' } : {})}
+                />
+              );
+            })}
 
           {notes.length > 5 && !(noteCount > notes.length) && (
             <Button
               type="button"
-              className="usa-button usa-button--unstyled"
+              className="usa-button usa-button--unstyled margin-top-3"
               onClick={() => {
                 setNoteCount(noteCount + 5);
               }}

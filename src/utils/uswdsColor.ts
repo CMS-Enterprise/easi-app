@@ -34,7 +34,8 @@ const themeColorTokens = {
 };
 
 const systemColorTokens = {
-  'blue-vivid-40': '#2491ff'
+  'blue-vivid-40': '#2491ff',
+  'gray-20': '#c9c9c9'
 };
 
 const colorTokens = {
