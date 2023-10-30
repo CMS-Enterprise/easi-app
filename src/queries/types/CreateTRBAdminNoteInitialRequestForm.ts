@@ -39,6 +39,7 @@ export interface CreateTRBAdminNoteInitialRequestForm_createTRBAdminNoteInitialR
 export interface CreateTRBAdminNoteInitialRequestForm_createTRBAdminNoteInitialRequestForm_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData_recommendations {
   __typename: "TRBAdviceLetterRecommendation";
   title: string;
+  deletedAt: Time | null;
 }
 
 export interface CreateTRBAdminNoteInitialRequestForm_createTRBAdminNoteInitialRequestForm_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData {

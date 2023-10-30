@@ -80,11 +80,13 @@ const noteAdviceLetter: TRBAdminNoteFragment = {
     recommendations: [
       {
         __typename: 'TRBAdviceLetterRecommendation',
-        title: 'Recommendation One'
+        title: 'Recommendation One',
+        deletedAt: null
       },
       {
         __typename: 'TRBAdviceLetterRecommendation',
-        title: 'Recommendation Two'
+        title: 'Recommendation Two',
+        deletedAt: null
       }
     ]
   },

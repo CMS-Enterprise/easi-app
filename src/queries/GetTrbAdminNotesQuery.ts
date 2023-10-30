@@ -31,6 +31,7 @@ export const TRBAdminNoteFragment = gql`
         appliesToNextSteps
         recommendations {
           title
+          deletedAt
         }
       }
     }

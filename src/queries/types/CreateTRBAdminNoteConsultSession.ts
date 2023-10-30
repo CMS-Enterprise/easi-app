@@ -39,6 +39,7 @@ export interface CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSessi
 export interface CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData_recommendations {
   __typename: "TRBAdviceLetterRecommendation";
   title: string;
+  deletedAt: Time | null;
 }
 
 export interface CreateTRBAdminNoteConsultSession_createTRBAdminNoteConsultSession_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData {
