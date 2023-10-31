@@ -141,7 +141,7 @@ describe('Issue LCID form', async () => {
     // Check for modal
 
     const modalTitle = await screen.findByText(
-      'Are you sure you want to complete this action?'
+      'Are you sure you want to complete this decision action?'
     );
     expect(modalTitle).toBeInTheDocument();
 

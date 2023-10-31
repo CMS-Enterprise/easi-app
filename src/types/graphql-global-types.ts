@@ -605,6 +605,44 @@ export interface CreateSystemIntakeNoteInput {
 }
 
 /**
+ * The data needed to create a TRB admin note with the Advice Letter category
+ */
+export interface CreateTRBAdminNoteAdviceLetterInput {
+  trbRequestId: UUID;
+  noteText: HTML;
+  appliesToMeetingSummary: boolean;
+  appliesToNextSteps: boolean;
+  recommendationIDs: UUID[];
+}
+
+/**
+ * The data needed to create a TRB admin note with the Consult Session category
+ */
+export interface CreateTRBAdminNoteConsultSessionInput {
+  trbRequestId: UUID;
+  noteText: HTML;
+}
+
+/**
+ * The data needed to create a TRB admin note with the General Request category
+ */
+export interface CreateTRBAdminNoteGeneralRequestInput {
+  trbRequestId: UUID;
+  noteText: HTML;
+}
+
+/**
+ * The data needed to create a TRB admin note with the Initial Request Form category
+ */
+export interface CreateTRBAdminNoteInitialRequestFormInput {
+  trbRequestId: UUID;
+  noteText: HTML;
+  appliesToBasicRequestDetails: boolean;
+  appliesToSubjectAreas: boolean;
+  appliesToAttendees: boolean;
+}
+
+/**
  * The data needed to create any category of TRB admin note, without any category-specific data
  * TODO - EASI-3458 - remove
  */
@@ -612,6 +650,15 @@ export interface CreateTRBAdminNoteInput {
   trbRequestId: UUID;
   category: TRBAdminNoteCategory;
   noteText: HTML;
+}
+
+/**
+ * The data needed to create a TRB admin note with the Supporting Documents category
+ */
+export interface CreateTRBAdminNoteSupportingDocumentsInput {
+  trbRequestId: UUID;
+  noteText: HTML;
+  documentIDs: UUID[];
 }
 
 /**
@@ -946,6 +993,19 @@ export interface SystemIntakeNotITGovReqInput {
 export interface SystemIntakeProductManagerInput {
   name: string;
   component: string;
+}
+
+/**
+ * Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
+ */
+export interface SystemIntakeRejectIntakeInput {
+  systemIntakeID: UUID;
+  reason: HTML;
+  nextSteps: HTML;
+  trbFollowUp: SystemIntakeTRBFollowUp;
+  additionalInfo?: HTML | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
 }
 
 /**

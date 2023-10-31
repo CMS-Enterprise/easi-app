@@ -3,7 +3,6 @@ package resolvers
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -418,7 +417,6 @@ func GetTRBLeadInfo(ctx context.Context, trbLead *string) (*models.UserInfo, err
 // GetTRBRequesterInfo retrieves the user info of a TRB request's requester
 func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.UserInfo, error) {
 	requesterInfo, err := dataloaders.GetUserInfo(ctx, requesterEUA)
-	fmt.Println("REQUESTER INFO", requesterEUA, requesterInfo)
 	if err != nil {
 		return nil, err
 	}

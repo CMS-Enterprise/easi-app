@@ -2,9 +2,9 @@ package recommendations
 
 import (
 	"errors"
+	"slices"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/slices"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"

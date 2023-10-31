@@ -33,6 +33,7 @@ func (s *seederConfig) seedTRBRequests(ctx context.Context) error {
 		s.seedTRBCase8,
 		s.seedTRBCase9,
 		s.seedTRBCase10,
+		s.seedTRBCase11,
 	}
 
 	for _, seedFunc := range cases {
@@ -271,6 +272,112 @@ func (s *seederConfig) seedTRBCase10(ctx context.Context) error {
 	return nil
 }
 
+// seed a TRB request with category-specific admin notes, including references to documents and recommendations
+func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
+	trb, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 11 - Admin notes w/ category-specific data").Ptr(), true)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBConsultMeeting(ctx, trb, true)
+	if err != nil {
+		return err
+	}
+
+	// draft advice letter, not sent
+	_, err = s.addAdviceLetter(ctx, trb, true, false, false)
+	if err != nil {
+		return err
+	}
+
+	// create 3 documents we can reference in admin notes
+	documentIDs := []uuid.UUID{}
+	scanStatus := "CLEAN"
+	for i := 0; i < 3; i++ {
+		// new error variable to avoid issues with shadowing err from outer scope
+		doc, errAddDocument := s.addDocument(ctx, trb, &scanStatus)
+		if errAddDocument != nil {
+			return err
+		}
+		documentIDs = append(documentIDs, doc.ID)
+	}
+
+	// create 3 recommendations we can reference in admin notes
+	recommendations, err := s.addAdviceLetterRecommendations(ctx, trb)
+	if err != nil {
+		return err
+	}
+
+	// create admin notes of all five categories
+
+	generalRequestNoteInput := model.CreateTRBAdminNoteGeneralRequestInput{
+		TrbRequestID: trb.ID,
+		NoteText:     "This is a general request admin note from seed data",
+	}
+	_, err = resolvers.CreateTRBAdminNoteGeneralRequest(ctx, s.store, generalRequestNoteInput)
+	if err != nil {
+		return err
+	}
+
+	initialRequestFormNoteInput := model.CreateTRBAdminNoteInitialRequestFormInput{
+		TrbRequestID:                 trb.ID,
+		NoteText:                     "This is an initial request form admin note from seed data",
+		AppliesToBasicRequestDetails: true,
+		AppliesToSubjectAreas:        false,
+		AppliesToAttendees:           true,
+	}
+	_, err = resolvers.CreateTRBAdminNoteInitialRequestForm(ctx, s.store, initialRequestFormNoteInput)
+	if err != nil {
+		return err
+	}
+
+	// link to 2 of the documents so we can check that it links to multiple docs *and* that it doesn't link to all the docs on the request
+	supportingDocumentsNoteInput := model.CreateTRBAdminNoteSupportingDocumentsInput{
+		TrbRequestID: trb.ID,
+		NoteText:     "This is a supporting documents admin note from seed data",
+		DocumentIDs: []uuid.UUID{
+			documentIDs[0],
+			documentIDs[1],
+		},
+	}
+	_, err = resolvers.CreateTRBAdminNoteSupportingDocuments(ctx, s.store, supportingDocumentsNoteInput)
+	if err != nil {
+		return err
+	}
+
+	consultSessionNoteInput := model.CreateTRBAdminNoteConsultSessionInput{
+		TrbRequestID: trb.ID,
+		NoteText:     "This is a consult session admin note from seed data",
+	}
+	_, err = resolvers.CreateTRBAdminNoteConsultSession(ctx, s.store, consultSessionNoteInput)
+	if err != nil {
+		return err
+	}
+
+	// link to 2 of the recommendations so we can check that it links to multiple recs *and* that it doesn't link to all the recs on the request
+	adviceLetterNoteInput := model.CreateTRBAdminNoteAdviceLetterInput{
+		TrbRequestID:            trb.ID,
+		NoteText:                "This is an advice letter admin note from seed data",
+		AppliesToMeetingSummary: true,
+		AppliesToNextSteps:      false,
+		RecommendationIDs: []uuid.UUID{
+			recommendations[0].ID,
+			recommendations[1].ID,
+		},
+	}
+	_, err = resolvers.CreateTRBAdminNoteAdviceLetter(ctx, s.store, adviceLetterNoteInput)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s *seederConfig) seedTRBLeadOptions(ctx context.Context) ([]*models.UserInfo, error) {
 	leadUsers := map[string]*models.UserInfo{
 		"ABCD": {
@@ -499,36 +606,7 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 		}
 
 		// create three recommendations for testing manipulation of recommendations' positions
-
-		recommendation1 := &models.TRBAdviceLetterRecommendation{
-			TRBRequestID:   trb.ID,
-			Title:          "Restart your computer",
-			Recommendation: "I recommend you restart your computer",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-		}
-		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation1)
-		if err != nil {
-			return nil, err
-		}
-
-		recommendation2 := &models.TRBAdviceLetterRecommendation{
-			TRBRequestID:   trb.ID,
-			Title:          "Unplug it and plug it back in",
-			Recommendation: "I recommend you unplug your computer and plug it back in",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-		}
-		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation2)
-		if err != nil {
-			return nil, err
-		}
-
-		recommendation3 := &models.TRBAdviceLetterRecommendation{
-			TRBRequestID:   trb.ID,
-			Title:          "Get a new computer",
-			Recommendation: "Your computer is broken, you need a new one",
-			Links:          pq.StringArray{"google.com", "askjeeves.com"},
-		}
-		_, err = resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation3)
+		_, err = s.addAdviceLetterRecommendations(ctx, trb)
 		if err != nil {
 			return nil, err
 		}
@@ -540,6 +618,48 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 	}
 
 	return letter, nil
+}
+
+// creates three recommendations attached to a TRB request
+func (s *seederConfig) addAdviceLetterRecommendations(ctx context.Context, trb *models.TRBRequest) ([]*models.TRBAdviceLetterRecommendation, error) {
+	recommendation1ToCreate := &models.TRBAdviceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Restart your computer",
+		Recommendation: "I recommend you restart your computer",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+	}
+	createdRecommendation1, err := resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation1ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	recommendation2ToCreate := &models.TRBAdviceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Unplug it and plug it back in",
+		Recommendation: "I recommend you unplug your computer and plug it back in",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+	}
+	createdRecommendation2, err := resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation2ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	recommendation3ToCreate := &models.TRBAdviceLetterRecommendation{
+		TRBRequestID:   trb.ID,
+		Title:          "Get a new computer",
+		Recommendation: "Your computer is broken, you need a new one",
+		Links:          pq.StringArray{"google.com", "askjeeves.com"},
+	}
+	createdRecommendation3, err := resolvers.CreateTRBAdviceLetterRecommendation(ctx, s.store, recommendation3ToCreate)
+	if err != nil {
+		return nil, err
+	}
+
+	return []*models.TRBAdviceLetterRecommendation{
+		createdRecommendation1,
+		createdRecommendation2,
+		createdRecommendation3,
+	}, nil
 }
 
 func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, scanStatus *string) (*models.TRBRequestDocument, error) {

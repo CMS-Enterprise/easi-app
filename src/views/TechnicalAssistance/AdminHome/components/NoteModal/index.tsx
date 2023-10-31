@@ -67,11 +67,11 @@ const NotesModal = ({
       appElement={document.getElementById('root')! as HTMLElement}
     >
       <div data-testid="discussion-modal">
-        <div className="easi-notes__x-button-container display-flex text-base flex-align-center padding-y-0 padding-x-3">
+        <div className="easi-notes__x-button-container display-flex text-base flex-align-center padding-y-0 padding-x-1">
           <Button
             type="button"
             data-testid="close-discussions"
-            className="bg-transparent margin-right-2"
+            className="bg-transparent margin-right-0"
             aria-label="Close Modal"
             onClick={() => {
               if (viewType === 'addNote') {
@@ -87,12 +87,11 @@ const NotesModal = ({
               <IconArrowBack size={4} className="text-base" />
             )}
           </Button>
-
           <h4 className="margin-0">
             {viewType === 'viewNotes' ? t('notes.notes') : t('notes.allNotes')}
           </h4>
         </div>
-        <GridContainer className="padding-y-8 margin-left-2">
+        <GridContainer className="padding-y-6">
           <Grid desktop={{ col: 12 }}>
             {viewType === 'viewNotes' ? (
               <Notes

@@ -10,6 +10,28 @@ export const TRBAdminNoteFragment = gql`
       commonName
     }
     createdAt
+
+    categorySpecificData {
+      ... on TRBAdminNoteInitialRequestFormCategoryData {
+        appliesToBasicRequestDetails
+        appliesToSubjectAreas
+        appliesToAttendees
+      }
+
+      ... on TRBAdminNoteSupportingDocumentsCategoryData {
+        documents {
+          fileName
+        }
+      }
+
+      ... on TRBAdminNoteAdviceLetterCategoryData {
+        appliesToMeetingSummary
+        appliesToNextSteps
+        recommendations {
+          title
+        }
+      }
+    }
   }
 `;
 
