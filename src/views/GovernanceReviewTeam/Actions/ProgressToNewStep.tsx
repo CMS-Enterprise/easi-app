@@ -26,8 +26,8 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
       <ActionForm
         systemIntakeId={systemIntakeId}
         title={t('progressToNewStep.title')}
-        description=""
-        breadcrumb=""
+        description={t('progressToNewStep.description')}
+        breadcrumb={t('progressToNewStep.breadcrumb')}
         successMessage=""
         onSubmit={onSubmit}
       >
