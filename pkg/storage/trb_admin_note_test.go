@@ -3,6 +3,8 @@ package storage
 import (
 	"context"
 
+	"github.com/guregu/null"
+
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -16,8 +18,10 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 		category := models.TRBAdminNoteCategoryAdviceLetter
 		noteText := models.HTML("Creation test")
 		noteToCreate := models.TRBAdminNote{
-			Category: category,
-			NoteText: noteText,
+			Category:                category,
+			NoteText:                noteText,
+			AppliesToMeetingSummary: null.BoolFrom(true),
+			AppliesToNextSteps:      null.BoolFrom(false),
 		}
 		noteToCreate.TRBRequestID = trbRequestID
 		noteToCreate.CreatedBy = anonEUA
@@ -29,6 +33,12 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 		s.EqualValues(category, createdNote.Category)
 		s.EqualValues(noteText, createdNote.NoteText)
 		s.False(createdNote.IsArchived)
+
+		// make sure these fields have set values, then check that the values are correct
+		s.NotNil(createdNote.AppliesToMeetingSummary.Ptr())
+		s.EqualValues(noteToCreate.AppliesToMeetingSummary.Bool, createdNote.AppliesToMeetingSummary.Bool)
+		s.NotNil(createdNote.AppliesToNextSteps.Ptr())
+		s.EqualValues(noteToCreate.AppliesToNextSteps.Bool, createdNote.AppliesToNextSteps.Bool)
 	})
 
 	s.Run("Creating, then fetching a note by TRB request ID returns the created note", func() {
@@ -84,7 +94,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	s.Run("Creating two notes with the same TRB request ID, then fetching notes by TRB request ID, returns both different notes", func() {
 		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 
-		category1 := models.TRBAdminNoteCategoryInitialRequestForm
+		category1 := models.TRBAdminNoteCategoryGeneralRequest
 		noteText1 := models.HTML("Creating two notes, then fetch by TRB request ID test (note 1)")
 		author1 := "ABCD"
 		noteToCreate1 := models.TRBAdminNote{
@@ -95,7 +105,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 		noteToCreate1.CreatedBy = author1
 
 		// make sure category2, noteText2, author2 are all distinct from category1, noteText1, author1
-		category2 := models.TRBAdminNoteCategoryAdviceLetter
+		category2 := models.TRBAdminNoteCategoryConsultSession
 		noteText2 := models.HTML("Creating two notes, then fetch by TRB request ID test (note 2)")
 		author2 := "GRTB"
 		noteToCreate2 := models.TRBAdminNote{
@@ -137,7 +147,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 		noteToUpdate, err := s.store.CreateTRBAdminNote(ctx, &noteToCreate)
 		s.NoError(err)
 
-		updatedCategory := models.TRBAdminNoteCategoryAdviceLetter
+		updatedCategory := models.TRBAdminNoteCategoryConsultSession
 		updatedNoteText := models.HTML("Update note test (updated)")
 		updatingUser := "USR1"
 
@@ -158,7 +168,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 		trbRequestID := createTRBRequest(ctx, s, anonEUA)
 
 		noteToCreate := models.TRBAdminNote{
-			Category: models.TRBAdminNoteCategoryAdviceLetter,
+			Category: models.TRBAdminNoteCategoryGeneralRequest,
 			NoteText: "Archive note test",
 		}
 		noteToCreate.TRBRequestID = trbRequestID
