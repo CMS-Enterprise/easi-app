@@ -133,6 +133,6 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		// check that the last recommendation's position was adjusted from 2 to 1 to close the gap
 		lastRecommendationAfterDelete, err := store.GetTRBAdviceLetterRecommendationByID(ctx, createdRecommendations[2].ID)
 		s.NoError(err)
-		s.EqualValues(1, lastRecommendationAfterDelete.PositionInLetter.ValueOrZero)
+		s.EqualValues(1, lastRecommendationAfterDelete.PositionInLetter.ValueOrZero())
 	})
 }
