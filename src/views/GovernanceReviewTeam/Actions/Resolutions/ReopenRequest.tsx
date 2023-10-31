@@ -2,12 +2,18 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { SystemIntakeReopenRequestInput } from 'types/graphql-global-types';
+import { NonNullableProps } from 'types/util';
+
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
 import ResolutionTitleBox from './ResolutionTitleBox';
 import { ResolutionProps } from '.';
 
-interface ReopenRequestFields extends SystemIntakeActionFields {}
+type ReopenRequestFields = NonNullableProps<
+  Omit<SystemIntakeReopenRequestInput, 'systemIntakeID'> &
+    SystemIntakeActionFields
+>;
 
 const ReopenRequest = ({
   systemIntakeId,
