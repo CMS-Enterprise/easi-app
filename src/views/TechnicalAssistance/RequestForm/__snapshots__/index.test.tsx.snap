@@ -8,7 +8,7 @@ exports[`TRB Request Form Feedback > goes to and renders the feedback view 1`] =
   >
     <nav
       aria-label="Breadcrumbs"
-      class="usa-breadcrumb padding-bottom-0"
+      class="usa-breadcrumb usa-breadcrumb--wrap padding-bottom-0"
       style="background-color: transparent;"
     >
       <ol
