@@ -4,15 +4,20 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { FormGroup } from '@trussworks/react-uswds';
 
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionProgressToNewStepQuery from 'queries/CreateSystemIntakeActionProgressToNewStepQuery';
 import {
   CreateSystemIntakeActionProgressToNewStep,
   CreateSystemIntakeActionProgressToNewStepVariables
 } from 'queries/types/CreateSystemIntakeActionProgressToNewStep';
-import { SystemIntakeProgressToNewStepsInput } from 'types/graphql-global-types';
+import {
+  SystemIntakeProgressToNewStepsInput,
+  SystemIntakeStepToProgressTo
+} from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
@@ -60,6 +65,44 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
         successMessage=""
         onSubmit={onSubmit}
       >
+        <Controller
+          control={control}
+          name="newStep"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name} className="text-normal" required>
+                {t('progressToNewStep.newStep')}
+              </Label>
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
+              <RadioField
+                {...field}
+                value={SystemIntakeStepToProgressTo.DRAFT_BUSINESS_CASE}
+                id={SystemIntakeStepToProgressTo.DRAFT_BUSINESS_CASE}
+                label={t('progressToNewStep.draftBusinessCase')}
+              />
+              <RadioField
+                {...field}
+                value={SystemIntakeStepToProgressTo.GRT_MEETING}
+                id={SystemIntakeStepToProgressTo.GRT_MEETING}
+                label={t('progressToNewStep.grtMeeting')}
+              />
+              <RadioField
+                {...field}
+                value={SystemIntakeStepToProgressTo.FINAL_BUSINESS_CASE}
+                id={SystemIntakeStepToProgressTo.FINAL_BUSINESS_CASE}
+                label={t('progressToNewStep.finalBusinessCase')}
+              />
+              <RadioField
+                {...field}
+                value={SystemIntakeStepToProgressTo.GRB_MEETING}
+                id={SystemIntakeStepToProgressTo.GRB_MEETING}
+                label={t('progressToNewStep.grbMeeting')}
+              />
+            </FormGroup>
+          )}
+        />
         <Controller
           control={control}
           name="feedback"

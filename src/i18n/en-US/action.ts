@@ -71,7 +71,9 @@ const action = {
     intakeFormStep: 'Which form needs edits?',
     emailFeedback: 'What changes are needed?',
     reason: 'Why are you expiring this Life Cycle ID?',
-    reason_notApproved: 'Reason'
+    reason_notApproved: 'Reason',
+    newStep:
+      'Which step of the IT Governance process should this request move to?'
   },
   manageLcid: {
     title: 'Manage a Life Cycle ID (LCID)',
@@ -371,6 +373,12 @@ const action = {
     description:
       'Use this action if this request is ready to move to a new step in the IT Governance process.',
     breadcrumb: 'Progress to a new step',
+    newStep:
+      'Which step of the IT Governance process should this request move to?',
+    draftBusinessCase: 'Draft Business Case',
+    grtMeeting: 'GRT meeting',
+    finalBusinessCase: 'Final Business Case',
+    grbMeeting: 'GRB meeting',
     feedback: 'Feedback for the requester (optional)',
     feedbackHelpText:
       'If there is any extra feedback you would like to give to the requester as they progress to the next step, input that feedback here. This includes any feedback from the GRT for the requester.',
