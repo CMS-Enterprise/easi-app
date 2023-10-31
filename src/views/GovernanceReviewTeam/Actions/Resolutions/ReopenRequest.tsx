@@ -1,7 +1,13 @@
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from '@apollo/client';
 
+import CreateSystemIntakeActionReopenRequestQuery from 'queries/CreateSystemIntakeActionReopenRequestQuery';
+import {
+  CreateSystemIntakeActionReopenRequest,
+  CreateSystemIntakeActionReopenRequestVariables
+} from 'queries/types/CreateSystemIntakeActionReopenRequest';
 import { SystemIntakeReopenRequestInput } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
 
@@ -21,17 +27,30 @@ const ReopenRequest = ({
   decisionState
 }: ResolutionProps) => {
   const { t } = useTranslation('action');
+
+  const [reopenRequest] = useMutation<
+    CreateSystemIntakeActionReopenRequest,
+    CreateSystemIntakeActionReopenRequestVariables
+  >(CreateSystemIntakeActionReopenRequestQuery, {
+    refetchQueries: ['GetSystemIntake']
+  });
+
   const form = useForm<ReopenRequestFields>();
 
   /**
-   * Submit handler containing mutation logic
+   * Reopen request on form submit
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: ReopenRequestFields) => {
-    // Execute mutation here
-    // mutate(formData);
-  };
+  const onSubmit = async (formData: ReopenRequestFields) =>
+    reopenRequest({
+      variables: {
+        input: {
+          systemIntakeID: systemIntakeId,
+          ...formData
+        }
+      }
+    });
 
   return (
     <FormProvider<ReopenRequestFields> {...form}>
