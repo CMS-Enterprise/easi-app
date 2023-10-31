@@ -1,8 +1,12 @@
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { FormGroup } from '@trussworks/react-uswds';
 
+import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionProgressToNewStepQuery from 'queries/CreateSystemIntakeActionProgressToNewStepQuery';
 import {
   CreateSystemIntakeActionProgressToNewStep,
@@ -29,6 +33,7 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
   });
 
   const form = useForm<ProgressToNewStepFields>();
+  const { control } = form;
 
   /**
    * Submit handler containing mutation logic
@@ -55,7 +60,48 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
         successMessage=""
         onSubmit={onSubmit}
       >
-        {/* Action fields here */}
+        <Controller
+          control={control}
+          name="feedback"
+          render={({ field: { ref, ...field } }) => (
+            <FormGroup>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('progressToNewStep.feedback')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('progressToNewStep.feedbackHelpText')}
+              </HelpText>
+              <TextAreaField
+                {...field}
+                id={field.name}
+                value={field.value || ''}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
+        />
+        <Controller
+          control={control}
+          name="grbRecommendations"
+          render={({ field: { ref, ...field } }) => (
+            <FormGroup>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('progressToNewStep.grbRecommendations')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('progressToNewStep.grbRecommendationsHelpText')}
+              </HelpText>
+              <TextAreaField
+                {...field}
+                id={field.name}
+                value={field.value || ''}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
+        />
       </ActionForm>
     </FormProvider>
   );

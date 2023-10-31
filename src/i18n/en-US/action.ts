@@ -370,7 +370,13 @@ const action = {
     title: 'Action: progress to a new step',
     description:
       'Use this action if this request is ready to move to a new step in the IT Governance process.',
-    breadcrumb: 'Progress to a new step'
+    breadcrumb: 'Progress to a new step',
+    feedback: 'Feedback for the requester (optional)',
+    feedbackHelpText:
+      'If there is any extra feedback you would like to give to the requester as they progress to the next step, input that feedback here. This includes any feedback from the GRT for the requester.',
+    grbRecommendations: 'Recommendations for the GRB (optional)',
+    grbRecommendationsHelpText:
+      'Add any extra context or recommendations that you would like the Governance Review Board (GRB) to consider as a part of their evaluation of this project. The requester will be able to see these recommendations.'
   },
   notItGovRequest: {
     reason: 'Why is this not an IT Governance request? (optional)',
