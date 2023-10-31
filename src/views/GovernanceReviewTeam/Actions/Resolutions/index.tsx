@@ -171,6 +171,8 @@ const Resolutions = ({ systemIntake }: ActionsProps) => {
             systemIntakeId={systemIntakeId}
             state={state}
             decisionState={decisionState}
+            lcid={systemIntake.lcid}
+            lcidStatus={systemIntake.lcidStatus}
           />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/re-open-request">

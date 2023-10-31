@@ -385,6 +385,17 @@ const action = {
     success:
       'This request was not approved by the GRB. This request is now closed.'
   },
+  closeRequest: {
+    success: 'This request is now closed.',
+    reason: 'Why are you closing this request? (optional)',
+    reasonHelpText:
+      'Provide any additional details as to why you are closing this request.',
+    modal: {
+      title: 'This action will not affect the issued Life Cycle ID ({{lcid}}).',
+      content:
+        'Completing this action will not change the status of the issued LCID, it will only mark the request process as closed, and the project team will still receive automatic updates about their LCID. If you wish to Retire the LCID associated with this request, please go back and choose the “Manage Life Cycle ID” action.'
+    }
+  },
   rejectIntake: {
     backLink: 'Change',
     heading: 'Actions on request',
