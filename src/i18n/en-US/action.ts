@@ -73,7 +73,8 @@ const action = {
     reason: 'Why are you expiring this Life Cycle ID?',
     reason_notApproved: 'Reason',
     newStep:
-      'Which step of the IT Governance process should this request move to?'
+      'Which step of the IT Governance process should this request move to?',
+    meetingDate: 'Meeting date'
   },
   manageLcid: {
     title: 'Manage a Life Cycle ID (LCID)',
@@ -377,6 +378,9 @@ const action = {
       'Which step of the IT Governance process should this request move to?',
     draftBusinessCase: 'Draft Business Case',
     grtMeeting: 'GRT meeting',
+    meetingDate: 'Meeting date',
+    meetingDateHelpText:
+      'Adding a date here will replace any GRT date already entered.',
     finalBusinessCase: 'Final Business Case',
     grbMeeting: 'GRB meeting',
     feedback: 'Feedback for the requester (optional)',

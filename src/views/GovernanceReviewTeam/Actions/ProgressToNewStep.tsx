@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { FormGroup } from '@trussworks/react-uswds';
 
+import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
@@ -88,6 +89,39 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
                 id={SystemIntakeStepToProgressTo.GRT_MEETING}
                 label={t('progressToNewStep.grtMeeting')}
               />
+              {field.value === SystemIntakeStepToProgressTo.GRT_MEETING && (
+                <Controller
+                  control={control}
+                  name="meetingDate"
+                  render={({
+                    field: { ref: meetingDateRef, ...meetingDateField },
+                    fieldState: { error: meetingDateError }
+                  }) => (
+                    <FormGroup
+                      error={!!meetingDateError}
+                      className="margin-left-4 margin-top-1"
+                    >
+                      <Label htmlFor={field.name}>
+                        {t('progressToNewStep.meetingDate')}
+                      </Label>
+                      <HelpText className="margin-top-1">
+                        {t('progressToNewStep.meetingDateHelpText')}
+                      </HelpText>
+                      <HelpText>{t('retireLcid.format')}</HelpText>
+                      {!!meetingDateError?.message && (
+                        <FieldErrorMsg>
+                          {t(meetingDateError.message)}
+                        </FieldErrorMsg>
+                      )}
+                      <DatePickerFormatted
+                        {...meetingDateField}
+                        id="meetingDate"
+                      />
+                    </FormGroup>
+                  )}
+                />
+              )}
+
               <RadioField
                 {...field}
                 value={SystemIntakeStepToProgressTo.FINAL_BUSINESS_CASE}
