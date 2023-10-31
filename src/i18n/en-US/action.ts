@@ -288,6 +288,8 @@ const action = {
   },
   decisionModal: {
     title: 'Are you sure you want to complete this decision action?',
+    title_nextStep:
+      'Are you sure you want to complete this action to progress to a new step?',
     content:
       'You previously requested that the team make changes to their {{action}}. Completing this decision action will remove the “Edits requested” status from that form, and the requester will no longer be able to make any changes.',
     intakeRequest: 'intake request form',

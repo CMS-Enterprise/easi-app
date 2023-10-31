@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
@@ -22,6 +22,7 @@ import {
 import { NonNullableProps } from 'types/util';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
+import { EditsRequestedContext } from '.';
 
 type ProgressToNewStepFields = NonNullableProps<
   Omit<SystemIntakeProgressToNewStepsInput, 'systemIntakeID'> &
@@ -30,6 +31,9 @@ type ProgressToNewStepFields = NonNullableProps<
 
 const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { t } = useTranslation('action');
+
+  /** Edits requested form key for confirmation modal */
+  const editsRequestedKey = useContext(EditsRequestedContext);
 
   const [mutate] = useMutation<
     CreateSystemIntakeActionProgressToNewStep,
@@ -65,6 +69,14 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
         breadcrumb={t('progressToNewStep.breadcrumb')}
         successMessage=""
         onSubmit={onSubmit}
+        modal={
+          editsRequestedKey && {
+            title: t('decisionModal.title', { context: 'nextStep' }),
+            content: t('decisionModal.content', {
+              action: t(`decisionModal.${editsRequestedKey}`)
+            })
+          }
+        }
         actionsSummaryProps={{
           heading: t('progressToNewStep.summaryBoxHeading'),
           items: [
