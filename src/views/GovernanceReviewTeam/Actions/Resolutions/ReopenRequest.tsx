@@ -1,8 +1,12 @@
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { FormGroup } from '@trussworks/react-uswds';
 
+import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionReopenRequestQuery from 'queries/CreateSystemIntakeActionReopenRequestQuery';
 import {
   CreateSystemIntakeActionReopenRequest,
@@ -36,6 +40,7 @@ const ReopenRequest = ({
   });
 
   const form = useForm<ReopenRequestFields>();
+  const { control } = form;
 
   /**
    * Reopen request on form submit
@@ -58,6 +63,7 @@ const ReopenRequest = ({
         systemIntakeId={systemIntakeId}
         successMessage=""
         onSubmit={onSubmit}
+        requiredFields={false}
         title={
           <ResolutionTitleBox
             title={t('resolutions.summary.reOpenRequest')}
@@ -67,7 +73,27 @@ const ReopenRequest = ({
           />
         }
       >
-        {/* Action fields here */}
+        <Controller
+          name="reason"
+          control={control}
+          render={({ field: { ref, ...field } }) => (
+            <FormGroup>
+              <Label htmlFor={field.name} className="text-normal">
+                {t('reopenRequest.reason')}
+              </Label>
+              <HelpText className="margin-top-1">
+                {t('reopenRequest.reasonHelpText')}
+              </HelpText>
+              <TextAreaField
+                {...field}
+                id={field.name}
+                value={field.value || ''}
+                size="sm"
+                characterCounter={false}
+              />
+            </FormGroup>
+          )}
+        />
       </ActionForm>
     </FormProvider>
   );

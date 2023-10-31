@@ -396,6 +396,11 @@ const action = {
         'Completing this action will not change the status of the issued LCID, it will only mark the request process as closed, and the project team will still receive automatic updates about their LCID. If you wish to Retire the LCID associated with this request, please go back and choose the “Manage Life Cycle ID” action.'
     }
   },
+  reopenRequest: {
+    reason: 'Why are you re-opening this request? (optional)',
+    reasonHelpText:
+      'Provide any additional details as to why you are re-opening this request.'
+  },
   rejectIntake: {
     backLink: 'Change',
     heading: 'Actions on request',
