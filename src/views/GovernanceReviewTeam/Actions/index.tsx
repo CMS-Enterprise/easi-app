@@ -23,7 +23,7 @@ import {
 } from 'types/graphql-global-types';
 
 import ManageLcid from './ManageLcid';
-import NextStep from './NextStep';
+import ProgressToNewStep from './ProgressToNewStep';
 import RequestEdits from './RequestEdits';
 import Resolutions from './Resolutions';
 
@@ -147,7 +147,9 @@ const Actions = ({ systemIntake }: ActionsProps) => {
 
           <Route
             path="/governance-review-team/:systemId/actions/next-step"
-            render={() => <NextStep systemIntakeId={systemIntake.id} />}
+            render={() => (
+              <ProgressToNewStep systemIntakeId={systemIntake.id} />
+            )}
           />
 
           {/* Select resolution page */}

@@ -366,8 +366,8 @@ const action = {
     submissionInfo:
       'The content for this email is automatically generated to notify the Requester of the new expiration date.'
   },
-  nextStep: {
-    title: 'Action: next steps'
+  progressToNewStep: {
+    title: 'Action: progress to a new step'
   },
   notItGovRequest: {
     reason: 'Why is this not an IT Governance request? (optional)',

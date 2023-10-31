@@ -4,28 +4,28 @@ import { useTranslation } from 'react-i18next';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
 
-interface NextStepFields extends SystemIntakeActionFields {}
+interface ProgressToNewStepFields extends SystemIntakeActionFields {}
 
-const NextStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
+const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
   const { t } = useTranslation('action');
 
-  const form = useForm<NextStepFields>();
+  const form = useForm<ProgressToNewStepFields>();
 
   /**
    * Submit handler containing mutation logic
    *
    * Error and success handling is done in `<ActionForm>`
    */
-  const onSubmit = async (formData: NextStepFields) => {
+  const onSubmit = async (formData: ProgressToNewStepFields) => {
     // Execute mutation here
     // mutate(formData);
   };
 
   return (
-    <FormProvider<NextStepFields> {...form}>
+    <FormProvider<ProgressToNewStepFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
-        title={t('nextStep.title')}
+        title={t('progressToNewStep.title')}
         description=""
         breadcrumb=""
         successMessage=""
@@ -37,4 +37,4 @@ const NextStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
   );
 };
 
-export default NextStep;
+export default ProgressToNewStep;
