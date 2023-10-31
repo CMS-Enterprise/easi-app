@@ -377,18 +377,27 @@ const action = {
     newStep:
       'Which step of the IT Governance process should this request move to?',
     draftBusinessCase: 'Draft Business Case',
+    draftBusinessCaseDescription:
+      'Choose this step if this request requires a business case and a GRT meeting. This will unlock the Business Case for the requester.',
     grtMeeting: 'GRT meeting',
+    grtMeetingDescription:
+      'Choose this step if the request either does not need a Business Case, but should be reviewed by the GRT, or if the draft Business Case is complete and the request is ready for the GRT.',
     meetingDate: 'Meeting date',
     meetingDateHelpText:
       'Adding a date here will replace any GRT date already entered.',
     finalBusinessCase: 'Final Business Case',
+    finalBusinessCaseDescription:
+      'Choose this step if this request is ready for a final Business Case and subsequent GRB meeting, either because the draft Business Case is complete, or because this request is skipping the GRT.',
     grbMeeting: 'GRB meeting',
+    grbMeetingDescription:
+      'Choose this step if the final Business case is complete and this team is ready to meet with the GRB.',
     feedback: 'Feedback for the requester (optional)',
     feedbackHelpText:
       'If there is any extra feedback you would like to give to the requester as they progress to the next step, input that feedback here. This includes any feedback from the GRT for the requester.',
     grbRecommendations: 'Recommendations for the GRB (optional)',
     grbRecommendationsHelpText:
-      'Add any extra context or recommendations that you would like the Governance Review Board (GRB) to consider as a part of their evaluation of this project. The requester will be able to see these recommendations.'
+      'Add any extra context or recommendations that you would like the Governance Review Board (GRB) to consider as a part of their evaluation of this project. The requester will be able to see these recommendations.',
+    summaryBoxHeading: 'Steps of the IT Governance process'
   },
   notItGovRequest: {
     reason: 'Why is this not an IT Governance request? (optional)',

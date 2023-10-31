@@ -65,6 +65,27 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
         breadcrumb={t('progressToNewStep.breadcrumb')}
         successMessage=""
         onSubmit={onSubmit}
+        actionsSummaryProps={{
+          heading: t('progressToNewStep.summaryBoxHeading'),
+          items: [
+            {
+              title: t('progressToNewStep.draftBusinessCase'),
+              description: t('progressToNewStep.draftBusinessCaseDescription')
+            },
+            {
+              title: t('progressToNewStep.grtMeeting'),
+              description: t('progressToNewStep.grtMeetingDescription')
+            },
+            {
+              title: t('progressToNewStep.finalBusinessCase'),
+              description: t('progressToNewStep.finalBusinessCaseDescription')
+            },
+            {
+              title: t('progressToNewStep.grbMeeting'),
+              description: t('progressToNewStep.grbMeetingDescription')
+            }
+          ]
+        }}
       >
         <Controller
           control={control}
