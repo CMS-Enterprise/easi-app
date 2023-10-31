@@ -61,7 +61,7 @@ const ReopenRequest = ({
     <FormProvider<ReopenRequestFields> {...form}>
       <ActionForm
         systemIntakeId={systemIntakeId}
-        successMessage=""
+        successMessage={t('reopenRequest.success')}
         onSubmit={onSubmit}
         requiredFields={false}
         title={

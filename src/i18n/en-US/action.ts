@@ -397,6 +397,7 @@ const action = {
     }
   },
   reopenRequest: {
+    success: 'This request is now open.',
     reason: 'Why are you re-opening this request? (optional)',
     reasonHelpText:
       'Provide any additional details as to why you are re-opening this request.'
