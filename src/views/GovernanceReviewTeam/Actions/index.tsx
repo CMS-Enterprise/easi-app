@@ -147,7 +147,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
           />
 
           <Route
-            path="/governance-review-team/:systemId/actions/next-step"
+            path="/governance-review-team/:systemId/actions/new-step"
             render={() => (
               <ProgressToNewStep systemIntakeId={systemIntake.id} step={step} />
             )}
@@ -203,7 +203,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
                           {/* Progress to new step */}
                           <ActionRadioOption
                             {...fieldProps}
-                            value="actions/next-step"
+                            value="actions/new-step"
                             label={t('chooseAction.progressToNewStep.title')}
                             description={t(
                               'chooseAction.progressToNewStep.description'

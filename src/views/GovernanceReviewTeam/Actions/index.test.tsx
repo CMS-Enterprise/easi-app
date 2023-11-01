@@ -206,7 +206,7 @@ describe('IT Gov Actions', () => {
   describe('Progress to a new step', () => {
     it('displays past date warning', async () => {
       renderActionPage({
-        action: 'next-step',
+        action: 'new-step',
         mocks: [
           getSystemIntakeQuery(),
           getSystemIntakeContactsQuery,
@@ -219,7 +219,7 @@ describe('IT Gov Actions', () => {
       });
 
       userEvent.click(screen.getByRole('radio', { name: 'GRB meeting' }));
-      // userEvent.click(screen.getByRole('textbox', { name: 'Meeting date' }));
+
       const meetingDateField = screen.getByRole('textbox', {
         name: 'Meeting date'
       });
@@ -232,7 +232,7 @@ describe('IT Gov Actions', () => {
 
     it('handles field errors', async () => {
       renderActionPage({
-        action: 'next-step',
+        action: 'new-step',
         mocks: [
           getSystemIntakeQuery(),
           getSystemIntakeContactsQuery,
