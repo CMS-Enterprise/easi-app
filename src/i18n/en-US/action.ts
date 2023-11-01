@@ -372,25 +372,26 @@ const action = {
       'The content for this email is automatically generated to notify the Requester of the new expiration date.'
   },
   progressToNewStep: {
+    success: 'Action complete. This request is now ready for a {{newStep}}.',
     title: 'Action: progress to a new step',
     description:
       'Use this action if this request is ready to move to a new step in the IT Governance process.',
     breadcrumb: 'Progress to a new step',
     newStep:
       'Which step of the IT Governance process should this request move to?',
-    draftBusinessCase: 'Draft Business Case',
+    DRAFT_BUSINESS_CASE: 'Draft Business Case',
     draftBusinessCaseDescription:
       'Choose this step if this request requires a business case and a GRT meeting. This will unlock the Business Case for the requester.',
-    grtMeeting: 'GRT meeting',
+    GRT_MEETING: 'GRT meeting',
     grtMeetingDescription:
       'Choose this step if the request either does not need a Business Case, but should be reviewed by the GRT, or if the draft Business Case is complete and the request is ready for the GRT.',
     meetingDate: 'Meeting date',
     meetingDateHelpText:
       'Adding a date here will replace any GRT date already entered.',
-    finalBusinessCase: 'Final Business Case',
+    FINAL_BUSINESS_CASE: 'Final Business Case',
     finalBusinessCaseDescription:
       'Choose this step if this request is ready for a final Business Case and subsequent GRB meeting, either because the draft Business Case is complete, or because this request is skipping the GRT.',
-    grbMeeting: 'GRB meeting',
+    GRB_MEETING: 'GRB meeting',
     grbMeetingDescription:
       'Choose this step if the final Business case is complete and this team is ready to meet with the GRB.',
     feedback: 'Feedback for the requester (optional)',

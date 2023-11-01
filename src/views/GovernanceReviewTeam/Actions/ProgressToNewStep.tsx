@@ -43,7 +43,9 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
   });
 
   const form = useForm<ProgressToNewStepFields>();
-  const { control } = form;
+  const { control, watch } = form;
+
+  const newStep = watch('newStep');
 
   /**
    * Submit handler containing mutation logic
@@ -67,7 +69,9 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
         title={t('progressToNewStep.title')}
         description={t('progressToNewStep.description')}
         breadcrumb={t('progressToNewStep.breadcrumb')}
-        successMessage=""
+        successMessage={t('progressToNewStep.success', {
+          newStep: t(`progressToNewStep.${newStep}`)
+        })}
         onSubmit={onSubmit}
         modal={
           editsRequestedKey && {
@@ -81,19 +85,19 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
           heading: t('progressToNewStep.summaryBoxHeading'),
           items: [
             {
-              title: t('progressToNewStep.draftBusinessCase'),
+              title: t('progressToNewStep.DRAFT_BUSINESS_CASE'),
               description: t('progressToNewStep.draftBusinessCaseDescription')
             },
             {
-              title: t('progressToNewStep.grtMeeting'),
+              title: t('progressToNewStep.GRT_MEETING'),
               description: t('progressToNewStep.grtMeetingDescription')
             },
             {
-              title: t('progressToNewStep.finalBusinessCase'),
+              title: t('progressToNewStep.FINAL_BUSINESS_CASE'),
               description: t('progressToNewStep.finalBusinessCaseDescription')
             },
             {
-              title: t('progressToNewStep.grbMeeting'),
+              title: t('progressToNewStep.GRB_MEETING'),
               description: t('progressToNewStep.grbMeetingDescription')
             }
           ]
@@ -114,13 +118,13 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
                 {...field}
                 value={SystemIntakeStepToProgressTo.DRAFT_BUSINESS_CASE}
                 id={SystemIntakeStepToProgressTo.DRAFT_BUSINESS_CASE}
-                label={t('progressToNewStep.draftBusinessCase')}
+                label={t('progressToNewStep.DRAFT_BUSINESS_CASE')}
               />
               <RadioField
                 {...field}
                 value={SystemIntakeStepToProgressTo.GRT_MEETING}
                 id={SystemIntakeStepToProgressTo.GRT_MEETING}
-                label={t('progressToNewStep.grtMeeting')}
+                label={t('progressToNewStep.GRT_MEETING')}
               />
               {field.value === SystemIntakeStepToProgressTo.GRT_MEETING && (
                 <Controller
@@ -159,13 +163,13 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
                 {...field}
                 value={SystemIntakeStepToProgressTo.FINAL_BUSINESS_CASE}
                 id={SystemIntakeStepToProgressTo.FINAL_BUSINESS_CASE}
-                label={t('progressToNewStep.finalBusinessCase')}
+                label={t('progressToNewStep.FINAL_BUSINESS_CASE')}
               />
               <RadioField
                 {...field}
                 value={SystemIntakeStepToProgressTo.GRB_MEETING}
                 id={SystemIntakeStepToProgressTo.GRB_MEETING}
-                label={t('progressToNewStep.grbMeeting')}
+                label={t('progressToNewStep.GRB_MEETING')}
               />
             </FormGroup>
           )}
