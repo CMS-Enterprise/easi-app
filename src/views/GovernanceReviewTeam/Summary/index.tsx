@@ -67,16 +67,34 @@ const RequestSummary = ({
     ? SystemIntakeState.CLOSED
     : SystemIntakeState.OPEN;
 
-  // Get admin lead assigned to intake
-  const getAdminLead = () => {
-    if (adminLead) {
-      return adminLead;
-    }
+  /** Admin lead text and modal trigger button */
+  const AdminLead = () => {
+    const buttonText = t(
+      `governanceReviewTeam:adminLeads.${
+        adminLead ? 'changeLead' : 'assignLead'
+      }`
+    );
+
     return (
-      <div className="display-flex flex-align-center">
-        <IconError className="text-secondary margin-right-05" />
-        {t('governanceReviewTeam:adminLeads.notAssigned')}
-      </div>
+      <>
+        <span className="display-flex flex-align-center margin-right-1">
+          {!adminLead && (
+            <IconError className="text-secondary margin-right-05" />
+          )}
+          {adminLead || t('governanceReviewTeam:adminLeads.notAssigned')}
+        </span>
+        <Button
+          type="button"
+          unstyled
+          onClick={() => {
+            // Reset newAdminLead to value in intake
+            resetNewAdminLead();
+            setModalOpen(true);
+          }}
+        >
+          {buttonText}
+        </Button>
+      </>
     );
   };
 
@@ -200,18 +218,7 @@ const RequestSummary = ({
                   className="margin-x-0 display-flex"
                   data-testid="admin-lead"
                 >
-                  <span className="margin-right-1">{getAdminLead()}</span>
-                  <Button
-                    type="button"
-                    unstyled
-                    onClick={() => {
-                      // Reset newAdminLead to value in intake
-                      resetNewAdminLead();
-                      setModalOpen(true);
-                    }}
-                  >
-                    {t('governanceReviewTeam:adminLeads.changeLead')}
-                  </Button>
+                  <AdminLead />
                 </dd>
               </div>
             </dl>

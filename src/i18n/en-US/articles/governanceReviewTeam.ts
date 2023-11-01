@@ -236,6 +236,7 @@ const governanceReviewTeam = {
       noChanges: "Don't make changes and return to request page"
     },
     changeLead: 'Change',
+    assignLead: 'Assign',
     notAssigned: 'Not Assigned',
     members: [
       'Jaime Cadwell',
