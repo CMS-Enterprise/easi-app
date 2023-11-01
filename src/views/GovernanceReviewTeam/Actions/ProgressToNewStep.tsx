@@ -29,16 +29,6 @@ import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
 import { actionDateInPast } from './ManageLcid/RetireLcid';
 import { EditsRequestedContext } from '.';
 
-type ProgressToNewStepFields = NonNullableProps<
-  Omit<SystemIntakeProgressToNewStepsInput, 'systemIntakeID'> &
-    SystemIntakeActionFields
->;
-
-type ProgressToNewStepProps = {
-  systemIntakeId: string;
-  step: SystemIntakeStep | undefined;
-};
-
 /** Meeting date sub-field for the GRT and GRB meeting radio fields */
 const MeetingDateField = ({
   control,
@@ -81,6 +71,19 @@ const MeetingDateField = ({
   );
 };
 
+type ProgressToNewStepFields = NonNullableProps<
+  Omit<SystemIntakeProgressToNewStepsInput, 'systemIntakeID'> &
+    SystemIntakeActionFields
+>;
+
+type ProgressToNewStepProps = {
+  systemIntakeId: string;
+  step: SystemIntakeStep | undefined;
+};
+
+/**
+ * Progress to new step action form
+ */
 const ProgressToNewStep = ({
   systemIntakeId,
   step
@@ -113,7 +116,7 @@ const ProgressToNewStep = ({
   const newStep = watch('newStep');
 
   /**
-   * Submit handler containing mutation logic
+   * Progress to new step on form submit
    *
    * Error and success handling is done in `<ActionForm>`
    */
