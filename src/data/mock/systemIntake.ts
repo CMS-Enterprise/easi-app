@@ -415,10 +415,9 @@ export const getSystemIntakeContactsQuery: MockedQuery<
   }
 };
 
-export const getGovernanceTaskListQuery: MockedQuery<
-  GetGovernanceTaskList,
-  GetGovernanceTaskListVariables
-> = {
+export const getGovernanceTaskListQuery = (
+  taskListData?: Partial<GetGovernanceTaskList['systemIntake']>
+): MockedQuery<GetGovernanceTaskList, GetGovernanceTaskListVariables> => ({
   request: {
     query: GetGovernanceTaskListQuery,
     variables: {
@@ -446,11 +445,12 @@ export const getGovernanceTaskListQuery: MockedQuery<
         updatedAt: null,
         grtDate: null,
         grbDate: null,
-        businessCase: null
+        businessCase: null,
+        ...taskListData
       }
     }
   }
-};
+});
 
 export const getGRTFeedbackQuery: MockedQuery<
   GetGRTFeedback,
