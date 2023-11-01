@@ -223,6 +223,7 @@ const governanceReviewTeam = {
     shutdownComplete: 'Request was marked "Shutdown Complete"'
   },
   actions: 'Actions',
+  requestType: 'Request type',
   status: {
     label: 'Status',
     open: 'Open',

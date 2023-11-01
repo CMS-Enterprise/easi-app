@@ -35,6 +35,7 @@ type RequestSummaryProps = {
   adminLead: string | null;
   submittedAt: string | null;
   lcid: string | null;
+  contractNumber: string | null;
 };
 
 const RequestSummary = ({
@@ -45,7 +46,8 @@ const RequestSummary = ({
   status,
   adminLead,
   submittedAt,
-  lcid
+  lcid,
+  contractNumber
 }: RequestSummaryProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const [isModalOpen, setModalOpen] = useState(false);
@@ -95,6 +97,7 @@ const RequestSummary = ({
 
   return (
     <section className="easi-grt__request-summary bg-primary-darker text-white">
+      {/* Update admin lead error */}
       {mutationResult.error && (
         <ErrorAlert heading="System error">
           <ErrorAlertMessage
@@ -103,6 +106,7 @@ const RequestSummary = ({
           />
         </ErrorAlert>
       )}
+
       <div className="grid-container padding-bottom-2">
         <BreadcrumbBar variant="wrap" className="bg-transparent text-white">
           <Breadcrumb>
@@ -117,33 +121,38 @@ const RequestSummary = ({
           <Breadcrumb current>{requestName}</Breadcrumb>
         </BreadcrumbBar>
 
-        <dl className="easi-grt__request-info">
-          <div>
-            <dt>{t('intake:fields.projectName')}</dt>
-            <dd>{requestName}</dd>
+        <h2 className="margin-y-0">{requestName}</h2>
+
+        <dl className="easi-grt__request-info grid-row grid-gap margin-top-0">
+          <div className="tablet:grid-col-8">
+            <dt className="font-body-xs">{t('requestType')}</dt>
+            <dd>{translateRequestType(requestType)}</dd>
+
+            <dt className="font-body-xs">
+              {t('intake:review.contractNumber')}
+            </dt>
+            <dd>{contractNumber}</dd>
           </div>
-          <div className="easi-grt__request-info-col">
-            <div className="easi-grt__description-group">
-              <dt>{t('intake:contactDetails.requester')}</dt>
-              <dd>
-                {getPersonNameAndComponentAcronym(
-                  requester?.name || '',
-                  requester?.component
-                )}
-              </dd>
-            </div>
-            <div className="easi-grt__description-group">
-              <dt>{t('intake:fields.submissionDate')}</dt>
-              <dd>
-                {submittedAt
-                  ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
-                  : 'N/A'}
-              </dd>
-            </div>
-            <div className="easi-grt__description-group">
-              <dt>{t('intake:fields.requestFor')}</dt>
-              <dd>{translateRequestType(requestType)}</dd>
-            </div>
+
+          <div className="tablet:grid-col-4">
+            <dt className="font-body-xs">
+              {t('intake:contactDetails.requester')}
+            </dt>
+            <dd>
+              {getPersonNameAndComponentAcronym(
+                requester?.name || '',
+                requester?.component
+              )}
+            </dd>
+
+            <dt className="font-body-xs">
+              {t('intake:fields.submissionDate')}
+            </dt>
+            <dd>
+              {submittedAt
+                ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
+                : 'N/A'}
+            </dd>
           </div>
         </dl>
       </div>

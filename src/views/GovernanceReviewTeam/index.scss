@@ -9,26 +9,14 @@
   }
 
   &__request-info {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0;
-
     dt {
-      margin-bottom: 0.25em;
+      margin-top: 1rem;
+      margin-bottom: 0.25rem;
     }
-
     dd {
       margin: 0;
-      font-weight: 600;
+      font-weight: 700;
     }
-  }
-
-  &__request-info-col {
-    display: flex;
-  }
-
-  &__description-group + &__description-group {
-    margin-left: 2em;
   }
 
   &__nav-list {

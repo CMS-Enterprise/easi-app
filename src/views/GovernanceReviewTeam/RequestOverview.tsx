@@ -117,6 +117,7 @@ const RequestOverview = () => {
           adminLead={systemIntake.adminLead}
           submittedAt={systemIntake.submittedAt}
           lcid={systemIntake.lcid}
+          contractNumber={systemIntake.contract.number}
         />
       )}
       {!fullPageLayout && (

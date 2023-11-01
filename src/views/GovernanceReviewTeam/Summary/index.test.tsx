@@ -45,7 +45,8 @@ const summaryProps = {
   adminLead: null,
   submittedAt: DateTime.local().toString(),
   lcid: null,
-  requester
+  requester,
+  contractNumber: '123456'
 };
 
 describe('The GRT Review page', () => {
