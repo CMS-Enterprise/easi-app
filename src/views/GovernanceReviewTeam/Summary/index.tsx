@@ -106,12 +106,17 @@ const RequestSummary = ({
       <div className="grid-container padding-bottom-2">
         <BreadcrumbBar variant="wrap" className="bg-transparent text-white">
           <Breadcrumb>
-            <BreadcrumbLink asCustom={Link} to="/">
-              <span className="text-white">Home</span>
+            <BreadcrumbLink
+              asCustom={Link}
+              to="/"
+              className="text-white text-underline"
+            >
+              Home
             </BreadcrumbLink>
           </Breadcrumb>
           <Breadcrumb current>{requestName}</Breadcrumb>
         </BreadcrumbBar>
+
         <dl className="easi-grt__request-info">
           <div>
             <dt>{t('intake:fields.projectName')}</dt>
