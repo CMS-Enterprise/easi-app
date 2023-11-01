@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Control, Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
@@ -52,6 +52,7 @@ const MeetingDateField = ({
     <Controller
       control={control}
       name="meetingDate"
+      shouldUnregister
       render={({ field: { ref, ...field }, fieldState: { error } }) => (
         <FormGroup error={!!error} className="margin-left-4 margin-top-1">
           <Label htmlFor={field.name}>
@@ -126,11 +127,6 @@ const ProgressToNewStep = ({
       }
     });
 
-  // Reset meeting date field value on new step field value change
-  useEffect(() => {
-    setValue('meetingDate', undefined);
-  }, [newStep, setValue]);
-
   return (
     <FormProvider<ProgressToNewStepFields> {...form}>
       <ActionForm
@@ -193,6 +189,14 @@ const ProgressToNewStep = ({
 
               <RadioField
                 {...field}
+                // Reset meeting date field value on initial click
+                onClick={() => {
+                  if (
+                    field.value !== SystemIntakeStepToProgressTo.GRT_MEETING
+                  ) {
+                    setValue('meetingDate', undefined);
+                  }
+                }}
                 value={SystemIntakeStepToProgressTo.GRT_MEETING}
                 id={SystemIntakeStepToProgressTo.GRT_MEETING}
                 label={t('progressToNewStep.GRT_MEETING')}
@@ -210,6 +214,14 @@ const ProgressToNewStep = ({
 
               <RadioField
                 {...field}
+                // Reset meeting date field value on initial click
+                onClick={() => {
+                  if (
+                    field.value !== SystemIntakeStepToProgressTo.GRB_MEETING
+                  ) {
+                    setValue('meetingDate', undefined);
+                  }
+                }}
                 value={SystemIntakeStepToProgressTo.GRB_MEETING}
                 id={SystemIntakeStepToProgressTo.GRB_MEETING}
                 label={t('progressToNewStep.GRB_MEETING')}
