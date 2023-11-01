@@ -17,6 +17,7 @@ import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
+import { SystemIntakeState } from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
@@ -25,6 +26,8 @@ import {
   translateRequestType,
   translateStatus
 } from 'utils/systemIntake';
+
+import StatusTag from './StatusTag';
 
 type RequestSummaryProps = {
   id: string;
@@ -58,6 +61,11 @@ const RequestSummary = ({
       errorPolicy: 'all'
     }
   );
+
+  // TODO EASI-3440: update to use v2 `state` field
+  const state: SystemIntakeState = isIntakeClosed(status)
+    ? SystemIntakeState.CLOSED
+    : SystemIntakeState.OPEN;
 
   // Get admin lead assigned to intake
   const getAdminLead = () => {
@@ -167,13 +175,8 @@ const RequestSummary = ({
                 <dt className="margin-right-1">
                   <h4 className="margin-y-0">{t('status.label')}</h4>
                 </dt>
-                <dd
-                  className="margin-right-1 text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
-                  data-testid="grt-status"
-                >
-                  {isIntakeClosed(status)
-                    ? t('status.closed')
-                    : t('status.open')}
+                <dd className="margin-right-1" data-testid="grt-status">
+                  <StatusTag state={state} />
                 </dd>
                 <dd data-testid="grt-current-status">
                   {translateStatus(status, lcid)}
