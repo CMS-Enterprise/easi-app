@@ -26,13 +26,23 @@ func (s *Store) CreateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 			trb_request_id,
 			created_by,
 			category,
-			note_text
+			note_text,
+			applies_to_basic_request_details,
+			applies_to_subject_areas,
+			applies_to_attendees,
+			applies_to_meeting_summary,
+			applies_to_next_steps
 		) VALUES (
 			:id,
 			:trb_request_id,
 			:created_by,
 			:category,
-			:note_text
+			:note_text,
+			:applies_to_basic_request_details,
+			:applies_to_subject_areas,
+			:applies_to_attendees,
+			:applies_to_meeting_summary,
+			:applies_to_next_steps
 		) RETURNING *;
 	`
 	stmt, err := s.db.PrepareNamed(trbAdminNoteCreateSQL)
@@ -139,6 +149,11 @@ func (s *Store) UpdateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 			category = :category,
 			note_text = :note_text,
 			is_archived = :is_archived,
+			applies_to_basic_request_details = :applies_to_basic_request_details,
+			applies_to_subject_areas = :applies_to_subject_areas,
+			applies_to_attendees = :applies_to_attendees,
+			applies_to_meeting_summary = :applies_to_meeting_summary,
+			applies_to_next_steps = :applies_to_next_steps,
 			modified_by = :modified_by,
 			modified_at = CURRENT_TIMESTAMP
 		WHERE id = :id

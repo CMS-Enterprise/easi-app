@@ -90,7 +90,7 @@ type TrbAdminWrapperProps = {
   children: React.ReactNode;
 
   /** Page title */
-  title: string;
+  title?: string;
   /** Page description */
   description?: string;
   /** Set to true if step actions should be hidden */
@@ -163,9 +163,11 @@ export default function TrbAdminWrapper({
 
       <Grid row gap="lg">
         <Grid tablet={{ col: 8 }}>
-          <h1 className="margin-top-0 margin-bottom-1">{t(title)}</h1>
+          {title && (
+            <h1 className="margin-top-0 margin-bottom-1">{t(title)}</h1>
+          )}
           {description && (
-            <p className="line-height-body-5 font-body-md margin-top-0 mnargin-bottom-1">
+            <p className="line-height-body-4 text-light font-body-md margin-top-0">
               {t(description)}
             </p>
           )}

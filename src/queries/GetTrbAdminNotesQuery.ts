@@ -6,10 +6,35 @@ export const TRBAdminNoteFragment = gql`
     isArchived
     category
     noteText
+
     author {
       commonName
     }
     createdAt
+
+    categorySpecificData {
+      ... on TRBAdminNoteInitialRequestFormCategoryData {
+        appliesToBasicRequestDetails
+        appliesToSubjectAreas
+        appliesToAttendees
+      }
+
+      ... on TRBAdminNoteSupportingDocumentsCategoryData {
+        documents {
+          fileName
+          deletedAt
+        }
+      }
+
+      ... on TRBAdminNoteAdviceLetterCategoryData {
+        appliesToMeetingSummary
+        appliesToNextSteps
+        recommendations {
+          title
+          deletedAt
+        }
+      }
+    }
   }
 `;
 

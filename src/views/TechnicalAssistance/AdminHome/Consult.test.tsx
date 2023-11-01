@@ -92,7 +92,7 @@ describe('Trb Admin: Action: Schedule a TRB consult session', () => {
             getTrbRequestQuery,
             getTRBRequestAttendeesQuery,
             getTRBRequestAttendeesQuery,
-            getTrbAdminNotesQuery,
+            getTrbAdminNotesQuery(),
             summaryQuery,
             summaryQuery,
             emptyConsultMeetingTime,

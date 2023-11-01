@@ -223,7 +223,6 @@ const FundingSourceForm = ({
             id="IntakeForm-FundingSources"
             name="fundingSources"
             selectedLabel={t('Funding sources')}
-            className="margin-top-1"
             options={fundingSourceOptions.map(option => ({
               value: option,
               label: t(option)

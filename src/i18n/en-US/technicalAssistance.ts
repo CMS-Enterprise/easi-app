@@ -1033,8 +1033,26 @@ const technicalAssistance = {
     },
     labels: {
       category: 'What is this note about?',
-      noteText: 'Note'
+      categoryHelpText:
+        'Certain categories below will display an extra field to allow for additional specificity.',
+      noteText: 'Note',
+      section: 'Which section?',
+      selectedSections: 'Selected sections',
+      selectHelpText: 'Select all that apply',
+      sectionHelpText:
+        'Select all that apply if this note is about specific sections of the initial request form. If this is a note about supporting documents, please select “Supporting documents” in the dropdown above.',
+      appliesToBasicRequestDetails: 'Basic request details',
+      appliesToSubjectAreas: 'Subject areas',
+      appliesToAttendees: 'Attendees',
+      whichDocument: 'Which document?',
+      selectedDocuments: 'Selected documents',
+      meetingSummary: 'Meeting summary',
+      nextSteps: 'Next steps',
+      recommendation: 'Recommendation ({{title}})',
+      removedRecommendation: 'Removed recommendation ({{title}})',
+      removedDocument: 'Removed document ({{fileName}})'
     },
+    noDocuments: 'There are no documents uploaded for this request.',
     categories: {
       ADVICE_LETTER: 'Advice letter',
       CONSULT_SESSION: 'Consult session',

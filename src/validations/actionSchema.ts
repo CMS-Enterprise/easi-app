@@ -187,3 +187,11 @@ export const expireLcidSchema = Yup.object().shape({
   reason: Yup.string().required('Please fill in the blank'),
   nextSteps: Yup.string()
 });
+
+export const notApprovedSchema = Yup.object().shape({
+  reason: Yup.string().required('Please fill in the blank'),
+  nextSteps: Yup.string().required('Please fill in the blank'),
+  trbFollowUp: Yup.mixed<SystemIntakeTRBFollowUp>()
+    .oneOf(Object.values(SystemIntakeTRBFollowUp))
+    .required('Please make a selection')
+});
