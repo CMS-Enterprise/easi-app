@@ -159,7 +159,7 @@ const RequestSummary = ({
               <dt className="font-body-xs">
                 {t('intake:review.contractNumber')}
               </dt>
-              <dd>{contractNumber}</dd>
+              <dd>{contractNumber || t('intake:review.noContractNumber')}</dd>
             </div>
 
             <div className="tablet:grid-col-4">
