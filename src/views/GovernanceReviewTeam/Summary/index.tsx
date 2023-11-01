@@ -179,7 +179,10 @@ const RequestSummary = ({
                   <StatusTag state={state} />
                 </dd>
                 <dd data-testid="grt-current-status">
-                  {translateStatus(status, lcid)}
+                  {
+                    /* TODO EASI-3440: Update to use v2 statuses */
+                    translateStatus(status, lcid)
+                  }
                 </dd>
               </div>
 
