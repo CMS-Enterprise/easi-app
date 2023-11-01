@@ -72,7 +72,7 @@ describe('Retire LCID action form', async () => {
 
     // Past retirement date alert should not show for future date
     expect(
-      screen.queryByText(i18next.t<string>('action:retireLcid.pastDateAlert'))
+      screen.queryByText(i18next.t<string>('action:pastDateAlert'))
     ).toBeNull();
 
     // Reason field should not show if updating retirement date
@@ -93,7 +93,7 @@ describe('Retire LCID action form', async () => {
     userEvent.type(retireDateField, '01/01/2023');
 
     expect(
-      screen.getByText(i18next.t<string>('action:retireLcid.pastDateAlert'))
+      screen.getByText(i18next.t<string>('action:pastDateAlert'))
     ).toBeInTheDocument();
   });
 });

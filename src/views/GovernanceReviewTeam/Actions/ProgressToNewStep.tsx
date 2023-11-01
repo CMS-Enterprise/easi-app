@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
 
+import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
@@ -25,6 +26,7 @@ import { NonNullableProps } from 'types/util';
 import { progressToNewStepSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
+import { actionDateInPast } from './ManageLcid/RetireLcid';
 import { EditsRequestedContext } from '.';
 
 type ProgressToNewStepFields = NonNullableProps<
@@ -63,6 +65,15 @@ const MeetingDateField = ({
             <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
           )}
           <DatePickerFormatted {...field} id="meetingDate" />
+
+          {
+            // If past date is selected, show alert
+            field.value && actionDateInPast(field.value) && (
+              <Alert type="warning" slim>
+                {t('pastDateAlert')}
+              </Alert>
+            )
+          }
         </FormGroup>
       )}
     />
