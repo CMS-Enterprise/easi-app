@@ -72,8 +72,7 @@ const action = {
     emailFeedback: 'What changes are needed?',
     reason: 'Why are you expiring this Life Cycle ID?',
     reason_notApproved: 'Reason',
-    newStep:
-      'Which step of the IT Governance process should this request move to?',
+    newStep: 'New step',
     meetingDate: 'Meeting date'
   },
   manageLcid: {

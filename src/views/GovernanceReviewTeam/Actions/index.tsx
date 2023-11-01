@@ -106,6 +106,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
     }
   });
   const taskStatuses = data?.systemIntake?.itGovTaskStatuses;
+  const { step } = data?.systemIntake || {};
 
   /**
    * Translation key for edits requested form type - used in EditsRequestedContext
@@ -148,7 +149,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
           <Route
             path="/governance-review-team/:systemId/actions/next-step"
             render={() => (
-              <ProgressToNewStep systemIntakeId={systemIntake.id} />
+              <ProgressToNewStep systemIntakeId={systemIntake.id} step={step} />
             )}
           />
 

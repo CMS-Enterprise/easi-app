@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
@@ -199,14 +200,30 @@ export const notApprovedSchema = Yup.object().shape({
     .required('Please make a selection')
 });
 
-export const progressToNewStepSchema = Yup.object().shape({
-  newStep: Yup.mixed<SystemIntakeStepToProgressTo>()
-    .oneOf(Object.values(SystemIntakeStepToProgressTo))
-    .required('Please make a selection'),
-  meetingDate: validExpirationDate().when('newStep', {
-    is: SystemIntakeStepToProgressTo.GRT_MEETING,
-    then: validExpirationDate().required('Please enter a valid date')
-  }),
-  feedback: Yup.string(),
-  grbRecommendations: Yup.string()
-});
+export const progressToNewStepSchema = (
+  currentStep: SystemIntakeStepToProgressTo | undefined
+) => {
+  const currentStepLabel = i18next.t(`action:progressToNewStep.${currentStep}`);
+
+  return Yup.object().shape({
+    newStep: Yup.mixed<SystemIntakeStepToProgressTo>()
+      .oneOf(
+        // Filter current step out of valid options
+        Object.values(SystemIntakeStepToProgressTo).filter(
+          option => option !== currentStep
+        ),
+        ({ value }) => {
+          // Error if selected value is current step
+          if (value !== currentStep) return 'Please select a valid next step.';
+          return `This request is already at the ${currentStepLabel} step. Please select a different step.`;
+        }
+      )
+      .required('Please make a selection'),
+    meetingDate: validExpirationDate().when('newStep', {
+      is: SystemIntakeStepToProgressTo.GRT_MEETING,
+      then: validExpirationDate().required('Please enter a valid date')
+    }),
+    feedback: Yup.string(),
+    grbRecommendations: Yup.string()
+  });
+};

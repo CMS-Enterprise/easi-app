@@ -18,6 +18,7 @@ import {
 } from 'queries/types/CreateSystemIntakeActionProgressToNewStep';
 import {
   SystemIntakeProgressToNewStepsInput,
+  SystemIntakeStep,
   SystemIntakeStepToProgressTo
 } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
@@ -31,7 +32,15 @@ type ProgressToNewStepFields = NonNullableProps<
     SystemIntakeActionFields
 >;
 
-const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
+type ProgressToNewStepProps = {
+  systemIntakeId: string;
+  step: SystemIntakeStep | undefined;
+};
+
+const ProgressToNewStep = ({
+  systemIntakeId,
+  step
+}: ProgressToNewStepProps) => {
   const { t } = useTranslation('action');
 
   /** Edits requested form key for confirmation modal */
@@ -44,8 +53,16 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
     refetchQueries: ['GetSystemIntake']
   });
 
+  /** Current step converted to `SystemIntakeStepToProgressTo` type */
+  const currentStep =
+    step && step in SystemIntakeStepToProgressTo
+      ? SystemIntakeStepToProgressTo[
+          SystemIntakeStep[step] as keyof typeof SystemIntakeStepToProgressTo
+        ]
+      : undefined;
+
   const form = useForm<ProgressToNewStepFields>({
-    resolver: yupResolver(progressToNewStepSchema)
+    resolver: yupResolver(progressToNewStepSchema(currentStep))
   });
   const { control, watch } = form;
 
