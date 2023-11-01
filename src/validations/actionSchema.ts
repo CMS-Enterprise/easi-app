@@ -1,7 +1,10 @@
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
-import { SystemIntakeTRBFollowUp } from 'types/graphql-global-types';
+import {
+  SystemIntakeStepToProgressTo,
+  SystemIntakeTRBFollowUp
+} from 'types/graphql-global-types';
 
 const skippableEmail = Yup.string().when('shouldSendEmail', {
   is: false,
@@ -194,4 +197,16 @@ export const notApprovedSchema = Yup.object().shape({
   trbFollowUp: Yup.mixed<SystemIntakeTRBFollowUp>()
     .oneOf(Object.values(SystemIntakeTRBFollowUp))
     .required('Please make a selection')
+});
+
+export const progressToNewStepSchema = Yup.object().shape({
+  newStep: Yup.mixed<SystemIntakeStepToProgressTo>()
+    .oneOf(Object.values(SystemIntakeStepToProgressTo))
+    .required('Please make a selection'),
+  meetingDate: validExpirationDate().when('newStep', {
+    is: SystemIntakeStepToProgressTo.GRT_MEETING,
+    then: validExpirationDate().required('Please enter a valid date')
+  }),
+  feedback: Yup.string(),
+  grbRecommendations: Yup.string()
 });

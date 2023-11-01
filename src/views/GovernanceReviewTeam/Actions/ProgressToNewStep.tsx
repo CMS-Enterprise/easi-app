@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
 
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
@@ -20,6 +21,7 @@ import {
   SystemIntakeStepToProgressTo
 } from 'types/graphql-global-types';
 import { NonNullableProps } from 'types/util';
+import { progressToNewStepSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
 import { EditsRequestedContext } from '.';
@@ -42,7 +44,9 @@ const ProgressToNewStep = ({ systemIntakeId }: { systemIntakeId: string }) => {
     refetchQueries: ['GetSystemIntake']
   });
 
-  const form = useForm<ProgressToNewStepFields>();
+  const form = useForm<ProgressToNewStepFields>({
+    resolver: yupResolver(progressToNewStepSchema)
+  });
   const { control, watch } = form;
 
   const newStep = watch('newStep');
