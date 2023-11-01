@@ -115,7 +115,7 @@ const RequestSummary = ({
               to="/"
               className="text-white text-underline"
             >
-              Home
+              {t('header:home')}
             </BreadcrumbLink>
           </Breadcrumb>
           <Breadcrumb current>{requestName}</Breadcrumb>
