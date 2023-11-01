@@ -183,6 +183,12 @@ const RequestSummary = ({
                     /* TODO EASI-3440: Update to use v2 statuses */
                     translateStatus(status, lcid)
                   }
+                  <Link
+                    to={`/governance-review-team/${id}/actions`}
+                    className="margin-0 tablet:margin-left-1"
+                  >
+                    {t('action:takeAnAction')}
+                  </Link>
                 </dd>
               </div>
 
