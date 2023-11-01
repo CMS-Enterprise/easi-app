@@ -44,6 +44,7 @@ import {
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatus,
+  SystemIntakeStep,
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
@@ -439,6 +440,7 @@ export const getGovernanceTaskListQuery: MockedQuery<
           grbMeetingStatus: ITGovGRBStatus.CANT_START,
           decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
         },
+        step: SystemIntakeStep.INITIAL_REQUEST_FORM,
         governanceRequestFeedbacks: [],
         submittedAt: null,
         updatedAt: null,

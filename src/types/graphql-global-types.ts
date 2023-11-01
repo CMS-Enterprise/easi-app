@@ -300,6 +300,18 @@ export enum SystemIntakeStatus {
 }
 
 /**
+ * SystemIntakeStep represents the current step in the intake process
+ */
+export enum SystemIntakeStep {
+  DECISION_AND_NEXT_STEPS = "DECISION_AND_NEXT_STEPS",
+  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
+  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
+  GRB_MEETING = "GRB_MEETING",
+  GRT_MEETING = "GRT_MEETING",
+  INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
+}
+
+/**
  * Steps in the system intake process that a Progress to New Step action can progress to
  */
 export enum SystemIntakeStepToProgressTo {
