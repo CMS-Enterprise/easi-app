@@ -44,7 +44,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.client
-      target: src
+      target: local_dev
     environment:
       - VITE_APP_ENV
       - VITE_API_ADDRESS
