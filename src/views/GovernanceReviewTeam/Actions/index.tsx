@@ -21,6 +21,7 @@ import {
   ITGovIntakeFormStatus,
   SystemIntakeState
 } from 'types/graphql-global-types';
+import NotFound from 'views/NotFound';
 
 import ManageLcid from './ManageLcid';
 import ProgressToNewStep from './ProgressToNewStep';
@@ -141,18 +142,6 @@ const Actions = ({ systemIntake }: ActionsProps) => {
     <EditsRequestedContext.Provider value={editsRequestedKey}>
       <div className="grt-admin-actions">
         <Switch>
-          <Route
-            path="/governance-review-team/:systemId/actions/request-edits"
-            render={() => <RequestEdits systemIntakeId={systemIntake.id} />}
-          />
-
-          <Route
-            path="/governance-review-team/:systemId/actions/new-step"
-            render={() => (
-              <ProgressToNewStep systemIntakeId={systemIntake.id} step={step} />
-            )}
-          />
-
           {/* Select resolution page */}
           <Route
             path="/governance-review-team/:systemId/resolutions/:subPage?"
@@ -165,8 +154,22 @@ const Actions = ({ systemIntake }: ActionsProps) => {
             render={() => <ManageLcid systemIntake={systemIntake} />}
           />
 
+          {/* Request edits */}
+          <Route
+            path="/governance-review-team/:systemId/actions/request-edits"
+            render={() => <RequestEdits systemIntakeId={systemIntake.id} />}
+          />
+
+          {/* Progress to a new step */}
+          <Route
+            path="/governance-review-team/:systemId/actions/new-step"
+            render={() => (
+              <ProgressToNewStep systemIntakeId={systemIntake.id} step={step} />
+            )}
+          />
+
           {/* Select action main page */}
-          <Route path="/governance-review-team/:systemId/actions">
+          <Route path="/governance-review-team/:systemId/actions" exact>
             <PageHeading
               data-testid="grt-actions-view"
               className="margin-top-0 margin-bottom-5"
@@ -269,6 +272,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
               </Button>
             </form>
           </Route>
+          <NotFound />
         </Switch>
       </div>
     </EditsRequestedContext.Provider>
