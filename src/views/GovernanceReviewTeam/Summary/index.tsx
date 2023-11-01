@@ -9,7 +9,6 @@ import {
   Button,
   IconError
 } from '@trussworks/react-uswds';
-import classnames from 'classnames';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -23,7 +22,6 @@ import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import {
   isIntakeClosed,
-  isIntakeOpen,
   translateRequestType,
   translateStatus
 } from 'utils/systemIntake';
@@ -96,7 +94,7 @@ const RequestSummary = ({
   });
 
   return (
-    <section className="easi-grt__request-summary">
+    <section className="easi-grt__request-summary bg-primary-darker text-white">
       {mutationResult.error && (
         <ErrorAlert heading="System error">
           <ErrorAlertMessage
@@ -145,12 +143,7 @@ const RequestSummary = ({
         </dl>
       </div>
 
-      <div
-        className={classnames({
-          'bg-base-lightest': isIntakeClosed(status),
-          'easi-grt__status--open': isIntakeOpen(status)
-        })}
-      >
+      <div className="bg-base-lightest">
         <div className="grid-container overflow-auto">
           <dl className="easi-grt__status-group">
             <div className="easi-grt__status-info text-gray-90">
