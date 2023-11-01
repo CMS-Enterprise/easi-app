@@ -28,6 +28,7 @@ export interface TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteInitialRe
 export interface TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData_documents {
   __typename: "TRBRequestDocument";
   fileName: string;
+  deletedAt: Time | null;
 }
 
 export interface TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData {
@@ -38,6 +39,7 @@ export interface TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteSupportin
 export interface TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData_recommendations {
   __typename: "TRBAdviceLetterRecommendation";
   title: string;
+  deletedAt: Time | null;
 }
 
 export interface TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData {

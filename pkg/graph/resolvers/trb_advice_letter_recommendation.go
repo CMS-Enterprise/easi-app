@@ -50,6 +50,8 @@ func UpdateTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Sto
 		return nil, err
 	}
 
+	// This will fail to fetch an existing recommendation if the recommendation is deleted, which is sufficient protection
+	// against attempting to update a deleted recommendation.
 	recommendation, err := store.GetTRBAdviceLetterRecommendationByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -111,7 +113,7 @@ func DeleteTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Sto
 
 	// sort recommendations by position, so we can loop over them to find the recommendations we need to update
 	slices.SortFunc(allRecommendationsForRequest, func(recommendationA, recommendationB *models.TRBAdviceLetterRecommendation) int {
-		return recommendationA.PositionInLetter - recommendationB.PositionInLetter
+		return int(recommendationA.PositionInLetter.ValueOrZero()) - int(recommendationB.PositionInLetter.ValueOrZero())
 	})
 
 	var trbRequestID uuid.UUID // will be set once we start looping over allRecommendationsForRequest

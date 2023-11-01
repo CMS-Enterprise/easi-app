@@ -1048,7 +1048,9 @@ const technicalAssistance = {
       selectedDocuments: 'Selected documents',
       meetingSummary: 'Meeting summary',
       nextSteps: 'Next steps',
-      recommendation: 'Recommendation ({{title}})'
+      recommendation: 'Recommendation ({{title}})',
+      removedRecommendation: 'Removed recommendation ({{title}})',
+      removedDocument: 'Removed document ({{fileName}})'
     },
     noDocuments: 'There are no documents uploaded for this request.',
     categories: {

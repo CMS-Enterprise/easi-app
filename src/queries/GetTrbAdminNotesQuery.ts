@@ -6,6 +6,7 @@ export const TRBAdminNoteFragment = gql`
     isArchived
     category
     noteText
+
     author {
       commonName
     }
@@ -21,6 +22,7 @@ export const TRBAdminNoteFragment = gql`
       ... on TRBAdminNoteSupportingDocumentsCategoryData {
         documents {
           fileName
+          deletedAt
         }
       }
 
@@ -29,6 +31,7 @@ export const TRBAdminNoteFragment = gql`
         appliesToNextSteps
         recommendations {
           title
+          deletedAt
         }
       }
     }

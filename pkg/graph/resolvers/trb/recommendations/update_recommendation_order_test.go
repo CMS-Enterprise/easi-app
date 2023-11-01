@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -19,7 +20,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: uuid.New(),
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 0,
+				PositionInLetter: null.IntFrom(0),
 				Title:            "Currently at the start, will be reordered to the end",
 			},
 			{
@@ -27,7 +28,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: uuid.New(),
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 1,
+				PositionInLetter: null.IntFrom(1),
 				Title:            "Currently at the end, will be reordered to the start",
 			},
 		}
@@ -54,7 +55,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: uuid.New(),
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 0,
+				PositionInLetter: null.IntFrom(0),
 				Title:            "A single current recommendation",
 			},
 		}
@@ -81,7 +82,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: currentRecIDs[0],
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 0,
+				PositionInLetter: null.IntFrom(0),
 				Title:            "Current recommendation 0",
 			},
 			{
@@ -89,7 +90,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: currentRecIDs[1],
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 1,
+				PositionInLetter: null.IntFrom(1),
 				Title:            "Current recommendation 1",
 			},
 			{
@@ -97,7 +98,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: currentRecIDs[2],
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 2,
+				PositionInLetter: null.IntFrom(2),
 				Title:            "Current recommendation 2",
 			},
 		}
@@ -130,7 +131,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: currentRecIDs[0],
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 0,
+				PositionInLetter: null.IntFrom(0),
 				Title:            "Current recommendation 0",
 			},
 			{
@@ -138,7 +139,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: currentRecIDs[1],
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 1,
+				PositionInLetter: null.IntFrom(1),
 				Title:            "Current recommendation 1",
 			},
 			{
@@ -146,7 +147,7 @@ func TestIsNewRecommendationOrderValid(t *testing.T) {
 					ID: currentRecIDs[2],
 				},
 				TRBRequestID:     trbRequestID,
-				PositionInLetter: 2,
+				PositionInLetter: null.IntFrom(2),
 				Title:            "Current recommendation 2",
 			},
 		}

@@ -48,8 +48,16 @@ const noteSupportingDocuments: TRBAdminNoteFragment = {
   categorySpecificData: {
     __typename: 'TRBAdminNoteSupportingDocumentsCategoryData',
     documents: [
-      { __typename: 'TRBRequestDocument', fileName: 'documentOne.pdf' },
-      { __typename: 'TRBRequestDocument', fileName: 'documentTwo.pdf' }
+      {
+        __typename: 'TRBRequestDocument',
+        fileName: 'documentOne.pdf',
+        deletedAt: null
+      },
+      {
+        __typename: 'TRBRequestDocument',
+        fileName: 'documentTwo.pdf',
+        deletedAt: null
+      }
     ]
   },
   createdAt: '2024-03-27T13:20:37.852099Z'
@@ -72,11 +80,13 @@ const noteAdviceLetter: TRBAdminNoteFragment = {
     recommendations: [
       {
         __typename: 'TRBAdviceLetterRecommendation',
-        title: 'Recommendation One'
+        title: 'Recommendation One',
+        deletedAt: null
       },
       {
         __typename: 'TRBAdviceLetterRecommendation',
-        title: 'Recommendation Two'
+        title: 'Recommendation Two',
+        deletedAt: null
       }
     ]
   },
@@ -145,6 +155,54 @@ describe('TRB Admin Note', () => {
     expect(
       screen.getByText(
         'Advice letter: Meeting summary, Recommendation (Recommendation One), Recommendation (Recommendation Two)'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('Renders label for removed document', () => {
+    const note: TRBAdminNoteFragment = {
+      ...noteSupportingDocuments,
+      categorySpecificData: {
+        __typename: 'TRBAdminNoteSupportingDocumentsCategoryData',
+        documents: [
+          {
+            __typename: 'TRBRequestDocument',
+            fileName: 'documentOne.pdf',
+            deletedAt: '2023-03-28T13:20:37.852099Z'
+          }
+        ]
+      }
+    };
+    render(<Note note={note} />);
+
+    expect(
+      screen.getByText(
+        'Supporting documents: Removed document (documentOne.pdf)'
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('Renders label for removed recommendation', () => {
+    const note: TRBAdminNoteFragment = {
+      ...noteAdviceLetter,
+      categorySpecificData: {
+        __typename: 'TRBAdminNoteAdviceLetterCategoryData',
+        appliesToMeetingSummary: true,
+        appliesToNextSteps: false,
+        recommendations: [
+          {
+            __typename: 'TRBAdviceLetterRecommendation',
+            title: 'Recommendation One',
+            deletedAt: '2023-03-28T13:20:37.852099Z'
+          }
+        ]
+      }
+    };
+    render(<Note note={note} />);
+
+    expect(
+      screen.getByText(
+        'Advice letter: Meeting summary, Removed recommendation (Recommendation One)'
       )
     ).toBeInTheDocument();
   });

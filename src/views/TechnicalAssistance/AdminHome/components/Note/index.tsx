@@ -6,7 +6,10 @@ import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import { GetTrbAdminNotes_trbRequest_adminNotes as NoteType } from 'queries/types/GetTrbAdminNotes';
+import {
+  GetTrbAdminNotes_trbRequest_adminNotes as NoteType,
+  GetTrbAdminNotes_trbRequest_adminNotes_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData_documents as Document
+} from 'queries/types/GetTrbAdminNotes';
 import {
   TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteAdviceLetterCategoryData as AdviceLetterCategoryData,
   TRBAdminNoteFragment_categorySpecificData_TRBAdminNoteInitialRequestFormCategoryData as InitialRequestFormCategoryData
@@ -53,9 +56,25 @@ const Note = ({ note, className, border = true }: NoteProps) => {
       ...(appliesToMeetingSummary ? [t('notes.labels.meetingSummary')] : []),
       ...(appliesToNextSteps ? [t('notes.labels.nextSteps')] : []),
       ...recommendations.map(rec =>
-        t('notes.labels.recommendation', { title: rec.title })
+        t(
+          `notes.labels.${
+            rec.deletedAt ? 'removedRecommendation' : 'recommendation'
+          }`,
+          { title: rec.title }
+        )
       )
     ].join(', ');
+
+  /** Converts documents category data into string */
+  const documentsCategory = (documents: Document[]) =>
+    documents
+      .map(({ fileName, deletedAt }) => {
+        // If recommendation has been removed, return correct label
+        return deletedAt
+          ? t('notes.labels.removedDocument', { fileName })
+          : fileName;
+      })
+      .join(', ');
 
   /** Returns note category label with category specific data as string */
   const categoryString = () => {
@@ -69,9 +88,9 @@ const Note = ({ note, className, border = true }: NoteProps) => {
         );
         break;
       case 'TRBAdminNoteSupportingDocumentsCategoryData':
-        categorySpecificDataString = categorySpecificData.documents
-          .map(doc => doc.fileName)
-          .join(', ');
+        categorySpecificDataString = documentsCategory(
+          categorySpecificData.documents
+        );
         break;
       case 'TRBAdminNoteAdviceLetterCategoryData':
         categorySpecificDataString = adviceLetterCategory(categorySpecificData);
