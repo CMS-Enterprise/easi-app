@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import React, { useContext, useEffect } from 'react';
+import { Control, Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -37,6 +37,38 @@ type ProgressToNewStepProps = {
   step: SystemIntakeStep | undefined;
 };
 
+/** Meeting date sub-field for the GRT and GRB meeting radio fields */
+const MeetingDateField = ({
+  control,
+  type
+}: {
+  control: Control<ProgressToNewStepFields>;
+  type: 'GRT' | 'GRB';
+}) => {
+  const { t } = useTranslation('action');
+  return (
+    <Controller
+      control={control}
+      name="meetingDate"
+      render={({ field: { ref, ...field }, fieldState: { error } }) => (
+        <FormGroup error={!!error} className="margin-left-4 margin-top-1">
+          <Label htmlFor={field.name}>
+            {t('progressToNewStep.meetingDate')}
+          </Label>
+          <HelpText className="margin-top-1">
+            {t('progressToNewStep.meetingDateHelpText', { type })}
+          </HelpText>
+          <HelpText>{t('retireLcid.format')}</HelpText>
+          {!!error?.message && (
+            <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+          )}
+          <DatePickerFormatted {...field} id="meetingDate" />
+        </FormGroup>
+      )}
+    />
+  );
+};
+
 const ProgressToNewStep = ({
   systemIntakeId,
   step
@@ -64,7 +96,7 @@ const ProgressToNewStep = ({
   const form = useForm<ProgressToNewStepFields>({
     resolver: yupResolver(progressToNewStepSchema(currentStep))
   });
-  const { control, watch } = form;
+  const { control, watch, setValue } = form;
 
   const newStep = watch('newStep');
 
@@ -82,6 +114,11 @@ const ProgressToNewStep = ({
         }
       }
     });
+
+  // Reset meeting date field value on new step field value change
+  useEffect(() => {
+    setValue('meetingDate', undefined);
+  }, [newStep, setValue]);
 
   return (
     <FormProvider<ProgressToNewStepFields> {...form}>
@@ -135,12 +172,14 @@ const ProgressToNewStep = ({
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
+
               <RadioField
                 {...field}
                 value={SystemIntakeStepToProgressTo.DRAFT_BUSINESS_CASE}
                 id={SystemIntakeStepToProgressTo.DRAFT_BUSINESS_CASE}
                 label={t('progressToNewStep.DRAFT_BUSINESS_CASE')}
               />
+
               <RadioField
                 {...field}
                 value={SystemIntakeStepToProgressTo.GRT_MEETING}
@@ -148,36 +187,7 @@ const ProgressToNewStep = ({
                 label={t('progressToNewStep.GRT_MEETING')}
               />
               {field.value === SystemIntakeStepToProgressTo.GRT_MEETING && (
-                <Controller
-                  control={control}
-                  name="meetingDate"
-                  render={({
-                    field: { ref: meetingDateRef, ...meetingDateField },
-                    fieldState: { error: meetingDateError }
-                  }) => (
-                    <FormGroup
-                      error={!!meetingDateError}
-                      className="margin-left-4 margin-top-1"
-                    >
-                      <Label htmlFor={field.name}>
-                        {t('progressToNewStep.meetingDate')}
-                      </Label>
-                      <HelpText className="margin-top-1">
-                        {t('progressToNewStep.meetingDateHelpText')}
-                      </HelpText>
-                      <HelpText>{t('retireLcid.format')}</HelpText>
-                      {!!meetingDateError?.message && (
-                        <FieldErrorMsg>
-                          {t(meetingDateError.message)}
-                        </FieldErrorMsg>
-                      )}
-                      <DatePickerFormatted
-                        {...meetingDateField}
-                        id="meetingDate"
-                      />
-                    </FormGroup>
-                  )}
-                />
+                <MeetingDateField control={control} type="GRT" />
               )}
 
               <RadioField
@@ -186,12 +196,16 @@ const ProgressToNewStep = ({
                 id={SystemIntakeStepToProgressTo.FINAL_BUSINESS_CASE}
                 label={t('progressToNewStep.FINAL_BUSINESS_CASE')}
               />
+
               <RadioField
                 {...field}
                 value={SystemIntakeStepToProgressTo.GRB_MEETING}
                 id={SystemIntakeStepToProgressTo.GRB_MEETING}
                 label={t('progressToNewStep.GRB_MEETING')}
               />
+              {field.value === SystemIntakeStepToProgressTo.GRB_MEETING && (
+                <MeetingDateField control={control} type="GRB" />
+              )}
             </FormGroup>
           )}
         />

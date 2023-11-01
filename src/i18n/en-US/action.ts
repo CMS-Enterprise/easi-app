@@ -386,7 +386,7 @@ const action = {
       'Choose this step if the request either does not need a Business Case, but should be reviewed by the GRT, or if the draft Business Case is complete and the request is ready for the GRT.',
     meetingDate: 'Meeting date',
     meetingDateHelpText:
-      'Adding a date here will replace any GRT date already entered.',
+      'Adding a date here will replace any {{type}} date already entered.',
     FINAL_BUSINESS_CASE: 'Final Business Case',
     finalBusinessCaseDescription:
       'Choose this step if this request is ready for a final Business Case and subsequent GRB meeting, either because the draft Business Case is complete, or because this request is skipping the GRT.',
