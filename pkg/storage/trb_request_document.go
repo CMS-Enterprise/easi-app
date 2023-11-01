@@ -13,6 +13,7 @@ import (
 )
 
 // GetTRBRequestDocumentsByRequestID queries the DB for all documents attached to the TRB request with the given ID
+// It will NOT return any items that have been soft-deleted (deleted_at NOT NULL)
 func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestDocument, error) {
 	const trbRequestDocumentsGetByRequestIDSQL = `
 		SELECT id,
@@ -25,9 +26,11 @@ func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, trbReques
 			created_by,
 			modified_by,
 			created_at,
-			modified_at
+			modified_at,
+			deleted_at
 		FROM trb_request_documents
 		WHERE trb_request_id = :trb_request_id
+		AND deleted_at IS NULL
 	`
 
 	documents := []*models.TRBRequestDocument{}
@@ -75,7 +78,8 @@ func (s *Store) CreateTRBRequestDocument(ctx context.Context, document *models.T
 			bucket,
 			s3_key,
 			created_by,
-			modified_by
+			modified_by,
+			deleted_at
 		) VALUES (
 			:id,
 			:trb_request_id,
@@ -85,7 +89,8 @@ func (s *Store) CreateTRBRequestDocument(ctx context.Context, document *models.T
 			:bucket,
 			:s3_key,
 			:created_by,
-			:modified_by
+			:modified_by,
+			NULL
 		) RETURNING
 			id,
 			trb_request_id,
@@ -97,7 +102,8 @@ func (s *Store) CreateTRBRequestDocument(ctx context.Context, document *models.T
 			created_by,
 			created_at,
 			modified_by,
-			modified_at
+			modified_at,
+			deleted_at
 	`
 
 	if document.ID == uuid.Nil {
@@ -132,11 +138,10 @@ func (s *Store) CreateTRBRequestDocument(ctx context.Context, document *models.T
 	return &retDoc, nil
 }
 
-// DeleteTRBRequestDocument deletes an existing TRBRequestDocument, given its ID
+// DeleteTRBRequestDocument sets the deleted_at property on an existing TRBRequestDocument, given its ID
 func (s *Store) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*models.TRBRequestDocument, error) {
 	const trbRequestDocumentDeleteSQL = `
-		DELETE
-		FROM trb_request_documents
+		UPDATE trb_request_documents SET deleted_at = CURRENT_TIMESTAMP
 		WHERE id = :id
 		RETURNING
 			id,
@@ -149,7 +154,8 @@ func (s *Store) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*mo
 			created_by,
 			created_at,
 			modified_by,
-			modified_at
+			modified_at,
+			deleted_at
 	`
 
 	stmt, err := s.db.PrepareNamed(trbRequestDocumentDeleteSQL)

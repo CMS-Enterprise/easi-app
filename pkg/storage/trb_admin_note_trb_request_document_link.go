@@ -86,6 +86,8 @@ func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 }
 
 // GetTRBRequestDocumentsByAdminNoteID fetches all TRB request documents linked to a TRB admin note
+// This function specifically fetches all documents (even deleted ones), as this function is called by the resolver for TRB Admin Notes,
+// which need to display previously deleted document names
 func (s *Store) GetTRBRequestDocumentsByAdminNoteID(ctx context.Context, adminNoteID uuid.UUID) ([]*models.TRBRequestDocument, error) {
 	const trbRequestDocumentsGetByAdminNoteIDSQL = `
 		SELECT trb_request_documents.*
