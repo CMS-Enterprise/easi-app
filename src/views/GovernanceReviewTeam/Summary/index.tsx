@@ -96,152 +96,165 @@ const RequestSummary = ({
   });
 
   return (
-    <section className="easi-grt__request-summary bg-primary-darker text-white">
-      {/* Update admin lead error */}
-      {mutationResult.error && (
-        <ErrorAlert heading="System error">
-          <ErrorAlertMessage
-            message={mutationResult.error.message}
-            errorKey="system"
-          />
-        </ErrorAlert>
-      )}
+    <>
+      <section className="easi-grt__request-summary bg-primary-darker">
+        {/* Update admin lead error */}
+        {mutationResult.error && (
+          <ErrorAlert heading="System error">
+            <ErrorAlertMessage
+              message={mutationResult.error.message}
+              errorKey="system"
+            />
+          </ErrorAlert>
+        )}
 
-      <div className="grid-container padding-bottom-2">
-        <BreadcrumbBar variant="wrap" className="bg-transparent text-white">
-          <Breadcrumb>
-            <BreadcrumbLink
-              asCustom={Link}
-              to="/"
-              className="text-white text-underline"
-            >
-              {t('header:home')}
-            </BreadcrumbLink>
-          </Breadcrumb>
-          <Breadcrumb current>{requestName}</Breadcrumb>
-        </BreadcrumbBar>
-
-        <h2 className="margin-y-0">{requestName}</h2>
-
-        <dl className="easi-grt__request-info grid-row grid-gap margin-top-0">
-          <div className="tablet:grid-col-8">
-            <dt className="font-body-xs">{t('requestType')}</dt>
-            <dd>{translateRequestType(requestType)}</dd>
-
-            <dt className="font-body-xs">
-              {t('intake:review.contractNumber')}
-            </dt>
-            <dd>{contractNumber}</dd>
-          </div>
-
-          <div className="tablet:grid-col-4">
-            <dt className="font-body-xs">
-              {t('intake:contactDetails.requester')}
-            </dt>
-            <dd>
-              {getPersonNameAndComponentAcronym(
-                requester?.name || '',
-                requester?.component
-              )}
-            </dd>
-
-            <dt className="font-body-xs">
-              {t('intake:fields.submissionDate')}
-            </dt>
-            <dd>
-              {submittedAt
-                ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
-                : 'N/A'}
-            </dd>
-          </div>
-        </dl>
-      </div>
-
-      <div className="bg-base-lightest">
-        <div className="grid-container overflow-auto">
-          <dl className="easi-grt__status-group">
-            <div className="easi-grt__status-info text-gray-90">
-              <dt className="text-bold">{t('status.label')}</dt>
-              &nbsp;
-              <dd
-                className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
-                data-testid="grt-status"
+        {/* Request summary */}
+        <div className="grid-container padding-bottom-2 text-white">
+          <BreadcrumbBar variant="wrap" className="bg-transparent text-white">
+            <Breadcrumb>
+              <BreadcrumbLink
+                asCustom={Link}
+                to="/"
+                className="text-white text-underline"
               >
-                {isIntakeClosed(status) ? t('status.closed') : t('status.open')}
-              </dd>
-              <>
-                <dt data-testid="grt-current-status">
-                  {translateStatus(status, lcid)}
-                </dt>
-              </>
+                {t('header:home')}
+              </BreadcrumbLink>
+            </Breadcrumb>
+            <Breadcrumb current>{requestName}</Breadcrumb>
+          </BreadcrumbBar>
+
+          <h2 className="margin-y-0">{requestName}</h2>
+
+          <dl className="easi-grt__request-info grid-row grid-gap margin-top-0">
+            <div className="tablet:grid-col-8">
+              <dt className="font-body-xs">{t('requestType')}</dt>
+              <dd>{translateRequestType(requestType)}</dd>
+
+              <dt className="font-body-xs">
+                {t('intake:review.contractNumber')}
+              </dt>
+              <dd>{contractNumber}</dd>
             </div>
-            <div className="display-flex text-gray-90">
-              <span className="text-bold">{t('intake:fields.adminLead')}</span>
-              <span className="margin-x-1" data-testid="admin-lead">
-                {getAdminLead()}
-              </span>
-              <Button
-                type="button"
-                unstyled
-                onClick={() => {
-                  // Reset newAdminLead to value in intake
-                  resetNewAdminLead();
-                  setModalOpen(true);
-                }}
-              >
-                {t('governanceReviewTeam:adminLeads.changeLead')}
-              </Button>
-              <Modal
-                isOpen={isModalOpen}
-                closeModal={() => {
-                  setModalOpen(false);
-                }}
-              >
-                <PageHeading headingLevel="h2" className="margin-top-0">
-                  {t('governanceReviewTeam:adminLeads:assignModal.header', {
-                    requestName
-                  })}
-                </PageHeading>
-                <RadioGroup>
-                  {grtMembers.map(name => (
-                    <RadioField
-                      id={`admin-lead-${name}`}
-                      key={`admin-lead-${name}`}
-                      checked={name === newAdminLead}
-                      label={name}
-                      name="admin-lead"
-                      value={name}
-                      onChange={e => setAdminLead(e.target.value)}
-                      className="margin-y-3"
-                    />
-                  ))}
-                </RadioGroup>
-                <Button
-                  type="button"
-                  className="margin-right-4"
-                  onClick={() => {
-                    // Set admin lead as newAdminLead in the intake
-                    saveAdminLead();
-                    setModalOpen(false);
-                  }}
-                >
-                  {t('governanceReviewTeam:adminLeads:assignModal.save')}
-                </Button>
-                <Button
-                  type="button"
-                  unstyled
-                  onClick={() => {
-                    setModalOpen(false);
-                  }}
-                >
-                  {t('governanceReviewTeam:adminLeads:assignModal.noChanges')}
-                </Button>
-              </Modal>
+
+            <div className="tablet:grid-col-4">
+              <dt className="font-body-xs">
+                {t('intake:contactDetails.requester')}
+              </dt>
+              <dd>
+                {getPersonNameAndComponentAcronym(
+                  requester?.name || '',
+                  requester?.component
+                )}
+              </dd>
+
+              <dt className="font-body-xs">
+                {t('intake:fields.submissionDate')}
+              </dt>
+              <dd>
+                {submittedAt
+                  ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
+                  : 'N/A'}
+              </dd>
             </div>
           </dl>
         </div>
-      </div>
-    </section>
+
+        {/* Status & admin lead info */}
+        <div className="bg-base-lightest">
+          <div className="grid-container padding-y-105">
+            <dl className="easi-grt__status-group grid-row grid-gap margin-y-0">
+              <div className="easi-grt__status-info display-flex flex-align-center desktop:grid-col-8">
+                <dt className="margin-right-1">
+                  <h4 className="margin-y-0">{t('status.label')}</h4>
+                </dt>
+                <dd
+                  className="margin-right-1 text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
+                  data-testid="grt-status"
+                >
+                  {isIntakeClosed(status)
+                    ? t('status.closed')
+                    : t('status.open')}
+                </dd>
+                <dd data-testid="grt-current-status">
+                  {translateStatus(status, lcid)}
+                </dd>
+              </div>
+
+              <div className="display-flex flex-align-center desktop:grid-col-4">
+                <dt className="margin-right-1">
+                  <h4 className="margin-y-0">{t('intake:fields.adminLead')}</h4>
+                </dt>
+                <dd
+                  className="margin-x-0 display-flex"
+                  data-testid="admin-lead"
+                >
+                  <span className="margin-right-1">{getAdminLead()}</span>
+                  <Button
+                    type="button"
+                    unstyled
+                    onClick={() => {
+                      // Reset newAdminLead to value in intake
+                      resetNewAdminLead();
+                      setModalOpen(true);
+                    }}
+                  >
+                    {t('governanceReviewTeam:adminLeads.changeLead')}
+                  </Button>
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      {/* Change admin lead modal */}
+      <Modal
+        isOpen={isModalOpen}
+        closeModal={() => {
+          setModalOpen(false);
+        }}
+      >
+        <PageHeading headingLevel="h2" className="margin-top-0">
+          {t('governanceReviewTeam:adminLeads:assignModal.header', {
+            requestName
+          })}
+        </PageHeading>
+        <RadioGroup>
+          {grtMembers.map(name => (
+            <RadioField
+              id={`admin-lead-${name}`}
+              key={`admin-lead-${name}`}
+              checked={name === newAdminLead}
+              label={name}
+              name="admin-lead"
+              value={name}
+              onChange={e => setAdminLead(e.target.value)}
+              className="margin-y-3"
+            />
+          ))}
+        </RadioGroup>
+        <Button
+          type="button"
+          className="margin-right-4"
+          onClick={() => {
+            // Set admin lead as newAdminLead in the intake
+            saveAdminLead();
+            setModalOpen(false);
+          }}
+        >
+          {t('governanceReviewTeam:adminLeads:assignModal.save')}
+        </Button>
+        <Button
+          type="button"
+          unstyled
+          onClick={() => {
+            setModalOpen(false);
+          }}
+        >
+          {t('governanceReviewTeam:adminLeads:assignModal.noChanges')}
+        </Button>
+      </Modal>
+    </>
   );
 };
 

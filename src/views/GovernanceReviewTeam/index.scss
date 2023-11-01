@@ -47,18 +47,9 @@
     }
   }
 
-  &__status-group {
-    display: flex;
-    justify-content: space-between;
-
-    dt, dd {
-      display: inline;
-    }
-  }
-
   &__status-info {
     dd {
-      margin: 0 1em 0 0;
+      margin: 0;
     }
   }
 
