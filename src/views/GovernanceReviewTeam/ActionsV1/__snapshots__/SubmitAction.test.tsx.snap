@@ -10,10 +10,10 @@ exports[`Submit Action > renders additional contacts 1`] = `
     tabindex="-1"
   >
     <section
-      class="easi-grt__request-summary"
+      class="easi-grt__request-summary bg-primary-darker"
     >
       <div
-        class="grid-container padding-bottom-2"
+        class="grid-container padding-bottom-2 text-white"
       >
         <nav
           aria-label="Breadcrumbs"
@@ -26,14 +26,10 @@ exports[`Submit Action > renders additional contacts 1`] = `
               class="usa-breadcrumb__list-item"
             >
               <a
-                class="usa-breadcrumb__link"
+                class="text-white text-underline usa-breadcrumb__link"
                 href="/"
               >
-                <span
-                  class="text-white"
-                >
-                  Home
-                </span>
+                Home
               </a>
             </li>
             <li
@@ -44,97 +40,119 @@ exports[`Submit Action > renders additional contacts 1`] = `
             </li>
           </ol>
         </nav>
-        <dl
-          class="easi-grt__request-info"
+        <h2
+          class="margin-y-0"
         >
-          <div>
-            <dt>
-              Project name
+          Mock System Intake Request
+        </h2>
+        <dl
+          class="easi-grt__request-info grid-row grid-gap margin-top-0"
+        >
+          <div
+            class="tablet:grid-col-8"
+          >
+            <dt
+              class="font-body-xs"
+            >
+              Request type
             </dt>
             <dd>
-              Mock System Intake Request
+              Add a new system or service
+            </dd>
+            <dt
+              class="font-body-xs"
+            >
+              Contract number
+            </dt>
+            <dd>
+              123456-7890
             </dd>
           </div>
           <div
-            class="easi-grt__request-info-col"
+            class="tablet:grid-col-4"
           >
-            <div
-              class="easi-grt__description-group"
+            <dt
+              class="font-body-xs"
             >
-              <dt>
-                Requester
-              </dt>
-              <dd>
-                Ally Anderson, CMS
-              </dd>
-            </div>
-            <div
-              class="easi-grt__description-group"
+              Requester
+            </dt>
+            <dd>
+              Ally Anderson, CMS
+            </dd>
+            <dt
+              class="font-body-xs"
             >
-              <dt>
-                Submission date
-              </dt>
-              <dd>
-                October 20, 2022
-              </dd>
-            </div>
-            <div
-              class="easi-grt__description-group"
-            >
-              <dt>
-                Request for
-              </dt>
-              <dd>
-                Add a new system or service
-              </dd>
-            </div>
+              Submission date
+            </dt>
+            <dd>
+              October 20, 2022
+            </dd>
           </div>
         </dl>
       </div>
       <div
-        class="easi-grt__status--open"
+        class="bg-base-lightest"
       >
         <div
-          class="grid-container overflow-auto"
+          class="grid-container padding-y-105"
         >
           <dl
-            class="easi-grt__status-group"
+            class="easi-grt__status-group grid-row grid-gap margin-y-0"
           >
             <div
-              class="easi-grt__status-info text-gray-90"
+              class="easi-grt__status-info display-flex flex-wrap flex-align-center desktop:grid-col-8 margin-bottom-1 desktop:margin-bottom-0"
             >
               <dt
-                class="text-bold"
+                class="margin-right-1"
               >
-                Status
+                <h4
+                  class="margin-y-0"
+                >
+                  Status
+                </h4>
               </dt>
-               
               <dd
-                class="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
+                class="margin-right-1"
                 data-testid="grt-status"
               >
-                Open
+                <span
+                  class="easi-tag margin-0 text-white bg-info-dark"
+                  data-testid="tag"
+                >
+                  Open
+                </span>
               </dd>
-              <dt
+              <dd
+                class="margin-top-05 tablet:margin-top-0 width-full tablet:width-auto"
                 data-testid="grt-current-status"
               >
                 Intake request received
-              </dt>
+                <a
+                  class="margin-0 margin-left-1"
+                  href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions"
+                >
+                  Take an action
+                </a>
+              </dd>
             </div>
             <div
-              class="display-flex text-gray-90"
+              class="tablet:display-flex flex-align-center desktop:grid-col-4"
             >
-              <span
-                class="text-bold"
+              <dt
+                class="margin-right-1 margin-bottom-05 tablet:margin-bottom-0 width-full tablet:width-auto"
               >
-                Admin Lead
-              </span>
-              <span
-                class="margin-x-1"
+                <h4
+                  class="margin-y-0 text-no-wrap"
+                >
+                  Admin Lead
+                </h4>
+              </dt>
+              <dd
+                class="margin-x-0 display-flex flex-wrap"
                 data-testid="admin-lead"
               >
-                <div
-                  class="display-flex flex-align-center"
+                <span
+                  class="display-flex flex-align-center margin-right-1"
                 >
                   <svg
                     class="usa-icon text-secondary margin-right-05"
@@ -154,15 +172,15 @@ exports[`Submit Action > renders additional contacts 1`] = `
                     />
                   </svg>
                   Not Assigned
-                </div>
-              </span>
-              <button
-                class="usa-button usa-button--unstyled"
-                data-testid="button"
-                type="button"
-              >
-                Change
-              </button>
+                </span>
+                <button
+                  class="usa-button usa-button--unstyled width-auto"
+                  data-testid="button"
+                  type="button"
+                >
+                  Assign
+                </button>
+              </dd>
             </div>
           </dl>
         </div>
