@@ -164,7 +164,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                     as={TextInput}
                     error={!!flatErrors.requestName}
                     id="IntakeForm-ContractName"
-                    maxLength={50}
+                    maxLength={200}
                     name="requestName"
                   />
                 </FieldGroup>

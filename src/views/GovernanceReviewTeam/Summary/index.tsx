@@ -7,9 +7,11 @@ import {
   BreadcrumbBar,
   BreadcrumbLink,
   Button,
+  Grid,
+  GridContainer,
   IconError
 } from '@trussworks/react-uswds';
-import classnames from 'classnames';
+import classNames from 'classnames';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -96,7 +98,7 @@ const RequestSummary = ({
   });
 
   return (
-    <section className="easi-grt__request-summary">
+    <div className="easi-grt__request-summary">
       {mutationResult.error && (
         <ErrorAlert heading="System error">
           <ErrorAlertMessage
@@ -105,59 +107,77 @@ const RequestSummary = ({
           />
         </ErrorAlert>
       )}
-      <div className="grid-container padding-bottom-2">
-        <BreadcrumbBar variant="wrap" className="bg-transparent text-white">
-          <Breadcrumb>
-            <BreadcrumbLink asCustom={Link} to="/">
-              <span className="text-white">Home</span>
-            </BreadcrumbLink>
-          </Breadcrumb>
-          <Breadcrumb current>{requestName}</Breadcrumb>
-        </BreadcrumbBar>
-        <dl className="easi-grt__request-info">
-          <div>
-            <dt>{t('intake:fields.projectName')}</dt>
-            <dd>{requestName}</dd>
-          </div>
-          <div className="easi-grt__request-info-col">
-            <div className="easi-grt__description-group">
-              <dt>{t('intake:contactDetails.requester')}</dt>
-              <dd>
-                {getPersonNameAndComponentAcronym(
-                  requester?.name || '',
-                  requester?.component
-                )}
-              </dd>
-            </div>
-            <div className="easi-grt__description-group">
-              <dt>{t('intake:fields.submissionDate')}</dt>
-              <dd>
-                {submittedAt
-                  ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
-                  : 'N/A'}
-              </dd>
-            </div>
-            <div className="easi-grt__description-group">
-              <dt>{t('intake:fields.requestFor')}</dt>
-              <dd>{translateRequestType(requestType)}</dd>
-            </div>
-          </div>
-        </dl>
-      </div>
+      <section className="bg-primary-darker padding-bottom-3 text-white">
+        <GridContainer>
+          <BreadcrumbBar variant="wrap" className="bg-transparent text-white">
+            <Breadcrumb>
+              <BreadcrumbLink asCustom={Link} to="/">
+                <span className="text-white">Home</span>
+              </BreadcrumbLink>
+            </Breadcrumb>
+            <Breadcrumb current>Request details</Breadcrumb>
+          </BreadcrumbBar>
 
-      <div
-        className={classnames({
-          'bg-base-lightest': isIntakeClosed(status),
-          'easi-grt__status--open': isIntakeOpen(status)
-        })}
-      >
+          {/* Request name */}
+          <h2 className="margin-top-05 margin-bottom-0">{requestName}</h2>
+
+          {/* Request details */}
+          <Grid row>
+            <Grid tablet={{ col: 8 }}>
+              {/* Request type */}
+              <div className="margin-top-2 margin-bottom-05">
+                <h5 className="text-normal margin-y-0">
+                  {t('intake:fields.requestFor')}
+                </h5>
+                <h4 className="margin-y-05">
+                  {translateRequestType(requestType)}
+                </h4>
+              </div>
+            </Grid>
+            <Grid tablet={{ col: 4 }}>
+              {/* Requester */}
+              <div className="margin-top-2 margin-bottom-05">
+                <h5 className="text-normal margin-y-0">
+                  {t('intake:contactDetails.requester')}
+                </h5>
+                <h4 className="margin-y-05">
+                  {getPersonNameAndComponentAcronym(
+                    requester?.name || '',
+                    requester?.component
+                  )}
+                </h4>
+              </div>
+              {/* Submission date */}
+              <div className="margin-top-2 margin-bottom-05">
+                <h5 className="text-normal margin-y-0">
+                  {t('intake:fields.submissionDate')}
+                </h5>
+                <h4 className="margin-y-05">
+                  {submittedAt
+                    ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
+                    : 'N/A'}
+                </h4>
+              </div>
+            </Grid>
+          </Grid>
+        </GridContainer>
+      </section>
+
+      <div className="bg-base-lightest">
         <div className="grid-container overflow-auto">
           <dl className="easi-grt__status-group">
             <div className="easi-grt__status-info text-gray-90">
               <dt className="text-bold">{t('status.label')}</dt>
               &nbsp;
               <dd
-                className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
+                // className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
+                className={classNames(
+                  'text-white text-bold padding-y-05 padding-x-105 margin-x-1',
+                  {
+                    'bg-base': isIntakeClosed(status),
+                    'bg-info-dark': isIntakeOpen(status)
+                  }
+                )}
                 data-testid="grt-status"
               >
                 {isIntakeClosed(status) ? t('status.closed') : t('status.open')}
@@ -234,7 +254,7 @@ const RequestSummary = ({
           </dl>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

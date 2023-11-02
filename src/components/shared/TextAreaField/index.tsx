@@ -30,7 +30,7 @@ const TextAreaField = ({
   onBlur,
   value,
   size = 'md',
-  characterCounter = true,
+  characterCounter = false, // EASI-3456
   ...props
 }: TextAreaFieldProps) => {
   const textAreaClasses = classnames(
