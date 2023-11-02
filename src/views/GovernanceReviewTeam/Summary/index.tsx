@@ -85,6 +85,7 @@ const RequestSummary = ({
         </span>
         <Button
           type="button"
+          className="width-auto"
           unstyled
           onClick={() => {
             // Reset newAdminLead to value in intake
@@ -189,33 +190,38 @@ const RequestSummary = ({
         <div className="bg-base-lightest">
           <div className="grid-container padding-y-105">
             <dl className="easi-grt__status-group grid-row grid-gap margin-y-0">
-              <div className="easi-grt__status-info display-flex flex-align-center desktop:grid-col-8">
+              <div className="easi-grt__status-info display-flex flex-wrap flex-align-center desktop:grid-col-8 margin-bottom-1 desktop:margin-bottom-0">
                 <dt className="margin-right-1">
                   <h4 className="margin-y-0">{t('status.label')}</h4>
                 </dt>
                 <dd className="margin-right-1" data-testid="grt-status">
                   <StatusTag state={state} />
                 </dd>
-                <dd data-testid="grt-current-status">
+                <dd
+                  data-testid="grt-current-status"
+                  className="margin-top-05 tablet:margin-top-0 width-full tablet:width-auto"
+                >
                   {
                     /* TODO EASI-3440: Update to use v2 statuses */
                     translateStatus(status, lcid)
                   }
                   <Link
                     to={`/governance-review-team/${id}/actions`}
-                    className="margin-0 tablet:margin-left-1"
+                    className="margin-0 margin-left-1"
                   >
                     {t('action:takeAnAction')}
                   </Link>
                 </dd>
               </div>
 
-              <div className="display-flex flex-align-center desktop:grid-col-4">
-                <dt className="margin-right-1">
-                  <h4 className="margin-y-0">{t('intake:fields.adminLead')}</h4>
+              <div className="tablet:display-flex flex-align-center desktop:grid-col-4">
+                <dt className="margin-right-1 margin-bottom-05 tablet:margin-bottom-0 width-full tablet:width-auto">
+                  <h4 className="margin-y-0 text-no-wrap">
+                    {t('intake:fields.adminLead')}
+                  </h4>
                 </dt>
                 <dd
-                  className="margin-x-0 display-flex"
+                  className="margin-x-0 display-flex flex-wrap"
                   data-testid="admin-lead"
                 >
                   <AdminLead />
