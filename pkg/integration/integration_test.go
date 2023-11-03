@@ -21,6 +21,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/server"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cmsgov/easi-app/pkg/testlevels"
 )
 
 // test user for authorization
@@ -41,9 +42,8 @@ type IntegrationTestSuite struct {
 }
 
 func TestIntegrationTestSuite(t *testing.T) {
-	if testing.Short() {
-		t.Skip("skipping integration tests in `-short` mode")
-	}
+	testlevels.ExternalIntegrationTest(t) // external due to calling Okta
+
 	config := testhelpers.NewConfig()
 	easiServer := server.NewServer(config)
 	testServer := httptest.NewServer(easiServer)

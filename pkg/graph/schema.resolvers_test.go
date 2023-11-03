@@ -33,6 +33,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cmsgov/easi-app/pkg/testlevels"
 	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
@@ -103,6 +104,11 @@ func (m mockS3Client) GetObjectTagging(input *s3.GetObjectTaggingInput) (*s3.Get
 }
 
 func TestGraphQLTestSuite(t *testing.T) {
+	// can be run locally with Minio - see logic in upload.NewS3Client()
+	// (will be run in CI against an actual S3 bucket)
+	// LaunchDarkly client is set up with Offline: true, doesn't actually contact LaunchDarkly
+	testlevels.LocalIntegrationTest(t)
+
 	config := testhelpers.NewConfig()
 
 	logger, loggerErr := zap.NewDevelopment()

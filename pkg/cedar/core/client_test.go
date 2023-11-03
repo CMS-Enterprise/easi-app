@@ -10,6 +10,7 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/testlevels"
 )
 
 type ClientTestSuite struct {
@@ -18,6 +19,9 @@ type ClientTestSuite struct {
 }
 
 func TestClientTestSuite(t *testing.T) {
+	// unit test - creates offline LaunchDarkly client, tests instantiation logic
+	testlevels.UnitTest(t)
+
 	tests := &ClientTestSuite{
 		Suite:  suite.Suite{},
 		logger: zap.NewExample(),

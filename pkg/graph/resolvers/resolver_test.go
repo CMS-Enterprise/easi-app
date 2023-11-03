@@ -16,6 +16,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cmsgov/easi-app/pkg/testlevels"
 	"github.com/cmsgov/easi-app/pkg/upload"
 
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
@@ -36,6 +37,11 @@ func (suite *ResolverSuite) SetupTest() {
 
 // TestResolverSuite runs the resolver test suite
 func TestResolverSuite(t *testing.T) {
+	// can be run locally
+	// LaunchDarkly client is set up with Offline: true, doesn't actually contact LaunchDarkly
+	// S3 client uses Minio (locally and in CI) due to setting IsLocal: true
+	testlevels.LocalIntegrationTest(t)
+
 	rs := new(ResolverSuite)
 	rs.testConfigs = GetDefaultTestConfigs()
 	rs.fetchUserInfoStub = func(context.Context, string) (*models.UserInfo, error) {

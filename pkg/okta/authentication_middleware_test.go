@@ -17,6 +17,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cmsgov/easi-app/pkg/testlevels"
 )
 
 type AuthenticationMiddlewareTestSuite struct {
@@ -26,6 +27,8 @@ type AuthenticationMiddlewareTestSuite struct {
 }
 
 func TestAuthenticationMiddlewareTestSuite(t *testing.T) {
+	testlevels.UnitTest(t) // runs locally, testing the middleware against fake Okta tokens
+
 	config := testhelpers.NewConfig()
 	logger := zap.NewNop()
 
@@ -132,6 +135,8 @@ func (s *AuthenticationMiddlewareTestSuite) TestAuthorizeMiddleware() {
 }
 
 func TestJobCodes(t *testing.T) {
+	testlevels.UnitTest(t) // runs locally, just testing getting job codes from a (fake) Okta token
+
 	payload := `
 	{
 		"sub":"NASA",

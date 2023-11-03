@@ -14,6 +14,7 @@ import (
 	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
 	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cmsgov/easi-app/pkg/testlevels"
 )
 
 type ClientTestSuite struct {
@@ -22,6 +23,9 @@ type ClientTestSuite struct {
 }
 
 func TestClientTestSuite(t *testing.T) {
+	// unit test - creates offline LaunchDarkly client, tests instantiation and translation logic
+	testlevels.UnitTest(t)
+
 	tests := &ClientTestSuite{
 		Suite:  suite.Suite{},
 		logger: zap.NewExample(),
