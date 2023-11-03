@@ -2,7 +2,6 @@ package appses
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -13,6 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cmsgov/easi-app/pkg/testlevels"
 )
 
 type SESTestSuite struct {
@@ -22,24 +22,10 @@ type SESTestSuite struct {
 }
 
 func TestSESTestSuite(t *testing.T) {
-	// since this is an external service,
-	// skip when testing with --short
-	if testing.Short() {
-		return
-	}
+	testlevels.ExternalIntegrationTest(t) // external due to calling AWS SES
 
 	logger := zap.NewNop()
 	config := testhelpers.NewConfig()
-
-	env, err := appconfig.NewEnvironment(config.GetString(appconfig.EnvironmentKey))
-	if err != nil {
-		fmt.Printf("Failed to get environment: %v", err)
-		t.Fail()
-	}
-	if env.Local() {
-		fmt.Println("Skipping AWS SES test in local environment")
-		return
-	}
 
 	sesConfig := Config{
 		SourceARN: config.GetString(appconfig.AWSSESSourceARNKey),
