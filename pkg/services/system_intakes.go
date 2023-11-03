@@ -172,6 +172,8 @@ func NewArchiveSystemIntake(
 		intake.Status = models.SystemIntakeStatusWITHDRAWN
 		intake.ArchivedAt = &updatedTime
 
+		intake.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusWITHDRAWN)
+
 		intake, err = update(ctx, intake)
 		if err != nil {
 			return &apperrors.QueryError{
@@ -287,6 +289,7 @@ func NewUpdateLifecycleFields(
 		}
 
 		existing.Status = models.SystemIntakeStatusLCIDISSUED
+		existing.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusLCIDISSUED)
 		updated, err := update(ctx, existing)
 		if err != nil {
 			return nil, &apperrors.QueryError{
@@ -356,6 +359,7 @@ func NewUpdateRejectionFields(
 		existing.RejectionReason = intake.RejectionReason
 		existing.DecisionNextSteps = intake.DecisionNextSteps
 		existing.Status = models.SystemIntakeStatusNOTAPPROVED
+		existing.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusNOTAPPROVED)
 		updated, err := update(ctx, existing)
 		if err != nil {
 			return nil, err
@@ -406,7 +410,11 @@ func NewProvideGRTFeedback(
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		intake.Status = newStatus
+		intake.Status = newStatus // IT Gov V1
+
+		// Update IT Gov V2 fields based on `newStatus`
+		intake.SetV2FieldsBasedOnV1Status(newStatus)
+
 		intake, err = update(ctx, intake)
 		if err != nil {
 			return nil, err

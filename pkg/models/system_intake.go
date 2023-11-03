@@ -327,3 +327,77 @@ func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatu
 
 	return &issuedStatus
 }
+
+// SetV2FieldsBasedOnV1Status sets all IT Gov V2 fields based on a V1 status. This is effectively
+// an attempt to map V1 statuses to V2 fields.
+// NOTE: This could (and probably should) be the same mapping we use when running a DB migration to migrate
+// existing data
+func (si *SystemIntake) SetV2FieldsBasedOnV1Status(status SystemIntakeStatus) {
+	// TODO Figure out if the cases where we set `si.DecisionState` make sense
+	// TODO Figure out if RequestFormState, DraftBusinessCaseState, and FinalBusinessCaseState are all set properly
+	switch status {
+	case SystemIntakeStatusINTAKEDRAFT:
+		si.Step = SystemIntakeStepINITIALFORM
+		si.State = SystemIntakeStateOPEN
+		si.RequestFormState = SIRFSInProgress
+	case SystemIntakeStatusINTAKESUBMITTED:
+		si.Step = SystemIntakeStepINITIALFORM
+		si.State = SystemIntakeStateOPEN
+		si.RequestFormState = SIRFSSubmitted
+	case SystemIntakeStatusNEEDBIZCASE:
+		si.Step = SystemIntakeStepDRAFTBIZCASE
+		si.State = SystemIntakeStateOPEN
+		si.DraftBusinessCaseState = SIRFSNotStarted
+	case SystemIntakeStatusCLOSED:
+		si.State = SystemIntakeStateCLOSED
+	case SystemIntakeStatusAPPROVED:
+		// This status doesn't appear to be referenced in any V1 actions -- good riddance!
+	case SystemIntakeStatusREADYFORGRT:
+		si.Step = SystemIntakeStepGRTMEETING
+		si.State = SystemIntakeStateOPEN
+	case SystemIntakeStatusREADYFORGRB:
+		si.Step = SystemIntakeStepGRBMEETING
+		si.State = SystemIntakeStateOPEN
+	case SystemIntakeStatusWITHDRAWN:
+		// TODO - Do we even need to do anything here? Is setting `CLOSED` misleading?
+		// TODO - Should we set si.Step / si.DecisionState?
+		si.State = SystemIntakeStateCLOSED
+	case SystemIntakeStatusNOTITREQUEST:
+		si.Step = SystemIntakeStepDECISION
+		si.State = SystemIntakeStateCLOSED
+		si.DecisionState = SIDSNotGovernance
+	case SystemIntakeStatusLCIDISSUED:
+		si.Step = SystemIntakeStepDECISION
+		si.State = SystemIntakeStateCLOSED
+		si.DecisionState = SIDSLcidIssued
+	case SystemIntakeStatusBIZCASEDRAFT:
+		si.Step = SystemIntakeStepDRAFTBIZCASE
+		si.DraftBusinessCaseState = SIRFSInProgress
+	case SystemIntakeStatusBIZCASEDRAFTSUBMITTED:
+		si.Step = SystemIntakeStepDRAFTBIZCASE
+		si.DraftBusinessCaseState = SIRFSSubmitted
+	case SystemIntakeStatusBIZCASEFINALSUBMITTED:
+		si.Step = SystemIntakeStepFINALBIZCASE
+		si.FinalBusinessCaseState = SIRFSSubmitted
+	case SystemIntakeStatusBIZCASECHANGESNEEDED:
+		// TODO I think this is _only_ used for Draft Biz Cases -- Final Biz Cases use SystemIntakeStatusBIZCASEFINALNEEDED
+		// whether it's the first time submitting or if more changes are needed
+		si.Step = SystemIntakeStepDRAFTBIZCASE
+		si.DraftBusinessCaseState = SIRFSEditsRequested
+	case SystemIntakeStatusBIZCASEFINALNEEDED:
+		si.Step = SystemIntakeStepFINALBIZCASE
+		si.FinalBusinessCaseState = SIRFSEditsRequested // TODO Is this right? -- It could also be SIRFSEditsRequested if it's being requested for edits
+	case SystemIntakeStatusNOTAPPROVED:
+		si.State = SystemIntakeStateCLOSED
+		si.Step = SystemIntakeStepDECISION
+		si.DecisionState = SIDSNotApproved
+	case SystemIntakeStatusNOGOVERNANCE:
+		si.State = SystemIntakeStateCLOSED
+		si.Step = SystemIntakeStepDECISION
+		si.DecisionState = SIDSNotGovernance
+	case SystemIntakeStatusSHUTDOWNINPROGRESS:
+		// TODO Don't think this is actually needed since we don't support shutdowns
+	case SystemIntakeStatusSHUTDOWNCOMPLETE:
+		// TODO Don't think this is actually needed since we don't support shutdowns
+	}
+}
