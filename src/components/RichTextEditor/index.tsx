@@ -17,6 +17,7 @@ import {
 } from '@toast-ui/react-editor';
 import classNames from 'classnames';
 import DOMPurify from 'dompurify';
+import { FieldHookConfig, useField } from 'formik';
 
 import ExternalLinkModal from 'components/shared/ExternalLinkModal';
 
@@ -37,7 +38,16 @@ interface RichTextEditorProps extends EditorProps {
   /** Editable element div props */
   editableProps?: EditableProps;
   /** RHF controlled input field */
-  field?: ControllerRenderProps<any, any>;
+  field?:
+    | ControllerRenderProps<any, any>
+    /**
+     * Formik field alternative properties
+     */
+    | {
+        value: any;
+        onChange: (v: any) => void;
+        onBlur?: (...args: any[]) => void;
+      };
   required?: boolean;
 }
 
@@ -264,6 +274,8 @@ const linkAttributes = {
 function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
   const editorRef = React.createRef<Editor>();
 
+  console.debug('RichTextEditor field', field);
+
   // Make sure to apply mods only once
   useEffect(() => {
     const editor = editorRef.current;
@@ -287,7 +299,7 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
 
     if (
       editor &&
-      field?.value &&
+      typeof field?.value === 'string' &&
       // Skip the update if the passed in `field.value` already matches the instance contents.
       // Essentially makes sure this is only called when the passed value prop is updated,
       // since changes from within the editor instance will also update `field.value`.
@@ -320,7 +332,7 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
         // linkAttributes={linkAttributes}
 
         onBlur={() => {
-          field?.onBlur();
+          field?.onBlur?.();
         }}
         onChange={() => {
           const val = editorRef.current?.getInstance().getHTML() || '';
@@ -348,6 +360,29 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
 }
 
 export default RichTextEditor;
+
+/**
+ * Rich Text Editor field wrapper component for Formik.
+ * Adapts formik field properties to work with RHF.
+ */
+export function RichTextEditorFormikField({ ...props }: FieldHookConfig<any>) {
+  const [field, , helpers] = useField(props);
+  console.debug('RichTextEditorFormikField', props, field);
+
+  return (
+    <RichTextEditor
+      field={{
+        // Prefer the passed in prop since form fields are generally controlled inputs
+        value: props.value || field.value,
+        onChange: (v: any) => {
+          helpers.setValue(v);
+          props.onChange?.(v);
+        },
+        onBlur: props.onBlur
+      }}
+    />
+  );
+}
 
 interface RichTextViewerProps extends Omit<ViewerProps, 'initialValue'> {
   /** Wrapper div classname */

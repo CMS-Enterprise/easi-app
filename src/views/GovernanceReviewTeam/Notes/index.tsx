@@ -15,6 +15,7 @@ import {
   NotesList
 } from 'components/NotesList';
 import PageHeading from 'components/PageHeading';
+import { RichTextEditorFormikField } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -122,6 +123,8 @@ const Notes = () => {
     type: '' // TODO - make this an enum?
   });
 
+  console.debug('noteModal', noteModal);
+
   // Character limit for length of free text (LCID Scope, Next Steps, and Cost Baseline),
   // any text longer then this limit will be displayed with a button to allow users
   // to expand/unexpand the text
@@ -147,6 +150,12 @@ const Notes = () => {
   const initialValues = {
     note: ''
   };
+
+  // const enableRte = false;
+  // const enableOriginal = true;
+
+  const enableRte = true;
+  const enableOriginal = false;
 
   // New
   const notesByTimestamp =
@@ -189,6 +198,7 @@ const Notes = () => {
                   id="GovernanceReviewTeam-EditNoteButton"
                   unstyled
                   onClick={() => {
+                    console.log('edit note content', content);
                     setupNoteModal({
                       ...noteModal,
                       ...{
@@ -222,22 +232,45 @@ const Notes = () => {
                   <Label htmlFor="GovernanceReviewTeam-EditNote">
                     {t('notes.editModal.contentLabel')}
                   </Label>
-                  <Field
-                    as={TextAreaField}
-                    id="GovernanceReviewTeam-EditNote"
-                    name="editNote"
-                    className="easi-grt__note-textarea margin-bottom-4"
-                    onChange={(e: { target: { value: any } }) => {
-                      setupNoteModal({
-                        ...noteModal,
-                        ...{
-                          content: e.target.value
-                        }
-                      });
-                    }}
-                    value={noteModal.content}
-                    onBlur={() => {}}
-                  />
+                  {enableRte && (
+                    <RichTextEditorFormikField
+                      id="GovernanceReviewTeam-EditNote"
+                      name="editNote"
+                      className="easi-grt__note-textarea margin-bottom-4"
+                      onChange={(value: any) => {
+                        // if (id === noteModal.id) {
+                        console.log('RTE Field onChange value', value, id);
+                        setupNoteModal({
+                          ...noteModal,
+                          ...{
+                            content: value
+                          }
+                        });
+                        // }
+                      }}
+                      value={noteModal.content}
+                      onBlur={() => {}}
+                    />
+                  )}
+                  {enableOriginal && (
+                    <Field
+                      as={TextAreaField}
+                      id="GovernanceReviewTeam-EditNote"
+                      name="editNote"
+                      className="easi-grt__note-textarea margin-bottom-4"
+                      onChange={(e: { target: { value: any } }) => {
+                        console.log('Field onChange e', e, id);
+                        setupNoteModal({
+                          ...noteModal,
+                          ...{
+                            content: e.target.value
+                          }
+                        });
+                      }}
+                      value={noteModal.content}
+                      onBlur={() => {}}
+                    />
+                  )}
                   <Button
                     type="button"
                     id="GovernanceReviewTeam-SaveEditsButton"
@@ -507,6 +540,7 @@ const Notes = () => {
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {(formikProps: FormikProps<NoteForm>) => {
           const { values, handleSubmit } = formikProps;
+          console.debug('values', values);
           return (
             <div className="tablet:grid-col-9 margin-bottom-7">
               {createMutationResult && createMutationResult.error && (
@@ -527,13 +561,23 @@ const Notes = () => {
                   <Label htmlFor="GovernanceReviewTeam-Note">
                     {t('notes.addNote')}
                   </Label>
-                  <Field
-                    as={TextAreaField}
-                    id="GovernanceReviewTeam-Note"
-                    maxLength={2000}
-                    name="note"
-                    className="easi-grt__note-field"
-                  />
+                  {enableRte && (
+                    <RichTextEditorFormikField
+                      id="GovernanceReviewTeam-Note"
+                      maxLength={2000}
+                      name="note"
+                      className="easi-grt__note-field"
+                    />
+                  )}
+                  {enableOriginal && (
+                    <Field
+                      as={TextAreaField}
+                      id="GovernanceReviewTeam-Note"
+                      maxLength={2000}
+                      name="note"
+                      className="easi-grt__note-field"
+                    />
+                  )}
                 </FieldGroup>
                 <Button
                   className="margin-top-2"
