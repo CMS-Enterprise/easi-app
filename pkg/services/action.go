@@ -96,16 +96,18 @@ func NewSubmitSystemIntake(
 			return &apperrors.UnauthorizedError{Err: err}
 		}
 
+		// Check to see if this intake has already been submitted once (and, therefore, is a re-submission)
+		// isResubmission := intake.SubmittedAt != nil // TODO Uncomment this when we implement emails in EASI-3449
+
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
 		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		intake.RequestFormState = models.SIRFSSubmitted
+		intake.SubmittedAt = &updatedTime
 
 		intakeSubmittedToCedar := intake.AlfabetID.Valid // When submitted to CEDAR, the AlfabetID gets set. If set, we currently don't re-submit it
-
 		if !intakeSubmittedToCedar {
 			// Send SystemIntake to CEDAR Intake API
-			intake.SubmittedAt = &updatedTime
 			alfabetID, submitToCEDARErr := submitToCEDAR(ctx, intake)
 			if submitToCEDARErr != nil {
 				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(submitToCEDARErr))
