@@ -10,8 +10,8 @@ import {
   IconError,
   ModalRef
 } from '@trussworks/react-uswds';
-import classNames from 'classnames';
 
+import StateTag from 'components/StateTag';
 import { TRBAttendee } from 'queries/types/TRBAttendee';
 import {
   TRBRequestState,
@@ -129,17 +129,7 @@ export default function Summary({
               className="display-flex flex-align-center margin-y-05"
             >
               <h4 className="margin-y-0">{t('adminHome.status')}</h4>
-              <span
-                className={classNames(
-                  'text-white text-bold padding-y-05 padding-x-105 margin-x-1',
-                  {
-                    'bg-base': state === TRBRequestState.CLOSED,
-                    'bg-info-dark': state === TRBRequestState.OPEN
-                  }
-                )}
-              >
-                {t(`adminHome.${state.toLowerCase()}`)}
-              </span>
+              <StateTag state={state} />
               <p className="margin-y-0 text-base">{taskStatusText}</p>
             </Grid>
 
