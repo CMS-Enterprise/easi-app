@@ -243,8 +243,8 @@ const governanceReviewTeam = {
       'Jaime Cadwell',
       'Leah Nguyen',
       'Leilani Fields',
-      'Savannah Huttenberger',
       'Nicholas Downey',
+      'Savannah Huttenberger',
       'Tara Ross',
       'Valerie Hartz'
     ]
