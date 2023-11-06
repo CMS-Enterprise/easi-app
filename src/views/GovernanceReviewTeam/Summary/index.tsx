@@ -7,13 +7,15 @@ import {
   BreadcrumbBar,
   BreadcrumbLink,
   Button,
+  ButtonGroup,
   Grid,
   GridContainer,
-  IconError
+  IconError,
+  ModalFooter,
+  ModalHeading
 } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
-import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import StateTag from 'components/StateTag';
@@ -232,11 +234,11 @@ const RequestSummary = ({
           setModalOpen(false);
         }}
       >
-        <PageHeading headingLevel="h2" className="margin-top-0">
+        <ModalHeading>
           {t('governanceReviewTeam:adminLeads:assignModal.header', {
             requestName
           })}
-        </PageHeading>
+        </ModalHeading>
         <RadioGroup>
           {grtMembers.map(name => (
             <RadioField
@@ -247,30 +249,33 @@ const RequestSummary = ({
               name="admin-lead"
               value={name}
               onChange={e => setAdminLead(e.target.value)}
-              className="margin-y-3"
             />
           ))}
         </RadioGroup>
-        <Button
-          type="button"
-          className="margin-right-4"
-          onClick={() => {
-            // Set admin lead as newAdminLead in the intake
-            saveAdminLead();
-            setModalOpen(false);
-          }}
-        >
-          {t('governanceReviewTeam:adminLeads:assignModal.save')}
-        </Button>
-        <Button
-          type="button"
-          unstyled
-          onClick={() => {
-            setModalOpen(false);
-          }}
-        >
-          {t('governanceReviewTeam:adminLeads:assignModal.noChanges')}
-        </Button>
+        <ModalFooter>
+          <ButtonGroup>
+            <Button
+              type="button"
+              className="margin-right-1"
+              onClick={() => {
+                // Set admin lead as newAdminLead in the intake
+                saveAdminLead();
+                setModalOpen(false);
+              }}
+            >
+              {t('governanceReviewTeam:adminLeads:assignModal.save')}
+            </Button>
+            <Button
+              type="button"
+              unstyled
+              onClick={() => {
+                setModalOpen(false);
+              }}
+            >
+              {t('governanceReviewTeam:adminLeads:assignModal.noChanges')}
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
       </Modal>
     </div>
   );
