@@ -8,9 +8,11 @@ import {
   ButtonGroup,
   Form,
   FormGroup,
+  Grid,
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -28,7 +30,10 @@ import { SystemIntakeContactProps } from 'types/systemIntake';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
+import ActionsSummary, { ActionsSummaryProps } from './ActionsSummary';
 import EmailRecipientsFields from './EmailRecipientsFields';
+
+import './ActionForm.scss';
 
 export interface SystemIntakeActionFields {
   additionalInfo: string;
@@ -50,6 +55,8 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
     title: string;
     content: React.ReactNode;
   };
+  /** Props to display the ActionsSummary component to the right of action form */
+  actionsSummaryProps?: ActionsSummaryProps;
   /** Show required fields text */
   requiredFields?: boolean;
   /** Disable form submit buttons */
@@ -81,6 +88,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   successMessage,
   onSubmit,
   modal,
+  actionsSummaryProps,
   requiredFields = true,
   disableSubmit,
   errorKeyContext,
@@ -276,139 +284,157 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           </Alert>
         )
       }
-
-      <Form
-        {...formProps}
-        onSubmit={submitForm}
-        className="maxw-none margin-top-6 tablet:grid-col-6"
+      <Grid
+        row
+        className={classNames('it-gov-action-form-row margin-top-6', {
+          'grid-gap': !!actionsSummaryProps
+        })}
       >
-        {children}
+        <Form
+          {...formProps}
+          onSubmit={submitForm}
+          className="maxw-none grid-col tablet:grid-col-6 margin-bottom-6 tablet:margin-bottom-0"
+        >
+          {children}
 
-        {/* Notification email */}
-        <h3 className="margin-bottom-0 margin-top-6">
-          {t('notification.heading')}
-        </h3>
-        <Alert type="info" slim>
-          {t('notification.alert')}
-        </Alert>
-        <Trans
-          i18nKey="action:notification.description"
-          components={{ p: <p className="line-height-body-5" /> }}
-        />
+          {/* Notification email */}
+          <h3 className="margin-bottom-0 margin-top-6">
+            {t('notification.heading')}
+          </h3>
+          <Alert type="info" slim>
+            {t('notification.alert')}
+          </Alert>
+          <Trans
+            i18nKey="action:notification.description"
+            components={{ p: <p className="line-height-body-5" /> }}
+          />
 
-        {/* Additional information */}
-        <Controller
-          control={control}
-          name="additionalInfo"
-          render={({ field, fieldState: { error } }) => (
-            <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal">
-                {t('notification.additionalInformation')}
-              </Label>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <TextAreaField
-                {...field}
-                ref={null}
-                id={field.name}
-                size="sm"
-                characterCounter={false}
-              />
-            </FormGroup>
-          )}
-        />
+          {/* Additional information */}
+          <Controller
+            control={control}
+            name="additionalInfo"
+            render={({ field, fieldState: { error } }) => (
+              <FormGroup error={!!error}>
+                <Label htmlFor={field.name} className="text-normal">
+                  {t('notification.additionalInformation')}
+                </Label>
+                {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                <TextAreaField
+                  {...field}
+                  ref={null}
+                  id={field.name}
+                  size="sm"
+                  characterCounter={false}
+                />
+              </FormGroup>
+            )}
+          />
 
-        {/* Notification recipients */}
-        <EmailRecipientsFields
-          className="margin-top-6"
-          systemIntakeId={systemIntakeId}
-          activeContact={activeContact}
-          setActiveContact={setActiveContact}
-          contacts={contacts}
-          recipients={recipients}
-          setRecipients={values => setValue('notificationRecipients', values)}
-          error={errors.notificationRecipients?.message || ''}
-        />
+          {/* Notification recipients */}
+          <EmailRecipientsFields
+            className="margin-top-6"
+            systemIntakeId={systemIntakeId}
+            activeContact={activeContact}
+            setActiveContact={setActiveContact}
+            contacts={contacts}
+            recipients={recipients}
+            setRecipients={values => setValue('notificationRecipients', values)}
+            error={errors.notificationRecipients?.message || ''}
+          />
 
-        {/* Admin note */}
-        <Controller
-          control={control}
-          name="adminNote"
-          render={({ field, fieldState: { error } }) => (
-            <FormGroup
-              error={!!error}
-              className="bg-base-lightest padding-2 margin-top-6"
+          {/* Admin note */}
+          <Controller
+            control={control}
+            name="adminNote"
+            render={({ field, fieldState: { error } }) => (
+              <FormGroup
+                error={!!error}
+                className="bg-base-lightest padding-2 margin-top-6"
+              >
+                <h3 className="margin-y-0">{t('adminNote.title')}</h3>
+                <p className="line-height-body-5 margin-y-1">
+                  {t('adminNote.description')}
+                </p>
+                <Label
+                  htmlFor={field.name}
+                  className="text-normal margin-top-2"
+                >
+                  {t('adminNote.label')}
+                </Label>
+                {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                <TextAreaField
+                  {...field}
+                  ref={null}
+                  id={field.name}
+                  size="sm"
+                  characterCounter={false}
+                />
+              </FormGroup>
+            )}
+          />
+
+          {modal && (
+            <Modal
+              isOpen={modalIsOpen}
+              closeModal={() => setModalIsOpen(false)}
             >
-              <h3 className="margin-y-0">{t('adminNote.title')}</h3>
-              <p className="line-height-body-5 margin-y-1">
-                {t('adminNote.description')}
-              </p>
-              <Label htmlFor={field.name} className="text-normal margin-top-2">
-                {t('adminNote.label')}
-              </Label>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <TextAreaField
-                {...field}
-                ref={null}
-                id={field.name}
-                size="sm"
-                characterCounter={false}
-              />
-            </FormGroup>
+              <ModalHeading>{t(modal.title)}</ModalHeading>
+              {modal.content}
+              <ModalFooter>
+                <ButtonGroup>
+                  <Button
+                    type="button"
+                    onClick={() => completeAction(watch() as TFieldValues)}
+                    className="margin-right-1"
+                  >
+                    {t('completeAction')}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setModalIsOpen(false)}
+                    unstyled
+                  >
+                    Go back
+                  </Button>
+                </ButtonGroup>
+              </ModalFooter>
+            </Modal>
           )}
-        />
 
-        {modal && (
-          <Modal isOpen={modalIsOpen} closeModal={() => setModalIsOpen(false)}>
-            <ModalHeading>{t(modal.title)}</ModalHeading>
-            {modal.content}
-            <ModalFooter>
-              <ButtonGroup>
-                <Button
-                  type="button"
-                  onClick={() => completeAction(watch() as TFieldValues)}
-                  className="margin-right-1"
-                >
-                  {t('completeAction')}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => setModalIsOpen(false)}
-                  unstyled
-                >
-                  Go back
-                </Button>
-              </ButtonGroup>
-            </ModalFooter>
-          </Modal>
+          <Pager
+            // Complete action
+            back={{
+              text: t('completeAction'),
+              disabled:
+                disableSubmit ||
+                isSubmitting ||
+                !recipientsSelected ||
+                modalIsOpen,
+              outline: false,
+              type: 'submit',
+              onClick: () => setSendEmail(true)
+            }}
+            // Complete action without sending email
+            next={{
+              text: t('completeActionWithoutEmail'),
+              outline: true,
+              disabled: disableSubmit || isSubmitting || modalIsOpen,
+              onClick: () => setSendEmail(false)
+            }}
+            taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
+            saveExitText={t('cancelAction')}
+            border={false}
+            className="margin-top-6"
+            submitDisabled
+          />
+        </Form>
+
+        {!!actionsSummaryProps && (
+          <Grid col={12} tablet={{ col: 6 }}>
+            <ActionsSummary {...actionsSummaryProps} />
+          </Grid>
         )}
-
-        <Pager
-          // Complete action
-          back={{
-            text: t('completeAction'),
-            disabled:
-              disableSubmit ||
-              isSubmitting ||
-              !recipientsSelected ||
-              modalIsOpen,
-            outline: false,
-            type: 'submit',
-            onClick: () => setSendEmail(true)
-          }}
-          // Complete action without sending email
-          next={{
-            text: t('completeActionWithoutEmail'),
-            outline: true,
-            disabled: disableSubmit || isSubmitting || modalIsOpen,
-            onClick: () => setSendEmail(false)
-          }}
-          taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
-          saveExitText={t('cancelAction')}
-          border={false}
-          className="margin-top-6"
-          submitDisabled
-        />
-      </Form>
+      </Grid>
     </div>
   );
 };

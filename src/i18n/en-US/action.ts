@@ -72,7 +72,9 @@ const action = {
     intakeFormStep: 'Which form needs edits?',
     emailFeedback: 'What changes are needed?',
     reason: 'Why are you expiring this Life Cycle ID?',
-    reason_notApproved: 'Reason'
+    reason_notApproved: 'Reason',
+    newStep: 'New step',
+    meetingDate: 'Meeting date'
   },
   manageLcid: {
     title: 'Manage a Life Cycle ID (LCID)',
@@ -286,6 +288,8 @@ const action = {
   },
   decisionModal: {
     title: 'Are you sure you want to complete this decision action?',
+    title_nextStep:
+      'Are you sure you want to complete this action to progress to a new step?',
     content:
       'You previously requested that the team make changes to their {{action}}. Completing this decision action will remove the “Edits requested” status from that form, and the requester will no longer be able to make any changes.',
     intakeRequest: 'intake request form',
@@ -299,13 +303,13 @@ const action = {
     RETIRED: 'Retired',
     RETIRING_SOON: 'Retiring soon'
   },
+  pastDateAlert:
+    "You've entered a date that is in the past. Please double-check to make sure this date is accurate.",
   retireLcid: {
     retirementDate: 'Life Cycle ID retirement date',
     retirementDateHelpText:
       'If you select a future date, this project team will not continue to recieve automatic updates about their Life Cycle ID, and the LCID will me marked as retired on the chosen date.',
     format: 'Format: mm/dd/yyyy',
-    pastDateAlert:
-      "You've entered a date that is in the past. Please double-check to make sure this date is accurate.",
     reason: 'Why are you retiring this Life Cycle ID? (optional)',
     reasonHelpText:
       'Provide any additional details as to why you are retiring this LCID.',
@@ -367,8 +371,36 @@ const action = {
     submissionInfo:
       'The content for this email is automatically generated to notify the Requester of the new expiration date.'
   },
-  nextStep: {
-    title: 'Action: next steps'
+  progressToNewStep: {
+    success: 'Action complete. This request is now ready for a {{newStep}}.',
+    title: 'Action: progress to a new step',
+    description:
+      'Use this action if this request is ready to move to a new step in the IT Governance process.',
+    breadcrumb: 'Progress to a new step',
+    newStep:
+      'Which step of the IT Governance process should this request move to?',
+    DRAFT_BUSINESS_CASE: 'Draft Business Case',
+    draftBusinessCaseDescription:
+      'Choose this step if this request requires a business case and a GRT meeting. This will unlock the Business Case for the requester.',
+    GRT_MEETING: 'GRT meeting',
+    grtMeetingDescription:
+      'Choose this step if the request either does not need a Business Case, but should be reviewed by the GRT, or if the draft Business Case is complete and the request is ready for the GRT.',
+    meetingDate: 'Meeting date',
+    meetingDateHelpText:
+      'Adding a date here will replace any {{type}} date already entered.',
+    FINAL_BUSINESS_CASE: 'Final Business Case',
+    finalBusinessCaseDescription:
+      'Choose this step if this request is ready for a final Business Case and subsequent GRB meeting, either because the draft Business Case is complete, or because this request is skipping the GRT.',
+    GRB_MEETING: 'GRB meeting',
+    grbMeetingDescription:
+      'Choose this step if the final Business case is complete and this team is ready to meet with the GRB.',
+    feedback: 'Feedback for the requester (optional)',
+    feedbackHelpText:
+      'If there is any extra feedback you would like to give to the requester as they progress to the next step, input that feedback here. This includes any feedback from the GRT for the requester.',
+    grbRecommendations: 'Recommendations for the GRB (optional)',
+    grbRecommendationsHelpText:
+      'Add any extra context or recommendations that you would like the Governance Review Board (GRB) to consider as a part of their evaluation of this project. The requester will be able to see these recommendations.',
+    summaryBoxHeading: 'Steps of the IT Governance process'
   },
   notItGovRequest: {
     reason: 'Why is this not an IT Governance request? (optional)',

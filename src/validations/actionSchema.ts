@@ -1,7 +1,11 @@
+import i18next from 'i18next';
 import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
-import { SystemIntakeTRBFollowUp } from 'types/graphql-global-types';
+import {
+  SystemIntakeStepToProgressTo,
+  SystemIntakeTRBFollowUp
+} from 'types/graphql-global-types';
 
 const skippableEmail = Yup.string().when('shouldSendEmail', {
   is: false,
@@ -195,3 +199,39 @@ export const notApprovedSchema = Yup.object().shape({
     .oneOf(Object.values(SystemIntakeTRBFollowUp))
     .required('Please make a selection')
 });
+
+export const progressToNewStepSchema = (
+  currentStep: SystemIntakeStepToProgressTo | undefined
+) => {
+  const currentStepLabel = i18next.t(`action:progressToNewStep.${currentStep}`);
+
+  return Yup.object().shape({
+    newStep: Yup.mixed<SystemIntakeStepToProgressTo>()
+      .oneOf(
+        // Filter current step out of valid options
+        Object.values(SystemIntakeStepToProgressTo).filter(
+          option => option !== currentStep
+        ),
+        ({ value }) => {
+          // Error if selected value is current step
+          if (value !== currentStep) return 'Please select a valid next step.';
+          return `This request is already at the ${currentStepLabel} step. Please select a different step.`;
+        }
+      )
+      .required('Please make a selection'),
+    // Meeting date required if new step is GRB or GRT meeting
+    meetingDate: Yup.date().when('newStep', {
+      is: (val: SystemIntakeStepToProgressTo) =>
+        [
+          SystemIntakeStepToProgressTo.GRT_MEETING,
+          SystemIntakeStepToProgressTo.GRB_MEETING
+        ].includes(val),
+      then: Yup.date()
+        .required('Please enter a valid date')
+        .nullable()
+        .typeError('Please enter a valid date')
+    }),
+    feedback: Yup.string(),
+    grbRecommendations: Yup.string()
+  });
+};
