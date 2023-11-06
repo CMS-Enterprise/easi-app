@@ -347,7 +347,7 @@ func (si *SystemIntake) SetV2FieldsBasedOnV1Status(status SystemIntakeStatus) {
 	case SystemIntakeStatusNEEDBIZCASE:
 		si.Step = SystemIntakeStepDRAFTBIZCASE
 		si.State = SystemIntakeStateOPEN
-		si.DraftBusinessCaseState = SIRFSNotStarted
+		// not setting si.DraftBusinessCaseState since `SIRFSNotStarted` is the default in the table
 	case SystemIntakeStatusCLOSED:
 		si.State = SystemIntakeStateCLOSED
 	case SystemIntakeStatusAPPROVED:
@@ -359,8 +359,6 @@ func (si *SystemIntake) SetV2FieldsBasedOnV1Status(status SystemIntakeStatus) {
 		si.Step = SystemIntakeStepGRBMEETING
 		si.State = SystemIntakeStateOPEN
 	case SystemIntakeStatusWITHDRAWN:
-		// TODO - Do we even need to do anything here? Is setting `CLOSED` misleading?
-		// TODO - Should we set si.Step / si.DecisionState?
 		si.State = SystemIntakeStateCLOSED
 	case SystemIntakeStatusNOTITREQUEST:
 		si.Step = SystemIntakeStepDECISION
@@ -372,21 +370,24 @@ func (si *SystemIntake) SetV2FieldsBasedOnV1Status(status SystemIntakeStatus) {
 		si.DecisionState = SIDSLcidIssued
 	case SystemIntakeStatusBIZCASEDRAFT:
 		si.Step = SystemIntakeStepDRAFTBIZCASE
+		si.State = SystemIntakeStateOPEN
 		si.DraftBusinessCaseState = SIRFSInProgress
 	case SystemIntakeStatusBIZCASEDRAFTSUBMITTED:
 		si.Step = SystemIntakeStepDRAFTBIZCASE
+		si.State = SystemIntakeStateOPEN
 		si.DraftBusinessCaseState = SIRFSSubmitted
 	case SystemIntakeStatusBIZCASEFINALSUBMITTED:
 		si.Step = SystemIntakeStepFINALBIZCASE
+		si.State = SystemIntakeStateOPEN
 		si.FinalBusinessCaseState = SIRFSSubmitted
 	case SystemIntakeStatusBIZCASECHANGESNEEDED:
-		// TODO I think this is _only_ used for Draft Biz Cases -- Final Biz Cases use SystemIntakeStatusBIZCASEFINALNEEDED
-		// whether it's the first time submitting or if more changes are needed
 		si.Step = SystemIntakeStepDRAFTBIZCASE
+		si.State = SystemIntakeStateOPEN
 		si.DraftBusinessCaseState = SIRFSEditsRequested
 	case SystemIntakeStatusBIZCASEFINALNEEDED:
 		si.Step = SystemIntakeStepFINALBIZCASE
-		si.FinalBusinessCaseState = SIRFSEditsRequested // TODO Is this right? -- It could also be SIRFSEditsRequested if it's being requested for edits
+		si.State = SystemIntakeStateOPEN
+		si.FinalBusinessCaseState = SIRFSEditsRequested // Safely default to this since we don't know if it's the first time submitting or if more changes are needed
 	case SystemIntakeStatusNOTAPPROVED:
 		si.State = SystemIntakeStateCLOSED
 		si.Step = SystemIntakeStepDECISION
@@ -396,8 +397,8 @@ func (si *SystemIntake) SetV2FieldsBasedOnV1Status(status SystemIntakeStatus) {
 		si.Step = SystemIntakeStepDECISION
 		si.DecisionState = SIDSNotGovernance
 	case SystemIntakeStatusSHUTDOWNINPROGRESS:
-		// TODO Don't think this is actually needed since we don't support shutdowns
+		// This status is not needed since we don't support shutdowns
 	case SystemIntakeStatusSHUTDOWNCOMPLETE:
-		// TODO Don't think this is actually needed since we don't support shutdowns
+		// This status is not needed since we don't support shutdowns
 	}
 }
