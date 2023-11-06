@@ -157,6 +157,7 @@ exports[`Submit Action > renders additional contacts 1`] = `
               </h4>
               <span
                 class="display-flex flex-align-center"
+                data-testid="admin-lead"
               >
                 <svg
                   class="usa-icon text-error margin-right-05"
