@@ -102,7 +102,10 @@ export default function Summary({
               <h5 className="text-normal margin-y-0">
                 {t('adminHome.submissionDate')}
               </h5>
-              <h4 className="margin-top-05 margin-bottom-2">
+              <h4
+                className="margin-top-05 margin-bottom-2"
+                data-testid="trbSummary-submissionDate"
+              >
                 {t(submissionDate)}
               </h4>
             </Grid>
@@ -120,11 +123,13 @@ export default function Summary({
                 <h4 className="margin-right-1">{t('adminHome.status')}</h4>
                 <StateTag state={state} />
               </div>
-              <p className="text-base-dark">{taskStatusText}</p>
+              <p className="text-base-dark" data-testid="trbSummary-status">
+                {taskStatusText}
+              </p>
             </Grid>
 
             {/* TRB Lead */}
-            <Grid tablet={{ col: 4 }}>
+            <Grid tablet={{ col: 4 }} data-testid="trbSummary-trbLead">
               <h4 className="text-no-wrap width-full tablet:width-auto">
                 {t('adminHome.trbLead')}
               </h4>
