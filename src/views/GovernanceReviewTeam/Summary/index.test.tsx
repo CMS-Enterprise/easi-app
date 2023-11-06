@@ -60,7 +60,7 @@ describe('The GRT Review page', () => {
     );
 
     expect(
-      within(screen.getByTestId('grt-status')).getByText('Open')
+      within(screen.getByTestId('request-state')).getByText('Open')
     ).toBeInTheDocument();
   });
 
@@ -74,7 +74,7 @@ describe('The GRT Review page', () => {
     );
 
     expect(
-      within(screen.getByTestId('grt-status')).getByText('Closed')
+      within(screen.getByTestId('request-state')).getByText('Closed')
     ).toBeInTheDocument();
   });
 

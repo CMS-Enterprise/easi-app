@@ -205,7 +205,7 @@ const RequestSummary = ({
                 <h4 className="margin-right-1">{t('status.label')}</h4>
                 <StateTag state={state} />
               </div>
-              <p className="text-base-dark">
+              <p className="text-base-dark" data-testid="grt-current-status">
                 {
                   /* TODO EASI-3440: Update to use v2 statuses */
                   translateStatus(status, lcid)

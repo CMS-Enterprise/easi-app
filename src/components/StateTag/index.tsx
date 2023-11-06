@@ -18,6 +18,7 @@ const StateTag = ({ state, className }: StateTagProps) => {
 
   return (
     <Tag
+      data-testid="request-state"
       className={classNames('easi-state-tag', className, {
         'text-white bg-info-dark': state === SystemIntakeState.OPEN,
         'bg-base-light': state === SystemIntakeState.CLOSED
