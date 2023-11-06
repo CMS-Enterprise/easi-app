@@ -2,22 +2,6 @@
 @use 'colors' as *;
 
 .easi-grt {
-  // Overriding USWDS to change the Breadcrumb caret to white
-  // The BG color is blue so by default, there's not enough color contrast
-  &__request-summary .usa-breadcrumb__list-item:not(:last-child)::after {
-    background-color: color('white');
-  }
-
-  &__request-info {
-    dt {
-      margin-top: 1rem;
-      margin-bottom: 0.25rem;
-    }
-    dd {
-      margin: 0;
-      font-weight: 700;
-    }
-  }
 
   &__nav-list {
     padding: 0;
@@ -44,12 +28,6 @@
     &--border {
       border-bottom: 1px solid color('disabled-light');
       padding-bottom: 0.75rem;
-    }
-  }
-
-  &__status-info {
-    dd {
-      margin: 0;
     }
   }
 

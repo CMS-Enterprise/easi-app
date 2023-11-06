@@ -7,6 +7,8 @@ import {
   BreadcrumbBar,
   BreadcrumbLink,
   Button,
+  Grid,
+  GridContainer,
   IconError
 } from '@trussworks/react-uswds';
 
@@ -28,6 +30,8 @@ import {
 } from 'utils/systemIntake';
 
 import StatusTag from './StatusTag';
+
+import './index.scss';
 
 type RequestSummaryProps = {
   id: string;
@@ -77,7 +81,7 @@ const RequestSummary = ({
 
     return (
       <>
-        <span className="display-flex flex-align-center margin-right-1">
+        <span className="display-flex flex-align-center">
           {!adminLead && (
             <IconError className="text-secondary margin-right-05" />
           )}
@@ -123,8 +127,8 @@ const RequestSummary = ({
   });
 
   return (
-    <>
-      <section className="easi-grt__request-summary bg-primary-darker">
+    <div className="easi-admin-summary">
+      <section className="easi-admin-summary__request-details bg-primary-darker">
         {/* Update admin lead error */}
         {mutationResult.error && (
           <ErrorAlert heading="System error">
@@ -135,8 +139,8 @@ const RequestSummary = ({
           </ErrorAlert>
         )}
 
-        {/* Request summary */}
-        <div className="grid-container padding-bottom-2 text-white">
+        <GridContainer className="text-white padding-bottom-1">
+          {/* Breadcrumbs */}
           <BreadcrumbBar variant="wrap" className="bg-transparent text-white">
             <Breadcrumb>
               <BreadcrumbLink
@@ -150,86 +154,76 @@ const RequestSummary = ({
             <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
 
-          <h2 className="margin-y-0">{requestName}</h2>
+          {/* Request summary */}
+          <h2 className="margin-top-05 margin-bottom-2">{requestName}</h2>
 
-          <dl className="easi-grt__request-info grid-row grid-gap margin-top-0">
-            <div className="tablet:grid-col-8">
-              <dt className="font-body-xs">{t('requestType')}</dt>
-              <dd>{translateRequestType(requestType)}</dd>
+          <Grid row gap>
+            <Grid tablet={{ col: 8 }}>
+              <h5 className="text-normal margin-y-0">{t('requestType')}</h5>
+              <h4 className="margin-top-05 margin-bottom-2">
+                {translateRequestType(requestType)}
+              </h4>
 
-              <dt className="font-body-xs">
+              <h5 className="text-normal margin-y-0">
                 {t('intake:review.contractNumber')}
-              </dt>
-              <dd>{contractNumber || t('intake:review.noContractNumber')}</dd>
-            </div>
+              </h5>
+              <h4 className="margin-top-05 margin-bottom-2">
+                {contractNumber || t('intake:review.noContractNumber')}
+              </h4>
+            </Grid>
 
-            <div className="tablet:grid-col-4">
-              <dt className="font-body-xs">
+            <Grid tablet={{ col: 4 }}>
+              <h5 className="text-normal margin-y-0">
                 {t('intake:contactDetails.requester')}
-              </dt>
-              <dd>
+              </h5>
+              <h4 className="margin-top-05 margin-bottom-2">
                 {getPersonNameAndComponentAcronym(
                   requester?.name || '',
                   requester?.component
                 )}
-              </dd>
+              </h4>
 
-              <dt className="font-body-xs">
+              <h5 className="text-normal margin-y-0">
                 {t('intake:fields.submissionDate')}
-              </dt>
-              <dd>
+              </h5>
+              <h4 className="margin-top-05 margin-bottom-2">
                 {submittedAt
                   ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
                   : 'N/A'}
-              </dd>
-            </div>
-          </dl>
-        </div>
+              </h4>
+            </Grid>
+          </Grid>
+        </GridContainer>
+      </section>
 
-        {/* Status & admin lead info */}
-        <div className="bg-base-lightest">
-          <div className="grid-container padding-y-105">
-            <dl className="easi-grt__status-group grid-row grid-gap margin-y-0">
-              <div className="easi-grt__status-info display-flex flex-wrap flex-align-center desktop:grid-col-8 margin-bottom-1 desktop:margin-bottom-0">
-                <dt className="margin-right-1">
-                  <h4 className="margin-y-0">{t('status.label')}</h4>
-                </dt>
-                <dd className="margin-right-1" data-testid="grt-status">
-                  <StatusTag state={state} />
-                </dd>
-                <dd
-                  data-testid="grt-current-status"
-                  className="margin-top-05 tablet:margin-top-0 width-full tablet:width-auto"
-                >
-                  {
-                    /* TODO EASI-3440: Update to use v2 statuses */
-                    translateStatus(status, lcid)
-                  }
-                  <Link
-                    to={`/governance-review-team/${id}/actions`}
-                    className="margin-0 margin-left-1"
-                  >
-                    {t('action:takeAnAction')}
-                  </Link>
-                </dd>
+      {/* Status & admin lead info */}
+      <section className="easi-admin-summary__status bg-base-lightest">
+        <GridContainer className="padding-y-1">
+          <Grid row gap>
+            {/* Status */}
+            <Grid desktop={{ col: 8 }}>
+              <div>
+                <h4 className="margin-right-1">{t('status.label')}</h4>
+                <StatusTag state={state} />
               </div>
+              {
+                /* TODO EASI-3440: Update to use v2 statuses */
+                translateStatus(status, lcid)
+              }
+              <Link to={`/governance-review-team/${id}/actions`}>
+                {t('action:takeAnAction')}
+              </Link>
+            </Grid>
 
-              <div className="tablet:display-flex flex-align-center desktop:grid-col-4">
-                <dt className="margin-right-1 margin-bottom-05 tablet:margin-bottom-0 width-full tablet:width-auto">
-                  <h4 className="margin-y-0 text-no-wrap">
-                    {t('intake:fields.adminLead')}
-                  </h4>
-                </dt>
-                <dd
-                  className="margin-x-0 display-flex flex-wrap"
-                  data-testid="admin-lead"
-                >
-                  <AdminLead />
-                </dd>
-              </div>
-            </dl>
-          </div>
-        </div>
+            {/* Admin lead */}
+            <Grid desktop={{ col: 4 }}>
+              <h4 className="text-no-wrap width-full tablet:width-auto">
+                {t('intake:fields.adminLead')}
+              </h4>
+              <AdminLead />
+            </Grid>
+          </Grid>
+        </GridContainer>
       </section>
 
       {/* Change admin lead modal */}
@@ -279,7 +273,7 @@ const RequestSummary = ({
           {t('governanceReviewTeam:adminLeads:assignModal.noChanges')}
         </Button>
       </Modal>
-    </>
+    </div>
   );
 };
 
