@@ -81,9 +81,7 @@ const RequestSummary = ({
     return (
       <>
         <span className="display-flex flex-align-center">
-          {!adminLead && (
-            <IconError className="text-secondary margin-right-05" />
-          )}
+          {!adminLead && <IconError className="text-error margin-right-05" />}
           {adminLead || t('governanceReviewTeam:adminLeads.notAssigned')}
         </span>
         <Button
@@ -205,10 +203,12 @@ const RequestSummary = ({
                 <h4 className="margin-right-1">{t('status.label')}</h4>
                 <StateTag state={state} />
               </div>
-              {
-                /* TODO EASI-3440: Update to use v2 statuses */
-                translateStatus(status, lcid)
-              }
+              <p className="text-base-dark">
+                {
+                  /* TODO EASI-3440: Update to use v2 statuses */
+                  translateStatus(status, lcid)
+                }
+              </p>
               <Link to={`/governance-review-team/${id}/actions`}>
                 {t('action:takeAnAction')}
               </Link>
