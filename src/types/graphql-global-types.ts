@@ -300,6 +300,28 @@ export enum SystemIntakeStatus {
 }
 
 /**
+ * SystemIntakeStep represents the current step in the intake process
+ */
+export enum SystemIntakeStep {
+  DECISION_AND_NEXT_STEPS = "DECISION_AND_NEXT_STEPS",
+  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
+  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
+  GRB_MEETING = "GRB_MEETING",
+  GRT_MEETING = "GRT_MEETING",
+  INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
+}
+
+/**
+ * Steps in the system intake process that a Progress to New Step action can progress to
+ */
+export enum SystemIntakeStepToProgressTo {
+  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
+  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
+  GRB_MEETING = "GRB_MEETING",
+  GRT_MEETING = "GRT_MEETING",
+}
+
+/**
  * Different options for whether the Governance team believes a requester's team should consult with the TRB
  */
 export enum SystemIntakeTRBFollowUp {
@@ -1004,6 +1026,20 @@ export interface SystemIntakeNotITGovReqInput {
 export interface SystemIntakeProductManagerInput {
   name: string;
   component: string;
+}
+
+/**
+ * Input for submitting a Progress to New Step action in IT Gov v2
+ */
+export interface SystemIntakeProgressToNewStepsInput {
+  systemIntakeID: UUID;
+  newStep: SystemIntakeStepToProgressTo;
+  meetingDate?: Time | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  feedback?: HTML | null;
+  grbRecommendations?: HTML | null;
+  additionalInfo?: HTML | null;
+  adminNote?: HTML | null;
 }
 
 /**

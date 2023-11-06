@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ITGovIntakeFormStatus, ITGovFeedbackStatus, ITGovDraftBusinessCaseStatus, ITGovGRTStatus, ITGovFinalBusinessCaseStatus, ITGovGRBStatus, ITGovDecisionStatus, GovernanceRequestFeedbackTargetForm } from "./../../types/graphql-global-types";
+import { ITGovIntakeFormStatus, ITGovFeedbackStatus, ITGovDraftBusinessCaseStatus, ITGovGRTStatus, ITGovFinalBusinessCaseStatus, ITGovGRBStatus, ITGovDecisionStatus, GovernanceRequestFeedbackTargetForm, SystemIntakeStep } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetGovernanceTaskList
@@ -40,6 +40,7 @@ export interface GetGovernanceTaskList_systemIntake {
   updatedAt: Time | null;
   grtDate: Time | null;
   grbDate: Time | null;
+  step: SystemIntakeStep;
   businessCase: GetGovernanceTaskList_systemIntake_businessCase | null;
 }
 

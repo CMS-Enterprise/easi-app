@@ -22,6 +22,7 @@ function Breadcrumbs({ items }: BreadcrumbsProps) {
     <BreadcrumbBar
       navProps={{ style: { backgroundColor: 'transparent' } }}
       className="padding-bottom-0"
+      variant="wrap"
     >
       {items.map((link, idx) => {
         if (idx === items.length - 1) {

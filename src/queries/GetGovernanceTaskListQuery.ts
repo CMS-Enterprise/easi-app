@@ -22,6 +22,8 @@ export default gql`
       grtDate
       grbDate
 
+      step
+
       businessCase {
         id
       }
