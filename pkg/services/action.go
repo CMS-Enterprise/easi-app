@@ -96,9 +96,6 @@ func NewSubmitSystemIntake(
 			return &apperrors.UnauthorizedError{Err: err}
 		}
 
-		// Check to see if this intake has already been submitted once (and, therefore, is a re-submission)
-		// isResubmission := intake.SubmittedAt != nil // TODO Uncomment this when we implement emails in EASI-3449
-
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
 		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
