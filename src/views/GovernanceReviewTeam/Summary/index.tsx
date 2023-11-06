@@ -82,7 +82,10 @@ const RequestSummary = ({
 
     return (
       <>
-        <span className="display-flex flex-align-center">
+        <span
+          className="display-flex flex-align-center"
+          data-testid="admin-lead"
+        >
           {!adminLead && <IconError className="text-error margin-right-05" />}
           {adminLead || t('governanceReviewTeam:adminLeads.notAssigned')}
         </span>
