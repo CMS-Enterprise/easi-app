@@ -6,17 +6,19 @@ import { lowerCase } from 'lodash';
 import Tag from 'components/shared/Tag';
 import { SystemIntakeState } from 'types/graphql-global-types';
 
-type StatusTagProps = { state: SystemIntakeState };
+import './index.scss';
+
+type StateTagProps = { state: 'OPEN' | 'CLOSED'; className?: string };
 
 /**
- * Tag to display system intake open/closed status
+ * Tag to display open/closed state
  */
-const StatusTag = ({ state }: StatusTagProps) => {
+const StateTag = ({ state, className }: StateTagProps) => {
   const { t } = useTranslation('governanceReviewTeam');
 
   return (
     <Tag
-      className={classNames('margin-0', {
+      className={classNames('easi-state-tag', className, {
         'text-white bg-info-dark': state === SystemIntakeState.OPEN,
         'bg-base-light': state === SystemIntakeState.CLOSED
       })}
@@ -26,4 +28,4 @@ const StatusTag = ({ state }: StatusTagProps) => {
   );
 };
 
-export default StatusTag;
+export default StateTag;

@@ -16,6 +16,7 @@ import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
+import StateTag from 'components/StateTag';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
@@ -28,8 +29,6 @@ import {
   translateRequestType,
   translateStatus
 } from 'utils/systemIntake';
-
-import StatusTag from './StatusTag';
 
 import './index.scss';
 
@@ -204,7 +203,7 @@ const RequestSummary = ({
             <Grid desktop={{ col: 8 }}>
               <div>
                 <h4 className="margin-right-1">{t('status.label')}</h4>
-                <StatusTag state={state} />
+                <StateTag state={state} />
               </div>
               {
                 /* TODO EASI-3440: Update to use v2 statuses */
