@@ -1,6 +1,10 @@
 @use 'viewports' as *;
 
 .system-intake {
+  &__feedback-banner .usa-icon {
+    flex-shrink: 0;
+  }
+
   &__hr {
     opacity: 0.3;
   }
