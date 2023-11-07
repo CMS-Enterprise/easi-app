@@ -306,6 +306,7 @@ const intake = {
     hasContractRadio_NOT_NEEDED: "I don't anticipate needing contractor support"
   },
   review: {
+    heading: 'Check your answers before sending',
     notSubmitted: 'Not yet submitted',
     systemRequest: 'System Request',
     submissionDate: 'Submission Date',
@@ -340,7 +341,16 @@ const intake = {
     noContractNumber: 'No contract number specified',
     performance: 'Period of performance',
     notEntered: 'Not Entered',
-    documents: 'Documents'
+    documents: 'Documents',
+    nextSteps: {
+      heading: 'What happens next?',
+      description:
+        'The Governance Review Admin Team will review and get back to you with <strong>one of these</strong> outcomes:',
+      direct: 'direct you to go through the Governance Review process',
+      decide: 'or decide there is no further governance needed',
+      timeline: 'They will get back to you in two business days.'
+    },
+    sendIntakeRequest: 'Send my intake request'
   }
 };
 
