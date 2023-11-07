@@ -15,6 +15,7 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
 import CharacterCounter from 'components/CharacterCounter';
+import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
@@ -41,8 +42,6 @@ import { SystemIntakeFormState } from 'types/graphql-global-types';
 import { ContractDetailsForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
-
-import FeedbackBanner from '../FeedbackBanner';
 
 import FundingSources from './FundingSources';
 
@@ -198,6 +197,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               SystemIntakeFormState.EDITS_REQUESTED && (
               <FeedbackBanner
                 id={systemIntake.id}
+                type="Intake Request"
                 className="margin-bottom-3"
               />
             )}

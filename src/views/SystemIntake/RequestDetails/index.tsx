@@ -14,6 +14,7 @@ import {
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import CharacterCounter from 'components/CharacterCounter';
+import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
@@ -35,8 +36,6 @@ import {
 import { SystemIntakeFormState } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
-
-import FeedbackBanner from '../FeedbackBanner';
 
 type RequestDetailsForm = {
   requestName: string;
@@ -146,7 +145,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
 
             {systemIntake.requestFormState ===
               SystemIntakeFormState.EDITS_REQUESTED && (
-              <FeedbackBanner id={systemIntake.id} />
+              <FeedbackBanner id={systemIntake.id} type="Intake Request" />
             )}
 
             <p className="line-height-body-6">

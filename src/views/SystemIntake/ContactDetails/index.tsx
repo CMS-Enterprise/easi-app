@@ -16,6 +16,7 @@ import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import AdditionalContacts from 'components/AdditionalContacts';
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import CedarContactSelect from 'components/CedarContactSelect';
+import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
@@ -42,8 +43,6 @@ import {
 } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
-
-import FeedbackBanner from '../FeedbackBanner';
 
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
@@ -316,7 +315,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
             {systemIntake.requestFormState ===
               SystemIntakeFormState.EDITS_REQUESTED && (
-              <FeedbackBanner id={systemIntake.id} />
+              <FeedbackBanner id={systemIntake.id} type="Intake Request" />
             )}
 
             <Form className="tablet:grid-col-6 margin-bottom-7">

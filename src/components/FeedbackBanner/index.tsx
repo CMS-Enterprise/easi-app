@@ -4,11 +4,12 @@ import { GridContainer, IconWarning, Link } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 type FeedbackBannerProps = {
+  type: 'Intake Request' | 'Draft Business Case' | 'Final Business Case';
   id: string;
   className?: string;
 };
 
-const FeedbackBanner = ({ id, className }: FeedbackBannerProps) => {
+const FeedbackBanner = ({ type, id, className }: FeedbackBannerProps) => {
   const { t } = useTranslation('intake');
   return (
     <div
@@ -23,7 +24,7 @@ const FeedbackBanner = ({ id, className }: FeedbackBannerProps) => {
       >
         <p className="margin-top-0 margin-bottom-2 display-flex line-height-body-5">
           <IconWarning className="text-error-dark margin-right-1" size={3} />
-          {t('feedback')}
+          {t('feedback', { type })}
         </p>
         <Link
           href={`/governance-task-list/${id}/feedback`}

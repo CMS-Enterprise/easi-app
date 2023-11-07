@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import FeedbackBanner from 'components/FeedbackBanner';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
@@ -15,8 +16,6 @@ import {
 } from 'queries/types/SubmitIntake';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeFormState } from 'types/graphql-global-types';
-
-import FeedbackBanner from '../FeedbackBanner';
 
 type ReviewProps = {
   systemIntake: SystemIntake;
@@ -43,7 +42,11 @@ const Review = ({ systemIntake }: ReviewProps) => {
       </PageHeading>
 
       {hasEditsRequested && (
-        <FeedbackBanner id={systemIntake.id} className="margin-bottom-3" />
+        <FeedbackBanner
+          id={systemIntake.id}
+          type="Intake Request"
+          className="margin-bottom-3"
+        />
       )}
 
       <SystemIntakeReview systemIntake={systemIntake} />
