@@ -100,12 +100,11 @@ func NewSubmitSystemIntake(
 		intake.UpdatedAt = &updatedTime
 		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		intake.RequestFormState = models.SIRFSSubmitted
+		intake.SubmittedAt = &updatedTime
 
 		intakeSubmittedToCedar := intake.AlfabetID.Valid // When submitted to CEDAR, the AlfabetID gets set. If set, we currently don't re-submit it
-
 		if !intakeSubmittedToCedar {
 			// Send SystemIntake to CEDAR Intake API
-			intake.SubmittedAt = &updatedTime
 			alfabetID, submitToCEDARErr := submitToCEDAR(ctx, intake)
 			if submitToCEDARErr != nil {
 				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(submitToCEDARErr))
