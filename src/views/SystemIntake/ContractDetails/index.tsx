@@ -302,6 +302,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     label={t('contractDetails.hasContractRadio', {
                       context: 'HAVE_CONTRACT'
                     })}
+                    value="HAVE_CONTRACT"
                     aria-describedby="IntakeForm-HasContractHelp"
                     aria-expanded={
                       values.contract.hasContract === 'HAVE_CONTRACT'
