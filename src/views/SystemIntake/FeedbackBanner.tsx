@@ -10,7 +10,10 @@ const FeedbackBanner = ({ id }: FeedbackBannerProps) => {
   const { t } = useTranslation('intake');
   return (
     <div className="system-intake__feedback-banner bg-error-lighter padding-y-2">
-      <GridContainer>
+      <GridContainer
+        // TODO EASI-3085: Remove horizontal padding class for v2 form layout
+        className="padding-x-2"
+      >
         <p className="margin-top-0 margin-bottom-2 display-flex line-height-body-5">
           <IconWarning className="text-error-dark margin-right-1" size={3} />
           {t('feedback')}
