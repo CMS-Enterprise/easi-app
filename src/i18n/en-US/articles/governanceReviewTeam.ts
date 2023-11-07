@@ -251,15 +251,16 @@ const governanceReviewTeam = {
     changeLead: 'Change',
     notAssigned: 'Not Assigned',
     members: [
-      'Jaime Cadwell',
       'Alex Smith',
-      'Leilani Fields',
       'Ashley Marks',
-      'Leah Nguyen',
       'Emily Hill',
+      'Jaime Cadwell',
+      'Leah Nguyen',
+      'Leilani Fields',
+      'Nicholas Downey',
       'Savannah Huttenberger',
-      'Valerie Hartz',
-      'Nicholas Downey'
+      'Tara Ross',
+      'Valerie Hartz'
     ]
   }
 };
