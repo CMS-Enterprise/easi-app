@@ -229,6 +229,41 @@ const intake = {
       none: 'No one in OIT'
     }
   },
+  requestDetails: {
+    heading: 'Request details',
+    description:
+      'Provide a brief explanation of the business need/issue/problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
+    contractTitle: 'Contract/Request Title',
+    contractTitleHelpText:
+      'Your request title should match the title of your Acquisition Plan or Interagency Agreement.',
+    businessNeed:
+      'What is your business need that this contract/request will meet?',
+    businessNeedHelpText:
+      'Include an explanation of the business need/issue/problem that the contract/request will address. This information can be pulled from your draft Acquisition Plan (Statement of Need section) and/or taken from the Statement of Work, Statement of Objectives or Performance Work Statement. Please be brief.',
+    businessSolution: 'How are you thinking of solving it?',
+    businessSolutionHelpText:
+      'Let us know if you have a solution in mind. This information can be pulled from your draft Acquisition Plan (Capability or Performance section) and/or taken from the Statement of Work, Statement of Objectives or Performance Work Statement. Please be brief.',
+    currentStage: 'Where are you in the process?',
+    currentStageHelpText:
+      'This helps the governance team provide the right type of guidance for your request',
+    needsEaSupport: 'Does your request need Enterprise Architecture support?',
+    needsEaSupportHelpText:
+      'If you are unsure, mark "Yes" and someone from the EA team will assess your needs.',
+    eaTeamHelp: {
+      label: 'How can the Enterprise Architecture team help me?',
+      description:
+        "CMS' Enterprise Architecture (EA) function will help you build your Business Case by addressing the following:",
+      explore:
+        'Explore business solutions that might exist elsewhere within CMS',
+      discuss: 'Discuss lessons learned from similar projects',
+      give:
+        'Give you and your team an enterprise-level view of the agency to avoid duplication of projects',
+      help: 'Help you explore alternatives you might not have thought of',
+      model: 'Model your business processes and document workflows'
+    },
+    hasUiChanges:
+      'Does your project involve any user interface component, or changes to an interface component?'
+  },
   contractDetails: {
     fundingSources: {
       label: 'Which existing funding sources will fund this project?',

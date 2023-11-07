@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
@@ -22,6 +23,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import IconButton from 'components/shared/IconButton';
 import processStages from 'constants/enums/processStages';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeRequestDetails as UpdateSystemIntakeRequestDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -50,6 +52,8 @@ type RequestDetailsProps = {
 };
 
 const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
+  const { t } = useTranslation('intake');
+
   const {
     id,
     requestName,
@@ -123,7 +127,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               <ErrorAlert
                 testId="request-details-errors"
                 classNames="margin-top-3"
-                heading="Please check and fix the following"
+                heading={t('form:inputError.checkFix')}
               >
                 {Object.keys(flatErrors).map(key => {
                   return (
@@ -137,7 +141,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
               </ErrorAlert>
             )}
             <PageHeading className="margin-bottom-3">
-              Request details
+              {t('requestDetails.heading')}
             </PageHeading>
 
             {systemIntake.requestFormState ===
@@ -146,10 +150,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
             )}
 
             <p className="line-height-body-6">
-              Provide a brief explanation of the business need/issue/problem
-              that the contract/request will address, including your current
-              plans for how to address the need. This page should speak to what
-              your contract/request accomplishes and how.
+              {t('requestDetails.description')}
             </p>
 
             <MandatoryFieldsAlert className="tablet:grid-col-6" />
@@ -160,14 +161,13 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 error={!!flatErrors.requestName}
               >
                 <Label htmlFor="IntakeForm-ContractName">
-                  Contract/Request Title
+                  {t('requestDetails.contractTitle')}
                 </Label>
                 <HelpText
                   id="IntakeForm-ContractNameHelp"
                   className="margin-top-105"
                 >
-                  Your request title should match the title of your Acquisition
-                  Plan or Interagency Agreement.
+                  {t('requestDetails.contractTitleHelpText')}
                 </HelpText>
                 <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                 <Field
@@ -184,18 +184,13 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 error={!!flatErrors.businessNeed}
               >
                 <Label htmlFor="IntakeForm-BusinessNeed">
-                  What is your business need that this contract/request will
-                  meet?
+                  {t('requestDetails.businessNeed')}
                 </Label>
                 <HelpText
                   id="IntakeForm-BusinessNeedHelp"
                   className="margin-top-105"
                 >
-                  Include an explanation of the business need/issue/problem that
-                  the contract/request will address. This information can be
-                  pulled from your draft Acquisition Plan (Statement of Need
-                  section) and/or taken from the Statement of Work, Statement of
-                  Objectives or Performance Work Statement. Please be brief.
+                  {t('requestDetails.businessNeedHelpText')}
                 </HelpText>
                 <FieldErrorMsg>{flatErrors.businessNeed}</FieldErrorMsg>
                 <Field
@@ -217,17 +212,13 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 error={!!flatErrors.businessSolution}
               >
                 <Label htmlFor="IntakeForm-BusinessSolution">
-                  How are you thinking of solving it?
+                  {t('requestDetails.businessSolution')}
                 </Label>
                 <HelpText
                   id="IntakeForm-BusinessSolutionHelp"
                   className="margin-y-1"
                 >
-                  Let us know if you have a solution in mind. This information
-                  can be pulled from your draft Acquisition Plan (Capability or
-                  Performance section) and/or taken from the Statement of Work,
-                  Statement of Objectives or Performance Work Statement. Please
-                  be brief.
+                  {t('requestDetails.businessSolutionHelpText')}
                 </HelpText>
                 <FieldErrorMsg>{flatErrors.businessSolution}</FieldErrorMsg>
                 <Field
@@ -250,11 +241,10 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                 error={!!flatErrors.currentStage}
               >
                 <Label htmlFor="IntakeForm-CurrentStage">
-                  Where are you in the process?
+                  {t('requestDetails.currentStage')}
                 </Label>
                 <HelpText id="IntakeForm-ProcessHelp" className="margin-y-1">
-                  This helps the governance team provide the right type of
-                  guidance for your request
+                  {t('requestDetails.currentStageHelpText')}
                 </HelpText>
                 <FieldErrorMsg>{flatErrors.CurrentStage}</FieldErrorMsg>
                 <Field
@@ -290,11 +280,10 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   data-testid="ea-support"
                 >
                   <legend className="usa-label margin-bottom-1">
-                    Does your request need Enterprise Architecture support?
+                    {t('requestDetails.needsEaSupport')}
                   </legend>
                   <HelpText id="IntakeForm-EAHelp">
-                    If you are unsure, mark &quot;Yes&quot; and someone from the
-                    EA team will assess your needs.
+                    {t('requestDetails.needsEaSupportHelpText')}
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.needsEaSupport}</FieldErrorMsg>
                   <Field
@@ -324,29 +313,16 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   <div className="margin-top-105">
                     <CollapsableLink
                       id="SystemIntake-WhatsEA"
-                      label="How can the Enterprise Architecture team help me?"
+                      label={t('requestDetails.eaTeamHelp.label')}
                     >
                       <>
-                        CMS&apos; Enterprise Architecture (EA) function will
-                        help you build your Business Case by addressing the
-                        following:
+                        {t('requestDetails.eaTeamHelp.description')}
                         <ul className="margin-bottom-0">
-                          <li>
-                            Explore business solutions that might exist
-                            elsewhere within CMS
-                          </li>
-                          <li>Discuss lessons learned from similar projects</li>
-                          <li>
-                            Give you and your team an enterprise-level view of
-                            the agency to avoid duplication of projects
-                          </li>
-                          <li>
-                            Help you explore alternatives you might not have
-                            thought of
-                          </li>
-                          <li>
-                            Model your business processes and document workflows
-                          </li>
+                          <li>{t('requestDetails.eaTeamHelp.explore')}</li>
+                          <li>{t('requestDetails.eaTeamHelp.discuss')}</li>
+                          <li>{t('requestDetails.eaTeamHelp.give')}</li>
+                          <li>{t('requestDetails.eaTeamHelp.help')}</li>
+                          <li>{t('requestDetails.eaTeamHelp.model')}</li>
                         </ul>
                       </>
                     </CollapsableLink>
@@ -364,8 +340,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   data-testid="has-ui-changes"
                 >
                   <legend className="usa-label margin-bottom-1">
-                    Does your project involve any user interface component, or
-                    changes to an interface component?
+                    {t('requestDetails.hasUiChanges')}
                   </legend>
                   <FieldErrorMsg>{flatErrors.hasUiChanges}</FieldErrorMsg>
                   <Field
@@ -435,29 +410,28 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   });
                 }}
               >
-                Next
+                {t('Next')}
               </Button>
-              <div className="margin-y-3">
-                <Button
-                  type="button"
-                  unstyled
-                  onClick={() => {
-                    mutate({
-                      variables: {
-                        input: { id, ...values }
-                      }
-                    }).then(response => {
-                      if (!response.errors) {
-                        history.push(saveExitLink);
-                      }
-                    });
-                  }}
-                >
-                  <span className="display-flex flex-align-center">
-                    <IconNavigateBefore /> Save & Exit
-                  </span>
-                </Button>
-              </div>
+              <IconButton
+                type="button"
+                unstyled
+                onClick={() => {
+                  mutate({
+                    variables: {
+                      input: { id, ...values }
+                    }
+                  }).then(response => {
+                    if (!response.errors) {
+                      history.push(saveExitLink);
+                    }
+                  });
+                }}
+                className="margin-y-3"
+                icon={<IconNavigateBefore className="margin-right-0" />}
+                iconPosition="before"
+              >
+                {t('Save & Exit')}
+              </IconButton>
             </Form>
             <AutoSave
               values={values}
