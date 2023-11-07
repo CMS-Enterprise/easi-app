@@ -4,13 +4,19 @@ import { GridContainer, IconWarning, Link } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 type FeedbackBannerProps = {
+  /** Type of form edits were requested on - used for feedback text */
   type: 'Intake Request' | 'Draft Business Case' | 'Final Business Case';
   id: string;
   className?: string;
 };
 
+/**
+ * Feedback banner to display on Intake Request, Draft Business Case,
+ * and Final Business Case forms when edits have been requested
+ */
 const FeedbackBanner = ({ type, id, className }: FeedbackBannerProps) => {
   const { t } = useTranslation('intake');
+
   return (
     <div
       className={classNames(
