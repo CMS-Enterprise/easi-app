@@ -279,7 +279,9 @@ describe('The System Intake page', () => {
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     expect(
-      screen.getByText(i18next.t<string>('intake:feedback'))
+      screen.getByText(
+        i18next.t<string>('intake:feedback', { type: 'Intake Form' })
+      )
     ).toBeInTheDocument();
   });
 });
