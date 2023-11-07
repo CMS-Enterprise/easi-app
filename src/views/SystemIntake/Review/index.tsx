@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
@@ -13,6 +14,9 @@ import {
   SubmitIntakeVariables
 } from 'queries/types/SubmitIntake';
 import { SystemIntake } from 'queries/types/SystemIntake';
+import { SystemIntakeFormState } from 'types/graphql-global-types';
+
+import FeedbackBanner from '../FeedbackBanner';
 
 type ReviewProps = {
   systemIntake: SystemIntake;
@@ -27,9 +31,21 @@ const Review = ({ systemIntake }: ReviewProps) => {
     SubmitIntakeVariables
   >(SubmitIntakeQuery);
 
+  const hasEditsRequested =
+    systemIntake.requestFormState === SystemIntakeFormState.EDITS_REQUESTED;
+
   return (
     <div className="system-intake__review">
-      <PageHeading>{t('review.heading')}</PageHeading>
+      <PageHeading
+        className={classNames({ 'margin-bottom-3': hasEditsRequested })}
+      >
+        {t('review.heading')}
+      </PageHeading>
+
+      {hasEditsRequested && (
+        <FeedbackBanner id={systemIntake.id} className="margin-bottom-3" />
+      )}
+
       <SystemIntakeReview systemIntake={systemIntake} />
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">{t('review.nextSteps.heading')}</h2>
