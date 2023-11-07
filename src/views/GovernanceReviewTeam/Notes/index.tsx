@@ -229,14 +229,24 @@ const Notes = () => {
                     {t('notes.editModal.header')}
                   </PageHeading>
                   <p>{t('notes.editModal.description')}</p>
-                  <Label htmlFor="GovernanceReviewTeam-EditNote">
+                  <Label
+                    id="GovernanceReviewTeam-EditNote-label"
+                    htmlFor="GovernanceReviewTeam-EditNote"
+                  >
                     {t('notes.editModal.contentLabel')}
                   </Label>
                   {enableRte && (
                     <RichTextEditorFormikField
                       id="GovernanceReviewTeam-EditNote"
                       name="editNote"
-                      className="easi-grt__note-textarea margin-bottom-4"
+                      height="300px"
+                      className="margin-bottom-4"
+                      required
+                      editableProps={{
+                        id: 'GovernanceReviewTeam-EditNote',
+                        'data-testid': 'GovernanceReviewTeam-EditNote',
+                        'aria-labelledby': 'GovernanceReviewTeam-EditNote-label'
+                      }}
                       onChange={(value: any) => {
                         // if (id === noteModal.id) {
                         console.log('RTE Field onChange value', value, id);
@@ -558,15 +568,23 @@ const Notes = () => {
                 }}
               >
                 <FieldGroup>
-                  <Label htmlFor="GovernanceReviewTeam-Note">
+                  <Label
+                    id="GovernanceReviewTeam-Note-label"
+                    htmlFor="GovernanceReviewTeam-Note"
+                  >
                     {t('notes.addNote')}
                   </Label>
                   {enableRte && (
                     <RichTextEditorFormikField
                       id="GovernanceReviewTeam-Note"
-                      maxLength={2000}
                       name="note"
-                      className="easi-grt__note-field"
+                      height="5rem"
+                      required
+                      editableProps={{
+                        id: 'GovernanceReviewTeam-Note',
+                        'data-testid': 'GovernanceReviewTeam-Note',
+                        'aria-labelledby': 'GovernanceReviewTeam-Note-label'
+                      }}
                     />
                   )}
                   {enableOriginal && (

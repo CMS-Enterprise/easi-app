@@ -361,11 +361,23 @@ function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
 
 export default RichTextEditor;
 
+type RichTextEditorFormikFieldProps = FieldHookConfig<any> &
+  Pick<
+    RichTextEditorProps,
+    'className' | 'editableProps' | 'required' | 'height'
+  >;
+
 /**
  * Rich Text Editor field wrapper component for Formik.
  * Adapts formik field properties to work with RHF.
  */
-export function RichTextEditorFormikField({ ...props }: FieldHookConfig<any>) {
+export function RichTextEditorFormikField({
+  editableProps,
+  required,
+  height,
+  className,
+  ...props
+}: RichTextEditorFormikFieldProps) {
   const [field, , helpers] = useField(props);
   console.debug('RichTextEditorFormikField', props, field);
 
@@ -380,6 +392,10 @@ export function RichTextEditorFormikField({ ...props }: FieldHookConfig<any>) {
         },
         onBlur: props.onBlur
       }}
+      editableProps={editableProps}
+      required={required}
+      height={height}
+      className={className}
     />
   );
 }
