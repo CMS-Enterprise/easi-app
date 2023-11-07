@@ -306,7 +306,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               {t('contactDetails.intakeProcessDescription')}
             </p>
 
-            <MandatoryFieldsAlert />
+            <MandatoryFieldsAlert className="tablet:grid-col-6" />
 
             <PageHeading className="margin-bottom-3">
               {t('contactDetails.heading')}
