@@ -41,6 +41,8 @@ import {
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
+import FeedbackBanner from '../FeedbackBanner';
+
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 import './index.scss';
@@ -299,13 +301,20 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 })}
               </ErrorAlert>
             )}
+
             <p className="line-height-body-5">
               {t('contactDetails.intakeProcessDescription')}
             </p>
 
+            <MandatoryFieldsAlert />
+
+            <PageHeading className="margin-bottom-3">
+              {t('contactDetails.heading')}
+            </PageHeading>
+
+            <FeedbackBanner id={systemIntake.id} />
+
             <div className="tablet:grid-col-6 margin-bottom-7">
-              <MandatoryFieldsAlert />
-              <PageHeading>{t('contactDetails.heading')}</PageHeading>
               <Form>
                 {/* Requester Name */}
                 <FieldGroup
