@@ -4,6 +4,9 @@ const intake = {
     startRequest: 'Start a request',
     changeRequestType: 'Change request type'
   },
+  feedback:
+    'The Governance Team has requested edits to your Intake Request form. Please make any necessary changes and re-submit your form.',
+  viewFeedback: 'View feedback',
   fields: {
     projectName: 'Project name',
     requester: 'Requester',
