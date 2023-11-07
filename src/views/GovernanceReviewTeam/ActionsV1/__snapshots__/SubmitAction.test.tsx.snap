@@ -9,165 +9,187 @@ exports[`Submit Action > renders additional contacts 1`] = `
     role="main"
     tabindex="-1"
   >
-    <section
-      class="easi-grt__request-summary"
+    <div
+      class="easi-admin-summary"
     >
-      <div
-        class="grid-container padding-bottom-2"
-      >
-        <nav
-          aria-label="Breadcrumbs"
-          class="usa-breadcrumb usa-breadcrumb--wrap bg-transparent text-white"
-        >
-          <ol
-            class="usa-breadcrumb__list"
-          >
-            <li
-              class="usa-breadcrumb__list-item"
-            >
-              <a
-                class="usa-breadcrumb__link"
-                href="/"
-              >
-                <span
-                  class="text-white"
-                >
-                  Home
-                </span>
-              </a>
-            </li>
-            <li
-              aria-current="page"
-              class="usa-breadcrumb__list-item usa-current"
-            >
-              Mock System Intake Request
-            </li>
-          </ol>
-        </nav>
-        <dl
-          class="easi-grt__request-info"
-        >
-          <div>
-            <dt>
-              Project name
-            </dt>
-            <dd>
-              Mock System Intake Request
-            </dd>
-          </div>
-          <div
-            class="easi-grt__request-info-col"
-          >
-            <div
-              class="easi-grt__description-group"
-            >
-              <dt>
-                Requester
-              </dt>
-              <dd>
-                Ally Anderson, CMS
-              </dd>
-            </div>
-            <div
-              class="easi-grt__description-group"
-            >
-              <dt>
-                Submission date
-              </dt>
-              <dd>
-                October 20, 2022
-              </dd>
-            </div>
-            <div
-              class="easi-grt__description-group"
-            >
-              <dt>
-                Request for
-              </dt>
-              <dd>
-                Add a new system or service
-              </dd>
-            </div>
-          </div>
-        </dl>
-      </div>
-      <div
-        class="easi-grt__status--open"
+      <section
+        class="easi-admin-summary__request-details bg-primary-darker"
       >
         <div
-          class="grid-container overflow-auto"
+          class="grid-container text-white padding-bottom-1"
+          data-testid="gridContainer"
         >
-          <dl
-            class="easi-grt__status-group"
+          <nav
+            aria-label="Breadcrumbs"
+            class="usa-breadcrumb usa-breadcrumb--wrap bg-transparent text-white"
+          >
+            <ol
+              class="usa-breadcrumb__list"
+            >
+              <li
+                class="usa-breadcrumb__list-item"
+              >
+                <a
+                  class="text-white text-underline usa-breadcrumb__link"
+                  href="/"
+                >
+                  Home
+                </a>
+              </li>
+              <li
+                aria-current="page"
+                class="usa-breadcrumb__list-item usa-current"
+              >
+                Mock System Intake Request
+              </li>
+            </ol>
+          </nav>
+          <h2
+            class="margin-top-05 margin-bottom-2"
+          >
+            Mock System Intake Request
+          </h2>
+          <div
+            class="grid-row grid-gap"
+            data-testid="grid"
           >
             <div
-              class="easi-grt__status-info text-gray-90"
+              class="tablet:grid-col-8"
+              data-testid="grid"
             >
-              <dt
-                class="text-bold"
+              <h5
+                class="text-normal margin-y-0"
               >
-                Status
-              </dt>
-               
-              <dd
-                class="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
-                data-testid="grt-status"
+                Request type
+              </h5>
+              <h4
+                class="margin-top-05 margin-bottom-2"
               >
-                Open
-              </dd>
-              <dt
+                Add a new system or service
+              </h4>
+              <h5
+                class="text-normal margin-y-0"
+              >
+                Contract number
+              </h5>
+              <h4
+                class="margin-top-05 margin-bottom-2"
+              >
+                123456-7890
+              </h4>
+            </div>
+            <div
+              class="tablet:grid-col-4"
+              data-testid="grid"
+            >
+              <h5
+                class="text-normal margin-y-0"
+              >
+                Requester
+              </h5>
+              <h4
+                class="margin-top-05 margin-bottom-2"
+              >
+                Ally Anderson, CMS
+              </h4>
+              <h5
+                class="text-normal margin-y-0"
+              >
+                Submission date
+              </h5>
+              <h4
+                class="margin-top-05 margin-bottom-2"
+              >
+                October 20, 2022
+              </h4>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        class="easi-admin-summary__status bg-base-lightest"
+      >
+        <div
+          class="grid-container padding-y-1"
+          data-testid="gridContainer"
+        >
+          <div
+            class="grid-row grid-gap"
+            data-testid="grid"
+          >
+            <div
+              class="desktop:grid-col-8"
+              data-testid="grid"
+            >
+              <div>
+                <h4
+                  class="margin-right-1"
+                >
+                  Status
+                </h4>
+                <span
+                  class="easi-tag easi-state-tag text-white bg-info-dark"
+                  data-testid="request-state"
+                >
+                  Open
+                </span>
+              </div>
+              <p
+                class="text-base-dark"
                 data-testid="grt-current-status"
               >
                 Intake request received
-              </dt>
+              </p>
+              <a
+                href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions"
+              >
+                Take an action
+              </a>
             </div>
             <div
-              class="display-flex text-gray-90"
+              class="desktop:grid-col-4"
+              data-testid="grid"
             >
-              <span
-                class="text-bold"
+              <h4
+                class="text-no-wrap width-full tablet:width-auto"
               >
                 Admin Lead
-              </span>
+              </h4>
               <span
-                class="margin-x-1"
+                class="display-flex flex-align-center"
                 data-testid="admin-lead"
               >
-                <div
-                  class="display-flex flex-align-center"
+                <svg
+                  class="usa-icon text-error margin-right-05"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    class="usa-icon text-secondary margin-right-05"
-                    focusable="false"
-                    height="1em"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
-                    />
-                  </svg>
-                  Not Assigned
-                </div>
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                  />
+                </svg>
+                Not Assigned
               </span>
               <button
-                class="usa-button usa-button--unstyled"
+                class="usa-button usa-button--unstyled width-auto"
                 data-testid="button"
                 type="button"
               >
-                Change
+                Assign
               </button>
             </div>
-          </dl>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
     <div
       class="easi-grt__subNav-accordion"
     >

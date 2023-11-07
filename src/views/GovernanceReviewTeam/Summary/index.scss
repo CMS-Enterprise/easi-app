@@ -1,0 +1,42 @@
+@use 'uswds-core' as *;
+@use 'colors' as *;
+@use 'viewports' as *;
+
+.easi-admin-summary {
+  &__request-details {
+    // Overriding USWDS to change the Breadcrumb caret to white
+    // The BG color is blue so by default, there's not enough color contrast
+    .usa-breadcrumb__list-item:not(:last-child)::after {
+      background-color: color('white');
+    }
+  }
+  
+  &__status {
+    .grid-row {
+      row-gap: .5rem;
+    }
+
+    .grid-row > div {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      column-gap: .5rem;
+      row-gap: .25rem;
+
+      h4, p {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+      > div {
+        display: flex;
+        align-items: center;
+        width: 100%;
+
+        @media screen and (min-width: $tablet) {
+          width: auto;
+        }
+      }
+    }
+  }
+}

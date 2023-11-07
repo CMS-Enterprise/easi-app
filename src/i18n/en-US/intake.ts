@@ -279,6 +279,7 @@ const intake = {
     contractors: 'Contractors',
     contractVehicle: 'Contract vehicle',
     contractNumber: 'Contract number',
+    noContractNumber: 'No contract number specified',
     performance: 'Period of performance',
     notEntered: 'Not Entered',
     documents: 'Documents'

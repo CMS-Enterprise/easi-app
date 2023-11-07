@@ -237,6 +237,7 @@ const governanceReviewTeam = {
     shutdownComplete: 'Request was marked "Shutdown Complete"'
   },
   actions: 'Actions',
+  requestType: 'Request type',
   status: {
     label: 'Status',
     open: 'Open',
@@ -249,6 +250,7 @@ const governanceReviewTeam = {
       noChanges: "Don't make changes and return to request page"
     },
     changeLead: 'Change',
+    assignLead: 'Assign',
     notAssigned: 'Not Assigned',
     members: [
       'Alex Smith',

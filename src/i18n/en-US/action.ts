@@ -1,4 +1,5 @@
 const action = {
+  takeAnAction: 'Take an action',
   chooseAction: {
     heading: 'Actions',
     selectAction: 'Select this action',
