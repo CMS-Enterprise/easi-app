@@ -32,6 +32,7 @@ import {
   UpdateSystemIntakeContactDetails,
   UpdateSystemIntakeContactDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContactDetails';
+import { SystemIntakeFormState } from 'types/graphql-global-types';
 import {
   CedarContactProps,
   ContactDetailsForm,
@@ -312,7 +313,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               {t('contactDetails.heading')}
             </PageHeading>
 
-            <FeedbackBanner id={systemIntake.id} />
+            {systemIntake.requestFormState ===
+              SystemIntakeFormState.EDITS_REQUESTED && (
+              <FeedbackBanner id={systemIntake.id} />
+            )}
 
             <Form className="tablet:grid-col-6 margin-bottom-7">
               {/* Requester Name */}
