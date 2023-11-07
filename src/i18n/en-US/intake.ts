@@ -265,6 +265,7 @@ const intake = {
       'Does your project involve any user interface component, or changes to an interface component?'
   },
   contractDetails: {
+    heading: 'Contract details',
     fundingSources: {
       label: 'Which existing funding sources will fund this project?',
       helpText:
@@ -283,7 +284,26 @@ const intake = {
         fundingNumberUnique: 'Funding number must be unique',
         fundingSource: 'Select a funding source'
       }
-    }
+    },
+    currentAnnualSpending: 'What is the current annual spending?',
+    plannedYearOneSpending:
+      'What is the planned annual spending of the first year of the new contract?',
+    hasContract:
+      'Do you already have a contract in place to support this effort?',
+    hasContractHelpText:
+      'This information helps the Office of Acquisition and Grants Management (OAGM) track work',
+    hasContractRadio_HAVE_CONTRACT:
+      'I am planning project changes during my existing contract/InterAgency Agreement (IAA) period of performance',
+    contractors: 'Contractor(s)',
+    periodOfPerformance:
+      'Period of Performance dates (include all option years)',
+    newPeriodOfPerformance:
+      'New Period of Performance dates (include all option years)',
+    periodOfPerformanceHelpText: 'For example: 4/10/2020 - 4/9/2025',
+    hasContractRadio_IN_PROGRESS:
+      'I am currently working on my OAGM Acquisition Plan/IAA documents',
+    hasContractRadio_NOT_STARTED: "I haven't started acquisition planning yet",
+    hasContractRadio_NOT_NEEDED: "I don't anticipate needing contractor support"
   },
   review: {
     notSubmitted: 'Not yet submitted',

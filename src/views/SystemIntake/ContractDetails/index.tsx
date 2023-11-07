@@ -28,6 +28,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import IconButton from 'components/shared/IconButton';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -172,7 +173,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               <ErrorAlert
                 testId="contract-details-errors"
                 classNames="margin-top-3"
-                heading="Please check and fix the following"
+                heading={t('form:inputError.checkFix')}
               >
                 {Object.keys(flatErrors).map(key => {
                   return (
@@ -185,657 +186,649 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 })}
               </ErrorAlert>
             )}
-            <PageHeading>Contract details</PageHeading>
-            <div className="tablet:grid-col-9 margin-bottom-7">
-              <div className="tablet:grid-col-6">
-                <MandatoryFieldsAlert />
-              </div>
-              <Form>
-                <FieldGroup
-                  scrollElement="fundingSources"
-                  error={!!flatErrors.fundingSources}
+
+            <PageHeading>{t('contractDetails.heading')}</PageHeading>
+
+            <MandatoryFieldsAlert className="tablet:grid-col-6" />
+
+            <Form className="tablet:grid-col-9 margin-bottom-7">
+              <FieldGroup
+                scrollElement="fundingSources"
+                error={!!flatErrors.fundingSources}
+              >
+                <legend className="usa-label margin-bottom-1">
+                  {t('contractDetails.fundingSources.label')}
+                </legend>
+                <HelpText id="Intake-Form-ExistingFundingHelp">
+                  {t('contractDetails.fundingSources.helpText')}
+                </HelpText>
+                <Field
+                  as={FundingSources}
+                  id="IntakeForm-Added-FundingSources"
+                  name="fundingSources"
+                  initialValues={values.fundingSources}
+                  setFieldValue={setFieldValue}
+                  fundingSourceOptions={intakeFundingSources}
+                />
+              </FieldGroup>
+              <FieldGroup
+                scrollElement="annualSpending.currentAnnualSpending"
+                error={!!flatErrors['annualSpending.currentAnnualSpending']}
+              >
+                <fieldset
+                  className="usa-fieldset margin-top-4"
+                  data-testid="annual-spend-fieldset"
                 >
                   <legend className="usa-label margin-bottom-1">
-                    {t('contractDetails.fundingSources.label')}
+                    {t('contractDetails.currentAnnualSpending')}
                   </legend>
-                  <HelpText id="Intake-Form-ExistingFundingHelp">
-                    {t('contractDetails.fundingSources.helpText')}
-                  </HelpText>
+                  <FieldErrorMsg>
+                    {flatErrors['annualSpending.currentAnnualSpending']}
+                  </FieldErrorMsg>
                   <Field
-                    as={FundingSources}
-                    id="IntakeForm-Added-FundingSources"
-                    name="fundingSources"
-                    initialValues={values.fundingSources}
-                    setFieldValue={setFieldValue}
-                    fundingSourceOptions={intakeFundingSources}
+                    as={Textarea}
+                    className="system-intake__current-annual-spending"
+                    error={!!flatErrors['annualSpending.currentAnnualSpending']}
+                    id="IntakeForm-CurrentAnnualSpending"
+                    name="annualSpending.currentAnnualSpending"
+                    maxLength={100}
                   />
-                </FieldGroup>
-                <FieldGroup
-                  scrollElement="annualSpending.currentAnnualSpending"
-                  error={!!flatErrors['annualSpending.currentAnnualSpending']}
+                  <CharacterCounter
+                    id="currentAnnualSpending-counter"
+                    characterCount={
+                      2000 - values.annualSpending.currentAnnualSpending.length
+                    }
+                  />
+                  <legend className="usa-label margin-bottom-1">
+                    {t('contractDetails.plannedYearOneSpending')}
+                  </legend>
+                  <FieldErrorMsg>
+                    {flatErrors['annualSpending.plannedYearOneSpending']}
+                  </FieldErrorMsg>
+                  <Field
+                    as={Textarea}
+                    className="system-intake__year-one-annual-spending"
+                    error={
+                      !!flatErrors['annualSpending.plannedYearOneSpending']
+                    }
+                    id="IntakeForm-PlannedYearOneAnnualSpending"
+                    name="annualSpending.plannedYearOneSpending"
+                    maxLength={100}
+                  />
+                  <CharacterCounter
+                    id="plannedYearOneAnnualSpending-counter"
+                    characterCount={
+                      2000 - values.annualSpending.plannedYearOneSpending.length
+                    }
+                  />
+                </fieldset>
+              </FieldGroup>
+              <FieldGroup
+                scrollElement="contract.hasContract"
+                error={!!flatErrors['contract.hasContract']}
+                className="margin-bottom-105"
+              >
+                <fieldset
+                  className="usa-fieldset margin-top-4"
+                  data-testid="contract-fieldset"
                 >
-                  <fieldset
-                    className="usa-fieldset margin-top-4"
-                    data-testid="annual-spend-fieldset"
-                  >
-                    <legend className="usa-label margin-bottom-1">
-                      What is the current annual spending?
-                    </legend>
-                    <FieldErrorMsg>
-                      {flatErrors['annualSpending.currentAnnualSpending']}
-                    </FieldErrorMsg>
-                    <Field
-                      as={Textarea}
-                      className="system-intake__current-annual-spending"
-                      error={
-                        !!flatErrors['annualSpending.currentAnnualSpending']
-                      }
-                      id="IntakeForm-CurrentAnnualSpending"
-                      name="annualSpending.currentAnnualSpending"
-                      maxLength={100}
-                    />
-                    <CharacterCounter
-                      id="currentAnnualSpending-counter"
-                      characterCount={
-                        2000 -
-                        values.annualSpending.currentAnnualSpending.length
-                      }
-                    />
-                    <legend className="usa-label margin-bottom-1">
-                      What is the planned annual spending of the first year of
-                      the new contract?
-                    </legend>
-                    <FieldErrorMsg>
-                      {flatErrors['annualSpending.plannedYearOneSpending']}
-                    </FieldErrorMsg>
-                    <Field
-                      as={Textarea}
-                      className="system-intake__year-one-annual-spending"
-                      error={
-                        !!flatErrors['annualSpending.plannedYearOneSpending']
-                      }
-                      id="IntakeForm-PlannedYearOneAnnualSpending"
-                      name="annualSpending.plannedYearOneSpending"
-                      maxLength={100}
-                    />
-                    <CharacterCounter
-                      id="plannedYearOneAnnualSpending-counter"
-                      characterCount={
-                        2000 -
-                        values.annualSpending.plannedYearOneSpending.length
-                      }
-                    />
-                  </fieldset>
-                </FieldGroup>
-                <FieldGroup
-                  scrollElement="contract.hasContract"
-                  error={!!flatErrors['contract.hasContract']}
-                  className="margin-bottom-105"
-                >
-                  <fieldset
-                    className="usa-fieldset margin-top-4"
-                    data-testid="contract-fieldset"
-                  >
-                    <legend className="usa-label margin-bottom-1">
-                      Do you already have a contract in place to support this
-                      effort?
-                    </legend>
-                    <HelpText id="IntakeForm-HasContractHelp">
-                      This information helps the Office of Acquisition and
-                      Grants Management (OAGM) track work
-                    </HelpText>
-                    <FieldErrorMsg>
-                      {flatErrors['contract.hasContract']}
-                    </FieldErrorMsg>
-                    <Field
-                      as={Radio}
-                      checked={values.contract.hasContract === 'HAVE_CONTRACT'}
-                      id="IntakeForm-ContractHaveContract"
-                      name="contract.hasContract"
-                      label="I am planning project changes during my existing contract/InterAgency Agreement (IAA) period of performance"
-                      value="HAVE_CONTRACT"
-                      aria-describedby="IntakeForm-HasContractHelp"
-                      aria-expanded={
-                        values.contract.hasContract === 'HAVE_CONTRACT'
-                      }
-                      aria-controls="has-contract-branch-wrapper"
-                    />
-                    {values.contract.hasContract === 'HAVE_CONTRACT' && (
-                      <div
-                        id="has-contract-branch-wrapper"
-                        className="margin-top-neg-2 margin-left-4 margin-bottom-2"
+                  <legend className="usa-label margin-bottom-1">
+                    {t('contractDetails.hasContract')}
+                  </legend>
+                  <HelpText id="IntakeForm-HasContractHelp">
+                    {t('contractDetails.hasContractHelpText')}
+                  </HelpText>
+                  <FieldErrorMsg>
+                    {flatErrors['contract.hasContract']}
+                  </FieldErrorMsg>
+                  <Field
+                    as={Radio}
+                    checked={values.contract.hasContract === 'HAVE_CONTRACT'}
+                    id="IntakeForm-ContractHaveContract"
+                    name="contract.hasContract"
+                    label={t('contractDetails.hasContractRadio', {
+                      context: 'HAVE_CONTRACT'
+                    })}
+                    aria-describedby="IntakeForm-HasContractHelp"
+                    aria-expanded={
+                      values.contract.hasContract === 'HAVE_CONTRACT'
+                    }
+                    aria-controls="has-contract-branch-wrapper"
+                  />
+                  {values.contract.hasContract === 'HAVE_CONTRACT' && (
+                    <div
+                      id="has-contract-branch-wrapper"
+                      className="margin-top-neg-2 margin-left-4 margin-bottom-2"
+                    >
+                      <FieldGroup
+                        scrollElement="contract.contractor"
+                        error={!!flatErrors['contract.contractor']}
                       >
-                        <FieldGroup
-                          scrollElement="contract.contractor"
+                        <Label htmlFor="IntakeForm-Contractor">
+                          {t('contractDetails.contractors')}
+                        </Label>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.contractor']}
+                        </FieldErrorMsg>
+                        <Field
+                          as={TextInput}
                           error={!!flatErrors['contract.contractor']}
-                        >
-                          <Label htmlFor="IntakeForm-Contractor">
-                            Contractor(s)
-                          </Label>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.contractor']}
-                          </FieldErrorMsg>
-                          <Field
-                            as={TextInput}
-                            error={!!flatErrors['contract.contractor']}
-                            id="IntakeForm-Contractor"
-                            maxLength={100}
-                            name="contract.contractor"
-                          />
-                        </FieldGroup>
-                        <FieldGroup
-                          scrollElement="contract.number"
-                          error={!!flatErrors['contract.number']}
-                        >
-                          <Label
-                            className="system-intake__label-margin-top-1"
-                            htmlFor="IntakeForm-Number"
-                          >
-                            {t('fields.contractNumber')}
-                          </Label>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.number']}
-                          </FieldErrorMsg>
-                          <Field
-                            as={TextInput}
-                            error={!!flatErrors['contract.number']}
-                            id="IntakeForm-Number"
-                            maxLength={100}
-                            name="contract.number"
-                          />
-                        </FieldGroup>
-
-                        <fieldset
-                          className={classnames(
-                            'usa-fieldset',
-                            'usa-form-group',
-                            'margin-top-4',
-                            {
-                              'usa-form-group--error':
-                                errors.contract &&
-                                (errors.contract.startDate ||
-                                  errors.contract.endDate)
-                            }
-                          )}
-                        >
-                          <legend className="usa-label">
-                            Period of Performance dates (include all option
-                            years)
-                          </legend>
-                          <HelpText className="margin-bottom-1">
-                            For example: 4/10/2020 - 4/9/2025
-                          </HelpText>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.startDate.month']}
-                          </FieldErrorMsg>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.startDate.day']}
-                          </FieldErrorMsg>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.startDate.year']}
-                          </FieldErrorMsg>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.endDate.month']}
-                          </FieldErrorMsg>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.endDate.day']}
-                          </FieldErrorMsg>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.endDate.year']}
-                          </FieldErrorMsg>
-                          <div className="display-flex flex-align-center">
-                            <div className="usa-memorable-date">
-                              <FieldGroup
-                                className="usa-form-group--month"
-                                scrollElement="contract.startDate.month"
-                              >
-                                <Label
-                                  className="system-intake__label-margin-top-0"
-                                  htmlFor="IntakeForm-ContractStartMonth"
-                                >
-                                  Month
-                                </Label>
-                                <Field
-                                  as={DateInputMonth}
-                                  error={
-                                    !!flatErrors['contract.startDate.month']
-                                  }
-                                  id="IntakeForm-ContractStartMonth"
-                                  name="contract.startDate.month"
-                                />
-                              </FieldGroup>
-                              <FieldGroup
-                                className="usa-form-group--day"
-                                scrollElement="contract.startDate.day"
-                              >
-                                <Label
-                                  className="system-intake__label-margin-top-0"
-                                  htmlFor="IntakeForm-ContractStartDay"
-                                >
-                                  Day
-                                </Label>
-                                <Field
-                                  as={DateInputDay}
-                                  error={!!flatErrors['contract.startDate.day']}
-                                  id="IntakeForm-ContractStartDay"
-                                  name="contract.startDate.day"
-                                />
-                              </FieldGroup>
-                              <FieldGroup
-                                className="usa-form-group--year"
-                                scrollElement="contract.startDate.year"
-                              >
-                                <Label
-                                  className="system-intake__label-margin-top-0"
-                                  htmlFor="IntakeForm-ContractStartYear"
-                                >
-                                  Year
-                                </Label>
-                                <Field
-                                  as={DateInputYear}
-                                  error={
-                                    !!flatErrors['contract.startDate.year']
-                                  }
-                                  id="IntakeForm-ContractStartYear"
-                                  name="contract.startDate.year"
-                                />
-                              </FieldGroup>
-                            </div>
-
-                            <span className="margin-right-2">to</span>
-                            <div className="usa-memorable-date">
-                              <FieldGroup
-                                className="usa-form-group--month"
-                                scrollElement="contract.endDate.month"
-                              >
-                                <Label
-                                  className="system-intake__label-margin-top-0"
-                                  htmlFor="IntakeForm-ContractEndMonth"
-                                >
-                                  Month
-                                </Label>
-                                <Field
-                                  as={DateInputMonth}
-                                  error={!!flatErrors['contract.endDate.month']}
-                                  id="IntakeForm-ContractEndMonth"
-                                  name="contract.endDate.month"
-                                />
-                              </FieldGroup>
-                              <FieldGroup
-                                className="usa-form-group--day"
-                                scrollElement="contract.endDate.day"
-                              >
-                                <Label
-                                  className="system-intake__label-margin-top-0"
-                                  htmlFor="IntakeForm-ContractEndDay"
-                                >
-                                  Day
-                                </Label>
-                                <Field
-                                  as={DateInputDay}
-                                  error={!!flatErrors['contract.endDate.day']}
-                                  id="IntakeForm-ContractEndDay"
-                                  name="contract.endDate.day"
-                                />
-                              </FieldGroup>
-                              <FieldGroup
-                                className="usa-form-group--year"
-                                scrollElement="contract.endDate.year"
-                              >
-                                <Label
-                                  className="system-intake__label-margin-top-0"
-                                  htmlFor="IntakeForm-ContractEndYear"
-                                >
-                                  Year
-                                </Label>
-                                <Field
-                                  as={DateInputYear}
-                                  error={!!flatErrors['contract.endDate.year']}
-                                  id="IntakeForm-ContractEndYear"
-                                  name="contract.endDate.year"
-                                />
-                              </FieldGroup>
-                            </div>
-                          </div>
-                        </fieldset>
-                      </div>
-                    )}
-                    <Field
-                      as={Radio}
-                      checked={values.contract.hasContract === 'IN_PROGRESS'}
-                      id="IntakeForm-ContractInProgress"
-                      name="contract.hasContract"
-                      label="I am currently working on my OAGM Acquisition Plan/IAA documents"
-                      value="IN_PROGRESS"
-                      aria-expanded={
-                        values.contract.hasContract === 'IN_PROGRESS'
-                      }
-                      aria-controls="in-progress-branch-wrapper"
-                    />
-                    {values.contract.hasContract === 'IN_PROGRESS' && (
-                      <div
-                        id="in-progress-branch-wrapper"
-                        className="margin-top-neg-2 margin-left-4 margin-bottom-2"
+                          id="IntakeForm-Contractor"
+                          maxLength={100}
+                          name="contract.contractor"
+                        />
+                      </FieldGroup>
+                      <FieldGroup
+                        scrollElement="contract.number"
+                        error={!!flatErrors['contract.number']}
                       >
-                        <FieldGroup
-                          scrollElement="contract.contractor"
-                          error={!!flatErrors['contract.contractor']}
+                        <Label
+                          className="system-intake__label-margin-top-1"
+                          htmlFor="IntakeForm-Number"
                         >
-                          <Label htmlFor="IntakeForm-Contractor">
-                            Contractor(s)
-                          </Label>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.contractor']}
-                          </FieldErrorMsg>
-                          <Field
-                            as={TextInput}
-                            error={!!flatErrors['contract.contractor']}
-                            id="IntakeForm-Contractor"
-                            maxLength={100}
-                            name="contract.contractor"
-                          />
-                        </FieldGroup>
-                        <FieldGroup
-                          scrollElement="contract.number"
+                          {t('fields.contractNumber')}
+                        </Label>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.number']}
+                        </FieldErrorMsg>
+                        <Field
+                          as={TextInput}
                           error={!!flatErrors['contract.number']}
-                        >
-                          <Label
-                            className="system-intake__label-margin-top-1"
-                            htmlFor="IntakeForm-Number"
-                          >
-                            {t('fields.contractNumber')}
-                          </Label>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.number']}
-                          </FieldErrorMsg>
-                          <Field
-                            as={TextInput}
-                            error={!!flatErrors['contract.number']}
-                            id="IntakeForm-Number"
-                            maxLength={100}
-                            name="contract.number"
-                          />
-                        </FieldGroup>
+                          id="IntakeForm-Number"
+                          maxLength={100}
+                          name="contract.number"
+                        />
+                      </FieldGroup>
 
-                        <fieldset
-                          className={classnames(
-                            'usa-fieldset',
-                            'usa-form-group',
-                            'margin-top-4',
-                            {
-                              'usa-form-group--error':
-                                errors.contract &&
-                                (errors.contract.startDate ||
-                                  errors.contract.endDate)
-                            }
-                          )}
-                        >
-                          <legend className="usa-label">
-                            New Period of Performance dates (include all option
-                            years)
-                          </legend>
-                          <HelpText className="margin-bottom-1">
-                            For example: 4/10/2020 - 4/9/2025
-                          </HelpText>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.startDate.month']}
-                          </FieldErrorMsg>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.startDate.day']}
-                          </FieldErrorMsg>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.startDate.year']}
-                          </FieldErrorMsg>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.endDate.month']}
-                          </FieldErrorMsg>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.endDate.day']}
-                          </FieldErrorMsg>
-                          <FieldErrorMsg>
-                            {flatErrors['contract.endDate.year']}
-                          </FieldErrorMsg>
-                          <div className="display-flex flex-align-center">
-                            <div
-                              className="usa-memorable-date"
-                              data-scroll="contract.startDate.validDate"
+                      <fieldset
+                        className={classnames(
+                          'usa-fieldset',
+                          'usa-form-group',
+                          'margin-top-4',
+                          {
+                            'usa-form-group--error':
+                              errors.contract &&
+                              (errors.contract.startDate ||
+                                errors.contract.endDate)
+                          }
+                        )}
+                      >
+                        <legend className="usa-label">
+                          {t('contractDetails.periodOfPerformance')}
+                        </legend>
+                        <HelpText className="margin-bottom-1">
+                          {t('contractDetails.periodOfPerformanceHelpText')}
+                        </HelpText>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.startDate.month']}
+                        </FieldErrorMsg>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.startDate.day']}
+                        </FieldErrorMsg>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.startDate.year']}
+                        </FieldErrorMsg>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.endDate.month']}
+                        </FieldErrorMsg>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.endDate.day']}
+                        </FieldErrorMsg>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.endDate.year']}
+                        </FieldErrorMsg>
+                        <div className="display-flex flex-align-center">
+                          <div className="usa-memorable-date">
+                            <FieldGroup
+                              className="usa-form-group--month"
+                              scrollElement="contract.startDate.month"
                             >
-                              <FieldGroup
-                                className="usa-form-group--month"
-                                scrollElement="contract.startDate.month"
+                              <Label
+                                className="system-intake__label-margin-top-0"
+                                htmlFor="IntakeForm-ContractStartMonth"
                               >
-                                <Label
-                                  className="system-intake__label-margin-top-0"
-                                  htmlFor="IntakeForm-ContractStartMonth"
-                                >
-                                  Month
-                                </Label>
-                                <Field
-                                  as={DateInputMonth}
-                                  error={
-                                    !!flatErrors['contract.startDate.month'] ||
-                                    !!flatErrors['contract.startDate.validDate']
-                                  }
-                                  id="IntakeForm-ContractStartMonth"
-                                  name="contract.startDate.month"
-                                />
-                              </FieldGroup>
-                              <FieldGroup
-                                className="usa-form-group--day"
-                                scrollElement="contract.startDate.day"
-                              >
-                                <Label
-                                  className="system-intake__label-margin-top-0"
-                                  htmlFor="IntakeForm-ContractStartDay"
-                                >
-                                  Day
-                                </Label>
-                                <Field
-                                  as={DateInputDay}
-                                  error={
-                                    !!flatErrors['contract.startDate.day'] ||
-                                    !!flatErrors['contract.startDate.validDate']
-                                  }
-                                  id="IntakeForm-ContractStartDay"
-                                  name="contract.startDate.day"
-                                />
-                              </FieldGroup>
-                              <FieldGroup
-                                className="usa-form-group--year"
-                                scrollElement="contract.startDate.year"
-                              >
-                                <Label
-                                  className="system-intake__label-margin-top-0"
-                                  htmlFor="IntakeForm-ContractStartYear"
-                                >
-                                  Year
-                                </Label>
-                                <Field
-                                  as={DateInputYear}
-                                  error={
-                                    !!flatErrors['contract.startDate.year'] ||
-                                    !!flatErrors['contract.startDate.validDate']
-                                  }
-                                  id="IntakeForm-ContractStartYear"
-                                  name="contract.startDate.year"
-                                />
-                              </FieldGroup>
-                            </div>
-
-                            <span className="margin-right-2">to</span>
-                            <div
-                              className="usa-memorable-date"
-                              data-scroll="contract.endDate.validDate"
+                                {t('general:date.month')}
+                              </Label>
+                              <Field
+                                as={DateInputMonth}
+                                error={!!flatErrors['contract.startDate.month']}
+                                id="IntakeForm-ContractStartMonth"
+                                name="contract.startDate.month"
+                              />
+                            </FieldGroup>
+                            <FieldGroup
+                              className="usa-form-group--day"
+                              scrollElement="contract.startDate.day"
                             >
-                              <FieldGroup
-                                className="usa-form-group--month"
-                                scrollElement="contract.endDate.month"
+                              <Label
+                                className="system-intake__label-margin-top-0"
+                                htmlFor="IntakeForm-ContractStartDay"
                               >
-                                <Label
-                                  className="system-intake__label-margin-top-0"
-                                  htmlFor="IntakeForm-ContractEndMonth"
-                                >
-                                  Month
-                                </Label>
-                                <Field
-                                  as={DateInputMonth}
-                                  error={
-                                    !!flatErrors['contract.endDate.month'] ||
-                                    !!flatErrors['contract.endDate.validDate']
-                                  }
-                                  id="IntakeForm-ContractEndMonth"
-                                  name="contract.endDate.month"
-                                />
-                              </FieldGroup>
-                              <FieldGroup
-                                className="usa-form-group--day"
-                                scrollElement="contract.endDate.day"
+                                {t('general:date.day')}
+                              </Label>
+                              <Field
+                                as={DateInputDay}
+                                error={!!flatErrors['contract.startDate.day']}
+                                id="IntakeForm-ContractStartDay"
+                                name="contract.startDate.day"
+                              />
+                            </FieldGroup>
+                            <FieldGroup
+                              className="usa-form-group--year"
+                              scrollElement="contract.startDate.year"
+                            >
+                              <Label
+                                className="system-intake__label-margin-top-0"
+                                htmlFor="IntakeForm-ContractStartYear"
                               >
-                                <Label
-                                  className="system-intake__label-margin-top-0"
-                                  htmlFor="IntakeForm-ContractEndDay"
-                                >
-                                  Day
-                                </Label>
-                                <Field
-                                  as={DateInputDay}
-                                  error={
-                                    !!flatErrors['contract.endDate.day'] ||
-                                    !!flatErrors['contract.endDate.validDate']
-                                  }
-                                  id="IntakeForm-ContractEndDay"
-                                  name="contract.endDate.day"
-                                />
-                              </FieldGroup>
-                              <FieldGroup
-                                className="usa-form-group--year"
-                                scrollElement="contract.endDate.year"
-                              >
-                                <Label
-                                  className="system-intake__label-margin-top-0"
-                                  htmlFor="IntakeForm-ContractEndYear"
-                                >
-                                  Year
-                                </Label>
-                                <Field
-                                  as={DateInputYear}
-                                  error={
-                                    !!flatErrors['contract.endDate.year'] ||
-                                    !!flatErrors['contract.endDate.validDate']
-                                  }
-                                  id="IntakeForm-ContractEndYear"
-                                  name="contract.endDate.year"
-                                />
-                              </FieldGroup>
-                            </div>
+                                {t('general:date.year')}
+                              </Label>
+                              <Field
+                                as={DateInputYear}
+                                error={!!flatErrors['contract.startDate.year']}
+                                id="IntakeForm-ContractStartYear"
+                                name="contract.startDate.year"
+                              />
+                            </FieldGroup>
                           </div>
-                        </fieldset>
-                      </div>
-                    )}
-                    <Field
-                      as={Radio}
-                      checked={values.contract.hasContract === 'NOT_STARTED'}
-                      id="IntakeForm-ContractNotStarted"
-                      name="contract.hasContract"
-                      label="I haven't started acquisition planning yet"
-                      value="NOT_STARTED"
-                      onChange={() => {
-                        setFieldValue('contract.hasContract', 'NOT_STARTED');
-                        setFieldValue('contract.contractor', '');
-                        setFieldValue('contract.number', '');
-                        setFieldValue('contract.startDate.month', '');
-                        setFieldValue('contract.startDate.day', '');
-                        setFieldValue('contract.startDate.year', '');
-                        setFieldValue('contract.endDate.month', '');
-                        setFieldValue('contract.endDate.day', '');
-                        setFieldValue('contract.endDate.year', '');
-                      }}
-                    />
-                    <Field
-                      as={Radio}
-                      checked={values.contract.hasContract === 'NOT_NEEDED'}
-                      id="IntakeForm-ContractNotNeeded"
-                      name="contract.hasContract"
-                      label="I don't anticipate needing contractor support"
-                      value="NOT_NEEDED"
-                      onChange={() => {
-                        setFieldValue('contract.hasContract', 'NOT_NEEDED');
-                        setFieldValue('contract.contractor', '');
-                        setFieldValue('contract.number', '');
-                        setFieldValue('contract.startDate.month', '');
-                        setFieldValue('contract.startDate.day', '');
-                        setFieldValue('contract.startDate.year', '');
-                        setFieldValue('contract.endDate.month', '');
-                        setFieldValue('contract.endDate.day', '');
-                        setFieldValue('contract.endDate.year', '');
-                      }}
-                    />
-                  </fieldset>
-                </FieldGroup>
 
-                <Button
-                  type="button"
-                  outline
-                  onClick={() => {
-                    formikProps.setErrors({});
-                    mutate({
-                      variables: {
-                        input: formatContractDetailsPayload(values)
-                      }
-                    }).then(res => {
-                      if (!res.errors) {
-                        history.push('request-details');
-                      }
-                    });
-                  }}
-                >
-                  Back
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    formikProps.validateForm().then(err => {
-                      if (Object.keys(err).length === 0) {
-                        mutate({
-                          variables: {
-                            input: formatContractDetailsPayload(values)
+                          <span className="margin-right-2">{t('to')}</span>
+                          <div className="usa-memorable-date">
+                            <FieldGroup
+                              className="usa-form-group--month"
+                              scrollElement="contract.endDate.month"
+                            >
+                              <Label
+                                className="system-intake__label-margin-top-0"
+                                htmlFor="IntakeForm-ContractEndMonth"
+                              >
+                                {t('general:date.month')}
+                              </Label>
+                              <Field
+                                as={DateInputMonth}
+                                error={!!flatErrors['contract.endDate.month']}
+                                id="IntakeForm-ContractEndMonth"
+                                name="contract.endDate.month"
+                              />
+                            </FieldGroup>
+                            <FieldGroup
+                              className="usa-form-group--day"
+                              scrollElement="contract.endDate.day"
+                            >
+                              <Label
+                                className="system-intake__label-margin-top-0"
+                                htmlFor="IntakeForm-ContractEndDay"
+                              >
+                                {t('general:date.day')}
+                              </Label>
+                              <Field
+                                as={DateInputDay}
+                                error={!!flatErrors['contract.endDate.day']}
+                                id="IntakeForm-ContractEndDay"
+                                name="contract.endDate.day"
+                              />
+                            </FieldGroup>
+                            <FieldGroup
+                              className="usa-form-group--year"
+                              scrollElement="contract.endDate.year"
+                            >
+                              <Label
+                                className="system-intake__label-margin-top-0"
+                                htmlFor="IntakeForm-ContractEndYear"
+                              >
+                                {t('general:date.year')}
+                              </Label>
+                              <Field
+                                as={DateInputYear}
+                                error={!!flatErrors['contract.endDate.year']}
+                                id="IntakeForm-ContractEndYear"
+                                name="contract.endDate.year"
+                              />
+                            </FieldGroup>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                  )}
+                  <Field
+                    as={Radio}
+                    checked={values.contract.hasContract === 'IN_PROGRESS'}
+                    id="IntakeForm-ContractInProgress"
+                    name="contract.hasContract"
+                    label={t('contractDetails.hasContractRadio', {
+                      context: 'IN_PROGRESS'
+                    })}
+                    value="IN_PROGRESS"
+                    aria-expanded={
+                      values.contract.hasContract === 'IN_PROGRESS'
+                    }
+                    aria-controls="in-progress-branch-wrapper"
+                  />
+                  {values.contract.hasContract === 'IN_PROGRESS' && (
+                    <div
+                      id="in-progress-branch-wrapper"
+                      className="margin-top-neg-2 margin-left-4 margin-bottom-2"
+                    >
+                      <FieldGroup
+                        scrollElement="contract.contractor"
+                        error={!!flatErrors['contract.contractor']}
+                      >
+                        <Label htmlFor="IntakeForm-Contractor">
+                          {t('contractDetails.contractors')}
+                        </Label>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.contractor']}
+                        </FieldErrorMsg>
+                        <Field
+                          as={TextInput}
+                          error={!!flatErrors['contract.contractor']}
+                          id="IntakeForm-Contractor"
+                          maxLength={100}
+                          name="contract.contractor"
+                        />
+                      </FieldGroup>
+                      <FieldGroup
+                        scrollElement="contract.number"
+                        error={!!flatErrors['contract.number']}
+                      >
+                        <Label
+                          className="system-intake__label-margin-top-1"
+                          htmlFor="IntakeForm-Number"
+                        >
+                          {t('fields.contractNumber')}
+                        </Label>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.number']}
+                        </FieldErrorMsg>
+                        <Field
+                          as={TextInput}
+                          error={!!flatErrors['contract.number']}
+                          id="IntakeForm-Number"
+                          maxLength={100}
+                          name="contract.number"
+                        />
+                      </FieldGroup>
+
+                      <fieldset
+                        className={classnames(
+                          'usa-fieldset',
+                          'usa-form-group',
+                          'margin-top-4',
+                          {
+                            'usa-form-group--error':
+                              errors.contract &&
+                              (errors.contract.startDate ||
+                                errors.contract.endDate)
                           }
-                        }).then(res => {
-                          if (!res.errors) {
-                            history.push('documents');
-                          }
-                        });
-                      } else {
-                        window.scrollTo(0, 0);
-                      }
-                    });
-                  }}
-                >
-                  Next
-                </Button>
-                <div className="margin-y-3">
-                  <Button
-                    type="button"
-                    unstyled
-                    onClick={() => {
+                        )}
+                      >
+                        <legend className="usa-label">
+                          {t('contractDetails.newPeriodOfPerformance')}
+                        </legend>
+                        <HelpText className="margin-bottom-1">
+                          {t('contractDetails.periodOfPerformanceHelpText')}
+                        </HelpText>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.startDate.month']}
+                        </FieldErrorMsg>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.startDate.day']}
+                        </FieldErrorMsg>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.startDate.year']}
+                        </FieldErrorMsg>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.endDate.month']}
+                        </FieldErrorMsg>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.endDate.day']}
+                        </FieldErrorMsg>
+                        <FieldErrorMsg>
+                          {flatErrors['contract.endDate.year']}
+                        </FieldErrorMsg>
+                        <div className="display-flex flex-align-center">
+                          <div
+                            className="usa-memorable-date"
+                            data-scroll="contract.startDate.validDate"
+                          >
+                            <FieldGroup
+                              className="usa-form-group--month"
+                              scrollElement="contract.startDate.month"
+                            >
+                              <Label
+                                className="system-intake__label-margin-top-0"
+                                htmlFor="IntakeForm-ContractStartMonth"
+                              >
+                                {t('general:date.month')}
+                              </Label>
+                              <Field
+                                as={DateInputMonth}
+                                error={
+                                  !!flatErrors['contract.startDate.month'] ||
+                                  !!flatErrors['contract.startDate.validDate']
+                                }
+                                id="IntakeForm-ContractStartMonth"
+                                name="contract.startDate.month"
+                              />
+                            </FieldGroup>
+                            <FieldGroup
+                              className="usa-form-group--day"
+                              scrollElement="contract.startDate.day"
+                            >
+                              <Label
+                                className="system-intake__label-margin-top-0"
+                                htmlFor="IntakeForm-ContractStartDay"
+                              >
+                                {t('general:date.day')}
+                              </Label>
+                              <Field
+                                as={DateInputDay}
+                                error={
+                                  !!flatErrors['contract.startDate.day'] ||
+                                  !!flatErrors['contract.startDate.validDate']
+                                }
+                                id="IntakeForm-ContractStartDay"
+                                name="contract.startDate.day"
+                              />
+                            </FieldGroup>
+                            <FieldGroup
+                              className="usa-form-group--year"
+                              scrollElement="contract.startDate.year"
+                            >
+                              <Label
+                                className="system-intake__label-margin-top-0"
+                                htmlFor="IntakeForm-ContractStartYear"
+                              >
+                                {t('general:date.year')}
+                              </Label>
+                              <Field
+                                as={DateInputYear}
+                                error={
+                                  !!flatErrors['contract.startDate.year'] ||
+                                  !!flatErrors['contract.startDate.validDate']
+                                }
+                                id="IntakeForm-ContractStartYear"
+                                name="contract.startDate.year"
+                              />
+                            </FieldGroup>
+                          </div>
+
+                          <span className="margin-right-2">{t('to')}</span>
+                          <div
+                            className="usa-memorable-date"
+                            data-scroll="contract.endDate.validDate"
+                          >
+                            <FieldGroup
+                              className="usa-form-group--month"
+                              scrollElement="contract.endDate.month"
+                            >
+                              <Label
+                                className="system-intake__label-margin-top-0"
+                                htmlFor="IntakeForm-ContractEndMonth"
+                              >
+                                {t('general:date.month')}
+                              </Label>
+                              <Field
+                                as={DateInputMonth}
+                                error={
+                                  !!flatErrors['contract.endDate.month'] ||
+                                  !!flatErrors['contract.endDate.validDate']
+                                }
+                                id="IntakeForm-ContractEndMonth"
+                                name="contract.endDate.month"
+                              />
+                            </FieldGroup>
+                            <FieldGroup
+                              className="usa-form-group--day"
+                              scrollElement="contract.endDate.day"
+                            >
+                              <Label
+                                className="system-intake__label-margin-top-0"
+                                htmlFor="IntakeForm-ContractEndDay"
+                              >
+                                {t('general:date.day')}
+                              </Label>
+                              <Field
+                                as={DateInputDay}
+                                error={
+                                  !!flatErrors['contract.endDate.day'] ||
+                                  !!flatErrors['contract.endDate.validDate']
+                                }
+                                id="IntakeForm-ContractEndDay"
+                                name="contract.endDate.day"
+                              />
+                            </FieldGroup>
+                            <FieldGroup
+                              className="usa-form-group--year"
+                              scrollElement="contract.endDate.year"
+                            >
+                              <Label
+                                className="system-intake__label-margin-top-0"
+                                htmlFor="IntakeForm-ContractEndYear"
+                              >
+                                {t('general:date.year')}
+                              </Label>
+                              <Field
+                                as={DateInputYear}
+                                error={
+                                  !!flatErrors['contract.endDate.year'] ||
+                                  !!flatErrors['contract.endDate.validDate']
+                                }
+                                id="IntakeForm-ContractEndYear"
+                                name="contract.endDate.year"
+                              />
+                            </FieldGroup>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                  )}
+                  <Field
+                    as={Radio}
+                    checked={values.contract.hasContract === 'NOT_STARTED'}
+                    id="IntakeForm-ContractNotStarted"
+                    name="contract.hasContract"
+                    label={t('contractDetails.hasContractRadio', {
+                      context: 'NOT_STARTED'
+                    })}
+                    value="NOT_STARTED"
+                    onChange={() => {
+                      setFieldValue('contract.hasContract', 'NOT_STARTED');
+                      setFieldValue('contract.contractor', '');
+                      setFieldValue('contract.number', '');
+                      setFieldValue('contract.startDate.month', '');
+                      setFieldValue('contract.startDate.day', '');
+                      setFieldValue('contract.startDate.year', '');
+                      setFieldValue('contract.endDate.month', '');
+                      setFieldValue('contract.endDate.day', '');
+                      setFieldValue('contract.endDate.year', '');
+                    }}
+                  />
+                  <Field
+                    as={Radio}
+                    checked={values.contract.hasContract === 'NOT_NEEDED'}
+                    id="IntakeForm-ContractNotNeeded"
+                    name="contract.hasContract"
+                    label={t('contractDetails.hasContractRadio', {
+                      context: 'NOT_NEEDED'
+                    })}
+                    value="NOT_NEEDED"
+                    onChange={() => {
+                      setFieldValue('contract.hasContract', 'NOT_NEEDED');
+                      setFieldValue('contract.contractor', '');
+                      setFieldValue('contract.number', '');
+                      setFieldValue('contract.startDate.month', '');
+                      setFieldValue('contract.startDate.day', '');
+                      setFieldValue('contract.startDate.year', '');
+                      setFieldValue('contract.endDate.month', '');
+                      setFieldValue('contract.endDate.day', '');
+                      setFieldValue('contract.endDate.year', '');
+                    }}
+                  />
+                </fieldset>
+              </FieldGroup>
+
+              <Button
+                type="button"
+                outline
+                onClick={() => {
+                  formikProps.setErrors({});
+                  mutate({
+                    variables: {
+                      input: formatContractDetailsPayload(values)
+                    }
+                  }).then(res => {
+                    if (!res.errors) {
+                      history.push('request-details');
+                    }
+                  });
+                }}
+              >
+                {t('Back')}
+              </Button>
+              <Button
+                type="button"
+                onClick={() => {
+                  formikProps.validateForm().then(err => {
+                    if (Object.keys(err).length === 0) {
                       mutate({
                         variables: {
                           input: formatContractDetailsPayload(values)
                         }
                       }).then(res => {
                         if (!res.errors) {
-                          history.push(saveExitLink);
+                          history.push('documents');
                         }
                       });
-                    }}
-                  >
-                    <span className="display-flex flex-align-center">
-                      <IconNavigateBefore /> Save & Exit
-                    </span>
-                  </Button>
-                </div>
-              </Form>
-            </div>
+                    } else {
+                      window.scrollTo(0, 0);
+                    }
+                  });
+                }}
+              >
+                {t('Next')}
+              </Button>
+              <IconButton
+                type="button"
+                unstyled
+                onClick={() => {
+                  mutate({
+                    variables: {
+                      input: formatContractDetailsPayload(values)
+                    }
+                  }).then(res => {
+                    if (!res.errors) {
+                      history.push(saveExitLink);
+                    }
+                  });
+                }}
+                className="margin-y-3"
+                icon={<IconNavigateBefore className="margin-right-0" />}
+                iconPosition="before"
+              >
+                {t('Save & Exit')}
+              </IconButton>
+            </Form>
             <AutoSave
               values={values}
               onSave={() => {

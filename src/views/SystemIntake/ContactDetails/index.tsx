@@ -24,6 +24,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import IconButton from 'components/shared/IconButton';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -742,24 +743,23 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               >
                 {t('Next')}
               </Button>
-              <div className="margin-y-3">
-                <Button
-                  disabled={!!activeContact}
-                  type="button"
-                  unstyled
-                  onClick={() => {
-                    onSubmit(values, formikProps).then(response => {
-                      if (!response?.errors) {
-                        history.push(saveExitLink);
-                      }
-                    });
-                  }}
-                >
-                  <span className="display-flex flex-align-center">
-                    <IconNavigateBefore /> {t('Save & Exit')}
-                  </span>
-                </Button>
-              </div>
+              <IconButton
+                disabled={!!activeContact}
+                type="button"
+                unstyled
+                onClick={() => {
+                  onSubmit(values, formikProps).then(response => {
+                    if (!response?.errors) {
+                      history.push(saveExitLink);
+                    }
+                  });
+                }}
+                className="margin-y-3"
+                icon={<IconNavigateBefore className="margin-right-0" />}
+                iconPosition="before"
+              >
+                {t('Save & Exit')}
+              </IconButton>
             </Form>
             <AutoSave
               values={values}

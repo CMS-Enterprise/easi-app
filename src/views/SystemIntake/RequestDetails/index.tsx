@@ -387,7 +387,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   });
                 }}
               >
-                Back
+                {t('Back')}
               </Button>
               <Button
                 type="button"
