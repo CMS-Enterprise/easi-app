@@ -280,7 +280,7 @@ describe('The System Intake page', () => {
 
     expect(
       screen.getByText(
-        i18next.t<string>('intake:feedback', { type: 'Intake Form' })
+        i18next.t<string>('intake:feedback', { type: 'Intake Request' })
       )
     ).toBeInTheDocument();
   });
