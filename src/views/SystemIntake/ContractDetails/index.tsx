@@ -37,9 +37,12 @@ import {
   UpdateSystemIntakeContractDetails,
   UpdateSystemIntakeContractDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContractDetails';
+import { SystemIntakeFormState } from 'types/graphql-global-types';
 import { ContractDetailsForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
+
+import FeedbackBanner from '../FeedbackBanner';
 
 import FundingSources from './FundingSources';
 
@@ -187,7 +190,17 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               </ErrorAlert>
             )}
 
-            <PageHeading>{t('contractDetails.heading')}</PageHeading>
+            <PageHeading className="margin-bottom-3">
+              {t('contractDetails.heading')}
+            </PageHeading>
+
+            {systemIntake.requestFormState ===
+              SystemIntakeFormState.EDITS_REQUESTED && (
+              <FeedbackBanner
+                id={systemIntake.id}
+                className="margin-bottom-3"
+              />
+            )}
 
             <MandatoryFieldsAlert className="tablet:grid-col-6" />
 

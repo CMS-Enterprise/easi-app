@@ -1,15 +1,22 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { GridContainer, IconWarning, Link } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 type FeedbackBannerProps = {
   id: string;
+  className?: string;
 };
 
-const FeedbackBanner = ({ id }: FeedbackBannerProps) => {
+const FeedbackBanner = ({ id, className }: FeedbackBannerProps) => {
   const { t } = useTranslation('intake');
   return (
-    <div className="system-intake__feedback-banner bg-error-lighter padding-y-2">
+    <div
+      className={classNames(
+        'system-intake__feedback-banner bg-error-lighter padding-y-2',
+        className
+      )}
+    >
       <GridContainer
         // TODO EASI-3085: Remove horizontal padding class for v2 form layout
         className="padding-x-2"
