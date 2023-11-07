@@ -8,6 +8,7 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import i18next from 'i18next';
 import configureMockStore from 'redux-mock-store';
 
 import {
@@ -17,6 +18,7 @@ import {
 } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetSytemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import { SystemIntakeFormState } from 'types/graphql-global-types';
 
 import { SystemIntake } from './index';
 
@@ -252,6 +254,32 @@ describe('The System Intake page', () => {
         name: /this page cannot be found/i,
         level: 1
       })
+    ).toBeInTheDocument();
+  });
+
+  it('renders feedback banner if edits are requested', async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[`/system/${systemIntake.id}/request-details`]}
+      >
+        <MockedProvider
+          mocks={[
+            getSystemIntakeQuery({
+              requestFormState: SystemIntakeFormState.EDITS_REQUESTED
+            })
+          ]}
+        >
+          <Route path="/system/:systemId/:formPage">
+            <SystemIntake />
+          </Route>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    expect(
+      screen.getByText(i18next.t<string>('intake:feedback'))
     ).toBeInTheDocument();
   });
 });
