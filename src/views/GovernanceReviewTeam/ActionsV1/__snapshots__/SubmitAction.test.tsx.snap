@@ -9,90 +9,111 @@ exports[`Submit Action > renders additional contacts 1`] = `
     role="main"
     tabindex="-1"
   >
-    <section
+    <div
       class="easi-grt__request-summary"
     >
-      <div
-        class="grid-container padding-bottom-2"
+      <section
+        class="bg-primary-darker padding-bottom-3 text-white"
       >
-        <nav
-          aria-label="Breadcrumbs"
-          class="usa-breadcrumb usa-breadcrumb--wrap bg-transparent text-white"
+        <div
+          class="grid-container"
+          data-testid="gridContainer"
         >
-          <ol
-            class="usa-breadcrumb__list"
+          <nav
+            aria-label="Breadcrumbs"
+            class="usa-breadcrumb usa-breadcrumb--wrap bg-transparent text-white"
           >
-            <li
-              class="usa-breadcrumb__list-item"
+            <ol
+              class="usa-breadcrumb__list"
             >
-              <a
-                class="usa-breadcrumb__link"
-                href="/"
+              <li
+                class="usa-breadcrumb__list-item"
               >
-                <span
-                  class="text-white"
+                <a
+                  class="usa-breadcrumb__link"
+                  href="/"
                 >
-                  Home
-                </span>
-              </a>
-            </li>
-            <li
-              aria-current="page"
-              class="usa-breadcrumb__list-item usa-current"
-            >
-              Mock System Intake Request
-            </li>
-          </ol>
-        </nav>
-        <dl
-          class="easi-grt__request-info"
-        >
-          <div>
-            <dt>
-              Project name
-            </dt>
-            <dd>
-              Mock System Intake Request
-            </dd>
-          </div>
+                  <span
+                    class="text-white"
+                  >
+                    Home
+                  </span>
+                </a>
+              </li>
+              <li
+                aria-current="page"
+                class="usa-breadcrumb__list-item usa-current"
+              >
+                Request details
+              </li>
+            </ol>
+          </nav>
+          <h2
+            class="margin-top-05 margin-bottom-0"
+          >
+            Mock System Intake Request
+          </h2>
           <div
-            class="easi-grt__request-info-col"
+            class="grid-row"
+            data-testid="grid"
           >
             <div
-              class="easi-grt__description-group"
+              class="tablet:grid-col-8"
+              data-testid="grid"
             >
-              <dt>
-                Requester
-              </dt>
-              <dd>
-                Ally Anderson, CMS
-              </dd>
+              <div
+                class="margin-top-2 margin-bottom-05"
+              >
+                <h5
+                  class="text-normal margin-y-0"
+                >
+                  Request for
+                </h5>
+                <h4
+                  class="margin-y-05"
+                >
+                  Add a new system or service
+                </h4>
+              </div>
             </div>
             <div
-              class="easi-grt__description-group"
+              class="tablet:grid-col-4"
+              data-testid="grid"
             >
-              <dt>
-                Submission date
-              </dt>
-              <dd>
-                October 20, 2022
-              </dd>
-            </div>
-            <div
-              class="easi-grt__description-group"
-            >
-              <dt>
-                Request for
-              </dt>
-              <dd>
-                Add a new system or service
-              </dd>
+              <div
+                class="margin-top-2 margin-bottom-05"
+              >
+                <h5
+                  class="text-normal margin-y-0"
+                >
+                  Requester
+                </h5>
+                <h4
+                  class="margin-y-05"
+                >
+                  Ally Anderson, CMS
+                </h4>
+              </div>
+              <div
+                class="margin-top-2 margin-bottom-05"
+              >
+                <h5
+                  class="text-normal margin-y-0"
+                >
+                  Submission date
+                </h5>
+                <h4
+                  class="margin-y-05"
+                >
+                  October 20, 2022
+                </h4>
+              </div>
             </div>
           </div>
-        </dl>
-      </div>
+        </div>
+      </section>
       <div
-        class="easi-grt__status--open"
+        class="bg-base-lightest"
       >
         <div
           class="grid-container overflow-auto"
@@ -110,7 +131,7 @@ exports[`Submit Action > renders additional contacts 1`] = `
               </dt>
                
               <dd
-                class="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
+                class="text-white text-bold padding-y-05 padding-x-105 margin-x-1 bg-info-dark"
                 data-testid="grt-status"
               >
                 Open
@@ -167,7 +188,7 @@ exports[`Submit Action > renders additional contacts 1`] = `
           </dl>
         </div>
       </div>
-    </section>
+    </div>
     <div
       class="easi-grt__subNav-accordion"
     >
@@ -775,17 +796,9 @@ exports[`Submit Action > renders additional contacts 1`] = `
                 <textarea
                   class="usa-textarea usa-textarea__size-md"
                   id="SubmitActionForm-Feedback"
-                  maxlength="3000"
+                  maxlength="10000"
                   name="feedback"
                 />
-                <span
-                  aria-atomic="false"
-                  aria-live="polite"
-                  class="easi-character-counter margin-top-1"
-                  id="SubmitActionForm-Feedback-counter"
-                >
-                  2000 characters remaining
-                </span>
               </div>
               <div>
                 <button
