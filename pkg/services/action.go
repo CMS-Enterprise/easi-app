@@ -121,12 +121,11 @@ func NewSubmitSystemIntake(
 		intake.UpdatedAt = &updatedTime
 		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		intake.RequestFormState = models.SIRFSSubmitted
+		intake.SubmittedAt = &updatedTime
 
 		intakeSubmittedToCedar := intake.AlfabetID.Valid // When submitted to CEDAR, the AlfabetID gets set. If set, we currently don't re-submit it
-
 		if !intakeSubmittedToCedar {
 			// Send SystemIntake to CEDAR Intake API
-			intake.SubmittedAt = &updatedTime
 			alfabetID, submitToCEDARErr := submitToCEDAR(ctx, intake)
 			if submitToCEDARErr != nil {
 				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(submitToCEDARErr))
@@ -403,8 +402,8 @@ func NewTakeActionUpdateStatus(
 // persists an action and updates a request
 func NewCreateActionUpdateStatus(
 	config Config,
-	updateStatus func(c context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error),
-	saveAction func(context.Context, *models.Action) error,
+	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error), saveAction func(context.Context, *models.Action) error,
 	sendReviewEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText models.HTML) error,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
 ) func(
@@ -423,22 +422,26 @@ func NewCreateActionUpdateStatus(
 		shouldCloseBusinessCase bool,
 		recipients *models.EmailNotificationRecipients,
 	) (*models.SystemIntake, error) {
-		err := saveAction(ctx, action)
+		intake, err := fetch(ctx, id)
 		if err != nil {
 			return nil, err
 		}
 
-		intake, err := updateStatus(ctx, id, newStatus)
+		err = saveAction(ctx, action)
 		if err != nil {
-			return nil, &apperrors.QueryError{
-				Err:       err,
-				Model:     intake,
-				Operation: apperrors.QuerySave,
-			}
+			return nil, err
 		}
 
-		if shouldCloseBusinessCase && intake.BusinessCaseID != nil {
-			if err = closeBusinessCase(ctx, *intake.BusinessCaseID); err != nil {
+		// Update IT Gov V2 fields based on `newStatus`
+		intake.Status = newStatus
+		intake.SetV2FieldsBasedOnV1Status(newStatus)
+		updatedIntake, err := update(ctx, intake)
+		if err != nil {
+			return nil, err
+		}
+
+		if shouldCloseBusinessCase && updatedIntake.BusinessCaseID != nil {
+			if err = closeBusinessCase(ctx, *updatedIntake.BusinessCaseID); err != nil {
 				return nil, err
 			}
 		}
@@ -447,9 +450,9 @@ func NewCreateActionUpdateStatus(
 			err = sendReviewEmails(
 				ctx,
 				*recipients,
-				intake.ID,
-				intake.ProjectName.String,
-				intake.Requester,
+				updatedIntake.ID,
+				updatedIntake.ProjectName.String,
+				updatedIntake.Requester,
 				action.Feedback.ValueOrEmptyHTML(),
 			)
 			if err != nil {
@@ -457,7 +460,7 @@ func NewCreateActionUpdateStatus(
 			}
 		}
 
-		return intake, err
+		return updatedIntake, err
 	}
 }
 
@@ -507,6 +510,8 @@ func NewCreateActionExtendLifecycleID(
 		intake.LifecycleScope = &scope
 		intake.DecisionNextSteps = nextSteps
 		intake.LifecycleCostBaseline = null.StringFromPtr(costBaseline)
+
+		intake.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusLCIDISSUED)
 
 		_, updateErr := updateSystemIntake(ctx, intake)
 		if updateErr != nil {

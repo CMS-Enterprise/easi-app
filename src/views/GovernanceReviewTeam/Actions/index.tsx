@@ -21,9 +21,10 @@ import {
   ITGovIntakeFormStatus,
   SystemIntakeState
 } from 'types/graphql-global-types';
+import NotFound from 'views/NotFound';
 
 import ManageLcid from './ManageLcid';
-import NextStep from './NextStep';
+import ProgressToNewStep from './ProgressToNewStep';
 import RequestEdits from './RequestEdits';
 import Resolutions from './Resolutions';
 
@@ -106,6 +107,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
     }
   });
   const taskStatuses = data?.systemIntake?.itGovTaskStatuses;
+  const { step } = data?.systemIntake || {};
 
   /**
    * Translation key for edits requested form type - used in EditsRequestedContext
@@ -140,16 +142,6 @@ const Actions = ({ systemIntake }: ActionsProps) => {
     <EditsRequestedContext.Provider value={editsRequestedKey}>
       <div className="grt-admin-actions">
         <Switch>
-          <Route
-            path="/governance-review-team/:systemId/actions/request-edits"
-            render={() => <RequestEdits systemIntakeId={systemIntake.id} />}
-          />
-
-          <Route
-            path="/governance-review-team/:systemId/actions/next-step"
-            render={() => <NextStep systemIntakeId={systemIntake.id} />}
-          />
-
           {/* Select resolution page */}
           <Route
             path="/governance-review-team/:systemId/resolutions/:subPage?"
@@ -162,8 +154,22 @@ const Actions = ({ systemIntake }: ActionsProps) => {
             render={() => <ManageLcid systemIntake={systemIntake} />}
           />
 
+          {/* Request edits */}
+          <Route
+            path="/governance-review-team/:systemId/actions/request-edits"
+            render={() => <RequestEdits systemIntakeId={systemIntake.id} />}
+          />
+
+          {/* Progress to a new step */}
+          <Route
+            path="/governance-review-team/:systemId/actions/new-step"
+            render={() => (
+              <ProgressToNewStep systemIntakeId={systemIntake.id} step={step} />
+            )}
+          />
+
           {/* Select action main page */}
-          <Route path="/governance-review-team/:systemId/actions">
+          <Route path="/governance-review-team/:systemId/actions" exact>
             <PageHeading
               data-testid="grt-actions-view"
               className="margin-top-0 margin-bottom-5"
@@ -200,7 +206,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
                           {/* Progress to new step */}
                           <ActionRadioOption
                             {...fieldProps}
-                            value="actions/next-step"
+                            value="actions/new-step"
                             label={t('chooseAction.progressToNewStep.title')}
                             description={t(
                               'chooseAction.progressToNewStep.description'
@@ -266,6 +272,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
               </Button>
             </form>
           </Route>
+          <NotFound />
         </Switch>
       </div>
     </EditsRequestedContext.Provider>

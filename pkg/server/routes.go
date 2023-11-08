@@ -209,7 +209,8 @@ func (s *Server) routes(
 			),
 			CreateActionUpdateStatus: services.NewCreateActionUpdateStatus(
 				serviceConfig,
-				store.UpdateSystemIntakeStatus,
+				store.FetchSystemIntakeByID,
+				store.UpdateSystemIntake,
 				saveAction,
 				emailClient.SendSystemIntakeReviewEmails,
 				services.NewCloseBusinessCase(

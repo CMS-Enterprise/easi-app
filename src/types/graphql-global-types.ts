@@ -300,6 +300,28 @@ export enum SystemIntakeStatus {
 }
 
 /**
+ * SystemIntakeStep represents the current step in the intake process
+ */
+export enum SystemIntakeStep {
+  DECISION_AND_NEXT_STEPS = "DECISION_AND_NEXT_STEPS",
+  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
+  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
+  GRB_MEETING = "GRB_MEETING",
+  GRT_MEETING = "GRT_MEETING",
+  INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
+}
+
+/**
+ * Steps in the system intake process that a Progress to New Step action can progress to
+ */
+export enum SystemIntakeStepToProgressTo {
+  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
+  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
+  GRB_MEETING = "GRB_MEETING",
+  GRT_MEETING = "GRT_MEETING",
+}
+
+/**
  * Different options for whether the Governance team believes a requester's team should consult with the TRB
  */
 export enum SystemIntakeTRBFollowUp {
@@ -872,6 +894,17 @@ export interface SystemIntakeChangeLCIDRetirementDateInput {
 }
 
 /**
+ * Input for creating a Close Request Action in Admin Actions v2
+ */
+export interface SystemIntakeCloseRequestInput {
+  systemIntakeID: UUID;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  reason?: HTML | null;
+  additionalInfo?: HTML | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * The input data used to add an OIT collaborator for a system request
  */
 export interface SystemIntakeCollaboratorInput {
@@ -996,6 +1029,20 @@ export interface SystemIntakeProductManagerInput {
 }
 
 /**
+ * Input for submitting a Progress to New Step action in IT Gov v2
+ */
+export interface SystemIntakeProgressToNewStepsInput {
+  systemIntakeID: UUID;
+  newStep: SystemIntakeStepToProgressTo;
+  meetingDate?: Time | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  feedback?: HTML | null;
+  grbRecommendations?: HTML | null;
+  additionalInfo?: HTML | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
  */
 export interface SystemIntakeRejectIntakeInput {
@@ -1005,6 +1052,17 @@ export interface SystemIntakeRejectIntakeInput {
   trbFollowUp: SystemIntakeTRBFollowUp;
   additionalInfo?: HTML | null;
   notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
+}
+
+/**
+ * Input for creating a Reopen Request Action in Admin Actions v2
+ */
+export interface SystemIntakeReopenRequestInput {
+  systemIntakeID: UUID;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  reason?: HTML | null;
+  additionalInfo?: HTML | null;
   adminNote?: HTML | null;
 }
 

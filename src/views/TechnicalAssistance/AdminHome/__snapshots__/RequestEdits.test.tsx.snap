@@ -8,7 +8,7 @@ exports[`Trb Admin: Action: Request Edits > submits a feedback message 1`] = `
   >
     <nav
       aria-label="Breadcrumbs"
-      class="usa-breadcrumb padding-bottom-0"
+      class="usa-breadcrumb usa-breadcrumb--wrap padding-bottom-0"
       style="background-color: transparent;"
     >
       <ol

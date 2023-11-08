@@ -37,6 +37,9 @@ struct_tag: gqlgen
 autobind:
   - 'github.com/cmsgov/easi-app/pkg/models'
 
+# Optional: turn on to exclude the gqlgen version in the generated file notice. No effect if `omit_gqlgen_file_notice` is true.
+omit_gqlgen_version_in_file_notice: true
+
 # This section declares type mapping between the GraphQL and go type systems
 #
 # The first line in each type will be used as defaults for resolver arguments and

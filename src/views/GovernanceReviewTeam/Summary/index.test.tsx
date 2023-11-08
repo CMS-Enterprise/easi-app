@@ -45,7 +45,8 @@ const summaryProps = {
   adminLead: null,
   submittedAt: DateTime.local().toString(),
   lcid: null,
-  requester
+  requester,
+  contractNumber: '123456'
 };
 
 describe('The GRT Review page', () => {
@@ -59,7 +60,7 @@ describe('The GRT Review page', () => {
     );
 
     expect(
-      within(screen.getByTestId('grt-status')).getByText('Open')
+      within(screen.getByTestId('request-state')).getByText('Open')
     ).toBeInTheDocument();
   });
 
@@ -73,7 +74,7 @@ describe('The GRT Review page', () => {
     );
 
     expect(
-      within(screen.getByTestId('grt-status')).getByText('Closed')
+      within(screen.getByTestId('request-state')).getByText('Closed')
     ).toBeInTheDocument();
   });
 

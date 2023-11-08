@@ -1,3 +1,41 @@
+import { SystemIntakeActionType } from 'types/graphql-global-types';
+
+/** System intake action type translations */
+const actionNameTranslations: Record<SystemIntakeActionType, string> = {
+  BIZ_CASE_NEEDS_CHANGES: 'Requested business case changes (not ready for GRT)',
+  CHANGE_LCID_RETIREMENT_DATE: 'Life Cycle ID retirement date updated',
+  CLOSE_REQUEST: 'Closed the request',
+  CONFIRM_LCID: 'Life Cycle ID confirmed',
+  CREATE_BIZ_CASE: 'Created a new business case',
+  EXPIRE_LCID: 'Life Cycle ID expired',
+  EXTEND_LCID: 'Life Cycle ID extended',
+  GUIDE_RECEIVED_CLOSE: 'Guide received. Closed the request.',
+  ISSUE_LCID: 'Issued Life Cycle ID with no further governance',
+  NEED_BIZ_CASE: 'Requested a business case',
+  NOT_GOVERNANCE: 'Marked as not an IT governance request',
+  NOT_IT_REQUEST: 'Marked as not an IT governance request',
+  NOT_RESPONDING_CLOSE: 'Requester was not responding. Closed the request.',
+  NO_GOVERNANCE_NEEDED: 'Marked as no further governance needed',
+  PROGRESS_TO_NEW_STEP: 'Progressed to a new step',
+  PROVIDE_FEEDBACK_NEED_BIZ_CASE:
+    'Provided GRT Feedback and progressed to business case',
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT:
+    'Provided GRT feedback and kept business case draft',
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL:
+    'Provided GRT feedback and moved business case to final',
+  READY_FOR_GRB: 'Marked as ready for GRB',
+  READY_FOR_GRT: 'Marked as ready for GRT',
+  REJECT: 'Rejected the request',
+  REOPEN_REQUEST: 'Reopened the request',
+  REQUEST_EDITS: 'Requested edits to a form',
+  RETIRE_LCID: 'Life Cycle ID retired',
+  SEND_EMAIL: 'Email sent to requester',
+  SUBMIT_BIZ_CASE: 'Submitted a business case',
+  SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft business case',
+  SUBMIT_INTAKE: 'Submitted a System Intake',
+  UPDATE_LCID: 'Life Cycle ID updated'
+};
+
 const governanceReviewTeam = {
   title: 'Prepare for the Governance Review Team meeting',
   description:
@@ -135,31 +173,7 @@ const governanceReviewTeam = {
     heading: 'Admin team notes',
     addNote: 'Add a note',
     addNoteCta: 'Add note',
-    actionName: {
-      NOT_IT_REQUEST: 'Marked as not an IT governance request',
-      NEED_BIZ_CASE: 'Requested a business case',
-      READY_FOR_GRT: 'Marked as ready for GRT',
-      READY_FOR_GRB: 'Marked as ready for GRB',
-      PROVIDE_FEEDBACK_NEED_BIZ_CASE:
-        'Provided GRT Feedback and progressed to business case',
-      ISSUE_LCID: 'Issued Life Cycle ID with no further governance',
-      EXTEND_LCID: 'Life Cycle ID extended',
-      BIZ_CASE_NEEDS_CHANGES:
-        'Requested business case changes (not ready for GRT)',
-      PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT:
-        'Provided GRT feedback and kept business case draft',
-      PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL:
-        'Provided GRT feedback and moved business case to final',
-      NO_GOVERNANCE_NEEDED: 'Marked as no further governance needed',
-      SUBMIT_INTAKE: 'Submitted a System Intake',
-      SUBMIT_BIZ_CASE: 'Submitted a business case',
-      CREATE_BIZ_CASE: 'Created a new business case',
-      SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft business case',
-      REJECT: 'Rejected the request',
-      SEND_EMAIL: 'Email sent to requester',
-      NOT_RESPONDING_CLOSE: 'Requester was not responding. Closed the request.',
-      GUIDE_RECEIVED_CLOSE: 'Guide received. Closed the request.'
-    },
+    actionName: actionNameTranslations,
     showEmail: 'Show Email',
     hideEmail: 'Hide Email',
     extendLcid: {
@@ -223,6 +237,7 @@ const governanceReviewTeam = {
     shutdownComplete: 'Request was marked "Shutdown Complete"'
   },
   actions: 'Actions',
+  requestType: 'Request type',
   status: {
     label: 'Status',
     open: 'Open',
@@ -235,17 +250,19 @@ const governanceReviewTeam = {
       noChanges: "Don't make changes and return to request page"
     },
     changeLead: 'Change',
+    assignLead: 'Assign',
     notAssigned: 'Not Assigned',
     members: [
-      'Jaime Cadwell',
       'Alex Smith',
-      'Leilani Fields',
       'Ashley Marks',
-      'Leah Nguyen',
       'Emily Hill',
+      'Jaime Cadwell',
+      'Leah Nguyen',
+      'Leilani Fields',
+      'Nicholas Downey',
       'Savannah Huttenberger',
-      'Valerie Hartz',
-      'Nicholas Downey'
+      'Tara Ross',
+      'Valerie Hartz'
     ]
   }
 };

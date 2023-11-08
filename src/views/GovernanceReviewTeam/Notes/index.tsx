@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-import { Button } from '@trussworks/react-uswds';
+import { Button, ButtonGroup, ModalFooter } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
@@ -215,10 +215,12 @@ const Notes = () => {
                     });
                   }}
                 >
-                  <PageHeading headingLevel="h2" className="margin-top-0">
+                  <PageHeading headingLevel="h2" className="margin-y-0">
                     {t('notes.editModal.header')}
                   </PageHeading>
-                  <p>{t('notes.editModal.description')}</p>
+                  <p className="margin-top-0">
+                    {t('notes.editModal.description')}
+                  </p>
                   <Label htmlFor="GovernanceReviewTeam-EditNote">
                     {t('notes.editModal.contentLabel')}
                   </Label>
@@ -226,7 +228,7 @@ const Notes = () => {
                     as={TextAreaField}
                     id="GovernanceReviewTeam-EditNote"
                     name="editNote"
-                    className="easi-grt__note-textarea margin-bottom-4"
+                    className="easi-grt__note-textarea"
                     onChange={(e: { target: { value: any } }) => {
                       setupNoteModal({
                         ...noteModal,
@@ -238,36 +240,43 @@ const Notes = () => {
                     value={noteModal.content}
                     onBlur={() => {}}
                   />
-                  <Button
-                    type="button"
-                    id="GovernanceReviewTeam-SaveEditsButton"
-                    className="margin-right-4"
-                    onClick={() => {
-                      updateSystemIntakeNote(noteModal.id, noteModal.content);
-                      setupNoteModal({
-                        ...noteModal,
-                        ...{
-                          isOpen: false
-                        }
-                      });
-                    }}
-                  >
-                    {t('notes.editModal.saveEdits')}
-                  </Button>
-                  <Button
-                    type="button"
-                    unstyled
-                    onClick={() => {
-                      setupNoteModal({
-                        ...noteModal,
-                        ...{
-                          isOpen: false
-                        }
-                      });
-                    }}
-                  >
-                    {t('notes.editModal.cancel')}
-                  </Button>
+                  <ModalFooter>
+                    <ButtonGroup>
+                      <Button
+                        type="button"
+                        id="GovernanceReviewTeam-SaveEditsButton"
+                        className="margin-right-1"
+                        onClick={() => {
+                          updateSystemIntakeNote(
+                            noteModal.id,
+                            noteModal.content
+                          );
+                          setupNoteModal({
+                            ...noteModal,
+                            ...{
+                              isOpen: false
+                            }
+                          });
+                        }}
+                      >
+                        {t('notes.editModal.saveEdits')}
+                      </Button>
+                      <Button
+                        type="button"
+                        unstyled
+                        onClick={() => {
+                          setupNoteModal({
+                            ...noteModal,
+                            ...{
+                              isOpen: false
+                            }
+                          });
+                        }}
+                      >
+                        {t('notes.editModal.cancel')}
+                      </Button>
+                    </ButtonGroup>
+                  </ModalFooter>
                 </Modal>
               )}
 
@@ -356,6 +365,7 @@ const Notes = () => {
         feedback,
         lcidExpirationChange
       } = action;
+
       return {
         createdAt,
         element: (
