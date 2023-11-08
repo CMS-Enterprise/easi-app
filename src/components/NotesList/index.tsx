@@ -1,6 +1,8 @@
 import React from 'react';
 import classnames from 'classnames';
 
+import { RichTextViewer } from 'components/RichTextEditor';
+
 import './index.scss';
 
 type NoteListItemProps = {
@@ -36,7 +38,15 @@ export const NoteContent = ({
     className
   );
 
-  return <p className={classes}>{children}</p>;
+  return (
+    <p className={classes}>
+      {typeof children === 'string' ? (
+        <RichTextViewer value={children} />
+      ) : (
+        children
+      )}
+    </p>
+  );
 };
 
 export const NoteByline = ({
