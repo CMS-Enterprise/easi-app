@@ -1,8 +1,20 @@
-<p>Hello,</p>
+{{template "easi_header.gohtml"}}
+
+<p>You have {{if .IsResubmitted}}completed{{else}}made changes to{{end}} a {{if .IsDraft}}draft{{else}}final{{end}} Business Case for your IT Governance request {{.RequestName}}. The Governance Review Team (GRT) will review {{if .IsResubmitted}}it{{else}}your changes{{end}} and {{if .IsDraft}}will either get back to you within two business days or share feedback at your scheduled GRT meeting.{{else}}get back to you within two business days. In the meantime, you may review guidance in EASi about <a href="{{.PreparingForGRBLink}}">preparing for the GRB</a>. If you have not done so already, you may consider filling out the GRB meeting slide deck template, located <a href="">here</a>.</p>{{end}}
 
 <p>
-  You have a new Business Case pending in EASi.
-  Please get back to the requester as soon as possible with your response.
+  The Governance Review Team will inform you of any next steps for your request. Possible next steps:
+  <ul>
+    {{if .IsDraft}}<li>additional steps in the Governance Review process such as a meeting with the full GRT or a meeting with the Governance Review Board (GRB)</li>
+    {{else}}<li>your Business Case is ready for a meeting with the Governance Review Board (GRB)</li>
+    <li>your Business Case needs further edits before presenting to the GRB</li>{{end}}
+    <li>no further governance is necessary and a decision is issued or the request is closed.</li>
+  </ul>
 </p>
 
-<a href="{{.BusinessCaseLink}}" >Open Business Case for {{.RequestName}} in EASi</a>
+<p><a href="{{.SystemIntakeRequestLink}}">View your request in EASi</a></p>
+
+<p>If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
+<hr>
+<p>You will continue to receive email notifications about your request until it is closed.</p>
+

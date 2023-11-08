@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -100,21 +99,6 @@ const (
 	// SystemIntakeStepDECISION captures enum value "DECISION_AND_NEXT_STEPS"
 	SystemIntakeStepDECISION SystemIntakeStep = "DECISION_AND_NEXT_STEPS"
 )
-
-// Humanize replaces underscores with spaces and converts an uppercased word to a capitalized one
-func (step SystemIntakeStep) Humanize() string {
-	if step == "" {
-		return ""
-	}
-	upperStepSlice := strings.Split(string(step), "_")
-	var wordSlice []string
-	for _, word := range upperStepSlice {
-		word = strings.ToLower(word)
-		upperWord := strings.ToUpper(string(word[0])) + word[1:]
-		wordSlice = append(wordSlice, upperWord)
-	}
-	return strings.Join(wordSlice, " ")
-}
 
 // SystemIntakeLCIDStatus represents the possible statuses that an issued LCID can be in
 type SystemIntakeLCIDStatus string

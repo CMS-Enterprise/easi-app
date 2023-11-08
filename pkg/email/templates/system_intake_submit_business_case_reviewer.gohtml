@@ -1,8 +1,13 @@
-<p>Hello,</p>
+{{template "easi_header.gohtml"}}
 
-<p>
-  You have a new Business Case pending in EASi.
-  Please get back to the requester as soon as possible with your response.
+<p>{{.RequesterName}} has {{if .IsResubmitted}}made changes to their{else}}submitted a{{end}} {{if .IsDraft}}draft{{else}}final{{end}} Business Case for {{.RequestName}}. Use the link below to review {{if .IsResubmitted}}the changes{{else}}the Business Case in EASi{{end}}. The lead for this request of another member of the Governance team should respond within two business days with any feedback about the Business Case or to move the request to the next step in the Governance Review process.</p>
+
+<p><a href="{{.SystemIntakeAdminLink}}">View this request in EASi</a></p>
+
+<p>Next Steps:
+  <ul>
+    <li>review the {{if .IsDraft}}draft{{else}}final{{end}} Business Case and decide what (if any) next steps are needed</li>
+    <li>Take the appropriate actions within EASi.</li>
+  </ul>
 </p>
 
-<a href="{{.BusinessCaseLink}}" >Open Business Case for {{.RequestName}} in EASi</a>

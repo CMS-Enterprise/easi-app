@@ -1,38 +1,43 @@
 {{template "easi_header.gohtml"}}
 
-<p><pre style="white-space: pre-wrap; word-break: keep-all;">Lifecycle ID issued for {{.ProjectName}} is set to expire on {{.ExpiresAt}}. If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>
-To avoid this please email the Governance Team at {{.GRTEmail}} within one week to update them with the current status of your project.
-
-For New IT development projects, please include (if applicable):
-<ul>
-<li>if the project is in production and if so, the date it was released into production</li>
-<li>if development of the project is still underway and if so, the target production release date</li>
-<li>the date the final contract option year expires</li>
-<li>if the development effort has encountered difficulties and would like technical assistance (please also include the target production date)</li>
-<li>if the project has been cancelled</li>
-<li>if the project is on hold</li>
-</ul>
-For O&M projects or services contracts, please include (if applicable):
-<ul>
-<li>if the current contract is not being extended, include the end date of the period of performance</li>
-<li>if a new contract or re-compete is being planned, include the target date for release of solicitation and the target award date</li>
-<li>if an extension of the current contract is planned, include the new contract expiration date</li>
-<li>describe any new development or planned changes to service requirements, if any</li>
-<li>if you anticipate a cost increase, please indicate how much of an increase you anticipate over what you are currently spending</li>
-<li>if contract support is no longer needed</li>
-</ul>
-View this request in EASi:
-<ul>
-<li>The person who initially submitted this request, {{.RequesterName}}, may <a href="{{.RequesterLink}}" style="font-weight: bold">click here</a> to view the request task list and <a href="{{.RequesterLink}}/request-decision" style="font-weight: bold">here</a> to view the decision and LCID information</li>
-<li>Governance Team members may <a href="{{.GRTLink}}" style="font-weight: bold">click here</a> to view the decision and LCID information</li>
-<li>Others should contact {{.RequesterName}} or the Governance Team for more information on the request</li>
-</ul>
-If you have questions please contact the Governance Team at {{.GRTEmail}}
-
-
-<u>Current Lifecycle ID Summary</u>
-<p>Lifecycle ID: {{.LifecycleID}}</p>
-<p>Expiration Date: {{.ExpiresAt}}</p>
-<p>Scope: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.Scope}}</pre></p>
-{{if .CostBaseline}}<p>Project Cost Baseline: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.CostBaseline}}</pre></p>{{end}}
-{{if .NextSteps}}<p>Next Steps: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.NextSteps}}</pre></p>{{end}}
+<p>Lifecycle ID issued for {{.ProjectName}} is set to expire on {{.ExpiresAt}}. If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>
+<p>To avoid this please email the Governance Team at <a href="mailto:{{.GRTEmail}}">{{.GRTEmail}}</a> within one week to update them with the current status of your project.</p>
+<p>
+  For New IT development projects, please include (if applicable):
+  <ul>
+    <li>if the project is in production and if so, the date it was released into production</li>
+    <li>if development of the project is still underway and if so, the target production release date</li>
+    <li>the date the final contract option year expires</li>
+    <li>if the development effort has encountered difficulties and would like technical assistance (please also include the target production date)</li>
+    <li>if the project has been cancelled</li>
+    <li>if the project is on hold</li>
+  </ul>
+</p>
+<p>
+  For O&M projects or services contracts, please include (if applicable):
+  <ul>
+    <li>if the current contract is not being extended, include the end date of the period of performance</li>
+    <li>if a new contract or re-compete is being planned, include the target date for release of solicitation and the target award date</li>
+    <li>if an extension of the current contract is planned, include the new contract expiration date</li>
+    <li>describe any new development or planned changes to service requirements, if any</li>
+    <li>if you anticipate a cost increase, please indicate how much of an increase you anticipate over what you are currently spending</li>
+    <li>if contract support is no longer needed</li>
+  </ul>
+</p>
+<p>
+  View this request in EASi:
+  <ul>
+    <li>The person who initially submitted this request, {{.RequesterName}}, may <a href="{{.RequesterLink}}" style="font-weight: bold">click here</a> to view the request task list and <a href="{{.RequesterLink}}/request-decision" style="font-weight: bold">here</a> to view the decision and LCID information</li>
+    <li>Governance Team members may <a href="{{.GRTLink}}" style="font-weight: bold">click here</a> to view the decision and LCID information</li>
+    <li>Others should contact {{.RequesterName}} or the Governance Team for more information on the request</li>
+  </ul>
+</p>
+<p>If you have questions please contact the Governance Team at {{.GRTEmail}}</p>
+<p>
+  <u>Current Lifecycle ID Summary</u><br>
+  Lifecycle ID: {{.LifecycleID}}<br>
+  Expiration Date: {{.ExpiresAt}}<br>
+  Scope: {{.Scope}}
+  {{if .CostBaseline}}<br>Project Cost Baseline: {{.CostBaseline}}{{end}}
+  {{if .NextSteps}}<br>Next Steps: {{.NextSteps}}{{end}}
+</p>

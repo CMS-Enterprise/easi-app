@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/url"
 	"path"
+	"strings"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -460,4 +461,20 @@ func (c Client) listAllRecipients(recipients models.EmailNotificationRecipients)
 	}
 
 	return allRecipients
+}
+
+// HumanizeSnakeCase replaces underscores with spaces and converts an uppercased word to a capitalized one
+func HumanizeSnakeCase(s string) string {
+	if s == "" {
+		return ""
+	}
+	upperSlice := strings.Split(s, "_")
+	var wordSlice []string
+	for _, word := range upperSlice {
+		capitalFirstLetter := strings.ToUpper(string(word[0]))
+		restOfWord := strings.ToLower(word[1:])
+		capitalizedWord := capitalFirstLetter + restOfWord
+		wordSlice = append(wordSlice, capitalizedWord)
+	}
+	return strings.Join(wordSlice, " ")
 }
