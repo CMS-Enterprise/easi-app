@@ -343,7 +343,7 @@ const Notes = () => {
                   {t('notes.remove')}
                 </Button>
               </NoteByline>
-              {noteModal.type === 'remove' && ( // TODO - is this the best way to do this. Maybe better to have two separate noteModal useState hooks?
+              {noteModal.type === 'remove' && noteModal.id === id && (
                 <Modal
                   isOpen={noteModal.isOpen}
                   closeModal={() => {
