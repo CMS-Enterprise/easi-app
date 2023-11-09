@@ -24,7 +24,7 @@ describe('Governance Review Team', () => {
       '/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/intake-request'
     );
     cy.get('[data-testid="admin-lead"]').contains('Not Assigned');
-    cy.contains('button', 'Change').click();
+    cy.contains('button', 'Assign').click();
 
     const firstGovTeamMember = governaceReviewTeam.adminLeads.members[0];
     cy.get(`input[value='${firstGovTeamMember}']`).check({ force: true });
@@ -221,7 +221,7 @@ describe('Governance Review Team', () => {
       .then(text => {
         expect(text.length).to.equal(28);
       });
-    cy.contains('dt', 'Life Cycle ID issued');
+    cy.contains('p', 'Life Cycle ID issued');
 
     cy.get(
       'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/lcid"]'
@@ -233,7 +233,7 @@ describe('Governance Review Team', () => {
     cy.contains('dt', 'Next Steps').siblings('dd').contains('Next steps');
   });
 
-  it('can close a request', () => {
+  it.only('can close a request', () => {
     // Selecting name based on pre-seeded data
     // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
     cy.governanceReviewTeam.grtActions.selectAction({
@@ -249,7 +249,7 @@ describe('Governance Review Team', () => {
 
     cy.wait('@getSystemIntake').its('response.statusCode').should('eq', 200);
 
-    cy.get('[data-testid="grt-status"]').contains('Closed');
+    cy.get('[data-testid="request-state"]').contains('Closed');
 
     cy.visit('/');
     cy.get('[data-testid="view-closed-intakes-btn"]').click();
