@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, ButtonGroup, ModalFooter } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
 import Modal from 'components/Modal';
@@ -21,7 +21,6 @@ import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
 import TruncatedText from 'components/shared/TruncatedText';
 import CreateSystemIntakeNoteQuery from 'queries/CreateSystemIntakeNoteQuery';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
@@ -123,8 +122,6 @@ const Notes = () => {
     type: '' // TODO - make this an enum?
   });
 
-  console.debug('noteModal', noteModal);
-
   // Character limit for length of free text (LCID Scope, Next Steps, and Cost Baseline),
   // any text longer then this limit will be displayed with a button to allow users
   // to expand/unexpand the text
@@ -150,12 +147,6 @@ const Notes = () => {
   const initialValues = {
     note: ''
   };
-
-  // const enableRte = false;
-  // const enableOriginal = true;
-
-  const enableRte = true;
-  const enableOriginal = false;
 
   // New
   const notesByTimestamp =
@@ -198,7 +189,6 @@ const Notes = () => {
                   id="GovernanceReviewTeam-EditNoteButton"
                   unstyled
                   onClick={() => {
-                    console.log('edit note content', content);
                     setupNoteModal({
                       ...noteModal,
                       ...{
@@ -237,51 +227,27 @@ const Notes = () => {
                   >
                     {t('notes.editModal.contentLabel')}
                   </Label>
-                  {enableRte && (
-                    <RichTextEditorFormikField
-                      id="GovernanceReviewTeam-EditNote"
-                      name="editNote"
-                      height="300px"
-                      required
-                      editableProps={{
-                        id: 'GovernanceReviewTeam-EditNote',
-                        'data-testid': 'GovernanceReviewTeam-EditNote',
-                        'aria-labelledby': 'GovernanceReviewTeam-EditNote-label'
-                      }}
-                      onChange={(value: any) => {
-                        // if (id === noteModal.id) {
-                        console.log('RTE Field onChange value', value, id);
-                        setupNoteModal({
-                          ...noteModal,
-                          ...{
-                            content: value
-                          }
-                        });
-                        // }
-                      }}
-                      value={noteModal.content}
-                      onBlur={() => {}}
-                    />
-                  )}
-                  {enableOriginal && (
-                    <Field
-                      as={TextAreaField}
-                      id="GovernanceReviewTeam-EditNote"
-                      name="editNote"
-                      className="easi-grt__note-textarea"
-                      onChange={(e: { target: { value: any } }) => {
-                        console.log('Field onChange e', e, id);
-                        setupNoteModal({
-                          ...noteModal,
-                          ...{
-                            content: e.target.value
-                          }
-                        });
-                      }}
-                      value={noteModal.content}
-                      onBlur={() => {}}
-                    />
-                  )}
+                  <RichTextEditorFormikField
+                    id="GovernanceReviewTeam-EditNote"
+                    name="editNote"
+                    height="300px"
+                    required
+                    editableProps={{
+                      id: 'GovernanceReviewTeam-EditNote',
+                      'data-testid': 'GovernanceReviewTeam-EditNote',
+                      'aria-labelledby': 'GovernanceReviewTeam-EditNote-label'
+                    }}
+                    onChange={(value: any) => {
+                      setupNoteModal({
+                        ...noteModal,
+                        ...{
+                          content: value
+                        }
+                      });
+                    }}
+                    value={noteModal.content}
+                    onBlur={() => {}}
+                  />
                   <ModalFooter>
                     <ButtonGroup>
                       <Button
@@ -559,7 +525,6 @@ const Notes = () => {
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {(formikProps: FormikProps<NoteForm>) => {
           const { values, handleSubmit } = formikProps;
-          console.debug('values', values);
           return (
             <div className="tablet:grid-col-9 margin-bottom-7">
               {createMutationResult && createMutationResult.error && (
@@ -583,28 +548,17 @@ const Notes = () => {
                   >
                     {t('notes.addNote')}
                   </Label>
-                  {enableRte && (
-                    <RichTextEditorFormikField
-                      id="GovernanceReviewTeam-Note"
-                      name="note"
-                      height="5rem"
-                      required
-                      editableProps={{
-                        id: 'GovernanceReviewTeam-Note',
-                        'data-testid': 'GovernanceReviewTeam-Note',
-                        'aria-labelledby': 'GovernanceReviewTeam-Note-label'
-                      }}
-                    />
-                  )}
-                  {enableOriginal && (
-                    <Field
-                      as={TextAreaField}
-                      id="GovernanceReviewTeam-Note"
-                      maxLength={2000}
-                      name="note"
-                      className="easi-grt__note-field"
-                    />
-                  )}
+                  <RichTextEditorFormikField
+                    id="GovernanceReviewTeam-Note"
+                    name="note"
+                    height="5rem"
+                    required
+                    editableProps={{
+                      id: 'GovernanceReviewTeam-Note',
+                      'data-testid': 'GovernanceReviewTeam-Note',
+                      'aria-labelledby': 'GovernanceReviewTeam-Note-label'
+                    }}
+                  />
                 </FieldGroup>
                 <Button
                   className="margin-top-2"

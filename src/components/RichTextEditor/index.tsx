@@ -274,8 +274,6 @@ const linkAttributes = {
 function RichTextEditor({ className, field, ...props }: RichTextEditorProps) {
   const editorRef = React.createRef<Editor>();
 
-  console.debug('RichTextEditor field', field);
-
   // Make sure to apply mods only once
   useEffect(() => {
     const editor = editorRef.current;
@@ -379,8 +377,6 @@ export function RichTextEditorFormikField({
   ...props
 }: RichTextEditorFormikFieldProps) {
   const [field, , helpers] = useField(props);
-  console.debug('RichTextEditorFormikField', props, field);
-
   return (
     <RichTextEditor
       field={{
