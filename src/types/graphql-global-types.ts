@@ -240,6 +240,16 @@ export enum SystemIntakeDocumentStatus {
 }
 
 /**
+ * This represents the possible state any system intake form can take
+ */
+export enum SystemIntakeFormState {
+  EDITS_REQUESTED = "EDITS_REQUESTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  NOT_STARTED = "NOT_STARTED",
+  SUBMITTED = "SUBMITTED",
+}
+
+/**
  * SystemIntakeRequestEditsOptions represents the current step in the intake process
  */
 export enum SystemIntakeFormStep {

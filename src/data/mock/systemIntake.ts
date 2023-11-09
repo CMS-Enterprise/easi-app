@@ -41,6 +41,7 @@ import {
   SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentStatus,
+  SystemIntakeFormState,
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatus,
@@ -243,7 +244,8 @@ export const systemIntake: SystemIntake = {
   documents: [],
   state: SystemIntakeState.OPEN,
   decisionState: SystemIntakeDecisionState.NO_DECISION,
-  trbFollowUpRecommendation: null
+  trbFollowUpRecommendation: null,
+  requestFormState: SystemIntakeFormState.SUBMITTED
 };
 
 /** System intake form that has NOT been started */

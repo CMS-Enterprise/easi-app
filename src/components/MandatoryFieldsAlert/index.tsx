@@ -5,10 +5,15 @@ import Alert from 'components/shared/Alert';
 
 import './index.scss';
 
-const MandatoryFieldsAlert = () => {
+const MandatoryFieldsAlert = ({ className }: { className?: string }) => {
   const { t } = useTranslation('form');
   return (
-    <Alert type="info" slim data-testid="mandatory-fields-alert">
+    <Alert
+      type="info"
+      className={className}
+      data-testid="mandatory-fields-alert"
+      slim
+    >
       {t('allFieldsMandatory')}
     </Alert>
   );
