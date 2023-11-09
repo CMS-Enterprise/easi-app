@@ -60,7 +60,7 @@ func (sie systemIntakeEmails) businessCaseSubmissionRequesterBody(
 // SendSubmitBizCaseRequesterNotification sends an email for a submitted business case
 func (sie systemIntakeEmails) SendSubmitBizCaseRequesterNotification(
 	ctx context.Context,
-	reqeuesterEmailAddress models.EmailAddress,
+	requesterEmailAddress models.EmailAddress,
 	requestName string,
 	systemIntakeID uuid.UUID,
 	isResubmitted bool,
@@ -93,7 +93,7 @@ func (sie systemIntakeEmails) SendSubmitBizCaseRequesterNotification(
 	}
 	err = sie.client.sender.Send(
 		ctx,
-		[]models.EmailAddress{sie.client.config.GRTEmail},
+		[]models.EmailAddress{requesterEmailAddress},
 		nil,
 		subject,
 		body,

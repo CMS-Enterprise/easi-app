@@ -119,7 +119,9 @@ func NewSubmitSystemIntake(
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
+		// TODO: Remove when Admin Actions v2 is live
 		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
+		// Set intake state based on v2 logic
 		intake.RequestFormState = models.SIRFSSubmitted
 		intake.SubmittedAt = &updatedTime
 
@@ -235,15 +237,6 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		isResubmitted := false
-		if (intake.Step == models.SystemIntakeStepDRAFTBIZCASE && intake.DraftBusinessCaseState == models.SIRFSEditsRequested) ||
-			(intake.Step == models.SystemIntakeStepFINALBIZCASE && intake.FinalBusinessCaseState == models.SIRFSEditsRequested) {
-			isResubmitted = true
-		}
-		isDraft := false
-		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
-			isDraft = true
-		}
 		// Uncomment below when UI has changed for unique lifecycle costs
 		//err = appvalidation.BusinessCaseForUpdate(businessCase)
 		//if err != nil {
@@ -252,7 +245,8 @@ func NewSubmitBusinessCase(
 		updatedAt := config.clock.Now()
 		businessCase.UpdatedAt = &updatedAt
 
-		if businessCase.SystemIntakeStatus == models.SystemIntakeStatusBIZCASEFINALNEEDED {
+		if businessCase.SystemIntakeStatus == models.SystemIntakeStatusBIZCASEFINALNEEDED ||
+			intake.Step == models.SystemIntakeStepFINALBIZCASE {
 			err = validateForSubmit(businessCase)
 			if err != nil {
 				return err
@@ -277,12 +271,26 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		intake.Status = newIntakeStatus // newIntakeStatus determines what state we update.
-		if newIntakeStatus == models.SystemIntakeStatusBIZCASEFINALSUBMITTED {
-			intake.FinalBusinessCaseState = models.SIRFSSubmitted
-		} else if newIntakeStatus == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED {
-			intake.DraftBusinessCaseState = models.SIRFSSubmitted
+		isResubmitted := false
+		if (intake.Step == models.SystemIntakeStepDRAFTBIZCASE && intake.DraftBusinessCaseState == models.SIRFSEditsRequested) ||
+			(intake.Step == models.SystemIntakeStepFINALBIZCASE && intake.FinalBusinessCaseState == models.SIRFSEditsRequested) {
+			isResubmitted = true
 		}
+		isDraft := false
+		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+			isDraft = true
+		}
+
+		// TODO: Remove when Admin Actions v2 is live
+		intake.Status = newIntakeStatus
+
+		// Set intake state based on v2 logic
+		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+			intake.DraftBusinessCaseState = models.SIRFSSubmitted
+		} else if intake.Step == models.SystemIntakeStepFINALBIZCASE {
+			intake.FinalBusinessCaseState = models.SIRFSSubmitted
+		}
+
 		intake.UpdatedAt = &updatedAt
 		intake, err = updateIntake(ctx, intake)
 		if err != nil {
@@ -318,7 +326,8 @@ func NewSubmitBusinessCase(
 
 		// TODO - EASI-2363 - rework conditional to also trigger on publishing finalized system intakes
 		// need to check intake.Status, *not* businessCase.SystemIntakeStatus - intake is what gets returned from calling updateIntake()
-		if intake.Status == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED {
+		if intake.Status == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED ||
+			intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 			err = submitToCEDAR(ctx, *businessCase)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(err))
