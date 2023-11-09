@@ -1,8 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
 
-import { RichTextViewer } from 'components/RichTextEditor';
-
 import './index.scss';
 
 type NoteListItemProps = {
@@ -13,6 +11,11 @@ type NoteListItemProps = {
 type NoteContentProps = {
   children: React.ReactNode;
   className?: string;
+  /**
+   * Option to <p> element wrap `children` for plain text content.
+   * Use `false` when `children` is something like the RTE Viewer.
+   */
+  plainTextWrap?: boolean;
 } & JSX.IntrinsicElements['p'];
 
 type NoteBylineProps = {
@@ -29,6 +32,7 @@ type NoteListProps = {
 export const NoteContent = ({
   children,
   className,
+  plainTextWrap = true,
   ...props
 }: NoteContentProps) => {
   const classes = classnames(
@@ -38,14 +42,10 @@ export const NoteContent = ({
     className
   );
 
-  return (
-    <p className={classes}>
-      {typeof children === 'string' ? (
-        <RichTextViewer value={children} />
-      ) : (
-        children
-      )}
-    </p>
+  return plainTextWrap ? (
+    <p className={classes}>{children}</p>
+  ) : (
+    <>{children}</>
   );
 };
 

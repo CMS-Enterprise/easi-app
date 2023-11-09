@@ -15,7 +15,10 @@ import {
   NotesList
 } from 'components/NotesList';
 import PageHeading from 'components/PageHeading';
-import { RichTextEditorFormikField } from 'components/RichTextEditor';
+import {
+  RichTextEditorFormikField,
+  RichTextViewer
+} from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -164,7 +167,9 @@ const Notes = () => {
         createdAt,
         element: (
           <NoteListItem key={id} isLinked data-testid="user-note">
-            <NoteContent>{content}</NoteContent>
+            <NoteContent plainTextWrap={false}>
+              <RichTextViewer className="margin-bottom-1" value={content} />
+            </NoteContent>
             <NoteByline>{`by ${author.name} | ${DateTime.fromISO(
               createdAt
             ).toFormat('MMMM d, yyyy')} at ${DateTime.fromISO(
