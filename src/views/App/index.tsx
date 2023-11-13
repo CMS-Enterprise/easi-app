@@ -24,8 +24,9 @@ import FlagsWrapper from 'views/FlagsWrapper';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
+import GovernanceFeedback from 'views/GovernanceTaskList/Feedback';
 import GovernanceTaskListV1 from 'views/GovernanceTaskListV1';
-import GovernanceFeedback from 'views/GovernanceTaskListV1/Feedback';
+import GovernanceFeedbackV1 from 'views/GovernanceTaskListV1/Feedback';
 import LcidInfo from 'views/GovernanceTaskListV1/LcidInfo';
 import RequestDecision from 'views/GovernanceTaskListV1/RequestDecision';
 import Help from 'views/Help';
@@ -111,25 +112,34 @@ const AppRoutes = () => {
 
       {flags.itGovV2Enabled ? (
         // IT Gov V2
-        <SecureRoute
-          path="/governance-task-list/:systemId"
-          exact
-          component={GovernanceTaskList}
-        />
+        <>
+          <SecureRoute
+            path="/governance-task-list/:systemId"
+            exact
+            component={GovernanceTaskList}
+          />
+          <SecureRoute
+            path="/governance-task-list/:systemId/feedback"
+            exact
+            component={GovernanceFeedback}
+          />
+        </>
       ) : (
         // IT Gov V1
-        <SecureRoute
-          path="/governance-task-list/:systemId"
-          exact
-          component={GovernanceTaskListV1}
-        />
+        <>
+          <SecureRoute
+            path="/governance-task-list/:systemId"
+            exact
+            component={GovernanceTaskListV1}
+          />
+          <SecureRoute
+            path="/governance-task-list/:systemId/feedback"
+            exact
+            component={GovernanceFeedbackV1}
+          />
+        </>
       )}
 
-      <SecureRoute
-        path="/governance-task-list/:systemId/feedback"
-        exact
-        component={GovernanceFeedback}
-      />
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/prepare-for-grt"
