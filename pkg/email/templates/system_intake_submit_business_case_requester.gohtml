@@ -1,6 +1,6 @@
 {{template "easi_header.gohtml"}}
 
-<p>You have {{if .IsResubmitted}}completed{{else}}made changes to{{end}} a {{if .IsDraft}}draft{{else}}final{{end}} Business Case for your IT Governance request {{.RequestName}}. The Governance Review Team (GRT) will review {{if .IsResubmitted}}it{{else}}your changes{{end}} and {{if .IsDraft}}will either get back to you within two business days or share feedback at your scheduled GRT meeting.{{else}}get back to you within two business days. In the meantime, you may review guidance in EASi about <a href="{{.PreparingForGRBLink}}">preparing for the GRB</a>. If you have not done so already, you may consider filling out the GRB meeting slide deck template, located <a href="">here</a>.</p>{{end}}
+<p>You have {{if .IsResubmitted}}made changes to{{else}}completed{{end}} a {{if .IsDraft}}draft{{else}}final{{end}} Business Case for your IT Governance request {{.RequestName}}. The Governance Review Team (GRT) will review {{if .IsResubmitted}}your changes{{else}}it{{end}} and {{if .IsDraft}}will either get back to you within two business days or share feedback at your scheduled GRT meeting.{{else}}get back to you within two business days. In the meantime, you may review guidance in EASi about <a href="{{.PreparingForGRBLink}}">preparing for the GRB</a>. If you have not done so already, you may consider filling out the GRB meeting slide deck template, located <a href="">here</a>.</p>{{end}}
 
 <p>
   The Governance Review Team will inform you of any next steps for your request. Possible next steps:
