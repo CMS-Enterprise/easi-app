@@ -52,6 +52,19 @@ const taskList = {
     },
     descriptiveDate: 'Feedback given on {{date}}'
   },
+  feedbackV2: {
+    heading: 'Feedback about your request',
+    returnToRequest: 'Return to Intake Request',
+    date: 'Date',
+    from: 'From',
+    editsRequestedFor: 'Edits requested for',
+    feedbackTitle: 'Edits requested to a form',
+    targetForm: {
+      INTAKE_REQUEST: 'Intake Request form',
+      DRAFT_BUSINESS_CASE: 'Draft Business Case form',
+      FINAL_BUSINESS_CASE: 'Final Business Case form'
+    }
+  },
   lcidAlert: {
     heading: 'Life Cycle ID Information',
     label: 'LCID:',

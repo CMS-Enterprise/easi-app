@@ -5,97 +5,115 @@ import { useQuery } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
-  BreadcrumbLink
+  BreadcrumbLink,
+  Grid,
+  IconArrowBack
 } from '@trussworks/react-uswds';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
-import HelpText from 'components/shared/HelpText';
-import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
+import Divider from 'components/shared/Divider';
+import IconLink from 'components/shared/IconLink';
+import GetGovernanceRequestFeedbackQuery from 'queries/GetGovernanceRequestFeedbackQuery';
 import {
-  GetGRTFeedback,
-  GetGRTFeedback_systemIntake_grtFeedbacks as GRTFeedback,
-  GetGRTFeedbackVariables
-} from 'queries/types/GetGRTFeedback';
+  GetGovernanceRequestFeedback,
+  GetGovernanceRequestFeedbackVariables
+} from 'queries/types/GetGovernanceRequestFeedback';
+import { GovernanceRequestFeedbackTargetForm } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
 const GovernanceFeedback = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('taskList');
-  const { data: grtFeedbackData } = useQuery<
-    GetGRTFeedback,
-    GetGRTFeedbackVariables
-  >(GetGRTFeedbackQuery, {
+  const { data } = useQuery<
+    GetGovernanceRequestFeedback,
+    GetGovernanceRequestFeedbackVariables
+  >(GetGovernanceRequestFeedbackQuery, {
     variables: {
       intakeID: systemId
     }
   });
 
-  const feedback = grtFeedbackData?.systemIntake?.grtFeedbacks || [];
-  const feedbackforGRB = feedback.filter(
-    grtFeedback => grtFeedback.feedbackType === 'GRB'
-  );
-  const feedbackforBusinessOwner = feedback.filter(
-    grtFeedback => grtFeedback.feedbackType === 'BUSINESS_OWNER'
-  );
-
-  const formatGRTFeedback = (item: GRTFeedback) => {
-    const formattedDate = formatDateLocal(item.createdAt, 'MMMM d, yyyy');
-    return (
-      <div className="margin-bottom-3" key={item.id}>
-        <h4
-          className="margin-y-0"
-          aria-label={t('feedback.descriptiveDate', { date: formattedDate })}
-        >
-          {formattedDate}
-        </h4>
-        <p className="margin-top-1 line-height-body-6">{item.feedback}</p>
-      </div>
-    );
-  };
+  const feedback = data?.systemIntake?.governanceRequestFeedbacks || [];
 
   return (
-    <MainContent>
-      <div className="grid-container">
-        <BreadcrumbBar variant="wrap">
-          <Breadcrumb>
-            <BreadcrumbLink asCustom={Link} to="/">
-              <span>{t('navigation.home')}</span>
-            </BreadcrumbLink>
-          </Breadcrumb>
-          <Breadcrumb>
-            <BreadcrumbLink
-              asCustom={Link}
-              to={`/governance-task-list/${systemId}`}
-            >
-              <span>{t('navigation.governanceTaskList')}</span>
-            </BreadcrumbLink>
-          </Breadcrumb>
-          <Breadcrumb current>{t('navigation.feedback')}</Breadcrumb>
-        </BreadcrumbBar>
-        <div className="grid-col-10">
-          <PageHeading>{t('feedback.heading')}</PageHeading>
-          {feedbackforGRB.length > 0 && (
-            <>
-              <h2>{t('feedback.grb.heading')}</h2>
-              <HelpText>{t('feedback.grb.help')}</HelpText>
-              <div className="margin-top-3">
-                {feedbackforGRB.map(item => formatGRTFeedback(item))}
-              </div>
-            </>
-          )}
+    <MainContent className="grid-container padding-bottom-10 margin-bottom-2">
+      <BreadcrumbBar variant="wrap">
+        <Breadcrumb>
+          <BreadcrumbLink asCustom={Link} to="/">
+            <span>{t('navigation.home')}</span>
+          </BreadcrumbLink>
+        </Breadcrumb>
+        <Breadcrumb>
+          <BreadcrumbLink
+            asCustom={Link}
+            to={`/governance-task-list/${systemId}`}
+          >
+            <span>{t('navigation.governanceTaskList')}</span>
+          </BreadcrumbLink>
+        </Breadcrumb>
+        <Breadcrumb current>{t('navigation.feedback')}</Breadcrumb>
+      </BreadcrumbBar>
 
-          <h2>{t('feedback.businessOwner.heading')}</h2>
-          <HelpText>{t('feedback.businessOwner.help')}</HelpText>
-          <div className="margin-top-3">
-            {feedbackforBusinessOwner.map(item => formatGRTFeedback(item))}
-          </div>
-        </div>
-        <UswdsReactLink to={`/governance-task-list/${systemId}`}>
-          {t('navigation.returnToTaskList')}
-        </UswdsReactLink>
-      </div>
+      <PageHeading className="margin-top-4 margin-bottom-105">
+        {t('feedbackV2.heading')}
+      </PageHeading>
+
+      <IconLink
+        to={`/governance-task-list/${systemId}`}
+        icon={<IconArrowBack />}
+      >
+        {t('feedbackV2.returnToRequest')}
+      </IconLink>
+
+      <ul className="usa-list--unstyled margin-top-4">
+        {feedback.map(item => {
+          return (
+            <li className="border-top-1px border-base-light margin-bottom-4">
+              <h3 className="margin-top-4">{t('feedbackV2.feedbackTitle')}</h3>
+              <dl className="grid-row">
+                <Grid col={6}>
+                  <dt className="text-bold margin-bottom-1">
+                    {t('feedbackV2.date')}
+                  </dt>
+                  <dd className="margin-x-0">
+                    {formatDateLocal(item.createdAt, 'MMMM d, yyyy')}
+                  </dd>
+                </Grid>
+                <Grid col={6}>
+                  <dt className="text-bold margin-bottom-1">
+                    {t('feedbackV2.from')}
+                  </dt>
+                  <dd className="margin-x-0">{item.author.commonName}</dd>
+                </Grid>
+                <div className="bg-base-lightest width-full margin-top-3 padding-3">
+                  {item.targetForm !==
+                    GovernanceRequestFeedbackTargetForm.NO_TARGET_PROVIDED && (
+                    <dl className="margin-y-0">
+                      <dt className="text-bold margin-top-0 margin-bottom-1">
+                        {t('feedbackV2.editsRequestedFor')}
+                      </dt>
+                      <dd className="margin-top-1 margin-bottom-4 margin-x-0">
+                        {t(`feedbackV2.targetForm.${item.targetForm}`)}
+                      </dd>
+                    </dl>
+                  )}
+                  <p className="margin-y-0">{item.feedback}</p>
+                </div>
+              </dl>
+            </li>
+          );
+        })}
+      </ul>
+
+      <Divider className="margin-bottom-4" />
+
+      <IconLink
+        to={`/governance-task-list/${systemId}`}
+        icon={<IconArrowBack />}
+      >
+        {t('feedbackV2.returnToRequest')}
+      </IconLink>
     </MainContent>
   );
 };
