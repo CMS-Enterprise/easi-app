@@ -57,6 +57,7 @@ const taskList = {
     returnToRequest: 'Return to Intake Request',
     date: 'Date',
     from: 'From',
+    author: '{{name}}, Governance Team',
     editsRequestedFor: 'Edits requested for',
     feedbackTitle: 'Edits requested to a form',
     targetForm: {

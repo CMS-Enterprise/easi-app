@@ -84,7 +84,9 @@ const GovernanceFeedback = () => {
                   <dt className="text-bold margin-bottom-1">
                     {t('feedbackV2.from')}
                   </dt>
-                  <dd className="margin-x-0">{item.author.commonName}</dd>
+                  <dd className="margin-x-0">
+                    {t('feedbackV2.author', { name: item.author.commonName })}
+                  </dd>
                 </Grid>
                 <div className="bg-base-lightest width-full margin-top-3 padding-3">
                   {item.targetForm !==
