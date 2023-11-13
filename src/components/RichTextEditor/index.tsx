@@ -20,6 +20,7 @@ import DOMPurify from 'dompurify';
 import { FieldHookConfig, useField } from 'formik';
 
 import ExternalLinkModal from 'components/shared/ExternalLinkModal';
+import extractTextContent from 'utils/extractTextContent';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import '@toast-ui/editor/dist/toastui-editor.css';
@@ -253,11 +254,6 @@ function showLinkUnderSelection(toastEditor: ToastuiEditor) {
 
     return null;
   });
-}
-
-function extractTextContent(html: string) {
-  return new DOMParser().parseFromString(html, 'text/html').documentElement
-    .textContent;
 }
 
 // Link attributes should match pkg/sanitization/html.go#createHTMLPolicy()
