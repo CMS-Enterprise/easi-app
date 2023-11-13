@@ -40,14 +40,17 @@ const GovernanceFeedback = () => {
 
   /** Return to request and PDF download links */
   const ActionLinks = () => (
-    <div className="display-flex">
+    <div className="tablet:display-flex">
       <IconLink
         to={`/governance-task-list/${systemId}`}
         icon={<IconArrowBack />}
+        className="margin-bottom-1 tablet:margin-bottom-0"
       >
         {t('feedbackV2.returnToRequest')}
       </IconLink>
-      <span className="margin-x-2 text-base-light">|</span>
+      <span className="margin-x-2 text-base-light display-none tablet:display-block">
+        |
+      </span>
       {/* TODO: Update link to download PDF */}
       <IconLink
         to={`/governance-task-list/${systemId}`}
