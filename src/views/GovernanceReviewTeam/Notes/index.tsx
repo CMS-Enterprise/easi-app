@@ -556,7 +556,7 @@ const Notes = () => {
                   <RichTextEditorFormikField
                     id="GovernanceReviewTeam-Note"
                     name="note"
-                    height="5rem"
+                    height="405px"
                     required
                     editableProps={{
                       id: 'GovernanceReviewTeam-Note',
