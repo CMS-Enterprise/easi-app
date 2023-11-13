@@ -59,7 +59,9 @@ const taskList = {
     from: 'From',
     author: '{{name}}, Governance Team',
     editsRequestedFor: 'Edits requested for',
-    feedbackTitle: 'Edits requested to a form',
+    feedbackTitleEditsRequested: 'Edits requested to a form',
+    feedbackTitle_GRB: 'Recommendation for the Governance Review Board (GRB)',
+    feedbackTitle_REQUESTER: 'General feedback for the requester',
     targetForm: {
       INTAKE_REQUEST: 'Intake Request form',
       DRAFT_BUSINESS_CASE: 'Draft Business Case form',

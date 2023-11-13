@@ -70,7 +70,13 @@ const GovernanceFeedback = () => {
         {feedback.map(item => {
           return (
             <li className="border-top-1px border-base-light margin-bottom-4">
-              <h3 className="margin-top-4">{t('feedbackV2.feedbackTitle')}</h3>
+              <h3 className="margin-top-4">
+                {item.targetForm !==
+                GovernanceRequestFeedbackTargetForm.NO_TARGET_PROVIDED
+                  ? t('feedbackV2.feedbackTitleEditsRequested')
+                  : t('feedbackV2.feedbackTitle', { context: item.type })}
+              </h3>
+
               <dl className="grid-row">
                 <Grid col={6}>
                   <dt className="text-bold margin-bottom-1">
