@@ -55,6 +55,7 @@ const taskList = {
   feedbackV2: {
     heading: 'Feedback about your request',
     returnToRequest: 'Return to Intake Request',
+    downloadAsPDF: 'Download feedback as PDF',
     date: 'Date',
     from: 'From',
     author: '{{name}}, Governance Team',

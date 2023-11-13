@@ -7,7 +7,8 @@ import {
   BreadcrumbBar,
   BreadcrumbLink,
   Grid,
-  IconArrowBack
+  IconArrowBack,
+  IconFileDownload
 } from '@trussworks/react-uswds';
 
 import MainContent from 'components/MainContent';
@@ -25,6 +26,7 @@ import { formatDateLocal } from 'utils/date';
 const GovernanceFeedback = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('taskList');
+
   const { data } = useQuery<
     GetGovernanceRequestFeedback,
     GetGovernanceRequestFeedbackVariables
@@ -35,6 +37,26 @@ const GovernanceFeedback = () => {
   });
 
   const feedback = data?.systemIntake?.governanceRequestFeedbacks || [];
+
+  /** Return to request and PDF download links */
+  const ActionLinks = () => (
+    <div className="display-flex">
+      <IconLink
+        to={`/governance-task-list/${systemId}`}
+        icon={<IconArrowBack />}
+      >
+        {t('feedbackV2.returnToRequest')}
+      </IconLink>
+      <span className="margin-x-2 text-base-light">|</span>
+      {/* TODO: Update link to download PDF */}
+      <IconLink
+        to={`/governance-task-list/${systemId}`}
+        icon={<IconFileDownload />}
+      >
+        {t('feedbackV2.downloadAsPDF')}
+      </IconLink>
+    </div>
+  );
 
   return (
     <MainContent className="grid-container padding-bottom-10 margin-bottom-2">
@@ -59,12 +81,7 @@ const GovernanceFeedback = () => {
         {t('feedbackV2.heading')}
       </PageHeading>
 
-      <IconLink
-        to={`/governance-task-list/${systemId}`}
-        icon={<IconArrowBack />}
-      >
-        {t('feedbackV2.returnToRequest')}
-      </IconLink>
+      <ActionLinks />
 
       <ul className="usa-list--unstyled margin-top-4">
         {feedback.map(item => {
@@ -116,12 +133,7 @@ const GovernanceFeedback = () => {
 
       <Divider className="margin-bottom-4" />
 
-      <IconLink
-        to={`/governance-task-list/${systemId}`}
-        icon={<IconArrowBack />}
-      >
-        {t('feedbackV2.returnToRequest')}
-      </IconLink>
+      <ActionLinks />
     </MainContent>
   );
 };
