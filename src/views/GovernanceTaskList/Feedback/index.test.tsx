@@ -15,8 +15,10 @@ import {
   GovernanceRequestFeedbackType
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
+import { formatDateLocal } from 'utils/date';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
+import FeedbackItem from './FeedbackItem';
 import Feedback from '.';
 
 const governanceRequestFeedbacks: GovernanceRequestFeedback[] = [
@@ -135,6 +137,7 @@ describe('Feedback page', () => {
         initialEntries={[
           {
             pathname: `/governance-task-list/${systemIntake.id}/feedback`,
+            // Set state for when navigating to feedback from intake request form
             state: {
               form: {
                 pathname: `/system/${systemIntake.id}/contact-details`,
@@ -178,5 +181,75 @@ describe('Feedback page', () => {
         i18next.t<string>('Intake Request Form')
       )
     );
+  });
+});
+
+describe('Feedback item component', () => {
+  const [
+    editsRequestedFeedback,
+    grbFeedback,
+    requesterFeedback
+  ] = governanceRequestFeedbacks;
+
+  it('Renders feedback type - Edits requested', () => {
+    render(<FeedbackItem {...editsRequestedFeedback} />);
+
+    const {
+      createdAt,
+      author,
+      targetForm,
+      feedback
+    } = governanceRequestFeedbacks[0];
+
+    expect(
+      screen.getByRole('heading', {
+        name: i18next.t<string>(
+          'taskList:feedbackV2.feedbackTitleEditsRequested'
+        )
+      })
+    );
+
+    const formattedDate = formatDateLocal(createdAt, 'MMMM d, yyyy');
+    expect(screen.getByText(formattedDate));
+
+    const formattedAuthor = i18next.t<string>('taskList:feedbackV2.author', {
+      name: author.commonName
+    });
+    expect(screen.getByText(formattedAuthor));
+
+    const targetFormList = screen.getByTestId('target-form');
+    expect(
+      within(targetFormList).getByText(
+        i18next.t<string>(`taskList:feedbackV2.targetForm.${targetForm}`)
+      )
+    );
+
+    expect(screen.getByText(feedback));
+  });
+
+  it('Renders feedback type - Requester', () => {
+    render(<FeedbackItem {...requesterFeedback} />);
+
+    expect(
+      screen.getByRole('heading', {
+        name: 'General feedback for the requester'
+      })
+    );
+
+    // Target form text should be hidden for NO_TARGET_PROVIDED
+    expect(screen.queryByTestId('target-form')).toBeNull();
+  });
+
+  it('Renders feedback type - GRB', () => {
+    render(<FeedbackItem {...grbFeedback} />);
+
+    expect(
+      screen.getByRole('heading', {
+        name: 'Recommendation for the Governance Review Board (GRB)'
+      })
+    );
+
+    // Target form text should be hidden for NO_TARGET_PROVIDED
+    expect(screen.queryByTestId('target-form')).toBeNull();
   });
 });
