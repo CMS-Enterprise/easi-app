@@ -188,6 +188,7 @@ const useRequestTableColumns = (
             closeLabel="more"
             text={lastAdminNote.content}
             charLimit={freeFormTextCharLimit}
+            isRich
           />
         </>
       );
