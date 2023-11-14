@@ -7,7 +7,6 @@ import {
   Breadcrumb,
   BreadcrumbBar,
   BreadcrumbLink,
-  Grid,
   IconArrowBack,
   IconFileDownload
 } from '@trussworks/react-uswds';
@@ -22,8 +21,8 @@ import {
   GetGovernanceRequestFeedback,
   GetGovernanceRequestFeedbackVariables
 } from 'queries/types/GetGovernanceRequestFeedback';
-import { GovernanceRequestFeedbackTargetForm } from 'types/graphql-global-types';
-import { formatDateLocal } from 'utils/date';
+
+import FeedbackItem from './FeedbackItem';
 
 const GovernanceFeedback = () => {
   const { systemId } = useParams<{ systemId: string }>();
@@ -126,54 +125,9 @@ const GovernanceFeedback = () => {
         <ActionLinks />
 
         <ul className="usa-list--unstyled margin-top-4">
-          {feedback.map(item => {
-            return (
-              <li
-                className="border-top-1px border-base-light margin-bottom-4"
-                key={item.id}
-              >
-                <h3 className="margin-top-4">
-                  {item.targetForm !==
-                  GovernanceRequestFeedbackTargetForm.NO_TARGET_PROVIDED
-                    ? t('feedbackV2.feedbackTitleEditsRequested')
-                    : t('feedbackV2.feedbackTitle', { context: item.type })}
-                </h3>
-
-                <dl className="grid-row">
-                  <Grid col={6}>
-                    <dt className="text-bold margin-bottom-1">
-                      {t('feedbackV2.date')}
-                    </dt>
-                    <dd className="margin-x-0">
-                      {formatDateLocal(item.createdAt, 'MMMM d, yyyy')}
-                    </dd>
-                  </Grid>
-                  <Grid col={6}>
-                    <dt className="text-bold margin-bottom-1">
-                      {t('feedbackV2.from')}
-                    </dt>
-                    <dd className="margin-x-0">
-                      {t('feedbackV2.author', { name: item.author.commonName })}
-                    </dd>
-                  </Grid>
-                  <div className="bg-base-lightest width-full margin-top-3 padding-3">
-                    {item.targetForm !==
-                      GovernanceRequestFeedbackTargetForm.NO_TARGET_PROVIDED && (
-                      <dl className="margin-y-0">
-                        <dt className="text-bold margin-top-0 margin-bottom-1">
-                          {t('feedbackV2.editsRequestedFor')}
-                        </dt>
-                        <dd className="margin-top-1 margin-bottom-4 margin-x-0">
-                          {t(`feedbackV2.targetForm.${item.targetForm}`)}
-                        </dd>
-                      </dl>
-                    )}
-                    <p className="margin-y-0">{item.feedback}</p>
-                  </div>
-                </dl>
-              </li>
-            );
-          })}
+          {feedback.map(item => (
+            <FeedbackItem key={item.id} {...item} />
+          ))}
         </ul>
       </div>
 
