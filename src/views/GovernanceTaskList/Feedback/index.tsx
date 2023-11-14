@@ -13,6 +13,7 @@ import {
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import Divider from 'components/shared/Divider';
 import IconButton from 'components/shared/IconButton';
 import IconLink from 'components/shared/IconLink';
@@ -46,7 +47,7 @@ const GovernanceFeedback = () => {
     `
   });
 
-  const { data } = useQuery<
+  const { data, loading } = useQuery<
     GetGovernanceRequestFeedback,
     GetGovernanceRequestFeedbackVariables
   >(GetGovernanceRequestFeedbackQuery, {
@@ -110,6 +111,8 @@ const GovernanceFeedback = () => {
       </>
     );
   };
+
+  if (loading) return <PageLoading />;
 
   return (
     <MainContent className="grid-container padding-bottom-10 margin-bottom-2">
