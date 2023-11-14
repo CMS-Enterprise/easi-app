@@ -112,34 +112,27 @@ const AppRoutes = () => {
 
       {flags.itGovV2Enabled ? (
         // IT Gov V2
-        <>
-          <SecureRoute
-            path="/governance-task-list/:systemId"
-            exact
-            component={GovernanceTaskList}
-          />
-          <SecureRoute
-            path="/governance-task-list/:systemId/feedback"
-            exact
-            component={GovernanceFeedback}
-          />
-        </>
+        <SecureRoute
+          path="/governance-task-list/:systemId"
+          exact
+          component={GovernanceTaskList}
+        />
       ) : (
         // IT Gov V1
-        <>
-          <SecureRoute
-            path="/governance-task-list/:systemId"
-            exact
-            component={GovernanceTaskListV1}
-          />
-          <SecureRoute
-            path="/governance-task-list/:systemId/feedback"
-            exact
-            component={GovernanceFeedbackV1}
-          />
-        </>
+        <SecureRoute
+          path="/governance-task-list/:systemId"
+          exact
+          component={GovernanceTaskListV1}
+        />
       )}
 
+      <SecureRoute
+        path="/governance-task-list/:systemId/feedback"
+        exact
+        component={
+          flags.itGovV2Enabled ? GovernanceFeedback : GovernanceFeedbackV1
+        }
+      />
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/prepare-for-grt"
