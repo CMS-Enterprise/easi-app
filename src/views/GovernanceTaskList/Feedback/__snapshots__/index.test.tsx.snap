@@ -121,13 +121,13 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
           <h3
             class="margin-top-4"
           >
-            Edits requested to a form
+            General feedback for the requester
           </h3>
           <dl
             class="grid-row"
           >
             <div
-              class="grid-col-6"
+              class="tablet:grid-col-6"
               data-testid="grid"
             >
               <dt
@@ -142,7 +142,111 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
               </dd>
             </div>
             <div
-              class="grid-col-6"
+              class="tablet:grid-col-6 margin-top-2 tablet:margin-top-0"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-1"
+              >
+                From
+              </dt>
+              <dd
+                class="margin-x-0"
+              >
+                Jerry Seinfeld, Governance Team
+              </dd>
+            </div>
+            <div
+              class="bg-base-lightest width-full margin-top-3 padding-3"
+            >
+              <p
+                class="margin-y-0"
+              >
+                This is feedback for the requester from the Progress to New Step action.
+              </p>
+            </div>
+          </dl>
+        </li>
+        <li
+          class="border-top-1px border-base-light margin-bottom-4"
+        >
+          <h3
+            class="margin-top-4"
+          >
+            Recommendation for the Governance Review Board (GRB)
+          </h3>
+          <dl
+            class="grid-row"
+          >
+            <div
+              class="tablet:grid-col-6"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-1"
+              >
+                Date
+              </dt>
+              <dd
+                class="margin-x-0"
+              >
+                November 14, 2023
+              </dd>
+            </div>
+            <div
+              class="tablet:grid-col-6 margin-top-2 tablet:margin-top-0"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-1"
+              >
+                From
+              </dt>
+              <dd
+                class="margin-x-0"
+              >
+                Jerry Seinfeld, Governance Team
+              </dd>
+            </div>
+            <div
+              class="bg-base-lightest width-full margin-top-3 padding-3"
+            >
+              <p
+                class="margin-y-0"
+              >
+                This is a recommendation for the GRB from the Progress to New Step action.
+              </p>
+            </div>
+          </dl>
+        </li>
+        <li
+          class="border-top-1px border-base-light margin-bottom-4"
+        >
+          <h3
+            class="margin-top-4"
+          >
+            Edits requested to a form
+          </h3>
+          <dl
+            class="grid-row"
+          >
+            <div
+              class="tablet:grid-col-6"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-1"
+              >
+                Date
+              </dt>
+              <dd
+                class="margin-x-0"
+              >
+                November 14, 2023
+              </dd>
+            </div>
+            <div
+              class="tablet:grid-col-6 margin-top-2 tablet:margin-top-0"
               data-testid="grid"
             >
               <dt
@@ -178,110 +282,6 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
                 class="margin-y-0"
               >
                 This is feedback from the Request Edits action
-              </p>
-            </div>
-          </dl>
-        </li>
-        <li
-          class="border-top-1px border-base-light margin-bottom-4"
-        >
-          <h3
-            class="margin-top-4"
-          >
-            Recommendation for the Governance Review Board (GRB)
-          </h3>
-          <dl
-            class="grid-row"
-          >
-            <div
-              class="grid-col-6"
-              data-testid="grid"
-            >
-              <dt
-                class="text-bold margin-bottom-1"
-              >
-                Date
-              </dt>
-              <dd
-                class="margin-x-0"
-              >
-                November 14, 2023
-              </dd>
-            </div>
-            <div
-              class="grid-col-6"
-              data-testid="grid"
-            >
-              <dt
-                class="text-bold margin-bottom-1"
-              >
-                From
-              </dt>
-              <dd
-                class="margin-x-0"
-              >
-                Jerry Seinfeld, Governance Team
-              </dd>
-            </div>
-            <div
-              class="bg-base-lightest width-full margin-top-3 padding-3"
-            >
-              <p
-                class="margin-y-0"
-              >
-                This is a recommendation for the GRB from the Progress to New Step action.
-              </p>
-            </div>
-          </dl>
-        </li>
-        <li
-          class="border-top-1px border-base-light margin-bottom-4"
-        >
-          <h3
-            class="margin-top-4"
-          >
-            General feedback for the requester
-          </h3>
-          <dl
-            class="grid-row"
-          >
-            <div
-              class="grid-col-6"
-              data-testid="grid"
-            >
-              <dt
-                class="text-bold margin-bottom-1"
-              >
-                Date
-              </dt>
-              <dd
-                class="margin-x-0"
-              >
-                November 14, 2023
-              </dd>
-            </div>
-            <div
-              class="grid-col-6"
-              data-testid="grid"
-            >
-              <dt
-                class="text-bold margin-bottom-1"
-              >
-                From
-              </dt>
-              <dd
-                class="margin-x-0"
-              >
-                Jerry Seinfeld, Governance Team
-              </dd>
-            </div>
-            <div
-              class="bg-base-lightest width-full margin-top-3 padding-3"
-            >
-              <p
-                class="margin-y-0"
-              >
-                This is feedback for the requester from the Progress to New Step action.
               </p>
             </div>
           </dl>
