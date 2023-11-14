@@ -84,7 +84,7 @@ const getGovernanceRequestFeedbackQuery: MockedQuery<
 
 describe('Feedback page', () => {
   it('Renders the feedback page - Governance task list', async () => {
-    render(
+    const { asFragment } = render(
       <MemoryRouter
         initialEntries={[`/governance-task-list/${systemIntake.id}/feedback`]}
       >
@@ -129,6 +129,8 @@ describe('Feedback page', () => {
       'listitem'
     );
     expect(breadcrumbLinks).toHaveLength(3);
+
+    expect(asFragment()).toMatchSnapshot();
   });
 
   it('Renders the feedback page - Intake Request Form', async () => {
