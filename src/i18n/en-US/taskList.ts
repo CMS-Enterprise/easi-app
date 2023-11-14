@@ -32,11 +32,13 @@ const taskList = {
   },
   navigation: {
     home: 'IT Governance',
-    governanceTaskList: 'Governance Task List',
+    governanceTaskList: 'Governance task list',
     feedback: 'Feedback',
     lcidInfo: 'About this LCID',
     nextSteps: 'Decision and next steps',
-    returnToTaskList: 'Return to task list'
+    returnToTaskList: 'Return to task list',
+    returnToGovernanceTaskList: 'Return to governance task list',
+    returnToForm: 'Return to {{type}}'
   },
   feedback: {
     heading: 'Recommendations',
@@ -54,7 +56,6 @@ const taskList = {
   },
   feedbackV2: {
     heading: 'Feedback about your request',
-    returnToRequest: 'Return to Intake Request',
     downloadAsPDF: 'Download feedback as PDF',
     date: 'Date',
     from: 'From',
