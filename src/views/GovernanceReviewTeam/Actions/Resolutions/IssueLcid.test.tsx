@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render, screen /* , waitFor */ } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {
@@ -12,6 +12,7 @@ import {
 } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import { formatDateLocal } from 'utils/date';
+import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import { EditsRequestedContext } from '..';
@@ -19,24 +20,19 @@ import { EditsRequestedContext } from '..';
 import IssueLcid from './IssueLcid';
 
 /** Checks field default values when lcid is selected */
-const checkFieldDefaults = async () => {
+const checkFieldDefaults = () => {
   expect(
     screen.getByRole('textbox', { name: 'Expiration date *' })
   ).toHaveValue(
     formatDateLocal(systemIntakeWithLcid.lcidExpiresAt || '', 'MM/dd/yyyy')
   );
 
-  expect(
-    screen.getByRole('textbox', { name: 'Scope of Life Cycle ID *' })
-  ).toHaveValue(systemIntakeWithLcid.lcidScope);
-  // await waitFor(() => {
-  //   expect(screen.getByTestId('scope')).toContainHTML(
-  //     systemIntakeWithLcid.lcidScope!
-  //   );
-  // });
+  expect(screen.getByTestId('scope')).toContainHTML(
+    systemIntakeWithLcid.lcidScope!
+  );
 
-  expect(screen.getByRole('textbox', { name: 'Next steps *' })).toHaveValue(
-    systemIntakeWithLcid.decisionNextSteps
+  expect(screen.getByTestId('nextSteps')).toContainHTML(
+    systemIntakeWithLcid.decisionNextSteps!
   );
 
   expect(
@@ -83,7 +79,7 @@ describe('Issue LCID form', async () => {
     userEvent.selectOptions(selectLcid, [systemIntakeWithLcid.lcid!]);
     expect(selectLcid).toHaveValue(systemIntakeWithLcid.lcid);
 
-    await checkFieldDefaults();
+    checkFieldDefaults();
   });
 
   it('Displays confirmation modal when edits are requested', async () => {
@@ -118,15 +114,9 @@ describe('Issue LCID form', async () => {
       '01/01/2024'
     );
 
-    userEvent.type(
-      screen.getByRole('textbox', { name: 'Scope of Life Cycle ID *' }),
-      'Test scope'
-    );
+    await typeRichText(screen.getByTestId('scope'), 'Test scope');
 
-    userEvent.type(
-      screen.getByRole('textbox', { name: 'Next steps *' }),
-      'Test next steps'
-    );
+    await typeRichText(screen.getByTestId('nextSteps'), 'Test next steps');
 
     userEvent.click(
       screen.getByRole('radio', {
