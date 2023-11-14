@@ -89,7 +89,10 @@ const GovernanceFeedback = () => {
       <ul className="usa-list--unstyled margin-top-4">
         {feedback.map(item => {
           return (
-            <li className="border-top-1px border-base-light margin-bottom-4">
+            <li
+              className="border-top-1px border-base-light margin-bottom-4"
+              key={item.id}
+            >
               <h3 className="margin-top-4">
                 {item.targetForm !==
                 GovernanceRequestFeedbackTargetForm.NO_TARGET_PROVIDED
