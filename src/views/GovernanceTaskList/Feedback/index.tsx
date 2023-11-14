@@ -131,7 +131,7 @@ const GovernanceFeedback = () => {
           className="usa-list--unstyled margin-top-4"
           data-testid="feedback-list"
         >
-          {feedback.map(item => (
+          {[...feedback].reverse().map(item => (
             <FeedbackItem key={item.id} {...item} />
           ))}
         </ul>
