@@ -24,13 +24,13 @@ const FeedbackItem = ({
       </h3>
 
       <dl className="grid-row">
-        <Grid col={6}>
+        <Grid tablet={{ col: 6 }}>
           <dt className="text-bold margin-bottom-1">{t('feedbackV2.date')}</dt>
           <dd className="margin-x-0">
             {formatDateLocal(createdAt, 'MMMM d, yyyy')}
           </dd>
         </Grid>
-        <Grid col={6}>
+        <Grid tablet={{ col: 6 }} className="margin-top-2 tablet:margin-top-0">
           <dt className="text-bold margin-bottom-1">{t('feedbackV2.from')}</dt>
           <dd className="margin-x-0">
             {t('feedbackV2.author', { name: author.commonName })}
