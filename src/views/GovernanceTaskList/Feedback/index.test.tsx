@@ -81,7 +81,7 @@ const getGovernanceRequestFeedbackQuery: MockedQuery<
 };
 
 describe('Feedback page', () => {
-  it('Renders the feedback page', async () => {
+  it('Renders the feedback page - Governance task list', async () => {
     render(
       <MemoryRouter
         initialEntries={[`/governance-task-list/${systemIntake.id}/feedback`]}
@@ -122,9 +122,61 @@ describe('Feedback page', () => {
     // Check correct number of feedback items are rendered
     expect(feedbackItems).toHaveLength(governanceRequestFeedbacks.length);
 
+    // Breadcrumbs
     const breadcrumbLinks = within(screen.getByRole('navigation')).getAllByRole(
       'listitem'
     );
     expect(breadcrumbLinks).toHaveLength(3);
+  });
+
+  it('Renders the feedback page - Intake Request Form', async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[
+          {
+            pathname: `/governance-task-list/${systemIntake.id}/feedback`,
+            state: {
+              form: {
+                pathname: `/system/${systemIntake.id}/contact-details`,
+                type: 'Intake Request Form'
+              }
+            }
+          }
+        ]}
+      >
+        <VerboseMockedProvider mocks={[getGovernanceRequestFeedbackQuery]}>
+          <Route path="/governance-task-list/:systemId/feedback">
+            <Feedback />
+          </Route>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(
+      await screen.findByRole('heading', {
+        name: i18next.t<string>('taskList:feedbackV2.heading')
+      })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getAllByRole('link', {
+        name: i18next.t<string>('taskList:navigation.returnToForm', {
+          type: 'Intake Request Form'
+        })
+      })
+    );
+
+    // Breadcrumbs
+    const breadcrumbLinks = within(screen.getByRole('navigation')).getAllByRole(
+      'listitem'
+    );
+    expect(breadcrumbLinks).toHaveLength(4);
+
+    // Check for intake request form breadcrumb link
+    expect(
+      within(breadcrumbLinks[2]).getByText(
+        i18next.t<string>('Intake Request Form')
+      )
+    );
   });
 });
