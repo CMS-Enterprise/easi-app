@@ -391,10 +391,10 @@ func NewProvideGRTFeedback(
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
-	saveGRTFeedback func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error),
+	saveGRTFeedback func(context.Context, *models.GovernanceRequestFeedback) (*models.GovernanceRequestFeedback, error),
 	sendReviewEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText models.HTML) error,
-) func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, recipients *models.EmailNotificationRecipients) (*models.GRTFeedback, error) {
-	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus, recipients *models.EmailNotificationRecipients) (*models.GRTFeedback, error) {
+) func(ctx context.Context, grtFeedback *models.GovernanceRequestFeedback, action *models.Action, newStatus models.SystemIntakeStatus, recipients *models.EmailNotificationRecipients) (*models.GovernanceRequestFeedback, error) {
+	return func(ctx context.Context, grtFeedback *models.GovernanceRequestFeedback, action *models.Action, newStatus models.SystemIntakeStatus, recipients *models.EmailNotificationRecipients) (*models.GovernanceRequestFeedback, error) {
 		intake, err := fetch(ctx, grtFeedback.IntakeID)
 		if err != nil {
 			return nil, err

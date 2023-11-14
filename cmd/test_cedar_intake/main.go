@@ -34,7 +34,7 @@ func noErr(err error) {
 type testData struct {
 	action       *models.Action
 	businessCase *models.BusinessCase
-	feedback     *models.GRTFeedback
+	// feedback     *models.GRTFeedback
 	note         *models.SystemIntakeNote
 	systemIntake *models.SystemIntake
 }
@@ -278,18 +278,18 @@ func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *
 	return businessCase
 }
 
-func makeTestGRTFeedback(times usefulTimes, systemIntake models.SystemIntake) *models.GRTFeedback {
-	feedback := &models.GRTFeedback{
-		ID:           uuid.New(),
-		IntakeID:     systemIntake.ID,
-		FeedbackType: models.GRTFeedbackTypeGRB,
-		Feedback:     "this was awesome. Great job! ",
-		CreatedAt:    &times.now,
-		UpdatedAt:    &times.now,
-	}
+// func makeTestGRTFeedback(times usefulTimes, systemIntake models.SystemIntake) *models.GRTFeedback {
+// 	feedback := &models.GRTFeedback{
+// 		ID:           uuid.New(),
+// 		IntakeID:     systemIntake.ID,
+// 		FeedbackType: models.GRTFeedbackTypeGRB,
+// 		Feedback:     "this was awesome. Great job! ",
+// 		CreatedAt:    &times.now,
+// 		UpdatedAt:    &times.now,
+// 	}
 
-	return feedback
-}
+// 	return feedback
+// }
 
 func makeTestData() *testData {
 	now := time.Now()
@@ -309,12 +309,12 @@ func makeTestData() *testData {
 	testAction := makeTestAction(*testIntake)
 	testNote := makeTestNote(*testIntake)
 	testBusinessCase := makeTestBusinessCase(times, *testIntake)
-	testGRTFeedback := makeTestGRTFeedback(times, *testIntake)
+	// testGRTFeedback := makeTestGRTFeedback(times, *testIntake)
 
 	return &testData{
 		action:       testAction,
 		businessCase: testBusinessCase,
-		feedback:     testGRTFeedback,
+		// feedback:     testGRTFeedback,
 		note:         testNote,
 		systemIntake: testIntake,
 	}
@@ -363,10 +363,10 @@ func submitToCEDAR() {
 	noErr(err)
 	fmt.Println("Successfully sent business case")
 
-	fmt.Println("Sending GRT feedback")
-	err = client.PublishGRTFeedback(ctx, *testData.feedback)
-	noErr(err)
-	fmt.Println("Successfully sent GRT feedback")
+	// fmt.Println("Sending GRT feedback")
+	// err = client.PublishGRTFeedback(ctx, *testData.feedback)
+	// noErr(err)
+	// fmt.Println("Successfully sent GRT feedback")
 
 	/*
 		fmt.Println("Sending note")
@@ -404,10 +404,10 @@ func dumpPayload() {
 	dumpIntakeObject(&businessCaseIntakeObject, execDir)
 	fmt.Println("Business case data dumped inside " + execDir + string(filepath.Separator))
 
-	fmt.Println("Dumping GRT feedback data")
-	feedbackIntakeObject := translation.TranslatableFeedback(*testData.feedback)
-	dumpIntakeObject(&feedbackIntakeObject, execDir)
-	fmt.Println("GRT feedback data dumped inside " + execDir + string(filepath.Separator))
+	// fmt.Println("Dumping GRT feedback data")
+	// feedbackIntakeObject := translation.TranslatableFeedback(*testData.feedback)
+	// dumpIntakeObject(&feedbackIntakeObject, execDir)
+	// fmt.Println("GRT feedback data dumped inside " + execDir + string(filepath.Separator))
 
 	fmt.Println("Dumping system intake data")
 	systemIntakeIntakeObject := translation.TranslatableSystemIntake(*testData.systemIntake)

@@ -997,7 +997,6 @@ type SystemIntake {
   governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
   grtDate: Time
-  grtFeedbacks: [GRTFeedback!]!
   id: UUID!
   isso: SystemIntakeISSO!
   lcid: String
@@ -1417,23 +1416,23 @@ input UpdateSystemIntakeAdminLeadInput {
   id: UUID!
 }
 
-"""
-Indicates who the source is of feedback on a system request
-"""
-enum GRTFeedbackType {
-  BUSINESS_OWNER
-  GRB
-}
+# """
+# Indicates who the source is of feedback on a system request
+# """
+# enum GRTFeedbackType {
+#   BUSINESS_OWNER
+#   GRB
+# }
 
-"""
-Feedback from the GRT to a business owner or GRB
-"""
-type GRTFeedback {
-  id: UUID
-  createdAt: Time!
-  feedback: HTML
-  feedbackType: GRTFeedbackType
-}
+# """
+# Feedback from the GRT to a business owner or GRB
+# """
+# type GRTFeedback {
+#   id: UUID
+#   createdAt: Time!
+#   feedback: HTML
+#   feedbackType: GRTFeedbackType
+# }
 
 """
 Input data used to update GRT and GRB dates for a system request
