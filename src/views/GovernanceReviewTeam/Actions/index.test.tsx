@@ -17,6 +17,7 @@ import {
 import useMessage, { MessageProvider } from 'hooks/useMessage';
 import CreateSystemIntakeActionRequestEditsQuery from 'queries/CreateSystemIntakeActionRequestEditsQuery';
 import { MockedQuery } from 'types/util';
+import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import Actions from '.';
@@ -133,7 +134,7 @@ describe('IT Gov Actions', () => {
                   regularRecipientEmails: ['ally.anderson@local.fake']
                 },
                 intakeFormStep: 'INITIAL_REQUEST_FORM',
-                emailFeedback: 'Ch-ch-changes'
+                emailFeedback: '<p>Ch-ch-changes</p>'
               }
             }
           },
@@ -160,10 +161,7 @@ describe('IT Gov Actions', () => {
       'Initial request form'
     ]);
 
-    userEvent.type(
-      screen.getByLabelText(/What changes are needed?/),
-      'Ch-ch-changes'
-    );
+    await typeRichText(screen.getByTestId('emailFeedback'), 'Ch-ch-changes');
 
     userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
 
