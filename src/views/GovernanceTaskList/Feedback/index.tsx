@@ -127,7 +127,10 @@ const GovernanceFeedback = () => {
 
         <ActionLinks />
 
-        <ul className="usa-list--unstyled margin-top-4">
+        <ul
+          className="usa-list--unstyled margin-top-4"
+          data-testid="feedback-list"
+        >
           {feedback.map(item => (
             <FeedbackItem key={item.id} {...item} />
           ))}
