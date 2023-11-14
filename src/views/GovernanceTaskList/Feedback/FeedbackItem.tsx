@@ -6,6 +6,9 @@ import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedba
 import { GovernanceRequestFeedbackTargetForm } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
+/**
+ * IT Governance request feedback item
+ */
 const FeedbackItem = ({
   targetForm,
   type,

@@ -25,6 +25,9 @@ import {
 
 import FeedbackItem from './FeedbackItem';
 
+/**
+ * IT Governance feedback page
+ */
 const GovernanceFeedback = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('taskList');
@@ -58,7 +61,7 @@ const GovernanceFeedback = () => {
 
   const feedback = data?.systemIntake?.governanceRequestFeedbacks || [];
 
-  /** Return to request and PDF download links */
+  /** Return and PDF download links */
   const ActionLinks = () => (
     <div className="easi-no-print tablet:display-flex">
       <IconLink
@@ -84,6 +87,11 @@ const GovernanceFeedback = () => {
     </div>
   );
 
+  /**
+   * Breadcrumb links
+   *
+   * Includes form link if navigating from intake or business case form
+   */
   const BreadcrumbLinks = () => {
     return (
       <>
