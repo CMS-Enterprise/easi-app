@@ -15,6 +15,7 @@ type BusinessCaseStepWrapperProps = {
   errors: Record<string, string>;
   /** Form step content and fields */
   children: React.ReactNode;
+  description?: string;
   className?: string;
   'data-testid'?: string;
 };
@@ -26,6 +27,7 @@ type BusinessCaseStepWrapperProps = {
  */
 const BusinessCaseStepWrapper = ({
   title,
+  description,
   id,
   errors,
   children,
@@ -61,6 +63,8 @@ const BusinessCaseStepWrapper = ({
         type="Draft Business Case"
         className="margin-top-3"
       />
+
+      <p className="line-height-body-6">{description}</p>
 
       {children}
     </div>
