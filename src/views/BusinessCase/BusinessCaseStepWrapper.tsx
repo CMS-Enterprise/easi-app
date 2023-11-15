@@ -65,11 +65,14 @@ const BusinessCaseStepWrapper = ({
     const { bizCaseDraftStatus, bizCaseFinalStatus } =
       data?.systemIntake?.itGovTaskStatuses || {};
 
-    return (
-      bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.EDITS_REQUESTED ||
-      bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.EDITS_REQUESTED
-    );
-  }, [data]);
+    if (isFinal) {
+      return (
+        bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.EDITS_REQUESTED
+      );
+    }
+
+    return bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.EDITS_REQUESTED;
+  }, [data, isFinal]);
 
   return (
     <div className={classNames('grid-container', className)} {...props}>
