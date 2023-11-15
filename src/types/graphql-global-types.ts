@@ -76,6 +76,14 @@ export enum GovernanceRequestFeedbackTargetForm {
 }
 
 /**
+ * Represents the possible types of feedback on governance requests, based on who it's directed to
+ */
+export enum GovernanceRequestFeedbackType {
+  GRB = "GRB",
+  REQUESTER = "REQUESTER",
+}
+
+/**
  * The requester view of the IT gov Decision step status
  */
 export enum ITGovDecisionStatus {
