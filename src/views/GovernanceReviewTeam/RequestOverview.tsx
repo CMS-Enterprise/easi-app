@@ -203,7 +203,7 @@ const RequestOverview = () => {
                 render={() => (
                   <BusinessCaseReview
                     businessCase={businessCase}
-                    grtFeedbacks={systemIntake.grtFeedbacks}
+                    grtFeedbacks={systemIntake.governanceRequestFeedbacks}
                   />
                 )}
               />

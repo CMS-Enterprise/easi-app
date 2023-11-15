@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
+import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedback';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear, parseAsUTC } from 'utils/date';
 
@@ -17,7 +17,7 @@ import './index.scss';
 
 type BusinessCaseReviewProps = {
   values: BusinessCaseModel;
-  grtFeedbacks?: GRTFeedback[] | null;
+  grtFeedbacks?: GovernanceRequestFeedback[] | null;
   helpArticle?: boolean;
 };
 

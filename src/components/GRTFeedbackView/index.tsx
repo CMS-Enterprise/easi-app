@@ -2,24 +2,25 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import HelpText from 'components/shared/HelpText';
-import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
+import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedback';
+import { GovernanceRequestFeedbackType } from 'types/graphql-global-types';
 import { formatDateLocal, parseAsUTC } from 'utils/date';
 
 type GRTFeedbackViewProps = {
-  grtFeedbacks: GRTFeedback[];
+  grtFeedbacks: GovernanceRequestFeedback[];
 };
 
 const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
   const { t } = useTranslation('businessCase');
 
   const feedbacksForGRB = grtFeedbacks.filter(
-    grtFeedback => grtFeedback.feedbackType === 'GRB'
+    grtFeedback => grtFeedback.type === GovernanceRequestFeedbackType.GRB
   );
   const feedbacksForBusinessOwner = grtFeedbacks.filter(
-    grtFeedback => grtFeedback.feedbackType === 'BUSINESS_OWNER'
+    grtFeedback => grtFeedback.type === GovernanceRequestFeedbackType.REQUESTER
   );
 
-  const formatGRTFeedback = (feedback: GRTFeedback) => {
+  const formatGRTFeedback = (feedback: GovernanceRequestFeedback) => {
     const formattedDate = formatDateLocal(feedback.createdAt, 'MMMM d, yyyy');
     return (
       <div className="margin-bottom-3" key={feedback.createdAt}>

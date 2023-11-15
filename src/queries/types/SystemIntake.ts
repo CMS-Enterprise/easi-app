@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { GRTFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState } from "./../../types/graphql-global-types";
+import { GovernanceRequestFeedbackTargetForm, GovernanceRequestFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL fragment: SystemIntake
@@ -51,10 +51,18 @@ export interface SystemIntake_annualSpending {
   plannedYearOneSpending: string | null;
 }
 
-export interface SystemIntake_grtFeedbacks {
-  __typename: "GRTFeedback";
-  feedback: HTML | null;
-  feedbackType: GRTFeedbackType | null;
+export interface SystemIntake_governanceRequestFeedbacks_author {
+  __typename: "UserInfo";
+  commonName: string;
+}
+
+export interface SystemIntake_governanceRequestFeedbacks {
+  __typename: "GovernanceRequestFeedback";
+  id: UUID;
+  feedback: HTML;
+  targetForm: GovernanceRequestFeedbackTargetForm;
+  type: GovernanceRequestFeedbackType;
+  author: SystemIntake_governanceRequestFeedbacks_author;
   createdAt: Time;
 }
 
@@ -128,7 +136,7 @@ export interface SystemIntake {
   decisionNextSteps: HTML | null;
   grbDate: Time | null;
   grtDate: Time | null;
-  grtFeedbacks: SystemIntake_grtFeedbacks[];
+  governanceRequestFeedbacks: SystemIntake_governanceRequestFeedbacks[];
   governanceTeams: SystemIntake_governanceTeams;
   isso: SystemIntake_isso;
   existingFunding: boolean | null;

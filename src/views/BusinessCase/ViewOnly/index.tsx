@@ -3,11 +3,11 @@ import { useQuery } from '@apollo/client';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
 import PageHeading from 'components/PageHeading';
-import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
+import GetGovernanceRequestFeedbackQuery from 'queries/GetGovernanceRequestFeedbackQuery';
 import {
-  GetGRTFeedback,
-  GetGRTFeedbackVariables
-} from 'queries/types/GetGRTFeedback';
+  GetGovernanceRequestFeedback,
+  GetGovernanceRequestFeedbackVariables
+} from 'queries/types/GetGovernanceRequestFeedback';
 import { BusinessCaseModel } from 'types/businessCase';
 
 type BusinessCaseViewOnlyProps = {
@@ -16,15 +16,16 @@ type BusinessCaseViewOnlyProps = {
 
 const BusinessCaseView = ({ businessCase }: BusinessCaseViewOnlyProps) => {
   const { data: grtFeedbackPayload } = useQuery<
-    GetGRTFeedback,
-    GetGRTFeedbackVariables
-  >(GetGRTFeedbackQuery, {
+    GetGovernanceRequestFeedback,
+    GetGovernanceRequestFeedbackVariables
+  >(GetGovernanceRequestFeedbackQuery, {
     variables: {
       intakeID: businessCase.systemIntakeId
     }
   });
 
-  const grtFeedbacks = grtFeedbackPayload?.systemIntake?.grtFeedbacks;
+  const grtFeedbacks =
+    grtFeedbackPayload?.systemIntake?.governanceRequestFeedbacks;
 
   return (
     <>

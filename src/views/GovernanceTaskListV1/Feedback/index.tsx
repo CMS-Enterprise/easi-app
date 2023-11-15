@@ -12,35 +12,37 @@ import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import HelpText from 'components/shared/HelpText';
-import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
+import GetGovernanceRequestFeedbackQuery from 'queries/GetGovernanceRequestFeedbackQuery';
 import {
-  GetGRTFeedback,
-  GetGRTFeedback_systemIntake_grtFeedbacks as GRTFeedback,
-  GetGRTFeedbackVariables
-} from 'queries/types/GetGRTFeedback';
+  GetGovernanceRequestFeedback,
+  GetGovernanceRequestFeedbackVariables
+} from 'queries/types/GetGovernanceRequestFeedback';
+import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedback';
+import { GovernanceRequestFeedbackType } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 
 const GovernanceFeedback = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('taskList');
   const { data: grtFeedbackData } = useQuery<
-    GetGRTFeedback,
-    GetGRTFeedbackVariables
-  >(GetGRTFeedbackQuery, {
+    GetGovernanceRequestFeedback,
+    GetGovernanceRequestFeedbackVariables
+  >(GetGovernanceRequestFeedbackQuery, {
     variables: {
       intakeID: systemId
     }
   });
 
-  const feedback = grtFeedbackData?.systemIntake?.grtFeedbacks || [];
+  const feedback =
+    grtFeedbackData?.systemIntake?.governanceRequestFeedbacks || [];
   const feedbackforGRB = feedback.filter(
-    grtFeedback => grtFeedback.feedbackType === 'GRB'
+    grtFeedback => grtFeedback.type === GovernanceRequestFeedbackType.GRB
   );
   const feedbackforBusinessOwner = feedback.filter(
-    grtFeedback => grtFeedback.feedbackType === 'BUSINESS_OWNER'
+    grtFeedback => grtFeedback.type === GovernanceRequestFeedbackType.REQUESTER
   );
 
-  const formatGRTFeedback = (item: GRTFeedback) => {
+  const formatGRTFeedback = (item: GovernanceRequestFeedback) => {
     const formattedDate = formatDateLocal(item.createdAt, 'MMMM d, yyyy');
     return (
       <div className="margin-bottom-3" key={item.id}>

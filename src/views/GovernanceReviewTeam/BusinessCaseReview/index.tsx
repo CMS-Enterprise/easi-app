@@ -9,14 +9,15 @@ import GRTFeedbackView from 'components/GRTFeedbackView';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
-import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
+import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedback';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
 
 type BusinessCaseReviewProps = {
   businessCase: BusinessCaseModel;
-  grtFeedbacks?: GRTFeedback[] | null;
+  grtFeedbacks?: GovernanceRequestFeedback[] | null;
 };
+
 const BusinessCaseReview = ({
   businessCase,
   grtFeedbacks
