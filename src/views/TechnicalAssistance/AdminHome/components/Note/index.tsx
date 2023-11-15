@@ -6,6 +6,7 @@ import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import { RichTextViewer } from 'components/RichTextEditor';
 import {
   GetTrbAdminNotes_trbRequest_adminNotes as NoteType,
   GetTrbAdminNotes_trbRequest_adminNotes_categorySpecificData_TRBAdminNoteSupportingDocumentsCategoryData_documents as Document
@@ -138,7 +139,9 @@ const Note = ({ note, className, border = true }: NoteProps) => {
           }
         </dd>
 
-        <dd className="margin-left-0 margin-top-2">{note.noteText}</dd>
+        <dd className="margin-left-0 margin-top-2">
+          <RichTextViewer value={note.noteText} />
+        </dd>
       </Grid>
     </dl>
   );
