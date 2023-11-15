@@ -16,6 +16,33 @@ const businessCase = {
   requesterPhoneNumber: 'Requester Phone Number',
   requesterPhoneNumberHelpText: 'For example 1234567890 or 123-456-7890',
   requestDescription: 'Request description',
+  businessNeed: {
+    label: 'What is your business or user need?',
+    include: 'Include:',
+    explanation:
+      'a detailed explanation of the business need/issue/problem that the request will address',
+    mandates: 'any legislative mandates or regulations that needs to be met',
+    investmentBenefits:
+      'any expected benefits from the investment of organizational resources into the request',
+    deadlines:
+      'relevant deadlines (e.g., statutory deadlines that CMS must meet)',
+    solutionBenefits:
+      'and the benefits of developing an IT solution for this need'
+  },
+  currentSolutionSummary: 'Summary of Current Solution',
+  currentSolutionSummaryHelpText:
+    'Provide a brief summary of the solution currently in place including any associated software products and costs (e.g. services, software, Operation and Maintenance)',
+  cmsBenefit: 'How will CMS benefit from this effort?',
+  cmsBenefitHelpText:
+    'Provide a summary of how this effort benefits CMS. Include any information on how it supports CMS&apos; mission and strategic goals, creates efficiencies and/or cost savings, or reduces risk',
+  priorityAlignment:
+    'How does this effort align with organizational priorities?',
+  priorityAlignmentHelpText:
+    'List out any administrator priorities or new legislative/regulatory mandates this effort supports. If applicable, include any relevant deadlines',
+  successIndicators:
+    'How will you determine whether or not this effort is successful?',
+  successIndicatorsHelpText:
+    'Include any indicators that you think would demonstrate success',
   alternatives: 'Alternatives analysis',
   grtFeedback: {
     header: 'Recommendations',

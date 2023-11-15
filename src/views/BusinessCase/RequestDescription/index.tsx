@@ -86,34 +86,19 @@ const RequestDescription = ({
                   error={!!flatErrors.businessNeed}
                 >
                   <Label htmlFor="BusinessCase-BusinessNeed">
-                    What is your business or user need?
+                    {t('businessNeed.label')}
                   </Label>
                   <HelpText
                     id="BusinessCase-BusinessNeedHelp"
                     className="margin-y-1"
                   >
-                    <span>Include:</span>
+                    {t('businessNeed.include')}
                     <ul className="margin-top-1 padding-left-205">
-                      <li>
-                        a detailed explanation of the business
-                        need/issue/problem that the request will address
-                      </li>
-                      <li>
-                        any legislative mandates or regulations that needs to be
-                        met
-                      </li>
-                      <li>
-                        any expected benefits from the investment of
-                        organizational resources into the request
-                      </li>
-                      <li>
-                        relevant deadlines (e.g., statutory deadlines that CMS
-                        must meet)
-                      </li>
-                      <li>
-                        and the benefits of developing an IT solution for this
-                        need
-                      </li>
+                      <li>{t('businessNeed.explanation')}</li>
+                      <li>{t('businessNeed.mandates')}</li>
+                      <li>{t('businessNeed.investmentBenefits')}</li>
+                      <li>{t('businessNeed.deadlines')}</li>
+                      <li>{t('businessNeed.solutionBenefits')}</li>
                     </ul>
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.businessNeed}</FieldErrorMsg>
@@ -136,15 +121,13 @@ const RequestDescription = ({
                   error={!!flatErrors.currentSolutionSummary}
                 >
                   <Label htmlFor="BusinessCase-CurrentSolutionSummary">
-                    Summary of Current Solution
+                    {t('currentSolutionSummary')}
                   </Label>
                   <HelpText
                     id="BusinessCase-CurrentSolutionSummaryHelp"
                     className="margin-top-1"
                   >
-                    Provide a brief summary of the solution currently in place
-                    including any associated software products and costs (e.g.
-                    services, software, Operation and Maintenance)
+                    {t('currentSolutionSummaryHelpText')}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors.currentSolutionSummary}
@@ -168,16 +151,13 @@ const RequestDescription = ({
                   error={!!flatErrors.cmsBenefit}
                 >
                   <Label htmlFor="BusinessCase-CmsBenefit">
-                    How will CMS benefit from this effort?
+                    {t('cmsBenefit')}
                   </Label>
                   <HelpText
                     id="BusinessCase-CmsBenefitHelp"
                     className="margin-y-1"
                   >
-                    Provide a summary of how this effort benefits CMS. Include
-                    any information on how it supports CMS&apos; mission and
-                    strategic goals, creates efficiencies and/or cost savings,
-                    or reduces risk
+                    {t('cmsBenefitHelpText')}
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.cmsBenefit}</FieldErrorMsg>
                   <Field
@@ -199,15 +179,13 @@ const RequestDescription = ({
                   error={!!flatErrors.priorityAlignment}
                 >
                   <Label htmlFor="BusinessCase-PriorityAlignment">
-                    How does this effort align with organizational priorities?
+                    {t('priorityAlignment')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PriorityAlignmentHelp"
                     className="margin-y-1"
                   >
-                    List out any administrator priorities or new
-                    legislative/regulatory mandates this effort supports. If
-                    applicable, include any relevant deadlines
+                    {t('priorityAlignmentHelpText')}
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.priorityAlignment}</FieldErrorMsg>
                   <Field
@@ -229,15 +207,13 @@ const RequestDescription = ({
                   error={!!flatErrors.successIndicators}
                 >
                   <Label htmlFor="BusinessCase-SuccessIndicators">
-                    How will you determine whether or not this effort is
-                    successful?
+                    {t('successIndicators')}
                   </Label>
                   <HelpText
                     id="BusinessCase-SuccessIndicatorsHelp"
                     className="margin-y-1"
                   >
-                    Include any indicators that you think would demonstrate
-                    success
+                    {t('successIndicatorsHelpText')}
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.successIndicators}</FieldErrorMsg>
                   <Field
@@ -265,7 +241,7 @@ const RequestDescription = ({
                 history.push(newUrl);
               }}
             >
-              Back
+              {t('Back')}
             </Button>
             <Button
               type="button"
@@ -281,7 +257,7 @@ const RequestDescription = ({
                 });
               }}
             >
-              Next
+              {t('Next')}
             </Button>
             <div className="margin-y-3">
               <Button
@@ -295,7 +271,7 @@ const RequestDescription = ({
                 }}
               >
                 <span className="display-flex flex-align-center">
-                  <IconNavigateBefore /> Save & Exit
+                  <IconNavigateBefore /> {t('Save & Exit')}
                 </span>
               </Button>
             </div>
