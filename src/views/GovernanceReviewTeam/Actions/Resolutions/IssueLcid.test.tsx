@@ -41,9 +41,9 @@ const checkFieldDefaults = () => {
     })
   ).toBeChecked();
 
-  expect(
-    screen.getByRole('textbox', { name: 'Project cost baseline' })
-  ).toHaveValue(systemIntakeWithLcid.lcidCostBaseline);
+  expect(screen.getByTestId('costBaseline')).toContainHTML(
+    systemIntakeWithLcid.lcidCostBaseline!
+  );
 };
 
 describe('Issue LCID form', async () => {
