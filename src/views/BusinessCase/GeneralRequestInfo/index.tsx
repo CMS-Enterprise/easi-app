@@ -187,7 +187,7 @@ const GeneralRequestInfo = ({
                   `/governance-task-list/${businessCase.systemIntakeId}`
                 );
               }}
-              className="margin-y-3"
+              className="margin-bottom-3 margin-top-205"
             >
               {t('Save & Exit')}
             </IconButton>
