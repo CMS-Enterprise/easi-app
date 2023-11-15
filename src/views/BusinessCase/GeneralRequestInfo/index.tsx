@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
@@ -8,11 +9,8 @@ import {
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
-import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
-import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
@@ -25,6 +23,8 @@ import {
   BusinessCaseFinalValidationSchema
 } from 'validations/businessCaseSchema';
 
+import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
+
 type GeneralRequestInfoProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
@@ -35,6 +35,7 @@ const GeneralRequestInfo = ({
   businessCase,
   dispatchSave
 }: GeneralRequestInfoProps) => {
+  const { t } = useTranslation('businessCase');
   const history = useHistory();
   const initialValues: GeneralRequestInfoForm = {
     requestName: businessCase.requestName,
@@ -62,38 +63,17 @@ const GeneralRequestInfo = ({
         const { errors, values, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
-          <div className="grid-container" data-testid="general-request-info">
-            {Object.keys(errors).length > 0 && (
-              <ErrorAlert
-                classNames="margin-top-3"
-                heading="Please check and fix the following"
-                testId="formik-validation-errors"
-              >
-                {Object.keys(flatErrors).map(key => {
-                  return (
-                    <ErrorAlertMessage
-                      key={`Error.${key}`}
-                      errorKey={key}
-                      message={flatErrors[key]}
-                    />
-                  );
-                })}
-              </ErrorAlert>
+          <BusinessCaseStepWrapper
+            id={businessCase.id || ''}
+            title={t('generalRequest')}
+            description={t('generalRequestDescription')}
+            errors={flatErrors}
+            data-testid="general-request-info"
+            // TODO EASI-3440: Update to use v2 status
+            fieldsMandatory={isBusinessCaseFinal(
+              businessCase.systemIntakeStatus
             )}
-            <PageHeading>General request information</PageHeading>
-            <p className="line-height-body-6">
-              Make a first draft of the various solutions you’ve thought of and
-              the costs involved to build or buy them. Once you have a draft
-              business case ready for review, send it to the Governance Review
-              Admin Team who will ensure it is ready to be presented at the
-              Governance Review Team (GRT) Meeting.
-            </p>
-            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
-            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
-              <div className="tablet:grid-col-5">
-                <MandatoryFieldsAlert />
-              </div>
-            )}
+          >
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form>
                 <FieldGroup
@@ -217,7 +197,7 @@ const GeneralRequestInfo = ({
               onSave={dispatchSave}
               debounceDelay={1000 * 3}
             />
-          </div>
+          </BusinessCaseStepWrapper>
         );
       }}
     </Formik>

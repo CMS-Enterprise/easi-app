@@ -8,6 +8,8 @@ const businessCase = {
     }
   },
   generalRequest: 'General request information',
+  generalRequestDescription:
+    "Make a first draft of the various solutions you've thought of and the costs involved to build or buy them. Once you have a draft business case ready for review, send it to the Governance Review Admin Team who will ensure it is ready to be presented at the Governance Review Team (GRT) Meeting.",
   requestDescription: 'Request description',
   alternatives: 'Alternatives analysis',
   grtFeedback: {
