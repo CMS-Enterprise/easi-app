@@ -6,6 +6,8 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import { RichTextViewer } from 'components/RichTextEditor';
+
 // This component takes free form text and a character limit and
 // will return the whole text until it reaches the character limit, once
 // it is over the character limit the text will be truncated and a
@@ -19,6 +21,7 @@ type TruncatedTextProps = {
   charLimit: number;
   closeLabel?: string;
   className?: string;
+  isRich?: boolean;
 };
 
 const TruncatedText = ({
@@ -27,13 +30,20 @@ const TruncatedText = ({
   text,
   charLimit,
   closeLabel,
-  className
+  className,
+  isRich = false
 }: TruncatedTextProps) => {
   const [isOpen, setOpen] = useState(true);
 
   // If text is shorter then specified character limit, just
   // return the whole text
   if (text.length < charLimit) {
+    if (isRich)
+      return (
+        <div className={className}>
+          <RichTextViewer value={text} />
+        </div>
+      );
     return <div className={className}>{text}</div>;
   }
 
@@ -44,7 +54,14 @@ const TruncatedText = ({
 
   return (
     <div className={className}>
-      {isOpen ? `${startOfText}... ` : `${text} `}
+      {/* eslint-disable-next-line no-nested-ternary */}
+      {isRich ? (
+        <RichTextViewer value={isOpen ? `${startOfText}... ` : `${text} `} />
+      ) : isOpen ? (
+        `${startOfText}... `
+      ) : (
+        `${text} `
+      )}
       <Button
         type="button"
         onClick={() => setOpen(!isOpen)}

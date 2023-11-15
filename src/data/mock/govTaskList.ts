@@ -6,7 +6,8 @@ import {
   ITGovFinalBusinessCaseStatus,
   ITGovGRBStatus,
   ITGovGRTStatus,
-  ITGovIntakeFormStatus
+  ITGovIntakeFormStatus,
+  SystemIntakeStep
 } from 'types/graphql-global-types';
 import { GetGovernanceTaskListWithMockData } from 'types/itGov';
 
@@ -31,6 +32,7 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
+      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [],
       submittedAt: null,
       updatedAt: null,
@@ -53,6 +55,7 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
+      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       intakeFormPctComplete: 22,
       governanceRequestFeedbacks: [],
       submittedAt: null,
@@ -76,6 +79,7 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
+      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-07T00:30:28Z',
       updatedAt: null,
@@ -98,6 +102,7 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
+      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -126,6 +131,7 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
+      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -155,6 +161,7 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
+      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [],
       submittedAt: null,
       updatedAt: null,
@@ -177,6 +184,7 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
+      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [],
       submittedAt: null,
       updatedAt: null,
@@ -199,6 +207,7 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
+      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [],
       governanceRequestFeedbackCompletedAt: '2023-07-10T00:30:28Z',
       submittedAt: null,
@@ -222,6 +231,7 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
+      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -251,6 +261,7 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
+      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -280,6 +291,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -302,6 +314,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.GRT_MEETING,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -324,6 +337,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -346,6 +360,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -372,6 +387,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -399,6 +415,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -432,6 +449,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -465,6 +483,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -498,6 +517,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -526,6 +546,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -553,6 +574,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -580,6 +602,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.GRT_MEETING,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -607,6 +630,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.GRT_MEETING,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -634,6 +658,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.GRT_MEETING,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -661,6 +686,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.GRT_MEETING,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -694,6 +720,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.GRT_MEETING,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -722,6 +749,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.GRT_MEETING,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -749,6 +777,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -772,6 +801,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -799,6 +829,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -827,6 +858,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -855,6 +887,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -890,6 +923,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -925,6 +959,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -960,6 +995,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -990,6 +1026,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -1017,6 +1054,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.NOT_NEEDED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.FINAL_BUSINESS_CASE,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -1044,6 +1082,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.READY_TO_SCHEDULE,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.GRB_MEETING,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -1071,6 +1110,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.SCHEDULED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.GRB_MEETING,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -1098,6 +1138,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.GRB_MEETING,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -1126,6 +1167,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
+      step: SystemIntakeStep.GRB_MEETING,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -1153,6 +1195,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.IN_REVIEW
       },
+      step: SystemIntakeStep.DECISION_AND_NEXT_STEPS,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
@@ -1180,6 +1223,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.COMPLETED
       },
+      step: SystemIntakeStep.GRB_MEETING,
       governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',

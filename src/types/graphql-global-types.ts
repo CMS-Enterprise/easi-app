@@ -76,6 +76,14 @@ export enum GovernanceRequestFeedbackTargetForm {
 }
 
 /**
+ * Represents the possible types of feedback on governance requests, based on who it's directed to
+ */
+export enum GovernanceRequestFeedbackType {
+  GRB = "GRB",
+  REQUESTER = "REQUESTER",
+}
+
+/**
  * The requester view of the IT gov Decision step status
  */
 export enum ITGovDecisionStatus {
@@ -240,6 +248,16 @@ export enum SystemIntakeDocumentStatus {
 }
 
 /**
+ * This represents the possible state any system intake form can take
+ */
+export enum SystemIntakeFormState {
+  EDITS_REQUESTED = "EDITS_REQUESTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  NOT_STARTED = "NOT_STARTED",
+  SUBMITTED = "SUBMITTED",
+}
+
+/**
  * SystemIntakeRequestEditsOptions represents the current step in the intake process
  */
 export enum SystemIntakeFormStep {
@@ -297,6 +315,28 @@ export enum SystemIntakeStatus {
   SHUTDOWN_COMPLETE = "SHUTDOWN_COMPLETE",
   SHUTDOWN_IN_PROGRESS = "SHUTDOWN_IN_PROGRESS",
   WITHDRAWN = "WITHDRAWN",
+}
+
+/**
+ * SystemIntakeStep represents the current step in the intake process
+ */
+export enum SystemIntakeStep {
+  DECISION_AND_NEXT_STEPS = "DECISION_AND_NEXT_STEPS",
+  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
+  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
+  GRB_MEETING = "GRB_MEETING",
+  GRT_MEETING = "GRT_MEETING",
+  INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
+}
+
+/**
+ * Steps in the system intake process that a Progress to New Step action can progress to
+ */
+export enum SystemIntakeStepToProgressTo {
+  DRAFT_BUSINESS_CASE = "DRAFT_BUSINESS_CASE",
+  FINAL_BUSINESS_CASE = "FINAL_BUSINESS_CASE",
+  GRB_MEETING = "GRB_MEETING",
+  GRT_MEETING = "GRT_MEETING",
 }
 
 /**
@@ -872,6 +912,17 @@ export interface SystemIntakeChangeLCIDRetirementDateInput {
 }
 
 /**
+ * Input for creating a Close Request Action in Admin Actions v2
+ */
+export interface SystemIntakeCloseRequestInput {
+  systemIntakeID: UUID;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  reason?: HTML | null;
+  additionalInfo?: HTML | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * The input data used to add an OIT collaborator for a system request
  */
 export interface SystemIntakeCollaboratorInput {
@@ -996,6 +1047,20 @@ export interface SystemIntakeProductManagerInput {
 }
 
 /**
+ * Input for submitting a Progress to New Step action in IT Gov v2
+ */
+export interface SystemIntakeProgressToNewStepsInput {
+  systemIntakeID: UUID;
+  newStep: SystemIntakeStepToProgressTo;
+  meetingDate?: Time | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  feedback?: HTML | null;
+  grbRecommendations?: HTML | null;
+  additionalInfo?: HTML | null;
+  adminNote?: HTML | null;
+}
+
+/**
  * Input for setting an intake's decision to Not Approved by GRB in IT Gov v2
  */
 export interface SystemIntakeRejectIntakeInput {
@@ -1005,6 +1070,17 @@ export interface SystemIntakeRejectIntakeInput {
   trbFollowUp: SystemIntakeTRBFollowUp;
   additionalInfo?: HTML | null;
   notificationRecipients?: EmailNotificationRecipients | null;
+  adminNote?: HTML | null;
+}
+
+/**
+ * Input for creating a Reopen Request Action in Admin Actions v2
+ */
+export interface SystemIntakeReopenRequestInput {
+  systemIntakeID: UUID;
+  notificationRecipients?: EmailNotificationRecipients | null;
+  reason?: HTML | null;
+  additionalInfo?: HTML | null;
   adminNote?: HTML | null;
 }
 

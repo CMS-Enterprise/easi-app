@@ -10,13 +10,13 @@ exports[`Submit Action > renders additional contacts 1`] = `
     tabindex="-1"
   >
     <div
-      class="easi-grt__request-summary"
+      class="easi-admin-summary"
     >
       <section
-        class="bg-primary-darker padding-bottom-3 text-white"
+        class="easi-admin-summary__request-details bg-primary-darker"
       >
         <div
-          class="grid-container"
+          class="grid-container text-white padding-bottom-1"
           data-testid="gridContainer"
         >
           <nav
@@ -30,164 +30,165 @@ exports[`Submit Action > renders additional contacts 1`] = `
                 class="usa-breadcrumb__list-item"
               >
                 <a
-                  class="usa-breadcrumb__link"
+                  class="text-white text-underline usa-breadcrumb__link"
                   href="/"
                 >
-                  <span
-                    class="text-white"
-                  >
-                    Home
-                  </span>
+                  Home
                 </a>
               </li>
               <li
                 aria-current="page"
                 class="usa-breadcrumb__list-item usa-current"
               >
-                Request details
+                Mock System Intake Request
               </li>
             </ol>
           </nav>
           <h2
-            class="margin-top-05 margin-bottom-0"
+            class="margin-top-05 margin-bottom-2"
           >
             Mock System Intake Request
           </h2>
           <div
-            class="grid-row"
+            class="grid-row grid-gap"
             data-testid="grid"
           >
             <div
               class="tablet:grid-col-8"
               data-testid="grid"
             >
-              <div
-                class="margin-top-2 margin-bottom-05"
+              <h5
+                class="text-normal margin-y-0"
               >
-                <h5
-                  class="text-normal margin-y-0"
-                >
-                  Request for
-                </h5>
-                <h4
-                  class="margin-y-05"
-                >
-                  Add a new system or service
-                </h4>
-              </div>
+                Request type
+              </h5>
+              <h4
+                class="margin-top-05 margin-bottom-2"
+              >
+                Add a new system or service
+              </h4>
+              <h5
+                class="text-normal margin-y-0"
+              >
+                Contract number
+              </h5>
+              <h4
+                class="margin-top-05 margin-bottom-2"
+              >
+                123456-7890
+              </h4>
             </div>
             <div
               class="tablet:grid-col-4"
               data-testid="grid"
             >
-              <div
-                class="margin-top-2 margin-bottom-05"
+              <h5
+                class="text-normal margin-y-0"
               >
-                <h5
-                  class="text-normal margin-y-0"
-                >
-                  Requester
-                </h5>
-                <h4
-                  class="margin-y-05"
-                >
-                  Ally Anderson, CMS
-                </h4>
-              </div>
-              <div
-                class="margin-top-2 margin-bottom-05"
+                Requester
+              </h5>
+              <h4
+                class="margin-top-05 margin-bottom-2"
               >
-                <h5
-                  class="text-normal margin-y-0"
-                >
-                  Submission date
-                </h5>
-                <h4
-                  class="margin-y-05"
-                >
-                  October 20, 2022
-                </h4>
-              </div>
+                Ally Anderson, CMS
+              </h4>
+              <h5
+                class="text-normal margin-y-0"
+              >
+                Submission date
+              </h5>
+              <h4
+                class="margin-top-05 margin-bottom-2"
+              >
+                October 20, 2022
+              </h4>
             </div>
           </div>
         </div>
       </section>
-      <div
-        class="bg-base-lightest"
+      <section
+        class="easi-admin-summary__status bg-base-lightest"
       >
         <div
-          class="grid-container overflow-auto"
+          class="grid-container padding-y-1"
+          data-testid="gridContainer"
         >
-          <dl
-            class="easi-grt__status-group"
+          <div
+            class="grid-row grid-gap"
+            data-testid="grid"
           >
             <div
-              class="easi-grt__status-info text-gray-90"
+              class="desktop:grid-col-8"
+              data-testid="grid"
             >
-              <dt
-                class="text-bold"
-              >
-                Status
-              </dt>
-               
-              <dd
-                class="text-white text-bold padding-y-05 padding-x-105 margin-x-1 bg-info-dark"
-                data-testid="grt-status"
-              >
-                Open
-              </dd>
-              <dt
+              <div>
+                <h4
+                  class="margin-right-1"
+                >
+                  Status
+                </h4>
+                <span
+                  class="easi-tag easi-state-tag text-white bg-info-dark"
+                  data-testid="request-state"
+                >
+                  Open
+                </span>
+              </div>
+              <p
+                class="text-base-dark"
                 data-testid="grt-current-status"
               >
                 Intake request received
-              </dt>
+              </p>
+              <a
+                href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions"
+              >
+                Take an action
+              </a>
             </div>
             <div
-              class="display-flex text-gray-90"
+              class="desktop:grid-col-4"
+              data-testid="grid"
             >
-              <span
-                class="text-bold"
+              <h4
+                class="text-no-wrap width-full tablet:width-auto"
               >
                 Admin Lead
-              </span>
+              </h4>
               <span
-                class="margin-x-1"
+                class="display-flex flex-align-center"
                 data-testid="admin-lead"
               >
-                <div
-                  class="display-flex flex-align-center"
+                <svg
+                  class="usa-icon text-error margin-right-05"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    class="usa-icon text-secondary margin-right-05"
-                    focusable="false"
-                    height="1em"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
-                    />
-                  </svg>
-                  Not Assigned
-                </div>
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                  />
+                </svg>
+                Not Assigned
               </span>
               <button
-                class="usa-button usa-button--unstyled"
+                class="usa-button usa-button--unstyled width-auto"
                 data-testid="button"
                 type="button"
               >
-                Change
+                Assign
               </button>
             </div>
-          </dl>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
     <div
       class="easi-grt__subNav-accordion"

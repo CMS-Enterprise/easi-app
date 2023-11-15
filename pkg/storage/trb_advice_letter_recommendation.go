@@ -80,9 +80,10 @@ func (s *Store) CreateTRBAdviceLetterRecommendation(
 }
 
 // GetTRBAdviceLetterRecommendationByID retrieves a TRB advice letter recommendation record from the database
+// It will not return any entities that have a deleted_at value
 func (s *Store) GetTRBAdviceLetterRecommendationByID(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
 	recommendation := models.TRBAdviceLetterRecommendation{}
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_advice_letter_recommendations WHERE id = :id`)
+	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_advice_letter_recommendations WHERE id = :id AND deleted_at IS NULL`)
 	if err != nil {
 		return nil, err
 	}
@@ -113,6 +114,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Cont
 		SELECT *
 		FROM trb_advice_letter_recommendations
 		WHERE trb_request_id = $1
+		AND deleted_at IS NULL
 		ORDER BY position_in_letter ASC
 	`, trbRequestID)
 
@@ -128,6 +130,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsByTRBRequestID(ctx context.Cont
 }
 
 // GetTRBAdviceLetterRecommendationsSharingTRBRequestID queries the DB for all TRB advice letter recommendations with the same TRB request ID as the given recommendation
+// It will not return any entities that have a deleted_at value
 func (s *Store) GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx context.Context, recommendationID uuid.UUID) ([]*models.TRBAdviceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
 		SELECT *
@@ -136,7 +139,7 @@ func (s *Store) GetTRBAdviceLetterRecommendationsSharingTRBRequestID(ctx context
 			SELECT trb_request_id
 			FROM trb_advice_letter_recommendations
 			WHERE id = :recommendationID
-		)
+		) AND deleted_at IS NULL
 	`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
@@ -212,7 +215,8 @@ func (s *Store) UpdateTRBAdviceLetterRecommendation(ctx context.Context, recomme
 // DeleteTRBAdviceLetterRecommendation deletes an existing TRB advice letter recommendation record in the database
 func (s *Store) DeleteTRBAdviceLetterRecommendation(ctx context.Context, id uuid.UUID) (*models.TRBAdviceLetterRecommendation, error) {
 	stmt, err := s.db.PrepareNamed(`
-		DELETE FROM trb_advice_letter_recommendations
+		UPDATE trb_advice_letter_recommendations
+		SET deleted_at = CURRENT_TIMESTAMP, position_in_letter = NULL
 		WHERE id = :id
 		RETURNING *;`)
 
@@ -318,7 +322,7 @@ func (s *Store) UpdateTRBAdviceLetterRecommendationOrder(
 	// sort updated recommendations by position, return in correct order
 	// (easier to do this in Go than in SQL; doing it in SQL would require wrapping the whole UPDATE query in another CTE, then using ORDER BY on that)
 	slices.SortFunc(updatedRecommendations, func(recommendationA, recommendationB *models.TRBAdviceLetterRecommendation) int {
-		return recommendationA.PositionInLetter - recommendationB.PositionInLetter
+		return int(recommendationA.PositionInLetter.ValueOrZero()) - int(recommendationB.PositionInLetter.ValueOrZero())
 	})
 
 	return updatedRecommendations, nil

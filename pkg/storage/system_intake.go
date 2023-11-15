@@ -608,20 +608,24 @@ func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *ti
 
 // UpdateSystemIntakeStatus updates the status for an intake
 func (s *Store) UpdateSystemIntakeStatus(ctx context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error) {
-	var intake struct {
-		Status    models.SystemIntakeStatus
-		ID        uuid.UUID
-		UpdatedAt time.Time `db:"updated_at"`
-	}
+	var intake models.SystemIntake
+	now := time.Now()
 	intake.Status = newStatus
 	intake.ID = id
-	intake.UpdatedAt = time.Now()
+	intake.UpdatedAt = &now
+	intake.SetV2FieldsBasedOnV1Status(newStatus) // ensure all V2 fields are calculated and set
 
 	const updateSystemIntakeSQL = `
 		UPDATE system_intakes
 		SET
 			updated_at = :updated_at,
-			status = :status
+			status = :status,
+			step = :step,
+			state = :state,
+			decision_state = :decision_state,
+			request_form_state = :request_form_state,
+			draft_business_case_state = :draft_business_case_state,
+			final_business_case_state = :final_business_case_state
 		WHERE system_intakes.id = :id
 	`
 	_, err := s.db.NamedExec(

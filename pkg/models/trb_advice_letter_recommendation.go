@@ -1,7 +1,10 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/lib/pq"
 )
 
@@ -12,5 +15,6 @@ type TRBAdviceLetterRecommendation struct {
 	Title            string         `json:"title" db:"title"`
 	Recommendation   HTML           `json:"recommendation" db:"recommendation"`
 	Links            pq.StringArray `json:"links" db:"links"`
-	PositionInLetter int            `json:"positionInLetter" db:"position_in_letter"` // 0-based indexing
+	PositionInLetter null.Int       `json:"positionInLetter" db:"position_in_letter"` // 0-based indexing
+	DeletedAt        *time.Time     `json:"deletedAt" db:"deleted_at"`
 }

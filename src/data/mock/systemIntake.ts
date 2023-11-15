@@ -41,9 +41,11 @@ import {
   SystemIntakeDecisionState,
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentStatus,
+  SystemIntakeFormState,
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatus,
+  SystemIntakeStep,
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
@@ -242,7 +244,8 @@ export const systemIntake: SystemIntake = {
   documents: [],
   state: SystemIntakeState.OPEN,
   decisionState: SystemIntakeDecisionState.NO_DECISION,
-  trbFollowUpRecommendation: null
+  trbFollowUpRecommendation: null,
+  requestFormState: SystemIntakeFormState.SUBMITTED
 };
 
 /** System intake form that has NOT been started */
@@ -414,10 +417,9 @@ export const getSystemIntakeContactsQuery: MockedQuery<
   }
 };
 
-export const getGovernanceTaskListQuery: MockedQuery<
-  GetGovernanceTaskList,
-  GetGovernanceTaskListVariables
-> = {
+export const getGovernanceTaskListQuery = (
+  taskListData?: Partial<GetGovernanceTaskList['systemIntake']>
+): MockedQuery<GetGovernanceTaskList, GetGovernanceTaskListVariables> => ({
   request: {
     query: GetGovernanceTaskListQuery,
     variables: {
@@ -439,16 +441,18 @@ export const getGovernanceTaskListQuery: MockedQuery<
           grbMeetingStatus: ITGovGRBStatus.CANT_START,
           decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
         },
+        step: SystemIntakeStep.INITIAL_REQUEST_FORM,
         governanceRequestFeedbacks: [],
         submittedAt: null,
         updatedAt: null,
         grtDate: null,
         grbDate: null,
-        businessCase: null
+        businessCase: null,
+        ...taskListData
       }
     }
   }
-};
+});
 
 export const getGRTFeedbackQuery: MockedQuery<
   GetGRTFeedback,

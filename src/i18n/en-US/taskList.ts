@@ -32,11 +32,13 @@ const taskList = {
   },
   navigation: {
     home: 'IT Governance',
-    governanceTaskList: 'Governance Task List',
+    governanceTaskList: 'Governance task list',
     feedback: 'Feedback',
     lcidInfo: 'About this LCID',
     nextSteps: 'Decision and next steps',
-    returnToTaskList: 'Return to task list'
+    returnToTaskList: 'Return to task list',
+    returnToGovernanceTaskList: 'Return to governance task list',
+    returnToForm: 'Return to {{type}}'
   },
   feedback: {
     heading: 'Recommendations',
@@ -51,6 +53,22 @@ const taskList = {
         'These are the Governance Review Team recommendations for the Business Owner'
     },
     descriptiveDate: 'Feedback given on {{date}}'
+  },
+  feedbackV2: {
+    heading: 'Feedback about your request',
+    downloadAsPDF: 'Download feedback as PDF',
+    date: 'Date',
+    from: 'From',
+    author: '{{name}}, Governance Team',
+    editsRequestedFor: 'Edits requested for',
+    feedbackTitleEditsRequested: 'Edits requested to a form',
+    feedbackTitle_GRB: 'Recommendation for the Governance Review Board (GRB)',
+    feedbackTitle_REQUESTER: 'General feedback for the requester',
+    targetForm: {
+      INTAKE_REQUEST: 'Intake Request form',
+      DRAFT_BUSINESS_CASE: 'Draft Business Case form',
+      FINAL_BUSINESS_CASE: 'Final Business Case form'
+    }
   },
   lcidAlert: {
     heading: 'Life Cycle ID Information',

@@ -7,28 +7,32 @@ import {
   BreadcrumbBar,
   BreadcrumbLink,
   Button,
+  ButtonGroup,
   Grid,
   GridContainer,
-  IconError
+  IconError,
+  ModalFooter,
+  ModalHeading
 } from '@trussworks/react-uswds';
-import classNames from 'classnames';
 
 import Modal from 'components/Modal';
-import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
+import StateTag from 'components/StateTag';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
+import { SystemIntakeState } from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import {
   isIntakeClosed,
-  isIntakeOpen,
   translateRequestType,
   translateStatus
 } from 'utils/systemIntake';
+
+import './index.scss';
 
 type RequestSummaryProps = {
   id: string;
@@ -39,6 +43,7 @@ type RequestSummaryProps = {
   adminLead: string | null;
   submittedAt: string | null;
   lcid: string | null;
+  contractNumber: string | null;
 };
 
 const RequestSummary = ({
@@ -49,7 +54,8 @@ const RequestSummary = ({
   status,
   adminLead,
   submittedAt,
-  lcid
+  lcid,
+  contractNumber
 }: RequestSummaryProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const [isModalOpen, setModalOpen] = useState(false);
@@ -61,16 +67,41 @@ const RequestSummary = ({
     }
   );
 
-  // Get admin lead assigned to intake
-  const getAdminLead = () => {
-    if (adminLead) {
-      return adminLead;
-    }
+  // TODO EASI-3440: update to use v2 `state` field
+  const state: SystemIntakeState = isIntakeClosed(status)
+    ? SystemIntakeState.CLOSED
+    : SystemIntakeState.OPEN;
+
+  /** Admin lead text and modal trigger button */
+  const AdminLead = () => {
+    const buttonText = t(
+      `governanceReviewTeam:adminLeads.${
+        adminLead ? 'changeLead' : 'assignLead'
+      }`
+    );
+
     return (
-      <div className="display-flex flex-align-center">
-        <IconError className="text-secondary margin-right-05" />
-        {t('governanceReviewTeam:adminLeads.notAssigned')}
-      </div>
+      <>
+        <span
+          className="display-flex flex-align-center"
+          data-testid="admin-lead"
+        >
+          {!adminLead && <IconError className="text-error margin-right-05" />}
+          {adminLead || t('governanceReviewTeam:adminLeads.notAssigned')}
+        </span>
+        <Button
+          type="button"
+          className="width-auto"
+          unstyled
+          onClick={() => {
+            // Reset newAdminLead to value in intake
+            resetNewAdminLead();
+            setModalOpen(true);
+          }}
+        >
+          {buttonText}
+        </Button>
+      </>
     );
   };
 
@@ -98,162 +129,157 @@ const RequestSummary = ({
   });
 
   return (
-    <div className="easi-grt__request-summary">
-      {mutationResult.error && (
-        <ErrorAlert heading="System error">
-          <ErrorAlertMessage
-            message={mutationResult.error.message}
-            errorKey="system"
-          />
-        </ErrorAlert>
-      )}
-      <section className="bg-primary-darker padding-bottom-3 text-white">
-        <GridContainer>
+    <div className="easi-admin-summary">
+      <section className="easi-admin-summary__request-details bg-primary-darker">
+        {/* Update admin lead error */}
+        {mutationResult.error && (
+          <ErrorAlert heading="System error">
+            <ErrorAlertMessage
+              message={mutationResult.error.message}
+              errorKey="system"
+            />
+          </ErrorAlert>
+        )}
+
+        <GridContainer className="text-white padding-bottom-1">
+          {/* Breadcrumbs */}
           <BreadcrumbBar variant="wrap" className="bg-transparent text-white">
             <Breadcrumb>
-              <BreadcrumbLink asCustom={Link} to="/">
-                <span className="text-white">Home</span>
+              <BreadcrumbLink
+                asCustom={Link}
+                to="/"
+                className="text-white text-underline"
+              >
+                {t('header:home')}
               </BreadcrumbLink>
             </Breadcrumb>
-            <Breadcrumb current>Request details</Breadcrumb>
+            <Breadcrumb current>{requestName}</Breadcrumb>
           </BreadcrumbBar>
 
-          {/* Request name */}
-          <h2 className="margin-top-05 margin-bottom-0">{requestName}</h2>
+          {/* Request summary */}
+          <h2 className="margin-top-05 margin-bottom-2">{requestName}</h2>
 
-          {/* Request details */}
-          <Grid row>
+          <Grid row gap>
             <Grid tablet={{ col: 8 }}>
-              {/* Request type */}
-              <div className="margin-top-2 margin-bottom-05">
-                <h5 className="text-normal margin-y-0">
-                  {t('intake:fields.requestFor')}
-                </h5>
-                <h4 className="margin-y-05">
-                  {translateRequestType(requestType)}
-                </h4>
-              </div>
+              <h5 className="text-normal margin-y-0">{t('requestType')}</h5>
+              <h4 className="margin-top-05 margin-bottom-2">
+                {translateRequestType(requestType)}
+              </h4>
+
+              <h5 className="text-normal margin-y-0">
+                {t('intake:review.contractNumber')}
+              </h5>
+              <h4 className="margin-top-05 margin-bottom-2">
+                {contractNumber || t('intake:review.noContractNumber')}
+              </h4>
             </Grid>
+
             <Grid tablet={{ col: 4 }}>
-              {/* Requester */}
-              <div className="margin-top-2 margin-bottom-05">
-                <h5 className="text-normal margin-y-0">
-                  {t('intake:contactDetails.requester')}
-                </h5>
-                <h4 className="margin-y-05">
-                  {getPersonNameAndComponentAcronym(
-                    requester?.name || '',
-                    requester?.component
-                  )}
-                </h4>
-              </div>
-              {/* Submission date */}
-              <div className="margin-top-2 margin-bottom-05">
-                <h5 className="text-normal margin-y-0">
-                  {t('intake:fields.submissionDate')}
-                </h5>
-                <h4 className="margin-y-05">
-                  {submittedAt
-                    ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
-                    : 'N/A'}
-                </h4>
-              </div>
+              <h5 className="text-normal margin-y-0">
+                {t('intake:contactDetails.requester')}
+              </h5>
+              <h4 className="margin-top-05 margin-bottom-2">
+                {getPersonNameAndComponentAcronym(
+                  requester?.name || '',
+                  requester?.component
+                )}
+              </h4>
+
+              <h5 className="text-normal margin-y-0">
+                {t('intake:fields.submissionDate')}
+              </h5>
+              <h4 className="margin-top-05 margin-bottom-2">
+                {submittedAt
+                  ? formatDateLocal(submittedAt, 'MMMM d, yyyy')
+                  : 'N/A'}
+              </h4>
             </Grid>
           </Grid>
         </GridContainer>
       </section>
 
-      <div className="bg-base-lightest">
-        <div className="grid-container overflow-auto">
-          <dl className="easi-grt__status-group">
-            <div className="easi-grt__status-info text-gray-90">
-              <dt className="text-bold">{t('status.label')}</dt>
-              &nbsp;
-              <dd
-                // className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
-                className={classNames(
-                  'text-white text-bold padding-y-05 padding-x-105 margin-x-1',
-                  {
-                    'bg-base': isIntakeClosed(status),
-                    'bg-info-dark': isIntakeOpen(status)
-                  }
-                )}
-                data-testid="grt-status"
-              >
-                {isIntakeClosed(status) ? t('status.closed') : t('status.open')}
-              </dd>
-              <>
-                <dt data-testid="grt-current-status">
-                  {translateStatus(status, lcid)}
-                </dt>
-              </>
-            </div>
-            <div className="display-flex text-gray-90">
-              <span className="text-bold">{t('intake:fields.adminLead')}</span>
-              <span className="margin-x-1" data-testid="admin-lead">
-                {getAdminLead()}
-              </span>
-              <Button
-                type="button"
-                unstyled
-                onClick={() => {
-                  // Reset newAdminLead to value in intake
-                  resetNewAdminLead();
-                  setModalOpen(true);
-                }}
-              >
-                {t('governanceReviewTeam:adminLeads.changeLead')}
-              </Button>
-              <Modal
-                isOpen={isModalOpen}
-                closeModal={() => {
-                  setModalOpen(false);
-                }}
-              >
-                <PageHeading headingLevel="h2" className="margin-top-0">
-                  {t('governanceReviewTeam:adminLeads:assignModal.header', {
-                    requestName
-                  })}
-                </PageHeading>
-                <RadioGroup>
-                  {grtMembers.map(name => (
-                    <RadioField
-                      id={`admin-lead-${name}`}
-                      key={`admin-lead-${name}`}
-                      checked={name === newAdminLead}
-                      label={name}
-                      name="admin-lead"
-                      value={name}
-                      onChange={e => setAdminLead(e.target.value)}
-                      className="margin-y-3"
-                    />
-                  ))}
-                </RadioGroup>
-                <Button
-                  type="button"
-                  className="margin-right-4"
-                  onClick={() => {
-                    // Set admin lead as newAdminLead in the intake
-                    saveAdminLead();
-                    setModalOpen(false);
-                  }}
-                >
-                  {t('governanceReviewTeam:adminLeads:assignModal.save')}
-                </Button>
-                <Button
-                  type="button"
-                  unstyled
-                  onClick={() => {
-                    setModalOpen(false);
-                  }}
-                >
-                  {t('governanceReviewTeam:adminLeads:assignModal.noChanges')}
-                </Button>
-              </Modal>
-            </div>
-          </dl>
-        </div>
-      </div>
+      {/* Status & admin lead info */}
+      <section className="easi-admin-summary__status bg-base-lightest">
+        <GridContainer className="padding-y-1">
+          <Grid row gap>
+            {/* Status */}
+            <Grid desktop={{ col: 8 }}>
+              <div>
+                <h4 className="margin-right-1">{t('status.label')}</h4>
+                <StateTag state={state} />
+              </div>
+              <p className="text-base-dark" data-testid="grt-current-status">
+                {
+                  /* TODO EASI-3440: Update to use v2 statuses */
+                  translateStatus(status, lcid)
+                }
+              </p>
+              <Link to={`/governance-review-team/${id}/actions`}>
+                {t('action:takeAnAction')}
+              </Link>
+            </Grid>
+
+            {/* Admin lead */}
+            <Grid desktop={{ col: 4 }}>
+              <h4 className="text-no-wrap width-full tablet:width-auto">
+                {t('intake:fields.adminLead')}
+              </h4>
+              <AdminLead />
+            </Grid>
+          </Grid>
+        </GridContainer>
+      </section>
+
+      {/* Change admin lead modal */}
+      <Modal
+        isOpen={isModalOpen}
+        closeModal={() => {
+          setModalOpen(false);
+        }}
+      >
+        <ModalHeading>
+          {t('governanceReviewTeam:adminLeads:assignModal.header', {
+            requestName
+          })}
+        </ModalHeading>
+        <RadioGroup>
+          {grtMembers.map(name => (
+            <RadioField
+              id={`admin-lead-${name}`}
+              key={`admin-lead-${name}`}
+              checked={name === newAdminLead}
+              label={name}
+              name="admin-lead"
+              value={name}
+              onChange={e => setAdminLead(e.target.value)}
+            />
+          ))}
+        </RadioGroup>
+        <ModalFooter>
+          <ButtonGroup>
+            <Button
+              type="button"
+              className="margin-right-1"
+              onClick={() => {
+                // Set admin lead as newAdminLead in the intake
+                saveAdminLead();
+                setModalOpen(false);
+              }}
+            >
+              {t('governanceReviewTeam:adminLeads:assignModal.save')}
+            </Button>
+            <Button
+              type="button"
+              unstyled
+              onClick={() => {
+                setModalOpen(false);
+              }}
+            >
+              {t('governanceReviewTeam:adminLeads:assignModal.noChanges')}
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 };

@@ -327,3 +327,92 @@ func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatu
 
 	return &issuedStatus
 }
+
+// SetV2FieldsBasedOnV1Status sets all IT Gov V2 fields based on a V1 status. This is effectively
+// an attempt to map V1 statuses to V2 fields.
+// NOTE: This could (and probably should) be the same mapping we use when running a DB migration to migrate
+// existing data
+func (si *SystemIntake) SetV2FieldsBasedOnV1Status(status SystemIntakeStatus) {
+	// TODO Figure out if the cases where we set `si.DecisionState` make sense
+	// TODO Figure out if RequestFormState, DraftBusinessCaseState, and FinalBusinessCaseState are all set properly
+	switch status {
+	case SystemIntakeStatusINTAKEDRAFT:
+		si.Step = SystemIntakeStepINITIALFORM
+		si.State = SystemIntakeStateOPEN
+		// handled through resolvers and formstate
+		si.RequestFormState = SIRFSInProgress
+	case SystemIntakeStatusINTAKESUBMITTED:
+		si.Step = SystemIntakeStepINITIALFORM
+		si.State = SystemIntakeStateOPEN
+		// handled in submit function
+		si.RequestFormState = SIRFSSubmitted
+	case SystemIntakeStatusNEEDBIZCASE:
+		si.Step = SystemIntakeStepDRAFTBIZCASE
+		si.State = SystemIntakeStateOPEN
+		// not setting si.DraftBusinessCaseState since `SIRFSNotStarted` is the default in the table
+	case SystemIntakeStatusCLOSED:
+		si.State = SystemIntakeStateCLOSED
+	case SystemIntakeStatusAPPROVED:
+		// This status doesn't appear to be referenced in any V1 actions -- good riddance!
+	case SystemIntakeStatusREADYFORGRT:
+		si.Step = SystemIntakeStepGRTMEETING
+		si.State = SystemIntakeStateOPEN
+	case SystemIntakeStatusREADYFORGRB:
+		si.Step = SystemIntakeStepGRBMEETING
+		si.State = SystemIntakeStateOPEN
+	case SystemIntakeStatusWITHDRAWN:
+		si.State = SystemIntakeStateCLOSED
+	case SystemIntakeStatusNOTITREQUEST:
+		si.Step = SystemIntakeStepDECISION
+		si.State = SystemIntakeStateCLOSED
+		si.DecisionState = SIDSNotGovernance
+	case SystemIntakeStatusLCIDISSUED:
+		si.Step = SystemIntakeStepDECISION
+		si.State = SystemIntakeStateCLOSED
+		si.DecisionState = SIDSLcidIssued
+	// Biz Case Needed
+	case SystemIntakeStatusBIZCASEDRAFT:
+		si.Step = SystemIntakeStepDRAFTBIZCASE
+		si.State = SystemIntakeStateOPEN
+		// handled in services/business_case.go by calling formstate.GetNewStateForUpdatedForm
+		// si.DraftBusinessCaseState = SIRFSInProgress
+	case SystemIntakeStatusBIZCASEDRAFTSUBMITTED:
+		si.Step = SystemIntakeStepDRAFTBIZCASE
+		si.State = SystemIntakeStateOPEN
+		// handled in services/action.go
+		si.DraftBusinessCaseState = SIRFSSubmitted
+	case SystemIntakeStatusBIZCASEFINALSUBMITTED:
+		si.Step = SystemIntakeStepFINALBIZCASE
+		si.State = SystemIntakeStateOPEN
+		// handled in services/action.go
+		si.FinalBusinessCaseState = SIRFSSubmitted
+	case SystemIntakeStatusBIZCASECHANGESNEEDED:
+		if si.Step == SystemIntakeStepFINALBIZCASE {
+			si.FinalBusinessCaseState = SIRFSEditsRequested
+		} else {
+			si.Step = SystemIntakeStepDRAFTBIZCASE
+			si.DraftBusinessCaseState = SIRFSEditsRequested
+		}
+		si.State = SystemIntakeStateOPEN
+	// describes either progressing or requesting edits
+	case SystemIntakeStatusBIZCASEFINALNEEDED:
+		if si.FinalBusinessCaseState == SIRFSSubmitted {
+			si.FinalBusinessCaseState = SIRFSEditsRequested
+		}
+		si.Step = SystemIntakeStepFINALBIZCASE
+		si.State = SystemIntakeStateOPEN
+		// not setting si.FinalBusinessCaseState since `SIRFSNotStarted` is the default in the table
+	case SystemIntakeStatusNOTAPPROVED:
+		si.State = SystemIntakeStateCLOSED
+		si.Step = SystemIntakeStepDECISION
+		si.DecisionState = SIDSNotApproved
+	case SystemIntakeStatusNOGOVERNANCE:
+		si.State = SystemIntakeStateCLOSED
+		si.Step = SystemIntakeStepDECISION
+		si.DecisionState = SIDSNotGovernance
+	case SystemIntakeStatusSHUTDOWNINPROGRESS:
+		// This status is not needed since we don't support shutdowns
+	case SystemIntakeStatusSHUTDOWNCOMPLETE:
+		// This status is not needed since we don't support shutdowns
+	}
+}
