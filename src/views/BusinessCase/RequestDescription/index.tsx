@@ -8,7 +8,6 @@ import {
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
-import CharacterCounter from 'components/CharacterCounter';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
@@ -135,10 +134,6 @@ const RequestDescription = ({
                     name="businessNeed"
                     aria-describedby="BusinessCase-BusinessNeedCounter BusinessCase-BusinessNeedHelp"
                   />
-                  <CharacterCounter
-                    id="BusinessCase-BusinessNeedCounter"
-                    characterCount={2000 - values.businessNeed.length}
-                  />
                 </FieldGroup>
 
                 <FieldGroup
@@ -167,10 +162,6 @@ const RequestDescription = ({
                     name="currentSolutionSummary"
                     aria-describedby="BusinessCase-CurrentSolutionSummaryCounter BusinessCase-CurrentSolutionSummaryHelp"
                   />
-                  <CharacterCounter
-                    id="BusinessCase-CurrentSolutionSummaryCounter"
-                    characterCount={2000 - values.currentSolutionSummary.length}
-                  />
                 </FieldGroup>
 
                 <FieldGroup
@@ -198,10 +189,6 @@ const RequestDescription = ({
                     name="cmsBenefit"
                     aria-describedby="BusinessCase-CmsBenefitCounter BusinessCase-CmsBenefitHelp"
                   />
-                  <CharacterCounter
-                    id="BusinessCase-CmsBenefitCounter"
-                    characterCount={2000 - values.cmsBenefit.length}
-                  />
                 </FieldGroup>
 
                 <FieldGroup
@@ -228,10 +215,6 @@ const RequestDescription = ({
                     name="priorityAlignment"
                     aria-describedby="BusinessCase-PriorityAlignmentCounter BusinessCase-PriorityAlignmentHelp"
                   />
-                  <CharacterCounter
-                    id="BusinessCase-PriorityAlignmentCounter"
-                    characterCount={2000 - values.priorityAlignment.length}
-                  />
                 </FieldGroup>
 
                 <FieldGroup
@@ -257,10 +240,6 @@ const RequestDescription = ({
                     maxLength={2000}
                     name="successIndicators"
                     aria-describedby="BusinessCase-SuccessIndicatorsCounter BusinessCase-SuccessIndicatorsHelp"
-                  />
-                  <CharacterCounter
-                    id="BusinessCase-SuccessIndicatorsCounter"
-                    characterCount={2000 - values.successIndicators.length}
                   />
                 </FieldGroup>
               </Form>

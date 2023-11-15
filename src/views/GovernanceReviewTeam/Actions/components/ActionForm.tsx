@@ -324,7 +324,6 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
                   ref={null}
                   id={field.name}
                   size="sm"
-                  characterCounter={false}
                 />
               </FormGroup>
             )}
@@ -367,7 +366,6 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
                   ref={null}
                   id={field.name}
                   size="sm"
-                  characterCounter={false}
                 />
               </FormGroup>
             )}

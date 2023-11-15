@@ -2,7 +2,6 @@ import React from 'react';
 import { Label, Radio, Textarea, TextInput } from '@trussworks/react-uswds';
 import { Field, FormikProps } from 'formik';
 
-import CharacterCounter from 'components/CharacterCounter';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -85,10 +84,6 @@ const AlternativeSolutionFields = ({
             name={`${altId}.summary`}
             aria-describedby={`BusinessCase-${altId}SummmaryCounter BusinessCase-${altId}SummaryHelp`}
           />
-          <CharacterCounter
-            id={`BusinessCase-${altId}SummmaryCounter`}
-            characterCount={2000 - values[`${altId}`].summary.length}
-          />
         </FieldGroup>
 
         <FieldGroup
@@ -116,12 +111,6 @@ const AlternativeSolutionFields = ({
             maxLength={2000}
             name={`${altId}.acquisitionApproach`}
             aria-describedby={`BusinessCase-${altId}AcquisitionApproachCounter BusinessCase-${altId}AcquisitionApproachHelp`}
-          />
-          <CharacterCounter
-            id={`BusinessCase-${altId}AcquisitionApproachCounter`}
-            characterCount={
-              2000 - values[`${altId}`].acquisitionApproach.length
-            }
           />
         </FieldGroup>
 
@@ -391,10 +380,6 @@ const AlternativeSolutionFields = ({
             name={`${altId}.pros`}
             aria-describedby={`BusinessCase-${altId}ProsCounter BusinessCase-${altId}ProsHelp`}
           />
-          <CharacterCounter
-            id={`BusinessCase-${altId}ProsCounter`}
-            characterCount={2000 - values[`${altId}`].pros.length}
-          />
         </FieldGroup>
 
         <FieldGroup
@@ -416,10 +401,6 @@ const AlternativeSolutionFields = ({
             maxLength={2000}
             name={`${altId}.cons`}
             aria-describedby={`BusinessCase-${altId}ConsHelp BusinessCase-${altId}ConsCounter`}
-          />
-          <CharacterCounter
-            id={`BusinessCase-${altId}ConsCounter`}
-            characterCount={2000 - values[`${altId}`].cons.length}
           />
         </FieldGroup>
       </div>
@@ -459,10 +440,6 @@ const AlternativeSolutionFields = ({
             maxLength={2000}
             name={`${altId}.costSavings`}
             aria-describedby={`BusinessCase-${altId}CostSavingsCounter BusinessCase-${altId}CostSavingsHelp`}
-          />
-          <CharacterCounter
-            id={`BusinessCase-${altId}CostSavingsCounter`}
-            characterCount={2000 - values[`${altId}`].costSavings.length}
           />
         </FieldGroup>
       </div>

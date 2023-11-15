@@ -125,7 +125,6 @@ const CloseRequest = ({
                 id={field.name}
                 value={field.value || ''}
                 size="sm"
-                characterCounter={false}
               />
             </FormGroup>
           )}

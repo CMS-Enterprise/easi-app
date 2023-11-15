@@ -10,7 +10,6 @@ import {
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
-import CharacterCounter from 'components/CharacterCounter';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -173,12 +172,6 @@ const PreferredSolution = ({
                     name="preferredSolution.summary"
                     aria-describedby="BusinessCase-PreferredSolutionSummaryCounter BusinessCase-PreferredSolutionSummaryHelp"
                   />
-                  <CharacterCounter
-                    id="BusinessCase-PreferredSolutionSummaryCounter"
-                    characterCount={
-                      2000 - values.preferredSolution.summary.length
-                    }
-                  />
                 </FieldGroup>
                 <FieldGroup
                   scrollElement="preferredSolution.acquisitionApproach"
@@ -207,12 +200,6 @@ const PreferredSolution = ({
                     maxLength={2000}
                     name="preferredSolution.acquisitionApproach"
                     aria-describedby="BusinessCase-PreferredSolutionAcquisitionApproachCounter BusinessCase-PreferredSolutionAcquisitionApproachHelp"
-                  />
-                  <CharacterCounter
-                    id="BusinessCase-PreferredSolutionAcquisitionApproachCounter"
-                    characterCount={
-                      2000 - values.preferredSolution.acquisitionApproach.length
-                    }
                   />
                 </FieldGroup>
 
@@ -557,10 +544,6 @@ const PreferredSolution = ({
                     name="preferredSolution.pros"
                     aria-describedby="BusinessCase-PreferredSolutionProsCounter BusinessCase-PreferredSolutionProsHelp"
                   />
-                  <CharacterCounter
-                    id="BusinessCase-PreferredSolutionProsCounter"
-                    characterCount={2000 - values.preferredSolution.pros.length}
-                  />
                 </FieldGroup>
 
                 <FieldGroup
@@ -587,10 +570,6 @@ const PreferredSolution = ({
                     maxLength={2000}
                     name="preferredSolution.cons"
                     aria-describedby="BusinessCase-PreferredSolutionConsCounter BusinessCase-PreferredSolutionConsHelp"
-                  />
-                  <CharacterCounter
-                    id="BusinessCase-PreferredSolutionConsCounter"
-                    characterCount={2000 - values.preferredSolution.cons.length}
                   />
                 </FieldGroup>
               </div>
@@ -632,12 +611,6 @@ const PreferredSolution = ({
                     maxLength={2000}
                     name="preferredSolution.costSavings"
                     aria-describedby="BusinessCase-PreferredSolutionCostSavingsCounter BusinessCase-PreferredSolutionCostSavingsHelp"
-                  />
-                  <CharacterCounter
-                    id="BusinessCase-PreferredSolutionCostSavingsCounter"
-                    characterCount={
-                      2000 - values.preferredSolution.costSavings.length
-                    }
                   />
                 </FieldGroup>
               </div>

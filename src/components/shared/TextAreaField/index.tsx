@@ -1,8 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
 
-import CharacterCounter from 'components/CharacterCounter';
-
 import './index.scss';
 
 type TextAreaFieldProps = {
@@ -16,7 +14,6 @@ type TextAreaFieldProps = {
   onBlur: () => void;
   value: string;
   size?: 'auto' | 'sm' | 'md';
-  characterCounter?: boolean;
 } & JSX.IntrinsicElements['textarea'];
 
 const TextAreaField = ({
@@ -30,7 +27,6 @@ const TextAreaField = ({
   onBlur,
   value,
   size = 'md',
-  characterCounter = false, // EASI-3456
   ...props
 }: TextAreaFieldProps) => {
   const textAreaClasses = classnames(
@@ -58,12 +54,6 @@ const TextAreaField = ({
         maxLength={maxLength}
         {...props}
       />
-      {characterCounter && (
-        <CharacterCounter
-          id={`${id}-counter`}
-          characterCount={2000 - (value?.length || 0)}
-        />
-      )}
     </>
   );
 };

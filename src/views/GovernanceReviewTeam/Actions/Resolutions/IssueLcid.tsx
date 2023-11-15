@@ -374,12 +374,7 @@ const IssueLcid = ({
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField
-                {...field}
-                id={field.name}
-                size="sm"
-                characterCounter={false}
-              />
+              <TextAreaField {...field} id={field.name} size="sm" />
             </FormGroup>
           )}
         />
@@ -398,12 +393,7 @@ const IssueLcid = ({
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField
-                {...field}
-                id={field.name}
-                size="sm"
-                characterCounter={false}
-              />
+              <TextAreaField {...field} id={field.name} size="sm" />
             </FormGroup>
           )}
         />
@@ -467,7 +457,6 @@ const IssueLcid = ({
                 value={field.value || ''}
                 id={field.name}
                 size="sm"
-                characterCounter={false}
               />
             </FormGroup>
           )}

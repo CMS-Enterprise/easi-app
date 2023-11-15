@@ -112,12 +112,7 @@ const NotApproved = ({
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField
-                {...field}
-                id={field.name}
-                size="sm"
-                characterCounter={false}
-              />
+              <TextAreaField {...field} id={field.name} size="sm" />
             </FormGroup>
           )}
         />
@@ -135,12 +130,7 @@ const NotApproved = ({
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField
-                {...field}
-                id={field.name}
-                size="sm"
-                characterCounter={false}
-              />
+              <TextAreaField {...field} id={field.name} size="sm" />
             </FormGroup>
           )}
         />
