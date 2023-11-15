@@ -157,7 +157,12 @@ const Actions = ({ systemIntake }: ActionsProps) => {
           {/* Request edits */}
           <Route
             path="/governance-review-team/:systemId/actions/request-edits"
-            render={() => <RequestEdits systemIntakeId={systemIntake.id} />}
+            render={() => (
+              <RequestEdits
+                currentStep={step}
+                systemIntakeId={systemIntake.id}
+              />
+            )}
           />
 
           {/* Progress to a new step */}
