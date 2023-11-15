@@ -69,7 +69,7 @@ const GeneralRequestInfo = ({
 
         return (
           <BusinessCaseStepWrapper
-            id={businessCase.id || ''}
+            systemIntakeId={businessCase.systemIntakeId}
             title={t('generalRequest')}
             description={t('generalRequestDescription')}
             errors={flatErrors}

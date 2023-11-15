@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
@@ -6,18 +6,27 @@ import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import useCacheQuery from 'hooks/useCacheQuery';
+import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
+import {
+  GetGovernanceTaskList,
+  GetGovernanceTaskListVariables
+} from 'queries/types/GetGovernanceTaskList';
+import {
+  ITGovDraftBusinessCaseStatus,
+  ITGovFinalBusinessCaseStatus
+} from 'types/graphql-global-types';
 
 type BusinessCaseStepWrapperProps = {
   /** Form page title */
   title: string;
-  /** Business case ID */
-  id: string;
+  systemIntakeId: string;
   /** Form errors object */
   errors: Record<string, string>;
   /** Form step content and fields */
   children: React.ReactNode;
   description?: string;
-  /** Whether to show "all fields are mandatory alert - defaults to false" */
+  /** Whether to show "all fields are mandatory" alert - defaults to false */
   fieldsMandatory?: boolean;
   className?: string;
   'data-testid'?: string;
@@ -31,7 +40,7 @@ type BusinessCaseStepWrapperProps = {
 const BusinessCaseStepWrapper = ({
   title,
   description,
-  id,
+  systemIntakeId,
   errors,
   children,
   fieldsMandatory = false,
@@ -39,6 +48,26 @@ const BusinessCaseStepWrapper = ({
   ...props
 }: BusinessCaseStepWrapperProps) => {
   const { t } = useTranslation('form');
+
+  const { data } = useCacheQuery<
+    GetGovernanceTaskList,
+    GetGovernanceTaskListVariables
+  >(GetGovernanceTaskListQuery, {
+    variables: {
+      id: systemIntakeId
+    }
+  });
+
+  /** Whether or not business case has edits requested */
+  const hasEditsRequested: boolean = useMemo(() => {
+    const { bizCaseDraftStatus, bizCaseFinalStatus } =
+      data?.systemIntake?.itGovTaskStatuses || {};
+
+    return (
+      bizCaseDraftStatus === ITGovDraftBusinessCaseStatus.EDITS_REQUESTED ||
+      bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.EDITS_REQUESTED
+    );
+  }, [data]);
 
   return (
     <div className={classNames('grid-container', className)} {...props}>
@@ -62,11 +91,13 @@ const BusinessCaseStepWrapper = ({
 
       <PageHeading className="margin-bottom-4">{title}</PageHeading>
 
-      <FeedbackBanner
-        id={id}
-        type="Draft Business Case"
-        className="margin-top-3"
-      />
+      {hasEditsRequested && (
+        <FeedbackBanner
+          id={systemIntakeId}
+          type="Draft Business Case"
+          className="margin-top-3"
+        />
+      )}
 
       <p className="line-height-body-6">{description}</p>
 
