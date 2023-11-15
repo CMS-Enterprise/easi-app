@@ -3,21 +3,22 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
-  IconNavigateBefore,
+  ButtonGroup,
+  IconArrowBack,
   Label,
   Radio,
-  Textarea,
   TextInput
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
-import CharacterCounter from 'components/CharacterCounter';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import IconButton from 'components/shared/IconButton';
+import TextAreaField from 'components/shared/TextAreaField';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
@@ -100,6 +101,7 @@ const PreferredSolution = ({
             <Form>
               <div className="tablet:grid-col-9">
                 <h2>{t('preferredSolution')}</h2>
+
                 <FieldGroup
                   scrollElement="preferredSolution.title"
                   error={!!flatErrors['preferredSolution.title']}
@@ -118,6 +120,7 @@ const PreferredSolution = ({
                     name="preferredSolution.title"
                   />
                 </FieldGroup>
+
                 <FieldGroup
                   scrollElement="preferredSolution.summary"
                   error={!!flatErrors['preferredSolution.summary']}
@@ -141,20 +144,16 @@ const PreferredSolution = ({
                     {flatErrors['preferredSolution.summary']}
                   </FieldErrorMsg>
                   <Field
-                    as={Textarea}
+                    as={TextAreaField}
+                    characterCounter
                     error={!!flatErrors['preferredSolution.summary']}
                     id="BusinessCase-PreferredSolutionSummary"
                     maxLength={2000}
                     name="preferredSolution.summary"
                     aria-describedby="BusinessCase-PreferredSolutionSummaryCounter BusinessCase-PreferredSolutionSummaryHelp"
                   />
-                  <CharacterCounter
-                    id="BusinessCase-PreferredSolutionSummaryCounter"
-                    characterCount={
-                      2000 - values.preferredSolution.summary.length
-                    }
-                  />
                 </FieldGroup>
+
                 <FieldGroup
                   scrollElement="preferredSolution.acquisitionApproach"
                   error={!!flatErrors['preferredSolution.acquisitionApproach']}
@@ -172,7 +171,8 @@ const PreferredSolution = ({
                     {flatErrors['preferredSolution.acquisitionApproach']}
                   </FieldErrorMsg>
                   <Field
-                    as={Textarea}
+                    as={TextAreaField}
+                    characterCounter
                     error={
                       !!flatErrors['preferredSolution.acquisitionApproach']
                     }
@@ -180,12 +180,6 @@ const PreferredSolution = ({
                     maxLength={2000}
                     name="preferredSolution.acquisitionApproach"
                     aria-describedby="BusinessCase-PreferredSolutionAcquisitionApproachCounter BusinessCase-PreferredSolutionAcquisitionApproachHelp"
-                  />
-                  <CharacterCounter
-                    id="BusinessCase-PreferredSolutionAcquisitionApproachCounter"
-                    characterCount={
-                      2000 - values.preferredSolution.acquisitionApproach.length
-                    }
                   />
                 </FieldGroup>
 
@@ -314,7 +308,7 @@ const PreferredSolution = ({
                       }
                       id="BusinessCase-PreferredSolutionHostingCloud"
                       name="preferredSolution.hosting.type"
-                      label="Yes, in the cloud (AWS, Azure, etc.)"
+                      label={t('hostingTypeCloud')}
                       value="cloud"
                       onChange={() => {
                         setFieldValue(
@@ -353,6 +347,7 @@ const PreferredSolution = ({
                             name="preferredSolution.hosting.location"
                           />
                         </FieldGroup>
+
                         <FieldGroup
                           className="margin-bottom-1 margin-left-4"
                           scrollElement="preferredSolution.hosting.cloudServiceType"
@@ -393,7 +388,7 @@ const PreferredSolution = ({
                       }
                       id="BusinessCase-PreferredSolutionHostingDataCenter"
                       name="preferredSolution.hosting.type"
-                      label="Yes, at a data center"
+                      label={t('hostingTypeDataCenter')}
                       value="dataCenter"
                       onChange={() => {
                         setFieldValue(
@@ -407,6 +402,7 @@ const PreferredSolution = ({
                         );
                       }}
                     />
+
                     {values.preferredSolution.hosting.type === 'dataCenter' && (
                       <FieldGroup
                         className="margin-yx-1 margin-left-4"
@@ -432,12 +428,13 @@ const PreferredSolution = ({
                         />
                       </FieldGroup>
                     )}
+
                     <Field
                       as={Radio}
                       checked={values.preferredSolution.hosting.type === 'none'}
                       id="BusinessCase-PreferredSolutionHostingNone"
                       name="preferredSolution.hosting.type"
-                      label="No, hosting is not needed"
+                      label={t('noHostingNeeded')}
                       value="none"
                       onChange={() => {
                         setFieldValue('preferredSolution.hosting.type', 'none');
@@ -450,6 +447,7 @@ const PreferredSolution = ({
                     />
                   </fieldset>
                 </FieldGroup>
+
                 <FieldGroup
                   scrollElement="preferredSolution.hasUserInterface"
                   error={!!flatErrors['preferredSolution.hasUserInterface']}
@@ -473,6 +471,7 @@ const PreferredSolution = ({
                       label={t('Yes')}
                       value="YES"
                     />
+
                     <Field
                       as={Radio}
                       checked={
@@ -514,16 +513,13 @@ const PreferredSolution = ({
                     {flatErrors['preferredSolution.pros']}
                   </FieldErrorMsg>
                   <Field
-                    as={Textarea}
+                    as={TextAreaField}
+                    characterCounter
                     error={!!flatErrors['preferredSolution.pros']}
                     id="BusinessCase-PreferredSolutionPros"
                     maxLength={2000}
                     name="preferredSolution.pros"
                     aria-describedby="BusinessCase-PreferredSolutionProsCounter BusinessCase-PreferredSolutionProsHelp"
-                  />
-                  <CharacterCounter
-                    id="BusinessCase-PreferredSolutionProsCounter"
-                    characterCount={2000 - values.preferredSolution.pros.length}
                   />
                 </FieldGroup>
 
@@ -544,19 +540,17 @@ const PreferredSolution = ({
                     {flatErrors['preferredSolution.cons']}
                   </FieldErrorMsg>
                   <Field
-                    as={Textarea}
+                    as={TextAreaField}
+                    characterCounter
                     error={!!flatErrors['preferredSolution.cons']}
                     id="BusinessCase-PreferredSolutionCons"
                     maxLength={2000}
                     name="preferredSolution.cons"
                     aria-describedby="BusinessCase-PreferredSolutionConsCounter BusinessCase-PreferredSolutionConsHelp"
                   />
-                  <CharacterCounter
-                    id="BusinessCase-PreferredSolutionConsCounter"
-                    characterCount={2000 - values.preferredSolution.cons.length}
-                  />
                 </FieldGroup>
               </div>
+
               <EstimatedLifecycleCost
                 className="margin-top-2"
                 formikKey="preferredSolution.estimatedLifecycleCost"
@@ -568,85 +562,82 @@ const PreferredSolution = ({
                 }
                 setFieldValue={setFieldValue}
               />
-              <div className="tablet:grid-col-9 margin-bottom-7">
-                <FieldGroup
-                  scrollElement="preferredSolution.costSavings"
-                  error={!!flatErrors['preferredSolution.costSavings']}
+
+              <FieldGroup
+                scrollElement="preferredSolution.costSavings"
+                error={!!flatErrors['preferredSolution.costSavings']}
+                className="tablet:grid-col-9 margin-bottom-6"
+              >
+                <Label htmlFor="BusinessCase-PreferredSolutionCostSavings">
+                  {t('costSavings')}
+                </Label>
+                <HelpText
+                  id="BusinessCase-PreferredSolutionCostSavingsHelp"
+                  className="margin-y-1"
                 >
-                  <Label htmlFor="BusinessCase-PreferredSolutionCostSavings">
-                    {t('costSavings')}
-                  </Label>
-                  <HelpText
-                    id="BusinessCase-PreferredSolutionCostSavingsHelp"
-                    className="margin-y-1"
-                  >
-                    {t('costSavingsHelpText')}
-                  </HelpText>
-                  <FieldErrorMsg>
-                    {flatErrors['preferredSolution.costSavings']}
-                  </FieldErrorMsg>
-                  <Field
-                    as={Textarea}
-                    error={!!flatErrors['preferredSolution.costSavings']}
-                    id="BusinessCase-PreferredSolutionCostSavings"
-                    maxLength={2000}
-                    name="preferredSolution.costSavings"
-                    aria-describedby="BusinessCase-PreferredSolutionCostSavingsCounter BusinessCase-PreferredSolutionCostSavingsHelp"
-                  />
-                  <CharacterCounter
-                    id="BusinessCase-PreferredSolutionCostSavingsCounter"
-                    characterCount={
-                      2000 - values.preferredSolution.costSavings.length
-                    }
-                  />
-                </FieldGroup>
-              </div>
+                  {t('costSavingsHelpText')}
+                </HelpText>
+                <FieldErrorMsg>
+                  {flatErrors['preferredSolution.costSavings']}
+                </FieldErrorMsg>
+                <Field
+                  as={TextAreaField}
+                  characterCounter
+                  error={!!flatErrors['preferredSolution.costSavings']}
+                  id="BusinessCase-PreferredSolutionCostSavings"
+                  maxLength={2000}
+                  name="preferredSolution.costSavings"
+                  aria-describedby="BusinessCase-PreferredSolutionCostSavingsCounter BusinessCase-PreferredSolutionCostSavingsHelp"
+                />
+              </FieldGroup>
             </Form>
 
-            <Button
-              type="button"
-              outline
-              onClick={() => {
-                dispatchSave();
-                setErrors({});
-                const newUrl = 'request-description';
-                history.push(newUrl);
-              }}
-            >
-              {t('Back')}
-            </Button>
-            <Button
-              type="button"
-              onClick={() => {
-                validateForm().then(err => {
-                  if (Object.keys(err).length === 0) {
-                    dispatchSave();
-                    const newUrl = 'alternative-solution-a';
-                    history.push(newUrl);
-                  } else {
-                    window.scrollTo(0, 0);
-                  }
-                });
-              }}
-            >
-              {t('Next')}
-            </Button>
-            <div className="margin-y-3">
+            <ButtonGroup>
               <Button
                 type="button"
-                unstyled
+                outline
                 onClick={() => {
                   dispatchSave();
-                  history.push(
-                    `/governance-task-list/${businessCase.systemIntakeId}`
-                  );
+                  setErrors({});
+                  const newUrl = 'request-description';
+                  history.push(newUrl);
                 }}
               >
-                <span className="display-flex flex-align-center">
-                  <IconNavigateBefore /> {t('Save & Exit')}
-                </span>
+                {t('Back')}
               </Button>
-            </div>
+              <Button
+                type="button"
+                onClick={() => {
+                  validateForm().then(err => {
+                    if (Object.keys(err).length === 0) {
+                      dispatchSave();
+                      const newUrl = 'alternative-solution-a';
+                      history.push(newUrl);
+                    } else {
+                      window.scrollTo(0, 0);
+                    }
+                  });
+                }}
+              >
+                {t('Next')}
+              </Button>
+            </ButtonGroup>
+
+            <IconButton
+              type="button"
+              icon={<IconArrowBack />}
+              className="margin-bottom-3 margin-top-2"
+              onClick={() => {
+                dispatchSave();
+                history.push(
+                  `/governance-task-list/${businessCase.systemIntakeId}`
+                );
+              }}
+              unstyled
+            >
+              {t('Save & Exit')}
+            </IconButton>
+
             <PageNumber
               currentPage={4}
               totalPages={
