@@ -30,6 +30,7 @@ type GeneralRequestInfoProps = {
   formikRef: any;
   dispatchSave: () => void;
 };
+
 const GeneralRequestInfo = ({
   formikRef,
   businessCase,
@@ -80,7 +81,9 @@ const GeneralRequestInfo = ({
                   scrollElement="requestName"
                   error={!!flatErrors.requestName}
                 >
-                  <Label htmlFor="BusinessCase-RequestName">Project Name</Label>
+                  <Label htmlFor="BusinessCase-RequestName">
+                    {t('projectName')}
+                  </Label>
                   <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                   <Field
                     as={TextInput}
@@ -95,7 +98,9 @@ const GeneralRequestInfo = ({
                   scrollElement="requester.name"
                   error={!!flatErrors['requester.name']}
                 >
-                  <Label htmlFor="BusinessCase-RequesterName">Requester</Label>
+                  <Label htmlFor="BusinessCase-RequesterName">
+                    {t('requester')}
+                  </Label>
                   <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
                   <Field
                     as={TextInput}
@@ -111,7 +116,7 @@ const GeneralRequestInfo = ({
                   error={!!flatErrors['businessOwner.name']}
                 >
                   <Label htmlFor="BusinessCase-BusinessOwnerName">
-                    Business Owner
+                    {t('businessOwner')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['businessOwner.name']}
@@ -130,10 +135,10 @@ const GeneralRequestInfo = ({
                   error={!!flatErrors['requester.phoneNumber']}
                 >
                   <Label htmlFor="BusinessCase-RequesterPhoneNumber">
-                    Requester Phone Number
+                    {t('requesterPhoneNumber')}
                   </Label>
                   <HelpText id="BusinessCase-PhoneNumber">
-                    For example 1234567890 or 123-456-7890
+                    {t('requesterPhoneNumberHelpText')}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['requester.phoneNumber']}
@@ -166,7 +171,7 @@ const GeneralRequestInfo = ({
                 });
               }}
             >
-              Next
+              {t('Next')}
             </Button>
             <div className="margin-y-3">
               <Button
@@ -180,7 +185,7 @@ const GeneralRequestInfo = ({
                 }}
               >
                 <span className="display-flex flex-align-center">
-                  <IconNavigateBefore /> Save & Exit
+                  <IconNavigateBefore /> {t('Save & Exit')}
                 </span>
               </Button>
             </div>
