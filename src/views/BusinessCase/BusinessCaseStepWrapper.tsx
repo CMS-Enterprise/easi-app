@@ -21,6 +21,7 @@ type BusinessCaseStepWrapperProps = {
   /** Form page title */
   title: string;
   systemIntakeId: string;
+  isFinal: boolean;
   /** Form errors object */
   errors: Record<string, string>;
   /** Form step content and fields */
@@ -41,6 +42,7 @@ const BusinessCaseStepWrapper = ({
   title,
   description,
   systemIntakeId,
+  isFinal,
   errors,
   children,
   fieldsMandatory = false,
@@ -94,7 +96,7 @@ const BusinessCaseStepWrapper = ({
       {hasEditsRequested && (
         <FeedbackBanner
           id={systemIntakeId}
-          type="Draft Business Case"
+          type={isFinal ? 'Final Business Case' : 'Draft Business Case'}
           className="margin-top-3"
         />
       )}

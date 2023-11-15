@@ -67,6 +67,9 @@ const GeneralRequestInfo = ({
         const { errors, values, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
 
+        // TODO EASI-3440: Update to use v2 status
+        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
+
         return (
           <BusinessCaseStepWrapper
             systemIntakeId={businessCase.systemIntakeId}
@@ -74,10 +77,8 @@ const GeneralRequestInfo = ({
             description={t('generalRequestDescription')}
             errors={flatErrors}
             data-testid="general-request-info"
-            // TODO EASI-3440: Update to use v2 status
-            fieldsMandatory={isBusinessCaseFinal(
-              businessCase.systemIntakeStatus
-            )}
+            isFinal={isFinal}
+            fieldsMandatory={isFinal}
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">
               <FieldGroup
