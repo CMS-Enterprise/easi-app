@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import './ActionsSummary.scss';
 
-type ActionsSummaryProps = {
+export type ActionsSummaryProps = {
   heading: string;
   items: { title: string; description: string }[];
   className?: string;

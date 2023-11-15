@@ -6,6 +6,7 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import i18next from 'i18next';
 
 import {
   getGovernanceTaskListQuery,
@@ -16,6 +17,14 @@ import {
 } from 'data/mock/systemIntake';
 import useMessage, { MessageProvider } from 'hooks/useMessage';
 import CreateSystemIntakeActionRequestEditsQuery from 'queries/CreateSystemIntakeActionRequestEditsQuery';
+import {
+  CreateSystemIntakeActionRequestEdits,
+  CreateSystemIntakeActionRequestEditsVariables
+} from 'queries/types/CreateSystemIntakeActionRequestEdits';
+import {
+  SystemIntakeFormStep,
+  SystemIntakeStep
+} from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
 import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -55,7 +64,7 @@ const renderActionPage = ({
 describe('IT Gov Actions', () => {
   it('Renders options and selects action', async () => {
     render(
-      <VerboseMockedProvider mocks={[getGovernanceTaskListQuery]}>
+      <VerboseMockedProvider mocks={[getGovernanceTaskListQuery()]}>
         <MemoryRouter
           initialEntries={[
             `/governance-review-team/${systemIntake.id}/actions`
@@ -91,115 +100,158 @@ describe('IT Gov Actions', () => {
     ).toBeInTheDocument();
   });
 
-  it('Renders request edits action', async () => {
-    renderActionPage({
-      action: 'request-edits',
-      mocks: [
-        getSystemIntakeQuery(),
-        getSystemIntakeContactsQuery,
-        getGovernanceTaskListQuery
-      ]
-    });
-
-    expect(
-      await screen.findByRole('heading', { name: 'Action: request edits' })
-    ).toBeInTheDocument();
-
-    // Requester is default recipient
-    expect(
-      screen.getByRole('checkbox', {
-        name: `${requester.commonName}, CMS (Requester) ${requester.email}`
-      })
-    ).toBeChecked();
-  });
-
-  it('Submits a request edits successfully', async () => {
-    renderActionPage({
-      action: 'request-edits',
-      mocks: [
-        getSystemIntakeQuery(),
-        getSystemIntakeContactsQuery,
-        getGovernanceTaskListQuery,
-        {
-          request: {
-            query: CreateSystemIntakeActionRequestEditsQuery,
-            variables: {
-              input: {
-                systemIntakeID: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
-                adminNote: '',
-                additionalInfo: '',
-                notificationRecipients: {
-                  shouldNotifyITGovernance: true,
-                  shouldNotifyITInvestment: false,
-                  regularRecipientEmails: ['ally.anderson@local.fake']
-                },
-                intakeFormStep: 'INITIAL_REQUEST_FORM',
-                emailFeedback: '<p>Ch-ch-changes</p>'
-              }
-            }
-          },
-          result: {
-            data: {
-              createSystemIntakeActionRequestEdits: {
-                systemIntake: {
-                  id: 'a4158ad8-1236-4a55-9ad5-7e15a5d49de2',
-                  __typename: 'SystemIntake'
-                },
-                __typename: 'UpdateSystemIntakePayload'
-              }
-            }
+  describe('Request edits', () => {
+    const createSystemIntakeActionRequestEditsQuery: MockedQuery<
+      CreateSystemIntakeActionRequestEdits,
+      CreateSystemIntakeActionRequestEditsVariables
+    > = {
+      request: {
+        query: CreateSystemIntakeActionRequestEditsQuery,
+        variables: {
+          input: {
+            systemIntakeID: systemIntake.id,
+            adminNote: '',
+            additionalInfo: '',
+            notificationRecipients: {
+              shouldNotifyITGovernance: true,
+              shouldNotifyITInvestment: false,
+              regularRecipientEmails: [requester.email!]
+            },
+            intakeFormStep: SystemIntakeFormStep.INITIAL_REQUEST_FORM,
+            emailFeedback: '<p>Ch-ch-changes</p>'
           }
         }
-      ]
+      },
+      result: {
+        data: {
+          createSystemIntakeActionRequestEdits: {
+            systemIntake: {
+              id: systemIntake.id,
+              __typename: 'SystemIntake'
+            },
+            __typename: 'UpdateSystemIntakePayload'
+          }
+        }
+      }
+    };
+
+    it('submits the form successfully', async () => {
+      renderActionPage({
+        action: 'request-edits',
+        mocks: [
+          getSystemIntakeQuery(),
+          getSystemIntakeContactsQuery,
+          getGovernanceTaskListQuery(),
+          createSystemIntakeActionRequestEditsQuery
+        ]
+      });
+
+      expect(
+        await screen.findByRole('heading', { name: 'Action: request edits' })
+      ).toBeInTheDocument();
+
+      // Fill in required fields
+
+      userEvent.selectOptions(screen.getByTestId('intakeFormStep'), [
+        'Initial request form'
+      ]);
+
+      await typeRichText(screen.getByTestId('emailFeedback'), 'Ch-ch-changes');
+
+      userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
+
+      expect(
+        await screen.findByText(
+          'Are you sure you want to complete this action to request edits?'
+        )
+      ).toBeInTheDocument();
+
+      // Continue through confirmation
+      userEvent.click(
+        screen.getAllByRole('button', { name: 'Complete action' })[1]
+      );
+
+      // Success alert message
+      await screen.findByText(
+        'You have requested edits to the Initial request form.'
+      );
     });
 
-    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+    it('handles field errors', async () => {
+      renderActionPage({
+        action: 'request-edits',
+        mocks: [
+          getSystemIntakeQuery(),
+          getSystemIntakeContactsQuery,
+          getGovernanceTaskListQuery()
+        ]
+      });
 
-    // Fill in required fields
+      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
-    userEvent.selectOptions(screen.getByTestId('intakeFormStep'), [
-      'Initial request form'
-    ]);
+      userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
 
-    await typeRichText(screen.getByTestId('emailFeedback'), 'Ch-ch-changes');
-
-    userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
-
-    expect(
+      await screen.findByText('Please check and fix the following');
       await screen.findByText(
-        'Are you sure you want to complete this action to request edits?'
-      )
-    ).toBeInTheDocument();
-
-    // Continue through confirmation
-    userEvent.click(
-      screen.getAllByRole('button', { name: 'Complete action' })[1]
-    );
-
-    // Success alert message
-    await screen.findByText(
-      'You have requested edits to the Initial request form.'
-    );
+        'Which form needs edits?: Please make a selection'
+      );
+      await screen.findByText(
+        'What changes are needed?: Please fill in the blank'
+      );
+    });
   });
 
-  it('Handles field errors for request edits', async () => {
-    renderActionPage({
-      action: 'request-edits',
-      mocks: [
-        getSystemIntakeQuery(),
-        getSystemIntakeContactsQuery,
-        getGovernanceTaskListQuery
-      ]
+  describe('Progress to a new step', () => {
+    it('displays past date warning', async () => {
+      renderActionPage({
+        action: 'new-step',
+        mocks: [
+          getSystemIntakeQuery(),
+          getSystemIntakeContactsQuery,
+          getGovernanceTaskListQuery()
+        ]
+      });
+
+      await screen.findByRole('heading', {
+        name: 'Action: progress to a new step'
+      });
+
+      userEvent.click(screen.getByRole('radio', { name: 'GRB meeting' }));
+
+      const meetingDateField = screen.getByRole('textbox', {
+        name: 'Meeting date'
+      });
+      userEvent.type(meetingDateField, '01/01/2000');
+
+      expect(
+        await screen.findByText(i18next.t<string>('action:pastDateAlert'))
+      ).toBeInTheDocument();
     });
 
-    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+    it('handles field errors', async () => {
+      renderActionPage({
+        action: 'new-step',
+        mocks: [
+          getSystemIntakeQuery(),
+          getSystemIntakeContactsQuery,
+          getGovernanceTaskListQuery({ step: SystemIntakeStep.GRB_MEETING })
+        ]
+      });
 
-    userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
+      await screen.findByRole('heading', {
+        name: 'Action: progress to a new step'
+      });
 
-    await screen.findByText('Please check and fix the following');
-    await screen.findByText('Which form needs edits?: Please make a selection');
-    await screen.findByText(
-      'What changes are needed?: Please fill in the blank'
-    );
+      userEvent.click(screen.getByRole('radio', { name: 'GRB meeting' }));
+      userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
+
+      // Error for selecting current step
+      await screen.findByText(
+        'This request is already at the GRB meeting step. Please select a different step.'
+      );
+
+      // Date field required error
+      await screen.findByText('Please enter a valid date');
+    });
   });
 });

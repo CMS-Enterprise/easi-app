@@ -35,11 +35,11 @@ type RetireLcidFields = NonNullableProps<
   Omit<SystemIntakeRetireLCIDInput, 'systemIntakeID'> & SystemIntakeActionFields
 >;
 
-export const retireDateInPast = (lcidRetiresAt: string | null): boolean => {
-  if (!lcidRetiresAt || lcidRetiresAt.length === 0) return false;
+export const actionDateInPast = (date: string | null): boolean => {
+  if (!date || date.length === 0) return false;
 
   const startOfDay = DateTime.local().startOf('day').toISO();
-  return startOfDay > lcidRetiresAt;
+  return startOfDay > date;
 };
 
 interface RetireLcidProps extends ManageLcidProps {
@@ -136,9 +136,9 @@ const RetireLcid = ({
 
               {
                 // If past date is selected, show alert
-                retireDateInPast(field.value) && (
+                actionDateInPast(field.value) && (
                   <Alert type="warning" slim>
-                    {t('retireLcid.pastDateAlert')}
+                    {t('pastDateAlert')}
                   </Alert>
                 )
               }

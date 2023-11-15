@@ -48,6 +48,9 @@
 }
 
 .easi-toast-editor {
+  // Match some rules from .usa-textarea
+  margin-top: .5rem;
+
   .toastui-editor {
     min-height: 0 !important;
   }

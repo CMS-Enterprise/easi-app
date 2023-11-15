@@ -8,7 +8,7 @@ exports[`TRB Subview snapshots > matches Process Flow 1`] = `
   >
     <nav
       aria-label="Breadcrumbs"
-      class="usa-breadcrumb padding-bottom-0"
+      class="usa-breadcrumb usa-breadcrumb--wrap padding-bottom-0"
       style="background-color: transparent;"
     >
       <ol
@@ -236,7 +236,7 @@ exports[`TRB Subview snapshots > matches Request Type 1`] = `
   >
     <nav
       aria-label="Breadcrumbs"
-      class="usa-breadcrumb padding-bottom-0"
+      class="usa-breadcrumb usa-breadcrumb--wrap padding-bottom-0"
       style="background-color: transparent;"
     >
       <ol

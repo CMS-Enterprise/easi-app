@@ -1,6 +1,10 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 // TRBRequestDocumentStatus represents the availability of a document in regards to virus scanning
 type TRBRequestDocumentStatus string
@@ -35,4 +39,5 @@ type TRBRequestDocument struct {
 	FileName           string                `json:"fileName" db:"file_name"`
 	Bucket             string                `json:"bucket" db:"bucket"`
 	S3Key              string                `json:"s3Key" db:"s3_key"` // The document's key inside an S3 bucket; does *not* include the bucket name.
+	DeletedAt          *time.Time            `json:"deletedAt" db:"deleted_at"`
 }

@@ -86,6 +86,8 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 }
 
 // GetTRBRecommendationsByAdminNoteID fetches all TRB advice letter documents linked to a TRB admin note
+// This function specifically fetches all recommendations (even deleted ones), as this function is called by the resolver for TRB Admin Notes,
+// which need to display previously deleted recommendation titles
 func (s *Store) GetTRBRecommendationsByAdminNoteID(ctx context.Context, adminNoteID uuid.UUID) ([]*models.TRBAdviceLetterRecommendation, error) {
 	const trbRequestRecommendationsGetByAdminNoteIDSQL = `
 		SELECT trb_advice_letter_recommendations.*

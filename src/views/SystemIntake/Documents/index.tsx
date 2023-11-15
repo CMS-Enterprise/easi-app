@@ -3,10 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 
+import FeedbackBanner from 'components/FeedbackBanner';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import useMessage from 'hooks/useMessage';
 import { SystemIntake } from 'queries/types/SystemIntake';
+import { SystemIntakeFormState } from 'types/graphql-global-types';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import DocumentsTable from './DocumentsTable';
@@ -33,9 +35,19 @@ const Documents = ({ systemIntake }: DocumentsProps) => {
     <>
       <Message />
 
-      <PageHeading className="margin-top-4 margin-bottom-1">
+      <PageHeading className="margin-top-4 margin-bottom-3">
         {t('intake:documents.title')}
       </PageHeading>
+
+      {systemIntake.requestFormState ===
+        SystemIntakeFormState.EDITS_REQUESTED && (
+        <FeedbackBanner
+          id={systemIntake.id}
+          type="Intake Request"
+          className="margin-bottom-2"
+        />
+      )}
+
       <p className="margin-top-1 font-body-md line-height-body-5 tablet:grid-col-12 desktop:grid-col-8">
         {t('intake:documents.tableDescription')}
       </p>

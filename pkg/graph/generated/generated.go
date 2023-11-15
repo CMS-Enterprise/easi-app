@@ -956,6 +956,7 @@ type ComplexityRoot struct {
 		Author         func(childComplexity int) int
 		CreatedAt      func(childComplexity int) int
 		CreatedBy      func(childComplexity int) int
+		DeletedAt      func(childComplexity int) int
 		ID             func(childComplexity int) int
 		Links          func(childComplexity int) int
 		ModifiedAt     func(childComplexity int) int
@@ -1016,6 +1017,7 @@ type ComplexityRoot struct {
 	}
 
 	TRBRequestDocument struct {
+		DeletedAt    func(childComplexity int) int
 		DocumentType func(childComplexity int) int
 		FileName     func(childComplexity int) int
 		ID           func(childComplexity int) int
@@ -6481,6 +6483,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBAdviceLetterRecommendation.CreatedBy(childComplexity), true
 
+	case "TRBAdviceLetterRecommendation.deletedAt":
+		if e.complexity.TRBAdviceLetterRecommendation.DeletedAt == nil {
+			break
+		}
+
+		return e.complexity.TRBAdviceLetterRecommendation.DeletedAt(childComplexity), true
+
 	case "TRBAdviceLetterRecommendation.id":
 		if e.complexity.TRBAdviceLetterRecommendation.ID == nil {
 			break
@@ -6816,6 +6825,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBRequestAttendee.UserInfo(childComplexity), true
+
+	case "TRBRequestDocument.deletedAt":
+		if e.complexity.TRBRequestDocument.DeletedAt == nil {
+			break
+		}
+
+		return e.complexity.TRBRequestDocument.DeletedAt(childComplexity), true
 
 	case "TRBRequestDocument.documentType":
 		if e.complexity.TRBRequestDocument.DocumentType == nil {
@@ -7413,7 +7429,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeRequesterWithComponentInput,
 		ec.unmarshalInputSystemIntakeRetireLCIDInput,
 		ec.unmarshalInputSystemIntakeUpdateLCIDInput,
-		ec.unmarshalInputTRBRequestChanges,
 		ec.unmarshalInputUpdateAccessibilityRequestCedarSystemInput,
 		ec.unmarshalInputUpdateAccessibilityRequestStatus,
 		ec.unmarshalInputUpdateSystemIntakeAdminLeadInput,
@@ -7425,13 +7440,9 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateSystemIntakeNoteInput,
 		ec.unmarshalInputUpdateSystemIntakeRequestDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeReviewDatesInput,
-		ec.unmarshalInputUpdateTRBAdminNoteInput,
-		ec.unmarshalInputUpdateTRBAdviceLetterInput,
-		ec.unmarshalInputUpdateTRBAdviceLetterRecommendationInput,
 		ec.unmarshalInputUpdateTRBAdviceLetterRecommendationOrderInput,
 		ec.unmarshalInputUpdateTRBRequestAttendeeInput,
 		ec.unmarshalInputUpdateTRBRequestConsultMeetingTimeInput,
-		ec.unmarshalInputUpdateTRBRequestFormInput,
 		ec.unmarshalInputUpdateTRBRequestFundingSourcesInput,
 		ec.unmarshalInputUpdateTRBRequestTRBLeadInput,
 		ec.unmarshalInputUpdateTestDateInput,
@@ -9339,7 +9350,7 @@ type TRBRequest {
   status: TRBRequestStatus!
   attendees: [TRBRequestAttendee!]!
   feedback: [TRBRequestFeedback!]!
-  documents: [TRBRequestDocument!]!
+  documents: [TRBRequestDocument!]! # This query will not return deleted documents -- see pkg/storage/trb_request_document.go ` + "`" + `GetTRBRequestDocumentsByRequestID` + "`" + `
   form: TRBRequestForm!
   adviceLetter: TRBAdviceLetter
   taskStatuses: TRBTaskStatuses!
@@ -9472,6 +9483,7 @@ type TRBRequestDocument {
   status: TRBRequestDocumentStatus!
   uploadedAt: Time!
   url: String!
+  deletedAt: Time
 }
 
 """
@@ -9862,6 +9874,7 @@ type TRBAdminNoteInitialRequestFormCategoryData {
 
 """
 Data specific to admin notes in the Supporting Documents category
+The "documents" property _will_ return deleted documents so that UI can reference the document name
 """
 type TRBAdminNoteSupportingDocumentsCategoryData {
   documents: [TRBRequestDocument!]!
@@ -9880,6 +9893,7 @@ type TRBAdminNoteConsultSessionCategoryData {
 
 """
 Data specific to admin notes in the Advice Letter category
+The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
 """
 type TRBAdminNoteAdviceLetterCategoryData {
   appliesToMeetingSummary: Boolean!
@@ -9921,7 +9935,7 @@ type TRBAdviceLetter {
   """
   List of recommendations in the order specified by users
   """
-  recommendations: [TRBAdviceLetterRecommendation!]!
+  recommendations: [TRBAdviceLetterRecommendation!]! # This query will not return deleted recommendations -- see pkg/storage/trb_advice_letter_recommendation.go ` + "`" + `GetTRBAdviceLetterRecommendationsByTRBRequestID` + "`" + `
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -10048,6 +10062,7 @@ type TRBAdviceLetterRecommendation {
   createdAt: Time!
   modifiedBy: String
   modifiedAt: Time
+  deletedAt: Time
 }
 
 """
@@ -24664,6 +24679,8 @@ func (ec *executionContext) fieldContext_CreateTRBRequestDocumentPayload_documen
 				return ec.fieldContext_TRBRequestDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_TRBRequestDocument_url(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBRequestDocument_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequestDocument", field.Name)
 		},
@@ -25148,6 +25165,8 @@ func (ec *executionContext) fieldContext_DeleteTRBRequestDocumentPayload_documen
 				return ec.fieldContext_TRBRequestDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_TRBRequestDocument_url(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBRequestDocument_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequestDocument", field.Name)
 		},
@@ -33605,6 +33624,8 @@ func (ec *executionContext) fieldContext_Mutation_createTRBAdviceLetterRecommend
 				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedBy(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedAt(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBAdviceLetterRecommendation", field.Name)
 		},
@@ -33706,6 +33727,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBAdviceLetterRecommend
 				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedBy(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedAt(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBAdviceLetterRecommendation", field.Name)
 		},
@@ -33807,6 +33830,8 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBAdviceLetterRecommend
 				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedBy(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedAt(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBAdviceLetterRecommendation", field.Name)
 		},
@@ -33908,6 +33933,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteTRBAdviceLetterRecommend
 				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedBy(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedAt(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBAdviceLetterRecommendation", field.Name)
 		},
@@ -44785,6 +44812,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteAdviceLetterCategoryData_re
 				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedBy(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedAt(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBAdviceLetterRecommendation", field.Name)
 		},
@@ -45057,6 +45086,8 @@ func (ec *executionContext) fieldContext_TRBAdminNoteSupportingDocumentsCategory
 				return ec.fieldContext_TRBRequestDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_TRBRequestDocument_url(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBRequestDocument_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequestDocument", field.Name)
 		},
@@ -45468,6 +45499,8 @@ func (ec *executionContext) fieldContext_TRBAdviceLetter_recommendations(ctx con
 				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedBy(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBAdviceLetterRecommendation_modifiedAt(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBAdviceLetterRecommendation_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBAdviceLetterRecommendation", field.Name)
 		},
@@ -46075,6 +46108,47 @@ func (ec *executionContext) _TRBAdviceLetterRecommendation_modifiedAt(ctx contex
 }
 
 func (ec *executionContext) fieldContext_TRBAdviceLetterRecommendation_modifiedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBAdviceLetterRecommendation",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBAdviceLetterRecommendation_deletedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdviceLetterRecommendation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBAdviceLetterRecommendation_deletedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DeletedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBAdviceLetterRecommendation_deletedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "TRBAdviceLetterRecommendation",
 		Field:      field,
@@ -46879,6 +46953,8 @@ func (ec *executionContext) fieldContext_TRBRequest_documents(ctx context.Contex
 				return ec.fieldContext_TRBRequestDocument_uploadedAt(ctx, field)
 			case "url":
 				return ec.fieldContext_TRBRequestDocument_url(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_TRBRequestDocument_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequestDocument", field.Name)
 		},
@@ -48350,6 +48426,47 @@ func (ec *executionContext) fieldContext_TRBRequestDocument_url(ctx context.Cont
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequestDocument_deletedAt(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequestDocument) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequestDocument_deletedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DeletedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequestDocument_deletedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequestDocument",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -56898,53 +57015,6 @@ func (ec *executionContext) unmarshalInputSystemIntakeUpdateLCIDInput(ctx contex
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputTRBRequestChanges(ctx context.Context, obj interface{}) (map[string]interface{}, error) {
-	it := make(map[string]interface{}, len(obj.(map[string]interface{})))
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"name", "archived", "type"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["name"] = data
-		case "archived":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("archived"))
-			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["archived"] = data
-		case "type":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("type"))
-			data, err := ec.unmarshalOTRBRequestType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestType(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["type"] = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputUpdateAccessibilityRequestCedarSystemInput(ctx context.Context, obj interface{}) (model.UpdateAccessibilityRequestCedarSystemInput, error) {
 	var it model.UpdateAccessibilityRequestCedarSystemInput
 	asMap := map[string]interface{}{}
@@ -57525,174 +57595,6 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeReviewDatesInput(ctx
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateTRBAdminNoteInput(ctx context.Context, obj interface{}) (map[string]interface{}, error) {
-	it := make(map[string]interface{}, len(obj.(map[string]interface{})))
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id", "category", "noteText"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["id"] = data
-		case "category":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalOTRBAdminNoteCategory2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["category"] = data
-		case "noteText":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("noteText"))
-			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["noteText"] = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputUpdateTRBAdviceLetterInput(ctx context.Context, obj interface{}) (map[string]interface{}, error) {
-	it := make(map[string]interface{}, len(obj.(map[string]interface{})))
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"trbRequestId", "meetingSummary", "nextSteps", "isFollowupRecommended", "followupPoint"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "trbRequestId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["trbRequestId"] = data
-		case "meetingSummary":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("meetingSummary"))
-			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["meetingSummary"] = data
-		case "nextSteps":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nextSteps"))
-			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["nextSteps"] = data
-		case "isFollowupRecommended":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isFollowupRecommended"))
-			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["isFollowupRecommended"] = data
-		case "followupPoint":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("followupPoint"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["followupPoint"] = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputUpdateTRBAdviceLetterRecommendationInput(ctx context.Context, obj interface{}) (map[string]interface{}, error) {
-	it := make(map[string]interface{}, len(obj.(map[string]interface{})))
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id", "title", "recommendation", "links"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["id"] = data
-		case "title":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["title"] = data
-		case "recommendation":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("recommendation"))
-			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["recommendation"] = data
-		case "links":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("links"))
-			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["links"] = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputUpdateTRBAdviceLetterRecommendationOrderInput(ctx context.Context, obj interface{}) (model.UpdateTRBAdviceLetterRecommendationOrderInput, error) {
 	var it model.UpdateTRBAdviceLetterRecommendationOrderInput
 	asMap := map[string]interface{}{}
@@ -57837,233 +57739,6 @@ func (ec *executionContext) unmarshalInputUpdateTRBRequestConsultMeetingTimeInpu
 				return it, err
 			}
 			it.Notes = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputUpdateTRBRequestFormInput(ctx context.Context, obj interface{}) (map[string]interface{}, error) {
-	it := make(map[string]interface{}, len(obj.(map[string]interface{})))
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"trbRequestId", "isSubmitted", "component", "needsAssistanceWith", "hasSolutionInMind", "proposedSolution", "whereInProcess", "whereInProcessOther", "hasExpectedStartEndDates", "expectedStartDate", "expectedEndDate", "collabGroups", "collabDateSecurity", "collabDateEnterpriseArchitecture", "collabDateCloud", "collabDatePrivacyAdvisor", "collabDateGovernanceReviewBoard", "collabDateOther", "collabGroupOther", "collabGRBConsultRequested", "systemIntakes", "subjectAreaOptions", "subjectAreaOptionOther"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "trbRequestId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["trbRequestId"] = data
-		case "isSubmitted":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("isSubmitted"))
-			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["isSubmitted"] = data
-		case "component":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("component"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["component"] = data
-		case "needsAssistanceWith":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("needsAssistanceWith"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["needsAssistanceWith"] = data
-		case "hasSolutionInMind":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasSolutionInMind"))
-			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["hasSolutionInMind"] = data
-		case "proposedSolution":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("proposedSolution"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["proposedSolution"] = data
-		case "whereInProcess":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("whereInProcess"))
-			data, err := ec.unmarshalOTRBWhereInProcessOption2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBWhereInProcessOption(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["whereInProcess"] = data
-		case "whereInProcessOther":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("whereInProcessOther"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["whereInProcessOther"] = data
-		case "hasExpectedStartEndDates":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasExpectedStartEndDates"))
-			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["hasExpectedStartEndDates"] = data
-		case "expectedStartDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("expectedStartDate"))
-			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["expectedStartDate"] = data
-		case "expectedEndDate":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("expectedEndDate"))
-			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["expectedEndDate"] = data
-		case "collabGroups":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collabGroups"))
-			data, err := ec.unmarshalOTRBCollabGroupOption2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOptionᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["collabGroups"] = data
-		case "collabDateSecurity":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collabDateSecurity"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["collabDateSecurity"] = data
-		case "collabDateEnterpriseArchitecture":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collabDateEnterpriseArchitecture"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["collabDateEnterpriseArchitecture"] = data
-		case "collabDateCloud":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collabDateCloud"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["collabDateCloud"] = data
-		case "collabDatePrivacyAdvisor":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collabDatePrivacyAdvisor"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["collabDatePrivacyAdvisor"] = data
-		case "collabDateGovernanceReviewBoard":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collabDateGovernanceReviewBoard"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["collabDateGovernanceReviewBoard"] = data
-		case "collabDateOther":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collabDateOther"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["collabDateOther"] = data
-		case "collabGroupOther":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collabGroupOther"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["collabGroupOther"] = data
-		case "collabGRBConsultRequested":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("collabGRBConsultRequested"))
-			data, err := ec.unmarshalOBoolean2ᚖbool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["collabGRBConsultRequested"] = data
-		case "systemIntakes":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakes"))
-			data, err := ec.unmarshalOUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["systemIntakes"] = data
-		case "subjectAreaOptions":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("subjectAreaOptions"))
-			data, err := ec.unmarshalOTRBSubjectAreaOption2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBSubjectAreaOptionᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["subjectAreaOptions"] = data
-		case "subjectAreaOptionOther":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("subjectAreaOptionOther"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["subjectAreaOptionOther"] = data
 		}
 	}
 
@@ -68984,6 +68659,8 @@ func (ec *executionContext) _TRBAdviceLetterRecommendation(ctx context.Context, 
 			out.Values[i] = ec._TRBAdviceLetterRecommendation_modifiedBy(ctx, field, obj)
 		case "modifiedAt":
 			out.Values[i] = ec._TRBAdviceLetterRecommendation_modifiedAt(ctx, field, obj)
+		case "deletedAt":
+			out.Values[i] = ec._TRBAdviceLetterRecommendation_deletedAt(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -69840,6 +69517,8 @@ func (ec *executionContext) _TRBRequestDocument(ctx context.Context, sel ast.Sel
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "deletedAt":
+			out.Values[i] = ec._TRBRequestDocument_deletedAt(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -74434,18 +74113,15 @@ func (ec *executionContext) unmarshalNUpdateSystemIntakeReviewDatesInput2github�
 }
 
 func (ec *executionContext) unmarshalNUpdateTRBAdminNoteInput2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
-	res, err := ec.unmarshalInputUpdateTRBAdminNoteInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
+	return v.(map[string]interface{}), nil
 }
 
 func (ec *executionContext) unmarshalNUpdateTRBAdviceLetterInput2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
-	res, err := ec.unmarshalInputUpdateTRBAdviceLetterInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
+	return v.(map[string]interface{}), nil
 }
 
 func (ec *executionContext) unmarshalNUpdateTRBAdviceLetterRecommendationInput2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
-	res, err := ec.unmarshalInputUpdateTRBAdviceLetterRecommendationInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
+	return v.(map[string]interface{}), nil
 }
 
 func (ec *executionContext) unmarshalNUpdateTRBAdviceLetterRecommendationOrderInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBAdviceLetterRecommendationOrderInput(ctx context.Context, v interface{}) (model.UpdateTRBAdviceLetterRecommendationOrderInput, error) {
@@ -74464,8 +74140,7 @@ func (ec *executionContext) unmarshalNUpdateTRBRequestConsultMeetingTimeInput2gi
 }
 
 func (ec *executionContext) unmarshalNUpdateTRBRequestFormInput2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
-	res, err := ec.unmarshalInputUpdateTRBRequestFormInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
+	return v.(map[string]interface{}), nil
 }
 
 func (ec *executionContext) unmarshalNUpdateTRBRequestFundingSourcesInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBRequestFundingSourcesInput(ctx context.Context, v interface{}) (model.UpdateTRBRequestFundingSourcesInput, error) {
@@ -75694,8 +75369,7 @@ func (ec *executionContext) unmarshalOTRBRequestChanges2map(ctx context.Context,
 	if v == nil {
 		return nil, nil
 	}
-	res, err := ec.unmarshalInputTRBRequestChanges(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
+	return v.(map[string]interface{}), nil
 }
 
 func (ec *executionContext) marshalOTRBRequestDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestDocument(ctx context.Context, sel ast.SelectionSet, v *models.TRBRequestDocument) graphql.Marshaler {

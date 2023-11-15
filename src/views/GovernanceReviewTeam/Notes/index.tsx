@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-import { Button } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Button, ButtonGroup, ModalFooter } from '@trussworks/react-uswds';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
 import Modal from 'components/Modal';
@@ -15,12 +15,15 @@ import {
   NotesList
 } from 'components/NotesList';
 import PageHeading from 'components/PageHeading';
+import {
+  RichTextEditorFormikField,
+  RichTextViewer
+} from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
 import TruncatedText from 'components/shared/TruncatedText';
 import CreateSystemIntakeNoteQuery from 'queries/CreateSystemIntakeNoteQuery';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
@@ -164,7 +167,9 @@ const Notes = () => {
         createdAt,
         element: (
           <NoteListItem key={id} isLinked data-testid="user-note">
-            <NoteContent>{content}</NoteContent>
+            <NoteContent plainTextWrap={false}>
+              <RichTextViewer className="margin-bottom-1" value={content} />
+            </NoteContent>
             <NoteByline>{`by ${author.name} | ${DateTime.fromISO(
               createdAt
             ).toFormat('MMMM d, yyyy')} at ${DateTime.fromISO(
@@ -203,7 +208,7 @@ const Notes = () => {
                   {t('notes.edit')}
                 </Button>
               </NoteByline>
-              {noteModal.type === 'edit' && ( // TODO - is this the best way to do this. Maybe better to have two separate noteModal useState hooks?
+              {noteModal.type === 'edit' && noteModal.id === id && (
                 <Modal
                   isOpen={noteModal.isOpen}
                   closeModal={() => {
@@ -215,59 +220,76 @@ const Notes = () => {
                     });
                   }}
                 >
-                  <PageHeading headingLevel="h2" className="margin-top-0">
+                  <PageHeading headingLevel="h2" className="margin-y-0">
                     {t('notes.editModal.header')}
                   </PageHeading>
-                  <p>{t('notes.editModal.description')}</p>
-                  <Label htmlFor="GovernanceReviewTeam-EditNote">
+                  <p className="margin-top-0">
+                    {t('notes.editModal.description')}
+                  </p>
+                  <Label
+                    id="GovernanceReviewTeam-EditNote-label"
+                    htmlFor="GovernanceReviewTeam-EditNote"
+                  >
                     {t('notes.editModal.contentLabel')}
                   </Label>
-                  <Field
-                    as={TextAreaField}
+                  <RichTextEditorFormikField
                     id="GovernanceReviewTeam-EditNote"
                     name="editNote"
-                    className="easi-grt__note-textarea margin-bottom-4"
-                    onChange={(e: { target: { value: any } }) => {
+                    height="300px"
+                    required
+                    editableProps={{
+                      id: 'GovernanceReviewTeam-EditNote',
+                      'data-testid': 'GovernanceReviewTeam-EditNote',
+                      'aria-labelledby': 'GovernanceReviewTeam-EditNote-label'
+                    }}
+                    onChange={(value: any) => {
                       setupNoteModal({
                         ...noteModal,
                         ...{
-                          content: e.target.value
+                          content: value
                         }
                       });
                     }}
                     value={noteModal.content}
                     onBlur={() => {}}
                   />
-                  <Button
-                    type="button"
-                    id="GovernanceReviewTeam-SaveEditsButton"
-                    className="margin-right-4"
-                    onClick={() => {
-                      updateSystemIntakeNote(noteModal.id, noteModal.content);
-                      setupNoteModal({
-                        ...noteModal,
-                        ...{
-                          isOpen: false
-                        }
-                      });
-                    }}
-                  >
-                    {t('notes.editModal.saveEdits')}
-                  </Button>
-                  <Button
-                    type="button"
-                    unstyled
-                    onClick={() => {
-                      setupNoteModal({
-                        ...noteModal,
-                        ...{
-                          isOpen: false
-                        }
-                      });
-                    }}
-                  >
-                    {t('notes.editModal.cancel')}
-                  </Button>
+                  <ModalFooter>
+                    <ButtonGroup>
+                      <Button
+                        type="button"
+                        id="GovernanceReviewTeam-SaveEditsButton"
+                        className="margin-right-1"
+                        onClick={() => {
+                          updateSystemIntakeNote(
+                            noteModal.id,
+                            noteModal.content
+                          );
+                          setupNoteModal({
+                            ...noteModal,
+                            ...{
+                              isOpen: false
+                            }
+                          });
+                        }}
+                      >
+                        {t('notes.editModal.saveEdits')}
+                      </Button>
+                      <Button
+                        type="button"
+                        unstyled
+                        onClick={() => {
+                          setupNoteModal({
+                            ...noteModal,
+                            ...{
+                              isOpen: false
+                            }
+                          });
+                        }}
+                      >
+                        {t('notes.editModal.cancel')}
+                      </Button>
+                    </ButtonGroup>
+                  </ModalFooter>
                 </Modal>
               )}
 
@@ -292,7 +314,7 @@ const Notes = () => {
                   {t('notes.remove')}
                 </Button>
               </NoteByline>
-              {noteModal.type === 'remove' && ( // TODO - is this the best way to do this. Maybe better to have two separate noteModal useState hooks?
+              {noteModal.type === 'remove' && noteModal.id === id && (
                 <Modal
                   isOpen={noteModal.isOpen}
                   closeModal={() => {
@@ -356,6 +378,7 @@ const Notes = () => {
         feedback,
         lcidExpirationChange
       } = action;
+
       return {
         createdAt,
         element: (
@@ -524,15 +547,22 @@ const Notes = () => {
                 }}
               >
                 <FieldGroup>
-                  <Label htmlFor="GovernanceReviewTeam-Note">
+                  <Label
+                    id="GovernanceReviewTeam-Note-label"
+                    htmlFor="GovernanceReviewTeam-Note"
+                  >
                     {t('notes.addNote')}
                   </Label>
-                  <Field
-                    as={TextAreaField}
+                  <RichTextEditorFormikField
                     id="GovernanceReviewTeam-Note"
-                    maxLength={2000}
                     name="note"
-                    className="easi-grt__note-field"
+                    height="405px"
+                    required
+                    editableProps={{
+                      id: 'GovernanceReviewTeam-Note',
+                      'data-testid': 'GovernanceReviewTeam-Note',
+                      'aria-labelledby': 'GovernanceReviewTeam-Note-label'
+                    }}
                   />
                 </FieldGroup>
                 <Button

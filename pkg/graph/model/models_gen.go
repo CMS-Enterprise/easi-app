@@ -850,6 +850,7 @@ type SystemIntakeUpdateLCIDInput struct {
 }
 
 // Data specific to admin notes in the Advice Letter category
+// The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
 type TRBAdminNoteAdviceLetterCategoryData struct {
 	AppliesToMeetingSummary bool                                    `json:"appliesToMeetingSummary"`
 	AppliesToNextSteps      bool                                    `json:"appliesToNextSteps"`
@@ -886,6 +887,7 @@ type TRBAdminNoteInitialRequestFormCategoryData struct {
 func (TRBAdminNoteInitialRequestFormCategoryData) IsTRBAdminNoteCategorySpecificData() {}
 
 // Data specific to admin notes in the Supporting Documents category
+// The "documents" property _will_ return deleted documents so that UI can reference the document name
 type TRBAdminNoteSupportingDocumentsCategoryData struct {
 	Documents []*models.TRBRequestDocument `json:"documents"`
 }
