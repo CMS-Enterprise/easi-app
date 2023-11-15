@@ -95,6 +95,10 @@ const businessCase = {
     'What is the cost savings or avoidance associated with this solution?',
   costSavingsHelpText:
     'This could include old systems going away, contract hours/ new Full Time Employees not needed, or other savings, even if indirect.',
+  additionalAlternatives: 'Additional alternatives',
+  additionalAlternativesHelpText:
+    'If you are buillding a multi-year project that will require significant upkeep, you may want to include more alternatives. Keep in mind that Government off-the-shelf and Commercial off-the-shelf products are acceptable alternatives to include.',
+  alternativeB: 'Alternative B',
   grtFeedback: {
     header: 'Recommendations',
     grbSubhead: 'GRT recommendations to the GRB',
