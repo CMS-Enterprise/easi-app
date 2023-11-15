@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
@@ -9,11 +10,8 @@ import {
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import CharacterCounter from 'components/CharacterCounter';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
-import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
-import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
@@ -26,6 +24,8 @@ import {
   BusinessCaseFinalValidationSchema
 } from 'validations/businessCaseSchema';
 
+import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
+
 type RequestDescriptionProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
@@ -37,7 +37,9 @@ const RequestDescription = ({
   formikRef,
   dispatchSave
 }: RequestDescriptionProps) => {
+  const { t } = useTranslation('businessCase');
   const history = useHistory();
+
   const initialValues = {
     businessNeed: businessCase.businessNeed,
     currentSolutionSummary: businessCase.currentSolutionSummary,
@@ -64,31 +66,19 @@ const RequestDescription = ({
       {(formikProps: FormikProps<RequestDescriptionForm>) => {
         const { values, errors, setErrors, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
+
+        // TODO EASI-3440: Update to use v2 status
+        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
+
         return (
-          <div className="grid-container" data-testid="request-description">
-            {Object.keys(errors).length > 0 && (
-              <ErrorAlert
-                classNames="margin-top-3"
-                heading="Please check and fix the following"
-                testId="formik-validation-errors"
-              >
-                {Object.keys(flatErrors).map(key => {
-                  return (
-                    <ErrorAlertMessage
-                      key={`Error.${key}`}
-                      errorKey={key}
-                      message={flatErrors[key]}
-                    />
-                  );
-                })}
-              </ErrorAlert>
-            )}
-            <PageHeading>Request description</PageHeading>
-            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
-              <div className="tablet:grid-col-5">
-                <MandatoryFieldsAlert />
-              </div>
-            )}
+          <BusinessCaseStepWrapper
+            systemIntakeId={businessCase.systemIntakeId}
+            title={t('requestDescription')}
+            data-testid="request-description"
+            errors={flatErrors}
+            fieldsMandatory={isFinal}
+            isFinal={isFinal}
+          >
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form>
                 <FieldGroup
@@ -322,7 +312,7 @@ const RequestDescription = ({
               onSave={dispatchSave}
               debounceDelay={1000 * 3}
             />
-          </div>
+          </BusinessCaseStepWrapper>
         );
       }}
     </Formik>
