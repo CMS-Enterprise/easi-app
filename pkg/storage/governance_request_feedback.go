@@ -43,7 +43,7 @@ func (s *Store) CreateGovernanceRequestFeedback(ctx context.Context, requestFeed
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create governance request feedback with error %s", err),
 			zap.Error(err),
-			zap.String("user", requestFeedback.CreatedBy),
+			zap.Any("user", requestFeedback.CreatedBy), // use zap.Any to handle possible nil pointers
 		)
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (s *Store) CreateGovernanceRequestFeedback(ctx context.Context, requestFeed
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create governance request feedback with error %s", err),
 			zap.Error(err),
-			zap.String("user", requestFeedback.CreatedBy),
+			zap.Any("user", requestFeedback.CreatedBy), // use zap.Any to handle possible nil pointers
 		)
 		return nil, err
 	}

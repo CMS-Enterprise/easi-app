@@ -763,8 +763,11 @@ func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.
 		TargetForm:   models.GRFTFNoTargetProvided,
 		Type:         models.GRFTRequester, // instead of (old) models.GRTFeedbackTypeBUSINESSOWNER
 	}
+
+	// Set metadata
+	createdBy := appcontext.Principal(ctx).ID()
 	feedback.CreatedAt = time.Now()
-	feedback.CreatedBy = appcontext.Principal(ctx).ID()
+	feedback.CreatedBy = &createdBy
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
 		// &models.GRTFeedback{
@@ -797,8 +800,11 @@ func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx cont
 		TargetForm:   models.GRFTFNoTargetProvided,
 		Type:         models.GRFTRequester, // instead of (old) models.GRTFeedbackTypeBUSINESSOWNER
 	}
+
+	// Set metadata
+	createdBy := appcontext.Principal(ctx).ID()
 	feedback.CreatedAt = time.Now()
-	feedback.CreatedBy = appcontext.Principal(ctx).ID()
+	feedback.CreatedBy = &createdBy
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
 		// &models.GRTFeedback{
@@ -831,8 +837,11 @@ func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Cont
 		TargetForm:   models.GRFTFNoTargetProvided,
 		Type:         models.GRFTRequester, // instead of (old) models.GRTFeedbackTypeBUSINESSOWNER
 	}
+
+	// Set metadata
+	createdBy := appcontext.Principal(ctx).ID()
 	feedback.CreatedAt = time.Now()
-	feedback.CreatedBy = appcontext.Principal(ctx).ID()
+	feedback.CreatedBy = &createdBy
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
 		// &models.GRTFeedback{
@@ -1659,8 +1668,11 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 		TargetForm:   models.GRFTFNoTargetProvided,
 		Type:         models.GRFTGRB, // instead of (old) models.GRTFeedbackTypeGRB
 	}
+
+	// Set metadata
+	createdBy := appcontext.Principal(ctx).ID()
 	feedback.CreatedAt = time.Now()
-	feedback.CreatedBy = appcontext.Principal(ctx).ID()
+	feedback.CreatedBy = &createdBy
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
 		// &models.GRTFeedback{

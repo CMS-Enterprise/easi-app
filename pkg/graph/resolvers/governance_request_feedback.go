@@ -16,12 +16,19 @@ func GetGovernanceRequestFeedbacksByIntakeID(ctx context.Context, store *storage
 }
 
 // GetGovernanceRequestFeedbackAuthor returns the full user info for a feedback item's author
+// nil values for feedbackAuthorEUAID are allowed and will return a nil *models.UserInfo
 func GetGovernanceRequestFeedbackAuthor(
 	ctx context.Context,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	feedbackAuthorEUAID string,
+	feedbackAuthorEUAID *string,
 ) (*models.UserInfo, error) {
-	authorInfo, err := dataloaders.GetUserInfo(ctx, feedbackAuthorEUAID)
+	// If there's no feedbackAuthorEUAID, don't try and query Okta, just return a nil userinfo
+	if feedbackAuthorEUAID == nil {
+		return nil, nil
+	}
+
+	// Handled nil value above, safe to dereference and pass to GetUserInfo
+	authorInfo, err := dataloaders.GetUserInfo(ctx, *feedbackAuthorEUAID)
 	if err != nil {
 		return nil, err
 	}
