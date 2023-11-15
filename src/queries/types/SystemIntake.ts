@@ -62,7 +62,7 @@ export interface SystemIntake_governanceRequestFeedbacks {
   feedback: HTML;
   targetForm: GovernanceRequestFeedbackTargetForm;
   type: GovernanceRequestFeedbackType;
-  author: SystemIntake_governanceRequestFeedbacks_author;
+  author: SystemIntake_governanceRequestFeedbacks_author | null;
   createdAt: Time;
 }
 

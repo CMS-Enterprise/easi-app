@@ -215,7 +215,7 @@ describe('Feedback item component', () => {
     expect(screen.getByText(formattedDate));
 
     const formattedAuthor = i18next.t<string>('taskList:feedbackV2.author', {
-      name: author.commonName
+      name: author?.commonName
     });
     expect(screen.getByText(formattedAuthor));
 
