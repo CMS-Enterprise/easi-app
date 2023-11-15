@@ -98,7 +98,10 @@ const businessCase = {
   additionalAlternatives: 'Additional alternatives',
   additionalAlternativesHelpText:
     'If you are buillding a multi-year project that will require significant upkeep, you may want to include more alternatives. Keep in mind that Government off-the-shelf and Commercial off-the-shelf products are acceptable alternatives to include.',
+  alternativeA: 'Alternative A',
   alternativeB: 'Alternative B',
+  removeAlternativeB: 'Remove Alternative B',
+  confirmRemoveAlternativeB: 'Are you sure you want to remove Alternative B?',
   grtFeedback: {
     header: 'Recommendations',
     grbSubhead: 'GRT recommendations to the GRB',

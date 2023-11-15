@@ -2,12 +2,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Button, IconNavigateBefore } from '@trussworks/react-uswds';
+import { Button, ButtonGroup, IconArrowBack } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
 
 import PageNumber from 'components/PageNumber';
 import Alert from 'components/shared/Alert';
 import AutoSave from 'components/shared/AutoSave';
+import IconButton from 'components/shared/IconButton';
 import {
   alternativeSolutionHasFilledFields,
   defaultProposedSolution
@@ -90,97 +91,98 @@ const AlternativeSolutionB = ({
             </Alert>
 
             <Form>
-              <div>
-                <div className="easi-business-case__name-wrapper tablet:grid-col-9">
-                  <h2 className="margin-0">Alternative B</h2>
-                  <Button
-                    type="button"
-                    className="margin-left-2"
-                    unstyled
-                    onClick={() => {
-                      if (
-                        // eslint-disable-next-line no-alert
-                        window.confirm(
-                          'Are you sure you want to remove Alternative B?'
-                        )
-                      ) {
-                        dispatch(
-                          putBusinessCase({
-                            ...businessCase,
-                            alternativeB: defaultProposedSolution
-                          })
-                        );
-                        history.replace(
-                          `/business/${businessCase.id}/alternative-solution-a`
-                        );
-                      }
-                    }}
-                  >
-                    Remove Alternative B
-                  </Button>
-                </div>
-
-                <AlternativeSolutionFields
-                  altLetter="B"
-                  businessCaseCreatedAt={businessCase.createdAt}
-                  formikProps={formikProps}
-                />
-              </div>
-            </Form>
-            <Button
-              type="button"
-              outline
-              onClick={() => {
-                dispatchSave();
-                setErrors({});
-                const newUrl = 'alternative-solution-a';
-                history.push(newUrl);
-              }}
-            >
-              Back
-            </Button>
-            <Button
-              type="button"
-              onClick={() => {
-                dispatchSave();
-                // If final business case OR any field is filled
-                if (
-                  businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED' &&
-                  alternativeSolutionHasFilledFields(
-                    formikRef?.current?.values?.alternativeB
-                  )
-                ) {
-                  validateForm().then(err => {
-                    if (Object.keys(err).length === 0) {
-                      history.push('review');
-                    } else {
-                      window.scrollTo(0, 0);
+              <div className="easi-business-case__name-wrapper tablet:grid-col-9">
+                <h2 className="margin-0">{t('alternativeB')}</h2>
+                <Button
+                  type="button"
+                  className="margin-left-2"
+                  unstyled
+                  onClick={() => {
+                    if (
+                      // eslint-disable-next-line no-alert
+                      window.confirm(t('confirmRemoveAlternativeB'))
+                    ) {
+                      dispatch(
+                        putBusinessCase({
+                          ...businessCase,
+                          alternativeB: defaultProposedSolution
+                        })
+                      );
+                      history.replace(
+                        `/business/${businessCase.id}/alternative-solution-a`
+                      );
                     }
-                  });
-                } else {
-                  history.push('review');
-                }
-              }}
-            >
-              Next
-            </Button>
-            <div className="margin-y-3">
+                  }}
+                >
+                  {t('removeAlternativeB')}
+                </Button>
+              </div>
+
+              <AlternativeSolutionFields
+                altLetter="B"
+                businessCaseCreatedAt={businessCase.createdAt}
+                formikProps={formikProps}
+              />
+            </Form>
+
+            <ButtonGroup>
               <Button
                 type="button"
-                unstyled
+                outline
                 onClick={() => {
                   dispatchSave();
-                  history.push(
-                    `/governance-task-list/${businessCase.systemIntakeId}`
-                  );
+                  setErrors({});
+                  const newUrl = 'alternative-solution-a';
+                  history.push(newUrl);
                 }}
               >
-                <span className="display-flex flex-align-center">
-                  <IconNavigateBefore /> Save & Exit
-                </span>
+                {t('Back')}
               </Button>
-            </div>
+              <Button
+                type="button"
+                onClick={() => {
+                  dispatchSave();
+                  // If final business case OR any field is filled
+                  if (
+                    businessCase.systemIntakeStatus ===
+                      'BIZ_CASE_FINAL_NEEDED' &&
+                    alternativeSolutionHasFilledFields(
+                      formikRef?.current?.values?.alternativeB
+                    )
+                  ) {
+                    validateForm().then(err => {
+                      if (Object.keys(err).length === 0) {
+                        history.push('review');
+                      } else {
+                        window.scrollTo(0, 0);
+                      }
+                    });
+                  } else {
+                    history.push('review');
+                  }
+                }}
+              >
+                {t('Next')}
+              </Button>
+            </ButtonGroup>
+
+            <IconButton
+              type="button"
+              icon={<IconArrowBack />}
+              className="margin-top-2 margin-bottom-3"
+              onClick={() => {
+                dispatchSave();
+                history.push(
+                  `/governance-task-list/${businessCase.systemIntakeId}`
+                );
+              }}
+              unstyled
+            >
+              {t('Save & Exit')}
+            </IconButton>
+
             <PageNumber currentPage={6} totalPages={6} />
+
             <AutoSave
               values={values}
               onSave={dispatchSave}
