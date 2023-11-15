@@ -130,7 +130,7 @@ const RequestDescription = ({
                     as={Textarea}
                     error={!!flatErrors.businessNeed}
                     id="BusinessCase-BusinessNeed"
-                    maxLength={2000}
+                    maxLength={10000}
                     name="businessNeed"
                     aria-describedby="BusinessCase-BusinessNeedCounter BusinessCase-BusinessNeedHelp"
                   />
@@ -158,7 +158,7 @@ const RequestDescription = ({
                     as={Textarea}
                     error={!!flatErrors.currentSolutionSummary}
                     id="BusinessCase-CurrentSolutionSummary"
-                    maxLength={2000}
+                    maxLength={10000}
                     name="currentSolutionSummary"
                     aria-describedby="BusinessCase-CurrentSolutionSummaryCounter BusinessCase-CurrentSolutionSummaryHelp"
                   />
@@ -185,7 +185,7 @@ const RequestDescription = ({
                     as={Textarea}
                     error={!!flatErrors.cmsBenefit}
                     id="BusinessCase-CmsBenefit"
-                    maxLength={2000}
+                    maxLength={10000}
                     name="cmsBenefit"
                     aria-describedby="BusinessCase-CmsBenefitCounter BusinessCase-CmsBenefitHelp"
                   />
@@ -211,7 +211,7 @@ const RequestDescription = ({
                     as={Textarea}
                     error={!!flatErrors.priorityAlignment}
                     id="BusinessCase-PriorityAlignment"
-                    maxLength={2000}
+                    maxLength={10000}
                     name="priorityAlignment"
                     aria-describedby="BusinessCase-PriorityAlignmentCounter BusinessCase-PriorityAlignmentHelp"
                   />
@@ -237,7 +237,7 @@ const RequestDescription = ({
                     as={Textarea}
                     error={!!flatErrors.successIndicators}
                     id="BusinessCase-SuccessIndicators"
-                    maxLength={2000}
+                    maxLength={10000}
                     name="successIndicators"
                     aria-describedby="BusinessCase-SuccessIndicatorsCounter BusinessCase-SuccessIndicatorsHelp"
                   />

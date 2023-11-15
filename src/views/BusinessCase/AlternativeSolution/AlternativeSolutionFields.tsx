@@ -80,7 +80,7 @@ const AlternativeSolutionFields = ({
             as={Textarea}
             error={!!flatErrors[`${altId}.summary`]}
             id={`BusinessCase-${altId}Summary`}
-            maxLength={2000}
+            maxLength={10000}
             name={`${altId}.summary`}
             aria-describedby={`BusinessCase-${altId}SummmaryCounter BusinessCase-${altId}SummaryHelp`}
           />
@@ -108,7 +108,7 @@ const AlternativeSolutionFields = ({
             as={Textarea}
             error={flatErrors[`${altId}.acquisitionApproach`]}
             id={`BusinessCase-${altId}AcquisitionApproach`}
-            maxLength={2000}
+            maxLength={10000}
             name={`${altId}.acquisitionApproach`}
             aria-describedby={`BusinessCase-${altId}AcquisitionApproachCounter BusinessCase-${altId}AcquisitionApproachHelp`}
           />
@@ -376,7 +376,7 @@ const AlternativeSolutionFields = ({
             as={Textarea}
             error={!!flatErrors[`${altId}.pros`]}
             id={`BusinessCase-${altId}Pros`}
-            maxLength={2000}
+            maxLength={10000}
             name={`${altId}.pros`}
             aria-describedby={`BusinessCase-${altId}ProsCounter BusinessCase-${altId}ProsHelp`}
           />
@@ -398,7 +398,7 @@ const AlternativeSolutionFields = ({
             as={Textarea}
             error={!!flatErrors[`${altId}.cons`]}
             id={`BusinessCase-${altId}Cons`}
-            maxLength={2000}
+            maxLength={10000}
             name={`${altId}.cons`}
             aria-describedby={`BusinessCase-${altId}ConsHelp BusinessCase-${altId}ConsCounter`}
           />
@@ -437,7 +437,7 @@ const AlternativeSolutionFields = ({
             as={Textarea}
             error={!!flatErrors[`${altId}.costSavings`]}
             id={`BusinessCase-${altId}CostSavings`}
-            maxLength={2000}
+            maxLength={10000}
             name={`${altId}.costSavings`}
             aria-describedby={`BusinessCase-${altId}CostSavingsCounter BusinessCase-${altId}CostSavingsHelp`}
           />

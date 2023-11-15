@@ -195,7 +195,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   as={Textarea}
                   error={!!flatErrors.businessNeed}
                   id="IntakeForm-BusinessNeed"
-                  maxLength={2000}
+                  maxLength={10000}
                   name="businessNeed"
                   aria-describedby="IntakeForm-BusinessNeedCounter IntakeForm-BusinessNeedHelp"
                 />
@@ -219,7 +219,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   as={Textarea}
                   error={!!flatErrors.businessSolution}
                   id="IntakeForm-BusinessSolution"
-                  maxLength={2000}
+                  maxLength={10000}
                   name="businessSolution"
                   aria-describedby="IntakeForm-BusinessSolutionCounter IntakeForm-BusinessSolutionHelp"
                 />
