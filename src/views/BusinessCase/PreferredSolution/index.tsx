@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
@@ -12,11 +13,8 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 
 import CharacterCounter from 'components/CharacterCounter';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
-import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
-import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
@@ -30,6 +28,8 @@ import {
   BusinessCaseFinalValidationSchema
 } from 'validations/businessCaseSchema';
 
+import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
+
 type PreferredSolutionProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
@@ -40,7 +40,9 @@ const PreferredSolution = ({
   formikRef,
   dispatchSave
 }: PreferredSolutionProps) => {
+  const { t } = useTranslation('businessCase');
   const history = useHistory();
+
   const initialValues = {
     preferredSolution: businessCase.preferredSolution
   };
@@ -68,51 +70,33 @@ const PreferredSolution = ({
           setFieldValue,
           validateForm
         } = formikProps;
+
         const flatErrors = flattenErrors(errors);
+
+        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
+
         return (
-          <div className="grid-container" data-testid="preferred-solution">
-            {Object.keys(errors).length > 0 && (
-              <ErrorAlert
-                classNames="margin-top-3"
-                heading="Please check and fix the following"
-                testId="formik-validation-errors"
-              >
-                {Object.keys(flatErrors).map(key => {
-                  return (
-                    <ErrorAlertMessage
-                      key={`Error.${key}`}
-                      errorKey={key}
-                      message={flatErrors[key]}
-                    />
-                  );
-                })}
-              </ErrorAlert>
-            )}
-            <PageHeading>Alternatives Analysis</PageHeading>
-            <div className="tablet:grid-col-9">
-              <div className="line-height-body-6">
-                Some examples of options to consider may include:
-                <ul className="padding-left-205 margin-y-0">
-                  <li>Buy vs. build vs. lease vs. reuse of existing system</li>
-                  <li>
-                    Commercial off-the-shelf (COTS) vs. Government off-the-shelf
-                    (GOTS)
-                  </li>
-                  <li>Mainframe vs. server-based vs. clustering vs. Cloud</li>
+          <BusinessCaseStepWrapper
+            title={t('alternatives')}
+            description={
+              <>
+                <p className="margin-bottom-0">
+                  {t('alternativesDescription.examples')}
+                </p>
+                <ul className="padding-left-205 margin-top-0">
+                  <li>{t('alternativesDescription.buy')}</li>
+                  <li>{t('alternativesDescription.commercial')}</li>
+                  <li>{t('alternativesDescription.mainframe')}</li>
                 </ul>
-                <br />
-                In your options, include details such as differences between
-                system capabilities, user friendliness, technical and security
-                considerations, ease and timing of integration with CMS&apos; IT
-                infrastructure, etc.
-              </div>
-            </div>
-            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
-            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
-              <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
-                <MandatoryFieldsAlert />
-              </div>
-            )}
+                <p>{t('alternativesDescription.include')}</p>
+              </>
+            }
+            systemIntakeId={businessCase.systemIntakeId}
+            data-testid="preferred-solution"
+            errors={flatErrors}
+            isFinal={isFinal}
+            fieldsMandatory={isFinal}
+          >
             <Form>
               <div className="tablet:grid-col-9">
                 <h2>Preferred solution</h2>
@@ -700,7 +684,7 @@ const PreferredSolution = ({
               onSave={dispatchSave}
               debounceDelay={1000 * 3}
             />
-          </div>
+          </BusinessCaseStepWrapper>
         );
       }}
     </Formik>

@@ -26,7 +26,7 @@ type BusinessCaseStepWrapperProps = {
   errors: Record<string, string>;
   /** Form step content and fields */
   children: React.ReactNode;
-  description?: string;
+  description?: React.ReactNode;
   /** Whether to show "all fields are mandatory" alert - defaults to false */
   fieldsMandatory?: boolean;
   className?: string;
@@ -104,7 +104,9 @@ const BusinessCaseStepWrapper = ({
         />
       )}
 
-      <p className="line-height-body-6">{description}</p>
+      <div className="line-height-body-6 tablet:grid-col-9">
+        {typeof description === 'string' ? <p>{description}</p> : description}
+      </div>
 
       {fieldsMandatory && (
         <MandatoryFieldsAlert className="tablet:grid-col-5" />

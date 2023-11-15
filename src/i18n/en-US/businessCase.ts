@@ -34,7 +34,7 @@ const businessCase = {
     'Provide a brief summary of the solution currently in place including any associated software products and costs (e.g. services, software, Operation and Maintenance)',
   cmsBenefit: 'How will CMS benefit from this effort?',
   cmsBenefitHelpText:
-    'Provide a summary of how this effort benefits CMS. Include any information on how it supports CMS&apos; mission and strategic goals, creates efficiencies and/or cost savings, or reduces risk',
+    "Provide a summary of how this effort benefits CMS. Include any information on how it supports CMS' mission and strategic goals, creates efficiencies and/or cost savings, or reduces risk",
   priorityAlignment:
     'How does this effort align with organizational priorities?',
   priorityAlignmentHelpText:
@@ -44,6 +44,15 @@ const businessCase = {
   successIndicatorsHelpText:
     'Include any indicators that you think would demonstrate success',
   alternatives: 'Alternatives analysis',
+  alternativesDescription: {
+    examples: 'Some examples of options to consider may include:',
+    buy: 'Buy vs. build vs. lease vs. reuse of existing system',
+    commercial:
+      'Commercial off-the-shelf (COTS) vs. Government off-the-shelf (GOTS)',
+    mainframe: 'Mainframe vs. server-based vs. clustering vs. Cloud',
+    include:
+      "In your options, include details such as differences between system capabilities, user friendliness, technical and security considerations, ease and timing of integration with CMS' IT infrastructure, etc."
+  },
   grtFeedback: {
     header: 'Recommendations',
     grbSubhead: 'GRT recommendations to the GRB',
