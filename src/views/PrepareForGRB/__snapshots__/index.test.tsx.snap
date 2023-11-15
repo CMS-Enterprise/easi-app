@@ -39,7 +39,7 @@ exports[`The prepare for GRB info page > matches the snapshot 1`] = `
             onClick={[Function]}
           >
             <span>
-              Governance Task List
+              Governance task list
             </span>
           </a>
         </li>

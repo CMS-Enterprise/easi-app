@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { GridContainer, IconWarning, Link } from '@trussworks/react-uswds';
+import { Link, useLocation } from 'react-router-dom';
+import { GridContainer, IconWarning } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 import './index.scss';
@@ -18,6 +19,7 @@ type FeedbackBannerProps = {
  */
 const FeedbackBanner = ({ type, id, className }: FeedbackBannerProps) => {
   const { t } = useTranslation('intake');
+  const { pathname } = useLocation();
 
   return (
     <div
@@ -35,7 +37,10 @@ const FeedbackBanner = ({ type, id, className }: FeedbackBannerProps) => {
           {t('feedback', { type })}
         </p>
         <Link
-          href={`/governance-task-list/${id}/feedback`}
+          to={{
+            pathname: `/governance-task-list/${id}/feedback`,
+            state: { form: { pathname, type } }
+          }}
           className="usa-button usa-button--outline"
         >
           {t('viewFeedback')}
