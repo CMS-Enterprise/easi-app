@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 
 import FeedbackBanner from 'components/FeedbackBanner';
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 
@@ -16,6 +17,8 @@ type BusinessCaseStepWrapperProps = {
   /** Form step content and fields */
   children: React.ReactNode;
   description?: string;
+  /** Whether to show "all fields are mandatory alert - defaults to false" */
+  fieldsMandatory?: boolean;
   className?: string;
   'data-testid'?: string;
 };
@@ -31,6 +34,7 @@ const BusinessCaseStepWrapper = ({
   id,
   errors,
   children,
+  fieldsMandatory = false,
   className,
   ...props
 }: BusinessCaseStepWrapperProps) => {
@@ -65,6 +69,10 @@ const BusinessCaseStepWrapper = ({
       />
 
       <p className="line-height-body-6">{description}</p>
+
+      {fieldsMandatory && (
+        <MandatoryFieldsAlert className="tablet:grid-col-5" />
+      )}
 
       {children}
     </div>
