@@ -44,6 +44,8 @@ const businessCase = {
   successIndicatorsHelpText:
     'Include any indicators that you think would demonstrate success',
   alternatives: 'Alternatives analysis',
+  alternativesOptional:
+    "This section is optional. You can skip it if you don't have any alternative solutions.",
   alternativesDescription: {
     examples: 'Some examples of options to consider may include:',
     buy: 'Buy vs. build vs. lease vs. reuse of existing system',
