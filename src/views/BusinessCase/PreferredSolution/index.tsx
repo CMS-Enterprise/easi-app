@@ -133,7 +133,7 @@ const PreferredSolution = ({
                     className="margin-top-1"
                   >
                     {t('preferredSolutionSummary.include')}
-                    <ul className="padding-left-205">
+                    <ul className="padding-left-205 margin-top-1 margin-bottom-0">
                       <li>{t('preferredSolutionSummary.summary')}</li>
                       <li>{t('preferredSolutionSummary.implementation')}</li>
                       <li>{t('preferredSolutionSummary.costs')}</li>
@@ -163,7 +163,7 @@ const PreferredSolution = ({
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionAcquisitionApproachHelp"
-                    className="margin-y-1"
+                    className="margin-top-1"
                   >
                     {t('preferredSolutionApproachHelpText')}
                   </HelpText>
@@ -505,7 +505,7 @@ const PreferredSolution = ({
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionProsHelp"
-                    className="margin-y-1"
+                    className="margin-top-1"
                   >
                     {t('preferredSolutionProsHelpText')}
                   </HelpText>
@@ -532,7 +532,7 @@ const PreferredSolution = ({
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionConsHelp"
-                    className="margin-y-1"
+                    className="margin-top-1"
                   >
                     {t('preferredSolutionConsHelpText')}
                   </HelpText>
@@ -573,7 +573,7 @@ const PreferredSolution = ({
                 </Label>
                 <HelpText
                   id="BusinessCase-PreferredSolutionCostSavingsHelp"
-                  className="margin-y-1"
+                  className="margin-top-1"
                 >
                   {t('costSavingsHelpText')}
                 </HelpText>
