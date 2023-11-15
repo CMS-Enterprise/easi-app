@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
-  IconNavigateBefore,
+  IconArrowBack,
   Label,
   TextInput
 } from '@trussworks/react-uswds';
@@ -14,6 +14,7 @@ import AutoSave from 'components/shared/AutoSave';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import IconButton from 'components/shared/IconButton';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
@@ -38,11 +39,13 @@ const GeneralRequestInfo = ({
 }: GeneralRequestInfoProps) => {
   const { t } = useTranslation('businessCase');
   const history = useHistory();
+
   const initialValues: GeneralRequestInfoForm = {
     requestName: businessCase.requestName,
     requester: businessCase.requester,
     businessOwner: businessCase.businessOwner
   };
+
   const allowedPhoneNumberCharacters = /[\d- ]+/g;
 
   const ValidationSchema =
@@ -63,6 +66,7 @@ const GeneralRequestInfo = ({
       {(formikProps: FormikProps<GeneralRequestInfoForm>) => {
         const { errors, values, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
+
         return (
           <BusinessCaseStepWrapper
             id={businessCase.id || ''}
@@ -75,88 +79,86 @@ const GeneralRequestInfo = ({
               businessCase.systemIntakeStatus
             )}
           >
-            <div className="tablet:grid-col-9 margin-bottom-7">
-              <Form>
-                <FieldGroup
-                  scrollElement="requestName"
+            <Form className="tablet:grid-col-9 margin-bottom-6">
+              <FieldGroup
+                scrollElement="requestName"
+                error={!!flatErrors.requestName}
+              >
+                <Label htmlFor="BusinessCase-RequestName">
+                  {t('projectName')}
+                </Label>
+                <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
+                <Field
+                  as={TextInput}
                   error={!!flatErrors.requestName}
-                >
-                  <Label htmlFor="BusinessCase-RequestName">
-                    {t('projectName')}
-                  </Label>
-                  <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
-                  <Field
-                    as={TextInput}
-                    error={!!flatErrors.requestName}
-                    id="BusinessCase-RequestName"
-                    maxLength={50}
-                    name="requestName"
-                  />
-                </FieldGroup>
+                  id="BusinessCase-RequestName"
+                  maxLength={50}
+                  name="requestName"
+                />
+              </FieldGroup>
 
-                <FieldGroup
-                  scrollElement="requester.name"
+              <FieldGroup
+                scrollElement="requester.name"
+                error={!!flatErrors['requester.name']}
+              >
+                <Label htmlFor="BusinessCase-RequesterName">
+                  {t('requester')}
+                </Label>
+                <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
+                <Field
+                  as={TextInput}
                   error={!!flatErrors['requester.name']}
-                >
-                  <Label htmlFor="BusinessCase-RequesterName">
-                    {t('requester')}
-                  </Label>
-                  <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
-                  <Field
-                    as={TextInput}
-                    error={!!flatErrors['requester.name']}
-                    id="BusinessCase-RequesterName"
-                    maxLength={50}
-                    name="requester.name"
-                  />
-                </FieldGroup>
+                  id="BusinessCase-RequesterName"
+                  maxLength={50}
+                  name="requester.name"
+                />
+              </FieldGroup>
 
-                <FieldGroup
-                  scrollElement="businessOwner.name"
+              <FieldGroup
+                scrollElement="businessOwner.name"
+                error={!!flatErrors['businessOwner.name']}
+              >
+                <Label htmlFor="BusinessCase-BusinessOwnerName">
+                  {t('businessOwner')}
+                </Label>
+                <FieldErrorMsg>
+                  {flatErrors['businessOwner.name']}
+                </FieldErrorMsg>
+                <Field
+                  as={TextInput}
                   error={!!flatErrors['businessOwner.name']}
-                >
-                  <Label htmlFor="BusinessCase-BusinessOwnerName">
-                    {t('businessOwner')}
-                  </Label>
-                  <FieldErrorMsg>
-                    {flatErrors['businessOwner.name']}
-                  </FieldErrorMsg>
-                  <Field
-                    as={TextInput}
-                    error={!!flatErrors['businessOwner.name']}
-                    id="BusinessCase-BusinessOwnerName"
-                    maxLength={50}
-                    name="businessOwner.name"
-                  />
-                </FieldGroup>
+                  id="BusinessCase-BusinessOwnerName"
+                  maxLength={50}
+                  name="businessOwner.name"
+                />
+              </FieldGroup>
 
-                <FieldGroup
-                  scrollElement="requester.phoneNumber"
+              <FieldGroup
+                scrollElement="requester.phoneNumber"
+                error={!!flatErrors['requester.phoneNumber']}
+              >
+                <Label htmlFor="BusinessCase-RequesterPhoneNumber">
+                  {t('requesterPhoneNumber')}
+                </Label>
+                <HelpText id="BusinessCase-PhoneNumber">
+                  {t('requesterPhoneNumberHelpText')}
+                </HelpText>
+                <FieldErrorMsg>
+                  {flatErrors['requester.phoneNumber']}
+                </FieldErrorMsg>
+                <Field
+                  as={TextInput}
                   error={!!flatErrors['requester.phoneNumber']}
-                >
-                  <Label htmlFor="BusinessCase-RequesterPhoneNumber">
-                    {t('requesterPhoneNumber')}
-                  </Label>
-                  <HelpText id="BusinessCase-PhoneNumber">
-                    {t('requesterPhoneNumberHelpText')}
-                  </HelpText>
-                  <FieldErrorMsg>
-                    {flatErrors['requester.phoneNumber']}
-                  </FieldErrorMsg>
-                  <div className="width-card-lg">
-                    <Field
-                      as={TextInput}
-                      error={!!flatErrors['requester.phoneNumber']}
-                      id="BusinessCase-RequesterPhoneNumber"
-                      maxLength={20}
-                      name="requester.phoneNumber"
-                      match={allowedPhoneNumberCharacters}
-                      aria-describedby="BusinessCase-PhoneNumber"
-                    />
-                  </div>
-                </FieldGroup>
-              </Form>
-            </div>
+                  id="BusinessCase-RequesterPhoneNumber"
+                  maxLength={20}
+                  name="requester.phoneNumber"
+                  match={allowedPhoneNumberCharacters}
+                  aria-describedby="BusinessCase-PhoneNumber"
+                  className="width-card-lg"
+                />
+              </FieldGroup>
+            </Form>
+
             <Button
               type="button"
               onClick={() => {
@@ -173,22 +175,22 @@ const GeneralRequestInfo = ({
             >
               {t('Next')}
             </Button>
-            <div className="margin-y-3">
-              <Button
-                type="button"
-                unstyled
-                onClick={() => {
-                  dispatchSave();
-                  history.push(
-                    `/governance-task-list/${businessCase.systemIntakeId}`
-                  );
-                }}
-              >
-                <span className="display-flex flex-align-center">
-                  <IconNavigateBefore /> {t('Save & Exit')}
-                </span>
-              </Button>
-            </div>
+
+            <IconButton
+              icon={<IconArrowBack />}
+              type="button"
+              unstyled
+              onClick={() => {
+                dispatchSave();
+                history.push(
+                  `/governance-task-list/${businessCase.systemIntakeId}`
+                );
+              }}
+              className="margin-y-3"
+            >
+              {t('Save & Exit')}
+            </IconButton>
+
             <PageNumber
               currentPage={1}
               totalPages={
@@ -197,6 +199,7 @@ const GeneralRequestInfo = ({
                   : 5
               }
             />
+
             <AutoSave
               values={values}
               onSave={dispatchSave}
