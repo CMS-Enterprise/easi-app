@@ -1,14 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Button, IconNavigateBefore } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
 
-import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import Alert from 'components/shared/Alert';
 import AutoSave from 'components/shared/AutoSave';
-import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import {
   alternativeSolutionHasFilledFields,
   defaultProposedSolution
@@ -16,7 +15,10 @@ import {
 import { BusinessCaseModel } from 'types/businessCase';
 import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
+import { isBusinessCaseFinal } from 'utils/systemIntake';
 import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
+
+import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
 import AlternativeSolutionFields from './AlternativeSolutionFields';
 
@@ -33,6 +35,7 @@ const AlternativeSolutionB = ({
 }: AlternativeSolutionBProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const { t } = useTranslation('businessCase');
 
   const initialValues = {
     alternativeB: businessCase.alternativeB
@@ -52,50 +55,40 @@ const AlternativeSolutionB = ({
         const { errors, setErrors, validateForm } = formikProps;
         const values = formikProps.values.alternativeB;
         const flatErrors = flattenErrors(errors);
+
+        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
+
         return (
-          <div className="grid-container" data-testid="alternative-solution-b">
-            {Object.keys(errors).length > 0 && (
-              <ErrorAlert
-                testId="formik-validation-errors"
-                classNames="margin-top-3"
-                heading="Please check and fix the following"
-              >
-                {Object.keys(flatErrors).map(key => {
-                  return (
-                    <ErrorAlertMessage
-                      key={`Error.${key}`}
-                      errorKey={key}
-                      message={flatErrors[key]}
-                    />
-                  );
-                })}
-              </ErrorAlert>
-            )}
-            <PageHeading>Alternatives Analysis</PageHeading>
-            <div className="tablet:grid-col-9">
-              <div className="line-height-body-6">
-                Some examples of options to consider may include:
-                <ul className="padding-left-205 margin-y-0">
-                  <li>Buy vs. build vs. lease vs. reuse of existing system</li>
-                  <li>
-                    Commercial off-the-shelf (COTS) vs. Government off-the-shelf
-                    (GOTS)
-                  </li>
-                  <li>Mainframe vs. server-based vs. clustering vs. Cloud</li>
+          <BusinessCaseStepWrapper
+            systemIntakeId={businessCase.systemIntakeId}
+            title={t('alternatives')}
+            description={
+              <>
+                <p className="margin-bottom-0">
+                  {t('alternativesDescription.examples')}
+                </p>
+                <ul className="padding-left-205 margin-top-0">
+                  <li>{t('alternativesDescription.buy')}</li>
+                  <li>{t('alternativesDescription.commercial')}</li>
+                  <li>{t('alternativesDescription.mainframe')}</li>
                 </ul>
-                <br />
-                In your options, include details such as differences between
-                system capabilities, user friendliness, technical and security
-                considerations, ease and timing of integration with CMS&apos; IT
-                infrastructure, etc.
-              </div>
-            </div>
-            <div className="tablet:grid-col-8 margin-top-2">
-              <Alert type="info" slim role="alert" aria-live="polite">
-                This section is optional. You can skip it if you don&apos;t have
-                any alternative solutions.
-              </Alert>
-            </div>
+                <p>{t('alternativesDescription.include')}</p>
+              </>
+            }
+            errors={flatErrors}
+            data-testid="alternative-solution-b"
+            isFinal={isFinal}
+          >
+            <Alert
+              type="info"
+              slim
+              role="alert"
+              aria-live="polite"
+              className="tablet:grid-col-8 margin-top-2"
+            >
+              {t('alternativesOptional')}
+            </Alert>
+
             <Form>
               <div>
                 <div className="easi-business-case__name-wrapper tablet:grid-col-9">
@@ -193,7 +186,7 @@ const AlternativeSolutionB = ({
               onSave={dispatchSave}
               debounceDelay={1000 * 3}
             />
-          </div>
+          </BusinessCaseStepWrapper>
         );
       }}
     </Formik>
