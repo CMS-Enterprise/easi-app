@@ -99,13 +99,13 @@ const PreferredSolution = ({
           >
             <Form>
               <div className="tablet:grid-col-9">
-                <h2>Preferred solution</h2>
+                <h2>{t('preferredSolution')}</h2>
                 <FieldGroup
                   scrollElement="preferredSolution.title"
                   error={!!flatErrors['preferredSolution.title']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionTitle">
-                    Preferred solution: Title
+                    {t('preferredSolutionTitle')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.title']}
@@ -123,27 +123,18 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.summary']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionSummary">
-                    Preferred solution: Summary
+                    {t('preferredSolutionSummary.label')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionSummaryHelp"
                     className="margin-top-1"
                   >
-                    <span>Please include:</span>
+                    {t('preferredSolutionSummary.include')}
                     <ul className="padding-left-205">
-                      <li>
-                        a brief summary of the proposed IT solution including
-                        any associated software products,
-                      </li>
-                      <li>
-                        implementation approach (e.g. development/configuration,
-                        phases),
-                      </li>
-                      <li>
-                        costs (e.g. services, software, Operation and
-                        Maintenance),{' '}
-                      </li>
-                      <li>and potential acquisition approaches</li>
+                      <li>{t('preferredSolutionSummary.summary')}</li>
+                      <li>{t('preferredSolutionSummary.implementation')}</li>
+                      <li>{t('preferredSolutionSummary.costs')}</li>
+                      <li>{t('preferredSolutionSummary.approaches')}</li>
                     </ul>
                   </HelpText>
                   <FieldErrorMsg>
@@ -169,15 +160,13 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.acquisitionApproach']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionAcquisitionApproach">
-                    Preferred solution: Acquisition approach
+                    {t('preferredSolutionApproach')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionAcquisitionApproachHelp"
                     className="margin-y-1"
                   >
-                    Describe the approach to acquiring the products and services
-                    required to deliver the system, including potential contract
-                    vehicles.
+                    {t('preferredSolutionApproachHelpText')}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.acquisitionApproach']}
@@ -206,10 +195,7 @@ const PreferredSolution = ({
                   data-testid="security-approval"
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label">
-                      Is your solution approved by IT Security for use at CMS
-                      (FedRAMP, FISMA approved, within the CMS cloud enclave)?
-                    </legend>
+                    <legend className="usa-label">{t('isApproved')}</legend>
                     <FieldErrorMsg>
                       {flatErrors['preferredSolution.security.isApproved']}
                     </FieldErrorMsg>
@@ -261,12 +247,10 @@ const PreferredSolution = ({
                   >
                     <fieldset className="usa-fieldset margin-top-4">
                       <legend className="usa-label margin-bottom-1">
-                        Is it in the process of CMS approval?
+                        {t('isBeingReviewed')}
                       </legend>
                       <HelpText id="BusinessCase-PreferredSolutionApprovalHelp">
-                        Obtaining CMS Approval can be lengthy and solutions that
-                        do not have it or are just starting may lead to longer
-                        project timelines.
+                        {t('isBeingReviewedHelpText')}
                       </HelpText>
                       <FieldErrorMsg>
                         {
@@ -318,9 +302,7 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.hosting.type']}
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label">
-                      Do you need to host your solution?
-                    </legend>
+                    <legend className="usa-label">{t('hostingType')}</legend>
                     <FieldErrorMsg>
                       {flatErrors['preferredSolution.hosting.type']}
                     </FieldErrorMsg>
@@ -356,7 +338,7 @@ const PreferredSolution = ({
                           }
                         >
                           <Label htmlFor="BusinessCase-PreferredSolutionCloudLocation">
-                            Where are you planning to host?
+                            {t('hostingLocation')}
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['preferredSolution.hosting.location']}
@@ -381,8 +363,7 @@ const PreferredSolution = ({
                           }
                         >
                           <Label htmlFor="BusinessCase-PreferredSolutionCloudServiceType">
-                            What, if any, type of cloud service are you planning
-                            to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                            {t('cloudServiceType')}
                           </Label>
                           <FieldErrorMsg>
                             {
@@ -435,7 +416,7 @@ const PreferredSolution = ({
                         }
                       >
                         <Label htmlFor="BusinessCase-PreferredSolutionDataCenterLocation">
-                          Which data center do you plan to host it at?
+                          {t('dataCenterLocation')}
                         </Label>
                         <FieldErrorMsg>
                           {flatErrors['preferredSolution.hosting.location']}
@@ -476,7 +457,7 @@ const PreferredSolution = ({
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label">
-                      Will your solution have a User Interface?
+                      {t('hasUserInterface')}
                     </legend>
                     <FieldErrorMsg>
                       {flatErrors['preferredSolution.hasUserInterface']}
@@ -489,7 +470,7 @@ const PreferredSolution = ({
                       }
                       id="BusinessCase-PreferredHasUserInferfaceYes"
                       name="preferredSolution.hasUserInterface"
-                      label="Yes"
+                      label={t('Yes')}
                       value="YES"
                     />
                     <Field
@@ -499,7 +480,7 @@ const PreferredSolution = ({
                       }
                       id="BusinessCase-PreferredHasUserInferfaceNo"
                       name="preferredSolution.hasUserInterface"
-                      label="No"
+                      label={t('No')}
                       value="NO"
                     />
 
@@ -510,7 +491,7 @@ const PreferredSolution = ({
                       }
                       id="BusinessCase-PreferredHasUserInferfaceNotSure"
                       name="preferredSolution.hasUserInterface"
-                      label="I'm not sure"
+                      label={t('notSure')}
                       value="NOT_SURE"
                     />
                   </fieldset>
@@ -521,14 +502,13 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.pros']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionPros">
-                    Preferred solution: Pros
+                    {t('preferredSolutionPros')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionProsHelp"
                     className="margin-y-1"
                   >
-                    Identify any aspects of this solution that positively
-                    differentiates this approach from other solutions
+                    {t('preferredSolutionProsHelpText')}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.pros']}
@@ -552,14 +532,13 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.cons']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionCons">
-                    Preferred solution: Cons
+                    {t('preferredSolutionCons')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionConsHelp"
                     className="margin-y-1"
                   >
-                    Identify any aspects of this solution that negatively impact
-                    this approach
+                    {t('preferredSolutionConsHelpText')}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.cons']}
@@ -595,16 +574,13 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.costSavings']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionCostSavings">
-                    What is the cost savings or avoidance associated with this
-                    solution?
+                    {t('costSavings')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionCostSavingsHelp"
                     className="margin-y-1"
                   >
-                    This could include old systems going away, contract hours/
-                    new Full Time Employees not needed, or other savings, even
-                    if indirect.
+                    {t('costSavingsHelpText')}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.costSavings']}
@@ -637,7 +613,7 @@ const PreferredSolution = ({
                 history.push(newUrl);
               }}
             >
-              Back
+              {t('Back')}
             </Button>
             <Button
               type="button"
@@ -653,7 +629,7 @@ const PreferredSolution = ({
                 });
               }}
             >
-              Next
+              {t('Next')}
             </Button>
             <div className="margin-y-3">
               <Button
@@ -667,7 +643,7 @@ const PreferredSolution = ({
                 }}
               >
                 <span className="display-flex flex-align-center">
-                  <IconNavigateBefore /> Save & Exit
+                  <IconNavigateBefore /> {t('Save & Exit')}
                 </span>
               </Button>
             </div>

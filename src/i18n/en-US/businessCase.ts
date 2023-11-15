@@ -53,6 +53,46 @@ const businessCase = {
     include:
       "In your options, include details such as differences between system capabilities, user friendliness, technical and security considerations, ease and timing of integration with CMS' IT infrastructure, etc."
   },
+  preferredSolution: 'Preferred solution',
+  preferredSolutionTitle: 'Preferred solution: Title',
+  preferredSolutionSummary: {
+    label: 'Preferred solution: Summary',
+    include: 'Please include:',
+    summary:
+      'a brief summary of the proposed IT solution including any associated software products,',
+    implementation:
+      'implementation approach (e.g. development/configuration, phases),',
+    costs: 'costs (e.g. services, software, Operation and Maintenance),',
+    approaches: 'and potential acquisition approaches'
+  },
+  preferredSolutionApproach: 'Preferred solution: Acquisition approach',
+  preferredSolutionApproachHelpText:
+    'Describe the approach to acquiring the products and services required to deliver the system, including potential contract vehicles.',
+  isApproved:
+    'Is your solution approved by IT Security for use at CMS (FedRAMP, FISMA approved, within the CMS cloud enclave)?',
+  isBeingReviewed: 'Is it in the process of CMS approval?',
+  isBeingReviewedHelpText:
+    'Obtaining CMS Approval can be lengthy and solutions that do not have it or are just starting may lead to longer project timelines.',
+  hostingType: 'Do you need to host your solution?',
+  hostingTypeCloud: 'Yes, in the cloud (AWS, Azure, etc.)',
+  hostingTypeDataCenter: 'Yes, at a data center',
+  noHostingNeeded: 'No, hosting is not needed',
+  hostingLocation: 'Where are you planning to host?',
+  cloudServiceType:
+    'What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?',
+  dataCenterLocation: 'Which data center do you plan to host it at?',
+  hasUserInterface: 'Will your solution have a User Interface?',
+  notSure: "I'm not sure",
+  preferredSolutionPros: 'Preferred solution: Pros',
+  preferredSolutionProsHelpText:
+    'Identify any aspects of this solution that positively differentiates this approach from other solutions',
+  preferredSolutionCons: 'Preferred solution: Cons',
+  preferredSolutionConsHelpText:
+    'Identify any aspects of this solution that negatively impact this approach',
+  costSavings:
+    'What is the cost savings or avoidance associated with this solution?',
+  costSavingsHelpText:
+    'This could include old systems going away, contract hours/ new Full Time Employees not needed, or other savings, even if indirect.',
   grtFeedback: {
     header: 'Recommendations',
     grbSubhead: 'GRT recommendations to the GRB',
