@@ -134,6 +134,55 @@ describe('IT Gov Actions', () => {
       }
     };
 
+    it('target form dropdown selects the current form step by default', async () => {
+      renderActionPage({
+        action: 'request-edits',
+        mocks: [
+          getSystemIntakeQuery(),
+          getSystemIntakeContactsQuery,
+          getGovernanceTaskListQuery({
+            step: SystemIntakeStep.DRAFT_BUSINESS_CASE
+          }),
+          createSystemIntakeActionRequestEditsQuery
+        ]
+      });
+
+      expect(
+        await screen.findByRole('heading', { name: 'Action: request edits' })
+      ).toBeInTheDocument();
+
+      const dropdown = await screen.findByTestId('intakeFormStep');
+      expect(dropdown).toBeInTheDocument();
+      const selectedOption = dropdown.querySelector(
+        'option[selected]'
+      ) as HTMLOptionElement;
+      expect(selectedOption).toBeInTheDocument();
+      expect(selectedOption.value).toBe(SystemIntakeStep.DRAFT_BUSINESS_CASE);
+    });
+
+    it('target form dropdown has no selection when in a non-form step', async () => {
+      renderActionPage({
+        action: 'request-edits',
+        mocks: [
+          getSystemIntakeQuery(),
+          getSystemIntakeContactsQuery,
+          getGovernanceTaskListQuery({
+            step: SystemIntakeStep.GRT_MEETING
+          }),
+          createSystemIntakeActionRequestEditsQuery
+        ]
+      });
+
+      expect(
+        await screen.findByRole('heading', { name: 'Action: request edits' })
+      ).toBeInTheDocument();
+
+      const dropdown = await screen.findByTestId('intakeFormStep');
+      expect(dropdown).toBeInTheDocument();
+      const selectedOption = dropdown.querySelector('option[selected]');
+      expect(selectedOption).not.toBeInTheDocument();
+    });
+
     it('submits the form successfully', async () => {
       renderActionPage({
         action: 'request-edits',
