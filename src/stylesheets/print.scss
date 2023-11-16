@@ -21,7 +21,7 @@
 
 @media print {
   .easi-no-print {
-    display: none;
+    display: none !important;
   }
 
   // TODO Assess if this is still needed now that we're no longer using Prince
