@@ -16,7 +16,10 @@ import {
   CreateSystemIntakeActionRequestEdits,
   CreateSystemIntakeActionRequestEditsVariables
 } from 'queries/types/CreateSystemIntakeActionRequestEdits';
-import { SystemIntakeFormStep } from 'types/graphql-global-types';
+import {
+  SystemIntakeFormStep,
+  SystemIntakeStep
+} from 'types/graphql-global-types';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
 
@@ -25,7 +28,13 @@ interface RequestEditsFields extends SystemIntakeActionFields {
   emailFeedback: string;
 }
 
-const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
+const RequestEdits = ({
+  systemIntakeId,
+  currentStep
+}: {
+  systemIntakeId: string;
+  currentStep: SystemIntakeStep | undefined;
+}) => {
   const { t } = useTranslation(['action', 'form']);
 
   const form = useForm<RequestEditsFields>();
@@ -96,6 +105,7 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
                   data-testid="intakeFormStep"
                   {...field}
                   ref={null}
+                  defaultValue={currentStep}
                 >
                   <option value="">{t('form:dropdownInitialSelect')}</option>
                   {[
