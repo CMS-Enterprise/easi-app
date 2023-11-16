@@ -1,7 +1,7 @@
 {{template "easi_header.gohtml"}}
 
-<p>Lifecycle ID issued for {{.ProjectName}} is set to expire on {{.ExpiresAt}}. If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>
-<p>To avoid this please email the Governance Team at <a href="mailto:{{.GRTEmail}}">{{.GRTEmail}}</a> within one week to update them with the current status of your project.</p>
+<p>The Life Cycle ID that was issued for {{.ProjectName}}{{if .LCIDIssuedAt}} on {{.LCIDIssuedAt}}{{end}} is set to expire on {{.ExpiresAt}}. If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>
+<p>To avoid this, please email the Governance Team at <a href="mailto:{{.GRTEmail}}">{{.GRTEmail}}</a> within one week to update them with the current status of your project.</p>
 <p>
   For New IT development projects, please include (if applicable):
   <ul>
@@ -34,10 +34,13 @@
 </p>
 <p>If you have questions please contact the Governance Team at {{.GRTEmail}}</p>
 <p>
-  <u>Current Lifecycle ID Summary</u><br>
-  Lifecycle ID: {{.LifecycleID}}<br>
-  Expiration Date: {{.ExpiresAt}}<br>
-  Scope: {{.Scope}}
-  {{if .CostBaseline}}<br>Project Cost Baseline: {{.CostBaseline}}{{end}}
-  {{if .NextSteps}}<br>Next Steps: {{.NextSteps}}{{end}}
+  <u>Current Life Cycle ID Summary</u><br>
+  <strong>Lifecycle ID:</strong> {{.LifecycleID}}<br>{{if .LCIDIssuedAt}}
+  <strong>Date issued:</strong> {{.LCIDIssuedAt}}<br>{{end}}
+  <strong>Expiration Date:</strong> {{.ExpiresAt}}
+  {{if .Scope}}<br><strong>Scope:</strong> {{.Scope}}{{end}}
+  {{if .CostBaseline}}<br><strong>Project Cost Baseline:</strong> {{.CostBaseline}}{{end}}
+  {{if .NextSteps}}<br><strong>Next Steps:</strong> {{.NextSteps}}{{end}}
 </p>
+<hr>
+<p>Depending on the project, the Governance Team may continue to follow up with you about this Life Cycle ID.</p>
