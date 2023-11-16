@@ -110,7 +110,7 @@ describe('IT Gov Actions', () => {
         variables: {
           input: {
             systemIntakeID: systemIntake.id,
-            adminNote: '',
+            adminNote: null,
             additionalInfo: '',
             notificationRecipients: {
               shouldNotifyITGovernance: true,

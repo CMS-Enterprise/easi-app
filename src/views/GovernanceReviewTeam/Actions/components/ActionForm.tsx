@@ -37,7 +37,7 @@ import './ActionForm.scss';
 
 export interface SystemIntakeActionFields {
   additionalInfo: string;
-  adminNote: string;
+  adminNote: string | null;
   notificationRecipients: EmailNotificationRecipients;
 }
 
