@@ -23,7 +23,7 @@ type BusinessCaseStepWrapperProps = {
   systemIntakeId: string;
   isFinal: boolean;
   /** Form errors object */
-  errors: Record<string, string>;
+  errors?: Record<string, string>;
   /** Form step content and fields */
   children: React.ReactNode;
   description?: React.ReactNode;
@@ -76,7 +76,7 @@ const BusinessCaseStepWrapper = ({
 
   return (
     <div className={classNames('grid-container', className)} {...props}>
-      {Object.keys(errors).length > 0 && (
+      {errors && Object.keys(errors).length > 0 && (
         <ErrorAlert
           classNames="margin-top-3"
           heading={t('inputError.checkfix')}
