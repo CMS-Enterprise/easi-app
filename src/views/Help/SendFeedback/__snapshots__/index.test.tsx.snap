@@ -240,14 +240,6 @@ exports[`Help forms > submits the "Report A Problem" form successfully after a f
               id="whatWereYouDoing"
               name="whatWereYouDoing"
             />
-            <span
-              aria-atomic="false"
-              aria-live="polite"
-              class="easi-character-counter margin-top-1"
-              id="whatWereYouDoing-counter"
-            >
-              2000 characters remaining
-            </span>
           </div>
           <div
             class="usa-form-group"
@@ -266,14 +258,6 @@ exports[`Help forms > submits the "Report A Problem" form successfully after a f
               id="whatWentWrong"
               name="whatWentWrong"
             />
-            <span
-              aria-atomic="false"
-              aria-live="polite"
-              class="easi-character-counter margin-top-1"
-              id="whatWentWrong-counter"
-            >
-              2000 characters remaining
-            </span>
           </div>
           <div
             class="usa-form-group"
@@ -1186,14 +1170,6 @@ exports[`Help forms > submits the "Send Feedback" form successfully after a fail
               id="howCanWeImprove"
               name="howCanWeImprove"
             />
-            <span
-              aria-atomic="false"
-              aria-live="polite"
-              class="easi-character-counter margin-top-1"
-              id="howCanWeImprove-counter"
-            >
-              2000 characters remaining
-            </span>
           </div>
           <div
             class="margin-top-4 margin-bottom-9"
