@@ -79,7 +79,7 @@ const BusinessCaseStepWrapper = ({
       {errors && Object.keys(errors).length > 0 && (
         <ErrorAlert
           classNames="margin-top-3"
-          heading={t('inputError.checkfix')}
+          heading={t('inputError.checkFix')}
           testId="formik-validation-errors"
         >
           {Object.keys(errors).map(key => {
