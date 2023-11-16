@@ -42,6 +42,7 @@ import {
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
+import typeRichText from 'utils/testing/typeRichText';
 
 import TRBRequestInfoWrapper from '../RequestContext';
 import AdminHome from '..';
@@ -290,12 +291,7 @@ describe('Trb Admin Notes: Add Note', () => {
       );
 
       // Enter note text
-      userEvent.type(
-        getByLabelText(
-          RegExp(i18next.t<string>('technicalAssistance:notes.labels.noteText'))
-        ),
-        'My cute note'
-      );
+      await typeRichText(await screen.findByTestId('noteText'), 'My cute note');
 
       userEvent.click(submitButton);
     });
@@ -334,12 +330,7 @@ describe('Trb Admin Notes: Add Note', () => {
     );
 
     // Enter note text
-    userEvent.type(
-      getByLabelText(
-        RegExp(i18next.t<string>('technicalAssistance:notes.labels.noteText'))
-      ),
-      'My cute note'
-    );
+    await typeRichText(await screen.findByTestId('noteText'), 'My cute note');
 
     userEvent.click(
       getByRole('button', {
