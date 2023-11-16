@@ -129,6 +129,10 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
   /** Execute `onSubmit` prop with success and error handling */
   const completeAction = (formData: TFieldValues) => {
+    // Ensure blank admin notes are null instead of '' so that it doesn't get displayed in the notes list
+    // eslint-disable-next-line no-param-reassign
+    if (formData.adminNote === '') formData.adminNote = null;
+
     onSubmit(formData)
       .then(() => {
         // Display success message
