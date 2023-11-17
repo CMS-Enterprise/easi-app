@@ -229,7 +229,7 @@ describe('IT Gov Actions', () => {
         mocks: [
           getSystemIntakeQuery(),
           getSystemIntakeContactsQuery,
-          getGovernanceTaskListQuery()
+          getGovernanceTaskListQuery({ step: SystemIntakeStep.GRB_MEETING })
         ]
       });
 
