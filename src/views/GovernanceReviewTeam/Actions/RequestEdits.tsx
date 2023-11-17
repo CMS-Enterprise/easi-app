@@ -37,7 +37,21 @@ const RequestEdits = ({
 }) => {
   const { t } = useTranslation(['action', 'form']);
 
-  const form = useForm<RequestEditsFields>();
+  /** Default `intakeFormStep` value
+   *
+   * Converts `currentStep` prop to `SystemIntakeFormStep` type
+   */
+  const defaultIntakeFormStep =
+    currentStep &&
+    SystemIntakeFormStep[
+      SystemIntakeStep[currentStep] as keyof typeof SystemIntakeFormStep
+    ];
+
+  const form = useForm<RequestEditsFields>({
+    defaultValues: {
+      intakeFormStep: defaultIntakeFormStep
+    }
+  });
 
   const { watch, control } = form;
 
@@ -105,7 +119,6 @@ const RequestEdits = ({
                   data-testid="intakeFormStep"
                   {...field}
                   ref={null}
-                  defaultValue={currentStep}
                 >
                   <option value="">{t('form:dropdownInitialSelect')}</option>
                   {[
