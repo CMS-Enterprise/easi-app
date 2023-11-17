@@ -240,7 +240,8 @@ const governanceReviewTeam = {
   feedback: {
     title: 'Feedback',
     description:
-      'A history of feedback and recommendations sent to the requester as a part of admin actions.'
+      'A history of feedback and recommendations sent to the requester as a part of admin actions.',
+    noFeedback: 'No feedback has been added for this request.'
   },
   actions: 'Actions',
   requestType: 'Request type',

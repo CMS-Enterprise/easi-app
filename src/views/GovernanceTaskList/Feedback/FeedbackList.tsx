@@ -5,6 +5,7 @@ import { IconArrowBack, IconFileDownload } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import IconButton from 'components/shared/IconButton';
 import IconLink from 'components/shared/IconLink';
@@ -85,6 +86,14 @@ const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
   );
 
   if (loading) return <PageLoading />;
+
+  if (feedback.length === 0) {
+    return (
+      <Alert type="info" className="margin-top-4" slim>
+        {t('governanceReviewTeam:feedback.noFeedback')}
+      </Alert>
+    );
+  }
 
   return (
     <>
