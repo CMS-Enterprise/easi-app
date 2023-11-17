@@ -228,7 +228,7 @@ const RequestOverview = () => {
               {flags.itGovV2Enabled && (
                 <Route
                   path="/governance-review-team/:systemId/feedback"
-                  render={() => <Feedback />}
+                  render={() => <Feedback systemIntakeId={systemId} />}
                 />
               )}
 
