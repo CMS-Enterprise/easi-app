@@ -36,7 +36,7 @@ const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
 
   const printRef = useRef<HTMLDivElement>(null);
   const handlePrint = useReactToPrint({
-    documentTitle: 'Feedback',
+    documentTitle: `Feedback for ${systemIntakeId}.pdf`,
     content: () => printRef.current,
     pageStyle: `
       @page {
