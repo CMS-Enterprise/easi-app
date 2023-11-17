@@ -499,7 +499,7 @@ const Notes = () => {
                   closeLabel={t('notes.hideEmail')}
                   styleLeftBar={false}
                 >
-                  {feedback}
+                  <RichTextViewer value={feedback} />
                 </CollapsableLink>
               </div>
             )}

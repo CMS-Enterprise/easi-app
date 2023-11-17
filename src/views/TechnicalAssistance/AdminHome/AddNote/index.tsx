@@ -13,6 +13,7 @@ import classNames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageHeading from 'components/PageHeading';
+import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import CheckboxField from 'components/shared/CheckboxField';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -21,7 +22,6 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
-import TextAreaField from 'components/shared/TextAreaField';
 import Spinner from 'components/Spinner';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
@@ -421,15 +421,24 @@ const AddNote = ({
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <FormGroup>
-                  <Label htmlFor="noteText" className="text-normal" required>
+                  <Label
+                    id={`${field.name}-label`}
+                    htmlFor="noteText"
+                    className="text-normal"
+                    required
+                  >
                     {t('notes.labels.noteText')}
                   </Label>
-
-                  <TextAreaField
-                    {...field}
-                    ref={null}
-                    id={field.name}
-                    error={!!error}
+                  <RichTextEditor
+                    editableProps={{
+                      id: field.name,
+                      'data-testid': field.name,
+                      'aria-describedby': `${field.name}-hint`,
+                      'aria-labelledby': `${field.name}-label`
+                    }}
+                    field={{ ...field, value: field.value || '' }}
+                    height="300px"
+                    required
                   />
                 </FormGroup>
               )}
