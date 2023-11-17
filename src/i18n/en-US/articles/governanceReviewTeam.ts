@@ -238,7 +238,9 @@ const governanceReviewTeam = {
     shutdownComplete: 'Request was marked "Shutdown Complete"'
   },
   feedback: {
-    title: 'Feedback'
+    title: 'Feedback',
+    description:
+      'A history of feedback and recommendations sent to the requester as a part of admin actions.'
   },
   actions: 'Actions',
   requestType: 'Request type',

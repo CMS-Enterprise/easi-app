@@ -31,7 +31,6 @@ import { AppState } from 'reducers/rootReducer';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/ActionsV1/ProvideGRTFeedbackToBusinessOwner';
 import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/ActionsV1/ProvideGRTRecommendationsToGRB';
-import GovernanceFeedback from 'views/GovernanceTaskList/Feedback';
 import NotFound from 'views/NotFound';
 
 import ChooseAction from './ActionsV1/ChooseAction';
@@ -45,6 +44,7 @@ import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
 import Documents from './Documents';
+import Feedback from './Feedback';
 import IntakeReview from './IntakeReview';
 import LifecycleID from './LifecycleID';
 import Notes from './Notes';
@@ -228,7 +228,7 @@ const RequestOverview = () => {
               {flags.itGovV2Enabled && (
                 <Route
                   path="/governance-review-team/:systemId/feedback"
-                  render={() => <GovernanceFeedback />}
+                  render={() => <Feedback />}
                 />
               )}
 
