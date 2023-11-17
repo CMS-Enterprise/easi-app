@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 
+import { RichTextViewer } from 'components/RichTextEditor';
 import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedback';
 import { GovernanceRequestFeedbackTargetForm } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
@@ -51,7 +52,7 @@ const FeedbackItem = ({
               </dd>
             </dl>
           )}
-          <p className="margin-y-0">{feedback}</p>
+          <RichTextViewer value={feedback} />
         </div>
       </dl>
     </li>
