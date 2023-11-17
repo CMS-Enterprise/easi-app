@@ -76,6 +76,7 @@ const getGovernanceRequestFeedbackQuery: MockedQuery<
     data: {
       systemIntake: {
         __typename: 'SystemIntake',
+        id: systemIntake.id,
         governanceRequestFeedbacks
       }
     }
