@@ -31,6 +31,7 @@ import { AppState } from 'reducers/rootReducer';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/ActionsV1/ProvideGRTFeedbackToBusinessOwner';
 import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/ActionsV1/ProvideGRTRecommendationsToGRB';
+import GovernanceFeedback from 'views/GovernanceTaskList/Feedback';
 import NotFound from 'views/NotFound';
 
 import ChooseAction from './ActionsV1/ChooseAction';
@@ -145,8 +146,15 @@ const RequestOverview = () => {
                     {t('back.allRequests')}
                   </Link>
                 </li>
-                {subNavItems(systemId).map(
-                  ({ aria, groupEnd, route, text }) => (
+                {subNavItems(systemId)
+                  // Hide Feedback tab behind feature flag
+                  .filter(({ route }) => {
+                    if (!flags.itGovV2Enabled) {
+                      return !route.includes('feedback');
+                    }
+                    return true;
+                  })
+                  .map(({ aria, groupEnd, route, text }) => (
                     <li
                       key={`desktop-sidenav-${text}`}
                       className={classnames({
@@ -172,8 +180,7 @@ const RequestOverview = () => {
                         </Link>
                       )}
                     </li>
-                  )
-                )}
+                  ))}
               </ul>
             </nav>
           )}
@@ -217,6 +224,14 @@ const RequestOverview = () => {
                   return <Dates systemIntake={systemIntake} />;
                 }}
               />
+
+              {flags.itGovV2Enabled && (
+                <Route
+                  path="/governance-review-team/:systemId/feedback"
+                  render={() => <GovernanceFeedback />}
+                />
+              )}
+
               <Route
                 path="/governance-review-team/:systemId/decision"
                 render={() => <Decision systemIntake={systemIntake} />}

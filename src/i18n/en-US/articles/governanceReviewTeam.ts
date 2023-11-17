@@ -207,7 +207,8 @@ const governanceReviewTeam = {
     openBusiness: 'Open business case',
     openNotes: 'Open admin team notes',
     openDecision: 'Open decision',
-    openLcid: 'Open LCID'
+    openLcid: 'Open LCID',
+    openFeedback: 'Open feedback'
   },
   back: {
     allRequests: 'Back to all requests'
@@ -235,6 +236,9 @@ const governanceReviewTeam = {
       'Request was marked "No further governance needed"',
     noDecision: 'Decision not yet made',
     shutdownComplete: 'Request was marked "Shutdown Complete"'
+  },
+  feedback: {
+    title: 'Feedback'
   },
   actions: 'Actions',
   requestType: 'Request type',
