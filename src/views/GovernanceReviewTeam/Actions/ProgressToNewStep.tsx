@@ -5,13 +5,13 @@ import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
 
+import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
-import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionProgressToNewStepQuery from 'queries/CreateSystemIntakeActionProgressToNewStepQuery';
 import {
   CreateSystemIntakeActionProgressToNewStep,
@@ -241,18 +241,24 @@ const ProgressToNewStep = ({
           name="feedback"
           render={({ field: { ref, ...field } }) => (
             <FormGroup>
-              <Label htmlFor={field.name} className="text-normal">
+              <Label
+                id={`${field.name}-label`}
+                htmlFor={field.name}
+                className="text-normal"
+              >
                 {t('progressToNewStep.feedback')}
               </Label>
               <HelpText className="margin-top-1">
                 {t('progressToNewStep.feedbackHelpText')}
               </HelpText>
-              <TextAreaField
-                {...field}
-                id={field.name}
-                value={field.value || ''}
-                size="sm"
-                characterCounter={false}
+              <RichTextEditor
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
+                field={{ ...field, value: field.value || '' }}
               />
             </FormGroup>
           )}
@@ -262,18 +268,24 @@ const ProgressToNewStep = ({
           name="grbRecommendations"
           render={({ field: { ref, ...field } }) => (
             <FormGroup>
-              <Label htmlFor={field.name} className="text-normal">
+              <Label
+                id={`${field.name}-label`}
+                htmlFor={field.name}
+                className="text-normal"
+              >
                 {t('progressToNewStep.grbRecommendations')}
               </Label>
               <HelpText className="margin-top-1">
                 {t('progressToNewStep.grbRecommendationsHelpText')}
               </HelpText>
-              <TextAreaField
-                {...field}
-                id={field.name}
-                value={field.value || ''}
-                size="sm"
-                characterCounter={false}
+              <RichTextEditor
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
+                field={{ ...field, value: field.value || '' }}
               />
             </FormGroup>
           )}

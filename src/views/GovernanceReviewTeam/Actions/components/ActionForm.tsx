@@ -17,12 +17,12 @@ import classNames from 'classnames';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import { ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
-import TextAreaField from 'components/shared/TextAreaField';
 import useMessage from 'hooks/useMessage';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
@@ -37,7 +37,7 @@ import './ActionForm.scss';
 
 export interface SystemIntakeActionFields {
   additionalInfo: string;
-  adminNote: string;
+  adminNote: string | null;
   notificationRecipients: EmailNotificationRecipients;
 }
 
@@ -129,6 +129,10 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
   /** Execute `onSubmit` prop with success and error handling */
   const completeAction = (formData: TFieldValues) => {
+    // Ensure blank admin notes are null instead of '' so that it doesn't get displayed in the notes list
+    // eslint-disable-next-line no-param-reassign
+    if (formData.adminNote === '') formData.adminNote = null;
+
     onSubmit(formData)
       .then(() => {
         // Display success message
@@ -315,16 +319,22 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
             name="additionalInfo"
             render={({ field, fieldState: { error } }) => (
               <FormGroup error={!!error}>
-                <Label htmlFor={field.name} className="text-normal">
+                <Label
+                  id={`${field.name}-label`}
+                  htmlFor={field.name}
+                  className="text-normal"
+                >
                   {t('notification.additionalInformation')}
                 </Label>
                 {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-                <TextAreaField
-                  {...field}
-                  ref={null}
-                  id={field.name}
-                  size="sm"
-                  characterCounter={false}
+                <RichTextEditor
+                  editableProps={{
+                    id: field.name,
+                    'data-testid': field.name,
+                    'aria-describedby': `${field.name}-hint`,
+                    'aria-labelledby': `${field.name}-label`
+                  }}
+                  field={{ ...field, value: field.value || '' }}
                 />
               </FormGroup>
             )}
@@ -356,18 +366,21 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
                   {t('adminNote.description')}
                 </p>
                 <Label
+                  id={`${field.name}-label`}
                   htmlFor={field.name}
                   className="text-normal margin-top-2"
                 >
                   {t('adminNote.label')}
                 </Label>
                 {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-                <TextAreaField
-                  {...field}
-                  ref={null}
-                  id={field.name}
-                  size="sm"
-                  characterCounter={false}
+                <RichTextEditor
+                  editableProps={{
+                    id: field.name,
+                    'data-testid': field.name,
+                    'aria-describedby': `${field.name}-hint`,
+                    'aria-labelledby': `${field.name}-label`
+                  }}
+                  field={{ ...field, value: field.value || '' }}
                 />
               </FormGroup>
             )}

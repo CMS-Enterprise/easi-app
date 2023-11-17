@@ -159,11 +159,24 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
             <div
               class="bg-base-lightest width-full margin-top-3 padding-3"
             >
-              <p
-                class="margin-y-0"
+              <div
+                class="easi-toast easi-toast-viewer"
               >
-                This is feedback for the requester from the Progress to New Step action.
-              </p>
+                <div>
+                  <div
+                    class="toastui-editor-contents"
+                    style="overflow-wrap: break-word;"
+                  >
+                    <p
+                      data-nodeid="1"
+                    >
+                      This is feedback for the requester from the Progress to New Step action.
+                    </p>
+                    
+
+                  </div>
+                </div>
+              </div>
             </div>
           </dl>
         </li>
@@ -211,11 +224,24 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
             <div
               class="bg-base-lightest width-full margin-top-3 padding-3"
             >
-              <p
-                class="margin-y-0"
+              <div
+                class="easi-toast easi-toast-viewer"
               >
-                This is a recommendation for the GRB from the Progress to New Step action.
-              </p>
+                <div>
+                  <div
+                    class="toastui-editor-contents"
+                    style="overflow-wrap: break-word;"
+                  >
+                    <p
+                      data-nodeid="3"
+                    >
+                      This is a recommendation for the GRB from the Progress to New Step action.
+                    </p>
+                    
+
+                  </div>
+                </div>
+              </div>
             </div>
           </dl>
         </li>
@@ -278,11 +304,24 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
                   Intake Request form
                 </dd>
               </dl>
-              <p
-                class="margin-y-0"
+              <div
+                class="easi-toast easi-toast-viewer"
               >
-                This is feedback from the Request Edits action
-              </p>
+                <div>
+                  <div
+                    class="toastui-editor-contents"
+                    style="overflow-wrap: break-word;"
+                  >
+                    <p
+                      data-nodeid="5"
+                    >
+                      This is feedback from the Request Edits action
+                    </p>
+                    
+
+                  </div>
+                </div>
+              </div>
             </div>
           </dl>
         </li>

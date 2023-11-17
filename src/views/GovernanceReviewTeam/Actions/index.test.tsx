@@ -26,6 +26,7 @@ import {
   SystemIntakeStep
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
+import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import Actions from '.';
@@ -109,7 +110,7 @@ describe('IT Gov Actions', () => {
         variables: {
           input: {
             systemIntakeID: systemIntake.id,
-            adminNote: '',
+            adminNote: null,
             additionalInfo: '',
             notificationRecipients: {
               shouldNotifyITGovernance: true,
@@ -117,7 +118,7 @@ describe('IT Gov Actions', () => {
               regularRecipientEmails: [requester.email!]
             },
             intakeFormStep: SystemIntakeFormStep.INITIAL_REQUEST_FORM,
-            emailFeedback: 'Ch-ch-changes'
+            emailFeedback: '<p>Ch-ch-changes</p>'
           }
         }
       },
@@ -204,10 +205,7 @@ describe('IT Gov Actions', () => {
         'Initial request form'
       ]);
 
-      userEvent.type(
-        screen.getByLabelText(/What changes are needed?/),
-        'Ch-ch-changes'
-      );
+      await typeRichText(screen.getByTestId('emailFeedback'), 'Ch-ch-changes');
 
       userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
 
