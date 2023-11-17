@@ -153,12 +153,9 @@ describe('IT Gov Actions', () => {
       ).toBeInTheDocument();
 
       const dropdown = await screen.findByTestId('intakeFormStep');
+
       expect(dropdown).toBeInTheDocument();
-      const selectedOption = dropdown.querySelector(
-        'option[selected]'
-      ) as HTMLOptionElement;
-      expect(selectedOption).toBeInTheDocument();
-      expect(selectedOption.value).toBe(SystemIntakeStep.DRAFT_BUSINESS_CASE);
+      expect(dropdown).toHaveValue(SystemIntakeFormStep.DRAFT_BUSINESS_CASE);
     });
 
     it('target form dropdown has no selection when in a non-form step', async () => {
@@ -232,7 +229,7 @@ describe('IT Gov Actions', () => {
         mocks: [
           getSystemIntakeQuery(),
           getSystemIntakeContactsQuery,
-          getGovernanceTaskListQuery()
+          getGovernanceTaskListQuery({ step: SystemIntakeStep.GRB_MEETING })
         ]
       });
 
