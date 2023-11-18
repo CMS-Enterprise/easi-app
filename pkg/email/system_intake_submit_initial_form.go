@@ -35,7 +35,7 @@ func (sie systemIntakeEmails) submitInitialFormRequesterBody(
 	requestName string,
 	isResubmitted bool,
 ) (string, error) {
-	intakePath := path.Join("governance-review-team", systemIntakeID.String(), "intake-request")
+	intakePath := path.Join("governance-task-list", systemIntakeID.String())
 	data := submitInitialFormRequesterBody{
 		RequestName:              requestName,
 		IsResubmitted:            isResubmitted,

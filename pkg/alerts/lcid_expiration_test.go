@@ -117,6 +117,7 @@ func TestLCIDExpirationAlert(t *testing.T) {
 		projectName string,
 		requesterName string,
 		lcid string,
+		lcidIssueDate *time.Time,
 		lcidExpirationDate *time.Time,
 		scope models.HTML,
 		lifecycleCostBaseline string,

@@ -78,25 +78,47 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 	submit := func(c context.Context, intake *models.SystemIntake) (string, error) {
 		return "ALFABET-ID", nil
 	}
-	submitEmailCount := 0
-	sendSubmitEmail := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-		submitEmailCount++
+	sendRequesterEmailCount := 0
+	sendReviewerEmailCount := 0
+	sendRequesterEmail := func(
+		ctx context.Context,
+		requesterEmailAddress models.EmailAddress,
+		intakeID uuid.UUID,
+		requestName string,
+		isResubmitted bool,
+	) error {
+		sendRequesterEmailCount++
+		return nil
+	}
+	sendReviewerEmail := func(
+		ctx context.Context,
+		intakeID uuid.UUID,
+		requestName string,
+		requesterName string,
+		requesterComponent string,
+		requestType models.SystemIntakeRequestType,
+		processStage string,
+		isResubmitted bool,
+	) error {
+		sendReviewerEmailCount++
 		return nil
 	}
 
 	s.Run("golden path submit intake", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, saveAction, sendSubmitEmail)
-		s.Equal(0, submitEmailCount)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, saveAction, sendRequesterEmail, sendReviewerEmail)
+		s.Equal(0, sendRequesterEmailCount)
+		s.Equal(0, sendReviewerEmailCount)
 
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.NoError(err)
-		s.Equal(1, submitEmailCount)
+		s.Equal(1, sendRequesterEmailCount)
 		s.Equal("ALFABET-ID", intake.AlfabetID.String)
 
-		submitEmailCount = 0
+		sendRequesterEmailCount = 0
+		sendReviewerEmailCount = 0
 	})
 
 	s.Run("returns error from authorization if authorization fails", func() {
@@ -106,7 +128,7 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, authorizationError
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, failAuthorize, update, submit, saveAction, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, failAuthorize, update, submit, saveAction, sendRequesterEmail, sendReviewerEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.Equal(authorizationError, err)
@@ -118,7 +140,7 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 		unauthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, unauthorize, update, submit, saveAction, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, unauthorize, update, submit, saveAction, sendRequesterEmail, sendReviewerEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
@@ -130,7 +152,7 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 		failCreateAction := func(ctx context.Context, action *models.Action) error {
 			return errors.New("error")
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, failCreateAction, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, failCreateAction, sendRequesterEmail, sendReviewerEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -148,11 +170,12 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 				Source:    "CEDAR",
 			}
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, failSubmitToCEDAR, saveAction, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, failSubmitToCEDAR, saveAction, sendRequesterEmail, sendReviewerEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(nil, err)
-		s.Equal(1, submitEmailCount)
+		s.Equal(1, sendRequesterEmailCount)
+		s.Equal(1, sendReviewerEmailCount)
 	})
 
 	s.Run("doesn't return error when intake has already been submitted", func() {
@@ -162,11 +185,20 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 			AlfabetID: null.StringFrom("394-141-0"),
 		}
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, saveAction, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(
+			serviceConfig,
+			authorize,
+			update,
+			submit,
+			saveAction,
+			sendRequesterEmail,
+			sendReviewerEmail,
+		)
 		err := submitSystemIntake(ctx, &alreadySubmittedIntake, &action)
 		s.NoError(err)
 
-		s.Equal(2, submitEmailCount)
+		s.Equal(2, sendRequesterEmailCount)
+		s.Equal(2, sendReviewerEmailCount)
 	})
 
 	s.Run("returns query error if update fails", func() {
@@ -175,7 +207,15 @@ func (s *ServicesTestSuite) TestNewSubmitSystemIntake() {
 		failUpdate := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("update error")
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, failUpdate, submit, saveAction, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(
+			serviceConfig,
+			authorize,
+			failUpdate,
+			submit,
+			saveAction,
+			sendRequesterEmail,
+			sendReviewerEmail,
+		)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -209,9 +249,28 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 	}
 
 	s.Run("golden path submit Biz Case", func() {
-		submitEmailCount := 0
-		sendSubmitEmailMock := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			submitEmailCount++
+		sendRequesterEmailCount := 0
+		sendReviewerEmailCount := 0
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendRequesterEmailCount++
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendReviewerEmailCount++
 			return nil
 		}
 
@@ -230,22 +289,44 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			saveAction,
 			updateIntake,
 			updateBusinessCase,
-			sendSubmitEmailMock,
+			sendRequesterEmail,
+			sendReviewerEmail,
 			submitToCEDARStub,
 			status,
 		)
-		s.Equal(0, submitEmailCount)
+		s.Equal(0, sendRequesterEmailCount)
+		s.Equal(0, sendReviewerEmailCount)
 
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.NoError(err)
-		s.Equal(1, submitEmailCount)
+		s.Equal(1, sendRequesterEmailCount)
+		s.Equal(1, sendReviewerEmailCount)
 	})
 
 	s.Run("submit Biz Case sets the intake status to the value passed", func() {
-		submitEmailCount := 0
-		sendSubmitEmailMock := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			submitEmailCount++
+		sendRequesterEmailCount := 0
+		sendReviewerEmailCount := 0
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendRequesterEmailCount++
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendReviewerEmailCount++
 			return nil
 		}
 
@@ -264,21 +345,41 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			saveAction,
 			updateIntake,
 			updateBusinessCase,
-			sendSubmitEmailMock,
+			sendRequesterEmail,
+			sendReviewerEmail,
 			submitToCEDARStub,
 			status,
 		)
-		s.Equal(0, submitEmailCount)
+		s.Equal(0, sendRequesterEmailCount)
+		s.Equal(0, sendReviewerEmailCount)
 
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.NoError(err)
-		s.Equal(1, submitEmailCount)
+		s.Equal(1, sendRequesterEmailCount)
+		s.Equal(1, sendReviewerEmailCount)
 		s.Equal(intake.Status, status)
 	})
 
 	s.Run("returns error from authorization if authorization fails", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
 			return nil
 		}
 
@@ -301,7 +402,8 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			saveAction,
 			updateIntake,
 			updateBusinessCase,
-			sendSubmitEmailStub,
+			sendRequesterEmail,
+			sendReviewerEmail,
 			submitToCEDARStub,
 			status,
 		)
@@ -311,7 +413,24 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 	})
 
 	s.Run("returns unauthorized error if authorization denied", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
 			return nil
 		}
 
@@ -333,7 +452,8 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			saveAction,
 			updateIntake,
 			updateBusinessCase,
-			sendSubmitEmailStub,
+			sendRequesterEmail,
+			sendReviewerEmail,
 			submitToCEDARStub,
 			status,
 		)
@@ -343,7 +463,24 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 	})
 
 	s.Run("returns error if fails to save action", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
 			return nil
 		}
 
@@ -365,7 +502,8 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			failCreateAction,
 			updateIntake,
 			updateBusinessCase,
-			sendSubmitEmailStub,
+			sendRequesterEmail,
+			sendReviewerEmail,
 			submitToCEDARStub,
 			status,
 		)
@@ -375,9 +513,28 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 	})
 
 	s.Run("does not return error for validation if status is not biz case final", func() {
-		submitEmailCount := 0
-		sendSubmitEmailMock := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			submitEmailCount++
+		sendRequesterEmailCount := 0
+		sendReviewerEmailCount := 0
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendRequesterEmailCount++
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendReviewerEmailCount++
 			return nil
 		}
 
@@ -403,20 +560,41 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			saveAction,
 			updateIntake,
 			updateBusinessCase,
-			sendSubmitEmailMock,
+			sendRequesterEmail,
+			sendReviewerEmail,
 			submitToCEDARStub,
 			status,
 		)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.NoError(err)
-		s.Equal(1, submitEmailCount)
+		s.Equal(1, sendRequesterEmailCount)
+		s.Equal(1, sendReviewerEmailCount)
 	})
 
 	s.Run("returns error when status is biz case final and validation fails", func() {
-		submitEmailCount := 0
-		sendSubmitEmailMock := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
-			submitEmailCount++
+		sendRequesterEmailCount := 0
+		sendReviewerEmailCount := 0
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendRequesterEmailCount++
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendReviewerEmailCount++
 			return nil
 		}
 
@@ -445,18 +623,37 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			saveAction,
 			updateIntake,
 			updateBusinessCase,
-			sendSubmitEmailMock,
+			sendRequesterEmail,
+			sendReviewerEmail,
 			submitToCEDARStub,
 			status,
 		)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.IsType(&apperrors.ValidationError{}, err)
-		s.Equal(0, submitEmailCount)
+		s.Equal(0, sendRequesterEmailCount)
+		s.Equal(0, sendReviewerEmailCount)
 	})
 
 	s.Run("returns query error if update intake fails", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
 			return nil
 		}
 
@@ -478,7 +675,8 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			saveAction,
 			failUpdateIntake,
 			updateBusinessCase,
-			sendSubmitEmailStub,
+			sendRequesterEmail,
+			sendReviewerEmail,
 			submitToCEDARStub,
 			status,
 		)
@@ -488,7 +686,24 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 	})
 
 	s.Run("returns query error if update biz case fails", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
 			return nil
 		}
 
@@ -510,7 +725,8 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			saveAction,
 			updateIntake,
 			failUpdateBizCase,
-			sendSubmitEmailStub,
+			sendRequesterEmail,
+			sendReviewerEmail,
 			submitToCEDARStub,
 			status,
 		)
@@ -520,7 +736,24 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 	})
 
 	s.Run("Submits business case data to CEDAR when submitting draft business case", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
 			return nil
 		}
 
@@ -542,7 +775,8 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			saveAction,
 			updateIntake,
 			updateBusinessCase,
-			sendSubmitEmailStub,
+			sendRequesterEmail,
+			sendReviewerEmail,
 			submitToCEDARMock,
 			status,
 		)
@@ -555,7 +789,24 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 	})
 
 	s.Run("Error submitting business case data to CEDAR when submitting draft business case does not return overall error", func() {
-		sendSubmitEmailStub := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
 			return nil
 		}
 
@@ -575,7 +826,8 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			saveAction,
 			updateIntake,
 			updateBusinessCase,
-			sendSubmitEmailStub,
+			sendRequesterEmail,
+			sendReviewerEmail,
 			failSubmitToCEDAR,
 			status,
 		)

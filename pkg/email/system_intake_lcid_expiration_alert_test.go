@@ -20,161 +20,207 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 		ShouldNotifyITGovernance: true,
 		ShouldNotifyITInvestment: false,
 	}
-	// allRecipients := append(recipients, s.config.TRBEmail)
+	GRTEmailAddress := s.config.GRTEmail.String()
 	intakeID := uuid.MustParse("19b916b7-0d18-493d-b08d-c726cff6c3df")
-	projectName := "Test Request"
+	requestName := "Test Request"
 	requesterName := "Test Requester"
-	lcid := "123456"
+	lifecycleID := "123456"
 	scope := models.HTML("scope")
-	lifecycleCostBaseline := "lifecycleCostBaseline"
+	costBaseline := "costBaseline"
 	nextSteps := models.HTML("nextSteps")
-	lcidExpiresAt, _ := time.Parse("2006-01-02", "2021-12-25")
-	requesterTaskListLink := fmt.Sprintf(
-		"<a href=\"%s://%s/governance-task-list/%s\" style=\"font-weight: bold\">click here</a>",
+	expireDate, _ := time.Parse("01/02/2006", "12/25/2021")
+	issueDate, _ := time.Parse("01/02/2006", "12/25/2023")
+	requesterTaskLink := fmt.Sprintf(
+		"%s://%s/governance-task-list/%s",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),
 	)
 	requesterDecisionLink := fmt.Sprintf(
-		"<a href=\"%s://%s/governance-task-list/%s/request-decision\" style=\"font-weight: bold\">here</a>",
+		"%s://%s/governance-task-list/%s/request-decision",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),
 	)
-	grtDecisionLink := fmt.Sprintf(
-		"<a href=\"%s://%s/governance-review-team/%s/lcid\" style=\"font-weight: bold\">click here</a>",
+	adminLink := fmt.Sprintf(
+		"%s://%s/governance-review-team/%s/lcid",
 		s.config.URLScheme,
 		s.config.URLHost,
 		intakeID.String(),
 	)
+	getExpectedEmail := func(
+		requestName string,
+		issueDate string,
+		expireDate string,
+		GRTEmailAddress string,
+		requesterTaskLink string,
+		requesterDecisionLink string,
+		adminLink string,
+		lifecycleID string,
+		scope string,
+		costBaseline string,
+		nextSteps string,
+	) string {
+		var openingIssuedText string
+		var summaryIssuedText string
+		var summaryScope string
+		var summaryCostBaseline string
+		var summaryNextSteps string
+		if issueDate != "" {
+			openingIssuedText = " on " + issueDate
+			summaryIssuedText = fmt.Sprintf("\n  <strong>Date issued:</strong> %s<br>", issueDate)
+		}
+		if scope != "" {
+			summaryScope = fmt.Sprintf("<br><strong>Scope:</strong> %s", scope)
+		}
+		if costBaseline != "" {
+			summaryCostBaseline = fmt.Sprintf("<br><strong>Project Cost Baseline:</strong> %s", costBaseline)
+		}
+		if nextSteps != "" {
+			summaryNextSteps = fmt.Sprintf("<br><strong>Next Steps:</strong> %s", nextSteps)
+		}
+		return fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+
+<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+
+<p>The Life Cycle ID that was issued for %s%s is set to expire on %s. If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>
+<p>To avoid this, please email the Governance Team at <a href="mailto:%s">%s</a> within one week to update them with the current status of your project.</p>
+<p>
+  For New IT development projects, please include (if applicable):
+  <ul>
+    <li>if the project is in production and if so, the date it was released into production</li>
+    <li>if development of the project is still underway and if so, the target production release date</li>
+    <li>the date the final contract option year expires</li>
+    <li>if the development effort has encountered difficulties and would like technical assistance (please also include the target production date)</li>
+    <li>if the project has been cancelled</li>
+    <li>if the project is on hold</li>
+  </ul>
+</p>
+<p>
+  For O&M projects or services contracts, please include (if applicable):
+  <ul>
+    <li>if the current contract is not being extended, include the end date of the period of performance</li>
+    <li>if a new contract or re-compete is being planned, include the target date for release of solicitation and the target award date</li>
+    <li>if an extension of the current contract is planned, include the new contract expiration date</li>
+    <li>describe any new development or planned changes to service requirements, if any</li>
+    <li>if you anticipate a cost increase, please indicate how much of an increase you anticipate over what you are currently spending</li>
+    <li>if contract support is no longer needed</li>
+  </ul>
+</p>
+<p>
+  View this request in EASi:
+  <ul>
+    <li>The person who initially submitted this request, %s, may <a href="%s" style="font-weight: bold">click here</a> to view the request task list and <a href="%s" style="font-weight: bold">here</a> to view the decision and LCID information</li>
+    <li>Governance Team members may <a href="%s" style="font-weight: bold">click here</a> to view the decision and LCID information</li>
+    <li>Others should contact %s or the Governance Team for more information on the request</li>
+  </ul>
+</p>
+<p>If you have questions please contact the Governance Team at <a href="mailto:%s">%s</a></p>
+<p>
+  <u>Current Life Cycle ID Summary</u><br>
+  <strong>Lifecycle ID:</strong> %s<br>%s
+  <strong>Expiration Date:</strong> %s
+  %s
+  %s
+  %s
+</p>
+<hr>
+<p>Depending on the project, the Governance Team may continue to follow up with you about this Life Cycle ID.</p>
+`,
+			requestName,
+			openingIssuedText,
+			expireDate,
+			GRTEmailAddress,
+			GRTEmailAddress,
+			requesterName,
+			requesterTaskLink,
+			requesterDecisionLink,
+			adminLink,
+			requesterName,
+			GRTEmailAddress,
+			GRTEmailAddress,
+			lifecycleID,
+			summaryIssuedText,
+			expireDate,
+			summaryScope,
+			summaryCostBaseline,
+			summaryNextSteps,
+		)
+	}
 
 	s.Run("successful call has the right content", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		expectedEmail := "<h1 style=\"margin-bottom: 0.5rem;\">EASi</h1>\n\n" +
-			"<span style=\"font-size:15px; line-height: 18px; color: #71767A\">Easy Access to System Information</span>\n\n" +
-			"<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">Lifecycle ID issued for " +
-			projectName +
-			" is set to expire on " +
-			lcidExpiresAt.Format("January 02, 2006") + ". " +
-			"If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>\n" +
-			"To avoid this please email the Governance Team at " +
-			string(s.config.GRTEmail) +
-			" within one week to update them with the current status of your project.\n\n" +
-			"For New IT development projects, please include (if applicable):\n" +
-			"<ul>\n" +
-			"<li>if the project is in production and if so, the date it was released into production</li>\n" +
-			"<li>if development of the project is still underway and if so, the target production release date</li>\n" +
-			"<li>the date the final contract option year expires</li>\n" +
-			"<li>if the development effort has encountered difficulties and would like technical assistance (please also include the target production date)</li>\n" +
-			"<li>if the project has been cancelled</li>\n" +
-			"<li>if the project is on hold</li>\n" +
-			"</ul>\n" +
-			"For O&M projects or services contracts, please include (if applicable):\n" +
-			"<ul>\n" +
-			"<li>if the current contract is not being extended, include the end date of the period of performance</li>\n" +
-			"<li>if a new contract or re-compete is being planned, include the target date for release of solicitation and the target award date</li>\n" +
-			"<li>if an extension of the current contract is planned, include the new contract expiration date</li>\n" +
-			"<li>describe any new development or planned changes to service requirements, if any</li>\n" +
-			"<li>if you anticipate a cost increase, please indicate how much of an increase you anticipate over what you are currently spending</li>\n" +
-			"<li>if contract support is no longer needed</li>\n" +
-			"</ul>\n" +
-			"View this request in EASi:\n" +
-			"<ul>\n" +
-			"<li>The person who initially submitted this request, " + requesterName + ", may " + requesterTaskListLink +
-			" to view the request task list and " + requesterDecisionLink + " to view the decision and LCID information</li>\n" +
-			"<li>Governance Team members may " + grtDecisionLink + " to view the decision and LCID information</li>\n" +
-			"<li>Others should contact " + requesterName + " or the Governance Team for more information on the request</li>\n" +
-			"</ul>\n" +
-			"If you have questions please contact the Governance Team at " + string(s.config.GRTEmail) + "\n\n\n" +
-			"<u>Current Lifecycle ID Summary</u>\n" +
-			"<p>Lifecycle ID: " + lcid + "</p>\n" +
-			"<p>Expiration Date: " + lcidExpiresAt.Format("January 02, 2006") + "</p>\n" +
-			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(scope) + "</pre></p>\n" +
-			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + lifecycleCostBaseline + "</pre></p>\n" +
-			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(nextSteps) + "</pre></p>\n"
+		expectedEmail := getExpectedEmail(
+			requestName,
+			issueDate.Format("01/02/2006"),
+			expireDate.Format("01/02/2006"),
+			GRTEmailAddress,
+			requesterTaskLink,
+			requesterDecisionLink,
+			adminLink,
+			lifecycleID,
+			scope.ValueOrEmptyString(),
+			costBaseline,
+			nextSteps.ValueOrEmptyString(),
+		)
 
 		err = client.SendLCIDExpirationAlertEmail(
 			ctx,
 			recipients,
 			intakeID,
-			projectName,
+			requestName,
 			requesterName,
-			lcid,
-			&lcidExpiresAt,
+			lifecycleID,
+			&issueDate,
+			&expireDate,
 			scope,
-			lifecycleCostBaseline,
+			costBaseline,
 			nextSteps,
 		)
 
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
-		s.Equal(fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lcid, projectName), sender.subject)
+		s.Equal(fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lifecycleID, requestName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
 
-	s.Run("successful call has the right content with no cost baseline or next steps", func() {
+	s.Run("successful call has the right content with no scope, cost baseline, or next steps", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		expectedEmail := "<h1 style=\"margin-bottom: 0.5rem;\">EASi</h1>\n\n" +
-			"<span style=\"font-size:15px; line-height: 18px; color: #71767A\">Easy Access to System Information</span>\n\n" +
-			"<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">Lifecycle ID issued for " +
-			projectName +
-			" is set to expire on " +
-			lcidExpiresAt.Format("January 02, 2006") + ". " +
-			"If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>\n" +
-			"To avoid this please email the Governance Team at " +
-			string(s.config.GRTEmail) +
-			" within one week to update them with the current status of your project.\n\n" +
-			"For New IT development projects, please include (if applicable):\n" +
-			"<ul>\n" +
-			"<li>if the project is in production and if so, the date it was released into production</li>\n" +
-			"<li>if development of the project is still underway and if so, the target production release date</li>\n" +
-			"<li>the date the final contract option year expires</li>\n" +
-			"<li>if the development effort has encountered difficulties and would like technical assistance (please also include the target production date)</li>\n" +
-			"<li>if the project has been cancelled</li>\n" +
-			"<li>if the project is on hold</li>\n" +
-			"</ul>\n" +
-			"For O&M projects or services contracts, please include (if applicable):\n" +
-			"<ul>\n" +
-			"<li>if the current contract is not being extended, include the end date of the period of performance</li>\n" +
-			"<li>if a new contract or re-compete is being planned, include the target date for release of solicitation and the target award date</li>\n" +
-			"<li>if an extension of the current contract is planned, include the new contract expiration date</li>\n" +
-			"<li>describe any new development or planned changes to service requirements, if any</li>\n" +
-			"<li>if you anticipate a cost increase, please indicate how much of an increase you anticipate over what you are currently spending</li>\n" +
-			"<li>if contract support is no longer needed</li>\n" +
-			"</ul>\n" +
-			"View this request in EASi:\n" +
-			"<ul>\n" +
-			"<li>The person who initially submitted this request, " + requesterName + ", may " + requesterTaskListLink +
-			" to view the request task list and " + requesterDecisionLink + " to view the decision and LCID information</li>\n" +
-			"<li>Governance Team members may " + grtDecisionLink + " to view the decision and LCID information</li>\n" +
-			"<li>Others should contact " + requesterName + " or the Governance Team for more information on the request</li>\n" +
-			"</ul>\n" +
-			"If you have questions please contact the Governance Team at " + string(s.config.GRTEmail) + "\n\n\n" +
-			"<u>Current Lifecycle ID Summary</u>\n" +
-			"<p>Lifecycle ID: " + lcid + "</p>\n" +
-			"<p>Expiration Date: " + lcidExpiresAt.Format("January 02, 2006") + "</p>\n" +
-			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(scope) + "</pre></p>\n\n\n"
+		expectedEmail := getExpectedEmail(
+			requestName,
+			issueDate.Format("01/02/2006"),
+			expireDate.Format("01/02/2006"),
+			GRTEmailAddress,
+			requesterTaskLink,
+			requesterDecisionLink,
+			adminLink,
+			lifecycleID,
+			"",
+			"",
+			"",
+		)
 
 		err = client.SendLCIDExpirationAlertEmail(
 			ctx,
 			recipients,
 			intakeID,
-			projectName,
+			requestName,
 			requesterName,
-			lcid,
-			&lcidExpiresAt,
-			scope,
-			"", // lifecycleCostBaseline
+			lifecycleID,
+			&issueDate,
+			&expireDate,
+			"", // scope
+			"", // costBaseline
 			"", // nextSteps
 		)
 
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
-		s.Equal(fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lcid, projectName), sender.subject)
+		s.Equal(fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lifecycleID, requestName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
 
@@ -187,12 +233,13 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			ctx,
 			recipients,
 			intakeID,
-			projectName,
+			requestName,
 			requesterName,
-			lcid,
-			&lcidExpiresAt,
+			lifecycleID,
+			&issueDate,
+			&expireDate,
 			scope,
-			lifecycleCostBaseline,
+			costBaseline,
 			nextSteps,
 		)
 
@@ -212,12 +259,13 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			ctx,
 			recipients,
 			intakeID,
-			projectName,
+			requestName,
 			requesterName,
-			lcid,
-			&lcidExpiresAt,
+			lifecycleID,
+			&issueDate,
+			&expireDate,
 			scope,
-			lifecycleCostBaseline,
+			costBaseline,
 			nextSteps,
 		)
 
@@ -238,12 +286,13 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			ctx,
 			recipients,
 			intakeID,
-			projectName,
+			requestName,
 			requesterName,
-			lcid,
-			&lcidExpiresAt,
+			lifecycleID,
+			&issueDate,
+			&expireDate,
 			scope,
-			lifecycleCostBaseline,
+			costBaseline,
 			nextSteps,
 		)
 
