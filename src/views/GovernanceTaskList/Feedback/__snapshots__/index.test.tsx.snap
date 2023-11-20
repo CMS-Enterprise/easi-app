@@ -47,70 +47,77 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
         </li>
       </ol>
     </nav>
+    <h1
+      aria-live="polite"
+      class="easi-h1 margin-top-4 margin-bottom-105"
+      tabindex="-1"
+    >
+      Feedback about your request
+    </h1>
+    <div
+      class="tablet:display-flex"
+    >
+      <a
+        class="usa-link display-flex flex-align-center margin-bottom-1 tablet:margin-bottom-0"
+        href="/governance-task-list/a4158ad8-1236-4a55-9ad5-7e15a5d49de2"
+      >
+        <svg
+          class="usa-icon margin-right-1"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+          />
+        </svg>
+        Return to governance task list
+      </a>
+      <span
+        class="margin-x-2 text-base-light display-none tablet:display-block"
+      >
+        |
+      </span>
+      <button
+        class="usa-button usa-button--unstyled display-flex flex-align-center"
+        data-testid="button"
+        type="button"
+      >
+        <svg
+          class="usa-icon margin-right-1"
+          focusable="false"
+          height="1em"
+          role="img"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+          />
+        </svg>
+        Download feedback as PDF
+      </button>
+    </div>
     <div>
       <h1
         aria-live="polite"
-        class="easi-h1 margin-top-4 margin-bottom-105"
+        class="easi-h1 easi-only-print"
         tabindex="-1"
       >
-        Feedback about your request
+        Feedback
       </h1>
-      <div
-        class="easi-no-print tablet:display-flex"
-      >
-        <a
-          class="usa-link display-flex flex-align-center margin-bottom-1 tablet:margin-bottom-0"
-          href="/governance-task-list/a4158ad8-1236-4a55-9ad5-7e15a5d49de2"
-        >
-          <svg
-            class="usa-icon margin-right-1"
-            focusable="false"
-            height="1em"
-            role="img"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
-            />
-          </svg>
-          Return to governance task list
-        </a>
-        <span
-          class="margin-x-2 text-base-light display-none tablet:display-block"
-        >
-          |
-        </span>
-        <button
-          class="usa-button usa-button--unstyled display-flex flex-align-center"
-          data-testid="button"
-          type="button"
-        >
-          <svg
-            class="usa-icon margin-right-1"
-            focusable="false"
-            height="1em"
-            role="img"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
-            />
-          </svg>
-          Download feedback as PDF
-        </button>
-      </div>
       <ul
         class="usa-list--unstyled margin-top-4"
         data-testid="feedback-list"
@@ -328,10 +335,10 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
       </ul>
     </div>
     <div
-      class="easi-divider margin-bottom-4"
+      class="easi-divider margin-bottom-4 easi-no-print"
     />
     <div
-      class="easi-no-print tablet:display-flex"
+      class="tablet:display-flex"
     >
       <a
         class="usa-link display-flex flex-align-center margin-bottom-1 tablet:margin-bottom-0"

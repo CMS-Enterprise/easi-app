@@ -7,6 +7,7 @@ import {
   IconExpandMore
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 
@@ -32,6 +33,8 @@ const AccordionNavigation = ({
   const { t } = useTranslation('governanceReviewTeam');
   const isMobile = useCheckResponsiveScreen('tablet');
   const [isAccordionOpen, setIsAccordionOpen] = useState<boolean>(false);
+
+  const flags = useFlags();
 
   /** Page title text property from current page */
   const activePageTitle: string | undefined = useMemo(() => {
@@ -71,24 +74,32 @@ const AccordionNavigation = ({
           className="easi-grt__subNav__list-container bg-primary-dark"
         >
           <ul className="easi-grt__subNav__list subNav">
-            {subNavItems.map(({ groupEnd, route, text }) => (
-              <li
-                key={`mobile-subnav--${text}`}
-                className={classnames({
-                  'subNav__item--group-border': groupEnd
-                })}
-              >
-                <NavLink
-                  to={route}
+            {subNavItems
+              // Hide Feedback tab behind feature flag
+              .filter(({ route }) => {
+                if (!flags.itGovV2Enabled) {
+                  return !route.includes('feedback');
+                }
+                return true;
+              })
+              .map(({ groupEnd, route, text }) => (
+                <li
+                  key={`mobile-subnav--${text}`}
                   className={classnames({
-                    'subNav--current': route.split('/')[3] === activePage
+                    'subNav__item--group-border': groupEnd
                   })}
-                  onClick={() => setIsAccordionOpen(!isAccordionOpen)}
                 >
-                  {t(text)}
-                </NavLink>
-              </li>
-            ))}
+                  <NavLink
+                    to={route}
+                    className={classnames({
+                      'subNav--current': route.split('/')[3] === activePage
+                    })}
+                    onClick={() => setIsAccordionOpen(!isAccordionOpen)}
+                  >
+                    {t(text)}
+                  </NavLink>
+                </li>
+              ))}
             <li>
               <NavLink
                 to="/"
