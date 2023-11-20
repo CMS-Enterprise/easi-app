@@ -1,14 +1,11 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
-import {
-  GovernanceRequestFeedbackTargetForm,
-  ITGovGRTStatus
-} from 'types/graphql-global-types';
+import { ITGovGRTStatus } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { formatDateUtc } from 'utils/date';
 
@@ -20,17 +17,6 @@ const GovTaskGrtMeeting = ({
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'grtMeeting';
   const { t } = useTranslation('itGov');
-
-  const hasFeedback = useMemo(() => {
-    // If GRT meeting is NOT completed, return false
-    if (grtMeetingStatus !== ITGovGRTStatus.COMPLETED) return false;
-
-    // Return true if request has feedback on draft business case
-    return !!governanceRequestFeedbacks.find(
-      ({ targetForm }) =>
-        targetForm === GovernanceRequestFeedbackTargetForm.DRAFT_BUSINESS_CASE
-    );
-  }, [governanceRequestFeedbacks, grtMeetingStatus]);
 
   return (
     <TaskListItem
@@ -69,16 +55,6 @@ const GovTaskGrtMeeting = ({
               target="_blank"
             >
               {t(`taskList.step.${stepKey}.button`)}
-            </UswdsReactLink>
-          </div>
-        )}
-
-        {/* Link to view feedback */}
-        {hasFeedback && (
-          <div className="margin-top-2">
-            {/* TODO: EASI-3088 - update feedback link */}
-            <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
-              {t(`button.viewFeedback`)}
             </UswdsReactLink>
           </div>
         )}
