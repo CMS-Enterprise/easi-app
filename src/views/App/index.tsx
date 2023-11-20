@@ -24,8 +24,9 @@ import FlagsWrapper from 'views/FlagsWrapper';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
+import GovernanceFeedback from 'views/GovernanceTaskList/Feedback';
 import GovernanceTaskListV1 from 'views/GovernanceTaskListV1';
-import GovernanceFeedback from 'views/GovernanceTaskListV1/Feedback';
+import GovernanceFeedbackV1 from 'views/GovernanceTaskListV1/Feedback';
 import LcidInfo from 'views/GovernanceTaskListV1/LcidInfo';
 import RequestDecision from 'views/GovernanceTaskListV1/RequestDecision';
 import Help from 'views/Help';
@@ -128,7 +129,9 @@ const AppRoutes = () => {
       <SecureRoute
         path="/governance-task-list/:systemId/feedback"
         exact
-        component={GovernanceFeedback}
+        component={
+          flags.itGovV2Enabled ? GovernanceFeedback : GovernanceFeedbackV1
+        }
       />
       <SecureRoute
         exact

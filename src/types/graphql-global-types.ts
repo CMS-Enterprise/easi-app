@@ -76,6 +76,14 @@ export enum GovernanceRequestFeedbackTargetForm {
 }
 
 /**
+ * Represents the possible types of feedback on governance requests, based on who it's directed to
+ */
+export enum GovernanceRequestFeedbackType {
+  GRB = "GRB",
+  REQUESTER = "REQUESTER",
+}
+
+/**
  * The requester view of the IT gov Decision step status
  */
 export enum ITGovDecisionStatus {
@@ -237,6 +245,16 @@ export enum SystemIntakeDocumentStatus {
   AVAILABLE = "AVAILABLE",
   PENDING = "PENDING",
   UNAVAILABLE = "UNAVAILABLE",
+}
+
+/**
+ * This represents the possible state any system intake form can take
+ */
+export enum SystemIntakeFormState {
+  EDITS_REQUESTED = "EDITS_REQUESTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  NOT_STARTED = "NOT_STARTED",
+  SUBMITTED = "SUBMITTED",
 }
 
 /**

@@ -4,6 +4,9 @@ const intake = {
     startRequest: 'Start a request',
     changeRequestType: 'Change request type'
   },
+  feedback:
+    'The Governance Team has requested edits to your {{type}} form. Please make any necessary changes and re-submit your form.',
+  viewFeedback: 'View feedback',
   fields: {
     projectName: 'Project name',
     requester: 'Requester',
@@ -226,7 +229,43 @@ const intake = {
       none: 'No one in OIT'
     }
   },
+  requestDetails: {
+    heading: 'Request details',
+    description:
+      'Provide a brief explanation of the business need/issue/problem that the contract/request will address, including your current plans for how to address the need. This page should speak to what your contract/request accomplishes and how.',
+    contractTitle: 'Contract/Request Title',
+    contractTitleHelpText:
+      'Your request title should match the title of your Acquisition Plan or Interagency Agreement.',
+    businessNeed:
+      'What is your business need that this contract/request will meet?',
+    businessNeedHelpText:
+      'Include an explanation of the business need/issue/problem that the contract/request will address. This information can be pulled from your draft Acquisition Plan (Statement of Need section) and/or taken from the Statement of Work, Statement of Objectives or Performance Work Statement. Please be brief.',
+    businessSolution: 'How are you thinking of solving it?',
+    businessSolutionHelpText:
+      'Let us know if you have a solution in mind. This information can be pulled from your draft Acquisition Plan (Capability or Performance section) and/or taken from the Statement of Work, Statement of Objectives or Performance Work Statement. Please be brief.',
+    currentStage: 'Where are you in the process?',
+    currentStageHelpText:
+      'This helps the governance team provide the right type of guidance for your request',
+    needsEaSupport: 'Does your request need Enterprise Architecture support?',
+    needsEaSupportHelpText:
+      'If you are unsure, mark "Yes" and someone from the EA team will assess your needs.',
+    eaTeamHelp: {
+      label: 'How can the Enterprise Architecture team help me?',
+      description:
+        "CMS' Enterprise Architecture (EA) function will help you build your Business Case by addressing the following:",
+      explore:
+        'Explore business solutions that might exist elsewhere within CMS',
+      discuss: 'Discuss lessons learned from similar projects',
+      give:
+        'Give you and your team an enterprise-level view of the agency to avoid duplication of projects',
+      help: 'Help you explore alternatives you might not have thought of',
+      model: 'Model your business processes and document workflows'
+    },
+    hasUiChanges:
+      'Does your project involve any user interface component, or changes to an interface component?'
+  },
   contractDetails: {
+    heading: 'Contract details',
     fundingSources: {
       label: 'Which existing funding sources will fund this project?',
       helpText:
@@ -245,9 +284,29 @@ const intake = {
         fundingNumberUnique: 'Funding number must be unique',
         fundingSource: 'Select a funding source'
       }
-    }
+    },
+    currentAnnualSpending: 'What is the current annual spending?',
+    plannedYearOneSpending:
+      'What is the planned annual spending of the first year of the new contract?',
+    hasContract:
+      'Do you already have a contract in place to support this effort?',
+    hasContractHelpText:
+      'This information helps the Office of Acquisition and Grants Management (OAGM) track work',
+    hasContractRadio_HAVE_CONTRACT:
+      'I am planning project changes during my existing contract/InterAgency Agreement (IAA) period of performance',
+    contractors: 'Contractor(s)',
+    periodOfPerformance:
+      'Period of Performance dates (include all option years)',
+    newPeriodOfPerformance:
+      'New Period of Performance dates (include all option years)',
+    periodOfPerformanceHelpText: 'For example: 4/10/2020 - 4/9/2025',
+    hasContractRadio_IN_PROGRESS:
+      'I am currently working on my OAGM Acquisition Plan/IAA documents',
+    hasContractRadio_NOT_STARTED: "I haven't started acquisition planning yet",
+    hasContractRadio_NOT_NEEDED: "I don't anticipate needing contractor support"
   },
   review: {
+    heading: 'Check your answers before sending',
     notSubmitted: 'Not yet submitted',
     systemRequest: 'System Request',
     submissionDate: 'Submission Date',
@@ -282,7 +341,16 @@ const intake = {
     noContractNumber: 'No contract number specified',
     performance: 'Period of performance',
     notEntered: 'Not Entered',
-    documents: 'Documents'
+    documents: 'Documents',
+    nextSteps: {
+      heading: 'What happens next?',
+      description:
+        'The Governance Review Admin Team will review and get back to you with <strong>one of these</strong> outcomes:',
+      direct: 'direct you to go through the Governance Review process',
+      decide: 'or decide there is no further governance needed',
+      timeline: 'They will get back to you in two business days.'
+    },
+    sendIntakeRequest: 'Send my intake request'
   }
 };
 

@@ -339,10 +339,12 @@ func (si *SystemIntake) SetV2FieldsBasedOnV1Status(status SystemIntakeStatus) {
 	case SystemIntakeStatusINTAKEDRAFT:
 		si.Step = SystemIntakeStepINITIALFORM
 		si.State = SystemIntakeStateOPEN
+		// handled through resolvers and formstate
 		si.RequestFormState = SIRFSInProgress
 	case SystemIntakeStatusINTAKESUBMITTED:
 		si.Step = SystemIntakeStepINITIALFORM
 		si.State = SystemIntakeStateOPEN
+		// handled in submit function
 		si.RequestFormState = SIRFSSubmitted
 	case SystemIntakeStatusNEEDBIZCASE:
 		si.Step = SystemIntakeStepDRAFTBIZCASE
@@ -368,26 +370,38 @@ func (si *SystemIntake) SetV2FieldsBasedOnV1Status(status SystemIntakeStatus) {
 		si.Step = SystemIntakeStepDECISION
 		si.State = SystemIntakeStateCLOSED
 		si.DecisionState = SIDSLcidIssued
+	// Biz Case Needed
 	case SystemIntakeStatusBIZCASEDRAFT:
 		si.Step = SystemIntakeStepDRAFTBIZCASE
 		si.State = SystemIntakeStateOPEN
-		si.DraftBusinessCaseState = SIRFSInProgress
+		// handled in services/business_case.go by calling formstate.GetNewStateForUpdatedForm
+		// si.DraftBusinessCaseState = SIRFSInProgress
 	case SystemIntakeStatusBIZCASEDRAFTSUBMITTED:
 		si.Step = SystemIntakeStepDRAFTBIZCASE
 		si.State = SystemIntakeStateOPEN
+		// handled in services/action.go
 		si.DraftBusinessCaseState = SIRFSSubmitted
 	case SystemIntakeStatusBIZCASEFINALSUBMITTED:
 		si.Step = SystemIntakeStepFINALBIZCASE
 		si.State = SystemIntakeStateOPEN
+		// handled in services/action.go
 		si.FinalBusinessCaseState = SIRFSSubmitted
 	case SystemIntakeStatusBIZCASECHANGESNEEDED:
-		si.Step = SystemIntakeStepDRAFTBIZCASE
+		if si.Step == SystemIntakeStepFINALBIZCASE {
+			si.FinalBusinessCaseState = SIRFSEditsRequested
+		} else {
+			si.Step = SystemIntakeStepDRAFTBIZCASE
+			si.DraftBusinessCaseState = SIRFSEditsRequested
+		}
 		si.State = SystemIntakeStateOPEN
-		si.DraftBusinessCaseState = SIRFSEditsRequested
+	// describes either progressing or requesting edits
 	case SystemIntakeStatusBIZCASEFINALNEEDED:
+		if si.FinalBusinessCaseState == SIRFSSubmitted {
+			si.FinalBusinessCaseState = SIRFSEditsRequested
+		}
 		si.Step = SystemIntakeStepFINALBIZCASE
 		si.State = SystemIntakeStateOPEN
-		si.FinalBusinessCaseState = SIRFSEditsRequested // Safely default to this since we don't know if it's the first time submitting or if more changes are needed
+		// not setting si.FinalBusinessCaseState since `SIRFSNotStarted` is the default in the table
 	case SystemIntakeStatusNOTAPPROVED:
 		si.State = SystemIntakeStateCLOSED
 		si.Step = SystemIntakeStepDECISION

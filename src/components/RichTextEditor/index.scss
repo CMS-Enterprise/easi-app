@@ -48,6 +48,9 @@
 }
 
 .easi-toast-editor {
+  // Match some rules from .usa-textarea
+  margin-top: .5rem;
+
   .toastui-editor {
     min-height: 0 !important;
   }
@@ -62,7 +65,7 @@
   }
   .toastui-editor-defaultUI-toolbar {
     height: auto;
-    background: transparent;
+    background: white;
     border-bottom: 1px solid color('gray-10');
     padding: 4px 2px 2px;
   }

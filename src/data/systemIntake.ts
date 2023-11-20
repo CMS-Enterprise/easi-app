@@ -10,6 +10,7 @@ import {
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal, parseAsUTC } from 'utils/date';
+import extractTextContent from 'utils/extractTextContent';
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
 export const initialSystemIntakeForm: SystemIntakeForm = {
@@ -252,11 +253,11 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
     : null;
 
   // Apppend lastAdminNote createdAt date to content
+  // Strip out html tags from content
   if (lastAdminNote) {
-    lastAdminNote.content = `${lastAdminNote.content} (${formatDateLocal(
-      lastAdminNote.createdAt,
-      'MM/dd/yyyy'
-    )})`;
+    lastAdminNote.content = `${extractTextContent(
+      lastAdminNote.content
+    )} (${formatDateLocal(lastAdminNote.createdAt, 'MM/dd/yyyy')})`;
   }
 
   // Format dates to MM/dd/yyyy

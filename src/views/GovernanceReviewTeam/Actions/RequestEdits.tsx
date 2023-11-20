@@ -9,14 +9,17 @@ import {
   Label
 } from '@trussworks/react-uswds';
 
+import RichTextEditor from 'components/RichTextEditor';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
-import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionRequestEditsQuery from 'queries/CreateSystemIntakeActionRequestEditsQuery';
 import {
   CreateSystemIntakeActionRequestEdits,
   CreateSystemIntakeActionRequestEditsVariables
 } from 'queries/types/CreateSystemIntakeActionRequestEdits';
-import { SystemIntakeFormStep } from 'types/graphql-global-types';
+import {
+  SystemIntakeFormStep,
+  SystemIntakeStep
+} from 'types/graphql-global-types';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
 
@@ -25,10 +28,30 @@ interface RequestEditsFields extends SystemIntakeActionFields {
   emailFeedback: string;
 }
 
-const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
+const RequestEdits = ({
+  systemIntakeId,
+  currentStep
+}: {
+  systemIntakeId: string;
+  currentStep: SystemIntakeStep | undefined;
+}) => {
   const { t } = useTranslation(['action', 'form']);
 
-  const form = useForm<RequestEditsFields>();
+  /** Default `intakeFormStep` value
+   *
+   * Converts `currentStep` prop to `SystemIntakeFormStep` type
+   */
+  const defaultIntakeFormStep =
+    currentStep &&
+    SystemIntakeFormStep[
+      SystemIntakeStep[currentStep] as keyof typeof SystemIntakeFormStep
+    ];
+
+  const form = useForm<RequestEditsFields>({
+    defaultValues: {
+      intakeFormStep: defaultIntakeFormStep
+    }
+  });
 
   const { watch, control } = form;
 
@@ -118,7 +141,8 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
             render={({ field, fieldState: { error } }) => (
               <FormGroup error={!!error}>
                 <Label
-                  htmlFor="emailFeedback"
+                  id={`${field.name}-label`}
+                  htmlFor={field.name}
                   error={!!error}
                   className="text-normal"
                 >
@@ -128,12 +152,15 @@ const RequestEdits = ({ systemIntakeId }: { systemIntakeId: string }) => {
                 {error && (
                   <ErrorMessage>{t('form:inputError.fillBlank')}</ErrorMessage>
                 )}
-                <TextAreaField
-                  {...field}
-                  ref={null}
-                  id="emailFeedback"
-                  aria-describedby="emailFeedback-info"
-                  error={!!error}
+                <RichTextEditor
+                  editableProps={{
+                    id: field.name,
+                    'data-testid': field.name,
+                    'aria-describedby': `${field.name}-hint`,
+                    'aria-labelledby': `${field.name}-label`
+                  }}
+                  field={{ ...field, value: field.value || '' }}
+                  required
                 />
               </FormGroup>
             )}

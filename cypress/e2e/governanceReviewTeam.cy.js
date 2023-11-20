@@ -112,7 +112,7 @@ describe('Governance Review Team', () => {
 
       cy.get('#GovernanceReviewTeam-Note')
         .type(noteFixture)
-        .should('have.value', noteFixture);
+        .should('have.html', `<p>${noteFixture}</p>`);
 
       cy.get('button[type="submit"]').click();
 
@@ -136,11 +136,14 @@ describe('Governance Review Team', () => {
       cy.get('#GovernanceReviewTeam-EditNoteButton').click();
 
       const noteFixture = 'Test note';
-      cy.get('#GovernanceReviewTeam-EditNote').contains(noteFixture);
+      cy.get('#GovernanceReviewTeam-EditNote').should(
+        'have.html',
+        `<p>${noteFixture}</p>`
+      );
 
       cy.get('#GovernanceReviewTeam-EditNote')
         .type(' edited', { force: true })
-        .should('have.value', 'Test note edited');
+        .should('have.html', '<p>Test note edited</p>');
 
       cy.get('#GovernanceReviewTeam-SaveEditsButton').click({ force: true });
 

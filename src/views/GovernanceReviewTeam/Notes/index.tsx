@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, ButtonGroup, ModalFooter } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
 import Modal from 'components/Modal';
@@ -15,12 +15,15 @@ import {
   NotesList
 } from 'components/NotesList';
 import PageHeading from 'components/PageHeading';
+import {
+  RichTextEditorFormikField,
+  RichTextViewer
+} from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
 import TruncatedText from 'components/shared/TruncatedText';
 import CreateSystemIntakeNoteQuery from 'queries/CreateSystemIntakeNoteQuery';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
@@ -164,7 +167,9 @@ const Notes = () => {
         createdAt,
         element: (
           <NoteListItem key={id} isLinked data-testid="user-note">
-            <NoteContent>{content}</NoteContent>
+            <NoteContent plainTextWrap={false}>
+              <RichTextViewer className="margin-bottom-1" value={content} />
+            </NoteContent>
             <NoteByline>{`by ${author.name} | ${DateTime.fromISO(
               createdAt
             ).toFormat('MMMM d, yyyy')} at ${DateTime.fromISO(
@@ -203,7 +208,7 @@ const Notes = () => {
                   {t('notes.edit')}
                 </Button>
               </NoteByline>
-              {noteModal.type === 'edit' && ( // TODO - is this the best way to do this. Maybe better to have two separate noteModal useState hooks?
+              {noteModal.type === 'edit' && noteModal.id === id && (
                 <Modal
                   isOpen={noteModal.isOpen}
                   closeModal={() => {
@@ -221,19 +226,27 @@ const Notes = () => {
                   <p className="margin-top-0">
                     {t('notes.editModal.description')}
                   </p>
-                  <Label htmlFor="GovernanceReviewTeam-EditNote">
+                  <Label
+                    id="GovernanceReviewTeam-EditNote-label"
+                    htmlFor="GovernanceReviewTeam-EditNote"
+                  >
                     {t('notes.editModal.contentLabel')}
                   </Label>
-                  <Field
-                    as={TextAreaField}
+                  <RichTextEditorFormikField
                     id="GovernanceReviewTeam-EditNote"
                     name="editNote"
-                    className="easi-grt__note-textarea"
-                    onChange={(e: { target: { value: any } }) => {
+                    height="300px"
+                    required
+                    editableProps={{
+                      id: 'GovernanceReviewTeam-EditNote',
+                      'data-testid': 'GovernanceReviewTeam-EditNote',
+                      'aria-labelledby': 'GovernanceReviewTeam-EditNote-label'
+                    }}
+                    onChange={(value: any) => {
                       setupNoteModal({
                         ...noteModal,
                         ...{
-                          content: e.target.value
+                          content: value
                         }
                       });
                     }}
@@ -301,7 +314,7 @@ const Notes = () => {
                   {t('notes.remove')}
                 </Button>
               </NoteByline>
-              {noteModal.type === 'remove' && ( // TODO - is this the best way to do this. Maybe better to have two separate noteModal useState hooks?
+              {noteModal.type === 'remove' && noteModal.id === id && (
                 <Modal
                   isOpen={noteModal.isOpen}
                   closeModal={() => {
@@ -486,7 +499,7 @@ const Notes = () => {
                   closeLabel={t('notes.hideEmail')}
                   styleLeftBar={false}
                 >
-                  {feedback}
+                  <RichTextViewer value={feedback} />
                 </CollapsableLink>
               </div>
             )}
@@ -534,15 +547,22 @@ const Notes = () => {
                 }}
               >
                 <FieldGroup>
-                  <Label htmlFor="GovernanceReviewTeam-Note">
+                  <Label
+                    id="GovernanceReviewTeam-Note-label"
+                    htmlFor="GovernanceReviewTeam-Note"
+                  >
                     {t('notes.addNote')}
                   </Label>
-                  <Field
-                    as={TextAreaField}
+                  <RichTextEditorFormikField
                     id="GovernanceReviewTeam-Note"
-                    maxLength={2000}
                     name="note"
-                    className="easi-grt__note-field"
+                    height="405px"
+                    required
+                    editableProps={{
+                      id: 'GovernanceReviewTeam-Note',
+                      'data-testid': 'GovernanceReviewTeam-Note',
+                      'aria-labelledby': 'GovernanceReviewTeam-Note-label'
+                    }}
                   />
                 </FieldGroup>
                 <Button

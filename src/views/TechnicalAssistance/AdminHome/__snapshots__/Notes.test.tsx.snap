@@ -87,7 +87,24 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
           <dd
             class="margin-left-0 margin-top-2"
           >
-            Initial Request Form Note
+            <div
+              class="easi-toast easi-toast-viewer"
+            >
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="1"
+                  >
+                    Initial Request Form Note
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
           </dd>
         </div>
       </dl>
@@ -142,7 +159,24 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
           <dd
             class="margin-left-0 margin-top-2"
           >
-            Supporting Documents Note
+            <div
+              class="easi-toast easi-toast-viewer"
+            >
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="3"
+                  >
+                    Supporting Documents Note
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
           </dd>
         </div>
       </dl>
@@ -197,7 +231,24 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
           <dd
             class="margin-left-0 margin-top-2"
           >
-            Advice Letter Note
+            <div
+              class="easi-toast easi-toast-viewer"
+            >
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="5"
+                  >
+                    Advice Letter Note
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
           </dd>
         </div>
       </dl>
@@ -252,7 +303,24 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
           <dd
             class="margin-left-0 margin-top-2"
           >
-            General Request Note
+            <div
+              class="easi-toast easi-toast-viewer"
+            >
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="7"
+                  >
+                    General Request Note
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
           </dd>
         </div>
       </dl>
@@ -307,7 +375,24 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
           <dd
             class="margin-left-0 margin-top-2"
           >
-            General Request Note
+            <div
+              class="easi-toast easi-toast-viewer"
+            >
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="9"
+                  >
+                    General Request Note
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
           </dd>
         </div>
       </dl>
@@ -362,7 +447,24 @@ exports[`Trb Admin Notes: View Notes > renders successfully  1`] = `
           <dd
             class="margin-left-0 margin-top-2"
           >
-            Hidden note
+            <div
+              class="easi-toast easi-toast-viewer"
+            >
+              <div>
+                <div
+                  class="toastui-editor-contents"
+                  style="overflow-wrap: break-word;"
+                >
+                  <p
+                    data-nodeid="11"
+                  >
+                    Hidden note
+                  </p>
+                  
+
+                </div>
+              </div>
+            </div>
           </dd>
         </div>
       </dl>
