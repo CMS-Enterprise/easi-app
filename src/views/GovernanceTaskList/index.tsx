@@ -1,20 +1,25 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Button, Grid, GridContainer } from '@trussworks/react-uswds';
+import { Button, Grid, GridContainer, Link } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 import { TaskListContainer } from 'components/TaskList';
+import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import {
   GetGovernanceTaskList,
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
-import { ITGovIntakeFormStatus } from 'types/graphql-global-types';
+import {
+  ITGovDecisionStatus,
+  ITGovIntakeFormStatus
+} from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
@@ -70,6 +75,27 @@ function GovernanceTaskList() {
                 <p className="font-body-lg line-height-body-5 text-light margin-y-0">
                   {t('taskList.description')}
                 </p>
+
+                {
+                  // Decision issued alert
+                  systemIntake.itGovTaskStatuses.decisionAndNextStepsStatus ===
+                    ITGovDecisionStatus.COMPLETED && (
+                    <Alert
+                      type="info"
+                      heading={t('taskList.decisionAlert.heading')}
+                    >
+                      <Trans
+                        i18nKey="itGov:taskList.decisionAlert.text"
+                        components={{
+                          emailLink: (
+                            <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
+                          ),
+                          email: IT_GOV_EMAIL
+                        }}
+                      />
+                    </Alert>
+                  )
+                }
 
                 {
                   // General feedback banner with link
