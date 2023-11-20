@@ -82,9 +82,8 @@ const GovTaskFeedbackFromInitialReview = ({
         {/* Link to view feedback */}
         {hasFeedback && (
           <div className="margin-top-2">
-            {/* TODO: EASI-3088 - update feedback link */}
             <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
-              {t(`button.viewFeedback`)}
+              {t('taskList.step.intakeForm.viewRequestedEdits')}
             </UswdsReactLink>
           </div>
         )}

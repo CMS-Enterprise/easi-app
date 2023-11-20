@@ -21,6 +21,7 @@ export default {
         description:
           'Tell the Governance Team about your project or idea and upload any existing documentation. This step lets CMS build up context about your project and start preparing for further discussions with your team.',
         viewSubmittedRequestForm: 'View submitted request form',
+        viewRequestedEdits: 'View requested edits',
         editsRequestedWarning:
           'The Governance Team has requested edits to your initial request form. Please make the requested changes and resubmit your form.'
       },
