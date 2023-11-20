@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { FormGroup } from '@trussworks/react-uswds';
 
+import RichTextEditor from 'components/RichTextEditor';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionNotITGovRequestQuery from 'queries/CreateSystemIntakeActionNotITGovRequestQuery';
 import {
   CreateSystemIntakeActionNotITGovRequest,
@@ -91,18 +91,24 @@ const NotGovernance = ({
           control={control}
           render={({ field: { ref, ...field } }) => (
             <FormGroup>
-              <Label htmlFor={field.name} className="text-normal">
+              <Label
+                id={`${field.name}-label`}
+                htmlFor={field.name}
+                className="text-normal"
+              >
                 {t('notItGovRequest.reason')}
               </Label>
               <HelpText className="margin-top-1">
                 {t('notItGovRequest.reasonHelpText')}
               </HelpText>
-              <TextAreaField
-                {...field}
-                id={field.name}
-                value={field.value || ''}
-                size="sm"
-                characterCounter={false}
+              <RichTextEditor
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
+                field={{ ...field, ref, value: field.value || '' }}
               />
             </FormGroup>
           )}
