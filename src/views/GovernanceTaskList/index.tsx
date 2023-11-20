@@ -87,6 +87,7 @@ function GovernanceTaskList() {
                       <Trans
                         i18nKey="itGov:taskList.decisionAlert.text"
                         components={{
+                          decisionLink: <Link href="#decision"> </Link>,
                           emailLink: (
                             <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
                           ),

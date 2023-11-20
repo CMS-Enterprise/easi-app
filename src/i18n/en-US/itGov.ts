@@ -19,7 +19,7 @@ export default {
     decisionAlert: {
       heading: 'Decision issued',
       text:
-        'A decision has been made for this request, and you can view the decision at the bottom of this page. For additional information, please check the email sent to you. If you have further questions, contact the Governance Team at <emailLink>{{email}}</emailLink>.'
+        'A decision has been made for this request, and you can view the decision at the <decisionLink>bottom of this page</decisionLink>. For additional information, please check the email sent to you. If you have further questions, contact the Governance Team at <emailLink>{{email}}</emailLink>.'
     },
     generalFeedback: {
       heading: 'The Governance team has offered feedback about your request.',
