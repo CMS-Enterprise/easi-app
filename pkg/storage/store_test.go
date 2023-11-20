@@ -46,7 +46,7 @@ func (s *StoreTestSuite) emptyDatabaseTables() error {
 	DELETE FROM actions;
 	DELETE FROM estimated_lifecycle_costs;
 	DELETE FROM business_cases;
-	DELETE FROM grt_feedback;
+	DELETE FROM governance_request_feedback;
 	DELETE FROM system_intake_contacts;
 	DELETE FROM system_intake_funding_sources;
 	DELETE FROM system_intakes;
