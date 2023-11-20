@@ -76,6 +76,7 @@ const getGovernanceRequestFeedbackQuery: MockedQuery<
     data: {
       systemIntake: {
         __typename: 'SystemIntake',
+        id: systemIntake.id,
         governanceRequestFeedbacks
       }
     }
@@ -97,13 +98,13 @@ describe('Feedback page', () => {
     );
 
     expect(
-      await screen.findByRole('heading', {
+      screen.getByRole('heading', {
         name: i18next.t<string>('taskList:feedbackV2.heading')
       })
     ).toBeInTheDocument();
 
     expect(
-      screen.getAllByRole('link', {
+      await screen.findAllByRole('link', {
         name: i18next.t<string>(
           'taskList:navigation.returnToGovernanceTaskList'
         )

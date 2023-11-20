@@ -17,6 +17,7 @@ export default gql`
   ${GovernanceRequestFeedback}
   query GetGovernanceRequestFeedback($intakeID: UUID!) {
     systemIntake(id: $intakeID) {
+      id
       governanceRequestFeedbacks {
         ...GovernanceRequestFeedback
       }

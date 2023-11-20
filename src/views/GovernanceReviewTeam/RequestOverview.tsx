@@ -44,6 +44,7 @@ import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
 import Documents from './Documents';
+import Feedback from './Feedback';
 import IntakeReview from './IntakeReview';
 import LifecycleID from './LifecycleID';
 import Notes from './Notes';
@@ -145,8 +146,15 @@ const RequestOverview = () => {
                     {t('back.allRequests')}
                   </Link>
                 </li>
-                {subNavItems(systemId).map(
-                  ({ aria, groupEnd, route, text }) => (
+                {subNavItems(systemId)
+                  // Hide Feedback tab behind feature flag
+                  .filter(({ route }) => {
+                    if (!flags.itGovV2Enabled) {
+                      return !route.includes('feedback');
+                    }
+                    return true;
+                  })
+                  .map(({ aria, groupEnd, route, text }) => (
                     <li
                       key={`desktop-sidenav-${text}`}
                       className={classnames({
@@ -172,8 +180,7 @@ const RequestOverview = () => {
                         </Link>
                       )}
                     </li>
-                  )
-                )}
+                  ))}
               </ul>
             </nav>
           )}
@@ -217,6 +224,14 @@ const RequestOverview = () => {
                   return <Dates systemIntake={systemIntake} />;
                 }}
               />
+
+              {flags.itGovV2Enabled && (
+                <Route
+                  path="/governance-review-team/:systemId/feedback"
+                  render={() => <Feedback systemIntakeId={systemId} />}
+                />
+              )}
+
               <Route
                 path="/governance-review-team/:systemId/decision"
                 render={() => <Decision systemIntake={systemIntake} />}

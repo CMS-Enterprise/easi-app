@@ -3,7 +3,7 @@
 exports[`The Business Case Review Component > matches the snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="margin-top-neg-1 grid-container"
+    class="margin-top-neg-1"
   >
     <div
       class="easi-pdf-export"

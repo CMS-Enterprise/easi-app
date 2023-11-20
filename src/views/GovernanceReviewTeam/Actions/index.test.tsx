@@ -26,6 +26,7 @@ import {
   SystemIntakeStep
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
+import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import Actions from '.';
@@ -109,7 +110,7 @@ describe('IT Gov Actions', () => {
         variables: {
           input: {
             systemIntakeID: systemIntake.id,
-            adminNote: '',
+            adminNote: null,
             additionalInfo: '',
             notificationRecipients: {
               shouldNotifyITGovernance: true,
@@ -117,7 +118,7 @@ describe('IT Gov Actions', () => {
               regularRecipientEmails: [requester.email!]
             },
             intakeFormStep: SystemIntakeFormStep.INITIAL_REQUEST_FORM,
-            emailFeedback: 'Ch-ch-changes'
+            emailFeedback: '<p>Ch-ch-changes</p>'
           }
         }
       },
@@ -133,6 +134,52 @@ describe('IT Gov Actions', () => {
         }
       }
     };
+
+    it('target form dropdown selects the current form step by default', async () => {
+      renderActionPage({
+        action: 'request-edits',
+        mocks: [
+          getSystemIntakeQuery(),
+          getSystemIntakeContactsQuery,
+          getGovernanceTaskListQuery({
+            step: SystemIntakeStep.DRAFT_BUSINESS_CASE
+          }),
+          createSystemIntakeActionRequestEditsQuery
+        ]
+      });
+
+      expect(
+        await screen.findByRole('heading', { name: 'Action: request edits' })
+      ).toBeInTheDocument();
+
+      const dropdown = await screen.findByTestId('intakeFormStep');
+
+      expect(dropdown).toBeInTheDocument();
+      expect(dropdown).toHaveValue(SystemIntakeFormStep.DRAFT_BUSINESS_CASE);
+    });
+
+    it('target form dropdown has no selection when in a non-form step', async () => {
+      renderActionPage({
+        action: 'request-edits',
+        mocks: [
+          getSystemIntakeQuery(),
+          getSystemIntakeContactsQuery,
+          getGovernanceTaskListQuery({
+            step: SystemIntakeStep.GRT_MEETING
+          }),
+          createSystemIntakeActionRequestEditsQuery
+        ]
+      });
+
+      expect(
+        await screen.findByRole('heading', { name: 'Action: request edits' })
+      ).toBeInTheDocument();
+
+      const dropdown = await screen.findByTestId('intakeFormStep');
+      expect(dropdown).toBeInTheDocument();
+      const selectedOption = dropdown.querySelector('option[selected]');
+      expect(selectedOption).not.toBeInTheDocument();
+    });
 
     it('submits the form successfully', async () => {
       renderActionPage({
@@ -155,10 +202,7 @@ describe('IT Gov Actions', () => {
         'Initial request form'
       ]);
 
-      userEvent.type(
-        screen.getByLabelText(/What changes are needed?/),
-        'Ch-ch-changes'
-      );
+      await typeRichText(screen.getByTestId('emailFeedback'), 'Ch-ch-changes');
 
       userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
 
@@ -185,7 +229,7 @@ describe('IT Gov Actions', () => {
         mocks: [
           getSystemIntakeQuery(),
           getSystemIntakeContactsQuery,
-          getGovernanceTaskListQuery()
+          getGovernanceTaskListQuery({ step: SystemIntakeStep.GRB_MEETING })
         ]
       });
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import classNames from 'classnames';
 
 import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
@@ -31,11 +30,7 @@ const BusinessCaseReview = ({
   const filename = `Business case for ${values.requestName}.pdf`;
 
   return (
-    <div
-      className={classNames('margin-top-neg-1', {
-        'grid-container': !helpArticle
-      })}
-    >
+    <div className="margin-top-neg-1">
       <PDFExport
         title="Business Case"
         filename={filename}
