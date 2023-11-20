@@ -63,7 +63,7 @@ export default {
         editsRequestedWarning:
           'The Governance Team has requested edits to your final Business Case. Please make the requested changes and resubmit your form.',
         noFeedbackInfo:
-          'The Governance Team had no feedback for your final Business Case. If you have any questions, you may contact them at <a>{{email}}</a>.'
+          'The Governance Team has not requested edits to your final Business Case. If you have any questions, you may contact them at <a>{{email}}</a>.'
       },
       grbMeeting: {
         title: 'Attend the GRB meeting',
