@@ -89,7 +89,7 @@ func ProgressIntake(
 	})
 
 	// save feedback for requester
-	if input.Feedback != nil {
+	if input.Feedback != nil && len(*input.Feedback) > 0 {
 		errGroup.Go(func() error {
 			feedbackForRequester := &models.GovernanceRequestFeedback{
 				IntakeID:     intake.ID,
@@ -110,7 +110,7 @@ func ProgressIntake(
 	}
 
 	// save feedback/recommendations for GRB
-	if input.GrbRecommendations != nil {
+	if input.GrbRecommendations != nil && len(*input.GrbRecommendations) > 0 {
 		errGroup.Go(func() error {
 			feedbackForGRB := &models.GovernanceRequestFeedback{
 				IntakeID:     intake.ID,
@@ -131,7 +131,7 @@ func ProgressIntake(
 	}
 
 	// save admin note
-	if input.AdminNote != nil {
+	if input.AdminNote != nil && len(*input.AdminNote) > 0 {
 		errGroup.Go(func() error {
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
