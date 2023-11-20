@@ -86,7 +86,7 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
     );
 
     // View feedback
-    getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+    getByRoleWithNameTextKey('link', 'itGov:button.viewRequestedEdits');
 
     // View submitted request form should not exist
     expect(
@@ -113,7 +113,7 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
     );
 
     // View feedback + View submitted request form
-    getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+    getByRoleWithNameTextKey('link', 'itGov:button.viewRequestedEdits');
     getByRoleWithNameTextKey(
       'link',
       'itGov:taskList.step.intakeForm.viewSubmittedRequestForm'
