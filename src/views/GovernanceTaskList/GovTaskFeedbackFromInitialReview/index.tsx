@@ -83,7 +83,7 @@ const GovTaskFeedbackFromInitialReview = ({
         {hasFeedback && (
           <div className="margin-top-2">
             <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
-              {t('taskList.step.intakeForm.viewRequestedEdits')}
+              {t('button.viewRequestedEdits')}
             </UswdsReactLink>
           </div>
         )}
