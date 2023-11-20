@@ -12,6 +12,7 @@ import {
 } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import { formatDateLocal } from 'utils/date';
+import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import { EditsRequestedContext } from '..';
@@ -26,12 +27,12 @@ const checkFieldDefaults = () => {
     formatDateLocal(systemIntakeWithLcid.lcidExpiresAt || '', 'MM/dd/yyyy')
   );
 
-  expect(
-    screen.getByRole('textbox', { name: 'Scope of Life Cycle ID *' })
-  ).toHaveValue(systemIntakeWithLcid.lcidScope);
+  expect(screen.getByTestId('scope')).toContainHTML(
+    systemIntakeWithLcid.lcidScope!
+  );
 
-  expect(screen.getByRole('textbox', { name: 'Next steps *' })).toHaveValue(
-    systemIntakeWithLcid.decisionNextSteps
+  expect(screen.getByTestId('nextSteps')).toContainHTML(
+    systemIntakeWithLcid.decisionNextSteps!
   );
 
   expect(
@@ -40,9 +41,9 @@ const checkFieldDefaults = () => {
     })
   ).toBeChecked();
 
-  expect(
-    screen.getByRole('textbox', { name: 'Project cost baseline' })
-  ).toHaveValue(systemIntakeWithLcid.lcidCostBaseline);
+  expect(screen.getByTestId('costBaseline')).toContainHTML(
+    systemIntakeWithLcid.lcidCostBaseline!
+  );
 };
 
 describe('Issue LCID form', async () => {
@@ -113,15 +114,9 @@ describe('Issue LCID form', async () => {
       '01/01/2024'
     );
 
-    userEvent.type(
-      screen.getByRole('textbox', { name: 'Scope of Life Cycle ID *' }),
-      'Test scope'
-    );
+    await typeRichText(screen.getByTestId('scope'), 'Test scope');
 
-    userEvent.type(
-      screen.getByRole('textbox', { name: 'Next steps *' }),
-      'Test next steps'
-    );
+    await typeRichText(screen.getByTestId('nextSteps'), 'Test next steps');
 
     userEvent.click(
       screen.getByRole('radio', {

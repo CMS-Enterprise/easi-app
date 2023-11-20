@@ -5,10 +5,10 @@ import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup, Radio } from '@trussworks/react-uswds';
 
+import RichTextEditor from 'components/RichTextEditor';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionRejectIntakeQuery from 'queries/CreateSystemIntakeActionRejectIntakeQuery';
 import {
   CreateSystemIntakeActionRejectIntake,
@@ -112,7 +112,16 @@ const NotApproved = ({
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField {...field} id={field.name} size="sm" />
+              <RichTextEditor
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
+                field={{ ...field, value: field.value || '' }}
+                required
+              />
             </FormGroup>
           )}
         />
@@ -121,7 +130,12 @@ const NotApproved = ({
           control={control}
           render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal" required>
+              <Label
+                id={`${field.name}-label`}
+                htmlFor={field.name}
+                className="text-normal"
+                required
+              >
                 {t('issueLCID.nextStepsLabel')}
               </Label>
               <HelpText className="margin-top-1">
@@ -130,7 +144,16 @@ const NotApproved = ({
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField {...field} id={field.name} size="sm" />
+              <RichTextEditor
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
+                field={{ ...field, value: field.value || '' }}
+                required
+              />
             </FormGroup>
           )}
         />

@@ -53,7 +53,24 @@ exports[`TRB Admin Note > Renders correct note information 1`] = `
       <dd
         class="margin-left-0 margin-top-2"
       >
-        My cute note
+        <div
+          class="easi-toast easi-toast-viewer"
+        >
+          <div>
+            <div
+              class="toastui-editor-contents"
+              style="overflow-wrap: break-word;"
+            >
+              <p
+                data-nodeid="1"
+              >
+                My cute note
+              </p>
+              
+
+            </div>
+          </div>
+        </div>
       </dd>
     </div>
   </dl>
