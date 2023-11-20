@@ -1,10 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedback';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear, parseAsUTC } from 'utils/date';
 
@@ -16,13 +14,11 @@ import './index.scss';
 
 type BusinessCaseReviewProps = {
   values: BusinessCaseModel;
-  grtFeedbacks?: GovernanceRequestFeedback[] | null;
   helpArticle?: boolean;
 };
 
 const BusinessCaseReview = ({
   values,
-  grtFeedbacks,
   helpArticle = false
 }: BusinessCaseReviewProps) => {
   const { t } = useTranslation('businessCase');
@@ -88,14 +84,6 @@ const BusinessCaseReview = ({
             alternativeB={values.alternativeB}
           />
         </div>
-
-        {grtFeedbacks && grtFeedbacks.length > 0 && (
-          <div className="bg-gray-10 margin-top-3 padding-x-3 padding-top-3 padding-bottom-1">
-            <div className="grid-container">
-              <GRTFeedbackView grtFeedbacks={grtFeedbacks} />
-            </div>
-          </div>
-        )}
       </PDFExport>
     </div>
   );
