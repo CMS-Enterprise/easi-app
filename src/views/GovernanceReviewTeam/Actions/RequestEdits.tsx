@@ -9,8 +9,8 @@ import {
   Label
 } from '@trussworks/react-uswds';
 
+import RichTextEditor from 'components/RichTextEditor';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
-import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionRequestEditsQuery from 'queries/CreateSystemIntakeActionRequestEditsQuery';
 import {
   CreateSystemIntakeActionRequestEdits,
@@ -37,7 +37,21 @@ const RequestEdits = ({
 }) => {
   const { t } = useTranslation(['action', 'form']);
 
-  const form = useForm<RequestEditsFields>();
+  /** Default `intakeFormStep` value
+   *
+   * Converts `currentStep` prop to `SystemIntakeFormStep` type
+   */
+  const defaultIntakeFormStep =
+    currentStep &&
+    SystemIntakeFormStep[
+      SystemIntakeStep[currentStep] as keyof typeof SystemIntakeFormStep
+    ];
+
+  const form = useForm<RequestEditsFields>({
+    defaultValues: {
+      intakeFormStep: defaultIntakeFormStep
+    }
+  });
 
   const { watch, control } = form;
 
@@ -105,7 +119,6 @@ const RequestEdits = ({
                   data-testid="intakeFormStep"
                   {...field}
                   ref={null}
-                  defaultValue={currentStep}
                 >
                   <option value="">{t('form:dropdownInitialSelect')}</option>
                   {[
@@ -128,7 +141,8 @@ const RequestEdits = ({
             render={({ field, fieldState: { error } }) => (
               <FormGroup error={!!error}>
                 <Label
-                  htmlFor="emailFeedback"
+                  id={`${field.name}-label`}
+                  htmlFor={field.name}
                   error={!!error}
                   className="text-normal"
                 >
@@ -138,12 +152,15 @@ const RequestEdits = ({
                 {error && (
                   <ErrorMessage>{t('form:inputError.fillBlank')}</ErrorMessage>
                 )}
-                <TextAreaField
-                  {...field}
-                  ref={null}
-                  id="emailFeedback"
-                  aria-describedby="emailFeedback-info"
-                  error={!!error}
+                <RichTextEditor
+                  editableProps={{
+                    id: field.name,
+                    'data-testid': field.name,
+                    'aria-describedby': `${field.name}-hint`,
+                    'aria-labelledby': `${field.name}-label`
+                  }}
+                  field={{ ...field, value: field.value || '' }}
+                  required
                 />
               </FormGroup>
             )}

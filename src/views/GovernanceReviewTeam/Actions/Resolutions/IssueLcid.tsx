@@ -6,12 +6,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Dropdown, FormGroup, Radio } from '@trussworks/react-uswds';
 
 import PageLoading from 'components/PageLoading';
+import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 import CreateSystemIntakeActionConfirmLcidQuery from 'queries/CreateSystemIntakeActionConfirmLcidQuery';
@@ -365,7 +365,12 @@ const IssueLcid = ({
           control={control}
           render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal" required>
+              <Label
+                id={`${field.name}-label`}
+                htmlFor={field.name}
+                className="text-normal"
+                required
+              >
                 {t('issueLCID.scopeLabel')}
               </Label>
               <HelpText className="margin-top-1">
@@ -374,11 +379,15 @@ const IssueLcid = ({
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField
-                {...field}
-                id={field.name}
-                size="sm"
-                characterCounter={false}
+              <RichTextEditor
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
+                field={{ ...field, ref, value: field.value || '' }}
+                required
               />
             </FormGroup>
           )}
@@ -389,7 +398,12 @@ const IssueLcid = ({
           control={control}
           render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal" required>
+              <Label
+                id={`${field.name}-label`}
+                htmlFor={field.name}
+                className="text-normal"
+                required
+              >
                 {t('issueLCID.nextStepsLabel')}
               </Label>
               <HelpText className="margin-top-1">
@@ -398,11 +412,15 @@ const IssueLcid = ({
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField
-                {...field}
-                id={field.name}
-                size="sm"
-                characterCounter={false}
+              <RichTextEditor
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
+                field={{ ...field, ref, value: field.value || '' }}
+                required
               />
             </FormGroup>
           )}
@@ -456,18 +474,25 @@ const IssueLcid = ({
           control={control}
           render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal">
+              <Label
+                id={`${field.name}-label`}
+                htmlFor={field.name}
+                className="text-normal"
+              >
                 {t('issueLCID.costBaselineLabel')}
               </Label>
               <HelpText className="margin-top-1">
                 {t('issueLCID.costBaselineHelpText')}
               </HelpText>
-              <TextAreaField
-                {...field}
-                value={field.value || ''}
-                id={field.name}
-                size="sm"
-                characterCounter={false}
+              <RichTextEditor
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
+                field={{ ...field, value: field.value || '' }}
+                required
               />
             </FormGroup>
           )}
