@@ -32,7 +32,7 @@ export default {
         reviewInfo:
           'To help with this review, someone from the Governance Team may schedule a phone call with you and Enterprise Architecture (EA).<br/><br/> After that phone call, the Governance Team will decide if you need to go through any additional steps in the governance process.',
         noFeedbackInfo:
-          'The Governance Team had no feedback for your initial Intake Request form. If you have any questions, you may contact them at <a>{{email}}</a>.'
+          'The Governance Team has not requested edits to your Intake Request form. If you have any questions, you may contact them at <a>{{email}}</a>.'
       },
       bizCaseDraft: {
         title: 'Prepare a draft Business Case',
