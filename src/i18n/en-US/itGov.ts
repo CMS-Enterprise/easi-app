@@ -16,6 +16,11 @@ export default {
     stepsInvolved:
       'Steps involved in an IT Governance request (opens in a new tab)',
     sampleBusinessCase: 'Sample Business Case (opens in a new tab)',
+    generalFeedback: {
+      heading: 'The Governance team has offered feedback about your request.',
+      text:
+        'Please review the feedback using the button below. It may have important information about your project and your IT Governance request.'
+    },
     step: {
       intakeForm: {
         title: 'Fill out the Intake Request form',

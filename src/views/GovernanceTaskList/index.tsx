@@ -71,6 +71,26 @@ function GovernanceTaskList() {
                   {t('taskList.description')}
                 </p>
 
+                {
+                  // General feedback banner with link
+                  systemIntake.governanceRequestFeedbacks.length > 0 && (
+                    <div className="bg-base-lightest padding-2 margin-top-3">
+                      <h4 className="margin-0">
+                        {t('taskList.generalFeedback.heading')}
+                      </h4>
+                      <p className="margin-top-05 line-height-body-5">
+                        {t('taskList.generalFeedback.text')}
+                      </p>
+                      <UswdsReactLink
+                        className="usa-button usa-button--outline"
+                        to={`/governance-task-list/${systemIntake.id}/feedback`}
+                      >
+                        {t('button.viewFeedback')}
+                      </UswdsReactLink>
+                    </div>
+                  )
+                }
+
                 <TaskListContainer className="margin-top-4">
                   {/* 1. Fill out the Intake Request form */}
                   <GovTaskIntakeForm {...systemIntake} />
