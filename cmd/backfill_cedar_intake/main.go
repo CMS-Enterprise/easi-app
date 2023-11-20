@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"database/sql"
-	"errors"
 	"fmt"
 	"os"
 
@@ -23,7 +21,6 @@ import (
 func noErr(err error) {
 	if err != nil {
 		fmt.Println("Error!")
-		fmt.Println(err)
 		panic("Aborting")
 	}
 }
@@ -83,10 +80,16 @@ func submitToCEDAR() {
 	fmt.Println("=======================================")
 	allIntakes, err := store.FetchSystemIntakes(ctx)
 	noErr(err)
+	fmt.Println("Found", len(allIntakes), "intakes")
+
+	errors := []error{}
 	for _, intake := range allIntakes {
 		fmt.Println("Sending system intake", intake.ID.String())
 		err = client.PublishSystemIntake(ctx, intake)
-		noErr(err)
+		if err != nil {
+			errors = append(errors, err)
+			fmt.Println("Error sending system intake", err)
+		}
 		fmt.Println("Successfully sent system intake", intake.ID.String())
 		fmt.Println("=======================================")
 
@@ -98,49 +101,55 @@ func submitToCEDAR() {
 		} else {
 			fmt.Println("Sending business case", businessCase.ID.String(), "with intake ID", intake.ID.String())
 			err = client.PublishBusinessCase(ctx, *businessCase)
-			noErr(err)
+			if err != nil {
+				errors = append(errors, err)
+				fmt.Println("Error sending business case", err)
+			}
 		}
 		fmt.Println("=======================================")
 
-		fmt.Println("Fetching actions for intake", intake.ID.String())
-		actions, err := store.GetActionsByRequestID(ctx, intake.ID)
-		if !errors.Is(err, sql.ErrNoRows) {
-			noErr(err)
-		}
-		for _, action := range actions {
-			fmt.Println("Sending action", action.ID.String(), "with intake ID", intake.ID.String())
-			err = client.PublishAction(ctx, action)
-			noErr(err)
-			fmt.Println("Successfully sent action", action.ID.String())
-			fmt.Println("=======================================")
-		}
+		// fmt.Println("Fetching actions for intake", intake.ID.String())
+		// actions, err := store.GetActionsByRequestID(ctx, intake.ID)
+		// if !errors.Is(err, sql.ErrNoRows) {
+		// 	noErr(err)
+		// }
+		// for _, action := range actions {
+		// 	fmt.Println("Sending action", action.ID.String(), "with intake ID", intake.ID.String())
+		// 	err = client.PublishAction(ctx, action)
+		// 	noErr(err)
+		// 	fmt.Println("Successfully sent action", action.ID.String())
+		// 	fmt.Println("=======================================")
+		// }
 
-		fmt.Println("Fetching GRT feedback for intake", intake.ID.String())
-		feedbacks, err := store.FetchGRTFeedbacksByIntakeID(ctx, intake.ID)
-		if !errors.Is(err, sql.ErrNoRows) {
-			noErr(err)
-		}
-		for _, feedback := range feedbacks {
-			fmt.Println("Sending feedback", feedback.ID.String(), "with intake ID", intake.ID.String())
-			err = client.PublishGRTFeedback(ctx, *feedback)
-			noErr(err)
-			fmt.Println("Successfully sent feedback", feedback.ID.String())
-			fmt.Println("=======================================")
-		}
+		// fmt.Println("Fetching GRT feedback for intake", intake.ID.String())
+		// feedbacks, err := store.FetchGRTFeedbacksByIntakeID(ctx, intake.ID)
+		// if !errors.Is(err, sql.ErrNoRows) {
+		// 	noErr(err)
+		// }
+		// for _, feedback := range feedbacks {
+		// 	fmt.Println("Sending feedback", feedback.ID.String(), "with intake ID", intake.ID.String())
+		// 	err = client.PublishGRTFeedback(ctx, *feedback)
+		// 	noErr(err)
+		// 	fmt.Println("Successfully sent feedback", feedback.ID.String())
+		// 	fmt.Println("=======================================")
+		// }
 
-		fmt.Println("Fetching notes for intake", intake.ID.String())
-		notes, err := store.FetchNotesBySystemIntakeID(ctx, intake.ID)
-		if !errors.Is(err, sql.ErrNoRows) {
-			noErr(err)
-		}
-		for _, note := range notes {
-			fmt.Println("Sending note", note.ID.String(), "with intake ID", intake.ID.String())
-			err = client.PublishNote(ctx, *note)
-			noErr(err)
-			fmt.Println("Successfully sent note", note.ID.String())
-			fmt.Println("=======================================")
-		}
+		// fmt.Println("Fetching notes for intake", intake.ID.String())
+		// notes, err := store.FetchNotesBySystemIntakeID(ctx, intake.ID)
+		// if !errors.Is(err, sql.ErrNoRows) {
+		// 	noErr(err)
+		// }
+		// for _, note := range notes {
+		// 	fmt.Println("Sending note", note.ID.String(), "with intake ID", intake.ID.String())
+		// 	err = client.PublishNote(ctx, *note)
+		// 	noErr(err)
+		// 	fmt.Println("Successfully sent note", note.ID.String())
+		// 	fmt.Println("=======================================")
+		// }
 	}
+
+	fmt.Println("Finished!")
+	fmt.Println("Errors:", errors)
 }
 
 var submitCmd = &cobra.Command{
@@ -153,7 +162,7 @@ var submitCmd = &cobra.Command{
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "test_cedar_intake",
+	Use:   "backfill_cedar_intake",
 	Short: "Utility for testing functionality related to the CEDAR Intake API",
 	Long:  `Utility for either submitting test data to the CEDAR Intake API or dumping the JSON payload that would be submitted to a local file`,
 }
