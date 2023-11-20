@@ -22,7 +22,6 @@ import {
   SystemIntakeStep,
   SystemIntakeStepToProgressTo
 } from 'types/graphql-global-types';
-import { NonNullableProps } from 'types/util';
 import { progressToNewStepSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from './components/ActionForm';
@@ -55,7 +54,11 @@ const MeetingDateField = ({
           {!!error?.message && (
             <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
           )}
-          <DatePickerFormatted {...field} id="meetingDate" />
+          <DatePickerFormatted
+            {...field}
+            value={field.value || ''}
+            id="meetingDate"
+          />
 
           {
             // If past date is selected, show alert
@@ -71,10 +74,11 @@ const MeetingDateField = ({
   );
 };
 
-type ProgressToNewStepFields = NonNullableProps<
-  Omit<SystemIntakeProgressToNewStepsInput, 'systemIntakeID'> &
-    SystemIntakeActionFields
->;
+type ProgressToNewStepFields = Omit<
+  SystemIntakeProgressToNewStepsInput,
+  'systemIntakeID'
+> &
+  SystemIntakeActionFields;
 
 type ProgressToNewStepProps = {
   systemIntakeId: string;
@@ -258,7 +262,7 @@ const ProgressToNewStep = ({
                   'aria-describedby': `${field.name}-hint`,
                   'aria-labelledby': `${field.name}-label`
                 }}
-                field={{ ...field, value: field.value || '' }}
+                field={field}
               />
             </FormGroup>
           )}
@@ -285,7 +289,7 @@ const ProgressToNewStep = ({
                   'aria-describedby': `${field.name}-hint`,
                   'aria-labelledby': `${field.name}-label`
                 }}
-                field={{ ...field, value: field.value || '' }}
+                field={field}
               />
             </FormGroup>
           )}
