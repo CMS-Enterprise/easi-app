@@ -146,15 +146,8 @@ const RequestOverview = () => {
                     {t('back.allRequests')}
                   </Link>
                 </li>
-                {subNavItems(systemId)
-                  // Hide Feedback tab behind feature flag
-                  .filter(({ route }) => {
-                    if (!flags.itGovV2Enabled) {
-                      return !route.includes('feedback');
-                    }
-                    return true;
-                  })
-                  .map(({ aria, groupEnd, route, text }) => (
+                {subNavItems(systemId).map(
+                  ({ aria, groupEnd, route, text }) => (
                     <li
                       key={`desktop-sidenav-${text}`}
                       className={classnames({
@@ -180,7 +173,8 @@ const RequestOverview = () => {
                         </Link>
                       )}
                     </li>
-                  ))}
+                  )
+                )}
               </ul>
             </nav>
           )}
@@ -225,12 +219,10 @@ const RequestOverview = () => {
                 }}
               />
 
-              {flags.itGovV2Enabled && (
-                <Route
-                  path="/governance-review-team/:systemId/feedback"
-                  render={() => <Feedback systemIntakeId={systemId} />}
-                />
-              )}
+              <Route
+                path="/governance-review-team/:systemId/feedback"
+                render={() => <Feedback systemIntakeId={systemId} />}
+              />
 
               <Route
                 path="/governance-review-team/:systemId/decision"
