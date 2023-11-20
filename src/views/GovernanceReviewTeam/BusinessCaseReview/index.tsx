@@ -5,10 +5,10 @@ import { DateTime } from 'luxon';
 import AlternativeAnalysisReview from 'components/BusinessCaseReview/AlternativeAnalysisReview';
 import GeneralRequestInfoReview from 'components/BusinessCaseReview/GeneralRequestInfoReview';
 import RequestDescriptionReview from 'components/BusinessCaseReview/RequestDescriptionReview';
-import GRTFeedbackView from 'components/GRTFeedbackView';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
+import Alert from 'components/shared/Alert';
 import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedback';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
@@ -83,12 +83,17 @@ const BusinessCaseReview = ({
           alternativeA={businessCase.alternativeA}
           alternativeB={businessCase.alternativeB}
         />
-        {grtFeedbacks && grtFeedbacks.length > 0 && (
-          <div className="bg-gray-10 margin-top-3 padding-x-3 padding-top-3 padding-bottom-1">
-            <GRTFeedbackView grtFeedbacks={grtFeedbacks} />
-          </div>
-        )}
+
+        {
+          // Alert to show Feedback has moved to new tab
+          grtFeedbacks && grtFeedbacks.length > 0 && (
+            <Alert type="info" className="margin-top-5 easi-no-print" slim>
+              {t('feedback.feedbackMoved')}
+            </Alert>
+          )
+        }
       </PDFExport>
+
       <UswdsReactLink
         className="usa-button margin-top-5"
         variant="unstyled"
