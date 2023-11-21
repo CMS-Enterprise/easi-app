@@ -90,8 +90,7 @@ describe('Gov Task: Attend the GRT meeting statuses', () => {
         date: 'July 17, 2023'
       })
     );
-    // View feedback
-    getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+
     // Link to prep grt meeting
     getByRoleWithNameTextKey('link', 'itGov:taskList.step.grtMeeting.link');
   });

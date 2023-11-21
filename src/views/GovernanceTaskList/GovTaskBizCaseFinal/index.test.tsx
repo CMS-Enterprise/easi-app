@@ -121,7 +121,7 @@ describe('Gov Task: Submit your Business Case for final approval statuses', () =
     getByRoleWithNameTextKey('link', 'itGov:button.editForm');
 
     // View feedback link
-    getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+    getByRoleWithNameTextKey('link', 'itGov:button.viewRequestedEdits');
   });
 
   it('Re-submitted', () => {
@@ -145,7 +145,7 @@ describe('Gov Task: Submit your Business Case for final approval statuses', () =
     );
 
     // View feedback + Submitted final biz case
-    getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+    getByRoleWithNameTextKey('link', 'itGov:button.viewRequestedEdits');
     getByRoleWithNameTextKey(
       'link',
       'itGov:taskList.step.bizCaseFinal.viewSubmittedFinalBusinessCase'
@@ -171,7 +171,7 @@ describe('Gov Task: Submit your Business Case for final approval statuses', () =
     expect(screen.queryByTestId('alert')).not.toBeInTheDocument();
 
     // View feedback + Submitted draft biz case
-    getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+    getByRoleWithNameTextKey('link', 'itGov:button.viewRequestedEdits');
     getByRoleWithNameTextKey(
       'link',
       'itGov:taskList.step.bizCaseFinal.viewSubmittedFinalBusinessCase'
@@ -211,7 +211,7 @@ describe('Gov Task: Submit your Business Case for final approval statuses', () =
     // No View feedback link
     expect(
       screen.queryByRole('link', {
-        name: i18next.t<string>('itGov:button.viewFeedback')
+        name: i18next.t<string>('itGov:button.viewRequestedEdits')
       })
     ).not.toBeInTheDocument();
 

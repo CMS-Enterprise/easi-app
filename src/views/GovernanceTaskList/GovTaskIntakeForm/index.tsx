@@ -101,6 +101,15 @@ const GovTaskIntakeForm = ({
           </div>
         )}
 
+        {/* Link to view feedback */}
+        {hasFeedback && (
+          <div className="margin-top-2">
+            <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
+              {t('button.viewRequestedEdits')}
+            </UswdsReactLink>
+          </div>
+        )}
+
         {/* Link to the submitted request form */}
         {itGovTaskStatuses.intakeFormStatus ===
           ITGovIntakeFormStatus.COMPLETED &&
@@ -111,16 +120,6 @@ const GovTaskIntakeForm = ({
               </UswdsReactLink>
             </div>
           )}
-
-        {/* Link to view feedback */}
-        {hasFeedback && (
-          <div className="margin-top-2">
-            {/* TODO: EASI-3088 - update feedback link */}
-            <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
-              {t(`button.viewFeedback`)}
-            </UswdsReactLink>
-          </div>
-        )}
       </TaskListDescription>
     </TaskListItem>
   );
