@@ -81,7 +81,6 @@ const AlternativeSolutionFields = ({
             maxLength={10000}
             name={`${altId}.summary`}
             aria-describedby={`BusinessCase-${altId}SummmaryCounter BusinessCase-${altId}SummaryHelp`}
-            characterCounter
           />
         </FieldGroup>
 
@@ -108,7 +107,6 @@ const AlternativeSolutionFields = ({
             maxLength={10000}
             name={`${altId}.acquisitionApproach`}
             aria-describedby={`BusinessCase-${altId}AcquisitionApproachCounter BusinessCase-${altId}AcquisitionApproachHelp`}
-            characterCounter
           />
         </FieldGroup>
 
@@ -369,7 +367,6 @@ const AlternativeSolutionFields = ({
             maxLength={10000}
             name={`${altId}.pros`}
             aria-describedby={`BusinessCase-${altId}ProsCounter BusinessCase-${altId}ProsHelp`}
-            characterCounter
           />
         </FieldGroup>
 
@@ -394,7 +391,6 @@ const AlternativeSolutionFields = ({
             maxLength={10000}
             name={`${altId}.cons`}
             aria-describedby={`BusinessCase-${altId}ConsHelp BusinessCase-${altId}ConsCounter`}
-            characterCounter
           />
         </FieldGroup>
       </div>
@@ -435,7 +431,6 @@ const AlternativeSolutionFields = ({
           maxLength={2000}
           name={`${altId}.costSavings`}
           aria-describedby={`BusinessCase-${altId}CostSavingsCounter BusinessCase-${altId}CostSavingsHelp`}
-          characterCounter
         />
       </FieldGroup>
     </>

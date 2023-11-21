@@ -145,7 +145,6 @@ const PreferredSolution = ({
                   </FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    characterCounter
                     error={!!flatErrors['preferredSolution.summary']}
                     id="BusinessCase-PreferredSolutionSummary"
                     maxLength={10000}
@@ -172,7 +171,6 @@ const PreferredSolution = ({
                   </FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    characterCounter
                     error={
                       !!flatErrors['preferredSolution.acquisitionApproach']
                     }
@@ -514,7 +512,6 @@ const PreferredSolution = ({
                   </FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    characterCounter
                     error={!!flatErrors['preferredSolution.pros']}
                     id="BusinessCase-PreferredSolutionPros"
                     maxLength={10000}
@@ -541,7 +538,6 @@ const PreferredSolution = ({
                   </FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    characterCounter
                     error={!!flatErrors['preferredSolution.cons']}
                     id="BusinessCase-PreferredSolutionCons"
                     maxLength={10000}
@@ -582,7 +578,6 @@ const PreferredSolution = ({
                 </FieldErrorMsg>
                 <Field
                   as={TextAreaField}
-                  characterCounter
                   error={!!flatErrors['preferredSolution.costSavings']}
                   id="BusinessCase-PreferredSolutionCostSavings"
                   maxLength={2000}
