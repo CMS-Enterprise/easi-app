@@ -5,6 +5,7 @@ export default {
     continue: 'Continue',
     editForm: 'Edit form',
     viewFeedback: 'View feedback',
+    viewRequestedEdits: 'View requested edits',
     saveAndExit: 'Save and exit',
     removeYourRequest: 'Remove your request'
   },
@@ -15,6 +16,16 @@ export default {
     stepsInvolved:
       'Steps involved in an IT Governance request (opens in a new tab)',
     sampleBusinessCase: 'Sample Business Case (opens in a new tab)',
+    decisionAlert: {
+      heading: 'Decision issued',
+      text:
+        'A decision has been made for this request, and you can view the decision at the <decisionLink>bottom of this page</decisionLink>. For additional information, please check the email sent to you. If you have further questions, contact the Governance Team at <emailLink>{{email}}</emailLink>.'
+    },
+    generalFeedback: {
+      heading: 'The Governance team has offered feedback about your request.',
+      text:
+        'Please review the feedback using the button below. It may have important information about your project and your IT Governance request.'
+    },
     step: {
       intakeForm: {
         title: 'Fill out the Intake Request form',
@@ -31,7 +42,7 @@ export default {
         reviewInfo:
           'To help with this review, someone from the Governance Team may schedule a phone call with you and Enterprise Architecture (EA).<br/><br/> After that phone call, the Governance Team will decide if you need to go through any additional steps in the governance process.',
         noFeedbackInfo:
-          'The Governance Team had no feedback for your initial Intake Request form. If you have any questions, you may contact them at <a>{{email}}</a>.'
+          'The Governance Team has not requested edits to your Intake Request form. If you have any questions, you may contact them at <a>{{email}}</a>.'
       },
       bizCaseDraft: {
         title: 'Prepare a draft Business Case',
@@ -42,7 +53,7 @@ export default {
         editsRequestedWarning:
           'The Governance Team has requested edits to your draft Business Case. Please make the requested changes and resubmit your form.',
         noFeedbackInfo:
-          'The Governance Team had no feedback for your draft Business Case. If you have any questions, you may contact them at <a>{{email}}</a>.'
+          'The Governance Team has not requested edits to your draft Business Case. If you have any questions, you may contact them at <a>{{email}}</a>.'
       },
       grtMeeting: {
         title: 'Attend the GRT meeting',
@@ -62,7 +73,7 @@ export default {
         editsRequestedWarning:
           'The Governance Team has requested edits to your final Business Case. Please make the requested changes and resubmit your form.',
         noFeedbackInfo:
-          'The Governance Team had no feedback for your final Business Case. If you have any questions, you may contact them at <a>{{email}}</a>.'
+          'The Governance Team has not requested edits to your final Business Case. If you have any questions, you may contact them at <a>{{email}}</a>.'
       },
       grbMeeting: {
         title: 'Attend the GRB meeting',
