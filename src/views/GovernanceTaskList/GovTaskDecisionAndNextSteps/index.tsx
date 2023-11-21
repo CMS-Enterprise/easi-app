@@ -29,6 +29,7 @@ const GovTaskDecisionAndNextSteps = ({
           : undefined
       }
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
+      id="decision"
     >
       <TaskListDescription>
         <p>{t(`taskList.step.${stepKey}.description`)}</p>
