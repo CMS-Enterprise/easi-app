@@ -1,12 +1,13 @@
 import React from 'react';
-import { Label, Radio, Textarea, TextInput } from '@trussworks/react-uswds';
+import { useTranslation } from 'react-i18next';
+import { Label, Radio, TextInput } from '@trussworks/react-uswds';
 import { Field, FormikProps } from 'formik';
 
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import { yesNoMap } from 'data/common';
+import TextAreaField from 'components/shared/TextAreaField';
 import flattenErrors from 'utils/flattenErrors';
 
 type AlternativeSolutionFieldsProps = {
@@ -20,9 +21,14 @@ const AlternativeSolutionFields = ({
   businessCaseCreatedAt,
   formikProps
 }: AlternativeSolutionFieldsProps) => {
+  const { t } = useTranslation('businessCase');
+
   const { values, errors = {}, setFieldValue } = formikProps;
-  const altLabel = `Alternative ${altLetter}`;
+
+  const altLabel = t('alternativeLabel', { altLetter });
+
   const altId = `alternative${altLetter}`;
+
   const flatErrors = flattenErrors(errors);
 
   return (
@@ -36,7 +42,7 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.title`]}
         >
           <Label htmlFor={`BusinessCase-${altId}Title`}>
-            {`${altLabel}: Title`}
+            {t('alternativeLabels.title', { altLabel })}
           </Label>
           <FieldErrorMsg>{flatErrors[`${altId}.title`]}</FieldErrorMsg>
           <Field
@@ -53,36 +59,29 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.summary`]}
         >
           <Label htmlFor={`BusinessCase-${altId}Summary`}>
-            {`${altLabel}: Summary`}
+            {t('alternativeLabels.summary', { altLabel })}
           </Label>
           <HelpText
             id={`BusinessCase-${altId}SummaryHelp`}
             className="margin-top-1"
           >
-            <span>Please include:</span>
-            <ul className="padding-left-205 margin-bottom-1">
-              <li>
-                a brief summary of the proposed IT solution including any
-                associated software products,
-              </li>
-              <li>
-                implementation approach (e.g. development/configuration,
-                phases),
-              </li>
-              <li>
-                costs (e.g. services, software, Operation and Maintenance),{' '}
-              </li>
-              <li>and potential acquisition approaches</li>
+            {t('preferredSolutionSummary.include')}
+            <ul className="padding-left-205 margin-top-1 margin-bottom-0">
+              <li>{t('preferredSolutionSummary.summary')}</li>
+              <li>{t('preferredSolutionSummary.implementation')}</li>
+              <li>{t('preferredSolutionSummary.costs')}</li>
+              <li>{t('preferredSolutionSummary.approaches')}</li>
             </ul>
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.summary`]}</FieldErrorMsg>
           <Field
-            as={Textarea}
+            as={TextAreaField}
             error={!!flatErrors[`${altId}.summary`]}
             id={`BusinessCase-${altId}Summary`}
             maxLength={10000}
             name={`${altId}.summary`}
             aria-describedby={`BusinessCase-${altId}SummmaryCounter BusinessCase-${altId}SummaryHelp`}
+            characterCounter
           />
         </FieldGroup>
 
@@ -91,26 +90,25 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.acquisitionApproach`]}
         >
           <Label htmlFor={`BusinessCase-${altId}AcquisitionApproach`}>
-            {`${altLabel}: Acquisition approach`}
+            {t('alternativeLabels.acquisitionApproach', { altLabel })}
           </Label>
           <HelpText
             id={`BusinessCase-${altId}AcquisitionApproachHelp`}
-            className="margin-y-1"
+            className="margin-top-1"
           >
-            Describe the approach to acquiring the products and services
-            required to deliver the system, including potential contract
-            vehicles.
+            {t('preferredSolutionApproachHelpText')}
           </HelpText>
           <FieldErrorMsg>
             {flatErrors[`${altId}.acquisitionApproach`]}
           </FieldErrorMsg>
           <Field
-            as={Textarea}
+            as={TextAreaField}
             error={flatErrors[`${altId}.acquisitionApproach`]}
             id={`BusinessCase-${altId}AcquisitionApproach`}
             maxLength={10000}
             name={`${altId}.acquisitionApproach`}
             aria-describedby={`BusinessCase-${altId}AcquisitionApproachCounter BusinessCase-${altId}AcquisitionApproachHelp`}
+            characterCounter
           />
         </FieldGroup>
 
@@ -120,10 +118,7 @@ const AlternativeSolutionFields = ({
           data-testid="security-approval"
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label">
-              Is your solution approved by IT Security for use at CMS (FedRAMP,
-              FISMA approved, within the CMS cloud enclave)?
-            </legend>
+            <legend className="usa-label">{t('isApproved')}</legend>
             <FieldErrorMsg>
               {flatErrors[`${altId}.security.isApproved`]}
             </FieldErrorMsg>
@@ -132,7 +127,7 @@ const AlternativeSolutionFields = ({
               checked={values[`${altId}`].security.isApproved === true}
               id={`BusinessCase-${altId}SecurityApproved`}
               name={`${altId}.security.isApproved`}
-              label={yesNoMap.YES}
+              label={t('Yes')}
               value
               onChange={() => {
                 setFieldValue(`${altId}.security.isApproved`, true);
@@ -144,7 +139,7 @@ const AlternativeSolutionFields = ({
               checked={values[`${altId}`].security.isApproved === false}
               id={`BusinessCase-${altId}SecurityNotApproved`}
               name={`${altId}.security.isApproved`}
-              label={yesNoMap.NO}
+              label={t('No')}
               value={false}
               onChange={() => {
                 setFieldValue(`${altId}.security.isApproved`, false);
@@ -162,12 +157,10 @@ const AlternativeSolutionFields = ({
           >
             <fieldset className="usa-fieldset margin-top-4">
               <legend className="usa-label margin-bottom-1">
-                Is it in the process of CMS approval?
+                {t('isBeingReviewed')}
               </legend>
               <HelpText id={`BusinessCase-${altId}SecurityReviewHelp`}>
-                Obtaining CMS Approval can be lengthy and solutions that do not
-                have it or are just starting may lead to longer project
-                timelines.
+                {t('isBeingReviewedHelpText')}
               </HelpText>
               <FieldErrorMsg>
                 {flatErrors[`${altId}.security.isBeingReviewed`]}
@@ -177,7 +170,7 @@ const AlternativeSolutionFields = ({
                 checked={values[`${altId}`].security.isBeingReviewed === 'YES'}
                 id={`BusinessCase-${altId}SecurityIsBeingReviewedYed`}
                 name={`${altId}.security.isBeingReviewed`}
-                label={yesNoMap.YES}
+                label={t('Yes')}
                 value="YES"
                 aria-describedby={`BusinessCase-${altId}SecurityReviewHelp`}
               />
@@ -186,7 +179,7 @@ const AlternativeSolutionFields = ({
                 checked={values[`${altId}`].security.isBeingReviewed === 'NO'}
                 id={`BusinessCase-${altId}SecurityIsBeingReviewedNo`}
                 name={`${altId}.security.isBeingReviewed`}
-                label={yesNoMap.NO}
+                label={t('No')}
                 value="NO"
               />
               <Field
@@ -196,7 +189,7 @@ const AlternativeSolutionFields = ({
                 }
                 id={`BusinessCase-${altId}SecurityIsBeingReviewedNotSure`}
                 name={`${altId}.security.isBeingReviewed`}
-                label={yesNoMap.NOT_SURE}
+                label={t('notSure')}
                 value="NOT_SURE"
               />
             </fieldset>
@@ -208,9 +201,7 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.hosting.type`]}
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label">
-              Do you need to host your solution?
-            </legend>
+            <legend className="usa-label">{t('hostingType')}</legend>
             <FieldErrorMsg>{flatErrors[`${altId}.hosting.type`]}</FieldErrorMsg>
 
             <Field
@@ -218,7 +209,7 @@ const AlternativeSolutionFields = ({
               checked={values[`${altId}`].hosting.type === 'cloud'}
               id={`BusinessCase-${altId}HostingCloud`}
               name={`${altId}.hosting.type`}
-              label="Yes, in the cloud (AWS, Azure, etc.)"
+              label={t('hostingTypeCloud')}
               value="cloud"
               onChange={() => {
                 setFieldValue(`${altId}.hosting.type`, 'cloud');
@@ -234,7 +225,7 @@ const AlternativeSolutionFields = ({
                   error={!!flatErrors[`${altId}.hosting.location`]}
                 >
                   <Label htmlFor={`BusinessCase-${altId}CloudLocation`}>
-                    Where are you planning to host?
+                    {t('hostingLocation')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors[`${altId}.hosting.location`]}
@@ -253,8 +244,7 @@ const AlternativeSolutionFields = ({
                   error={!!flatErrors[`${altId}.hosting.cloudServiceType`]}
                 >
                   <Label htmlFor={`BusinessCase-${altId}CloudServiceType`}>
-                    What, if any, type of cloud service are you planning to use
-                    for this solution (Iaas, PaaS, SaaS, etc.)?
+                    {t('cloudServiceType')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors[`${altId}.hosting.cloudServiceType`]}
@@ -274,7 +264,7 @@ const AlternativeSolutionFields = ({
               checked={values[`${altId}`].hosting.type === 'dataCenter'}
               id={`BusinessCase-${altId}HostingDataCenter`}
               name={`${altId}.hosting.type`}
-              label="Yes, at a data center"
+              label={t('hostingTypeDataCenter')}
               value="dataCenter"
               onChange={() => {
                 setFieldValue(`${altId}.hosting.type`, 'dataCenter');
@@ -289,7 +279,7 @@ const AlternativeSolutionFields = ({
                 error={!!flatErrors[`${altId}.hosting.location`]}
               >
                 <Label htmlFor={`BusinessCase-${altId}DataCenterLocation`}>
-                  Which data center do you plan to host it at?
+                  {t('dataCenterLocation')}
                 </Label>
                 <FieldErrorMsg>
                   {flatErrors[`${altId}.hosting.location`]}
@@ -308,7 +298,7 @@ const AlternativeSolutionFields = ({
               checked={values[`${altId}`].hosting.type === 'none'}
               id={`BusinessCase-${altId}HostingNone`}
               name={`${altId}.hosting.type`}
-              label="No, hosting is not needed"
+              label={t('noHostingNeeded')}
               value="none"
               onChange={() => {
                 setFieldValue(`${altId}.hosting.type`, 'none');
@@ -325,9 +315,7 @@ const AlternativeSolutionFields = ({
           data-testid="user-interface-group"
         >
           <fieldset className="usa-fieldset margin-top-4">
-            <legend className="usa-label">
-              Will your solution have a User Interface?
-            </legend>
+            <legend className="usa-label">{t('hasUserInterface')}</legend>
             <FieldErrorMsg>
               {flatErrors[`${altId}.hasUserInterface`]}
             </FieldErrorMsg>
@@ -337,7 +325,7 @@ const AlternativeSolutionFields = ({
               checked={values[`${altId}`].hasUserInterface === 'YES'}
               id={`BusinessCase-${altId}HasUserInferfaceYes`}
               name={`${altId}.hasUserInterface`}
-              label={yesNoMap.YES}
+              label={t('Yes')}
               value="YES"
             />
             <Field
@@ -345,7 +333,7 @@ const AlternativeSolutionFields = ({
               checked={values[`${altId}`].hasUserInterface === 'NO'}
               id={`BusinessCase-${altId}HasUserInferfaceNo`}
               name={`${altId}.hasUserInterface`}
-              label={yesNoMap.NO}
+              label={t('No')}
               value="NO"
             />
 
@@ -354,7 +342,7 @@ const AlternativeSolutionFields = ({
               checked={values[`${altId}`].hasUserInterface === 'NOT_SURE'}
               id={`BusinessCase-${altId}HasUserInferfaceNotSure`}
               name={`${altId}.hasUserInterface`}
-              label={yesNoMap.NOT_SURE}
+              label={t('notSure')}
               value="NOT_SURE"
             />
           </fieldset>
@@ -365,20 +353,23 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.pros`]}
         >
           <Label htmlFor={`BusinessCase-${altId}Pros`}>
-            {`${altLabel}: Pros`}
+            {t('alternativeLabels.pros', { altLabel })}
           </Label>
-          <HelpText id={`BusinessCase-${altId}ProsHelp`} className="margin-y-1">
-            Identify any aspects of this solution that positively differentiates
-            this approach from other solutions
+          <HelpText
+            id={`BusinessCase-${altId}ProsHelp`}
+            className="margin-top-1"
+          >
+            {t('preferredSolutionProsHelpText')}
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.pros`]}</FieldErrorMsg>
           <Field
-            as={Textarea}
+            as={TextAreaField}
             error={!!flatErrors[`${altId}.pros`]}
             id={`BusinessCase-${altId}Pros`}
             maxLength={10000}
             name={`${altId}.pros`}
             aria-describedby={`BusinessCase-${altId}ProsCounter BusinessCase-${altId}ProsHelp`}
+            characterCounter
           />
         </FieldGroup>
 
@@ -387,23 +378,27 @@ const AlternativeSolutionFields = ({
           error={!!flatErrors[`${altId}.cons`]}
         >
           <Label htmlFor={`BusinessCase-${altId}Cons`}>
-            {`${altLabel}: Cons`}
+            {t('alternativeLabels.cons', { altLabel })}
           </Label>
-          <HelpText id={`BusinessCase-${altId}ConsHelp`} className="margin-y-1">
-            Identify any aspects of this solution that negatively impact this
-            approach
+          <HelpText
+            id={`BusinessCase-${altId}ConsHelp`}
+            className="margin-top-1"
+          >
+            {t('preferredSolutionConsHelpText')}
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.cons`]}</FieldErrorMsg>
           <Field
-            as={Textarea}
+            as={TextAreaField}
             error={!!flatErrors[`${altId}.cons`]}
             id={`BusinessCase-${altId}Cons`}
             maxLength={10000}
             name={`${altId}.cons`}
             aria-describedby={`BusinessCase-${altId}ConsHelp BusinessCase-${altId}ConsCounter`}
+            characterCounter
           />
         </FieldGroup>
       </div>
+
       <EstimatedLifecycleCost
         className="margin-top-2"
         formikKey={`${altId}.estimatedLifecycleCost`}
@@ -417,32 +412,32 @@ const AlternativeSolutionFields = ({
         }
         setFieldValue={setFieldValue}
       />
-      <div className="margin-top-2 margin-bottom-7 tablet:grid-col-9">
-        <FieldGroup
-          scrollElement={`${altId}.costSavings`}
-          error={!!flatErrors[`${altId}.costSavings`]}
+
+      <FieldGroup
+        scrollElement={`${altId}.costSavings`}
+        error={!!flatErrors[`${altId}.costSavings`]}
+        className="margin-top-2 margin-bottom-6 tablet:grid-col-9"
+      >
+        <Label htmlFor={`BusinessCase-${altId}CostSavings`}>
+          {t('costSavings')}
+        </Label>
+        <HelpText
+          id={`BusinessCase-${altId}CostSavingsHelp`}
+          className="margin-top-1"
         >
-          <Label htmlFor={`BusinessCase-${altId}CostSavings`}>
-            What is the cost savings or avoidance associated with this solution?
-          </Label>
-          <HelpText
-            id={`BusinessCase-${altId}CostSavingsHelp`}
-            className="margin-y-1"
-          >
-            This could include old systems going away, contract hours/ new Full
-            Time Employees not needed, or other savings, even if indirect.
-          </HelpText>
-          <FieldErrorMsg>{flatErrors[`${altId}.costSavings`]}</FieldErrorMsg>
-          <Field
-            as={Textarea}
-            error={!!flatErrors[`${altId}.costSavings`]}
-            id={`BusinessCase-${altId}CostSavings`}
-            maxLength={10000}
-            name={`${altId}.costSavings`}
-            aria-describedby={`BusinessCase-${altId}CostSavingsCounter BusinessCase-${altId}CostSavingsHelp`}
-          />
-        </FieldGroup>
-      </div>
+          {t('costSavingsHelpText')}
+        </HelpText>
+        <FieldErrorMsg>{flatErrors[`${altId}.costSavings`]}</FieldErrorMsg>
+        <Field
+          as={TextAreaField}
+          error={!!flatErrors[`${altId}.costSavings`]}
+          id={`BusinessCase-${altId}CostSavings`}
+          maxLength={2000}
+          name={`${altId}.costSavings`}
+          aria-describedby={`BusinessCase-${altId}CostSavingsCounter BusinessCase-${altId}CostSavingsHelp`}
+          characterCounter
+        />
+      </FieldGroup>
     </>
   );
 };

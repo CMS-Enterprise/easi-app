@@ -2,14 +2,16 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { Button, ButtonGroup } from '@trussworks/react-uswds';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
-import PageHeading from 'components/PageHeading';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
 import { postAction } from 'types/routines';
+import { isBusinessCaseFinal } from 'utils/systemIntake';
+
+import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
 import './index.scss';
 
@@ -32,14 +34,19 @@ const Review = ({ businessCase }: ReviewProps) => {
       ? 'SUBMIT_FINAL_BIZ_CASE'
       : 'SUBMIT_BIZ_CASE';
 
-  return (
-    <div className="business-case-review" data-testid="business-case-review">
-      <div className="grid-container">
-        <PageHeading>{t('checkAnswers')}</PageHeading>
-      </div>
+  const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
 
+  return (
+    <BusinessCaseStepWrapper
+      systemIntakeId={businessCase.systemIntakeId}
+      title={t('checkAnswers')}
+      className="business-case-review"
+      data-testid="business-case-review"
+      isFinal={isFinal}
+    >
       <BusinessCaseReview values={businessCase} />
-      <div className="grid-container margin-top-6">
+
+      <ButtonGroup className="margin-top-6">
         <Button
           type="button"
           outline
@@ -68,8 +75,8 @@ const Review = ({ businessCase }: ReviewProps) => {
         >
           {t('sendBusinessCase')}
         </Button>
-      </div>
-    </div>
+      </ButtonGroup>
+    </BusinessCaseStepWrapper>
   );
 };
 

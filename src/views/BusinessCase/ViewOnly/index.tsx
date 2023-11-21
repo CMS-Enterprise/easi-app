@@ -27,14 +27,10 @@ const BusinessCaseView = ({ businessCase }: BusinessCaseViewOnlyProps) => {
   const grtFeedbacks = grtFeedbackPayload?.systemIntake?.grtFeedbacks;
 
   return (
-    <>
-      <div className="grid-container">
-        <PageHeading>Review your Business Case</PageHeading>
-      </div>
-      <div className="business-case-review">
-        <BusinessCaseReview values={businessCase} grtFeedbacks={grtFeedbacks} />
-      </div>
-    </>
+    <div className="grid-container">
+      <PageHeading>Review your Business Case</PageHeading>
+      <BusinessCaseReview values={businessCase} grtFeedbacks={grtFeedbacks} />
+    </div>
   );
 };
 

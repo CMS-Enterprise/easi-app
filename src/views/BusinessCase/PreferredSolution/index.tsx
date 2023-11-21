@@ -1,24 +1,24 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
-  IconNavigateBefore,
+  ButtonGroup,
+  IconArrowBack,
   Label,
   Radio,
-  Textarea,
   TextInput
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
-import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
-import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import IconButton from 'components/shared/IconButton';
+import TextAreaField from 'components/shared/TextAreaField';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
@@ -28,6 +28,8 @@ import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
 } from 'validations/businessCaseSchema';
+
+import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
 type PreferredSolutionProps = {
   businessCase: BusinessCaseModel;
@@ -39,7 +41,9 @@ const PreferredSolution = ({
   formikRef,
   dispatchSave
 }: PreferredSolutionProps) => {
+  const { t } = useTranslation('businessCase');
   const history = useHistory();
+
   const initialValues = {
     preferredSolution: businessCase.preferredSolution
   };
@@ -67,60 +71,43 @@ const PreferredSolution = ({
           setFieldValue,
           validateForm
         } = formikProps;
+
         const flatErrors = flattenErrors(errors);
+
+        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
+
         return (
-          <div className="grid-container" data-testid="preferred-solution">
-            {Object.keys(errors).length > 0 && (
-              <ErrorAlert
-                classNames="margin-top-3"
-                heading="Please check and fix the following"
-                testId="formik-validation-errors"
-              >
-                {Object.keys(flatErrors).map(key => {
-                  return (
-                    <ErrorAlertMessage
-                      key={`Error.${key}`}
-                      errorKey={key}
-                      message={flatErrors[key]}
-                    />
-                  );
-                })}
-              </ErrorAlert>
-            )}
-            <PageHeading>Alternatives Analysis</PageHeading>
-            <div className="tablet:grid-col-9">
-              <div className="line-height-body-6">
-                Some examples of options to consider may include:
-                <ul className="padding-left-205 margin-y-0">
-                  <li>Buy vs. build vs. lease vs. reuse of existing system</li>
-                  <li>
-                    Commercial off-the-shelf (COTS) vs. Government off-the-shelf
-                    (GOTS)
-                  </li>
-                  <li>Mainframe vs. server-based vs. clustering vs. Cloud</li>
+          <BusinessCaseStepWrapper
+            title={t('alternatives')}
+            description={
+              <>
+                <p className="margin-bottom-0">
+                  {t('alternativesDescription.examples')}
+                </p>
+                <ul className="padding-left-205 margin-top-0">
+                  <li>{t('alternativesDescription.buy')}</li>
+                  <li>{t('alternativesDescription.commercial')}</li>
+                  <li>{t('alternativesDescription.mainframe')}</li>
                 </ul>
-                <br />
-                In your options, include details such as differences between
-                system capabilities, user friendliness, technical and security
-                considerations, ease and timing of integration with CMS&apos; IT
-                infrastructure, etc.
-              </div>
-            </div>
-            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
-            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
-              <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
-                <MandatoryFieldsAlert />
-              </div>
-            )}
+                <p>{t('alternativesDescription.include')}</p>
+              </>
+            }
+            systemIntakeId={businessCase.systemIntakeId}
+            data-testid="preferred-solution"
+            errors={flatErrors}
+            isFinal={isFinal}
+            fieldsMandatory={isFinal}
+          >
             <Form>
               <div className="tablet:grid-col-9">
-                <h2>Preferred solution</h2>
+                <h2>{t('preferredSolution')}</h2>
+
                 <FieldGroup
                   scrollElement="preferredSolution.title"
                   error={!!flatErrors['preferredSolution.title']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionTitle">
-                    Preferred solution: Title
+                    {t('preferredSolutionTitle')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.title']}
@@ -133,39 +120,32 @@ const PreferredSolution = ({
                     name="preferredSolution.title"
                   />
                 </FieldGroup>
+
                 <FieldGroup
                   scrollElement="preferredSolution.summary"
                   error={!!flatErrors['preferredSolution.summary']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionSummary">
-                    Preferred solution: Summary
+                    {t('preferredSolutionSummary.label')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionSummaryHelp"
                     className="margin-top-1"
                   >
-                    <span>Please include:</span>
-                    <ul className="padding-left-205">
-                      <li>
-                        a brief summary of the proposed IT solution including
-                        any associated software products,
-                      </li>
-                      <li>
-                        implementation approach (e.g. development/configuration,
-                        phases),
-                      </li>
-                      <li>
-                        costs (e.g. services, software, Operation and
-                        Maintenance),{' '}
-                      </li>
-                      <li>and potential acquisition approaches</li>
+                    {t('preferredSolutionSummary.include')}
+                    <ul className="padding-left-205 margin-top-1 margin-bottom-0">
+                      <li>{t('preferredSolutionSummary.summary')}</li>
+                      <li>{t('preferredSolutionSummary.implementation')}</li>
+                      <li>{t('preferredSolutionSummary.costs')}</li>
+                      <li>{t('preferredSolutionSummary.approaches')}</li>
                     </ul>
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.summary']}
                   </FieldErrorMsg>
                   <Field
-                    as={Textarea}
+                    as={TextAreaField}
+                    characterCounter
                     error={!!flatErrors['preferredSolution.summary']}
                     id="BusinessCase-PreferredSolutionSummary"
                     maxLength={10000}
@@ -173,26 +153,26 @@ const PreferredSolution = ({
                     aria-describedby="BusinessCase-PreferredSolutionSummaryCounter BusinessCase-PreferredSolutionSummaryHelp"
                   />
                 </FieldGroup>
+
                 <FieldGroup
                   scrollElement="preferredSolution.acquisitionApproach"
                   error={!!flatErrors['preferredSolution.acquisitionApproach']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionAcquisitionApproach">
-                    Preferred solution: Acquisition approach
+                    {t('preferredSolutionApproach')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionAcquisitionApproachHelp"
-                    className="margin-y-1"
+                    className="margin-top-1"
                   >
-                    Describe the approach to acquiring the products and services
-                    required to deliver the system, including potential contract
-                    vehicles.
+                    {t('preferredSolutionApproachHelpText')}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.acquisitionApproach']}
                   </FieldErrorMsg>
                   <Field
-                    as={Textarea}
+                    as={TextAreaField}
+                    characterCounter
                     error={
                       !!flatErrors['preferredSolution.acquisitionApproach']
                     }
@@ -209,10 +189,7 @@ const PreferredSolution = ({
                   data-testid="security-approval"
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label">
-                      Is your solution approved by IT Security for use at CMS
-                      (FedRAMP, FISMA approved, within the CMS cloud enclave)?
-                    </legend>
+                    <legend className="usa-label">{t('isApproved')}</legend>
                     <FieldErrorMsg>
                       {flatErrors['preferredSolution.security.isApproved']}
                     </FieldErrorMsg>
@@ -264,12 +241,10 @@ const PreferredSolution = ({
                   >
                     <fieldset className="usa-fieldset margin-top-4">
                       <legend className="usa-label margin-bottom-1">
-                        Is it in the process of CMS approval?
+                        {t('isBeingReviewed')}
                       </legend>
                       <HelpText id="BusinessCase-PreferredSolutionApprovalHelp">
-                        Obtaining CMS Approval can be lengthy and solutions that
-                        do not have it or are just starting may lead to longer
-                        project timelines.
+                        {t('isBeingReviewedHelpText')}
                       </HelpText>
                       <FieldErrorMsg>
                         {
@@ -321,9 +296,7 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.hosting.type']}
                 >
                   <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label">
-                      Do you need to host your solution?
-                    </legend>
+                    <legend className="usa-label">{t('hostingType')}</legend>
                     <FieldErrorMsg>
                       {flatErrors['preferredSolution.hosting.type']}
                     </FieldErrorMsg>
@@ -335,7 +308,7 @@ const PreferredSolution = ({
                       }
                       id="BusinessCase-PreferredSolutionHostingCloud"
                       name="preferredSolution.hosting.type"
-                      label="Yes, in the cloud (AWS, Azure, etc.)"
+                      label={t('hostingTypeCloud')}
                       value="cloud"
                       onChange={() => {
                         setFieldValue(
@@ -359,7 +332,7 @@ const PreferredSolution = ({
                           }
                         >
                           <Label htmlFor="BusinessCase-PreferredSolutionCloudLocation">
-                            Where are you planning to host?
+                            {t('hostingLocation')}
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['preferredSolution.hosting.location']}
@@ -374,6 +347,7 @@ const PreferredSolution = ({
                             name="preferredSolution.hosting.location"
                           />
                         </FieldGroup>
+
                         <FieldGroup
                           className="margin-bottom-1 margin-left-4"
                           scrollElement="preferredSolution.hosting.cloudServiceType"
@@ -384,8 +358,7 @@ const PreferredSolution = ({
                           }
                         >
                           <Label htmlFor="BusinessCase-PreferredSolutionCloudServiceType">
-                            What, if any, type of cloud service are you planning
-                            to use for this solution (Iaas, PaaS, SaaS, etc.)?
+                            {t('cloudServiceType')}
                           </Label>
                           <FieldErrorMsg>
                             {
@@ -415,7 +388,7 @@ const PreferredSolution = ({
                       }
                       id="BusinessCase-PreferredSolutionHostingDataCenter"
                       name="preferredSolution.hosting.type"
-                      label="Yes, at a data center"
+                      label={t('hostingTypeDataCenter')}
                       value="dataCenter"
                       onChange={() => {
                         setFieldValue(
@@ -429,6 +402,7 @@ const PreferredSolution = ({
                         );
                       }}
                     />
+
                     {values.preferredSolution.hosting.type === 'dataCenter' && (
                       <FieldGroup
                         className="margin-yx-1 margin-left-4"
@@ -438,7 +412,7 @@ const PreferredSolution = ({
                         }
                       >
                         <Label htmlFor="BusinessCase-PreferredSolutionDataCenterLocation">
-                          Which data center do you plan to host it at?
+                          {t('dataCenterLocation')}
                         </Label>
                         <FieldErrorMsg>
                           {flatErrors['preferredSolution.hosting.location']}
@@ -454,12 +428,13 @@ const PreferredSolution = ({
                         />
                       </FieldGroup>
                     )}
+
                     <Field
                       as={Radio}
                       checked={values.preferredSolution.hosting.type === 'none'}
                       id="BusinessCase-PreferredSolutionHostingNone"
                       name="preferredSolution.hosting.type"
-                      label="No, hosting is not needed"
+                      label={t('noHostingNeeded')}
                       value="none"
                       onChange={() => {
                         setFieldValue('preferredSolution.hosting.type', 'none');
@@ -472,6 +447,7 @@ const PreferredSolution = ({
                     />
                   </fieldset>
                 </FieldGroup>
+
                 <FieldGroup
                   scrollElement="preferredSolution.hasUserInterface"
                   error={!!flatErrors['preferredSolution.hasUserInterface']}
@@ -479,7 +455,7 @@ const PreferredSolution = ({
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label">
-                      Will your solution have a User Interface?
+                      {t('hasUserInterface')}
                     </legend>
                     <FieldErrorMsg>
                       {flatErrors['preferredSolution.hasUserInterface']}
@@ -492,9 +468,10 @@ const PreferredSolution = ({
                       }
                       id="BusinessCase-PreferredHasUserInferfaceYes"
                       name="preferredSolution.hasUserInterface"
-                      label="Yes"
+                      label={t('Yes')}
                       value="YES"
                     />
+
                     <Field
                       as={Radio}
                       checked={
@@ -502,7 +479,7 @@ const PreferredSolution = ({
                       }
                       id="BusinessCase-PreferredHasUserInferfaceNo"
                       name="preferredSolution.hasUserInterface"
-                      label="No"
+                      label={t('No')}
                       value="NO"
                     />
 
@@ -513,7 +490,7 @@ const PreferredSolution = ({
                       }
                       id="BusinessCase-PreferredHasUserInferfaceNotSure"
                       name="preferredSolution.hasUserInterface"
-                      label="I'm not sure"
+                      label={t('notSure')}
                       value="NOT_SURE"
                     />
                   </fieldset>
@@ -524,20 +501,20 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.pros']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionPros">
-                    Preferred solution: Pros
+                    {t('preferredSolutionPros')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionProsHelp"
-                    className="margin-y-1"
+                    className="margin-top-1"
                   >
-                    Identify any aspects of this solution that positively
-                    differentiates this approach from other solutions
+                    {t('preferredSolutionProsHelpText')}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.pros']}
                   </FieldErrorMsg>
                   <Field
-                    as={Textarea}
+                    as={TextAreaField}
+                    characterCounter
                     error={!!flatErrors['preferredSolution.pros']}
                     id="BusinessCase-PreferredSolutionPros"
                     maxLength={10000}
@@ -551,20 +528,20 @@ const PreferredSolution = ({
                   error={!!flatErrors['preferredSolution.cons']}
                 >
                   <Label htmlFor="BusinessCase-PreferredSolutionCons">
-                    Preferred solution: Cons
+                    {t('preferredSolutionCons')}
                   </Label>
                   <HelpText
                     id="BusinessCase-PreferredSolutionConsHelp"
-                    className="margin-y-1"
+                    className="margin-top-1"
                   >
-                    Identify any aspects of this solution that negatively impact
-                    this approach
+                    {t('preferredSolutionConsHelpText')}
                   </HelpText>
                   <FieldErrorMsg>
                     {flatErrors['preferredSolution.cons']}
                   </FieldErrorMsg>
                   <Field
-                    as={Textarea}
+                    as={TextAreaField}
+                    characterCounter
                     error={!!flatErrors['preferredSolution.cons']}
                     id="BusinessCase-PreferredSolutionCons"
                     maxLength={10000}
@@ -573,6 +550,7 @@ const PreferredSolution = ({
                   />
                 </FieldGroup>
               </div>
+
               <EstimatedLifecycleCost
                 className="margin-top-2"
                 formikKey="preferredSolution.estimatedLifecycleCost"
@@ -584,82 +562,82 @@ const PreferredSolution = ({
                 }
                 setFieldValue={setFieldValue}
               />
-              <div className="tablet:grid-col-9 margin-bottom-7">
-                <FieldGroup
-                  scrollElement="preferredSolution.costSavings"
-                  error={!!flatErrors['preferredSolution.costSavings']}
+
+              <FieldGroup
+                scrollElement="preferredSolution.costSavings"
+                error={!!flatErrors['preferredSolution.costSavings']}
+                className="tablet:grid-col-9 margin-bottom-6"
+              >
+                <Label htmlFor="BusinessCase-PreferredSolutionCostSavings">
+                  {t('costSavings')}
+                </Label>
+                <HelpText
+                  id="BusinessCase-PreferredSolutionCostSavingsHelp"
+                  className="margin-top-1"
                 >
-                  <Label htmlFor="BusinessCase-PreferredSolutionCostSavings">
-                    What is the cost savings or avoidance associated with this
-                    solution?
-                  </Label>
-                  <HelpText
-                    id="BusinessCase-PreferredSolutionCostSavingsHelp"
-                    className="margin-y-1"
-                  >
-                    This could include old systems going away, contract hours/
-                    new Full Time Employees not needed, or other savings, even
-                    if indirect.
-                  </HelpText>
-                  <FieldErrorMsg>
-                    {flatErrors['preferredSolution.costSavings']}
-                  </FieldErrorMsg>
-                  <Field
-                    as={Textarea}
-                    error={!!flatErrors['preferredSolution.costSavings']}
-                    id="BusinessCase-PreferredSolutionCostSavings"
-                    maxLength={10000}
-                    name="preferredSolution.costSavings"
-                    aria-describedby="BusinessCase-PreferredSolutionCostSavingsCounter BusinessCase-PreferredSolutionCostSavingsHelp"
-                  />
-                </FieldGroup>
-              </div>
+                  {t('costSavingsHelpText')}
+                </HelpText>
+                <FieldErrorMsg>
+                  {flatErrors['preferredSolution.costSavings']}
+                </FieldErrorMsg>
+                <Field
+                  as={TextAreaField}
+                  characterCounter
+                  error={!!flatErrors['preferredSolution.costSavings']}
+                  id="BusinessCase-PreferredSolutionCostSavings"
+                  maxLength={2000}
+                  name="preferredSolution.costSavings"
+                  aria-describedby="BusinessCase-PreferredSolutionCostSavingsCounter BusinessCase-PreferredSolutionCostSavingsHelp"
+                />
+              </FieldGroup>
             </Form>
 
-            <Button
-              type="button"
-              outline
-              onClick={() => {
-                dispatchSave();
-                setErrors({});
-                const newUrl = 'request-description';
-                history.push(newUrl);
-              }}
-            >
-              Back
-            </Button>
-            <Button
-              type="button"
-              onClick={() => {
-                validateForm().then(err => {
-                  if (Object.keys(err).length === 0) {
-                    dispatchSave();
-                    const newUrl = 'alternative-solution-a';
-                    history.push(newUrl);
-                  } else {
-                    window.scrollTo(0, 0);
-                  }
-                });
-              }}
-            >
-              Next
-            </Button>
-            <div className="margin-y-3">
+            <ButtonGroup>
               <Button
                 type="button"
-                unstyled
+                outline
                 onClick={() => {
                   dispatchSave();
-                  history.push(
-                    `/governance-task-list/${businessCase.systemIntakeId}`
-                  );
+                  setErrors({});
+                  const newUrl = 'request-description';
+                  history.push(newUrl);
                 }}
               >
-                <span className="display-flex flex-align-center">
-                  <IconNavigateBefore /> Save & Exit
-                </span>
+                {t('Back')}
               </Button>
-            </div>
+              <Button
+                type="button"
+                onClick={() => {
+                  validateForm().then(err => {
+                    if (Object.keys(err).length === 0) {
+                      dispatchSave();
+                      const newUrl = 'alternative-solution-a';
+                      history.push(newUrl);
+                    } else {
+                      window.scrollTo(0, 0);
+                    }
+                  });
+                }}
+              >
+                {t('Next')}
+              </Button>
+            </ButtonGroup>
+
+            <IconButton
+              type="button"
+              icon={<IconArrowBack />}
+              className="margin-bottom-3 margin-top-2"
+              onClick={() => {
+                dispatchSave();
+                history.push(
+                  `/governance-task-list/${businessCase.systemIntakeId}`
+                );
+              }}
+              unstyled
+            >
+              {t('Save & Exit')}
+            </IconButton>
+
             <PageNumber
               currentPage={4}
               totalPages={
@@ -673,7 +651,7 @@ const PreferredSolution = ({
               onSave={dispatchSave}
               debounceDelay={1000 * 3}
             />
-          </div>
+          </BusinessCaseStepWrapper>
         );
       }}
     </Formik>
