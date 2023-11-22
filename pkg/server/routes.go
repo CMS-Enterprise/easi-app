@@ -204,7 +204,7 @@ func (s *Server) routes(
 				store.FetchSystemIntakeByID,
 				store.UpdateSystemIntake,
 				saveAction,
-				store.CreateGRTFeedback,
+				store.CreateGovernanceRequestFeedback,
 				emailClient.SendSystemIntakeReviewEmails,
 			),
 			CreateActionUpdateStatus: services.NewCreateActionUpdateStatus(

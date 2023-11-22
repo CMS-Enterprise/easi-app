@@ -98,7 +98,7 @@ func ProgressIntake(
 				TargetForm:   models.GRFTFNoTargetProvided,
 				Type:         models.GRFTRequester,
 			}
-			feedbackForRequester.CreatedBy = adminEUAID
+			feedbackForRequester.CreatedBy = &adminEUAID
 
 			_, errRequesterFeedback := store.CreateGovernanceRequestFeedback(ctx, feedbackForRequester)
 			if errRequesterFeedback != nil {
@@ -119,7 +119,7 @@ func ProgressIntake(
 				TargetForm:   models.GRFTFNoTargetProvided,
 				Type:         models.GRFTGRB,
 			}
-			feedbackForGRB.CreatedBy = adminEUAID
+			feedbackForGRB.CreatedBy = &adminEUAID
 
 			_, errGRBFeedback := store.CreateGovernanceRequestFeedback(ctx, feedbackForGRB)
 			if errGRBFeedback != nil {
@@ -237,7 +237,7 @@ func CreateSystemIntakeActionRequestEdits(
 
 	govReqFeedback := &models.GovernanceRequestFeedback{}
 	govReqFeedback.IntakeID = intake.ID
-	govReqFeedback.CreatedBy = adminTakingAction.EuaUserID
+	govReqFeedback.CreatedBy = &adminTakingAction.EuaUserID
 	govReqFeedback.SourceAction = models.GRFSARequestEdits
 	govReqFeedback.TargetForm = targetForm
 	govReqFeedback.Feedback = input.EmailFeedback

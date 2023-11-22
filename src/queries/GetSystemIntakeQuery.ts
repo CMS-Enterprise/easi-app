@@ -1,9 +1,11 @@
 import { gql } from '@apollo/client';
 
+import { GovernanceRequestFeedback } from './GetGovernanceRequestFeedbackQuery';
 import { SystemIntakeDocument } from './SystemIntakeDocumentQueries';
 
 export const SystemIntake = gql`
   ${SystemIntakeDocument}
+  ${GovernanceRequestFeedback}
   fragment SystemIntake on SystemIntake {
     id
     adminLead
@@ -41,10 +43,8 @@ export const SystemIntake = gql`
     decisionNextSteps
     grbDate
     grtDate
-    grtFeedbacks {
-      feedback
-      feedbackType
-      createdAt
+    governanceRequestFeedbacks {
+      ...GovernanceRequestFeedback
     }
     governanceTeams {
       isPresent
