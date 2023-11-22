@@ -2,7 +2,6 @@ import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
-import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
@@ -10,10 +9,6 @@ import {
   GetGovernanceTaskList,
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
-import {
-  GetGRTFeedback,
-  GetGRTFeedbackVariables
-} from 'queries/types/GetGRTFeedback';
 import {
   GetSystemIntake,
   GetSystemIntakeVariables
@@ -227,7 +222,7 @@ export const systemIntake: SystemIntake = {
   submittedAt: '2022-10-20T14:55:47.88283Z',
   grbDate: null,
   grtDate: null,
-  grtFeedbacks: [],
+  governanceRequestFeedbacks: [],
   lcid: null,
   lcidIssuedAt: null,
   lcidExpiresAt: null,
@@ -453,23 +448,3 @@ export const getGovernanceTaskListQuery = (
     }
   }
 });
-
-export const getGRTFeedbackQuery: MockedQuery<
-  GetGRTFeedback,
-  GetGRTFeedbackVariables
-> = {
-  request: {
-    query: GetGRTFeedbackQuery,
-    variables: {
-      intakeID: systemIntakeId
-    }
-  },
-  result: {
-    data: {
-      systemIntake: {
-        __typename: 'SystemIntake',
-        grtFeedbacks: []
-      }
-    }
-  }
-};

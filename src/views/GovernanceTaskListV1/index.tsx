@@ -24,12 +24,7 @@ import {
   intakeTag
 } from 'data/taskList';
 import useMessage from 'hooks/useMessage';
-import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
-import {
-  GetGRTFeedback,
-  GetGRTFeedbackVariables
-} from 'queries/types/GetGRTFeedback';
 import {
   GetSystemIntake,
   GetSystemIntakeVariables
@@ -59,17 +54,6 @@ const GovernanceTaskList = () => {
   const { showMessageOnNextPage } = useMessage();
   const { t } = useTranslation('taskList');
 
-  const { data: grtFeedbackData } = useQuery<
-    GetGRTFeedback,
-    GetGRTFeedbackVariables
-  >(GetGRTFeedbackQuery, {
-    variables: {
-      intakeID: systemId
-    }
-  });
-
-  const grtFeedback = grtFeedbackData?.systemIntake?.grtFeedbacks;
-
   const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
     GetSystemIntakeQuery,
     {
@@ -78,6 +62,8 @@ const GovernanceTaskList = () => {
       }
     }
   );
+
+  const grtFeedback = data?.systemIntake?.governanceRequestFeedbacks;
 
   const { systemIntake } = data || {};
   const {

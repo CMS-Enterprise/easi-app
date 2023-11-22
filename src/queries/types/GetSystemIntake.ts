@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { GRTFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState } from "./../../types/graphql-global-types";
+import { GovernanceRequestFeedbackTargetForm, GovernanceRequestFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemIntake
@@ -51,10 +51,18 @@ export interface GetSystemIntake_systemIntake_annualSpending {
   plannedYearOneSpending: string | null;
 }
 
-export interface GetSystemIntake_systemIntake_grtFeedbacks {
-  __typename: "GRTFeedback";
-  feedback: HTML | null;
-  feedbackType: GRTFeedbackType | null;
+export interface GetSystemIntake_systemIntake_governanceRequestFeedbacks_author {
+  __typename: "UserInfo";
+  commonName: string;
+}
+
+export interface GetSystemIntake_systemIntake_governanceRequestFeedbacks {
+  __typename: "GovernanceRequestFeedback";
+  id: UUID;
+  feedback: HTML;
+  targetForm: GovernanceRequestFeedbackTargetForm;
+  type: GovernanceRequestFeedbackType;
+  author: GetSystemIntake_systemIntake_governanceRequestFeedbacks_author | null;
   createdAt: Time;
 }
 
@@ -128,7 +136,7 @@ export interface GetSystemIntake_systemIntake {
   decisionNextSteps: HTML | null;
   grbDate: Time | null;
   grtDate: Time | null;
-  grtFeedbacks: GetSystemIntake_systemIntake_grtFeedbacks[];
+  governanceRequestFeedbacks: GetSystemIntake_systemIntake_governanceRequestFeedbacks[];
   governanceTeams: GetSystemIntake_systemIntake_governanceTeams;
   isso: GetSystemIntake_systemIntake_isso;
   existingFunding: boolean | null;

@@ -304,6 +304,18 @@ exports[`Submit Action > renders additional contacts 1`] = `
               class=""
             >
               <a
+                aria-label="Open feedback"
+                class="easi-grt__nav-link"
+                data-testid="grt-nav-feedback.title-link"
+                href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/feedback"
+              >
+                Feedback
+              </a>
+            </li>
+            <li
+              class=""
+            >
+              <a
                 aria-label="Open decision"
                 class="easi-grt__nav-link"
                 data-testid="grt-nav-decision.title-link"

@@ -37,7 +37,9 @@ const FeedbackItem = ({
         <Grid tablet={{ col: 6 }} className="margin-top-2 tablet:margin-top-0">
           <dt className="text-bold margin-bottom-1">{t('feedbackV2.from')}</dt>
           <dd className="margin-x-0">
-            {t('feedbackV2.author', { name: author.commonName })}
+            {author
+              ? t('feedbackV2.author', { name: author?.commonName })
+              : t('feedbackV2.governanceTeam')}
           </dd>
         </Grid>
         <div className="bg-base-lightest width-full margin-top-3 padding-3">

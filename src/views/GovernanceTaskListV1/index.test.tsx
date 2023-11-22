@@ -11,7 +11,6 @@ import {
 import configureMockStore from 'redux-mock-store';
 
 import {
-  getGRTFeedbackQuery,
   getSystemIntakeQuery,
   initialSystemIntakeForm,
   systemIntake
@@ -57,10 +56,7 @@ describe('The Goveranance Task List', () => {
       <MemoryRouter
         initialEntries={[`/governance-task-list/${systemIntake.id}`]}
       >
-        <MockedProvider
-          mocks={[getSystemIntakeQuery(), getGRTFeedbackQuery]}
-          addTypename={false}
-        >
+        <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={store}>
             <MessageProvider>
               <Route
@@ -89,10 +85,7 @@ describe('The Goveranance Task List', () => {
       <MemoryRouter
         initialEntries={[`/governance-task-list/${systemIntake.id}`]}
       >
-        <MockedProvider
-          mocks={[getSystemIntakeQuery(), getGRTFeedbackQuery]}
-          addTypename={false}
-        >
+        <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={store}>
             <MessageProvider>
               <Route
@@ -128,8 +121,7 @@ describe('The Goveranance Task List', () => {
                 requestName: 'Easy Access to System Information',
                 status: SystemIntakeStatus.INTAKE_DRAFT,
                 requestType: SystemIntakeRequestType.RECOMPETE
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -172,8 +164,7 @@ describe('The Goveranance Task List', () => {
               getSystemIntakeQuery({
                 requestName: 'Easy Access to System Information',
                 requestType: SystemIntakeRequestType.RECOMPETE
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -224,8 +215,7 @@ describe('The Goveranance Task List', () => {
                 requestName: 'Easy Access to System Information',
                 requestType: SystemIntakeRequestType.RECOMPETE,
                 status: SystemIntakeStatus.LCID_ISSUED
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -285,8 +275,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 requestName: 'Easy Access to System Information'
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -324,10 +313,7 @@ describe('The Goveranance Task List', () => {
           initialEntries={[`/governance-task-list/${systemIntake.id}`]}
         >
           <MockedProvider
-            mocks={[
-              getSystemIntakeQuery(initialSystemIntakeForm),
-              getGRTFeedbackQuery
-            ]}
+            mocks={[getSystemIntakeQuery(initialSystemIntakeForm)]}
             addTypename={false}
           >
             <Provider store={store}>
@@ -371,10 +357,7 @@ describe('The Goveranance Task List', () => {
           initialEntries={[`/governance-task-list/${systemIntake.id}`]}
         >
           <MockedProvider
-            mocks={[
-              getSystemIntakeQuery(initialSystemIntakeForm),
-              getGRTFeedbackQuery
-            ]}
+            mocks={[getSystemIntakeQuery(initialSystemIntakeForm)]}
             addTypename={false}
           >
             <Provider store={store}>
@@ -418,8 +401,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.INTAKE_SUBMITTED
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -469,8 +451,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.NEED_BIZ_CASE
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -525,8 +506,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.BIZ_CASE_DRAFT
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -582,8 +562,7 @@ describe('The Goveranance Task List', () => {
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.BIZ_CASE_DRAFT_SUBMITTED,
                 businessCaseId: 'ac94c1d7-48ca-4c49-9045-371b4d3062b4'
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -639,8 +618,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.BIZ_CASE_CHANGES_NEEDED
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -697,8 +675,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.READY_FOR_GRT
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -772,8 +749,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.BIZ_CASE_FINAL_NEEDED
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -842,8 +818,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.BIZ_CASE_FINAL_SUBMITTED
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -913,8 +888,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.READY_FOR_GRB
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -981,8 +955,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.LCID_ISSUED
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -1055,8 +1028,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.NO_GOVERNANCE
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -1115,8 +1087,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.NOT_IT_REQUEST
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -1180,8 +1151,7 @@ describe('The Goveranance Task List', () => {
               getSystemIntakeQuery({
                 lcid: '123456',
                 status: SystemIntakeStatus.READY_FOR_GRB
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -1249,8 +1219,7 @@ describe('The Goveranance Task List', () => {
             mocks={[
               getSystemIntakeQuery({
                 status: SystemIntakeStatus.READY_FOR_GRB
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -1324,8 +1293,7 @@ describe('The Goveranance Task List', () => {
               getSystemIntakeQuery({
                 lcid: '123456',
                 status: SystemIntakeStatus.LCID_ISSUED
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
@@ -1405,8 +1373,7 @@ describe('The Goveranance Task List', () => {
               getSystemIntakeQuery({
                 lcid: '123456',
                 status: SystemIntakeStatus.NOT_APPROVED
-              }),
-              getGRTFeedbackQuery
+              })
             ]}
             addTypename={false}
           >
