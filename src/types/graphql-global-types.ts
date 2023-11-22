@@ -58,14 +58,6 @@ export enum CedarAssigneeType {
 }
 
 /**
- * Indicates who the source is of feedback on a system request
- */
-export enum GRTFeedbackType {
-  BUSINESS_OWNER = "BUSINESS_OWNER",
-  GRB = "GRB",
-}
-
-/**
  * Represents the possible forms on a governance request that can receive feedback
  */
 export enum GovernanceRequestFeedbackTargetForm {

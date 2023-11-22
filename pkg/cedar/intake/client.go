@@ -111,10 +111,10 @@ func (c *Client) PublishBusinessCase(ctx context.Context, bc models.BusinessCase
 }
 
 // PublishGRTFeedback sends an item of GRT feedback to CEDAR through the Intake API for eventual storage in Alfabet
-func (c *Client) PublishGRTFeedback(ctx context.Context, feedback models.GRTFeedback) error {
-	intakeObject := translation.TranslatableFeedback(feedback)
-	return c.publishIntakeObject(ctx, &intakeObject)
-}
+// func (c *Client) PublishGRTFeedback(ctx context.Context, feedback models.GRTFeedback) error {
+// 	intakeObject := translation.TranslatableFeedback(feedback)
+// 	return c.publishIntakeObject(ctx, &intakeObject)
+// }
 
 // PublishAction sends an action to CEDAR through the Intake API for eventual storage in Alfabet
 func (c *Client) PublishAction(ctx context.Context, action models.Action) error {

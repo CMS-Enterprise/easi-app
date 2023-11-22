@@ -50,7 +50,7 @@ describe('Governance Task List', () => {
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
     // Header
-    await screen.getByRole('heading', {
+    screen.getByRole('heading', {
       level: 1,
       name: i18next.t<string>('itGov:taskList.heading')
     });

@@ -108,7 +108,7 @@ describe('Gov Task: Feedback from initial review statuses', () => {
     expect(screen.queryByTestId('alert')).not.toBeInTheDocument();
 
     // View feedback
-    getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+    getByRoleWithNameTextKey('link', 'itGov:button.viewRequestedEdits');
 
     // Completed date
     screen.getByText(
@@ -131,6 +131,6 @@ describe('Gov Task: Feedback from initial review statuses', () => {
     getExpectedAlertType('info');
 
     // View feedback
-    getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+    getByRoleWithNameTextKey('link', 'itGov:button.viewRequestedEdits');
   });
 });

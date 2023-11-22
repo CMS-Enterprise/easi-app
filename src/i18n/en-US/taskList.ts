@@ -60,6 +60,7 @@ const taskList = {
     date: 'Date',
     from: 'From',
     author: '{{name}}, Governance Team',
+    governanceTeam: 'Governance Team',
     editsRequestedFor: 'Edits requested for',
     feedbackTitleEditsRequested: 'Edits requested to a form',
     feedbackTitle_GRB: 'Recommendation for the Governance Review Board (GRB)',
