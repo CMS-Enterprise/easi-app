@@ -13,6 +13,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -71,12 +72,27 @@ func migrateIntakes() {
 	fmt.Println("=======================================")
 	allIntakes, err := store.FetchSystemIntakes(ctx)
 	noErr(err)
-	for _, i := range allIntakes {
+
+	totalNum := len(allIntakes)
+	for idx, i := range allIntakes {
+		fmt.Println("Processing intake", idx+1, "of", totalNum)
 		intake := i // prevent gosec's G601 -- Implicit memory aliasing in for loop.
 		fmt.Println("Preparing to update system intake", intake.ID.String())
 		fmt.Println("Intake Status:", intake.Status)
 		intake.SetV2FieldsBasedOnV1Status(intake.Status)
-		_, err := store.UpdateSystemIntake(ctx, &intake)
+
+		bizCase, err := store.FetchBusinessCaseBySystemIntakeID(ctx, intake.ID)
+		noErr(err)
+		if bizCase != nil {
+			fmt.Println("Found biz case for intake", intake.ID.String())
+			if intake.Step == models.SystemIntakeStepDECISION {
+				intake.FinalBusinessCaseState = models.SIRFSSubmitted
+			} else {
+				intake.DraftBusinessCaseState = models.SIRFSInProgress
+			}
+		}
+
+		_, err = store.UpdateSystemIntake(ctx, &intake)
 		noErr(err)
 		fmt.Println("Updated system intake", intake.ID.String())
 		fmt.Println("=======================================")
