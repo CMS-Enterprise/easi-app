@@ -4,6 +4,7 @@ import { Grid, ModalRef } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import i18next from 'i18next';
 
+import PDFExport from 'components/PDFExport';
 import AdminAction, { AdminActionButton } from 'components/shared/AdminAction';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { TaskStatus } from 'components/shared/TaskStatusTag';
@@ -105,13 +106,20 @@ type TrbAdminWrapperProps = {
     assignLeadModalRef?: React.RefObject<ModalRef>;
     assignLeadModalTrbRequestIdRef?: React.MutableRefObject<TrbRequestIdRef>;
   };
+  /** Whether or not to render admin actions box at bottom of page */
+  renderBottom?: boolean;
   /** Props to display status tag */
   statusTagProps?: {
     status: TaskStatus;
     name: string;
     date: string;
   };
-  renderBottom?: boolean;
+  /** Props for optional PDF export button */
+  pdfExportProps?: {
+    title: string;
+    filename: string;
+    label: string;
+  };
 };
 
 export default function TrbAdminWrapper({
@@ -123,8 +131,9 @@ export default function TrbAdminWrapper({
   disableStep,
   adminActionProps,
   noteCount,
+  renderBottom,
   statusTagProps,
-  renderBottom
+  pdfExportProps
 }: TrbAdminWrapperProps) {
   const { t } = useTranslation('technicalAssistance');
 
@@ -142,6 +151,28 @@ export default function TrbAdminWrapper({
     assignLeadModalTrbRequestIdRef,
     openNotes
   });
+
+  /** Wraps content in `PDFExport` component if `pdfExportProps` prop is defined */
+  const PDFWrapper = ({
+    children: pdfContent
+  }: {
+    children: React.ReactNode;
+  }) => {
+    if (pdfExportProps) {
+      return (
+        <PDFExport
+          linkPosition="top"
+          title={pdfExportProps.title}
+          filename={pdfExportProps.filename}
+          label={pdfExportProps.label}
+        >
+          {pdfContent}
+        </PDFExport>
+      );
+    }
+
+    return <>{pdfContent}</>;
+  };
 
   return (
     <Grid
@@ -192,19 +223,21 @@ export default function TrbAdminWrapper({
         )}
       </Grid>
 
-      {/* Admin Action box */}
-      {actionButtons.length > 0 && adminActionProps && !disableStep && (
-        <TrbAdminAction
-          translationKey={`technicalAssistance:adminAction.statuses.${
-            adminActionProps.state === TRBRequestState.CLOSED
-              ? adminActionProps.state
-              : adminActionProps.status
-          }`}
-          actionButtons={actionButtons}
-        />
-      )}
+      <PDFWrapper>
+        {/* Admin Action box */}
+        {actionButtons.length > 0 && adminActionProps && !disableStep && (
+          <TrbAdminAction
+            translationKey={`technicalAssistance:adminAction.statuses.${
+              adminActionProps.state === TRBRequestState.CLOSED
+                ? adminActionProps.state
+                : adminActionProps.status
+            }`}
+            actionButtons={actionButtons}
+          />
+        )}
 
-      {children}
+        {children}
+      </PDFWrapper>
 
       {/* Admin Action box rendered additionally at bottom */}
       {renderBottom &&
