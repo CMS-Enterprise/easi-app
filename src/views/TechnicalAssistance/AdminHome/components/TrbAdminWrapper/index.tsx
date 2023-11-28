@@ -32,11 +32,13 @@ export type ActionText = {
 type TrbAdminActionProps = {
   translationKey: string;
   actionButtons: AdminActionButton[];
+  className?: string;
 };
 
 const TrbAdminAction = ({
   translationKey,
-  actionButtons
+  actionButtons,
+  className
 }: TrbAdminActionProps) => {
   const text: ActionText = i18next.t(translationKey, { returnObjects: true });
   const { list } = text;
@@ -45,7 +47,9 @@ const TrbAdminAction = ({
       title={text.title}
       description={text.description}
       buttons={actionButtons}
-      className="margin-top-0"
+      className={classNames('easi-no-print', className, {
+        'margin-top-0': !className?.includes('margin-top')
+      })}
     >
       {list && (
         <CollapsableLink
@@ -233,6 +237,7 @@ export default function TrbAdminWrapper({
                 : adminActionProps.status
             }`}
             actionButtons={actionButtons}
+            className={pdfExportProps ? 'margin-top-3' : ''}
           />
         )}
 
