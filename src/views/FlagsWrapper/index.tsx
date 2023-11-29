@@ -38,6 +38,7 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             downgrade508Tester: false,
             downgradeTrbAdmin: false,
             itGovV2Enabled: false,
+            itGovV2Fields: false,
             systemProfile: true,
             systemProfileHiddenFields: false,
             cedar508Requests: false,
