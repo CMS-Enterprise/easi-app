@@ -13,7 +13,6 @@ import {
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
-import CharacterCounter from 'components/CharacterCounter';
 import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -173,7 +172,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   as={TextInput}
                   error={!!flatErrors.requestName}
                   id="IntakeForm-ContractName"
-                  maxLength={50}
+                  maxLength={200}
                   name="requestName"
                 />
               </FieldGroup>
@@ -196,13 +195,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   as={Textarea}
                   error={!!flatErrors.businessNeed}
                   id="IntakeForm-BusinessNeed"
-                  maxLength={2000}
+                  maxLength={10000}
                   name="businessNeed"
                   aria-describedby="IntakeForm-BusinessNeedCounter IntakeForm-BusinessNeedHelp"
-                />
-                <CharacterCounter
-                  id="IntakeForm-BusinessNeedCounter"
-                  characterCount={2000 - values.businessNeed.length}
                 />
               </FieldGroup>
 
@@ -224,13 +219,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
                   as={Textarea}
                   error={!!flatErrors.businessSolution}
                   id="IntakeForm-BusinessSolution"
-                  maxLength={2000}
+                  maxLength={10000}
                   name="businessSolution"
                   aria-describedby="IntakeForm-BusinessSolutionCounter IntakeForm-BusinessSolutionHelp"
-                />
-                <CharacterCounter
-                  id="IntakeForm-BusinessSolutionCounter"
-                  characterCount={2000 - values.businessSolution.length}
                 />
               </FieldGroup>
 

@@ -145,10 +145,9 @@ const PreferredSolution = ({
                   </FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    characterCounter
                     error={!!flatErrors['preferredSolution.summary']}
                     id="BusinessCase-PreferredSolutionSummary"
-                    maxLength={2000}
+                    maxLength={10000}
                     name="preferredSolution.summary"
                     aria-describedby="BusinessCase-PreferredSolutionSummaryCounter BusinessCase-PreferredSolutionSummaryHelp"
                   />
@@ -172,12 +171,11 @@ const PreferredSolution = ({
                   </FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    characterCounter
                     error={
                       !!flatErrors['preferredSolution.acquisitionApproach']
                     }
                     id="BusinessCase-PreferredSolutionAcquisitionApproach"
-                    maxLength={2000}
+                    maxLength={10000}
                     name="preferredSolution.acquisitionApproach"
                     aria-describedby="BusinessCase-PreferredSolutionAcquisitionApproachCounter BusinessCase-PreferredSolutionAcquisitionApproachHelp"
                   />
@@ -514,10 +512,9 @@ const PreferredSolution = ({
                   </FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    characterCounter
                     error={!!flatErrors['preferredSolution.pros']}
                     id="BusinessCase-PreferredSolutionPros"
-                    maxLength={2000}
+                    maxLength={10000}
                     name="preferredSolution.pros"
                     aria-describedby="BusinessCase-PreferredSolutionProsCounter BusinessCase-PreferredSolutionProsHelp"
                   />
@@ -541,10 +538,9 @@ const PreferredSolution = ({
                   </FieldErrorMsg>
                   <Field
                     as={TextAreaField}
-                    characterCounter
                     error={!!flatErrors['preferredSolution.cons']}
                     id="BusinessCase-PreferredSolutionCons"
-                    maxLength={2000}
+                    maxLength={10000}
                     name="preferredSolution.cons"
                     aria-describedby="BusinessCase-PreferredSolutionConsCounter BusinessCase-PreferredSolutionConsHelp"
                   />
@@ -582,7 +578,6 @@ const PreferredSolution = ({
                 </FieldErrorMsg>
                 <Field
                   as={TextAreaField}
-                  characterCounter
                   error={!!flatErrors['preferredSolution.costSavings']}
                   id="BusinessCase-PreferredSolutionCostSavings"
                   maxLength={2000}

@@ -371,7 +371,7 @@ const IssueLifecycleId = ({ refetch }: IssueLifecycleIdProps) => {
                     as={TextAreaField}
                     error={!!flatErrors.scope}
                     id="IssueLifecycleIdForm-Scope"
-                    maxLength={3000}
+                    maxLength={10000}
                     name="scope"
                   />
                 </FieldGroup>
@@ -394,7 +394,7 @@ const IssueLifecycleId = ({ refetch }: IssueLifecycleIdProps) => {
                     as={TextAreaField}
                     error={!!flatErrors.nextSteps}
                     id="IssueLifecycleIdForm-NextSteps"
-                    maxLength={3000}
+                    maxLength={10000}
                     name="nextSteps"
                   />
                 </FieldGroup>
@@ -408,7 +408,7 @@ const IssueLifecycleId = ({ refetch }: IssueLifecycleIdProps) => {
                   <Field
                     as={TextAreaField}
                     id="IssueLifecycleIdForm-CostBaseline"
-                    maxLength={3000}
+                    maxLength={10000}
                     name="costBaseline"
                   />
                 </FieldGroup>
@@ -443,7 +443,7 @@ const IssueLifecycleId = ({ refetch }: IssueLifecycleIdProps) => {
                     as={TextAreaField}
                     error={!!flatErrors.feedback}
                     id="IssueLifecycleIdForm-Feedback"
-                    maxLength={2000}
+                    maxLength={10000}
                     name="feedback"
                     aria-describedby="IssueLifecycleIdForm-SubmitHelp"
                   />

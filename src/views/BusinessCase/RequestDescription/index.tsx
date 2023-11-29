@@ -109,7 +109,6 @@ const RequestDescription = ({
                   maxLength={2000}
                   name="businessNeed"
                   aria-describedby="BusinessCase-BusinessNeedCounter BusinessCase-BusinessNeedHelp"
-                  characterCounter
                 />
               </FieldGroup>
 
@@ -136,7 +135,6 @@ const RequestDescription = ({
                   maxLength={2000}
                   name="currentSolutionSummary"
                   aria-describedby="BusinessCase-CurrentSolutionSummaryCounter BusinessCase-CurrentSolutionSummaryHelp"
-                  characterCounter
                 />
               </FieldGroup>
 
@@ -161,7 +159,6 @@ const RequestDescription = ({
                   maxLength={2000}
                   name="cmsBenefit"
                   aria-describedby="BusinessCase-CmsBenefitCounter BusinessCase-CmsBenefitHelp"
-                  characterCounter
                 />
               </FieldGroup>
 
@@ -186,7 +183,6 @@ const RequestDescription = ({
                   maxLength={2000}
                   name="priorityAlignment"
                   aria-describedby="BusinessCase-PriorityAlignmentCounter BusinessCase-PriorityAlignmentHelp"
-                  characterCounter
                 />
               </FieldGroup>
 
@@ -211,7 +207,6 @@ const RequestDescription = ({
                   maxLength={2000}
                   name="successIndicators"
                   aria-describedby="BusinessCase-SuccessIndicatorsCounter BusinessCase-SuccessIndicatorsHelp"
-                  characterCounter
                 />
               </FieldGroup>
             </Form>

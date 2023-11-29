@@ -200,7 +200,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
                     as={TextAreaField}
                     error={!!flatErrors.feedback}
                     id="SubmitActionForm-Feedback"
-                    maxLength={3000}
+                    maxLength={10000}
                     name="feedback"
                   />
                 </FieldGroup>
