@@ -120,11 +120,11 @@ func (s *ClientTestSuite) TestTranslation() {
 		s.NotNil(ii)
 	})
 
-	s.Run("feedback", func() {
-		fb := translation.TranslatableFeedback(testhelpers.NewGRTFeedback())
+	// s.Run("feedback", func() {
+	// 	fb := translation.TranslatableFeedback(testhelpers.NewGRTFeedback())
 
-		ii, err := fb.CreateIntakeModel()
-		s.NoError(err)
-		s.NotNil(ii)
-	})
+	// 	ii, err := fb.CreateIntakeModel()
+	// 	s.NoError(err)
+	// 	s.NotNil(ii)
+	// })
 }

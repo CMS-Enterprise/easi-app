@@ -41,6 +41,7 @@ type TaskListItemProps = {
   statusDateInfo?: TaskListItemDateInfo;
   children?: React.ReactNode;
   testId?: string;
+  id?: string;
 };
 
 const TaskListItem = ({
@@ -49,7 +50,8 @@ const TaskListItem = ({
   statusPercentComplete,
   statusDateInfo,
   children,
-  testId
+  testId,
+  id
 }: TaskListItemProps) => {
   const { t } = useTranslation('taskList');
 
@@ -67,7 +69,7 @@ const TaskListItem = ({
   );
 
   return (
-    <li className={taskListItemClasses} data-testid={testId}>
+    <li className={taskListItemClasses} data-testid={testId} id={id}>
       <div className="task-list__task-content">
         <div className="task-list__task-heading-row">
           <h3 className="task-list__task-heading line-height-heading-2 margin-top-0 margin-bottom-1">

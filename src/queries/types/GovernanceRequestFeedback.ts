@@ -20,6 +20,6 @@ export interface GovernanceRequestFeedback {
   feedback: HTML;
   targetForm: GovernanceRequestFeedbackTargetForm;
   type: GovernanceRequestFeedbackType;
-  author: GovernanceRequestFeedback_author;
+  author: GovernanceRequestFeedback_author | null;
   createdAt: Time;
 }

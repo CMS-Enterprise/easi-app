@@ -241,7 +241,9 @@ const governanceReviewTeam = {
     title: 'Feedback',
     description:
       'A history of feedback and recommendations sent to the requester as a part of admin actions.',
-    noFeedback: 'No feedback has been added for this request.'
+    noFeedback: 'No feedback has been added for this request.',
+    feedbackMoved:
+      'Feedback and recommendations have moved! Use the Feedback tab in the navigation to the left to view feedback and recommendations that have been sent to the requester and project team.'
   },
   actions: 'Actions',
   requestType: 'Request type',
