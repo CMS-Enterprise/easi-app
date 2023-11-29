@@ -45,6 +45,7 @@ import {
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatus,
+  SystemIntakeStatusAdmin,
   SystemIntakeStep,
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
@@ -302,6 +303,7 @@ export const systemIntakeForTable: TableSystemIntake = {
   euaUserId: '',
   requestName: '',
   status: SystemIntakeStatus.INTAKE_SUBMITTED,
+  statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
   state: SystemIntakeState.OPEN,
   requesterName: systemIntake.requester.name,
   requesterComponent: systemIntake.requester.component,

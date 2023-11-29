@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { CellProps, Column, Row } from 'react-table';
 import { IconError } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import TruncatedText from 'components/shared/TruncatedText';
@@ -19,6 +20,7 @@ const useRequestTableColumns = (
   activeTable: 'open' | 'closed'
 ): Array<Column<SystemIntakeForTable>> => {
   const { t } = useTranslation('governanceReviewTeam');
+  const flags = useFlags();
 
   // Character limit for length of free text (Admin Note, LCID Scope, etc.), any
   // text longer then this limit will be displayed with a button to allow users
@@ -123,7 +125,7 @@ const useRequestTableColumns = (
     }
   };
 
-  const statusColumn: Column<SystemIntakeForTable> = {
+  const statusV1Column: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.status'),
     accessor: 'status',
     Cell: ({
@@ -151,6 +153,11 @@ const useRequestTableColumns = (
       // If any other value just display status
       return value;
     }
+  };
+
+  const statusColumn: Column<SystemIntakeForTable> = {
+    Header: t<string>('intake:fields.status'),
+    accessor: 'statusAdmin'
   };
 
   const lcidExpirationDateColumn: Column<SystemIntakeForTable> = {
@@ -207,7 +214,7 @@ const useRequestTableColumns = (
         requestNameColumn,
         requesterColumn,
         adminLeadColumn,
-        statusColumn,
+        flags.itGovV2Fields ? statusColumn : statusV1Column,
         grtDateColumn,
         grbDateColumn
       ];
@@ -218,7 +225,7 @@ const useRequestTableColumns = (
         requestNameColumn,
         requesterColumn,
         lcidExpirationDateColumn,
-        statusColumn,
+        flags.itGovV2Fields ? statusColumn : statusV1Column,
         lastAdminNoteColumn
       ];
     }

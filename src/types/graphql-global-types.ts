@@ -318,6 +318,26 @@ export enum SystemIntakeStatus {
 }
 
 /**
+ * This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
+ */
+export enum SystemIntakeStatusAdmin {
+  CLOSED = "CLOSED",
+  DRAFT_BUSINESS_CASE_IN_PROGRESS = "DRAFT_BUSINESS_CASE_IN_PROGRESS",
+  DRAFT_BUSINESS_CASE_SUBMITTED = "DRAFT_BUSINESS_CASE_SUBMITTED",
+  FINAL_BUSINESS_CASE_IN_PROGRESS = "FINAL_BUSINESS_CASE_IN_PROGRESS",
+  FINAL_BUSINESS_CASE_SUBMITTED = "FINAL_BUSINESS_CASE_SUBMITTED",
+  GRB_MEETING_COMPLETE = "GRB_MEETING_COMPLETE",
+  GRB_MEETING_READY = "GRB_MEETING_READY",
+  GRT_MEETING_COMPLETE = "GRT_MEETING_COMPLETE",
+  GRT_MEETING_READY = "GRT_MEETING_READY",
+  INITIAL_REQUEST_FORM_IN_PROGRESS = "INITIAL_REQUEST_FORM_IN_PROGRESS",
+  INITIAL_REQUEST_FORM_SUBMITTED = "INITIAL_REQUEST_FORM_SUBMITTED",
+  LCID_ISSUED = "LCID_ISSUED",
+  NOT_APPROVED = "NOT_APPROVED",
+  NOT_GOVERNANCE = "NOT_GOVERNANCE",
+}
+
+/**
  * SystemIntakeStep represents the current step in the intake process
  */
 export enum SystemIntakeStep {
