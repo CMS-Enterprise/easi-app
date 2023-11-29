@@ -14,6 +14,7 @@ import {
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Modal from 'components/Modal';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -58,6 +59,7 @@ const RequestSummary = ({
   contractNumber
 }: RequestSummaryProps) => {
   const { t } = useTranslation('governanceReviewTeam');
+  const flags = useFlags();
   const [isModalOpen, setModalOpen] = useState(false);
   const [newAdminLead, setAdminLead] = useState('');
   const [mutate, mutationResult] = useMutation<UpdateSystemIntakeAdminLead>(
@@ -67,7 +69,6 @@ const RequestSummary = ({
     }
   );
 
-  // TODO EASI-3440: update to use v2 `state` field
   const state: SystemIntakeState = isIntakeClosed(status)
     ? SystemIntakeState.CLOSED
     : SystemIntakeState.OPEN;
@@ -206,13 +207,10 @@ const RequestSummary = ({
             <Grid desktop={{ col: 8 }}>
               <div>
                 <h4 className="margin-right-1">{t('status.label')}</h4>
-                <StateTag state={state} />
+                {!flags.itGovV2Fields && <StateTag state={state} />}
               </div>
               <p className="text-base-dark" data-testid="grt-current-status">
-                {
-                  /* TODO EASI-3440: Update to use v2 statuses */
-                  translateStatus(status, lcid)
-                }
+                {flags.itGovV2Fields ? status : translateStatus(status, lcid)}
               </p>
               <Link to={`/governance-review-team/${id}/actions`}>
                 {t('action:takeAnAction')}

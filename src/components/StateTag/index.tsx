@@ -8,7 +8,7 @@ import { SystemIntakeState } from 'types/graphql-global-types';
 
 import './index.scss';
 
-type StateTagProps = { state: 'OPEN' | 'CLOSED'; className?: string };
+type StateTagProps = { state: string; className?: string };
 
 /**
  * Tag to display open/closed state

@@ -155,6 +155,7 @@ export const systemIntake: SystemIntake = {
   euaUserId: requester.euaUserId,
   adminLead: '',
   status: SystemIntakeStatus.INTAKE_SUBMITTED,
+  statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
   requester: {
     __typename: 'SystemIntakeRequester',
     name: requester.commonName!,

@@ -114,7 +114,9 @@ const RequestOverview = () => {
           requester={systemIntake.requester}
           requestName={systemIntake.requestName || ''}
           requestType={systemIntake.requestType}
-          status={systemIntake.status}
+          status={
+            flags.itGovV2Fields ? systemIntake.statusAdmin : systemIntake.status
+          }
           adminLead={systemIntake.adminLead}
           submittedAt={systemIntake.submittedAt}
           lcid={systemIntake.lcid}

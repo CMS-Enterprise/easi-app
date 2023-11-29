@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { GovernanceRequestFeedbackTargetForm, GovernanceRequestFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState } from "./../../types/graphql-global-types";
+import { GovernanceRequestFeedbackTargetForm, GovernanceRequestFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatus, SystemIntakeStatusAdmin, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL fragment: SystemIntake
@@ -158,6 +158,7 @@ export interface SystemIntake {
   requestName: string | null;
   requestType: SystemIntakeRequestType;
   status: SystemIntakeStatus;
+  statusAdmin: SystemIntakeStatusAdmin;
   grtReviewEmailBody: string | null;
   decidedAt: Time | null;
   businessCaseId: UUID | null;
