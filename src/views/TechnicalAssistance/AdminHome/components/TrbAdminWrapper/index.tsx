@@ -4,10 +4,10 @@ import { Grid, ModalRef } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import i18next from 'i18next';
 
-import PDFExport from 'components/PDFExport';
 import AdminAction, { AdminActionButton } from 'components/shared/AdminAction';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { TaskStatus } from 'components/shared/TaskStatusTag';
+import usePDFExport from 'hooks/usePDFExport';
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPath, TrbRequestIdRef } from 'types/technicalAssistance';
 
@@ -156,27 +156,10 @@ export default function TrbAdminWrapper({
     openNotes
   });
 
-  /** Wraps content in `PDFExport` component if `pdfExportProps` prop is defined */
-  const PDFWrapper = ({
-    children: pdfContent
-  }: {
-    children: React.ReactNode;
-  }) => {
-    if (pdfExportProps) {
-      return (
-        <PDFExport
-          linkPosition="top"
-          title={pdfExportProps.title}
-          filename={pdfExportProps.filename}
-          label={pdfExportProps.label}
-        >
-          {pdfContent}
-        </PDFExport>
-      );
-    }
-
-    return <>{pdfContent}</>;
-  };
+  const { PDFExportWrapper, PDFExportButton } = usePDFExport({
+    filename: pdfExportProps?.filename || '',
+    title: pdfExportProps?.title
+  });
 
   return (
     <Grid
@@ -214,6 +197,10 @@ export default function TrbAdminWrapper({
               className="margin-top-0 margin-bottom-205"
             />
           )}
+
+          {!!pdfExportProps && (
+            <PDFExportButton>{pdfExportProps.label}</PDFExportButton>
+          )}
         </Grid>
 
         {noteCount !== undefined && (
@@ -227,22 +214,23 @@ export default function TrbAdminWrapper({
         )}
       </Grid>
 
-      <PDFWrapper>
-        {/* Admin Action box */}
-        {actionButtons.length > 0 && adminActionProps && !disableStep && (
-          <TrbAdminAction
-            translationKey={`technicalAssistance:adminAction.statuses.${
-              adminActionProps.state === TRBRequestState.CLOSED
-                ? adminActionProps.state
-                : adminActionProps.status
-            }`}
-            actionButtons={actionButtons}
-            className={pdfExportProps ? 'margin-top-3' : ''}
-          />
-        )}
+      {actionButtons.length > 0 && adminActionProps && !disableStep && (
+        <TrbAdminAction
+          translationKey={`technicalAssistance:adminAction.statuses.${
+            adminActionProps.state === TRBRequestState.CLOSED
+              ? adminActionProps.state
+              : adminActionProps.status
+          }`}
+          actionButtons={actionButtons}
+          className={pdfExportProps ? 'margin-top-3' : ''}
+        />
+      )}
 
-        {children}
-      </PDFWrapper>
+      {pdfExportProps ? (
+        <PDFExportWrapper>{children}</PDFExportWrapper>
+      ) : (
+        children
+      )}
 
       {/* Admin Action box rendered additionally at bottom */}
       {renderBottom &&
