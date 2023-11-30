@@ -195,6 +195,7 @@ function PublicAdviceLetter() {
               showDateSent={false}
               showSectionBorders={false}
               editable={false}
+              publicView
             />
           </PDFExportWrapper>
         )}

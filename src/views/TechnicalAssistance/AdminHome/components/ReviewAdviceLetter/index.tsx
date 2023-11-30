@@ -23,6 +23,7 @@ type ReviewAdviceLetterProps = {
   showDateSent?: boolean;
   showSectionBorders?: boolean;
   editable?: boolean;
+  publicView?: boolean;
   className?: string;
 };
 
@@ -37,6 +38,7 @@ const ReviewAdviceLetter = ({
   showDateSent = true,
   showSectionBorders = true,
   editable = true,
+  publicView = false,
   className
 }: ReviewAdviceLetterProps) => {
   const { t } = useTranslation('technicalAssistance');
@@ -82,9 +84,11 @@ const ReviewAdviceLetter = ({
           </UswdsReactLink>
         )}
 
-        <p className="easi-no-print text-bold margin-top-4 margin-bottom-0">
-          {t('adviceLetter.meetingSummary')}
-        </p>
+        {!publicView && (
+          <p className="easi-no-print text-bold margin-top-4 margin-bottom-0">
+            {t('adviceLetter.meetingSummary')}
+          </p>
+        )}
 
         {adviceLetter.meetingSummary && (
           <RichTextViewer
