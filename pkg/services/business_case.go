@@ -119,6 +119,7 @@ func NewCreateBusinessCase(
 		}
 
 		intake.Status = models.SystemIntakeStatusBIZCASEDRAFT
+		intake.SetV2FieldsBasedOnV1Status(intake.Status)
 		intake.UpdatedAt = &now
 		if _, err = updateIntake(ctx, intake); err != nil {
 			return &models.BusinessCase{}, err

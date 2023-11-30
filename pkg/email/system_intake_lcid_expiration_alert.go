@@ -19,6 +19,7 @@ type lcidExperationAlert struct {
 	ProjectName   string
 	RequesterName string
 	LifecycleID   string
+	LCIDIssuedAt  string
 	ExpiresAt     string
 	Scope         template.HTML
 	CostBaseline  string
@@ -34,6 +35,7 @@ func (c Client) lcidExpirationBody(
 	projectName string,
 	requesterName string,
 	lcid string,
+	lcidIssuedAt *time.Time,
 	lcidExpirationDate *time.Time,
 	scope models.HTML,
 	lifecycleCostBaseline string,
@@ -41,11 +43,20 @@ func (c Client) lcidExpirationBody(
 ) (string, error) {
 	requesterPath := path.Join("governance-task-list", systemIntakeID.String())
 	grtPath := path.Join("governance-review-team", systemIntakeID.String(), "lcid")
+	var issuedAt string
+	if lcidIssuedAt != nil {
+		issuedAt = lcidIssuedAt.Format("01/02/2006")
+	}
+	var expiresAt string
+	if lcidExpirationDate != nil {
+		expiresAt = lcidExpirationDate.Format("01/02/2006")
+	}
 	data := lcidExperationAlert{
 		ProjectName:   projectName,
 		RequesterName: requesterName,
 		LifecycleID:   lcid,
-		ExpiresAt:     lcidExpirationDate.Format("January 2, 2006"),
+		LCIDIssuedAt:  issuedAt,
+		ExpiresAt:     expiresAt,
 		Scope:         scope.ToTemplate(),
 		CostBaseline:  lifecycleCostBaseline,
 		NextSteps:     nextSteps.ToTemplate(),
@@ -75,13 +86,25 @@ func (c Client) SendLCIDExpirationAlertEmail(
 	projectName string,
 	requesterName string,
 	lcid string,
+	lcidIssuedAt *time.Time,
 	lcidExpirationDate *time.Time,
 	scope models.HTML,
 	lifecycleCostBaseline string,
 	nextSteps models.HTML,
 ) error {
 	subject := fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lcid, projectName)
-	body, err := c.lcidExpirationBody(ctx, systemIntakeID, projectName, requesterName, lcid, lcidExpirationDate, scope, lifecycleCostBaseline, nextSteps)
+	body, err := c.lcidExpirationBody(
+		ctx,
+		systemIntakeID,
+		projectName,
+		requesterName,
+		lcid,
+		lcidIssuedAt,
+		lcidExpirationDate,
+		scope,
+		lifecycleCostBaseline,
+		nextSteps,
+	)
 
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
