@@ -45,13 +45,19 @@ const ReviewAdviceLetter = ({
 
   return (
     <div className={className}>
+      {/* Thank you text for PDF version */}
+      <p className="easi-only-print line-height-body-5 font-body-lg">
+        {t('adviceLetter.thankYou')}
+      </p>
+
       {/* Date sent */}
       {showDateSent && (
         <>
-          <p className="text-bold margin-bottom-0">
+          <p className="text-bold margin-bottom-0 easi-no-print">
             {t('adviceLetter.sendDate')}
           </p>
-          <p className="margin-top-1">
+
+          <p className="margin-top-1 easi-no-print">
             {adviceLetter.dateSent
               ? formatDateLocal(adviceLetter.dateSent, 'MMMM d, yyyy')
               : t('adviceLetter.notYetSent')}
@@ -68,6 +74,7 @@ const ReviewAdviceLetter = ({
         })}
       >
         <h2 className="margin-bottom-1">{t('adviceLetter.whatWeHeard')}</h2>
+
         {showSectionEditLinks && (
           <UswdsReactLink
             to={`/trb/${trbRequestId}/advice/summary`}
@@ -76,9 +83,11 @@ const ReviewAdviceLetter = ({
             {t('check.edit')}
           </UswdsReactLink>
         )}
-        <p className="text-bold margin-top-4 margin-bottom-0">
+
+        <p className="easi-no-print text-bold margin-top-4 margin-bottom-0">
           {t('adviceLetter.meetingSummary')}
         </p>
+
         {adviceLetter.meetingSummary && (
           <RichTextViewer
             className="margin-top-1"
@@ -96,6 +105,7 @@ const ReviewAdviceLetter = ({
         })}
       >
         <h2 className="margin-bottom-1">{t('adviceLetter.whatWeRecommend')}</h2>
+
         {showSectionEditLinks && (
           <UswdsReactLink
             to={`/trb/${trbRequestId}/advice/recommendations`}
@@ -142,6 +152,7 @@ const ReviewAdviceLetter = ({
         <p className="text-bold margin-top-4 margin-bottom-1">
           {t('adviceLetter.nextSteps')}
         </p>
+
         {adviceLetter.nextSteps ? (
           <RichTextViewer
             className="margin-top-1"
@@ -157,6 +168,7 @@ const ReviewAdviceLetter = ({
         <p className="text-bold margin-top-3 margin-bottom-1">
           {t('adviceLetter.followup')}
         </p>
+
         <p className="margin-top-1 line-height-body-5">
           {adviceLetter.isFollowupRecommended
             ? t(`Yes, ${adviceLetter.followupPoint}`)
