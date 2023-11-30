@@ -46,9 +46,7 @@ const ReviewAdviceLetter = ({
   return (
     <div className={className}>
       {/* Thank you text for PDF version */}
-      <p className="easi-only-print line-height-body-5 font-body-lg">
-        {t('adviceLetter.thankYou')}
-      </p>
+      <p className="easi-only-print">{t('adviceLetter.thankYou')}</p>
 
       {/* Date sent */}
       {showDateSent && (

@@ -16,6 +16,7 @@ import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { CMS_TRB_EMAIL } from 'constants/externalUrls';
+import usePDFExport from 'hooks/usePDFExport';
 import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
 import {
   GetTrbPublicAdviceLetter,
@@ -43,6 +44,11 @@ function PublicAdviceLetter() {
 
   const { state } = useLocation<{ fromTaskList: boolean }>();
   const fromTaskList = state?.fromTaskList;
+
+  const { PDFExportWrapper, PDFExportButton } = usePDFExport({
+    filename: `advice letter ${id}.pdf`,
+    title: t('adviceLetterForm.heading')
+  });
 
   const { data, error, loading } = useQuery<
     GetTrbPublicAdviceLetter,
@@ -93,6 +99,7 @@ function PublicAdviceLetter() {
     <>
       <GridContainer className="full-width">
         <Breadcrumbs items={breadcrumbs} />
+
         <PageHeading className="margin-top-6 margin-bottom-1">
           {t('adviceLetterForm.heading')}
         </PageHeading>
@@ -103,12 +110,13 @@ function PublicAdviceLetter() {
               <IconArrowBack className="margin-right-05 margin-bottom-2px text-tbottom" />
               {t('requestFeedback.returnToTaskList')}
             </UswdsReactLink>
-            <p className="line-height-body-5 font-body-lg text-light margin-top-6">
+
+            <p className="line-height-body-5 font-body-lg text-light margin-top-6 margin-bottom-105">
               {t('adviceLetter.thankYou')}
             </p>
           </>
         ) : (
-          <p className="line-height-body-5 font-body-lg text-light margin-y-0">
+          <p className="line-height-body-5 font-body-lg text-light margin-top-0 margin-bottom-2">
             <Trans
               i18nKey="technicalAssistance:adviceLetter.description"
               components={{
@@ -118,6 +126,8 @@ function PublicAdviceLetter() {
             />
           </p>
         )}
+
+        <PDFExportButton>{t('adviceLetter.downloadAsPdf')}</PDFExportButton>
       </GridContainer>
 
       {!fromTaskList && (
@@ -178,15 +188,19 @@ function PublicAdviceLetter() {
 
       <GridContainer className="full-width">
         {adviceLetter && (
-          <ReviewAdviceLetter
-            trbRequestId={id}
-            adviceLetter={adviceLetter}
-            showDateSent={false}
-            showSectionBorders={false}
-            editable={false}
-          />
+          <PDFExportWrapper>
+            <ReviewAdviceLetter
+              trbRequestId={id}
+              adviceLetter={adviceLetter}
+              showDateSent={false}
+              showSectionBorders={false}
+              editable={false}
+            />
+          </PDFExportWrapper>
         )}
+      </GridContainer>
 
+      <GridContainer className="full-width">
         <Grid row gap>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
             <SummaryBox
