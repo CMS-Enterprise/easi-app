@@ -4,12 +4,17 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
 <DocumentFragment>
   <div>
     <p
-      class="text-bold margin-bottom-0"
+      class="easi-only-print"
+    >
+      Thank you for attending the TRB consult session!
+    </p>
+    <p
+      class="text-bold margin-bottom-0 easi-no-print"
     >
       Send date
     </p>
     <p
-      class="margin-top-1"
+      class="margin-top-1 easi-no-print"
     >
       Not yet sent
     </p>
@@ -23,7 +28,7 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
         What we heard
       </h2>
       <p
-        class="text-bold margin-top-4 margin-bottom-0"
+        class="easi-no-print text-bold margin-top-4 margin-bottom-0"
       >
         Meeting summary
       </p>
