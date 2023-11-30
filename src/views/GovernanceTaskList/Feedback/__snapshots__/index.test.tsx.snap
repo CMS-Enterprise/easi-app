@@ -86,7 +86,7 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
         |
       </span>
       <button
-        class="usa-button usa-button--unstyled display-flex flex-align-center"
+        class="usa-button usa-button--unstyled display-flex flex-align-center easi-no-print"
         data-testid="button"
         type="button"
       >
@@ -112,9 +112,7 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
     </div>
     <div>
       <h1
-        aria-live="polite"
-        class="easi-h1 easi-only-print"
-        tabindex="-1"
+        class="easi-only-print"
       >
         Feedback
       </h1>
@@ -369,7 +367,7 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
         |
       </span>
       <button
-        class="usa-button usa-button--unstyled display-flex flex-align-center"
+        class="usa-button usa-button--unstyled display-flex flex-align-center easi-no-print"
         data-testid="button"
         type="button"
       >
