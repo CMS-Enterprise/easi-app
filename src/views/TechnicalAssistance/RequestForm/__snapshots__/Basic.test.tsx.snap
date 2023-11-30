@@ -251,14 +251,6 @@ exports[`Trb Request form: Basic > submits the form successfully after a failed 
             id="needsAssistanceWith"
             name="needsAssistanceWith"
           />
-          <span
-            aria-atomic="false"
-            aria-live="polite"
-            class="easi-character-counter margin-top-1"
-            id="needsAssistanceWith-counter"
-          >
-            2000 characters remaining
-          </span>
         </div>
         <div
           class="usa-form-group"

@@ -29,7 +29,6 @@ import {
   useFormikContext
 } from 'formik';
 
-import CharacterCounter from 'components/CharacterCounter';
 import HelpBreadcrumb from 'components/HelpBreadcrumb';
 import MainContent from 'components/MainContent';
 import {
@@ -607,10 +606,6 @@ const SendFeedback = () => {
                         as={Textarea}
                         id="howCanWeImprove"
                         name="howCanWeImprove"
-                      />
-                      <CharacterCounter
-                        id="howCanWeImprove-counter"
-                        characterCount={2000 - values.howCanWeImprove.length}
                       />
                     </FormGroup>
                     <HelpFormSubmitFooter submit={t('sendFeedback.submit')} />
