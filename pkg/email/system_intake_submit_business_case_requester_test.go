@@ -49,23 +49,23 @@ func (s *EmailTestSuite) TestSubmitBizCaseRequester() {
 		if isDraft {
 			openingDraftText1 = "draft"
 			openingDraftText2 = "will either get back to you within two business days or share feedback at your scheduled GRT meeting."
-			nextStepsDraftText = "<li>additional steps in the Governance Review process such as a meeting with the full GRT or a meeting with the Governance Review Board (GRB)</li>"
+			nextStepsDraftText = "<li>additional steps in the Governance Review process are needed such as a meeting with the full GRT or a meeting with the Governance Review Board (GRB), or</li>"
 		} else {
 			openingDraftText1 = "final"
 			openingDraftText2 = fmt.Sprintf(`get back to you within two business days. In the meantime, you may review guidance in EASi about <a href="%s">preparing for the GRB</a>`, preparingForGRBLink)
-			nextStepsDraftText = "<li>your Business Case is ready for a meeting with the Governance Review Board (GRB)</li>\n    <li>your Business Case needs further edits before presenting to the GRB</li>"
+			nextStepsDraftText = "<li>you are ready for a meeting with the Governance Review Board (GRB),</li>\n    <li>your Business Case needs further edits before presenting to the GRB, or</li>"
 		}
 		return fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
 
 <span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
 
-<p>You have %s a %s Business Case for your IT Governance request %s. The Governance Review Team (GRT) will review %s and %s.</p>
+<p>You have %s a %s Business Case for your IT Governance request (%s). The Governance Review Team (GRT) will review %s and %s.</p>
 
 <p>
-  The Governance Review Team will inform you of any next steps for your request. Possible next steps:
+  The Governance Team will determine one of the following possible outcomes for your request:
   <ul>
     %s
-    <li>no further governance is necessary and a decision is issued or the request is closed.</li>
+    <li>no further steps are necessary and a decision will be issued or the request will be closed.</li>
   </ul>
 </p>
 

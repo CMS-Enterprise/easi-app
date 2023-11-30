@@ -31,27 +31,31 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormRequester() {
 	getExpectedEmail := func(isResubmitted bool) string {
 		var openingResubmittedText1 string
 		var openingResubmittedText2 string
-		var outcomesSubmittedText string
+		var outcomesSubmittedText1 string
+		var outcomesSubmittedText2 string
 		if isResubmitted {
 			openingResubmittedText1 = "made changes to"
 			openingResubmittedText2 = "your changes"
+			outcomesSubmittedText1 = ", or"
+			outcomesSubmittedText2 = ".</li>"
 		} else {
 			openingResubmittedText1 = "completed"
 			openingResubmittedText2 = "it"
-			outcomesSubmittedText = "<li>decide that the IT Governance process is not applicable and close your request.</li>"
+			outcomesSubmittedText1 = ","
+			outcomesSubmittedText2 = `, or</li>
+    <li>decide that the IT Governance process is not applicable and close your request.</li>`
 		}
 		return fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
 
 <span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
 
-<p>You have %s the Intake Request form for your IT Governance request %s. The Governance Review Team (GRT) will review %s and get back to you within two business days.</p>
+<p>You have %s the Intake Request form for your IT Governance request (%s). The Governance Review Team (GRT) will review %s and get back to you within two business days.</p>
 
 <p>
-  The Governance Team will inform you if any next steps need to be taken with your request. They will communicate one of these possible outcomes. They will:
+  The Governance Team will inform you if any next steps need to be taken with your request when they communicate one of the following possible outcomes. They will either:
   <ul>
-    <li>process your request and issue a Life Cycle ID without any additional work on your part</li>
-    <li>direct you to go through additional steps in the Governance Review process such as drafting a Business Case, meeting with the full GRT, or meeting with the Governance Review Board (GRB)</li>
-    %s
+    <li>process your request and issue a Life Cycle ID without any additional work on your part%s</li>
+    <li>direct you to go through additional steps in the Governance Review process such as drafting a Business Case, meeting with the full GRT, or meeting with the Governance Review Board (GRB)%s
   </ul>
 </p>
 
@@ -64,7 +68,8 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormRequester() {
 			openingResubmittedText1,
 			requestName,
 			openingResubmittedText2,
-			outcomesSubmittedText,
+			outcomesSubmittedText1,
+			outcomesSubmittedText2,
 			requesterTaskLink,
 			GRTEmailAddress,
 			GRTEmailAddress,

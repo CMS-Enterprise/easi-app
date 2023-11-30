@@ -36,12 +36,6 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 		s.config.URLHost,
 		intakeID.String(),
 	)
-	requesterDecisionLink := fmt.Sprintf(
-		"%s://%s/governance-task-list/%s/request-decision",
-		s.config.URLScheme,
-		s.config.URLHost,
-		intakeID.String(),
-	)
 	adminLink := fmt.Sprintf(
 		"%s://%s/governance-review-team/%s/lcid",
 		s.config.URLScheme,
@@ -54,7 +48,6 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 		expireDate string,
 		GRTEmailAddress string,
 		requesterTaskLink string,
-		requesterDecisionLink string,
 		adminLink string,
 		lifecycleID string,
 		scope string,
@@ -86,7 +79,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 <p>The Life Cycle ID that was issued for %s%s is set to expire on %s. If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>
 <p>To avoid this, please email the Governance Team at <a href="mailto:%s">%s</a> within one week to update them with the current status of your project.</p>
 <p>
-  For New IT development projects, please include (if applicable):
+  For new IT development projects, please include (if applicable):
   <ul>
     <li>if the project is in production and if so, the date it was released into production</li>
     <li>if development of the project is still underway and if so, the target production release date</li>
@@ -110,12 +103,12 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 <p>
   View this request in EASi:
   <ul>
-    <li>The person who initially submitted this request, %s, may <a href="%s" style="font-weight: bold">click here</a> to view the request task list and <a href="%s" style="font-weight: bold">here</a> to view the decision and LCID information</li>
-    <li>Governance Team members may <a href="%s" style="font-weight: bold">click here</a> to view the decision and LCID information</li>
-    <li>Others should contact %s or the Governance Team for more information on the request</li>
+    <li>The person who initially submitted this request, %s, may <a href="%s" style="font-weight: bold">click here</a> to view the request task list.</li>
+    <li>Governance Team members may <a href="%s" style="font-weight: bold">click here</a> to view the decision and LCID information.</li>
+    <li>Others should contact %s or the Governance Team for more information on the request.</li>
   </ul>
 </p>
-<p>If you have questions please contact the Governance Team at <a href="mailto:%s">%s</a></p>
+<p>If you have questions please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
 <p>
   <u>Current Life Cycle ID Summary</u><br>
   <strong>Lifecycle ID:</strong> %s<br>%s
@@ -134,7 +127,6 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			GRTEmailAddress,
 			requesterName,
 			requesterTaskLink,
-			requesterDecisionLink,
 			adminLink,
 			requesterName,
 			GRTEmailAddress,
@@ -158,7 +150,6 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			expireDate.Format("01/02/2006"),
 			GRTEmailAddress,
 			requesterTaskLink,
-			requesterDecisionLink,
 			adminLink,
 			lifecycleID,
 			scope.ValueOrEmptyString(),
@@ -196,7 +187,6 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 			expireDate.Format("01/02/2006"),
 			GRTEmailAddress,
 			requesterTaskLink,
-			requesterDecisionLink,
 			adminLink,
 			lifecycleID,
 			"",

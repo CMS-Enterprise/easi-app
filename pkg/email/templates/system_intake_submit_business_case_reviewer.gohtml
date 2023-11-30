@@ -1,13 +1,13 @@
 {{template "easi_header.gohtml"}}
 
-<p>{{.RequesterName}} has {{if .IsResubmitted}}made changes to their{{else}}submitted a{{end}} {{if .IsDraft}}draft{{else}}final{{end}} Business Case for {{.RequestName}}. Use the link below to review the {{if .IsResubmitted}}changes{{else}}Business Case{{end}} in EASi. The lead for this request or another member of the Governance team should respond within two business days with any feedback about the Business Case or to move the request to the next step in the Governance Review process.</p>
+<p>{{.RequesterName}} has {{if .IsResubmitted}}made changes to their{{else}}submitted a{{end}} {{if .IsDraft}}draft{{else}}final{{end}} Business Case for {{.RequestName}}. Use the link below to review the {{if .IsResubmitted}}changes{{else}}Business Case{{end}} in EASi. The lead for this request or another member of the Governance Team should respond within two business days with any feedback about the Business Case or to move the request to the next step in the Governance Review process.</p>
 
 <p><a href="{{.BusinessCaseAdminLink}}">View this request in EASi</a></p>
 
-<p>Next Steps:
+<p>Next steps:
   <ul>
-    <li>review the {{if .IsDraft}}draft{{else}}final{{end}} Business Case and decide what (if any) next steps are needed</li>
-    <li>take the appropriate actions within EASi.</li>
+    <li>Review the {{if .IsDraft}}draft{{else}}final{{end}} Business Case and decide what (if any) next steps are needed.</li>
+    <li>Take the appropriate actions within EASi.</li>
   </ul>
 </p>
 

@@ -44,7 +44,7 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormReviewer() {
 
 <span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
 
-<p>%s has %s Intake Request, %s. Use the link below to review the %s in EASi and assign a lead. A member of the Governance team should respond within two business days with any feedback about the request or to move the request to the next step in the Governance Review process.</p>
+<p>%s has %s Intake Request, %s. Use the link below to review the %s in EASi and assign a lead. A member of the Governance Team should respond within two business days with any feedback about the request or to move the request to the next step in the Governance Review process.</p>
 
 <p><u>Request Summary</u><br>
 <strong>Requester name:</strong> %s<br>
@@ -55,7 +55,7 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormReviewer() {
 
 <p><a href="%s">View this request in EASi</a></p>
 
-<p>Next Steps:
+<p>Next steps:
   <ul>
     <li>Assign a lead.</li>
     <li>Review the Intake Request form and decide what (if any) next steps are needed.</li>

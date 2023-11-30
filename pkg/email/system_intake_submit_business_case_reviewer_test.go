@@ -47,13 +47,13 @@ func (s *EmailTestSuite) TestSubmitBizCaseReviewer() {
 
 <span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
 
-<p>%s has %s %s Business Case for %s. Use the link below to review the %s in EASi. The lead for this request or another member of the Governance team should respond within two business days with any feedback about the Business Case or to move the request to the next step in the Governance Review process.</p>
+<p>%s has %s %s Business Case for %s. Use the link below to review the %s in EASi. The lead for this request or another member of the Governance Team should respond within two business days with any feedback about the Business Case or to move the request to the next step in the Governance Review process.</p>
 
 <p><a href="%s">View this request in EASi</a></p>
 
-<p>Next Steps:
+<p>Next steps:
   <ul>
-    <li>review the %s Business Case and decide what (if any) next steps are needed</li>
+    <li>Review the %s Business Case and decide what (if any) next steps are needed.</li>
     <li>Take the appropriate actions within EASi.</li>
   </ul>
 </p>
