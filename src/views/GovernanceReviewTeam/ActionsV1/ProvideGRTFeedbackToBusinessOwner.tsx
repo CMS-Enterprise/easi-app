@@ -190,7 +190,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                     as={TextAreaField}
                     error={!!flatErrors.grtFeedback}
                     id="ProvideGRTFeedbackForm-GRTFeedback"
-                    maxLength={3000}
+                    maxLength={10000}
                     name="grtFeedback"
                   />
                 </FieldGroup>
@@ -225,7 +225,7 @@ const ProvideGRTFeedbackToBusinessOwner = ({
                     as={TextAreaField}
                     error={!!flatErrors.emailBody}
                     id="ProvideGRTFeedbackForm-EmailBody"
-                    maxLength={2000}
+                    maxLength={10000}
                     name="emailBody"
                   />
                 </FieldGroup>
