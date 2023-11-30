@@ -809,17 +809,9 @@ exports[`Submit Action > renders additional contacts 1`] = `
                 <textarea
                   class="usa-textarea usa-textarea__size-md"
                   id="SubmitActionForm-Feedback"
-                  maxlength="3000"
+                  maxlength="10000"
                   name="feedback"
                 />
-                <span
-                  aria-atomic="false"
-                  aria-live="polite"
-                  class="easi-character-counter margin-top-1"
-                  id="SubmitActionForm-Feedback-counter"
-                >
-                  2000 characters remaining
-                </span>
               </div>
               <div>
                 <button
