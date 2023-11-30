@@ -67,11 +67,15 @@ const AdviceLetter = ({
         assignLeadModalTrbRequestIdRef,
         assignLeadModalRef
       }}
-      pdfExportProps={{
-        label: t('adviceLetter.downloadAsPdf'),
-        filename: `advice letter ${id}.pdf`,
-        title: t('adviceLetterForm.heading')
-      }}
+      pdfExportProps={
+        adviceLetter
+          ? {
+              label: t('adviceLetter.downloadAsPdf'),
+              filename: `advice letter ${id}.pdf`,
+              title: t('adviceLetterForm.heading')
+            }
+          : undefined
+      }
     >
       {
         // If advice letter status is CANNOT_START_YET, show alert message

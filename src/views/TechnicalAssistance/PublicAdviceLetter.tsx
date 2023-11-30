@@ -127,7 +127,9 @@ function PublicAdviceLetter() {
           </p>
         )}
 
-        <PDFExportButton>{t('adviceLetter.downloadAsPdf')}</PDFExportButton>
+        {!!adviceLetter && (
+          <PDFExportButton>{t('adviceLetter.downloadAsPdf')}</PDFExportButton>
+        )}
       </GridContainer>
 
       {!fromTaskList && (
