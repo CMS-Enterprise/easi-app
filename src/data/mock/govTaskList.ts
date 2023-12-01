@@ -7,6 +7,7 @@ import {
   ITGovGRBStatus,
   ITGovGRTStatus,
   ITGovIntakeFormStatus,
+  SystemIntakeDecisionState,
   SystemIntakeStep
 } from 'types/graphql-global-types';
 import { GetGovernanceTaskListWithMockData } from 'types/itGov';
@@ -1040,6 +1041,7 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.COMPLETED,
         decisionAndNextStepsStatus: ITGovDecisionStatus.COMPLETED
       },
+      decisionState: SystemIntakeDecisionState.LCID_ISSUED,
       step: SystemIntakeStep.GRB_MEETING,
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',

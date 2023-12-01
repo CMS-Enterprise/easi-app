@@ -24,6 +24,7 @@ export default gql`
 
       step
       state
+      decisionState
 
       businessCase {
         id

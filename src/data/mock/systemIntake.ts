@@ -428,6 +428,7 @@ export const taskListSystemIntake: TaskListSystemIntake = {
   },
   step: SystemIntakeStep.INITIAL_REQUEST_FORM,
   state: SystemIntakeState.OPEN,
+  decisionState: SystemIntakeDecisionState.NO_DECISION,
   governanceRequestFeedbacks: [],
   submittedAt: null,
   updatedAt: null,
