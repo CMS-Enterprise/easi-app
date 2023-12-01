@@ -17,8 +17,8 @@ import {
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
 import {
-  ITGovDecisionStatus,
   ITGovIntakeFormStatus,
+  SystemIntakeDecisionState,
   SystemIntakeState
 } from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
@@ -50,8 +50,7 @@ function GovernanceTaskList() {
   const isClosed = systemIntake?.state === SystemIntakeState.CLOSED;
 
   const hasDecision =
-    systemIntake?.itGovTaskStatuses.decisionAndNextStepsStatus ===
-    ITGovDecisionStatus.COMPLETED;
+    systemIntake?.decisionState !== SystemIntakeDecisionState.NO_DECISION;
 
   if (error) {
     return <NotFound />;
