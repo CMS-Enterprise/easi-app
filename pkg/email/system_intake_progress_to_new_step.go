@@ -39,7 +39,7 @@ func (sie systemIntakeEmails) systemIntakeProgressToNewStepBody(
 
 	data := systemIntakeProgressToNewStepEmailParameters{
 		RequestName:              requestName,
-		Step:                     step.Humanize(),
+		Step:                     HumanizeSnakeCase(string(step)),
 		RequesterName:            requesterName,
 		Feedback:                 feedback.ToTemplate(),
 		SystemIntakeRequestLink:  sie.client.urlFromPath(requesterPath),
@@ -75,7 +75,7 @@ func (sie systemIntakeEmails) SendProgressToNewStepNotification(
 		requestName = "Draft System Intake"
 	}
 	step := models.SystemIntakeStep(newStep)
-	subject := fmt.Sprintf("%s is ready for a %s", requestName, step.Humanize())
+	subject := fmt.Sprintf("%s is ready for a %s", requestName, HumanizeSnakeCase(string(step)))
 	body, err := sie.systemIntakeProgressToNewStepBody(systemIntakeID, requestName, step, requesterName, feedback, additionalInfo)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}

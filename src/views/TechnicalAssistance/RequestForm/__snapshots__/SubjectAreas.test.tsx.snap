@@ -423,14 +423,6 @@ exports[`Trb Request form: Subject areas > checks subject area form elements 1`]
           id="subjectAreaOptionOther"
           name="subjectAreaOptionOther"
         />
-        <span
-          aria-atomic="false"
-          aria-live="polite"
-          class="easi-character-counter margin-top-1"
-          id="subjectAreaOptionOther-counter"
-        >
-          2000 characters remaining
-        </span>
       </div>
     </div>
     <div

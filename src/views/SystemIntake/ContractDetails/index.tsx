@@ -14,7 +14,6 @@ import classnames from 'classnames';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
-import CharacterCounter from 'components/CharacterCounter';
 import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -246,12 +245,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     name="annualSpending.currentAnnualSpending"
                     maxLength={100}
                   />
-                  <CharacterCounter
-                    id="currentAnnualSpending-counter"
-                    characterCount={
-                      2000 - values.annualSpending.currentAnnualSpending.length
-                    }
-                  />
                   <legend className="usa-label margin-bottom-1">
                     {t('contractDetails.plannedYearOneSpending')}
                   </legend>
@@ -267,12 +260,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     id="IntakeForm-PlannedYearOneAnnualSpending"
                     name="annualSpending.plannedYearOneSpending"
                     maxLength={100}
-                  />
-                  <CharacterCounter
-                    id="plannedYearOneAnnualSpending-counter"
-                    characterCount={
-                      2000 - values.annualSpending.plannedYearOneSpending.length
-                    }
                   />
                 </fieldset>
               </FieldGroup>

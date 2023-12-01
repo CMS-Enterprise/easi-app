@@ -97,7 +97,6 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
                 id={field.name}
                 value={field.value || ''}
                 size="sm"
-                characterCounter={false}
               />
             </FormGroup>
           )}
@@ -118,7 +117,6 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
                 id={field.name}
                 value={field.value || ''}
                 size="sm"
-                characterCounter={false}
               />
             </FormGroup>
           )}
