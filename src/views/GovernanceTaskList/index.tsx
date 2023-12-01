@@ -18,7 +18,8 @@ import {
 } from 'queries/types/GetGovernanceTaskList';
 import {
   ITGovDecisionStatus,
-  ITGovIntakeFormStatus
+  ITGovIntakeFormStatus,
+  SystemIntakeState
 } from 'types/graphql-global-types';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
@@ -45,6 +46,12 @@ function GovernanceTaskList() {
   });
 
   const systemIntake = data?.systemIntake;
+
+  const isClosed = systemIntake?.state === SystemIntakeState.CLOSED;
+
+  const hasDecision =
+    systemIntake?.itGovTaskStatuses.decisionAndNextStepsStatus ===
+    ITGovDecisionStatus.COMPLETED;
 
   if (error) {
     return <NotFound />;
@@ -76,13 +83,31 @@ function GovernanceTaskList() {
                   {t('taskList.description')}
                 </p>
 
+                {isClosed && !hasDecision && (
+                  <Alert
+                    type="warning"
+                    heading={t('Request closed')}
+                    className="margin-bottom-6"
+                  >
+                    <Trans
+                      i18nKey="itGov:taskList.closedAlert.text"
+                      components={{
+                        emailLink: (
+                          <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
+                        ),
+                        email: IT_GOV_EMAIL
+                      }}
+                    />
+                  </Alert>
+                )}
+
                 {
                   // Decision issued alert
-                  systemIntake.itGovTaskStatuses.decisionAndNextStepsStatus ===
-                    ITGovDecisionStatus.COMPLETED && (
+                  hasDecision && (
                     <Alert
                       type="info"
                       heading={t('taskList.decisionAlert.heading')}
+                      className="margin-bottom-6"
                     >
                       <Trans
                         i18nKey="itGov:taskList.decisionAlert.text"
