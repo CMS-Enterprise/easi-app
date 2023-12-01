@@ -23,6 +23,7 @@ export default gql`
       grbDate
 
       step
+      state
 
       businessCase {
         id

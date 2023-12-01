@@ -11,7 +11,9 @@ import {
 } from 'types/graphql-global-types';
 import { GetGovernanceTaskListWithMockData } from 'types/itGov';
 
-const id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
+import { taskListSystemIntake } from './systemIntake';
+
+const { id } = taskListSystemIntake;
 
 /** IT Gov Task List status states */
 // eslint-disable-next-line import/prefer-default-export
@@ -19,32 +21,11 @@ export const taskListState: {
   [k: string]: GetGovernanceTaskListWithMockData;
 } = {
   intakeFormNotStarted: {
-    systemIntake: {
-      __typename: 'SystemIntake',
-      id,
-      itGovTaskStatuses: {
-        __typename: 'ITGovTaskStatuses',
-        intakeFormStatus: ITGovIntakeFormStatus.READY,
-        feedbackFromInitialReviewStatus: ITGovFeedbackStatus.CANT_START,
-        decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
-        bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
-        grtMeetingStatus: ITGovGRTStatus.CANT_START,
-        bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
-        grbMeetingStatus: ITGovGRBStatus.CANT_START
-      },
-      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
-      governanceRequestFeedbacks: [],
-      submittedAt: null,
-      updatedAt: null,
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
-    }
+    systemIntake: taskListSystemIntake
   },
   intakeFormInProgress: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.IN_PROGRESS,
@@ -55,20 +36,12 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
-      intakeFormPctComplete: 22,
-      governanceRequestFeedbacks: [],
-      submittedAt: null,
-      updatedAt: null,
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
+      intakeFormPctComplete: 22
     }
   },
   intakeFormSubmitted: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -79,19 +52,12 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
-      governanceRequestFeedbacks: [],
-      submittedAt: '2023-07-07T00:30:28Z',
-      updatedAt: null,
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
+      submittedAt: '2023-07-07T00:30:28Z'
     }
   },
   intakeFormEditsRequested: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.EDITS_REQUESTED,
@@ -102,7 +68,6 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -111,16 +76,12 @@ export const taskListState: {
         }
       ],
       submittedAt: '2023-07-07T00:30:28Z',
-      updatedAt: '2023-07-08T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
+      updatedAt: '2023-07-08T00:30:28Z'
     }
   },
   intakeFormResubmittedAfterEdits: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -131,7 +92,6 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -140,17 +100,13 @@ export const taskListState: {
         }
       ],
       submittedAt: '2023-07-09T00:30:28Z',
-      updatedAt: '2023-07-09T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
+      updatedAt: '2023-07-09T00:30:28Z'
     }
   },
 
   feedbackFromInitialReviewCantStart: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.IN_PROGRESS,
@@ -160,20 +116,12 @@ export const taskListState: {
         grtMeetingStatus: ITGovGRTStatus.CANT_START,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
-      },
-      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
-      governanceRequestFeedbacks: [],
-      submittedAt: null,
-      updatedAt: null,
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
+      }
     }
   },
   feedbackFromInitialReviewInProgress: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -183,20 +131,12 @@ export const taskListState: {
         grtMeetingStatus: ITGovGRTStatus.CANT_START,
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
-      },
-      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
-      governanceRequestFeedbacks: [],
-      submittedAt: null,
-      updatedAt: null,
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
+      }
     }
   },
   feedbackFromInitialReviewDoneNoFeedback: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -207,20 +147,12 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
-      governanceRequestFeedbacks: [],
-      governanceRequestFeedbackCompletedAt: '2023-07-10T00:30:28Z',
-      submittedAt: null,
-      updatedAt: null,
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
+      governanceRequestFeedbackCompletedAt: '2023-07-10T00:30:28Z'
     }
   },
   feedbackFromInitialReviewDoneWithFeedback: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -231,7 +163,6 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
@@ -239,18 +170,12 @@ export const taskListState: {
           id
         }
       ],
-      governanceRequestFeedbackCompletedAt: '2023-07-10T00:30:28Z',
-      submittedAt: null,
-      updatedAt: null,
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
+      governanceRequestFeedbackCompletedAt: '2023-07-10T00:30:28Z'
     }
   },
   feedbackFromInitialReviewResubmittedWithFeedback: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -261,26 +186,19 @@ export const taskListState: {
         bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
         grbMeetingStatus: ITGovGRBStatus.CANT_START
       },
-      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
       governanceRequestFeedbacks: [
         {
           __typename: 'GovernanceRequestFeedback',
           targetForm: GovernanceRequestFeedbackTargetForm.INTAKE_REQUEST,
           id
         }
-      ],
-      submittedAt: null,
-      updatedAt: null,
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
+      ]
     }
   },
 
   bizCaseDraftCantStart: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -291,19 +209,13 @@ export const taskListState: {
         grbMeetingStatus: ITGovGRBStatus.CANT_START,
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
-      step: SystemIntakeStep.INITIAL_REQUEST_FORM,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
-      updatedAt: '2023-07-09T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
+      updatedAt: '2023-07-09T00:30:28Z'
     }
   },
   bizCaseDraftSkipped: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -315,18 +227,13 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.GRT_MEETING,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
-      updatedAt: '2023-07-09T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
+      updatedAt: '2023-07-09T00:30:28Z'
     }
   },
   bizCaseDraftNotStarted: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -338,18 +245,13 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
-      updatedAt: '2023-07-09T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
-      businessCase: null
+      updatedAt: '2023-07-09T00:30:28Z'
     }
   },
   bizCaseDraftInProgress: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -361,12 +263,9 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-12T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -375,8 +274,7 @@ export const taskListState: {
   },
   bizCaseDraftSubmitted: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -388,13 +286,10 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-13T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-13T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -403,8 +298,7 @@ export const taskListState: {
   },
   bizCaseDraftEditsRequestedFromAdmins: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -427,8 +321,6 @@ export const taskListState: {
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-14T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-13T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -437,8 +329,7 @@ export const taskListState: {
   },
   bizCaseDraftReSubmitted: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -461,8 +352,6 @@ export const taskListState: {
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -471,8 +360,7 @@ export const taskListState: {
   },
   bizCaseDraftDoneWithFeedback: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -495,8 +383,6 @@ export const taskListState: {
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-16T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -505,8 +391,7 @@ export const taskListState: {
   },
   bizCaseDraftDoneNoFeedback: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -518,13 +403,10 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-16T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -534,8 +416,7 @@ export const taskListState: {
 
   grtMeetingCantStart: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -547,13 +428,10 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -562,8 +440,7 @@ export const taskListState: {
   },
   grtMeetingSkipped: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -575,13 +452,10 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.DRAFT_BUSINESS_CASE,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -590,8 +464,7 @@ export const taskListState: {
   },
   grtMeetingInProgressNotScheduled: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -603,13 +476,10 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.GRT_MEETING,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
-      grtDate: null,
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -618,8 +488,7 @@ export const taskListState: {
   },
   grtMeetingInProgressScheduled: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -631,13 +500,11 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.GRT_MEETING,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -646,8 +513,7 @@ export const taskListState: {
   },
   grtMeetingDone: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -659,13 +525,11 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.GRT_MEETING,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -674,8 +538,7 @@ export const taskListState: {
   },
   grtMeetingDoneDecisionWithFeedback: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -699,7 +562,6 @@ export const taskListState: {
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -708,8 +570,7 @@ export const taskListState: {
   },
   grtMeetingDoneDecisionWithoutFeedback: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -721,13 +582,11 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.GRT_MEETING,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -737,8 +596,7 @@ export const taskListState: {
 
   bizCaseFinalCantStart: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -750,13 +608,11 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.GRT_MEETING,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -765,8 +621,7 @@ export const taskListState: {
   },
   bizCaseFinalSkipped: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -778,19 +633,16 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.INITIAL_REQUEST_FORM,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       governanceRequestFeedbackCompletedAt: '2023-07-10T00:30:28Z',
       grtDate: null,
-      grbDate: null,
       businessCase: null
     }
   },
   bizCaseFinalNotStarted: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -802,13 +654,11 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.FINAL_BUSINESS_CASE,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -817,8 +667,7 @@ export const taskListState: {
   },
   bizCaseFinalInProgress: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -830,13 +679,11 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.FINAL_BUSINESS_CASE,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       bizCaseFinalPctComplete: 89,
       businessCase: {
         __typename: 'BusinessCase',
@@ -846,8 +693,7 @@ export const taskListState: {
   },
   bizCaseFinalSubmitted: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -859,13 +705,11 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.FINAL_BUSINESS_CASE,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       bizCaseFinalSubmittedAt: '2023-07-18T00:30:28Z',
       businessCase: {
         __typename: 'BusinessCase',
@@ -875,8 +719,7 @@ export const taskListState: {
   },
   bizCaseFinalEditsRequestedFromAdmins: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -900,7 +743,6 @@ export const taskListState: {
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       bizCaseFinalUpdatedAt: '2023-07-19T00:30:28Z',
       bizCaseFinalSubmittedAt: '2023-07-18T00:30:28Z',
       businessCase: {
@@ -911,8 +753,7 @@ export const taskListState: {
   },
   bizCaseFinalReSubmitted: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -936,7 +777,6 @@ export const taskListState: {
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       bizCaseFinalUpdatedAt: '2023-07-20T00:30:28Z',
       bizCaseFinalSubmittedAt: '2023-07-20T00:30:28Z',
       businessCase: {
@@ -947,8 +787,7 @@ export const taskListState: {
   },
   bizCaseFinalDoneWithFeedback: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -972,7 +811,6 @@ export const taskListState: {
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       bizCaseFinalUpdatedAt: '2023-07-2T00:30:28Z',
       bizCaseFinalSubmittedAt: '2023-07-21T00:30:28Z',
       businessCase: {
@@ -983,8 +821,7 @@ export const taskListState: {
   },
   bizCaseFinalDoneNoFeedback: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -996,13 +833,11 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.FINAL_BUSINESS_CASE,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       bizCaseFinalUpdatedAt: '2023-07-20T00:30:28Z',
       bizCaseFinalSubmittedAt: '2023-07-21T00:30:28Z',
       businessCase: {
@@ -1014,8 +849,7 @@ export const taskListState: {
 
   grbMeetingCantStart: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -1027,13 +861,11 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.FINAL_BUSINESS_CASE,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -1042,8 +874,7 @@ export const taskListState: {
   },
   grbMeetingSkipped: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -1055,13 +886,11 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.FINAL_BUSINESS_CASE,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -1070,8 +899,7 @@ export const taskListState: {
   },
   grbMeetingInProgressNotScheduled: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -1083,13 +911,11 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.GRB_MEETING,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
       bizCaseDraftSubmittedAt: '2023-07-15T00:30:28Z',
       grtDate: '2023-07-17T00:30:28Z',
-      grbDate: null,
       businessCase: {
         __typename: 'BusinessCase',
         id: '1a4baff0-12ba-4087-8483-678d92b48733'
@@ -1098,8 +924,7 @@ export const taskListState: {
   },
   grbMeetingInProgressScheduled: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -1111,7 +936,6 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.GRB_MEETING,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
@@ -1126,8 +950,7 @@ export const taskListState: {
   },
   grbMeetingDone: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -1139,7 +962,6 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.GRB_MEETING,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
@@ -1155,8 +977,7 @@ export const taskListState: {
 
   decisionAndNextStepsCantStart: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -1168,7 +989,6 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
       },
       step: SystemIntakeStep.GRB_MEETING,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
@@ -1183,8 +1003,7 @@ export const taskListState: {
   },
   decisionAndNextStepsInProgress: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -1196,7 +1015,6 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.IN_REVIEW
       },
       step: SystemIntakeStep.DECISION_AND_NEXT_STEPS,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
@@ -1211,8 +1029,7 @@ export const taskListState: {
   },
   decisionAndNextStepsDone: {
     systemIntake: {
-      __typename: 'SystemIntake',
-      id,
+      ...taskListSystemIntake,
       itGovTaskStatuses: {
         __typename: 'ITGovTaskStatuses',
         intakeFormStatus: ITGovIntakeFormStatus.COMPLETED,
@@ -1224,7 +1041,6 @@ export const taskListState: {
         decisionAndNextStepsStatus: ITGovDecisionStatus.COMPLETED
       },
       step: SystemIntakeStep.GRB_MEETING,
-      governanceRequestFeedbacks: [],
       submittedAt: '2023-07-09T00:30:28Z',
       updatedAt: '2023-07-09T00:30:28Z',
       bizCaseDraftUpdatedAt: '2023-07-15T00:30:28Z',
