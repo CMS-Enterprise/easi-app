@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import classNames from 'classnames';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -7,7 +8,8 @@ import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import {
   GovernanceRequestFeedbackTargetForm,
-  ITGovIntakeFormStatus
+  ITGovIntakeFormStatus,
+  SystemIntakeState
 } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
@@ -18,7 +20,8 @@ const GovTaskIntakeForm = ({
   intakeFormPctComplete,
   governanceRequestFeedbacks,
   submittedAt,
-  updatedAt
+  updatedAt,
+  state
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'intakeForm';
   const { t } = useTranslation('itGov');
@@ -89,7 +92,9 @@ const GovTaskIntakeForm = ({
           <div className="margin-top-2">
             <UswdsReactLink
               variant="unstyled"
-              className="usa-button"
+              className={classNames('usa-button', {
+                'usa-button--disabled': state !== SystemIntakeState.CLOSED
+              })}
               to={`/system/${id}/contact-details`}
             >
               {t(

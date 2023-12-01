@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -9,7 +10,8 @@ import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import {
   GovernanceRequestFeedbackTargetForm,
-  ITGovFinalBusinessCaseStatus
+  ITGovFinalBusinessCaseStatus,
+  SystemIntakeState
 } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
@@ -21,7 +23,8 @@ const GovTaskBizCaseFinal = ({
   bizCaseFinalSubmittedAt,
   bizCaseFinalUpdatedAt,
   governanceRequestFeedbacks,
-  businessCase
+  businessCase,
+  state
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'bizCaseFinal';
   const { t } = useTranslation('itGov');
@@ -112,7 +115,9 @@ const GovTaskBizCaseFinal = ({
           <div className="margin-top-2">
             <UswdsReactLink
               variant="unstyled"
-              className="usa-button"
+              className={classNames('usa-button', {
+                'usa-button--disabled': state === SystemIntakeState.CLOSED
+              })}
               to={`/business/${businessCase?.id}/general-request-info`}
             >
               {t(`button.${statusButtonText.get(bizCaseFinalStatus)}`)}
