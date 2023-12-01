@@ -1,4 +1,7 @@
-import { SystemIntakeActionType } from 'types/graphql-global-types';
+import {
+  SystemIntakeActionType,
+  SystemIntakeStatusAdmin
+} from 'types/graphql-global-types';
 
 /** System intake action type translations */
 const actionNameTranslations: Record<SystemIntakeActionType, string> = {
@@ -34,6 +37,23 @@ const actionNameTranslations: Record<SystemIntakeActionType, string> = {
   SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft business case',
   SUBMIT_INTAKE: 'Submitted a System Intake',
   UPDATE_LCID: 'Life Cycle ID updated'
+};
+
+const systemIntakeStatusAdmin: Record<SystemIntakeStatusAdmin, string> = {
+  CLOSED: 'Closed',
+  DRAFT_BUSINESS_CASE_IN_PROGRESS: 'Draft Business Case in progress',
+  DRAFT_BUSINESS_CASE_SUBMITTED: 'Draft Business Case submitted',
+  FINAL_BUSINESS_CASE_IN_PROGRESS: 'Final Business Case in progress',
+  FINAL_BUSINESS_CASE_SUBMITTED: 'Final Business Case submitted',
+  GRB_MEETING_COMPLETE: 'GRB meeting complete',
+  GRB_MEETING_READY: 'Ready for GRB meeting',
+  GRT_MEETING_COMPLETE: 'GRT meeting complete',
+  GRT_MEETING_READY: 'Ready for GRT meeting',
+  INITIAL_REQUEST_FORM_IN_PROGRESS: 'Intake Request in progress',
+  INITIAL_REQUEST_FORM_SUBMITTED: 'Intake Request submitted',
+  LCID_ISSUED: 'LCID issued: {{lcid}}',
+  NOT_APPROVED: 'Project not approved by the GRB',
+  NOT_GOVERNANCE: 'Not an IT Governance request'
 };
 
 const governanceReviewTeam = {
@@ -252,6 +272,7 @@ const governanceReviewTeam = {
     open: 'Open',
     closed: 'Closed'
   },
+  systemIntakeStatusAdmin,
   adminLeads: {
     assignModal: {
       header: 'Choose an Admin Lead for {{-requestName}}',
