@@ -93,7 +93,7 @@ const GovTaskIntakeForm = ({
             <UswdsReactLink
               variant="unstyled"
               className={classNames('usa-button', {
-                'usa-button--disabled': state !== SystemIntakeState.CLOSED
+                'usa-button--disabled': state === SystemIntakeState.CLOSED
               })}
               to={`/system/${id}/contact-details`}
             >
