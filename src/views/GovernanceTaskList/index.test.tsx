@@ -8,36 +8,27 @@ import {
 import i18next from 'i18next';
 
 import { taskListState } from 'data/mock/govTaskList';
-import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
+import {
+  getGovernanceTaskListQuery,
+  systemIntake
+} from 'data/mock/systemIntake';
+import { SystemIntakeState } from 'types/graphql-global-types';
 import { getByRoleWithNameTextKey } from 'utils/testing/helpers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import GovernanceTaskList from '.';
 
 describe('Governance Task List', () => {
-  const id = '80950153-4a66-4881-b728-f4cc701ff926';
+  const { id } = systemIntake;
 
   it('renders a request task list at the initial state', async () => {
     render(
       <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
         <VerboseMockedProvider
           mocks={[
-            {
-              request: {
-                query: GetGovernanceTaskListQuery,
-                variables: {
-                  id
-                }
-              },
-              result: {
-                data: {
-                  systemIntake: {
-                    ...taskListState.intakeFormNotStarted.systemIntake,
-                    id
-                  }
-                }
-              }
-            }
+            getGovernanceTaskListQuery(
+              taskListState.intakeFormNotStarted.systemIntake
+            )
           ]}
         >
           <Route path="/governance-task-list/:systemId">
@@ -70,5 +61,57 @@ describe('Governance Task List', () => {
       level: 3,
       name: i18next.t<string>('itGov:taskList.step.intakeForm.title')
     });
+  });
+
+  it('renders alert and disables buttons if request is closed', async () => {
+    render(
+      <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
+        <VerboseMockedProvider
+          mocks={[
+            getGovernanceTaskListQuery({
+              ...taskListState.intakeFormNotStarted.systemIntake,
+              state: SystemIntakeState.CLOSED
+            })
+          ]}
+        >
+          <Route path="/governance-task-list/:systemId">
+            <GovernanceTaskList />
+          </Route>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    expect(screen.getByTestId('closed-alert')).toBeInTheDocument();
+
+    expect(screen.getByRole('link', { name: 'Start' })).toHaveClass(
+      'usa-button--disabled'
+    );
+  });
+
+  it('renders alert when decision has been made', async () => {
+    render(
+      <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
+        <VerboseMockedProvider
+          mocks={[
+            getGovernanceTaskListQuery(
+              taskListState.decisionAndNextStepsDone.systemIntake
+            )
+          ]}
+        >
+          <Route path="/governance-task-list/:systemId">
+            <GovernanceTaskList />
+          </Route>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    expect(screen.getByTestId('decision-alert')).toBeInTheDocument();
+
+    // If decision has been made, closed alert should not be displayed
+    expect(screen.queryByTestId('closed-alert')).toBeNull();
   });
 });

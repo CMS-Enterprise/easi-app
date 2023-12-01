@@ -87,6 +87,7 @@ function GovernanceTaskList() {
                     type="warning"
                     heading={t('Request closed')}
                     className="margin-bottom-6"
+                    data-testid="closed-alert"
                   >
                     <Trans
                       i18nKey="itGov:taskList.closedAlert.text"
@@ -107,6 +108,7 @@ function GovernanceTaskList() {
                       type="info"
                       heading={t('taskList.decisionAlert.heading')}
                       className="margin-bottom-6"
+                      data-testid="decision-alert"
                     >
                       <Trans
                         i18nKey="itGov:taskList.decisionAlert.text"
