@@ -180,17 +180,19 @@ func main() {
 
 	intake = makeSystemIntake("With GRT scheduled", logger, store, func(i *models.SystemIntake) {
 		i.Status = models.SystemIntakeStatusREADYFORGRT
-		lastMonth := time.Now().Add(-30 * 24 * time.Hour)
-		tomorrow := time.Now().Add(24 * time.Hour)
+		lastMonth := time.Now().AddDate(0, -1, 0)
+		tomorrow := time.Now().AddDate(0, 0, 1)
 		i.GRBDate = &lastMonth
 		i.GRTDate = &tomorrow
 	})
 	makeBusinessCase("With GRT scheduled", logger, store, intake)
 
 	intake = makeSystemIntake("With LCID Issued", logger, store, func(i *models.SystemIntake) {
-		lifecycleExpiresAt := time.Now().Add(30 * 24 * time.Hour)
-		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
+		lifecycleExpiresAt := time.Now().AddDate(0, 0, 90)
+		submittedAt := time.Now().AddDate(0, 0, -365)
 		i.LifecycleID = null.StringFrom("210001")
+		issuedAt := time.Now()
+		i.LifecycleIssuedAt = &issuedAt
 		i.LifecycleExpiresAt = &lifecycleExpiresAt
 		i.Status = models.SystemIntakeStatusLCIDISSUED
 		i.SubmittedAt = &submittedAt
@@ -199,10 +201,40 @@ func main() {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
 
+	makeSystemIntake("Expiring LCID Intake", logger, store, func(i *models.SystemIntake) {
+		lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
+		submittedAt := time.Now().AddDate(0, 0, -365)
+		i.LifecycleID = null.StringFrom("410001")
+		issuedAt := time.Now().AddDate(0, 0, -300)
+		i.LifecycleIssuedAt = &issuedAt
+		i.LifecycleExpiresAt = &lifecycleExpiresAt
+		i.Status = models.SystemIntakeStatusLCIDISSUED
+		i.State = models.SystemIntakeStateCLOSED
+		i.DecisionState = models.SIDSLcidIssued
+		i.SubmittedAt = &submittedAt
+	})
+
+	makeSystemIntake("Expiring LCID Intake with alert sent 14 days ago", logger, store, func(i *models.SystemIntake) {
+		lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
+		submittedAt := time.Now().AddDate(0, 0, -365)
+		i.LifecycleID = null.StringFrom("510001")
+		issuedAt := time.Now().AddDate(0, 0, -300)
+		i.LifecycleIssuedAt = &issuedAt
+		i.LifecycleExpiresAt = &lifecycleExpiresAt
+		lastAlertSent := time.Now().AddDate(0, 0, -14)
+		i.LifecycleExpirationAlertTS = &lastAlertSent
+		i.Status = models.SystemIntakeStatusLCIDISSUED
+		i.State = models.SystemIntakeStateCLOSED
+		i.DecisionState = models.SIDSLcidIssued
+		i.SubmittedAt = &submittedAt
+	})
+
 	makeSystemIntake("Intake with expiring LCID and no EUA User ID - test case for EASI-3083", logger, store, func(i *models.SystemIntake) {
-		lifecycleExpiresAt := time.Now().Add(30 * 24 * time.Hour)
-		submittedAt := time.Now().Add(-365 * 24 * time.Hour)
+		lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
+		submittedAt := time.Now().AddDate(0, 0, -365)
 		i.LifecycleID = null.StringFrom("300001")
+		issuedAt := time.Now()
+		i.LifecycleIssuedAt = &issuedAt
 		i.LifecycleExpiresAt = &lifecycleExpiresAt
 		i.Status = models.SystemIntakeStatusLCIDISSUED
 		i.SubmittedAt = &submittedAt

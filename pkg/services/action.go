@@ -85,7 +85,23 @@ func NewSubmitSystemIntake(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	submitToCEDAR func(context.Context, *models.SystemIntake) (string, error),
 	saveAction func(context.Context, *models.Action) error,
-	emailReviewer func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
+	emailRequester func(
+		ctx context.Context,
+		requesterEmailAddress models.EmailAddress,
+		intakeID uuid.UUID,
+		requestName string,
+		isResubmitted bool,
+	) error,
+	emailReviewer func(
+		ctx context.Context,
+		intakeID uuid.UUID,
+		requestName string,
+		requesterName string,
+		requesterComponent string,
+		requestType models.SystemIntakeRequestType,
+		processStage string,
+		isResubmitted bool,
+	) error,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		ok, err := authorize(ctx, intake)
@@ -96,9 +112,16 @@ func NewSubmitSystemIntake(
 			return &apperrors.UnauthorizedError{Err: err}
 		}
 
+		isResubmitted := false
+		if intake.RequestFormState == models.SIRFSEditsRequested {
+			isResubmitted = true
+		}
+
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
+		// TODO: Remove when Admin Actions v2 is live
 		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
+		// Set intake state based on v2 logic
 		intake.RequestFormState = models.SIRFSSubmitted
 		intake.SubmittedAt = &updatedTime
 
@@ -139,9 +162,28 @@ func NewSubmitSystemIntake(
 		}
 
 		// only send an email when everything went ok
-		err = emailReviewer(ctx, intake.ProjectName.String, intake.ID)
+		err = emailRequester(
+			ctx,
+			action.ActorEmail,
+			intake.ID,
+			intake.ProjectName.ValueOrZero(),
+			isResubmitted,
+		)
 		if err != nil {
-			appcontext.ZLogger(ctx).Error("Submit Intake email failed to send: ", zap.Error(err))
+			appcontext.ZLogger(ctx).Error("submit intake email reviewer failed to send: ", zap.Error(err))
+		}
+		err = emailReviewer(
+			ctx,
+			intake.ID,
+			intake.ProjectName.ValueOrZero(),
+			intake.Requester,
+			intake.Component.ValueOrZero(),
+			intake.RequestType,
+			intake.ProcessStatus.ValueOrZero(),
+			isResubmitted,
+		)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error("submit intake email requester failed to send: ", zap.Error(err))
 		}
 
 		return nil
@@ -158,7 +200,22 @@ func NewSubmitBusinessCase(
 	saveAction func(context.Context, *models.Action) error,
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
-	sendEmail func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
+	emailRequester func(
+		ctx context.Context,
+		requesterEmail models.EmailAddress,
+		requestName string,
+		intakeID uuid.UUID,
+		isResubmitted bool,
+		isDraft bool,
+	) error,
+	emailReviewer func(
+		ctx context.Context,
+		intakeID uuid.UUID,
+		requesterName string,
+		requestName string,
+		isResubmitted bool,
+		isDraft bool,
+	) error,
 	submitToCEDAR func(ctx context.Context, bc models.BusinessCase) error,
 	newIntakeStatus models.SystemIntakeStatus,
 ) ActionExecuter {
@@ -179,6 +236,7 @@ func NewSubmitBusinessCase(
 				Model:     intake,
 			}
 		}
+
 		// Uncomment below when UI has changed for unique lifecycle costs
 		//err = appvalidation.BusinessCaseForUpdate(businessCase)
 		//if err != nil {
@@ -187,7 +245,8 @@ func NewSubmitBusinessCase(
 		updatedAt := config.clock.Now()
 		businessCase.UpdatedAt = &updatedAt
 
-		if businessCase.SystemIntakeStatus == models.SystemIntakeStatusBIZCASEFINALNEEDED {
+		if businessCase.SystemIntakeStatus == models.SystemIntakeStatusBIZCASEFINALNEEDED ||
+			intake.Step == models.SystemIntakeStepFINALBIZCASE {
 			err = validateForSubmit(businessCase)
 			if err != nil {
 				return err
@@ -212,12 +271,26 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		intake.Status = newIntakeStatus // newIntakeStatus determines what state we update.
-		if newIntakeStatus == models.SystemIntakeStatusBIZCASEFINALSUBMITTED {
-			intake.FinalBusinessCaseState = models.SIRFSSubmitted
-		} else if newIntakeStatus == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED {
-			intake.DraftBusinessCaseState = models.SIRFSSubmitted
+		isResubmitted := false
+		if (intake.Step == models.SystemIntakeStepDRAFTBIZCASE && intake.DraftBusinessCaseState == models.SIRFSEditsRequested) ||
+			(intake.Step == models.SystemIntakeStepFINALBIZCASE && intake.FinalBusinessCaseState == models.SIRFSEditsRequested) {
+			isResubmitted = true
 		}
+		isDraft := false
+		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+			isDraft = true
+		}
+
+		// TODO: Remove when Admin Actions v2 is live
+		intake.Status = newIntakeStatus
+
+		// Set intake state based on v2 logic
+		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+			intake.DraftBusinessCaseState = models.SIRFSSubmitted
+		} else if intake.Step == models.SystemIntakeStepFINALBIZCASE {
+			intake.FinalBusinessCaseState = models.SIRFSSubmitted
+		}
+
 		intake.UpdatedAt = &updatedAt
 		intake, err = updateIntake(ctx, intake)
 		if err != nil {
@@ -228,14 +301,33 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		err = sendEmail(ctx, businessCase.ProjectName.String, businessCase.SystemIntakeID)
+		err = emailRequester(
+			ctx,
+			action.ActorEmail,
+			intake.ProjectName.String,
+			intake.ID,
+			isResubmitted,
+			isDraft,
+		)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error("Submit Business Case email failed to send: ", zap.Error(err))
+		}
+		err = emailReviewer(
+			ctx,
+			intake.ID,
+			intake.Requester,
+			intake.ProjectName.String,
+			isResubmitted,
+			isDraft,
+		)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("Submit Business Case email failed to send: ", zap.Error(err))
 		}
 
 		// TODO - EASI-2363 - rework conditional to also trigger on publishing finalized system intakes
 		// need to check intake.Status, *not* businessCase.SystemIntakeStatus - intake is what gets returned from calling updateIntake()
-		if intake.Status == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED {
+		if intake.Status == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED ||
+			intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 			err = submitToCEDAR(ctx, *businessCase)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(err))
