@@ -85,9 +85,7 @@ describe('Governance Task List', () => {
 
     expect(screen.getByTestId('closed-alert')).toBeInTheDocument();
 
-    expect(screen.getByRole('link', { name: 'Start' })).toHaveClass(
-      'usa-button--disabled'
-    );
+    expect(screen.getByRole('button', { name: 'Start' })).toBeDisabled();
   });
 
   it('renders alert when decision has been made', async () => {
