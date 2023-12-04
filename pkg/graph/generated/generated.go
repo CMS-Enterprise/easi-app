@@ -662,7 +662,9 @@ type ComplexityRoot struct {
 		Name            func(childComplexity int) int
 		NextMeetingDate func(childComplexity int) int
 		Status          func(childComplexity int) int
+		StatusAdmin     func(childComplexity int) int
 		StatusCreatedAt func(childComplexity int) int
+		StatusRequester func(childComplexity int) int
 		SubmittedAt     func(childComplexity int) int
 		Type            func(childComplexity int) int
 	}
@@ -5129,12 +5131,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Request.Status(childComplexity), true
 
+	case "Request.statusAdmin":
+		if e.complexity.Request.StatusAdmin == nil {
+			break
+		}
+
+		return e.complexity.Request.StatusAdmin(childComplexity), true
+
 	case "Request.statusCreatedAt":
 		if e.complexity.Request.StatusCreatedAt == nil {
 			break
 		}
 
 		return e.complexity.Request.StatusCreatedAt(childComplexity), true
+
+	case "Request.statusRequester":
+		if e.complexity.Request.StatusRequester == nil {
+			break
+		}
+
+		return e.complexity.Request.StatusRequester(childComplexity), true
 
 	case "Request.submittedAt":
 		if e.complexity.Request.SubmittedAt == nil {
@@ -7538,6 +7554,8 @@ type Request {
   submittedAt: Time
   type: RequestType!
   status: String!
+  statusRequester: SystemIntakeStatusRequester
+  statusAdmin: SystemIntakeStatusAdmin
   statusCreatedAt: Time
   lcid: String
   nextMeetingDate: Time
@@ -8978,7 +8996,7 @@ input SystemIntakeProgressToNewStepsInput {
 """
 Input for updating an intake's LCID in IT Gov v2
 """
-input SystemIntakeUpdateLCIDInput { 
+input SystemIntakeUpdateLCIDInput {
   systemIntakeID: UUID!
 
   expiresAt: Time
@@ -37001,6 +37019,88 @@ func (ec *executionContext) fieldContext_Request_status(ctx context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _Request_statusRequester(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Request_statusRequester(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StatusRequester, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeStatusRequester)
+	fc.Result = res
+	return ec.marshalOSystemIntakeStatusRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusRequester(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Request_statusRequester(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Request",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeStatusRequester does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Request_statusAdmin(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Request_statusAdmin(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StatusAdmin, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeStatusAdmin)
+	fc.Result = res
+	return ec.marshalOSystemIntakeStatusAdmin2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusAdmin(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Request_statusAdmin(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Request",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeStatusAdmin does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Request_statusCreatedAt(ctx context.Context, field graphql.CollectedField, obj *model.Request) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Request_statusCreatedAt(ctx, field)
 	if err != nil {
@@ -37173,6 +37273,10 @@ func (ec *executionContext) fieldContext_RequestEdge_node(ctx context.Context, f
 				return ec.fieldContext_Request_type(ctx, field)
 			case "status":
 				return ec.fieldContext_Request_status(ctx, field)
+			case "statusRequester":
+				return ec.fieldContext_Request_statusRequester(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_Request_statusAdmin(ctx, field)
 			case "statusCreatedAt":
 				return ec.fieldContext_Request_statusCreatedAt(ctx, field)
 			case "lcid":
@@ -64743,6 +64847,10 @@ func (ec *executionContext) _Request(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "statusRequester":
+			out.Values[i] = ec._Request_statusRequester(ctx, field, obj)
+		case "statusAdmin":
+			out.Values[i] = ec._Request_statusAdmin(ctx, field, obj)
 		case "statusCreatedAt":
 			out.Values[i] = ec._Request_statusCreatedAt(ctx, field, obj)
 		case "lcid":
@@ -74745,6 +74853,40 @@ func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋ
 		return graphql.Null
 	}
 	return ec._SystemIntakeNote(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeStatusAdmin2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusAdmin(ctx context.Context, v interface{}) (*models.SystemIntakeStatusAdmin, error) {
+	if v == nil {
+		return nil, nil
+	}
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeStatusAdmin(tmp)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeStatusAdmin2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusAdmin(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeStatusAdmin) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalString(string(*v))
+	return res
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeStatusRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusRequester(ctx context.Context, v interface{}) (*models.SystemIntakeStatusRequester, error) {
+	if v == nil {
+		return nil, nil
+	}
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeStatusRequester(tmp)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeStatusRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusRequester(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeStatusRequester) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalString(string(*v))
+	return res
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeStep2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStep(ctx context.Context, v interface{}) (*models.SystemIntakeStep, error) {

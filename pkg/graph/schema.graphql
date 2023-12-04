@@ -38,6 +38,8 @@ type Request {
   submittedAt: Time
   type: RequestType!
   status: String!
+  statusRequester: SystemIntakeStatusRequester
+  statusAdmin: SystemIntakeStatusAdmin
   statusCreatedAt: Time
   lcid: String
   nextMeetingDate: Time
@@ -1478,7 +1480,7 @@ input SystemIntakeProgressToNewStepsInput {
 """
 Input for updating an intake's LCID in IT Gov v2
 """
-input SystemIntakeUpdateLCIDInput { 
+input SystemIntakeUpdateLCIDInput {
   systemIntakeID: UUID!
 
   expiresAt: Time

@@ -2384,16 +2384,40 @@ func (r *queryResolver) Requests(ctx context.Context, after *string, first int) 
 	if queryErr != nil {
 		return nil, gqlerror.Errorf("query error: %s", queryErr)
 	}
+	// If we don't support accessibility requests yet we can remove the FetchMyRequests call and the nested looping code below
+	intakes, queryErr := r.store.FetchSystemIntakesByEuaID(ctx, appcontext.Principal(ctx).ID())
+	if queryErr != nil {
+		return nil, gqlerror.Errorf("query error: %s", queryErr)
+	}
 
 	edges := []*model.RequestEdge{}
 
 	for _, request := range requests {
+		var requesterStatus models.SystemIntakeStatusRequester
+		var adminStatus models.SystemIntakeStatusAdmin
+		if request.Type == model.RequestTypeGovernanceRequest {
+			for _, intake := range intakes {
+				if intake.ID == request.ID {
+					requesterStatus, queryErr = resolvers.CalculateSystemIntakeRequesterStatus(&intake, time.Now())
+					if queryErr != nil {
+						return nil, gqlerror.Errorf("query error: %s", queryErr)
+					}
+					adminStatus, queryErr = resolvers.CalculateSystemIntakeAdminStatus(&intake)
+					if queryErr != nil {
+						return nil, gqlerror.Errorf("query error: %s", queryErr)
+					}
+					break
+				}
+			}
+		}
 		node := model.Request{
 			ID:              request.ID,
 			SubmittedAt:     request.SubmittedAt,
 			Name:            request.Name.Ptr(),
 			Type:            request.Type,
 			Status:          request.Status,
+			StatusRequester: &requesterStatus,
+			StatusAdmin:     &adminStatus,
 			StatusCreatedAt: request.StatusCreatedAt,
 			Lcid:            request.LifecycleID.Ptr(),
 			NextMeetingDate: request.NextMeetingDate,
