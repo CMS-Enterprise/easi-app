@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link } from '@trussworks/react-uswds';
-import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
+import { Button, Link } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -28,6 +28,8 @@ const GovTaskBizCaseFinal = ({
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'bizCaseFinal';
   const { t } = useTranslation('itGov');
+
+  const history = useHistory();
 
   const statusButtonText = new Map<ITGovFinalBusinessCaseStatus, string>([
     [ITGovFinalBusinessCaseStatus.READY, 'start'],
@@ -113,15 +115,22 @@ const GovTaskBizCaseFinal = ({
 
         {statusButtonText.has(bizCaseFinalStatus) && (
           <div className="margin-top-2">
-            <UswdsReactLink
-              variant="unstyled"
-              className={classNames('usa-button', {
-                'usa-button--disabled': state === SystemIntakeState.CLOSED
-              })}
-              to={`/business/${businessCase?.id}/general-request-info`}
+            <Button
+              type="button"
+              disabled={state === SystemIntakeState.CLOSED}
+              onClick={() => {
+                history.push({
+                  pathname: `/business/${
+                    businessCase?.id || 'new'
+                  }/general-request-info`,
+                  state: {
+                    systemIntakeId: id
+                  }
+                });
+              }}
             >
               {t(`button.${statusButtonText.get(bizCaseFinalStatus)}`)}
-            </UswdsReactLink>
+            </Button>
           </div>
         )}
 
