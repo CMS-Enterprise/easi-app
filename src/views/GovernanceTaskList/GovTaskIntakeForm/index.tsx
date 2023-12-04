@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
+import { Button } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -25,6 +26,7 @@ const GovTaskIntakeForm = ({
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'intakeForm';
   const { t } = useTranslation('itGov');
+  const history = useHistory();
 
   const statusButtonText = new Map<ITGovIntakeFormStatus, string>([
     [ITGovIntakeFormStatus.READY, 'start'],
@@ -90,19 +92,17 @@ const GovTaskIntakeForm = ({
         {/* Button to the intake form */}
         {statusButtonText.has(itGovTaskStatuses.intakeFormStatus) && (
           <div className="margin-top-2">
-            <UswdsReactLink
-              variant="unstyled"
-              className={classNames('usa-button', {
-                'usa-button--disabled': state === SystemIntakeState.CLOSED
-              })}
-              to={`/system/${id}/contact-details`}
+            <Button
+              type="button"
+              onClick={() => history.push(`/system/${id}/contact-details`)}
+              disabled={state === SystemIntakeState.CLOSED}
             >
               {t(
                 `button.${statusButtonText.get(
                   itGovTaskStatuses.intakeFormStatus
                 )}`
               )}
-            </UswdsReactLink>
+            </Button>
           </div>
         )}
 
