@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import {
   render,
@@ -8,7 +9,9 @@ import {
 import i18next from 'i18next';
 
 import { taskListState } from 'data/mock/govTaskList';
+import { MessageProvider } from 'hooks/useMessage';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
+import easiMockStore from 'utils/testing/easiMockStore';
 import { getByRoleWithNameTextKey } from 'utils/testing/helpers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
@@ -16,6 +19,8 @@ import GovernanceTaskList from '.';
 
 describe('Governance Task List', () => {
   const id = '80950153-4a66-4881-b728-f4cc701ff926';
+
+  const store = easiMockStore();
 
   it('renders a request task list at the initial state', async () => {
     render(
@@ -40,9 +45,13 @@ describe('Governance Task List', () => {
             }
           ]}
         >
-          <Route path="/governance-task-list/:systemId">
-            <GovernanceTaskList />
-          </Route>
+          <Provider store={store}>
+            <MessageProvider>
+              <Route path="/governance-task-list/:systemId">
+                <GovernanceTaskList />
+              </Route>
+            </MessageProvider>
+          </Provider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );
