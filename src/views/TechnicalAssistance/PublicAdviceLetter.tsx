@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
+import { useReactToPrint } from 'react-to-print';
 import { useQuery } from '@apollo/client';
 import {
   Grid,
@@ -13,10 +14,10 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import { PDFExportButton } from 'components/PDFExport';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { CMS_TRB_EMAIL } from 'constants/externalUrls';
-import usePDFExport from 'hooks/usePDFExport';
 import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
 import {
   GetTrbPublicAdviceLetter,
@@ -45,9 +46,17 @@ function PublicAdviceLetter() {
   const { state } = useLocation<{ fromTaskList: boolean }>();
   const fromTaskList = state?.fromTaskList;
 
-  const { PDFExportWrapper, PDFExportButton } = usePDFExport({
-    filename: `advice letter ${id}.pdf`,
-    title: t('adviceLetterForm.heading')
+  const printRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    documentTitle: `advice letter ${id}.pdf`,
+    content: () => printRef.current,
+    // The lib default is to have no margin, which hides window.prints()'s built in pagination
+    // Set auto margins back to show everything the browser renders
+    pageStyle: `
+      @page {
+        margin: auto;
+      }
+    `
   });
 
   const { data, error, loading } = useQuery<
@@ -128,7 +137,9 @@ function PublicAdviceLetter() {
         )}
 
         {!!adviceLetter && (
-          <PDFExportButton>{t('adviceLetter.downloadAsPdf')}</PDFExportButton>
+          <PDFExportButton handlePrint={handlePrint}>
+            {t('adviceLetter.downloadAsPdf')}
+          </PDFExportButton>
         )}
       </GridContainer>
 
@@ -190,7 +201,8 @@ function PublicAdviceLetter() {
 
       <GridContainer className="full-width">
         {adviceLetter && (
-          <PDFExportWrapper>
+          <div ref={printRef}>
+            <h1 className="easi-only-print">{t('adviceLetterForm.heading')}</h1>
             <ReviewAdviceLetter
               trbRequestId={id}
               adviceLetter={adviceLetter}
@@ -199,7 +211,7 @@ function PublicAdviceLetter() {
               editable={false}
               publicView
             />
-          </PDFExportWrapper>
+          </div>
         )}
       </GridContainer>
 

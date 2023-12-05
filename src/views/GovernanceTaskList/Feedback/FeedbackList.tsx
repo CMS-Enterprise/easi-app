@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useReactToPrint } from 'react-to-print';
 import { IconArrowBack } from '@trussworks/react-uswds';
 
+import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import { PDFExportButton } from 'components/PDFExport';
 import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
 import IconLink from 'components/shared/IconLink';
 import useCacheQuery from 'hooks/useCacheQuery';
-import usePDFExport from 'hooks/usePDFExport';
 import GetGovernanceRequestFeedbackQuery from 'queries/GetGovernanceRequestFeedbackQuery';
 import {
   GetGovernanceRequestFeedback,
@@ -33,9 +35,15 @@ type FeedbackListProps = {
 const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
   const { t } = useTranslation('taskList');
 
-  const { PDFExportWrapper, PDFExportButton } = usePDFExport({
-    title: t('governanceReviewTeam:feedback.title'),
-    filename: `Feedback for ${systemIntakeId}.pdf`
+  const printRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    documentTitle: `Feedback for ${systemIntakeId}.pdf`,
+    content: () => printRef.current,
+    pageStyle: `
+      @page {
+        margin: auto;
+      }
+    `
   });
 
   const { data, loading } = useCacheQuery<
@@ -66,8 +74,9 @@ const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
           </span>
         </>
       )}
-
-      <PDFExportButton>{t('feedbackV2.downloadAsPDF')}</PDFExportButton>
+      <PDFExportButton handlePrint={handlePrint}>
+        {t('feedbackV2.downloadAsPDF')}
+      </PDFExportButton>
     </div>
   );
 
@@ -85,7 +94,11 @@ const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
     <>
       <ActionLinks />
 
-      <PDFExportWrapper>
+      <div ref={printRef}>
+        <PageHeading className="easi-only-print">
+          {t('governanceReviewTeam:feedback.title')}
+        </PageHeading>
+
         <ul
           className="usa-list--unstyled margin-top-4"
           data-testid="feedback-list"
@@ -94,7 +107,7 @@ const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
             <FeedbackItem key={item.id} {...item} />
           ))}
         </ul>
-      </PDFExportWrapper>
+      </div>
 
       <Divider className="margin-bottom-4 easi-no-print" />
 

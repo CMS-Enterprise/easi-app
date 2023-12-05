@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useReactToPrint } from 'react-to-print';
 import { Grid, ModalRef } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import i18next from 'i18next';
 
+import { PDFExportButton } from 'components/PDFExport';
 import AdminAction, { AdminActionButton } from 'components/shared/AdminAction';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { TaskStatus } from 'components/shared/TaskStatusTag';
-import usePDFExport from 'hooks/usePDFExport';
 import { TRBRequestState, TRBRequestStatus } from 'types/graphql-global-types';
 import { TrbAdminPath, TrbRequestIdRef } from 'types/technicalAssistance';
 
@@ -156,9 +157,17 @@ export default function TrbAdminWrapper({
     openNotes
   });
 
-  const { PDFExportWrapper, PDFExportButton } = usePDFExport({
-    filename: pdfExportProps?.filename || '',
-    title: pdfExportProps?.title
+  const printRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    documentTitle: pdfExportProps?.filename || '',
+    content: () => printRef.current,
+    // The lib default is to have no margin, which hides window.prints()'s built in pagination
+    // Set auto margins back to show everything the browser renders
+    pageStyle: `
+      @page {
+        margin: auto;
+      }
+    `
   });
 
   return (
@@ -199,7 +208,9 @@ export default function TrbAdminWrapper({
           )}
 
           {!!pdfExportProps && (
-            <PDFExportButton>{pdfExportProps.label}</PDFExportButton>
+            <PDFExportButton handlePrint={handlePrint}>
+              {pdfExportProps.label}
+            </PDFExportButton>
           )}
         </Grid>
 
@@ -227,7 +238,12 @@ export default function TrbAdminWrapper({
       )}
 
       {pdfExportProps ? (
-        <PDFExportWrapper>{children}</PDFExportWrapper>
+        <div ref={printRef}>
+          {pdfExportProps?.title && (
+            <h1 className="easi-only-print">{pdfExportProps.title}</h1>
+          )}
+          {children}
+        </div>
       ) : (
         children
       )}
