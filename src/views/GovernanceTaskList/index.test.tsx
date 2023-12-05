@@ -83,9 +83,13 @@ describe('Governance Task List', () => {
             })
           ]}
         >
-          <Route path="/governance-task-list/:systemId">
-            <GovernanceTaskList />
-          </Route>
+          <Provider store={store}>
+            <MessageProvider>
+              <Route path="/governance-task-list/:systemId">
+                <GovernanceTaskList />
+              </Route>
+            </MessageProvider>
+          </Provider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -107,9 +111,13 @@ describe('Governance Task List', () => {
             )
           ]}
         >
-          <Route path="/governance-task-list/:systemId">
-            <GovernanceTaskList />
-          </Route>
+          <Provider store={store}>
+            <MessageProvider>
+              <Route path="/governance-task-list/:systemId">
+                <GovernanceTaskList />
+              </Route>
+            </MessageProvider>
+          </Provider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );
