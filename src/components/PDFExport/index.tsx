@@ -5,6 +5,33 @@ import classNames from 'classnames';
 
 import IconButton from 'components/shared/IconButton';
 
+type PDFExportButtonProps = {
+  children: React.ReactNode;
+  handlePrint: () => void;
+  disabled?: boolean;
+  className?: string;
+};
+
+export const PDFExportButton = ({
+  children,
+  handlePrint,
+  disabled,
+  className
+}: PDFExportButtonProps) => {
+  return (
+    <IconButton
+      icon={<IconFileDownload />}
+      className={classNames('easi-no-print', className)}
+      type="button"
+      onClick={handlePrint}
+      disabled={disabled}
+      unstyled
+    >
+      {children}
+    </IconButton>
+  );
+};
+
 type PDFExportProps = {
   filename: string;
   title: string;
@@ -54,16 +81,9 @@ const PDFExport = ({
           'margin-top-6': linkPosition === 'bottom'
         })}
       >
-        <IconButton
-          icon={<IconFileDownload />}
-          className="easi-no-print"
-          type="button"
-          onClick={handlePrint}
-          disabled={disabled}
-          unstyled
-        >
+        <PDFExportButton handlePrint={handlePrint} disabled={disabled}>
           {label || 'Download PDF'}
-        </IconButton>
+        </PDFExportButton>
       </div>
 
       {linkPosition === 'top' && PrintContent}
