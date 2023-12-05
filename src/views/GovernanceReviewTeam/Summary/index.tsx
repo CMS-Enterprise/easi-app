@@ -23,11 +23,15 @@ import StateTag from 'components/StateTag';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
-import { SystemIntakeState } from 'types/graphql-global-types';
+import {
+  SystemIntakeState,
+  SystemIntakeStatusAdmin
+} from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import {
+  isAdminIntakeClosed,
   isIntakeClosed,
   translateRequestType,
   translateStatus
@@ -41,6 +45,7 @@ type RequestSummaryProps = {
   requestName: string;
   requestType: RequestType;
   status: string;
+  statusAdmin: SystemIntakeStatusAdmin;
   adminLead: string | null;
   submittedAt: string | null;
   lcid: string | null;
@@ -53,6 +58,7 @@ const RequestSummary = ({
   requestName,
   requestType,
   status,
+  statusAdmin,
   adminLead,
   submittedAt,
   lcid,
@@ -69,7 +75,11 @@ const RequestSummary = ({
     }
   );
 
-  const state: SystemIntakeState = isIntakeClosed(status)
+  const stateV1: SystemIntakeState = isIntakeClosed(status)
+    ? SystemIntakeState.CLOSED
+    : SystemIntakeState.OPEN;
+
+  const state: SystemIntakeState = isAdminIntakeClosed(statusAdmin)
     ? SystemIntakeState.CLOSED
     : SystemIntakeState.OPEN;
 
@@ -207,10 +217,12 @@ const RequestSummary = ({
             <Grid desktop={{ col: 8 }}>
               <div>
                 <h4 className="margin-right-1">{t('status.label')}</h4>
-                {!flags.itGovV2Fields && <StateTag state={state} />}
+                <StateTag state={flags.itGovV2Fields ? state : stateV1} />
               </div>
               <p className="text-base-dark" data-testid="grt-current-status">
-                {flags.itGovV2Fields ? status : translateStatus(status, lcid)}
+                {flags.itGovV2Fields
+                  ? t(`systemIntakeStatusAdmin.${statusAdmin}`)
+                  : translateStatus(status, lcid)}
               </p>
               <Link to={`/governance-review-team/${id}/actions`}>
                 {t('action:takeAnAction')}

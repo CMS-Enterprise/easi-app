@@ -3,6 +3,7 @@ import {
   prepareSystemIntakeForApp
 } from 'data/systemIntake';
 import systemIntakeReducer from 'reducers/systemIntakeReducer';
+import { SystemIntakeStatusAdmin } from 'types/graphql-global-types';
 import {
   clearSystemIntake,
   fetchSystemIntake,
@@ -13,6 +14,7 @@ describe('The system intake reducer', () => {
   const mockApiSystemIntake = {
     id: '',
     status: 'INTAKE_DRAFT',
+    statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
     requester: '',
     component: '',
     businessOwner: '',

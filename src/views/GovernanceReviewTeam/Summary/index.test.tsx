@@ -8,7 +8,8 @@ import users from 'data/mock/users';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
 import {
   SystemIntakeRequestType,
-  SystemIntakeStatus
+  SystemIntakeStatus,
+  SystemIntakeStatusAdmin
 } from 'types/graphql-global-types';
 
 import Summary from '.';
@@ -42,6 +43,7 @@ const summaryProps = {
   requestName: 'Request Name',
   requestType: SystemIntakeRequestType.NEW,
   status: SystemIntakeStatus.INTAKE_SUBMITTED,
+  statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
   adminLead: null,
   submittedAt: DateTime.local().toString(),
   lcid: null,

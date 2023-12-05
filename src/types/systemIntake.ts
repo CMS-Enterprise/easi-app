@@ -1,12 +1,33 @@
 import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
 
+import { SystemIntakeStatusAdmin } from './graphql-global-types';
+
 export type GovernanceCollaborationTeam = {
   collaborator: string;
   name: string;
   key: string;
 };
 
-export const openIntakeStatuses = [
+export const openIntakeStatusesAdmin: SystemIntakeStatusAdmin[] = [
+  SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
+  SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_SUBMITTED,
+  SystemIntakeStatusAdmin.FINAL_BUSINESS_CASE_IN_PROGRESS,
+  SystemIntakeStatusAdmin.FINAL_BUSINESS_CASE_SUBMITTED,
+  SystemIntakeStatusAdmin.GRB_MEETING_COMPLETE,
+  SystemIntakeStatusAdmin.GRB_MEETING_READY,
+  SystemIntakeStatusAdmin.GRT_MEETING_COMPLETE,
+  SystemIntakeStatusAdmin.GRT_MEETING_READY,
+  SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
+  SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED
+];
+
+export const closedIntakeStatusesAdmin: SystemIntakeStatusAdmin[] = [
+  SystemIntakeStatusAdmin.LCID_ISSUED,
+  SystemIntakeStatusAdmin.NOT_APPROVED,
+  SystemIntakeStatusAdmin.NOT_GOVERNANCE
+];
+
+export const openIntakeStatusesV1 = [
   'INTAKE_DRAFT',
   'INTAKE_SUBMITTED',
   'NEED_BIZ_CASE',
@@ -20,7 +41,7 @@ export const openIntakeStatuses = [
   'SHUTDOWN_IN_PROGRESS'
 ];
 
-export const closedIntakeStatuses = [
+export const closedIntakeStatusesV1 = [
   'LCID_ISSUED',
   'WITHDRAWN',
   'NOT_IT_REQUEST',
@@ -29,13 +50,13 @@ export const closedIntakeStatuses = [
   'SHUTDOWN_COMPLETE'
 ];
 
-export const intakeStatuses = [
-  ...openIntakeStatuses,
-  ...closedIntakeStatuses
+export const intakeStatusesV1 = [
+  ...openIntakeStatusesV1,
+  ...closedIntakeStatusesV1
 ] as const;
 
 // TODO: Remove old intake statuses once they're deprecated
-export type SystemIntakeStatus = typeof intakeStatuses[number];
+export type SystemIntakeStatusV1 = typeof intakeStatusesV1[number];
 
 export type RequestType = 'NEW' | 'MAJOR_CHANGES' | 'RECOMPETE' | 'SHUTDOWN';
 
@@ -47,7 +68,8 @@ export type SystemIntakeForm = {
   id: string;
   euaUserId: string;
   requestName: string;
-  status: SystemIntakeStatus;
+  status: SystemIntakeStatusV1;
+  statusAdmin: SystemIntakeStatusAdmin;
   requestType: RequestType;
   requester: {
     name: string;
