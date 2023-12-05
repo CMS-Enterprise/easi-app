@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 
 import GetTrbPublicAdviceLetterQuery from 'queries/GetTrbPublicAdviceLetterQuery';
@@ -91,7 +91,7 @@ describe('Trb Public Advice Letter', () => {
       </MockedProvider>
     );
 
-    await findByRole('heading', {
+    await screen.findAllByRole('heading', {
       level: 1,
       name: i18next.t<string>('technicalAssistance:adviceLetterForm.heading')
     });
@@ -181,7 +181,7 @@ describe('Trb Public Advice Letter', () => {
   });
 
   it('renders from task list link', async () => {
-    const { findByRole, findAllByRole, asFragment } = render(
+    const { findAllByRole, asFragment } = render(
       <MockedProvider
         defaultOptions={{
           watchQuery: { fetchPolicy: 'no-cache' },
@@ -216,7 +216,7 @@ describe('Trb Public Advice Letter', () => {
       </MockedProvider>
     );
 
-    await findByRole('heading', {
+    await screen.findAllByRole('heading', {
       level: 1,
       name: i18next.t<string>('technicalAssistance:adviceLetterForm.heading')
     });

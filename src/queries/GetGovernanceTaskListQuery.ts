@@ -27,6 +27,8 @@ export default gql`
       grbDate
 
       step
+      state
+      decisionState
 
       businessCase {
         id
