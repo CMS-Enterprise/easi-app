@@ -86,7 +86,7 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
         |
       </span>
       <button
-        class="usa-button usa-button--unstyled display-flex flex-align-center"
+        class="usa-button usa-button--unstyled display-flex flex-align-center easi-no-print"
         data-testid="button"
         type="button"
       >
@@ -369,7 +369,7 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
         |
       </span>
       <button
-        class="usa-button usa-button--unstyled display-flex flex-align-center"
+        class="usa-button usa-button--unstyled display-flex flex-align-center easi-no-print"
         data-testid="button"
         type="button"
       >

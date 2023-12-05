@@ -1,13 +1,13 @@
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useReactToPrint } from 'react-to-print';
-import { IconArrowBack, IconFileDownload } from '@trussworks/react-uswds';
+import { IconArrowBack } from '@trussworks/react-uswds';
 
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import { PDFExportButton } from 'components/PDFExport';
 import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
-import IconButton from 'components/shared/IconButton';
 import IconLink from 'components/shared/IconLink';
 import useCacheQuery from 'hooks/useCacheQuery';
 import GetGovernanceRequestFeedbackQuery from 'queries/GetGovernanceRequestFeedbackQuery';
@@ -74,14 +74,9 @@ const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
           </span>
         </>
       )}
-      <IconButton
-        type="button"
-        onClick={handlePrint}
-        icon={<IconFileDownload />}
-        unstyled
-      >
+      <PDFExportButton handlePrint={handlePrint}>
         {t('feedbackV2.downloadAsPDF')}
-      </IconButton>
+      </PDFExportButton>
     </div>
   );
 

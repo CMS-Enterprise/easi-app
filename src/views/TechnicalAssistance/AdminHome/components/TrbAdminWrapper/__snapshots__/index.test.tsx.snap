@@ -72,7 +72,7 @@ exports[`TRB Admin Wrapper > matches the snapshot 1`] = `
       </div>
     </div>
     <div
-      class="usa-summary-box margin-top-0"
+      class="usa-summary-box easi-no-print margin-top-0"
     >
       <h5
         class="text-base-dark text-uppercase margin-top-0 margin-bottom-05 line-height-body-1 text-normal text-body-xs"
