@@ -29,7 +29,7 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
     expectTaskStatusTagToHaveTextKey('READY');
 
     // Start button
-    getByRoleWithNameTextKey('link', 'itGov:button.start');
+    getByRoleWithNameTextKey('button', 'itGov:button.start');
   });
 
   it('in progress', () => {
@@ -46,7 +46,7 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
     );
 
     // Continue button
-    getByRoleWithNameTextKey('link', 'itGov:button.continue');
+    getByRoleWithNameTextKey('button', 'itGov:button.continue');
   });
 
   it('submitted', () => {
@@ -78,7 +78,7 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
     expectTaskStatusTagToHaveTextKey('EDITS_REQUESTED');
 
     // Edit form button
-    getByRoleWithNameTextKey('link', 'itGov:button.editForm');
+    getByRoleWithNameTextKey('button', 'itGov:button.editForm');
 
     // Edits requested warning
     expect(getExpectedAlertType('warning')).toHaveTextContent(

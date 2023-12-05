@@ -21,6 +21,11 @@ export default {
       text:
         'A decision has been made for this request, and you can view the decision at the <decisionLink>bottom of this page</decisionLink>. For additional information, please check the email sent to you. If you have further questions, contact the Governance Team at <emailLink>{{email}}</emailLink>.'
     },
+    closedAlert: {
+      heading: 'Request closed',
+      text:
+        'The Governance Team has closed this request without issuing a decision. If you have questions, you may contact them at <emailLink>{{email}}</emailLink>.'
+    },
     generalFeedback: {
       heading: 'The Governance team has offered feedback about your request.',
       text:
