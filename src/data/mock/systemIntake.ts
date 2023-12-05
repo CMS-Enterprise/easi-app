@@ -416,6 +416,7 @@ export const getSystemIntakeContactsQuery: MockedQuery<
 export const taskListSystemIntake: TaskListSystemIntake = {
   __typename: 'SystemIntake',
   id: systemIntakeId,
+  requestName: 'Mock system intake',
   itGovTaskStatuses: {
     __typename: 'ITGovTaskStatuses',
     intakeFormStatus: ITGovIntakeFormStatus.READY,

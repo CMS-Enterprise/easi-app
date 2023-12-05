@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import {
   render,
@@ -12,7 +13,9 @@ import {
   getGovernanceTaskListQuery,
   systemIntake
 } from 'data/mock/systemIntake';
+import { MessageProvider } from 'hooks/useMessage';
 import { SystemIntakeState } from 'types/graphql-global-types';
+import easiMockStore from 'utils/testing/easiMockStore';
 import { getByRoleWithNameTextKey } from 'utils/testing/helpers';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
@@ -20,6 +23,8 @@ import GovernanceTaskList from '.';
 
 describe('Governance Task List', () => {
   const { id } = systemIntake;
+
+  const store = easiMockStore();
 
   it('renders a request task list at the initial state', async () => {
     render(
@@ -31,9 +36,13 @@ describe('Governance Task List', () => {
             )
           ]}
         >
-          <Route path="/governance-task-list/:systemId">
-            <GovernanceTaskList />
-          </Route>
+          <Provider store={store}>
+            <MessageProvider>
+              <Route path="/governance-task-list/:systemId">
+                <GovernanceTaskList />
+              </Route>
+            </MessageProvider>
+          </Provider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -74,9 +83,13 @@ describe('Governance Task List', () => {
             })
           ]}
         >
-          <Route path="/governance-task-list/:systemId">
-            <GovernanceTaskList />
-          </Route>
+          <Provider store={store}>
+            <MessageProvider>
+              <Route path="/governance-task-list/:systemId">
+                <GovernanceTaskList />
+              </Route>
+            </MessageProvider>
+          </Provider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );
@@ -98,9 +111,13 @@ describe('Governance Task List', () => {
             )
           ]}
         >
-          <Route path="/governance-task-list/:systemId">
-            <GovernanceTaskList />
-          </Route>
+          <Provider store={store}>
+            <MessageProvider>
+              <Route path="/governance-task-list/:systemId">
+                <GovernanceTaskList />
+              </Route>
+            </MessageProvider>
+          </Provider>
         </VerboseMockedProvider>
       </MemoryRouter>
     );

@@ -34,6 +34,7 @@ export interface GetGovernanceTaskList_systemIntake_businessCase {
 export interface GetGovernanceTaskList_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
+  requestName: string | null;
   itGovTaskStatuses: GetGovernanceTaskList_systemIntake_itGovTaskStatuses;
   governanceRequestFeedbacks: GetGovernanceTaskList_systemIntake_governanceRequestFeedbacks[];
   submittedAt: Time | null;
