@@ -112,7 +112,9 @@ exports[`Feedback page > Renders the feedback page - Governance task list 1`] = 
     </div>
     <div>
       <h1
-        class="easi-only-print"
+        aria-live="polite"
+        class="easi-h1 easi-only-print"
+        tabindex="-1"
       >
         Feedback
       </h1>
