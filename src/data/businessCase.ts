@@ -115,11 +115,7 @@ export const businessCaseInitialData: BusinessCaseModel = {
   createdAt: ''
 };
 
-type lifecycleCostLinesType = {
-  Preferred: LifecycleCosts;
-  A: LifecycleCosts;
-  B: LifecycleCosts;
-};
+type lifecycleCostLinesType = Record<LifecycleSolution, LifecycleCosts>;
 
 /**
  * This function tells us whether the parameter alternativeSolution has been started
@@ -166,57 +162,50 @@ export const alternativeSolutionHasFilledFields = (
   );
 };
 
+const LifecyclePhaseMap = {
+  Development: 'development',
+  'Operations and Maintenance': 'operationsMaintenance',
+  'Help desk/call center': 'helpDesk',
+  'Software licenses': 'software',
+  'Planning, support, and professional services': 'planning',
+  Infrastructure: 'infrastructure',
+  'OIT services, tools, and pilots': 'oit',
+  Other: 'other'
+} as const;
+
+type PhaseKey = typeof LifecyclePhaseMap[keyof typeof LifecyclePhaseMap];
+
 export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {
-  const phaseTypeMap: any = {
-    Development: 'development',
-    'Operations and Maintenance': 'operationsMaintenance',
-    'Help desk/call center': 'helpDesk',
-    'Software licenses': 'software',
-    'Planning, support, and professional services': 'planning',
-    Infrastructure: 'infrastructure',
-    'OIT services, tools, and pilots': 'oit',
-    Other: 'other'
-  };
+  /** Lifecycle costs from API */
+  const lifecycleCosts: ApiLifecycleCostLine[] =
+    businessCase.lifecycleCostLines;
 
+  /** Default lifecycle costs object for app */
   const lifecycleCostLines: lifecycleCostLinesType = {
     Preferred: cloneDeep(defaultEstimatedLifecycle),
     A: cloneDeep(defaultEstimatedLifecycle),
     B: cloneDeep(defaultEstimatedLifecycle)
   };
 
-  let doesAltBHaveLifecycleCostLines = false;
+  /** Merge lifecycle costs from api with default lifecycle costs */
+  lifecycleCosts.forEach(line => {
+    const { phase, solution } = line;
 
-  businessCase.lifecycleCostLines
-    .filter((line: any) => !!line.cost)
-    .forEach((line: any) => {
-      const phaseType:
-        | 'development'
-        | 'operationsMaintenance'
-        | 'helpDesk'
-        | 'software'
-        | 'planning'
-        | 'infrastructure'
-        | 'oit'
-        | 'other' = phaseTypeMap[`${line.phase}`];
+    const phaseKey: PhaseKey = LifecyclePhaseMap[phase];
 
-      if (line.solution === 'B') {
-        doesAltBHaveLifecycleCostLines = true;
-      }
-      const phase =
-        lifecycleCostLines[line.solution as keyof lifecycleCostLinesType][
-          phaseType
-        ];
-      phase.isPresent = true;
-      phase.years[`year${line.year}` as keyof LifecycleYears] = line.cost
-        ? line.cost.toString()
-        : '';
-    });
+    /** Cost object for current phase */
+    const costObject: CostData = lifecycleCostLines[solution][phaseKey];
 
-  if (!doesAltBHaveLifecycleCostLines) {
-    lifecycleCostLines.B = cloneDeep(defaultEstimatedLifecycle);
-  }
+    // Mark cost phase as `isPresent`
+    costObject.isPresent = true;
+
+    // Set cost for correct year within cost object
+    costObject.years[
+      `year${line.year}` as keyof LifecycleYears
+    ] = line.cost.toString();
+  });
 
   return {
     id: businessCase.id,
