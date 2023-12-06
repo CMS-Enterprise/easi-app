@@ -1,4 +1,6 @@
-export type LifecyclePhase =
+export type LifecyclePhase<
+  otherType extends string = 'Other services, tools, and pilots'
+> =
   | 'Development'
   | 'Operations and Maintenance'
   | 'Help desk/call center'
@@ -6,7 +8,7 @@ export type LifecyclePhase =
   | 'Planning, support, and professional services'
   | 'Infrastructure'
   | 'OIT services, tools, and pilots'
-  | 'Other services, tools, and pilots';
+  | otherType;
 
 export type LifecycleYears = {
   year1: string;
@@ -37,9 +39,7 @@ export type LifecycleCosts = {
 export type LifecycleSolution = 'Preferred' | 'A' | 'B';
 
 /** Lifecycle phases for API */
-export type ApiLifecyclePhase =
-  | Omit<LifecyclePhase, 'Other services, tools, and pilots'>
-  | 'Other';
+export type ApiLifecyclePhase = LifecyclePhase<'Other'>;
 
 /** Lifecycle cost formatted for API */
 export type ApiLifecycleCostLine = {
