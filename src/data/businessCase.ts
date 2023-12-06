@@ -4,7 +4,14 @@ import {
   BusinessCaseModel,
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
-import { LifecycleCosts, LifecycleYears } from 'types/estimatedLifecycle';
+import {
+  ApiLifecycleCostLine,
+  ApiLifecyclePhase,
+  CostData,
+  LifecycleCosts,
+  LifecycleSolution,
+  LifecycleYears
+} from 'types/estimatedLifecycle';
 
 const yearsObject = {
   year1: '',
@@ -291,58 +298,75 @@ export const prepareBusinessCaseForApp = (
   };
 };
 
+/** Array of lifecycle costs formatted for API */
+const formatLifecycleCostsForApi = (
+  lifecycleCosts: LifecycleCosts,
+  solution: LifecycleSolution
+): ApiLifecycleCostLine[] => {
+  /** Array of lifecycle cost objects */
+  const lifecycleCostsArray: CostData[] = Object.values(lifecycleCosts);
+
+  // Reformat lifecycle costs for API and return as array
+  return lifecycleCostsArray.reduce((acc, costData) => {
+    const { label, years, isPresent } = costData;
+
+    // Skip phases without any costs entered
+    if (!isPresent) return acc;
+
+    /** Phase label formatted for API */
+    const phase: ApiLifecyclePhase =
+      label === 'Other services, tools, and pilots' ? 'Other' : label;
+
+    /** Array of costs for current phase */
+    const currentPhaseCosts: string[] = Object.values(years);
+
+    /** Current phase costs reformatted for API */
+    const formattedLifecycleCosts: ApiLifecycleCostLine[] = currentPhaseCosts.map(
+      (cost, index) => ({
+        solution,
+        phase,
+        year: (index + 1).toString(),
+        // If no cost entered, return 0
+        cost: cost ? parseFloat(cost) : 0
+      })
+    );
+
+    return [...acc, ...formattedLifecycleCosts];
+  }, [] as ApiLifecycleCostLine[]);
+};
+
 export const prepareBusinessCaseForApi = (
   businessCase: BusinessCaseModel
 ): any => {
   const alternativeBExists = alternativeSolutionHasFilledFields(
     businessCase.alternativeB
   );
-  const solutionNameMap: {
-    solutionLifecycleCostLines: LifecycleCosts;
-    solutionApiName: string;
-  }[] = [
-    {
-      solutionLifecycleCostLines:
-        businessCase.preferredSolution.estimatedLifecycleCost,
-      solutionApiName: 'Preferred'
-    },
-    {
-      solutionLifecycleCostLines:
-        businessCase.alternativeA.estimatedLifecycleCost,
-      solutionApiName: 'A'
-    },
+
+  const alternativeAExists = alternativeSolutionHasFilledFields(
+    businessCase.alternativeA
+  );
+
+  /** Preferred, Alternative A, and Alternative B lifecycle costs formatted for API */
+  const lifecycleCostLines: ApiLifecycleCostLine[] = [
+    ...formatLifecycleCostsForApi(
+      businessCase.preferredSolution.estimatedLifecycleCost,
+      'Preferred'
+    ),
+
+    ...(alternativeAExists
+      ? formatLifecycleCostsForApi(
+          businessCase.alternativeA.estimatedLifecycleCost,
+          'A'
+        )
+      : []),
+
     ...(alternativeBExists
-      ? [
-          {
-            solutionLifecycleCostLines:
-              businessCase.alternativeB.estimatedLifecycleCost,
-            solutionApiName: 'B'
-          }
-        ]
+      ? formatLifecycleCostsForApi(
+          businessCase.alternativeB.estimatedLifecycleCost,
+          'A'
+        )
       : [])
   ];
-
-  const lifecycleCostLines = solutionNameMap
-    .map(({ solutionLifecycleCostLines, solutionApiName }) => {
-      return Object.values(solutionLifecycleCostLines).reduce(
-        (acc: any, phase) => {
-          const { label, years } = phase;
-          const phaseObject = Object.keys(years).map((year: string) => {
-            const cost = years[year as keyof LifecycleYears];
-            return {
-              solution: solutionApiName,
-              phase:
-                label === 'Other services, tools, and pilots' ? 'Other' : label,
-              cost: cost ? parseFloat(cost) : null,
-              year: year.slice(-1)
-            };
-          });
-          return [...acc, ...phaseObject];
-        },
-        []
-      );
-    })
-    .flat();
 
   return {
     ...(businessCase.id && {
