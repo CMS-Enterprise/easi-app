@@ -4,6 +4,8 @@ export default gql`
   query GetGovernanceTaskList($id: UUID!) {
     systemIntake(id: $id) {
       id
+      requestName
+
       itGovTaskStatuses {
         intakeFormStatus
         feedbackFromInitialReviewStatus
@@ -13,16 +15,20 @@ export default gql`
         grbMeetingStatus
         decisionAndNextStepsStatus
       }
+
       governanceRequestFeedbacks {
         id
         targetForm
       }
+
       submittedAt
       updatedAt
       grtDate
       grbDate
 
       step
+      state
+      decisionState
 
       businessCase {
         id

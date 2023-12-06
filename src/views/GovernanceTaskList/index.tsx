@@ -1,25 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Button, Grid, GridContainer, Link } from '@trussworks/react-uswds';
+import {
+  Button,
+  ButtonGroup,
+  Grid,
+  GridContainer,
+  Link,
+  ModalHeading
+} from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
+import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
 import { TaskListContainer } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
+import useMessage from 'hooks/useMessage';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import {
   GetGovernanceTaskList,
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
 import {
-  ITGovDecisionStatus,
-  ITGovIntakeFormStatus
+  ITGovIntakeFormStatus,
+  SystemIntakeDecisionState,
+  SystemIntakeState
 } from 'types/graphql-global-types';
+import { archiveSystemIntake } from 'types/routines';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
@@ -34,6 +46,12 @@ import GovTaskIntakeForm from './GovTaskIntakeForm';
 function GovernanceTaskList() {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('itGov');
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const { showMessageOnNextPage } = useMessage();
+
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
   const { data, loading, error } = useQuery<
     GetGovernanceTaskList,
@@ -45,6 +63,24 @@ function GovernanceTaskList() {
   });
 
   const systemIntake = data?.systemIntake;
+  const requestName = systemIntake?.requestName;
+
+  const archiveIntake = () => {
+    const redirect = () => {
+      const message = t('taskList:withdraw_modal.confirmationText', {
+        context: requestName ? 'name' : 'noName',
+        requestName
+      });
+      showMessageOnNextPage(message, { type: 'success' });
+      history.push('/');
+    };
+    dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
+  };
+
+  const isClosed = systemIntake?.state === SystemIntakeState.CLOSED;
+
+  const hasDecision =
+    systemIntake?.decisionState !== SystemIntakeDecisionState.NO_DECISION;
 
   if (error) {
     return <NotFound />;
@@ -76,13 +112,33 @@ function GovernanceTaskList() {
                   {t('taskList.description')}
                 </p>
 
+                {isClosed && !hasDecision && (
+                  <Alert
+                    type="warning"
+                    heading={t('Request closed')}
+                    className="margin-bottom-6"
+                    data-testid="closed-alert"
+                  >
+                    <Trans
+                      i18nKey="itGov:taskList.closedAlert.text"
+                      components={{
+                        emailLink: (
+                          <Link href={`mailto:${IT_GOV_EMAIL}`}> </Link>
+                        ),
+                        email: IT_GOV_EMAIL
+                      }}
+                    />
+                  </Alert>
+                )}
+
                 {
                   // Decision issued alert
-                  systemIntake.itGovTaskStatuses.decisionAndNextStepsStatus ===
-                    ITGovDecisionStatus.COMPLETED && (
+                  hasDecision && (
                     <Alert
                       type="info"
                       heading={t('taskList.decisionAlert.heading')}
+                      className="margin-bottom-6"
+                      data-testid="decision-alert"
                     >
                       <Trans
                         i18nKey="itGov:taskList.decisionAlert.text"
@@ -151,7 +207,12 @@ function GovernanceTaskList() {
                   ITGovIntakeFormStatus.IN_PROGRESS
                 ].includes(systemIntake.itGovTaskStatuses.intakeFormStatus) && (
                   <div className="margin-top-1">
-                    <Button type="button" unstyled className="text-error">
+                    <Button
+                      type="button"
+                      className="text-error"
+                      onClick={() => setModalOpen(true)}
+                      unstyled
+                    >
                       {t('button.removeYourRequest')}
                     </Button>
                   </div>
@@ -181,6 +242,31 @@ function GovernanceTaskList() {
           </Grid>
         )}
       </GridContainer>
+
+      {/* Remove request modal */}
+      <Modal isOpen={isModalOpen} closeModal={() => setModalOpen(false)}>
+        <ModalHeading>
+          {t('taskList:withdraw_modal:header', {
+            requestName: requestName || 'this request'
+          })}
+        </ModalHeading>
+
+        <p>{t('taskList:withdraw_modal:warning')}</p>
+
+        <ButtonGroup>
+          <Button
+            className="margin-right-1"
+            type="button"
+            onClick={archiveIntake}
+          >
+            {t('taskList:withdraw_modal:confirm')}
+          </Button>
+
+          <Button type="button" unstyled onClick={() => setModalOpen(false)}>
+            {t('taskList:withdraw_modal:cancel')}
+          </Button>
+        </ButtonGroup>
+      </Modal>
     </MainContent>
   );
 }
