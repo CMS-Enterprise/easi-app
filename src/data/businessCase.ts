@@ -145,7 +145,7 @@ export const alternativeSolutionHasFilledFields = (
     phase => phase.isPresent
   );
 
-  return (
+  return !!(
     title ||
     summary ||
     acquisitionApproach ||
@@ -213,19 +213,19 @@ export const prepareBusinessCaseForApp = (
     status: businessCase.status,
     systemIntakeId: businessCase.systemIntakeId,
     systemIntakeStatus: businessCase.systemIntakeStatus,
-    requestName: businessCase.projectName,
+    requestName: businessCase.projectName || '',
     requester: {
-      name: businessCase.requester,
-      phoneNumber: businessCase.requesterPhoneNumber
+      name: businessCase.requester || '',
+      phoneNumber: businessCase.requesterPhoneNumber || ''
     },
     businessOwner: {
-      name: businessCase.businessOwner
+      name: businessCase.businessOwner || ''
     },
-    businessNeed: businessCase.businessNeed,
-    currentSolutionSummary: businessCase.currentSolutionSummary,
-    cmsBenefit: businessCase.cmsBenefit,
-    priorityAlignment: businessCase.priorityAlignment,
-    successIndicators: businessCase.successIndicators,
+    businessNeed: businessCase.businessNeed || '',
+    currentSolutionSummary: businessCase.currentSolutionSummary || '',
+    cmsBenefit: businessCase.cmsBenefit || '',
+    priorityAlignment: businessCase.priorityAlignment || '',
+    successIndicators: businessCase.successIndicators || '',
     preferredSolution: {
       title: businessCase.preferredTitle || '',
       summary: businessCase.preferredSummary || '',
@@ -233,17 +233,17 @@ export const prepareBusinessCaseForApp = (
       pros: businessCase.preferredPros || '',
       cons: businessCase.preferredCons || '',
       costSavings: businessCase.preferredCostSavings || '',
-      estimatedLifecycleCost: lifecycleCostLines.Preferred || '',
+      estimatedLifecycleCost: lifecycleCostLines.Preferred,
       security: {
         isApproved: businessCase.preferredSecurityIsApproved,
-        isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed
+        isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed || ''
       },
       hosting: {
-        type: businessCase.preferredHostingType,
-        location: businessCase.preferredHostingLocation,
-        cloudServiceType: businessCase.preferredHostingCloudServiceType
+        type: businessCase.preferredHostingType || '',
+        location: businessCase.preferredHostingLocation || '',
+        cloudServiceType: businessCase.preferredHostingCloudServiceType || ''
       },
-      hasUserInterface: businessCase.preferredHasUI
+      hasUserInterface: businessCase.preferredHasUI || ''
     },
     alternativeA: {
       title: businessCase.alternativeATitle || '',
@@ -252,7 +252,7 @@ export const prepareBusinessCaseForApp = (
       pros: businessCase.alternativeAPros || '',
       cons: businessCase.alternativeACons || '',
       costSavings: businessCase.alternativeACostSavings || '',
-      estimatedLifecycleCost: lifecycleCostLines.A || '',
+      estimatedLifecycleCost: lifecycleCostLines.A,
       security: {
         isApproved: businessCase.alternativeASecurityIsApproved,
         isBeingReviewed: businessCase.alternativeASecurityIsBeingReviewed
@@ -357,6 +357,7 @@ export const prepareBusinessCaseForApi = (
       : [])
   ];
 
+  // Return business case and convert empty strings to null for backend validation
   return {
     ...(businessCase.id && {
       id: businessCase.id
@@ -366,83 +367,72 @@ export const prepareBusinessCaseForApi = (
     }),
     status: businessCase.status,
     systemIntakeId: businessCase.systemIntakeId,
-    projectName: businessCase.requestName,
-    requester: businessCase.requester.name,
-    requesterPhoneNumber: businessCase.requester.phoneNumber,
-    businessOwner: businessCase.businessOwner.name,
-    businessNeed: businessCase.businessNeed,
-    currentSolutionSummary: businessCase.currentSolutionSummary,
-    cmsBenefit: businessCase.cmsBenefit,
-    priorityAlignment: businessCase.priorityAlignment,
-    successIndicators: businessCase.successIndicators,
-    preferredTitle: businessCase.preferredSolution.title,
-    preferredSummary: businessCase.preferredSolution.summary,
+    projectName: businessCase.requestName || null,
+    requester: businessCase.requester.name || null,
+    requesterPhoneNumber: businessCase.requester.phoneNumber || null,
+    businessOwner: businessCase.businessOwner.name || null,
+    businessNeed: businessCase.businessNeed || null,
+    currentSolutionSummary: businessCase.currentSolutionSummary || null,
+    cmsBenefit: businessCase.cmsBenefit || null,
+    priorityAlignment: businessCase.priorityAlignment || null,
+    successIndicators: businessCase.successIndicators || null,
+
+    // Preferred solution
+    preferredTitle: businessCase.preferredSolution.title || null,
+    preferredSummary: businessCase.preferredSolution.summary || null,
     preferredAcquisitionApproach:
-      businessCase.preferredSolution.acquisitionApproach,
+      businessCase.preferredSolution.acquisitionApproach || null,
     preferredSecurityIsApproved:
       businessCase.preferredSolution.security.isApproved,
     preferredSecurityisBeingReviewed:
-      businessCase.preferredSolution.security.isBeingReviewed,
-    preferredHostingType: businessCase.preferredSolution.hosting.type,
-    preferredHostingLocation: businessCase.preferredSolution.hosting.location,
+      businessCase.preferredSolution.security.isBeingReviewed || null,
+    preferredHostingType: businessCase.preferredSolution.hosting.type || null,
+    preferredHostingLocation:
+      businessCase.preferredSolution.hosting.location || null,
     preferredHostingCloudServiceType:
-      businessCase.preferredSolution.hosting.cloudServiceType,
-    preferredHasUI: businessCase.preferredSolution.hasUserInterface,
-    preferredPros: businessCase.preferredSolution.pros,
-    preferredCons: businessCase.preferredSolution.cons,
-    preferredCostSavings: businessCase.preferredSolution.costSavings,
-    alternativeATitle: businessCase.alternativeA.title,
-    alternativeASummary: businessCase.alternativeA.summary,
+      businessCase.preferredSolution.hosting.cloudServiceType || null,
+    preferredHasUI: businessCase.preferredSolution.hasUserInterface || null,
+    preferredPros: businessCase.preferredSolution.pros || null,
+    preferredCons: businessCase.preferredSolution.cons || null,
+    preferredCostSavings: businessCase.preferredSolution.costSavings || null,
+
+    // Alternative A
+    alternativeATitle: businessCase.alternativeA.title || null,
+    alternativeASummary: businessCase.alternativeA.summary || null,
     alternativeAAcquisitionApproach:
-      businessCase.alternativeA.acquisitionApproach,
+      businessCase.alternativeA.acquisitionApproach || null,
     alternativeASecurityIsApproved:
       businessCase.alternativeA.security.isApproved,
     alternativeASecurityisBeingReviewed:
-      businessCase.alternativeA.security.isBeingReviewed,
-    alternativeAHostingType: businessCase.alternativeA.hosting.type,
-    alternativeAHostingLocation: businessCase.alternativeA.hosting.location,
+      businessCase.alternativeA.security.isBeingReviewed || null,
+    alternativeAHostingType: businessCase.alternativeA.hosting.type || null,
+    alternativeAHostingLocation:
+      businessCase.alternativeA.hosting.location || null,
     alternativeAHostingCloudServiceType:
-      businessCase.alternativeA.hosting.cloudServiceType,
-    alternativeAHasUI: businessCase.alternativeA.hasUserInterface,
-    alternativeAPros: businessCase.alternativeA.pros,
-    alternativeACons: businessCase.alternativeA.cons,
-    alternativeACostSavings: businessCase.alternativeA.costSavings,
-    alternativeBTitle: alternativeBExists
-      ? businessCase.alternativeB.title
-      : null,
-    alternativeBSummary: alternativeBExists
-      ? businessCase.alternativeB.summary
-      : null,
-    alternativeBAcquisitionApproach: alternativeBExists
-      ? businessCase.alternativeB.acquisitionApproach
-      : null,
-    alternativeBSecurityIsApproved: alternativeBExists
-      ? businessCase.alternativeB.security.isApproved
-      : null,
-    alternativeBSecurityisBeingReviewed: alternativeBExists
-      ? businessCase.alternativeB.security.isBeingReviewed
-      : null,
-    alternativeBHostingType: alternativeBExists
-      ? businessCase.alternativeB.hosting.type
-      : null,
-    alternativeBHostingLocation: alternativeBExists
-      ? businessCase.alternativeB.hosting.location
-      : null,
-    alternativeBHostingCloudServiceType: alternativeBExists
-      ? businessCase.alternativeB.hosting.cloudServiceType
-      : null,
-    alternativeBHasUI: alternativeBExists
-      ? businessCase.alternativeB.hasUserInterface
-      : null,
-    alternativeBPros: alternativeBExists
-      ? businessCase.alternativeB.pros
-      : null,
-    alternativeBCons: alternativeBExists
-      ? businessCase.alternativeB.cons
-      : null,
-    alternativeBCostSavings: alternativeBExists
-      ? businessCase.alternativeB.costSavings
-      : null,
+      businessCase.alternativeA.hosting.cloudServiceType || null,
+    alternativeAHasUI: businessCase.alternativeA.hasUserInterface || null,
+    alternativeAPros: businessCase.alternativeA.pros || null,
+    alternativeACons: businessCase.alternativeA.cons || null,
+    alternativeACostSavings: businessCase.alternativeA.costSavings || null,
+
+    // Alternative B
+    alternativeBTitle: businessCase.alternativeB.title || null,
+    alternativeBSummary: businessCase.alternativeB.summary || null,
+    alternativeBAcquisitionApproach:
+      businessCase.alternativeB.acquisitionApproach || null,
+    alternativeBSecurityIsApproved:
+      businessCase.alternativeB.security.isApproved || null,
+    alternativeBSecurityisBeingReviewed:
+      businessCase.alternativeB.security.isBeingReviewed || null,
+    alternativeBHostingType: businessCase.alternativeB.hosting.type || null,
+    alternativeBHostingLocation:
+      businessCase.alternativeB.hosting.location || null,
+    alternativeBHostingCloudServiceType:
+      businessCase.alternativeB.hosting.cloudServiceType || null,
+    alternativeBHasUI: businessCase.alternativeB.hasUserInterface || null,
+    alternativeBPros: businessCase.alternativeB.pros || null,
+    alternativeBCons: businessCase.alternativeB.cons || null,
+    alternativeBCostSavings: businessCase.alternativeB.costSavings || null,
     lifecycleCostLines
   };
 };
