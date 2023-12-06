@@ -454,7 +454,7 @@ type ReopenTRBRequestInput struct {
 	NotifyEuaIds   []string    `json:"notifyEuaIds"`
 }
 
-// Represents a request being made with the EASi system
+// Represents a requester's system intake request
 type Request struct {
 	ID              uuid.UUID                           `json:"id"`
 	Name            *string                             `json:"name,omitempty"`
@@ -462,7 +462,6 @@ type Request struct {
 	Type            RequestType                         `json:"type"`
 	Status          string                              `json:"status"`
 	StatusRequester *models.SystemIntakeStatusRequester `json:"statusRequester,omitempty"`
-	StatusAdmin     *models.SystemIntakeStatusAdmin     `json:"statusAdmin,omitempty"`
 	StatusCreatedAt *time.Time                          `json:"statusCreatedAt,omitempty"`
 	Lcid            *string                             `json:"lcid,omitempty"`
 	NextMeetingDate *time.Time                          `json:"nextMeetingDate,omitempty"`

@@ -30,7 +30,7 @@ enum PersonRole {
 }
 
 """
-Represents a request being made with the EASi system
+Represents a requester's system intake request
 """
 type Request {
   id: UUID!
@@ -39,7 +39,6 @@ type Request {
   type: RequestType!
   status: String!
   statusRequester: SystemIntakeStatusRequester
-  statusAdmin: SystemIntakeStatusAdmin
   statusCreatedAt: Time
   lcid: String
   nextMeetingDate: Time
@@ -2819,7 +2818,11 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  requests(after: String, first: Int!): RequestsConnection
+  """
+  Requests fetches a requester's own intake requests
+  first is currently non-functional and can be removed later
+  """
+  requests(first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
   @hasRole(role: EASI_GOVTEAM)

@@ -2378,13 +2378,8 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
 }
 
-// Requests is the resolver for the requests field.
-func (r *queryResolver) Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error) {
-	requests, queryErr := r.store.FetchMyRequests(ctx)
-	if queryErr != nil {
-		return nil, gqlerror.Errorf("query error: %s", queryErr)
-	}
-	// If we don't support accessibility requests yet we can remove the FetchMyRequests call and the nested looping code below
+// Requests is the resolver for the requests field. (First is not in use)
+func (r *queryResolver) Requests(ctx context.Context, first int) (*model.RequestsConnection, error) {
 	intakes, queryErr := r.store.FetchSystemIntakesByEuaID(ctx, appcontext.Principal(ctx).ID())
 	if queryErr != nil {
 		return nil, gqlerror.Errorf("query error: %s", queryErr)
@@ -2392,35 +2387,36 @@ func (r *queryResolver) Requests(ctx context.Context, after *string, first int) 
 
 	edges := []*model.RequestEdge{}
 
-	for _, request := range requests {
+	for _, intake := range intakes {
 		var requesterStatus models.SystemIntakeStatusRequester
-		var adminStatus models.SystemIntakeStatusAdmin
-		if request.Type == model.RequestTypeGovernanceRequest {
-			for _, intake := range intakes {
-				if intake.ID == request.ID {
-					requesterStatus, queryErr = resolvers.CalculateSystemIntakeRequesterStatus(&intake, time.Now())
-					if queryErr != nil {
-						return nil, gqlerror.Errorf("query error: %s", queryErr)
-					}
-					adminStatus, queryErr = resolvers.CalculateSystemIntakeAdminStatus(&intake)
-					if queryErr != nil {
-						return nil, gqlerror.Errorf("query error: %s", queryErr)
-					}
-					break
-				}
+		requesterStatus, queryErr = resolvers.CalculateSystemIntakeRequesterStatus(&intake, time.Now())
+		if queryErr != nil {
+			return nil, gqlerror.Errorf("query error: %s", queryErr)
+		}
+		var nextMeetingDate *time.Time
+		grbDateIsSetAndNotInPast := intake.GRBDate != nil && time.Now().Before(*intake.GRBDate)
+		grtDateIsSetAndNotInPast := intake.GRTDate != nil && time.Now().Before(*intake.GRTDate)
+		if grbDateIsSetAndNotInPast && grtDateIsSetAndNotInPast {
+			if intake.GRBDate.Before(*intake.GRTDate) {
+				nextMeetingDate = intake.GRBDate
+			} else {
+				nextMeetingDate = intake.GRTDate
 			}
+		} else if grtDateIsSetAndNotInPast {
+			nextMeetingDate = intake.GRTDate
+		} else if grbDateIsSetAndNotInPast {
+			nextMeetingDate = intake.GRBDate
 		}
 		node := model.Request{
-			ID:              request.ID,
-			SubmittedAt:     request.SubmittedAt,
-			Name:            request.Name.Ptr(),
-			Type:            request.Type,
-			Status:          request.Status,
+			ID:              intake.ID,
+			SubmittedAt:     intake.SubmittedAt,
+			Name:            intake.ProjectName.Ptr(),
+			Type:            model.RequestTypeGovernanceRequest,
+			Status:          string(intake.Status),
 			StatusRequester: &requesterStatus,
-			StatusAdmin:     &adminStatus,
-			StatusCreatedAt: request.StatusCreatedAt,
-			Lcid:            request.LifecycleID.Ptr(),
-			NextMeetingDate: request.NextMeetingDate,
+			StatusCreatedAt: intake.CreatedAt,
+			Lcid:            intake.LifecycleID.Ptr(),
+			NextMeetingDate: nextMeetingDate,
 		}
 		edges = append(edges, &model.RequestEdge{
 			Node: &node,
