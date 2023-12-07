@@ -4,6 +4,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageHeading from 'components/PageHeading';
 import ReviewRow from 'components/ReviewRow';
+import { RichTextViewer } from 'components/RichTextEditor';
 import {
   DescriptionDefinition,
   DescriptionList,
@@ -33,10 +34,7 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
             <DescriptionTerm
               term={t('governanceReviewTeam:lifecycleID.title')}
             />
-            <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={systemIntake?.lcid}
-            />
+            <DescriptionDefinition definition={systemIntake?.lcid} />
           </div>
         </ReviewRow>
         <ReviewRow>
@@ -59,8 +57,9 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
               term={t('governanceReviewTeam:lifecycleID.scope')}
             />
             <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={systemIntake?.lcidScope}
+              definition={
+                <RichTextViewer value={systemIntake?.lcidScope || ''} />
+              }
             />
           </div>
         </ReviewRow>
@@ -70,8 +69,9 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
               term={t('governanceReviewTeam:lifecycleID.nextSteps')}
             />
             <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={systemIntake?.decisionNextSteps}
+              definition={
+                <RichTextViewer value={systemIntake?.decisionNextSteps || ''} />
+              }
             />
           </div>
         </ReviewRow>
@@ -80,7 +80,6 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
             <div>
               <DescriptionTerm term={t('action:issueLCID.trbFollowup.label')} />
               <DescriptionDefinition
-                className="text-pre-wrap"
                 definition={
                   systemIntake?.trbFollowUpRecommendation &&
                   t(
@@ -98,8 +97,9 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
                 term={t('governanceReviewTeam:lifecycleID.costBaseline')}
               />
               <DescriptionDefinition
-                className="text-pre-wrap"
-                definition={systemIntake?.lcidCostBaseline}
+                definition={
+                  <RichTextViewer value={systemIntake?.lcidCostBaseline} />
+                }
               />
             </div>
           </ReviewRow>
