@@ -87,23 +87,10 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		return nil, err
 	}
 
-	closedStatuses, err := models.GetStatusesByFilter(models.SystemIntakeStatusFilterCLOSED)
-	if err != nil {
-		return nil, err
-	}
-
-	status := inputStatusInitiated
-	for _, stat := range closedStatuses {
-		if si.Status == stat {
-			status = inputStatusFinal
-			break
-		}
-	}
-
 	result := wire.IntakeInput{
 		ClientID:     pStr(si.ID.String()),
 		Body:         pStr(string(blob)),
-		ClientStatus: statusStr(status),
+		ClientStatus: pStr(string(si.Status)),
 
 		// invariants for this type
 		Type:       typeStr(intakeInputSystemIntake),
