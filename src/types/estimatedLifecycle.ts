@@ -55,6 +55,6 @@ export type ApiLifecyclePhase = LifecyclePhase<'Other'>;
 export type ApiLifecycleCostLine = {
   solution: LifecycleSolution;
   phase: ApiLifecyclePhase;
-  cost: number;
+  cost: number | null;
   year: string;
 };
