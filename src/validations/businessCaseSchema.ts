@@ -2,13 +2,25 @@ import * as Yup from 'yup';
 
 const phoneNumberRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 
-const fiscalYearCosts = Yup.object().shape({
-  year1: Yup.string().required(),
-  year2: Yup.string().required(),
-  year3: Yup.string().required(),
-  year4: Yup.string().required(),
-  year5: Yup.string().required()
-});
+const fiscalYearCosts = Yup.object()
+  .shape({
+    year1: Yup.string(),
+    year2: Yup.string(),
+    year3: Yup.string(),
+    year4: Yup.string(),
+    year5: Yup.string()
+  })
+  .test('lifecycleCosts', (years, phase) => {
+    const costs = Object.values(years);
+    const phaseLabel: string = phase.parent.label;
+
+    return costs.find(cost => !cost)
+      ? true
+      : phase.createError({
+          message: `Please enter all ${phaseLabel} estimated lifecycle costs`,
+          path: phase.path
+        });
+  });
 
 const relatedCostPhase = Yup.object().shape({
   isPresent: Yup.boolean(),
