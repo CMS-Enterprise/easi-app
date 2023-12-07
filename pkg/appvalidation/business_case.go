@@ -166,7 +166,7 @@ func validateAllRequiredLifecycleCosts(businessCase *models.BusinessCase) map[st
 		validations["preferredSolution"] = v
 	}
 	if alternativeARequired(businessCase) {
-		if v := validateRequiredCost(bCosts); v != "" {
+		if v := validateRequiredCost(aCosts); v != "" {
 			validations["alternativeASolution"] = v
 		}
 	} else {
