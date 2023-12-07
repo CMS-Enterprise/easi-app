@@ -14,12 +14,15 @@ const fiscalYearCosts = Yup.object()
     const costs = Object.values(years);
     const phaseLabel: string = phase.parent.label;
 
-    return costs.find(cost => !cost)
-      ? true
-      : phase.createError({
-          message: `Please enter all ${phaseLabel} estimated lifecycle costs`,
-          path: phase.path
-        });
+    const hasEmptyCost = costs.findIndex(cost => !cost) > -1;
+
+    return (
+      !hasEmptyCost ||
+      phase.createError({
+        message: `Please enter all ${phaseLabel} estimated lifecycle costs`,
+        path: phase.path
+      })
+    );
   });
 
 const relatedCostPhase = Yup.object().shape({
