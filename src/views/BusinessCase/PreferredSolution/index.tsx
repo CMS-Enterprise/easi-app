@@ -48,10 +48,11 @@ const PreferredSolution = ({
     preferredSolution: businessCase.preferredSolution
   };
 
-  const ValidationSchema =
-    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
-      ? BusinessCaseFinalValidationSchema
-      : BusinessCaseDraftValidationSchema;
+  const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
+
+  const ValidationSchema = isFinal
+    ? BusinessCaseFinalValidationSchema
+    : BusinessCaseDraftValidationSchema;
 
   return (
     <Formik
@@ -73,8 +74,6 @@ const PreferredSolution = ({
         } = formikProps;
 
         const flatErrors = flattenErrors(errors);
-
-        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
 
         return (
           <BusinessCaseStepWrapper
