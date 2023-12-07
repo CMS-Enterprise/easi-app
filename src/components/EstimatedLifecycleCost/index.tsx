@@ -65,7 +65,10 @@ const Phase = ({
   return (
     <FieldArray name={`${formikKey}.${category}`}>
       {() => (
-        <FieldGroup className="est-lifecycle-cost__phase-costs margin-0">
+        <FieldGroup
+          className="est-lifecycle-cost__phase-costs margin-0"
+          data-scroll={`${formikKey}.${category}.years`}
+        >
           <div className="est-lifecycle-cost__phase-fieldset">
             <fieldset
               className="usa-fieldset"
@@ -247,7 +250,7 @@ const EstimatedLifecycleCost = ({
   formikKey,
   lifecycleCosts,
   setFieldValue,
-  errors = {},
+  errors,
   businessCaseCreatedAt = '',
   className
 }: EstimatedLifecycleCostProps) => {
@@ -332,19 +335,21 @@ const EstimatedLifecycleCost = ({
       <LifecycleCostSummary />
 
       <div className="cost-table margin-y-4">
-        <FieldGroup
-          error={Object.keys(errors).length > 0}
-          scrollElement={formikKey}
-        >
+        <FieldGroup error={!!errors}>
           <h4 className="margin-0">{t('lifecycleCost.tableHeading')}</h4>
 
-          <p className="margin-top-1 text-base">
+          <HelpText className="margin-y-1">
             {t('lifecycleCost.tableDescription')}
-          </p>
+          </HelpText>
 
-          <FieldErrorMsg>
-            {typeof errors === 'string' ? errors : ''}
-          </FieldErrorMsg>
+          {
+            // Phase error messages
+            !!errors &&
+              Object.values(errors).map((error, index) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <FieldErrorMsg key={index}>{error.years}</FieldErrorMsg>
+              ))
+          }
 
           <div className="cost-table-row cost-table-row__headings minh-0">
             {Object.keys(lifecycleCosts.development.years).map((year, i) => {
