@@ -80,6 +80,14 @@ func BusinessCaseForUpdate(businessCase *models.BusinessCase) error {
 	return nil
 }
 
+func alternativeARequired(businessCase *models.BusinessCase) bool {
+	return businessCase.AlternativeATitle.Valid ||
+		businessCase.AlternativeASummary.Valid ||
+		businessCase.AlternativeAAcquisitionApproach.Valid ||
+		businessCase.AlternativeAPros.Valid ||
+		businessCase.AlternativeACons.Valid ||
+		businessCase.AlternativeACostSavings.Valid
+}
 func alternativeBRequired(businessCase *models.BusinessCase) bool {
 	return businessCase.AlternativeBTitle.Valid ||
 		businessCase.AlternativeBSummary.Valid ||
@@ -157,8 +165,14 @@ func validateAllRequiredLifecycleCosts(businessCase *models.BusinessCase) map[st
 	if v := validateRequiredCost(preferredCosts); v != "" {
 		validations["preferredSolution"] = v
 	}
-	if v := validateRequiredCost(aCosts); v != "" {
-		validations["alternativeASolution"] = v
+	if alternativeARequired(businessCase) {
+		if v := validateRequiredCost(bCosts); v != "" {
+			validations["alternativeASolution"] = v
+		}
+	} else {
+		if len(bCosts) != 0 {
+			validations["alternativeASolution"] = "is required to be empty"
+		}
 	}
 	if alternativeBRequired(businessCase) {
 		if v := validateRequiredCost(bCosts); v != "" {
@@ -245,29 +259,31 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase) error {
 	if validate.RequireNullString(businessCase.PreferredCostSavings) {
 		expectedErr.WithValidation("PreferredCostSavings", "is required")
 	}
-	if validate.RequireNullString(businessCase.AlternativeATitle) {
-		expectedErr.WithValidation("AlternativeATitle", "is required")
-	}
-	if validate.RequireNullString(businessCase.AlternativeASummary) {
-		expectedErr.WithValidation("AlternativeASummary", "is required")
-	}
-	if validate.RequireNullString(businessCase.AlternativeAAcquisitionApproach) {
-		expectedErr.WithValidation("AlternativeAAcquisitionApproach", "is required")
-	}
-	if validate.RequireNullString(businessCase.AlternativeAHostingType) {
-		expectedErr.WithValidation("AlternativeAHostingType", "is required")
-	}
-	if validate.RequireNullString(businessCase.AlternativeAHasUI) {
-		expectedErr.WithValidation("AlternativeAHasUI", "is required")
-	}
-	if validate.RequireNullString(businessCase.AlternativeAPros) {
-		expectedErr.WithValidation("AlternativeAPros", "is required")
-	}
-	if validate.RequireNullString(businessCase.AlternativeACons) {
-		expectedErr.WithValidation("AlternativeACons", "is required")
-	}
-	if validate.RequireNullString(businessCase.AlternativeACostSavings) {
-		expectedErr.WithValidation("AlternativeACostSavings", "is required")
+	if alternativeARequired(businessCase) {
+		if validate.RequireNullString(businessCase.AlternativeATitle) {
+			expectedErr.WithValidation("AlternativeATitle", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeASummary) {
+			expectedErr.WithValidation("AlternativeASummary", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeAAcquisitionApproach) {
+			expectedErr.WithValidation("AlternativeAAcquisitionApproach", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeAHostingType) {
+			expectedErr.WithValidation("AlternativeAHostingType", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeAHasUI) {
+			expectedErr.WithValidation("AlternativeAHasUI", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeAPros) {
+			expectedErr.WithValidation("AlternativeAPros", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeACons) {
+			expectedErr.WithValidation("AlternativeACons", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeACostSavings) {
+			expectedErr.WithValidation("AlternativeACostSavings", "is required")
+		}
 	}
 	if alternativeBRequired(businessCase) {
 		if validate.RequireNullString(businessCase.AlternativeBTitle) {
