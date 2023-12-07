@@ -25,13 +25,13 @@ const yearsObject = {
 export const defaultEstimatedLifecycle: LifecycleCosts = {
   development: {
     label: 'Development',
-    isPresent: false,
+    isPresent: true,
     type: 'primary',
     years: cloneDeep(yearsObject)
   },
   operationsMaintenance: {
     label: 'Operations and Maintenance',
-    isPresent: false,
+    isPresent: true,
     type: 'primary',
     years: cloneDeep(yearsObject)
   },
@@ -142,8 +142,14 @@ export const alternativeSolutionHasFilledFields = (
     estimatedLifecycleCost
   } = alternativeSolution;
 
-  const hasLineItem = !!Object.values(estimatedLifecycleCost).find(
-    phase => phase.isPresent
+  /** Whether requester has entered costs for required lifecycle cost categories */
+  const hasRequiredPhaseCosts: boolean = !![
+    ...Object.values(estimatedLifecycleCost.development.years),
+    ...Object.values(estimatedLifecycleCost.operationsMaintenance.years)
+  ].find(cost => !!cost);
+
+  const hasRelatedCosts = !!Object.values(estimatedLifecycleCost).find(
+    phase => phase.isPresent && phase.type === 'related'
   );
 
   return !!(
@@ -159,7 +165,8 @@ export const alternativeSolutionHasFilledFields = (
     pros ||
     cons ||
     costSavings ||
-    hasLineItem
+    hasRequiredPhaseCosts ||
+    hasRelatedCosts
   );
 };
 
