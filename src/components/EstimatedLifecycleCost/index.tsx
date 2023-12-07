@@ -153,10 +153,6 @@ const Phase = ({
                             `${formikKey}.${category}.years.${year}`,
                             e.target.value.replace(/\D/g, '')
                           );
-                          setFieldValue(
-                            `${formikKey}.${category}.isPresent`,
-                            e.target.value.length > 0
-                          );
                         }}
                       />
                     </FieldGroup>
@@ -231,7 +227,7 @@ const OtherCosts = ({
             type="submit"
             onClick={() => {
               if (lifecycleCosts[activeRelatedCost as CategoryKeys]) {
-                setRelatedCosts([...relatedCosts, activeRelatedCost]);
+                setRelatedCosts(activeRelatedCost);
               }
               setActiveRelatedCost(null);
             }}
@@ -296,6 +292,12 @@ const EstimatedLifecycleCost = ({
         setFieldValue(`${formikKey}.${category}.years.${year}`, '');
       });
     }
+  };
+
+  /** Add related cost to table */
+  const addRelatedCost = (category: CategoryKeys) => {
+    setRelatedCosts([...relatedCosts, category]);
+    setFieldValue(`${formikKey}.${category}.isPresent`, true);
   };
 
   const { t } = useTranslation('businessCase');
@@ -387,7 +389,7 @@ const EstimatedLifecycleCost = ({
           <OtherCosts
             lifecycleCosts={lifecycleCosts}
             relatedCosts={relatedCosts}
-            setRelatedCosts={setRelatedCosts}
+            setRelatedCosts={addRelatedCost}
           />
         </FieldGroup>
         <div className="cost-table-row cost-table-row__totals border-bottom-0">
