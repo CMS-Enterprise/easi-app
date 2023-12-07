@@ -264,9 +264,9 @@ export const prepareBusinessCaseForApp = (
         isBeingReviewed: businessCase.alternativeASecurityIsBeingReviewed
       },
       hosting: {
-        type: businessCase.alternativeAHostingType,
-        location: businessCase.alternativeAHostingLocation,
-        cloudServiceType: businessCase.alternativeAHostingCloudServiceType
+        type: businessCase.alternativeAHostingType || '',
+        location: businessCase.alternativeAHostingLocation || '',
+        cloudServiceType: businessCase.alternativeAHostingCloudServiceType || ''
       },
       hasUserInterface: businessCase.alternativeAHasUI
     },
