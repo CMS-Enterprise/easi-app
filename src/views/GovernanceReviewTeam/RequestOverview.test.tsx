@@ -6,7 +6,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
-import { grtActions } from 'data/mock/grtActions';
+import grtActions from 'data/mock/grtActions';
 import { getSystemIntakeQuery, systemIntake } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';

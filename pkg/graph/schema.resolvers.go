@@ -756,13 +756,26 @@ func (r *iTGovTaskStatusesResolver) DecisionAndNextStepsStatus(ctx context.Conte
 
 // AddGRTFeedbackAndKeepBusinessCaseInDraft is the resolver for the addGRTFeedbackAndKeepBusinessCaseInDraft field.
 func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
+	feedback := models.GovernanceRequestFeedback{
+		IntakeID:     input.IntakeID,
+		Feedback:     input.Feedback,
+		SourceAction: models.GRFSAProgressToNewStep,
+		TargetForm:   models.GRFTFNoTargetProvided,
+		Type:         models.GRFTRequester, // instead of (old) models.GRTFeedbackTypeBUSINESSOWNER
+	}
+
+	// Set metadata
+	createdBy := appcontext.Principal(ctx).ID()
+	feedback.CreatedAt = time.Now()
+	feedback.CreatedBy = &createdBy
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
-		&models.GRTFeedback{
-			IntakeID:     input.IntakeID,
-			Feedback:     input.Feedback,
-			FeedbackType: models.GRTFeedbackTypeBUSINESSOWNER,
-		},
+		// &models.GRTFeedback{
+		// 	IntakeID:     input.IntakeID,
+		// 	Feedback:     input.Feedback,
+		// 	FeedbackType: models.GRTFeedbackTypeBUSINESSOWNER,
+		// },
+		&feedback,
 		&models.Action{
 			IntakeID:   &input.IntakeID,
 			Feedback:   &input.EmailBody,
@@ -780,13 +793,26 @@ func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.
 
 // AddGRTFeedbackAndProgressToFinalBusinessCase is the resolver for the addGRTFeedbackAndProgressToFinalBusinessCase field.
 func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
+	feedback := models.GovernanceRequestFeedback{
+		IntakeID:     input.IntakeID,
+		Feedback:     input.Feedback,
+		SourceAction: models.GRFSAProgressToNewStep,
+		TargetForm:   models.GRFTFNoTargetProvided,
+		Type:         models.GRFTRequester, // instead of (old) models.GRTFeedbackTypeBUSINESSOWNER
+	}
+
+	// Set metadata
+	createdBy := appcontext.Principal(ctx).ID()
+	feedback.CreatedAt = time.Now()
+	feedback.CreatedBy = &createdBy
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
-		&models.GRTFeedback{
-			IntakeID:     input.IntakeID,
-			Feedback:     input.Feedback,
-			FeedbackType: models.GRTFeedbackTypeBUSINESSOWNER,
-		},
+		// &models.GRTFeedback{
+		// 	IntakeID:     input.IntakeID,
+		// 	Feedback:     input.Feedback,
+		// 	FeedbackType: models.GRTFeedbackTypeBUSINESSOWNER,
+		// },
+		&feedback,
 		&models.Action{
 			IntakeID:   &input.IntakeID,
 			Feedback:   &input.EmailBody,
@@ -804,13 +830,26 @@ func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx cont
 
 // AddGRTFeedbackAndRequestBusinessCase is the resolver for the addGRTFeedbackAndRequestBusinessCase field.
 func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
+	feedback := models.GovernanceRequestFeedback{
+		IntakeID:     input.IntakeID,
+		Feedback:     input.Feedback,
+		SourceAction: models.GRFSAProgressToNewStep,
+		TargetForm:   models.GRFTFNoTargetProvided,
+		Type:         models.GRFTRequester, // instead of (old) models.GRTFeedbackTypeBUSINESSOWNER
+	}
+
+	// Set metadata
+	createdBy := appcontext.Principal(ctx).ID()
+	feedback.CreatedAt = time.Now()
+	feedback.CreatedBy = &createdBy
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
-		&models.GRTFeedback{
-			IntakeID:     input.IntakeID,
-			Feedback:     input.Feedback,
-			FeedbackType: models.GRTFeedbackTypeBUSINESSOWNER,
-		},
+		// &models.GRTFeedback{
+		// 	IntakeID:     input.IntakeID,
+		// 	Feedback:     input.Feedback,
+		// 	FeedbackType: models.GRTFeedbackTypeBUSINESSOWNER,
+		// },
+		&feedback,
 		&models.Action{
 			IntakeID:   &input.IntakeID,
 			Feedback:   &input.EmailBody,
@@ -1622,13 +1661,26 @@ func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.Iss
 
 // MarkSystemIntakeReadyForGrb is the resolver for the markSystemIntakeReadyForGRB field.
 func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
+	feedback := models.GovernanceRequestFeedback{
+		IntakeID:     input.IntakeID,
+		Feedback:     input.Feedback,
+		SourceAction: models.GRFSAProgressToNewStep,
+		TargetForm:   models.GRFTFNoTargetProvided,
+		Type:         models.GRFTGRB, // instead of (old) models.GRTFeedbackTypeGRB
+	}
+
+	// Set metadata
+	createdBy := appcontext.Principal(ctx).ID()
+	feedback.CreatedAt = time.Now()
+	feedback.CreatedBy = &createdBy
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
-		&models.GRTFeedback{
-			IntakeID:     input.IntakeID,
-			Feedback:     input.Feedback,
-			FeedbackType: models.GRTFeedbackTypeGRB,
-		},
+		// &models.GRTFeedback{
+		// 	IntakeID:     input.IntakeID,
+		// 	Feedback:     input.Feedback,
+		// 	FeedbackType: models.GRTFeedbackTypeGRB,
+		// },
+		&feedback,
 		&models.Action{
 			IntakeID:   &input.IntakeID,
 			Feedback:   &input.EmailBody,
@@ -2326,25 +2378,45 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
 }
 
-// Requests is the resolver for the requests field.
-func (r *queryResolver) Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error) {
-	requests, queryErr := r.store.FetchMyRequests(ctx)
+// Requests is the resolver for the requests field. (First is not in use)
+func (r *queryResolver) Requests(ctx context.Context, first int) (*model.RequestsConnection, error) {
+	intakes, queryErr := r.store.FetchSystemIntakesByEuaID(ctx, appcontext.Principal(ctx).ID())
 	if queryErr != nil {
 		return nil, gqlerror.Errorf("query error: %s", queryErr)
 	}
 
 	edges := []*model.RequestEdge{}
 
-	for _, request := range requests {
+	for _, intake := range intakes {
+		var requesterStatus models.SystemIntakeStatusRequester
+		requesterStatus, queryErr = resolvers.CalculateSystemIntakeRequesterStatus(&intake, time.Now())
+		if queryErr != nil {
+			return nil, gqlerror.Errorf("query error: %s", queryErr)
+		}
+		var nextMeetingDate *time.Time
+		grbDateIsSetAndNotInPast := intake.GRBDate != nil && time.Now().Before(*intake.GRBDate)
+		grtDateIsSetAndNotInPast := intake.GRTDate != nil && time.Now().Before(*intake.GRTDate)
+		if grbDateIsSetAndNotInPast && grtDateIsSetAndNotInPast {
+			if intake.GRBDate.Before(*intake.GRTDate) {
+				nextMeetingDate = intake.GRBDate
+			} else {
+				nextMeetingDate = intake.GRTDate
+			}
+		} else if grtDateIsSetAndNotInPast {
+			nextMeetingDate = intake.GRTDate
+		} else if grbDateIsSetAndNotInPast {
+			nextMeetingDate = intake.GRBDate
+		}
 		node := model.Request{
-			ID:              request.ID,
-			SubmittedAt:     request.SubmittedAt,
-			Name:            request.Name.Ptr(),
-			Type:            request.Type,
-			Status:          request.Status,
-			StatusCreatedAt: request.StatusCreatedAt,
-			Lcid:            request.LifecycleID.Ptr(),
-			NextMeetingDate: request.NextMeetingDate,
+			ID:              intake.ID,
+			SubmittedAt:     intake.SubmittedAt,
+			Name:            intake.ProjectName.Ptr(),
+			Type:            model.RequestTypeGovernanceRequest,
+			Status:          string(intake.Status),
+			StatusRequester: &requesterStatus,
+			StatusCreatedAt: intake.CreatedAt,
+			Lcid:            intake.LifecycleID.Ptr(),
+			NextMeetingDate: nextMeetingDate,
 		}
 		edges = append(edges, &model.RequestEdge{
 			Node: &node,
@@ -2930,11 +3002,6 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		IsPresent: &isPresent,
 		Teams:     teams,
 	}, nil
-}
-
-// GrtFeedbacks is the resolver for the grtFeedbacks field.
-func (r *systemIntakeResolver) GrtFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GRTFeedback, error) {
-	return r.store.FetchGRTFeedbacksByIntakeID(ctx, obj.ID)
 }
 
 // Isso is the resolver for the isso field.

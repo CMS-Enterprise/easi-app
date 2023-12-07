@@ -374,10 +374,13 @@ func (s *Store) FetchSystemIntakeByLifecycleID(ctx context.Context, lifecycleID 
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
 func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	const byEuaIDClause = `
-		WHERE system_intakes.eua_user_id=$1 AND system_intakes.status != 'WITHDRAWN'
+	const whereClause = `
+		WHERE system_intakes.eua_user_id=$1
+			AND system_intakes.status != 'WITHDRAWN'
+			AND system_intakes.archived_at IS NULL
+		ORDER BY created_at DESC
 	`
-	err := s.db.Select(&intakes, fetchSystemIntakeSQL+byEuaIDClause, euaID)
+	err := s.db.Select(&intakes, fetchSystemIntakeSQL+whereClause, euaID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intakes %s", err),

@@ -15,6 +15,11 @@ const subNavItems = (systemId: string) => [
     aria: 'aria.openBusiness'
   },
   {
+    route: `/governance-review-team/${systemId}/feedback`,
+    text: 'feedback.title',
+    aria: 'aria.openFeedback'
+  },
+  {
     route: `/governance-review-team/${systemId}/decision`,
     text: 'decision.title',
     aria: 'aria.openDecision'

@@ -30,7 +30,7 @@ enum PersonRole {
 }
 
 """
-Represents a request being made with the EASi system
+Represents a requester's system intake request
 """
 type Request {
   id: UUID!
@@ -38,6 +38,7 @@ type Request {
   submittedAt: Time
   type: RequestType!
   status: String!
+  statusRequester: SystemIntakeStatusRequester
   statusCreatedAt: Time
   lcid: String
   nextMeetingDate: Time
@@ -997,7 +998,6 @@ type SystemIntake {
   governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
   grtDate: Time
-  grtFeedbacks: [GRTFeedback!]!
   id: UUID!
   isso: SystemIntakeISSO!
   lcid: String
@@ -1418,24 +1418,6 @@ input UpdateSystemIntakeAdminLeadInput {
 }
 
 """
-Indicates who the source is of feedback on a system request
-"""
-enum GRTFeedbackType {
-  BUSINESS_OWNER
-  GRB
-}
-
-"""
-Feedback from the GRT to a business owner or GRB
-"""
-type GRTFeedback {
-  id: UUID
-  createdAt: Time!
-  feedback: HTML
-  feedbackType: GRTFeedbackType
-}
-
-"""
 Input data used to update GRT and GRB dates for a system request
 """
 input UpdateSystemIntakeReviewDatesInput {
@@ -1497,7 +1479,7 @@ input SystemIntakeProgressToNewStepsInput {
 """
 Input for updating an intake's LCID in IT Gov v2
 """
-input SystemIntakeUpdateLCIDInput { 
+input SystemIntakeUpdateLCIDInput {
   systemIntakeID: UUID!
 
   expiresAt: Time
@@ -2040,7 +2022,7 @@ type GovernanceRequestFeedback {
   sourceAction: GovernanceRequestFeedbackSourceAction!
   targetForm: GovernanceRequestFeedbackTargetForm!
   type: GovernanceRequestFeedbackType!
-  author: UserInfo!
+  author: UserInfo
   createdBy: String!
   createdAt: Time!
   modifiedBy: String
@@ -2836,7 +2818,11 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  requests(after: String, first: Int!): RequestsConnection
+  """
+  Requests fetches a requester's own intake requests
+  first is currently non-functional and can be removed later
+  """
+  requests(first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
   @hasRole(role: EASI_GOVTEAM)

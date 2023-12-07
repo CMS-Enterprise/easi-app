@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "ad2dc3e6-09bf-4f8b-8f27-a387de44b569",
+		"_postman_id": "de661b7b-cb82-4fcd-bfb6-2d4724f7e261",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12341016"
+		"_exporter_id": "11253221"
 	},
 	"item": [
 		{
@@ -34,7 +34,109 @@
 									"mode": "graphql",
 									"graphql": {
 										"query": "mutation CreateSystemIntakeActionBusinessCaseNeeded($input: BasicActionInput!) {\n  createSystemIntakeActionBusinessCaseNeeded(input: $input) {\n    systemIntake {\n      status\n      id\n      __typename\n    }\n    __typename\n  }\n}",
-										"variables": "{\n  \"input\": {\n    \"intakeId\": \"{{systemIntakeID}}\",\n    \"feedback\": \"Hooray!\",\n    \"notificationRecipients\": {\n      \"regularRecipientEmails\": [\n        \"aaron.adams@local.fake\"\n      ],\n      \"shouldNotifyITGovernance\": true,\n      \"shouldNotifyITInvestment\": false\n    }\n  }\n}"
+										"variables": "{\n  \"input\": {\n    \"intakeId\": \"{{systemIntakeID}}\",\n    \"feedback\": \"Hooray!\",\n    \"notificationRecipients\": {\n      \"regularRecipientEmails\": [\n        \"{{testEmailAddress}}\"\n      ],\n      \"shouldNotifyITGovernance\": true,\n      \"shouldNotifyITInvestment\": false\n    }\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddGRTFeedbackAndRequestBusinessCase",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Correct status returned\", function() {",
+											"    pm.response.to.have.status(200);",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AddGRTFeedbackAndRequestBusinessCase($input: AddGRTFeedbackInput!) {\n  addGRTFeedbackAndRequestBusinessCase(input: $input) {\n    id\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"emailBody\": \"<h1>Feedback! Go to biz case</h1><p>this is an email btw</p>\",\n    \"feedback\": \"<h1>Feedback! Go to biz case</h1>\",\n    \"intakeID\": \"{{systemIntakeID}}\",\n    \"notificationRecipients\": {\n      \"regularRecipientEmails\": [\n        \"{{testEmailAddress}}\"\n      ],\n      \"shouldNotifyITGovernance\": true,\n      \"shouldNotifyITInvestment\": false\n    }\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddGRTFeedbackAndKeepBusinessCaseInDraft",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Correct status returned\", function() {",
+											"    pm.response.to.have.status(200);",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AddGRTFeedbackAndKeepBusinessCaseInDraft($input: AddGRTFeedbackInput!) {\n  addGRTFeedbackAndKeepBusinessCaseInDraft(input: $input) {\n    id\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"emailBody\": \"<h1>Feedback, but stay in draft</h1><p>this is an email btw</p>\",\n    \"feedback\": \"<h1>Feedback, but stay in draft</h1><p>this is an email btw</p>\",\n    \"intakeID\": \"{{systemIntakeID}}\",\n    \"notificationRecipients\": {\n      \"regularRecipientEmails\": [\n        \"{{testEmailAddress}}\"\n      ],\n      \"shouldNotifyITGovernance\": true,\n      \"shouldNotifyITInvestment\": false\n    }\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddGRTFeedbackAndProgressToFinalBusinessCase",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Correct status returned\", function() {",
+											"    pm.response.to.have.status(200);",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AddGRTFeedbackAndProgressToFinalBusinessCase($input: AddGRTFeedbackInput!) {\n  addGRTFeedbackAndProgressToFinalBusinessCase(input: $input) {\n    id\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"emailBody\": \"<h1>Feedback! Go to final</h1><p>this is an email btw</p>\",\n    \"feedback\": \"<h1>Feedback! Go to final</h1>\",\n    \"intakeID\": \"{{systemIntakeID}}\",\n    \"notificationRecipients\": {\n      \"regularRecipientEmails\": [\n        \"{{testEmailAddress}}\"\n      ],\n      \"shouldNotifyITGovernance\": true,\n      \"shouldNotifyITInvestment\": false\n    }\n  }\n}"
 									}
 								},
 								"url": {
@@ -128,7 +230,7 @@
 							"name": "Progress to New Step",
 							"item": [
 								{
-									"name": "Progress to GRT meeting, with no date specified",
+									"name": "Progress to GRT meeting, with no date specified Copy",
 									"request": {
 										"method": "POST",
 										"header": [],
@@ -179,6 +281,27 @@
 											"graphql": {
 												"query": "mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {\r\n    createSystemIntakeActionProgressToNewStep(input: $input) {\r\n        systemIntake {\r\n            step\r\n            grtDate\r\n        }\r\n    }\r\n}\r\n",
 												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"newStep\": \"GRT_MEETING\",\r\n        \"meetingDate\": \"2030-07-28T20:12:31.703Z\",\r\n        \"feedback\": \"this is more feedback\",\r\n        \"additionalInfo\": \"add'l info\"\r\n    }\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Progress to GRB meeting, with date in future Copy",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation CreateSystemIntakeActionProgressToNewStep($input: SystemIntakeProgressToNewStepsInput!) {\r\n    createSystemIntakeActionProgressToNewStep(input: $input) {\r\n        systemIntake {\r\n            step\r\n            grbDate\r\n        }\r\n    }\r\n}\r\n",
+												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"newStep\": \"GRB_MEETING\",\r\n        \"meetingDate\": \"2029-07-28T20:12:31.703Z\",\r\n        \"feedback\": \"this is more feedback\",\r\n        \"additionalInfo\": \"add'l info\"\r\n    }\r\n}"
 											}
 										},
 										"url": {
@@ -833,7 +956,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"id\": \"{{businessCaseID}}\",\n  \"euaUserId\": \"{{euaUserId}}\",\n  \"status\": \"OPEN\",\n  \"systemIntakeId\": \"{{systemIntakeID}}\",\n  \"projectName\": \"Happy Happy Fun Time\",\n  \"requester\": \"User ABCD\",\n  \"requesterPhoneNumber\": \"0008675309\",\n  \"businessOwner\": \"Caden Schmeler\",\n  \"businessNeed\": \"This will make sure everyone has a good day. Believe me\",\n  \"currentSolutionSummary\": \"It is going good\",\n  \"cmsBenefit\": \"More Pizza\",\n  \"priorityAlignment\": \"Yes it does\",\n  \"successIndicators\": \"By everyone's happiness\",\n  \"preferredTitle\": \"Pizza Parties R Us\",\n  \"preferredSummary\": \"We make Pizza Parties!\",\n  \"preferredAcquisitionApproach\": \"We buy pizza\",\n  \"preferredSecurityIsApproved\": true,\n  \"preferredSecurityisBeingReviewed\": \"\",\n  \"preferredHostingType\": \"none\",\n  \"preferredHostingLocation\": \"\",\n  \"preferredHostingCloudServiceType\": \"\",\n  \"preferredHasUI\": \"NO\",\n  \"preferredPros\": \"Pizza\",\n  \"preferredCons\": \"time between eating pizza\",\n  \"preferredCostSavings\": \"Less cost because everyone wants pizza\",\n  \"alternativeATitle\": \"Spaghetti Parties\",\n  \"alternativeASummary\": \"It's spaghetti!\",\n  \"alternativeAAcquisitionApproach\": \"Buy spaghetti\",\n  \"alternativeASecurityIsApproved\": false,\n  \"alternativeASecurityisBeingReviewed\": \"NOT_SURE\",\n  \"alternativeAHostingType\": \"dataCenter\",\n  \"alternativeAHostingLocation\": \"Spaghetti Land\",\n  \"alternativeAHostingCloudServiceType\": \"\",\n  \"alternativeAHasUI\": \"NO\",\n  \"alternativeAPros\": \"Spaghetti!\",\n  \"alternativeACons\": \"No PIzza\",\n  \"alternativeACostSavings\": \"25 bucks a quarter\",\n  \"alternativeBTitle\": null,\n  \"alternativeBSummary\": null,\n  \"alternativeBAcquisitionApproach\": null,\n  \"alternativeBSecurityIsApproved\": null,\n  \"alternativeBSecurityisBeingReviewed\": null,\n  \"alternativeBHostingType\": null,\n  \"alternativeBHostingLocation\": null,\n  \"alternativeBHostingCloudServiceType\": null,\n  \"alternativeBHasUI\": null,\n  \"alternativeBPros\": null,\n  \"alternativeBCons\": null,\n  \"alternativeBCostSavings\": null,\n  \"lifecycleCostLines\": [\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Development\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Development\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Development\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Development\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Development\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": null,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": null,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": null,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Software licenses\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Software licenses\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Software licenses\",\n      \"cost\": null,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Software licenses\",\n      \"cost\": null,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Software licenses\",\n      \"cost\": null,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": null,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": null,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": null,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": null,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": null,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": null,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": null,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": null,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": null,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Other\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Other\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Other\",\n      \"cost\": null,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Other\",\n      \"cost\": null,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Other\",\n      \"cost\": null,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Development\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Development\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Development\",\n      \"cost\": 25,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Development\",\n      \"cost\": 25,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Development\",\n      \"cost\": 25,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 25,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 25,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 25,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 25,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 25,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": null,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": null,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": null,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Software licenses\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Software licenses\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Software licenses\",\n      \"cost\": null,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Software licenses\",\n      \"cost\": null,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Software licenses\",\n      \"cost\": null,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": null,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": null,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": null,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": null,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": null,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": null,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": null,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": null,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": null,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Other\",\n      \"cost\": null,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Other\",\n      \"cost\": null,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Other\",\n      \"cost\": null,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Other\",\n      \"cost\": null,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Other\",\n      \"cost\": null,\n      \"year\": \"5\"\n    }\n  ]\n}",
+									"raw": "{\n  \"id\": \"{{businessCaseID}}\",\n  \"euaUserId\": \"{{euaUserId}}\",\n  \"status\": \"OPEN\",\n  \"systemIntakeId\": \"{{systemIntakeID}}\",\n  \"projectName\": \"Happy Happy Fun Time\",\n  \"requester\": \"User ABCD\",\n  \"requesterPhoneNumber\": \"0008675309\",\n  \"businessOwner\": \"Caden Schmeler\",\n  \"businessNeed\": \"This will make sure everyone has a good day. Believe me\",\n  \"currentSolutionSummary\": \"It is going good\",\n  \"cmsBenefit\": \"More Pizza\",\n  \"priorityAlignment\": \"Yes it does\",\n  \"successIndicators\": \"By everyone's happiness\",\n  \"preferredTitle\": \"Pizza Parties R Us\",\n  \"preferredSummary\": \"We make Pizza Parties!\",\n  \"preferredAcquisitionApproach\": \"We buy pizza\",\n  \"preferredSecurityIsApproved\": true,\n  \"preferredSecurityisBeingReviewed\": \"\",\n  \"preferredHostingType\": \"none\",\n  \"preferredHostingLocation\": \"\",\n  \"preferredHostingCloudServiceType\": \"\",\n  \"preferredHasUI\": \"NO\",\n  \"preferredPros\": \"Pizza\",\n  \"preferredCons\": \"time between eating pizza\",\n  \"preferredCostSavings\": \"Less cost because everyone wants pizza\",\n  \"alternativeATitle\": \"Spaghetti Parties\",\n  \"alternativeASummary\": \"It's spaghetti!\",\n  \"alternativeAAcquisitionApproach\": \"Buy spaghetti\",\n  \"alternativeASecurityIsApproved\": false,\n  \"alternativeASecurityisBeingReviewed\": \"NOT_SURE\",\n  \"alternativeAHostingType\": \"dataCenter\",\n  \"alternativeAHostingLocation\": \"Spaghetti Land\",\n  \"alternativeAHostingCloudServiceType\": \"\",\n  \"alternativeAHasUI\": \"NO\",\n  \"alternativeAPros\": \"Spaghetti!\",\n  \"alternativeACons\": \"No PIzza\",\n  \"alternativeACostSavings\": \"25 bucks a quarter\",\n  \"alternativeBTitle\": null,\n  \"alternativeBSummary\": null,\n  \"alternativeBAcquisitionApproach\": null,\n  \"alternativeBSecurityIsApproved\": null,\n  \"alternativeBSecurityisBeingReviewed\": null,\n  \"alternativeBHostingType\": null,\n  \"alternativeBHostingLocation\": null,\n  \"alternativeBHostingCloudServiceType\": null,\n  \"alternativeBHasUI\": null,\n  \"alternativeBPros\": null,\n  \"alternativeBCons\": null,\n  \"alternativeBCostSavings\": null,\n  \"lifecycleCostLines\": [\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Development\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Development\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Development\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Development\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Development\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Software licenses\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Software licenses\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Software licenses\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Software licenses\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Software licenses\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Other\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Other\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Other\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Other\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"Preferred\",\n      \"phase\": \"Other\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Development\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Development\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Development\",\n      \"cost\": 25,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Development\",\n      \"cost\": 25,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Development\",\n      \"cost\": 25,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 25,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 25,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 25,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 25,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Operations and Maintenance\",\n      \"cost\": 25,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Help desk/call center\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Software licenses\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Software licenses\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Software licenses\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Software licenses\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Software licenses\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Planning, support, and professional services\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Infrastructure\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"OIT services, tools, and pilots\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Other\",\n      \"cost\": 50,\n      \"year\": \"1\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Other\",\n      \"cost\": 50,\n      \"year\": \"2\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Other\",\n      \"cost\": 50,\n      \"year\": \"3\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Other\",\n      \"cost\": 50,\n      \"year\": \"4\"\n    },\n    {\n      \"solution\": \"A\",\n      \"phase\": \"Other\",\n      \"cost\": 50,\n      \"year\": \"5\"\n    }\n  ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -994,6 +1117,38 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "query systemIntake {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    step\n    requestFormState\n    draftBusinessCaseState\n    grtMeetingState\n    finalBusinessCaseState\n    grbMeetingState\n    decisionState\n    itGovTaskStatuses {      \n        intakeFormStatus\n        feedbackFromInitialReviewStatus\n        decisionAndNextStepsStatus\n        bizCaseDraftStatus\n        grtMeetingStatus\n        bizCaseFinalStatus\n        grbMeetingStatus\n    }\n    id\n    actions {\n        type\n        actor {\n            name\n        }\n        step\n        feedback\n    }\n#   adminLead\n#   archivedAt\n# #   businessCase\n#   businessNeed\n# #   businessOwner\n#   businessSolution\n# #   contract\n# #   costs\n#   createdAt\n#   currentStage\n#   decisionNextSteps\n#   eaCollaborator\n#   eaCollaboratorName\n#   euaUserId\n#   existingFunding\n# #   fundingSources\n# #   governanceTeams\n#   grbDate\n#   grtDate\n# #   grtFeedbacks\n#   id\n# #   isso\n#   lcid\n#   lcidExpiresAt\n#   lcidScope\n#   lcidCostBaseline\n#   needsEaSupport\n# #   notes\n#   oitSecurityCollaborator\n#   oitSecurityCollaboratorName\n# #   productManager\n#   projectAcronym\n#   rejectionReason\n#   requestName\n#   requestType\n# #   requester\n#   status\n#   submittedAt\n#   trbCollaborator\n#   trbCollaboratorName\n#   updatedAt\n#   grtReviewEmailBody\n#   decidedAt\n#   businessCaseId\n# #   lastAdminNote\n#   cedarSystemId\n# #   documents\n#   hasUiChanges\n    \n    \n  }\n  \n  \n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SystemIntake Get My Requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query systemIntake {\n    # first does nothing and should be removed later\n  requests(first: -1) {\n      edges {\n        node {\n          id\n          name\n          submittedAt\n          type\n          status\n          statusRequester\n          statusCreatedAt\n          lcid\n          nextMeetingDate\n        }\n      }\n    }\n}",
 								"variables": ""
 							}
 						},
@@ -2009,7 +2164,7 @@
 		},
 		{
 			"key": "testEmailAddress",
-			"value": "",
+			"value": "user.one@local.fake",
 			"type": "string"
 		},
 		{

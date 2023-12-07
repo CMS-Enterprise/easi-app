@@ -346,5 +346,134 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		additionalInfo,
 	)
 	noErr(err)
-
+	// initial form first submit
+	err = client.SystemIntake.SendSubmitInitialFormRequesterNotification(
+		ctx,
+		requesterEmail,
+		intakeID,
+		"Almond M&Ms",
+		false, // isResubmitted
+	)
+	noErr(err)
+	err = client.SystemIntake.SendSubmitInitialFormReviewerNotification(
+		ctx,
+		intakeID,
+		"Almond M&Ms",
+		"Johnny Bravo",
+		"some component",
+		models.SystemIntakeRequestTypeMAJORCHANGES,
+		"some stage",
+		false, // isResubmitted
+	)
+	noErr(err)
+	// initial form first resubmitted
+	err = client.SystemIntake.SendSubmitInitialFormRequesterNotification(
+		ctx,
+		requesterEmail,
+		intakeID,
+		"Almond M&Ms",
+		true, // isResubmitted
+	)
+	noErr(err)
+	err = client.SystemIntake.SendSubmitInitialFormReviewerNotification(
+		ctx,
+		intakeID,
+		"Almond M&Ms",
+		"Johnny Bravo",
+		"some component",
+		models.SystemIntakeRequestTypeMAJORCHANGES,
+		"some stage",
+		true, // isResubmitted
+	)
+	noErr(err)
+	// initial biz case draft
+	err = client.SystemIntake.SendSubmitBizCaseRequesterNotification(
+		ctx,
+		requesterEmail,
+		"Candy Corn",
+		intakeID,
+		false, // isResubmitted
+		true,  // isDraft
+	)
+	noErr(err)
+	err = client.SystemIntake.SendSubmitBizCaseReviewerNotification(
+		ctx,
+		intakeID,
+		"Dexter",
+		"Candy Corn",
+		false, // isResubmitted
+		true,  // isDraft
+	)
+	noErr(err)
+	// resubmitted biz case draft
+	err = client.SystemIntake.SendSubmitBizCaseRequesterNotification(
+		ctx,
+		requesterEmail,
+		"Candy Corn",
+		intakeID,
+		true, // isResubmitted
+		true, // isDraft
+	)
+	noErr(err)
+	err = client.SystemIntake.SendSubmitBizCaseReviewerNotification(
+		ctx,
+		intakeID,
+		"Dexter",
+		"Candy Corn",
+		true, // isResubmitted
+		true, // isDraft
+	)
+	noErr(err)
+	// initial biz case final
+	err = client.SystemIntake.SendSubmitBizCaseRequesterNotification(
+		ctx,
+		requesterEmail,
+		"Bit o Honey",
+		intakeID,
+		false, // isResubmitted
+		false, // isDraft
+	)
+	noErr(err)
+	err = client.SystemIntake.SendSubmitBizCaseReviewerNotification(
+		ctx,
+		intakeID,
+		"Dexter",
+		"Bit o Honey",
+		false, // isResubmitted
+		false, // isDraft
+	)
+	noErr(err)
+	// resubmitted biz case final
+	err = client.SystemIntake.SendSubmitBizCaseRequesterNotification(
+		ctx,
+		requesterEmail,
+		"Bit o Honey",
+		intakeID,
+		true,  // isResubmitted
+		false, // isDraft
+	)
+	noErr(err)
+	err = client.SystemIntake.SendSubmitBizCaseReviewerNotification(
+		ctx,
+		intakeID,
+		"Dexter",
+		"Bit o Honey",
+		true,  // isResubmitted
+		false, // isDraft
+	)
+	noErr(err)
+	err = client.SendLCIDExpirationAlertEmail(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Pop Rocks",
+		"Samurai Jack",
+		"123456",
+		&lifecycleIssuedAt,
+		&lifecycleExpiresAt,
+		*lifecycleScope,
+		lifecycleCostBaseline,
+		*nextSteps,
+	)
+	noErr(err)
 }

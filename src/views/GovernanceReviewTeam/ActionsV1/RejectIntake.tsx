@@ -185,7 +185,7 @@ const RejectIntake = () => {
                     as={TextAreaField}
                     error={!!flatErrors.reason}
                     id="RejectIntakeForm-Reason"
-                    maxLength={3000}
+                    maxLength={10000}
                     name="reason"
                   />
                 </FieldGroup>
@@ -208,7 +208,7 @@ const RejectIntake = () => {
                     as={TextAreaField}
                     error={!!flatErrors.nextSteps}
                     id="RejectIntakeForm-NextSteps"
-                    maxLength={3000}
+                    maxLength={10000}
                     name="nextSteps"
                   />
                 </FieldGroup>
@@ -249,7 +249,7 @@ const RejectIntake = () => {
                     as={TextAreaField}
                     error={!!flatErrors.feedback}
                     id="RejectIntakeForm-Feedback"
-                    maxLength={2000}
+                    maxLength={10000}
                     name="feedback"
                     aria-describedby="RejectIntakeForm-SubmitHelp"
                   />

@@ -359,7 +359,7 @@ const ExtendLifecycleId = ({
                     as={TextAreaField}
                     error={!!flatErrors.scope}
                     id="ExtendLifecycleIdForm-Scope"
-                    maxLength={3000}
+                    maxLength={10000}
                     name="scope"
                   />
                 </FieldGroup>
@@ -382,7 +382,7 @@ const ExtendLifecycleId = ({
                     as={TextAreaField}
                     error={!!flatErrors.nextSteps}
                     id="ExtendLifecycleIdForm-NextSteps"
-                    maxLength={3000}
+                    maxLength={10000}
                     name="nextSteps"
                   />
                 </FieldGroup>
@@ -399,7 +399,7 @@ const ExtendLifecycleId = ({
                   <Field
                     as={TextAreaField}
                     id="ExtendLifecycleIdForm-CostBaseline"
-                    maxLength={3000}
+                    maxLength={10000}
                     name="newCostBaseline"
                   />
                 </FieldGroup>

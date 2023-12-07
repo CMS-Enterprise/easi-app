@@ -1,11 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import classNames from 'classnames';
 
-import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear, parseAsUTC } from 'utils/date';
 
@@ -17,13 +14,11 @@ import './index.scss';
 
 type BusinessCaseReviewProps = {
   values: BusinessCaseModel;
-  grtFeedbacks?: GRTFeedback[] | null;
   helpArticle?: boolean;
 };
 
 const BusinessCaseReview = ({
   values,
-  grtFeedbacks,
   helpArticle = false
 }: BusinessCaseReviewProps) => {
   const { t } = useTranslation('businessCase');
@@ -31,11 +26,7 @@ const BusinessCaseReview = ({
   const filename = `Business case for ${values.requestName}.pdf`;
 
   return (
-    <div
-      className={classNames('margin-top-neg-1', {
-        'grid-container': !helpArticle
-      })}
-    >
+    <div className="margin-top-neg-1">
       <PDFExport
         title="Business Case"
         filename={filename}
@@ -93,14 +84,6 @@ const BusinessCaseReview = ({
             alternativeB={values.alternativeB}
           />
         </div>
-
-        {grtFeedbacks && grtFeedbacks.length > 0 && (
-          <div className="bg-gray-10 margin-top-3 padding-x-3 padding-top-3 padding-bottom-1">
-            <div className="grid-container">
-              <GRTFeedbackView grtFeedbacks={grtFeedbacks} />
-            </div>
-          </div>
-        )}
       </PDFExport>
     </div>
   );

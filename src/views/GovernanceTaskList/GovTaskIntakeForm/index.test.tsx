@@ -29,7 +29,7 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
     expectTaskStatusTagToHaveTextKey('READY');
 
     // Start button
-    getByRoleWithNameTextKey('link', 'itGov:button.start');
+    getByRoleWithNameTextKey('button', 'itGov:button.start');
   });
 
   it('in progress', () => {
@@ -46,7 +46,7 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
     );
 
     // Continue button
-    getByRoleWithNameTextKey('link', 'itGov:button.continue');
+    getByRoleWithNameTextKey('button', 'itGov:button.continue');
   });
 
   it('submitted', () => {
@@ -78,7 +78,7 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
     expectTaskStatusTagToHaveTextKey('EDITS_REQUESTED');
 
     // Edit form button
-    getByRoleWithNameTextKey('link', 'itGov:button.editForm');
+    getByRoleWithNameTextKey('button', 'itGov:button.editForm');
 
     // Edits requested warning
     expect(getExpectedAlertType('warning')).toHaveTextContent(
@@ -86,7 +86,7 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
     );
 
     // View feedback
-    getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+    getByRoleWithNameTextKey('link', 'itGov:button.viewRequestedEdits');
 
     // View submitted request form should not exist
     expect(
@@ -113,7 +113,7 @@ describe('Gov Task: Fill out the Intake Request form statuses', () => {
     );
 
     // View feedback + View submitted request form
-    getByRoleWithNameTextKey('link', 'itGov:button.viewFeedback');
+    getByRoleWithNameTextKey('link', 'itGov:button.viewRequestedEdits');
     getByRoleWithNameTextKey(
       'link',
       'itGov:taskList.step.intakeForm.viewSubmittedRequestForm'

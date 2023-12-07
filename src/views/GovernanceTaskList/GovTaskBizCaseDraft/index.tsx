@@ -10,7 +10,8 @@ import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import {
   GovernanceRequestFeedbackTargetForm,
-  ITGovDraftBusinessCaseStatus
+  ITGovDraftBusinessCaseStatus,
+  SystemIntakeState
 } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
@@ -21,7 +22,8 @@ const GovTaskBizCaseDraft = ({
   bizCaseDraftSubmittedAt,
   bizCaseDraftUpdatedAt,
   governanceRequestFeedbacks,
-  businessCase
+  businessCase,
+  state
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'bizCaseDraft';
   const { t } = useTranslation('itGov');
@@ -119,6 +121,7 @@ const GovTaskBizCaseDraft = ({
                   }
                 });
               }}
+              disabled={state === SystemIntakeState.CLOSED}
             >
               {t(`button.${statusButtonText.get(bizCaseDraftStatus)}`)}
             </Button>
@@ -128,9 +131,8 @@ const GovTaskBizCaseDraft = ({
         {/* Link to view feedback */}
         {hasFeedback && (
           <div className="margin-top-2">
-            {/* TODO: EASI-3088 - update feedback link */}
             <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
-              {t(`button.viewFeedback`)}
+              {t('button.viewRequestedEdits')}
             </UswdsReactLink>
           </div>
         )}

@@ -385,7 +385,7 @@ const AccessibilityRequestDetailPage = () => {
                       name="noteText"
                       className="accessibility-request__note-field"
                       error={!!flatErrors.noteText}
-                      maxLength={2000}
+                      maxLength={10000}
                     />
                   </FieldGroup>
                   <FieldGroup>

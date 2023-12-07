@@ -2,18 +2,14 @@ import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
-import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
 import {
   GetGovernanceTaskList,
+  GetGovernanceTaskList_systemIntake as TaskListSystemIntake,
   GetGovernanceTaskListVariables
 } from 'queries/types/GetGovernanceTaskList';
-import {
-  GetGRTFeedback,
-  GetGRTFeedbackVariables
-} from 'queries/types/GetGRTFeedback';
 import {
   GetSystemIntake,
   GetSystemIntakeVariables
@@ -227,7 +223,7 @@ export const systemIntake: SystemIntake = {
   submittedAt: '2022-10-20T14:55:47.88283Z',
   grbDate: null,
   grtDate: null,
-  grtFeedbacks: [],
+  governanceRequestFeedbacks: [],
   lcid: null,
   lcidIssuedAt: null,
   lcidExpiresAt: null,
@@ -417,6 +413,31 @@ export const getSystemIntakeContactsQuery: MockedQuery<
   }
 };
 
+export const taskListSystemIntake: TaskListSystemIntake = {
+  __typename: 'SystemIntake',
+  id: systemIntakeId,
+  requestName: 'Mock system intake',
+  itGovTaskStatuses: {
+    __typename: 'ITGovTaskStatuses',
+    intakeFormStatus: ITGovIntakeFormStatus.READY,
+    feedbackFromInitialReviewStatus: ITGovFeedbackStatus.CANT_START,
+    decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
+    bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
+    grtMeetingStatus: ITGovGRTStatus.CANT_START,
+    bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
+    grbMeetingStatus: ITGovGRBStatus.CANT_START
+  },
+  step: SystemIntakeStep.INITIAL_REQUEST_FORM,
+  state: SystemIntakeState.OPEN,
+  decisionState: SystemIntakeDecisionState.NO_DECISION,
+  governanceRequestFeedbacks: [],
+  submittedAt: null,
+  updatedAt: null,
+  grtDate: null,
+  grbDate: null,
+  businessCase: null
+};
+
 export const getGovernanceTaskListQuery = (
   taskListData?: Partial<GetGovernanceTaskList['systemIntake']>
 ): MockedQuery<GetGovernanceTaskList, GetGovernanceTaskListVariables> => ({
@@ -429,47 +450,9 @@ export const getGovernanceTaskListQuery = (
   result: {
     data: {
       systemIntake: {
-        __typename: 'SystemIntake',
-        id: systemIntakeId,
-        itGovTaskStatuses: {
-          __typename: 'ITGovTaskStatuses',
-          intakeFormStatus: ITGovIntakeFormStatus.READY,
-          feedbackFromInitialReviewStatus: ITGovFeedbackStatus.CANT_START,
-          bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
-          grtMeetingStatus: ITGovGRTStatus.CANT_START,
-          bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
-          grbMeetingStatus: ITGovGRBStatus.CANT_START,
-          decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START
-        },
-        step: SystemIntakeStep.INITIAL_REQUEST_FORM,
-        governanceRequestFeedbacks: [],
-        submittedAt: null,
-        updatedAt: null,
-        grtDate: null,
-        grbDate: null,
-        businessCase: null,
+        ...taskListSystemIntake,
         ...taskListData
       }
     }
   }
 });
-
-export const getGRTFeedbackQuery: MockedQuery<
-  GetGRTFeedback,
-  GetGRTFeedbackVariables
-> = {
-  request: {
-    query: GetGRTFeedbackQuery,
-    variables: {
-      intakeID: systemIntakeId
-    }
-  },
-  result: {
-    data: {
-      systemIntake: {
-        __typename: 'SystemIntake',
-        grtFeedbacks: []
-      }
-    }
-  }
-};

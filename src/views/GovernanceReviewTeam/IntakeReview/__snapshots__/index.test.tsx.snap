@@ -599,11 +599,12 @@ exports[`The GRT intake review view > matches the snapshot 1`] = `
       class="easi-pdf-export__controls margin-top-6"
     >
       <button
-        class="usa-button usa-button--unstyled easi-no-print display-flex flex-align-center"
+        class="usa-button usa-button--unstyled display-flex flex-align-center easi-no-print"
+        data-testid="button"
         type="button"
       >
         <svg
-          class="usa-icon margin-right-05"
+          class="usa-icon margin-right-1"
           focusable="false"
           height="1em"
           role="img"

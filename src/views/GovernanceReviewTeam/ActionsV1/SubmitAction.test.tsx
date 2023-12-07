@@ -8,7 +8,7 @@ import configureMockStore from 'redux-mock-store';
 
 import { IT_GOV_EMAIL, IT_INVESTMENT_EMAIL } from 'constants/externalUrls';
 import { businessCaseInitialData } from 'data/businessCase';
-import { grtActions } from 'data/mock/grtActions';
+import grtActions from 'data/mock/grtActions';
 import {
   getSystemIntakeContactsQuery,
   getSystemIntakeQuery,

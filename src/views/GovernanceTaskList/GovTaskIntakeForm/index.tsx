@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+import { Button } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -7,7 +9,8 @@ import Alert from 'components/shared/Alert';
 import TaskListItem, { TaskListDescription } from 'components/TaskList';
 import {
   GovernanceRequestFeedbackTargetForm,
-  ITGovIntakeFormStatus
+  ITGovIntakeFormStatus,
+  SystemIntakeState
 } from 'types/graphql-global-types';
 import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 import { TaskListItemDateInfo } from 'types/taskList';
@@ -18,10 +21,12 @@ const GovTaskIntakeForm = ({
   intakeFormPctComplete,
   governanceRequestFeedbacks,
   submittedAt,
-  updatedAt
+  updatedAt,
+  state
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'intakeForm';
   const { t } = useTranslation('itGov');
+  const history = useHistory();
 
   const statusButtonText = new Map<ITGovIntakeFormStatus, string>([
     [ITGovIntakeFormStatus.READY, 'start'],
@@ -87,16 +92,25 @@ const GovTaskIntakeForm = ({
         {/* Button to the intake form */}
         {statusButtonText.has(itGovTaskStatuses.intakeFormStatus) && (
           <div className="margin-top-2">
-            <UswdsReactLink
-              variant="unstyled"
-              className="usa-button"
-              to={`/system/${id}/contact-details`}
+            <Button
+              type="button"
+              onClick={() => history.push(`/system/${id}/contact-details`)}
+              disabled={state === SystemIntakeState.CLOSED}
             >
               {t(
                 `button.${statusButtonText.get(
                   itGovTaskStatuses.intakeFormStatus
                 )}`
               )}
+            </Button>
+          </div>
+        )}
+
+        {/* Link to view feedback */}
+        {hasFeedback && (
+          <div className="margin-top-2">
+            <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
+              {t('button.viewRequestedEdits')}
             </UswdsReactLink>
           </div>
         )}
@@ -111,16 +125,6 @@ const GovTaskIntakeForm = ({
               </UswdsReactLink>
             </div>
           )}
-
-        {/* Link to view feedback */}
-        {hasFeedback && (
-          <div className="margin-top-2">
-            {/* TODO: EASI-3088 - update feedback link */}
-            <UswdsReactLink to={`/governance-task-list/${id}/feedback`}>
-              {t(`button.viewFeedback`)}
-            </UswdsReactLink>
-          </div>
-        )}
       </TaskListDescription>
     </TaskListItem>
   );

@@ -44,6 +44,7 @@ import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
 import Documents from './Documents';
+import Feedback from './Feedback';
 import IntakeReview from './IntakeReview';
 import LifecycleID from './LifecycleID';
 import Notes from './Notes';
@@ -203,7 +204,7 @@ const RequestOverview = () => {
                 render={() => (
                   <BusinessCaseReview
                     businessCase={businessCase}
-                    grtFeedbacks={systemIntake.grtFeedbacks}
+                    grtFeedbacks={systemIntake.governanceRequestFeedbacks}
                   />
                 )}
               />
@@ -217,6 +218,12 @@ const RequestOverview = () => {
                   return <Dates systemIntake={systemIntake} />;
                 }}
               />
+
+              <Route
+                path="/governance-review-team/:systemId/feedback"
+                render={() => <Feedback systemIntakeId={systemId} />}
+              />
+
               <Route
                 path="/governance-review-team/:systemId/decision"
                 render={() => <Decision systemIntake={systemIntake} />}
