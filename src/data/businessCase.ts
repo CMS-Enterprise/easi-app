@@ -208,9 +208,9 @@ export const prepareBusinessCaseForApp = (
     costObject.isPresent = true;
 
     // Set cost for correct year within cost object
-    costObject.years[
-      `year${line.year}` as keyof LifecycleYears
-    ] = line.cost.toString();
+    costObject.years[`year${line.year}` as keyof LifecycleYears] = line?.cost
+      ? line.cost.toString()
+      : '';
   });
 
   return {
@@ -264,9 +264,9 @@ export const prepareBusinessCaseForApp = (
         isBeingReviewed: businessCase.alternativeASecurityIsBeingReviewed
       },
       hosting: {
-        type: businessCase.alternativeAHostingType,
-        location: businessCase.alternativeAHostingLocation,
-        cloudServiceType: businessCase.alternativeAHostingCloudServiceType
+        type: businessCase.alternativeAHostingType || '',
+        location: businessCase.alternativeAHostingLocation || '',
+        cloudServiceType: businessCase.alternativeAHostingCloudServiceType || ''
       },
       hasUserInterface: businessCase.alternativeAHasUI
     },
@@ -321,8 +321,7 @@ const formatLifecycleCostsForApi = (
         solution,
         phase,
         year: (index + 1).toString(),
-        // If no cost entered, return 0
-        cost: cost ? parseFloat(cost) : 0
+        cost: cost ? parseFloat(cost) : null
       })
     );
 
