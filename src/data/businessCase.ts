@@ -207,10 +207,11 @@ export const prepareBusinessCaseForApp = (
     // Mark cost phase as `isPresent`
     costObject.isPresent = true;
 
+    /** Cost converted to string */
+    const cost: string = line?.cost === null ? '' : line?.cost.toString();
+
     // Set cost for correct year within cost object
-    costObject.years[`year${line.year}` as keyof LifecycleYears] = line?.cost
-      ? line.cost.toString()
-      : '';
+    costObject.years[`year${line.year}` as keyof LifecycleYears] = cost;
   });
 
   return {
