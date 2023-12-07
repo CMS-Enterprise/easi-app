@@ -185,9 +185,9 @@ const governanceReviewTeam = {
       oldNextSteps: 'Old Next Steps',
       newCostBaseline: 'New Cost Baseline',
       oldCostBaseline: 'Old Cost Baseline',
-      noScope: 'No Scope Specified',
-      noNextSteps: 'No Next Steps Specified',
-      noCostBaseline: 'No Cost Baseline Specified'
+      noScope: 'No scope specified',
+      noNextSteps: 'No next steps specified',
+      noCostBaseline: 'No cost baseline specified'
     }
   },
   dates: {
