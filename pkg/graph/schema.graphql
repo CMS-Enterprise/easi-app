@@ -30,7 +30,7 @@ enum PersonRole {
 }
 
 """
-Represents a request being made with the EASi system
+Represents a requester's system intake request
 """
 type Request {
   id: UUID!
@@ -38,6 +38,7 @@ type Request {
   submittedAt: Time
   type: RequestType!
   status: String!
+  statusRequester: SystemIntakeStatusRequester
   statusCreatedAt: Time
   lcid: String
   nextMeetingDate: Time
@@ -1478,7 +1479,7 @@ input SystemIntakeProgressToNewStepsInput {
 """
 Input for updating an intake's LCID in IT Gov v2
 """
-input SystemIntakeUpdateLCIDInput { 
+input SystemIntakeUpdateLCIDInput {
   systemIntakeID: UUID!
 
   expiresAt: Time
@@ -2817,7 +2818,11 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  requests(after: String, first: Int!): RequestsConnection
+  """
+  Requests fetches a requester's own intake requests
+  first is currently non-functional and can be removed later
+  """
+  requests(first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
   @hasRole(role: EASI_GOVTEAM)
