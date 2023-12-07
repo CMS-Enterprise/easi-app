@@ -2,20 +2,27 @@
 
 # Function to show usage
 usage() {
-    echo "Usage: $0 [-b branch_name]"
-    echo "  -b  Set the branch name. If not provided, it will be inferred from Git."
-    exit 1
+  echo "Usage: $0 [-b branch_name]"
+  echo "  -b  Set the branch name. If not provided, it will be inferred from Git."
+  exit 1
 }
 
 # Parent path magic to always set the correct relative paths when running this script
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" || exit ; pwd -P )
 cd "$parent_path" || exit
 
+# PREREQ CHECKS!
 # Check if kustomize is installed
 if ! command -v kustomize &> /dev/null; then
-    echo "kustomize is not installed in user PATH directories. Please install kustomize and try again."
-    echo "See https://kubectl.docs.kubernetes.io/installation/kustomize/ for installation instructions."
-    exit 1
+  echo "kustomize is not installed in user PATH directories. Please install kustomize and try again."
+  echo "See https://kubectl.docs.kubernetes.io/installation/kustomize/ for installation instructions."
+  exit 1
+fi
+# Check if kubectl is installed
+if ! command -v kubectl &> /dev/null; then
+  echo "kubectl is not installed in user PATH directories. Please install kubectl and try again."
+  echo "See https://kubernetes.io/docs/tasks/tools/ for installation instructions."
+  exit 1
 fi
 
 BRANCH_NAME=""
