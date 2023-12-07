@@ -10,6 +10,16 @@ export type LifecyclePhase<
   | 'OIT services, tools, and pilots'
   | otherType;
 
+export type LifecyclePhaseKey =
+  | 'development'
+  | 'operationsMaintenance'
+  | 'helpDesk'
+  | 'software'
+  | 'planning'
+  | 'infrastructure'
+  | 'oit'
+  | 'other';
+
 export type LifecycleYears = {
   year1: string;
   year2: string;

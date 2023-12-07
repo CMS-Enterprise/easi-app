@@ -9,6 +9,7 @@ import {
   ApiLifecyclePhase,
   CostData,
   LifecycleCosts,
+  LifecyclePhaseKey,
   LifecycleSolution,
   LifecycleYears
 } from 'types/estimatedLifecycle';
@@ -162,7 +163,7 @@ export const alternativeSolutionHasFilledFields = (
   );
 };
 
-const LifecyclePhaseMap = {
+const LifecyclePhaseMap: Record<ApiLifecyclePhase, LifecyclePhaseKey> = {
   Development: 'development',
   'Operations and Maintenance': 'operationsMaintenance',
   'Help desk/call center': 'helpDesk',
@@ -171,9 +172,7 @@ const LifecyclePhaseMap = {
   Infrastructure: 'infrastructure',
   'OIT services, tools, and pilots': 'oit',
   Other: 'other'
-} as const;
-
-type PhaseKey = typeof LifecyclePhaseMap[keyof typeof LifecyclePhaseMap];
+};
 
 export const prepareBusinessCaseForApp = (
   businessCase: any
@@ -193,7 +192,7 @@ export const prepareBusinessCaseForApp = (
   lifecycleCosts.forEach(line => {
     const { phase, solution } = line;
 
-    const phaseKey: PhaseKey = LifecyclePhaseMap[phase];
+    const phaseKey = LifecyclePhaseMap[phase];
 
     /** Cost object for current phase */
     const costObject: CostData = lifecycleCostLines[solution][phaseKey];
