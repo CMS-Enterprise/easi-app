@@ -142,17 +142,10 @@ export const provideGRTFeedbackSchema = Yup.object().shape({
   emailBody: skippableEmail
 });
 
-/** Checks that expiration date is valid and in the future */
-const validExpirationDate = () =>
-  Yup.string()
-    .nullable()
-    .test('expiresAt', 'Date cannot be in the past', value => {
-      if (!value) return true;
-      return DateTime.fromISO(value) >= DateTime.local().startOf('day');
-    });
-
 export const confirmLcidSchema = Yup.object().shape({
-  expiresAt: validExpirationDate().required('Please enter a valid date'),
+  expiresAt: Yup.date()
+    .typeError('Please enter a valid date')
+    .required('Please enter a valid date'),
   scope: Yup.string().required('Please fill in the blank'),
   nextSteps: Yup.string().required('Please fill in the blank'),
   trbFollowUp: Yup.mixed<SystemIntakeTRBFollowUp>()

@@ -38,6 +38,7 @@ import { NonNullableProps } from 'types/util';
 import { lcidActionSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
+import { actionDateInPast } from '../ManageLcid/RetireLcid';
 import { EditsRequestedContext } from '..';
 
 import ResolutionTitleBox from './ResolutionTitleBox';
@@ -361,6 +362,14 @@ const IssueLcid = ({
                 id={field.name}
                 defaultValue={field.value}
               />
+              {
+                // If past date is selected, show alert
+                actionDateInPast(field.value || null) && (
+                  <Alert type="warning" slim>
+                    {t('pastDateAlert')}
+                  </Alert>
+                )
+              }
             </FormGroup>
           )}
         />
