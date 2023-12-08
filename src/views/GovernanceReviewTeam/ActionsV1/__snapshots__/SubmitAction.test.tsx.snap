@@ -40,7 +40,7 @@ exports[`Submit Action > renders additional contacts 1`] = `
                 aria-current="page"
                 class="usa-breadcrumb__list-item usa-current"
               >
-                Mock System Intake Request
+                Governance request details
               </li>
             </ol>
           </nav>
@@ -282,10 +282,10 @@ exports[`Submit Action > renders additional contacts 1`] = `
               <a
                 aria-label="Open documents"
                 class="easi-grt__nav-link"
-                data-testid="grt-nav-intake:documents.uploadedDocuments-link"
+                data-testid="grt-nav-intake:documents.supportingDocuments-link"
                 href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/documents"
               >
-                Uploaded documents
+                Supporting documents
               </a>
             </li>
             <li
