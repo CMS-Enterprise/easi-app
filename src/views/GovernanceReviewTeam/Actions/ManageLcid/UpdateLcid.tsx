@@ -25,6 +25,7 @@ import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
 import LcidSummary, { LcidSummaryProps } from './LcidSummary';
 import LcidTitleBox from './LcidTitleBox';
+import { actionDateInPast } from './RetireLcid';
 import { ManageLcidProps } from '.';
 
 type UpdateLcidFields = NonNullableProps<
@@ -139,7 +140,17 @@ const UpdateLcid = ({
                 {...field}
                 id={field.name}
                 defaultValue={field.value}
+                // Fix for empty string throwing off field validation
+                onChange={e => field.onChange(e || undefined)}
               />
+              {
+                // If past date is selected, show alert
+                actionDateInPast(field.value || null) && (
+                  <Alert type="warning" slim>
+                    {t('pastDateAlert')}
+                  </Alert>
+                )
+              }
             </FormGroup>
           )}
         />

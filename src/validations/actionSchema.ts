@@ -173,7 +173,7 @@ export const lcidActionSchema = (isConfirmingLcid: boolean) => {
 };
 
 export const updateLcidSchema = Yup.object().shape({
-  expiresAt: validExpirationDate()
+  expiresAt: Yup.date().typeError('Please enter a valid date')
 });
 
 export const retireLcidSchema = Yup.object().shape({
