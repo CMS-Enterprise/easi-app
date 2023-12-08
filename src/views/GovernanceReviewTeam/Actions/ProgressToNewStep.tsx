@@ -56,6 +56,8 @@ const MeetingDateField = ({
           )}
           <DatePickerFormatted
             {...field}
+            // Fix for empty string throwing off field validation
+            onChange={e => field.onChange(e || undefined)}
             value={field.value || ''}
             id="meetingDate"
           />

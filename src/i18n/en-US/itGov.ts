@@ -10,7 +10,7 @@ export default {
     removeYourRequest: 'Remove your request'
   },
   taskList: {
-    heading: 'Governance Task List',
+    heading: 'Governance task list',
     description: 'for IT Governance request',
     help: 'Help',
     stepsInvolved:

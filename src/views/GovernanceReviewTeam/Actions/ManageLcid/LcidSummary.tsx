@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Grid } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import { RichTextViewer } from 'components/RichTextEditor';
 import LcidStatusTag from 'components/shared/LcidStatusTag';
 import { SystemIntakeLCIDStatus } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
@@ -83,23 +84,35 @@ const LcidSummary = ({
           {t('updateLcid.currentScope')}
         </dt>
         <dd className="margin-left-0 font-body-md line-height-body-5">
-          {lcidScope || t('governanceReviewTeam:notes.extendLcid.noScope')}
+          <RichTextViewer
+            value={
+              lcidScope || t('governanceReviewTeam:notes.extendLcid.noScope')
+            }
+          />
         </dd>
 
         <dt className="text-bold margin-top-2">
           {t('updateLcid.currentNextSteps')}
         </dt>
         <dd className="margin-left-0 font-body-md line-height-body-5">
-          {decisionNextSteps ||
-            t('governanceReviewTeam:notes.extendLcid.noNextSteps')}
+          <RichTextViewer
+            value={
+              decisionNextSteps ||
+              t('governanceReviewTeam:notes.extendLcid.noNextSteps')
+            }
+          />
         </dd>
 
         <dt className="text-bold margin-top-2">
           {t('updateLcid.currentCostBaseline')}
         </dt>
         <dd className="margin-left-0 font-body-md line-height-body-5">
-          {lcidCostBaseline ||
-            t('governanceReviewTeam:notes.extendLcid.noCostBaseline')}
+          <RichTextViewer
+            value={
+              lcidCostBaseline ||
+              t('governanceReviewTeam:notes.extendLcid.noCostBaseline')
+            }
+          />
         </dd>
       </dl>
     </div>

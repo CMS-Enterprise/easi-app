@@ -417,6 +417,7 @@ const Notes = () => {
                       t('notes.extendLcid.noScope')
                     }
                     charLimit={freeFormTextCharLimit}
+                    isRich
                   />
                 </dd>
 
@@ -431,6 +432,7 @@ const Notes = () => {
                       t('notes.extendLcid.noScope')
                     }
                     charLimit={freeFormTextCharLimit}
+                    isRich
                   />
                 </dd>
 
@@ -445,6 +447,7 @@ const Notes = () => {
                       t('notes.extendLcid.noNextSteps')
                     }
                     charLimit={freeFormTextCharLimit}
+                    isRich
                   />
                 </dd>
 
@@ -459,6 +462,7 @@ const Notes = () => {
                       t('notes.extendLcid.noNextSteps')
                     }
                     charLimit={freeFormTextCharLimit}
+                    isRich
                   />
                 </dd>
 
@@ -473,6 +477,7 @@ const Notes = () => {
                       t('notes.extendLcid.noCostBaseline')
                     }
                     charLimit={freeFormTextCharLimit}
+                    isRich
                   />
                 </dd>
 
@@ -487,6 +492,7 @@ const Notes = () => {
                       t('notes.extendLcid.noCostBaseline')
                     }
                     charLimit={freeFormTextCharLimit}
+                    isRich
                   />
                 </dd>
               </dl>
