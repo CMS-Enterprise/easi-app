@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useReactToPrint } from 'react-to-print';
 import { Grid, ModalRef } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 import i18next from 'i18next';
 
+import { PDFExportButton } from 'components/PDFExport';
 import AdminAction, { AdminActionButton } from 'components/shared/AdminAction';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { TaskStatus } from 'components/shared/TaskStatusTag';
@@ -31,11 +33,13 @@ export type ActionText = {
 type TrbAdminActionProps = {
   translationKey: string;
   actionButtons: AdminActionButton[];
+  className?: string;
 };
 
 const TrbAdminAction = ({
   translationKey,
-  actionButtons
+  actionButtons,
+  className
 }: TrbAdminActionProps) => {
   const text: ActionText = i18next.t(translationKey, { returnObjects: true });
   const { list } = text;
@@ -44,7 +48,9 @@ const TrbAdminAction = ({
       title={text.title}
       description={text.description}
       buttons={actionButtons}
-      className="margin-top-0"
+      className={classNames('easi-no-print', className, {
+        'margin-top-0': !className?.includes('margin-top')
+      })}
     >
       {list && (
         <CollapsableLink
@@ -105,13 +111,20 @@ type TrbAdminWrapperProps = {
     assignLeadModalRef?: React.RefObject<ModalRef>;
     assignLeadModalTrbRequestIdRef?: React.MutableRefObject<TrbRequestIdRef>;
   };
+  /** Whether or not to render admin actions box at bottom of page */
+  renderBottom?: boolean;
   /** Props to display status tag */
   statusTagProps?: {
     status: TaskStatus;
     name: string;
     date: string;
   };
-  renderBottom?: boolean;
+  /** Props for optional PDF export button */
+  pdfExportProps?: {
+    title: string;
+    filename: string;
+    label: string;
+  };
 };
 
 export default function TrbAdminWrapper({
@@ -123,8 +136,9 @@ export default function TrbAdminWrapper({
   disableStep,
   adminActionProps,
   noteCount,
+  renderBottom,
   statusTagProps,
-  renderBottom
+  pdfExportProps
 }: TrbAdminWrapperProps) {
   const { t } = useTranslation('technicalAssistance');
 
@@ -141,6 +155,19 @@ export default function TrbAdminWrapper({
     assignLeadModalRef,
     assignLeadModalTrbRequestIdRef,
     openNotes
+  });
+
+  const printRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    documentTitle: pdfExportProps?.filename || '',
+    content: () => printRef.current,
+    // The lib default is to have no margin, which hides window.prints()'s built in pagination
+    // Set auto margins back to show everything the browser renders
+    pageStyle: `
+      @page {
+        margin: auto;
+      }
+    `
   });
 
   return (
@@ -179,6 +206,12 @@ export default function TrbAdminWrapper({
               className="margin-top-0 margin-bottom-205"
             />
           )}
+
+          {!!pdfExportProps && (
+            <PDFExportButton handlePrint={handlePrint}>
+              {pdfExportProps.label}
+            </PDFExportButton>
+          )}
         </Grid>
 
         {noteCount !== undefined && (
@@ -192,7 +225,6 @@ export default function TrbAdminWrapper({
         )}
       </Grid>
 
-      {/* Admin Action box */}
       {actionButtons.length > 0 && adminActionProps && !disableStep && (
         <TrbAdminAction
           translationKey={`technicalAssistance:adminAction.statuses.${
@@ -201,10 +233,20 @@ export default function TrbAdminWrapper({
               : adminActionProps.status
           }`}
           actionButtons={actionButtons}
+          className={pdfExportProps ? 'margin-top-3' : ''}
         />
       )}
 
-      {children}
+      {pdfExportProps ? (
+        <div ref={printRef}>
+          {pdfExportProps?.title && (
+            <h1 className="easi-only-print">{pdfExportProps.title}</h1>
+          )}
+          {children}
+        </div>
+      ) : (
+        children
+      )}
 
       {/* Admin Action box rendered additionally at bottom */}
       {renderBottom &&

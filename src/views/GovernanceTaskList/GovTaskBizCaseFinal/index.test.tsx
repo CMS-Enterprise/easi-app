@@ -47,7 +47,7 @@ describe('Gov Task: Submit your Business Case for final approval statuses', () =
     // Ready to start
     expectTaskStatusTagToHaveTextKey('READY_TO_START');
     // Start button
-    getByRoleWithNameTextKey('link', 'itGov:button.start');
+    getByRoleWithNameTextKey('button', 'itGov:button.start');
   });
 
   it('In progress', () => {
@@ -63,7 +63,7 @@ describe('Gov Task: Submit your Business Case for final approval statuses', () =
       })
     );
     // Continue button
-    getByRoleWithNameTextKey('link', 'itGov:button.continue');
+    getByRoleWithNameTextKey('button', 'itGov:button.continue');
   });
 
   it('Submitted', async () => {
@@ -118,7 +118,7 @@ describe('Gov Task: Submit your Business Case for final approval statuses', () =
     );
 
     // Edit form button
-    getByRoleWithNameTextKey('link', 'itGov:button.editForm');
+    getByRoleWithNameTextKey('button', 'itGov:button.editForm');
 
     // View feedback link
     getByRoleWithNameTextKey('link', 'itGov:button.viewRequestedEdits');

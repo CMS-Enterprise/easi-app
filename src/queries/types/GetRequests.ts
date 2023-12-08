@@ -41,6 +41,10 @@ export interface GetRequests_myTrbRequests {
 }
 
 export interface GetRequests {
+  /**
+   * Requests fetches a requester's own intake requests
+   * first is currently non-functional and can be removed later
+   */
   requests: GetRequests_requests | null;
   myTrbRequests: GetRequests_myTrbRequests[];
 }

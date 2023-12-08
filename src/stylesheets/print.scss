@@ -35,12 +35,6 @@
     display: block;
   }
 
-  h1 {
-    border-bottom: solid 5px $turquoise;
-    padding-bottom: 1rem;
-    margin-bottom: 3rem;
-  }
-
   // prince doesn't support overflow: auto
   // this is a different way to create a new block formatting context
   .overflow-auto {

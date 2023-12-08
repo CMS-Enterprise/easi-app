@@ -2378,25 +2378,45 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
 }
 
-// Requests is the resolver for the requests field.
-func (r *queryResolver) Requests(ctx context.Context, after *string, first int) (*model.RequestsConnection, error) {
-	requests, queryErr := r.store.FetchMyRequests(ctx)
+// Requests is the resolver for the requests field. (First is not in use)
+func (r *queryResolver) Requests(ctx context.Context, first int) (*model.RequestsConnection, error) {
+	intakes, queryErr := r.store.FetchSystemIntakesByEuaID(ctx, appcontext.Principal(ctx).ID())
 	if queryErr != nil {
 		return nil, gqlerror.Errorf("query error: %s", queryErr)
 	}
 
 	edges := []*model.RequestEdge{}
 
-	for _, request := range requests {
+	for _, intake := range intakes {
+		var requesterStatus models.SystemIntakeStatusRequester
+		requesterStatus, queryErr = resolvers.CalculateSystemIntakeRequesterStatus(&intake, time.Now())
+		if queryErr != nil {
+			return nil, gqlerror.Errorf("query error: %s", queryErr)
+		}
+		var nextMeetingDate *time.Time
+		grbDateIsSetAndNotInPast := intake.GRBDate != nil && time.Now().Before(*intake.GRBDate)
+		grtDateIsSetAndNotInPast := intake.GRTDate != nil && time.Now().Before(*intake.GRTDate)
+		if grbDateIsSetAndNotInPast && grtDateIsSetAndNotInPast {
+			if intake.GRBDate.Before(*intake.GRTDate) {
+				nextMeetingDate = intake.GRBDate
+			} else {
+				nextMeetingDate = intake.GRTDate
+			}
+		} else if grtDateIsSetAndNotInPast {
+			nextMeetingDate = intake.GRTDate
+		} else if grbDateIsSetAndNotInPast {
+			nextMeetingDate = intake.GRBDate
+		}
 		node := model.Request{
-			ID:              request.ID,
-			SubmittedAt:     request.SubmittedAt,
-			Name:            request.Name.Ptr(),
-			Type:            request.Type,
-			Status:          request.Status,
-			StatusCreatedAt: request.StatusCreatedAt,
-			Lcid:            request.LifecycleID.Ptr(),
-			NextMeetingDate: request.NextMeetingDate,
+			ID:              intake.ID,
+			SubmittedAt:     intake.SubmittedAt,
+			Name:            intake.ProjectName.Ptr(),
+			Type:            model.RequestTypeGovernanceRequest,
+			Status:          string(intake.Status),
+			StatusRequester: &requesterStatus,
+			StatusCreatedAt: intake.CreatedAt,
+			Lcid:            intake.LifecycleID.Ptr(),
+			NextMeetingDate: nextMeetingDate,
 		}
 		edges = append(edges, &model.RequestEdge{
 			Node: &node,

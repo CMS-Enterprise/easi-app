@@ -3,6 +3,35 @@ import { useReactToPrint } from 'react-to-print';
 import { IconFileDownload } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import IconButton from 'components/shared/IconButton';
+
+type PDFExportButtonProps = {
+  children: React.ReactNode;
+  handlePrint: () => void;
+  disabled?: boolean;
+  className?: string;
+};
+
+export const PDFExportButton = ({
+  children,
+  handlePrint,
+  disabled,
+  className
+}: PDFExportButtonProps) => {
+  return (
+    <IconButton
+      icon={<IconFileDownload />}
+      className={classNames('easi-no-print', className)}
+      type="button"
+      onClick={handlePrint}
+      disabled={disabled}
+      unstyled
+    >
+      {children}
+    </IconButton>
+  );
+};
+
 type PDFExportProps = {
   filename: string;
   title: string;
@@ -52,15 +81,9 @@ const PDFExport = ({
           'margin-top-6': linkPosition === 'bottom'
         })}
       >
-        <button
-          className="usa-button usa-button--unstyled easi-no-print display-flex flex-align-center"
-          type="button"
-          onClick={handlePrint}
-          disabled={disabled}
-        >
-          <IconFileDownload className="margin-right-05" />
+        <PDFExportButton handlePrint={handlePrint} disabled={disabled}>
           {label || 'Download PDF'}
-        </button>
+        </PDFExportButton>
       </div>
 
       {linkPosition === 'top' && PrintContent}
