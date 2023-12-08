@@ -110,6 +110,7 @@ const IssueLcid = ({
     }, {});
   }, [data]);
 
+  /** Only pre-fill next steps, trb follow up, and cost baseline if confirming decision */
   const defaultValues: Partial<IssueLcidFields> = confirmingLcid
     ? {
         lcid: systemIntake.lcid || '',
@@ -119,10 +120,14 @@ const IssueLcid = ({
         trbFollowUp: systemIntake.trbFollowUpRecommendation || undefined,
         costBaseline: systemIntake.lcidCostBaseline || ''
       }
-    : {};
+    : {
+        lcid: systemIntake.lcid || '',
+        expiresAt: systemIntake.lcidExpiresAt || '',
+        scope: systemIntake.lcidScope || ''
+      };
 
   const form = useForm<IssueLcidFields>({
-    resolver: yupResolver(lcidActionSchema(confirmingLcid)),
+    resolver: yupResolver(lcidActionSchema(!!systemIntake?.lcid)),
     defaultValues
   });
 
@@ -168,10 +173,10 @@ const IssueLcid = ({
     };
 
     /** Returns `confirmLcid` or `issueLcid` mutation based on form action type */
-    const mutation = confirmingLcid ? confirmLcid : issueLcid;
+    const mutation = systemIntake?.lcid ? confirmLcid : issueLcid;
 
     // If confirming LCID, remove LCID from mutation input
-    if (confirmingLcid) {
+    if (systemIntake?.lcid) {
       delete input.lcid;
     }
 
@@ -243,7 +248,7 @@ const IssueLcid = ({
           }
         }
       >
-        {confirmingLcid ? (
+        {systemIntake?.lcid ? (
           /* If confirming decision, display current LCID */
           <>
             <p className="margin-0">{t('issueLCID.lcid.label')}</p>
@@ -261,9 +266,11 @@ const IssueLcid = ({
                 }}
               />
             </p>
-            <Alert type="info" className="margin-top-1" slim>
-              {t('issueLCID.confirmLcidAlert')}
-            </Alert>
+            {confirmingLcid && (
+              <Alert type="info" className="margin-top-1" slim>
+                {t('issueLCID.confirmLcidAlert')}
+              </Alert>
+            )}
           </>
         ) : (
           /* New or existing LCID fields */

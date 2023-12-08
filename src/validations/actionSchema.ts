@@ -161,8 +161,8 @@ export const issueLcidSchema = confirmLcidSchema.shape({
   })
 });
 
-export const lcidActionSchema = (isConfirmingLcid: boolean) => {
-  return isConfirmingLcid ? confirmLcidSchema : issueLcidSchema;
+export const lcidActionSchema = (lcidExists: boolean) => {
+  return lcidExists ? confirmLcidSchema : issueLcidSchema;
 };
 
 export const updateLcidSchema = Yup.object().shape({
