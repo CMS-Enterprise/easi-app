@@ -31,7 +31,6 @@ import { RequestType } from 'types/systemIntake';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import {
-  isAdminIntakeClosed,
   isIntakeClosed,
   translateRequestType,
   translateStatus
@@ -50,6 +49,7 @@ type RequestSummaryProps = {
   submittedAt: string | null;
   lcid: string | null;
   contractNumber: string | null;
+  state: SystemIntakeState;
 };
 
 const RequestSummary = ({
@@ -62,7 +62,8 @@ const RequestSummary = ({
   adminLead,
   submittedAt,
   lcid,
-  contractNumber
+  contractNumber,
+  state
 }: RequestSummaryProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const flags = useFlags();
@@ -76,10 +77,6 @@ const RequestSummary = ({
   );
 
   const stateV1: SystemIntakeState = isIntakeClosed(status)
-    ? SystemIntakeState.CLOSED
-    : SystemIntakeState.OPEN;
-
-  const state: SystemIntakeState = isAdminIntakeClosed(statusAdmin)
     ? SystemIntakeState.CLOSED
     : SystemIntakeState.OPEN;
 
