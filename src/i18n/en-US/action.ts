@@ -197,7 +197,7 @@ const action = {
     },
     option: {
       intakeFormStep: {
-        INITIAL_REQUEST_FORM: 'Initial request form',
+        INITIAL_REQUEST_FORM: 'Intake Request form',
         DRAFT_BUSINESS_CASE: 'Draft business case',
         FINAL_BUSINESS_CASE: 'Final business case'
       }
