@@ -53,7 +53,7 @@ echo "❄️  Clear ${BRANCH_NAME} namespace ❄️"
 kubectl delete ns "$BRANCH_NAME" --force
 
 echo "🐋 Building easi-client:${BRANCH_NAME} image 🐋"
-docker build -f ../Dockerfile.client_k8s -t easi-client:$BRANCH_NAME ../.
+docker build -f ../Dockerfile.client_k8s -t easi-client:"$BRANCH_NAME" ../.
 
 # APPLICATION_VERSION=$(git rev-parse HEAD)
 # APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
@@ -64,10 +64,10 @@ docker build -f ../Dockerfile.client_k8s -t easi-client:$BRANCH_NAME ../.
 
 echo "🐋 Building easi-backend:${BRANCH_NAME} image 🐋"
 # docker build -f ../Dockerfile --build-arg APPLICATION_DATETIME="${APPLICATION_DATETIME}" --build-arg APPLICATION_TS="${APPLICATION_TS}" --build-arg APPLICATION_VERSION="${APPLICATION_VERSION}" -t easi-backend:latest ../.
-docker build -f ../Dockerfile.backend_k8s --target build -t easi-backend:$BRANCH_NAME ../.
+docker build -f ../Dockerfile.backend_k8s --target build -t easi-backend:"$BRANCH_NAME" ../.
 
 echo "🐋 Building db-migrate:${BRANCH_NAME} image 🐋"
-docker build -f ../Dockerfile.db_migrations --build-arg TAG=9.10-alpine -t db-migrate:$BRANCH_NAME ../.
+docker build -f ../Dockerfile.db_migrations --build-arg TAG=9.10-alpine -t db-migrate:"$BRANCH_NAME" ../.
 
 echo "❄️  Deploying EASi via Kustomize  ❄️"
 TEMPDIR=$(mktemp -d ../tmp.k8s.XXXXX)
