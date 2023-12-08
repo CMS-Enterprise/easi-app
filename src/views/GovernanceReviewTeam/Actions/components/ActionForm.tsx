@@ -434,7 +434,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
               disabled: disableSubmit || isSubmitting || modalIsOpen,
               onClick: () => setSendEmail(false)
             }}
-            taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
+            taskListUrl={`/governance-review-team/${systemIntakeId}/actions`}
             saveExitText={t('cancelAction')}
             border={false}
             className="margin-top-6"
