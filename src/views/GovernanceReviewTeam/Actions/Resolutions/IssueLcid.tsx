@@ -30,6 +30,7 @@ import {
   GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
 } from 'queries/types/GetSystemIntakesWithLCIDS';
 import {
+  SystemIntakeDecisionState,
   SystemIntakeIssueLCIDInput,
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
@@ -66,12 +67,12 @@ const IssueLcid = ({
   systemIntakeId,
   state,
   decisionState,
-  ...defaultValues
+  ...systemIntake
 }: IssueLcidProps) => {
   const { t } = useTranslation('action');
 
-  /** Type of LCID action */
-  const actionType = defaultValues.lcid ? 'confirm' : 'issue';
+  const confirmingLcid =
+    decisionState === SystemIntakeDecisionState.LCID_ISSUED;
 
   /** Edits requested form key for confirmation modal */
   const editsRequestedKey = useContext(EditsRequestedContext);
@@ -107,16 +108,20 @@ const IssueLcid = ({
     }, {});
   }, [data]);
 
+  const defaultValues: Partial<IssueLcidFields> = confirmingLcid
+    ? {
+        lcid: systemIntake.lcid || '',
+        expiresAt: systemIntake.lcidExpiresAt || '',
+        nextSteps: systemIntake.decisionNextSteps || '',
+        scope: systemIntake.lcidScope || '',
+        trbFollowUp: systemIntake.trbFollowUpRecommendation || undefined,
+        costBaseline: systemIntake.lcidCostBaseline || ''
+      }
+    : {};
+
   const form = useForm<IssueLcidFields>({
-    resolver: yupResolver(lcidActionSchema(actionType)),
-    defaultValues: {
-      lcid: defaultValues.lcid || '',
-      expiresAt: defaultValues.lcidExpiresAt || '',
-      nextSteps: defaultValues.decisionNextSteps || '',
-      scope: defaultValues.lcidScope || '',
-      trbFollowUp: defaultValues.trbFollowUpRecommendation || undefined,
-      costBaseline: defaultValues.lcidCostBaseline || ''
-    }
+    resolver: yupResolver(lcidActionSchema(confirmingLcid)),
+    defaultValues
   });
 
   const { control, setValue, watch, resetField } = form;
@@ -161,10 +166,10 @@ const IssueLcid = ({
     };
 
     /** Returns `confirmLcid` or `issueLcid` mutation based on form action type */
-    const mutation = actionType === 'confirm' ? confirmLcid : issueLcid;
+    const mutation = confirmingLcid ? confirmLcid : issueLcid;
 
     // If confirming LCID, remove LCID from mutation input
-    if (actionType === 'confirm') {
+    if (confirmingLcid) {
       delete input.lcid;
     }
 
@@ -236,7 +241,7 @@ const IssueLcid = ({
           }
         }
       >
-        {defaultValues.lcid ? (
+        {confirmingLcid ? (
           /* If confirming decision, display current LCID */
           <>
             <p className="margin-0">{t('issueLCID.lcid.label')}</p>
