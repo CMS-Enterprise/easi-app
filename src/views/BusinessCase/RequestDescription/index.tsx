@@ -19,10 +19,7 @@ import TextAreaField from 'components/shared/TextAreaField';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import {
-  BusinessCaseDraftValidationSchema,
-  BusinessCaseFinalValidationSchema
-} from 'validations/businessCaseSchema';
+import { BusinessCaseSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
@@ -50,16 +47,11 @@ const RequestDescription = ({
     successIndicators: businessCase.successIndicators
   };
 
-  const ValidationSchema =
-    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
-      ? BusinessCaseFinalValidationSchema
-      : BusinessCaseDraftValidationSchema;
-
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={ValidationSchema.requestDescription}
+      validationSchema={BusinessCaseSchema(isFinal).requestDescription}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}

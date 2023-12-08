@@ -18,10 +18,7 @@ import IconButton from 'components/shared/IconButton';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import {
-  BusinessCaseDraftValidationSchema,
-  BusinessCaseFinalValidationSchema
-} from 'validations/businessCaseSchema';
+import { BusinessCaseSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
@@ -49,16 +46,11 @@ const GeneralRequestInfo = ({
 
   const allowedPhoneNumberCharacters = /[\d- ]+/g;
 
-  const ValidationSchema =
-    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
-      ? BusinessCaseFinalValidationSchema
-      : BusinessCaseDraftValidationSchema;
-
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={ValidationSchema.generalRequestInfo}
+      validationSchema={BusinessCaseSchema(isFinal).generalRequestInfo}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
