@@ -25,7 +25,7 @@ type BusinessCaseStepWrapperProps = {
   /** Form errors object */
   errors?: Record<string, string>;
   /** Form step content and fields */
-  children: any;
+  children: React.ReactNode;
   description?: React.ReactNode;
   /** Whether to show "all fields are mandatory" alert - defaults to false */
   fieldsMandatory?: boolean;
@@ -112,9 +112,7 @@ const BusinessCaseStepWrapper = ({
         <MandatoryFieldsAlert className="tablet:grid-col-5" />
       )}
 
-      {typeof children === 'function'
-        ? children({ systemIntake: data?.systemIntake })
-        : children}
+      {children}
     </div>
   );
 };
