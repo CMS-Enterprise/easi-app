@@ -144,16 +144,24 @@ func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCas
 		)
 	`
 	for i := range businessCase.LifecycleCostLines {
-		cost := businessCase.LifecycleCostLines[i]
-		cost.ID = uuid.New()
-		cost.BusinessCaseID = businessCase.ID
-		_, err := tx.NamedExec(createEstimatedLifecycleCostSQL, &cost)
+		costLine := businessCase.LifecycleCostLines[i]
+
+		// if cost is `nil`, we don't want to attempt to insert that into the DB
+		// this is a known behavior -- the frontend will try and send `null` values in the array of costs,
+		// so we just catch them here before they make it into the DB
+		if costLine.Cost == nil {
+			continue
+		}
+
+		costLine.ID = uuid.New()
+		costLine.BusinessCaseID = businessCase.ID
+		_, err := tx.NamedExec(createEstimatedLifecycleCostSQL, &costLine)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(
 				fmt.Sprintf(
 					"Failed to create cost %s %s with error %s",
-					cost.Solution,
-					cost.Year,
+					costLine.Solution,
+					costLine.Year,
 					err,
 				),
 				zap.String("EUAUserID", businessCase.EUAUserID),
