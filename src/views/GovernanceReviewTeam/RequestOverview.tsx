@@ -120,6 +120,7 @@ const RequestOverview = () => {
           submittedAt={systemIntake.submittedAt}
           lcid={systemIntake.lcid}
           contractNumber={systemIntake?.contract?.number}
+          state={systemIntake?.state}
         />
       )}
       {!fullPageLayout && (

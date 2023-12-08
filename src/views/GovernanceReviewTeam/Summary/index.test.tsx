@@ -8,6 +8,7 @@ import users from 'data/mock/users';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
 import {
   SystemIntakeRequestType,
+  SystemIntakeState,
   SystemIntakeStatus,
   SystemIntakeStatusAdmin
 } from 'types/graphql-global-types';
@@ -56,7 +57,7 @@ describe('The GRT Review page', () => {
     render(
       <MemoryRouter>
         <MockedProvider>
-          <Summary {...summaryProps} />
+          <Summary {...summaryProps} state={SystemIntakeState.OPEN} />
         </MockedProvider>
       </MemoryRouter>
     );
@@ -70,7 +71,11 @@ describe('The GRT Review page', () => {
     render(
       <MemoryRouter>
         <MockedProvider>
-          <Summary {...summaryProps} status={SystemIntakeStatus.LCID_ISSUED} />
+          <Summary
+            {...summaryProps}
+            status={SystemIntakeStatus.LCID_ISSUED}
+            state={SystemIntakeState.CLOSED}
+          />
         </MockedProvider>
       </MemoryRouter>
     );
@@ -89,6 +94,7 @@ describe('The GRT Review page', () => {
           <Summary
             {...summaryProps}
             status={SystemIntakeStatus.LCID_ISSUED}
+            state={SystemIntakeState.CLOSED}
             lcid={lcid}
           />
         </MockedProvider>

@@ -8,25 +8,6 @@ export type GovernanceCollaborationTeam = {
   key: string;
 };
 
-export const openIntakeStatusesAdmin: SystemIntakeStatusAdmin[] = [
-  SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_IN_PROGRESS,
-  SystemIntakeStatusAdmin.DRAFT_BUSINESS_CASE_SUBMITTED,
-  SystemIntakeStatusAdmin.FINAL_BUSINESS_CASE_IN_PROGRESS,
-  SystemIntakeStatusAdmin.FINAL_BUSINESS_CASE_SUBMITTED,
-  SystemIntakeStatusAdmin.GRB_MEETING_COMPLETE,
-  SystemIntakeStatusAdmin.GRB_MEETING_READY,
-  SystemIntakeStatusAdmin.GRT_MEETING_COMPLETE,
-  SystemIntakeStatusAdmin.GRT_MEETING_READY,
-  SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
-  SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED
-];
-
-export const closedIntakeStatusesAdmin: SystemIntakeStatusAdmin[] = [
-  SystemIntakeStatusAdmin.LCID_ISSUED,
-  SystemIntakeStatusAdmin.NOT_APPROVED,
-  SystemIntakeStatusAdmin.NOT_GOVERNANCE
-];
-
 export const openIntakeStatusesV1 = [
   'INTAKE_DRAFT',
   'INTAKE_SUBMITTED',
