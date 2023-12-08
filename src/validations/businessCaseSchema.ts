@@ -14,7 +14,7 @@ const fiscalYearCosts = Yup.object()
     const costs = Object.values(years);
     const phaseLabel: string = phase.parent.label;
 
-    const hasEmptyCost = costs.findIndex(cost => !cost) > -1;
+    const hasEmptyCost = costs.some(cost => !cost);
 
     return (
       !hasEmptyCost ||
