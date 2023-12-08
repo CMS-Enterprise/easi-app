@@ -160,11 +160,7 @@ const Resolutions = ({ systemIntake }: ActionsProps) => {
           />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/not-approved">
-          <NotApproved
-            systemIntakeId={systemIntakeId}
-            state={state}
-            decisionState={decisionState}
-          />
+          <NotApproved {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/close-request">
           <CloseRequest
