@@ -308,7 +308,7 @@ const action = {
   retireLcid: {
     retirementDate: 'Life Cycle ID retirement date',
     retirementDateHelpText:
-      'If you select a future date, this project team will not continue to recieve automatic updates about their Life Cycle ID, and the LCID will me marked as retired on the chosen date.',
+      'If you select a future date, this project team will not continue to receive automatic updates about their Life Cycle ID, and the LCID will be marked as retired on the chosen date.',
     format: 'Format: mm/dd/yyyy',
     reason: 'Why are you retiring this Life Cycle ID? (optional)',
     reasonHelpText:
