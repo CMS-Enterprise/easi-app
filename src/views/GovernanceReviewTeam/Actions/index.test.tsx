@@ -199,7 +199,7 @@ describe('IT Gov Actions', () => {
       // Fill in required fields
 
       userEvent.selectOptions(screen.getByTestId('intakeFormStep'), [
-        'Initial request form'
+        'Intake Request form'
       ]);
 
       await typeRichText(screen.getByTestId('emailFeedback'), 'Ch-ch-changes');
@@ -219,7 +219,7 @@ describe('IT Gov Actions', () => {
 
       // Success alert message
       await screen.findByText(
-        'You have requested edits to the Initial request form.'
+        'You have requested edits to the Intake Request form.'
       );
     });
 
@@ -295,9 +295,6 @@ describe('IT Gov Actions', () => {
       await screen.findByText(
         'This request is already at the GRB meeting step. Please select a different step.'
       );
-
-      // Date field required error
-      await screen.findByText('Please enter a valid date');
     });
   });
 });

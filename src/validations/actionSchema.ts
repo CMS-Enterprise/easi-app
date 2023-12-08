@@ -209,18 +209,7 @@ export const progressToNewStepSchema = (
         }
       )
       .required('Please make a selection'),
-    // Meeting date required if new step is GRB or GRT meeting
-    meetingDate: Yup.date().when('newStep', {
-      is: (val: SystemIntakeStepToProgressTo) =>
-        [
-          SystemIntakeStepToProgressTo.GRT_MEETING,
-          SystemIntakeStepToProgressTo.GRB_MEETING
-        ].includes(val),
-      then: Yup.date()
-        .required('Please enter a valid date')
-        .nullable()
-        .typeError('Please enter a valid date')
-    }),
+    meetingDate: Yup.date().typeError('Please enter a valid date'),
     feedback: Yup.string(),
     grbRecommendations: Yup.string()
   });

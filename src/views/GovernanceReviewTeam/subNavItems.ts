@@ -6,7 +6,7 @@ const subNavItems = (systemId: string) => [
   },
   {
     route: `/governance-review-team/${systemId}/documents`,
-    text: 'intake:documents.uploadedDocuments',
+    text: 'intake:documents.supportingDocuments',
     aria: 'aria.openDocuments'
   },
   {
