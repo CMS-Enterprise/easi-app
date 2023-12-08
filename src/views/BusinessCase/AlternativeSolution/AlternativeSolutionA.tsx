@@ -27,14 +27,12 @@ type AlternativeSolutionProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
-  isFinal: boolean;
 };
 
 const AlternativeSolutionA = ({
   businessCase,
   formikRef,
-  dispatchSave,
-  isFinal
+  dispatchSave
 }: AlternativeSolutionProps) => {
   const history = useHistory();
   const { t } = useTranslation('businessCase');

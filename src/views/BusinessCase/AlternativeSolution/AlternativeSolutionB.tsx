@@ -26,14 +26,12 @@ type AlternativeSolutionBProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
-  isFinal: boolean;
 };
 
 const AlternativeSolutionB = ({
   businessCase,
   formikRef,
-  dispatchSave,
-  isFinal
+  dispatchSave
 }: AlternativeSolutionBProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
