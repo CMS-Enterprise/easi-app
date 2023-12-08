@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
 
+import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import Divider from 'components/shared/Divider';
@@ -149,20 +150,27 @@ const UpdateLcid = ({
           control={control}
           render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal">
+              <Label
+                htmlFor={field.name}
+                id={`${field.name}-label`}
+                className="text-normal"
+              >
                 {t('issueLCID.scopeLabel')}
               </Label>
-              <HelpText className="margin-top-1">
+              <HelpText className="margin-top-1" id={`${field.name}-hint`}>
                 {t('updateLcid.scopeHelpText')}
               </HelpText>
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField
+              <RichTextEditor
                 {...field}
-                id={field.name}
-                value={field.value || ''}
-                size="sm"
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
               />
             </FormGroup>
           )}
@@ -173,20 +181,27 @@ const UpdateLcid = ({
           control={control}
           render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal">
+              <Label
+                htmlFor={field.name}
+                id={`${field.name}-label`}
+                className="text-normal"
+              >
                 {t('issueLCID.nextStepsLabel')}
               </Label>
-              <HelpText className="margin-top-1">
+              <HelpText className="margin-top-1" id={`${field.name}-hint`}>
                 {t('issueLCID.nextStepsHelpText')}
               </HelpText>
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField
+              <RichTextEditor
                 {...field}
-                id={field.name}
-                value={field.value || ''}
-                size="sm"
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
               />
             </FormGroup>
           )}
@@ -220,17 +235,24 @@ const UpdateLcid = ({
           control={control}
           render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal">
+              <Label
+                htmlFor={field.name}
+                id={`${field.name}-label`}
+                className="text-normal"
+              >
                 {t('updateLcid.reasonLabel')}
               </Label>
               <HelpText className="margin-top-1">
                 {t('updateLcid.reasonHelpText')}
               </HelpText>
-              <TextAreaField
+              <RichTextEditor
                 {...field}
-                value={field.value || ''}
-                id={field.name}
-                size="sm"
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
               />
             </FormGroup>
           )}
