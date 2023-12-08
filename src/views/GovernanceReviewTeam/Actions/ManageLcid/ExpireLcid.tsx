@@ -5,10 +5,10 @@ import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
 
+import RichTextEditor from 'components/RichTextEditor';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionExpireLcidQuery from 'queries/CreateSystemIntakeActionExpireLcidQuery';
 import {
   CreateSystemIntakeActionExpireLcid,
@@ -83,7 +83,12 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
           control={control}
           render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal" required>
+              <Label
+                htmlFor={field.name}
+                id={`${field.name}-label`}
+                className="text-normal"
+                required
+              >
                 {t('expireLcid.reason')}
               </Label>
               <HelpText className="margin-top-1">
@@ -92,11 +97,14 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField
+              <RichTextEditor
                 {...field}
-                id={field.name}
-                value={field.value || ''}
-                size="sm"
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
               />
             </FormGroup>
           )}
@@ -106,17 +114,24 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
           control={control}
           render={({ field: { ref, ...field } }) => (
             <FormGroup>
-              <Label htmlFor={field.name} className="text-normal">
+              <Label
+                htmlFor={field.name}
+                id={`${field.name}-label`}
+                className="text-normal"
+              >
                 {t('expireLcid.nextSteps')}
               </Label>
-              <HelpText className="margin-top-1">
+              <HelpText className="margin-top-1" id={`${field.name}-hint`}>
                 {t('expireLcid.nextStepsHelpText')}
               </HelpText>
-              <TextAreaField
+              <RichTextEditor
                 {...field}
-                id={field.name}
-                value={field.value || ''}
-                size="sm"
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
               />
             </FormGroup>
           )}

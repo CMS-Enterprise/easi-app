@@ -142,17 +142,10 @@ export const provideGRTFeedbackSchema = Yup.object().shape({
   emailBody: skippableEmail
 });
 
-/** Checks that expiration date is valid and in the future */
-const validExpirationDate = () =>
-  Yup.string()
-    .nullable()
-    .test('expiresAt', 'Date cannot be in the past', value => {
-      if (!value) return true;
-      return DateTime.fromISO(value) >= DateTime.local().startOf('day');
-    });
-
 export const confirmLcidSchema = Yup.object().shape({
-  expiresAt: validExpirationDate().required('Please enter a valid date'),
+  expiresAt: Yup.date()
+    .typeError('Please enter a valid date')
+    .required('Please enter a valid date'),
   scope: Yup.string().required('Please fill in the blank'),
   nextSteps: Yup.string().required('Please fill in the blank'),
   trbFollowUp: Yup.mixed<SystemIntakeTRBFollowUp>()
@@ -168,15 +161,12 @@ export const issueLcidSchema = confirmLcidSchema.shape({
   })
 });
 
-export const lcidActionSchema = (type: 'issue' | 'confirm') => {
-  if (type === 'issue') {
-    return issueLcidSchema;
-  }
-  return confirmLcidSchema;
+export const lcidActionSchema = (lcidExists: boolean) => {
+  return lcidExists ? confirmLcidSchema : issueLcidSchema;
 };
 
 export const updateLcidSchema = Yup.object().shape({
-  expiresAt: validExpirationDate()
+  expiresAt: Yup.date().typeError('Please enter a valid date')
 });
 
 export const retireLcidSchema = Yup.object().shape({
@@ -219,18 +209,7 @@ export const progressToNewStepSchema = (
         }
       )
       .required('Please make a selection'),
-    // Meeting date required if new step is GRB or GRT meeting
-    meetingDate: Yup.date().when('newStep', {
-      is: (val: SystemIntakeStepToProgressTo) =>
-        [
-          SystemIntakeStepToProgressTo.GRT_MEETING,
-          SystemIntakeStepToProgressTo.GRB_MEETING
-        ].includes(val),
-      then: Yup.date()
-        .required('Please enter a valid date')
-        .nullable()
-        .typeError('Please enter a valid date')
-    }),
+    meetingDate: Yup.date().typeError('Please enter a valid date'),
     feedback: Yup.string(),
     grbRecommendations: Yup.string()
   });

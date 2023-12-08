@@ -38,6 +38,7 @@ import {
 import { UpdateSystemIntakeNote } from 'queries/types/UpdateSystemIntakeNote';
 import UpdateSystemIntakeNoteQuery from 'queries/UpdateSystemIntakeNoteQuery';
 import { AppState } from 'reducers/rootReducer';
+import { SystemIntakeActionType } from 'types/graphql-global-types';
 import { formatDateUtc } from 'utils/date';
 
 import './index.scss';
@@ -389,108 +390,122 @@ const Notes = () => {
             ).toFormat('MMMM d, yyyy')} at ${DateTime.fromISO(
               createdAt
             ).toLocaleString(DateTime.TIME_SIMPLE)}`}</NoteByline>
-            {lcidExpirationChange && (
-              <dl>
-                <dt>Life Cycle ID</dt>
-                <dd>{data.systemIntake?.lcid}</dd>
-                <dt>{t('notes.extendLcid.newExpirationDate')}</dt>
-                <dd>
-                  {formatDateUtc(lcidExpirationChange.newDate, 'MMMM d, yyyy')}
-                </dd>
-                <dt>{t('notes.extendLcid.oldExpirationDate')}</dt>
-                <dd>
-                  {formatDateUtc(
-                    lcidExpirationChange.previousDate,
-                    'MMMM d, yyyy'
-                  )}
-                </dd>
 
-                {/* Used TruncatedText for old/new scope, next steps, and cost baseline since they can be 3000 characters */}
-                <dt>{t('notes.extendLcid.newScope')}</dt>
-                <dd>
-                  <TruncatedText
-                    id="new-lcid-scope"
-                    label="less"
-                    closeLabel="more"
-                    text={
-                      lcidExpirationChange.newScope ||
-                      t('notes.extendLcid.noScope')
-                    }
-                    charLimit={freeFormTextCharLimit}
-                  />
-                </dd>
+            {
+              // Update LCID fields summary
+              lcidExpirationChange &&
+                type === SystemIntakeActionType.UPDATE_LCID && (
+                  <dl>
+                    <dt>Life Cycle ID</dt>
+                    <dd>{data.systemIntake?.lcid}</dd>
+                    <dt>{t('notes.extendLcid.newExpirationDate')}</dt>
+                    <dd>
+                      {formatDateUtc(
+                        lcidExpirationChange.newDate,
+                        'MMMM d, yyyy'
+                      )}
+                    </dd>
+                    <dt>{t('notes.extendLcid.oldExpirationDate')}</dt>
+                    <dd>
+                      {formatDateUtc(
+                        lcidExpirationChange.previousDate,
+                        'MMMM d, yyyy'
+                      )}
+                    </dd>
 
-                <dt>{t('notes.extendLcid.oldScope')}</dt>
-                <dd>
-                  <TruncatedText
-                    id="previous-lcid-scope"
-                    label="less"
-                    closeLabel="more"
-                    text={
-                      lcidExpirationChange.previousScope ||
-                      t('notes.extendLcid.noScope')
-                    }
-                    charLimit={freeFormTextCharLimit}
-                  />
-                </dd>
+                    {/* Used TruncatedText for old/new scope, next steps, and cost baseline since they can be 3000 characters */}
+                    <dt>{t('notes.extendLcid.newScope')}</dt>
+                    <dd>
+                      <TruncatedText
+                        id="new-lcid-scope"
+                        label="less"
+                        closeLabel="more"
+                        text={
+                          lcidExpirationChange.newScope ||
+                          t('notes.extendLcid.noScope')
+                        }
+                        charLimit={freeFormTextCharLimit}
+                        isRich
+                      />
+                    </dd>
 
-                <dt>{t('notes.extendLcid.newNextSteps')}</dt>
-                <dd>
-                  <TruncatedText
-                    id="new-lcid-next-steps"
-                    label="less"
-                    closeLabel="more"
-                    text={
-                      lcidExpirationChange.newNextSteps ||
-                      t('notes.extendLcid.noNextSteps')
-                    }
-                    charLimit={freeFormTextCharLimit}
-                  />
-                </dd>
+                    <dt>{t('notes.extendLcid.oldScope')}</dt>
+                    <dd>
+                      <TruncatedText
+                        id="previous-lcid-scope"
+                        label="less"
+                        closeLabel="more"
+                        text={
+                          lcidExpirationChange.previousScope ||
+                          t('notes.extendLcid.noScope')
+                        }
+                        charLimit={freeFormTextCharLimit}
+                        isRich
+                      />
+                    </dd>
 
-                <dt>{t('notes.extendLcid.oldNextSteps')}</dt>
-                <dd>
-                  <TruncatedText
-                    id="previous-lcid-next-steps"
-                    label="less"
-                    closeLabel="more"
-                    text={
-                      lcidExpirationChange.previousNextSteps ||
-                      t('notes.extendLcid.noNextSteps')
-                    }
-                    charLimit={freeFormTextCharLimit}
-                  />
-                </dd>
+                    <dt>{t('notes.extendLcid.newNextSteps')}</dt>
+                    <dd>
+                      <TruncatedText
+                        id="new-lcid-next-steps"
+                        label="less"
+                        closeLabel="more"
+                        text={
+                          lcidExpirationChange.newNextSteps ||
+                          t('notes.extendLcid.noNextSteps')
+                        }
+                        charLimit={freeFormTextCharLimit}
+                        isRich
+                      />
+                    </dd>
 
-                <dt>{t('notes.extendLcid.newCostBaseline')}</dt>
-                <dd>
-                  <TruncatedText
-                    id="new-lcid-cost-baseline"
-                    label="less"
-                    closeLabel="more"
-                    text={
-                      lcidExpirationChange.newCostBaseline ||
-                      t('notes.extendLcid.noCostBaseline')
-                    }
-                    charLimit={freeFormTextCharLimit}
-                  />
-                </dd>
+                    <dt>{t('notes.extendLcid.oldNextSteps')}</dt>
+                    <dd>
+                      <TruncatedText
+                        id="previous-lcid-next-steps"
+                        label="less"
+                        closeLabel="more"
+                        text={
+                          lcidExpirationChange.previousNextSteps ||
+                          t('notes.extendLcid.noNextSteps')
+                        }
+                        charLimit={freeFormTextCharLimit}
+                        isRich
+                      />
+                    </dd>
 
-                <dt>{t('notes.extendLcid.oldCostBaseline')}</dt>
-                <dd>
-                  <TruncatedText
-                    id="previous-lcid-cost-baseline"
-                    label="less"
-                    closeLabel="more"
-                    text={
-                      lcidExpirationChange.previousCostBaseline ||
-                      t('notes.extendLcid.noCostBaseline')
-                    }
-                    charLimit={freeFormTextCharLimit}
-                  />
-                </dd>
-              </dl>
-            )}
+                    <dt>{t('notes.extendLcid.newCostBaseline')}</dt>
+                    <dd>
+                      <TruncatedText
+                        id="new-lcid-cost-baseline"
+                        label="less"
+                        closeLabel="more"
+                        text={
+                          lcidExpirationChange.newCostBaseline ||
+                          t('notes.extendLcid.noCostBaseline')
+                        }
+                        charLimit={freeFormTextCharLimit}
+                        isRich
+                      />
+                    </dd>
+
+                    <dt>{t('notes.extendLcid.oldCostBaseline')}</dt>
+                    <dd>
+                      <TruncatedText
+                        id="previous-lcid-cost-baseline"
+                        label="less"
+                        closeLabel="more"
+                        text={
+                          lcidExpirationChange.previousCostBaseline ||
+                          t('notes.extendLcid.noCostBaseline')
+                        }
+                        charLimit={freeFormTextCharLimit}
+                        isRich
+                      />
+                    </dd>
+                  </dl>
+                )
+            }
             {feedback && (
               <div className="margin-top-2">
                 <CollapsableLink
