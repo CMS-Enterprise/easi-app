@@ -5,11 +5,30 @@ import (
 
 	"github.com/guregu/null"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
+
+// CreateSystemIntake creates a system intake. Moved here to help with seed data in 3343.
+func CreateSystemIntake(
+	ctx context.Context,
+	store *storage.Store,
+	input model.CreateSystemIntakeInput,
+) (*models.SystemIntake, error) {
+	systemIntake := models.SystemIntake{
+		EUAUserID:   null.StringFrom(appcontext.Principal(ctx).ID()),
+		RequestType: models.SystemIntakeRequestType(input.RequestType),
+		Requester:   input.Requester.Name,
+		Status:      models.SystemIntakeStatusINTAKEDRAFT,
+		State:       models.SystemIntakeStateOPEN,
+		Step:        models.SystemIntakeStepINITIALFORM,
+	}
+	createdIntake, err := store.CreateSystemIntake(ctx, &systemIntake)
+	return createdIntake, err
+}
 
 // TODO: thes calls could largely be combined in a more general call to Update the System Intake. It would rely on a similar approach that was taken in TRB
 
