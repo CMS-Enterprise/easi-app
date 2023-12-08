@@ -245,6 +245,7 @@ const governanceReviewTeam = {
     feedbackMoved:
       'Feedback and recommendations have moved! Use the Feedback tab in the navigation to the left to view feedback and recommendations that have been sent to the requester and project team.'
   },
+  governanceRequestDetails: 'Governance request details',
   actions: 'Actions',
   requestType: 'Request type',
   status: {
