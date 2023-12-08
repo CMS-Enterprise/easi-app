@@ -12,6 +12,7 @@ import Divider from 'components/shared/Divider';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionUpdateLcidQuery from 'queries/CreateSystemIntakeActionUpdateLcidQuery';
 import {
   CreateSystemIntakeActionUpdateLcid,
@@ -211,24 +212,17 @@ const UpdateLcid = ({
           control={control}
           render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label
-                htmlFor={field.name}
-                id={`${field.name}-label`}
-                className="text-normal"
-              >
+              <Label htmlFor={field.name} className="text-normal">
                 {t('issueLCID.costBaselineLabel')}
               </Label>
-              <HelpText className="margin-top-1" id={`${field.name}-hint`}>
+              <HelpText className="margin-top-1">
                 {t('issueLCID.costBaselineHelpText')}
               </HelpText>
-              <RichTextEditor
+              <TextAreaField
                 {...field}
-                editableProps={{
-                  id: field.name,
-                  'data-testid': field.name,
-                  'aria-describedby': `${field.name}-hint`,
-                  'aria-labelledby': `${field.name}-label`
-                }}
+                value={field.value || ''}
+                id={field.name}
+                size="sm"
               />
             </FormGroup>
           )}
