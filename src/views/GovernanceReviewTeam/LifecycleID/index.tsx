@@ -4,6 +4,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageHeading from 'components/PageHeading';
 import ReviewRow from 'components/ReviewRow';
+import { RichTextViewer } from 'components/RichTextEditor';
 import {
   DescriptionDefinition,
   DescriptionList,
@@ -17,33 +18,24 @@ type LcidProps = {
 };
 
 const LifecycleID = ({ systemIntake }: LcidProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('governanceReviewTeam');
   const flags = useFlags();
 
   const Issued = () => (
     <>
       <PageHeading className="margin-top-0">
-        {t('governanceReviewTeam:lifecycleID.title')}
+        {t('lifecycleID.title')}
       </PageHeading>
-      <DescriptionList
-        title={t('governanceReviewTeam:decision.decisionSectionTitle')}
-      >
+      <DescriptionList title={t('decision.decisionSectionTitle')}>
         <ReviewRow>
           <div>
-            <DescriptionTerm
-              term={t('governanceReviewTeam:lifecycleID.title')}
-            />
-            <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={systemIntake?.lcid}
-            />
+            <DescriptionTerm term={t('lifecycleID.title')} />
+            <DescriptionDefinition definition={systemIntake?.lcid} />
           </div>
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm
-              term={t('governanceReviewTeam:lifecycleID.expiration')}
-            />
+            <DescriptionTerm term={t('lifecycleID.expiration')} />
             <DescriptionDefinition
               definition={
                 systemIntake?.lcidExpiresAt
@@ -55,23 +47,30 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm
-              term={t('governanceReviewTeam:lifecycleID.scope')}
-            />
+            <DescriptionTerm term={t('lifecycleID.scope')} />
             <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={systemIntake?.lcidScope}
+              definition={
+                <RichTextViewer
+                  value={
+                    systemIntake?.lcidScope || t('notes.extendLcid.noScope')
+                  }
+                />
+              }
             />
           </div>
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm
-              term={t('governanceReviewTeam:lifecycleID.nextSteps')}
-            />
+            <DescriptionTerm term={t('lifecycleID.nextSteps')} />
             <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={systemIntake?.decisionNextSteps}
+              definition={
+                <RichTextViewer
+                  value={
+                    systemIntake?.decisionNextSteps ||
+                    t('notes.extendLcid.noNextSteps')
+                  }
+                />
+              }
             />
           </div>
         </ReviewRow>
@@ -80,7 +79,6 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
             <div>
               <DescriptionTerm term={t('action:issueLCID.trbFollowup.label')} />
               <DescriptionDefinition
-                className="text-pre-wrap"
                 definition={
                   systemIntake?.trbFollowUpRecommendation &&
                   t(
@@ -94,12 +92,11 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
         {systemIntake?.lcidCostBaseline && (
           <ReviewRow>
             <div>
-              <DescriptionTerm
-                term={t('governanceReviewTeam:lifecycleID.costBaseline')}
-              />
+              <DescriptionTerm term={t('lifecycleID.costBaseline')} />
               <DescriptionDefinition
-                className="text-pre-wrap"
-                definition={systemIntake?.lcidCostBaseline}
+                definition={
+                  <RichTextViewer value={systemIntake?.lcidCostBaseline} />
+                }
               />
             </div>
           </ReviewRow>
@@ -117,9 +114,9 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
   return (
     <>
       <PageHeading data-testid="grt-decision-view">
-        {t('governanceReviewTeam:lifecycleID.title')}
+        {t('lifecycleID.title')}
       </PageHeading>
-      <p>{t('governanceReviewTeam:lifecycleID.noLCID')}</p>
+      <p>{t('lifecycleID.noLCID')}</p>
     </>
   );
 };

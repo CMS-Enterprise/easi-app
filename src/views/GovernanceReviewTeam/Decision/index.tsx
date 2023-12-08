@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import PageHeading from 'components/PageHeading';
 import ReviewRow from 'components/ReviewRow';
+import { RichTextViewer } from 'components/RichTextEditor';
 import {
   DescriptionDefinition,
   DescriptionList,
@@ -41,7 +42,9 @@ const Decision = ({ systemIntake }: DecisionProps) => {
             />
             <DescriptionDefinition
               className="text-pre-wrap"
-              definition={systemIntake?.rejectionReason}
+              definition={
+                <RichTextViewer value={systemIntake?.rejectionReason || ''} />
+              }
             />
           </div>
         </ReviewRow>
@@ -52,7 +55,14 @@ const Decision = ({ systemIntake }: DecisionProps) => {
             />
             <DescriptionDefinition
               className="text-pre-wrap"
-              definition={systemIntake?.decisionNextSteps}
+              definition={
+                <RichTextViewer
+                  value={
+                    systemIntake?.decisionNextSteps ||
+                    t('governanceReviewTeam:notes.extendLcid.noNextSteps')
+                  }
+                />
+              }
             />
           </div>
         </ReviewRow>
