@@ -17,9 +17,12 @@ const Documents = ({ systemIntake }: DocumentsProps) => {
 
   return (
     <div>
-      <PageHeading className="margin-top-0">
-        {t('documents.uploadedDocuments')}
+      <PageHeading className="margin-y-0">
+        {t('documents.supportingDocuments')}
       </PageHeading>
+      <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-4">
+        {t('documents.adminDescription')}
+      </p>
       <DocumentsTable systemIntake={systemIntake} canEdit={false} />
     </div>
   );

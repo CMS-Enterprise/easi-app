@@ -34,7 +34,9 @@ const intake = {
       'Choose a document to upload, such as a draft IGCE, contracting document, or another document related to your Intake Request.',
     returnToIntake: "Don't upload and return to Intake Request",
     selectDocument: 'Select your document',
-    uploadedDocuments: 'Uploaded documents',
+    supportingDocuments: 'Supporting documents',
+    adminDescription:
+      'The requester has uploaded these documents as a part of this request. If the Governance Team needs additional documentation to process this request, contact the requester.',
     type: {
       SOO_SOW: 'SOO or SOW',
       DRAFT_ICGE: 'Draft ICGE',
