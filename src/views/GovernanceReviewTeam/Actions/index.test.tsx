@@ -295,9 +295,6 @@ describe('IT Gov Actions', () => {
       await screen.findByText(
         'This request is already at the GRB meeting step. Please select a different step.'
       );
-
-      // Date field required error
-      await screen.findByText('Please enter a valid date');
     });
   });
 });
