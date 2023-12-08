@@ -248,7 +248,7 @@ const Resolutions = ({ systemIntake }: ActionsProps) => {
                   disabled: !isDirty
                 }}
                 saveExitText={t('cancelAction')}
-                taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
+                taskListUrl={`/governance-review-team/${systemIntakeId}/actions`}
                 className="margin-top-6"
                 border={false}
                 submitDisabled
