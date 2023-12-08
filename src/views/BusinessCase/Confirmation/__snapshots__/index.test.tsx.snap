@@ -41,7 +41,7 @@ exports[`The Business Case Confirmation page > matches the snapshot 1`] = `
             d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
           />
         </svg>
-        Go back to Governance Task List
+        Go back to governance task list
       </a>
     </div>
   </div>

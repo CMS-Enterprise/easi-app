@@ -205,9 +205,9 @@ const governanceReviewTeam = {
       oldNextSteps: 'Old Next Steps',
       newCostBaseline: 'New Cost Baseline',
       oldCostBaseline: 'Old Cost Baseline',
-      noScope: 'No Scope Specified',
-      noNextSteps: 'No Next Steps Specified',
-      noCostBaseline: 'No Cost Baseline Specified'
+      noScope: 'No scope specified',
+      noNextSteps: 'No next steps specified',
+      noCostBaseline: 'No cost baseline specified'
     }
   },
   dates: {
@@ -265,6 +265,7 @@ const governanceReviewTeam = {
     feedbackMoved:
       'Feedback and recommendations have moved! Use the Feedback tab in the navigation to the left to view feedback and recommendations that have been sent to the requester and project team.'
   },
+  governanceRequestDetails: 'Governance request details',
   actions: 'Actions',
   requestType: 'Request type',
   status: {

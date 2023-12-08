@@ -100,13 +100,13 @@ const action = {
       title: 'Available LCID actions',
       retire: 'Retire',
       retireDescription:
-        'LCIDs should be retired if they are no longer in use for a planned reason, such as the issuance of a new LCID, the decommissioning of a system, or other known reason. Retired LCIDs do not need to be added to the CIO risk register. This project team will no longer receive automatic notifications about their Life Cycle ID.',
+        'LCIDs should be retired if they are no longer in use for a planned reason, such as the issuance of a new LCID, the decommissioning of a system, or other known reason. Retired LCIDs do not need to be added to the Capital Planning Investment Control (CPIC) risk register. This project team will no longer receive automatic notifications about their Life Cycle ID.',
       update: 'Update',
       updateDescription:
         'LCIDs may be updated if there is an approved change to the details, such as an extension of the expiration date, a change to the scope, or similar.',
       expire: 'Expire',
       expireDescription:
-        'LCIDs will automatically expire when they reach their expiration date. Manually expiring an LCID will update the expiration date and set the status to “Expired”. Expired LCIDs are usually unplanned or unintended, and result in the project being added to the CIO risk register. This project team will continue to receive automatic notifications about their Life Cycle ID.'
+        'LCIDs will automatically expire when they reach their expiration date. Manually expiring an LCID will update the expiration date and set the status to “Expired”. Expired LCIDs are usually unplanned or unintended, and result in the project being added to the Capital Planning Investment Control (CPIC) risk register. This project team will continue to receive automatic notifications about their Life Cycle ID.'
     }
   },
   titleBox: {
@@ -197,7 +197,7 @@ const action = {
     },
     option: {
       intakeFormStep: {
-        INITIAL_REQUEST_FORM: 'Initial request form',
+        INITIAL_REQUEST_FORM: 'Intake Request form',
         DRAFT_BUSINESS_CASE: 'Draft business case',
         FINAL_BUSINESS_CASE: 'Final business case'
       }
@@ -308,7 +308,7 @@ const action = {
   retireLcid: {
     retirementDate: 'Life Cycle ID retirement date',
     retirementDateHelpText:
-      'If you select a future date, this project team will not continue to recieve automatic updates about their Life Cycle ID, and the LCID will me marked as retired on the chosen date.',
+      'If you select a future date, this project team will not continue to receive automatic updates about their Life Cycle ID, and the LCID will be marked as retired on the chosen date.',
     format: 'Format: mm/dd/yyyy',
     reason: 'Why are you retiring this Life Cycle ID? (optional)',
     reasonHelpText:

@@ -11,6 +11,7 @@ import {
   systemIntakeWithLcid
 } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import { SystemIntakeDecisionState } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -41,9 +42,9 @@ const checkFieldDefaults = () => {
     })
   ).toBeChecked();
 
-  expect(screen.getByTestId('costBaseline')).toContainHTML(
-    systemIntakeWithLcid.lcidCostBaseline!
-  );
+  expect(
+    screen.getByRole('textbox', { name: 'Project cost baseline' })
+  ).toHaveValue(systemIntakeWithLcid.lcidCostBaseline!);
 };
 
 describe('Issue LCID form', async () => {
@@ -155,6 +156,7 @@ describe('Issue LCID form', async () => {
             <IssueLcid
               {...systemIntake}
               {...systemIntakeWithLcid}
+              decisionState={SystemIntakeDecisionState.LCID_ISSUED}
               systemIntakeId={systemIntake.id}
             />
           </MessageProvider>
