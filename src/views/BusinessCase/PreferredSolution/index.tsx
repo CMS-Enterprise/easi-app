@@ -94,7 +94,6 @@ const PreferredSolution = ({
             systemIntakeId={businessCase.systemIntakeId}
             data-testid="preferred-solution"
             errors={flatErrors}
-            isFinal={isFinal}
             fieldsMandatory={isFinal}
           >
             <Form>

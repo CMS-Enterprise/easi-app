@@ -76,7 +76,6 @@ const RequestDescription = ({
             data-testid="request-description"
             errors={flatErrors}
             fieldsMandatory={isFinal}
-            isFinal={isFinal}
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">
               <FieldGroup

@@ -75,7 +75,6 @@ const GeneralRequestInfo = ({
             description={t('generalRequestDescription')}
             errors={flatErrors}
             data-testid="general-request-info"
-            isFinal={isFinal}
             fieldsMandatory={isFinal}
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">

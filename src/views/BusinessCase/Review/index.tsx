@@ -33,7 +33,6 @@ const Review = ({ businessCase, isFinal }: ReviewProps) => {
       title={t('checkAnswers')}
       className="business-case-review"
       data-testid="business-case-review"
-      isFinal={isFinal}
     >
       <>
         <BusinessCaseReview values={businessCase} />

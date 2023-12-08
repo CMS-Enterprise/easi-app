@@ -78,7 +78,6 @@ const AlternativeSolutionA = ({
             }
             errors={flatErrors}
             data-testid="alternative-solution-a"
-            isFinal={isFinal}
           >
             <Alert
               type="info"
