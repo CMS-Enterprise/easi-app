@@ -46,7 +46,7 @@ const intake = {
       heading: 'Your Intake Request has been submitted',
       subheading: 'Your reference ID is {{referenceId}}',
       homeCta: 'Go back to EASi homepage',
-      taskListCta: 'Go back to Governance Task List'
+      taskListCta: 'Go back to governance task list'
     }
   },
   lifecycleId: 'Life Cycle ID',
