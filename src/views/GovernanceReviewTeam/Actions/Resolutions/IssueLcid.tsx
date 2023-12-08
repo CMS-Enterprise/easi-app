@@ -12,6 +12,7 @@ import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 import CreateSystemIntakeActionConfirmLcidQuery from 'queries/CreateSystemIntakeActionConfirmLcidQuery';
@@ -474,25 +475,17 @@ const IssueLcid = ({
           control={control}
           render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label
-                id={`${field.name}-label`}
-                htmlFor={field.name}
-                className="text-normal"
-              >
+              <Label htmlFor={field.name} className="text-normal">
                 {t('issueLCID.costBaselineLabel')}
               </Label>
               <HelpText className="margin-top-1">
                 {t('issueLCID.costBaselineHelpText')}
               </HelpText>
-              <RichTextEditor
-                editableProps={{
-                  id: field.name,
-                  'data-testid': field.name,
-                  'aria-describedby': `${field.name}-hint`,
-                  'aria-labelledby': `${field.name}-label`
-                }}
-                field={{ ...field, value: field.value || '' }}
-                required
+              <TextAreaField
+                {...field}
+                value={field.value || ''}
+                id={field.name}
+                size="sm"
               />
             </FormGroup>
           )}
