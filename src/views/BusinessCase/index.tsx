@@ -17,9 +17,17 @@ import {
 import { FormikProps } from 'formik';
 
 import MainContent from 'components/MainContent';
+import PageLoading from 'components/PageLoading';
+import useCacheQuery from 'hooks/useCacheQuery';
 import usePrevious from 'hooks/usePrevious';
+import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
+import {
+  GetGovernanceTaskList,
+  GetGovernanceTaskListVariables
+} from 'queries/types/GetGovernanceTaskList';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
+import { SystemIntakeStep } from 'types/graphql-global-types';
 import {
   clearBusinessCase,
   fetchBusinessCase,
@@ -71,6 +79,18 @@ export const BusinessCase = () => {
     );
     current.resetForm({ values: current.values, errors: current.errors });
   };
+
+  const { data, loading } = useCacheQuery<
+    GetGovernanceTaskList,
+    GetGovernanceTaskListVariables
+  >(GetGovernanceTaskListQuery, {
+    variables: {
+      id: businessCase.systemIntakeId
+    }
+  });
+
+  const isFinal: boolean =
+    data?.systemIntake?.step === SystemIntakeStep.FINAL_BUSINESS_CASE;
 
   // Start new business case or resume existing business case
   useEffect(() => {
@@ -130,7 +150,10 @@ export const BusinessCase = () => {
           <Breadcrumb current>Business Case</Breadcrumb>
         </BreadcrumbBar>
       </div>
-      {businessCase.id && (
+
+      {loading && <PageLoading />}
+
+      {businessCase.id && !loading && (
         <Switch>
           <Route
             path="/business/:businessCaseId/general-request-info"
@@ -139,6 +162,7 @@ export const BusinessCase = () => {
                 formikRef={formikRef}
                 dispatchSave={dispatchSave}
                 businessCase={businessCase}
+                isFinal={isFinal}
               />
             )}
           />
@@ -149,6 +173,7 @@ export const BusinessCase = () => {
                 formikRef={formikRef}
                 dispatchSave={dispatchSave}
                 businessCase={businessCase}
+                isFinal={isFinal}
               />
             )}
           />
@@ -159,6 +184,7 @@ export const BusinessCase = () => {
                 formikRef={formikRef}
                 dispatchSave={dispatchSave}
                 businessCase={businessCase}
+                isFinal={isFinal}
               />
             )}
           />
@@ -169,6 +195,7 @@ export const BusinessCase = () => {
                 formikRef={formikRef}
                 dispatchSave={dispatchSave}
                 businessCase={businessCase}
+                isFinal={isFinal}
               />
             )}
           />
@@ -179,12 +206,15 @@ export const BusinessCase = () => {
                 formikRef={formikRef}
                 dispatchSave={dispatchSave}
                 businessCase={businessCase}
+                isFinal={isFinal}
               />
             )}
           />
           <Route
             path="/business/:businessCaseId/review"
-            render={() => <Review businessCase={businessCase} />}
+            render={() => (
+              <Review businessCase={businessCase} isFinal={isFinal} />
+            )}
           />
           <Route
             path="/business/:businessCaseId/view"

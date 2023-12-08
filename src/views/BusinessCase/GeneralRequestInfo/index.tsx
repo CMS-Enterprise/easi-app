@@ -18,7 +18,6 @@ import IconButton from 'components/shared/IconButton';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
@@ -30,12 +29,14 @@ type GeneralRequestInfoProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
+  isFinal: boolean;
 };
 
 const GeneralRequestInfo = ({
   formikRef,
   businessCase,
-  dispatchSave
+  dispatchSave,
+  isFinal
 }: GeneralRequestInfoProps) => {
   const { t } = useTranslation('businessCase');
   const history = useHistory();
@@ -66,9 +67,6 @@ const GeneralRequestInfo = ({
       {(formikProps: FormikProps<GeneralRequestInfoForm>) => {
         const { errors, values, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
-
-        // TODO EASI-3440: Update to use v2 status
-        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
 
         return (
           <BusinessCaseStepWrapper

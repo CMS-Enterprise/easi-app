@@ -23,7 +23,6 @@ import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
@@ -35,11 +34,13 @@ type PreferredSolutionProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
+  isFinal: boolean;
 };
 const PreferredSolution = ({
   businessCase,
   formikRef,
-  dispatchSave
+  dispatchSave,
+  isFinal
 }: PreferredSolutionProps) => {
   const { t } = useTranslation('businessCase');
   const history = useHistory();
@@ -73,8 +74,6 @@ const PreferredSolution = ({
         } = formikProps;
 
         const flatErrors = flattenErrors(errors);
-
-        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
 
         return (
           <BusinessCaseStepWrapper

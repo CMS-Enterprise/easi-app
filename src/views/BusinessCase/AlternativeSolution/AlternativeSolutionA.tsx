@@ -17,7 +17,6 @@ import IconButton from 'components/shared/IconButton';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
 import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
@@ -28,12 +27,14 @@ type AlternativeSolutionProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
+  isFinal: boolean;
 };
 
 const AlternativeSolutionA = ({
   businessCase,
   formikRef,
-  dispatchSave
+  dispatchSave,
+  isFinal
 }: AlternativeSolutionProps) => {
   const history = useHistory();
   const { t } = useTranslation('businessCase');
@@ -57,8 +58,6 @@ const AlternativeSolutionA = ({
         const values = formikProps.values.alternativeA;
 
         const flatErrors = flattenErrors(errors);
-
-        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
 
         return (
           <BusinessCaseStepWrapper

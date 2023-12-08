@@ -16,7 +16,6 @@ import {
 import { BusinessCaseModel } from 'types/businessCase';
 import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
 import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
@@ -27,12 +26,14 @@ type AlternativeSolutionBProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
+  isFinal: boolean;
 };
 
 const AlternativeSolutionB = ({
   businessCase,
   formikRef,
-  dispatchSave
+  dispatchSave,
+  isFinal
 }: AlternativeSolutionBProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -56,8 +57,6 @@ const AlternativeSolutionB = ({
         const { errors, setErrors, validateForm } = formikProps;
         const values = formikProps.values.alternativeB;
         const flatErrors = flattenErrors(errors);
-
-        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
 
         return (
           <BusinessCaseStepWrapper

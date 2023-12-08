@@ -19,7 +19,6 @@ import TextAreaField from 'components/shared/TextAreaField';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
@@ -31,12 +30,14 @@ type RequestDescriptionProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
+  isFinal: boolean;
 };
 
 const RequestDescription = ({
   businessCase,
   formikRef,
-  dispatchSave
+  dispatchSave,
+  isFinal
 }: RequestDescriptionProps) => {
   const { t } = useTranslation('businessCase');
   const history = useHistory();
@@ -67,9 +68,6 @@ const RequestDescription = ({
       {(formikProps: FormikProps<RequestDescriptionForm>) => {
         const { values, errors, setErrors, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
-
-        // TODO EASI-3440: Update to use v2 status
-        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
 
         return (
           <BusinessCaseStepWrapper

@@ -9,7 +9,6 @@ import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
 import { postAction } from 'types/routines';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
@@ -17,17 +16,16 @@ import './index.scss';
 
 type ReviewProps = {
   businessCase: BusinessCaseModel;
+  isFinal: boolean;
 };
 
-const Review = ({ businessCase }: ReviewProps) => {
+const Review = ({ businessCase, isFinal }: ReviewProps) => {
   const { t } = useTranslation('businessCase');
 
   const history = useHistory();
   const dispatch = useDispatch();
 
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
-
-  const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
 
   return (
     <BusinessCaseStepWrapper
