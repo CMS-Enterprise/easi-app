@@ -281,8 +281,8 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 	intake := models.SystemIntake{}
 	const whereClause = `
 		WHERE system_intakes.id=$1
-			AND system_intakes.archived_at IS NULL AND system_intakes.status != 'WITHDRAWN'
-`
+	`
+	// should not filter for archived because the update method relies on this method to return the archived intake
 	err := s.db.Get(&intake, fetchSystemIntakeSQL+whereClause, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
