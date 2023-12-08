@@ -37,6 +37,8 @@ const intake = {
     supportingDocuments: 'Supporting documents',
     adminDescription:
       'The requester has uploaded these documents as a part of this request. If the Governance Team needs additional documentation to process this request, contact the requester.',
+    noDocumentsAlert:
+      'The original requester did not upload any additional documentation to this request. If the Governance Team needs any supporting documentation in order to fully process this request, contact the requester.',
     type: {
       SOO_SOW: 'SOO or SOW',
       DRAFT_ICGE: 'Draft ICGE',

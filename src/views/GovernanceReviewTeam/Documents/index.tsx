@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
@@ -23,7 +24,14 @@ const Documents = ({ systemIntake }: DocumentsProps) => {
       <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-4">
         {t('documents.adminDescription')}
       </p>
-      <DocumentsTable systemIntake={systemIntake} canEdit={false} />
+
+      {systemIntake.documents.length > 0 ? (
+        <DocumentsTable systemIntake={systemIntake} canEdit={false} />
+      ) : (
+        <Alert type="info" slim>
+          {t('documents.noDocumentsAlert')}
+        </Alert>
+      )}
     </div>
   );
 };
