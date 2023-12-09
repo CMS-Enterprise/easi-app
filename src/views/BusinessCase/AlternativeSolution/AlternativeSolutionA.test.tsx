@@ -2,7 +2,11 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
@@ -19,7 +23,7 @@ window.matchMedia = (): any => ({
 
 window.scrollTo = vi.fn;
 
-const renderPage = (store: any) =>
+const renderPage = async (store: any) => {
   render(
     <MemoryRouter
       initialEntries={[
@@ -36,6 +40,9 @@ const renderPage = (store: any) =>
       </Provider>
     </MemoryRouter>
   );
+
+  await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
+};
 
 describe('Business case alternative a solution', () => {
   const mockStore = configureMockStore();
@@ -60,13 +67,13 @@ describe('Business case alternative a solution', () => {
   });
 
   it('renders without errors', async () => {
-    renderPage(defaultStore);
+    await renderPage(defaultStore);
 
     expect(screen.getByTestId('alternative-solution-a')).toBeInTheDocument();
   });
 
   it('navigates back a page', async () => {
-    renderPage(defaultStore);
+    await renderPage(defaultStore);
 
     screen.getByRole('button', { name: /back/i }).click();
 
@@ -74,7 +81,7 @@ describe('Business case alternative a solution', () => {
   });
 
   it('adds alternative b and navigates to it', async () => {
-    renderPage(defaultStore);
+    await renderPage(defaultStore);
 
     screen.getByRole('button', { name: /alternative b/i }).click();
 
@@ -82,7 +89,7 @@ describe('Business case alternative a solution', () => {
   });
 
   it('navigates forward to review', async () => {
-    renderPage(defaultStore);
+    await renderPage(defaultStore);
 
     screen.getByRole('button', { name: /next/i }).click();
 
@@ -115,7 +122,7 @@ describe('Business case alternative a solution', () => {
     });
 
     it('hides adding alternative b when it exists already', async () => {
-      renderPage(withAlternativeBStore);
+      await renderPage(withAlternativeBStore);
 
       expect(
         screen.queryByRole('button', { name: /alternative b/i })
@@ -123,7 +130,7 @@ describe('Business case alternative a solution', () => {
     });
 
     it('navigates forward to alternative b', async () => {
-      renderPage(withAlternativeBStore);
+      await renderPage(withAlternativeBStore);
 
       screen.getByRole('button', { name: /next/i }).click();
 
@@ -154,7 +161,7 @@ describe('Business case alternative a solution', () => {
     });
 
     it('renders validation errors', async () => {
-      renderPage(bizCaseFinalStore);
+      await renderPage(bizCaseFinalStore);
 
       // Fill one field so we can trigger validation errors
       const titleField = screen.getByRole('textbox', {
