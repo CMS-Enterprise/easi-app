@@ -23,11 +23,7 @@ import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
-import {
-  BusinessCaseDraftValidationSchema,
-  BusinessCaseFinalValidationSchema
-} from 'validations/businessCaseSchema';
+import { BusinessCaseSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
@@ -35,11 +31,13 @@ type PreferredSolutionProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
+  isFinal: boolean;
 };
 const PreferredSolution = ({
   businessCase,
   formikRef,
-  dispatchSave
+  dispatchSave,
+  isFinal
 }: PreferredSolutionProps) => {
   const { t } = useTranslation('businessCase');
   const history = useHistory();
@@ -48,16 +46,11 @@ const PreferredSolution = ({
     preferredSolution: businessCase.preferredSolution
   };
 
-  const ValidationSchema =
-    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
-      ? BusinessCaseFinalValidationSchema
-      : BusinessCaseDraftValidationSchema;
-
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={ValidationSchema.preferredSolution}
+      validationSchema={BusinessCaseSchema(isFinal).preferredSolution}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -73,8 +66,6 @@ const PreferredSolution = ({
         } = formikProps;
 
         const flatErrors = flattenErrors(errors);
-
-        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
 
         return (
           <BusinessCaseStepWrapper
@@ -95,7 +86,6 @@ const PreferredSolution = ({
             systemIntakeId={businessCase.systemIntakeId}
             data-testid="preferred-solution"
             errors={flatErrors}
-            isFinal={isFinal}
             fieldsMandatory={isFinal}
           >
             <Form>

@@ -14,18 +14,18 @@ import {
 } from 'queries/types/GetGovernanceTaskList';
 import {
   ITGovDraftBusinessCaseStatus,
-  ITGovFinalBusinessCaseStatus
+  ITGovFinalBusinessCaseStatus,
+  SystemIntakeStep
 } from 'types/graphql-global-types';
 
 type BusinessCaseStepWrapperProps = {
   /** Form page title */
   title: string;
   systemIntakeId: string;
-  isFinal: boolean;
+  /** Form step content and fields */
+  children: React.ReactNode;
   /** Form errors object */
   errors?: Record<string, string>;
-  /** Form step content and fields */
-  children: any;
   description?: React.ReactNode;
   /** Whether to show "all fields are mandatory" alert - defaults to false */
   fieldsMandatory?: boolean;
@@ -42,7 +42,6 @@ const BusinessCaseStepWrapper = ({
   title,
   description,
   systemIntakeId,
-  isFinal,
   errors,
   children,
   fieldsMandatory = false,
@@ -59,6 +58,9 @@ const BusinessCaseStepWrapper = ({
       id: systemIntakeId
     }
   });
+
+  const isFinal: boolean =
+    data?.systemIntake?.step === SystemIntakeStep.FINAL_BUSINESS_CASE;
 
   /** Whether or not business case has edits requested */
   const hasEditsRequested: boolean = useMemo(() => {
@@ -112,9 +114,7 @@ const BusinessCaseStepWrapper = ({
         <MandatoryFieldsAlert className="tablet:grid-col-5" />
       )}
 
-      {typeof children === 'function'
-        ? children({ systemIntake: data?.systemIntake })
-        : children}
+      {children}
     </div>
   );
 };

@@ -17,7 +17,6 @@ import IconButton from 'components/shared/IconButton';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
 import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
@@ -58,8 +57,6 @@ const AlternativeSolutionA = ({
 
         const flatErrors = flattenErrors(errors);
 
-        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
-
         return (
           <BusinessCaseStepWrapper
             systemIntakeId={businessCase.systemIntakeId}
@@ -79,7 +76,6 @@ const AlternativeSolutionA = ({
             }
             errors={flatErrors}
             data-testid="alternative-solution-a"
-            isFinal={isFinal}
           >
             <Alert
               type="info"

@@ -287,3 +287,9 @@ export const BusinessCaseDraftValidationSchema = {
   alternativeA: Yup.object().shape({}),
   alternativeB: Yup.object().shape({})
 };
+
+/** Returns business case schema based on whether final or draft */
+export const BusinessCaseSchema = (isFinal: boolean) =>
+  isFinal
+    ? BusinessCaseFinalValidationSchema
+    : BusinessCaseDraftValidationSchema;
