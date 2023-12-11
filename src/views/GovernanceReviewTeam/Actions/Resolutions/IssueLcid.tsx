@@ -31,6 +31,7 @@ import {
   GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
 } from 'queries/types/GetSystemIntakesWithLCIDS';
 import {
+  SystemIntakeDecisionState,
   SystemIntakeIssueLCIDInput,
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
@@ -38,6 +39,7 @@ import { NonNullableProps } from 'types/util';
 import { lcidActionSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
+import { actionDateInPast } from '../ManageLcid/RetireLcid';
 import { EditsRequestedContext } from '..';
 
 import ResolutionTitleBox from './ResolutionTitleBox';
@@ -67,12 +69,12 @@ const IssueLcid = ({
   systemIntakeId,
   state,
   decisionState,
-  ...defaultValues
+  ...systemIntake
 }: IssueLcidProps) => {
   const { t } = useTranslation('action');
 
-  /** Type of LCID action */
-  const actionType = defaultValues.lcid ? 'confirm' : 'issue';
+  const confirmingLcid =
+    decisionState === SystemIntakeDecisionState.LCID_ISSUED;
 
   /** Edits requested form key for confirmation modal */
   const editsRequestedKey = useContext(EditsRequestedContext);
@@ -108,16 +110,25 @@ const IssueLcid = ({
     }, {});
   }, [data]);
 
+  /** Only pre-fill next steps, trb follow up, and cost baseline if confirming decision */
+  const defaultValues: Partial<IssueLcidFields> = confirmingLcid
+    ? {
+        lcid: systemIntake.lcid || '',
+        expiresAt: systemIntake.lcidExpiresAt || '',
+        nextSteps: systemIntake.decisionNextSteps || '',
+        scope: systemIntake.lcidScope || '',
+        trbFollowUp: systemIntake.trbFollowUpRecommendation || undefined,
+        costBaseline: systemIntake.lcidCostBaseline || ''
+      }
+    : {
+        lcid: systemIntake.lcid || '',
+        expiresAt: systemIntake.lcidExpiresAt || '',
+        scope: systemIntake.lcidScope || ''
+      };
+
   const form = useForm<IssueLcidFields>({
-    resolver: yupResolver(lcidActionSchema(actionType)),
-    defaultValues: {
-      lcid: defaultValues.lcid || '',
-      expiresAt: defaultValues.lcidExpiresAt || '',
-      nextSteps: defaultValues.decisionNextSteps || '',
-      scope: defaultValues.lcidScope || '',
-      trbFollowUp: defaultValues.trbFollowUpRecommendation || undefined,
-      costBaseline: defaultValues.lcidCostBaseline || ''
-    }
+    resolver: yupResolver(lcidActionSchema(!!systemIntake?.lcid)),
+    defaultValues
   });
 
   const { control, setValue, watch, resetField } = form;
@@ -162,10 +173,10 @@ const IssueLcid = ({
     };
 
     /** Returns `confirmLcid` or `issueLcid` mutation based on form action type */
-    const mutation = actionType === 'confirm' ? confirmLcid : issueLcid;
+    const mutation = systemIntake?.lcid ? confirmLcid : issueLcid;
 
     // If confirming LCID, remove LCID from mutation input
-    if (actionType === 'confirm') {
+    if (systemIntake?.lcid) {
       delete input.lcid;
     }
 
@@ -237,7 +248,7 @@ const IssueLcid = ({
           }
         }
       >
-        {defaultValues.lcid ? (
+        {systemIntake?.lcid ? (
           /* If confirming decision, display current LCID */
           <>
             <p className="margin-0">{t('issueLCID.lcid.label')}</p>
@@ -255,9 +266,11 @@ const IssueLcid = ({
                 }}
               />
             </p>
-            <Alert type="info" className="margin-top-1" slim>
-              {t('issueLCID.confirmLcidAlert')}
-            </Alert>
+            {confirmingLcid && (
+              <Alert type="info" className="margin-top-1" slim>
+                {t('issueLCID.confirmLcidAlert')}
+              </Alert>
+            )}
           </>
         ) : (
           /* New or existing LCID fields */
@@ -357,6 +370,14 @@ const IssueLcid = ({
                 id={field.name}
                 defaultValue={field.value}
               />
+              {
+                // If past date is selected, show alert
+                actionDateInPast(field.value || null) && (
+                  <Alert type="warning" slim>
+                    {t('pastDateAlert')}
+                  </Alert>
+                )
+              }
             </FormGroup>
           )}
         />

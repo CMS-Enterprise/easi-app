@@ -2,25 +2,53 @@ import * as Yup from 'yup';
 
 const phoneNumberRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 
-const estimatedLifecycleCostSchema = Yup.object().test(
-  'requiredPhase',
-  'Please enter at least one estimated lifecycle cost.',
-  (value: any) => {
-    if (
-      value.development.isPresent ||
-      value.operationsMaintenance.isPresent ||
-      value.helpDesk.isPresent ||
-      value.software.isPresent ||
-      value.planning.isPresent ||
-      value.infrastructure.isPresent ||
-      value.oit.isPresent ||
-      value.other.isPresent
-    ) {
-      return true;
-    }
-    return false;
-  }
-);
+const fiscalYearCosts = Yup.object()
+  .shape({
+    year1: Yup.string(),
+    year2: Yup.string(),
+    year3: Yup.string(),
+    year4: Yup.string(),
+    year5: Yup.string()
+  })
+  .test('lifecycleCosts', (years, phase) => {
+    const costs = Object.values(years);
+    const phaseLabel: string = phase.parent.label;
+
+    const hasEmptyCost = costs.some(cost => !cost);
+
+    return (
+      !hasEmptyCost ||
+      phase.createError({
+        message: `Please enter all ${phaseLabel} estimated lifecycle costs`,
+        path: phase.path
+      })
+    );
+  });
+
+const relatedCostPhase = Yup.object().shape({
+  isPresent: Yup.boolean(),
+  years: Yup.object().when('isPresent', {
+    is: true,
+    then: fiscalYearCosts
+  })
+});
+
+const lifecycleCostsSchema = Yup.object().shape({
+  // Required lifecycle cost categories
+  development: Yup.object().shape({
+    years: fiscalYearCosts
+  }),
+  operationsMaintenance: Yup.object().shape({
+    years: fiscalYearCosts
+  }),
+  // Optional related costs
+  helpDesk: relatedCostPhase,
+  software: relatedCostPhase,
+  planning: relatedCostPhase,
+  infrastructure: relatedCostPhase,
+  oit: relatedCostPhase,
+  other: relatedCostPhase
+});
 
 export const BusinessCaseFinalValidationSchema = {
   generalRequestInfo: Yup.object().shape({
@@ -123,7 +151,7 @@ export const BusinessCaseFinalValidationSchema = {
       cons: Yup.string()
         .trim()
         .required('Tell us about the cons of Preferred solution'),
-      estimatedLifecycleCost: estimatedLifecycleCostSchema,
+      estimatedLifecycleCost: lifecycleCostsSchema,
       costSavings: Yup.string()
         .trim()
         .required(
@@ -192,7 +220,7 @@ export const BusinessCaseFinalValidationSchema = {
       cons: Yup.string()
         .trim()
         .required('Tell us about the cons of Alternative A solution'),
-      estimatedLifecycleCost: estimatedLifecycleCostSchema,
+      estimatedLifecycleCost: lifecycleCostsSchema,
       costSavings: Yup.string()
         .trim()
         .required(
@@ -261,7 +289,7 @@ export const BusinessCaseFinalValidationSchema = {
       cons: Yup.string()
         .trim()
         .required('Tell us about the cons of Alternative B solution'),
-      estimatedLifecycleCost: estimatedLifecycleCostSchema,
+      estimatedLifecycleCost: lifecycleCostsSchema,
       costSavings: Yup.string()
         .trim()
         .required(
