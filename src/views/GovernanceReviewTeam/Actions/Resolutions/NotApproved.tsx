@@ -15,6 +15,7 @@ import {
   CreateSystemIntakeActionRejectIntakeVariables
 } from 'queries/types/CreateSystemIntakeActionRejectIntake';
 import {
+  SystemIntakeDecisionState,
   SystemIntakeRejectIntakeInput,
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
@@ -32,11 +33,18 @@ type NotApprovedFields = NonNullableProps<
     SystemIntakeActionFields
 >;
 
+interface NotApprovedProps extends ResolutionProps {
+  rejectionReason?: string | null;
+  decisionNextSteps?: string | null;
+  trbFollowUpRecommendation?: SystemIntakeTRBFollowUp | null;
+}
+
 const NotApproved = ({
   systemIntakeId,
   state,
-  decisionState
-}: ResolutionProps) => {
+  decisionState,
+  ...systemIntake
+}: NotApprovedProps) => {
   const { t } = useTranslation('action');
 
   /** Edits requested form key for confirmation modal */
@@ -49,9 +57,21 @@ const NotApproved = ({
     refetchQueries: ['GetSystemIntake']
   });
 
+  /** Set default values if confirming decision */
+  const defaultValues =
+    decisionState === SystemIntakeDecisionState.NOT_APPROVED
+      ? {
+          reason: systemIntake?.rejectionReason || '',
+          nextSteps: systemIntake?.decisionNextSteps || '',
+          trbFollowUp: systemIntake?.trbFollowUpRecommendation || undefined
+        }
+      : {};
+
   const form = useForm<NotApprovedFields>({
-    resolver: yupResolver(notApprovedSchema)
+    resolver: yupResolver(notApprovedSchema),
+    defaultValues
   });
+
   const {
     control,
     formState: { isValid }

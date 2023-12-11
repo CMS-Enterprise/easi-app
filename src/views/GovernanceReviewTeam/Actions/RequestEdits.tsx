@@ -37,6 +37,13 @@ const RequestEdits = ({
 }) => {
   const { t } = useTranslation(['action', 'form']);
 
+  const [mutate] = useMutation<
+    CreateSystemIntakeActionRequestEdits,
+    CreateSystemIntakeActionRequestEditsVariables
+  >(CreateSystemIntakeActionRequestEditsQuery, {
+    refetchQueries: ['GetGovernanceTaskList']
+  });
+
   /** Default `intakeFormStep` value
    *
    * Converts `currentStep` prop to `SystemIntakeFormStep` type
@@ -60,11 +67,6 @@ const RequestEdits = ({
       variables: { input: { systemIntakeID: systemIntakeId, ...formData } }
     });
   };
-
-  const [mutate] = useMutation<
-    CreateSystemIntakeActionRequestEdits,
-    CreateSystemIntakeActionRequestEditsVariables
-  >(CreateSystemIntakeActionRequestEditsQuery);
 
   const intakeFormStepName = t(
     `requestEdits.option.intakeFormStep.${watch('intakeFormStep')}`
