@@ -1,4 +1,6 @@
-export type LifecyclePhases =
+export type LifecyclePhase<
+  otherType extends string = 'Other services, tools, and pilots'
+> =
   | 'Development'
   | 'Operations and Maintenance'
   | 'Help desk/call center'
@@ -6,7 +8,17 @@ export type LifecyclePhases =
   | 'Planning, support, and professional services'
   | 'Infrastructure'
   | 'OIT services, tools, and pilots'
-  | 'Other services, tools, and pilots';
+  | otherType;
+
+export type LifecyclePhaseKey =
+  | 'development'
+  | 'operationsMaintenance'
+  | 'helpDesk'
+  | 'software'
+  | 'planning'
+  | 'infrastructure'
+  | 'oit'
+  | 'other';
 
 export type LifecycleYears = {
   year1: string;
@@ -17,7 +29,7 @@ export type LifecycleYears = {
 };
 
 export type CostData = {
-  label: LifecyclePhases;
+  label: LifecyclePhase;
   isPresent: boolean;
   type: 'primary' | 'related';
   years: LifecycleYears;
@@ -32,4 +44,17 @@ export type LifecycleCosts = {
   infrastructure: CostData;
   oit: CostData;
   other: CostData;
+};
+
+export type LifecycleSolution = 'Preferred' | 'A' | 'B';
+
+/** Lifecycle phases for API */
+export type ApiLifecyclePhase = LifecyclePhase<'Other'>;
+
+/** Lifecycle cost formatted for API */
+export type ApiLifecycleCostLine = {
+  solution: LifecycleSolution;
+  phase: ApiLifecyclePhase;
+  cost: number | null;
+  year: string;
 };

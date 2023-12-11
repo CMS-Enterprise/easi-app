@@ -257,15 +257,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForSubmit() {
 		}
 		expectedError := `Could not validate *models.BusinessCase ` +
 			`00000000-0000-0000-0000-000000000000: ` +
-			`{"AlternativeAAcquisitionApproach":"is required",` +
-			`"AlternativeACons":"is required",` +
-			`"AlternativeACostSavings":"is required",` +
-			`"AlternativeAHasUI":"is required",` +
-			`"AlternativeAHostingType":"is required",` +
-			`"AlternativeAPros":"is required",` +
-			`"AlternativeASummary":"is required",` +
-			`"AlternativeATitle":"is required",` +
-			`"BusinessNeed":"is required",` +
+			`{"BusinessNeed":"is required",` +
 			`"BusinessOwner":"is required",` +
 			`"CMSBenefit":"is required",` +
 			`"CurrentSolutionSummary":"is required",` +
@@ -287,7 +279,6 @@ func (s *AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`"Status":"must be OPEN",` +
 			`"SuccessIndicators":"is required",` +
 			`"SystemIntakeID":"is required",` +
-			`"alternativeASolution":"years 1, 2, 3, 4, 5 are required",` +
 			`"preferredSolution":"years 1, 2, 3, 4, 5 are required"}`
 		err := BusinessCaseForSubmit(&businessCase)
 
