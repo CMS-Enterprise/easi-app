@@ -4,7 +4,15 @@ import {
   BusinessCaseModel,
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
-import { LifecycleCosts, LifecycleYears } from 'types/estimatedLifecycle';
+import {
+  ApiLifecycleCostLine,
+  ApiLifecyclePhase,
+  CostData,
+  LifecycleCosts,
+  LifecyclePhaseKey,
+  LifecycleSolution,
+  LifecycleYears
+} from 'types/estimatedLifecycle';
 
 const yearsObject = {
   year1: '',
@@ -17,13 +25,13 @@ const yearsObject = {
 export const defaultEstimatedLifecycle: LifecycleCosts = {
   development: {
     label: 'Development',
-    isPresent: false,
+    isPresent: true,
     type: 'primary',
     years: cloneDeep(yearsObject)
   },
   operationsMaintenance: {
     label: 'Operations and Maintenance',
-    isPresent: false,
+    isPresent: true,
     type: 'primary',
     years: cloneDeep(yearsObject)
   },
@@ -108,11 +116,7 @@ export const businessCaseInitialData: BusinessCaseModel = {
   createdAt: ''
 };
 
-type lifecycleCostLinesType = {
-  Preferred: LifecycleCosts;
-  A: LifecycleCosts;
-  B: LifecycleCosts;
-};
+type lifecycleCostLinesType = Record<LifecycleSolution, LifecycleCosts>;
 
 /**
  * This function tells us whether the parameter alternativeSolution has been started
@@ -138,11 +142,17 @@ export const alternativeSolutionHasFilledFields = (
     estimatedLifecycleCost
   } = alternativeSolution;
 
-  const hasLineItem = !!Object.values(estimatedLifecycleCost).find(
-    phase => phase.isPresent
+  /** Whether requester has entered costs for required lifecycle cost categories */
+  const hasRequiredPhaseCosts: boolean = !![
+    ...Object.values(estimatedLifecycleCost.development.years),
+    ...Object.values(estimatedLifecycleCost.operationsMaintenance.years)
+  ].find(cost => !!cost);
+
+  const hasRelatedCosts = !!Object.values(estimatedLifecycleCost).find(
+    phase => phase.isPresent && phase.type === 'related'
   );
 
-  return (
+  return !!(
     title ||
     summary ||
     acquisitionApproach ||
@@ -155,61 +165,54 @@ export const alternativeSolutionHasFilledFields = (
     pros ||
     cons ||
     costSavings ||
-    hasLineItem
+    hasRequiredPhaseCosts ||
+    hasRelatedCosts
   );
+};
+
+const LifecyclePhaseMap: Record<ApiLifecyclePhase, LifecyclePhaseKey> = {
+  Development: 'development',
+  'Operations and Maintenance': 'operationsMaintenance',
+  'Help desk/call center': 'helpDesk',
+  'Software licenses': 'software',
+  'Planning, support, and professional services': 'planning',
+  Infrastructure: 'infrastructure',
+  'OIT services, tools, and pilots': 'oit',
+  Other: 'other'
 };
 
 export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {
-  const phaseTypeMap: any = {
-    Development: 'development',
-    'Operations and Maintenance': 'operationsMaintenance',
-    'Help desk/call center': 'helpDesk',
-    'Software licenses': 'software',
-    'Planning, support, and professional services': 'planning',
-    Infrastructure: 'infrastructure',
-    'OIT services, tools, and pilots': 'oit',
-    Other: 'other'
-  };
+  /** Lifecycle costs from API */
+  const lifecycleCosts: ApiLifecycleCostLine[] =
+    businessCase.lifecycleCostLines;
 
+  /** Default lifecycle costs object for app */
   const lifecycleCostLines: lifecycleCostLinesType = {
     Preferred: cloneDeep(defaultEstimatedLifecycle),
     A: cloneDeep(defaultEstimatedLifecycle),
     B: cloneDeep(defaultEstimatedLifecycle)
   };
 
-  let doesAltBHaveLifecycleCostLines = false;
+  /** Merge lifecycle costs from api with default lifecycle costs */
+  lifecycleCosts.forEach(line => {
+    const { phase, solution } = line;
 
-  businessCase.lifecycleCostLines
-    .filter((line: any) => !!line.cost)
-    .forEach((line: any) => {
-      const phaseType:
-        | 'development'
-        | 'operationsMaintenance'
-        | 'helpDesk'
-        | 'software'
-        | 'planning'
-        | 'infrastructure'
-        | 'oit'
-        | 'other' = phaseTypeMap[`${line.phase}`];
+    const phaseKey = LifecyclePhaseMap[phase];
 
-      if (line.solution === 'B') {
-        doesAltBHaveLifecycleCostLines = true;
-      }
-      const phase =
-        lifecycleCostLines[line.solution as keyof lifecycleCostLinesType][
-          phaseType
-        ];
-      phase.isPresent = true;
-      phase.years[`year${line.year}` as keyof LifecycleYears] = line.cost
-        ? line.cost.toString()
-        : '';
-    });
+    /** Cost object for current phase */
+    const costObject: CostData = lifecycleCostLines[solution][phaseKey];
 
-  if (!doesAltBHaveLifecycleCostLines) {
-    lifecycleCostLines.B = cloneDeep(defaultEstimatedLifecycle);
-  }
+    // Mark cost phase as `isPresent`
+    costObject.isPresent = true;
+
+    /** Cost converted to string */
+    const cost: string = line?.cost === null ? '' : line?.cost.toString();
+
+    // Set cost for correct year within cost object
+    costObject.years[`year${line.year}` as keyof LifecycleYears] = cost;
+  });
 
   return {
     id: businessCase.id,
@@ -217,19 +220,19 @@ export const prepareBusinessCaseForApp = (
     status: businessCase.status,
     systemIntakeId: businessCase.systemIntakeId,
     systemIntakeStatus: businessCase.systemIntakeStatus,
-    requestName: businessCase.projectName,
+    requestName: businessCase.projectName || '',
     requester: {
-      name: businessCase.requester,
-      phoneNumber: businessCase.requesterPhoneNumber
+      name: businessCase.requester || '',
+      phoneNumber: businessCase.requesterPhoneNumber || ''
     },
     businessOwner: {
-      name: businessCase.businessOwner
+      name: businessCase.businessOwner || ''
     },
-    businessNeed: businessCase.businessNeed,
-    currentSolutionSummary: businessCase.currentSolutionSummary,
-    cmsBenefit: businessCase.cmsBenefit,
-    priorityAlignment: businessCase.priorityAlignment,
-    successIndicators: businessCase.successIndicators,
+    businessNeed: businessCase.businessNeed || '',
+    currentSolutionSummary: businessCase.currentSolutionSummary || '',
+    cmsBenefit: businessCase.cmsBenefit || '',
+    priorityAlignment: businessCase.priorityAlignment || '',
+    successIndicators: businessCase.successIndicators || '',
     preferredSolution: {
       title: businessCase.preferredTitle || '',
       summary: businessCase.preferredSummary || '',
@@ -237,17 +240,17 @@ export const prepareBusinessCaseForApp = (
       pros: businessCase.preferredPros || '',
       cons: businessCase.preferredCons || '',
       costSavings: businessCase.preferredCostSavings || '',
-      estimatedLifecycleCost: lifecycleCostLines.Preferred || '',
+      estimatedLifecycleCost: lifecycleCostLines.Preferred,
       security: {
         isApproved: businessCase.preferredSecurityIsApproved,
-        isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed
+        isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed || ''
       },
       hosting: {
-        type: businessCase.preferredHostingType,
-        location: businessCase.preferredHostingLocation,
-        cloudServiceType: businessCase.preferredHostingCloudServiceType
+        type: businessCase.preferredHostingType || '',
+        location: businessCase.preferredHostingLocation || '',
+        cloudServiceType: businessCase.preferredHostingCloudServiceType || ''
       },
-      hasUserInterface: businessCase.preferredHasUI
+      hasUserInterface: businessCase.preferredHasUI || ''
     },
     alternativeA: {
       title: businessCase.alternativeATitle || '',
@@ -256,15 +259,15 @@ export const prepareBusinessCaseForApp = (
       pros: businessCase.alternativeAPros || '',
       cons: businessCase.alternativeACons || '',
       costSavings: businessCase.alternativeACostSavings || '',
-      estimatedLifecycleCost: lifecycleCostLines.A || '',
+      estimatedLifecycleCost: lifecycleCostLines.A,
       security: {
         isApproved: businessCase.alternativeASecurityIsApproved,
         isBeingReviewed: businessCase.alternativeASecurityIsBeingReviewed
       },
       hosting: {
-        type: businessCase.alternativeAHostingType,
-        location: businessCase.alternativeAHostingLocation,
-        cloudServiceType: businessCase.alternativeAHostingCloudServiceType
+        type: businessCase.alternativeAHostingType || '',
+        location: businessCase.alternativeAHostingLocation || '',
+        cloudServiceType: businessCase.alternativeAHostingCloudServiceType || ''
       },
       hasUserInterface: businessCase.alternativeAHasUI
     },
@@ -291,59 +294,76 @@ export const prepareBusinessCaseForApp = (
   };
 };
 
+/** Array of lifecycle costs formatted for API */
+const formatLifecycleCostsForApi = (
+  lifecycleCosts: LifecycleCosts,
+  solution: LifecycleSolution
+): ApiLifecycleCostLine[] => {
+  /** Array of lifecycle cost objects */
+  const lifecycleCostsArray: CostData[] = Object.values(lifecycleCosts);
+
+  // Reformat lifecycle costs for API and return as array
+  return lifecycleCostsArray.reduce((acc, costData) => {
+    const { label, years, isPresent } = costData;
+
+    // Skip phases without any costs entered
+    if (!isPresent) return acc;
+
+    /** Phase label formatted for API */
+    const phase: ApiLifecyclePhase =
+      label === 'Other services, tools, and pilots' ? 'Other' : label;
+
+    /** Array of costs for current phase */
+    const currentPhaseCosts: string[] = Object.values(years);
+
+    /** Current phase costs reformatted for API */
+    const formattedLifecycleCosts: ApiLifecycleCostLine[] = currentPhaseCosts.map(
+      (cost, index) => ({
+        solution,
+        phase,
+        year: (index + 1).toString(),
+        cost: cost ? parseFloat(cost) : null
+      })
+    );
+
+    return [...acc, ...formattedLifecycleCosts];
+  }, [] as ApiLifecycleCostLine[]);
+};
+
 export const prepareBusinessCaseForApi = (
   businessCase: BusinessCaseModel
 ): any => {
   const alternativeBExists = alternativeSolutionHasFilledFields(
     businessCase.alternativeB
   );
-  const solutionNameMap: {
-    solutionLifecycleCostLines: LifecycleCosts;
-    solutionApiName: string;
-  }[] = [
-    {
-      solutionLifecycleCostLines:
-        businessCase.preferredSolution.estimatedLifecycleCost,
-      solutionApiName: 'Preferred'
-    },
-    {
-      solutionLifecycleCostLines:
-        businessCase.alternativeA.estimatedLifecycleCost,
-      solutionApiName: 'A'
-    },
+
+  const alternativeAExists = alternativeSolutionHasFilledFields(
+    businessCase.alternativeA
+  );
+
+  /** Preferred, Alternative A, and Alternative B lifecycle costs formatted for API */
+  const lifecycleCostLines: ApiLifecycleCostLine[] = [
+    ...formatLifecycleCostsForApi(
+      businessCase.preferredSolution.estimatedLifecycleCost,
+      'Preferred'
+    ),
+
+    ...(alternativeAExists
+      ? formatLifecycleCostsForApi(
+          businessCase.alternativeA.estimatedLifecycleCost,
+          'A'
+        )
+      : []),
+
     ...(alternativeBExists
-      ? [
-          {
-            solutionLifecycleCostLines:
-              businessCase.alternativeB.estimatedLifecycleCost,
-            solutionApiName: 'B'
-          }
-        ]
+      ? formatLifecycleCostsForApi(
+          businessCase.alternativeB.estimatedLifecycleCost,
+          'A'
+        )
       : [])
   ];
 
-  const lifecycleCostLines = solutionNameMap
-    .map(({ solutionLifecycleCostLines, solutionApiName }) => {
-      return Object.values(solutionLifecycleCostLines).reduce(
-        (acc: any, phase) => {
-          const { label, years } = phase;
-          const phaseObject = Object.keys(years).map((year: string) => {
-            const cost = years[year as keyof LifecycleYears];
-            return {
-              solution: solutionApiName,
-              phase:
-                label === 'Other services, tools, and pilots' ? 'Other' : label,
-              cost: cost ? parseFloat(cost) : null,
-              year: year.slice(-1)
-            };
-          });
-          return [...acc, ...phaseObject];
-        },
-        []
-      );
-    })
-    .flat();
-
+  // Return business case and convert empty strings to null for backend validation
   return {
     ...(businessCase.id && {
       id: businessCase.id
@@ -353,83 +373,72 @@ export const prepareBusinessCaseForApi = (
     }),
     status: businessCase.status,
     systemIntakeId: businessCase.systemIntakeId,
-    projectName: businessCase.requestName,
-    requester: businessCase.requester.name,
-    requesterPhoneNumber: businessCase.requester.phoneNumber,
-    businessOwner: businessCase.businessOwner.name,
-    businessNeed: businessCase.businessNeed,
-    currentSolutionSummary: businessCase.currentSolutionSummary,
-    cmsBenefit: businessCase.cmsBenefit,
-    priorityAlignment: businessCase.priorityAlignment,
-    successIndicators: businessCase.successIndicators,
-    preferredTitle: businessCase.preferredSolution.title,
-    preferredSummary: businessCase.preferredSolution.summary,
+    projectName: businessCase.requestName || null,
+    requester: businessCase.requester.name || null,
+    requesterPhoneNumber: businessCase.requester.phoneNumber || null,
+    businessOwner: businessCase.businessOwner.name || null,
+    businessNeed: businessCase.businessNeed || null,
+    currentSolutionSummary: businessCase.currentSolutionSummary || null,
+    cmsBenefit: businessCase.cmsBenefit || null,
+    priorityAlignment: businessCase.priorityAlignment || null,
+    successIndicators: businessCase.successIndicators || null,
+
+    // Preferred solution
+    preferredTitle: businessCase.preferredSolution.title || null,
+    preferredSummary: businessCase.preferredSolution.summary || null,
     preferredAcquisitionApproach:
-      businessCase.preferredSolution.acquisitionApproach,
+      businessCase.preferredSolution.acquisitionApproach || null,
     preferredSecurityIsApproved:
       businessCase.preferredSolution.security.isApproved,
     preferredSecurityisBeingReviewed:
-      businessCase.preferredSolution.security.isBeingReviewed,
-    preferredHostingType: businessCase.preferredSolution.hosting.type,
-    preferredHostingLocation: businessCase.preferredSolution.hosting.location,
+      businessCase.preferredSolution.security.isBeingReviewed || null,
+    preferredHostingType: businessCase.preferredSolution.hosting.type || null,
+    preferredHostingLocation:
+      businessCase.preferredSolution.hosting.location || null,
     preferredHostingCloudServiceType:
-      businessCase.preferredSolution.hosting.cloudServiceType,
-    preferredHasUI: businessCase.preferredSolution.hasUserInterface,
-    preferredPros: businessCase.preferredSolution.pros,
-    preferredCons: businessCase.preferredSolution.cons,
-    preferredCostSavings: businessCase.preferredSolution.costSavings,
-    alternativeATitle: businessCase.alternativeA.title,
-    alternativeASummary: businessCase.alternativeA.summary,
+      businessCase.preferredSolution.hosting.cloudServiceType || null,
+    preferredHasUI: businessCase.preferredSolution.hasUserInterface || null,
+    preferredPros: businessCase.preferredSolution.pros || null,
+    preferredCons: businessCase.preferredSolution.cons || null,
+    preferredCostSavings: businessCase.preferredSolution.costSavings || null,
+
+    // Alternative A
+    alternativeATitle: businessCase.alternativeA.title || null,
+    alternativeASummary: businessCase.alternativeA.summary || null,
     alternativeAAcquisitionApproach:
-      businessCase.alternativeA.acquisitionApproach,
+      businessCase.alternativeA.acquisitionApproach || null,
     alternativeASecurityIsApproved:
       businessCase.alternativeA.security.isApproved,
     alternativeASecurityisBeingReviewed:
-      businessCase.alternativeA.security.isBeingReviewed,
-    alternativeAHostingType: businessCase.alternativeA.hosting.type,
-    alternativeAHostingLocation: businessCase.alternativeA.hosting.location,
+      businessCase.alternativeA.security.isBeingReviewed || null,
+    alternativeAHostingType: businessCase.alternativeA.hosting.type || null,
+    alternativeAHostingLocation:
+      businessCase.alternativeA.hosting.location || null,
     alternativeAHostingCloudServiceType:
-      businessCase.alternativeA.hosting.cloudServiceType,
-    alternativeAHasUI: businessCase.alternativeA.hasUserInterface,
-    alternativeAPros: businessCase.alternativeA.pros,
-    alternativeACons: businessCase.alternativeA.cons,
-    alternativeACostSavings: businessCase.alternativeA.costSavings,
-    alternativeBTitle: alternativeBExists
-      ? businessCase.alternativeB.title
-      : null,
-    alternativeBSummary: alternativeBExists
-      ? businessCase.alternativeB.summary
-      : null,
-    alternativeBAcquisitionApproach: alternativeBExists
-      ? businessCase.alternativeB.acquisitionApproach
-      : null,
-    alternativeBSecurityIsApproved: alternativeBExists
-      ? businessCase.alternativeB.security.isApproved
-      : null,
-    alternativeBSecurityisBeingReviewed: alternativeBExists
-      ? businessCase.alternativeB.security.isBeingReviewed
-      : null,
-    alternativeBHostingType: alternativeBExists
-      ? businessCase.alternativeB.hosting.type
-      : null,
-    alternativeBHostingLocation: alternativeBExists
-      ? businessCase.alternativeB.hosting.location
-      : null,
-    alternativeBHostingCloudServiceType: alternativeBExists
-      ? businessCase.alternativeB.hosting.cloudServiceType
-      : null,
-    alternativeBHasUI: alternativeBExists
-      ? businessCase.alternativeB.hasUserInterface
-      : null,
-    alternativeBPros: alternativeBExists
-      ? businessCase.alternativeB.pros
-      : null,
-    alternativeBCons: alternativeBExists
-      ? businessCase.alternativeB.cons
-      : null,
-    alternativeBCostSavings: alternativeBExists
-      ? businessCase.alternativeB.costSavings
-      : null,
+      businessCase.alternativeA.hosting.cloudServiceType || null,
+    alternativeAHasUI: businessCase.alternativeA.hasUserInterface || null,
+    alternativeAPros: businessCase.alternativeA.pros || null,
+    alternativeACons: businessCase.alternativeA.cons || null,
+    alternativeACostSavings: businessCase.alternativeA.costSavings || null,
+
+    // Alternative B
+    alternativeBTitle: businessCase.alternativeB.title || null,
+    alternativeBSummary: businessCase.alternativeB.summary || null,
+    alternativeBAcquisitionApproach:
+      businessCase.alternativeB.acquisitionApproach || null,
+    alternativeBSecurityIsApproved:
+      businessCase.alternativeB.security.isApproved || null,
+    alternativeBSecurityisBeingReviewed:
+      businessCase.alternativeB.security.isBeingReviewed || null,
+    alternativeBHostingType: businessCase.alternativeB.hosting.type || null,
+    alternativeBHostingLocation:
+      businessCase.alternativeB.hosting.location || null,
+    alternativeBHostingCloudServiceType:
+      businessCase.alternativeB.hosting.cloudServiceType || null,
+    alternativeBHasUI: businessCase.alternativeB.hasUserInterface || null,
+    alternativeBPros: businessCase.alternativeB.pros || null,
+    alternativeBCons: businessCase.alternativeB.cons || null,
+    alternativeBCostSavings: businessCase.alternativeB.costSavings || null,
     lifecycleCostLines
   };
 };
