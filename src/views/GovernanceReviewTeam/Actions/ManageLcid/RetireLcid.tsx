@@ -151,7 +151,7 @@ const RetireLcid = ({
             <Controller
               control={control}
               name="reason"
-              render={({ field: { ref, ...field } }) => (
+              render={({ field }) => (
                 <FormGroup>
                   <Label
                     htmlFor={field.name}
@@ -164,7 +164,7 @@ const RetireLcid = ({
                     {t('retireLcid.reasonHelpText')}
                   </HelpText>
                   <RichTextEditor
-                    {...field}
+                    field={field}
                     editableProps={{
                       id: field.name,
                       'data-testid': field.name,
