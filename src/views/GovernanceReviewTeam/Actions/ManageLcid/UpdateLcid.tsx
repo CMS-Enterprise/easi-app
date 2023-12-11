@@ -159,7 +159,7 @@ const UpdateLcid = ({
         <Controller
           name="scope"
           control={control}
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
               <Label
                 htmlFor={field.name}
@@ -175,7 +175,7 @@ const UpdateLcid = ({
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
               <RichTextEditor
-                {...field}
+                field={field}
                 editableProps={{
                   id: field.name,
                   'data-testid': field.name,
@@ -190,7 +190,7 @@ const UpdateLcid = ({
         <Controller
           name="nextSteps"
           control={control}
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
               <Label
                 htmlFor={field.name}
@@ -206,7 +206,7 @@ const UpdateLcid = ({
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
               <RichTextEditor
-                {...field}
+                field={field}
                 editableProps={{
                   id: field.name,
                   'data-testid': field.name,
@@ -244,7 +244,7 @@ const UpdateLcid = ({
         <Controller
           name="reason"
           control={control}
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
               <Label
                 htmlFor={field.name}
@@ -257,7 +257,7 @@ const UpdateLcid = ({
                 {t('updateLcid.reasonHelpText')}
               </HelpText>
               <RichTextEditor
-                {...field}
+                field={field}
                 editableProps={{
                   id: field.name,
                   'data-testid': field.name,
