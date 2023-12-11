@@ -9,6 +9,7 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
@@ -47,8 +48,10 @@ const Table = ({
     'home',
     'intake',
     'accessibility',
-    'technicalAssistance'
+    'technicalAssistance',
+    'governanceReviewTeam'
   ]);
+
   const { loading, error, data: tableData } = useQuery<
     GetRequests,
     GetRequestsVariables
@@ -56,6 +59,8 @@ const Table = ({
     variables: { first: 20 },
     fetchPolicy: 'cache-and-network'
   });
+
+  const flags = useFlags();
 
   const columns: any = useMemo(() => {
     return [
@@ -120,6 +125,12 @@ const Table = ({
                 </span>
               );
             case t(`requestsTable.types.GOVERNANCE_REQUEST`):
+              if (flags.itGovV2Fields) {
+                return t(
+                  `governanceReviewTeam:systemIntakeStatusRequester.${row.original.statusRequester}`,
+                  { lcid: row.original.lcid }
+                );
+              }
               if (row.original.lcid) {
                 return `${value}: ${row.original.lcid}`;
               }
