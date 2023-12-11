@@ -42,6 +42,7 @@ import {
   SystemIntakeState,
   SystemIntakeStatus,
   SystemIntakeStatusAdmin,
+  SystemIntakeStatusRequester,
   SystemIntakeStep,
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
@@ -157,6 +158,7 @@ export const systemIntake: SystemIntake = {
   adminLead: '',
   status: SystemIntakeStatus.INTAKE_SUBMITTED,
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
+  statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_SUBMITTED,
   requester: {
     __typename: 'SystemIntakeRequester',
     name: requester.commonName!,

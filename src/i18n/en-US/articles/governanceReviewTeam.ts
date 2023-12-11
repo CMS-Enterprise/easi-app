@@ -76,7 +76,7 @@ const systemIntakeStatusRequester: Record<
   INITIAL_REQUEST_FORM_IN_PROGRESS: 'Intake Request in progress',
   INITIAL_REQUEST_FORM_NEW: 'New',
   INITIAL_REQUEST_FORM_SUBMITTED: 'Intake Request submitted',
-  LCID_ISSUED: 'LCID issued: {lcid}',
+  LCID_ISSUED: 'LCID issued: {{lcid}}',
   NOT_APPROVED: 'Project not approved by the GRB',
   NOT_GOVERNANCE: 'Not an IT Governance request'
 };

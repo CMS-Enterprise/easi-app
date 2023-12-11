@@ -8,6 +8,7 @@ import {
   BreadcrumbLink,
   Link as UswdsLink
 } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -17,6 +18,7 @@ import {
   GetSystemIntake,
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
+import { SystemIntakeStatusRequester } from 'types/graphql-global-types';
 
 import Approved from './Approved';
 import Rejected from './Rejected';
@@ -26,6 +28,7 @@ import './index.scss';
 const RequestDecision = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('taskList');
+  const flags = useFlags();
 
   const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
     GetSystemIntakeQuery,
@@ -64,11 +67,26 @@ const RequestDecision = () => {
         <div className="grid-row">
           <div className="tablet:grid-col-9">
             <PageHeading>Decision and next steps</PageHeading>
-            {systemIntake?.status === 'LCID_ISSUED' && (
-              <Approved intake={systemIntake} />
-            )}
-            {systemIntake?.status === 'NOT_APPROVED' && (
-              <Rejected intake={systemIntake} />
+            {flags.itGovV2Fields ? (
+              <>
+                {systemIntake?.statusRequester ===
+                  SystemIntakeStatusRequester.LCID_ISSUED && (
+                  <Approved intake={systemIntake} />
+                )}
+                {systemIntake?.statusRequester ===
+                  SystemIntakeStatusRequester.NOT_APPROVED && (
+                  <Rejected intake={systemIntake} />
+                )}
+              </>
+            ) : (
+              <>
+                {systemIntake?.status === 'LCID_ISSUED' && (
+                  <Approved intake={systemIntake} />
+                )}
+                {systemIntake?.status === 'NOT_APPROVED' && (
+                  <Rejected intake={systemIntake} />
+                )}
+              </>
             )}
           </div>
           <div className="tablet:grid-col-1" />

@@ -87,6 +87,7 @@ export const SystemIntake = gql`
     requestType
     status
     statusAdmin
+    statusRequester
     grtReviewEmailBody
     decidedAt
     businessCaseId
