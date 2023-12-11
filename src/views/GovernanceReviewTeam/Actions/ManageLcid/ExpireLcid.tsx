@@ -81,7 +81,7 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
         <Controller
           name="reason"
           control={control}
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
               <Label
                 htmlFor={field.name}
@@ -98,7 +98,7 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
               <RichTextEditor
-                {...field}
+                field={field}
                 editableProps={{
                   id: field.name,
                   'data-testid': field.name,
@@ -112,7 +112,7 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
         <Controller
           name="nextSteps"
           control={control}
-          render={({ field: { ref, ...field } }) => (
+          render={({ field }) => (
             <FormGroup>
               <Label
                 htmlFor={field.name}
@@ -125,7 +125,7 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
                 {t('expireLcid.nextStepsHelpText')}
               </HelpText>
               <RichTextEditor
-                {...field}
+                field={field}
                 editableProps={{
                   id: field.name,
                   'data-testid': field.name,
