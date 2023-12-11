@@ -56,7 +56,7 @@ export const taskStatusClassName: Record<TaskStatus, string> = {
   READY_TO_SCHEDULE: 'bg-info-light',
   READY_TO_START: 'bg-info-light',
   SCHEDULED: 'bg-info-light',
-  SUBMITTED: 'bg-success-dark text-white'
+  SUBMITTED: 'bg-info-light'
 };
 
 type TaskStatusTagProps = {

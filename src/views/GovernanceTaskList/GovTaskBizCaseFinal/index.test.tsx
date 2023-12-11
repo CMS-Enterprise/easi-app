@@ -72,7 +72,7 @@ describe('Gov Task: Submit your Business Case for final approval statuses', () =
     );
 
     // Completed
-    expectTaskStatusTagToHaveTextKey('COMPLETED');
+    expectTaskStatusTagToHaveTextKey('SUBMITTED');
 
     // Submitted date
     screen.getByText(
@@ -130,7 +130,7 @@ describe('Gov Task: Submit your Business Case for final approval statuses', () =
     );
 
     // Completed
-    expectTaskStatusTagToHaveTextKey('COMPLETED');
+    expectTaskStatusTagToHaveTextKey('SUBMITTED');
 
     // Submitted date
     screen.getByText(

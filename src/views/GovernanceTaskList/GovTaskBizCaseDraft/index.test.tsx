@@ -74,7 +74,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     );
 
     // Completed
-    expectTaskStatusTagToHaveTextKey('COMPLETED');
+    expectTaskStatusTagToHaveTextKey('SUBMITTED');
 
     // Submitted date
     screen.getByText(
@@ -132,7 +132,7 @@ describe('Gov Task: Prepare a draft Business Case statuses', () => {
     );
 
     // Completed
-    expectTaskStatusTagToHaveTextKey('COMPLETED');
+    expectTaskStatusTagToHaveTextKey('SUBMITTED');
 
     // Submitted date
     screen.getByText(
