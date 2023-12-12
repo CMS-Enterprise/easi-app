@@ -141,6 +141,7 @@ exports[`Submit Action > renders additional contacts 1`] = `
                 Intake request received
               </p>
               <a
+                class="usa-link"
                 href="/governance-review-team/a4158ad8-1236-4a55-9ad5-7e15a5d49de2/actions"
               >
                 Take an action
@@ -289,7 +290,7 @@ exports[`Submit Action > renders additional contacts 1`] = `
               </a>
             </li>
             <li
-              class=""
+              class="easi-grt__nav-link--border"
             >
               <a
                 aria-label="Open business case"
