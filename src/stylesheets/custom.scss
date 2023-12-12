@@ -134,3 +134,16 @@
 .usa-list li.usa-button-group__item:last-child {
   margin-bottom: 0.25rem;
 }
+
+// USWDS button overrides
+.usa-button:not(.usa-button--unstyled) {
+  &:disabled, &[aria-disabled=true] {
+    color: color('gray-70') !important;
+  }
+}
+
+.usa-button.usa-button--outline:not(.usa-button--unstyled) {
+  &:disabled, &[aria-disabled=true] {
+    color: color('gray-50') !important;
+  }
+}
