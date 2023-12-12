@@ -85,7 +85,7 @@ const ManageLcid = ({ systemIntake }: ActionsProps) => {
         items={[
           { text: t('Home'), url: '/' },
           {
-            text: t('resolutions.requestDetails'),
+            text: t('governanceReviewTeam:governanceRequestDetails'),
             url: `/governance-review-team/${systemIntakeId}/intake-request`
           },
           {

@@ -164,14 +164,3 @@ exports[`TaskStatusTag > renders task status tag {"status":"SUBMITTED","classNam
   </span>
 </DocumentFragment>
 `;
-
-exports[`TaskStatusTag > renders task status tag {"status":"SUBMITTED","className":"bg-success-dark text-white"} 1`] = `
-<DocumentFragment>
-  <span
-    class="easi-tag easi-task-status-tag bg-success-dark text-white"
-    data-testid="task-list-task-tag"
-  >
-    Completed
-  </span>
-</DocumentFragment>
-`;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {
@@ -84,50 +84,56 @@ describe('Issue LCID form', async () => {
   });
 
   it('Displays confirmation modal when edits are requested', async () => {
-    render(
-      <VerboseMockedProvider
-        mocks={[
-          getSystemIntakeContactsQuery,
-          getSystemIntakeQuery(),
-          getSystemIntakesWithLcidsQuery
-        ]}
-      >
-        <MemoryRouter>
-          <MessageProvider>
-            <EditsRequestedContext.Provider value="intakeRequest">
-              <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
-            </EditsRequestedContext.Provider>
-          </MessageProvider>
-        </MemoryRouter>
-      </VerboseMockedProvider>
-    );
+    await act(async () => {
+      render(
+        <VerboseMockedProvider
+          mocks={[
+            getSystemIntakeContactsQuery,
+            getSystemIntakeQuery(),
+            getSystemIntakesWithLcidsQuery
+          ]}
+        >
+          <MemoryRouter>
+            <MessageProvider>
+              <EditsRequestedContext.Provider value="intakeRequest">
+                <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
+              </EditsRequestedContext.Provider>
+            </MessageProvider>
+          </MemoryRouter>
+        </VerboseMockedProvider>
+      );
 
-    await screen.findByText('Issue a Life Cycle ID');
+      await screen.findByText('Issue a Life Cycle ID');
 
-    userEvent.click(
-      screen.getByRole('radio', {
-        name: 'Generate a new Life Cycle ID'
-      })
-    );
+      userEvent.click(
+        screen.getByRole('radio', {
+          name: 'Generate a new Life Cycle ID'
+        })
+      );
 
-    userEvent.type(
-      screen.getByRole('textbox', { name: 'Expiration date *' }),
-      '01/01/2024'
-    );
+      userEvent.type(
+        screen.getByRole('textbox', { name: 'Expiration date *' }),
+        '01/01/2024'
+      );
 
-    await typeRichText(screen.getByTestId('scope'), 'Test scope');
+      await typeRichText(screen.getByTestId('scope'), 'Test scope');
 
-    await typeRichText(screen.getByTestId('nextSteps'), 'Test next steps');
+      await typeRichText(screen.getByTestId('nextSteps'), 'Test next steps');
 
-    userEvent.click(
-      screen.getByRole('radio', {
-        name: 'No, they may if they wish but it’s not necessary'
-      })
-    );
+      userEvent.click(
+        screen.getByRole('radio', {
+          name: 'No, they may if they wish but it’s not necessary'
+        })
+      );
+    });
 
-    userEvent.click(
-      screen.getByRole('button', { name: 'Complete action without email' })
-    );
+    const submitButton = screen.getByRole('button', {
+      name: 'Complete action'
+    });
+
+    expect(submitButton).not.toBeDisabled();
+
+    userEvent.click(submitButton);
 
     // Check for modal
 
