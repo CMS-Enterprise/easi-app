@@ -214,10 +214,10 @@ const RequestSummary = ({
             <Grid desktop={{ col: 8 }}>
               <div>
                 <h4 className="margin-right-1">{t('status.label')}</h4>
-                <StateTag state={flags.itGovV2Fields ? state : stateV1} />
+                <StateTag state={flags.itGovV2Enabled ? state : stateV1} />
               </div>
               <p className="text-base-dark" data-testid="grt-current-status">
-                {flags.itGovV2Fields
+                {flags.itGovV2Enabled
                   ? t(`systemIntakeStatusAdmin.${statusAdmin}`, { lcid })
                   : translateStatus(status, lcid)}
               </p>

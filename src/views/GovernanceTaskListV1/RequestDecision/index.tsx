@@ -67,7 +67,7 @@ const RequestDecision = () => {
         <div className="grid-row">
           <div className="tablet:grid-col-9">
             <PageHeading>Decision and next steps</PageHeading>
-            {flags.itGovV2Fields ? (
+            {flags.itGovV2Enabled ? (
               <>
                 {systemIntake?.statusRequester ===
                   SystemIntakeStatusRequester.LCID_ISSUED && (

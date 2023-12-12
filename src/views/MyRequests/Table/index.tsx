@@ -125,7 +125,7 @@ const Table = ({
                 </span>
               );
             case t(`requestsTable.types.GOVERNANCE_REQUEST`):
-              if (flags.itGovV2Fields) {
+              if (flags.itGovV2Enabled) {
                 return t(
                   `governanceReviewTeam:systemIntakeStatusRequester.${row.original.statusRequester}`,
                   { lcid: row.original.lcid }

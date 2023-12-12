@@ -221,7 +221,7 @@ const useRequestTableColumns = (
         requestNameColumn,
         requesterColumn,
         adminLeadColumn,
-        flags.itGovV2Fields ? statusColumn : statusV1Column,
+        flags.itGovV2Enabled ? statusColumn : statusV1Column,
         grtDateColumn,
         grbDateColumn
       ];
@@ -232,7 +232,7 @@ const useRequestTableColumns = (
         requestNameColumn,
         requesterColumn,
         lcidExpirationDateColumn,
-        flags.itGovV2Fields ? statusColumn : statusV1Column,
+        flags.itGovV2Enabled ? statusColumn : statusV1Column,
         lastAdminNoteColumn
       ];
     }
