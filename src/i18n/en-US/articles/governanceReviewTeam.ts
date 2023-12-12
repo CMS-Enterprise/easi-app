@@ -230,6 +230,7 @@ const governanceReviewTeam = {
       'LCID issued, see Life Cycle ID tab for more detailed information',
     nextSteps: 'Next Steps',
     rejectionReason: 'Rejection Reason',
+    noRejectionReasons: 'No reasons specified',
     decisionSectionTitle: 'Decision Details',
     descriptionNotItRequest: 'Request was marked "Not an IT Request"',
     descriptionNoGovernance:
