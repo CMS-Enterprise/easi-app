@@ -41,7 +41,11 @@ const Approved = ({ intake }: ApprovedProps) => {
             </h3>
           </dt>
           <dd className="margin-left-0 color-white">
-            {lcidScope && <RichTextViewer value={lcidScope} />}
+            <RichTextViewer
+              value={
+                lcidScope || t('governanceReviewTeam:notes.extendLcid.noScope')
+              }
+            />
           </dd>
 
           {lcidExpiresAt && (
@@ -67,18 +71,24 @@ const Approved = ({ intake }: ApprovedProps) => {
         </dl>
       </div>
 
+      {/* Next steps */}
+      <h3 className="margin-bottom-1">{t('decision.nextSteps')}</h3>
+
       {decisionNextSteps && (
-        <>
-          <h3>{t('decision.nextSteps')}</h3>
-          <Alert type="info" slim>
-            {t('decision.completeNextSteps')}
-          </Alert>
-          <RichTextViewer value={decisionNextSteps} className="margin-y-2" />
-        </>
+        <Alert type="info" slim className="margin-y-2">
+          {t('decision.completeNextSteps')}
+        </Alert>
       )}
 
+      <RichTextViewer
+        value={
+          decisionNextSteps ||
+          t('governanceReviewTeam:notes.extendLcid.noNextSteps')
+        }
+      />
+
       <UswdsReactLink
-        className="usa-button margin-y-2"
+        className="usa-button margin-top-4"
         variant="unstyled"
         to={`/governance-task-list/${id}`}
       >
