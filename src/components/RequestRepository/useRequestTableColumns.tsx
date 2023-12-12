@@ -161,32 +161,10 @@ const useRequestTableColumns = (
     Cell: ({
       row,
       value
-    }: CellProps<
-      SystemIntakeForTable,
-      SystemIntakeForTable['statusAdmin']
-    >) => {
-      const lcidIssued = t(
-        `governanceReviewTeam:systemIntakeStatusAdmin.${value}`,
-        { lcid: row.original.lcid }
-      );
-      if (row.original.lcidScope) {
-        return (
-          <>
-            {lcidIssued}
-            <TruncatedText
-              id={`lcid-scope-${row.original.lcidScope}`}
-              label="less"
-              closeLabel="more"
-              text={`Scope: ${row.original.lcidScope}`}
-              charLimit={freeFormTextCharLimit}
-              className="margin-top-2"
-              isRich
-            />
-          </>
-        );
-      }
-      return lcidIssued;
-    }
+    }: CellProps<SystemIntakeForTable, SystemIntakeForTable['statusAdmin']>) =>
+      t(`governanceReviewTeam:systemIntakeStatusAdmin.${value}`, {
+        lcid: row.original.lcid
+      })
   };
 
   const lcidExpirationDateColumn: Column<SystemIntakeForTable> = {
