@@ -52,7 +52,8 @@ const taskList = {
       help:
         'These are the Governance Review Team recommendations for the Business Owner'
     },
-    descriptiveDate: 'Feedback given on {{date}}'
+    descriptiveDate: 'Feedback given on {{date}}',
+    pdfTitle: 'Feedback for {{requestName}}'
   },
   feedbackV2: {
     heading: 'Feedback about your request',
