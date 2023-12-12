@@ -255,7 +255,7 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="view-closed-intakes-btn"]').click();
     cy.get('[data-testid="20cbcfbf-6459-4c96-943b-e76b83122dbf-row"]').contains(
       'td',
-      'Not an IT Governance request'
+      'Closed'
     );
   });
 
