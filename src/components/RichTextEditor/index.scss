@@ -166,7 +166,7 @@
 }
 
 // Prevent rich text viewer from overriding font styles
-.easi-toast.easi-toast-viewer .toastui-editor-contents {
+.easi-toast.easi-toast-viewer .toastui-editor-contents, .easi-toast.easi-toast-viewer .toastui-editor-contents p {
   font-size: inherit;
   color: inherit;
 }
