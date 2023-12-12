@@ -17,11 +17,41 @@ import {
   GetSystemIntake,
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
+import { SystemIntake } from 'queries/types/SystemIntake';
+import { SystemIntakeDecisionState } from 'types/graphql-global-types';
 
 import Approved from './Approved';
 import Rejected from './Rejected';
 
 import './index.scss';
+
+type DecisionComponentProps = {
+  decisionState: SystemIntakeDecisionState;
+  systemIntake: SystemIntake;
+};
+
+/** Renders decision content based on `decisionState` field */
+const DecisionComponent = ({
+  decisionState,
+  systemIntake
+}: DecisionComponentProps) => {
+  const { t } = useTranslation('governanceReviewTeam');
+
+  switch (decisionState) {
+    case SystemIntakeDecisionState.LCID_ISSUED:
+      return <Approved intake={systemIntake} />;
+
+    case SystemIntakeDecisionState.NOT_APPROVED:
+      return <Rejected intake={systemIntake} />;
+
+    case SystemIntakeDecisionState.NOT_GOVERNANCE:
+      // TODO: NOT_GOVERNANCE decision content
+      return <>Not an IT Governance Request</>;
+
+    default:
+      return <p>{t('decision.noDecision')}</p>;
+  }
+};
 
 const RequestDecision = () => {
   const { systemId } = useParams<{ systemId: string }>();
@@ -58,18 +88,18 @@ const RequestDecision = () => {
           <Breadcrumb current>{t('navigation.nextSteps')}</Breadcrumb>
         </BreadcrumbBar>
       </div>
+
       {loading && <PageLoading />}
 
-      {data?.systemIntake && (
+      {systemIntake && (
         <div className="grid-row">
           <div className="tablet:grid-col-9">
             <PageHeading>Decision and next steps</PageHeading>
-            {systemIntake?.status === 'LCID_ISSUED' && (
-              <Approved intake={systemIntake} />
-            )}
-            {systemIntake?.status === 'NOT_APPROVED' && (
-              <Rejected intake={systemIntake} />
-            )}
+
+            <DecisionComponent
+              decisionState={systemIntake?.decisionState}
+              systemIntake={systemIntake}
+            />
           </div>
           <div className="tablet:grid-col-1" />
           <div className="tablet:grid-col-2">
