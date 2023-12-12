@@ -165,7 +165,27 @@ const useRequestTableColumns = (
       SystemIntakeForTable,
       SystemIntakeForTable['statusAdmin']
     >) => {
-      return t(`governanceReviewTeam:systemIntakeStatusAdmin.${value}`);
+      const lcidIssued = t(
+        `governanceReviewTeam:systemIntakeStatusAdmin.${value}`,
+        { lcid: row.original.lcid }
+      );
+      if (row.original.lcidScope) {
+        return (
+          <>
+            {lcidIssued}
+            <TruncatedText
+              id={`lcid-scope-${row.original.lcidScope}`}
+              label="less"
+              closeLabel="more"
+              text={`Scope: ${row.original.lcidScope}`}
+              charLimit={freeFormTextCharLimit}
+              className="margin-top-2"
+              isRich
+            />
+          </>
+        );
+      }
+      return lcidIssued;
     }
   };
 
