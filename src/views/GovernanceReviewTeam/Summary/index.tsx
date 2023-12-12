@@ -218,7 +218,7 @@ const RequestSummary = ({
               </div>
               <p className="text-base-dark" data-testid="grt-current-status">
                 {flags.itGovV2Fields
-                  ? t(`systemIntakeStatusAdmin.${statusAdmin}`)
+                  ? t(`systemIntakeStatusAdmin.${statusAdmin}`, { lcid })
                   : translateStatus(status, lcid)}
               </p>
               <Link to={`/governance-review-team/${id}/actions`}>
