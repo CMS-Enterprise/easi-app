@@ -131,10 +131,8 @@ const taskList = {
     CANT_START: 'Cannot start yet',
     CANNOT_START_YET: 'Cannot start yet',
     COMPLETED: 'Completed',
-    DONE:
-      'Completed' /* TODO: EASI-3110 verify that this is correct mock data for all instances */,
-    SUBMITTED:
-      'Completed' /* TODO: EASI-3110 verify that this is correct mock data for all instances */,
+    DONE: 'Completed',
+    SUBMITTED: 'In review',
     EDITS_REQUESTED: 'Edits requested',
     IN_PROGRESS: 'In progress',
     IN_REVIEW: 'In review',
