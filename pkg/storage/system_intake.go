@@ -455,7 +455,7 @@ func (s *Store) FetchSystemIntakesByState(ctx context.Context, state models.Syst
 	err := s.db.Select(&intakes, `
 		SELECT *
 		FROM system_intakes
-		WHERE state=$1
+		WHERE state=$1 AND status != 'WITHDRAWN' AND system_intakes.archived_at IS NULL
 	`, state)
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
