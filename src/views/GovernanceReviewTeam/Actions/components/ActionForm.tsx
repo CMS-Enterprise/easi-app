@@ -223,7 +223,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           items={[
             { text: t('Home'), url: '/' },
             {
-              text: t('breadcrumb', { systemIntakeId }),
+              text: t('governanceReviewTeam:governanceRequestDetails'),
               url: `/governance-review-team/${systemIntakeId}/intake-request`
             },
             { text: breadcrumb }

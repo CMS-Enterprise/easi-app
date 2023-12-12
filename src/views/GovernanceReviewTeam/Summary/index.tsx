@@ -221,7 +221,10 @@ const RequestSummary = ({
                   ? t(`systemIntakeStatusAdmin.${statusAdmin}`, { lcid })
                   : translateStatus(status, lcid)}
               </p>
-              <Link to={`/governance-review-team/${id}/actions`}>
+              <Link
+                to={`/governance-review-team/${id}/actions`}
+                className="usa-link"
+              >
                 {t('action:takeAnAction')}
               </Link>
             </Grid>
