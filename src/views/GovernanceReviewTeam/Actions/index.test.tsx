@@ -184,6 +184,7 @@ describe('IT Gov Actions', () => {
           getSystemIntakeQuery(),
           getSystemIntakeContactsQuery,
           getGovernanceTaskListQuery(),
+          getGovernanceTaskListQuery(),
           createSystemIntakeActionRequestEditsQuery
         ]
       });
