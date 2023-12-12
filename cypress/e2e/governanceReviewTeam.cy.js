@@ -249,7 +249,9 @@ describe('Governance Review Team', () => {
 
     cy.wait('@getSystemIntake').its('response.statusCode').should('eq', 200);
 
-    cy.get('[data-testid="request-state"]').contains('Closed');
+    cy.get('[data-testid="request-state"]').contains(
+      'Not an IT Governance request'
+    );
 
     cy.visit('/');
     cy.get('[data-testid="view-closed-intakes-btn"]').click();
