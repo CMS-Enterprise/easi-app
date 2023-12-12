@@ -12,6 +12,7 @@ import {
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
   GetSystemIntake,
@@ -92,24 +93,25 @@ const RequestDecision = () => {
       {loading && <PageLoading />}
 
       {systemIntake && (
-        <div className="grid-row">
-          <div className="tablet:grid-col-9">
-            <PageHeading>Decision and next steps</PageHeading>
+        <div className="grid-row grid-gap-6 margin-top-2">
+          <div className="desktop:grid-col-9 margin-bottom-2">
+            <PageHeading className="margin-top-2">
+              {t('navigation.nextSteps')}
+            </PageHeading>
 
             <DecisionComponent
               decisionState={systemIntake?.decisionState}
               systemIntake={systemIntake}
             />
           </div>
-          <div className="tablet:grid-col-1" />
-          <div className="tablet:grid-col-2">
+
+          {/* Sidebar */}
+          <div className="desktop:grid-col-3">
             <div className="sidebar margin-top-4">
-              <h3 className="font-sans-sm">
-                Need help? Contact the Governance team
-              </h3>
+              <h3 className="font-sans-sm">{t('decision.needHelp')}</h3>
               <p>
-                <UswdsLink href="mailto:IT_Governance@cms.hhs.gov">
-                  IT_Governance@cms.hhs.gov
+                <UswdsLink href={`mailto:${IT_GOV_EMAIL}`}>
+                  {IT_GOV_EMAIL}
                 </UswdsLink>
               </p>
             </div>

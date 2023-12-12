@@ -9,6 +9,11 @@ type RejectedProps = {
   intake: SystemIntake;
 };
 
+/**
+ * Displays decision if request is not approved
+ *
+ * Used in requester view of Decision and Next Steps page
+ */
 const Rejected = ({ intake }: RejectedProps) => {
   const { id, rejectionReason, decisionNextSteps } = intake;
   const { t } = useTranslation('taskList');
@@ -38,7 +43,7 @@ const Rejected = ({ intake }: RejectedProps) => {
       />
 
       <UswdsReactLink
-        className="usa-button margin-y-2"
+        className="usa-button"
         variant="unstyled"
         to={`/governance-task-list/${id}`}
       >
