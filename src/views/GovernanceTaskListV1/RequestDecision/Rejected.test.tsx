@@ -1,6 +1,5 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
@@ -26,15 +25,12 @@ describe('Business owner task list rejected view', () => {
     expect(screen.getByTestId('grt-rejected')).toBeInTheDocument();
   });
 
-  it.skip('matches the snapshot', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <Rejected intake={rejectedIntake} />
-        </MemoryRouter>
-      )
-      .toJSON();
-
-    expect(tree).toMatchSnapshot();
+  it('matches the snapshot', () => {
+    const { asFragment } = render(
+      <MemoryRouter>
+        <Rejected intake={rejectedIntake} />
+      </MemoryRouter>
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 });
