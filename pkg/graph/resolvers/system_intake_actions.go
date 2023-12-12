@@ -707,6 +707,7 @@ func CreateSystemIntakeActionNotITGovRequest(
 	}
 	intake.State = models.SystemIntakeStateCLOSED
 	intake.Step = models.SystemIntakeStepDECISION
+	intake.RejectionReason = input.Reason
 	intake.DecisionState = models.SIDSNotGovernance
 
 	updatedTime := time.Now()
