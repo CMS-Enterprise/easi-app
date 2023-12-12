@@ -2446,19 +2446,7 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error) {
-	var stateFilter models.SystemIntakeState
-	if openRequests {
-		stateFilter = models.SystemIntakeStateOPEN
-	} else {
-		stateFilter = models.SystemIntakeStateCLOSED
-	}
-
-	intakes, err := r.store.FetchSystemIntakesByState(ctx, stateFilter)
-	if err != nil {
-		return nil, err
-	}
-
-	return intakes, nil
+	return resolvers.SystemIntakes(ctx, r.store, openRequests)
 }
 
 // Systems is the resolver for the systems field.
