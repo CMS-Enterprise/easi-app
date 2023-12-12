@@ -141,12 +141,7 @@ const IssueLcid = ({
   ) =>
     mutateIssueLcid({
       variables: {
-        input: {
-          ...input,
-          // TODO revert this when the pr fix is taken care of
-          // https://github.com/CMSgov/easi-app/pull/2327
-          costBaseline: input.costBaseline || ''
-        }
+        input
       }
     }).then(
       response =>
