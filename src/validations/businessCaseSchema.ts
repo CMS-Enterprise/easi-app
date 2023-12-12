@@ -109,12 +109,14 @@ export const BusinessCaseFinalValidationSchema = {
           .required(
             'Tell us whether for solution was approved by IT Security for use at CMS'
           ),
-        isBeingReviewed: Yup.string().when('isApproved', {
-          is: false,
-          then: Yup.string().required(
-            'Tell us whether your solution is in the process of receiving approval'
-          )
-        })
+        isBeingReviewed: Yup.string()
+          .nullable()
+          .when('isApproved', {
+            is: false,
+            then: Yup.string().required(
+              'Tell us whether your solution is in the process of receiving approval'
+            )
+          })
       }),
       hosting: Yup.object().shape({
         type: Yup.string().required(
@@ -178,12 +180,14 @@ export const BusinessCaseFinalValidationSchema = {
           .required(
             'Tell us whether for solution was approved by IT Security for use at CMS'
           ),
-        isBeingReviewed: Yup.string().when('isApproved', {
-          is: false,
-          then: Yup.string().required(
-            'Tell us whether your solution is in the process of receiving approval'
-          )
-        })
+        isBeingReviewed: Yup.string()
+          .nullable()
+          .when('isApproved', {
+            is: false,
+            then: Yup.string().required(
+              'Tell us whether your solution is in the process of receiving approval'
+            )
+          })
       }),
       hosting: Yup.object().shape({
         type: Yup.string()
@@ -247,12 +251,14 @@ export const BusinessCaseFinalValidationSchema = {
           .required(
             'Tell us whether for solution was approved by IT Security for use at CMS'
           ),
-        isBeingReviewed: Yup.string().when('isApproved', {
-          is: false,
-          then: Yup.string().required(
-            'Tell us whether your solution is in the process of receiving approval'
-          )
-        })
+        isBeingReviewed: Yup.string()
+          .nullable()
+          .when('isApproved', {
+            is: false,
+            then: Yup.string().required(
+              'Tell us whether your solution is in the process of receiving approval'
+            )
+          })
       }),
       hosting: Yup.object().shape({
         type: Yup.string().required(
