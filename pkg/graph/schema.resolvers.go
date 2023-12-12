@@ -2446,29 +2446,19 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error) {
-	var statusFilter models.SystemIntakeStatusFilter
+	var stateFilter models.SystemIntakeState
 	if openRequests {
-		statusFilter = models.SystemIntakeStatusFilterOPEN
+		stateFilter = models.SystemIntakeStateOPEN
 	} else {
-		statusFilter = models.SystemIntakeStatusFilterCLOSED
+		stateFilter = models.SystemIntakeStateCLOSED
 	}
-	allowedStatuses, err := models.GetStatusesByFilter(statusFilter)
+
+	intakes, err := r.store.FetchSystemIntakesByState(ctx, stateFilter)
 	if err != nil {
 		return nil, err
 	}
 
-	intakes, err := r.store.FetchSystemIntakesByStatuses(ctx, allowedStatuses)
-	if err != nil {
-		return nil, err
-	}
-
-	// The store method above returns a slice of structs, but we need to return a slice of struct pointers
-	intakePointers := []*models.SystemIntake{}
-	for _, i := range intakes {
-		intake := i
-		intakePointers = append(intakePointers, &intake)
-	}
-	return intakePointers, nil
+	return intakes, nil
 }
 
 // Systems is the resolver for the systems field.
