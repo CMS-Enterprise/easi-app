@@ -131,7 +131,13 @@ const IssueLcid = ({
     defaultValues
   });
 
-  const { control, setValue, watch, resetField } = form;
+  const {
+    control,
+    setValue,
+    watch,
+    resetField,
+    formState: { isValid }
+  } = form;
 
   const { showMessageOnNextPage } = useMessage();
 
@@ -230,6 +236,7 @@ const IssueLcid = ({
       <ActionForm
         systemIntakeId={systemIntakeId}
         onSubmit={onSubmit}
+        disableSubmit={!isValid}
         title={
           <ResolutionTitleBox
             title={t('resolutions.summary.issueLcid')}
