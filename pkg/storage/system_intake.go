@@ -269,20 +269,21 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 
 const fetchSystemIntakeSQL = `
 		SELECT
-		       system_intakes.*,
-		       business_cases.id as business_case_id
+			system_intakes.*,
+		    business_cases.id as business_case_id
 		FROM
-		     system_intakes
-		     LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
+		    system_intakes
+		    LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
 `
 
 // FetchSystemIntakeByID queries the DB for a system intake matching the given ID
 func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
-	const idMatchClause = `
+	const whereClause = `
 		WHERE system_intakes.id=$1
-`
-	err := s.db.Get(&intake, fetchSystemIntakeSQL+idMatchClause, id)
+	`
+	// should not filter for archived because the update method relies on this method to return the archived intake
+	err := s.db.Get(&intake, fetchSystemIntakeSQL+whereClause, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			appcontext.ZLogger(ctx).Info(
@@ -345,6 +346,7 @@ func (s *Store) FetchSystemIntakeByLifecycleID(ctx context.Context, lifecycleID 
 	intakes := []models.SystemIntake{}
 	const matchClause = `
 		WHERE system_intakes.lcid=$1
+			AND system_intakes.archived_at IS NULL AND system_intakes.status != 'WITHDRAWN'
 	`
 	err := s.db.Select(&intakes, fetchSystemIntakeSQL+matchClause, lifecycleID)
 	if err != nil {
@@ -407,9 +409,13 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 // This is a bit of a hold-over, and should be simplified when we start to filter based on IT Gov v2 states, which should be
 // much simpler to use
 // TODO: Modify with https://jiraent.cms.gov/browse/EASI-3440
+// TODO: This method is not currently in use.
 func (s *Store) FetchIntakesForAdmins(ctx context.Context) ([]*models.SystemIntake, error) {
 	intakes := []*models.SystemIntake{}
-	err := s.db.Select(&intakes, "SELECT * FROM system_intakes WHERE status NOT IN ('INTAKE_DRAFT','APPROVED','CLOSED')")
+	err := s.db.Select(&intakes, `
+		SELECT * FROM system_intakes WHERE status NOT IN ('INTAKE_DRAFT','APPROVED','CLOSED')
+		AND archived_at IS NULL AND status != 'WITHDRAWN'
+	`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
 		return []*models.SystemIntake{}, err
@@ -418,6 +424,7 @@ func (s *Store) FetchIntakesForAdmins(ctx context.Context) ([]*models.SystemInta
 }
 
 // FetchSystemIntakesByStatuses queries the DB for all system intakes matching a status filter
+// Is this in use? It should be removed post admin actions v2 launch or modified
 func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
 	var intakes models.SystemIntakes
 	query := `

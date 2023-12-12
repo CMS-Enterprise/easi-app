@@ -218,7 +218,8 @@ func GetStatusesByFilter(filter SystemIntakeStatusFilter) ([]SystemIntakeStatus,
 	case SystemIntakeStatusFilterCLOSED:
 		return []SystemIntakeStatus{
 			SystemIntakeStatusLCIDISSUED,
-			SystemIntakeStatusWITHDRAWN,
+			// prevents withdrawn intakes from appearing in "CLOSED" tab of admin view
+			// SystemIntakeStatusWITHDRAWN,
 			SystemIntakeStatusNOTITREQUEST,
 			SystemIntakeStatusNOTAPPROVED,
 			SystemIntakeStatusNOGOVERNANCE,
