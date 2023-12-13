@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import { formatDateUtc } from 'utils/date';
@@ -25,7 +26,9 @@ const Approved = ({ intake }: ApprovedProps) => {
           <dd className="margin-left-0 font-body-xl text-bold">{lcid}</dd>
         </dl>
         <h3>{t('decision.lcidScope')}</h3>
-        <p className="text-pre-wrap">{lcidScope}</p>
+        {lcidScope && (
+          <RichTextViewer value={lcidScope} className="margin-y-2" />
+        )}
         {lcidExpiresAt && (
           <p className="text-bold">
             {t('decision.lcidExpiration', {
@@ -46,7 +49,7 @@ const Approved = ({ intake }: ApprovedProps) => {
           <h3>{t('decision.nextSteps')}</h3>
           <Alert type="info">{t('decision.completeNextSteps')}</Alert>
 
-          <p className="text-pre-wrap">{decisionNextSteps}</p>
+          <RichTextViewer value={decisionNextSteps} className="margin-y-2" />
         </>
       )}
 

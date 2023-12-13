@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import { RichTextViewer } from 'components/RichTextEditor';
 import { SystemIntake } from 'queries/types/SystemIntake';
 
 type RejectedProps = {
@@ -18,11 +19,11 @@ const Rejected = ({ intake }: RejectedProps) => {
         {t('decision.bizCaseRejected')}
       </h2>
       <h3>{t('decision.reasons')}</h3>
-      <p>{rejectionReason}</p>
+      {rejectionReason && <RichTextViewer value={rejectionReason} />}
       {decisionNextSteps && (
         <>
           <h3>{t('decision.nextSteps')}</h3>
-          <p className="text-pre-wrap">{decisionNextSteps}</p>
+          <RichTextViewer value={decisionNextSteps} />
         </>
       )}
 

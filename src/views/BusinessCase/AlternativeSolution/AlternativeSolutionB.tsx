@@ -16,7 +16,6 @@ import {
 import { BusinessCaseModel } from 'types/businessCase';
 import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
 import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
@@ -57,8 +56,6 @@ const AlternativeSolutionB = ({
         const values = formikProps.values.alternativeB;
         const flatErrors = flattenErrors(errors);
 
-        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
-
         return (
           <BusinessCaseStepWrapper
             systemIntakeId={businessCase.systemIntakeId}
@@ -78,7 +75,6 @@ const AlternativeSolutionB = ({
             }
             errors={flatErrors}
             data-testid="alternative-solution-b"
-            isFinal={isFinal}
           >
             <Alert
               type="info"

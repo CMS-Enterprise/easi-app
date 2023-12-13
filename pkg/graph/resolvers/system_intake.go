@@ -191,3 +191,20 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 		SystemIntake: savedIntake,
 	}, err
 }
+
+// SystemIntakes returns a list of System Intakes for the admin table (which is why it uses the FetchSystemIntakesByStateForAdmins store method)
+func SystemIntakes(ctx context.Context, store *storage.Store, openRequests bool) ([]*models.SystemIntake, error) {
+	var stateFilter models.SystemIntakeState
+	if openRequests {
+		stateFilter = models.SystemIntakeStateOPEN
+	} else {
+		stateFilter = models.SystemIntakeStateCLOSED
+	}
+
+	intakes, err := store.FetchSystemIntakesByStateForAdmins(ctx, stateFilter)
+	if err != nil {
+		return nil, err
+	}
+
+	return intakes, nil
+}

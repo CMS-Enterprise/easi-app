@@ -456,6 +456,30 @@ func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuse
 	return intakes, nil
 }
 
+// FetchSystemIntakesByStateForAdmins queries the DB for all system intakes with a matching state
+// The intent of this query is to return all intakes that are in a state that is relevant to admins (i.e. not in a draft state, not archived)
+func (s *Store) FetchSystemIntakesByStateForAdmins(ctx context.Context, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
+	var intakes []*models.SystemIntake
+	err := s.db.Select(&intakes, `
+		SELECT *
+		FROM system_intakes
+		WHERE state=$1
+		AND (status != 'WITHDRAWN' AND archived_at IS NULL)
+		AND submitted_at IS NOT NULL
+	`, state)
+
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		appcontext.ZLogger(ctx).Error("Failed to fetch system intakes by state", zap.Error(err))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.SystemIntake{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return intakes, nil
+}
+
 func generateLifecyclePrefix(t time.Time, loc *time.Location) string {
 	return t.In(loc).Format("06002")
 }

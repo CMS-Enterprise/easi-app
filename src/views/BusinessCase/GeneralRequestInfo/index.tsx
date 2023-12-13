@@ -18,11 +18,7 @@ import IconButton from 'components/shared/IconButton';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
-import {
-  BusinessCaseDraftValidationSchema,
-  BusinessCaseFinalValidationSchema
-} from 'validations/businessCaseSchema';
+import { BusinessCaseSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
@@ -30,12 +26,14 @@ type GeneralRequestInfoProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
+  isFinal: boolean;
 };
 
 const GeneralRequestInfo = ({
   formikRef,
   businessCase,
-  dispatchSave
+  dispatchSave,
+  isFinal
 }: GeneralRequestInfoProps) => {
   const { t } = useTranslation('businessCase');
   const history = useHistory();
@@ -48,16 +46,11 @@ const GeneralRequestInfo = ({
 
   const allowedPhoneNumberCharacters = /[\d- ]+/g;
 
-  const ValidationSchema =
-    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
-      ? BusinessCaseFinalValidationSchema
-      : BusinessCaseDraftValidationSchema;
-
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={ValidationSchema.generalRequestInfo}
+      validationSchema={BusinessCaseSchema(isFinal).generalRequestInfo}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -67,9 +60,6 @@ const GeneralRequestInfo = ({
         const { errors, values, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
 
-        // TODO EASI-3440: Update to use v2 status
-        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
-
         return (
           <BusinessCaseStepWrapper
             systemIntakeId={businessCase.systemIntakeId}
@@ -77,7 +67,6 @@ const GeneralRequestInfo = ({
             description={t('generalRequestDescription')}
             errors={flatErrors}
             data-testid="general-request-info"
-            isFinal={isFinal}
             fieldsMandatory={isFinal}
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">
