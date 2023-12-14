@@ -40,7 +40,7 @@ const NotGovernance = ({
     CreateSystemIntakeActionNotITGovRequest,
     CreateSystemIntakeActionNotITGovRequestVariables
   >(CreateSystemIntakeActionNotITGovRequestQuery, {
-    refetchQueries: ['GetSystemIntake']
+    refetchQueries: ['GetSystemIntake', 'GetSystemIntakesTable']
   });
 
   /** Edits requested form key for confirmation modal */

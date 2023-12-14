@@ -36,7 +36,7 @@ const ReopenRequest = ({
     CreateSystemIntakeActionReopenRequest,
     CreateSystemIntakeActionReopenRequestVariables
   >(CreateSystemIntakeActionReopenRequestQuery, {
-    refetchQueries: ['GetSystemIntake']
+    refetchQueries: ['GetSystemIntake', 'GetSystemIntakesTable']
   });
 
   const form = useForm<ReopenRequestFields>();

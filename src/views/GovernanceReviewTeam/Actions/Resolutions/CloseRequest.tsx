@@ -50,7 +50,7 @@ const CloseRequest = ({
     CreateSystemIntakeActionCloseRequest,
     CreateSystemIntakeActionCloseRequestVariables
   >(CreateSystemIntakeActionCloseRequestQuery, {
-    refetchQueries: ['GetSystemIntake']
+    refetchQueries: ['GetSystemIntake', 'GetSystemIntakesTable']
   });
 
   const form = useForm<CloseRequestFields>();

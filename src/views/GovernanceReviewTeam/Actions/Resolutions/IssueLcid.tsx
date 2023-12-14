@@ -83,14 +83,14 @@ const IssueLcid = ({
     CreateSystemIntakeActionIssueLcid,
     CreateSystemIntakeActionIssueLcidVariables
   >(CreateSystemIntakeActionIssueLcidQuery, {
-    refetchQueries: ['GetSystemIntake']
+    refetchQueries: ['GetSystemIntake', 'GetSystemIntakesTable']
   });
 
   const [mutateConfirmLcid] = useMutation<
     CreateSystemIntakeActionConfirmLcid,
     CreateSystemIntakeActionConfirmLcidVariables
   >(CreateSystemIntakeActionConfirmLcidQuery, {
-    refetchQueries: ['GetSystemIntake']
+    refetchQueries: ['GetSystemIntake', 'GetSystemIntakesTable']
   });
 
   const { data, loading } = useCacheQuery<GetSystemIntakesWithLCIDSType>(

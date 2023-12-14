@@ -54,7 +54,7 @@ const NotApproved = ({
     CreateSystemIntakeActionRejectIntake,
     CreateSystemIntakeActionRejectIntakeVariables
   >(CreateSystemIntakeActionRejectIntakeQuery, {
-    refetchQueries: ['GetSystemIntake']
+    refetchQueries: ['GetSystemIntake', 'GetSystemIntakesTable']
   });
 
   /** Set default values if confirming decision */
