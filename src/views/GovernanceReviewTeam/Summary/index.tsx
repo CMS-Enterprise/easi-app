@@ -216,11 +216,19 @@ const RequestSummary = ({
                 <h4 className="margin-right-1">{t('status.label')}</h4>
                 <StateTag state={flags.itGovV2Enabled ? state : stateV1} />
               </div>
-              <p className="text-base-dark" data-testid="grt-current-status">
-                {flags.itGovV2Enabled
-                  ? t(`systemIntakeStatusAdmin.${statusAdmin}`, { lcid })
-                  : translateStatus(status, lcid)}
-              </p>
+              {
+                // Don't display additional status if closed with no decision
+                statusAdmin !== SystemIntakeStatusAdmin.CLOSED && (
+                  <p
+                    className="text-base-dark"
+                    data-testid="grt-current-status"
+                  >
+                    {flags.itGovV2Enabled
+                      ? t(`systemIntakeStatusAdmin.${statusAdmin}`, { lcid })
+                      : translateStatus(status, lcid)}
+                  </p>
+                )
+              }
               <Link
                 to={`/governance-review-team/${id}/actions`}
                 className="usa-link"
