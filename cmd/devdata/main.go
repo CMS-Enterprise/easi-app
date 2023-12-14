@@ -346,6 +346,9 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 		Contractor:        null.StringFrom("Contractor Name"),
 	}
 
+	submittedAt := time.Now()
+	intake.SubmittedAt = &submittedAt
+
 	for _, cb := range callbacks {
 		cb(&intake)
 	}

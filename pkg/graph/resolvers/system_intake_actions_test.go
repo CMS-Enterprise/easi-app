@@ -909,6 +909,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 				s.NoError(err)
 				additionalInfo := models.HTMLPointer("banana")
 				adminNote := models.HTMLPointer("apple")
+				reason := models.HTMLPointer("meatloaf")
 				actionedIntake, err := CreateSystemIntakeActionNotITGovRequest(
 					ctx,
 					s.testConfigs.Store,
@@ -921,7 +922,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 							ShouldNotifyITGovernance: false,
 							ShouldNotifyITInvestment: false,
 						},
-						Reason:         models.HTMLPointer("meatloaf"),
+						Reason:         reason,
 						AdditionalInfo: additionalInfo,
 						AdminNote:      adminNote,
 					},
@@ -935,6 +936,8 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 				s.Equal(models.SystemIntakeStepDECISION, actionedIntake.Step)
 				// Decision state should be NOT_GOVERNANCE
 				s.Equal(models.SIDSNotGovernance, actionedIntake.DecisionState)
+				// Rejection Reason should be stored
+				s.Equal(reason, actionedIntake.RejectionReason)
 			})
 		}
 	}

@@ -115,10 +115,12 @@ const RequestOverview = () => {
           requestName={systemIntake.requestName || ''}
           requestType={systemIntake.requestType}
           status={systemIntake.status}
+          statusAdmin={systemIntake.statusAdmin}
           adminLead={systemIntake.adminLead}
           submittedAt={systemIntake.submittedAt}
           lcid={systemIntake.lcid}
           contractNumber={systemIntake?.contract?.number}
+          state={systemIntake?.state}
         />
       )}
       {!fullPageLayout && (

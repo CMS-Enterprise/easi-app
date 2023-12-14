@@ -1,6 +1,5 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
@@ -29,14 +28,11 @@ describe('Business owner task list approved view', () => {
   });
 
   it('matches the snapshot', () => {
-    const tree = renderer
-      .create(
-        <MemoryRouter>
-          <Approved intake={approvedIntake} />
-        </MemoryRouter>
-      )
-      .toJSON();
-
-    expect(tree).toMatchSnapshot();
+    const { asFragment } = render(
+      <MemoryRouter>
+        <Approved intake={approvedIntake} />
+      </MemoryRouter>
+    );
+    expect(asFragment()).toMatchSnapshot();
   });
 });
