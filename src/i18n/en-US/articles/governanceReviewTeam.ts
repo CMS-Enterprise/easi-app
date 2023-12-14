@@ -268,19 +268,17 @@ const governanceReviewTeam = {
   },
   decision: {
     title: 'Decision',
-    titleApproved: 'Decision - Approved',
-    titleRejected: 'Decision - Rejected',
-    titleClosed: 'Decision - Closed',
-    lcidIssued:
+    title_LCID_ISSUED: 'Decision - Approved',
+    title_NOT_APPROVED: 'Decision - Rejected',
+    title_NOT_GOVERNANCE: 'Decision - Closed',
+    description: 'Decision not yet made',
+    description_LCID_ISSUED:
       'LCID issued, see Life Cycle ID tab for more detailed information',
+    description_NOT_GOVERNANCE: 'This is not an IT Governance request.',
     nextSteps: 'Next Steps',
     rejectionReason: 'Rejection Reason',
-    decisionSectionTitle: 'Decision Details',
-    descriptionNotItRequest: 'Request was marked "Not an IT Request"',
-    descriptionNoGovernance:
-      'Request was marked "No further governance needed"',
-    noDecision: 'Decision not yet made',
-    shutdownComplete: 'Request was marked "Shutdown Complete"'
+    noRejectionReasons: 'No reasons specified',
+    decisionSectionTitle: 'Decision Details'
   },
   feedback: {
     title: 'Feedback',

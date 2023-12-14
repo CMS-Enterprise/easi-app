@@ -28,7 +28,8 @@ const taskList = {
       'Finish these next steps to complete the governance review process.',
     decision: 'Decision:',
     alert:
-      'A decision has been made for this request, you can view the decision at the bottom of this page. Please check the email sent to you for further information.'
+      'A decision has been made for this request, you can view the decision at the bottom of this page. Please check the email sent to you for further information.',
+    needHelp: 'Need help? Contact the Governance team'
   },
   navigation: {
     home: 'IT Governance',

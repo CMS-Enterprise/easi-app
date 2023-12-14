@@ -8,11 +8,13 @@ exports[`Business owner task list rejected view > matches the snapshot 1`] = `
   >
     Your business case has been rejected.
   </h2>
-  <h3>
+  <h3
+    class="margin-bottom-1"
+  >
     Reasons
   </h3>
   <div
-    class="easi-toast easi-toast-viewer"
+    class="easi-toast easi-toast-viewer margin-bottom-2"
   >
     <div>
       <div
@@ -29,11 +31,13 @@ exports[`Business owner task list rejected view > matches the snapshot 1`] = `
       </div>
     </div>
   </div>
-  <h3>
+  <h3
+    class="margin-bottom-1"
+  >
     Next steps
   </h3>
   <div
-    class="easi-toast easi-toast-viewer"
+    class="easi-toast easi-toast-viewer margin-bottom-2"
   >
     <div>
       <div
@@ -49,16 +53,6 @@ exports[`Business owner task list rejected view > matches the snapshot 1`] = `
 
       </div>
     </div>
-  </div>
-  <div
-    class="margin-top-4"
-  >
-    <a
-      class="usa-button margin-bottom-2"
-      href="/governance-task-list/40e866cb-6bf4-4b1a-8fc6-bf0d8328cdfc"
-    >
-      Return to task list
-    </a>
   </div>
 </DocumentFragment>
 `;

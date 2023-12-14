@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import { RichTextViewer } from 'components/RichTextEditor';
 import { SystemIntake } from 'queries/types/SystemIntake';
 
@@ -9,8 +8,13 @@ type RejectedProps = {
   intake: SystemIntake;
 };
 
+/**
+ * Displays decision if request is not approved
+ *
+ * Used in requester view of Decision and Next Steps page
+ */
 const Rejected = ({ intake }: RejectedProps) => {
-  const { id, rejectionReason, decisionNextSteps } = intake;
+  const { rejectionReason, decisionNextSteps } = intake;
   const { t } = useTranslation('taskList');
 
   return (
@@ -18,24 +22,24 @@ const Rejected = ({ intake }: RejectedProps) => {
       <h2 className="margin-top-0" data-testid="grt-rejected">
         {t('decision.bizCaseRejected')}
       </h2>
-      <h3>{t('decision.reasons')}</h3>
-      {rejectionReason && <RichTextViewer value={rejectionReason} />}
-      {decisionNextSteps && (
-        <>
-          <h3>{t('decision.nextSteps')}</h3>
-          <RichTextViewer value={decisionNextSteps} />
-        </>
-      )}
 
-      <div className="margin-top-4">
-        <UswdsReactLink
-          className="usa-button margin-bottom-2"
-          variant="unstyled"
-          to={`/governance-task-list/${id}`}
-        >
-          {t('navigation.returnToTaskList')}
-        </UswdsReactLink>
-      </div>
+      <h3 className="margin-bottom-1">{t('decision.reasons')}</h3>
+      <RichTextViewer
+        value={
+          rejectionReason ||
+          t('governanceReviewTeam:decision.noRejectionReasons')
+        }
+        className="margin-bottom-2"
+      />
+
+      <h3 className="margin-bottom-1">{t('decision.nextSteps')}</h3>
+      <RichTextViewer
+        value={
+          decisionNextSteps ||
+          t('governanceReviewTeam:notes.extendLcid.noNextSteps')
+        }
+        className="margin-bottom-2"
+      />
     </>
   );
 };

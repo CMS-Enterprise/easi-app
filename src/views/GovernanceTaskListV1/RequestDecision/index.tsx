@@ -8,27 +8,53 @@ import {
   BreadcrumbLink,
   Link as UswdsLink
 } from '@trussworks/react-uswds';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import { IT_GOV_EMAIL } from 'constants/externalUrls';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
   GetSystemIntake,
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
-import { SystemIntakeStatusRequester } from 'types/graphql-global-types';
+import { SystemIntake } from 'queries/types/SystemIntake';
+import { SystemIntakeDecisionState } from 'types/graphql-global-types';
 
 import Approved from './Approved';
+import NotGovernance from './NotGovernance';
 import Rejected from './Rejected';
 
 import './index.scss';
 
+type DecisionComponentProps = {
+  systemIntake: SystemIntake;
+};
+
+/** Renders decision content based on `decisionState` field */
+const DecisionComponent = ({ systemIntake }: DecisionComponentProps) => {
+  const { decisionState } = systemIntake;
+  const { t } = useTranslation('governanceReviewTeam');
+
+  switch (decisionState) {
+    case SystemIntakeDecisionState.LCID_ISSUED:
+      return <Approved intake={systemIntake} />;
+
+    case SystemIntakeDecisionState.NOT_APPROVED:
+      return <Rejected intake={systemIntake} />;
+
+    case SystemIntakeDecisionState.NOT_GOVERNANCE:
+      return <NotGovernance intake={systemIntake} />;
+
+    default:
+      return <p>{t('decision.noDecision')}</p>;
+  }
+};
+
 const RequestDecision = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('taskList');
-  const flags = useFlags();
 
   const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
     GetSystemIntakeQuery,
@@ -61,43 +87,34 @@ const RequestDecision = () => {
           <Breadcrumb current>{t('navigation.nextSteps')}</Breadcrumb>
         </BreadcrumbBar>
       </div>
+
       {loading && <PageLoading />}
 
-      {data?.systemIntake && (
-        <div className="grid-row">
-          <div className="tablet:grid-col-9">
-            <PageHeading>Decision and next steps</PageHeading>
-            {flags.itGovV2Enabled ? (
-              <>
-                {systemIntake?.statusRequester ===
-                  SystemIntakeStatusRequester.LCID_ISSUED && (
-                  <Approved intake={systemIntake} />
-                )}
-                {systemIntake?.statusRequester ===
-                  SystemIntakeStatusRequester.NOT_APPROVED && (
-                  <Rejected intake={systemIntake} />
-                )}
-              </>
-            ) : (
-              <>
-                {systemIntake?.status === 'LCID_ISSUED' && (
-                  <Approved intake={systemIntake} />
-                )}
-                {systemIntake?.status === 'NOT_APPROVED' && (
-                  <Rejected intake={systemIntake} />
-                )}
-              </>
-            )}
+      {systemIntake && (
+        <div className="grid-row grid-gap-6 margin-top-2">
+          <div className="desktop:grid-col-9 margin-bottom-2">
+            <PageHeading className="margin-top-2">
+              {t('navigation.nextSteps')}
+            </PageHeading>
+
+            <DecisionComponent systemIntake={systemIntake} />
+
+            <UswdsReactLink
+              className="usa-button margin-top-4"
+              variant="unstyled"
+              to={`/governance-task-list/${systemId}`}
+            >
+              {t('navigation.returnToTaskList')}
+            </UswdsReactLink>
           </div>
-          <div className="tablet:grid-col-1" />
-          <div className="tablet:grid-col-2">
+
+          {/* Sidebar */}
+          <div className="desktop:grid-col-3">
             <div className="sidebar margin-top-4">
-              <h3 className="font-sans-sm">
-                Need help? Contact the Governance team
-              </h3>
+              <h3 className="font-sans-sm">{t('decision.needHelp')}</h3>
               <p>
-                <UswdsLink href="mailto:IT_Governance@cms.hhs.gov">
-                  IT_Governance@cms.hhs.gov
+                <UswdsLink href={`mailto:${IT_GOV_EMAIL}`}>
+                  {IT_GOV_EMAIL}
                 </UswdsLink>
               </p>
             </div>
