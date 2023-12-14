@@ -13,6 +13,7 @@ import { ItGovTaskSystemIntakeWithMockData } from 'types/itGov';
 const GovTaskDecisionAndNextSteps = ({
   id,
   itGovTaskStatuses: { decisionAndNextStepsStatus },
+  state,
   decisionState,
   decisionAndNextStepsSubmittedAt
 }: ItGovTaskSystemIntakeWithMockData) => {
@@ -23,6 +24,7 @@ const GovTaskDecisionAndNextSteps = ({
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
       status={decisionAndNextStepsStatus}
+      state={state}
       statusDateInfo={
         decisionAndNextStepsStatus === ITGovDecisionStatus.COMPLETED &&
         decisionAndNextStepsSubmittedAt

@@ -71,6 +71,7 @@ const GovTaskIntakeForm = ({
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
       status={itGovTaskStatuses.intakeFormStatus}
+      state={state}
       statusPercentComplete={
         itGovTaskStatuses.intakeFormStatus ===
           ITGovIntakeFormStatus.IN_PROGRESS && intakeFormPctComplete
