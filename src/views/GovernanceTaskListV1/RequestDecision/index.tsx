@@ -9,6 +9,7 @@ import {
   Link as UswdsLink
 } from '@trussworks/react-uswds';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -22,20 +23,18 @@ import { SystemIntake } from 'queries/types/SystemIntake';
 import { SystemIntakeDecisionState } from 'types/graphql-global-types';
 
 import Approved from './Approved';
+import NotGovernance from './NotGovernance';
 import Rejected from './Rejected';
 
 import './index.scss';
 
 type DecisionComponentProps = {
-  decisionState: SystemIntakeDecisionState;
   systemIntake: SystemIntake;
 };
 
 /** Renders decision content based on `decisionState` field */
-const DecisionComponent = ({
-  decisionState,
-  systemIntake
-}: DecisionComponentProps) => {
+const DecisionComponent = ({ systemIntake }: DecisionComponentProps) => {
+  const { decisionState } = systemIntake;
   const { t } = useTranslation('governanceReviewTeam');
 
   switch (decisionState) {
@@ -46,8 +45,7 @@ const DecisionComponent = ({
       return <Rejected intake={systemIntake} />;
 
     case SystemIntakeDecisionState.NOT_GOVERNANCE:
-      // TODO: NOT_GOVERNANCE decision content
-      return <>Not an IT Governance Request</>;
+      return <NotGovernance intake={systemIntake} />;
 
     default:
       return <p>{t('decision.noDecision')}</p>;
@@ -99,10 +97,15 @@ const RequestDecision = () => {
               {t('navigation.nextSteps')}
             </PageHeading>
 
-            <DecisionComponent
-              decisionState={systemIntake?.decisionState}
-              systemIntake={systemIntake}
-            />
+            <DecisionComponent systemIntake={systemIntake} />
+
+            <UswdsReactLink
+              className="usa-button margin-top-4"
+              variant="unstyled"
+              to={`/governance-task-list/${systemId}`}
+            >
+              {t('navigation.returnToTaskList')}
+            </UswdsReactLink>
           </div>
 
           {/* Sidebar */}

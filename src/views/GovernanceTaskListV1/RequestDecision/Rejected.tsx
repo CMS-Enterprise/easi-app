@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import { RichTextViewer } from 'components/RichTextEditor';
 import { SystemIntake } from 'queries/types/SystemIntake';
 
@@ -15,7 +14,7 @@ type RejectedProps = {
  * Used in requester view of Decision and Next Steps page
  */
 const Rejected = ({ intake }: RejectedProps) => {
-  const { id, rejectionReason, decisionNextSteps } = intake;
+  const { rejectionReason, decisionNextSteps } = intake;
   const { t } = useTranslation('taskList');
 
   return (
@@ -41,14 +40,6 @@ const Rejected = ({ intake }: RejectedProps) => {
         }
         className="margin-bottom-2"
       />
-
-      <UswdsReactLink
-        className="usa-button"
-        variant="unstyled"
-        to={`/governance-task-list/${id}`}
-      >
-        {t('navigation.returnToTaskList')}
-      </UswdsReactLink>
     </>
   );
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import { SystemIntake } from 'queries/types/SystemIntake';
@@ -17,7 +16,7 @@ type ApprovedProps = {
  * Used in requester view of Decision and Next Steps page
  */
 const Approved = ({ intake }: ApprovedProps) => {
-  const { id, lcid, lcidScope, lcidExpiresAt, decisionNextSteps } = intake;
+  const { lcid, lcidScope, lcidExpiresAt, decisionNextSteps } = intake;
   const { t } = useTranslation('taskList');
 
   return (
@@ -86,14 +85,6 @@ const Approved = ({ intake }: ApprovedProps) => {
           t('governanceReviewTeam:notes.extendLcid.noNextSteps')
         }
       />
-
-      <UswdsReactLink
-        className="usa-button margin-top-4"
-        variant="unstyled"
-        to={`/governance-task-list/${id}`}
-      >
-        {t('navigation.returnToTaskList')}
-      </UswdsReactLink>
     </>
   );
 };
