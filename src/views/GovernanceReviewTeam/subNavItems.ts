@@ -1,4 +1,12 @@
-const subNavItems = (systemId: string) => [
+type SubNavItems = {
+  route: `/governance-review-team/${string}/${string}`;
+  text: string;
+  aria?: string;
+  /** Value used to designate end of sidenav subgrouping / border-bottom */
+  groupEnd?: boolean;
+}[];
+
+const subNavItems = (systemId: string): SubNavItems => [
   {
     route: `/governance-review-team/${systemId}/intake-request`,
     text: 'general:intake',
@@ -12,7 +20,8 @@ const subNavItems = (systemId: string) => [
   {
     route: `/governance-review-team/${systemId}/business-case`,
     text: 'general:businessCase',
-    aria: 'aria.openBusiness'
+    aria: 'aria.openBusiness',
+    groupEnd: true
   },
   {
     route: `/governance-review-team/${systemId}/feedback`,
@@ -29,7 +38,6 @@ const subNavItems = (systemId: string) => [
     text: 'lifecycleID.title',
     aria: 'aria.openLcid',
     groupEnd: true
-    // Value used to designate end of sidenav subgrouping / border-bottom
   },
   {
     route: `/governance-review-team/${systemId}/actions`,

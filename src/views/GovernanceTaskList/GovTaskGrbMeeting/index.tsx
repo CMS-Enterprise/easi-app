@@ -11,6 +11,7 @@ import { formatDateUtc } from 'utils/date';
 
 const GovTaskGrbMeeting = ({
   itGovTaskStatuses: { grbMeetingStatus },
+  state,
   grbDate
 }: ItGovTaskSystemIntakeWithMockData) => {
   const stepKey = 'grbMeeting';
@@ -20,6 +21,7 @@ const GovTaskGrbMeeting = ({
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
       status={grbMeetingStatus}
+      state={state}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
     >
       <TaskListDescription>

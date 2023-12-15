@@ -17,6 +17,7 @@ import { TaskListItemDateInfo } from 'types/taskList';
 const GovTaskFeedbackFromInitialReview = ({
   id,
   itGovTaskStatuses: { feedbackFromInitialReviewStatus },
+  state,
   governanceRequestFeedbacks,
   governanceRequestFeedbackCompletedAt
 }: ItGovTaskSystemIntakeWithMockData) => {
@@ -58,6 +59,7 @@ const GovTaskFeedbackFromInitialReview = ({
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
       status={feedbackFromInitialReviewStatus}
+      state={state}
       statusDateInfo={dateInfo}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
     >

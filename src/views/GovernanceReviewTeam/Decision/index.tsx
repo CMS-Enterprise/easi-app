@@ -2,121 +2,74 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageHeading from 'components/PageHeading';
-import ReviewRow from 'components/ReviewRow';
 import { RichTextViewer } from 'components/RichTextEditor';
 import {
   DescriptionDefinition,
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-import { SystemIntake } from 'queries/types/SystemIntake';
+import { SystemIntakeDecisionState } from 'types/graphql-global-types';
 
-type DecisionProps = {
-  systemIntake?: SystemIntake | null;
+type RejectedProps = {
+  rejectionReason?: string | null;
+  decisionNextSteps?: string | null;
 };
 
-const Decision = ({ systemIntake }: DecisionProps) => {
-  const { t } = useTranslation();
+const Rejected = ({ rejectionReason, decisionNextSteps }: RejectedProps) => {
+  const { t } = useTranslation('governanceReviewTeam');
 
-  const Approved = () => (
-    <>
-      <PageHeading>
-        {t('governanceReviewTeam:decision.titleApproved')}
-      </PageHeading>
-      <p>{t('governanceReviewTeam:decision.lcidIssued')}</p>
-    </>
+  return (
+    <DescriptionList title={t('decision.decisionSectionTitle')}>
+      <DescriptionTerm term={t('decision.rejectionReason')} />
+      <DescriptionDefinition
+        className="text-pre-wrap"
+        definition={
+          <RichTextViewer
+            value={rejectionReason || t('decision.noRejectionReasons')}
+          />
+        }
+      />
+
+      <DescriptionTerm term={t('decision.nextSteps')} />
+      <DescriptionDefinition
+        className="text-pre-wrap"
+        definition={
+          <RichTextViewer
+            value={decisionNextSteps || t('notes.extendLcid.noNextSteps')}
+          />
+        }
+      />
+    </DescriptionList>
   );
+};
 
-  const Rejected = () => (
-    <>
-      <PageHeading>
-        {t('governanceReviewTeam:decision.titleRejected')}
-      </PageHeading>
-      <DescriptionList
-        title={t('governanceReviewTeam:decision.decisionSectionTitle')}
-      >
-        <ReviewRow>
-          <div>
-            <DescriptionTerm
-              term={t('governanceReviewTeam:decision.rejectionReason')}
-            />
-            <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={
-                <RichTextViewer value={systemIntake?.rejectionReason || ''} />
-              }
-            />
-          </div>
-        </ReviewRow>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm
-              term={t('governanceReviewTeam:decision.nextSteps')}
-            />
-            <DescriptionDefinition
-              className="text-pre-wrap"
-              definition={
-                <RichTextViewer
-                  value={
-                    systemIntake?.decisionNextSteps ||
-                    t('governanceReviewTeam:notes.extendLcid.noNextSteps')
-                  }
-                />
-              }
-            />
-          </div>
-        </ReviewRow>
-      </DescriptionList>
-    </>
-  );
+type DecisionProps = {
+  rejectionReason?: string | null;
+  decisionNextSteps?: string | null;
+  decisionState?: SystemIntakeDecisionState;
+};
 
-  const NotItRequest = () => (
-    <>
-      <PageHeading>
-        {t('governanceReviewTeam:decision.titleClosed')}
-      </PageHeading>
-      <p>{t('governanceReviewTeam:decision.descriptionNotItRequest')}</p>
-    </>
-  );
-
-  const NoGovernance = () => (
-    <>
-      <PageHeading>
-        {t('governanceReviewTeam:decision.titleClosed')}
-      </PageHeading>
-      <p>{t('governanceReviewTeam:decision.descriptionNoGovernance')}</p>
-    </>
-  );
-
-  const ShutdownComplete = () => (
-    <>
-      <PageHeading>
-        {t('governanceReviewTeam:decision.titleClosed')}
-      </PageHeading>
-      <p>{t('governanceReviewTeam:decision.shutdownComplete')}</p>
-    </>
-  );
-
-  switch (systemIntake?.status) {
-    case 'LCID_ISSUED':
-      return <Approved />;
-    case 'NOT_APPROVED':
-      return <Rejected />;
-    case 'NOT_IT_REQUEST':
-      return <NotItRequest />;
-    case 'NO_GOVERNANCE':
-      return <NoGovernance />;
-    case 'SHUTDOWN_COMPLETE':
-      return <ShutdownComplete />;
-    default:
-  }
+const Decision = ({
+  rejectionReason,
+  decisionNextSteps,
+  decisionState
+}: DecisionProps) => {
+  const { t } = useTranslation('governanceReviewTeam');
 
   return (
     <>
       <PageHeading data-testid="grt-decision-view" className="margin-top-0">
-        {t('governanceReviewTeam:decision.title')}
+        {t('decision.title', { context: decisionState })}
       </PageHeading>
-      <p>{t('governanceReviewTeam:decision.noDecision')}</p>
+
+      {decisionState === SystemIntakeDecisionState.NOT_APPROVED ? (
+        <Rejected
+          rejectionReason={rejectionReason}
+          decisionNextSteps={decisionNextSteps}
+        />
+      ) : (
+        <p>{t('decision.description', { context: decisionState })}</p>
+      )}
     </>
   );
 };

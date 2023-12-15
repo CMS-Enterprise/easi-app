@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { RequestType, TRBRequestStatus } from "./../../types/graphql-global-types";
+import { RequestType, SystemIntakeStatusRequester, TRBRequestStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetRequests
@@ -17,6 +17,7 @@ export interface GetRequests_requests_edges_node {
   type: RequestType;
   status: string;
   statusCreatedAt: Time | null;
+  statusRequester: SystemIntakeStatusRequester | null;
   lcid: string | null;
   nextMeetingDate: Time | null;
 }

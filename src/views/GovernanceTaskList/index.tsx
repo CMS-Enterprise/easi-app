@@ -108,9 +108,11 @@ function GovernanceTaskList() {
               </PageHeading>
 
               <div className="line-height-body-4">
-                <p className="font-body-lg line-height-body-5 text-light margin-y-0">
-                  {t('taskList.description')}
-                </p>
+                {requestName && (
+                  <p className="font-body-lg line-height-body-5 text-light margin-y-0">
+                    {t('taskList.description', { requestName })}
+                  </p>
+                )}
 
                 {isClosed && !hasDecision && (
                   <Alert

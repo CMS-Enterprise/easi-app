@@ -21,7 +21,7 @@ type systemIntakeIssueLCIDEmailParameters struct {
 	LifecycleIssuedAt        string
 	LifecycleExpiresAt       string
 	LifecycleScope           template.HTML
-	LifecycleCostBaseline    string
+	LifecycleCostBaseline    *string
 	DecisionNextSteps        template.HTML
 	TRBRecommendation        string
 	RequesterName            string
@@ -38,7 +38,7 @@ func (sie systemIntakeEmails) SystemIntakeIssueLCIDBody(
 	lifecycleIssuedAt time.Time,
 	lifecycleExpiresAt *time.Time,
 	lifecycleScope models.HTML,
-	lifecycleCostBaseline string,
+	lifecycleCostBaseline *string,
 	decisionNextSteps models.HTML,
 	trbFollowUp models.SystemIntakeTRBFollowUp,
 	requesterName string,
@@ -101,7 +101,7 @@ func (sie systemIntakeEmails) SendIssueLCIDNotification(
 	lifecycleIssuedAt time.Time,
 	lifecycleExpiresAt *time.Time,
 	lifecycleScope models.HTML,
-	lifecycleCostBaseline string,
+	lifecycleCostBaseline *string,
 	decisionNextSteps models.HTML,
 	trbFollowUp models.SystemIntakeTRBFollowUp,
 	requesterName string,

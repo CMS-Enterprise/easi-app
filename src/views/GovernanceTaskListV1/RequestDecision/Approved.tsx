@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import UswdsReactLink from 'components/LinkWrapper';
+import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import { formatDateUtc } from 'utils/date';
@@ -10,55 +10,81 @@ type ApprovedProps = {
   intake: SystemIntake;
 };
 
+/**
+ * Displays LCID summary and next steps if a request has been approved
+ *
+ * Used in requester view of Decision and Next Steps page
+ */
 const Approved = ({ intake }: ApprovedProps) => {
-  const { id, lcid, lcidScope, lcidExpiresAt, decisionNextSteps } = intake;
+  const { lcid, lcidScope, lcidExpiresAt, decisionNextSteps } = intake;
   const { t } = useTranslation('taskList');
+
   return (
     <>
+      {/* LCID summary info box */}
       <div
-        className="easi-governance-decision__info"
+        className="easi-governance-decision__info padding-2"
         data-testid="grt-approved"
       >
-        <h2 className="margin-top-0">{t('decision.bizCaseApproved')}</h2>
+        <h2 className="margin-top-05 margin-bottom-1">
+          {t('decision.bizCaseApproved')}
+        </h2>
+
         <dl>
           <dt>{t('decision.lcid')}</dt>
           <dd className="margin-left-0 font-body-xl text-bold">{lcid}</dd>
+
+          <dt>
+            <h3 className="margin-top-1 margin-bottom-05">
+              {t('decision.lcidScope')}
+            </h3>
+          </dt>
+          <dd className="margin-left-0 color-white">
+            <RichTextViewer
+              value={
+                lcidScope || t('governanceReviewTeam:notes.extendLcid.noScope')
+              }
+            />
+          </dd>
+
+          {lcidExpiresAt && (
+            <dd className="margin-left-0 margin-y-2 text-bold">
+              {t('decision.lcidExpiration', {
+                date: formatDateUtc(lcidExpiresAt, 'MMMM d, yyyy')
+              })}
+            </dd>
+          )}
+
+          {intake?.lcidCostBaseline && (
+            <>
+              <dt>
+                <h3 className="margin-top-1 margin-bottom-05">
+                  {t('decision.costBaseline')}
+                </h3>
+              </dt>
+              <dd className="margin-left-0 color-white">
+                {intake.lcidCostBaseline}
+              </dd>
+            </>
+          )}
         </dl>
-        <h3>{t('decision.lcidScope')}</h3>
-        <p className="text-pre-wrap">{lcidScope}</p>
-        {lcidExpiresAt && (
-          <p className="text-bold">
-            {t('decision.lcidExpiration', {
-              date: formatDateUtc(lcidExpiresAt, 'MMMM d, yyyy')
-            })}
-          </p>
-        )}
-        {intake?.lcidCostBaseline && (
-          <>
-            <h3 className="margin-top-0">{t('decision.costBaseline')}</h3>
-            <p>{intake.lcidCostBaseline}</p>
-          </>
-        )}
       </div>
+
+      {/* Next steps */}
+      <h3 className="margin-bottom-1">{t('decision.nextSteps')}</h3>
 
       {decisionNextSteps && (
-        <>
-          <h3>{t('decision.nextSteps')}</h3>
-          <Alert type="info">{t('decision.completeNextSteps')}</Alert>
-
-          <p className="text-pre-wrap">{decisionNextSteps}</p>
-        </>
+        <Alert type="info" slim className="margin-y-2">
+          {t('decision.completeNextSteps')}
+        </Alert>
       )}
 
-      <div className="margin-top-4">
-        <UswdsReactLink
-          className="usa-button margin-bottom-2"
-          variant="unstyled"
-          to={`/governance-task-list/${id}`}
-        >
-          {t('navigation.returnToTaskList')}
-        </UswdsReactLink>
-      </div>
+      <RichTextViewer
+        value={
+          decisionNextSteps ||
+          t('governanceReviewTeam:notes.extendLcid.noNextSteps')
+        }
+      />
     </>
   );
 };

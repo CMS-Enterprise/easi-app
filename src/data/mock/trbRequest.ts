@@ -49,6 +49,7 @@ import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsult
 import {
   PersonRole,
   RequestType,
+  SystemIntakeStatusRequester,
   TRBAdminNoteCategory,
   TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
@@ -238,6 +239,7 @@ const getRequestsData: {
         submittedAt: '2021-05-25T19:22:40Z',
         type: RequestType.ACCESSIBILITY_REQUEST,
         status: 'OPEN',
+        statusRequester: null,
         statusCreatedAt: '2021-05-25T19:22:40Z',
         lcid: null,
         nextMeetingDate: null
@@ -252,6 +254,7 @@ const getRequestsData: {
         submittedAt: '2021-05-25T19:22:40Z',
         type: RequestType.ACCESSIBILITY_REQUEST,
         status: 'IN_REMEDIATION',
+        statusRequester: null,
         statusCreatedAt: '2021-05-26T19:22:40Z',
         lcid: null,
         nextMeetingDate: null
@@ -266,6 +269,8 @@ const getRequestsData: {
         submittedAt: '2021-05-22T19:22:40Z',
         type: RequestType.GOVERNANCE_REQUEST,
         status: 'INTAKE_DRAFT',
+        statusRequester:
+          SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
         statusCreatedAt: null,
         lcid: null,
         nextMeetingDate: null
@@ -280,6 +285,7 @@ const getRequestsData: {
         submittedAt: '2021-05-20T19:22:40Z',
         type: RequestType.GOVERNANCE_REQUEST,
         status: 'LCID_ISSUED',
+        statusRequester: SystemIntakeStatusRequester.LCID_ISSUED,
         statusCreatedAt: null,
         lcid: 'A123456',
         nextMeetingDate: null
