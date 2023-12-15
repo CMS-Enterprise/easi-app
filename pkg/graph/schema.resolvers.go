@@ -163,7 +163,7 @@ func (r *accessibilityRequestNoteResolver) AuthorName(ctx context.Context, obj *
 	if err != nil {
 		return "", err
 	}
-	return user.CommonName, nil
+	return user.DisplayName, nil
 }
 
 // AlternativeASolution is the resolver for the alternativeASolution field.
@@ -911,7 +911,7 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 
 	err = r.emailClient.SendNewAccessibilityRequestEmail(
 		ctx,
-		requesterInfo.CommonName,
+		requesterInfo.DisplayName,
 		request.Name,
 		systemName,
 		request.ID,
@@ -962,7 +962,7 @@ func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input
 		return nil, err
 	}
 
-	err = r.emailClient.SendRemovedAccessibilityRequestEmail(ctx, request.Name, removerInfo.CommonName, input.Reason, removerInfo.Email)
+	err = r.emailClient.SendRemovedAccessibilityRequestEmail(ctx, request.Name, removerInfo.DisplayName, input.Reason, removerInfo.Email)
 	if err != nil {
 		return nil, err
 	}
@@ -1071,7 +1071,7 @@ func (r *mutationResolver) CreateAccessibilityRequestNote(ctx context.Context, i
 			return nil, err
 		}
 
-		err = r.emailClient.SendNewAccessibilityRequestNoteEmail(ctx, input.RequestID, request.Name, userInfo.CommonName)
+		err = r.emailClient.SendNewAccessibilityRequestNoteEmail(ctx, input.RequestID, request.Name, userInfo.DisplayName)
 		if err != nil {
 			return nil, err
 		}
@@ -1141,7 +1141,7 @@ func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context,
 				ctx,
 				input.RequestID,
 				request.Name,
-				userInfo.CommonName,
+				userInfo.DisplayName,
 				latestStatusRecord.Status,
 				input.Status,
 			)
@@ -1567,7 +1567,7 @@ func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input mod
 		Content:    &input.Content,
 		IsArchived: input.IsArchived,
 		ID:         input.ID,
-		ModifiedBy: &userInfo.EuaUserID,
+		ModifiedBy: &userInfo.Username,
 	})
 	return systemIntakeNote, err
 }
@@ -1736,7 +1736,7 @@ func (r *mutationResolver) SubmitIntake(ctx context.Context, input model.SubmitI
 			IntakeID:       &input.ID,
 			ActionType:     models.ActionTypeSUBMITINTAKE,
 			ActorEUAUserID: actorEUAID,
-			ActorName:      actorInfo.CommonName,
+			ActorName:      actorInfo.DisplayName,
 			ActorEmail:     actorInfo.Email,
 			Step:           &intake.Step,
 		})
@@ -1911,7 +1911,7 @@ func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.Se
 		if err != nil {
 			return nil, err
 		}
-		reporterName = userInfo.CommonName
+		reporterName = userInfo.DisplayName
 		reporterEmail = userInfo.Email.String()
 	}
 
@@ -1947,7 +1947,7 @@ func (r *mutationResolver) SendCantFindSomethingEmail(ctx context.Context, input
 	}
 
 	err = r.emailClient.SendCantFindSomethingEmail(ctx, email.SendCantFindSomethingEmailInput{
-		Name:  userInfo.CommonName,
+		Name:  userInfo.DisplayName,
 		Email: userInfo.Email.String(),
 		Body:  input.Body,
 	})
@@ -1970,7 +1970,7 @@ func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input mo
 		if err != nil {
 			return nil, err
 		}
-		reporterName = userInfo.CommonName
+		reporterName = userInfo.DisplayName
 		reporterEmail = userInfo.Email.String()
 	}
 
@@ -2142,7 +2142,7 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 			return
 		}
 
-		err = r.emailClient.SendCedarRolesChangedEmail(emailCtx, requesterUserInfo.CommonName, targetUserInfo.CommonName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now())
+		err = r.emailClient.SendCedarRolesChangedEmail(emailCtx, requesterUserInfo.DisplayName, targetUserInfo.DisplayName, rs.DidAdd, rs.DidDelete, rs.RoleTypeNamesBefore, rs.RoleTypeNamesAfter, rs.SystemName, time.Now())
 		if err != nil {
 			// don't fail the request if the email fails, just log and return from the go func
 			appcontext.ZLogger(emailCtx).Error("failed to send CEDAR notification email", zap.Error(err))
@@ -2692,7 +2692,7 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 	userInfoMap := make(map[string]*models.UserInfo)
 	for _, userInfo := range userInfos {
 		if userInfo != nil {
-			userInfoMap[userInfo.EuaUserID] = userInfo
+			userInfoMap[userInfo.Username] = userInfo
 		}
 	}
 
@@ -2702,7 +2702,7 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 		if userInfo, found := userInfoMap[contact.EUAUserID]; found {
 			augmentedContacts = append(augmentedContacts, &models.AugmentedSystemIntakeContact{
 				SystemIntakeContact: *contact,
-				CommonName:          userInfo.CommonName,
+				CommonName:          userInfo.DisplayName,
 				Email:               userInfo.Email,
 			})
 		} else {
@@ -3374,6 +3374,18 @@ func (r *tRBRequestFormResolver) SubjectAreaOptions(ctx context.Context, obj *mo
 	return subjectAreas, nil
 }
 
+// CommonName is the resolver for the commonName field.
+func (r *userInfoResolver) CommonName(ctx context.Context, obj *models.UserInfo) (string, error) {
+	return obj.DisplayName, nil
+	//TODO: EASI-3341 --> Refactot the schema to use the new field names
+}
+
+// EuaUserID is the resolver for the euaUserId field.
+func (r *userInfoResolver) EuaUserID(ctx context.Context, obj *models.UserInfo) (string, error) {
+	return obj.Username, nil
+	//TODO: EASI-3341 --> Refactot the schema to use the new field names
+}
+
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
 func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
 	return &accessibilityRequestResolver{r}
@@ -3494,6 +3506,9 @@ func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
 	return &tRBRequestFormResolver{r}
 }
 
+// UserInfo returns generated.UserInfoResolver implementation.
+func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
+
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type accessibilityRequestNoteResolver struct{ *Resolver }
@@ -3522,3 +3537,4 @@ type tRBRequestAttendeeResolver struct{ *Resolver }
 type tRBRequestDocumentResolver struct{ *Resolver }
 type tRBRequestFeedbackResolver struct{ *Resolver }
 type tRBRequestFormResolver struct{ *Resolver }
+type userInfoResolver struct{ *Resolver }

@@ -101,7 +101,7 @@ func CreateTRBRequestFeedback(
 				feedback.CopyTRBMailbox,
 				feedback.TRBRequestID,
 				request.GetName(),
-				requester.CommonName,
+				requester.DisplayName,
 				feedback.FeedbackMessage,
 			)
 			if err != nil {
@@ -114,7 +114,7 @@ func CreateTRBRequestFeedback(
 				feedback.CopyTRBMailbox,
 				feedback.TRBRequestID,
 				request.GetName(),
-				requester.CommonName,
+				requester.DisplayName,
 				feedback.FeedbackMessage,
 			)
 			if err != nil {

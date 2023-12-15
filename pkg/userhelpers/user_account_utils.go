@@ -105,10 +105,10 @@ func GetUserInfoAccountInfoWrapper(ctx context.Context, username string, getUser
 	}
 
 	accountInfo := &AccountInfo{}
-	accountInfo.Name = userinfo.CommonName
+	accountInfo.Name = userinfo.DisplayName
 	accountInfo.Locale = "UNKNOWN"
 	accountInfo.Email = userinfo.Email.String() // TODO: EASI-3341, can this be an email address type instead of string
-	accountInfo.PreferredUsername = userinfo.EuaUserID
+	accountInfo.PreferredUsername = userinfo.Username
 	accountInfo.GivenName = userinfo.FirstName
 	accountInfo.FamilyName = userinfo.LastName
 	accountInfo.ZoneInfo = "UNKNOWN"

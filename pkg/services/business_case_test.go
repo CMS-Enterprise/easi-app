@@ -81,9 +81,9 @@ func (s *ServicesTestSuite) TestBusinessCaseCreator() {
 	}
 	fetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			CommonName: "Name",
-			Email:      "name@site.com",
-			EuaUserID:  testhelpers.RandomEUAID(),
+			DisplayName: "Name",
+			Email:       "name@site.com",
+			Username:    testhelpers.RandomEUAID(),
 		}, nil
 	}
 	updateIntake := func(_ context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
