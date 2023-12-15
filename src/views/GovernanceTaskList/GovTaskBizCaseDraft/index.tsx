@@ -73,6 +73,7 @@ const GovTaskBizCaseDraft = ({
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
       status={bizCaseDraftStatus}
+      state={state}
       statusDateInfo={dateInfo}
       testId={kebabCase(t(`taskList.step.${stepKey}.title`))}
     >
