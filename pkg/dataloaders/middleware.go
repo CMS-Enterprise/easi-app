@@ -21,7 +21,7 @@ const (
 )
 
 // NewLoaders instantiates data loaders for the middleware
-func NewLoaders(fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error)) *Loaders {
+func NewLoaders(fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error)) *Loaders { // TODO: EASI-3341 can this be combined with the larger data loader paradigm?
 	userInfoLoader := UserInfoLoader{
 		FetchUserInfos: fetchUserInfos,
 	}

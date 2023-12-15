@@ -26,6 +26,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/authorization"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	"github.com/cmsgov/easi-app/pkg/oktaapi"
+	"github.com/cmsgov/easi-app/pkg/storage/loaders"
 	"github.com/cmsgov/easi-app/pkg/usersearch"
 
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
@@ -283,8 +284,12 @@ func (s *Server) routes(
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(gqlConfig))
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
-	loaderMiddleware := dataloaders.Middleware(userSearchClient.FetchUserInfos)
+	loaderMiddleware := dataloaders.Middleware(userSearchClient.FetchUserInfos) // TODO: EASI-3341 combine this middleware with the new form.
 	s.router.Use(loaderMiddleware)
+
+	dataLoaders := loaders.NewDataLoaders(store)
+	dataLoaderMiddleware := loaders.NewDataLoaderMiddleware(dataLoaders)
+	s.router.Use(dataLoaderMiddleware)
 
 	gql.Handle("/query", graphqlServer)
 
