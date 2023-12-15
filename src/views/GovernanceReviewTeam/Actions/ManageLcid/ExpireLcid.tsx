@@ -77,6 +77,7 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
             title={t('manageLcid.expire', { context: lcidStatus })}
           />
         }
+        notificationAlertWarn
       >
         <Controller
           name="reason"

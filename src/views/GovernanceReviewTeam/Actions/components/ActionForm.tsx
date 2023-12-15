@@ -69,6 +69,8 @@ export type ActionFormProps<TFieldValues extends SystemIntakeActionFields> = {
   errorKeyContext?: string;
   children?: React.ReactNode;
   className?: string;
+  // Switch notification type to warning instead of info default
+  notificationAlertWarn?: boolean;
 } & Omit<JSX.IntrinsicElements['form'], 'onSubmit' | 'title'>;
 
 /**
@@ -94,6 +96,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
   errorKeyContext,
   children,
   className,
+  notificationAlertWarn = false,
   ...formProps
 }: ActionFormProps<TFieldValues>) => {
   const { t } = useTranslation('action');
@@ -305,7 +308,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
           <h3 className="margin-bottom-0 margin-top-6">
             {t('notification.heading')}
           </h3>
-          <Alert type="info" slim>
+          <Alert type={notificationAlertWarn ? 'warning' : 'info'} slim>
             {t('notification.alert')}
           </Alert>
           <Trans
