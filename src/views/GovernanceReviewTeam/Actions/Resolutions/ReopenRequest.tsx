@@ -72,6 +72,7 @@ const ReopenRequest = ({
             decisionState={decisionState}
           />
         }
+        notificationAlertWarn
       >
         <Controller
           name="reason"
