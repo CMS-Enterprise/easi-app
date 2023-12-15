@@ -11,7 +11,7 @@ export default {
   },
   taskList: {
     heading: 'Governance task list',
-    description: 'for IT Governance request',
+    description: 'for {{requestName}}',
     help: 'Help',
     stepsInvolved:
       'Steps involved in an IT Governance request (opens in a new tab)',
@@ -93,7 +93,8 @@ export default {
         title: 'Decision and next steps',
         description:
           'If your request is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive documented next steps or concerns to address in order to proceed.',
-        button: 'Read the decision'
+        button: 'Read the decision',
+        viewExistingDecision: 'View existing decision'
       }
     }
   }

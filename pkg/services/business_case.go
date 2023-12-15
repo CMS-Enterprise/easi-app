@@ -118,8 +118,21 @@ func NewCreateBusinessCase(
 			return &models.BusinessCase{}, err
 		}
 
-		intake.Status = models.SystemIntakeStatusBIZCASEDRAFT
+		// It's possible to create a business case if you're in the Draft OR the Final step
+		// The former happens when progressing like this: intake form -> draft biz case -> final biz case
+		// The latter happens when progressing _straight_ to the final, without ever creating a draft first
+		// This means we need to check what step we're in before we set any statuses
+		// If you're in the final step, set status = SystemIntakeStatusBIZCASEFINALNEEDED
+		// If you're in _ANY_ other step (usually draft), set status = SystemIntakeStatusBIZCASEDRAFT
+		if intake.Step == models.SystemIntakeStepFINALBIZCASE {
+			intake.Status = models.SystemIntakeStatusBIZCASEFINALNEEDED
+		} else { // technically any other step, but typically draft is what it'll be in here
+			intake.Status = models.SystemIntakeStatusBIZCASEDRAFT
+		}
+
+		// Set V2 fields based on the now-appropriately-set status
 		intake.SetV2FieldsBasedOnV1Status(intake.Status)
+
 		intake.UpdatedAt = &now
 		if _, err = updateIntake(ctx, intake); err != nil {
 			return &models.BusinessCase{}, err

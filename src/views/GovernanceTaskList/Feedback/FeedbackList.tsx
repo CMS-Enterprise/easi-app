@@ -35,17 +35,6 @@ type FeedbackListProps = {
 const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
   const { t } = useTranslation('taskList');
 
-  const printRef = useRef<HTMLDivElement>(null);
-  const handlePrint = useReactToPrint({
-    documentTitle: `Feedback for ${systemIntakeId}.pdf`,
-    content: () => printRef.current,
-    pageStyle: `
-      @page {
-        margin: auto;
-      }
-    `
-  });
-
   const { data, loading } = useCacheQuery<
     GetGovernanceRequestFeedback,
     GetGovernanceRequestFeedbackVariables
@@ -56,6 +45,18 @@ const FeedbackList = ({ systemIntakeId, returnLink }: FeedbackListProps) => {
   });
 
   const feedback = data?.systemIntake?.governanceRequestFeedbacks || [];
+  const { requestName } = data?.systemIntake || {};
+
+  const printRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    documentTitle: `${t('feedback.pdfTitle', { requestName })}.pdf`,
+    content: () => printRef.current,
+    pageStyle: `
+      @page {
+        margin: auto;
+      }
+    `
+  });
 
   /** Return and PDF download links */
   const ActionLinks = () => (

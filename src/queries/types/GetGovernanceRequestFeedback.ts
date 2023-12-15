@@ -27,6 +27,7 @@ export interface GetGovernanceRequestFeedback_systemIntake_governanceRequestFeed
 export interface GetGovernanceRequestFeedback_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
+  requestName: string | null;
   governanceRequestFeedbacks: GetGovernanceRequestFeedback_systemIntake_governanceRequestFeedbacks[];
 }
 

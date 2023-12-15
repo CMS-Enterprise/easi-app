@@ -14,6 +14,7 @@ import {
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Modal from 'components/Modal';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -22,7 +23,10 @@ import StateTag from 'components/StateTag';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
-import { SystemIntakeState } from 'types/graphql-global-types';
+import {
+  SystemIntakeState,
+  SystemIntakeStatusAdmin
+} from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
@@ -40,10 +44,12 @@ type RequestSummaryProps = {
   requestName: string;
   requestType: RequestType;
   status: string;
+  statusAdmin: SystemIntakeStatusAdmin;
   adminLead: string | null;
   submittedAt: string | null;
   lcid: string | null;
   contractNumber: string | null;
+  state: SystemIntakeState;
 };
 
 const RequestSummary = ({
@@ -52,12 +58,15 @@ const RequestSummary = ({
   requestName,
   requestType,
   status,
+  statusAdmin,
   adminLead,
   submittedAt,
   lcid,
-  contractNumber
+  contractNumber,
+  state
 }: RequestSummaryProps) => {
   const { t } = useTranslation('governanceReviewTeam');
+  const flags = useFlags();
   const [isModalOpen, setModalOpen] = useState(false);
   const [newAdminLead, setAdminLead] = useState('');
   const [mutate, mutationResult] = useMutation<UpdateSystemIntakeAdminLead>(
@@ -67,8 +76,7 @@ const RequestSummary = ({
     }
   );
 
-  // TODO EASI-3440: update to use v2 `state` field
-  const state: SystemIntakeState = isIntakeClosed(status)
+  const stateV1: SystemIntakeState = isIntakeClosed(status)
     ? SystemIntakeState.CLOSED
     : SystemIntakeState.OPEN;
 
@@ -206,15 +214,17 @@ const RequestSummary = ({
             <Grid desktop={{ col: 8 }}>
               <div>
                 <h4 className="margin-right-1">{t('status.label')}</h4>
-                <StateTag state={state} />
+                <StateTag state={flags.itGovV2Enabled ? state : stateV1} />
               </div>
               <p className="text-base-dark" data-testid="grt-current-status">
-                {
-                  /* TODO EASI-3440: Update to use v2 statuses */
-                  translateStatus(status, lcid)
-                }
+                {flags.itGovV2Enabled
+                  ? t(`systemIntakeStatusAdmin.${statusAdmin}`, { lcid })
+                  : translateStatus(status, lcid)}
               </p>
-              <Link to={`/governance-review-team/${id}/actions`}>
+              <Link
+                to={`/governance-review-team/${id}/actions`}
+                className="usa-link"
+              >
                 {t('action:takeAnAction')}
               </Link>
             </Grid>
