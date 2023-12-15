@@ -15,24 +15,24 @@ You will obviously need a cluster to deploy to. This cluster needs to be configu
 
 #### Kustomize
 
-`kustomize` is a Kubernetes configuration transformation tool that enables you to customize untemplated YAML files, leaving the original files untouched.
+`kustomize` is a Kubernetes configuration transformation tool that enables you to customize base YAML manifests, leaving the original files untouched.
 `kustomize` will need to be installed somewhere in your PATH directories.  
 See https://kubectl.docs.kubernetes.io/installation/kustomize/ for installation instructions.
 
 ## What does it do?
 
-1. Pre-Req check: looking for `kubectl` and `kustomize`
+1. Prerequisite check: looking for `kubectl` and `kustomize`
 1. Clears given branch namespace to remove any previous deployment
 1. Builds `easi-client`, `easi-backend`, and `db-migrate` images and tags with branch/namespace name
 1. Using `kustomize`, deploys EASi into given branch namespace
-1. Prints output for EASi and Mailcatcher URLs for easy (😉) access
+1. Prints output for EASi and MailCatcher URLs for easy (😉) access
 
 ## Usage
 
 `./k8s_dev.sh [OPTIONS]`
 
 By default, this script will create a new namespace with the branch name.  
-For example: I have checked out a git branch named `EASI-3486/create-local-development-k8s-manifests`. The script will strip the relevant `easi-3486` and use this as the namespace throughtout runtime.
+For example: I have checked out a git branch named `EASI-3486/create-local-development-k8s-manifests`. The script will strip the relevant `easi-3486` and use this as the namespace throughout runtime.
 
 #### Options
 
