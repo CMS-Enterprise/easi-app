@@ -11,6 +11,7 @@ export default gql`
           type
           status
           statusCreatedAt
+          statusRequester
           lcid
           nextMeetingDate
         }

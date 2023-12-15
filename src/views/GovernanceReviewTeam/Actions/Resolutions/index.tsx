@@ -136,7 +136,7 @@ const Resolutions = ({ systemIntake }: ActionsProps) => {
         items={[
           { text: t('Home'), url: '/' },
           {
-            text: t('resolutions.requestDetails'),
+            text: t('governanceReviewTeam:governanceRequestDetails'),
             url: `/governance-review-team/${systemIntakeId}/intake-request`
           },
           {
@@ -160,11 +160,7 @@ const Resolutions = ({ systemIntake }: ActionsProps) => {
           />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/not-approved">
-          <NotApproved
-            systemIntakeId={systemIntakeId}
-            state={state}
-            decisionState={decisionState}
-          />
+          <NotApproved {...systemIntake} systemIntakeId={systemIntakeId} />
         </Route>
         <Route path="/governance-review-team/:systemId/resolutions/close-request">
           <CloseRequest
@@ -252,7 +248,7 @@ const Resolutions = ({ systemIntake }: ActionsProps) => {
                   disabled: !isDirty
                 }}
                 saveExitText={t('cancelAction')}
-                taskListUrl={`/governance-review-team/${systemIntakeId}/intake-request`}
+                taskListUrl={`/governance-review-team/${systemIntakeId}/actions`}
                 className="margin-top-6"
                 border={false}
                 submitDisabled

@@ -1,13 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Business owner task list approved view > matches the snapshot 1`] = `
-[
+<DocumentFragment>
   <div
-    className="easi-governance-decision__info"
+    class="easi-governance-decision__info padding-2"
     data-testid="grt-approved"
   >
     <h2
-      className="margin-top-0"
+      class="margin-top-05 margin-bottom-1"
     >
       Your business case has been approved.
     </h2>
@@ -16,58 +16,82 @@ exports[`Business owner task list approved view > matches the snapshot 1`] = `
         Project Life Cycle ID
       </dt>
       <dd
-        className="margin-left-0 font-body-xl text-bold"
+        class="margin-left-0 font-body-xl text-bold"
       >
         123456
       </dd>
+      <dt>
+        <h3
+          class="margin-top-1 margin-bottom-05"
+        >
+          Life Cycle ID Scope
+        </h3>
+      </dt>
+      <dd
+        class="margin-left-0 color-white"
+      >
+        <div
+          class="easi-toast easi-toast-viewer"
+        >
+          <div>
+            <div
+              class="toastui-editor-contents"
+              style="overflow-wrap: break-word;"
+            >
+              <p
+                data-nodeid="5"
+              >
+                Test scope
+              </p>
+              
+
+            </div>
+          </div>
+        </div>
+      </dd>
+      <dd
+        class="margin-left-0 margin-y-2 text-bold"
+      >
+        This ID expires on July 19, 2021
+      </dd>
     </dl>
-    <h3>
-      Life Cycle ID Scope
-    </h3>
-    <p
-      className="text-pre-wrap"
-    >
-      Test scope
-    </p>
-    <p
-      className="text-bold"
-    >
-      This ID expires on July 19, 2021
-    </p>
-    
-  </div>,
-  <h3>
+  </div>
+  <h3
+    class="margin-bottom-1"
+  >
     Next steps
-  </h3>,
+  </h3>
   <div
-    className="usa-alert usa-alert--info"
+    class="usa-alert usa-alert--info usa-alert--slim margin-y-2"
     data-testid="alert"
   >
     <div
-      className="usa-alert__body"
+      class="usa-alert__body"
     >
       <p
-        className="usa-alert__text"
+        class="usa-alert__text"
       >
         Finish these next steps to complete the governance review process.
       </p>
     </div>
-  </div>,
-  <p
-    className="text-pre-wrap"
-  >
-    Test next steps
-  </p>,
+  </div>
   <div
-    className="margin-top-4"
+    class="easi-toast easi-toast-viewer"
   >
-    <a
-      className="usa-button margin-bottom-2"
-      href="/governance-task-list/40e866cb-6bf4-4b1a-8fc6-bf0d8328cdfc"
-      onClick={[Function]}
-    >
-      Return to task list
-    </a>
-  </div>,
-]
+    <div>
+      <div
+        class="toastui-editor-contents"
+        style="overflow-wrap: break-word;"
+      >
+        <p
+          data-nodeid="7"
+        >
+          Test next steps
+        </p>
+        
+
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
 `;

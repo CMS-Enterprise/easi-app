@@ -65,7 +65,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 	respBusinessCase := resp.SystemIntake.BusinessCase
 	s.Equal(businessCase.ID.String(), respBusinessCase.ID)
 	s.Nil(respBusinessCase.AlternativeASolution.Cons)
-	s.Nil(respBusinessCase.LifecycleCostLines[0].Phase)
+	s.Empty(respBusinessCase.LifecycleCostLines)
 }
 
 func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuery() {

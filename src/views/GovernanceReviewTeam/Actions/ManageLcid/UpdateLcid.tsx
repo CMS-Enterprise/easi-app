@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
 
+import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import Divider from 'components/shared/Divider';
@@ -25,6 +26,7 @@ import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
 import LcidSummary, { LcidSummaryProps } from './LcidSummary';
 import LcidTitleBox from './LcidTitleBox';
+import { actionDateInPast } from './RetireLcid';
 import { ManageLcidProps } from '.';
 
 type UpdateLcidFields = NonNullableProps<
@@ -108,6 +110,7 @@ const UpdateLcid = ({
             />
           </LcidTitleBox>
         }
+        notificationAlertWarn
       >
         <h3 className="margin-bottom-1">{t('updateLcid.title')}</h3>
         <HelpText className="line-height-body-5">
@@ -139,7 +142,17 @@ const UpdateLcid = ({
                 {...field}
                 id={field.name}
                 defaultValue={field.value}
+                // Fix for empty string throwing off field validation
+                onChange={e => field.onChange(e || undefined)}
               />
+              {
+                // If past date is selected, show alert
+                actionDateInPast(field.value || null) && (
+                  <Alert type="warning" slim>
+                    {t('pastDateAlert')}
+                  </Alert>
+                )
+              }
             </FormGroup>
           )}
         />
@@ -147,22 +160,29 @@ const UpdateLcid = ({
         <Controller
           name="scope"
           control={control}
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal">
+              <Label
+                htmlFor={field.name}
+                id={`${field.name}-label`}
+                className="text-normal"
+              >
                 {t('issueLCID.scopeLabel')}
               </Label>
-              <HelpText className="margin-top-1">
+              <HelpText className="margin-top-1" id={`${field.name}-hint`}>
                 {t('updateLcid.scopeHelpText')}
               </HelpText>
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField
-                {...field}
-                id={field.name}
-                value={field.value || ''}
-                size="sm"
+              <RichTextEditor
+                field={field}
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
               />
             </FormGroup>
           )}
@@ -171,22 +191,29 @@ const UpdateLcid = ({
         <Controller
           name="nextSteps"
           control={control}
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal">
+              <Label
+                htmlFor={field.name}
+                id={`${field.name}-label`}
+                className="text-normal"
+              >
                 {t('issueLCID.nextStepsLabel')}
               </Label>
-              <HelpText className="margin-top-1">
+              <HelpText className="margin-top-1" id={`${field.name}-hint`}>
                 {t('issueLCID.nextStepsHelpText')}
               </HelpText>
               {!!error?.message && (
                 <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
               )}
-              <TextAreaField
-                {...field}
-                id={field.name}
-                value={field.value || ''}
-                size="sm"
+              <RichTextEditor
+                field={field}
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
               />
             </FormGroup>
           )}
@@ -218,19 +245,26 @@ const UpdateLcid = ({
         <Controller
           name="reason"
           control={control}
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+          render={({ field, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label htmlFor={field.name} className="text-normal">
+              <Label
+                htmlFor={field.name}
+                id={`${field.name}-label`}
+                className="text-normal"
+              >
                 {t('updateLcid.reasonLabel')}
               </Label>
               <HelpText className="margin-top-1">
                 {t('updateLcid.reasonHelpText')}
               </HelpText>
-              <TextAreaField
-                {...field}
-                value={field.value || ''}
-                id={field.name}
-                size="sm"
+              <RichTextEditor
+                field={field}
+                editableProps={{
+                  id: field.name,
+                  'data-testid': field.name,
+                  'aria-describedby': `${field.name}-hint`,
+                  'aria-labelledby': `${field.name}-label`
+                }}
               />
             </FormGroup>
           )}

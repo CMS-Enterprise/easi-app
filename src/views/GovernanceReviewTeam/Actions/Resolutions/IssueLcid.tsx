@@ -12,6 +12,7 @@ import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
 import useCacheQuery from 'hooks/useCacheQuery';
 import useMessage from 'hooks/useMessage';
 import CreateSystemIntakeActionConfirmLcidQuery from 'queries/CreateSystemIntakeActionConfirmLcidQuery';
@@ -30,6 +31,7 @@ import {
   GetSystemIntakesWithLCIDS_systemIntakesWithLcids as SystemIntakeWithLcid
 } from 'queries/types/GetSystemIntakesWithLCIDS';
 import {
+  SystemIntakeDecisionState,
   SystemIntakeIssueLCIDInput,
   SystemIntakeTRBFollowUp
 } from 'types/graphql-global-types';
@@ -37,6 +39,7 @@ import { NonNullableProps } from 'types/util';
 import { lcidActionSchema } from 'validations/actionSchema';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
+import { actionDateInPast } from '../ManageLcid/RetireLcid';
 import { EditsRequestedContext } from '..';
 
 import ResolutionTitleBox from './ResolutionTitleBox';
@@ -66,12 +69,12 @@ const IssueLcid = ({
   systemIntakeId,
   state,
   decisionState,
-  ...defaultValues
+  ...systemIntake
 }: IssueLcidProps) => {
   const { t } = useTranslation('action');
 
-  /** Type of LCID action */
-  const actionType = defaultValues.lcid ? 'confirm' : 'issue';
+  const confirmingLcid =
+    decisionState === SystemIntakeDecisionState.LCID_ISSUED;
 
   /** Edits requested form key for confirmation modal */
   const editsRequestedKey = useContext(EditsRequestedContext);
@@ -107,19 +110,34 @@ const IssueLcid = ({
     }, {});
   }, [data]);
 
+  /** Only pre-fill next steps, trb follow up, and cost baseline if confirming decision */
+  const defaultValues: Partial<IssueLcidFields> = confirmingLcid
+    ? {
+        lcid: systemIntake.lcid || '',
+        expiresAt: systemIntake.lcidExpiresAt || '',
+        nextSteps: systemIntake.decisionNextSteps || '',
+        scope: systemIntake.lcidScope || '',
+        trbFollowUp: systemIntake.trbFollowUpRecommendation || undefined,
+        costBaseline: systemIntake.lcidCostBaseline || ''
+      }
+    : {
+        lcid: systemIntake.lcid || '',
+        expiresAt: systemIntake.lcidExpiresAt || '',
+        scope: systemIntake.lcidScope || ''
+      };
+
   const form = useForm<IssueLcidFields>({
-    resolver: yupResolver(lcidActionSchema(actionType)),
-    defaultValues: {
-      lcid: defaultValues.lcid || '',
-      expiresAt: defaultValues.lcidExpiresAt || '',
-      nextSteps: defaultValues.decisionNextSteps || '',
-      scope: defaultValues.lcidScope || '',
-      trbFollowUp: defaultValues.trbFollowUpRecommendation || undefined,
-      costBaseline: defaultValues.lcidCostBaseline || ''
-    }
+    resolver: yupResolver(lcidActionSchema(!!systemIntake?.lcid)),
+    defaultValues
   });
 
-  const { control, setValue, watch, resetField } = form;
+  const {
+    control,
+    setValue,
+    watch,
+    resetField,
+    formState: { isValid }
+  } = form;
 
   const { showMessageOnNextPage } = useMessage();
 
@@ -161,10 +179,10 @@ const IssueLcid = ({
     };
 
     /** Returns `confirmLcid` or `issueLcid` mutation based on form action type */
-    const mutation = actionType === 'confirm' ? confirmLcid : issueLcid;
+    const mutation = systemIntake?.lcid ? confirmLcid : issueLcid;
 
     // If confirming LCID, remove LCID from mutation input
-    if (actionType === 'confirm') {
+    if (systemIntake?.lcid) {
       delete input.lcid;
     }
 
@@ -218,6 +236,7 @@ const IssueLcid = ({
       <ActionForm
         systemIntakeId={systemIntakeId}
         onSubmit={onSubmit}
+        disableSubmit={!isValid}
         title={
           <ResolutionTitleBox
             title={t('resolutions.summary.issueLcid')}
@@ -236,7 +255,7 @@ const IssueLcid = ({
           }
         }
       >
-        {defaultValues.lcid ? (
+        {systemIntake?.lcid ? (
           /* If confirming decision, display current LCID */
           <>
             <p className="margin-0">{t('issueLCID.lcid.label')}</p>
@@ -254,9 +273,11 @@ const IssueLcid = ({
                 }}
               />
             </p>
-            <Alert type="info" className="margin-top-1" slim>
-              {t('issueLCID.confirmLcidAlert')}
-            </Alert>
+            {confirmingLcid && (
+              <Alert type="info" className="margin-top-1" slim>
+                {t('issueLCID.confirmLcidAlert')}
+              </Alert>
+            )}
           </>
         ) : (
           /* New or existing LCID fields */
@@ -356,6 +377,14 @@ const IssueLcid = ({
                 id={field.name}
                 defaultValue={field.value}
               />
+              {
+                // If past date is selected, show alert
+                actionDateInPast(field.value || null) && (
+                  <Alert type="warning" slim>
+                    {t('pastDateAlert')}
+                  </Alert>
+                )
+              }
             </FormGroup>
           )}
         />
@@ -474,25 +503,17 @@ const IssueLcid = ({
           control={control}
           render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
-              <Label
-                id={`${field.name}-label`}
-                htmlFor={field.name}
-                className="text-normal"
-              >
+              <Label htmlFor={field.name} className="text-normal">
                 {t('issueLCID.costBaselineLabel')}
               </Label>
               <HelpText className="margin-top-1">
                 {t('issueLCID.costBaselineHelpText')}
               </HelpText>
-              <RichTextEditor
-                editableProps={{
-                  id: field.name,
-                  'data-testid': field.name,
-                  'aria-describedby': `${field.name}-hint`,
-                  'aria-labelledby': `${field.name}-label`
-                }}
-                field={{ ...field, value: field.value || '' }}
-                required
+              <TextAreaField
+                {...field}
+                value={field.value || ''}
+                id={field.name}
+                size="sm"
               />
             </FormGroup>
           )}

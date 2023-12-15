@@ -514,7 +514,7 @@ func IssueLCID(
 				currTime,
 				&input.ExpiresAt,
 				input.Scope,
-				*input.CostBaseline,
+				input.CostBaseline,
 				input.NextSteps,
 				input.TrbFollowUp,
 				intake.Requester,
@@ -707,6 +707,7 @@ func CreateSystemIntakeActionNotITGovRequest(
 	}
 	intake.State = models.SystemIntakeStateCLOSED
 	intake.Step = models.SystemIntakeStepDECISION
+	intake.RejectionReason = input.Reason
 	intake.DecisionState = models.SIDSNotGovernance
 
 	updatedTime := time.Now()
@@ -719,8 +720,7 @@ func CreateSystemIntakeActionNotITGovRequest(
 	if err != nil {
 		return nil, err
 	}
-	// TODO: Send Notification Email (EASI-3109)
-	// input.Reason is currently not persisted and only sent in the notification email
+
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeNOTITGOVREQUEST,
 		ActorName:      adminTakingAction.CommonName,
@@ -1019,7 +1019,7 @@ func ConfirmLCID(ctx context.Context,
 				&input.ExpiresAt,
 				intake.LifecycleIssuedAt,
 				input.Scope,
-				*input.CostBaseline,
+				input.CostBaseline,
 				input.NextSteps,
 				input.TrbFollowUp,
 				intake.Requester,

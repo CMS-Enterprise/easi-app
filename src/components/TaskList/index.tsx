@@ -37,6 +37,7 @@ export const TaskListDescription = ({ children }: TaskListDescriptionProps) => {
 type TaskListItemProps = {
   heading: string;
   status: TaskStatus | undefined;
+  state?: 'OPEN' | 'CLOSED';
   statusPercentComplete?: number | false | null | undefined;
   statusDateInfo?: TaskListItemDateInfo;
   children?: React.ReactNode;
@@ -47,6 +48,7 @@ type TaskListItemProps = {
 const TaskListItem = ({
   heading,
   status,
+  state = 'OPEN',
   statusPercentComplete,
   statusDateInfo,
   children,
@@ -77,7 +79,7 @@ const TaskListItem = ({
           </h3>
           <div className="task-list__task-heading-row__status">
             {!!status && status in taskStatusClassName && (
-              <TaskStatusTag status={status} />
+              <TaskStatusTag status={status} state={state} />
             )}
 
             {/* Task status info */}

@@ -15,7 +15,5 @@ func TestAppValidateTestSuite(t *testing.T) {
 		Suite: suite.Suite{},
 	}
 
-	if !testing.Short() {
-		suite.Run(t, testSuite)
-	}
+	suite.Run(t, testSuite)
 }

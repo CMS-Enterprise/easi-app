@@ -1,10 +1,6 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved
-} from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 
@@ -188,6 +184,7 @@ describe('IT Gov Actions', () => {
           getSystemIntakeQuery(),
           getSystemIntakeContactsQuery,
           getGovernanceTaskListQuery(),
+          getGovernanceTaskListQuery(),
           createSystemIntakeActionRequestEditsQuery
         ]
       });
@@ -199,7 +196,7 @@ describe('IT Gov Actions', () => {
       // Fill in required fields
 
       userEvent.selectOptions(screen.getByTestId('intakeFormStep'), [
-        'Initial request form'
+        'Intake Request form'
       ]);
 
       await typeRichText(screen.getByTestId('emailFeedback'), 'Ch-ch-changes');
@@ -219,30 +216,7 @@ describe('IT Gov Actions', () => {
 
       // Success alert message
       await screen.findByText(
-        'You have requested edits to the Initial request form.'
-      );
-    });
-
-    it('handles field errors', async () => {
-      renderActionPage({
-        action: 'request-edits',
-        mocks: [
-          getSystemIntakeQuery(),
-          getSystemIntakeContactsQuery,
-          getGovernanceTaskListQuery({ step: SystemIntakeStep.GRB_MEETING })
-        ]
-      });
-
-      await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
-
-      userEvent.click(screen.getByRole('button', { name: 'Complete action' }));
-
-      await screen.findByText('Please check and fix the following');
-      await screen.findByText(
-        'Which form needs edits?: Please make a selection'
-      );
-      await screen.findByText(
-        'What changes are needed?: Please fill in the blank'
+        'You have requested edits to the Intake Request form.'
       );
     });
   });
@@ -295,9 +269,6 @@ describe('IT Gov Actions', () => {
       await screen.findByText(
         'This request is already at the GRB meeting step. Please select a different step.'
       );
-
-      // Date field required error
-      await screen.findByText('Please enter a valid date');
     });
   });
 });

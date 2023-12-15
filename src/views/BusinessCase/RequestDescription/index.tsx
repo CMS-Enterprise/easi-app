@@ -19,11 +19,7 @@ import TextAreaField from 'components/shared/TextAreaField';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
-import {
-  BusinessCaseDraftValidationSchema,
-  BusinessCaseFinalValidationSchema
-} from 'validations/businessCaseSchema';
+import { BusinessCaseSchema } from 'validations/businessCaseSchema';
 
 import BusinessCaseStepWrapper from '../BusinessCaseStepWrapper';
 
@@ -31,12 +27,14 @@ type RequestDescriptionProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
+  isFinal: boolean;
 };
 
 const RequestDescription = ({
   businessCase,
   formikRef,
-  dispatchSave
+  dispatchSave,
+  isFinal
 }: RequestDescriptionProps) => {
   const { t } = useTranslation('businessCase');
   const history = useHistory();
@@ -49,16 +47,11 @@ const RequestDescription = ({
     successIndicators: businessCase.successIndicators
   };
 
-  const ValidationSchema =
-    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
-      ? BusinessCaseFinalValidationSchema
-      : BusinessCaseDraftValidationSchema;
-
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={ValidationSchema.requestDescription}
+      validationSchema={BusinessCaseSchema(isFinal).requestDescription}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -68,9 +61,6 @@ const RequestDescription = ({
         const { values, errors, setErrors, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
 
-        // TODO EASI-3440: Update to use v2 status
-        const isFinal = isBusinessCaseFinal(businessCase.systemIntakeStatus);
-
         return (
           <BusinessCaseStepWrapper
             systemIntakeId={businessCase.systemIntakeId}
@@ -78,7 +68,6 @@ const RequestDescription = ({
             data-testid="request-description"
             errors={flatErrors}
             fieldsMandatory={isFinal}
-            isFinal={isFinal}
           >
             <Form className="tablet:grid-col-9 margin-bottom-6">
               <FieldGroup

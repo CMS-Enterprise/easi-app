@@ -6,8 +6,8 @@
 <strong>Date issued:</strong> {{.LifecycleIssuedAt}}<br>
 <strong>Expiration date:</strong> {{.LifecycleExpiresAt}}<br>
 <strong>Scope:</strong> {{.LifecycleScope}}<br>
-<strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}<br>
-<strong>Next steps:</strong> {{.DecisionNextSteps}}</p>
+{{if .LifecycleCostBaseline}}<strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}<br>
+{{end}}<strong>Next steps:</strong> {{.DecisionNextSteps}}</p>
 
 <p>Technical Review Board (TRB) Consultation:<br>
 As a part of your next steps, the Governance Team {{.TRBRecommendation}}.</p>

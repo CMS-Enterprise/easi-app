@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import { SystemIntakeForTable } from 'components/RequestRepository/tableMap';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntake } from 'queries/types/SystemIntake';
+import { SystemIntakeStatusAdmin } from 'types/graphql-global-types';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
@@ -18,6 +19,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   euaUserId: '',
   requestName: '',
   status: 'INTAKE_DRAFT',
+  statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
   requestType: 'NEW',
   requester: {
     name: '',
@@ -166,6 +168,7 @@ export const prepareSystemIntakeForApp = (
     euaUserId: systemIntake.euaUserId || '',
     requestName: systemIntake.projectName || '',
     status: systemIntake.status || 'INTAKE_DRAFT',
+    statusAdmin: systemIntake.statusAdmin,
     requestType: systemIntake.requestType || 'NEW',
     requester: {
       name: systemIntake.requester || '',

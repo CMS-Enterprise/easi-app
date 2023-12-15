@@ -37,6 +37,13 @@ const RequestEdits = ({
 }) => {
   const { t } = useTranslation(['action', 'form']);
 
+  const [mutate] = useMutation<
+    CreateSystemIntakeActionRequestEdits,
+    CreateSystemIntakeActionRequestEditsVariables
+  >(CreateSystemIntakeActionRequestEditsQuery, {
+    refetchQueries: ['GetGovernanceTaskList']
+  });
+
   /** Default `intakeFormStep` value
    *
    * Converts `currentStep` prop to `SystemIntakeFormStep` type
@@ -53,18 +60,17 @@ const RequestEdits = ({
     }
   });
 
-  const { watch, control } = form;
+  const {
+    watch,
+    control,
+    formState: { isValid }
+  } = form;
 
   const submit = async (formData: RequestEditsFields) => {
     await mutate({
       variables: { input: { systemIntakeID: systemIntakeId, ...formData } }
     });
   };
-
-  const [mutate] = useMutation<
-    CreateSystemIntakeActionRequestEdits,
-    CreateSystemIntakeActionRequestEditsVariables
-  >(CreateSystemIntakeActionRequestEditsQuery);
 
   const intakeFormStepName = t(
     `requestEdits.option.intakeFormStep.${watch('intakeFormStep')}`
@@ -78,6 +84,7 @@ const RequestEdits = ({
           title={t('requestEdits.title')}
           description={t('requestEdits.description')}
           breadcrumb={t('requestEdits.breadcrumb')}
+          disableSubmit={!isValid}
           successMessage={t('requestEdits.success', {
             formName: intakeFormStepName
           })}

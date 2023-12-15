@@ -2,10 +2,10 @@ import i18next from 'i18next';
 
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import {
-  closedIntakeStatuses,
-  openIntakeStatuses,
+  closedIntakeStatusesV1,
+  openIntakeStatusesV1,
   RequestType,
-  SystemIntakeStatus
+  SystemIntakeStatusV1
 } from 'types/systemIntake';
 
 // NOTE: these utility functions take strings rather than more restricted types so they can operate on values coming from GraphQL queries,
@@ -18,7 +18,7 @@ import {
  * @param status - the intake's status
  */
 export const isIntakeClosed = (status: string) => {
-  return closedIntakeStatuses.includes(status);
+  return closedIntakeStatusesV1.includes(status);
 };
 
 /**
@@ -26,7 +26,7 @@ export const isIntakeClosed = (status: string) => {
  * @param status - the intake's status
  */
 export const isIntakeOpen = (status: string) => {
-  return openIntakeStatuses.includes(status);
+  return openIntakeStatusesV1.includes(status);
 };
 
 /**
@@ -78,7 +78,7 @@ export const getAcronymForComponent = (componentToTranslate: string) => {
  * @param statusEnum - intake status represented by enum value
  */
 export const translateStatus = (
-  statusEnum: SystemIntakeStatus,
+  statusEnum: SystemIntakeStatusV1,
   lcid: string | null
 ) => {
   let statusTranslation = '';
@@ -95,16 +95,4 @@ export const translateStatus = (
   }
 
   return statusTranslation;
-};
-
-/**
- * Checks if business case is in the final stage
- * i.e. intake state is equal to BIZ_CASE_FINAL_NEEDED or BIZ_CASE_FINAL_SUBMITTED
- * @param intakeStatus - the intake's status
- */
-export const isBusinessCaseFinal = (intakeStatus: string) => {
-  return (
-    intakeStatus === 'BIZ_CASE_FINAL_NEEDED' ||
-    intakeStatus === 'BIZ_CASE_FINAL_SUBMITTED'
-  );
 };

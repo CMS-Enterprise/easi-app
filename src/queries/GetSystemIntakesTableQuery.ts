@@ -12,6 +12,7 @@ export default gql`
       euaUserId
       requestName
       status
+      statusAdmin
       state
 
       # Uses requesterName and requesterComponent instead of full requester object

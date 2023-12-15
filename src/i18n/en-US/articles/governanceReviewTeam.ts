@@ -1,4 +1,8 @@
-import { SystemIntakeActionType } from 'types/graphql-global-types';
+import {
+  SystemIntakeActionType,
+  SystemIntakeStatusAdmin,
+  SystemIntakeStatusRequester
+} from 'types/graphql-global-types';
 
 /** System intake action type translations */
 const actionNameTranslations: Record<SystemIntakeActionType, string> = {
@@ -34,6 +38,47 @@ const actionNameTranslations: Record<SystemIntakeActionType, string> = {
   SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft business case',
   SUBMIT_INTAKE: 'Submitted a System Intake',
   UPDATE_LCID: 'Life Cycle ID updated'
+};
+
+const systemIntakeStatusAdmin: Record<SystemIntakeStatusAdmin, string> = {
+  CLOSED: 'Closed',
+  DRAFT_BUSINESS_CASE_IN_PROGRESS: 'Draft Business Case in progress',
+  DRAFT_BUSINESS_CASE_SUBMITTED: 'Draft Business Case submitted',
+  FINAL_BUSINESS_CASE_IN_PROGRESS: 'Final Business Case in progress',
+  FINAL_BUSINESS_CASE_SUBMITTED: 'Final Business Case submitted',
+  GRB_MEETING_COMPLETE: 'GRB meeting complete',
+  GRB_MEETING_READY: 'Ready for GRB meeting',
+  GRT_MEETING_COMPLETE: 'GRT meeting complete',
+  GRT_MEETING_READY: 'Ready for GRT meeting',
+  INITIAL_REQUEST_FORM_IN_PROGRESS: 'Intake Request in progress',
+  INITIAL_REQUEST_FORM_SUBMITTED: 'Intake Request submitted',
+  LCID_ISSUED: 'LCID issued: {{lcid}}',
+  NOT_APPROVED: 'Project not approved by the GRB',
+  NOT_GOVERNANCE: 'Not an IT Governance request'
+};
+
+const systemIntakeStatusRequester: Record<
+  SystemIntakeStatusRequester,
+  string
+> = {
+  CLOSED: 'Closed',
+  DRAFT_BUSINESS_CASE_EDITS_REQUESTED: 'Edits requested',
+  DRAFT_BUSINESS_CASE_IN_PROGRESS: 'Draft Business Case in progress',
+  DRAFT_BUSINESS_CASE_SUBMITTED: 'Draft Business Case submitted',
+  FINAL_BUSINESS_CASE_EDITS_REQUESTED: 'Edits requested',
+  FINAL_BUSINESS_CASE_IN_PROGRESS: 'Final Business Case in progress',
+  FINAL_BUSINESS_CASE_SUBMITTED: 'Final Business Case submitted',
+  GRB_MEETING_AWAITING_DECISION: 'Awaiting GRB decision',
+  GRB_MEETING_READY: 'Ready for GRB meeting',
+  GRT_MEETING_AWAITING_DECISION: 'Awaiting GRT decision',
+  GRT_MEETING_READY: 'Ready for GRT meeting',
+  INITIAL_REQUEST_FORM_EDITS_REQUESTED: 'Edits requested',
+  INITIAL_REQUEST_FORM_IN_PROGRESS: 'Intake Request in progress',
+  INITIAL_REQUEST_FORM_NEW: 'New',
+  INITIAL_REQUEST_FORM_SUBMITTED: 'Intake Request submitted',
+  LCID_ISSUED: 'LCID issued: {{lcid}}',
+  NOT_APPROVED: 'Project not approved by the GRB',
+  NOT_GOVERNANCE: 'Not an IT Governance request'
 };
 
 const governanceReviewTeam = {
@@ -185,9 +230,9 @@ const governanceReviewTeam = {
       oldNextSteps: 'Old Next Steps',
       newCostBaseline: 'New Cost Baseline',
       oldCostBaseline: 'Old Cost Baseline',
-      noScope: 'No Scope Specified',
-      noNextSteps: 'No Next Steps Specified',
-      noCostBaseline: 'No Cost Baseline Specified'
+      noScope: 'No scope specified',
+      noNextSteps: 'No next steps specified',
+      noCostBaseline: 'No cost baseline specified'
     }
   },
   dates: {
@@ -223,19 +268,17 @@ const governanceReviewTeam = {
   },
   decision: {
     title: 'Decision',
-    titleApproved: 'Decision - Approved',
-    titleRejected: 'Decision - Rejected',
-    titleClosed: 'Decision - Closed',
-    lcidIssued:
+    title_LCID_ISSUED: 'Decision - Approved',
+    title_NOT_APPROVED: 'Decision - Rejected',
+    title_NOT_GOVERNANCE: 'Decision - Closed',
+    description: 'Decision not yet made',
+    description_LCID_ISSUED:
       'LCID issued, see Life Cycle ID tab for more detailed information',
+    description_NOT_GOVERNANCE: 'This is not an IT Governance request.',
     nextSteps: 'Next Steps',
     rejectionReason: 'Rejection Reason',
-    decisionSectionTitle: 'Decision Details',
-    descriptionNotItRequest: 'Request was marked "Not an IT Request"',
-    descriptionNoGovernance:
-      'Request was marked "No further governance needed"',
-    noDecision: 'Decision not yet made',
-    shutdownComplete: 'Request was marked "Shutdown Complete"'
+    noRejectionReasons: 'No reasons specified',
+    decisionSectionTitle: 'Decision Details'
   },
   feedback: {
     title: 'Feedback',
@@ -245,6 +288,7 @@ const governanceReviewTeam = {
     feedbackMoved:
       'Feedback and recommendations have moved! Use the Feedback tab in the navigation to the left to view feedback and recommendations that have been sent to the requester and project team.'
   },
+  governanceRequestDetails: 'Governance request details',
   actions: 'Actions',
   requestType: 'Request type',
   status: {
@@ -252,6 +296,8 @@ const governanceReviewTeam = {
     open: 'Open',
     closed: 'Closed'
   },
+  systemIntakeStatusAdmin,
+  systemIntakeStatusRequester,
   adminLeads: {
     assignModal: {
       header: 'Choose an Admin Lead for {{-requestName}}',

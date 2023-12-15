@@ -6,12 +6,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { FormGroup } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
+import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import TextAreaField from 'components/shared/TextAreaField';
 import CreateSystemIntakeActionChangeLcidRetirementDateQuery from 'queries/CreateSystemIntakeActionChangeLcidRetirementDateQuery';
 import CreateSystemIntakeActionRetireLcidQuery from 'queries/CreateSystemIntakeActionRetireLcidQuery';
 import {
@@ -49,7 +49,6 @@ interface RetireLcidProps extends ManageLcidProps {
 
 const RetireLcid = ({
   systemIntakeId,
-  lcidStatus,
   lcid,
   lcidRetiresAt
 }: RetireLcidProps) => {
@@ -114,10 +113,11 @@ const RetireLcid = ({
             })}
           />
         }
+        notificationAlertWarn
       >
         <Controller
-          name="retiresAt"
           control={control}
+          name="retiresAt"
           render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
               <Label htmlFor={field.name} className="text-normal" required>
@@ -150,21 +150,28 @@ const RetireLcid = ({
           // Hide reason if changing retirement date
           !lcidRetiresAt && (
             <Controller
-              name="reason"
               control={control}
-              render={({ field: { ref, ...field } }) => (
+              name="reason"
+              render={({ field }) => (
                 <FormGroup>
-                  <Label htmlFor={field.name} className="text-normal">
+                  <Label
+                    htmlFor={field.name}
+                    id={`${field.name}-label`}
+                    className="text-normal"
+                  >
                     {t('retireLcid.reason')}
                   </Label>
-                  <HelpText className="margin-top-1">
+                  <HelpText className="margin-top-1" id={`${field.name}-hint`}>
                     {t('retireLcid.reasonHelpText')}
                   </HelpText>
-                  <TextAreaField
-                    {...field}
-                    id={field.name}
-                    value={field.value || ''}
-                    size="sm"
+                  <RichTextEditor
+                    field={field}
+                    editableProps={{
+                      id: field.name,
+                      'data-testid': field.name,
+                      'aria-describedby': `${field.name}-hint`,
+                      'aria-labelledby': `${field.name}-label`
+                    }}
                   />
                 </FormGroup>
               )}

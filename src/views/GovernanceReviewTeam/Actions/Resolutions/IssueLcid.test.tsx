@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {
@@ -11,6 +11,7 @@ import {
   systemIntakeWithLcid
 } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import { SystemIntakeDecisionState } from 'types/graphql-global-types';
 import { formatDateLocal } from 'utils/date';
 import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -41,9 +42,9 @@ const checkFieldDefaults = () => {
     })
   ).toBeChecked();
 
-  expect(screen.getByTestId('costBaseline')).toContainHTML(
-    systemIntakeWithLcid.lcidCostBaseline!
-  );
+  expect(
+    screen.getByRole('textbox', { name: 'Project cost baseline' })
+  ).toHaveValue(systemIntakeWithLcid.lcidCostBaseline!);
 };
 
 describe('Issue LCID form', async () => {
@@ -83,50 +84,56 @@ describe('Issue LCID form', async () => {
   });
 
   it('Displays confirmation modal when edits are requested', async () => {
-    render(
-      <VerboseMockedProvider
-        mocks={[
-          getSystemIntakeContactsQuery,
-          getSystemIntakeQuery(),
-          getSystemIntakesWithLcidsQuery
-        ]}
-      >
-        <MemoryRouter>
-          <MessageProvider>
-            <EditsRequestedContext.Provider value="intakeRequest">
-              <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
-            </EditsRequestedContext.Provider>
-          </MessageProvider>
-        </MemoryRouter>
-      </VerboseMockedProvider>
-    );
+    await act(async () => {
+      render(
+        <VerboseMockedProvider
+          mocks={[
+            getSystemIntakeContactsQuery,
+            getSystemIntakeQuery(),
+            getSystemIntakesWithLcidsQuery
+          ]}
+        >
+          <MemoryRouter>
+            <MessageProvider>
+              <EditsRequestedContext.Provider value="intakeRequest">
+                <IssueLcid {...systemIntake} systemIntakeId={systemIntake.id} />
+              </EditsRequestedContext.Provider>
+            </MessageProvider>
+          </MemoryRouter>
+        </VerboseMockedProvider>
+      );
 
-    await screen.findByText('Issue a Life Cycle ID');
+      await screen.findByText('Issue a Life Cycle ID');
 
-    userEvent.click(
-      screen.getByRole('radio', {
-        name: 'Generate a new Life Cycle ID'
-      })
-    );
+      userEvent.click(
+        screen.getByRole('radio', {
+          name: 'Generate a new Life Cycle ID'
+        })
+      );
 
-    userEvent.type(
-      screen.getByRole('textbox', { name: 'Expiration date *' }),
-      '01/01/2024'
-    );
+      userEvent.type(
+        screen.getByRole('textbox', { name: 'Expiration date *' }),
+        '01/01/2024'
+      );
 
-    await typeRichText(screen.getByTestId('scope'), 'Test scope');
+      await typeRichText(screen.getByTestId('scope'), 'Test scope');
 
-    await typeRichText(screen.getByTestId('nextSteps'), 'Test next steps');
+      await typeRichText(screen.getByTestId('nextSteps'), 'Test next steps');
 
-    userEvent.click(
-      screen.getByRole('radio', {
-        name: 'No, they may if they wish but it’s not necessary'
-      })
-    );
+      userEvent.click(
+        screen.getByRole('radio', {
+          name: 'No, they may if they wish but it’s not necessary'
+        })
+      );
+    });
 
-    userEvent.click(
-      screen.getByRole('button', { name: 'Complete action without email' })
-    );
+    const submitButton = screen.getByRole('button', {
+      name: 'Complete action'
+    });
+
+    expect(submitButton).not.toBeDisabled();
+
+    userEvent.click(submitButton);
 
     // Check for modal
 
@@ -155,6 +162,7 @@ describe('Issue LCID form', async () => {
             <IssueLcid
               {...systemIntake}
               {...systemIntakeWithLcid}
+              decisionState={SystemIntakeDecisionState.LCID_ISSUED}
               systemIntakeId={systemIntake.id}
             />
           </MessageProvider>
