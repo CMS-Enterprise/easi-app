@@ -260,7 +260,7 @@ function DocumentsTable({
       columns,
       data: documents,
       autoResetSortBy: false,
-      autoResetPage: false,
+      autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => [{ id: 'uploadedAt', desc: true }], [])
       }

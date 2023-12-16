@@ -133,7 +133,7 @@ function Homepage() {
       globalFilter: useMemo(() => globalFilterCellText, []),
       data: useMemo(() => data?.myTrbRequests || [], [data?.myTrbRequests]),
       autoResetSortBy: false,
-      autoResetPage: false,
+      autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => [{ id: 'form.submittedAt', desc: true }], []),
         pageIndex: 0,
