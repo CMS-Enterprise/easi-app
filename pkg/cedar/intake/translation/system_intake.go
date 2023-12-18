@@ -2,6 +2,7 @@ package translation
 
 import (
 	"encoding/json"
+	"time"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
@@ -101,8 +102,18 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 	if si.CreatedAt != nil {
 		result.ClientCreatedDate = pStrfmtDateTime(si.CreatedAt)
 	}
+
+	// Optionally send the updated at date if it exists
+	// Otherwise, send the created at date, falling back to the current time
+	// This code exists because the `ClientLastUpdatedDate` field is required by the CEDAR API
+	// but it's possible that the intake doesn't have it set (as we have it nullable)
 	if si.UpdatedAt != nil {
 		result.ClientLastUpdatedDate = pStrfmtDateTime(si.UpdatedAt)
+	} else if si.CreatedAt != nil {
+		result.ClientLastUpdatedDate = pStrfmtDateTime(si.CreatedAt)
+	} else {
+		now := time.Now()
+		result.ClientLastUpdatedDate = pStrfmtDateTime(&now)
 	}
 
 	return &result, nil
