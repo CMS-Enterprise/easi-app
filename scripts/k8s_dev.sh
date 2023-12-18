@@ -73,7 +73,7 @@ done
 
 # Set NAMESPACE from Git if not provided
 if [ -z "$NAMESPACE" ]; then
-    NAMESPACE=$(git rev-parse --abbrev-ref HEAD | sed -e 's/^\(EASI-[0-9]*\|NOREF\).*/\1/' | tr '[:upper:]' '[:lower:]')
+    NAMESPACE=$(git rev-parse --abbrev-ref HEAD | sed -E 's/^(EASI-[0-9]*|NOREF).*/\1/' | tr '[:upper:]' '[:lower:]')
 fi
 
 # Run validate_namespace
@@ -120,12 +120,12 @@ delete_temp_dir() {
     kustomize create --resources ../deploy/base
     kustomize edit set namespace "$NAMESPACE"
     kustomize build > manifest.yaml
-    sed -i'' -e "s/easi-client:latest/easi-client:${NAMESPACE}/" manifest.yaml
-    sed -i'' -e "s/easi-backend:latest/easi-backend:${NAMESPACE}/" manifest.yaml
-    sed -i'' -e "s/db-migrate:latest/db-migrate:${NAMESPACE}/" manifest.yaml
-    sed -i'' -e "s/easi-backend.localdev.me/${NAMESPACE}-backend.localdev.me/" manifest.yaml
-    sed -i'' -e "s/easi.localdev.me/${NAMESPACE}.localdev.me/" manifest.yaml
-    sed -i'' -e "s/email.localdev.me/${NAMESPACE}-email.localdev.me/" manifest.yaml
+    sed -i'' -E "s/easi-client:latest/easi-client:${NAMESPACE}/" manifest.yaml
+    sed -i'' -E "s/easi-backend:latest/easi-backend:${NAMESPACE}/" manifest.yaml
+    sed -i'' -E "s/db-migrate:latest/db-migrate:${NAMESPACE}/" manifest.yaml
+    sed -i'' -E "s/easi-backend.localdev.me/${NAMESPACE}-backend.localdev.me/" manifest.yaml
+    sed -i'' -E "s/easi.localdev.me/${NAMESPACE}.localdev.me/" manifest.yaml
+    sed -i'' -E "s/email.localdev.me/${NAMESPACE}-email.localdev.me/" manifest.yaml
     kubectl apply -f manifest.yaml
     trap delete_temp_dir EXIT
 )
