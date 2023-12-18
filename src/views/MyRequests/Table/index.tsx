@@ -196,7 +196,7 @@ const Table = ({
       },
       globalFilter: useMemo(() => globalFilterCellText, []),
       autoResetSortBy: false,
-      autoResetPage: false,
+      autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
         pageIndex: 0,

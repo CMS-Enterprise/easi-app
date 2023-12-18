@@ -192,7 +192,7 @@ export const Table = ({
       data: systems as CedarSystem[],
       globalFilter: useMemo(() => globalFilterCellText, []),
       autoResetSortBy: false,
-      autoResetPage: false,
+      autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => [{ id: 'systemName', desc: false }], []),
         pageIndex: 0,

@@ -169,7 +169,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       globalFilter: useMemo(() => globalFilterCellText, []),
       requests,
       autoResetSortBy: false,
-      autoResetPage: false,
+      autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => [{ id: 'submittedAt', desc: true }], []),
         pageIndex: 0

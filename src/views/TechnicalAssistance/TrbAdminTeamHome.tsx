@@ -205,7 +205,7 @@ function TrbNewRequestsTable({ requests, className }: TrbRequestsTableProps) {
       globalFilter: useMemo(() => globalFilterCellText, []),
       data: requests,
       autoResetSortBy: false,
-      autoResetPage: false,
+      autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => [{ id: 'form.submittedAt', desc: true }], []),
         pageIndex: 0,
@@ -423,7 +423,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
         [activeTable, requests]
       ),
       autoResetSortBy: false,
-      autoResetPage: false,
+      autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => [{ id: 'form.submittedAt', desc: true }], []),
         pageIndex: 0,
