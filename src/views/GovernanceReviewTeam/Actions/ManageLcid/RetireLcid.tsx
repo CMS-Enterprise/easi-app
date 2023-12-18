@@ -113,6 +113,7 @@ const RetireLcid = ({
             })}
           />
         }
+        notificationAlertWarn
       >
         <Controller
           control={control}

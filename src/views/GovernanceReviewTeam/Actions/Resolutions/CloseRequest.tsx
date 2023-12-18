@@ -108,6 +108,7 @@ const CloseRequest = ({
           />
         }
         modal={modal}
+        notificationAlertWarn
       >
         <Controller
           name="reason"

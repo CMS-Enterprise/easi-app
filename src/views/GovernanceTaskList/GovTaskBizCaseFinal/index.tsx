@@ -75,6 +75,7 @@ const GovTaskBizCaseFinal = ({
     <TaskListItem
       heading={t(`taskList.step.${stepKey}.title`)}
       status={bizCaseFinalStatus}
+      state={state}
       statusPercentComplete={
         bizCaseFinalStatus === ITGovFinalBusinessCaseStatus.IN_PROGRESS &&
         bizCaseFinalPctComplete
