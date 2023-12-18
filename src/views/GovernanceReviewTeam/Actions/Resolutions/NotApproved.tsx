@@ -25,6 +25,7 @@ import { notApprovedSchema } from 'validations/actionSchema';
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 import { EditsRequestedContext } from '..';
 
+import refetchQueries from './refetchQueries';
 import ResolutionTitleBox from './ResolutionTitleBox';
 import { ResolutionProps } from '.';
 
@@ -54,7 +55,7 @@ const NotApproved = ({
     CreateSystemIntakeActionRejectIntake,
     CreateSystemIntakeActionRejectIntakeVariables
   >(CreateSystemIntakeActionRejectIntakeQuery, {
-    refetchQueries: ['GetSystemIntake', 'GetSystemIntakesTable']
+    refetchQueries
   });
 
   /** Set default values if confirming decision */
