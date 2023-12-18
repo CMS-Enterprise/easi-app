@@ -38,7 +38,6 @@ type RequestSummaryProps = {
   requester: Requester;
   requestName: string;
   requestType: RequestType;
-  status: string;
   statusAdmin: SystemIntakeStatusAdmin;
   adminLead: string | null;
   submittedAt: string | null;
@@ -52,7 +51,6 @@ const RequestSummary = ({
   requester,
   requestName,
   requestType,
-  status,
   statusAdmin,
   adminLead,
   submittedAt,
