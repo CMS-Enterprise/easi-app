@@ -30,6 +30,11 @@ type DBConfig struct {
 	MaxConnections int
 }
 
+// PrepareNamed implements the INamedPreparer interface
+func (s *Store) PrepareNamed(query string) (*sqlx.NamedStmt, error) {
+	return s.db.PrepareNamed(query)
+}
+
 // NewStore creates a new Store struct
 // The `db` property on the Store will always be a *sqlx.DB, but a notable difference in the DB is that if
 // config.UseIAM is true, that DB instance will be backed by a custom connector in iam_db.go that generates
