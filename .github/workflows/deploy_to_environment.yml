@@ -132,7 +132,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2
       - name: Download Frontend assets
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.env }}-frontend-assets
           path: build/
