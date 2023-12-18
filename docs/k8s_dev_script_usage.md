@@ -38,7 +38,7 @@ For example: I have checked out a git branch named `EASI-3486/create-local-devel
 
 | OPTION 	|              ACTION              	|
 |--------	|:--------------------------------:	|
-|   -b   	| Create a custom branch namespace 	|
+|   -n   	| Create a custom namespace 	|
 
 ## Examples
 
@@ -80,7 +80,7 @@ ingress.networking.k8s.io/email-ingress created
 
 ### Custom Branch Namespace
 ```bash
-./scripts/k8s_dev.sh -b easi
+./scripts/k8s_dev.sh -n easi
 
 ❄️  Clear easi namespace ❄️
 Warning: Immediate deletion does not wait for confirmation that the running resource has been terminated. The resource may continue to run on the cluster indefinitely.
