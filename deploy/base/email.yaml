@@ -52,6 +52,7 @@ metadata:
   name: email-ingress
   namespace: easi
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   rules:
