@@ -138,7 +138,7 @@ exports[`Submit Action > renders additional contacts 1`] = `
                 class="text-base-dark"
                 data-testid="grt-current-status"
               >
-                Intake request received
+                Intake Request submitted
               </p>
               <a
                 class="usa-link"
