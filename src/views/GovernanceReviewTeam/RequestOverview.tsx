@@ -6,7 +6,6 @@ import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Grid, IconArrowBack } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
@@ -37,7 +36,6 @@ import './index.scss';
 
 const RequestOverview = () => {
   const { t } = useTranslation('governanceReviewTeam');
-  const flags = useFlags();
 
   const { Message } = useMessage();
 
@@ -48,12 +46,9 @@ const RequestOverview = () => {
     subPage?: string;
   }>();
 
-  /** If true, hides summary and side navigation for full width layout */
+  /** Hides summary and side navigation for all action subpages */
   const fullPageLayout: boolean =
-    flags.itGovV2Enabled &&
-    (activePage === 'resolutions' ||
-      activePage === 'manage-lcid' ||
-      (activePage === 'actions' && !!subPage));
+    activePage === 'resolutions' || activePage === 'manage-lcid' || !!subPage;
 
   const { loading, data } = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
     GetSystemIntakeQuery,
