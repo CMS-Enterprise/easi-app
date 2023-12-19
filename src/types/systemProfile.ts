@@ -8,6 +8,7 @@ import {
   GetSystemProfile,
   /* eslint-disable camelcase */
   GetSystemProfile_cedarAuthorityToOperate,
+  GetSystemProfile_cedarSoftwareProducts_softwareProducts,
   GetSystemProfile_cedarSystemDetails_cedarSystem,
   GetSystemProfile_cedarSystemDetails_deployments_dataCenter,
   GetSystemProfile_cedarSystemDetails_roles,
@@ -17,7 +18,6 @@ import {
 import {
   tempATOProp,
   tempBudgetProp,
-  tempProductsProp,
   tempSubSystemProp,
   tempSystemDataProp
 } from 'views/Sandbox/mockSystemData';
@@ -146,7 +146,8 @@ export interface SystemProfileData extends GetSystemProfile {
   // Remaining mock data stubs
   activities?: tempATOProp[];
   budgets?: tempBudgetProp[];
-  products?: tempProductsProp[];
+  // eslint-disable-next-line camelcase
+  products?: GetSystemProfile_cedarSoftwareProducts_softwareProducts[];
   subSystems?: tempSubSystemProp[];
   systemData?: tempSystemDataProp[];
 }

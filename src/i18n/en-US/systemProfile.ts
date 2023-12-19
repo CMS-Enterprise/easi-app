@@ -200,9 +200,12 @@ const systemProfile = {
     },
     toolsAndSoftware: {
       header: 'Tools and Software',
-      productType: 'Product Type',
-      softwareVersion: 'Software version',
-      softwareEdition: 'Software edition'
+      productCategory: 'Product Category',
+      noManufacturerListed: 'No manufacturer listed',
+      apiGateway: 'API Gateway',
+      usedForAI: 'Used for Artificial Intelligence',
+      noToolsOrSoftware:
+        'This system does not have any tools or software listed.'
     },
     systemData: {
       header: 'System Data',
