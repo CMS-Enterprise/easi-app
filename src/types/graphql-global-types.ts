@@ -310,6 +310,50 @@ export enum SystemIntakeStatus {
 }
 
 /**
+ * This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
+ */
+export enum SystemIntakeStatusAdmin {
+  CLOSED = "CLOSED",
+  DRAFT_BUSINESS_CASE_IN_PROGRESS = "DRAFT_BUSINESS_CASE_IN_PROGRESS",
+  DRAFT_BUSINESS_CASE_SUBMITTED = "DRAFT_BUSINESS_CASE_SUBMITTED",
+  FINAL_BUSINESS_CASE_IN_PROGRESS = "FINAL_BUSINESS_CASE_IN_PROGRESS",
+  FINAL_BUSINESS_CASE_SUBMITTED = "FINAL_BUSINESS_CASE_SUBMITTED",
+  GRB_MEETING_COMPLETE = "GRB_MEETING_COMPLETE",
+  GRB_MEETING_READY = "GRB_MEETING_READY",
+  GRT_MEETING_COMPLETE = "GRT_MEETING_COMPLETE",
+  GRT_MEETING_READY = "GRT_MEETING_READY",
+  INITIAL_REQUEST_FORM_IN_PROGRESS = "INITIAL_REQUEST_FORM_IN_PROGRESS",
+  INITIAL_REQUEST_FORM_SUBMITTED = "INITIAL_REQUEST_FORM_SUBMITTED",
+  LCID_ISSUED = "LCID_ISSUED",
+  NOT_APPROVED = "NOT_APPROVED",
+  NOT_GOVERNANCE = "NOT_GOVERNANCE",
+}
+
+/**
+ * This represents the (calculated) statuses that a requester view of a system intake request can show as part of the IT Gov v2 workflow
+ */
+export enum SystemIntakeStatusRequester {
+  CLOSED = "CLOSED",
+  DRAFT_BUSINESS_CASE_EDITS_REQUESTED = "DRAFT_BUSINESS_CASE_EDITS_REQUESTED",
+  DRAFT_BUSINESS_CASE_IN_PROGRESS = "DRAFT_BUSINESS_CASE_IN_PROGRESS",
+  DRAFT_BUSINESS_CASE_SUBMITTED = "DRAFT_BUSINESS_CASE_SUBMITTED",
+  FINAL_BUSINESS_CASE_EDITS_REQUESTED = "FINAL_BUSINESS_CASE_EDITS_REQUESTED",
+  FINAL_BUSINESS_CASE_IN_PROGRESS = "FINAL_BUSINESS_CASE_IN_PROGRESS",
+  FINAL_BUSINESS_CASE_SUBMITTED = "FINAL_BUSINESS_CASE_SUBMITTED",
+  GRB_MEETING_AWAITING_DECISION = "GRB_MEETING_AWAITING_DECISION",
+  GRB_MEETING_READY = "GRB_MEETING_READY",
+  GRT_MEETING_AWAITING_DECISION = "GRT_MEETING_AWAITING_DECISION",
+  GRT_MEETING_READY = "GRT_MEETING_READY",
+  INITIAL_REQUEST_FORM_EDITS_REQUESTED = "INITIAL_REQUEST_FORM_EDITS_REQUESTED",
+  INITIAL_REQUEST_FORM_IN_PROGRESS = "INITIAL_REQUEST_FORM_IN_PROGRESS",
+  INITIAL_REQUEST_FORM_NEW = "INITIAL_REQUEST_FORM_NEW",
+  INITIAL_REQUEST_FORM_SUBMITTED = "INITIAL_REQUEST_FORM_SUBMITTED",
+  LCID_ISSUED = "LCID_ISSUED",
+  NOT_APPROVED = "NOT_APPROVED",
+  NOT_GOVERNANCE = "NOT_GOVERNANCE",
+}
+
+/**
  * SystemIntakeStep represents the current step in the intake process
  */
 export enum SystemIntakeStep {
@@ -520,26 +564,6 @@ export enum TestDateTestType {
 }
 
 /**
- * Feedback intended for a business owner before they proceed to writing a
- * business case for a system request
- */
-export interface AddGRTFeedbackInput {
-  emailBody: HTML;
-  feedback: HTML;
-  intakeID: UUID;
-  notificationRecipients?: EmailNotificationRecipients | null;
-}
-
-/**
- * Input to add feedback to a system request
- */
-export interface BasicActionInput {
-  feedback: HTML;
-  intakeId: UUID;
-  notificationRecipients?: EmailNotificationRecipients | null;
-}
-
-/**
  * The input needed to close a TRB request
  */
 export interface CloseTRBRequestInput {
@@ -585,18 +609,6 @@ export interface CreateAccessibilityRequestNoteInput {
  */
 export interface CreateCedarSystemBookmarkInput {
   cedarSystemId: string;
-}
-
-/**
- * Input data for extending a system request's lifecycle ID
- */
-export interface CreateSystemIntakeActionExtendLifecycleIdInput {
-  id: UUID;
-  expirationDate?: Time | null;
-  nextSteps?: HTML | null;
-  scope: HTML;
-  costBaseline?: string | null;
-  notificationRecipients?: EmailNotificationRecipients | null;
 }
 
 /**
@@ -791,32 +803,6 @@ export interface GeneratePresignedUploadURLInput {
   fileName: string;
   mimeType: string;
   size: number;
-}
-
-/**
- * The input data required to issue a lifecycle ID for a system's IT governance
- * request
- */
-export interface IssueLifecycleIdInput {
-  expiresAt: Time;
-  feedback: HTML;
-  intakeId: UUID;
-  lcid?: string | null;
-  nextSteps?: HTML | null;
-  scope: HTML;
-  costBaseline?: string | null;
-  notificationRecipients?: EmailNotificationRecipients | null;
-}
-
-/**
- * Input data for rejection of a system's IT governance request
- */
-export interface RejectIntakeInput {
-  feedback: HTML;
-  intakeId: UUID;
-  nextSteps?: HTML | null;
-  reason: HTML;
-  notificationRecipients?: EmailNotificationRecipients | null;
 }
 
 /**

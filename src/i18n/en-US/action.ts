@@ -131,7 +131,6 @@ const action = {
     descriptionAction_CLOSED: 're-open this closed request',
     descriptionAction_OPEN: 'close this request for another reason',
     label: 'Resolution',
-    requestDetails: 'Request details',
     confirmDecision: 'Confirm current decision ({{decision}})',
     summary: {
       title: 'Request resolutions',

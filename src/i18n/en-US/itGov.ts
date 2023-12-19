@@ -11,7 +11,7 @@ export default {
   },
   taskList: {
     heading: 'Governance task list',
-    description: 'for IT Governance request',
+    description: 'for {{requestName}}',
     help: 'Help',
     stepsInvolved:
       'Steps involved in an IT Governance request (opens in a new tab)',

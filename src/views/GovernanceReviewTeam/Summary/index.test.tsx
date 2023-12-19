@@ -8,7 +8,8 @@ import users from 'data/mock/users';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
 import {
   SystemIntakeRequestType,
-  SystemIntakeStatus
+  SystemIntakeState,
+  SystemIntakeStatusAdmin
 } from 'types/graphql-global-types';
 
 import Summary from '.';
@@ -41,7 +42,7 @@ const summaryProps = {
   id: 'ccdfdcf5-5085-4521-9f77-fa1ea324502b',
   requestName: 'Request Name',
   requestType: SystemIntakeRequestType.NEW,
-  status: SystemIntakeStatus.INTAKE_SUBMITTED,
+  statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
   adminLead: null,
   submittedAt: DateTime.local().toString(),
   lcid: null,
@@ -54,7 +55,7 @@ describe('The GRT Review page', () => {
     render(
       <MemoryRouter>
         <MockedProvider>
-          <Summary {...summaryProps} />
+          <Summary {...summaryProps} state={SystemIntakeState.OPEN} />
         </MockedProvider>
       </MemoryRouter>
     );
@@ -68,7 +69,11 @@ describe('The GRT Review page', () => {
     render(
       <MemoryRouter>
         <MockedProvider>
-          <Summary {...summaryProps} status={SystemIntakeStatus.LCID_ISSUED} />
+          <Summary
+            {...summaryProps}
+            statusAdmin={SystemIntakeStatusAdmin.LCID_ISSUED}
+            state={SystemIntakeState.CLOSED}
+          />
         </MockedProvider>
       </MemoryRouter>
     );
@@ -86,7 +91,8 @@ describe('The GRT Review page', () => {
         <MockedProvider>
           <Summary
             {...summaryProps}
-            status={SystemIntakeStatus.LCID_ISSUED}
+            statusAdmin={SystemIntakeStatusAdmin.LCID_ISSUED}
+            state={SystemIntakeState.CLOSED}
             lcid={lcid}
           />
         </MockedProvider>
@@ -95,7 +101,7 @@ describe('The GRT Review page', () => {
 
     expect(
       within(screen.getByTestId('grt-current-status')).getByText(
-        `Life Cycle ID issued: ${lcid}`
+        `LCID issued: ${lcid}`
       )
     ).toBeInTheDocument();
   });

@@ -22,15 +22,14 @@ import StateTag from 'components/StateTag';
 import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/types/GetSystemIntake';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
-import { SystemIntakeState } from 'types/graphql-global-types';
+import {
+  SystemIntakeState,
+  SystemIntakeStatusAdmin
+} from 'types/graphql-global-types';
 import { RequestType } from 'types/systemIntake';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
-import {
-  isIntakeClosed,
-  translateRequestType,
-  translateStatus
-} from 'utils/systemIntake';
+import { translateRequestType } from 'utils/systemIntake';
 
 import './index.scss';
 
@@ -39,11 +38,12 @@ type RequestSummaryProps = {
   requester: Requester;
   requestName: string;
   requestType: RequestType;
-  status: string;
+  statusAdmin: SystemIntakeStatusAdmin;
   adminLead: string | null;
   submittedAt: string | null;
   lcid: string | null;
   contractNumber: string | null;
+  state: SystemIntakeState;
 };
 
 const RequestSummary = ({
@@ -51,11 +51,12 @@ const RequestSummary = ({
   requester,
   requestName,
   requestType,
-  status,
+  statusAdmin,
   adminLead,
   submittedAt,
   lcid,
-  contractNumber
+  contractNumber,
+  state
 }: RequestSummaryProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const [isModalOpen, setModalOpen] = useState(false);
@@ -66,11 +67,6 @@ const RequestSummary = ({
       errorPolicy: 'all'
     }
   );
-
-  // TODO EASI-3440: update to use v2 `state` field
-  const state: SystemIntakeState = isIntakeClosed(status)
-    ? SystemIntakeState.CLOSED
-    : SystemIntakeState.OPEN;
 
   /** Admin lead text and modal trigger button */
   const AdminLead = () => {
@@ -208,13 +204,21 @@ const RequestSummary = ({
                 <h4 className="margin-right-1">{t('status.label')}</h4>
                 <StateTag state={state} />
               </div>
-              <p className="text-base-dark" data-testid="grt-current-status">
-                {
-                  /* TODO EASI-3440: Update to use v2 statuses */
-                  translateStatus(status, lcid)
-                }
-              </p>
-              <Link to={`/governance-review-team/${id}/actions`}>
+              {
+                // Don't display additional status if closed with no decision
+                statusAdmin !== SystemIntakeStatusAdmin.CLOSED && (
+                  <p
+                    className="text-base-dark"
+                    data-testid="grt-current-status"
+                  >
+                    {t(`systemIntakeStatusAdmin.${statusAdmin}`, { lcid })}
+                  </p>
+                )
+              }
+              <Link
+                to={`/governance-review-team/${id}/actions`}
+                className="usa-link"
+              >
                 {t('action:takeAnAction')}
               </Link>
             </Grid>

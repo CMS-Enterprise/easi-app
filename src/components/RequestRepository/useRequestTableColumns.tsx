@@ -125,32 +125,14 @@ const useRequestTableColumns = (
 
   const statusColumn: Column<SystemIntakeForTable> = {
     Header: t<string>('intake:fields.status'),
-    accessor: 'status',
+    accessor: 'statusAdmin',
     Cell: ({
       row,
       value
-    }: CellProps<SystemIntakeForTable, SystemIntakeForTable['status']>) => {
-      // If LCID_ISSUED append LCID Scope to status
-      if (value === `LCID: ${row.original.lcid}`) {
-        return (
-          <>
-            {value}
-            <br />
-            <TruncatedText
-              id="lcid-scope"
-              label="less"
-              closeLabel="more"
-              text={`Scope: ${row.original.lcidScope}`}
-              charLimit={freeFormTextCharLimit}
-              className="margin-top-2"
-            />
-          </>
-        );
-      }
-
-      // If any other value just display status
-      return value;
-    }
+    }: CellProps<SystemIntakeForTable, SystemIntakeForTable['statusAdmin']>) =>
+      t(`governanceReviewTeam:systemIntakeStatusAdmin.${value}`, {
+        lcid: row.original.lcid
+      })
   };
 
   const lcidExpirationDateColumn: Column<SystemIntakeForTable> = {

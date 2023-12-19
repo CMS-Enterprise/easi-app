@@ -110,6 +110,7 @@ const UpdateLcid = ({
             />
           </LcidTitleBox>
         }
+        notificationAlertWarn
       >
         <h3 className="margin-bottom-1">{t('updateLcid.title')}</h3>
         <HelpText className="line-height-body-5">

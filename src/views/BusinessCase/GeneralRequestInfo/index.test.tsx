@@ -1,15 +1,25 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { MockedProvider } from '@apollo/client/testing';
-import { render, screen, waitFor } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
+import {
+  getGovernanceTaskListQuery,
+  systemIntake
+} from 'data/mock/systemIntake';
+import { SystemIntakeStep } from 'types/graphql-global-types';
+import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import BusinessCase from 'views/BusinessCase';
 
-const renderPage = (store: any) =>
+const renderPage = async (store: any, isFinal?: boolean) => {
   render(
     <MemoryRouter
       initialEntries={[
@@ -17,15 +27,26 @@ const renderPage = (store: any) =>
       ]}
     >
       <Provider store={store}>
-        <MockedProvider>
+        <VerboseMockedProvider
+          mocks={[
+            getGovernanceTaskListQuery({
+              step: isFinal
+                ? SystemIntakeStep.FINAL_BUSINESS_CASE
+                : SystemIntakeStep.DRAFT_BUSINESS_CASE
+            })
+          ]}
+        >
           <Route
             path="/business/:businessCaseId/:formPage"
             component={BusinessCase}
           />
-        </MockedProvider>
+        </VerboseMockedProvider>
       </Provider>
     </MemoryRouter>
   );
+
+  await waitForElementToBeRemoved(() => screen.getByRole('progressbar'));
+};
 
 describe('Business case general request info form', () => {
   const mockStore = configureMockStore();
@@ -36,6 +57,7 @@ describe('Business case general request info form', () => {
     businessCase: {
       form: {
         ...businessCaseInitialData,
+        systemIntakeId: systemIntake.id,
         id: '75746af8-9a9b-4558-a375-cf9848eb2b0d'
       },
       isLoading: false,
@@ -50,13 +72,13 @@ describe('Business case general request info form', () => {
   });
 
   it('renders without errors', async () => {
-    renderPage(defaultStore);
+    await renderPage(defaultStore);
 
     expect(screen.getByTestId('general-request-info')).toBeInTheDocument();
   });
 
   it('fills all fields', async () => {
-    renderPage(defaultStore);
+    await renderPage(defaultStore);
 
     const projectNameField = screen.getByRole('textbox', {
       name: /Project Name/i
@@ -84,7 +106,7 @@ describe('Business case general request info form', () => {
   });
 
   it('does not run validations', async () => {
-    renderPage(defaultStore);
+    await renderPage(defaultStore);
 
     screen.getByRole('button', { name: /Next/i }).click();
 
@@ -102,7 +124,7 @@ describe('Business case general request info form', () => {
   });
 
   it('does not render mandatory fields message', async () => {
-    renderPage(defaultStore);
+    await renderPage(defaultStore);
 
     expect(
       screen.queryByTestId('mandatory-fields-alert')
@@ -110,7 +132,7 @@ describe('Business case general request info form', () => {
   });
 
   it('navigates to next page', async () => {
-    renderPage(defaultStore);
+    await renderPage(defaultStore);
 
     screen.getByRole('button', { name: /next/i }).click();
 
@@ -119,30 +141,9 @@ describe('Business case general request info form', () => {
     });
   });
 
-  describe('BIZ_CASE_FINAL_NEEDED', () => {
-    const storeWithFinalBizCase = mockStore({
-      auth: {
-        euaId: 'AAAA'
-      },
-      businessCase: {
-        form: {
-          ...businessCaseInitialData,
-          id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-          systemIntakeStatus: 'BIZ_CASE_FINAL_NEEDED'
-        },
-        isLoading: false,
-        isSaving: false,
-        error: null
-      },
-      action: {
-        isPosting: false,
-        error: null,
-        actions: []
-      }
-    });
-
+  describe('Final business case', () => {
     it('renders mandatory fields message', async () => {
-      renderPage(storeWithFinalBizCase);
+      await renderPage(defaultStore, true);
 
       expect(screen.getByTestId('mandatory-fields-alert')).toBeInTheDocument();
     });
@@ -150,7 +151,7 @@ describe('Business case general request info form', () => {
     it('runs validations and renders form errors', async () => {
       window.scrollTo = vi.fn;
 
-      renderPage(storeWithFinalBizCase);
+      await renderPage(defaultStore, true);
 
       screen.getByRole('button', { name: /Next/i }).click();
 

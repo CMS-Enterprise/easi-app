@@ -40,17 +40,12 @@ export type TaskStatus =
   // IT Gov v1
   | TagEnum;
 
-export const taskStatusClassName: Record<TaskStatus, string> = {
-  /* TODO: EASI-3110 verify this new status */
+/** Statuses that reflect a step is in progress */
+const activeStatuses = {
   AWAITING_DECISION: 'bg-info-light',
-  CANNOT_START_YET: 'border-2px text-base',
-  CANT_START: 'border-2px text-base',
-  COMPLETED: 'bg-success-dark text-white',
-  DONE: 'bg-success-dark text-white',
   EDITS_REQUESTED: 'bg-warning',
   IN_PROGRESS: 'bg-warning',
   IN_REVIEW: 'bg-info-light',
-  NOT_NEEDED: 'border-2px text-base',
   READY: 'bg-info-light',
   READY_FOR_REVIEW: 'bg-info-light',
   READY_TO_SCHEDULE: 'bg-info-light',
@@ -59,16 +54,41 @@ export const taskStatusClassName: Record<TaskStatus, string> = {
   SUBMITTED: 'bg-info-light'
 };
 
-type TaskStatusTagProps = {
-  status: TaskStatus;
+/** Statuses that reflect that a step has no available actions */
+const inactiveStatuses = {
+  NOT_NEEDED: 'border-2px text-base',
+  CANNOT_START_YET: 'border-2px text-base',
+  CANT_START: 'border-2px text-base',
+  COMPLETED: 'bg-success-dark text-white',
+  DONE: 'bg-success-dark text-white'
 };
 
-const TaskStatusTag = ({ status }: TaskStatusTagProps) => {
+/** Default task status classNames */
+export const taskStatusClassName: Record<TaskStatus, string> = {
+  ...activeStatuses,
+  ...inactiveStatuses
+};
+
+type TaskStatusTagProps = {
+  status: TaskStatus;
+  state?: 'OPEN' | 'CLOSED';
+};
+
+const TaskStatusTag = ({ status, state = 'OPEN' }: TaskStatusTagProps) => {
   const { t } = useTranslation('taskList');
+
+  /** className if `state` === CLOSED */
+  const closedStateClassName = Object.keys(inactiveStatuses).includes(status)
+    ? taskStatusClassName[status]
+    : 'bg-base-light';
+
+  /** Returns className based on `state` */
+  const className =
+    state === 'OPEN' ? taskStatusClassName[status] : closedStateClassName;
 
   return (
     <Tag
-      className={`easi-task-status-tag ${taskStatusClassName[status]}`}
+      className={`easi-task-status-tag ${className}`}
       data-testid="task-list-task-tag"
     >
       {t(`taskStatus.${status}`)}
