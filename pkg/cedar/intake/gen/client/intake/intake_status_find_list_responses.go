@@ -48,7 +48,7 @@ func (o *IntakeStatusFindListReader) ReadResponse(response runtime.ClientRespons
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[GET /intake/status] intakeStatusFindList", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewIntakeStatusFindListOK() *IntakeStatusFindListOK {
 	return &IntakeStatusFindListOK{}
 }
 
-/*
-IntakeStatusFindListOK describes a response with status code 200, with default header values.
+/* IntakeStatusFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type IntakeStatusFindListOK struct {
 	Payload *models.IntakeStatusResponse
 }
 
-// IsSuccess returns true when this intake status find list o k response has a 2xx status code
-func (o *IntakeStatusFindListOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this intake status find list o k response has a 3xx status code
-func (o *IntakeStatusFindListOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this intake status find list o k response has a 4xx status code
-func (o *IntakeStatusFindListOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this intake status find list o k response has a 5xx status code
-func (o *IntakeStatusFindListOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this intake status find list o k response a status code equal to that given
-func (o *IntakeStatusFindListOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the intake status find list o k response
-func (o *IntakeStatusFindListOK) Code() int {
-	return 200
-}
-
 func (o *IntakeStatusFindListOK) Error() string {
 	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListOK  %+v", 200, o.Payload)
 }
-
-func (o *IntakeStatusFindListOK) String() string {
-	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListOK  %+v", 200, o.Payload)
-}
-
 func (o *IntakeStatusFindListOK) GetPayload() *models.IntakeStatusResponse {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewIntakeStatusFindListBadRequest() *IntakeStatusFindListBadRequest {
 	return &IntakeStatusFindListBadRequest{}
 }
 
-/*
-IntakeStatusFindListBadRequest describes a response with status code 400, with default header values.
+/* IntakeStatusFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type IntakeStatusFindListBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this intake status find list bad request response has a 2xx status code
-func (o *IntakeStatusFindListBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this intake status find list bad request response has a 3xx status code
-func (o *IntakeStatusFindListBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this intake status find list bad request response has a 4xx status code
-func (o *IntakeStatusFindListBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this intake status find list bad request response has a 5xx status code
-func (o *IntakeStatusFindListBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this intake status find list bad request response a status code equal to that given
-func (o *IntakeStatusFindListBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the intake status find list bad request response
-func (o *IntakeStatusFindListBadRequest) Code() int {
-	return 400
-}
-
 func (o *IntakeStatusFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *IntakeStatusFindListBadRequest) String() string {
-	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *IntakeStatusFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewIntakeStatusFindListUnauthorized() *IntakeStatusFindListUnauthorized {
 	return &IntakeStatusFindListUnauthorized{}
 }
 
-/*
-IntakeStatusFindListUnauthorized describes a response with status code 401, with default header values.
+/* IntakeStatusFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type IntakeStatusFindListUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this intake status find list unauthorized response has a 2xx status code
-func (o *IntakeStatusFindListUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this intake status find list unauthorized response has a 3xx status code
-func (o *IntakeStatusFindListUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this intake status find list unauthorized response has a 4xx status code
-func (o *IntakeStatusFindListUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this intake status find list unauthorized response has a 5xx status code
-func (o *IntakeStatusFindListUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this intake status find list unauthorized response a status code equal to that given
-func (o *IntakeStatusFindListUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the intake status find list unauthorized response
-func (o *IntakeStatusFindListUnauthorized) Code() int {
-	return 401
-}
-
 func (o *IntakeStatusFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *IntakeStatusFindListUnauthorized) String() string {
-	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *IntakeStatusFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewIntakeStatusFindListInternalServerError() *IntakeStatusFindListInternalS
 	return &IntakeStatusFindListInternalServerError{}
 }
 
-/*
-IntakeStatusFindListInternalServerError describes a response with status code 500, with default header values.
+/* IntakeStatusFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type IntakeStatusFindListInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this intake status find list internal server error response has a 2xx status code
-func (o *IntakeStatusFindListInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this intake status find list internal server error response has a 3xx status code
-func (o *IntakeStatusFindListInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this intake status find list internal server error response has a 4xx status code
-func (o *IntakeStatusFindListInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this intake status find list internal server error response has a 5xx status code
-func (o *IntakeStatusFindListInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this intake status find list internal server error response a status code equal to that given
-func (o *IntakeStatusFindListInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the intake status find list internal server error response
-func (o *IntakeStatusFindListInternalServerError) Code() int {
-	return 500
-}
-
 func (o *IntakeStatusFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *IntakeStatusFindListInternalServerError) String() string {
-	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *IntakeStatusFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

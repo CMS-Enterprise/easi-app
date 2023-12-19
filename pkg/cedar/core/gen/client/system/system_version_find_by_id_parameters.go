@@ -53,12 +53,10 @@ func NewSystemVersionFindByIDParamsWithHTTPClient(client *http.Client) *SystemVe
 	}
 }
 
-/*
-SystemVersionFindByIDParams contains all the parameters to send to the API endpoint
+/* SystemVersionFindByIDParams contains all the parameters to send to the API endpoint
+   for the system version find by Id operation.
 
-	for the system version find by Id operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type SystemVersionFindByIDParams struct {
 

@@ -54,7 +54,7 @@ func (o *SystemSummaryFindByIDReader) ReadResponse(response runtime.ClientRespon
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[GET /system/summary/{id}] systemSummaryFindById", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -63,8 +63,7 @@ func NewSystemSummaryFindByIDOK() *SystemSummaryFindByIDOK {
 	return &SystemSummaryFindByIDOK{}
 }
 
-/*
-SystemSummaryFindByIDOK describes a response with status code 200, with default header values.
+/* SystemSummaryFindByIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -72,44 +71,9 @@ type SystemSummaryFindByIDOK struct {
 	Payload *models.SystemSummaryResponse
 }
 
-// IsSuccess returns true when this system summary find by Id o k response has a 2xx status code
-func (o *SystemSummaryFindByIDOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this system summary find by Id o k response has a 3xx status code
-func (o *SystemSummaryFindByIDOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system summary find by Id o k response has a 4xx status code
-func (o *SystemSummaryFindByIDOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this system summary find by Id o k response has a 5xx status code
-func (o *SystemSummaryFindByIDOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this system summary find by Id o k response a status code equal to that given
-func (o *SystemSummaryFindByIDOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the system summary find by Id o k response
-func (o *SystemSummaryFindByIDOK) Code() int {
-	return 200
-}
-
 func (o *SystemSummaryFindByIDOK) Error() string {
 	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdOK  %+v", 200, o.Payload)
 }
-
-func (o *SystemSummaryFindByIDOK) String() string {
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdOK  %+v", 200, o.Payload)
-}
-
 func (o *SystemSummaryFindByIDOK) GetPayload() *models.SystemSummaryResponse {
 	return o.Payload
 }
@@ -131,8 +95,7 @@ func NewSystemSummaryFindByIDBadRequest() *SystemSummaryFindByIDBadRequest {
 	return &SystemSummaryFindByIDBadRequest{}
 }
 
-/*
-SystemSummaryFindByIDBadRequest describes a response with status code 400, with default header values.
+/* SystemSummaryFindByIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -140,44 +103,9 @@ type SystemSummaryFindByIDBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this system summary find by Id bad request response has a 2xx status code
-func (o *SystemSummaryFindByIDBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this system summary find by Id bad request response has a 3xx status code
-func (o *SystemSummaryFindByIDBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system summary find by Id bad request response has a 4xx status code
-func (o *SystemSummaryFindByIDBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this system summary find by Id bad request response has a 5xx status code
-func (o *SystemSummaryFindByIDBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this system summary find by Id bad request response a status code equal to that given
-func (o *SystemSummaryFindByIDBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the system summary find by Id bad request response
-func (o *SystemSummaryFindByIDBadRequest) Code() int {
-	return 400
-}
-
 func (o *SystemSummaryFindByIDBadRequest) Error() string {
 	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *SystemSummaryFindByIDBadRequest) String() string {
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *SystemSummaryFindByIDBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -199,8 +127,7 @@ func NewSystemSummaryFindByIDUnauthorized() *SystemSummaryFindByIDUnauthorized {
 	return &SystemSummaryFindByIDUnauthorized{}
 }
 
-/*
-SystemSummaryFindByIDUnauthorized describes a response with status code 401, with default header values.
+/* SystemSummaryFindByIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -208,44 +135,9 @@ type SystemSummaryFindByIDUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this system summary find by Id unauthorized response has a 2xx status code
-func (o *SystemSummaryFindByIDUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this system summary find by Id unauthorized response has a 3xx status code
-func (o *SystemSummaryFindByIDUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system summary find by Id unauthorized response has a 4xx status code
-func (o *SystemSummaryFindByIDUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this system summary find by Id unauthorized response has a 5xx status code
-func (o *SystemSummaryFindByIDUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this system summary find by Id unauthorized response a status code equal to that given
-func (o *SystemSummaryFindByIDUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the system summary find by Id unauthorized response
-func (o *SystemSummaryFindByIDUnauthorized) Code() int {
-	return 401
-}
-
 func (o *SystemSummaryFindByIDUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *SystemSummaryFindByIDUnauthorized) String() string {
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *SystemSummaryFindByIDUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -267,8 +159,7 @@ func NewSystemSummaryFindByIDNotFound() *SystemSummaryFindByIDNotFound {
 	return &SystemSummaryFindByIDNotFound{}
 }
 
-/*
-SystemSummaryFindByIDNotFound describes a response with status code 404, with default header values.
+/* SystemSummaryFindByIDNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -276,44 +167,9 @@ type SystemSummaryFindByIDNotFound struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this system summary find by Id not found response has a 2xx status code
-func (o *SystemSummaryFindByIDNotFound) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this system summary find by Id not found response has a 3xx status code
-func (o *SystemSummaryFindByIDNotFound) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system summary find by Id not found response has a 4xx status code
-func (o *SystemSummaryFindByIDNotFound) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this system summary find by Id not found response has a 5xx status code
-func (o *SystemSummaryFindByIDNotFound) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this system summary find by Id not found response a status code equal to that given
-func (o *SystemSummaryFindByIDNotFound) IsCode(code int) bool {
-	return code == 404
-}
-
-// Code gets the status code for the system summary find by Id not found response
-func (o *SystemSummaryFindByIDNotFound) Code() int {
-	return 404
-}
-
 func (o *SystemSummaryFindByIDNotFound) Error() string {
 	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdNotFound  %+v", 404, o.Payload)
 }
-
-func (o *SystemSummaryFindByIDNotFound) String() string {
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdNotFound  %+v", 404, o.Payload)
-}
-
 func (o *SystemSummaryFindByIDNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -335,8 +191,7 @@ func NewSystemSummaryFindByIDInternalServerError() *SystemSummaryFindByIDInterna
 	return &SystemSummaryFindByIDInternalServerError{}
 }
 
-/*
-SystemSummaryFindByIDInternalServerError describes a response with status code 500, with default header values.
+/* SystemSummaryFindByIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -344,44 +199,9 @@ type SystemSummaryFindByIDInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this system summary find by Id internal server error response has a 2xx status code
-func (o *SystemSummaryFindByIDInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this system summary find by Id internal server error response has a 3xx status code
-func (o *SystemSummaryFindByIDInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system summary find by Id internal server error response has a 4xx status code
-func (o *SystemSummaryFindByIDInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this system summary find by Id internal server error response has a 5xx status code
-func (o *SystemSummaryFindByIDInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this system summary find by Id internal server error response a status code equal to that given
-func (o *SystemSummaryFindByIDInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the system summary find by Id internal server error response
-func (o *SystemSummaryFindByIDInternalServerError) Code() int {
-	return 500
-}
-
 func (o *SystemSummaryFindByIDInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *SystemSummaryFindByIDInternalServerError) String() string {
-	return fmt.Sprintf("[GET /system/summary/{id}][%d] systemSummaryFindByIdInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *SystemSummaryFindByIDInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

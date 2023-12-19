@@ -54,16 +54,17 @@ func NewComponentAddParamsWithHTTPClient(client *http.Client) *ComponentAddParam
 	}
 }
 
-/*
-ComponentAddParams contains all the parameters to send to the API endpoint
+/* ComponentAddParams contains all the parameters to send to the API endpoint
+   for the component add operation.
 
-	for the component add operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type ComponentAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Component record to be added to Alfabet.
+	*/
 	Body *models.ComponentAddRequest
 
 	timeout    time.Duration

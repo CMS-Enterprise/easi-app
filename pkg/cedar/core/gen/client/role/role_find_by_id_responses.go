@@ -54,7 +54,7 @@ func (o *RoleFindByIDReader) ReadResponse(response runtime.ClientResponse, consu
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[GET /role] roleFindById", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -63,8 +63,7 @@ func NewRoleFindByIDOK() *RoleFindByIDOK {
 	return &RoleFindByIDOK{}
 }
 
-/*
-RoleFindByIDOK describes a response with status code 200, with default header values.
+/* RoleFindByIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -72,44 +71,9 @@ type RoleFindByIDOK struct {
 	Payload *models.RoleFindResponse
 }
 
-// IsSuccess returns true when this role find by Id o k response has a 2xx status code
-func (o *RoleFindByIDOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this role find by Id o k response has a 3xx status code
-func (o *RoleFindByIDOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this role find by Id o k response has a 4xx status code
-func (o *RoleFindByIDOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this role find by Id o k response has a 5xx status code
-func (o *RoleFindByIDOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this role find by Id o k response a status code equal to that given
-func (o *RoleFindByIDOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the role find by Id o k response
-func (o *RoleFindByIDOK) Code() int {
-	return 200
-}
-
 func (o *RoleFindByIDOK) Error() string {
 	return fmt.Sprintf("[GET /role][%d] roleFindByIdOK  %+v", 200, o.Payload)
 }
-
-func (o *RoleFindByIDOK) String() string {
-	return fmt.Sprintf("[GET /role][%d] roleFindByIdOK  %+v", 200, o.Payload)
-}
-
 func (o *RoleFindByIDOK) GetPayload() *models.RoleFindResponse {
 	return o.Payload
 }
@@ -131,8 +95,7 @@ func NewRoleFindByIDBadRequest() *RoleFindByIDBadRequest {
 	return &RoleFindByIDBadRequest{}
 }
 
-/*
-RoleFindByIDBadRequest describes a response with status code 400, with default header values.
+/* RoleFindByIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -140,44 +103,9 @@ type RoleFindByIDBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this role find by Id bad request response has a 2xx status code
-func (o *RoleFindByIDBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this role find by Id bad request response has a 3xx status code
-func (o *RoleFindByIDBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this role find by Id bad request response has a 4xx status code
-func (o *RoleFindByIDBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this role find by Id bad request response has a 5xx status code
-func (o *RoleFindByIDBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this role find by Id bad request response a status code equal to that given
-func (o *RoleFindByIDBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the role find by Id bad request response
-func (o *RoleFindByIDBadRequest) Code() int {
-	return 400
-}
-
 func (o *RoleFindByIDBadRequest) Error() string {
 	return fmt.Sprintf("[GET /role][%d] roleFindByIdBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *RoleFindByIDBadRequest) String() string {
-	return fmt.Sprintf("[GET /role][%d] roleFindByIdBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *RoleFindByIDBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -199,8 +127,7 @@ func NewRoleFindByIDUnauthorized() *RoleFindByIDUnauthorized {
 	return &RoleFindByIDUnauthorized{}
 }
 
-/*
-RoleFindByIDUnauthorized describes a response with status code 401, with default header values.
+/* RoleFindByIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -208,44 +135,9 @@ type RoleFindByIDUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this role find by Id unauthorized response has a 2xx status code
-func (o *RoleFindByIDUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this role find by Id unauthorized response has a 3xx status code
-func (o *RoleFindByIDUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this role find by Id unauthorized response has a 4xx status code
-func (o *RoleFindByIDUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this role find by Id unauthorized response has a 5xx status code
-func (o *RoleFindByIDUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this role find by Id unauthorized response a status code equal to that given
-func (o *RoleFindByIDUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the role find by Id unauthorized response
-func (o *RoleFindByIDUnauthorized) Code() int {
-	return 401
-}
-
 func (o *RoleFindByIDUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /role][%d] roleFindByIdUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *RoleFindByIDUnauthorized) String() string {
-	return fmt.Sprintf("[GET /role][%d] roleFindByIdUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *RoleFindByIDUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -267,8 +159,7 @@ func NewRoleFindByIDNotFound() *RoleFindByIDNotFound {
 	return &RoleFindByIDNotFound{}
 }
 
-/*
-RoleFindByIDNotFound describes a response with status code 404, with default header values.
+/* RoleFindByIDNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -276,44 +167,9 @@ type RoleFindByIDNotFound struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this role find by Id not found response has a 2xx status code
-func (o *RoleFindByIDNotFound) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this role find by Id not found response has a 3xx status code
-func (o *RoleFindByIDNotFound) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this role find by Id not found response has a 4xx status code
-func (o *RoleFindByIDNotFound) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this role find by Id not found response has a 5xx status code
-func (o *RoleFindByIDNotFound) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this role find by Id not found response a status code equal to that given
-func (o *RoleFindByIDNotFound) IsCode(code int) bool {
-	return code == 404
-}
-
-// Code gets the status code for the role find by Id not found response
-func (o *RoleFindByIDNotFound) Code() int {
-	return 404
-}
-
 func (o *RoleFindByIDNotFound) Error() string {
 	return fmt.Sprintf("[GET /role][%d] roleFindByIdNotFound  %+v", 404, o.Payload)
 }
-
-func (o *RoleFindByIDNotFound) String() string {
-	return fmt.Sprintf("[GET /role][%d] roleFindByIdNotFound  %+v", 404, o.Payload)
-}
-
 func (o *RoleFindByIDNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -335,8 +191,7 @@ func NewRoleFindByIDInternalServerError() *RoleFindByIDInternalServerError {
 	return &RoleFindByIDInternalServerError{}
 }
 
-/*
-RoleFindByIDInternalServerError describes a response with status code 500, with default header values.
+/* RoleFindByIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -344,44 +199,9 @@ type RoleFindByIDInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this role find by Id internal server error response has a 2xx status code
-func (o *RoleFindByIDInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this role find by Id internal server error response has a 3xx status code
-func (o *RoleFindByIDInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this role find by Id internal server error response has a 4xx status code
-func (o *RoleFindByIDInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this role find by Id internal server error response has a 5xx status code
-func (o *RoleFindByIDInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this role find by Id internal server error response a status code equal to that given
-func (o *RoleFindByIDInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the role find by Id internal server error response
-func (o *RoleFindByIDInternalServerError) Code() int {
-	return 500
-}
-
 func (o *RoleFindByIDInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /role][%d] roleFindByIdInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *RoleFindByIDInternalServerError) String() string {
-	return fmt.Sprintf("[GET /role][%d] roleFindByIdInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *RoleFindByIDInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

@@ -48,7 +48,7 @@ func (o *BudgetUpdateReader) ReadResponse(response runtime.ClientResponse, consu
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[PUT /budget] budgetUpdate", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewBudgetUpdateOK() *BudgetUpdateOK {
 	return &BudgetUpdateOK{}
 }
 
-/*
-BudgetUpdateOK describes a response with status code 200, with default header values.
+/* BudgetUpdateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type BudgetUpdateOK struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this budget update o k response has a 2xx status code
-func (o *BudgetUpdateOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this budget update o k response has a 3xx status code
-func (o *BudgetUpdateOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this budget update o k response has a 4xx status code
-func (o *BudgetUpdateOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this budget update o k response has a 5xx status code
-func (o *BudgetUpdateOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this budget update o k response a status code equal to that given
-func (o *BudgetUpdateOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the budget update o k response
-func (o *BudgetUpdateOK) Code() int {
-	return 200
-}
-
 func (o *BudgetUpdateOK) Error() string {
 	return fmt.Sprintf("[PUT /budget][%d] budgetUpdateOK  %+v", 200, o.Payload)
 }
-
-func (o *BudgetUpdateOK) String() string {
-	return fmt.Sprintf("[PUT /budget][%d] budgetUpdateOK  %+v", 200, o.Payload)
-}
-
 func (o *BudgetUpdateOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewBudgetUpdateBadRequest() *BudgetUpdateBadRequest {
 	return &BudgetUpdateBadRequest{}
 }
 
-/*
-BudgetUpdateBadRequest describes a response with status code 400, with default header values.
+/* BudgetUpdateBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type BudgetUpdateBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this budget update bad request response has a 2xx status code
-func (o *BudgetUpdateBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this budget update bad request response has a 3xx status code
-func (o *BudgetUpdateBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this budget update bad request response has a 4xx status code
-func (o *BudgetUpdateBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this budget update bad request response has a 5xx status code
-func (o *BudgetUpdateBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this budget update bad request response a status code equal to that given
-func (o *BudgetUpdateBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the budget update bad request response
-func (o *BudgetUpdateBadRequest) Code() int {
-	return 400
-}
-
 func (o *BudgetUpdateBadRequest) Error() string {
 	return fmt.Sprintf("[PUT /budget][%d] budgetUpdateBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *BudgetUpdateBadRequest) String() string {
-	return fmt.Sprintf("[PUT /budget][%d] budgetUpdateBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *BudgetUpdateBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewBudgetUpdateUnauthorized() *BudgetUpdateUnauthorized {
 	return &BudgetUpdateUnauthorized{}
 }
 
-/*
-BudgetUpdateUnauthorized describes a response with status code 401, with default header values.
+/* BudgetUpdateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type BudgetUpdateUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this budget update unauthorized response has a 2xx status code
-func (o *BudgetUpdateUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this budget update unauthorized response has a 3xx status code
-func (o *BudgetUpdateUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this budget update unauthorized response has a 4xx status code
-func (o *BudgetUpdateUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this budget update unauthorized response has a 5xx status code
-func (o *BudgetUpdateUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this budget update unauthorized response a status code equal to that given
-func (o *BudgetUpdateUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the budget update unauthorized response
-func (o *BudgetUpdateUnauthorized) Code() int {
-	return 401
-}
-
 func (o *BudgetUpdateUnauthorized) Error() string {
 	return fmt.Sprintf("[PUT /budget][%d] budgetUpdateUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *BudgetUpdateUnauthorized) String() string {
-	return fmt.Sprintf("[PUT /budget][%d] budgetUpdateUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *BudgetUpdateUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewBudgetUpdateInternalServerError() *BudgetUpdateInternalServerError {
 	return &BudgetUpdateInternalServerError{}
 }
 
-/*
-BudgetUpdateInternalServerError describes a response with status code 500, with default header values.
+/* BudgetUpdateInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type BudgetUpdateInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this budget update internal server error response has a 2xx status code
-func (o *BudgetUpdateInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this budget update internal server error response has a 3xx status code
-func (o *BudgetUpdateInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this budget update internal server error response has a 4xx status code
-func (o *BudgetUpdateInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this budget update internal server error response has a 5xx status code
-func (o *BudgetUpdateInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this budget update internal server error response a status code equal to that given
-func (o *BudgetUpdateInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the budget update internal server error response
-func (o *BudgetUpdateInternalServerError) Code() int {
-	return 500
-}
-
 func (o *BudgetUpdateInternalServerError) Error() string {
 	return fmt.Sprintf("[PUT /budget][%d] budgetUpdateInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *BudgetUpdateInternalServerError) String() string {
-	return fmt.Sprintf("[PUT /budget][%d] budgetUpdateInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *BudgetUpdateInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

@@ -52,12 +52,10 @@ func NewSoftwareProductsFindListParamsWithHTTPClient(client *http.Client) *Softw
 	}
 }
 
-/*
-SoftwareProductsFindListParams contains all the parameters to send to the API endpoint
+/* SoftwareProductsFindListParams contains all the parameters to send to the API endpoint
+   for the software products find list operation.
 
-	for the software products find list operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type SoftwareProductsFindListParams struct {
 
@@ -66,12 +64,6 @@ type SoftwareProductsFindListParams struct {
 	   Application ID.
 	*/
 	ID string
-
-	/* Version.
-
-	   Stakeholder version.
-	*/
-	Version *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -137,17 +129,6 @@ func (o *SoftwareProductsFindListParams) SetID(id string) {
 	o.ID = id
 }
 
-// WithVersion adds the version to the software products find list params
-func (o *SoftwareProductsFindListParams) WithVersion(version *string) *SoftwareProductsFindListParams {
-	o.SetVersion(version)
-	return o
-}
-
-// SetVersion adds the version to the software products find list params
-func (o *SoftwareProductsFindListParams) SetVersion(version *string) {
-	o.Version = version
-}
-
 // WriteToRequest writes these params to a swagger request
 func (o *SoftwareProductsFindListParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -163,23 +144,6 @@ func (o *SoftwareProductsFindListParams) WriteToRequest(r runtime.ClientRequest,
 
 		if err := r.SetQueryParam("id", qID); err != nil {
 			return err
-		}
-	}
-
-	if o.Version != nil {
-
-		// query param version
-		var qrVersion string
-
-		if o.Version != nil {
-			qrVersion = *o.Version
-		}
-		qVersion := qrVersion
-		if qVersion != "" {
-
-			if err := r.SetQueryParam("version", qVersion); err != nil {
-				return err
-			}
 		}
 	}
 

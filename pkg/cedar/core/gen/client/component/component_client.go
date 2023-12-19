@@ -40,9 +40,9 @@ type ClientService interface {
 }
 
 /*
-ComponentAdd this interface takes in a component record and adds that to alfabet
+  ComponentAdd this interface takes in a component record and adds that to alfabet
 
-This interface takes in a Component record and adds that to Alfabet.
+  This interface takes in a Component record and adds that to Alfabet.
 */
 func (a *Client) ComponentAdd(params *ComponentAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ComponentAddOK, error) {
 	// TODO: Validate the params before sending
@@ -81,9 +81,9 @@ func (a *Client) ComponentAdd(params *ComponentAddParams, authInfo runtime.Clien
 }
 
 /*
-ComponentDelete deletes a component within alfabet based on the ID that is passed in
+  ComponentDelete deletes a component within alfabet based on the ID that is passed in
 
-Deletes a component within Alfabet based on the ID that is passed in.
+  Deletes a component within Alfabet based on the ID that is passed in.
 */
 func (a *Client) ComponentDelete(params *ComponentDeleteParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ComponentDeleteOK, error) {
 	// TODO: Validate the params before sending
@@ -122,9 +122,9 @@ func (a *Client) ComponentDelete(params *ComponentDeleteParams, authInfo runtime
 }
 
 /*
-ComponentFind retrieves a component
+  ComponentFind retrieves a component
 
-Retrieve a component record based on the id parameter that is passed in.
+  Retrieve a component record based on the id parameter that is passed in.
 */
 func (a *Client) ComponentFind(params *ComponentFindParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ComponentFindOK, error) {
 	// TODO: Validate the params before sending

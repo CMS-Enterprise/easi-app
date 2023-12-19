@@ -54,7 +54,7 @@ func (o *ExchangeDeleteListReader) ReadResponse(response runtime.ClientResponse,
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[DELETE /exchange] exchangeDeleteList", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -63,8 +63,7 @@ func NewExchangeDeleteListOK() *ExchangeDeleteListOK {
 	return &ExchangeDeleteListOK{}
 }
 
-/*
-ExchangeDeleteListOK describes a response with status code 200, with default header values.
+/* ExchangeDeleteListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -72,44 +71,9 @@ type ExchangeDeleteListOK struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this exchange delete list o k response has a 2xx status code
-func (o *ExchangeDeleteListOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this exchange delete list o k response has a 3xx status code
-func (o *ExchangeDeleteListOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange delete list o k response has a 4xx status code
-func (o *ExchangeDeleteListOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this exchange delete list o k response has a 5xx status code
-func (o *ExchangeDeleteListOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this exchange delete list o k response a status code equal to that given
-func (o *ExchangeDeleteListOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the exchange delete list o k response
-func (o *ExchangeDeleteListOK) Code() int {
-	return 200
-}
-
 func (o *ExchangeDeleteListOK) Error() string {
 	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListOK  %+v", 200, o.Payload)
 }
-
-func (o *ExchangeDeleteListOK) String() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListOK  %+v", 200, o.Payload)
-}
-
 func (o *ExchangeDeleteListOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -131,8 +95,7 @@ func NewExchangeDeleteListBadRequest() *ExchangeDeleteListBadRequest {
 	return &ExchangeDeleteListBadRequest{}
 }
 
-/*
-ExchangeDeleteListBadRequest describes a response with status code 400, with default header values.
+/* ExchangeDeleteListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -140,44 +103,9 @@ type ExchangeDeleteListBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this exchange delete list bad request response has a 2xx status code
-func (o *ExchangeDeleteListBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this exchange delete list bad request response has a 3xx status code
-func (o *ExchangeDeleteListBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange delete list bad request response has a 4xx status code
-func (o *ExchangeDeleteListBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this exchange delete list bad request response has a 5xx status code
-func (o *ExchangeDeleteListBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this exchange delete list bad request response a status code equal to that given
-func (o *ExchangeDeleteListBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the exchange delete list bad request response
-func (o *ExchangeDeleteListBadRequest) Code() int {
-	return 400
-}
-
 func (o *ExchangeDeleteListBadRequest) Error() string {
 	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *ExchangeDeleteListBadRequest) String() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *ExchangeDeleteListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -199,8 +127,7 @@ func NewExchangeDeleteListUnauthorized() *ExchangeDeleteListUnauthorized {
 	return &ExchangeDeleteListUnauthorized{}
 }
 
-/*
-ExchangeDeleteListUnauthorized describes a response with status code 401, with default header values.
+/* ExchangeDeleteListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -208,44 +135,9 @@ type ExchangeDeleteListUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this exchange delete list unauthorized response has a 2xx status code
-func (o *ExchangeDeleteListUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this exchange delete list unauthorized response has a 3xx status code
-func (o *ExchangeDeleteListUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange delete list unauthorized response has a 4xx status code
-func (o *ExchangeDeleteListUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this exchange delete list unauthorized response has a 5xx status code
-func (o *ExchangeDeleteListUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this exchange delete list unauthorized response a status code equal to that given
-func (o *ExchangeDeleteListUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the exchange delete list unauthorized response
-func (o *ExchangeDeleteListUnauthorized) Code() int {
-	return 401
-}
-
 func (o *ExchangeDeleteListUnauthorized) Error() string {
 	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *ExchangeDeleteListUnauthorized) String() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *ExchangeDeleteListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -267,8 +159,7 @@ func NewExchangeDeleteListNotFound() *ExchangeDeleteListNotFound {
 	return &ExchangeDeleteListNotFound{}
 }
 
-/*
-ExchangeDeleteListNotFound describes a response with status code 404, with default header values.
+/* ExchangeDeleteListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -276,44 +167,9 @@ type ExchangeDeleteListNotFound struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this exchange delete list not found response has a 2xx status code
-func (o *ExchangeDeleteListNotFound) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this exchange delete list not found response has a 3xx status code
-func (o *ExchangeDeleteListNotFound) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange delete list not found response has a 4xx status code
-func (o *ExchangeDeleteListNotFound) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this exchange delete list not found response has a 5xx status code
-func (o *ExchangeDeleteListNotFound) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this exchange delete list not found response a status code equal to that given
-func (o *ExchangeDeleteListNotFound) IsCode(code int) bool {
-	return code == 404
-}
-
-// Code gets the status code for the exchange delete list not found response
-func (o *ExchangeDeleteListNotFound) Code() int {
-	return 404
-}
-
 func (o *ExchangeDeleteListNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListNotFound  %+v", 404, o.Payload)
 }
-
-func (o *ExchangeDeleteListNotFound) String() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListNotFound  %+v", 404, o.Payload)
-}
-
 func (o *ExchangeDeleteListNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -335,8 +191,7 @@ func NewExchangeDeleteListInternalServerError() *ExchangeDeleteListInternalServe
 	return &ExchangeDeleteListInternalServerError{}
 }
 
-/*
-ExchangeDeleteListInternalServerError describes a response with status code 500, with default header values.
+/* ExchangeDeleteListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -344,44 +199,9 @@ type ExchangeDeleteListInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this exchange delete list internal server error response has a 2xx status code
-func (o *ExchangeDeleteListInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this exchange delete list internal server error response has a 3xx status code
-func (o *ExchangeDeleteListInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange delete list internal server error response has a 4xx status code
-func (o *ExchangeDeleteListInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this exchange delete list internal server error response has a 5xx status code
-func (o *ExchangeDeleteListInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this exchange delete list internal server error response a status code equal to that given
-func (o *ExchangeDeleteListInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the exchange delete list internal server error response
-func (o *ExchangeDeleteListInternalServerError) Code() int {
-	return 500
-}
-
 func (o *ExchangeDeleteListInternalServerError) Error() string {
 	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *ExchangeDeleteListInternalServerError) String() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *ExchangeDeleteListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

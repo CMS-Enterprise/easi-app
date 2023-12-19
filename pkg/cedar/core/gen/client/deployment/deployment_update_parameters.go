@@ -54,16 +54,17 @@ func NewDeploymentUpdateParamsWithHTTPClient(client *http.Client) *DeploymentUpd
 	}
 }
 
-/*
-DeploymentUpdateParams contains all the parameters to send to the API endpoint
+/* DeploymentUpdateParams contains all the parameters to send to the API endpoint
+   for the deployment update operation.
 
-	for the deployment update operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type DeploymentUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   Deployment list to be updated in Alfabet.
+	*/
 	Body *models.DeploymentUpdateRequest
 
 	timeout    time.Duration

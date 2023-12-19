@@ -48,7 +48,7 @@ func (o *ComponentFindReader) ReadResponse(response runtime.ClientResponse, cons
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[GET /component] componentFind", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewComponentFindOK() *ComponentFindOK {
 	return &ComponentFindOK{}
 }
 
-/*
-ComponentFindOK describes a response with status code 200, with default header values.
+/* ComponentFindOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type ComponentFindOK struct {
 	Payload *models.ComponentFindResponse
 }
 
-// IsSuccess returns true when this component find o k response has a 2xx status code
-func (o *ComponentFindOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this component find o k response has a 3xx status code
-func (o *ComponentFindOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this component find o k response has a 4xx status code
-func (o *ComponentFindOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this component find o k response has a 5xx status code
-func (o *ComponentFindOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this component find o k response a status code equal to that given
-func (o *ComponentFindOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the component find o k response
-func (o *ComponentFindOK) Code() int {
-	return 200
-}
-
 func (o *ComponentFindOK) Error() string {
 	return fmt.Sprintf("[GET /component][%d] componentFindOK  %+v", 200, o.Payload)
 }
-
-func (o *ComponentFindOK) String() string {
-	return fmt.Sprintf("[GET /component][%d] componentFindOK  %+v", 200, o.Payload)
-}
-
 func (o *ComponentFindOK) GetPayload() *models.ComponentFindResponse {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewComponentFindBadRequest() *ComponentFindBadRequest {
 	return &ComponentFindBadRequest{}
 }
 
-/*
-ComponentFindBadRequest describes a response with status code 400, with default header values.
+/* ComponentFindBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type ComponentFindBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this component find bad request response has a 2xx status code
-func (o *ComponentFindBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this component find bad request response has a 3xx status code
-func (o *ComponentFindBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this component find bad request response has a 4xx status code
-func (o *ComponentFindBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this component find bad request response has a 5xx status code
-func (o *ComponentFindBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this component find bad request response a status code equal to that given
-func (o *ComponentFindBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the component find bad request response
-func (o *ComponentFindBadRequest) Code() int {
-	return 400
-}
-
 func (o *ComponentFindBadRequest) Error() string {
 	return fmt.Sprintf("[GET /component][%d] componentFindBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *ComponentFindBadRequest) String() string {
-	return fmt.Sprintf("[GET /component][%d] componentFindBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *ComponentFindBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewComponentFindUnauthorized() *ComponentFindUnauthorized {
 	return &ComponentFindUnauthorized{}
 }
 
-/*
-ComponentFindUnauthorized describes a response with status code 401, with default header values.
+/* ComponentFindUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type ComponentFindUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this component find unauthorized response has a 2xx status code
-func (o *ComponentFindUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this component find unauthorized response has a 3xx status code
-func (o *ComponentFindUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this component find unauthorized response has a 4xx status code
-func (o *ComponentFindUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this component find unauthorized response has a 5xx status code
-func (o *ComponentFindUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this component find unauthorized response a status code equal to that given
-func (o *ComponentFindUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the component find unauthorized response
-func (o *ComponentFindUnauthorized) Code() int {
-	return 401
-}
-
 func (o *ComponentFindUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /component][%d] componentFindUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *ComponentFindUnauthorized) String() string {
-	return fmt.Sprintf("[GET /component][%d] componentFindUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *ComponentFindUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewComponentFindInternalServerError() *ComponentFindInternalServerError {
 	return &ComponentFindInternalServerError{}
 }
 
-/*
-ComponentFindInternalServerError describes a response with status code 500, with default header values.
+/* ComponentFindInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type ComponentFindInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this component find internal server error response has a 2xx status code
-func (o *ComponentFindInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this component find internal server error response has a 3xx status code
-func (o *ComponentFindInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this component find internal server error response has a 4xx status code
-func (o *ComponentFindInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this component find internal server error response has a 5xx status code
-func (o *ComponentFindInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this component find internal server error response a status code equal to that given
-func (o *ComponentFindInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the component find internal server error response
-func (o *ComponentFindInternalServerError) Code() int {
-	return 500
-}
-
 func (o *ComponentFindInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /component][%d] componentFindInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *ComponentFindInternalServerError) String() string {
-	return fmt.Sprintf("[GET /component][%d] componentFindInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *ComponentFindInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

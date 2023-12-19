@@ -48,7 +48,7 @@ func (o *UserFindListReader) ReadResponse(response runtime.ClientResponse, consu
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[GET /user] userFindList", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewUserFindListOK() *UserFindListOK {
 	return &UserFindListOK{}
 }
 
-/*
-UserFindListOK describes a response with status code 200, with default header values.
+/* UserFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type UserFindListOK struct {
 	Payload *models.UserFindResponse
 }
 
-// IsSuccess returns true when this user find list o k response has a 2xx status code
-func (o *UserFindListOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this user find list o k response has a 3xx status code
-func (o *UserFindListOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this user find list o k response has a 4xx status code
-func (o *UserFindListOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this user find list o k response has a 5xx status code
-func (o *UserFindListOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this user find list o k response a status code equal to that given
-func (o *UserFindListOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the user find list o k response
-func (o *UserFindListOK) Code() int {
-	return 200
-}
-
 func (o *UserFindListOK) Error() string {
 	return fmt.Sprintf("[GET /user][%d] userFindListOK  %+v", 200, o.Payload)
 }
-
-func (o *UserFindListOK) String() string {
-	return fmt.Sprintf("[GET /user][%d] userFindListOK  %+v", 200, o.Payload)
-}
-
 func (o *UserFindListOK) GetPayload() *models.UserFindResponse {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewUserFindListBadRequest() *UserFindListBadRequest {
 	return &UserFindListBadRequest{}
 }
 
-/*
-UserFindListBadRequest describes a response with status code 400, with default header values.
+/* UserFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type UserFindListBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this user find list bad request response has a 2xx status code
-func (o *UserFindListBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this user find list bad request response has a 3xx status code
-func (o *UserFindListBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this user find list bad request response has a 4xx status code
-func (o *UserFindListBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this user find list bad request response has a 5xx status code
-func (o *UserFindListBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this user find list bad request response a status code equal to that given
-func (o *UserFindListBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the user find list bad request response
-func (o *UserFindListBadRequest) Code() int {
-	return 400
-}
-
 func (o *UserFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /user][%d] userFindListBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *UserFindListBadRequest) String() string {
-	return fmt.Sprintf("[GET /user][%d] userFindListBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *UserFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewUserFindListUnauthorized() *UserFindListUnauthorized {
 	return &UserFindListUnauthorized{}
 }
 
-/*
-UserFindListUnauthorized describes a response with status code 401, with default header values.
+/* UserFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type UserFindListUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this user find list unauthorized response has a 2xx status code
-func (o *UserFindListUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this user find list unauthorized response has a 3xx status code
-func (o *UserFindListUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this user find list unauthorized response has a 4xx status code
-func (o *UserFindListUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this user find list unauthorized response has a 5xx status code
-func (o *UserFindListUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this user find list unauthorized response a status code equal to that given
-func (o *UserFindListUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the user find list unauthorized response
-func (o *UserFindListUnauthorized) Code() int {
-	return 401
-}
-
 func (o *UserFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /user][%d] userFindListUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *UserFindListUnauthorized) String() string {
-	return fmt.Sprintf("[GET /user][%d] userFindListUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *UserFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewUserFindListInternalServerError() *UserFindListInternalServerError {
 	return &UserFindListInternalServerError{}
 }
 
-/*
-UserFindListInternalServerError describes a response with status code 500, with default header values.
+/* UserFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type UserFindListInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this user find list internal server error response has a 2xx status code
-func (o *UserFindListInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this user find list internal server error response has a 3xx status code
-func (o *UserFindListInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this user find list internal server error response has a 4xx status code
-func (o *UserFindListInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this user find list internal server error response has a 5xx status code
-func (o *UserFindListInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this user find list internal server error response a status code equal to that given
-func (o *UserFindListInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the user find list internal server error response
-func (o *UserFindListInternalServerError) Code() int {
-	return 500
-}
-
 func (o *UserFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /user][%d] userFindListInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *UserFindListInternalServerError) String() string {
-	return fmt.Sprintf("[GET /user][%d] userFindListInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *UserFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

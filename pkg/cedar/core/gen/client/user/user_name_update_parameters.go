@@ -54,16 +54,17 @@ func NewUserNameUpdateParamsWithHTTPClient(client *http.Client) *UserNameUpdateP
 	}
 }
 
-/*
-UserNameUpdateParams contains all the parameters to send to the API endpoint
+/* UserNameUpdateParams contains all the parameters to send to the API endpoint
+   for the user name update operation.
 
-	for the user name update operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type UserNameUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   User information to be updated in CEDAR.
+	*/
 	Body *models.UserUpdateRequest
 
 	/* Username.

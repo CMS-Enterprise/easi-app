@@ -53,12 +53,10 @@ func NewBudgetDeleteListParamsWithHTTPClient(client *http.Client) *BudgetDeleteL
 	}
 }
 
-/*
-BudgetDeleteListParams contains all the parameters to send to the API endpoint
+/* BudgetDeleteListParams contains all the parameters to send to the API endpoint
+   for the budget delete list operation.
 
-	for the budget delete list operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type BudgetDeleteListParams struct {
 

@@ -54,7 +54,7 @@ func (o *PersonFindByIDReader) ReadResponse(response runtime.ClientResponse, con
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[GET /person/{id}] personFindById", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -63,8 +63,7 @@ func NewPersonFindByIDOK() *PersonFindByIDOK {
 	return &PersonFindByIDOK{}
 }
 
-/*
-PersonFindByIDOK describes a response with status code 200, with default header values.
+/* PersonFindByIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -72,44 +71,9 @@ type PersonFindByIDOK struct {
 	Payload *models.Person
 }
 
-// IsSuccess returns true when this person find by Id o k response has a 2xx status code
-func (o *PersonFindByIDOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this person find by Id o k response has a 3xx status code
-func (o *PersonFindByIDOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this person find by Id o k response has a 4xx status code
-func (o *PersonFindByIDOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this person find by Id o k response has a 5xx status code
-func (o *PersonFindByIDOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this person find by Id o k response a status code equal to that given
-func (o *PersonFindByIDOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the person find by Id o k response
-func (o *PersonFindByIDOK) Code() int {
-	return 200
-}
-
 func (o *PersonFindByIDOK) Error() string {
 	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdOK  %+v", 200, o.Payload)
 }
-
-func (o *PersonFindByIDOK) String() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdOK  %+v", 200, o.Payload)
-}
-
 func (o *PersonFindByIDOK) GetPayload() *models.Person {
 	return o.Payload
 }
@@ -131,8 +95,7 @@ func NewPersonFindByIDBadRequest() *PersonFindByIDBadRequest {
 	return &PersonFindByIDBadRequest{}
 }
 
-/*
-PersonFindByIDBadRequest describes a response with status code 400, with default header values.
+/* PersonFindByIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -140,44 +103,9 @@ type PersonFindByIDBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this person find by Id bad request response has a 2xx status code
-func (o *PersonFindByIDBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this person find by Id bad request response has a 3xx status code
-func (o *PersonFindByIDBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this person find by Id bad request response has a 4xx status code
-func (o *PersonFindByIDBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this person find by Id bad request response has a 5xx status code
-func (o *PersonFindByIDBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this person find by Id bad request response a status code equal to that given
-func (o *PersonFindByIDBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the person find by Id bad request response
-func (o *PersonFindByIDBadRequest) Code() int {
-	return 400
-}
-
 func (o *PersonFindByIDBadRequest) Error() string {
 	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *PersonFindByIDBadRequest) String() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *PersonFindByIDBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -199,8 +127,7 @@ func NewPersonFindByIDUnauthorized() *PersonFindByIDUnauthorized {
 	return &PersonFindByIDUnauthorized{}
 }
 
-/*
-PersonFindByIDUnauthorized describes a response with status code 401, with default header values.
+/* PersonFindByIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -208,44 +135,9 @@ type PersonFindByIDUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this person find by Id unauthorized response has a 2xx status code
-func (o *PersonFindByIDUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this person find by Id unauthorized response has a 3xx status code
-func (o *PersonFindByIDUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this person find by Id unauthorized response has a 4xx status code
-func (o *PersonFindByIDUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this person find by Id unauthorized response has a 5xx status code
-func (o *PersonFindByIDUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this person find by Id unauthorized response a status code equal to that given
-func (o *PersonFindByIDUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the person find by Id unauthorized response
-func (o *PersonFindByIDUnauthorized) Code() int {
-	return 401
-}
-
 func (o *PersonFindByIDUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *PersonFindByIDUnauthorized) String() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *PersonFindByIDUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -267,8 +159,7 @@ func NewPersonFindByIDNotFound() *PersonFindByIDNotFound {
 	return &PersonFindByIDNotFound{}
 }
 
-/*
-PersonFindByIDNotFound describes a response with status code 404, with default header values.
+/* PersonFindByIDNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -276,44 +167,9 @@ type PersonFindByIDNotFound struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this person find by Id not found response has a 2xx status code
-func (o *PersonFindByIDNotFound) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this person find by Id not found response has a 3xx status code
-func (o *PersonFindByIDNotFound) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this person find by Id not found response has a 4xx status code
-func (o *PersonFindByIDNotFound) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this person find by Id not found response has a 5xx status code
-func (o *PersonFindByIDNotFound) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this person find by Id not found response a status code equal to that given
-func (o *PersonFindByIDNotFound) IsCode(code int) bool {
-	return code == 404
-}
-
-// Code gets the status code for the person find by Id not found response
-func (o *PersonFindByIDNotFound) Code() int {
-	return 404
-}
-
 func (o *PersonFindByIDNotFound) Error() string {
 	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdNotFound  %+v", 404, o.Payload)
 }
-
-func (o *PersonFindByIDNotFound) String() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdNotFound  %+v", 404, o.Payload)
-}
-
 func (o *PersonFindByIDNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -335,8 +191,7 @@ func NewPersonFindByIDInternalServerError() *PersonFindByIDInternalServerError {
 	return &PersonFindByIDInternalServerError{}
 }
 
-/*
-PersonFindByIDInternalServerError describes a response with status code 500, with default header values.
+/* PersonFindByIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -344,44 +199,9 @@ type PersonFindByIDInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this person find by Id internal server error response has a 2xx status code
-func (o *PersonFindByIDInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this person find by Id internal server error response has a 3xx status code
-func (o *PersonFindByIDInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this person find by Id internal server error response has a 4xx status code
-func (o *PersonFindByIDInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this person find by Id internal server error response has a 5xx status code
-func (o *PersonFindByIDInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this person find by Id internal server error response a status code equal to that given
-func (o *PersonFindByIDInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the person find by Id internal server error response
-func (o *PersonFindByIDInternalServerError) Code() int {
-	return 500
-}
-
 func (o *PersonFindByIDInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *PersonFindByIDInternalServerError) String() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *PersonFindByIDInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

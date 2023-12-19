@@ -48,7 +48,7 @@ func (o *SupportContactFindListReader) ReadResponse(response runtime.ClientRespo
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[GET /supportContact] supportContactFindList", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewSupportContactFindListOK() *SupportContactFindListOK {
 	return &SupportContactFindListOK{}
 }
 
-/*
-SupportContactFindListOK describes a response with status code 200, with default header values.
+/* SupportContactFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type SupportContactFindListOK struct {
 	Payload *models.SupportContactFindResponse
 }
 
-// IsSuccess returns true when this support contact find list o k response has a 2xx status code
-func (o *SupportContactFindListOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this support contact find list o k response has a 3xx status code
-func (o *SupportContactFindListOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact find list o k response has a 4xx status code
-func (o *SupportContactFindListOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this support contact find list o k response has a 5xx status code
-func (o *SupportContactFindListOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this support contact find list o k response a status code equal to that given
-func (o *SupportContactFindListOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the support contact find list o k response
-func (o *SupportContactFindListOK) Code() int {
-	return 200
-}
-
 func (o *SupportContactFindListOK) Error() string {
 	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListOK  %+v", 200, o.Payload)
 }
-
-func (o *SupportContactFindListOK) String() string {
-	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListOK  %+v", 200, o.Payload)
-}
-
 func (o *SupportContactFindListOK) GetPayload() *models.SupportContactFindResponse {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewSupportContactFindListBadRequest() *SupportContactFindListBadRequest {
 	return &SupportContactFindListBadRequest{}
 }
 
-/*
-SupportContactFindListBadRequest describes a response with status code 400, with default header values.
+/* SupportContactFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type SupportContactFindListBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this support contact find list bad request response has a 2xx status code
-func (o *SupportContactFindListBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this support contact find list bad request response has a 3xx status code
-func (o *SupportContactFindListBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact find list bad request response has a 4xx status code
-func (o *SupportContactFindListBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this support contact find list bad request response has a 5xx status code
-func (o *SupportContactFindListBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this support contact find list bad request response a status code equal to that given
-func (o *SupportContactFindListBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the support contact find list bad request response
-func (o *SupportContactFindListBadRequest) Code() int {
-	return 400
-}
-
 func (o *SupportContactFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *SupportContactFindListBadRequest) String() string {
-	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *SupportContactFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewSupportContactFindListUnauthorized() *SupportContactFindListUnauthorized
 	return &SupportContactFindListUnauthorized{}
 }
 
-/*
-SupportContactFindListUnauthorized describes a response with status code 401, with default header values.
+/* SupportContactFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type SupportContactFindListUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this support contact find list unauthorized response has a 2xx status code
-func (o *SupportContactFindListUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this support contact find list unauthorized response has a 3xx status code
-func (o *SupportContactFindListUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact find list unauthorized response has a 4xx status code
-func (o *SupportContactFindListUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this support contact find list unauthorized response has a 5xx status code
-func (o *SupportContactFindListUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this support contact find list unauthorized response a status code equal to that given
-func (o *SupportContactFindListUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the support contact find list unauthorized response
-func (o *SupportContactFindListUnauthorized) Code() int {
-	return 401
-}
-
 func (o *SupportContactFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *SupportContactFindListUnauthorized) String() string {
-	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *SupportContactFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewSupportContactFindListInternalServerError() *SupportContactFindListInter
 	return &SupportContactFindListInternalServerError{}
 }
 
-/*
-SupportContactFindListInternalServerError describes a response with status code 500, with default header values.
+/* SupportContactFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type SupportContactFindListInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this support contact find list internal server error response has a 2xx status code
-func (o *SupportContactFindListInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this support contact find list internal server error response has a 3xx status code
-func (o *SupportContactFindListInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact find list internal server error response has a 4xx status code
-func (o *SupportContactFindListInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this support contact find list internal server error response has a 5xx status code
-func (o *SupportContactFindListInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this support contact find list internal server error response a status code equal to that given
-func (o *SupportContactFindListInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the support contact find list internal server error response
-func (o *SupportContactFindListInternalServerError) Code() int {
-	return 500
-}
-
 func (o *SupportContactFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *SupportContactFindListInternalServerError) String() string {
-	return fmt.Sprintf("[GET /supportContact][%d] supportContactFindListInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *SupportContactFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

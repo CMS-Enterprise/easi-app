@@ -48,7 +48,7 @@ func (o *ThreatFindListReader) ReadResponse(response runtime.ClientResponse, con
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[GET /threat] threatFindList", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewThreatFindListOK() *ThreatFindListOK {
 	return &ThreatFindListOK{}
 }
 
-/*
-ThreatFindListOK describes a response with status code 200, with default header values.
+/* ThreatFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type ThreatFindListOK struct {
 	Payload *models.ThreatFindResponse
 }
 
-// IsSuccess returns true when this threat find list o k response has a 2xx status code
-func (o *ThreatFindListOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this threat find list o k response has a 3xx status code
-func (o *ThreatFindListOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this threat find list o k response has a 4xx status code
-func (o *ThreatFindListOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this threat find list o k response has a 5xx status code
-func (o *ThreatFindListOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this threat find list o k response a status code equal to that given
-func (o *ThreatFindListOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the threat find list o k response
-func (o *ThreatFindListOK) Code() int {
-	return 200
-}
-
 func (o *ThreatFindListOK) Error() string {
 	return fmt.Sprintf("[GET /threat][%d] threatFindListOK  %+v", 200, o.Payload)
 }
-
-func (o *ThreatFindListOK) String() string {
-	return fmt.Sprintf("[GET /threat][%d] threatFindListOK  %+v", 200, o.Payload)
-}
-
 func (o *ThreatFindListOK) GetPayload() *models.ThreatFindResponse {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewThreatFindListBadRequest() *ThreatFindListBadRequest {
 	return &ThreatFindListBadRequest{}
 }
 
-/*
-ThreatFindListBadRequest describes a response with status code 400, with default header values.
+/* ThreatFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type ThreatFindListBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this threat find list bad request response has a 2xx status code
-func (o *ThreatFindListBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this threat find list bad request response has a 3xx status code
-func (o *ThreatFindListBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this threat find list bad request response has a 4xx status code
-func (o *ThreatFindListBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this threat find list bad request response has a 5xx status code
-func (o *ThreatFindListBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this threat find list bad request response a status code equal to that given
-func (o *ThreatFindListBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the threat find list bad request response
-func (o *ThreatFindListBadRequest) Code() int {
-	return 400
-}
-
 func (o *ThreatFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /threat][%d] threatFindListBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *ThreatFindListBadRequest) String() string {
-	return fmt.Sprintf("[GET /threat][%d] threatFindListBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *ThreatFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewThreatFindListUnauthorized() *ThreatFindListUnauthorized {
 	return &ThreatFindListUnauthorized{}
 }
 
-/*
-ThreatFindListUnauthorized describes a response with status code 401, with default header values.
+/* ThreatFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type ThreatFindListUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this threat find list unauthorized response has a 2xx status code
-func (o *ThreatFindListUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this threat find list unauthorized response has a 3xx status code
-func (o *ThreatFindListUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this threat find list unauthorized response has a 4xx status code
-func (o *ThreatFindListUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this threat find list unauthorized response has a 5xx status code
-func (o *ThreatFindListUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this threat find list unauthorized response a status code equal to that given
-func (o *ThreatFindListUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the threat find list unauthorized response
-func (o *ThreatFindListUnauthorized) Code() int {
-	return 401
-}
-
 func (o *ThreatFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /threat][%d] threatFindListUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *ThreatFindListUnauthorized) String() string {
-	return fmt.Sprintf("[GET /threat][%d] threatFindListUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *ThreatFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewThreatFindListInternalServerError() *ThreatFindListInternalServerError {
 	return &ThreatFindListInternalServerError{}
 }
 
-/*
-ThreatFindListInternalServerError describes a response with status code 500, with default header values.
+/* ThreatFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type ThreatFindListInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this threat find list internal server error response has a 2xx status code
-func (o *ThreatFindListInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this threat find list internal server error response has a 3xx status code
-func (o *ThreatFindListInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this threat find list internal server error response has a 4xx status code
-func (o *ThreatFindListInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this threat find list internal server error response has a 5xx status code
-func (o *ThreatFindListInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this threat find list internal server error response a status code equal to that given
-func (o *ThreatFindListInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the threat find list internal server error response
-func (o *ThreatFindListInternalServerError) Code() int {
-	return 500
-}
-
 func (o *ThreatFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /threat][%d] threatFindListInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *ThreatFindListInternalServerError) String() string {
-	return fmt.Sprintf("[GET /threat][%d] threatFindListInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *ThreatFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

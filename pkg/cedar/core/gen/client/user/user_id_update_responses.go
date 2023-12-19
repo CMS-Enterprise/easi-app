@@ -48,7 +48,7 @@ func (o *UserIDUpdateReader) ReadResponse(response runtime.ClientResponse, consu
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[PUT /user/id/{id}] userIdUpdate", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewUserIDUpdateOK() *UserIDUpdateOK {
 	return &UserIDUpdateOK{}
 }
 
-/*
-UserIDUpdateOK describes a response with status code 200, with default header values.
+/* UserIDUpdateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type UserIDUpdateOK struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this user Id update o k response has a 2xx status code
-func (o *UserIDUpdateOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this user Id update o k response has a 3xx status code
-func (o *UserIDUpdateOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this user Id update o k response has a 4xx status code
-func (o *UserIDUpdateOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this user Id update o k response has a 5xx status code
-func (o *UserIDUpdateOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this user Id update o k response a status code equal to that given
-func (o *UserIDUpdateOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the user Id update o k response
-func (o *UserIDUpdateOK) Code() int {
-	return 200
-}
-
 func (o *UserIDUpdateOK) Error() string {
 	return fmt.Sprintf("[PUT /user/id/{id}][%d] userIdUpdateOK  %+v", 200, o.Payload)
 }
-
-func (o *UserIDUpdateOK) String() string {
-	return fmt.Sprintf("[PUT /user/id/{id}][%d] userIdUpdateOK  %+v", 200, o.Payload)
-}
-
 func (o *UserIDUpdateOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewUserIDUpdateBadRequest() *UserIDUpdateBadRequest {
 	return &UserIDUpdateBadRequest{}
 }
 
-/*
-UserIDUpdateBadRequest describes a response with status code 400, with default header values.
+/* UserIDUpdateBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type UserIDUpdateBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this user Id update bad request response has a 2xx status code
-func (o *UserIDUpdateBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this user Id update bad request response has a 3xx status code
-func (o *UserIDUpdateBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this user Id update bad request response has a 4xx status code
-func (o *UserIDUpdateBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this user Id update bad request response has a 5xx status code
-func (o *UserIDUpdateBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this user Id update bad request response a status code equal to that given
-func (o *UserIDUpdateBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the user Id update bad request response
-func (o *UserIDUpdateBadRequest) Code() int {
-	return 400
-}
-
 func (o *UserIDUpdateBadRequest) Error() string {
 	return fmt.Sprintf("[PUT /user/id/{id}][%d] userIdUpdateBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *UserIDUpdateBadRequest) String() string {
-	return fmt.Sprintf("[PUT /user/id/{id}][%d] userIdUpdateBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *UserIDUpdateBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewUserIDUpdateUnauthorized() *UserIDUpdateUnauthorized {
 	return &UserIDUpdateUnauthorized{}
 }
 
-/*
-UserIDUpdateUnauthorized describes a response with status code 401, with default header values.
+/* UserIDUpdateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type UserIDUpdateUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this user Id update unauthorized response has a 2xx status code
-func (o *UserIDUpdateUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this user Id update unauthorized response has a 3xx status code
-func (o *UserIDUpdateUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this user Id update unauthorized response has a 4xx status code
-func (o *UserIDUpdateUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this user Id update unauthorized response has a 5xx status code
-func (o *UserIDUpdateUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this user Id update unauthorized response a status code equal to that given
-func (o *UserIDUpdateUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the user Id update unauthorized response
-func (o *UserIDUpdateUnauthorized) Code() int {
-	return 401
-}
-
 func (o *UserIDUpdateUnauthorized) Error() string {
 	return fmt.Sprintf("[PUT /user/id/{id}][%d] userIdUpdateUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *UserIDUpdateUnauthorized) String() string {
-	return fmt.Sprintf("[PUT /user/id/{id}][%d] userIdUpdateUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *UserIDUpdateUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewUserIDUpdateInternalServerError() *UserIDUpdateInternalServerError {
 	return &UserIDUpdateInternalServerError{}
 }
 
-/*
-UserIDUpdateInternalServerError describes a response with status code 500, with default header values.
+/* UserIDUpdateInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type UserIDUpdateInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this user Id update internal server error response has a 2xx status code
-func (o *UserIDUpdateInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this user Id update internal server error response has a 3xx status code
-func (o *UserIDUpdateInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this user Id update internal server error response has a 4xx status code
-func (o *UserIDUpdateInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this user Id update internal server error response has a 5xx status code
-func (o *UserIDUpdateInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this user Id update internal server error response a status code equal to that given
-func (o *UserIDUpdateInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the user Id update internal server error response
-func (o *UserIDUpdateInternalServerError) Code() int {
-	return 500
-}
-
 func (o *UserIDUpdateInternalServerError) Error() string {
 	return fmt.Sprintf("[PUT /user/id/{id}][%d] userIdUpdateInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *UserIDUpdateInternalServerError) String() string {
-	return fmt.Sprintf("[PUT /user/id/{id}][%d] userIdUpdateInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *UserIDUpdateInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

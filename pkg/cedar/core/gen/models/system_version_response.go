@@ -54,8 +54,6 @@ func (m *SystemVersionResponse) validateIctObjects(formats strfmt.Registry) erro
 			if err := m.IctObjects[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("ictObjects" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("ictObjects" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -85,16 +83,9 @@ func (m *SystemVersionResponse) contextValidateIctObjects(ctx context.Context, f
 	for i := 0; i < len(m.IctObjects); i++ {
 
 		if m.IctObjects[i] != nil {
-
-			if swag.IsZero(m.IctObjects[i]) { // not required
-				return nil
-			}
-
 			if err := m.IctObjects[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("ictObjects" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("ictObjects" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

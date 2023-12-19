@@ -54,7 +54,7 @@ func (o *BudgetDeleteListReader) ReadResponse(response runtime.ClientResponse, c
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[DELETE /budget] budgetDeleteList", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -63,8 +63,7 @@ func NewBudgetDeleteListOK() *BudgetDeleteListOK {
 	return &BudgetDeleteListOK{}
 }
 
-/*
-BudgetDeleteListOK describes a response with status code 200, with default header values.
+/* BudgetDeleteListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -72,44 +71,9 @@ type BudgetDeleteListOK struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this budget delete list o k response has a 2xx status code
-func (o *BudgetDeleteListOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this budget delete list o k response has a 3xx status code
-func (o *BudgetDeleteListOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this budget delete list o k response has a 4xx status code
-func (o *BudgetDeleteListOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this budget delete list o k response has a 5xx status code
-func (o *BudgetDeleteListOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this budget delete list o k response a status code equal to that given
-func (o *BudgetDeleteListOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the budget delete list o k response
-func (o *BudgetDeleteListOK) Code() int {
-	return 200
-}
-
 func (o *BudgetDeleteListOK) Error() string {
 	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListOK  %+v", 200, o.Payload)
 }
-
-func (o *BudgetDeleteListOK) String() string {
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListOK  %+v", 200, o.Payload)
-}
-
 func (o *BudgetDeleteListOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -131,8 +95,7 @@ func NewBudgetDeleteListBadRequest() *BudgetDeleteListBadRequest {
 	return &BudgetDeleteListBadRequest{}
 }
 
-/*
-BudgetDeleteListBadRequest describes a response with status code 400, with default header values.
+/* BudgetDeleteListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -140,44 +103,9 @@ type BudgetDeleteListBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this budget delete list bad request response has a 2xx status code
-func (o *BudgetDeleteListBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this budget delete list bad request response has a 3xx status code
-func (o *BudgetDeleteListBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this budget delete list bad request response has a 4xx status code
-func (o *BudgetDeleteListBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this budget delete list bad request response has a 5xx status code
-func (o *BudgetDeleteListBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this budget delete list bad request response a status code equal to that given
-func (o *BudgetDeleteListBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the budget delete list bad request response
-func (o *BudgetDeleteListBadRequest) Code() int {
-	return 400
-}
-
 func (o *BudgetDeleteListBadRequest) Error() string {
 	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *BudgetDeleteListBadRequest) String() string {
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *BudgetDeleteListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -199,8 +127,7 @@ func NewBudgetDeleteListUnauthorized() *BudgetDeleteListUnauthorized {
 	return &BudgetDeleteListUnauthorized{}
 }
 
-/*
-BudgetDeleteListUnauthorized describes a response with status code 401, with default header values.
+/* BudgetDeleteListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -208,44 +135,9 @@ type BudgetDeleteListUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this budget delete list unauthorized response has a 2xx status code
-func (o *BudgetDeleteListUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this budget delete list unauthorized response has a 3xx status code
-func (o *BudgetDeleteListUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this budget delete list unauthorized response has a 4xx status code
-func (o *BudgetDeleteListUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this budget delete list unauthorized response has a 5xx status code
-func (o *BudgetDeleteListUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this budget delete list unauthorized response a status code equal to that given
-func (o *BudgetDeleteListUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the budget delete list unauthorized response
-func (o *BudgetDeleteListUnauthorized) Code() int {
-	return 401
-}
-
 func (o *BudgetDeleteListUnauthorized) Error() string {
 	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *BudgetDeleteListUnauthorized) String() string {
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *BudgetDeleteListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -267,8 +159,7 @@ func NewBudgetDeleteListNotFound() *BudgetDeleteListNotFound {
 	return &BudgetDeleteListNotFound{}
 }
 
-/*
-BudgetDeleteListNotFound describes a response with status code 404, with default header values.
+/* BudgetDeleteListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -276,44 +167,9 @@ type BudgetDeleteListNotFound struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this budget delete list not found response has a 2xx status code
-func (o *BudgetDeleteListNotFound) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this budget delete list not found response has a 3xx status code
-func (o *BudgetDeleteListNotFound) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this budget delete list not found response has a 4xx status code
-func (o *BudgetDeleteListNotFound) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this budget delete list not found response has a 5xx status code
-func (o *BudgetDeleteListNotFound) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this budget delete list not found response a status code equal to that given
-func (o *BudgetDeleteListNotFound) IsCode(code int) bool {
-	return code == 404
-}
-
-// Code gets the status code for the budget delete list not found response
-func (o *BudgetDeleteListNotFound) Code() int {
-	return 404
-}
-
 func (o *BudgetDeleteListNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListNotFound  %+v", 404, o.Payload)
 }
-
-func (o *BudgetDeleteListNotFound) String() string {
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListNotFound  %+v", 404, o.Payload)
-}
-
 func (o *BudgetDeleteListNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -335,8 +191,7 @@ func NewBudgetDeleteListInternalServerError() *BudgetDeleteListInternalServerErr
 	return &BudgetDeleteListInternalServerError{}
 }
 
-/*
-BudgetDeleteListInternalServerError describes a response with status code 500, with default header values.
+/* BudgetDeleteListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -344,44 +199,9 @@ type BudgetDeleteListInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this budget delete list internal server error response has a 2xx status code
-func (o *BudgetDeleteListInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this budget delete list internal server error response has a 3xx status code
-func (o *BudgetDeleteListInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this budget delete list internal server error response has a 4xx status code
-func (o *BudgetDeleteListInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this budget delete list internal server error response has a 5xx status code
-func (o *BudgetDeleteListInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this budget delete list internal server error response a status code equal to that given
-func (o *BudgetDeleteListInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the budget delete list internal server error response
-func (o *BudgetDeleteListInternalServerError) Code() int {
-	return 500
-}
-
 func (o *BudgetDeleteListInternalServerError) Error() string {
 	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *BudgetDeleteListInternalServerError) String() string {
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *BudgetDeleteListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

@@ -54,7 +54,7 @@ func (o *SystemSummaryFindListReader) ReadResponse(response runtime.ClientRespon
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[GET /system/summary] systemSummaryFindList", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -63,8 +63,7 @@ func NewSystemSummaryFindListOK() *SystemSummaryFindListOK {
 	return &SystemSummaryFindListOK{}
 }
 
-/*
-SystemSummaryFindListOK describes a response with status code 200, with default header values.
+/* SystemSummaryFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -72,44 +71,9 @@ type SystemSummaryFindListOK struct {
 	Payload *models.SystemSummaryResponse
 }
 
-// IsSuccess returns true when this system summary find list o k response has a 2xx status code
-func (o *SystemSummaryFindListOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this system summary find list o k response has a 3xx status code
-func (o *SystemSummaryFindListOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system summary find list o k response has a 4xx status code
-func (o *SystemSummaryFindListOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this system summary find list o k response has a 5xx status code
-func (o *SystemSummaryFindListOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this system summary find list o k response a status code equal to that given
-func (o *SystemSummaryFindListOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the system summary find list o k response
-func (o *SystemSummaryFindListOK) Code() int {
-	return 200
-}
-
 func (o *SystemSummaryFindListOK) Error() string {
 	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListOK  %+v", 200, o.Payload)
 }
-
-func (o *SystemSummaryFindListOK) String() string {
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListOK  %+v", 200, o.Payload)
-}
-
 func (o *SystemSummaryFindListOK) GetPayload() *models.SystemSummaryResponse {
 	return o.Payload
 }
@@ -131,8 +95,7 @@ func NewSystemSummaryFindListBadRequest() *SystemSummaryFindListBadRequest {
 	return &SystemSummaryFindListBadRequest{}
 }
 
-/*
-SystemSummaryFindListBadRequest describes a response with status code 400, with default header values.
+/* SystemSummaryFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -140,44 +103,9 @@ type SystemSummaryFindListBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this system summary find list bad request response has a 2xx status code
-func (o *SystemSummaryFindListBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this system summary find list bad request response has a 3xx status code
-func (o *SystemSummaryFindListBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system summary find list bad request response has a 4xx status code
-func (o *SystemSummaryFindListBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this system summary find list bad request response has a 5xx status code
-func (o *SystemSummaryFindListBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this system summary find list bad request response a status code equal to that given
-func (o *SystemSummaryFindListBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the system summary find list bad request response
-func (o *SystemSummaryFindListBadRequest) Code() int {
-	return 400
-}
-
 func (o *SystemSummaryFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *SystemSummaryFindListBadRequest) String() string {
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *SystemSummaryFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -199,8 +127,7 @@ func NewSystemSummaryFindListUnauthorized() *SystemSummaryFindListUnauthorized {
 	return &SystemSummaryFindListUnauthorized{}
 }
 
-/*
-SystemSummaryFindListUnauthorized describes a response with status code 401, with default header values.
+/* SystemSummaryFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -208,44 +135,9 @@ type SystemSummaryFindListUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this system summary find list unauthorized response has a 2xx status code
-func (o *SystemSummaryFindListUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this system summary find list unauthorized response has a 3xx status code
-func (o *SystemSummaryFindListUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system summary find list unauthorized response has a 4xx status code
-func (o *SystemSummaryFindListUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this system summary find list unauthorized response has a 5xx status code
-func (o *SystemSummaryFindListUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this system summary find list unauthorized response a status code equal to that given
-func (o *SystemSummaryFindListUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the system summary find list unauthorized response
-func (o *SystemSummaryFindListUnauthorized) Code() int {
-	return 401
-}
-
 func (o *SystemSummaryFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *SystemSummaryFindListUnauthorized) String() string {
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *SystemSummaryFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -267,8 +159,7 @@ func NewSystemSummaryFindListNotFound() *SystemSummaryFindListNotFound {
 	return &SystemSummaryFindListNotFound{}
 }
 
-/*
-SystemSummaryFindListNotFound describes a response with status code 404, with default header values.
+/* SystemSummaryFindListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -276,44 +167,9 @@ type SystemSummaryFindListNotFound struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this system summary find list not found response has a 2xx status code
-func (o *SystemSummaryFindListNotFound) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this system summary find list not found response has a 3xx status code
-func (o *SystemSummaryFindListNotFound) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system summary find list not found response has a 4xx status code
-func (o *SystemSummaryFindListNotFound) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this system summary find list not found response has a 5xx status code
-func (o *SystemSummaryFindListNotFound) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this system summary find list not found response a status code equal to that given
-func (o *SystemSummaryFindListNotFound) IsCode(code int) bool {
-	return code == 404
-}
-
-// Code gets the status code for the system summary find list not found response
-func (o *SystemSummaryFindListNotFound) Code() int {
-	return 404
-}
-
 func (o *SystemSummaryFindListNotFound) Error() string {
 	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListNotFound  %+v", 404, o.Payload)
 }
-
-func (o *SystemSummaryFindListNotFound) String() string {
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListNotFound  %+v", 404, o.Payload)
-}
-
 func (o *SystemSummaryFindListNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -335,8 +191,7 @@ func NewSystemSummaryFindListInternalServerError() *SystemSummaryFindListInterna
 	return &SystemSummaryFindListInternalServerError{}
 }
 
-/*
-SystemSummaryFindListInternalServerError describes a response with status code 500, with default header values.
+/* SystemSummaryFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -344,44 +199,9 @@ type SystemSummaryFindListInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this system summary find list internal server error response has a 2xx status code
-func (o *SystemSummaryFindListInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this system summary find list internal server error response has a 3xx status code
-func (o *SystemSummaryFindListInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system summary find list internal server error response has a 4xx status code
-func (o *SystemSummaryFindListInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this system summary find list internal server error response has a 5xx status code
-func (o *SystemSummaryFindListInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this system summary find list internal server error response a status code equal to that given
-func (o *SystemSummaryFindListInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the system summary find list internal server error response
-func (o *SystemSummaryFindListInternalServerError) Code() int {
-	return 500
-}
-
 func (o *SystemSummaryFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *SystemSummaryFindListInternalServerError) String() string {
-	return fmt.Sprintf("[GET /system/summary][%d] systemSummaryFindListInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *SystemSummaryFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

@@ -52,12 +52,10 @@ func NewOrganizationFindListParamsWithHTTPClient(client *http.Client) *Organizat
 	}
 }
 
-/*
-OrganizationFindListParams contains all the parameters to send to the API endpoint
+/* OrganizationFindListParams contains all the parameters to send to the API endpoint
+   for the organization find list operation.
 
-	for the organization find list operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type OrganizationFindListParams struct {
 

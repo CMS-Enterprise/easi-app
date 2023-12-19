@@ -36,9 +36,9 @@ type ClientService interface {
 }
 
 /*
-AuthorityToOperateFindList retrieves a list of a t o s based on query criteria
+  AuthorityToOperateFindList retrieves a list of a t o s based on query criteria
 
-An Authority to Operate (ATO) is official documentation that an IT asset within a defined boundary has met FISMA security requirements for a limited period of time. ATO security boundaries can encompass business systems, data centers, cloud service provider enclaves, or other IT assets.
+  An Authority to Operate (ATO) is official documentation that an IT asset within a defined boundary has met FISMA security requirements for a limited period of time. ATO security boundaries can encompass business systems, data centers, cloud service provider enclaves, or other IT assets.
 */
 func (a *Client) AuthorityToOperateFindList(params *AuthorityToOperateFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*AuthorityToOperateFindListOK, error) {
 	// TODO: Validate the params before sending

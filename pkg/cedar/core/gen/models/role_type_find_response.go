@@ -54,8 +54,6 @@ func (m *RoleTypeFindResponse) validateRoleTypes(formats strfmt.Registry) error 
 			if err := m.RoleTypes[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("RoleTypes" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("RoleTypes" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -85,16 +83,9 @@ func (m *RoleTypeFindResponse) contextValidateRoleTypes(ctx context.Context, for
 	for i := 0; i < len(m.RoleTypes); i++ {
 
 		if m.RoleTypes[i] != nil {
-
-			if swag.IsZero(m.RoleTypes[i]) { // not required
-				return nil
-			}
-
 			if err := m.RoleTypes[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("RoleTypes" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("RoleTypes" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

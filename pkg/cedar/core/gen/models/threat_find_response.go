@@ -60,8 +60,6 @@ func (m *ThreatFindResponse) validateThreats(formats strfmt.Registry) error {
 			if err := m.Threats[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Threats" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("Threats" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -100,16 +98,9 @@ func (m *ThreatFindResponse) contextValidateThreats(ctx context.Context, formats
 	for i := 0; i < len(m.Threats); i++ {
 
 		if m.Threats[i] != nil {
-
-			if swag.IsZero(m.Threats[i]) { // not required
-				return nil
-			}
-
 			if err := m.Threats[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Threats" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("Threats" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

@@ -53,12 +53,10 @@ func NewSystemSummaryFindListParamsWithHTTPClient(client *http.Client) *SystemSu
 	}
 }
 
-/*
-SystemSummaryFindListParams contains all the parameters to send to the API endpoint
+/* SystemSummaryFindListParams contains all the parameters to send to the API endpoint
+   for the system summary find list operation.
 
-	for the system summary find list operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type SystemSummaryFindListParams struct {
 
@@ -96,6 +94,12 @@ type SystemSummaryFindListParams struct {
 	*/
 	Offset *int32
 
+	/* RoleType.
+
+	   Role Type of Person that is associated with any System.
+	*/
+	RoleType *string
+
 	/* State.
 
 	   System state.
@@ -107,6 +111,12 @@ type SystemSummaryFindListParams struct {
 	   System status.
 	*/
 	Status *string
+
+	/* UserName.
+
+	   EUA of Person that has a Role associated with any System.
+	*/
+	UserName *string
 
 	/* Version.
 
@@ -222,6 +232,17 @@ func (o *SystemSummaryFindListParams) SetOffset(offset *int32) {
 	o.Offset = offset
 }
 
+// WithRoleType adds the roleType to the system summary find list params
+func (o *SystemSummaryFindListParams) WithRoleType(roleType *string) *SystemSummaryFindListParams {
+	o.SetRoleType(roleType)
+	return o
+}
+
+// SetRoleType adds the roleType to the system summary find list params
+func (o *SystemSummaryFindListParams) SetRoleType(roleType *string) {
+	o.RoleType = roleType
+}
+
 // WithState adds the state to the system summary find list params
 func (o *SystemSummaryFindListParams) WithState(state *string) *SystemSummaryFindListParams {
 	o.SetState(state)
@@ -242,6 +263,17 @@ func (o *SystemSummaryFindListParams) WithStatus(status *string) *SystemSummaryF
 // SetStatus adds the status to the system summary find list params
 func (o *SystemSummaryFindListParams) SetStatus(status *string) {
 	o.Status = status
+}
+
+// WithUserName adds the userName to the system summary find list params
+func (o *SystemSummaryFindListParams) WithUserName(userName *string) *SystemSummaryFindListParams {
+	o.SetUserName(userName)
+	return o
+}
+
+// SetUserName adds the userName to the system summary find list params
+func (o *SystemSummaryFindListParams) SetUserName(userName *string) {
+	o.UserName = userName
 }
 
 // WithVersion adds the version to the system summary find list params
@@ -348,6 +380,23 @@ func (o *SystemSummaryFindListParams) WriteToRequest(r runtime.ClientRequest, re
 		}
 	}
 
+	if o.RoleType != nil {
+
+		// query param roleType
+		var qrRoleType string
+
+		if o.RoleType != nil {
+			qrRoleType = *o.RoleType
+		}
+		qRoleType := qrRoleType
+		if qRoleType != "" {
+
+			if err := r.SetQueryParam("roleType", qRoleType); err != nil {
+				return err
+			}
+		}
+	}
+
 	if o.State != nil {
 
 		// query param state
@@ -377,6 +426,23 @@ func (o *SystemSummaryFindListParams) WriteToRequest(r runtime.ClientRequest, re
 		if qStatus != "" {
 
 			if err := r.SetQueryParam("status", qStatus); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.UserName != nil {
+
+		// query param userName
+		var qrUserName string
+
+		if o.UserName != nil {
+			qrUserName = *o.UserName
+		}
+		qUserName := qrUserName
+		if qUserName != "" {
+
+			if err := r.SetQueryParam("userName", qUserName); err != nil {
 				return err
 			}
 		}

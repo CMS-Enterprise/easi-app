@@ -54,6 +54,15 @@ type Exchange struct {
 	// data format other
 	DataFormatOther string `json:"dataFormatOther,omitempty"`
 
+	// exchange c UI description
+	ExchangeCUIDescription string `json:"exchangeCUIDescription,omitempty"`
+
+	// exchange connection authenticated
+	ExchangeConnectionAuthenticated bool `json:"exchangeConnectionAuthenticated,omitempty"`
+
+	// exchange contains c UI
+	ExchangeContainsCUI bool `json:"exchangeContainsCUI,omitempty"`
+
 	// exchange description
 	// Example: Reference data on vendors acting on behalf of insurance issuers
 	ExchangeDescription string `json:"exchangeDescription,omitempty"`
@@ -69,6 +78,12 @@ type Exchange struct {
 	// exchange name
 	// Example: Acumen Web Portals 1.0 \u003e\u003e Drug Data Processing System 1.0
 	ExchangeName string `json:"exchangeName,omitempty"`
+
+	// exchange network protocol
+	ExchangeNetworkProtocol []string `json:"exchangeNetworkProtocol"`
+
+	// exchange network protocol other
+	ExchangeNetworkProtocolOther string `json:"exchangeNetworkProtocolOther,omitempty"`
 
 	// exchange retired date
 	// Format: date
@@ -295,8 +310,6 @@ func (m *Exchange) validateTypeOfData(formats strfmt.Registry) error {
 			if err := m.TypeOfData[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("typeOfData" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("typeOfData" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -326,16 +339,9 @@ func (m *Exchange) contextValidateTypeOfData(ctx context.Context, formats strfmt
 	for i := 0; i < len(m.TypeOfData); i++ {
 
 		if m.TypeOfData[i] != nil {
-
-			if swag.IsZero(m.TypeOfData[i]) { // not required
-				return nil
-			}
-
 			if err := m.TypeOfData[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("typeOfData" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("typeOfData" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

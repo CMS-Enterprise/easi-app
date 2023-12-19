@@ -48,7 +48,7 @@ func (o *DeploymentUpdateReader) ReadResponse(response runtime.ClientResponse, c
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[PUT /deployment] deploymentUpdate", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewDeploymentUpdateOK() *DeploymentUpdateOK {
 	return &DeploymentUpdateOK{}
 }
 
-/*
-DeploymentUpdateOK describes a response with status code 200, with default header values.
+/* DeploymentUpdateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type DeploymentUpdateOK struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this deployment update o k response has a 2xx status code
-func (o *DeploymentUpdateOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this deployment update o k response has a 3xx status code
-func (o *DeploymentUpdateOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this deployment update o k response has a 4xx status code
-func (o *DeploymentUpdateOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this deployment update o k response has a 5xx status code
-func (o *DeploymentUpdateOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this deployment update o k response a status code equal to that given
-func (o *DeploymentUpdateOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the deployment update o k response
-func (o *DeploymentUpdateOK) Code() int {
-	return 200
-}
-
 func (o *DeploymentUpdateOK) Error() string {
 	return fmt.Sprintf("[PUT /deployment][%d] deploymentUpdateOK  %+v", 200, o.Payload)
 }
-
-func (o *DeploymentUpdateOK) String() string {
-	return fmt.Sprintf("[PUT /deployment][%d] deploymentUpdateOK  %+v", 200, o.Payload)
-}
-
 func (o *DeploymentUpdateOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewDeploymentUpdateBadRequest() *DeploymentUpdateBadRequest {
 	return &DeploymentUpdateBadRequest{}
 }
 
-/*
-DeploymentUpdateBadRequest describes a response with status code 400, with default header values.
+/* DeploymentUpdateBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type DeploymentUpdateBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this deployment update bad request response has a 2xx status code
-func (o *DeploymentUpdateBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this deployment update bad request response has a 3xx status code
-func (o *DeploymentUpdateBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this deployment update bad request response has a 4xx status code
-func (o *DeploymentUpdateBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this deployment update bad request response has a 5xx status code
-func (o *DeploymentUpdateBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this deployment update bad request response a status code equal to that given
-func (o *DeploymentUpdateBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the deployment update bad request response
-func (o *DeploymentUpdateBadRequest) Code() int {
-	return 400
-}
-
 func (o *DeploymentUpdateBadRequest) Error() string {
 	return fmt.Sprintf("[PUT /deployment][%d] deploymentUpdateBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *DeploymentUpdateBadRequest) String() string {
-	return fmt.Sprintf("[PUT /deployment][%d] deploymentUpdateBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *DeploymentUpdateBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewDeploymentUpdateUnauthorized() *DeploymentUpdateUnauthorized {
 	return &DeploymentUpdateUnauthorized{}
 }
 
-/*
-DeploymentUpdateUnauthorized describes a response with status code 401, with default header values.
+/* DeploymentUpdateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type DeploymentUpdateUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this deployment update unauthorized response has a 2xx status code
-func (o *DeploymentUpdateUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this deployment update unauthorized response has a 3xx status code
-func (o *DeploymentUpdateUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this deployment update unauthorized response has a 4xx status code
-func (o *DeploymentUpdateUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this deployment update unauthorized response has a 5xx status code
-func (o *DeploymentUpdateUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this deployment update unauthorized response a status code equal to that given
-func (o *DeploymentUpdateUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the deployment update unauthorized response
-func (o *DeploymentUpdateUnauthorized) Code() int {
-	return 401
-}
-
 func (o *DeploymentUpdateUnauthorized) Error() string {
 	return fmt.Sprintf("[PUT /deployment][%d] deploymentUpdateUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *DeploymentUpdateUnauthorized) String() string {
-	return fmt.Sprintf("[PUT /deployment][%d] deploymentUpdateUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *DeploymentUpdateUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewDeploymentUpdateInternalServerError() *DeploymentUpdateInternalServerErr
 	return &DeploymentUpdateInternalServerError{}
 }
 
-/*
-DeploymentUpdateInternalServerError describes a response with status code 500, with default header values.
+/* DeploymentUpdateInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type DeploymentUpdateInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this deployment update internal server error response has a 2xx status code
-func (o *DeploymentUpdateInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this deployment update internal server error response has a 3xx status code
-func (o *DeploymentUpdateInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this deployment update internal server error response has a 4xx status code
-func (o *DeploymentUpdateInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this deployment update internal server error response has a 5xx status code
-func (o *DeploymentUpdateInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this deployment update internal server error response a status code equal to that given
-func (o *DeploymentUpdateInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the deployment update internal server error response
-func (o *DeploymentUpdateInternalServerError) Code() int {
-	return 500
-}
-
 func (o *DeploymentUpdateInternalServerError) Error() string {
 	return fmt.Sprintf("[PUT /deployment][%d] deploymentUpdateInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *DeploymentUpdateInternalServerError) String() string {
-	return fmt.Sprintf("[PUT /deployment][%d] deploymentUpdateInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *DeploymentUpdateInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

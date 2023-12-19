@@ -36,9 +36,9 @@ type ClientService interface {
 }
 
 /*
-DataCenterFindList retrieves a list of data centers based on query criteria id name version state status and ids only if ids onlys is true only the id and name will be returned
+  DataCenterFindList retrieves a list of data centers based on query criteria id name version state status and ids only if ids onlys is true only the id and name will be returned
 
-Retrieve a list of data centers based on query criteria (id, name, version, state, status and idsOnly). If idsOnlys is true, only the id and name will be returned.
+  Retrieve a list of data centers based on query criteria (id, name, version, state, status and idsOnly). If idsOnlys is true, only the id and name will be returned.
 */
 func (a *Client) DataCenterFindList(params *DataCenterFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DataCenterFindListOK, error) {
 	// TODO: Validate the params before sending

@@ -53,12 +53,10 @@ func NewStakeholderFindListParamsWithHTTPClient(client *http.Client) *Stakeholde
 	}
 }
 
-/*
-StakeholderFindListParams contains all the parameters to send to the API endpoint
+/* StakeholderFindListParams contains all the parameters to send to the API endpoint
+   for the stakeholder find list operation.
 
-	for the stakeholder find list operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type StakeholderFindListParams struct {
 

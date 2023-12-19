@@ -54,16 +54,17 @@ func NewContractAddParamsWithHTTPClient(client *http.Client) *ContractAddParams 
 	}
 }
 
-/*
-ContractAddParams contains all the parameters to send to the API endpoint
+/* ContractAddParams contains all the parameters to send to the API endpoint
+   for the contract add operation.
 
-	for the contract add operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type ContractAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   An array of Contracts to be added to CEDAR Alfabet.
+	*/
 	Body *models.ContractAddRequest
 
 	timeout    time.Duration

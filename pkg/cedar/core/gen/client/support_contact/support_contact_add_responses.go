@@ -48,7 +48,7 @@ func (o *SupportContactAddReader) ReadResponse(response runtime.ClientResponse, 
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[POST /supportContact] supportContactAdd", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewSupportContactAddOK() *SupportContactAddOK {
 	return &SupportContactAddOK{}
 }
 
-/*
-SupportContactAddOK describes a response with status code 200, with default header values.
+/* SupportContactAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type SupportContactAddOK struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this support contact add o k response has a 2xx status code
-func (o *SupportContactAddOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this support contact add o k response has a 3xx status code
-func (o *SupportContactAddOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact add o k response has a 4xx status code
-func (o *SupportContactAddOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this support contact add o k response has a 5xx status code
-func (o *SupportContactAddOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this support contact add o k response a status code equal to that given
-func (o *SupportContactAddOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the support contact add o k response
-func (o *SupportContactAddOK) Code() int {
-	return 200
-}
-
 func (o *SupportContactAddOK) Error() string {
 	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddOK  %+v", 200, o.Payload)
 }
-
-func (o *SupportContactAddOK) String() string {
-	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddOK  %+v", 200, o.Payload)
-}
-
 func (o *SupportContactAddOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewSupportContactAddBadRequest() *SupportContactAddBadRequest {
 	return &SupportContactAddBadRequest{}
 }
 
-/*
-SupportContactAddBadRequest describes a response with status code 400, with default header values.
+/* SupportContactAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type SupportContactAddBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this support contact add bad request response has a 2xx status code
-func (o *SupportContactAddBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this support contact add bad request response has a 3xx status code
-func (o *SupportContactAddBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact add bad request response has a 4xx status code
-func (o *SupportContactAddBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this support contact add bad request response has a 5xx status code
-func (o *SupportContactAddBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this support contact add bad request response a status code equal to that given
-func (o *SupportContactAddBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the support contact add bad request response
-func (o *SupportContactAddBadRequest) Code() int {
-	return 400
-}
-
 func (o *SupportContactAddBadRequest) Error() string {
 	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *SupportContactAddBadRequest) String() string {
-	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *SupportContactAddBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewSupportContactAddUnauthorized() *SupportContactAddUnauthorized {
 	return &SupportContactAddUnauthorized{}
 }
 
-/*
-SupportContactAddUnauthorized describes a response with status code 401, with default header values.
+/* SupportContactAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type SupportContactAddUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this support contact add unauthorized response has a 2xx status code
-func (o *SupportContactAddUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this support contact add unauthorized response has a 3xx status code
-func (o *SupportContactAddUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact add unauthorized response has a 4xx status code
-func (o *SupportContactAddUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this support contact add unauthorized response has a 5xx status code
-func (o *SupportContactAddUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this support contact add unauthorized response a status code equal to that given
-func (o *SupportContactAddUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the support contact add unauthorized response
-func (o *SupportContactAddUnauthorized) Code() int {
-	return 401
-}
-
 func (o *SupportContactAddUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *SupportContactAddUnauthorized) String() string {
-	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *SupportContactAddUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewSupportContactAddInternalServerError() *SupportContactAddInternalServerE
 	return &SupportContactAddInternalServerError{}
 }
 
-/*
-SupportContactAddInternalServerError describes a response with status code 500, with default header values.
+/* SupportContactAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type SupportContactAddInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this support contact add internal server error response has a 2xx status code
-func (o *SupportContactAddInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this support contact add internal server error response has a 3xx status code
-func (o *SupportContactAddInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact add internal server error response has a 4xx status code
-func (o *SupportContactAddInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this support contact add internal server error response has a 5xx status code
-func (o *SupportContactAddInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this support contact add internal server error response a status code equal to that given
-func (o *SupportContactAddInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the support contact add internal server error response
-func (o *SupportContactAddInternalServerError) Code() int {
-	return 500
-}
-
 func (o *SupportContactAddInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *SupportContactAddInternalServerError) String() string {
-	return fmt.Sprintf("[POST /supportContact][%d] supportContactAddInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *SupportContactAddInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

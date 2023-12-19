@@ -48,7 +48,7 @@ func (o *ExchangeFindByIDReader) ReadResponse(response runtime.ClientResponse, c
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[GET /exchange/{id}] exchangeFindById", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewExchangeFindByIDOK() *ExchangeFindByIDOK {
 	return &ExchangeFindByIDOK{}
 }
 
-/*
-ExchangeFindByIDOK describes a response with status code 200, with default header values.
+/* ExchangeFindByIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type ExchangeFindByIDOK struct {
 	Payload *models.Exchange
 }
 
-// IsSuccess returns true when this exchange find by Id o k response has a 2xx status code
-func (o *ExchangeFindByIDOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this exchange find by Id o k response has a 3xx status code
-func (o *ExchangeFindByIDOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange find by Id o k response has a 4xx status code
-func (o *ExchangeFindByIDOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this exchange find by Id o k response has a 5xx status code
-func (o *ExchangeFindByIDOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this exchange find by Id o k response a status code equal to that given
-func (o *ExchangeFindByIDOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the exchange find by Id o k response
-func (o *ExchangeFindByIDOK) Code() int {
-	return 200
-}
-
 func (o *ExchangeFindByIDOK) Error() string {
 	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdOK  %+v", 200, o.Payload)
 }
-
-func (o *ExchangeFindByIDOK) String() string {
-	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdOK  %+v", 200, o.Payload)
-}
-
 func (o *ExchangeFindByIDOK) GetPayload() *models.Exchange {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewExchangeFindByIDBadRequest() *ExchangeFindByIDBadRequest {
 	return &ExchangeFindByIDBadRequest{}
 }
 
-/*
-ExchangeFindByIDBadRequest describes a response with status code 400, with default header values.
+/* ExchangeFindByIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type ExchangeFindByIDBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this exchange find by Id bad request response has a 2xx status code
-func (o *ExchangeFindByIDBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this exchange find by Id bad request response has a 3xx status code
-func (o *ExchangeFindByIDBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange find by Id bad request response has a 4xx status code
-func (o *ExchangeFindByIDBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this exchange find by Id bad request response has a 5xx status code
-func (o *ExchangeFindByIDBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this exchange find by Id bad request response a status code equal to that given
-func (o *ExchangeFindByIDBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the exchange find by Id bad request response
-func (o *ExchangeFindByIDBadRequest) Code() int {
-	return 400
-}
-
 func (o *ExchangeFindByIDBadRequest) Error() string {
 	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *ExchangeFindByIDBadRequest) String() string {
-	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *ExchangeFindByIDBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewExchangeFindByIDUnauthorized() *ExchangeFindByIDUnauthorized {
 	return &ExchangeFindByIDUnauthorized{}
 }
 
-/*
-ExchangeFindByIDUnauthorized describes a response with status code 401, with default header values.
+/* ExchangeFindByIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type ExchangeFindByIDUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this exchange find by Id unauthorized response has a 2xx status code
-func (o *ExchangeFindByIDUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this exchange find by Id unauthorized response has a 3xx status code
-func (o *ExchangeFindByIDUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange find by Id unauthorized response has a 4xx status code
-func (o *ExchangeFindByIDUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this exchange find by Id unauthorized response has a 5xx status code
-func (o *ExchangeFindByIDUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this exchange find by Id unauthorized response a status code equal to that given
-func (o *ExchangeFindByIDUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the exchange find by Id unauthorized response
-func (o *ExchangeFindByIDUnauthorized) Code() int {
-	return 401
-}
-
 func (o *ExchangeFindByIDUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *ExchangeFindByIDUnauthorized) String() string {
-	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *ExchangeFindByIDUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewExchangeFindByIDInternalServerError() *ExchangeFindByIDInternalServerErr
 	return &ExchangeFindByIDInternalServerError{}
 }
 
-/*
-ExchangeFindByIDInternalServerError describes a response with status code 500, with default header values.
+/* ExchangeFindByIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type ExchangeFindByIDInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this exchange find by Id internal server error response has a 2xx status code
-func (o *ExchangeFindByIDInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this exchange find by Id internal server error response has a 3xx status code
-func (o *ExchangeFindByIDInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange find by Id internal server error response has a 4xx status code
-func (o *ExchangeFindByIDInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this exchange find by Id internal server error response has a 5xx status code
-func (o *ExchangeFindByIDInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this exchange find by Id internal server error response a status code equal to that given
-func (o *ExchangeFindByIDInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the exchange find by Id internal server error response
-func (o *ExchangeFindByIDInternalServerError) Code() int {
-	return 500
-}
-
 func (o *ExchangeFindByIDInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *ExchangeFindByIDInternalServerError) String() string {
-	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *ExchangeFindByIDInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

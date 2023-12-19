@@ -54,16 +54,17 @@ func NewPersonAddParamsWithHTTPClient(client *http.Client) *PersonAddParams {
 	}
 }
 
-/*
-PersonAddParams contains all the parameters to send to the API endpoint
+/* PersonAddParams contains all the parameters to send to the API endpoint
+   for the person add operation.
 
-	for the person add operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type PersonAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Person information to be added to Alfabet.
+	*/
 	Body *models.Person
 
 	timeout    time.Duration

@@ -48,7 +48,7 @@ func (o *IntakeStatusByClientIDReader) ReadResponse(response runtime.ClientRespo
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[GET /intake/status/client/{id}] intakeStatusByClientId", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewIntakeStatusByClientIDOK() *IntakeStatusByClientIDOK {
 	return &IntakeStatusByClientIDOK{}
 }
 
-/*
-IntakeStatusByClientIDOK describes a response with status code 200, with default header values.
+/* IntakeStatusByClientIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type IntakeStatusByClientIDOK struct {
 	Payload *models.IntakeStatus
 }
 
-// IsSuccess returns true when this intake status by client Id o k response has a 2xx status code
-func (o *IntakeStatusByClientIDOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this intake status by client Id o k response has a 3xx status code
-func (o *IntakeStatusByClientIDOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this intake status by client Id o k response has a 4xx status code
-func (o *IntakeStatusByClientIDOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this intake status by client Id o k response has a 5xx status code
-func (o *IntakeStatusByClientIDOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this intake status by client Id o k response a status code equal to that given
-func (o *IntakeStatusByClientIDOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the intake status by client Id o k response
-func (o *IntakeStatusByClientIDOK) Code() int {
-	return 200
-}
-
 func (o *IntakeStatusByClientIDOK) Error() string {
 	return fmt.Sprintf("[GET /intake/status/client/{id}][%d] intakeStatusByClientIdOK  %+v", 200, o.Payload)
 }
-
-func (o *IntakeStatusByClientIDOK) String() string {
-	return fmt.Sprintf("[GET /intake/status/client/{id}][%d] intakeStatusByClientIdOK  %+v", 200, o.Payload)
-}
-
 func (o *IntakeStatusByClientIDOK) GetPayload() *models.IntakeStatus {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewIntakeStatusByClientIDBadRequest() *IntakeStatusByClientIDBadRequest {
 	return &IntakeStatusByClientIDBadRequest{}
 }
 
-/*
-IntakeStatusByClientIDBadRequest describes a response with status code 400, with default header values.
+/* IntakeStatusByClientIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type IntakeStatusByClientIDBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this intake status by client Id bad request response has a 2xx status code
-func (o *IntakeStatusByClientIDBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this intake status by client Id bad request response has a 3xx status code
-func (o *IntakeStatusByClientIDBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this intake status by client Id bad request response has a 4xx status code
-func (o *IntakeStatusByClientIDBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this intake status by client Id bad request response has a 5xx status code
-func (o *IntakeStatusByClientIDBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this intake status by client Id bad request response a status code equal to that given
-func (o *IntakeStatusByClientIDBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the intake status by client Id bad request response
-func (o *IntakeStatusByClientIDBadRequest) Code() int {
-	return 400
-}
-
 func (o *IntakeStatusByClientIDBadRequest) Error() string {
 	return fmt.Sprintf("[GET /intake/status/client/{id}][%d] intakeStatusByClientIdBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *IntakeStatusByClientIDBadRequest) String() string {
-	return fmt.Sprintf("[GET /intake/status/client/{id}][%d] intakeStatusByClientIdBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *IntakeStatusByClientIDBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewIntakeStatusByClientIDUnauthorized() *IntakeStatusByClientIDUnauthorized
 	return &IntakeStatusByClientIDUnauthorized{}
 }
 
-/*
-IntakeStatusByClientIDUnauthorized describes a response with status code 401, with default header values.
+/* IntakeStatusByClientIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type IntakeStatusByClientIDUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this intake status by client Id unauthorized response has a 2xx status code
-func (o *IntakeStatusByClientIDUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this intake status by client Id unauthorized response has a 3xx status code
-func (o *IntakeStatusByClientIDUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this intake status by client Id unauthorized response has a 4xx status code
-func (o *IntakeStatusByClientIDUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this intake status by client Id unauthorized response has a 5xx status code
-func (o *IntakeStatusByClientIDUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this intake status by client Id unauthorized response a status code equal to that given
-func (o *IntakeStatusByClientIDUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the intake status by client Id unauthorized response
-func (o *IntakeStatusByClientIDUnauthorized) Code() int {
-	return 401
-}
-
 func (o *IntakeStatusByClientIDUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /intake/status/client/{id}][%d] intakeStatusByClientIdUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *IntakeStatusByClientIDUnauthorized) String() string {
-	return fmt.Sprintf("[GET /intake/status/client/{id}][%d] intakeStatusByClientIdUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *IntakeStatusByClientIDUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewIntakeStatusByClientIDInternalServerError() *IntakeStatusByClientIDInter
 	return &IntakeStatusByClientIDInternalServerError{}
 }
 
-/*
-IntakeStatusByClientIDInternalServerError describes a response with status code 500, with default header values.
+/* IntakeStatusByClientIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type IntakeStatusByClientIDInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this intake status by client Id internal server error response has a 2xx status code
-func (o *IntakeStatusByClientIDInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this intake status by client Id internal server error response has a 3xx status code
-func (o *IntakeStatusByClientIDInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this intake status by client Id internal server error response has a 4xx status code
-func (o *IntakeStatusByClientIDInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this intake status by client Id internal server error response has a 5xx status code
-func (o *IntakeStatusByClientIDInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this intake status by client Id internal server error response a status code equal to that given
-func (o *IntakeStatusByClientIDInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the intake status by client Id internal server error response
-func (o *IntakeStatusByClientIDInternalServerError) Code() int {
-	return 500
-}
-
 func (o *IntakeStatusByClientIDInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /intake/status/client/{id}][%d] intakeStatusByClientIdInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *IntakeStatusByClientIDInternalServerError) String() string {
-	return fmt.Sprintf("[GET /intake/status/client/{id}][%d] intakeStatusByClientIdInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *IntakeStatusByClientIDInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

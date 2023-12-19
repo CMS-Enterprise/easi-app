@@ -54,16 +54,17 @@ func NewUserIDUpdateParamsWithHTTPClient(client *http.Client) *UserIDUpdateParam
 	}
 }
 
-/*
-UserIDUpdateParams contains all the parameters to send to the API endpoint
+/* UserIDUpdateParams contains all the parameters to send to the API endpoint
+   for the user Id update operation.
 
-	for the user Id update operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type UserIDUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   User information to be updated in CEDAR.
+	*/
 	Body *models.UserUpdateRequest
 
 	/* ID.

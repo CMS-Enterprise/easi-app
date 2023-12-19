@@ -48,7 +48,7 @@ func (o *ExchangeAddReader) ReadResponse(response runtime.ClientResponse, consum
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[POST /exchange] exchangeAdd", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewExchangeAddOK() *ExchangeAddOK {
 	return &ExchangeAddOK{}
 }
 
-/*
-ExchangeAddOK describes a response with status code 200, with default header values.
+/* ExchangeAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type ExchangeAddOK struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this exchange add o k response has a 2xx status code
-func (o *ExchangeAddOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this exchange add o k response has a 3xx status code
-func (o *ExchangeAddOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange add o k response has a 4xx status code
-func (o *ExchangeAddOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this exchange add o k response has a 5xx status code
-func (o *ExchangeAddOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this exchange add o k response a status code equal to that given
-func (o *ExchangeAddOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the exchange add o k response
-func (o *ExchangeAddOK) Code() int {
-	return 200
-}
-
 func (o *ExchangeAddOK) Error() string {
 	return fmt.Sprintf("[POST /exchange][%d] exchangeAddOK  %+v", 200, o.Payload)
 }
-
-func (o *ExchangeAddOK) String() string {
-	return fmt.Sprintf("[POST /exchange][%d] exchangeAddOK  %+v", 200, o.Payload)
-}
-
 func (o *ExchangeAddOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewExchangeAddBadRequest() *ExchangeAddBadRequest {
 	return &ExchangeAddBadRequest{}
 }
 
-/*
-ExchangeAddBadRequest describes a response with status code 400, with default header values.
+/* ExchangeAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type ExchangeAddBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this exchange add bad request response has a 2xx status code
-func (o *ExchangeAddBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this exchange add bad request response has a 3xx status code
-func (o *ExchangeAddBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange add bad request response has a 4xx status code
-func (o *ExchangeAddBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this exchange add bad request response has a 5xx status code
-func (o *ExchangeAddBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this exchange add bad request response a status code equal to that given
-func (o *ExchangeAddBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the exchange add bad request response
-func (o *ExchangeAddBadRequest) Code() int {
-	return 400
-}
-
 func (o *ExchangeAddBadRequest) Error() string {
 	return fmt.Sprintf("[POST /exchange][%d] exchangeAddBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *ExchangeAddBadRequest) String() string {
-	return fmt.Sprintf("[POST /exchange][%d] exchangeAddBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *ExchangeAddBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewExchangeAddUnauthorized() *ExchangeAddUnauthorized {
 	return &ExchangeAddUnauthorized{}
 }
 
-/*
-ExchangeAddUnauthorized describes a response with status code 401, with default header values.
+/* ExchangeAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type ExchangeAddUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this exchange add unauthorized response has a 2xx status code
-func (o *ExchangeAddUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this exchange add unauthorized response has a 3xx status code
-func (o *ExchangeAddUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange add unauthorized response has a 4xx status code
-func (o *ExchangeAddUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this exchange add unauthorized response has a 5xx status code
-func (o *ExchangeAddUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this exchange add unauthorized response a status code equal to that given
-func (o *ExchangeAddUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the exchange add unauthorized response
-func (o *ExchangeAddUnauthorized) Code() int {
-	return 401
-}
-
 func (o *ExchangeAddUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /exchange][%d] exchangeAddUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *ExchangeAddUnauthorized) String() string {
-	return fmt.Sprintf("[POST /exchange][%d] exchangeAddUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *ExchangeAddUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewExchangeAddInternalServerError() *ExchangeAddInternalServerError {
 	return &ExchangeAddInternalServerError{}
 }
 
-/*
-ExchangeAddInternalServerError describes a response with status code 500, with default header values.
+/* ExchangeAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type ExchangeAddInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this exchange add internal server error response has a 2xx status code
-func (o *ExchangeAddInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this exchange add internal server error response has a 3xx status code
-func (o *ExchangeAddInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this exchange add internal server error response has a 4xx status code
-func (o *ExchangeAddInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this exchange add internal server error response has a 5xx status code
-func (o *ExchangeAddInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this exchange add internal server error response a status code equal to that given
-func (o *ExchangeAddInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the exchange add internal server error response
-func (o *ExchangeAddInternalServerError) Code() int {
-	return 500
-}
-
 func (o *ExchangeAddInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /exchange][%d] exchangeAddInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *ExchangeAddInternalServerError) String() string {
-	return fmt.Sprintf("[POST /exchange][%d] exchangeAddInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *ExchangeAddInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

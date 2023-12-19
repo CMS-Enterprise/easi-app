@@ -52,12 +52,10 @@ func NewPersonFindByIDParamsWithHTTPClient(client *http.Client) *PersonFindByIDP
 	}
 }
 
-/*
-PersonFindByIDParams contains all the parameters to send to the API endpoint
+/* PersonFindByIDParams contains all the parameters to send to the API endpoint
+   for the person find by Id operation.
 
-	for the person find by Id operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type PersonFindByIDParams struct {
 

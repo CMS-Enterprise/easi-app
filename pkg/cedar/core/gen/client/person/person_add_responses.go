@@ -48,7 +48,7 @@ func (o *PersonAddReader) ReadResponse(response runtime.ClientResponse, consumer
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[POST /person] personAdd", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -57,8 +57,7 @@ func NewPersonAddOK() *PersonAddOK {
 	return &PersonAddOK{}
 }
 
-/*
-PersonAddOK describes a response with status code 200, with default header values.
+/* PersonAddOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -66,44 +65,9 @@ type PersonAddOK struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this person add o k response has a 2xx status code
-func (o *PersonAddOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this person add o k response has a 3xx status code
-func (o *PersonAddOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this person add o k response has a 4xx status code
-func (o *PersonAddOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this person add o k response has a 5xx status code
-func (o *PersonAddOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this person add o k response a status code equal to that given
-func (o *PersonAddOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the person add o k response
-func (o *PersonAddOK) Code() int {
-	return 200
-}
-
 func (o *PersonAddOK) Error() string {
 	return fmt.Sprintf("[POST /person][%d] personAddOK  %+v", 200, o.Payload)
 }
-
-func (o *PersonAddOK) String() string {
-	return fmt.Sprintf("[POST /person][%d] personAddOK  %+v", 200, o.Payload)
-}
-
 func (o *PersonAddOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -125,8 +89,7 @@ func NewPersonAddBadRequest() *PersonAddBadRequest {
 	return &PersonAddBadRequest{}
 }
 
-/*
-PersonAddBadRequest describes a response with status code 400, with default header values.
+/* PersonAddBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -134,44 +97,9 @@ type PersonAddBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this person add bad request response has a 2xx status code
-func (o *PersonAddBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this person add bad request response has a 3xx status code
-func (o *PersonAddBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this person add bad request response has a 4xx status code
-func (o *PersonAddBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this person add bad request response has a 5xx status code
-func (o *PersonAddBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this person add bad request response a status code equal to that given
-func (o *PersonAddBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the person add bad request response
-func (o *PersonAddBadRequest) Code() int {
-	return 400
-}
-
 func (o *PersonAddBadRequest) Error() string {
 	return fmt.Sprintf("[POST /person][%d] personAddBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *PersonAddBadRequest) String() string {
-	return fmt.Sprintf("[POST /person][%d] personAddBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *PersonAddBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -193,8 +121,7 @@ func NewPersonAddUnauthorized() *PersonAddUnauthorized {
 	return &PersonAddUnauthorized{}
 }
 
-/*
-PersonAddUnauthorized describes a response with status code 401, with default header values.
+/* PersonAddUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -202,44 +129,9 @@ type PersonAddUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this person add unauthorized response has a 2xx status code
-func (o *PersonAddUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this person add unauthorized response has a 3xx status code
-func (o *PersonAddUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this person add unauthorized response has a 4xx status code
-func (o *PersonAddUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this person add unauthorized response has a 5xx status code
-func (o *PersonAddUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this person add unauthorized response a status code equal to that given
-func (o *PersonAddUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the person add unauthorized response
-func (o *PersonAddUnauthorized) Code() int {
-	return 401
-}
-
 func (o *PersonAddUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /person][%d] personAddUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *PersonAddUnauthorized) String() string {
-	return fmt.Sprintf("[POST /person][%d] personAddUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *PersonAddUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -261,8 +153,7 @@ func NewPersonAddInternalServerError() *PersonAddInternalServerError {
 	return &PersonAddInternalServerError{}
 }
 
-/*
-PersonAddInternalServerError describes a response with status code 500, with default header values.
+/* PersonAddInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -270,44 +161,9 @@ type PersonAddInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this person add internal server error response has a 2xx status code
-func (o *PersonAddInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this person add internal server error response has a 3xx status code
-func (o *PersonAddInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this person add internal server error response has a 4xx status code
-func (o *PersonAddInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this person add internal server error response has a 5xx status code
-func (o *PersonAddInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this person add internal server error response a status code equal to that given
-func (o *PersonAddInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the person add internal server error response
-func (o *PersonAddInternalServerError) Code() int {
-	return 500
-}
-
 func (o *PersonAddInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /person][%d] personAddInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *PersonAddInternalServerError) String() string {
-	return fmt.Sprintf("[POST /person][%d] personAddInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *PersonAddInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

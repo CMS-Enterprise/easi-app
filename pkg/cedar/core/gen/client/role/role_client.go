@@ -42,9 +42,9 @@ type ClientService interface {
 }
 
 /*
-RoleAdd adds role assignments to a c e d a r application this interface takes in object Id role type Id a n d either assignee Id assignee user name or assignee org Id are required
+  RoleAdd adds role assignments to a c e d a r application this interface takes in object Id role type Id a n d either assignee Id assignee user name or assignee org Id are required
 
-Add role assignments to a CEDAR application. This interface takes in objectId, roleTypeId AND either assigneeId, assigneeUserName or assigneeOrgId are required.
+  Add role assignments to a CEDAR application. This interface takes in objectId, roleTypeId AND either assigneeId, assigneeUserName or assigneeOrgId are required.
 */
 func (a *Client) RoleAdd(params *RoleAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*RoleAddOK, error) {
 	// TODO: Validate the params before sending
@@ -83,9 +83,9 @@ func (a *Client) RoleAdd(params *RoleAddParams, authInfo runtime.ClientAuthInfoW
 }
 
 /*
-RoleDeleteList deletes a list of role assignments by ID this interface takes an application name and an array of role ids
+  RoleDeleteList deletes a list of role assignments by ID this interface takes an application name and an array of role ids
 
-Deletes a list of role assignments by ID. This interface takes an application name and an array of roleIds.
+  Deletes a list of role assignments by ID. This interface takes an application name and an array of roleIds.
 */
 func (a *Client) RoleDeleteList(params *RoleDeleteListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*RoleDeleteListOK, error) {
 	// TODO: Validate the params before sending
@@ -124,9 +124,9 @@ func (a *Client) RoleDeleteList(params *RoleDeleteListParams, authInfo runtime.C
 }
 
 /*
-RoleFindByID finds a list of role assignments based on an object s ID and or role type
+  RoleFindByID finds a list of role assignments based on an object s ID and or role type
 
-Finds a list of role assignments based on an object's ID. If objectId and roleTypeId are both provided, a list of role assignments for only those specific role type IDs are returned. If roleId is provided, then objectId and roleTypeId should not be provided and a specific role assignment is returned.
+  Finds a list of role assignments based on an object's ID. If objectId and roleTypeId are both provided, a list of role assignments for only those specific role type IDs are returned. If roleId is provided, then objectId and roleTypeId should not be provided and a specific role assignment is returned.
 */
 func (a *Client) RoleFindByID(params *RoleFindByIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*RoleFindByIDOK, error) {
 	// TODO: Validate the params before sending
@@ -165,9 +165,9 @@ func (a *Client) RoleFindByID(params *RoleFindByIDParams, authInfo runtime.Clien
 }
 
 /*
-RoleTypeFind finds a list of role types available within an application this interface takes in application
+  RoleTypeFind finds a list of role types available within an application this interface takes in application
 
-Finds a list of role types available within an application. This interface takes in application.
+  Finds a list of role types available within an application. This interface takes in application.
 */
 func (a *Client) RoleTypeFind(params *RoleTypeFindParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*RoleTypeFindOK, error) {
 	// TODO: Validate the params before sending

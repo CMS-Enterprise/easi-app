@@ -54,7 +54,7 @@ func (o *SystemDetailFindByIDReader) ReadResponse(response runtime.ClientRespons
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[GET /system/detail/{id}] systemDetailFindById", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -63,8 +63,7 @@ func NewSystemDetailFindByIDOK() *SystemDetailFindByIDOK {
 	return &SystemDetailFindByIDOK{}
 }
 
-/*
-SystemDetailFindByIDOK describes a response with status code 200, with default header values.
+/* SystemDetailFindByIDOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -72,44 +71,9 @@ type SystemDetailFindByIDOK struct {
 	Payload *models.SystemDetail
 }
 
-// IsSuccess returns true when this system detail find by Id o k response has a 2xx status code
-func (o *SystemDetailFindByIDOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this system detail find by Id o k response has a 3xx status code
-func (o *SystemDetailFindByIDOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system detail find by Id o k response has a 4xx status code
-func (o *SystemDetailFindByIDOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this system detail find by Id o k response has a 5xx status code
-func (o *SystemDetailFindByIDOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this system detail find by Id o k response a status code equal to that given
-func (o *SystemDetailFindByIDOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the system detail find by Id o k response
-func (o *SystemDetailFindByIDOK) Code() int {
-	return 200
-}
-
 func (o *SystemDetailFindByIDOK) Error() string {
 	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdOK  %+v", 200, o.Payload)
 }
-
-func (o *SystemDetailFindByIDOK) String() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdOK  %+v", 200, o.Payload)
-}
-
 func (o *SystemDetailFindByIDOK) GetPayload() *models.SystemDetail {
 	return o.Payload
 }
@@ -131,8 +95,7 @@ func NewSystemDetailFindByIDBadRequest() *SystemDetailFindByIDBadRequest {
 	return &SystemDetailFindByIDBadRequest{}
 }
 
-/*
-SystemDetailFindByIDBadRequest describes a response with status code 400, with default header values.
+/* SystemDetailFindByIDBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -140,44 +103,9 @@ type SystemDetailFindByIDBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this system detail find by Id bad request response has a 2xx status code
-func (o *SystemDetailFindByIDBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this system detail find by Id bad request response has a 3xx status code
-func (o *SystemDetailFindByIDBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system detail find by Id bad request response has a 4xx status code
-func (o *SystemDetailFindByIDBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this system detail find by Id bad request response has a 5xx status code
-func (o *SystemDetailFindByIDBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this system detail find by Id bad request response a status code equal to that given
-func (o *SystemDetailFindByIDBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the system detail find by Id bad request response
-func (o *SystemDetailFindByIDBadRequest) Code() int {
-	return 400
-}
-
 func (o *SystemDetailFindByIDBadRequest) Error() string {
 	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *SystemDetailFindByIDBadRequest) String() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *SystemDetailFindByIDBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -199,8 +127,7 @@ func NewSystemDetailFindByIDUnauthorized() *SystemDetailFindByIDUnauthorized {
 	return &SystemDetailFindByIDUnauthorized{}
 }
 
-/*
-SystemDetailFindByIDUnauthorized describes a response with status code 401, with default header values.
+/* SystemDetailFindByIDUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -208,44 +135,9 @@ type SystemDetailFindByIDUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this system detail find by Id unauthorized response has a 2xx status code
-func (o *SystemDetailFindByIDUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this system detail find by Id unauthorized response has a 3xx status code
-func (o *SystemDetailFindByIDUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system detail find by Id unauthorized response has a 4xx status code
-func (o *SystemDetailFindByIDUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this system detail find by Id unauthorized response has a 5xx status code
-func (o *SystemDetailFindByIDUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this system detail find by Id unauthorized response a status code equal to that given
-func (o *SystemDetailFindByIDUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the system detail find by Id unauthorized response
-func (o *SystemDetailFindByIDUnauthorized) Code() int {
-	return 401
-}
-
 func (o *SystemDetailFindByIDUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *SystemDetailFindByIDUnauthorized) String() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *SystemDetailFindByIDUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -267,8 +159,7 @@ func NewSystemDetailFindByIDNotFound() *SystemDetailFindByIDNotFound {
 	return &SystemDetailFindByIDNotFound{}
 }
 
-/*
-SystemDetailFindByIDNotFound describes a response with status code 404, with default header values.
+/* SystemDetailFindByIDNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -276,44 +167,9 @@ type SystemDetailFindByIDNotFound struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this system detail find by Id not found response has a 2xx status code
-func (o *SystemDetailFindByIDNotFound) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this system detail find by Id not found response has a 3xx status code
-func (o *SystemDetailFindByIDNotFound) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system detail find by Id not found response has a 4xx status code
-func (o *SystemDetailFindByIDNotFound) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this system detail find by Id not found response has a 5xx status code
-func (o *SystemDetailFindByIDNotFound) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this system detail find by Id not found response a status code equal to that given
-func (o *SystemDetailFindByIDNotFound) IsCode(code int) bool {
-	return code == 404
-}
-
-// Code gets the status code for the system detail find by Id not found response
-func (o *SystemDetailFindByIDNotFound) Code() int {
-	return 404
-}
-
 func (o *SystemDetailFindByIDNotFound) Error() string {
 	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdNotFound  %+v", 404, o.Payload)
 }
-
-func (o *SystemDetailFindByIDNotFound) String() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdNotFound  %+v", 404, o.Payload)
-}
-
 func (o *SystemDetailFindByIDNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -335,8 +191,7 @@ func NewSystemDetailFindByIDInternalServerError() *SystemDetailFindByIDInternalS
 	return &SystemDetailFindByIDInternalServerError{}
 }
 
-/*
-SystemDetailFindByIDInternalServerError describes a response with status code 500, with default header values.
+/* SystemDetailFindByIDInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -344,44 +199,9 @@ type SystemDetailFindByIDInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this system detail find by Id internal server error response has a 2xx status code
-func (o *SystemDetailFindByIDInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this system detail find by Id internal server error response has a 3xx status code
-func (o *SystemDetailFindByIDInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this system detail find by Id internal server error response has a 4xx status code
-func (o *SystemDetailFindByIDInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this system detail find by Id internal server error response has a 5xx status code
-func (o *SystemDetailFindByIDInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this system detail find by Id internal server error response a status code equal to that given
-func (o *SystemDetailFindByIDInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the system detail find by Id internal server error response
-func (o *SystemDetailFindByIDInternalServerError) Code() int {
-	return 500
-}
-
 func (o *SystemDetailFindByIDInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *SystemDetailFindByIDInternalServerError) String() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *SystemDetailFindByIDInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

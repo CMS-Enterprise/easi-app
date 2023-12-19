@@ -54,8 +54,6 @@ func (m *BudgetAddRequest) validateBudgets(formats strfmt.Registry) error {
 			if err := m.Budgets[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Budgets" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("Budgets" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -85,16 +83,9 @@ func (m *BudgetAddRequest) contextValidateBudgets(ctx context.Context, formats s
 	for i := 0; i < len(m.Budgets); i++ {
 
 		if m.Budgets[i] != nil {
-
-			if swag.IsZero(m.Budgets[i]) { // not required
-				return nil
-			}
-
 			if err := m.Budgets[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Budgets" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("Budgets" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

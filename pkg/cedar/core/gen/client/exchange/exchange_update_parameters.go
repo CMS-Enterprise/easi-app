@@ -54,16 +54,17 @@ func NewExchangeUpdateParamsWithHTTPClient(client *http.Client) *ExchangeUpdateP
 	}
 }
 
-/*
-ExchangeUpdateParams contains all the parameters to send to the API endpoint
+/* ExchangeUpdateParams contains all the parameters to send to the API endpoint
+   for the exchange update operation.
 
-	for the exchange update operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type ExchangeUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   Data exchange array to be updated in Alfabet.
+	*/
 	Body *models.ExchangeUpdateRequest
 
 	timeout    time.Duration

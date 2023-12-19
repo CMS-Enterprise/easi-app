@@ -60,8 +60,6 @@ func (m *DeploymentFindResponse) validateDeployments(formats strfmt.Registry) er
 			if err := m.Deployments[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Deployments" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("Deployments" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -100,16 +98,9 @@ func (m *DeploymentFindResponse) contextValidateDeployments(ctx context.Context,
 	for i := 0; i < len(m.Deployments); i++ {
 
 		if m.Deployments[i] != nil {
-
-			if swag.IsZero(m.Deployments[i]) { // not required
-				return nil
-			}
-
 			if err := m.Deployments[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Deployments" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("Deployments" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

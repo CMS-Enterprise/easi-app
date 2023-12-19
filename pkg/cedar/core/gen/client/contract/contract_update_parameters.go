@@ -55,16 +55,17 @@ func NewContractUpdateParamsWithHTTPClient(client *http.Client) *ContractUpdateP
 	}
 }
 
-/*
-ContractUpdateParams contains all the parameters to send to the API endpoint
+/* ContractUpdateParams contains all the parameters to send to the API endpoint
+   for the contract update operation.
 
-	for the contract update operation.
-
-	Typically these are written to a http.Request.
+   Typically these are written to a http.Request.
 */
 type ContractUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   An array of contracts to be updated in Alfabet.
+	*/
 	Body *models.ContractUpdateRequest
 
 	/* BudgetsOnly.

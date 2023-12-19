@@ -54,7 +54,7 @@ func (o *SupportContactDeleteListReader) ReadResponse(response runtime.ClientRes
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[DELETE /supportContact] supportContactDeleteList", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -63,8 +63,7 @@ func NewSupportContactDeleteListOK() *SupportContactDeleteListOK {
 	return &SupportContactDeleteListOK{}
 }
 
-/*
-SupportContactDeleteListOK describes a response with status code 200, with default header values.
+/* SupportContactDeleteListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -72,44 +71,9 @@ type SupportContactDeleteListOK struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this support contact delete list o k response has a 2xx status code
-func (o *SupportContactDeleteListOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this support contact delete list o k response has a 3xx status code
-func (o *SupportContactDeleteListOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact delete list o k response has a 4xx status code
-func (o *SupportContactDeleteListOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this support contact delete list o k response has a 5xx status code
-func (o *SupportContactDeleteListOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this support contact delete list o k response a status code equal to that given
-func (o *SupportContactDeleteListOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the support contact delete list o k response
-func (o *SupportContactDeleteListOK) Code() int {
-	return 200
-}
-
 func (o *SupportContactDeleteListOK) Error() string {
 	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListOK  %+v", 200, o.Payload)
 }
-
-func (o *SupportContactDeleteListOK) String() string {
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListOK  %+v", 200, o.Payload)
-}
-
 func (o *SupportContactDeleteListOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -131,8 +95,7 @@ func NewSupportContactDeleteListBadRequest() *SupportContactDeleteListBadRequest
 	return &SupportContactDeleteListBadRequest{}
 }
 
-/*
-SupportContactDeleteListBadRequest describes a response with status code 400, with default header values.
+/* SupportContactDeleteListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -140,44 +103,9 @@ type SupportContactDeleteListBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this support contact delete list bad request response has a 2xx status code
-func (o *SupportContactDeleteListBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this support contact delete list bad request response has a 3xx status code
-func (o *SupportContactDeleteListBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact delete list bad request response has a 4xx status code
-func (o *SupportContactDeleteListBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this support contact delete list bad request response has a 5xx status code
-func (o *SupportContactDeleteListBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this support contact delete list bad request response a status code equal to that given
-func (o *SupportContactDeleteListBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the support contact delete list bad request response
-func (o *SupportContactDeleteListBadRequest) Code() int {
-	return 400
-}
-
 func (o *SupportContactDeleteListBadRequest) Error() string {
 	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *SupportContactDeleteListBadRequest) String() string {
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *SupportContactDeleteListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -199,8 +127,7 @@ func NewSupportContactDeleteListUnauthorized() *SupportContactDeleteListUnauthor
 	return &SupportContactDeleteListUnauthorized{}
 }
 
-/*
-SupportContactDeleteListUnauthorized describes a response with status code 401, with default header values.
+/* SupportContactDeleteListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -208,44 +135,9 @@ type SupportContactDeleteListUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this support contact delete list unauthorized response has a 2xx status code
-func (o *SupportContactDeleteListUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this support contact delete list unauthorized response has a 3xx status code
-func (o *SupportContactDeleteListUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact delete list unauthorized response has a 4xx status code
-func (o *SupportContactDeleteListUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this support contact delete list unauthorized response has a 5xx status code
-func (o *SupportContactDeleteListUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this support contact delete list unauthorized response a status code equal to that given
-func (o *SupportContactDeleteListUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the support contact delete list unauthorized response
-func (o *SupportContactDeleteListUnauthorized) Code() int {
-	return 401
-}
-
 func (o *SupportContactDeleteListUnauthorized) Error() string {
 	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *SupportContactDeleteListUnauthorized) String() string {
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *SupportContactDeleteListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -267,8 +159,7 @@ func NewSupportContactDeleteListNotFound() *SupportContactDeleteListNotFound {
 	return &SupportContactDeleteListNotFound{}
 }
 
-/*
-SupportContactDeleteListNotFound describes a response with status code 404, with default header values.
+/* SupportContactDeleteListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -276,44 +167,9 @@ type SupportContactDeleteListNotFound struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this support contact delete list not found response has a 2xx status code
-func (o *SupportContactDeleteListNotFound) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this support contact delete list not found response has a 3xx status code
-func (o *SupportContactDeleteListNotFound) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact delete list not found response has a 4xx status code
-func (o *SupportContactDeleteListNotFound) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this support contact delete list not found response has a 5xx status code
-func (o *SupportContactDeleteListNotFound) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this support contact delete list not found response a status code equal to that given
-func (o *SupportContactDeleteListNotFound) IsCode(code int) bool {
-	return code == 404
-}
-
-// Code gets the status code for the support contact delete list not found response
-func (o *SupportContactDeleteListNotFound) Code() int {
-	return 404
-}
-
 func (o *SupportContactDeleteListNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListNotFound  %+v", 404, o.Payload)
 }
-
-func (o *SupportContactDeleteListNotFound) String() string {
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListNotFound  %+v", 404, o.Payload)
-}
-
 func (o *SupportContactDeleteListNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -335,8 +191,7 @@ func NewSupportContactDeleteListInternalServerError() *SupportContactDeleteListI
 	return &SupportContactDeleteListInternalServerError{}
 }
 
-/*
-SupportContactDeleteListInternalServerError describes a response with status code 500, with default header values.
+/* SupportContactDeleteListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -344,44 +199,9 @@ type SupportContactDeleteListInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this support contact delete list internal server error response has a 2xx status code
-func (o *SupportContactDeleteListInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this support contact delete list internal server error response has a 3xx status code
-func (o *SupportContactDeleteListInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this support contact delete list internal server error response has a 4xx status code
-func (o *SupportContactDeleteListInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this support contact delete list internal server error response has a 5xx status code
-func (o *SupportContactDeleteListInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this support contact delete list internal server error response a status code equal to that given
-func (o *SupportContactDeleteListInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the support contact delete list internal server error response
-func (o *SupportContactDeleteListInternalServerError) Code() int {
-	return 500
-}
-
 func (o *SupportContactDeleteListInternalServerError) Error() string {
 	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *SupportContactDeleteListInternalServerError) String() string {
-	return fmt.Sprintf("[DELETE /supportContact][%d] supportContactDeleteListInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *SupportContactDeleteListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

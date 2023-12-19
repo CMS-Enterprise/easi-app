@@ -54,7 +54,7 @@ func (o *RoleDeleteListReader) ReadResponse(response runtime.ClientResponse, con
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("[DELETE /role] roleDeleteList", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -63,8 +63,7 @@ func NewRoleDeleteListOK() *RoleDeleteListOK {
 	return &RoleDeleteListOK{}
 }
 
-/*
-RoleDeleteListOK describes a response with status code 200, with default header values.
+/* RoleDeleteListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -72,44 +71,9 @@ type RoleDeleteListOK struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this role delete list o k response has a 2xx status code
-func (o *RoleDeleteListOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this role delete list o k response has a 3xx status code
-func (o *RoleDeleteListOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this role delete list o k response has a 4xx status code
-func (o *RoleDeleteListOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this role delete list o k response has a 5xx status code
-func (o *RoleDeleteListOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this role delete list o k response a status code equal to that given
-func (o *RoleDeleteListOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the role delete list o k response
-func (o *RoleDeleteListOK) Code() int {
-	return 200
-}
-
 func (o *RoleDeleteListOK) Error() string {
 	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListOK  %+v", 200, o.Payload)
 }
-
-func (o *RoleDeleteListOK) String() string {
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListOK  %+v", 200, o.Payload)
-}
-
 func (o *RoleDeleteListOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -131,8 +95,7 @@ func NewRoleDeleteListBadRequest() *RoleDeleteListBadRequest {
 	return &RoleDeleteListBadRequest{}
 }
 
-/*
-RoleDeleteListBadRequest describes a response with status code 400, with default header values.
+/* RoleDeleteListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -140,44 +103,9 @@ type RoleDeleteListBadRequest struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this role delete list bad request response has a 2xx status code
-func (o *RoleDeleteListBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this role delete list bad request response has a 3xx status code
-func (o *RoleDeleteListBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this role delete list bad request response has a 4xx status code
-func (o *RoleDeleteListBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this role delete list bad request response has a 5xx status code
-func (o *RoleDeleteListBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this role delete list bad request response a status code equal to that given
-func (o *RoleDeleteListBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the role delete list bad request response
-func (o *RoleDeleteListBadRequest) Code() int {
-	return 400
-}
-
 func (o *RoleDeleteListBadRequest) Error() string {
 	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListBadRequest  %+v", 400, o.Payload)
 }
-
-func (o *RoleDeleteListBadRequest) String() string {
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListBadRequest  %+v", 400, o.Payload)
-}
-
 func (o *RoleDeleteListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -199,8 +127,7 @@ func NewRoleDeleteListUnauthorized() *RoleDeleteListUnauthorized {
 	return &RoleDeleteListUnauthorized{}
 }
 
-/*
-RoleDeleteListUnauthorized describes a response with status code 401, with default header values.
+/* RoleDeleteListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -208,44 +135,9 @@ type RoleDeleteListUnauthorized struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this role delete list unauthorized response has a 2xx status code
-func (o *RoleDeleteListUnauthorized) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this role delete list unauthorized response has a 3xx status code
-func (o *RoleDeleteListUnauthorized) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this role delete list unauthorized response has a 4xx status code
-func (o *RoleDeleteListUnauthorized) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this role delete list unauthorized response has a 5xx status code
-func (o *RoleDeleteListUnauthorized) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this role delete list unauthorized response a status code equal to that given
-func (o *RoleDeleteListUnauthorized) IsCode(code int) bool {
-	return code == 401
-}
-
-// Code gets the status code for the role delete list unauthorized response
-func (o *RoleDeleteListUnauthorized) Code() int {
-	return 401
-}
-
 func (o *RoleDeleteListUnauthorized) Error() string {
 	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListUnauthorized  %+v", 401, o.Payload)
 }
-
-func (o *RoleDeleteListUnauthorized) String() string {
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListUnauthorized  %+v", 401, o.Payload)
-}
-
 func (o *RoleDeleteListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -267,8 +159,7 @@ func NewRoleDeleteListNotFound() *RoleDeleteListNotFound {
 	return &RoleDeleteListNotFound{}
 }
 
-/*
-RoleDeleteListNotFound describes a response with status code 404, with default header values.
+/* RoleDeleteListNotFound describes a response with status code 404, with default header values.
 
 Not Found
 */
@@ -276,44 +167,9 @@ type RoleDeleteListNotFound struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this role delete list not found response has a 2xx status code
-func (o *RoleDeleteListNotFound) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this role delete list not found response has a 3xx status code
-func (o *RoleDeleteListNotFound) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this role delete list not found response has a 4xx status code
-func (o *RoleDeleteListNotFound) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this role delete list not found response has a 5xx status code
-func (o *RoleDeleteListNotFound) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this role delete list not found response a status code equal to that given
-func (o *RoleDeleteListNotFound) IsCode(code int) bool {
-	return code == 404
-}
-
-// Code gets the status code for the role delete list not found response
-func (o *RoleDeleteListNotFound) Code() int {
-	return 404
-}
-
 func (o *RoleDeleteListNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListNotFound  %+v", 404, o.Payload)
 }
-
-func (o *RoleDeleteListNotFound) String() string {
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListNotFound  %+v", 404, o.Payload)
-}
-
 func (o *RoleDeleteListNotFound) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -335,8 +191,7 @@ func NewRoleDeleteListInternalServerError() *RoleDeleteListInternalServerError {
 	return &RoleDeleteListInternalServerError{}
 }
 
-/*
-RoleDeleteListInternalServerError describes a response with status code 500, with default header values.
+/* RoleDeleteListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -344,44 +199,9 @@ type RoleDeleteListInternalServerError struct {
 	Payload *models.Response
 }
 
-// IsSuccess returns true when this role delete list internal server error response has a 2xx status code
-func (o *RoleDeleteListInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this role delete list internal server error response has a 3xx status code
-func (o *RoleDeleteListInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this role delete list internal server error response has a 4xx status code
-func (o *RoleDeleteListInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this role delete list internal server error response has a 5xx status code
-func (o *RoleDeleteListInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this role delete list internal server error response a status code equal to that given
-func (o *RoleDeleteListInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the role delete list internal server error response
-func (o *RoleDeleteListInternalServerError) Code() int {
-	return 500
-}
-
 func (o *RoleDeleteListInternalServerError) Error() string {
 	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListInternalServerError  %+v", 500, o.Payload)
 }
-
-func (o *RoleDeleteListInternalServerError) String() string {
-	return fmt.Sprintf("[DELETE /role][%d] roleDeleteListInternalServerError  %+v", 500, o.Payload)
-}
-
 func (o *RoleDeleteListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }
