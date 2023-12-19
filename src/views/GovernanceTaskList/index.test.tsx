@@ -4,7 +4,8 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import {
   render,
   screen,
-  waitForElementToBeRemoved
+  waitForElementToBeRemoved,
+  within
 } from '@testing-library/react';
 import i18next from 'i18next';
 
@@ -72,13 +73,13 @@ describe('Governance Task List', () => {
     });
   });
 
-  it('renders alert and disables buttons if request is closed', async () => {
+  it('renders closed state - no decision', async () => {
     render(
       <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
         <VerboseMockedProvider
           mocks={[
             getGovernanceTaskListQuery({
-              ...taskListState.intakeFormNotStarted.systemIntake,
+              ...taskListState.bizCaseDraftNotStarted.systemIntake,
               state: SystemIntakeState.CLOSED
             })
           ]}
@@ -96,12 +97,25 @@ describe('Governance Task List', () => {
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
+    // Closed alert should render
     expect(screen.getByTestId('closed-alert')).toBeInTheDocument();
 
-    expect(screen.getByRole('button', { name: 'Start' })).toBeDisabled();
+    const draftBusinessCaseStep = screen.getByTestId(
+      'prepare-a-draft-business-case'
+    );
+
+    // Start button should be disabled
+    expect(
+      within(draftBusinessCaseStep).getByRole('button', { name: 'Start' })
+    ).toBeDisabled();
+
+    // Status tag should be gray
+    expect(
+      within(draftBusinessCaseStep).getByTestId('task-list-task-tag')
+    ).toHaveClass('bg-base-light');
   });
 
-  it('renders alert when decision has been made', async () => {
+  it('renders closed state - decision issued', async () => {
     render(
       <MemoryRouter initialEntries={[`/governance-task-list/${id}`]}>
         <VerboseMockedProvider
@@ -124,6 +138,7 @@ describe('Governance Task List', () => {
 
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
 
+    // Decision alert should render
     expect(screen.getByTestId('decision-alert')).toBeInTheDocument();
 
     // If decision has been made, closed alert should not be displayed
