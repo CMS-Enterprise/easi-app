@@ -205,7 +205,7 @@ const RequestRepository = () => {
       globalFilter: useMemo(() => globalFilterCellText, []),
       data,
       autoResetSortBy: false,
-      autoResetPage: false,
+      autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => lastSort[activeTable], [lastSort, activeTable]),
         pageSize: defaultPageSize
