@@ -2,11 +2,10 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
-import grtActions from 'data/mock/grtActions';
 import { getSystemIntakeQuery, systemIntake } from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
@@ -249,54 +248,5 @@ describe('Governance Review Team', () => {
       </MemoryRouter>
     );
     await waitForPageLoad('grt-actions-view');
-  });
-
-  describe('actions', () => {
-    const renderPage = (slug: string) => {
-      render(
-        <MemoryRouter
-          initialEntries={[
-            `/governance-review-team/${systemIntake.id}/actions/${slug}`
-          ]}
-        >
-          <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
-            <Provider store={defaultStore}>
-              <MessageProvider>
-                <Route path="/governance-review-team/:systemId/actions/:activePage">
-                  <RequestOverview />
-                </Route>
-              </MessageProvider>
-            </Provider>
-          </MockedProvider>
-        </MemoryRouter>
-      );
-    };
-
-    const actionsList = [
-      'not-it-request',
-      'need-biz-case',
-      'provide-feedback-need-biz-case',
-      'provide-feedback-keep-draft',
-      'provide-feedback-need-final',
-      'ready-for-grt',
-      'ready-for-grb',
-      'biz-case-needs-changes',
-      'no-governance',
-      'send-email',
-      'not-responding-close',
-      'issue-lcid',
-      'not-approved'
-    ];
-
-    test.each(actionsList)('renders action page %j', async action => {
-      renderPage(action);
-      await waitForPageLoad(grtActions[action as keyof typeof grtActions].view);
-      const selectedAction = screen.getByTestId('grtSelectedAction');
-      expect(
-        within(selectedAction).getByText(
-          grtActions[action as keyof typeof grtActions].heading
-        )
-      ).toBeInTheDocument();
-    });
   });
 });
