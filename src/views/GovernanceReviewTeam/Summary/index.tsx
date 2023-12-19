@@ -204,9 +204,17 @@ const RequestSummary = ({
                 <h4 className="margin-right-1">{t('status.label')}</h4>
                 <StateTag state={state} />
               </div>
-              <p className="text-base-dark" data-testid="grt-current-status">
-                {t(`systemIntakeStatusAdmin.${statusAdmin}`, { lcid })}
-              </p>
+              {
+                // Don't display additional status if closed with no decision
+                statusAdmin !== SystemIntakeStatusAdmin.CLOSED && (
+                  <p
+                    className="text-base-dark"
+                    data-testid="grt-current-status"
+                  >
+                    {t(`systemIntakeStatusAdmin.${statusAdmin}`, { lcid })}
+                  </p>
+                )
+              }
               <Link
                 to={`/governance-review-team/${id}/actions`}
                 className="usa-link"
