@@ -90,7 +90,6 @@ const RequestOverview = () => {
           requester={systemIntake.requester}
           requestName={systemIntake.requestName || ''}
           requestType={systemIntake.requestType}
-          status={systemIntake.status}
           statusAdmin={systemIntake.statusAdmin}
           adminLead={systemIntake.adminLead}
           submittedAt={systemIntake.submittedAt}

@@ -1,4 +1,4 @@
-import { TFunction } from 'i18next';
+import i18next, { TFunction } from 'i18next';
 import { sortBy } from 'lodash';
 
 import contractStatus from 'constants/enums/contractStatus';
@@ -8,7 +8,6 @@ import {
 } from 'queries/types/GetSystemIntakesTable';
 import { formatContractDate } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
-import { translateStatus } from 'utils/systemIntake';
 
 // Here is where the data can be modified and used appropriately for sorting.
 // Modifed data can then be configured with JSX components in column cell configuration
@@ -128,7 +127,12 @@ const tableMap = (
         startDate: contractStartDate,
         endDate: contractEndDate
       },
-      status: translateStatus(intake.status, intake.lcid),
+      status: i18next.t(
+        `governanceReviewTeam:systemIntakeStatusAdmin.${intake.statusAdmin}`,
+        {
+          lcid: intake.lcid
+        }
+      ),
       lastAdminNote,
       filterDate
     };
