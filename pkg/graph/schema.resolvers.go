@@ -629,6 +629,37 @@ func (r *cedarRoleTypeResolver) Description(ctx context.Context, obj *models.Ced
 	return obj.Description.Ptr(), nil
 }
 
+// SoftwareProducts is the resolver for the softwareProducts field.
+func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error) {
+	softwareProducts := obj.SoftwareProducts
+
+	if len(softwareProducts) == 0 {
+		return nil, nil
+	}
+
+	var softwareProductItems []*model.CedarSoftwareProductItem
+	for _, softwareProduct := range softwareProducts {
+		softwareProductItem := &model.CedarSoftwareProductItem{
+			APIGatewayUse:                  &softwareProduct.APIGatewayUse,
+			ElaPurchase:                    &softwareProduct.ElaPurchase,
+			ElaVendorID:                    &softwareProduct.ElaVendorID,
+			ProvidesAiCapability:           &softwareProduct.ProvidesAiCapability,
+			Refstr:                         &softwareProduct.Refstr,
+			SoftwareCatagoryConnectionGUID: &softwareProduct.SoftwareCatagoryConnectionGUID,
+			SoftwareVendorConnectionGUID:   &softwareProduct.SoftwareVendorConnectionGUID,
+			SoftwareCost:                   &softwareProduct.SoftwareCost,
+			SoftwareElaOrganization:        &softwareProduct.SoftwareElaOrganization,
+			SoftwareName:                   &softwareProduct.SoftwareName,
+			SystemSoftwareConnectionGUID:   &softwareProduct.SystemSoftwareConnectionGUID,
+			TechnopediaCategory:            &softwareProduct.TechnopediaCategory,
+			TechnopediaID:                  &softwareProduct.TechnopediaID,
+		}
+		softwareProductItems = append(softwareProductItems, softwareProductItem)
+	}
+
+	return softwareProductItems, nil
+}
+
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
 func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error) {
 	ipEnabledCt := int(obj.SystemMaintainerInformation.IPEnabledAssetCount)
@@ -2509,6 +2540,15 @@ func (r *queryResolver) CedarPersonsByCommonName(ctx context.Context, commonName
 	return response, nil
 }
 
+// CedarSoftwareProducts is the resolver for the cedarSoftwareProducts field.
+func (r *queryResolver) CedarSoftwareProducts(ctx context.Context, cedarSystemID string) (*models.CedarSoftwareProducts, error) {
+	cedarSoftwareProducts, err := r.cedarCoreClient.GetSoftwareProductsBySystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+	return cedarSoftwareProducts, nil
+}
+
 // CedarSystem is the resolver for the cedarSystem field.
 func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error) {
 	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
@@ -3416,6 +3456,11 @@ func (r *Resolver) CedarRole() generated.CedarRoleResolver { return &cedarRoleRe
 // CedarRoleType returns generated.CedarRoleTypeResolver implementation.
 func (r *Resolver) CedarRoleType() generated.CedarRoleTypeResolver { return &cedarRoleTypeResolver{r} }
 
+// CedarSoftwareProducts returns generated.CedarSoftwareProductsResolver implementation.
+func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolver {
+	return &cedarSoftwareProductsResolver{r}
+}
+
 // CedarSystemDetails returns generated.CedarSystemDetailsResolver implementation.
 func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
 	return &cedarSystemDetailsResolver{r}
@@ -3504,6 +3549,7 @@ type cedarDeploymentResolver struct{ *Resolver }
 type cedarExchangeResolver struct{ *Resolver }
 type cedarRoleResolver struct{ *Resolver }
 type cedarRoleTypeResolver struct{ *Resolver }
+type cedarSoftwareProductsResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
 type cedarThreatResolver struct{ *Resolver }
 type governanceRequestFeedbackResolver struct{ *Resolver }
