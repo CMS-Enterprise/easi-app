@@ -7,15 +7,10 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
-
-	"github.com/google/uuid"
-	"github.com/guregu/null"
-	"github.com/vektah/gqlparser/v2/gqlerror"
-	"go.uber.org/zap"
-	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -29,6 +24,11 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/upload"
+	"github.com/google/uuid"
+	"github.com/guregu/null"
+	"github.com/vektah/gqlparser/v2/gqlerror"
+	"go.uber.org/zap"
+	"golang.org/x/sync/errgroup"
 )
 
 // Documents is the resolver for the documents field.
@@ -3286,13 +3286,23 @@ func (r *tRBRequestResolver) TrbLeadInfo(ctx context.Context, obj *models.TRBReq
 
 // RequesterInfo is the resolver for the requesterInfo field.
 func (r *tRBRequestResolver) RequesterInfo(ctx context.Context, obj *models.TRBRequest) (*models.UserInfo, error) {
-	return resolvers.GetTRBRequesterInfo(ctx, obj.CreatedBy)
+	// TODO: EASI-3341 this can be simplifed to return the UserAccount instead of a UserInfo struct...
+	account := obj.CreatedByUserAccount(ctx)
+	if account == nil {
+		return nil, fmt.Errorf("unable to return requester infor for %v", obj)
+	}
+	return resolvers.GetTRBRequesterInfo(ctx, *account.Username)
 }
 
 // RequesterComponent is the resolver for the requesterComponent field.
 func (r *tRBRequestResolver) RequesterComponent(ctx context.Context, obj *models.TRBRequest) (*string, error) {
-	requester := obj.CreatedBy
-	return resolvers.GetTRBUserComponent(ctx, r.store, &requester, obj.ID)
+	// TODO: EASI-3341 this can be simplifed to return the UserAccount instead of a UserInfo struct...
+	// The component piece should also likely be updated to be a dataloader
+	account := obj.CreatedByUserAccount(ctx)
+	if account == nil {
+		return nil, fmt.Errorf("unable to return requester infor for %v", obj)
+	}
+	return resolvers.GetTRBUserComponent(ctx, r.store, account.Username, obj.ID)
 }
 
 // AdminNotes is the resolver for the adminNotes field.

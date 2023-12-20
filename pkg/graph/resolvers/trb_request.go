@@ -22,11 +22,12 @@ func CreateTRBRequest(
 ) (*models.TRBRequest, error) {
 	princ := appcontext.Principal(ctx)
 
-	trb := models.NewTRBRequest(princ.ID())
+	trb := models.NewTRBRequest(princ.Account().ID)
 	trb.Type = requestType
 	trb.State = models.TRBRequestStateOpen
 
-	createdTRB, err := store.CreateTRBRequest(ctx, trb)
+	// TODO: this should use a transaction block. The creation of the initial form should also be moved out of the store method, and put here in the resolver.
+	createdTRB, err := store.CreateTRBRequest(ctx, princ, trb)
 	if err != nil {
 		return nil, err
 	}
@@ -274,7 +275,7 @@ func CloseTRBRequest(
 		return nil, err
 	}
 
-	requester, err := fetchUserInfo(ctx, trb.CreatedBy)
+	requester, err := UserAccountGetByIDLOADER(ctx, trb.CreatedBy)
 	if err != nil {
 		return nil, err
 	}
@@ -292,7 +293,7 @@ func CloseTRBRequest(
 	emailInput := email.SendTRBRequestClosedEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.GetName(),
-		RequesterName:  requester.DisplayName,
+		RequesterName:  requester.CommonName,
 		Recipients:     recipientEmails,
 		CopyTRBMailbox: copyTRBMailbox,
 		ReasonClosed:   reasonClosed,
@@ -347,7 +348,7 @@ func ReopenTRBRequest(
 		return nil, err
 	}
 
-	requester, err := fetchUserInfo(ctx, trb.CreatedBy)
+	requester, err := UserAccountGetByIDLOADER(ctx, trb.CreatedBy)
 	if err != nil {
 		return nil, err
 	}
@@ -365,7 +366,7 @@ func ReopenTRBRequest(
 	emailInput := email.SendTRBRequestReopenedEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.GetName(),
-		RequesterName:  requester.DisplayName,
+		RequesterName:  requester.CommonName,
 		Recipients:     recipientEmails,
 		ReasonReopened: reasonReopened,
 		CopyTRBMailbox: copyTRBMailbox,

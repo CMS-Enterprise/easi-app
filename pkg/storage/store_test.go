@@ -16,15 +16,17 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 type StoreTestSuite struct {
 	suite.Suite
-	db     *sqlx.DB
-	logger *zap.Logger
-	store  *Store
+	db        *sqlx.DB
+	logger    *zap.Logger
+	store     *Store
+	Principal *authentication.EUAPrincipal
 }
 
 // EqualTime uses time.Time's Equal() to check for equality
@@ -77,25 +79,55 @@ func TestStoreTestSuite(t *testing.T) {
 		fmt.Printf("Failed to get new database: %v", err)
 		t.Fail()
 	}
+	princ := getTestPrincipal(store, "ANON")
+
 	store.clock = clock.NewMock()
 
 	storeTestSuite := &StoreTestSuite{
-		Suite:  suite.Suite{},
-		db:     store.db,
-		logger: logger,
-		store:  store,
+		Suite:     suite.Suite{},
+		db:        store.db,
+		logger:    logger,
+		store:     store,
+		Principal: princ,
 	}
 
 	suite.Run(t, storeTestSuite)
 }
 
 // utility function for testing TRB-related methods
-func createTRBRequest(ctx context.Context, s *StoreTestSuite, createdBy string) uuid.UUID {
-	trbRequest := models.NewTRBRequest(createdBy)
+func createTRBRequest(ctx context.Context, s *StoreTestSuite) uuid.UUID {
+	trbRequest := models.NewTRBRequest(s.Principal.UserAccount.ID)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.State = models.TRBRequestStateOpen
-	createdRequest, err := s.store.CreateTRBRequest(ctx, trbRequest)
+	createdRequest, err := s.store.CreateTRBRequest(ctx, s.Principal, trbRequest)
 	s.NoError(err)
 
 	return createdRequest.ID
+}
+
+func getTestPrincipal(store *Store, userName string) *authentication.EUAPrincipal {
+
+	// userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+	tAccount := authentication.UserAccount{
+		Username:    &userName,
+		CommonName:  userName + "Doe",
+		Locale:      "en_US",
+		Email:       userName + "@local.cms.gov",
+		GivenName:   userName,
+		FamilyName:  "Doe",
+		ZoneInfo:    "America/Los_Angeles",
+		HasLoggedIn: true,
+	}
+
+	userAccount, _ := store.UserAccountInsertByUsername(store, &tAccount) //swallow error
+	princ := &authentication.EUAPrincipal{
+		EUAID:            userName,
+		JobCodeEASi:      true,
+		JobCodeGRT:       true,
+		JobCode508User:   true,
+		JobCode508Tester: true,
+		UserAccount:      userAccount,
+	}
+	return princ
+
 }

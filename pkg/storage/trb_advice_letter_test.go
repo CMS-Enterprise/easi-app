@@ -9,15 +9,16 @@ import (
 func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 	ctx := context.Background()
 
-	anonEua := "ANON"
-
+	// anonEua := "ANON"
+	accountEUA := models.ValueOrEmpty(s.Principal.UserAccount.Username)
 	s.Run("Creating an advice letter returns a blank advice letter in the In Progress status", func() {
-		trbRequestID := createTRBRequest(ctx, s, anonEua)
 
-		createdLetter, err := s.store.CreateTRBAdviceLetter(ctx, anonEua, trbRequestID)
+		trbRequestID := createTRBRequest(ctx, s)
+
+		createdLetter, err := s.store.CreateTRBAdviceLetter(ctx, accountEUA, trbRequestID)
 		s.NoError(err)
 		s.EqualValues(trbRequestID, createdLetter.TRBRequestID)
-		s.EqualValues(anonEua, createdLetter.CreatedBy)
+		s.EqualValues(accountEUA, createdLetter.CreatedBy)
 		s.EqualValues(models.TRBAdviceLetterStatusInProgress, createdLetter.Status)
 		s.Nil(createdLetter.MeetingSummary)
 		s.Nil(createdLetter.NextSteps)
@@ -27,16 +28,16 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 	})
 
 	s.Run("Creating, then fetching an advice letter returns a blank advice letter in the In Progress status", func() {
-		trbRequestID := createTRBRequest(ctx, s, anonEua)
+		trbRequestID := createTRBRequest(ctx, s)
 
-		_, err := s.store.CreateTRBAdviceLetter(ctx, anonEua, trbRequestID)
+		_, err := s.store.CreateTRBAdviceLetter(ctx, accountEUA, trbRequestID)
 		s.NoError(err)
 
 		fetchedLetter, err := s.store.GetTRBAdviceLetterByTRBRequestID(ctx, trbRequestID)
 		s.NoError(err)
 
 		s.EqualValues(trbRequestID, fetchedLetter.TRBRequestID)
-		s.EqualValues(anonEua, fetchedLetter.CreatedBy)
+		s.EqualValues(accountEUA, fetchedLetter.CreatedBy)
 		s.EqualValues(models.TRBAdviceLetterStatusInProgress, fetchedLetter.Status)
 
 		s.Nil(fetchedLetter.MeetingSummary)
@@ -47,9 +48,9 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 	})
 
 	s.Run("Updating an advice letter returns an advice letter with updated data", func() {
-		trbRequestID := createTRBRequest(ctx, s, anonEua)
+		trbRequestID := createTRBRequest(ctx, s)
 
-		createdLetter, err := s.store.CreateTRBAdviceLetter(ctx, anonEua, trbRequestID)
+		createdLetter, err := s.store.CreateTRBAdviceLetter(ctx, accountEUA, trbRequestID)
 		s.NoError(err)
 
 		updatedMeetingSummary := models.HTML("Meeting went well, no notes")
@@ -72,7 +73,7 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 		// fields that should have remained constant
 		s.EqualValues(createdLetter.ID, returnedLetter.ID)
 		s.EqualValues(createdLetter.TRBRequestID, returnedLetter.TRBRequestID)
-		s.EqualValues(anonEua, returnedLetter.CreatedBy)
+		s.EqualValues(accountEUA, returnedLetter.CreatedBy)
 		s.EqualValues(models.TRBAdviceLetterStatusInProgress, returnedLetter.Status)
 		s.Nil(returnedLetter.DateSent)
 
@@ -84,9 +85,9 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 	})
 
 	s.Run("Updating an advice letter to be ready for review changes the status while leaving DateSent nil", func() {
-		trbRequestID := createTRBRequest(ctx, s, anonEua)
+		trbRequestID := createTRBRequest(ctx, s)
 
-		createdLetter, err := s.store.CreateTRBAdviceLetter(ctx, anonEua, trbRequestID)
+		createdLetter, err := s.store.CreateTRBAdviceLetter(ctx, accountEUA, trbRequestID)
 		s.NoError(err)
 
 		updatedLetter, err := s.store.UpdateTRBAdviceLetterStatus(ctx, createdLetter.ID, models.TRBAdviceLetterStatusReadyForReview)
@@ -97,9 +98,9 @@ func (s *StoreTestSuite) TestTRBAdviceLetterStoreMethods() {
 	})
 
 	s.Run("Updating an advice letter to complete it changes the status and sets DateSent", func() {
-		trbRequestID := createTRBRequest(ctx, s, anonEua)
+		trbRequestID := createTRBRequest(ctx, s)
 
-		createdLetter, err := s.store.CreateTRBAdviceLetter(ctx, anonEua, trbRequestID)
+		createdLetter, err := s.store.CreateTRBAdviceLetter(ctx, accountEUA, trbRequestID)
 		s.NoError(err)
 
 		updatedLetter, err := s.store.UpdateTRBAdviceLetterStatus(ctx, createdLetter.ID, models.TRBAdviceLetterStatusCompleted)

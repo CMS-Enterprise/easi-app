@@ -9,10 +9,11 @@ import (
 func (s *StoreTestSuite) TestCreateTRBRequestAttendee() {
 	ctx := context.Background()
 	anonEua := "ANON"
-	trbRequest := models.NewTRBRequest(anonEua)
+	anonPrinc := s.Principal
+	trbRequest := models.NewTRBRequest(anonPrinc.UserAccount.ID)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.State = models.TRBRequestStateOpen
-	_, err := s.store.CreateTRBRequest(ctx, trbRequest)
+	_, err := s.store.CreateTRBRequest(ctx, anonPrinc, trbRequest)
 	s.NoError(err)
 
 	s.Run("create a TRB request attendee", func() {

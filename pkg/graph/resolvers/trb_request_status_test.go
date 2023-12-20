@@ -40,6 +40,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 	}
 
 	anonEua := "ANON"
+	userID := s.testConfigs.Principal.UserAccount.ID
 
 	stubFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
 		return &models.UserInfo{
@@ -64,7 +65,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		return userInfos, nil
 	}
 
-	trb := models.NewTRBRequest(anonEua)
+	trb := models.NewTRBRequest(userID)
 	trb.Type = models.TRBTNeedHelp
 	trb.State = models.TRBRequestStateOpen
 	trb, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)

@@ -2,6 +2,14 @@ package models
 
 import "github.com/lib/pq"
 
+// ValueOrEmpty returns a string if the input is not nil, otherwise returns an empty string
+func ValueOrEmpty(st *string) string {
+	if st != nil {
+		return *st
+	}
+	return ""
+}
+
 // ConvertEnums converts a pq.StringArray to specific, castable type
 func ConvertEnums[EnumType ~string](pqGroups pq.StringArray) []EnumType {
 	enumValues := []EnumType{}

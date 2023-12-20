@@ -154,10 +154,10 @@ func SendTRBAdviceLetter(ctx context.Context,
 	if errG := errGroup.Wait(); errG != nil {
 		return nil, errG
 	}
-
-	requester, err := fetchUserInfo(ctx, trb.CreatedBy)
-	if err != nil {
-		return nil, err
+	// TODO: EASI-3341 What to do if an account doesn't exit
+	requesterAccount, errAccount := UserAccountGetByIDLOADER(ctx, trb.CreatedBy)
+	if errAccount != nil {
+		return nil, errAccount
 	}
 
 	recipientEmails := make([]models.EmailAddress, 0, len(notifyUserInfos))
@@ -174,7 +174,7 @@ func SendTRBAdviceLetter(ctx context.Context,
 		TRBRequestID:   trb.ID,
 		RequestName:    trb.GetName(),
 		RequestType:    string(trb.Type),
-		RequesterName:  requester.DisplayName,
+		RequesterName:  requesterAccount.CommonName,
 		Component:      component,
 		SubmissionDate: letter.ModifiedAt,
 		ConsultDate:    trb.ConsultMeetingTime,

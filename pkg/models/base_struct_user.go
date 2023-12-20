@@ -2,6 +2,8 @@ package models
 
 import (
 	"github.com/google/uuid"
+
+	"github.com/cmsgov/easi-app/pkg/authentication"
 )
 
 //TODO: This will replace base struct when the user table is fully implemented
@@ -20,6 +22,15 @@ func NewBaseStructUser(createdBy uuid.UUID) BaseStructUser {
 			CreatedBy: createdBy,
 		},
 	}
+}
+
+// SetModifiedBy is the implementation of the BaseStruct interface. It sets the modifiedByProperty based on
+func (b *BaseStructUser) SetModifiedBy(principal authentication.Principal) error {
+
+	userID := principal.Account().ID
+
+	b.ModifiedBy = &userID
+	return nil
 }
 
 // GetBaseStruct returns the Base Struct User Object

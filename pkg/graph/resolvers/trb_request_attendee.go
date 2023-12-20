@@ -7,6 +7,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -22,7 +23,7 @@ func CreateTRBRequestAttendee(
 ) (*models.TRBRequestAttendee, error) {
 	// start fetching info we'll need to send notifications now, but don't wait on results until we're ready to send emails
 	var request models.TRBRequest
-	var requester models.UserInfo
+	var requester authentication.UserAccount
 	var attendeeInfo models.UserInfo
 
 	emailInfoErrGroup := new(errgroup.Group)
@@ -34,12 +35,12 @@ func CreateTRBRequestAttendee(
 			return getRequestErr
 		}
 		request = *requestPtr
-
-		requesterPtr, getRequesterErr := fetchUserInfo(ctx, request.CreatedBy)
-		if getRequesterErr != nil {
-			return getRequesterErr
+		requesterAccount, accountErr := UserAccountGetByIDLOADER(ctx, request.CreatedBy)
+		if accountErr != nil {
+			return accountErr
 		}
-		requester = *requesterPtr
+
+		requester = *requesterAccount
 
 		return nil
 	})
@@ -71,7 +72,7 @@ func CreateTRBRequestAttendee(
 		ctx,
 		attendeeInfo.Email,
 		request.GetName(),
-		requester.DisplayName,
+		requester.CommonName,
 	)
 	if err != nil {
 		return nil, err

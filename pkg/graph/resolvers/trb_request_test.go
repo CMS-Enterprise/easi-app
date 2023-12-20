@@ -301,7 +301,7 @@ func (s *ResolverSuite) TestIsRecentTRBRequest() {
 	// Run all tests
 	for _, test := range tests {
 		s.Run(fmt.Sprintf("numDaysOld=%d, isLeadAssigned=%t, isRequestClosed=%t, expected=%t", test.numDaysOld, test.isLeadAssigned, test.isRequestClosed, test.expected), func() {
-			trb := models.NewTRBRequest(s.testConfigs.Principal.ID())
+			trb := models.NewTRBRequest(s.testConfigs.Principal.UserAccount.ID)
 			trb.CreatedAt = now.AddDate(0, 0, -test.numDaysOld)
 			if test.isLeadAssigned {
 				trb.TRBLead = zero.StringFrom("TRBA").Ptr()

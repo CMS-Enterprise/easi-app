@@ -10,10 +10,12 @@ import (
 
 func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	ctx := context.Background()
-	anonEUA := "ANON"
+	// anonEUA := "ANON"
+	accountID := s.Principal.UserAccount.ID
+	accountEUA := models.ValueOrEmpty(s.Principal.UserAccount.Username)
 
 	s.Run("Creating an admin note returns a non-archived admin note with the passed-in data", func() {
-		trbRequestID := createTRBRequest(ctx, s, anonEUA)
+		trbRequestID := createTRBRequest(ctx, s)
 
 		category := models.TRBAdminNoteCategoryAdviceLetter
 		noteText := models.HTML("Creation test")
@@ -24,12 +26,12 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 			AppliesToNextSteps:      null.BoolFrom(false),
 		}
 		noteToCreate.TRBRequestID = trbRequestID
-		noteToCreate.CreatedBy = anonEUA
+		noteToCreate.CreatedBy = accountEUA
 
 		createdNote, err := s.store.CreateTRBAdminNote(ctx, &noteToCreate)
 		s.NoError(err)
 		s.EqualValues(trbRequestID, createdNote.TRBRequestID)
-		s.EqualValues(anonEUA, createdNote.CreatedBy)
+		s.EqualValues(accountID, createdNote.CreatedBy)
 		s.EqualValues(category, createdNote.Category)
 		s.EqualValues(noteText, createdNote.NoteText)
 		s.False(createdNote.IsArchived)
@@ -42,7 +44,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	})
 
 	s.Run("Creating, then fetching a note by TRB request ID returns the created note", func() {
-		trbRequestID := createTRBRequest(ctx, s, anonEUA)
+		trbRequestID := createTRBRequest(ctx, s)
 		category := models.TRBAdminNoteCategoryConsultSession
 		noteText := models.HTML("Creation, then fetch by TRB request ID test")
 		noteToCreate := models.TRBAdminNote{
@@ -50,7 +52,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 			NoteText: noteText,
 		}
 		noteToCreate.TRBRequestID = trbRequestID
-		noteToCreate.CreatedBy = anonEUA
+		noteToCreate.CreatedBy = accountEUA
 
 		_, err := s.store.CreateTRBAdminNote(ctx, &noteToCreate)
 		s.NoError(err)
@@ -61,14 +63,14 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 		s.Len(fetchedNotes, 1)
 		fetchedNote := fetchedNotes[0]
 		s.EqualValues(trbRequestID, fetchedNote.TRBRequestID)
-		s.EqualValues(anonEUA, fetchedNote.CreatedBy)
+		s.EqualValues(accountEUA, fetchedNote.CreatedBy)
 		s.EqualValues(category, fetchedNote.Category)
 		s.EqualValues(noteText, fetchedNote.NoteText)
 		s.False(fetchedNote.IsArchived)
 	})
 
 	s.Run("Creating, then fetching a note by note ID returns the created note", func() {
-		trbRequestID := createTRBRequest(ctx, s, anonEUA)
+		trbRequestID := createTRBRequest(ctx, s)
 		category := models.TRBAdminNoteCategoryGeneralRequest
 		noteText := models.HTML("Creation, then fetch by note ID test")
 		noteToCreate := models.TRBAdminNote{
@@ -76,7 +78,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 			NoteText: noteText,
 		}
 		noteToCreate.TRBRequestID = trbRequestID
-		noteToCreate.CreatedBy = anonEUA
+		noteToCreate.CreatedBy = accountEUA
 
 		createdNote, err := s.store.CreateTRBAdminNote(ctx, &noteToCreate)
 		s.NoError(err)
@@ -85,14 +87,14 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 		s.NoError(err)
 
 		s.EqualValues(trbRequestID, fetchedNote.TRBRequestID)
-		s.EqualValues(anonEUA, fetchedNote.CreatedBy)
+		s.EqualValues(accountEUA, fetchedNote.CreatedBy)
 		s.EqualValues(category, fetchedNote.Category)
 		s.EqualValues(noteText, fetchedNote.NoteText)
 		s.False(fetchedNote.IsArchived)
 	})
 
 	s.Run("Creating two notes with the same TRB request ID, then fetching notes by TRB request ID, returns both different notes", func() {
-		trbRequestID := createTRBRequest(ctx, s, anonEUA)
+		trbRequestID := createTRBRequest(ctx, s)
 
 		category1 := models.TRBAdminNoteCategoryGeneralRequest
 		noteText1 := models.HTML("Creating two notes, then fetch by TRB request ID test (note 1)")
@@ -134,7 +136,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	})
 
 	s.Run("Updating a note returns a note with updated data and sets ModifiedBy, ModifiedAt", func() {
-		trbRequestID := createTRBRequest(ctx, s, anonEUA)
+		trbRequestID := createTRBRequest(ctx, s)
 		initialCategory := models.TRBAdminNoteCategoryGeneralRequest
 		initialNoteText := models.HTML("Update note test (initial)")
 		noteToCreate := models.TRBAdminNote{
@@ -142,7 +144,7 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 			NoteText: initialNoteText,
 		}
 		noteToCreate.TRBRequestID = trbRequestID
-		noteToCreate.CreatedBy = anonEUA
+		noteToCreate.CreatedBy = accountEUA
 
 		noteToUpdate, err := s.store.CreateTRBAdminNote(ctx, &noteToCreate)
 		s.NoError(err)
@@ -165,14 +167,14 @@ func (s *StoreTestSuite) TestTRBAdminNoteStoreMethods() {
 	})
 
 	s.Run("Setting a note to be archived sets IsArchived to true and sets ModifiedBy, ModifiedAt", func() {
-		trbRequestID := createTRBRequest(ctx, s, anonEUA)
+		trbRequestID := createTRBRequest(ctx, s)
 
 		noteToCreate := models.TRBAdminNote{
 			Category: models.TRBAdminNoteCategoryGeneralRequest,
 			NoteText: "Archive note test",
 		}
 		noteToCreate.TRBRequestID = trbRequestID
-		noteToCreate.CreatedBy = anonEUA
+		noteToCreate.CreatedBy = accountEUA
 
 		createdNote, err := s.store.CreateTRBAdminNote(ctx, &noteToCreate)
 		s.NoError(err)

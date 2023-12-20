@@ -14,8 +14,9 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 	ctx := context.Background()
 	anonEua := "ANON"
 	store := s.testConfigs.Store
+	princ := getTestPrincipal(s.testConfigs.Store, anonEua)
 
-	trbRequest := models.NewTRBRequest(anonEua)
+	trbRequest := models.NewTRBRequest(princ.UserAccount.ID)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.State = models.TRBRequestStateOpen
 	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)

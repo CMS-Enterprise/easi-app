@@ -12,9 +12,7 @@ import (
 func (s *ResolverSuite) TestModifyTRBFundingSources() {
 	ctx := context.Background()
 
-	anonEua := "ANON"
-
-	trbRequest := models.NewTRBRequest(anonEua)
+	trbRequest := models.NewTRBRequest(s.testConfigs.Principal.UserAccount.ID)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.State = models.TRBRequestStateOpen
 	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)

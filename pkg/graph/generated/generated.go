@@ -14,6 +14,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/google/uuid"
@@ -972,29 +973,31 @@ type ComplexityRoot struct {
 	}
 
 	TRBRequest struct {
-		AdminNotes         func(childComplexity int) int
-		AdviceLetter       func(childComplexity int) int
-		Archived           func(childComplexity int) int
-		Attendees          func(childComplexity int) int
-		ConsultMeetingTime func(childComplexity int) int
-		CreatedAt          func(childComplexity int) int
-		CreatedBy          func(childComplexity int) int
-		Documents          func(childComplexity int) int
-		Feedback           func(childComplexity int) int
-		Form               func(childComplexity int) int
-		ID                 func(childComplexity int) int
-		IsRecent           func(childComplexity int) int
-		ModifiedAt         func(childComplexity int) int
-		ModifiedBy         func(childComplexity int) int
-		Name               func(childComplexity int) int
-		RequesterComponent func(childComplexity int) int
-		RequesterInfo      func(childComplexity int) int
-		State              func(childComplexity int) int
-		Status             func(childComplexity int) int
-		TRBLead            func(childComplexity int) int
-		TaskStatuses       func(childComplexity int) int
-		TrbLeadInfo        func(childComplexity int) int
-		Type               func(childComplexity int) int
+		AdminNotes            func(childComplexity int) int
+		AdviceLetter          func(childComplexity int) int
+		Archived              func(childComplexity int) int
+		Attendees             func(childComplexity int) int
+		ConsultMeetingTime    func(childComplexity int) int
+		CreatedAt             func(childComplexity int) int
+		CreatedBy             func(childComplexity int) int
+		CreatedByUserAccount  func(childComplexity int) int
+		Documents             func(childComplexity int) int
+		Feedback              func(childComplexity int) int
+		Form                  func(childComplexity int) int
+		ID                    func(childComplexity int) int
+		IsRecent              func(childComplexity int) int
+		ModifiedAt            func(childComplexity int) int
+		ModifiedBy            func(childComplexity int) int
+		ModifiedByUserAccount func(childComplexity int) int
+		Name                  func(childComplexity int) int
+		RequesterComponent    func(childComplexity int) int
+		RequesterInfo         func(childComplexity int) int
+		State                 func(childComplexity int) int
+		Status                func(childComplexity int) int
+		TRBLead               func(childComplexity int) int
+		TaskStatuses          func(childComplexity int) int
+		TrbLeadInfo           func(childComplexity int) int
+		Type                  func(childComplexity int) int
 	}
 
 	TRBRequestAttendee struct {
@@ -1109,6 +1112,18 @@ type ComplexityRoot struct {
 	UpdateTestDatePayload struct {
 		TestDate   func(childComplexity int) int
 		UserErrors func(childComplexity int) int
+	}
+
+	UserAccount struct {
+		CommonName  func(childComplexity int) int
+		Email       func(childComplexity int) int
+		FamilyName  func(childComplexity int) int
+		GivenName   func(childComplexity int) int
+		HasLoggedIn func(childComplexity int) int
+		ID          func(childComplexity int) int
+		Locale      func(childComplexity int) int
+		Username    func(childComplexity int) int
+		ZoneInfo    func(childComplexity int) int
 	}
 
 	UserError struct {
@@ -6613,6 +6628,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBRequest.CreatedBy(childComplexity), true
 
+	case "TRBRequest.createdByUserAccount":
+		if e.complexity.TRBRequest.CreatedByUserAccount == nil {
+			break
+		}
+
+		return e.complexity.TRBRequest.CreatedByUserAccount(childComplexity), true
+
 	case "TRBRequest.documents":
 		if e.complexity.TRBRequest.Documents == nil {
 			break
@@ -6661,6 +6683,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TRBRequest.ModifiedBy(childComplexity), true
+
+	case "TRBRequest.modifiedByUserAccount":
+		if e.complexity.TRBRequest.ModifiedByUserAccount == nil {
+			break
+		}
+
+		return e.complexity.TRBRequest.ModifiedByUserAccount(childComplexity), true
 
 	case "TRBRequest.name":
 		if e.complexity.TRBRequest.Name == nil {
@@ -7291,6 +7320,69 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdateTestDatePayload.UserErrors(childComplexity), true
+
+	case "UserAccount.commonName":
+		if e.complexity.UserAccount.CommonName == nil {
+			break
+		}
+
+		return e.complexity.UserAccount.CommonName(childComplexity), true
+
+	case "UserAccount.email":
+		if e.complexity.UserAccount.Email == nil {
+			break
+		}
+
+		return e.complexity.UserAccount.Email(childComplexity), true
+
+	case "UserAccount.familyName":
+		if e.complexity.UserAccount.FamilyName == nil {
+			break
+		}
+
+		return e.complexity.UserAccount.FamilyName(childComplexity), true
+
+	case "UserAccount.givenName":
+		if e.complexity.UserAccount.GivenName == nil {
+			break
+		}
+
+		return e.complexity.UserAccount.GivenName(childComplexity), true
+
+	case "UserAccount.hasLoggedIn":
+		if e.complexity.UserAccount.HasLoggedIn == nil {
+			break
+		}
+
+		return e.complexity.UserAccount.HasLoggedIn(childComplexity), true
+
+	case "UserAccount.id":
+		if e.complexity.UserAccount.ID == nil {
+			break
+		}
+
+		return e.complexity.UserAccount.ID(childComplexity), true
+
+	case "UserAccount.locale":
+		if e.complexity.UserAccount.Locale == nil {
+			break
+		}
+
+		return e.complexity.UserAccount.Locale(childComplexity), true
+
+	case "UserAccount.username":
+		if e.complexity.UserAccount.Username == nil {
+			break
+		}
+
+		return e.complexity.UserAccount.Username(childComplexity), true
+
+	case "UserAccount.zoneInfo":
+		if e.complexity.UserAccount.ZoneInfo == nil {
+			break
+		}
+
+		return e.complexity.UserAccount.ZoneInfo(childComplexity), true
 
 	case "UserError.message":
 		if e.complexity.UserError.Message == nil {
@@ -9312,10 +9404,17 @@ type TRBRequest {
   requesterComponent: String
   adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
   isRecent: Boolean!
-  createdBy: String!
+
+  createdBy: UUID!
+  createdByUserAccount: UserAccount!
   createdAt: Time! # will be used for UploadedAt in frontend
-  modifiedBy: String
+  modifiedBy: UUID
+  modifiedByUserAccount: UserAccount
   modifiedAt: Time
+  # createdBy: String!
+  # createdAt: Time! 
+  # modifiedBy: String
+  # modifiedAt: Time
 }
 
 """
@@ -10065,6 +10164,18 @@ input ReopenTRBRequestInput {
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
+type UserAccount {
+	id: UUID!
+	username: String!
+	commonName: String!
+	locale: String!
+	email: String!
+	givenName: String!
+	familyName: String!
+	zoneInfo: String!
+	hasLoggedIn: Boolean
+}
+
 
 """
 Defines the mutations for the schema
@@ -10213,6 +10324,7 @@ type Mutation {
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+  
 
   """
   Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionIssueLCID
@@ -30829,10 +30941,14 @@ func (ec *executionContext) fieldContext_Mutation_createTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_isRecent(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_TRBRequest_createdByUserAccount(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_TRBRequest_modifiedByUserAccount(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
@@ -30932,10 +31048,14 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_isRecent(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_TRBRequest_createdByUserAccount(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_TRBRequest_modifiedByUserAccount(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
@@ -31932,10 +32052,14 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestConsultMeeting
 				return ec.fieldContext_TRBRequest_isRecent(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_TRBRequest_createdByUserAccount(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_TRBRequest_modifiedByUserAccount(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
@@ -32059,10 +32183,14 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestTRBLead(ctx co
 				return ec.fieldContext_TRBRequest_isRecent(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_TRBRequest_createdByUserAccount(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_TRBRequest_modifiedByUserAccount(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
@@ -33826,10 +33954,14 @@ func (ec *executionContext) fieldContext_Mutation_closeTRBRequest(ctx context.Co
 				return ec.fieldContext_TRBRequest_isRecent(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_TRBRequest_createdByUserAccount(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_TRBRequest_modifiedByUserAccount(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
@@ -33953,10 +34085,14 @@ func (ec *executionContext) fieldContext_Mutation_reopenTrbRequest(ctx context.C
 				return ec.fieldContext_TRBRequest_isRecent(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_TRBRequest_createdByUserAccount(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_TRBRequest_modifiedByUserAccount(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
@@ -36259,10 +36395,14 @@ func (ec *executionContext) fieldContext_Query_trbRequest(ctx context.Context, f
 				return ec.fieldContext_TRBRequest_isRecent(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_TRBRequest_createdByUserAccount(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_TRBRequest_modifiedByUserAccount(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
@@ -36386,10 +36526,14 @@ func (ec *executionContext) fieldContext_Query_trbRequests(ctx context.Context, 
 				return ec.fieldContext_TRBRequest_isRecent(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_TRBRequest_createdByUserAccount(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_TRBRequest_modifiedByUserAccount(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
@@ -36489,10 +36633,14 @@ func (ec *executionContext) fieldContext_Query_myTrbRequests(ctx context.Context
 				return ec.fieldContext_TRBRequest_isRecent(ctx, field)
 			case "createdBy":
 				return ec.fieldContext_TRBRequest_createdBy(ctx, field)
+			case "createdByUserAccount":
+				return ec.fieldContext_TRBRequest_createdByUserAccount(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_TRBRequest_createdAt(ctx, field)
 			case "modifiedBy":
 				return ec.fieldContext_TRBRequest_modifiedBy(ctx, field)
+			case "modifiedByUserAccount":
+				return ec.fieldContext_TRBRequest_modifiedByUserAccount(ctx, field)
 			case "modifiedAt":
 				return ec.fieldContext_TRBRequest_modifiedAt(ctx, field)
 			}
@@ -47333,9 +47481,9 @@ func (ec *executionContext) _TRBRequest_createdBy(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(uuid.UUID)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequest_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -47345,7 +47493,71 @@ func (ec *executionContext) fieldContext_TRBRequest_createdBy(ctx context.Contex
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequest_createdByUserAccount(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequest_createdByUserAccount(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedByUserAccount(ctx), nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*authentication.UserAccount)
+	fc.Result = res
+	return ec.marshalNUserAccount2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequest_createdByUserAccount(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequest",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_UserAccount_id(ctx, field)
+			case "username":
+				return ec.fieldContext_UserAccount_username(ctx, field)
+			case "commonName":
+				return ec.fieldContext_UserAccount_commonName(ctx, field)
+			case "locale":
+				return ec.fieldContext_UserAccount_locale(ctx, field)
+			case "email":
+				return ec.fieldContext_UserAccount_email(ctx, field)
+			case "givenName":
+				return ec.fieldContext_UserAccount_givenName(ctx, field)
+			case "familyName":
+				return ec.fieldContext_UserAccount_familyName(ctx, field)
+			case "zoneInfo":
+				return ec.fieldContext_UserAccount_zoneInfo(ctx, field)
+			case "hasLoggedIn":
+				return ec.fieldContext_UserAccount_hasLoggedIn(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserAccount", field.Name)
 		},
 	}
 	return fc, nil
@@ -47418,9 +47630,9 @@ func (ec *executionContext) _TRBRequest_modifiedBy(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*uuid.UUID)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequest_modifiedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -47430,7 +47642,68 @@ func (ec *executionContext) fieldContext_TRBRequest_modifiedBy(ctx context.Conte
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TRBRequest_modifiedByUserAccount(ctx context.Context, field graphql.CollectedField, obj *models.TRBRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TRBRequest_modifiedByUserAccount(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ModifiedByUserAccount(ctx), nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*authentication.UserAccount)
+	fc.Result = res
+	return ec.marshalOUserAccount2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TRBRequest_modifiedByUserAccount(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TRBRequest",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_UserAccount_id(ctx, field)
+			case "username":
+				return ec.fieldContext_UserAccount_username(ctx, field)
+			case "commonName":
+				return ec.fieldContext_UserAccount_commonName(ctx, field)
+			case "locale":
+				return ec.fieldContext_UserAccount_locale(ctx, field)
+			case "email":
+				return ec.fieldContext_UserAccount_email(ctx, field)
+			case "givenName":
+				return ec.fieldContext_UserAccount_givenName(ctx, field)
+			case "familyName":
+				return ec.fieldContext_UserAccount_familyName(ctx, field)
+			case "zoneInfo":
+				return ec.fieldContext_UserAccount_zoneInfo(ctx, field)
+			case "hasLoggedIn":
+				return ec.fieldContext_UserAccount_hasLoggedIn(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UserAccount", field.Name)
 		},
 	}
 	return fc, nil
@@ -51279,6 +51552,399 @@ func (ec *executionContext) fieldContext_UpdateTestDatePayload_userErrors(ctx co
 				return ec.fieldContext_UserError_path(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type UserError", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserAccount_id(ctx context.Context, field graphql.CollectedField, obj *authentication.UserAccount) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserAccount_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserAccount_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserAccount",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserAccount_username(ctx context.Context, field graphql.CollectedField, obj *authentication.UserAccount) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserAccount_username(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Username, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalNString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserAccount_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserAccount",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserAccount_commonName(ctx context.Context, field graphql.CollectedField, obj *authentication.UserAccount) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserAccount_commonName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CommonName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserAccount_commonName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserAccount",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserAccount_locale(ctx context.Context, field graphql.CollectedField, obj *authentication.UserAccount) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserAccount_locale(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Locale, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserAccount_locale(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserAccount",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserAccount_email(ctx context.Context, field graphql.CollectedField, obj *authentication.UserAccount) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserAccount_email(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Email, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserAccount_email(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserAccount",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserAccount_givenName(ctx context.Context, field graphql.CollectedField, obj *authentication.UserAccount) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserAccount_givenName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GivenName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserAccount_givenName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserAccount",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserAccount_familyName(ctx context.Context, field graphql.CollectedField, obj *authentication.UserAccount) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserAccount_familyName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FamilyName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserAccount_familyName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserAccount",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserAccount_zoneInfo(ctx context.Context, field graphql.CollectedField, obj *authentication.UserAccount) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserAccount_zoneInfo(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ZoneInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserAccount_zoneInfo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserAccount",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserAccount_hasLoggedIn(ctx context.Context, field graphql.CollectedField, obj *authentication.UserAccount) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserAccount_hasLoggedIn(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasLoggedIn, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserAccount_hasLoggedIn(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserAccount",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -68883,6 +69549,42 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
+		case "createdByUserAccount":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequest_createdByUserAccount(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "createdAt":
 			out.Values[i] = ec._TRBRequest_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -68890,6 +69592,39 @@ func (ec *executionContext) _TRBRequest(ctx context.Context, sel ast.SelectionSe
 			}
 		case "modifiedBy":
 			out.Values[i] = ec._TRBRequest_modifiedBy(ctx, field, obj)
+		case "modifiedByUserAccount":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._TRBRequest_modifiedByUserAccount(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "modifiedAt":
 			out.Values[i] = ec._TRBRequest_modifiedAt(ctx, field, obj)
 		default:
@@ -69895,6 +70630,82 @@ func (ec *executionContext) _UpdateTestDatePayload(ctx context.Context, sel ast.
 			out.Values[i] = ec._UpdateTestDatePayload_testDate(ctx, field, obj)
 		case "userErrors":
 			out.Values[i] = ec._UpdateTestDatePayload_userErrors(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var userAccountImplementors = []string{"UserAccount"}
+
+func (ec *executionContext) _UserAccount(ctx context.Context, sel ast.SelectionSet, obj *authentication.UserAccount) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, userAccountImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UserAccount")
+		case "id":
+			out.Values[i] = ec._UserAccount_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "username":
+			out.Values[i] = ec._UserAccount_username(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "commonName":
+			out.Values[i] = ec._UserAccount_commonName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "locale":
+			out.Values[i] = ec._UserAccount_locale(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "email":
+			out.Values[i] = ec._UserAccount_email(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "givenName":
+			out.Values[i] = ec._UserAccount_givenName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "familyName":
+			out.Values[i] = ec._UserAccount_familyName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "zoneInfo":
+			out.Values[i] = ec._UserAccount_zoneInfo(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "hasLoggedIn":
+			out.Values[i] = ec._UserAccount_hasLoggedIn(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -73865,6 +74676,16 @@ func (ec *executionContext) marshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋg
 	return res
 }
 
+func (ec *executionContext) marshalNUserAccount2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v *authentication.UserAccount) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._UserAccount(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNUserError2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserError(ctx context.Context, sel ast.SelectionSet, v *model.UserError) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -75287,6 +76108,13 @@ func (ec *executionContext) marshalOUpdateTestDatePayload2ᚖgithubᚗcomᚋcmsg
 		return graphql.Null
 	}
 	return ec._UpdateTestDatePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUserAccount2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v *authentication.UserAccount) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UserAccount(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.UserError) graphql.Marshaler {

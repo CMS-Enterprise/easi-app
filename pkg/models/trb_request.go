@@ -1,10 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 // TRBRequest represents a TRB request object
 type TRBRequest struct {
-	BaseStruct
+	BaseStructUser
 	Name               *string         `json:"name" db:"name"`
 	Archived           bool            `json:"archived" db:"archived"`
 	Type               TRBRequestType  `json:"type" db:"type"`
@@ -14,9 +18,9 @@ type TRBRequest struct {
 }
 
 // NewTRBRequest returns a new trb request object
-func NewTRBRequest(createdBy string) *TRBRequest {
+func NewTRBRequest(createdBy uuid.UUID) *TRBRequest {
 	return &TRBRequest{
-		BaseStruct: NewBaseStruct(createdBy),
+		BaseStructUser: NewBaseStructUser(createdBy),
 	}
 
 }

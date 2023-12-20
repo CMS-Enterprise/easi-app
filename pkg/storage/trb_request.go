@@ -10,6 +10,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
 
 	_ "embed"
@@ -34,19 +35,21 @@ var trbRequestGetByIDSQL string
 var trbRequestUpdateSQL string
 
 // CreateTRBRequest creates a new TRBRequest record
-func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*models.TRBRequest, error) {
+func (s *Store) CreateTRBRequest(ctx context.Context, princ authentication.Principal, trb *models.TRBRequest) (*models.TRBRequest, error) {
 	tx := s.db.MustBegin()
 	defer tx.Rollback()
 
 	if trb.ID == uuid.Nil {
 		trb.ID = uuid.New()
 	}
+	//TODO: this logic should probably be moved up one more level. For now, we use the passed principal to set the created by fields.
+	trb.CreatedBy = princ.Account().ID
 
 	stmt, err := tx.PrepareNamed(trbRequestCreateSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create trb request with error %s", err),
-			zap.String("user", trb.CreatedBy),
+			zap.Any("userID", trb.CreatedBy),
 		)
 		return nil, err
 	}
@@ -56,7 +59,7 @@ func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create trb request with error %s", err),
-			zap.String("user", trb.CreatedBy),
+			zap.Any("userID", trb.CreatedBy),
 		)
 		return nil, err
 	}
@@ -67,7 +70,7 @@ func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*
 		CollabGroups: pq.StringArray{},
 	}
 	form.ID = uuid.New()
-	form.CreatedBy = retTRB.CreatedBy
+	form.CreatedBy = princ.ID() //TODO: when the request form is migrated to use user accounts, this can be simplified to use the retTRB.CreatedBy field
 
 	stmt, err = tx.PrepareNamed(trbRequestFormCreateSQL)
 

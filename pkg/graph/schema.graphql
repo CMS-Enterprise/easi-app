@@ -1798,10 +1798,17 @@ type TRBRequest {
   requesterComponent: String
   adminNotes: [TRBAdminNote!]! @hasRole(role: EASI_TRB_ADMIN)
   isRecent: Boolean!
-  createdBy: String!
+
+  createdBy: UUID!
+  createdByUserAccount: UserAccount!
   createdAt: Time! # will be used for UploadedAt in frontend
-  modifiedBy: String
+  modifiedBy: UUID
+  modifiedByUserAccount: UserAccount
   modifiedAt: Time
+  # createdBy: String!
+  # createdAt: Time! 
+  # modifiedBy: String
+  # modifiedAt: Time
 }
 
 """
@@ -2551,6 +2558,18 @@ input ReopenTRBRequestInput {
   copyTrbMailbox: Boolean!
   notifyEuaIds: [String!]!
 }
+type UserAccount {
+	id: UUID!
+	username: String!
+	commonName: String!
+	locale: String!
+	email: String!
+	givenName: String!
+	familyName: String!
+	zoneInfo: String!
+	hasLoggedIn: Boolean
+}
+
 
 """
 Defines the mutations for the schema
@@ -2699,6 +2718,7 @@ type Mutation {
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+  
 
   """
   Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionIssueLCID

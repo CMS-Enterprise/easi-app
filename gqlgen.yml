@@ -60,6 +60,9 @@ models:
   UUID:
     model:
       - github.com/cmsgov/easi-app/pkg/models.UUID
+  UserAccount:
+    model:
+      - github.com/cmsgov/easi-app/pkg/authentication.UserAccount      
   HTML:
     model:
       - github.com/cmsgov/easi-app/pkg/models.HTML
