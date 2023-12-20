@@ -14,7 +14,6 @@ import {
   ModalFooter,
   ModalHeading
 } from '@trussworks/react-uswds';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Modal from 'components/Modal';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -30,11 +29,7 @@ import {
 import { RequestType } from 'types/systemIntake';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
-import {
-  isIntakeClosed,
-  translateRequestType,
-  translateStatus
-} from 'utils/systemIntake';
+import { translateRequestType } from 'utils/systemIntake';
 
 import './index.scss';
 
@@ -43,7 +38,6 @@ type RequestSummaryProps = {
   requester: Requester;
   requestName: string;
   requestType: RequestType;
-  status: string;
   statusAdmin: SystemIntakeStatusAdmin;
   adminLead: string | null;
   submittedAt: string | null;
@@ -57,7 +51,6 @@ const RequestSummary = ({
   requester,
   requestName,
   requestType,
-  status,
   statusAdmin,
   adminLead,
   submittedAt,
@@ -66,7 +59,6 @@ const RequestSummary = ({
   state
 }: RequestSummaryProps) => {
   const { t } = useTranslation('governanceReviewTeam');
-  const flags = useFlags();
   const [isModalOpen, setModalOpen] = useState(false);
   const [newAdminLead, setAdminLead] = useState('');
   const [mutate, mutationResult] = useMutation<UpdateSystemIntakeAdminLead>(
@@ -75,10 +67,6 @@ const RequestSummary = ({
       errorPolicy: 'all'
     }
   );
-
-  const stateV1: SystemIntakeState = isIntakeClosed(status)
-    ? SystemIntakeState.CLOSED
-    : SystemIntakeState.OPEN;
 
   /** Admin lead text and modal trigger button */
   const AdminLead = () => {
@@ -214,13 +202,19 @@ const RequestSummary = ({
             <Grid desktop={{ col: 8 }}>
               <div>
                 <h4 className="margin-right-1">{t('status.label')}</h4>
-                <StateTag state={flags.itGovV2Enabled ? state : stateV1} />
+                <StateTag state={state} />
               </div>
-              <p className="text-base-dark" data-testid="grt-current-status">
-                {flags.itGovV2Enabled
-                  ? t(`systemIntakeStatusAdmin.${statusAdmin}`, { lcid })
-                  : translateStatus(status, lcid)}
-              </p>
+              {
+                // Don't display additional status if closed with no decision
+                statusAdmin !== SystemIntakeStatusAdmin.CLOSED && (
+                  <p
+                    className="text-base-dark"
+                    data-testid="grt-current-status"
+                  >
+                    {t(`systemIntakeStatusAdmin.${statusAdmin}`, { lcid })}
+                  </p>
+                )
+              }
               <Link
                 to={`/governance-review-team/${id}/actions`}
                 className="usa-link"
