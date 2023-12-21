@@ -201,6 +201,7 @@ Sprague
 Shoup
 TinyMCE
 Vite
+Rollout
 
 # Jira ticket numbers
 # The underlying spellchecking package doesn't currently support patterns; see https://github.com/lukeapage/node-markdown-spellcheck/issues/49
@@ -214,3 +215,4 @@ EASI-3224
 EASI-2888
 EASI-3019
 EASI-3082
+EASI-3341

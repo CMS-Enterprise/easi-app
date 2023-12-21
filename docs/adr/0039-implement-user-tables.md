@@ -36,23 +36,22 @@ Database migrations only happen in the DB context, so we can't query an external
 
 ## Pros and Cons of the Alternatives <!-- optional -->
 
-### *[alternative 1]*
+### Insert place holder records
 
-* `+` *[argument 1 pro]*
-* `+` *[argument 2 pro]*
-* `-` *[argument 1 con]*
-* *[...]* <!-- numbers of pros and cons can vary -->
+* `+` This can be done during the migration
+* `+` This doesn't rely on external data source
+* `-` Extra complexity incurred when querying user accounts (how can we be sure the data is up to date?)
 
-### *[alternative 2]*
+### Write a helper script or program that inserts user account records for all places in the DB that reference an EUAID
 
-* `+` *[argument 1 pro]*
-* `+` *[argument 2 pro]*
-* `-` *[argument 1 con]*
-* *[...]* <!-- numbers of pros and cons can vary -->
+* `+` Data is accurate
+* `+` Edge cases can be handled easily
+* `-` Relies on data to stay in an up to date state
+* `-` Extra complexity incurred by creating a separate app / script
 
-### *[alternative 3]*
+### A combination of approaches. Using an auxiliary script, and rely on temp records for any unforeseen edge cases
 
-* `+` *[argument 1 pro]*
-* `+` *[argument 2 pro]*
-* `-` *[argument 1 con]*
-* *[...]* <!-- numbers of pros and cons can vary -->
+* `+` We have a higher level of confidence in the data than either other approach
+* `+` Data should be up to date
+* `+` Any data that is not able to be updated by the script can use the temporary data
+* `-` We incur the complexity of both approaches
