@@ -10,22 +10,28 @@ FROM (
 SELECT actor_eua_user_id AS username
 FROM actions
 UNION
- -- Subquery for system_intakes table
+
+ 
+  
+  -- Subquery for business_cases table
   SELECT username
   FROM (
     SELECT eua_user_id AS username
-    FROM system_intakes
+    FROM business_cases
     -- UNION
     -- SELECT eua_user_id AS username
-    -- FROM system_intakes
-  ) AS system_intakes_usernames
+    -- FROM business_cases
+  ) AS business_cases_usernames
   
   UNION
+
 -- Subquery for cedar_system_bookmarks table
 SELECT eua_user_id AS username
 FROM cedar_system_bookmarks
 UNION
 
+
+-- Subquery for governance_request_feedback table
 SELECT created_by AS username
 FROM governance_request_feedback
 UNION
@@ -58,30 +64,128 @@ UNION
 
 
  
+-- Subquery for trb_admin_notes table
+SELECT created_by AS username
+FROM trb_admin_notes
+UNION
+SELECT modified_by AS username
+FROM trb_admin_notes
+UNION
+
+  -- Subquery for trb_admin_notes_trb_admin_note_recommendations_links table
+  SELECT created_by AS username
+  FROM trb_admin_notes_trb_admin_note_recommendations_links
+  UNION
+  SELECT modified_by AS username
+  FROM trb_admin_notes_trb_admin_note_recommendations_links
   
-  -- Subquery for business_cases table
-  SELECT username
-  FROM (
-    SELECT eua_user_id AS username
-    FROM business_cases
-    -- UNION
-    -- SELECT eua_user_id AS username
-    -- FROM business_cases
-  ) AS business_cases_usernames
+  UNION
+  
+  -- Subquery for trb_admin_notes_trb_request_documents_links table
+  SELECT created_by AS username
+  FROM trb_admin_notes_trb_request_documents_links
+  UNION
+  SELECT modified_by AS username
+  FROM trb_admin_notes_trb_request_documents_links
+  
+  UNION
+  
+  -- Subquery for trb_advice_letter_recommendations table
+  SELECT created_by AS username
+  FROM trb_advice_letter_recommendations
+  UNION
+  SELECT modified_by AS username
+  FROM trb_advice_letter_recommendations
+  
+  UNION
+  
+  -- Subquery for trb_advice_letters table
+  SELECT created_by AS username
+  FROM trb_advice_letters
+  UNION
+  SELECT modified_by AS username
+  FROM trb_advice_letters
+  
+  UNION
+  
+  -- Subquery for trb_lead_options table
+  SELECT created_by AS username
+  FROM trb_lead_options
+  UNION
+  SELECT modified_by AS username
+  FROM trb_lead_options
+  UNION
+  SELECT eua_user_id AS username
+  FROM trb_lead_options
   
   UNION
   
   -- Subquery for trb_request table
-  SELECT username
-  FROM (
-    SELECT trb_lead AS username
-    FROM trb_request
-    UNION
-    SELECT created_by AS username
-    FROM trb_request
-    UNION
-    SELECT modified_by AS username
-    FROM trb_request
-  ) AS trb_request_usernames
+  SELECT created_by AS username
+  FROM trb_request
+  UNION
+  SELECT modified_by AS username
+  FROM trb_request
+  UNION
+  SELECT trb_lead AS username
+  FROM trb_request
+  
+  UNION
+  
+  -- Subquery for trb_request_attendees table
+  SELECT created_by AS username
+  FROM trb_request_attendees
+  UNION
+  SELECT modified_by AS username
+  FROM trb_request_attendees
+  UNION
+  SELECT eua_user_id AS username
+  FROM trb_request_attendees
+  
+  UNION
+  
+  -- Subquery for trb_request_documents table
+  SELECT created_by AS username
+  FROM trb_request_documents
+  UNION
+  SELECT modified_by AS username
+  FROM trb_request_documents
+  
+  UNION
+  
+  -- Subquery for trb_request_feedback table
+  SELECT created_by AS username
+  FROM trb_request_feedback
+  UNION
+  SELECT modified_by AS username
+  FROM trb_request_feedback
+  -- TODO: EASI-3341 column notify_eua_ids is an array of EUAIDs, we probably should do a call of unnest and add it to the union select
+  
+  UNION
+  
+  -- Subquery for trb_request_forms table
+  SELECT created_by AS username
+  FROM trb_request_forms
+  UNION
+  SELECT modified_by AS username
+  FROM trb_request_forms
+  
+  UNION
+  
+  -- Subquery for trb_request_funding_sources table
+  SELECT created_by AS username
+  FROM trb_request_funding_sources
+  UNION
+  SELECT modified_by AS username
+  FROM trb_request_funding_sources
+  
+  UNION
+  
+  -- Subquery for trb_request_system_intakes table
+  SELECT created_by AS username
+  FROM trb_request_system_intakes
+  UNION
+  SELECT modified_by AS username
+  FROM trb_request_system_intakes
 ) AS combined_usernames 
 WHERE username IS NOT NULL;
