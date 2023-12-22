@@ -14,7 +14,7 @@ type TRBRequest struct {
 	Type               TRBRequestType  `json:"type" db:"type"`
 	State              TRBRequestState `json:"state" db:"state"`
 	ConsultMeetingTime *time.Time      `json:"consultMeetingTime" db:"consult_meeting_time"`
-	TRBLead            *string         `json:"trbLead" db:"trb_lead"`
+	TRBLead            *string         `json:"trbLead" db:"trb_lead"` // TODO: EASI-3341, this should be changed to UUID and reference the account table
 }
 
 // NewTRBRequest returns a new trb request object
