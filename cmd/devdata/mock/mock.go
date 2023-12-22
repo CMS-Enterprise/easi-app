@@ -8,6 +8,9 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/storage/loaders"
+	"github.com/cmsgov/easi-app/pkg/userhelpers"
 )
 
 // PrincipalUser is the "current user" when seeding the data
@@ -35,16 +38,31 @@ func FetchUserInfosMock(ctx context.Context, euas []string) ([]*models.UserInfo,
 	return userInfos, nil
 }
 
-// CtxWithLoggerAndPrincipal makes a context with a mocked logger and principal
-func CtxWithLoggerAndPrincipal(logger *zap.Logger, euaID string) context.Context {
+// CtxWithLoggerAndPrincipalAndLoaders makes a context with a mocked logger and principal
+func CtxWithLoggerAndPrincipalAndLoaders(store *storage.Store, logger *zap.Logger, euaID string) context.Context {
+	princ := getTestPrincipal(store, euaID)
+
+	ctx := appcontext.WithLogger(context.Background(), logger)
+
+	dataLoaders := loaders.NewDataLoaders(store)
+	ctx = loaders.CTXWithLoaders(ctx, dataLoaders)
+
+	ctx = appcontext.WithPrincipal(ctx, princ)
+	return ctx
+}
+
+func getTestPrincipal(store *storage.Store, userName string) *authentication.EUAPrincipal {
+
+	userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+
 	princ := &authentication.EUAPrincipal{
-		EUAID:            euaID,
+		EUAID:            userName,
 		JobCodeEASi:      true,
 		JobCodeGRT:       true,
 		JobCode508User:   true,
 		JobCode508Tester: true,
+		UserAccount:      userAccount,
 	}
-	ctx := appcontext.WithLogger(context.Background(), logger)
-	ctx = appcontext.WithPrincipal(ctx, princ)
-	return ctx
+	return princ
+
 }

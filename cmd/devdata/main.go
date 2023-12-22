@@ -64,7 +64,7 @@ func main() {
 
 	s3Client := upload.NewS3Client(s3Cfg)
 
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser)
+	ctx := mock.CtxWithLoggerAndPrincipalAndLoaders(store, logger, mock.PrincipalUser)
 	seederConfig := &seederConfig{
 		logger:   logger,
 		store:    store,
@@ -400,7 +400,7 @@ func makeSystemIntakeWithProgressToNextStep(
 	additionalInfo models.HTML,
 	adminNote models.HTML,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, creatingUser)
+	ctx := mock.CtxWithLoggerAndPrincipalAndLoaders(store, logger, creatingUser)
 
 	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
 		i.ID = intakeID
@@ -460,6 +460,7 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, int
 	if intake == nil {
 		intake = makeSystemIntake(name, logger, store)
 	}
+	//TODO: wrap the context with a principal so seed data doesn't fail
 
 	phase := models.LifecycleCostPhaseDEVELOPMENT
 	cost := 123456

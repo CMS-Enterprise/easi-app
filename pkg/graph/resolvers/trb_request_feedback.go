@@ -32,7 +32,7 @@ func CreateTRBRequestFeedback(
 
 	emailInfoErrGroup := new(errgroup.Group)
 
-	emailInfoErrGroup.Go(func() error {
+	emailInfoErrGroup.Go(func() error { // TODO: This can be moved after the nil check for email client
 		// declare new error variable so we don't interfere with calls outside of this goroutine
 		recipientInfos, getRecipientInfosErr := fetchUserInfos(ctx, feedback.NotifyEUAIDs)
 		if getRecipientInfosErr != nil {
@@ -44,23 +44,6 @@ func CreateTRBRequestFeedback(
 				recipientEmails = append(recipientEmails, recipientInfo.Email)
 			}
 		}
-		return nil
-	})
-
-	emailInfoErrGroup.Go(func() error {
-		// declare new error variable so we don't interfere with calls outside of this goroutine
-		requestPtr, getRequestErr := store.GetTRBRequestByID(ctx, feedback.TRBRequestID)
-		if getRequestErr != nil {
-			return getRequestErr
-		}
-		request = *requestPtr
-
-		requesterPtr, getRequesterErr := UserAccountGetByIDLOADER(ctx, request.CreatedBy)
-		if getRequesterErr != nil {
-			return getRequesterErr
-		}
-		requester = *requesterPtr
-
 		return nil
 	})
 
@@ -89,12 +72,11 @@ func CreateTRBRequestFeedback(
 		return nil, err
 	}
 
-	// send notification email last; make sure database has been updated first
-	if err = emailInfoErrGroup.Wait(); err != nil {
-		return nil, err
-	}
-
 	if emailClient != nil {
+		// send notification email last; make sure database has been updated first
+		if err = emailInfoErrGroup.Wait(); err != nil {
+			return nil, err
+		}
 		if feedback.Action == models.TRBFeedbackActionRequestEdits {
 			err = emailClient.SendTRBEditsNeededOnFormNotification(
 				ctx,
