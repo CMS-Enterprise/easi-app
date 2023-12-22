@@ -6,7 +6,7 @@ func main() {
 	/*
 		Steps
 		1. Query the database for all fields where there is
-			a. a username (EUAID)
+			a. a username (EUAID)  (query is get_all_usernames.sql) --> do the same approach with full names to try and do a match
 			b. a FullName of a User
 		2. Aggregate Unique records
 		3. Query OKTA for all users by unique username
