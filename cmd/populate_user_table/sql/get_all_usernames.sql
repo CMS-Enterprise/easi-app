@@ -10,7 +10,17 @@ FROM (
 SELECT actor_eua_user_id AS username
 FROM actions
 UNION
-
+ -- Subquery for system_intakes table
+  SELECT username
+  FROM (
+    SELECT eua_user_id AS username
+    FROM system_intakes
+    -- UNION
+    -- SELECT eua_user_id AS username
+    -- FROM system_intakes
+  ) AS system_intakes_usernames
+  
+  UNION
 -- Subquery for cedar_system_bookmarks table
 SELECT eua_user_id AS username
 FROM cedar_system_bookmarks
@@ -23,17 +33,31 @@ SELECT modified_by AS username
 FROM governance_request_feedback
 UNION
 
-  -- Subquery for system_intakes table
-  SELECT username
-  FROM (
-    SELECT eua_user_id AS username
-    FROM system_intakes
-    -- UNION
-    -- SELECT eua_user_id AS username
-    -- FROM system_intakes
-  ) AS system_intakes_usernames
-  
-  UNION
+-- Subquery for notes table
+SELECT eua_user_id AS username
+FROM notes
+UNION
+SELECT modified_by AS username
+FROM notes
+UNION
+
+-- Subquery for system_intake_contacts table
+SELECT eua_user_id AS username
+FROM system_intake_contacts
+UNION
+
+-- Subquery for system_intake_documents table
+SELECT created_by AS username
+FROM system_intake_documents
+UNION
+SELECT modified_by AS username
+FROM system_intake_documents
+UNION
+
+-- funding source doesn't have this
+
+
+ 
   
   -- Subquery for business_cases table
   SELECT username
