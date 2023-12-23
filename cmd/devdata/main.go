@@ -89,11 +89,11 @@ func main() {
 		i.Date = time.Date(yyyy, mm, dd+1, 0, 0, 0, 0, time.UTC)
 	})
 
-	makeSystemIntake("A Completed Intake Form", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntakeV1("A Completed Intake Form", logger, store, func(i *models.SystemIntake) {
 		i.ID = uuid.MustParse("af7a3924-3ff7-48ec-8a54-b8b4bc95610b")
 	})
 
-	makeSystemIntake("With Contract Month and Year", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntakeV1("With Contract Month and Year", logger, store, func(i *models.SystemIntake) {
 		i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
 		i.ContractStartMonth = null.StringFrom("10")
 		i.ContractStartYear = null.StringFrom("2021")
@@ -101,13 +101,13 @@ func main() {
 		i.ContractEndYear = null.StringFrom("2022")
 	})
 
-	makeSystemIntake("With Contract Dates", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntakeV1("With Contract Dates", logger, store, func(i *models.SystemIntake) {
 		i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
 		i.ContractStartDate = date(2021, 4, 5)
 		i.ContractEndDate = date(2022, 4, 5)
 	})
 
-	makeSystemIntake("With Both Contract Dates", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntakeV1("With Both Contract Dates", logger, store, func(i *models.SystemIntake) {
 		i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
 		i.ContractStartMonth = null.StringFrom("10")
 		i.ContractStartYear = null.StringFrom("2021")
@@ -117,11 +117,11 @@ func main() {
 		i.ContractEndDate = date(2022, 4, 8)
 	})
 
-	makeSystemIntake("Ready for business case", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntakeV1("Ready for business case", logger, store, func(i *models.SystemIntake) {
 		i.Status = models.SystemIntakeStatusNEEDBIZCASE
 	})
 
-	makeSystemIntake("For business case Cypress test", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntakeV1("For business case Cypress test", logger, store, func(i *models.SystemIntake) {
 		i.ID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
 		i.EUAUserID = null.StringFrom("E2E1")
 		i.Status = models.SystemIntakeStatusNEEDBIZCASE
@@ -136,7 +136,7 @@ func main() {
 		i.TRBCollaborator = null.StringFrom("")
 		i.OITSecurityCollaborator = null.StringFrom("")
 		i.EACollaborator = null.StringFrom("")
-		i.ProjectName = null.StringFrom("Easy Access to System Information")
+		// i.ProjectName = null.StringFrom("Easy Access to System Information")
 		i.ExistingFunding = null.BoolFrom(false)
 		i.FundingNumber = null.StringFrom("")
 		i.BusinessNeed = null.StringFrom("Business Need: The quick brown fox jumps over the lazy dog.")
@@ -148,46 +148,46 @@ func main() {
 		i.GrtReviewEmailBody = null.StringFrom("")
 	})
 
-	makeSystemIntake("Closable Request", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntakeV1("Closable Request", logger, store, func(i *models.SystemIntake) {
 		i.ID = uuid.MustParse("20cbcfbf-6459-4c96-943b-e76b83122dbf")
 	})
 
-	makeSystemIntake("Intake with no contract vehicle or number", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntakeV1("Intake with no contract vehicle or number", logger, store, func(i *models.SystemIntake) {
 		i.ID = uuid.MustParse("38e46d77-e474-4d15-a7c0-f6411221e2a4")
 		i.ContractVehicle = null.StringFromPtr(nil)
 		i.ContractNumber = null.StringFromPtr(nil)
 	})
 
-	makeSystemIntake("Intake with legacy Contract Vehicle", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntakeV1("Intake with legacy Contract Vehicle", logger, store, func(i *models.SystemIntake) {
 		i.ID = uuid.MustParse("2ed89f9f-7fd9-4e92-89d2-cee170a44d0d")
 		i.ContractVehicle = null.StringFrom("Honda")
 		i.ContractNumber = null.StringFromPtr(nil)
 	})
 
-	intake := makeSystemIntake("Draft Business Case", logger, store, func(i *models.SystemIntake) {
+	intake := makeSystemIntakeV1("Draft Business Case", logger, store, func(i *models.SystemIntake) {
 		i.Status = models.SystemIntakeStatusBIZCASEDRAFT
 	})
-	makeBusinessCase("Draft Business Case", logger, store, intake)
+	makeBusinessCaseV1("Draft Business Case", logger, store, intake)
 
-	intake = makeSystemIntake("With GRB scheduled", logger, store, func(i *models.SystemIntake) {
+	intake = makeSystemIntakeV1("With GRB scheduled", logger, store, func(i *models.SystemIntake) {
 		i.Status = models.SystemIntakeStatusREADYFORGRB
 		tomorrow := time.Now().Add(24 * time.Hour)
 		nextMonth := time.Now().Add(30 * 24 * time.Hour)
 		i.GRBDate = &tomorrow
 		i.GRTDate = &nextMonth
 	})
-	makeBusinessCase("With GRB scheduled", logger, store, intake)
+	makeBusinessCaseV1("With GRB scheduled", logger, store, intake)
 
-	intake = makeSystemIntake("With GRT scheduled", logger, store, func(i *models.SystemIntake) {
+	intake = makeSystemIntakeV1("With GRT scheduled", logger, store, func(i *models.SystemIntake) {
 		i.Status = models.SystemIntakeStatusREADYFORGRT
 		lastMonth := time.Now().AddDate(0, -1, 0)
 		tomorrow := time.Now().AddDate(0, 0, 1)
 		i.GRBDate = &lastMonth
 		i.GRTDate = &tomorrow
 	})
-	makeBusinessCase("With GRT scheduled", logger, store, intake)
+	makeBusinessCaseV1("With GRT scheduled", logger, store, intake)
 
-	intake = makeSystemIntake("With LCID Issued", logger, store, func(i *models.SystemIntake) {
+	intake = makeSystemIntakeV1("With LCID Issued", logger, store, func(i *models.SystemIntake) {
 		lifecycleExpiresAt := time.Now().AddDate(0, 0, 90)
 		submittedAt := time.Now().AddDate(0, 0, -365)
 		i.LifecycleID = null.StringFrom("210001")
@@ -197,11 +197,11 @@ func main() {
 		i.Status = models.SystemIntakeStatusLCIDISSUED
 		i.SubmittedAt = &submittedAt
 	})
-	makeBusinessCase("With LCID Issued", logger, store, intake, func(c *models.BusinessCase) {
+	makeBusinessCaseV1("With LCID Issued", logger, store, intake, func(c *models.BusinessCase) {
 		c.Status = models.BusinessCaseStatusCLOSED
 	})
 
-	makeSystemIntake("Expiring LCID Intake", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntakeV1("Expiring LCID Intake", logger, store, func(i *models.SystemIntake) {
 		lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
 		submittedAt := time.Now().AddDate(0, 0, -365)
 		i.LifecycleID = null.StringFrom("410001")
@@ -214,7 +214,7 @@ func main() {
 		i.SubmittedAt = &submittedAt
 	})
 
-	makeSystemIntake("Expiring LCID Intake with alert sent 14 days ago", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntakeV1("Expiring LCID Intake with alert sent 14 days ago", logger, store, func(i *models.SystemIntake) {
 		lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
 		submittedAt := time.Now().AddDate(0, 0, -365)
 		i.LifecycleID = null.StringFrom("510001")
@@ -229,7 +229,7 @@ func main() {
 		i.SubmittedAt = &submittedAt
 	})
 
-	makeSystemIntake("Intake with expiring LCID and no EUA User ID - test case for EASI-3083", logger, store, func(i *models.SystemIntake) {
+	makeSystemIntakeV1("Intake with expiring LCID and no EUA User ID - test case for EASI-3083", logger, store, func(i *models.SystemIntake) {
 		lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
 		submittedAt := time.Now().AddDate(0, 0, -365)
 		i.LifecycleID = null.StringFrom("300001")
@@ -242,61 +242,413 @@ func main() {
 	})
 
 	intakeID := uuid.MustParse("4d3f9821-e043-42bf-9cd0-faa5f053ed32")
-	makeSystemIntakeWithProgressToNextStep(
-		"Intake with feedback on progression to next step",
+	makeSystemIntakeAndProgressToStep(
+		"submitted and progressed to draft biz case",
 		logger,
 		store,
-		"USR1",
-		intakeID,
-		"Feedback to requester",
-		"Recommendations for GRB",
-		"additional info",
-		"admin note",
+		&intakeID,
+		model.SystemIntakeStepToProgressToDraftBusinessCase,
+	)
+
+	intakeID = uuid.MustParse("18f245bc-f84c-401f-973a-62af7950f9c1")
+	makeSystemIntakeAndProgressToStep(
+		"submitted and progressed to final biz case",
+		logger,
+		store,
+		&intakeID,
+		model.SystemIntakeStepToProgressToFinalBusinessCase,
+	)
+	intakeID = uuid.MustParse("116eb955-b09a-4377-ba92-04816de2c2ac")
+	makeSystemIntakeAndProgressToStep(
+		"submitted and progressed to grt meeting",
+		logger,
+		store,
+		&intakeID,
+		model.SystemIntakeStepToProgressToGrtMeeting,
+	)
+	intakeID = uuid.MustParse("8ef9d0fb-e673-441c-9876-f874b179f89c")
+	makeSystemIntakeAndProgressToStep(
+		"submitted and progressed to grb meeting",
+		logger,
+		store,
+		&intakeID,
+		model.SystemIntakeStepToProgressToGrbMeeting,
 	)
 
 	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
-	makeSystemIntakeWithEditsRequested(
-		"Edits requested on intake request",
+	makeSystemIntakeAndRequestEditsToForm(
+		"Edits requested on initial request form",
 		logger,
 		store,
-		"USR1",
-		intakeID,
-		"intake request feedback",
-		models.HTMLPointer("additional info on request form"),
-		"administrative note about request form",
+		&intakeID,
 		model.SystemIntakeFormStepInitialRequestForm,
 	)
 
 	intakeID = uuid.MustParse("ce874e71-de26-46da-bbfe-a8e3af960108")
-	makeSystemIntakeWithEditsRequested(
+	makeSystemIntakeAndRequestEditsToForm(
 		"Edits requested on draft biz case",
 		logger,
 		store,
-		"USR1",
-		intakeID,
-		"draft biz case feedback",
-		models.HTMLPointer("additional info on draft biz case"),
-		"administrative note about draft biz case",
+		&intakeID,
 		model.SystemIntakeFormStepDraftBusinessCase,
 	)
 
 	intakeID = uuid.MustParse("67eebec8-9242-4f2c-b337-f674686a5ab5")
-	makeSystemIntakeWithEditsRequested(
+	makeSystemIntakeAndRequestEditsToForm(
 		"Edits requested on final biz case",
 		logger,
 		store,
-		"USR1",
-		intakeID,
-		"final biz case feedback",
-		models.HTMLPointer("additional info on final biz case"),
-		"administrative note about final biz case",
+		&intakeID,
 		model.SystemIntakeFormStepFinalBusinessCase,
 	)
+
+	intakeID = uuid.MustParse("14ecf18c-8367-402d-a48e-92e7d2853f50")
+	makeSystemIntakeAndSubmit("my awesome intake request", &intakeID, logger, store)
+	makeSystemIntake("my OTHER awesome intake request", nil, logger, store)
 
 	must(nil, seederConfig.seedTRBRequests(ctx))
 }
 
-func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
+// creates, fills out the initial request form, and submits a system intake
+func makeSystemIntakeAndSubmit(
+	requestName string,
+	intakeID *uuid.UUID,
+	logger *zap.Logger,
+	store *storage.Store,
+) *models.SystemIntake {
+	intake := makeSystemIntake(requestName, intakeID, logger, store)
+	return submitSystemIntake(logger, store, intake)
+}
+
+// creates an intake and fills out the initial request form
+func makeSystemIntake(
+	requestName string,
+	intakeID *uuid.UUID,
+	logger *zap.Logger,
+	store *storage.Store,
+) *models.SystemIntake {
+	intake := createSystemIntake(
+		intakeID,
+		logger,
+		store,
+		"USR1",
+		"Requester Person",
+		models.SystemIntakeRequestTypeNEW,
+	)
+	intake = updateSystemIntakeRequestDetails(logger, store, intake,
+		requestName,
+		"An intense business need",
+		"with a great business solution",
+		true,
+		"Some CEDAR System ID",
+		"the current stage",
+		true,
+	)
+	updateSystemIntakeContact(logger, store, intake,
+		"USR1",
+		"Center for Medicare",
+		"Requester",
+	)
+	createSystemIntakeContact(logger, store, intake,
+		"A11Y",
+		"Center for Medicare",
+		"Business Owner",
+	)
+	createSystemIntakeContact(logger, store, intake,
+		"OQYV",
+		"Center for Medicare",
+		"Product Manager",
+	)
+	createSystemIntakeContact(logger, store, intake,
+		"GP87",
+		"Center for Medicare",
+		"ISSO",
+	)
+	intake = updateSystemIntakeContactDetails(logger, store, intake,
+		"User One",
+		"Office of the Actuary",
+		"Ally Anderson",
+		"Office of Minority Health",
+		"Hallie O'Hara",
+		"Emergency Preparedness and Response Operations",
+		true,
+		"Leatha Gorczany",
+	)
+	intake = updateSystemIntakeContractDetails(logger, store, intake)
+	return intake
+}
+
+// This is a v2 function that uses the resolver to create the intake
+func createSystemIntake(
+	intakeID *uuid.UUID,
+	logger *zap.Logger,
+	store *storage.Store,
+	requesterEUAID string,
+	requesterName string,
+	requestType models.SystemIntakeRequestType,
+) *models.SystemIntake {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, requesterEUAID)
+	// if there's no given intakeID, we can default to the resolver
+	if intakeID == nil {
+		input := model.CreateSystemIntakeInput{
+			RequestType: requestType,
+			Requester: &model.SystemIntakeRequesterInput{
+				Name: requesterName,
+			},
+		}
+		intake, err := resolvers.CreateSystemIntake(ctx, store, input)
+		if err != nil {
+			panic(err)
+		}
+		return intake
+	}
+	// however, if given an intakeID we must use the store method
+	i := models.SystemIntake{
+		ID:          *intakeID,
+		EUAUserID:   null.StringFrom(requesterEUAID),
+		RequestType: requestType,
+		Requester:   requesterName,
+		Status:      models.SystemIntakeStatusINTAKEDRAFT,
+		State:       models.SystemIntakeStateOPEN,
+		Step:        models.SystemIntakeStepINITIALFORM,
+	}
+	intake, err := store.CreateSystemIntake(ctx, &i)
+	if err != nil {
+		panic(err)
+	}
+	return intake
+}
+
+// This is a v2 function that uses the resolver to fill in an intake's request details
+func updateSystemIntakeRequestDetails(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+	requestName string,
+	businessNeed string,
+	businessSolution string,
+	needsEaSupport bool,
+	currentStage string,
+	cedarSystemID string,
+	hasUIChanges bool,
+) *models.SystemIntake {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, intake.EUAUserID.ValueOrZero())
+	input := model.UpdateSystemIntakeRequestDetailsInput{
+		ID:               intake.ID,
+		RequestName:      &requestName,
+		BusinessNeed:     &businessNeed,
+		BusinessSolution: &businessSolution,
+		NeedsEaSupport:   &needsEaSupport,
+		CurrentStage:     &currentStage,
+		CedarSystemID:    &cedarSystemID,
+		HasUIChanges:     &hasUIChanges,
+	}
+	fetchCedarSystemMock := func(context.Context, string) (*models.CedarSystem, error) {
+		return &models.CedarSystem{}, nil
+	}
+	payload, err := resolvers.SystemIntakeUpdate(ctx, store, fetchCedarSystemMock, input)
+	if err != nil {
+		panic(err)
+	}
+	return payload.SystemIntake
+}
+
+func createSystemIntakeContact(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+	euaUserID string,
+	component string,
+	role string,
+) {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, intake.EUAUserID.ValueOrZero())
+	input := model.CreateSystemIntakeContactInput{
+		Component:      component,
+		Role:           role,
+		EuaUserID:      euaUserID,
+		SystemIntakeID: intake.ID,
+	}
+	_, err := resolvers.CreateSystemIntakeContact(ctx, store, input)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func updateSystemIntakeContact(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+	euaUserID string,
+	component string,
+	role string,
+) {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, intake.EUAUserID.ValueOrZero())
+	input := model.UpdateSystemIntakeContactInput{
+		Component: component,
+		Role:      role,
+		EuaUserID: euaUserID,
+	}
+	_, err := resolvers.UpdateSystemIntakeContact(ctx, store, input)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func updateSystemIntakeContactDetails(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+	requesterName string,
+	requesterComponent string,
+	businessOwnerName string,
+	businessOwnerComponent string,
+	productManagerName string,
+	productManagerComponent string,
+	issoIsPresent bool,
+	issoName string,
+) *models.SystemIntake {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, intake.EUAUserID.ValueOrZero())
+	govTeamsPresent := true
+
+	input := model.UpdateSystemIntakeContactDetailsInput{
+		ID: intake.ID,
+		Requester: &model.SystemIntakeRequesterWithComponentInput{
+			Name:      requesterName,
+			Component: requesterComponent,
+		},
+		BusinessOwner: &model.SystemIntakeBusinessOwnerInput{
+			Name:      businessOwnerName,
+			Component: businessOwnerComponent,
+		},
+		ProductManager: &model.SystemIntakeProductManagerInput{
+			Name:      productManagerName,
+			Component: productManagerComponent,
+		},
+		Isso: &model.SystemIntakeISSOInput{
+			IsPresent: &issoIsPresent,
+			Name:      &issoName,
+		},
+		GovernanceTeams: &model.SystemIntakeGovernanceTeamInput{
+			IsPresent: &govTeamsPresent,
+			Teams: []*model.SystemIntakeCollaboratorInput{
+				{
+					Collaborator: "Mrs TRB member",
+					Key:          "technicalReviewBoard",
+				},
+				{
+					Collaborator: "Ms security team member",
+					Key:          "securityPrivacy",
+				},
+				{
+					Collaborator: "Mr Enterprise Architecture",
+					Key:          "enterpriseArchitecture",
+				},
+			},
+		},
+	}
+	payload, err := resolvers.SystemIntakeUpdateContactDetails(ctx, store, input)
+	if err != nil {
+		panic(err)
+	}
+	return payload.SystemIntake
+}
+
+func updateSystemIntakeContractDetails(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+) *models.SystemIntake {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, intake.EUAUserID.ValueOrZero())
+	existingFunding := true
+	fundingNumber1 := "123456"
+	fundingNumber2 := "789012"
+	source1 := "ACA 3021"
+	source2 := "Fed Admin"
+	source3 := "MIP Base"
+	currentAnnualSpending := "It's kind of a lot"
+	plannedYearOneSpending := "A little bit more"
+	contractor := "Dr Doom"
+	startDate := time.Now().AddDate(-1, 0, 0)
+	hasContract := "HAVE_CONTRACT"
+	endDate := time.Now().AddDate(3, 0, 0)
+	contractNumber := "123456789"
+	input := model.UpdateSystemIntakeContractDetailsInput{
+		ID: intake.ID,
+		FundingSources: &model.SystemIntakeFundingSourcesInput{
+			ExistingFunding: &existingFunding,
+			FundingSources: []*model.SystemIntakeFundingSourceInput{
+				{
+					FundingNumber: &fundingNumber1,
+					Source:        &source1,
+				},
+				{
+					FundingNumber: &fundingNumber2,
+					Source:        &source2,
+				},
+				{
+					FundingNumber: &fundingNumber2,
+					Source:        &source3,
+				},
+			},
+		},
+		Costs: &model.SystemIntakeCostsInput{}, //doesn't appear in current form
+		AnnualSpending: &model.SystemIntakeAnnualSpendingInput{
+			CurrentAnnualSpending:  &currentAnnualSpending,
+			PlannedYearOneSpending: &plannedYearOneSpending,
+		},
+		Contract: &model.SystemIntakeContractInput{
+			Contractor:  &contractor,
+			StartDate:   &startDate,
+			HasContract: &hasContract,
+			EndDate:     &endDate,
+			Number:      &contractNumber,
+		},
+	}
+	payload, err := resolvers.SystemIntakeUpdateContractDetails(ctx, store, input)
+	if err != nil {
+		panic(err)
+	}
+	return payload.SystemIntake
+}
+
+func submitSystemIntake(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+) *models.SystemIntake {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, intake.EUAUserID.ValueOrZero())
+	// until the submit function is refactored out of services, manually submit
+	// NOTE: does not send emails
+	mockSubmitIntake := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
+		updatedTime := time.Now()
+		intake.SubmittedAt = &updatedTime
+		intake.UpdatedAt = &updatedTime
+
+		// TODO: Remove when Admin Actions v2 is live
+		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
+		intake.RequestFormState = models.SIRFSSubmitted
+		_, err := store.UpdateSystemIntake(ctx, intake)
+		if err != nil {
+			panic(err)
+		}
+		_, err = store.CreateAction(ctx, action)
+		if err != nil {
+			panic(err)
+		}
+		return nil
+	}
+	input := model.SubmitIntakeInput{
+		ID: intake.ID,
+	}
+	payload, err := resolvers.SubmitIntake(ctx, store, mock.FetchUserInfoMock, mockSubmitIntake, input)
+	if err != nil {
+		panic(err)
+	}
+	return payload.SystemIntake
+}
+
+// This is a legacy V1 helper that doesn't use resolvers
+func makeSystemIntakeV1(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
 	ctx := appcontext.WithLogger(context.Background(), logger)
 
 	fundingSources := []*models.SystemIntakeFundingSource{
@@ -389,28 +741,22 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 	return &intake
 }
 
-func makeSystemIntakeWithProgressToNextStep(
-	name string,
+func progressIntake(
 	logger *zap.Logger,
 	store *storage.Store,
-	creatingUser string,
-	intakeID uuid.UUID,
-	feedbackText models.HTML,
-	grbRecommendations models.HTML,
-	additionalInfo models.HTML,
-	adminNote models.HTML,
-) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, creatingUser)
+	intake *models.SystemIntake,
+	newStep model.SystemIntakeStepToProgressTo,
+) *models.SystemIntake {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser)
 
-	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
-		i.ID = intakeID
-		i.Step = models.SystemIntakeStepINITIALFORM
-		i.RequestFormState = models.SIRFSSubmitted
-	})
+	feedbackText := models.HTML(fmt.Sprintf("feedback for %s progressing to %s", string(intake.Step), string(newStep)))
+	grbRecommendations := models.HTML(fmt.Sprintf("grb recommendations for %s progressing to %s", string(intake.Step), string(newStep)))
+	additionalInfo := models.HTML(fmt.Sprintf("additional info for %s progressing to %s", string(intake.Step), string(newStep)))
+	adminNote := models.HTML(fmt.Sprintf("admin note about %s progressing to %s", string(intake.Step), string(newStep)))
 
 	input := model.SystemIntakeProgressToNewStepsInput{
-		SystemIntakeID:     intakeID,
-		NewStep:            model.SystemIntakeStepToProgressToDraftBusinessCase, // arbitrary choice
+		SystemIntakeID:     intake.ID,
+		NewStep:            newStep,
 		Feedback:           &feedbackText,
 		GrbRecommendations: &grbRecommendations,
 		AdditionalInfo:     &additionalInfo,
@@ -418,47 +764,107 @@ func makeSystemIntakeWithProgressToNextStep(
 	}
 
 	// this will move the intake to the new step and save it to the database, save the feedback, and save a record of the action
-	must(resolvers.ProgressIntake(ctx, store, nil, mock.FetchUserInfoMock, input))
+	progressedIntake, err := resolvers.ProgressIntake(ctx, store, nil, mock.FetchUserInfoMock, input)
+	if err != nil {
+		panic(err)
+	}
+	return progressedIntake
 }
 
-func makeSystemIntakeWithEditsRequested(
+func makeSystemIntakeAndProgressToStep(
 	name string,
 	logger *zap.Logger,
 	store *storage.Store,
-	creatingUser string,
-	intakeID uuid.UUID,
-	feedbackText models.HTML,
-	additionalInfo *models.HTML,
-	adminNote models.HTML,
-	targetedForm model.SystemIntakeFormStep,
-) {
-	ctx := appcontext.WithLogger(context.Background(), logger)
+	intakeID *uuid.UUID,
+	newStep model.SystemIntakeStepToProgressTo,
+) *models.SystemIntake {
+	intake := makeSystemIntakeAndSubmit(name, intakeID, logger, store)
+	return progressIntake(logger, store, intake, newStep)
+}
 
-	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
-		i.ID = intakeID
-		i.Step = models.SystemIntakeStepINITIALFORM
-		i.RequestFormState = models.SIRFSSubmitted
-	})
+func makeSystemIntakeAndRequestEditsToForm(
+	name string,
+	logger *zap.Logger,
+	store *storage.Store,
+	intakeID *uuid.UUID,
+	targetedForm model.SystemIntakeFormStep,
+) *models.SystemIntake {
+	intake := makeSystemIntakeAndSubmit(name, intakeID, logger, store)
+	if targetedForm == model.SystemIntakeFormStepDraftBusinessCase {
+		makeBusinessCaseV1("draft biz case", logger, store, intake)
+	}
+	if targetedForm == model.SystemIntakeFormStepFinalBusinessCase {
+		makeBusinessCaseV1("final biz case", logger, store, intake, func(b *models.BusinessCase) {
+			b.CurrentSolutionSummary = null.StringFrom("It's gonna cost a lot")
+			b.CMSBenefit = null.StringFrom("Better Medicare")
+			b.PriorityAlignment = null.StringFrom("It's all gonna make sense later")
+			b.SuccessIndicators = null.StringFrom("First, we see progress, then success.")
+			b.PreferredTitle = null.StringFrom("Preferred Solution")
+			b.PreferredSummary = null.StringFrom("This is a summary")
+			b.PreferredAcquisitionApproach = null.StringFrom("First we acquire, then we approach")
+			b.PreferredSecurityIsApproved = null.BoolFrom(true)
+			b.PreferredHostingType = null.StringFrom("cloud")
+			b.PreferredHostingLocation = null.StringFrom("aws")
+			b.PreferredHostingCloudServiceType = null.StringFrom("paas")
+			b.PreferredHasUI = null.StringFrom("YES")
+			b.PreferredPros = null.StringFrom("YES")
+			b.PreferredCons = null.StringFrom("NO")
+			var newCostLines []models.EstimatedLifecycleCost
+			for i, v := range []string{"1", "2", "3", "4", "5"} {
+				phase1 := models.LifecycleCostPhaseDEVELOPMENT
+				phase2 := models.LifecycleCostPhaseOPERATIONMAINTENANCE
+				cost := (i + 1) * 100
+				estimatedLifeCycleCost := models.EstimatedLifecycleCost{
+					Solution: models.LifecycleCostSolutionPREFERRED,
+					Year:     models.LifecycleCostYear(v),
+					Phase:    &phase1,
+					Cost:     &cost,
+				}
+				newCostLines = append(newCostLines, estimatedLifeCycleCost)
+				estimatedLifeCycleCost.Phase = &phase2
+				newCostLines = append(newCostLines, estimatedLifeCycleCost)
+			}
+			b.LifecycleCostLines = newCostLines
+			b.PreferredCostSavings = null.StringFrom("Employees not needed")
+		})
+	}
+	intake = submitBusinessCaseV1(logger, store, intake)
+	return requestEditsToIntakeForm(logger, store, intake, targetedForm)
+}
+
+func requestEditsToIntakeForm(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+	targetedForm model.SystemIntakeFormStep,
+) *models.SystemIntake {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser)
+	adminNote := models.HTML(fmt.Sprintf("admin note that edits were requested to %s form", string(targetedForm)))
+	additionalInfo := models.HTML(fmt.Sprintf("add'l info about edits requested on %s form", string(targetedForm)))
 
 	input := &model.SystemIntakeRequestEditsInput{
-		SystemIntakeID: intakeID,
+		SystemIntakeID: intake.ID,
 		IntakeFormStep: targetedForm,
 		NotificationRecipients: &models.EmailNotificationRecipients{
 			RegularRecipientEmails:   []models.EmailAddress{},
 			ShouldNotifyITGovernance: false,
 			ShouldNotifyITInvestment: false,
 		},
-		EmailFeedback:  feedbackText,
-		AdditionalInfo: additionalInfo,
+		EmailFeedback:  models.HTML(fmt.Sprintf("feedback on %s form", string(targetedForm))),
+		AdditionalInfo: &additionalInfo,
 		AdminNote:      &adminNote,
 	}
-	must(resolvers.CreateSystemIntakeActionRequestEdits(ctx, store, nil, mock.FetchUserInfoMock, *input))
+	intake, err := resolvers.CreateSystemIntakeActionRequestEdits(ctx, store, nil, mock.FetchUserInfoMock, *input)
+	if err != nil {
+		panic(err)
+	}
+	return intake
 }
 
-func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) {
+func makeBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) {
 	ctx := appcontext.WithLogger(context.Background(), logger)
 	if intake == nil {
-		intake = makeSystemIntake(name, logger, store)
+		intake = makeSystemIntake(name, nil, logger, store)
 	}
 
 	phase := models.LifecycleCostPhaseDEVELOPMENT
@@ -466,7 +872,7 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, int
 	noCost := 0
 	businessCase := models.BusinessCase{
 		SystemIntakeID:       intake.ID,
-		EUAUserID:            mock.PrincipalUser,
+		EUAUserID:            intake.EUAUserID.ValueOrZero(),
 		Requester:            null.StringFrom("Shane Clark"),
 		RequesterPhoneNumber: null.StringFrom("3124567890"),
 		Status:               models.BusinessCaseStatusOPEN,
@@ -512,6 +918,25 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, int
 	}
 
 	must(store.CreateBusinessCase(ctx, &businessCase))
+}
+
+func submitBusinessCaseV1(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+) *models.SystemIntake {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, intake.EUAUserID.ValueOrZero())
+	if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+		intake.DraftBusinessCaseState = models.SIRFSSubmitted
+	}
+	if intake.Step == models.SystemIntakeStepFINALBIZCASE {
+		intake.FinalBusinessCaseState = models.SIRFSSubmitted
+	}
+	intake, err := store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		panic(err)
+	}
+	return intake
 }
 
 var lcid = 0

@@ -1709,40 +1709,7 @@ func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectI
 
 // SubmitIntake is the resolver for the submitIntake field.
 func (r *mutationResolver) SubmitIntake(ctx context.Context, input model.SubmitIntakeInput) (*model.UpdateSystemIntakePayload, error) {
-	intake, err := r.store.FetchSystemIntakeByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	actorEUAID := appcontext.Principal(ctx).ID()
-	actorInfo, err := r.service.FetchUserInfo(ctx, actorEUAID)
-	if err != nil {
-		return nil, err
-	}
-
-	err = r.service.SubmitIntake(
-		ctx,
-		intake,
-		&models.Action{
-			IntakeID:       &input.ID,
-			ActionType:     models.ActionTypeSUBMITINTAKE,
-			ActorEUAUserID: actorEUAID,
-			ActorName:      actorInfo.CommonName,
-			ActorEmail:     actorInfo.Email,
-			Step:           &intake.Step,
-		})
-	if err != nil {
-		return nil, err
-	}
-
-	intake, err = r.store.FetchSystemIntakeByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.UpdateSystemIntakePayload{
-		SystemIntake: intake,
-	}, err
+	return resolvers.SubmitIntake(ctx, r.store, r.service.FetchUserInfo, r.service.SubmitIntake, input)
 }
 
 // UpdateSystemIntakeAdminLead is the resolver for the updateSystemIntakeAdminLead field.
@@ -1808,39 +1775,12 @@ func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input 
 
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input model.CreateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error) {
-	contact := &models.SystemIntakeContact{
-		SystemIntakeID: input.SystemIntakeID,
-		EUAUserID:      input.EuaUserID,
-		Component:      input.Component,
-		Role:           input.Role,
-	}
-	createdContact, err := r.store.CreateSystemIntakeContact(ctx, contact)
-	if err != nil {
-		return nil, err
-	}
-	return &model.CreateSystemIntakeContactPayload{
-		SystemIntakeContact: createdContact,
-	}, nil
+	return resolvers.CreateSystemIntakeContact(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeContact is the resolver for the updateSystemIntakeContact field.
 func (r *mutationResolver) UpdateSystemIntakeContact(ctx context.Context, input model.UpdateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error) {
-	contact := &models.SystemIntakeContact{
-		ID:             input.ID,
-		SystemIntakeID: input.SystemIntakeID,
-		EUAUserID:      input.EuaUserID,
-		Component:      input.Component,
-		Role:           input.Role,
-	}
-
-	updatedContact, err := r.store.UpdateSystemIntakeContact(ctx, contact)
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.CreateSystemIntakeContactPayload{
-		SystemIntakeContact: updatedContact,
-	}, nil
+	return resolvers.UpdateSystemIntakeContact(ctx, r.store, input)
 }
 
 // DeleteSystemIntakeContact is the resolver for the deleteSystemIntakeContact field.
