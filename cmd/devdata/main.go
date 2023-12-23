@@ -395,7 +395,7 @@ func main() {
 
 	// getting to the final business case through the normal process means
 	// the business case was already filled as a draft, so there's no
-	// seed data needed for an unfilled Final in that scenario
+	// seed data needed for an unfilled Final business case
 
 	intakeID = uuid.MustParse("561a5cfc-83a6-4600-9531-3a465dddec19")
 	makeSystemIntakeAndProgressToStep(

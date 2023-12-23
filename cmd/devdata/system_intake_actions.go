@@ -14,40 +14,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-func progressIntake(
-	logger *zap.Logger,
-	store *storage.Store,
-	intake *models.SystemIntake,
-	newStep model.SystemIntakeStepToProgressTo,
-	meetingDate *time.Time,
-) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser)
-
-	feedbackText := models.HTML(fmt.Sprintf("feedback for %s progressing to %s", string(intake.Step), string(newStep)))
-	grbRecommendations := models.HTML(fmt.Sprintf("grb recommendations for %s progressing to %s", string(intake.Step), string(newStep)))
-	additionalInfo := models.HTML(fmt.Sprintf("additional info for %s progressing to %s", string(intake.Step), string(newStep)))
-	adminNote := models.HTML(fmt.Sprintf("admin note about %s progressing to %s", string(intake.Step), string(newStep)))
-
-	input := model.SystemIntakeProgressToNewStepsInput{
-		SystemIntakeID:     intake.ID,
-		NewStep:            newStep,
-		Feedback:           &feedbackText,
-		GrbRecommendations: &grbRecommendations,
-		AdditionalInfo:     &additionalInfo,
-		AdminNote:          &adminNote,
-	}
-	if meetingDate != nil {
-		input.MeetingDate = meetingDate
-	}
-
-	// this will move the intake to the new step and save it to the database, save the feedback, and save a record of the action
-	progressedIntake, err := resolvers.ProgressIntake(ctx, store, nil, mock.FetchUserInfoMock, input)
-	if err != nil {
-		panic(err)
-	}
-	return progressedIntake
-}
-
 type progressOptions struct {
 	meetingDate        *time.Time
 	completeOtherSteps bool
@@ -56,6 +22,7 @@ type progressOptions struct {
 	requestEdits       bool
 }
 
+// always fills out and submits the initial request form
 func makeSystemIntakeAndProgressToStep(
 	name string,
 	logger *zap.Logger,
@@ -152,6 +119,7 @@ func makeSystemIntakeAndProgressToStep(
 	return intake
 }
 
+// only for the initial form step
 func makeSystemIntakeAndRequestEditsToForm(
 	name string,
 	logger *zap.Logger,
@@ -160,6 +128,40 @@ func makeSystemIntakeAndRequestEditsToForm(
 ) *models.SystemIntake {
 	intake := makeSystemIntakeAndSubmit(name, intakeID, logger, store)
 	return requestEditsToIntakeForm(logger, store, intake, model.SystemIntakeFormStepInitialRequestForm)
+}
+
+func progressIntake(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+	newStep model.SystemIntakeStepToProgressTo,
+	meetingDate *time.Time,
+) *models.SystemIntake {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser)
+
+	feedbackText := models.HTML(fmt.Sprintf("feedback for %s progressing to %s", string(intake.Step), string(newStep)))
+	grbRecommendations := models.HTML(fmt.Sprintf("grb recommendations for %s progressing to %s", string(intake.Step), string(newStep)))
+	additionalInfo := models.HTML(fmt.Sprintf("additional info for %s progressing to %s", string(intake.Step), string(newStep)))
+	adminNote := models.HTML(fmt.Sprintf("admin note about %s progressing to %s", string(intake.Step), string(newStep)))
+
+	input := model.SystemIntakeProgressToNewStepsInput{
+		SystemIntakeID:     intake.ID,
+		NewStep:            newStep,
+		Feedback:           &feedbackText,
+		GrbRecommendations: &grbRecommendations,
+		AdditionalInfo:     &additionalInfo,
+		AdminNote:          &adminNote,
+	}
+	if meetingDate != nil {
+		input.MeetingDate = meetingDate
+	}
+
+	// this will move the intake to the new step and save it to the database, save the feedback, and save a record of the action
+	progressedIntake, err := resolvers.ProgressIntake(ctx, store, nil, mock.FetchUserInfoMock, input)
+	if err != nil {
+		panic(err)
+	}
+	return progressedIntake
 }
 
 func requestEditsToIntakeForm(
