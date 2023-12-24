@@ -25,9 +25,9 @@ type progressOptions struct {
 // always fills out and submits the initial request form
 func makeSystemIntakeAndProgressToStep(
 	name string,
+	intakeID *uuid.UUID,
 	logger *zap.Logger,
 	store *storage.Store,
-	intakeID *uuid.UUID,
 	newStep model.SystemIntakeStepToProgressTo,
 	options *progressOptions,
 ) *models.SystemIntake {
