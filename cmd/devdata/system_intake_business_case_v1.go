@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"time"
 
 	"github.com/guregu/null"
 	"go.uber.org/zap"
@@ -12,100 +11,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
-
-// This is a legacy V1 helper that doesn't use resolvers
-func makeSystemIntakeV1(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
-	ctx := appcontext.WithLogger(context.Background(), logger)
-
-	fundingSources := []*models.SystemIntakeFundingSource{
-		{
-			FundingNumber: null.StringFrom("123456"),
-			Source:        null.StringFrom("Research"),
-		},
-		{
-			FundingNumber: null.StringFrom("789012"),
-			Source:        null.StringFrom("DARPA"),
-		},
-	}
-
-	intake := models.SystemIntake{
-		EUAUserID: null.StringFrom(mock.PrincipalUser),
-		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
-
-		RequestType:                 models.SystemIntakeRequestTypeNEW,
-		Requester:                   "User ABCD",
-		Component:                   null.StringFrom("Center for Medicaid and CHIP Services"),
-		BusinessOwner:               null.StringFrom("User ABCD"),
-		BusinessOwnerComponent:      null.StringFrom("Center for Medicaid and CHIP Services"),
-		ProductManager:              null.StringFrom("Project Manager"),
-		ProductManagerComponent:     null.StringFrom("Center for Program Integrity"),
-		ISSOName:                    null.StringFrom("ISSO Name"),
-		TRBCollaboratorName:         null.StringFrom("TRB Collaborator Name"),
-		OITSecurityCollaboratorName: null.StringFrom("OIT Collaborator Name"),
-		EACollaboratorName:          null.StringFrom("EA Collaborator Name"),
-
-		ProjectName:     null.StringFrom(name),
-		ExistingFunding: null.BoolFrom(true),
-		FundingSources:  fundingSources,
-
-		BusinessNeed: null.StringFrom("A business need. TACO is a new tool for customers to access consolidated Active health information and facilitate the new Medicare process. The purpose is to provide a more integrated and unified customer service experience."),
-		Solution:     null.StringFrom("A solution. TACO is a new tool for customers to access consolidated Active health information and facilitate the new Medicare process. The purpose is to provide a more integrated and unified customer service experience."),
-
-		ProcessStatus:      null.StringFrom("I have done some initial research"),
-		EASupportRequest:   null.BoolFrom(true),
-		HasUIChanges:       null.BoolFrom(true),
-		ExistingContract:   null.StringFrom("HAVE_CONTRACT"),
-		CostIncrease:       null.StringFrom("YES"),
-		CostIncreaseAmount: null.StringFrom("10 million dollars?"),
-
-		ContractStartDate: date(2021, 1, 1),
-		ContractEndDate:   date(2023, 12, 31),
-		ContractNumber:    null.StringFrom("123456-7890"),
-		Contractor:        null.StringFrom("Contractor Name"),
-	}
-
-	submittedAt := time.Now()
-	intake.SubmittedAt = &submittedAt
-
-	for _, cb := range callbacks {
-		cb(&intake)
-	}
-
-	must(store.CreateSystemIntake(ctx, &intake))
-	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
-
-	tenMinutesAgo := time.Now().Add(-10 * time.Minute)
-	fiveMinutesAgo := time.Now().Add(-5 * time.Minute)
-
-	must(store.CreateAction(ctx, &models.Action{
-		IntakeID:       &intake.ID,
-		ActionType:     models.ActionTypeSUBMITINTAKE,
-		ActorName:      "Actor Name",
-		ActorEmail:     "actor@example.com",
-		ActorEUAUserID: "ACT1",
-		CreatedAt:      &tenMinutesAgo,
-	}))
-	must(store.CreateAction(ctx, &models.Action{
-		IntakeID:       &intake.ID,
-		ActionType:     models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
-		ActorName:      "Actor Name",
-		ActorEmail:     "actor@example.com",
-		ActorEUAUserID: "ACT2",
-		Feedback:       models.HTMLPointer("This business case needs feedback"),
-	}))
-
-	must(store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
-		SystemIntakeID: intake.ID,
-		AuthorEUAID:    "QQQQ",
-		AuthorName:     null.StringFrom("Author Name"),
-		Content:        models.HTMLPointer("a clever remark"),
-		CreatedAt:      &fiveMinutesAgo,
-	}))
-
-	must(store.UpdateSystemIntakeFundingSources(ctx, intake.ID, fundingSources))
-
-	return &intake
-}
 
 func makeDraftBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake) *models.SystemIntake {
 	return makeBusinessCaseV1(name, logger, store, intake)
@@ -170,7 +75,7 @@ func submitBusinessCaseV1(
 func makeBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) *models.SystemIntake {
 	ctx := appcontext.WithLogger(context.Background(), logger)
 	if intake == nil {
-		intake = makeSystemIntake(name, nil, logger, store)
+		intake = makeSystemIntake(name, nil, "USR1", logger, store)
 	}
 	if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 		intake.DraftBusinessCaseState = models.SIRFSInProgress

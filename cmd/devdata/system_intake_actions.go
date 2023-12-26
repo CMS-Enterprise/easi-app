@@ -26,12 +26,13 @@ type progressOptions struct {
 func makeSystemIntakeAndProgressToStep(
 	name string,
 	intakeID *uuid.UUID,
+	requesterEUA string,
 	logger *zap.Logger,
 	store *storage.Store,
 	newStep model.SystemIntakeStepToProgressTo,
 	options *progressOptions,
 ) *models.SystemIntake {
-	intake := makeSystemIntakeAndSubmit(name, intakeID, logger, store)
+	intake := makeSystemIntakeAndSubmit(name, intakeID, requesterEUA, logger, store)
 	if options == nil {
 		return progressIntake(logger, store, intake, newStep, nil)
 	}
@@ -119,17 +120,7 @@ func makeSystemIntakeAndProgressToStep(
 	return intake
 }
 
-// only for the initial form step
-func makeSystemIntakeAndRequestEditsToForm(
-	name string,
-	logger *zap.Logger,
-	store *storage.Store,
-	intakeID *uuid.UUID,
-) *models.SystemIntake {
-	intake := makeSystemIntakeAndSubmit(name, intakeID, logger, store)
-	return requestEditsToIntakeForm(logger, store, intake, model.SystemIntakeFormStepInitialRequestForm)
-}
-
+// Progresses an intake to a new step
 func progressIntake(
 	logger *zap.Logger,
 	store *storage.Store,

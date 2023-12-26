@@ -16,14 +16,16 @@ import (
 
 func makeSystemIntakeAndIssueLCID(
 	requestName string,
+	intakeID *uuid.UUID,
+	requesterEUA string,
 	logger *zap.Logger,
 	store *storage.Store,
-	intakeID *uuid.UUID,
 ) *models.SystemIntake {
 	pastMeetingDate := time.Now().AddDate(0, -1, 0)
 	intake := makeSystemIntakeAndProgressToStep(
 		requestName,
 		intakeID,
+		requesterEUA,
 		logger,
 		store,
 		model.SystemIntakeStepToProgressToGrbMeeting,

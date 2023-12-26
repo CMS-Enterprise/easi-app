@@ -19,10 +19,11 @@ import (
 func makeSystemIntakeAndSubmit(
 	requestName string,
 	intakeID *uuid.UUID,
+	requesterEUAID string,
 	logger *zap.Logger,
 	store *storage.Store,
 ) *models.SystemIntake {
-	intake := makeSystemIntake(requestName, intakeID, logger, store)
+	intake := makeSystemIntake(requestName, intakeID, requesterEUAID, logger, store)
 	return submitSystemIntake(logger, store, intake)
 }
 
@@ -30,6 +31,7 @@ func makeSystemIntakeAndSubmit(
 func makeSystemIntake(
 	requestName string,
 	intakeID *uuid.UUID,
+	requesterEUAID string,
 	logger *zap.Logger,
 	store *storage.Store,
 ) *models.SystemIntake {
@@ -37,14 +39,14 @@ func makeSystemIntake(
 		intakeID,
 		logger,
 		store,
-		"USR1",
-		"Requester Person",
+		requesterEUAID,
+		"Requester Name",
 		models.SystemIntakeRequestTypeNEW,
 	)
 	return fillOutInitialIntake(requestName, logger, store, intake)
 }
 
-// creates an intake and fills out the initial request form
+// updates an intake and fills out the initial request form
 func fillOutInitialIntake(
 	requestName string,
 	logger *zap.Logger,
@@ -380,4 +382,23 @@ func createSystemIntakeNote(
 		panic(err)
 	}
 	return note
+}
+
+// Updates the System Intake through the store method directly instead of using the resolver
+func modifySystemIntake(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+	cb func(*models.SystemIntake),
+) *models.SystemIntake {
+	if intake == nil {
+		panic("must provide intake to edit")
+	}
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, intake.EUAUserID.ValueOrZero())
+	cb(intake)
+	intake, err := store.UpdateSystemIntake(ctx, intake)
+	if err != nil {
+		panic(err)
+	}
+	return intake
 }
