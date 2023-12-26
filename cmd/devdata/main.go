@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	// "github.com/guregu/null"
+	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
@@ -66,176 +66,6 @@ func main() {
 		store:    store,
 		s3Client: &s3Client,
 	}
-
-	makeAccessibilityRequest("TACO", store)
-	makeAccessibilityRequest("Big Project", store)
-
-	now := time.Now()
-	yyyy, mm, dd := now.Date()
-
-	makeAccessibilityRequest("Seeded 508 Request", store, func(i *models.AccessibilityRequest) {
-		i.ID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
-	})
-
-	// Test date is one day after the 508 request is created
-	makeTestDate(logger, store, func(i *models.TestDate) {
-		i.ID = uuid.MustParse("18624c5b-4c00-49a7-960f-ac6d8b2c58df")
-		i.RequestID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
-		i.TestType = models.TestDateTestTypeInitial
-		i.Date = time.Date(yyyy, mm, dd+1, 0, 0, 0, 0, time.UTC)
-	})
-
-	// makeSystemIntakeV1("A Completed Intake Form", logger, store, func(i *models.SystemIntake) {
-	// 	i.ID = uuid.MustParse("af7a3924-3ff7-48ec-8a54-b8b4bc95610b")
-	// })
-	//
-	// makeSystemIntakeV1("With Contract Month and Year", logger, store, func(i *models.SystemIntake) {
-	// 	i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
-	// 	i.ContractStartMonth = null.StringFrom("10")
-	// 	i.ContractStartYear = null.StringFrom("2021")
-	// 	i.ContractEndMonth = null.StringFrom("10")
-	// 	i.ContractEndYear = null.StringFrom("2022")
-	// })
-	//
-	// makeSystemIntakeV1("With Contract Dates", logger, store, func(i *models.SystemIntake) {
-	// 	i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
-	// 	i.ContractStartDate = date(2021, 4, 5)
-	// 	i.ContractEndDate = date(2022, 4, 5)
-	// })
-	//
-	// makeSystemIntakeV1("With Both Contract Dates", logger, store, func(i *models.SystemIntake) {
-	// 	i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
-	// 	i.ContractStartMonth = null.StringFrom("10")
-	// 	i.ContractStartYear = null.StringFrom("2021")
-	// 	i.ContractEndMonth = null.StringFrom("10")
-	// 	i.ContractEndYear = null.StringFrom("2022")
-	// 	i.ContractStartDate = date(2021, 4, 9)
-	// 	i.ContractEndDate = date(2022, 4, 8)
-	// })
-	//
-	// makeSystemIntakeV1("Ready for business case", logger, store, func(i *models.SystemIntake) {
-	// 	i.Status = models.SystemIntakeStatusNEEDBIZCASE
-	// })
-	//
-	// makeSystemIntakeV1("For business case Cypress test", logger, store, func(i *models.SystemIntake) {
-	// 	i.ID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
-	// 	i.EUAUserID = null.StringFrom("E2E1")
-	// 	i.Status = models.SystemIntakeStatusNEEDBIZCASE
-	// 	i.RequestType = models.SystemIntakeRequestTypeNEW
-	// 	i.Requester = "EndToEnd One" // matches pkg/local/cedar_ldap.go, but doesn't really have to :shrug:
-	// 	i.Component = null.StringFrom("Center for Consumer Information and Insurance Oversight")
-	// 	i.BusinessOwner = null.StringFrom("John BusinessOwner")
-	// 	i.BusinessOwnerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
-	// 	i.ProductManager = null.StringFrom("John ProductManager")
-	// 	i.ProductManagerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
-	// 	i.ISSO = null.StringFrom("")
-	// 	i.TRBCollaborator = null.StringFrom("")
-	// 	i.OITSecurityCollaborator = null.StringFrom("")
-	// 	i.EACollaborator = null.StringFrom("")
-	// 	// i.ProjectName = null.StringFrom("Easy Access to System Information")
-	// 	i.ExistingFunding = null.BoolFrom(false)
-	// 	i.FundingNumber = null.StringFrom("")
-	// 	i.BusinessNeed = null.StringFrom("Business Need: The quick brown fox jumps over the lazy dog.")
-	// 	i.Solution = null.StringFrom("The quick brown fox jumps over the lazy dog.")
-	// 	i.ProcessStatus = null.StringFrom("Initial development underway")
-	// 	i.EASupportRequest = null.BoolFrom(false)
-	// 	i.HasUIChanges = null.BoolFrom(false)
-	// 	i.ExistingContract = null.StringFrom("No")
-	// 	i.GrtReviewEmailBody = null.StringFrom("")
-	// })
-	//
-	// makeSystemIntakeV1("Closable Request", logger, store, func(i *models.SystemIntake) {
-	// 	i.ID = uuid.MustParse("20cbcfbf-6459-4c96-943b-e76b83122dbf")
-	// })
-	//
-	// makeSystemIntakeV1("Intake with no contract vehicle or number", logger, store, func(i *models.SystemIntake) {
-	// 	i.ID = uuid.MustParse("38e46d77-e474-4d15-a7c0-f6411221e2a4")
-	// 	i.ContractVehicle = null.StringFromPtr(nil)
-	// 	i.ContractNumber = null.StringFromPtr(nil)
-	// })
-	//
-	// makeSystemIntakeV1("Intake with legacy Contract Vehicle", logger, store, func(i *models.SystemIntake) {
-	// 	i.ID = uuid.MustParse("2ed89f9f-7fd9-4e92-89d2-cee170a44d0d")
-	// 	i.ContractVehicle = null.StringFrom("Honda")
-	// 	i.ContractNumber = null.StringFromPtr(nil)
-	// })
-	//
-	// intake := makeSystemIntakeV1("Draft Business Case", logger, store, func(i *models.SystemIntake) {
-	// 	i.Status = models.SystemIntakeStatusBIZCASEDRAFT
-	// })
-	// makeBusinessCaseV1("Draft Business Case", logger, store, intake)
-	//
-	// intake = makeSystemIntakeV1("With GRB scheduled", logger, store, func(i *models.SystemIntake) {
-	// 	i.Status = models.SystemIntakeStatusREADYFORGRB
-	// 	tomorrow := time.Now().Add(24 * time.Hour)
-	// 	nextMonth := time.Now().Add(30 * 24 * time.Hour)
-	// 	i.GRBDate = &tomorrow
-	// 	i.GRTDate = &nextMonth
-	// })
-	// makeBusinessCaseV1("With GRB scheduled", logger, store, intake)
-	//
-	// intake = makeSystemIntakeV1("With GRT scheduled", logger, store, func(i *models.SystemIntake) {
-	// 	i.Status = models.SystemIntakeStatusREADYFORGRT
-	// 	lastMonth := time.Now().AddDate(0, -1, 0)
-	// 	tomorrow := time.Now().AddDate(0, 0, 1)
-	// 	i.GRBDate = &lastMonth
-	// 	i.GRTDate = &tomorrow
-	// })
-	// makeBusinessCaseV1("With GRT scheduled", logger, store, intake)
-	//
-	// intake = makeSystemIntakeV1("With LCID Issued", logger, store, func(i *models.SystemIntake) {
-	// 	lifecycleExpiresAt := time.Now().AddDate(0, 0, 90)
-	// 	submittedAt := time.Now().AddDate(0, 0, -365)
-	// 	i.LifecycleID = null.StringFrom("210001")
-	// 	issuedAt := time.Now()
-	// 	i.LifecycleIssuedAt = &issuedAt
-	// 	i.LifecycleExpiresAt = &lifecycleExpiresAt
-	// 	i.Status = models.SystemIntakeStatusLCIDISSUED
-	// 	i.SubmittedAt = &submittedAt
-	// })
-	// makeBusinessCaseV1("With LCID Issued", logger, store, intake, func(c *models.BusinessCase) {
-	// 	c.Status = models.BusinessCaseStatusCLOSED
-	// })
-	//
-	// makeSystemIntakeV1("Expiring LCID Intake", logger, store, func(i *models.SystemIntake) {
-	// 	lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
-	// 	submittedAt := time.Now().AddDate(0, 0, -365)
-	// 	i.LifecycleID = null.StringFrom("410001")
-	// 	issuedAt := time.Now().AddDate(0, 0, -300)
-	// 	i.LifecycleIssuedAt = &issuedAt
-	// 	i.LifecycleExpiresAt = &lifecycleExpiresAt
-	// 	i.Status = models.SystemIntakeStatusLCIDISSUED
-	// 	i.State = models.SystemIntakeStateCLOSED
-	// 	i.DecisionState = models.SIDSLcidIssued
-	// 	i.SubmittedAt = &submittedAt
-	// })
-	//
-	// makeSystemIntakeV1("Expiring LCID Intake with alert sent 14 days ago", logger, store, func(i *models.SystemIntake) {
-	// 	lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
-	// 	submittedAt := time.Now().AddDate(0, 0, -365)
-	// 	i.LifecycleID = null.StringFrom("510001")
-	// 	issuedAt := time.Now().AddDate(0, 0, -300)
-	// 	i.LifecycleIssuedAt = &issuedAt
-	// 	i.LifecycleExpiresAt = &lifecycleExpiresAt
-	// 	lastAlertSent := time.Now().AddDate(0, 0, -14)
-	// 	i.LifecycleExpirationAlertTS = &lastAlertSent
-	// 	i.Status = models.SystemIntakeStatusLCIDISSUED
-	// 	i.State = models.SystemIntakeStateCLOSED
-	// 	i.DecisionState = models.SIDSLcidIssued
-	// 	i.SubmittedAt = &submittedAt
-	// })
-
-	// makeSystemIntakeV1("Intake with expiring LCID and no EUA User ID - test case for EASI-3083", logger, store, func(i *models.SystemIntake) {
-	// 	lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
-	// 	submittedAt := time.Now().AddDate(0, 0, -365)
-	// 	i.LifecycleID = null.StringFrom("300001")
-	// 	issuedAt := time.Now()
-	// 	i.LifecycleIssuedAt = &issuedAt
-	// 	i.LifecycleExpiresAt = &lifecycleExpiresAt
-	// 	i.Status = models.SystemIntakeStatusLCIDISSUED
-	// 	i.SubmittedAt = &submittedAt
-	// 	i.EUAUserID = null.StringFromPtr(nil)
-	// })
 
 	var intake *models.SystemIntake
 	var intakeID uuid.UUID
@@ -639,6 +469,178 @@ func main() {
 	makeSystemIntake("initial form filled but not yet submitted", nil, logger, store)
 
 	must(nil, seederConfig.seedTRBRequests(ctx))
+
+	// Legacy Intake Requests used in E2E
+	makeAccessibilityRequest("TACO", store)
+	makeAccessibilityRequest("Big Project", store)
+
+	now := time.Now()
+	yyyy, mm, dd := now.Date()
+
+	makeAccessibilityRequest("Seeded 508 Request", store, func(i *models.AccessibilityRequest) {
+		i.ID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
+	})
+
+	// Test date is one day after the 508 request is created
+	makeTestDate(logger, store, func(i *models.TestDate) {
+		i.ID = uuid.MustParse("18624c5b-4c00-49a7-960f-ac6d8b2c58df")
+		i.RequestID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
+		i.TestType = models.TestDateTestTypeInitial
+		i.Date = time.Date(yyyy, mm, dd+1, 0, 0, 0, 0, time.UTC)
+	})
+
+	// For Governance Review Cypress Tests
+	intakeID = uuid.MustParse("af7a3924-3ff7-48ec-8a54-b8b4bc95610b")
+	intake = makeSystemIntakeAndSubmit("A Completed Intake Form", &intakeID, logger, store)
+	createSystemIntakeNote(logger, store, intake, "This is my note")
+
+	// makeSystemIntakeV1("With Contract Month and Year", logger, store, func(i *models.SystemIntake) {
+	// 	i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+	// 	i.ContractStartMonth = null.StringFrom("10")
+	// 	i.ContractStartYear = null.StringFrom("2021")
+	// 	i.ContractEndMonth = null.StringFrom("10")
+	// 	i.ContractEndYear = null.StringFrom("2022")
+	// })
+	//
+	// makeSystemIntakeV1("With Contract Dates", logger, store, func(i *models.SystemIntake) {
+	// 	i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+	// 	i.ContractStartDate = date(2021, 4, 5)
+	// 	i.ContractEndDate = date(2022, 4, 5)
+	// })
+	//
+	// makeSystemIntakeV1("With Both Contract Dates", logger, store, func(i *models.SystemIntake) {
+	// 	i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+	// 	i.ContractStartMonth = null.StringFrom("10")
+	// 	i.ContractStartYear = null.StringFrom("2021")
+	// 	i.ContractEndMonth = null.StringFrom("10")
+	// 	i.ContractEndYear = null.StringFrom("2022")
+	// 	i.ContractStartDate = date(2021, 4, 9)
+	// 	i.ContractEndDate = date(2022, 4, 8)
+	// })
+	//
+	// makeSystemIntakeV1("Ready for business case", logger, store, func(i *models.SystemIntake) {
+	// 	i.Status = models.SystemIntakeStatusNEEDBIZCASE
+	// })
+
+	makeSystemIntakeV1("For business case Cypress test", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
+		i.EUAUserID = null.StringFrom("E2E1")
+		i.Status = models.SystemIntakeStatusNEEDBIZCASE
+		i.RequestType = models.SystemIntakeRequestTypeNEW
+		i.Requester = "EndToEnd One" // matches pkg/local/cedar_ldap.go, but doesn't really have to :shrug:
+		i.Component = null.StringFrom("Center for Consumer Information and Insurance Oversight")
+		i.BusinessOwner = null.StringFrom("John BusinessOwner")
+		i.BusinessOwnerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
+		i.ProductManager = null.StringFrom("John ProductManager")
+		i.ProductManagerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
+		i.ISSO = null.StringFrom("")
+		i.TRBCollaborator = null.StringFrom("")
+		i.OITSecurityCollaborator = null.StringFrom("")
+		i.EACollaborator = null.StringFrom("")
+		i.ProjectName = null.StringFrom("Easy Access to System Information")
+		i.ExistingFunding = null.BoolFrom(false)
+		i.FundingNumber = null.StringFrom("")
+		i.BusinessNeed = null.StringFrom("Business Need: The quick brown fox jumps over the lazy dog.")
+		i.Solution = null.StringFrom("The quick brown fox jumps over the lazy dog.")
+		i.ProcessStatus = null.StringFrom("Initial development underway")
+		i.EASupportRequest = null.BoolFrom(false)
+		i.HasUIChanges = null.BoolFrom(false)
+		i.ExistingContract = null.StringFrom("No")
+		i.GrtReviewEmailBody = null.StringFrom("")
+	})
+
+	makeSystemIntakeV1("Closable Request", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("20cbcfbf-6459-4c96-943b-e76b83122dbf")
+	})
+
+	makeSystemIntakeV1("Intake with no contract vehicle or number", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("38e46d77-e474-4d15-a7c0-f6411221e2a4")
+		i.ContractVehicle = null.StringFromPtr(nil)
+		i.ContractNumber = null.StringFromPtr(nil)
+	})
+
+	makeSystemIntakeV1("Intake with legacy Contract Vehicle", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("2ed89f9f-7fd9-4e92-89d2-cee170a44d0d")
+		i.ContractVehicle = null.StringFrom("Honda")
+		i.ContractNumber = null.StringFromPtr(nil)
+	})
+
+	intake = makeSystemIntakeV1("Draft Business Case", logger, store, func(i *models.SystemIntake) {
+		i.Status = models.SystemIntakeStatusBIZCASEDRAFT
+	})
+	makeBusinessCaseV1("Draft Business Case", logger, store, intake)
+
+	intake = makeSystemIntakeV1("With GRB scheduled", logger, store, func(i *models.SystemIntake) {
+		i.Status = models.SystemIntakeStatusREADYFORGRB
+		tomorrow := time.Now().Add(24 * time.Hour)
+		nextMonth := time.Now().Add(30 * 24 * time.Hour)
+		i.GRBDate = &tomorrow
+		i.GRTDate = &nextMonth
+	})
+	makeBusinessCaseV1("With GRB scheduled", logger, store, intake)
+
+	intake = makeSystemIntakeV1("With GRT scheduled", logger, store, func(i *models.SystemIntake) {
+		i.Status = models.SystemIntakeStatusREADYFORGRT
+		lastMonth := time.Now().AddDate(0, -1, 0)
+		tomorrow := time.Now().AddDate(0, 0, 1)
+		i.GRBDate = &lastMonth
+		i.GRTDate = &tomorrow
+	})
+	makeBusinessCaseV1("With GRT scheduled", logger, store, intake)
+	//
+	// intake = makeSystemIntakeV1("With LCID Issued", logger, store, func(i *models.SystemIntake) {
+	// 	lifecycleExpiresAt := time.Now().AddDate(0, 0, 90)
+	// 	submittedAt := time.Now().AddDate(0, 0, -365)
+	// 	i.LifecycleID = null.StringFrom("210001")
+	// 	issuedAt := time.Now()
+	// 	i.LifecycleIssuedAt = &issuedAt
+	// 	i.LifecycleExpiresAt = &lifecycleExpiresAt
+	// 	i.Status = models.SystemIntakeStatusLCIDISSUED
+	// 	i.SubmittedAt = &submittedAt
+	// })
+	// makeBusinessCaseV1("With LCID Issued", logger, store, intake, func(c *models.BusinessCase) {
+	// 	c.Status = models.BusinessCaseStatusCLOSED
+	// })
+	//
+	// makeSystemIntakeV1("Expiring LCID Intake", logger, store, func(i *models.SystemIntake) {
+	// 	lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
+	// 	submittedAt := time.Now().AddDate(0, 0, -365)
+	// 	i.LifecycleID = null.StringFrom("410001")
+	// 	issuedAt := time.Now().AddDate(0, 0, -300)
+	// 	i.LifecycleIssuedAt = &issuedAt
+	// 	i.LifecycleExpiresAt = &lifecycleExpiresAt
+	// 	i.Status = models.SystemIntakeStatusLCIDISSUED
+	// 	i.State = models.SystemIntakeStateCLOSED
+	// 	i.DecisionState = models.SIDSLcidIssued
+	// 	i.SubmittedAt = &submittedAt
+	// })
+	//
+	// makeSystemIntakeV1("Expiring LCID Intake with alert sent 14 days ago", logger, store, func(i *models.SystemIntake) {
+	// 	lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
+	// 	submittedAt := time.Now().AddDate(0, 0, -365)
+	// 	i.LifecycleID = null.StringFrom("510001")
+	// 	issuedAt := time.Now().AddDate(0, 0, -300)
+	// 	i.LifecycleIssuedAt = &issuedAt
+	// 	i.LifecycleExpiresAt = &lifecycleExpiresAt
+	// 	lastAlertSent := time.Now().AddDate(0, 0, -14)
+	// 	i.LifecycleExpirationAlertTS = &lastAlertSent
+	// 	i.Status = models.SystemIntakeStatusLCIDISSUED
+	// 	i.State = models.SystemIntakeStateCLOSED
+	// 	i.DecisionState = models.SIDSLcidIssued
+	// 	i.SubmittedAt = &submittedAt
+	// })
+	//
+	// makeSystemIntakeV1("Intake with expiring LCID and no EUA User ID - test case for EASI-3083", logger, store, func(i *models.SystemIntake) {
+	// 	lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
+	// 	submittedAt := time.Now().AddDate(0, 0, -365)
+	// 	i.LifecycleID = null.StringFrom("300001")
+	// 	issuedAt := time.Now()
+	// 	i.LifecycleIssuedAt = &issuedAt
+	// 	i.LifecycleExpiresAt = &lifecycleExpiresAt
+	// 	i.Status = models.SystemIntakeStatusLCIDISSUED
+	// 	i.SubmittedAt = &submittedAt
+	// 	i.EUAUserID = null.StringFromPtr(nil)
+	// })
 }
 
 func date(year, month, day int) *time.Time {

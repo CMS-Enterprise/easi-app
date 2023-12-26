@@ -361,3 +361,23 @@ func updateSystemIntakeContractDetails(
 	}
 	return payload.SystemIntake
 }
+
+func createSystemIntakeNote(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+	noteContent string,
+) *models.SystemIntakeNote {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser)
+	content := models.HTML(noteContent)
+	input := model.CreateSystemIntakeNoteInput{
+		Content:    content,
+		AuthorName: "Author Name",
+		IntakeID:   intake.ID,
+	}
+	note, err := resolvers.CreateSystemIntakeNote(ctx, store, input)
+	if err != nil {
+		panic(err)
+	}
+	return note
+}
