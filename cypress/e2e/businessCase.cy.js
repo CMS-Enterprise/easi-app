@@ -8,9 +8,11 @@ describe('The Business Case Form', () => {
     cy.get('.accessibility-requests-table')
       .contains('a', 'Easy Access to System Information')
       .click();
-    cy.contains('h1', 'Get governance approval');
+    cy.contains('h1', 'Governance task list');
 
-    cy.get('[data-testid="start-biz-case-btn"]').click();
+    cy.get(
+      '[data-testid="fill-out-the-intake-request-form"] [data-testid="button"]'
+    ).click();
 
     // General Request Information
     // Autofilled Fields from System Intake
