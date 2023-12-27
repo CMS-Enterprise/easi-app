@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/oktaapi"
 	"github.com/cmsgov/easi-app/pkg/storage"
 
 	_ "embed"
@@ -22,6 +23,7 @@ type Uploader struct {
 	Store  storage.Store
 	DB     *sqlx.DB
 	Logger zap.Logger
+	Okta   *oktaapi.ClientWrapper
 }
 
 // NewUploader instantiates an Uploader
@@ -29,23 +31,18 @@ func NewUploader(config *viper.Viper) *Uploader { //TODO make this more configur
 	// config := viper.New()
 	// config.AutomaticEnv()
 
-	db, logger := getResolverDependencies(config)
+	db, logger, okta := getResolverDependencies(config)
 	return &Uploader{
 		// Store:  *store,
 		DB:     db,
 		Logger: *logger,
+		Okta:   okta,
 	}
 }
 
 func (u *Uploader) QueryUsernames() ([]string, error) {
 	usernames := []string{}
-	// stmt, err := u.DB.PrepareNamed(getAllUserNamesSQL)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// arg := struct{}{}
 
-	// err = stmt.Select(&usernames, arg) //TODO verify if nil works here or not
 	err := u.DB.Select(&usernames, getAllUserNamesSQL)
 
 	if err != nil {
@@ -62,16 +59,15 @@ func (u *Uploader) QueryUsernames() ([]string, error) {
 func getResolverDependencies(config *viper.Viper) (
 	*sqlx.DB,
 	*zap.Logger,
+	*oktaapi.ClientWrapper,
 ) {
 	// Create the logger
 	logger := zap.NewNop()
 
-	// // Create LD Client, which is required for creating the store
-	// ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
-	// if err != nil {
-	// 	panic(err)
-	// }
-
+	oktaClient, oktaClientErr := oktaapi.NewClient(config.GetString(appconfig.OKTAAPIURL), config.GetString(appconfig.OKTAAPIToken))
+	if oktaClientErr != nil {
+		logger.Fatal("failed to create okta api client", zap.Error(oktaClientErr))
+	}
 	// Create the DB Config & Store
 	dbConfig := storage.DBConfig{
 		Host:           config.GetString(appconfig.DBHostConfigKey),
@@ -93,7 +89,7 @@ func getResolverDependencies(config *viper.Viper) (
 		panic(err)
 	}
 
-	return db, logger
+	return db, logger, oktaClient
 }
 
 func newDB(config storage.DBConfig) (*sqlx.DB, error) {

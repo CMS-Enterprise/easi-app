@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -27,6 +28,7 @@ func execute() {
 
 // TODO: https://github.com/CMSgov/mint-app/tree/00e01f91fd8e7e624c54c25d3b3f62d0a8a388d4/cmd/backfill is a good reference point
 func main() {
+	ctx := context.Background()
 	config := viper.New()
 	config.AutomaticEnv()
 	uploader := NewUploader(config)
@@ -36,6 +38,11 @@ func main() {
 		fmt.Print(err)
 	}
 	fmt.Print(userNames)
+	userInfos, err := uploader.Okta.FetchUserInfos(ctx, userNames)
+	if err != nil {
+		fmt.Print(err)
+	}
+	fmt.Print(userInfos)
 
 	/*
 		Steps
