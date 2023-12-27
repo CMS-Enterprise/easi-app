@@ -10,9 +10,10 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/rds/rdsutils"
-	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
+
+	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
 // iamDb is a custom struct that satisfies the driver.Connector so that it can be used with sql.OpenDB.
