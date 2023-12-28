@@ -21,6 +21,9 @@ import (
 //go:embed SQL/get_all_usernames.sql
 var getAllUserNamesSQL string
 
+//go:embed SQL/get_all_full_names.sql
+var getAllFullNamesSQL string
+
 // Uploader handles functionality for uploading data to the DB
 type Uploader struct {
 	Store  *storage.Store
@@ -30,30 +33,66 @@ type Uploader struct {
 }
 
 var queryUserNameCmd = &cobra.Command{
-	Use:   "query",
+	Use:   "username",
 	Short: "Query unique usernames in the database and output to json file",
 	Long:  "Query unique usernames in the database and output to json file",
 	Run: func(cmd *cobra.Command, args []string) {
-		// ctx := context.Background()
-		config := viper.New()
-		config.AutomaticEnv()
-		uploader := NewUploader(config)
-		fmt.Println("Querying usernames")
 
-		// ctx = appcontext.WithLogger(ctx, &uploader.Logger)
-		_ = rootCmd //TODO, do we even want to bother with cobra?
-		userNames, err := uploader.QueryUsernames()
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Printf("%d distinct usernames found. \n", len(userNames))
-
-		filePath := "usernames.JSON"
-		// TODO: query args for a path if desired
-		fmt.Printf("Outputting results to %s \n", filePath)
-		writeObjectToJSONFile(userNames, filePath)
+		// fmt.Printf("Args: %v \n", args)
+		QueryUserNamesAndExportToJSON()
 
 	},
+}
+var queryFullNameCmd = &cobra.Command{
+	Use:   "fullname",
+	Short: "Query unique fullname in the database and output to json file",
+	Long:  "Query unique fullname in the database and output to json file",
+	Run: func(cmd *cobra.Command, args []string) {
+
+		// fmt.Printf("Args: %v \n", args)
+		QueryFullNamesAndExportToJSON()
+
+	},
+}
+
+// QueryUserNamesAndExportToJSON finds all distinct usernames in the database and exports to JSON
+func QueryUserNamesAndExportToJSON() {
+	// ctx := context.Background()
+	config := viper.New()
+	config.AutomaticEnv()
+	uploader := NewUploader(config)
+	fmt.Println("Querying usernames")
+
+	userNames, err := uploader.QueryUsernames()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("%d distinct usernames found. \n", len(userNames))
+
+	filePath := "usernames.JSON"
+	// TODO: query args for a path if desired
+	fmt.Printf("Outputting results to %s \n", filePath)
+	writeObjectToJSONFile(userNames, filePath)
+}
+
+// QueryFullNamesAndExportToJSON finds all distinct full names in the database and exports to JSON
+func QueryFullNamesAndExportToJSON() {
+	// ctx := context.Background()
+	config := viper.New()
+	config.AutomaticEnv()
+	uploader := NewUploader(config)
+	fmt.Println("Querying usernames")
+
+	userNames, err := uploader.QueryFullNames()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("%d distinct fullnames found. \n", len(userNames))
+
+	filePath := "full_names.JSON"
+	// TODO: query args for a path if desired
+	fmt.Printf("Outputting results to %s \n", filePath)
+	writeObjectToJSONFile(userNames, filePath)
 }
 
 // NewUploader instantiates an Uploader
@@ -84,6 +123,21 @@ func (u *Uploader) QueryUsernames() ([]string, error) {
 
 }
 
+// QueryFullNames queries the database for distinct references to a users full name in the database
+func (u *Uploader) QueryFullNames() ([]string, error) {
+	usernames := []string{}
+
+	err := u.DB.Select(&usernames, getAllFullNamesSQL)
+
+	if err != nil {
+		return nil, fmt.Errorf(" unable to query fullnames %w", err)
+
+	}
+
+	return usernames, nil
+
+}
+
 // UserAccountAttempt represents the attempt to make a user account based on a given username
 type UserAccountAttempt struct {
 	account      *authentication.UserAccount
@@ -97,8 +151,6 @@ type UserAccountAttempt struct {
 func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []string) []*UserAccountAttempt {
 	attempts := []*UserAccountAttempt{}
 
-	//TODO wire this up to use the Fetch User Info func
-	//  getAccountInfoFunc := func u.Okta.FetchUserInfo
 	for _, username := range userNames {
 		attempt := UserAccountAttempt{
 			username: username,
@@ -109,9 +161,6 @@ func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []stri
 			username,
 			false,
 			userhelpers.GetUserInfoAccountInfoWrapperFunc(u.Okta.FetchUserInfo),
-			// userhelpers.GetOktaAccountInfoWrapperFunction(getAccountInfoFunc),
-			// userhelpers.GetOktaAccountInfoWrapperFunction(u.Okta.FetchUserInfo),
-			// userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetOktaAccountInfo), // This function is for logged in users
 		)
 		if err != nil {
 			attempt.errorMessage = err
