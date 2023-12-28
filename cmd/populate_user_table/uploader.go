@@ -139,7 +139,7 @@ func ReadUsernamesFromJSONAndCreateAccounts() {
 
 	filePathOutput := "usernames_accounts.JSON"
 	fmt.Printf("Outputting results to %s \n", filePathOutput)
-	writeObjectToJSONFile(userNames, filePath)
+	writeObjectToJSONFile(userNames, filePathOutput)
 
 }
 
