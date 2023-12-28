@@ -21,6 +21,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(queryUserNameCmd)
 	rootCmd.AddCommand(queryFullNameCmd)
+	rootCmd.AddCommand(generateUserAccountByUsernameCmd)
 }
 
 func execute() {
@@ -49,12 +50,13 @@ func execute() {
 // TODO: https://github.com/CMSgov/mint-app/tree/00e01f91fd8e7e624c54c25d3b3f62d0a8a388d4/cmd/backfill is a good reference point
 func main() {
 
-	if err := queryUserNameCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	// if err := queryUserNameCmd.Execute(); err != nil {
+	// 	fmt.Println(err)
+	// 	os.Exit(1)
+	// }
+	testFunction()
 
-	// execute()
+	execute()
 }
 
 func testFunction() {

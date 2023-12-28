@@ -3,12 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/oktaapi"
@@ -54,6 +56,14 @@ var queryFullNameCmd = &cobra.Command{
 
 	},
 }
+var generateUserAccountByUsernameCmd = &cobra.Command{
+	Use:   "generateUser",
+	Short: "This command creates user accounts by the list of usernames stored in  usernames.JSON",
+	Long:  "This command creates user accounts by the list of usernames stored in  usernames.JSON",
+	Run: func(cmd *cobra.Command, args []string) {
+		ReadUsernamesFromJSONAndCreateAccounts()
+	},
+}
 
 // QueryUserNamesAndExportToJSON finds all distinct usernames in the database and exports to JSON
 func QueryUserNamesAndExportToJSON() {
@@ -93,6 +103,44 @@ func QueryFullNamesAndExportToJSON() {
 	// TODO: query args for a path if desired
 	fmt.Printf("Outputting results to %s \n", filePath)
 	writeObjectToJSONFile(userNames, filePath)
+}
+
+// ReadUsernamesFromJSONAndCreateAccounts reads usernames and creates a user account in the db
+func ReadUsernamesFromJSONAndCreateAccounts() {
+	ctx := context.Background()
+	config := viper.New()
+	config.AutomaticEnv()
+	uploader := NewUploader(config)
+	ctx = appcontext.WithLogger(ctx, &uploader.Logger)
+
+	filePath := "usernames.JSON"
+	userNames := []string{}
+	fmt.Printf("Attempting to read usernames from %s", filePath)
+
+	err := readJSONFromFile(filePath, &userNames)
+	if err != nil {
+		log.Fatal(err)
+	}
+	userAcountAttempts := uploader.GetOrCreateUserAccounts(ctx, userNames)
+	for _, attempt := range userAcountAttempts {
+		fmt.Printf("\n Println for %s. Success: %v", attempt.username, attempt.success)
+		CommonName := ""
+		if attempt.account != nil {
+			CommonName = attempt.account.CommonName
+		}
+		uploader.Logger.Info("attempt made for "+attempt.username,
+			zap.String("UserName", attempt.username),
+			zap.Bool("Success", attempt.success),
+			zap.String("Message", attempt.message),
+			zap.String("CommonName", CommonName),
+			zap.Error(attempt.errorMessage),
+		)
+	}
+
+	filePathOutput := "usernames_accounts.JSON"
+	fmt.Printf("Outputting results to %s \n", filePathOutput)
+	writeObjectToJSONFile(userNames, filePath)
+
 }
 
 // NewUploader instantiates an Uploader

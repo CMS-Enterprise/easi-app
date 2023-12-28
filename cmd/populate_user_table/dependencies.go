@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -115,4 +117,20 @@ func writeObjectToJSONFile(object interface{}, path string) {
 	if err != nil {
 		panic("Can't write the file")
 	}
+}
+
+func readJSONFromFile[anyType interface{}](file string, obj *anyType) error {
+
+	f, err := os.Open(file) //nolint
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	defer f.Close() //nolint
+
+	byteValue, _ := io.ReadAll(f)
+	err = json.Unmarshal(byteValue, &obj)
+
+	return err
+
 }
