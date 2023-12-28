@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
@@ -26,6 +27,30 @@ type Uploader struct {
 	DB     *sqlx.DB
 	Logger zap.Logger
 	Okta   *oktaapi.ClientWrapper //TODO, maybe this shouldn't be the wrapper, but the main instance?
+}
+
+var queryUserNameCmd = &cobra.Command{
+	Use:   "query",
+	Short: "Query unique usernames in the database and output to json file",
+	Long:  "Query unique usernames in the database and output to json file",
+	Run: func(cmd *cobra.Command, args []string) {
+		// ctx := context.Background()
+		config := viper.New()
+		config.AutomaticEnv()
+		uploader := NewUploader(config)
+
+		// ctx = appcontext.WithLogger(ctx, &uploader.Logger)
+		_ = rootCmd //TODO, do we even want to bother with cobra?
+		userNames, err := uploader.QueryUsernames()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		filePath := "usernames.JSON"
+		// TODO: query args for a path if desired
+		writeObjectToJSONFile(userNames, filePath)
+
+	},
 }
 
 // NewUploader instantiates an Uploader

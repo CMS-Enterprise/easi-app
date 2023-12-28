@@ -1,13 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
+	"path/filepath"
 
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/oktaapi"
@@ -29,10 +31,10 @@ func getResolverDependencies(config *viper.Viper) (
 	}
 
 	// Create LD Client, which is required for creating the store
-	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
-	if err != nil {
-		panic(err)
-	}
+	// ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	oktaClient, oktaClientErr := oktaapi.NewClient(config.GetString(appconfig.OKTAAPIURL), config.GetString(appconfig.OKTAAPIToken))
 	if oktaClientErr != nil {
@@ -48,7 +50,7 @@ func getResolverDependencies(config *viper.Viper) (
 		SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
 		MaxConnections: config.GetInt(appconfig.DBMaxConnections),
 	}
-	store, err := storage.NewStore(dbConfig, ldClient)
+	store, err := storage.NewStore(dbConfig, nil)
 	if err != nil {
 		fmt.Printf("Failed to get new database: %v", err)
 		panic(err)
@@ -96,4 +98,21 @@ func newDB(config storage.DBConfig) (*sqlx.DB, error) {
 
 	db.SetMaxOpenConns(config.MaxConnections)
 	return db, nil
+}
+
+func writeObjectToJSONFile(object interface{}, path string) {
+	entryBytes, err := json.Marshal(object)
+	if err != nil {
+		panic("Can't serialize the object")
+	}
+
+	file, err := os.Create(filepath.Clean(path))
+	if err != nil {
+
+		panic("Can't create the file")
+	}
+	_, err = file.Write(entryBytes)
+	if err != nil {
+		panic("Can't write the file")
+	}
 }

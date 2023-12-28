@@ -19,7 +19,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	// rootCmd.AddCommand(serveCmd)
+	rootCmd.AddCommand(queryUserNameCmd)
 	// rootCmd.AddCommand(testCmd)
 }
 func execute() {
@@ -29,8 +29,29 @@ func execute() {
 	}
 }
 
+/*
+	Steps
+	1. Query the database for all fields where there is
+		a. a username (EUAID)  (query is get_all_usernames.sql) --> do the same approach with full names to try and do a match
+		b. a FullName of a User
+	2. Aggregate Unique records
+	3. Query OKTA for all users by unique username
+	4. See if there are any matches with username and FullName
+	5. Query for users by FullName, see if there is a match, and if there is more than one?
+		a. How can we validate full names?
+	6. Create user records for each unique user (combine results from username and name)
+	7. Create an output in JSON / CSV to show results, and if anyone isn't found (so we can handle them specifically)
+
+
+*/
+
 // TODO: https://github.com/CMSgov/mint-app/tree/00e01f91fd8e7e624c54c25d3b3f62d0a8a388d4/cmd/backfill is a good reference point
 func main() {
+
+	execute()
+}
+
+func testFunction() {
 	ctx := context.Background()
 	config := viper.New()
 	config.AutomaticEnv()
@@ -48,21 +69,8 @@ func main() {
 	userNames = append(userNames, "WTPG")
 	userNames = append(userNames, "SV8L")
 	userNames = append(userNames, "SWKJ") //DEACTIVATED
+	writeObjectToJSONFile(userNames, "usernames.JSON")
 
-	// users := uploader.SearchAllUserNamesIndividually(ctx, userNames)
-
-	// fmt.Print(users)
-
-	// userInfos, err := uploader.SearchAllUserNamesConcurrently(ctx, userNames)
-	// if err != nil {
-	// 	uploader.Logger.Error("error looking for usernames concurrently", zap.Error(err))
-	// }
-
-	// // fmt.Print(userInfos)
-	// for _, user := range userInfos {
-	// 	fmt.Printf("\n User %s found \n", user.DisplayName)
-
-	// }
 	userAcountAttempts := uploader.GetOrCreateUserAccounts(ctx, userNames)
 
 	for _, attempt := range userAcountAttempts {
@@ -82,21 +90,5 @@ func main() {
 	}
 
 	fmt.Print(userAcountAttempts)
-
-	/*
-		Steps
-		1. Query the database for all fields where there is
-			a. a username (EUAID)  (query is get_all_usernames.sql) --> do the same approach with full names to try and do a match
-			b. a FullName of a User
-		2. Aggregate Unique records
-		3. Query OKTA for all users by unique username
-		4. See if there are any matches with username and FullName
-		5. Query for users by FullName, see if there is a match, and if there is more than one?
-			a. How can we validate full names?
-		6. Create user records for each unique user (combine results from username and name)
-		7. Create an output in JSON / CSV to show results, and if anyone isn't found (so we can handle them specifically)
-
-
-	*/
 
 }
