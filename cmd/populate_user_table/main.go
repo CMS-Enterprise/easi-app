@@ -7,6 +7,9 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
+
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 )
 
 var rootCmd = &cobra.Command{
@@ -32,17 +35,53 @@ func main() {
 	config := viper.New()
 	config.AutomaticEnv()
 	uploader := NewUploader(config)
+	ctx = appcontext.WithLogger(ctx, &uploader.Logger)
 	_ = rootCmd //TODO, do we even want to bother with cobra?
 	userNames, err := uploader.QueryUsernames()
 	if err != nil {
-		fmt.Print(err)
+		fmt.Println(err)
 	}
-	fmt.Print(userNames)
-	userInfos, err := uploader.Okta.FetchUserInfos(ctx, userNames)
-	if err != nil {
-		fmt.Print(err)
+	fmt.Println(userNames)
+	userNames = append(userNames, "WJZZ")
+	userNames = append(userNames, "BC0V")
+	userNames = append(userNames, "WLJI")
+	userNames = append(userNames, "WTPG")
+	userNames = append(userNames, "SV8L")
+	userNames = append(userNames, "SWKJ") //DEACTIVATED
+
+	// users := uploader.SearchAllUserNamesIndividually(ctx, userNames)
+
+	// fmt.Print(users)
+
+	// userInfos, err := uploader.SearchAllUserNamesConcurrently(ctx, userNames)
+	// if err != nil {
+	// 	uploader.Logger.Error("error looking for usernames concurrently", zap.Error(err))
+	// }
+
+	// // fmt.Print(userInfos)
+	// for _, user := range userInfos {
+	// 	fmt.Printf("\n User %s found \n", user.DisplayName)
+
+	// }
+	userAcountAttempts := uploader.GetOrCreateUserAccounts(ctx, userNames)
+
+	for _, attempt := range userAcountAttempts {
+		fmt.Printf("\n Println for %s. Success: %v", attempt.username, attempt.success)
+		CommonName := ""
+		if attempt.account != nil {
+			CommonName = attempt.account.CommonName
+		}
+		uploader.Logger.Info("attempt made for "+attempt.username,
+			zap.String("UserName", attempt.username),
+			zap.Bool("Success", attempt.success),
+			zap.String("Message", attempt.message),
+			zap.String("CommonName", CommonName),
+			zap.Error(attempt.errorMessage),
+		)
+
 	}
-	fmt.Print(userInfos)
+
+	fmt.Print(userAcountAttempts)
 
 	/*
 		Steps

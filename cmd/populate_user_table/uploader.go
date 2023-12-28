@@ -1,16 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/authentication"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/oktaapi"
 	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/userhelpers"
 
 	_ "embed"
 )
@@ -20,10 +22,10 @@ var getAllUserNamesSQL string
 
 // Uploader handles functionality for uploading data to the DB
 type Uploader struct {
-	Store  storage.Store
+	Store  *storage.Store
 	DB     *sqlx.DB
 	Logger zap.Logger
-	Okta   *oktaapi.ClientWrapper
+	Okta   *oktaapi.ClientWrapper //TODO, maybe this shouldn't be the wrapper, but the main instance?
 }
 
 // NewUploader instantiates an Uploader
@@ -31,9 +33,9 @@ func NewUploader(config *viper.Viper) *Uploader { //TODO make this more configur
 	// config := viper.New()
 	// config.AutomaticEnv()
 
-	db, logger, okta := getResolverDependencies(config)
+	db, store, logger, okta := getResolverDependencies(config)
 	return &Uploader{
-		// Store:  *store,
+		Store:  store,
 		DB:     db,
 		Logger: *logger,
 		Okta:   okta,
@@ -54,75 +56,71 @@ func (u *Uploader) QueryUsernames() ([]string, error) {
 
 }
 
-// getResolverDependencies takes a Viper config and returns a Store and Logger object to be used
-// by various resolver functions.
-func getResolverDependencies(config *viper.Viper) (
-	*sqlx.DB,
-	*zap.Logger,
-	*oktaapi.ClientWrapper,
-) {
-	// Create the logger
-	logger := zap.NewNop()
-
-	oktaClient, oktaClientErr := oktaapi.NewClient(config.GetString(appconfig.OKTAAPIURL), config.GetString(appconfig.OKTAAPIToken))
-	if oktaClientErr != nil {
-		logger.Fatal("failed to create okta api client", zap.Error(oktaClientErr))
-	}
-	// Create the DB Config & Store
-	dbConfig := storage.DBConfig{
-		Host:           config.GetString(appconfig.DBHostConfigKey),
-		Port:           config.GetString(appconfig.DBPortConfigKey),
-		Database:       config.GetString(appconfig.DBNameConfigKey),
-		Username:       config.GetString(appconfig.DBUsernameConfigKey),
-		Password:       config.GetString(appconfig.DBPasswordConfigKey),
-		SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
-		MaxConnections: config.GetInt(appconfig.DBMaxConnections),
-	}
-	// store, err := storage.NewStore(dbConfig, ldClient)
-	// if err != nil {
-	// 	fmt.Printf("Failed to get new database: %v", err)
-	// 	panic(err)
-
-	db, err := newDB(dbConfig)
-	if err != nil {
-		fmt.Printf("Failed to get new database: %v", err)
-		panic(err)
-	}
-
-	return db, logger, oktaClient
+// UserAccountAttempt represents the attempt to make a user account based on a given username
+type UserAccountAttempt struct {
+	account      *authentication.UserAccount
+	username     string
+	errorMessage error
+	message      string
+	success      bool
 }
 
-func newDB(config storage.DBConfig) (*sqlx.DB, error) {
+// GetOrCreateUserAccounts wraps the get or create user account functionality with information about if it successfully created an account or not
+func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []string) []*UserAccountAttempt {
+	attempts := []*UserAccountAttempt{}
 
-	var db *sqlx.DB
-	var err error
-	if config.UseIAM {
-		// Connect using the IAM DB package
-		sess := session.Must(session.NewSession())
-		db = newConnectionPoolWithIam(sess, config)
-		err = db.Ping()
-		if err != nil {
-			return nil, err
+	//TODO wire this up to use the Fetch User Info func
+	//  getAccountInfoFunc := func u.Okta.FetchUserInfo
+	for _, username := range userNames {
+		attempt := UserAccountAttempt{
+			username: username,
 		}
-	} else {
-		// Connect via normal user/pass
-		dataSourceName := fmt.Sprintf(
-			"host=%s port=%s user=%s "+
-				"password=%s dbname=%s sslmode=%s",
-			config.Host,
-			config.Port,
-			config.Username,
-			config.Password,
-			config.Database,
-			config.SSLMode,
+		account, err := userhelpers.GetOrCreateUserAccount(ctx,
+			u.Store,
+			u.Store,
+			username,
+			false,
+			userhelpers.GetUserInfoAccountInfoWrapperFunc(u.Okta.FetchUserInfo),
+			// userhelpers.GetOktaAccountInfoWrapperFunction(getAccountInfoFunc),
+			// userhelpers.GetOktaAccountInfoWrapperFunction(u.Okta.FetchUserInfo),
+			// userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetOktaAccountInfo), // This function is for logged in users
 		)
-
-		db, err = sqlx.Connect("postgres", dataSourceName)
 		if err != nil {
-			return nil, err
-		}
-	}
+			attempt.errorMessage = err
+			attempt.success = false
+			attempt.message = " failed to create or get user account"
+		} else {
+			attempt.account = account
+			attempt.success = true
+			attempt.message = "success"
 
-	db.SetMaxOpenConns(config.MaxConnections)
-	return db, nil
+		}
+		attempts = append(attempts, &attempt)
+
+	}
+	return attempts
+}
+
+// SearchAllUserNamesIndividually fetches user info synchronously for a list of users
+func (u *Uploader) SearchAllUserNamesIndividually(ctx context.Context, userNames []string) []*models.UserInfo {
+	users := []*models.UserInfo{}
+	for _, username := range userNames {
+		userInfo, err := u.Okta.FetchUserInfo(ctx, username)
+		if err != nil {
+			fmt.Println(err)
+		}
+		if userInfo != nil {
+			users = append(users, userInfo)
+			fmt.Printf("\n User %s found \n", userInfo.DisplayName)
+		}
+
+	}
+	return users
+}
+
+// SearchAllUserNamesConcurrently fetches user info concurrently for a list of users
+func (u *Uploader) SearchAllUserNamesConcurrently(ctx context.Context, userNames []string) ([]*models.UserInfo, error) {
+	userInfos, err := u.Okta.FetchUserInfos(ctx, userNames) // TODO, this isn't finding everyone... think about this some more.
+
+	return userInfos, err
 }
