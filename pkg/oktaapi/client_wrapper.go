@@ -75,6 +75,8 @@ func (cw *ClientWrapper) parseOktaProfileResponse(ctx context.Context, profile *
 
 func (o *oktaUserResponse) toUserInfo() *models.UserInfo {
 	return &models.UserInfo{
+		FirstName:   o.FirstName,
+		LastName:    o.LastName,
 		DisplayName: o.DisplayName,
 		Email:       models.NewEmailAddress(o.Email),
 		Username:    o.Login,
