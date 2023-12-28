@@ -38,6 +38,7 @@ var queryUserNameCmd = &cobra.Command{
 		config := viper.New()
 		config.AutomaticEnv()
 		uploader := NewUploader(config)
+		fmt.Println("Querying usernames")
 
 		// ctx = appcontext.WithLogger(ctx, &uploader.Logger)
 		_ = rootCmd //TODO, do we even want to bother with cobra?
@@ -45,9 +46,11 @@ var queryUserNameCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println(err)
 		}
+		fmt.Printf("%d distinct usernames found. \n", len(userNames))
 
 		filePath := "usernames.JSON"
 		// TODO: query args for a path if desired
+		fmt.Printf("Outputting results to %s \n", filePath)
 		writeObjectToJSONFile(userNames, filePath)
 
 	},
