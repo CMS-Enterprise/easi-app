@@ -11,15 +11,14 @@ import (
 func (s *EmailTestSuite) TestIntakeChangeLCIDRetirementDateNotification() {
 	ctx := context.Background()
 	lifecycleID := "123456"
-	lifecycleScope := models.HTMLPointer("<em>things</em>")
+	lifecycleScope := models.HTMLPointer("<p><em>things</em></p>")
 	lifecycleCostBaseline := "100bux"
 	issuedAt := time.Now()
 	retiresAt := time.Now().AddDate(2, 0, 0)
 	expiresAt := time.Now().AddDate(1, 0, 0)
 	ITGovInboxAddress := s.config.GRTEmail.String()
-	additionalInfo := models.HTMLPointer("An apple a day keeps the doctor away.")
-
-	decisionNextSteps := models.HTMLPointer("<p>Decision: Make lunch</p><p>Steps:</p><ol><li>Decide what to eat</li><li>Eat</li></ol>")
+	additionalInfo := models.HTMLPointer("<p>An apple a day keeps the doctor away.</p>")
+	decisionNextSteps := models.HTMLPointer("<p>Decision: Make lunch</p><p>Steps:</p><ol><li><p>Decide what to eat</p></li><li><p>Eat</p></li></ol>")
 
 	sender := mockSender{}
 	recipient := models.NewEmailAddress("fake@fake.com")
@@ -46,43 +45,70 @@ func (s *EmailTestSuite) TestIntakeChangeLCIDRetirementDateNotification() {
 	expectedSubject := fmt.Sprintf("The retirement date for a Life Cycle ID (%s) has been changed", lifecycleID)
 	s.Equal(expectedSubject, sender.subject)
 
-	expectedEmail := fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+	getExpectedEmail := func(
+		issuedAt *time.Time,
+		additionalInfo *models.HTML,
+	) string {
+		var additionalInfoStr string
+		var issuedAtStr string
+		if issuedAt != nil {
+			issuedAtStr = fmt.Sprintf(
+				`<p><strong>Original date issued:</strong> %s</p>`,
+				issuedAt.Format("01/02/2006"),
+			)
+		}
+		if additionalInfo != nil {
+			additionalInfoStr = fmt.Sprintf(
+				`<br><hr><p><strong>Additional information from the Governance Team:</strong></p><div class="no-margin">%s</div>`,
+				*additionalInfo.StringPointer(),
+			)
+		}
 
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+		return fmt.Sprintf(`
+			<h1 style="margin-bottom: 0">EASi</h1>
+			<p style="font-size:15px; color: #71767A; margin: 0.5rem 0 2rem;">Easy Access to System Information</p>
 
-<p>The Governance Team has updated the retirement date for a previously-issued Life Cycle ID (LCID).</p>
+			<p>The Governance Team has updated the retirement date for a previously-issued Life Cycle ID (LCID).</p>
+			<br>
+			<p class="no-margin"><strong>New retirement date:</strong> %s</p>
+			<br>
 
-<p>New retirement date: %s</p>
+		    <p>If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
 
-If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.
+			<br>
+			<div class="no-margin">
+				<p><u>Summary of retired Life Cycle ID</u></p>
+				<p><strong>Lifecycle ID:</strong> %s</p>
+				%s
+				<p><strong>Expiration date:</strong> %s</p>
+				<p><strong>Scope:</strong></p>%s
+				<p><strong>Project Cost Baseline:</strong> %s</p>
+				<p><strong>Next steps:</strong></p>%s
+			</div>
+			%s
+			`,
+			retiresAt.Format("01/02/2006"),
+			ITGovInboxAddress,
+			ITGovInboxAddress,
+			lifecycleID,
+			issuedAtStr,
+			expiresAt.Format("01/02/2006"),
+			*lifecycleScope.StringPointer(),
+			lifecycleCostBaseline,
+			*decisionNextSteps.StringPointer(),
+			additionalInfoStr,
+		)
+	}
 
-<p><u>Summary of retired Life Cycle ID</u><br>
-<strong>Lifecycle ID:</strong> %s<br>
-<strong>Original date issued:</strong> %s<br>
-<strong>Expiration date:</strong> %s<br>
-<strong>Scope:</strong> %s<br>
-<strong>Project Cost Baseline:</strong> %s<br>
-<strong>Next steps:</strong> %s</p>
-
-<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
-`,
-		retiresAt.Format("01/02/2006"),
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		lifecycleID,
-		issuedAt.Format("01/02/2006"),
-		expiresAt.Format("01/02/2006"),
-		*lifecycleScope.StringPointer(),
-		lifecycleCostBaseline,
-		*decisionNextSteps.StringPointer(),
-		*additionalInfo.StringPointer(),
-	)
-	s.Equal(expectedEmail, sender.body)
+	expectedEmail := getExpectedEmail(&issuedAt, additionalInfo)
 	s.Run("Recipient is correct", func() {
 		allRecipients := []models.EmailAddress{
 			recipient,
 		}
 		s.ElementsMatch(sender.toAddresses, allRecipients)
+	})
+	s.Run("Includes all info", func() {
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 	err = client.SystemIntake.SendChangeLCIDRetirementDateNotification(
@@ -98,37 +124,10 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		nil,
 	)
 	s.NoError(err)
-	expectedEmail = fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
-
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>The Governance Team has updated the retirement date for a previously-issued Life Cycle ID (LCID).</p>
-
-<p>New retirement date: %s</p>
-
-If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-<p><u>Summary of retired Life Cycle ID</u><br>
-<strong>Lifecycle ID:</strong> %s<br>
-<strong>Expiration date:</strong> %s<br>
-<strong>Scope:</strong> %s<br>
-<strong>Project Cost Baseline:</strong> %s<br>
-<strong>Next steps:</strong> %s</p>
-
-
-`,
-		retiresAt.Format("01/02/2006"),
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		lifecycleID,
-		expiresAt.Format("01/02/2006"),
-		*lifecycleScope.StringPointer(),
-		lifecycleCostBaseline,
-		*decisionNextSteps.StringPointer(),
-	)
+	expectedEmail = getExpectedEmail(nil, nil)
 
 	s.Run("Should omit additional info and issuedAt if absent", func() {
-		s.Equal(expectedEmail, sender.body)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 }

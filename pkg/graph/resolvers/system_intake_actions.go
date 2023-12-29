@@ -261,7 +261,7 @@ func CreateSystemIntakeActionRequestEdits(
 		err = emailClient.SystemIntake.SendRequestEditsNotification(ctx,
 			*input.NotificationRecipients,
 			intake.ID,
-			targetForm.Humanize(),
+			targetForm,
 			intake.ProjectName.ValueOrZero(),
 			intake.Requester,
 			input.EmailFeedback,

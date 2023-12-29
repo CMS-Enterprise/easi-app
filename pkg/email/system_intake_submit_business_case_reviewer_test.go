@@ -31,6 +31,7 @@ func (s *EmailTestSuite) TestSubmitBizCaseReviewer() {
 		var openingResubmittedText1 string
 		var openingResubmittedText2 string
 		var draftText string
+		var nextSteps string
 		if isResubmitted {
 			openingResubmittedText1 = "made changes to their"
 			openingResubmittedText2 = "changes"
@@ -40,25 +41,25 @@ func (s *EmailTestSuite) TestSubmitBizCaseReviewer() {
 		}
 		if isDraft {
 			draftText = "draft"
+			nextSteps = "what (if any) next steps are needed."
 		} else {
 			draftText = "final"
+			nextSteps = "if this Business Case is ready to present to the GRB."
 		}
-		return fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+		return fmt.Sprintf(`
+			<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
 
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+			<p>%s has %s %s Business Case for %s. Use the link below to review the %s in EASi. The lead for this request or another member of the Governance Team should respond within two business days with any feedback about the Business Case or to move the request to the next step in the Governance Review process.</p>
 
-<p>%s has %s %s Business Case for %s. Use the link below to review the %s in EASi. The lead for this request or another member of the Governance Team should respond within two business days with any feedback about the Business Case or to move the request to the next step in the Governance Review process.</p>
+			<p><a href="%s">View this request in EASi</a></p>
 
-<p><a href="%s">View this request in EASi</a></p>
-
-<p>Next steps:
-  <ul>
-    <li>Review the %s Business Case and decide what (if any) next steps are needed.</li>
-    <li>Take the appropriate actions within EASi.</li>
-  </ul>
-</p>
-
-`,
+			<p>Next steps:
+			  <ul>
+				<li>Review the %s Business Case and decide %s</li>
+				<li>Take the appropriate actions within EASi.</li>
+			  </ul>
+			</p>`,
 			requesterName,
 			openingResubmittedText1,
 			draftText,
@@ -66,6 +67,7 @@ func (s *EmailTestSuite) TestSubmitBizCaseReviewer() {
 			openingResubmittedText2,
 			adminLink,
 			draftText,
+			nextSteps,
 		)
 	}
 
@@ -89,7 +91,7 @@ func (s *EmailTestSuite) TestSubmitBizCaseReviewer() {
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
 		s.Equal(fmt.Sprintf("A draft Business Case has been submitted (%s)", requestName), sender.subject)
-		s.Equal(expectedEmail, sender.body)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 	s.Run("successful resubmit draft call has the right content", func() {
@@ -112,7 +114,7 @@ func (s *EmailTestSuite) TestSubmitBizCaseReviewer() {
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
 		s.Equal(fmt.Sprintf("Changes made to draft Business Case (%s)", requestName), sender.subject)
-		s.Equal(expectedEmail, sender.body)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 	s.Run("successful initial final submit call has the right content", func() {
@@ -135,7 +137,7 @@ func (s *EmailTestSuite) TestSubmitBizCaseReviewer() {
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
 		s.Equal(fmt.Sprintf("A final Business Case has been submitted (%s)", requestName), sender.subject)
-		s.Equal(expectedEmail, sender.body)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 	s.Run("successful resubmit final call has the right content", func() {
@@ -158,7 +160,7 @@ func (s *EmailTestSuite) TestSubmitBizCaseReviewer() {
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
 		s.Equal(fmt.Sprintf("Changes made to final Business Case (%s)", requestName), sender.subject)
-		s.Equal(expectedEmail, sender.body)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 	s.Run("if the template is nil, we get the error from it", func() {
