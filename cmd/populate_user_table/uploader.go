@@ -123,23 +123,23 @@ func ReadUsernamesFromJSONAndCreateAccounts() {
 	}
 	userAcountAttempts := uploader.GetOrCreateUserAccounts(ctx, userNames)
 	for _, attempt := range userAcountAttempts {
-		fmt.Printf("\n Println for %s. Success: %v", attempt.username, attempt.success)
+		fmt.Printf("\n Println for %s. Success: %v", attempt.Username, attempt.Success)
 		CommonName := ""
-		if attempt.account != nil {
-			CommonName = attempt.account.CommonName
+		if attempt.Account != nil {
+			CommonName = attempt.Account.CommonName
 		}
-		uploader.Logger.Info("attempt made for "+attempt.username,
-			zap.String("UserName", attempt.username),
-			zap.Bool("Success", attempt.success),
-			zap.String("Message", attempt.message),
+		uploader.Logger.Info("attempt made for "+attempt.Username,
+			zap.String("UserName", attempt.Username),
+			zap.Bool("Success", attempt.Success),
+			zap.String("Message", attempt.Message),
 			zap.String("CommonName", CommonName),
-			zap.Error(attempt.errorMessage),
+			zap.Error(attempt.ErrorMessage),
 		)
 	}
 
 	filePathOutput := "usernames_accounts.JSON"
 	fmt.Printf("Outputting results to %s \n", filePathOutput)
-	writeObjectToJSONFile(userNames, filePathOutput)
+	writeObjectToJSONFile(userAcountAttempts, filePathOutput) //TODO, figure out how to serialize the output better....
 
 }
 
@@ -188,11 +188,11 @@ func (u *Uploader) QueryFullNames() ([]string, error) {
 
 // UserAccountAttempt represents the attempt to make a user account based on a given username
 type UserAccountAttempt struct {
-	account      *authentication.UserAccount
-	username     string
-	errorMessage error
-	message      string
-	success      bool
+	Account      *authentication.UserAccount
+	Username     string
+	ErrorMessage error
+	Message      string
+	Success      bool
 }
 
 // GetOrCreateUserAccounts wraps the get or create user account functionality with information about if it successfully created an account or not
@@ -201,7 +201,7 @@ func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []stri
 
 	for _, username := range userNames {
 		attempt := UserAccountAttempt{
-			username: username,
+			Username: username,
 		}
 		account, err := userhelpers.GetOrCreateUserAccount(ctx,
 			u.Store,
@@ -211,13 +211,13 @@ func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []stri
 			userhelpers.GetUserInfoAccountInfoWrapperFunc(u.Okta.FetchUserInfo),
 		)
 		if err != nil {
-			attempt.errorMessage = err
-			attempt.success = false
-			attempt.message = " failed to create or get user account"
+			attempt.ErrorMessage = err
+			attempt.Success = false
+			attempt.Message = " failed to create or get user account"
 		} else {
-			attempt.account = account
-			attempt.success = true
-			attempt.message = "success"
+			attempt.Account = account
+			attempt.Success = true
+			attempt.Message = "success"
 
 		}
 		attempts = append(attempts, &attempt)

@@ -54,9 +54,10 @@ func main() {
 	// 	fmt.Println(err)
 	// 	os.Exit(1)
 	// }
-	testFunction()
+	ReadUsernamesFromJSONAndCreateAccounts()
+	// testFunction()
 
-	execute()
+	// execute()
 }
 
 func testFunction() {
@@ -82,17 +83,17 @@ func testFunction() {
 	userAcountAttempts := uploader.GetOrCreateUserAccounts(ctx, userNames)
 
 	for _, attempt := range userAcountAttempts {
-		fmt.Printf("\n Println for %s. Success: %v", attempt.username, attempt.success)
+		fmt.Printf("\n Println for %s. Success: %v", attempt.Username, attempt.Success)
 		CommonName := ""
-		if attempt.account != nil {
-			CommonName = attempt.account.CommonName
+		if attempt.Account != nil {
+			CommonName = attempt.Account.CommonName
 		}
-		uploader.Logger.Info("attempt made for "+attempt.username,
-			zap.String("UserName", attempt.username),
-			zap.Bool("Success", attempt.success),
-			zap.String("Message", attempt.message),
+		uploader.Logger.Info("attempt made for "+attempt.Username,
+			zap.String("UserName", attempt.Username),
+			zap.Bool("Success", attempt.Success),
+			zap.String("Message", attempt.Message),
 			zap.String("CommonName", CommonName),
-			zap.Error(attempt.errorMessage),
+			zap.Error(attempt.ErrorMessage),
 		)
 
 	}
