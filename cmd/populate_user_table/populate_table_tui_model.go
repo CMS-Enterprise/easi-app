@@ -153,10 +153,6 @@ func (tm populateUserTableTuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return cmdFinishedMsg{}
 			}
 
-			// return tm,
-			// //TODO, make this render better when it the other program ends execution
-			// _ = tea.ClearScreen()
-
 		}
 	case cmdFinishedMsg:
 		// Clear the screen when the message is received

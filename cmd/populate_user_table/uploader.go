@@ -27,6 +27,9 @@ var getAllUserNamesSQL string
 var getAllFullNamesSQL string
 
 // Uploader handles functionality for uploading data to the DB
+
+var outputFolder = "cmd/populate_user_table/output"
+
 type Uploader struct {
 	Store  *storage.Store
 	DB     *sqlx.DB
@@ -78,9 +81,10 @@ func QueryUserNamesAndExportToJSON() {
 	fmt.Printf("%d distinct usernames found. \n", len(userNames))
 
 	filePath := "usernames.JSON"
+	fullPath := outputFolder + `/` + filePath
 	// TODO: query args for a path if desired
-	fmt.Printf("Outputting results to %s \n", filePath)
-	writeObjectToJSONFile(userNames, filePath)
+	fmt.Printf("Outputting results to %s \n", fullPath)
+	writeObjectToJSONFile(userNames, fullPath)
 }
 
 // QueryFullNamesAndExportToJSON finds all distinct full names in the database and exports to JSON
@@ -98,9 +102,10 @@ func QueryFullNamesAndExportToJSON() {
 	fmt.Printf("%d distinct fullnames found. \n", len(userNames))
 
 	filePath := "full_names.JSON"
+	fullPath := outputFolder + `/` + filePath
 	// TODO: query args for a path if desired
-	fmt.Printf("Outputting results to %s \n", filePath)
-	writeObjectToJSONFile(userNames, filePath)
+	fmt.Printf("Outputting results to %s \n", fullPath)
+	writeObjectToJSONFile(userNames, fullPath)
 }
 
 // ReadUsernamesFromJSONAndCreateAccounts reads usernames and creates a user account in the db
@@ -111,7 +116,7 @@ func ReadUsernamesFromJSONAndCreateAccounts() {
 	uploader := NewUploader(config)
 	ctx = appcontext.WithLogger(ctx, &uploader.Logger)
 
-	filePath := "usernames.JSON"
+	filePath := outputFolder + `/` + "usernames.JSON"
 	userNames := []string{}
 	fmt.Printf("Attempting to read usernames from %s", filePath)
 
@@ -134,10 +139,10 @@ func ReadUsernamesFromJSONAndCreateAccounts() {
 			zap.Error(attempt.ErrorMessage),
 		)
 	}
-
 	filePathOutput := "usernames_accounts.JSON"
-	fmt.Printf("Outputting results to %s \n", filePathOutput)
-	writeObjectToJSONFile(userAcountAttempts, filePathOutput) //TODO, figure out how to serialize the output better....
+	fullPath := outputFolder + `/` + filePathOutput
+	fmt.Printf("Outputting results to %s \n", fullPath)
+	writeObjectToJSONFile(userAcountAttempts, fullPath) //TODO, figure out how to serialize the output better....
 
 }
 
