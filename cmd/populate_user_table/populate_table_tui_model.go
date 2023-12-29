@@ -7,8 +7,10 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+type cmdFinishedMsg struct{ err error }
+
 type commandOption interface {
-	Run()
+	Run() tea.Msg
 	Name() string
 	String() string
 }
@@ -17,8 +19,9 @@ type genericExampleOption struct {
 	CommandName string
 }
 
-func (geo genericExampleOption) Run() {
+func (geo genericExampleOption) Run() tea.Msg {
 	geo.CommandRun()
+	return cmdFinishedMsg{}
 }
 func (geo genericExampleOption) Name() string {
 	return geo.CommandName
@@ -31,6 +34,7 @@ type populateUserTableTuiModel struct {
 	options  []commandOption
 	cursor   int                   // which command option our cursor is pointing at
 	selected map[int]commandOption // which command options are selected
+	err      error
 }
 
 func newPopulateUserTableModel() populateUserTableTuiModel {
@@ -130,16 +134,22 @@ func (tm populateUserTableTuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			//TODO, maybe we need to clear the screen first? This looks weird going from example to example
 			for _, example := range tm.selected {
 				tea.SetWindowTitle(example.Name())
-				//TODO: set title better
-				tea.Printf("Let's demo %s!", example)
 
-				example.Run()
+				return tm, func() tea.Msg { return example.Run() }
 
 			}
-			//TODO, make this render better when it the other program ends execution
-			_ = tea.ClearScreen()
+
+			// return tm,
+			// //TODO, make this render better when it the other program ends execution
+			// _ = tea.ClearScreen()
 
 		}
+	case cmdFinishedMsg:
+		if msg.err != nil {
+			tm.err = msg.err
+			return tm, tea.Quit
+		}
+		return tm, tea.ClearScreen
 	}
 
 	return tm, nil
