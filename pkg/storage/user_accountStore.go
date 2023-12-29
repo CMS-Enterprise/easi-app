@@ -12,6 +12,9 @@ import (
 //go:embed SQL/user_account/get_by_username.sql
 var userAccountGetByUsername string
 
+//go:embed SQL/user_account/get_by_common_name.sql
+var userAccountGetByCommonName string
+
 //go:embed SQL/user_account/get_by_id.sql
 var userAccountGetByID string
 
@@ -23,6 +26,31 @@ var userAccountInsertByUsername string
 
 //go:embed SQL/user_account/update_by_username.sql
 var userAccountUpdateByUsername string
+
+// UserAccountGetByCommonName gets a user account by a give username
+func (s *Store) UserAccountGetByCommonName(commonName string) (*authentication.UserAccount, error) {
+	user := &authentication.UserAccount{}
+
+	stmt, err := s.db.PrepareNamed(userAccountGetByCommonName)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	arg := map[string]interface{}{
+		"common_name": commonName,
+	}
+
+	err = stmt.Get(user, arg)
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" { //EXPECT THERE TO BE NULL results, don't treat this as an error
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return user, nil
+}
 
 // UserAccountGetByUsername gets a user account by a give username
 func (s *Store) UserAccountGetByUsername(username string) (*authentication.UserAccount, error) {

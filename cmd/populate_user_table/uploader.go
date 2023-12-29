@@ -281,7 +281,7 @@ func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, userNa
 		attempt := UserAccountAttempt{
 			Username: username,
 		}
-		account, err := userhelpers.GetOrCreateUserAccount(ctx,
+		account, err := userhelpers.GetOrCreateUserAccountFullName(ctx,
 			u.Store,
 			u.Store,
 			username,

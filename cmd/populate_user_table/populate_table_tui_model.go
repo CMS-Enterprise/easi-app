@@ -15,22 +15,22 @@ type commandOption interface {
 	String() string
 	LastCMDMessage() string
 }
-type genericExampleOption struct {
+type genericCommandOption struct {
 	CommandRun  func()
 	CommandName string
 }
 
-func (geo genericExampleOption) Run() tea.Msg {
+func (geo genericCommandOption) Run() tea.Msg {
 	geo.CommandRun()
 	return cmdFinishedMsg{}
 }
-func (geo genericExampleOption) Name() string {
+func (geo genericCommandOption) Name() string {
 	return geo.CommandName
 }
-func (geo genericExampleOption) String() string {
+func (geo genericCommandOption) String() string {
 	return geo.Name()
 }
-func (geo genericExampleOption) LastCMDMessage() string {
+func (geo genericCommandOption) LastCMDMessage() string {
 	return "Ran " + geo.Name()
 }
 
@@ -46,17 +46,21 @@ func newPopulateUserTableModel() populateUserTableTuiModel {
 
 	return populateUserTableTuiModel{
 		options: []commandOption{
-			genericExampleOption{
+			genericCommandOption{
 				CommandName: "Query User Names and Export to file",
 				CommandRun:  func() { queryUserNameCmd.Run(queryUserNameCmd, []string{}) },
 			},
-			genericExampleOption{
+			genericCommandOption{
 				CommandName: "Query Full Names and Export to file",
 				CommandRun:  func() { queryFullNameCmd.Run(queryFullNameCmd, []string{}) },
 			},
-			genericExampleOption{
+			genericCommandOption{
 				CommandName: "Generate User Accounts By User Name List",
 				CommandRun:  func() { generateUserAccountByUsernameCmd.Run(generateUserAccountByUsernameCmd, []string{}) },
+			},
+			genericCommandOption{
+				CommandName: "Generate User Accounts By Full Name List",
+				CommandRun:  func() { generateUserAccountByDisplayNameCmd.Run(generateUserAccountByDisplayNameCmd, []string{}) },
 			},
 		},
 		// A map which indicates which choices are selected. We're using

@@ -40,15 +40,15 @@ type GetOktaAccountInfoFunc func(ctx context.Context, username string) (*OktaAcc
 // GetUserInfoFunc represents a type of function which takes a context and username and returns UserInfo
 type GetUserInfoFunc func(ctx context.Context, username string) (*models.UserInfo, error)
 
-// GetOrCreateUserAccount will return an account if it exists, or create and return a new one if not
-func GetOrCreateUserAccount(
+// GetOrCreateUserAccountFullName will return an account if it exists after searching by Full Name, or create and return a new one if not
+func GetOrCreateUserAccountFullName(
 	ctx context.Context,
 	np storage.NamedPreparer,
 	store *storage.Store,
 	username string,
 	hasLoggedIn bool,
 	getAccountInformation GetAccountInfoFunc) (*authentication.UserAccount, error) {
-	userAccount, accErr := store.UserAccountGetByUsername(username)
+	userAccount, accErr := store.UserAccountGetByCommonName(username) //TODO: this could be expanded to check by either username or commonName
 	if accErr != nil {
 		return nil, errors.New("failed to get user information from the database")
 	}
@@ -63,8 +63,54 @@ func GetOrCreateUserAccount(
 	if userAccount == nil {
 		userAccount = &authentication.UserAccount{}
 	}
-	userAccount.Username = &username
-	// userAccount.IsEUAID = !isMacUser // TODO: SW remove
+	userAccount.Username = &accountInfo.PreferredUsername //TODO: does username need to be a  pointer string?
+	userAccount.CommonName = accountInfo.Name
+	userAccount.Locale = accountInfo.Locale
+	userAccount.Email = accountInfo.Email
+	userAccount.GivenName = accountInfo.GivenName
+	userAccount.FamilyName = accountInfo.FamilyName
+	userAccount.ZoneInfo = accountInfo.ZoneInfo
+	userAccount.HasLoggedIn = hasLoggedIn
+
+	if userAccount.ID == uuid.Nil {
+		newAccount, newErr := store.UserAccountInsertByUsername(np, userAccount)
+		if newErr != nil {
+			return nil, newErr
+		}
+		return newAccount, nil
+	}
+
+	updatedAccount, updateErr := store.UserAccountUpdateByUserName(np, userAccount)
+	if updateErr != nil {
+		return nil, updateErr
+	}
+	return updatedAccount, nil
+}
+
+// GetOrCreateUserAccount will return an account if it exists, or create and return a new one if not
+func GetOrCreateUserAccount(
+	ctx context.Context,
+	np storage.NamedPreparer,
+	store *storage.Store,
+	username string,
+	hasLoggedIn bool,
+	getAccountInformation GetAccountInfoFunc) (*authentication.UserAccount, error) {
+	userAccount, accErr := store.UserAccountGetByCommonName(username) //TODO: this could be expanded to check by either username or commonName
+	if accErr != nil {
+		return nil, errors.New("failed to get user information from the database")
+	}
+	if userAccount != nil && userAccount.HasLoggedIn {
+		return userAccount, nil
+	}
+	accountInfo, err := getAccountInformation(ctx, username)
+	if err != nil {
+		return nil, err
+	}
+
+	if userAccount == nil {
+		userAccount = &authentication.UserAccount{}
+	}
+	userAccount.Username = &accountInfo.PreferredUsername //TODO: does username need to be a  pointer string?
 	userAccount.CommonName = accountInfo.Name
 	userAccount.Locale = accountInfo.Locale
 	userAccount.Email = accountInfo.Email
