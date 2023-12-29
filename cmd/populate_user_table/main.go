@@ -57,9 +57,11 @@ func main() {
 	// testFunction()
 
 	execute()
+	_ = testFunction
 }
 
 func testFunction() {
+
 	ctx := context.Background()
 	config := viper.New()
 	config.AutomaticEnv()
