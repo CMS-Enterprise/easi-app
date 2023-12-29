@@ -45,17 +45,17 @@ func GetOrCreateUserAccountFullName(
 	ctx context.Context,
 	np storage.NamedPreparer,
 	store *storage.Store,
-	username string,
+	fullName string,
 	hasLoggedIn bool,
-	getAccountInformation GetAccountInfoFunc) (*authentication.UserAccount, error) {
-	userAccount, accErr := store.UserAccountGetByCommonName(username) //TODO: this could be expanded to check by either username or commonName
+	getAccountInformationFullName GetAccountInfoFunc) (*authentication.UserAccount, error) {
+	userAccount, accErr := store.UserAccountGetByCommonName(fullName) //TODO: this could be expanded to check by either username or commonName
 	if accErr != nil {
 		return nil, errors.New("failed to get user information from the database")
 	}
 	if userAccount != nil && userAccount.HasLoggedIn {
 		return userAccount, nil
 	}
-	accountInfo, err := getAccountInformation(ctx, username)
+	accountInfo, err := getAccountInformationFullName(ctx, fullName)
 	if err != nil {
 		return nil, err
 	}

@@ -70,7 +70,7 @@ var generateUserAccountByDisplayNameCmd = &cobra.Command{
 	Short: "This command creates user accounts by the list of Full Names stored in  full_names.JSON",
 	Long:  "This command creates user accounts by the list of Full Names stored in  full_names.JSON",
 	Run: func(cmd *cobra.Command, args []string) {
-		ReadUsernamesFromJSONAndCreateAccounts()
+		ReadFullNamesFromJSONAndCreateAccounts()
 	},
 }
 
@@ -168,7 +168,7 @@ func ReadFullNamesFromJSONAndCreateAccounts() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	userAcountAttempts := uploader.GetOrCreateUserAccounts(ctx, fullNames)
+	userAcountAttempts := uploader.GetOrCreateUserAccountsByFullName(ctx, fullNames)
 	for _, attempt := range userAcountAttempts {
 		fmt.Printf("\n Println for %s. Success: %v", attempt.Username, attempt.Success)
 		CommonName := ""
@@ -183,7 +183,7 @@ func ReadFullNamesFromJSONAndCreateAccounts() {
 			zap.Error(attempt.ErrorMessage),
 		)
 	}
-	filePathOutput := "usernames_accounts.JSON"
+	filePathOutput := "full_names_accounts.JSON"
 	fullPath := outputFolder + `/` + filePathOutput
 	fmt.Printf("Outputting results to %s \n", fullPath)
 	writeObjectToJSONFile(userAcountAttempts, fullPath) //TODO, figure out how to serialize the output better....
@@ -274,19 +274,19 @@ func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []stri
 }
 
 // GetOrCreateUserAccountsByFullName wraps the get or create user account functionality by FullName with information about if it successfully created an account or not
-func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, userNames []string) []*UserAccountAttempt {
+func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, fullNames []string) []*UserAccountAttempt {
 	attempts := []*UserAccountAttempt{}
 
-	for _, username := range userNames {
-		attempt := UserAccountAttempt{
-			Username: username,
+	for _, fullname := range fullNames {
+		attempt := UserAccountAttempt{ //TODO, make a different struct for this specifically so we can record the name
+			Username: fullname,
 		}
 		account, err := userhelpers.GetOrCreateUserAccountFullName(ctx,
 			u.Store,
 			u.Store,
-			username,
+			fullname,
 			false,
-			userhelpers.GetUserInfoAccountInfoWrapperFunc(u.Okta.FetchUserInfo), // TODO: update this to search by fullname
+			userhelpers.GetUserInfoAccountInfoWrapperFunc(u.Okta.FetchUserInfoByCommonName), // TODO: update this to search by fullname
 		)
 		if err != nil {
 			attempt.ErrorMessage = err

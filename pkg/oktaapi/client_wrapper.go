@@ -136,6 +136,30 @@ func (cw *ClientWrapper) FetchUserInfo(ctx context.Context, username string) (*m
 	return profile.toUserInfo(), nil
 }
 
+// FetchUserInfoByCommonName fetches a single user from Okta by commonName
+// It will error if no users are found, and will also error if there are more than one result for that user
+// It is possible that users would share a name, but other functions must be used for to return the array.
+func (cw *ClientWrapper) FetchUserInfoByCommonName(ctx context.Context, commonName string) (*models.UserInfo, error) {
+	//TODO: UPDATE!!!!! This function only gets active users, we want a search that looks for all users by name, even if the account is suspended
+	users, err := cw.SearchCommonNameContains(ctx, commonName)
+	logger := appcontext.ZLogger(ctx)
+	if err != nil {
+		// Only log the error if it's not a context cancellation, we don't really care about these (but still pass it up the call stack)
+		if !errors.Is(err, context.Canceled) {
+			logger.Error("Error fetching Okta user", zap.Error(err), zap.String("commonName", commonName))
+		}
+		return nil, err
+	}
+	userNum := len(users)
+	if userNum < 1 {
+		return nil, fmt.Errorf("unable to find user by common name: %s", commonName)
+	} else if userNum > 1 {
+		return nil, fmt.Errorf("multiple users found by common name: %s", commonName)
+	}
+	// There is only one user
+	return users[0], nil
+}
+
 const euaSourceType = "EUA"
 const euaADSourceType = "EUA-AD"
 
