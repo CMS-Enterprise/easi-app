@@ -13,6 +13,7 @@ type commandOption interface {
 	Run() tea.Msg
 	Name() string
 	String() string
+	LastCMDMessage() string
 }
 type genericExampleOption struct {
 	CommandRun  func()
@@ -29,12 +30,16 @@ func (geo genericExampleOption) Name() string {
 func (geo genericExampleOption) String() string {
 	return geo.Name()
 }
+func (geo genericExampleOption) LastCMDMessage() string {
+	return "Ran " + geo.Name()
+}
 
 type populateUserTableTuiModel struct {
 	options  []commandOption
 	cursor   int                   // which command option our cursor is pointing at
 	selected map[int]commandOption // which command options are selected
 	err      error
+	lastCmnd string
 }
 
 func newPopulateUserTableModel() populateUserTableTuiModel {
@@ -68,6 +73,9 @@ func (tm populateUserTableTuiModel) Init() tea.Cmd {
 func (tm populateUserTableTuiModel) View() string {
 	// The header
 	s := "Which commands would you like to execute?\n\n"
+	if tm.lastCmnd != "" {
+		s += fmt.Sprintf("%s\n\n", tm.lastCmnd)
+	}
 
 	// Iterate over our options
 	for i, option := range tm.options {
@@ -131,12 +139,18 @@ func (tm populateUserTableTuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		// The "enter" key
 		case "enter":
-			//TODO, maybe we need to clear the screen first? This looks weird going from example to example
-			for _, example := range tm.selected {
-				tea.SetWindowTitle(example.Name())
+			for _, command := range tm.selected {
+				tea.SetWindowTitle(command.Name())
+				if tm.lastCmnd != "" {
+					tm.lastCmnd = tm.lastCmnd + "\n"
+				}
+				tm.lastCmnd += command.LastCMDMessage()
+				command.Run()
+				// return tm, func() tea.Msg { return example.Run() }
 
-				return tm, func() tea.Msg { return example.Run() }
-
+			}
+			return tm, func() tea.Msg {
+				return cmdFinishedMsg{}
 			}
 
 			// return tm,
@@ -145,6 +159,7 @@ func (tm populateUserTableTuiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		}
 	case cmdFinishedMsg:
+		// Clear the screen when the message is received
 		if msg.err != nil {
 			tm.err = msg.err
 			return tm, tea.Quit
