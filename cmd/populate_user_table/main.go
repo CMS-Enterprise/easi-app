@@ -16,6 +16,9 @@ var rootCmd = &cobra.Command{
 	Use:   "accountUploader",
 	Short: "accountUploader is utility for querying and generating user account references",
 	Long:  "accountUploader is utility for querying and generating user account references",
+	Run: func(cmd *cobra.Command, args []string) {
+		RunPopulateUserTableTUIModel()
+	},
 }
 
 func init() {
@@ -50,14 +53,10 @@ func execute() {
 // TODO: https://github.com/CMSgov/mint-app/tree/00e01f91fd8e7e624c54c25d3b3f62d0a8a388d4/cmd/backfill is a good reference point
 func main() {
 
-	// if err := queryUserNameCmd.Execute(); err != nil {
-	// 	fmt.Println(err)
-	// 	os.Exit(1)
-	// }
-	ReadUsernamesFromJSONAndCreateAccounts()
+	// generateUserAccountByUsernameCmd.Run(generateUserAccountByUsernameCmd, []string{})
 	// testFunction()
 
-	// execute()
+	execute()
 }
 
 func testFunction() {

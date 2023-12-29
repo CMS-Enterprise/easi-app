@@ -40,7 +40,6 @@ var queryUserNameCmd = &cobra.Command{
 	Long:  "Query unique usernames in the database and output to json file",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		// fmt.Printf("Args: %v \n", args)
 		QueryUserNamesAndExportToJSON()
 
 	},
@@ -51,7 +50,6 @@ var queryFullNameCmd = &cobra.Command{
 	Long:  "Query unique fullname in the database and output to json file",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		// fmt.Printf("Args: %v \n", args)
 		QueryFullNamesAndExportToJSON()
 
 	},
