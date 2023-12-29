@@ -65,6 +65,14 @@ var generateUserAccountByUsernameCmd = &cobra.Command{
 		ReadUsernamesFromJSONAndCreateAccounts()
 	},
 }
+var generateUserAccountByDisplayNameCmd = &cobra.Command{
+	Use:   "generateUserFull",
+	Short: "This command creates user accounts by the list of Full Names stored in  full_names.JSON",
+	Long:  "This command creates user accounts by the list of Full Names stored in  full_names.JSON",
+	Run: func(cmd *cobra.Command, args []string) {
+		ReadUsernamesFromJSONAndCreateAccounts()
+	},
+}
 
 // QueryUserNamesAndExportToJSON finds all distinct usernames in the database and exports to JSON
 func QueryUserNamesAndExportToJSON() {
@@ -125,6 +133,42 @@ func ReadUsernamesFromJSONAndCreateAccounts() {
 		log.Fatal(err)
 	}
 	userAcountAttempts := uploader.GetOrCreateUserAccounts(ctx, userNames)
+	for _, attempt := range userAcountAttempts {
+		fmt.Printf("\n Println for %s. Success: %v", attempt.Username, attempt.Success)
+		CommonName := ""
+		if attempt.Account != nil {
+			CommonName = attempt.Account.CommonName
+		}
+		uploader.Logger.Info("attempt made for "+attempt.Username,
+			zap.String("UserName", attempt.Username),
+			zap.Bool("Success", attempt.Success),
+			zap.String("Message", attempt.Message),
+			zap.String("CommonName", CommonName),
+			zap.Error(attempt.ErrorMessage),
+		)
+	}
+	filePathOutput := "usernames_accounts.JSON"
+	fullPath := outputFolder + `/` + filePathOutput
+	fmt.Printf("Outputting results to %s \n", fullPath)
+	writeObjectToJSONFile(userAcountAttempts, fullPath) //TODO, figure out how to serialize the output better....
+
+}
+func ReadFullNamesFromJSONAndCreateAccounts() {
+	ctx := context.Background()
+	config := viper.New()
+	config.AutomaticEnv()
+	uploader := NewUploader(config)
+	ctx = appcontext.WithLogger(ctx, &uploader.Logger)
+
+	filePath := outputFolder + `/` + "full_names.JSON"
+	fullNames := []string{}
+	fmt.Printf("Attempting to read full_names from %s", filePath)
+
+	err := readJSONFromFile(filePath, &fullNames)
+	if err != nil {
+		log.Fatal(err)
+	}
+	userAcountAttempts := uploader.GetOrCreateUserAccounts(ctx, fullNames)
 	for _, attempt := range userAcountAttempts {
 		fmt.Printf("\n Println for %s. Success: %v", attempt.Username, attempt.Success)
 		CommonName := ""
@@ -212,6 +256,37 @@ func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []stri
 			username,
 			false,
 			userhelpers.GetUserInfoAccountInfoWrapperFunc(u.Okta.FetchUserInfo),
+		)
+		if err != nil {
+			attempt.ErrorMessage = err
+			attempt.Success = false
+			attempt.Message = " failed to create or get user account"
+		} else {
+			attempt.Account = account
+			attempt.Success = true
+			attempt.Message = "success"
+
+		}
+		attempts = append(attempts, &attempt)
+
+	}
+	return attempts
+}
+
+// GetOrCreateUserAccountsByFullName wraps the get or create user account functionality by FullName with information about if it successfully created an account or not
+func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, userNames []string) []*UserAccountAttempt {
+	attempts := []*UserAccountAttempt{}
+
+	for _, username := range userNames {
+		attempt := UserAccountAttempt{
+			Username: username,
+		}
+		account, err := userhelpers.GetOrCreateUserAccount(ctx,
+			u.Store,
+			u.Store,
+			username,
+			false,
+			userhelpers.GetUserInfoAccountInfoWrapperFunc(u.Okta.FetchUserInfo), // TODO: update this to search by fullname
 		)
 		if err != nil {
 			attempt.ErrorMessage = err
