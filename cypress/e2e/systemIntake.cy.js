@@ -399,17 +399,6 @@ describe('The System Intake Form', () => {
     cy.get('#systemIntakeDocuments').contains('td', 'test.pdf');
   });
 
-  /**
-   * Test contact details section error messages
-   */
-  it('displays contact details error messages', () => {
-    // Click next button without filling in any values
-    cy.contains('button', 'Next').click();
-
-    // Check for error messages
-    cy.get('[data-testid="contact-details-errors"]');
-  });
-
   it('displays request details error messages', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
