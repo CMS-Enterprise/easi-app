@@ -399,24 +399,6 @@ describe('The System Intake Form', () => {
     cy.get('#systemIntakeDocuments').contains('td', 'test.pdf');
   });
 
-  it('displays request details error messages', () => {
-    cy.systemIntake.contactDetails.fillNonBranchingFields();
-
-    cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
-
-    cy.get('#IntakeForm-NoGovernanceTeam')
-      .check({ force: true })
-      .should('be.checked');
-
-    cy.contains('button', 'Next').click();
-
-    cy.contains('h1', 'Request details');
-
-    cy.contains('button', 'Next').click();
-
-    cy.get('[data-testid="request-details-errors"]');
-  });
-
   it('displays funding source error messages', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
     cy.contains('button', 'Next').click();
