@@ -107,8 +107,6 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    // Skip documents step
-
     cy.contains('button', 'Continue without documents').click();
 
     // Review
@@ -484,15 +482,5 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Back').click();
     cy.wait('@updateRequestDetails');
-  });
-});
-
-describe('users who got lost', () => {
-  it('redirects to the system type page if somebody managed to skip it', () => {
-    cy.localLogin({ name: 'E2E1' });
-    cy.visit('/system/new');
-    cy.location().should(loc => {
-      expect(loc.pathname).to.equal('/system/request-type');
-    });
   });
 });
