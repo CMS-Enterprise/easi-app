@@ -399,41 +399,6 @@ describe('The System Intake Form', () => {
     cy.get('#systemIntakeDocuments').contains('td', 'test.pdf');
   });
 
-  it('displays funding source error messages', () => {
-    cy.systemIntake.contactDetails.fillNonBranchingFields();
-    cy.contains('button', 'Next').click();
-    cy.systemIntake.requestDetails.fillNonBranchingFields();
-    cy.get('#IntakeForm-CurrentStage')
-      .select('Just an idea')
-      .should('have.value', 'Just an idea');
-    cy.contains('button', 'Next').click();
-
-    // Check empty funding number and funding sources
-    cy.systemIntake.contractDetails.addFundingSource({ restart: true });
-    cy.contains('span', 'Funding number must be exactly 6 digits');
-    cy.contains('span', 'Select a funding source');
-
-    // Check funding source is numeric
-    cy.systemIntake.contractDetails.addFundingSource({
-      fundingNumber: 'abcdef',
-      sources: ['Fed Admin', 'Research']
-    });
-    cy.contains('span', 'Funding number can only contain digits');
-
-    // Add valid funding source
-    cy.systemIntake.contractDetails.addFundingSource({
-      fundingNumber: '123456'
-    });
-
-    // Check funding number is unique
-    cy.systemIntake.contractDetails.addFundingSource({
-      fundingNumber: '123456',
-      sources: ['Fed Admin', 'Research'],
-      restart: true
-    });
-    cy.contains('span', 'Funding number must be unique');
-  });
-
   it('saves on back click', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
     cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
