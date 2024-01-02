@@ -15,24 +15,18 @@ Database migrations only happen in the DB context, so we can't query an external
 
 ## Considered Alternatives
 
-* *[alternative 1]*
-* *[alternative 2]*
-* *[alternative 3]*
-* *[...]* <!-- numbers of alternatives can vary -->
+*  Write a helper script or program that inserts user account records for all places in the DB that reference an EUAID
+* Insert place holder records
+* A combination of approaches. Using an auxiliary script, and rely on temp records for any unforeseen edge cases
+
 
 ## Decision Outcome
 
-* Chosen Alternative: *[alternative 1]*
-* *[justification.
-  e.g., only alternative,
-  which meets KO criterion decision driver
-  | which resolves force force
-  | ...
-  | comes out best (see below)]*
-* *[consequences. e.g.,
-  negative impact on quality attribute,
-  follow-up decisions required,
-  ...]* <!-- optional -->
+* A combination of approaches. Using an auxiliary script, and rely on temp records for any unforeseen edge cases
+
+An auxiliary script serves our current need the best. It will ensure that most users are have a record already in place before we attempt a migration. As a result, the migration should be smooth. 
+
+For cases where we cannot create a user account for an existing record, we can add placeholder account information. That will allow us to create a reference to the user table for an EUAID, and handle this edge case where user information is missing.
 
 ## Pros and Cons of the Alternatives <!-- optional -->
 
