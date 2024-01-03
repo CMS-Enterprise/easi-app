@@ -81,9 +81,9 @@ func testFunction() {
 	userNames = append(userNames, "SWKJ") //DEACTIVATED
 	writeObjectToJSONFile(userNames, "usernames.JSON")
 
-	userAcountAttempts := uploader.GetOrCreateUserAccounts(ctx, userNames)
+	userAccountAttempts := uploader.GetOrCreateUserAccounts(ctx, userNames)
 
-	for _, attempt := range userAcountAttempts {
+	for _, attempt := range userAccountAttempts {
 		fmt.Printf("\n Println for %s. Success: %v", attempt.Username, attempt.Success)
 		CommonName := ""
 		if attempt.Account != nil {
@@ -99,6 +99,6 @@ func testFunction() {
 
 	}
 
-	fmt.Print(userAcountAttempts)
+	fmt.Print(userAccountAttempts)
 
 }

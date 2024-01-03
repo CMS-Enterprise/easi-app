@@ -1,5 +1,5 @@
 
-SELECT fullname
+SELECT full_name
 FROM (
 
 
@@ -10,17 +10,17 @@ accessibility_request_status_records
 accessibility_requests
 accessibility_requests_and_statuses
 */
--- Subquery for actions table
+-- Sub query for actions table
 -- Note, we already get the EUAID for this field, so maybe, this isn't needed
-SELECT actor_name AS fullname
+SELECT actor_name AS full_name
 FROM actions
 UNION
 
--- Subquery for business_cases table
-SELECT requester AS fullname
+-- Sub query for business_cases table
+SELECT requester AS full_name
 FROM business_cases
 UNION
-SELECT business_owner AS fullname
+SELECT business_owner AS full_name
 FROM business_cases
 UNION
 
@@ -32,9 +32,9 @@ flyway_schema_history
 governance_request_feedback
 */
 
--- Subquery for notes table
+-- Sub query for notes table
 -- Note, we already get the EUAID for this field, so maybe, this isn't needed
-SELECT author_name AS fullname
+SELECT author_name AS full_name
 FROM notes
 UNION
 
@@ -44,55 +44,55 @@ system_intake_documents
 system_intake_funding_sources
 */
 
--- Subquery for system_intakes table
+-- Sub query for system_intakes table
 -- Note, we already get the EUAID, which I think we use for requester? This will have to be validated
 -- Verify that these aren't duplicated from the contacts table
-SELECT requester AS fullname
+SELECT requester AS full_name
 FROM system_intakes
 UNION
-SELECT business_owner AS fullname
+SELECT business_owner AS full_name
 FROM system_intakes
 UNION
-SELECT product_manager AS fullname
+SELECT product_manager AS full_name
 FROM system_intakes
 UNION
 
---TODO: NEED TO VERIFY THAT THESE FIELDS ARE NAMES AND NOT EUAIDS
-SELECT isso AS fullname
+--TODO: NEED TO VERIFY THAT THESE FIELDS ARE NAMES AND NOT EUA IDs
+SELECT isso AS full_name
 FROM system_intakes
 UNION
-SELECT trb_collaborator AS fullname
+SELECT trb_collaborator AS full_name
 FROM system_intakes
 UNION
-SELECT oit_security_collaborator AS fullname
+SELECT oit_security_collaborator AS full_name
 FROM system_intakes
 UNION
-SELECT ea_collaborator AS fullname
+SELECT ea_collaborator AS full_name
 FROM system_intakes
 UNION
-SELECT contractor AS fullname -- TODO: verify that this is meant to be an individual... This might just be a string
+SELECT contractor AS full_name -- TODO: verify that this is meant to be an individual... This might just be a string
 FROM system_intakes
 UNION
-SELECT isso AS fullname
+SELECT isso AS full_name
 FROM system_intakes
 UNION
 
  -- TODO: verify, is this supposed to be be the same as the other top columns
-SELECT isso_name AS fullname
+SELECT isso_name AS full_name
 FROM system_intakes
 UNION
-SELECT trb_collaborator_name AS fullname
+SELECT trb_collaborator_name AS full_name
 FROM system_intakes
 UNION
-SELECT oit_security_collaborator_name AS fullname
+SELECT oit_security_collaborator_name AS full_name
 FROM system_intakes
 UNION
-SELECT ea_collaborator_name AS fullname
+SELECT ea_collaborator_name AS full_name
 FROM system_intakes
 UNION
 
 -- Unsure if this is EUAID or name, will need to verify
-SELECT admin_lead AS fullname
+SELECT admin_lead AS full_name
 FROM system_intakes
 /*not present in these tables
 
@@ -114,5 +114,5 @@ user_account
 */
 
 
-) AS fullname 
-WHERE fullname IS NOT NULL AND fullname <>'';
+) AS full_name 
+WHERE full_name IS NOT NULL AND full_name <>'';

@@ -48,9 +48,9 @@ var queryUserNameCmd = &cobra.Command{
 	},
 }
 var queryFullNameCmd = &cobra.Command{
-	Use:   "fullname",
-	Short: "Query unique fullname in the database and output to json file",
-	Long:  "Query unique fullname in the database and output to json file",
+	Use:   "full_name",
+	Short: "Query unique full name in the database and output to json file",
+	Long:  "Query unique full name in the database and output to json file",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		QueryFullNamesAndExportToJSON()
@@ -107,7 +107,7 @@ func QueryFullNamesAndExportToJSON() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("%d distinct fullnames found. \n", len(userNames))
+	fmt.Printf("%d distinct full names found. \n", len(userNames))
 
 	filePath := "full_names.JSON"
 	fullPath := outputFolder + `/` + filePath
@@ -132,8 +132,8 @@ func ReadUsernamesFromJSONAndCreateAccounts() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	userAcountAttempts := uploader.GetOrCreateUserAccounts(ctx, userNames)
-	for _, attempt := range userAcountAttempts {
+	userAccountAttempts := uploader.GetOrCreateUserAccounts(ctx, userNames)
+	for _, attempt := range userAccountAttempts {
 		fmt.Printf("\n Println for %s. Success: %v", attempt.Username, attempt.Success)
 		CommonName := ""
 		if attempt.Account != nil {
@@ -150,7 +150,7 @@ func ReadUsernamesFromJSONAndCreateAccounts() {
 	filePathOutput := "usernames_accounts.JSON"
 	fullPath := outputFolder + `/` + filePathOutput
 	fmt.Printf("Outputting results to %s \n", fullPath)
-	writeObjectToJSONFile(userAcountAttempts, fullPath) //TODO, figure out how to serialize the output better....
+	writeObjectToJSONFile(userAccountAttempts, fullPath) //TODO, figure out how to serialize the output better....
 
 }
 func ReadFullNamesFromJSONAndCreateAccounts() {
@@ -168,8 +168,8 @@ func ReadFullNamesFromJSONAndCreateAccounts() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	userAcountAttempts := uploader.GetOrCreateUserAccountsByFullName(ctx, fullNames)
-	for _, attempt := range userAcountAttempts {
+	userAccountAttempts := uploader.GetOrCreateUserAccountsByFullName(ctx, fullNames)
+	for _, attempt := range userAccountAttempts {
 		fmt.Printf("\n Println for %s. Success: %v", attempt.Username, attempt.Success)
 		CommonName := ""
 		if attempt.Account != nil {
@@ -186,7 +186,7 @@ func ReadFullNamesFromJSONAndCreateAccounts() {
 	filePathOutput := "full_names_accounts.JSON"
 	fullPath := outputFolder + `/` + filePathOutput
 	fmt.Printf("Outputting results to %s \n", fullPath)
-	writeObjectToJSONFile(userAcountAttempts, fullPath) //TODO, figure out how to serialize the output better....
+	writeObjectToJSONFile(userAccountAttempts, fullPath) //TODO, figure out how to serialize the output better....
 
 }
 
@@ -225,7 +225,7 @@ func (u *Uploader) QueryFullNames() ([]string, error) {
 	err := u.DB.Select(&usernames, getAllFullNamesSQL)
 
 	if err != nil {
-		return nil, fmt.Errorf(" unable to query fullnames %w", err)
+		return nil, fmt.Errorf(" unable to query full names %w", err)
 
 	}
 
@@ -277,16 +277,16 @@ func (u *Uploader) GetOrCreateUserAccounts(ctx context.Context, userNames []stri
 func (u *Uploader) GetOrCreateUserAccountsByFullName(ctx context.Context, fullNames []string) []*UserAccountAttempt {
 	attempts := []*UserAccountAttempt{}
 
-	for _, fullname := range fullNames {
+	for _, fullName := range fullNames {
 		attempt := UserAccountAttempt{ //TODO, make a different struct for this specifically so we can record the name
-			Username: fullname,
+			Username: fullName,
 		}
 		account, err := userhelpers.GetOrCreateUserAccountFullName(ctx,
 			u.Store,
 			u.Store,
-			fullname,
+			fullName,
 			false,
-			userhelpers.GetUserInfoAccountInfoWrapperFunc(u.Okta.FetchUserInfoByCommonName), // TODO: update this to search by fullname
+			userhelpers.GetUserInfoAccountInfoWrapperFunc(u.Okta.FetchUserInfoByCommonName), // TODO: update this to search by full name
 		)
 		if err != nil {
 			attempt.ErrorMessage = err

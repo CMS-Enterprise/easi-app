@@ -6,14 +6,14 @@ Can refactor this to not do all
 SELECT username
 FROM (
 
--- Subquery for actions table
+-- Sub query for actions table
 SELECT actor_eua_user_id AS username
 FROM actions
 UNION
 
  
   
-  -- Subquery for business_cases table
+  -- Sub query for business_cases table
   SELECT username
   FROM (
     SELECT eua_user_id AS username
@@ -25,13 +25,13 @@ UNION
   
   UNION
 
--- Subquery for cedar_system_bookmarks table
+-- Sub query for cedar_system_bookmarks table
 SELECT eua_user_id AS username
 FROM cedar_system_bookmarks
 UNION
 
 
--- Subquery for governance_request_feedback table
+-- Sub query for governance_request_feedback table
 SELECT created_by AS username
 FROM governance_request_feedback
 UNION
@@ -39,7 +39,7 @@ SELECT modified_by AS username
 FROM governance_request_feedback
 UNION
 
--- Subquery for notes table
+-- Sub query for notes table
 SELECT eua_user_id AS username
 FROM notes
 UNION
@@ -47,12 +47,12 @@ SELECT modified_by AS username
 FROM notes
 UNION
 
--- Subquery for system_intake_contacts table
+-- Sub query for system_intake_contacts table
 SELECT eua_user_id AS username
 FROM system_intake_contacts
 UNION
 
--- Subquery for system_intake_documents table
+-- Sub query for system_intake_documents table
 SELECT created_by AS username
 FROM system_intake_documents
 UNION
@@ -64,7 +64,7 @@ UNION
 
 
  
--- Subquery for trb_admin_notes table
+-- Sub query for trb_admin_notes table
 SELECT created_by AS username
 FROM trb_admin_notes
 UNION
@@ -72,7 +72,7 @@ SELECT modified_by AS username
 FROM trb_admin_notes
 UNION
 
-  -- Subquery for trb_admin_notes_trb_admin_note_recommendations_links table
+  -- Sub query for trb_admin_notes_trb_admin_note_recommendations_links table
   SELECT created_by AS username
   FROM trb_admin_notes_trb_admin_note_recommendations_links
   UNION
@@ -81,7 +81,7 @@ UNION
   
   UNION
   
-  -- Subquery for trb_admin_notes_trb_request_documents_links table
+  -- Sub query for trb_admin_notes_trb_request_documents_links table
   SELECT created_by AS username
   FROM trb_admin_notes_trb_request_documents_links
   UNION
@@ -90,7 +90,7 @@ UNION
   
   UNION
   
-  -- Subquery for trb_advice_letter_recommendations table
+  -- Sub query for trb_advice_letter_recommendations table
   SELECT created_by AS username
   FROM trb_advice_letter_recommendations
   UNION
@@ -99,7 +99,7 @@ UNION
   
   UNION
   
-  -- Subquery for trb_advice_letters table
+  -- Sub query for trb_advice_letters table
   SELECT created_by AS username
   FROM trb_advice_letters
   UNION
@@ -108,7 +108,7 @@ UNION
   
   UNION
   
-  -- Subquery for trb_lead_options table
+  -- Sub query for trb_lead_options table
   SELECT created_by AS username
   FROM trb_lead_options
   UNION
@@ -120,7 +120,7 @@ UNION
   
   UNION
   
-  -- Subquery for trb_request table
+  -- Sub query for trb_request table
   SELECT created_by AS username
   FROM trb_request
   UNION
@@ -132,7 +132,7 @@ UNION
   
   UNION
   
-  -- Subquery for trb_request_attendees table
+  -- Sub query for trb_request_attendees table
   SELECT created_by AS username
   FROM trb_request_attendees
   UNION
@@ -144,7 +144,7 @@ UNION
   
   UNION
   
-  -- Subquery for trb_request_documents table
+  -- Sub query for trb_request_documents table
   SELECT created_by AS username
   FROM trb_request_documents
   UNION
@@ -153,7 +153,7 @@ UNION
   
   UNION
   
-  -- Subquery for trb_request_feedback table
+  -- Sub query for trb_request_feedback table
   SELECT created_by AS username
   FROM trb_request_feedback
   UNION
@@ -163,7 +163,7 @@ UNION
   
   UNION
   
-  -- Subquery for trb_request_forms table
+  -- Sub query for trb_request_forms table
   SELECT created_by AS username
   FROM trb_request_forms
   UNION
@@ -172,7 +172,7 @@ UNION
   
   UNION
   
-  -- Subquery for trb_request_funding_sources table
+  -- Sub query for trb_request_funding_sources table
   SELECT created_by AS username
   FROM trb_request_funding_sources
   UNION
@@ -181,7 +181,7 @@ UNION
   
   UNION
   
-  -- Subquery for trb_request_system_intakes table
+  -- Sub query for trb_request_system_intakes table
   SELECT created_by AS username
   FROM trb_request_system_intakes
   UNION
