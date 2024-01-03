@@ -64,3 +64,45 @@ Special attention should be given to places in the app that reference a user dif
 With the above decision, we should first implement user accounts, and create accounts for all historical references.
 
 We should implement user account references for all the places that a user besides the currently logged in user account is referenced. By doing so, we will ensure that we have a user account referenced in the database for all referenced users. This should give us confidence that every user referenced in the application has a user account.
+
+It would be ideal to create a reference of the user that is being added and replace the reference with a foreign key to the user table. A first pass alternative would be to create an account for every referenced user. We could then take more time to switch out the logic to reference a user.
+
+#### Areas that add Users
+1. System Intake
+    a. Requester
+    b. business owner
+    c. product manager
+    d. ISSO
+    e. TRB Collaborator
+    f. OIT Security Collaborator
+    g. EA Collaborator
+    h. Contractor
+    i. Admin Lead
+
+2. Business Cases
+    a. Requester (Should be the same as system intake)
+    b. business owner (Should be the same as system intake)
+
+## Proofs of Concepts
+
+To validate these hypothesis, a few branches were created to test some of this initial implementation.
+
+### [Account Creator Test Branch `(EASI-3341/user_account_spike_poc_user_table_filler)`](https://github.com/CMSgov/easi-app/tree/EASI-3341/user_account_spike_poc_user_table_filler)
+
+This branch makes a small utility program. It queries the database for both usernames and user ids, and then it attempts to find information on that user in OKTA. If successful, it creates an account reference for the user in the database. The script can be invoked by running `go run ./cmd/populate_user_table/*.go` . Select the options you want to run by pressing space, and press enter to execute the commands.
+
+
+
+### [Account Table and TRB Migration `(EASI-3341/user_account_spike_poc)`](https://github.com/CMSgov/easi-app/tree/EASI-3341/user_account_spike_poc)
+
+This branch ports the user table functionality from MINT. These features include
+1. New Data loaders
+2. A User Account Table
+3. A New implementation of Base Struct
+4. Generic functionality to get an account by an ID ( see TRB Request `createdByUserAccount` field)
+
+There is also a migration to migrate the TRB request table to use the user account table. More work will need to be done to finish migrating the data properly, but this shows feasibility
+
+
+### Access Check
+From previous work in MINT, access control should be fairly simple to implement. Previously, this was handled by the [access control](https://github.com/CMSgov/mint-app/blob/bfc54d4de177a4d836028e5356bdb24d30eab490/pkg/accesscontrol/access_control.go#L17C1-L77C2) package, simply checking if the user was a collaborator.  This should be straightforward to implement in EASI if it is needed.
