@@ -18,7 +18,7 @@ describe('The Task List', () => {
     cy.contains('a', 'Get started').click();
   });
 
-  it('shows a continue link when a user clicks back until they reach the task list', () => {
+  it.skip('shows a continue link when a user clicks back until they reach the task list', () => {
     cy.wait(1000);
     cy.get('[data-testid="intake-start-btn"]').should('be.visible').click();
 

@@ -5,11 +5,74 @@ import (
 
 	"github.com/guregu/null"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
+
+// CreateSystemIntake creates a system intake.
+func CreateSystemIntake(
+	ctx context.Context,
+	store *storage.Store,
+	input model.CreateSystemIntakeInput,
+) (*models.SystemIntake, error) {
+	systemIntake := models.SystemIntake{
+		EUAUserID:   null.StringFrom(appcontext.Principal(ctx).ID()),
+		RequestType: models.SystemIntakeRequestType(input.RequestType),
+		Requester:   input.Requester.Name,
+		Status:      models.SystemIntakeStatusINTAKEDRAFT,
+		State:       models.SystemIntakeStateOPEN,
+		Step:        models.SystemIntakeStepINITIALFORM,
+	}
+	createdIntake, err := store.CreateSystemIntake(ctx, &systemIntake)
+	return createdIntake, err
+}
+
+// CreateSystemIntakeContact creates a system intake's contact info.
+func CreateSystemIntakeContact(
+	ctx context.Context,
+	store *storage.Store,
+	input model.CreateSystemIntakeContactInput,
+) (*model.CreateSystemIntakeContactPayload, error) {
+	contact := &models.SystemIntakeContact{
+		SystemIntakeID: input.SystemIntakeID,
+		EUAUserID:      input.EuaUserID,
+		Component:      input.Component,
+		Role:           input.Role,
+	}
+	createdContact, err := store.CreateSystemIntakeContact(ctx, contact)
+	if err != nil {
+		return nil, err
+	}
+	return &model.CreateSystemIntakeContactPayload{
+		SystemIntakeContact: createdContact,
+	}, nil
+}
+
+// UpdateSystemIntakeContact updates a system intake's contact info.
+func UpdateSystemIntakeContact(
+	ctx context.Context,
+	store *storage.Store,
+	input model.UpdateSystemIntakeContactInput,
+) (*model.CreateSystemIntakeContactPayload, error) {
+	contact := &models.SystemIntakeContact{
+		ID:             input.ID,
+		SystemIntakeID: input.SystemIntakeID,
+		EUAUserID:      input.EuaUserID,
+		Component:      input.Component,
+		Role:           input.Role,
+	}
+
+	updatedContact, err := store.UpdateSystemIntakeContact(ctx, contact)
+	if err != nil {
+		return nil, err
+	}
+	return &model.CreateSystemIntakeContactPayload{
+		SystemIntakeContact: updatedContact,
+	}, nil
+}
 
 // TODO: thes calls could largely be combined in a more general call to Update the System Intake. It would rely on a similar approach that was taken in TRB
 
@@ -190,6 +253,51 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 	return &model.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
 	}, err
+}
+
+// SubmitIntake is the resolver to submit the initial request form of a system intake
+func SubmitIntake(
+	ctx context.Context,
+	store *storage.Store,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	submitIntake func(context.Context, *models.SystemIntake, *models.Action) error,
+	input model.SubmitIntakeInput,
+) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	actorEUAID := appcontext.Principal(ctx).ID()
+	actorInfo, err := fetchUserInfo(ctx, actorEUAID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = submitIntake(
+		ctx,
+		intake,
+		&models.Action{
+			IntakeID:       &input.ID,
+			ActionType:     models.ActionTypeSUBMITINTAKE,
+			ActorEUAUserID: actorEUAID,
+			ActorName:      actorInfo.CommonName,
+			ActorEmail:     actorInfo.Email,
+			Step:           &intake.Step,
+		})
+	if err != nil {
+		return nil, err
+	}
+
+	intake, err = store.FetchSystemIntakeByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+
 }
 
 // SystemIntakes returns a list of System Intakes for the admin table (which is why it uses the FetchSystemIntakesByStateForAdmins store method)

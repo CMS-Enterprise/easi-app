@@ -27,7 +27,6 @@ import GovernanceTaskList from 'views/GovernanceTaskList';
 import GovernanceFeedback from 'views/GovernanceTaskList/Feedback';
 import LcidInfo from 'views/GovernanceTaskList/LcidInfo';
 import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
-import GovernanceTaskListV1 from 'views/GovernanceTaskListV1';
 import Help from 'views/Help';
 import Home from 'views/Home';
 import Login from 'views/Login';
@@ -108,23 +107,11 @@ const AppRoutes = () => {
         path="/governance-overview/:systemId?"
         component={GovernanceOverview}
       />
-
-      {flags.itGovV2Enabled ? (
-        // IT Gov V2
-        <SecureRoute
-          path="/governance-task-list/:systemId"
-          exact
-          component={GovernanceTaskList}
-        />
-      ) : (
-        // IT Gov V1
-        <SecureRoute
-          path="/governance-task-list/:systemId"
-          exact
-          component={GovernanceTaskListV1}
-        />
-      )}
-
+      <SecureRoute
+        path="/governance-task-list/:systemId"
+        exact
+        component={GovernanceTaskList}
+      />
       <SecureRoute
         path="/governance-task-list/:systemId/feedback"
         exact

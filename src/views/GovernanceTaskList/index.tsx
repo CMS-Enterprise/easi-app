@@ -94,7 +94,10 @@ function GovernanceTaskList() {
   }
 
   return (
-    <MainContent className="margin-bottom-5 desktop:margin-bottom-10">
+    <MainContent
+      className="margin-bottom-5 desktop:margin-bottom-10"
+      data-testid="governance-task-list"
+    >
       <GridContainer className="width-full">
         <Breadcrumbs
           items={[
