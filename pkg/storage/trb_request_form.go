@@ -11,7 +11,39 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+
+	_ "embed"
 )
+
+//go:embed SQL/trb_request_form_create.sql
+var trbRequestFormCreateSQL string
+
+// CreateTRBRequestForm creates a new TRBRequestForm record
+func (s *Store) CreateTRBRequestForm(ctx context.Context, np NamedPreparer, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
+	if form.ID == uuid.Nil {
+		form.ID = uuid.New()
+	}
+
+	stmt, err := np.PrepareNamed(trbRequestFormCreateSQL)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to update TRB create form %s", err),
+			zap.String("id", form.ID.String()),
+		)
+		return nil, err
+	}
+	defer stmt.Close()
+
+	created := models.TRBRequestForm{}
+	err = stmt.Get(&created, form)
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to create TRB request form with error %s", zap.Error(err))
+		return nil, err
+	}
+	return &created, err
+
+}
 
 // UpdateTRBRequestForm updates a TRB request form record in the database
 func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {

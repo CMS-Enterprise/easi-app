@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/lib/pq"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -24,9 +23,6 @@ var trbRequestCollectionGetMySQL string
 //go:embed SQL/trb_request_create.sql
 var trbRequestCreateSQL string
 
-//go:embed SQL/trb_request_form_create.sql
-var trbRequestFormCreateSQL string
-
 //go:embed SQL/trb_request_get_by_id.sql
 var trbRequestGetByIDSQL string
 
@@ -34,15 +30,12 @@ var trbRequestGetByIDSQL string
 var trbRequestUpdateSQL string
 
 // CreateTRBRequest creates a new TRBRequest record
-func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*models.TRBRequest, error) {
-	tx := s.db.MustBegin()
-	defer tx.Rollback()
-
+func (s *Store) CreateTRBRequest(ctx context.Context, np NamedPreparer, trb *models.TRBRequest) (*models.TRBRequest, error) {
 	if trb.ID == uuid.Nil {
 		trb.ID = uuid.New()
 	}
 
-	stmt, err := tx.PrepareNamed(trbRequestCreateSQL)
+	stmt, err := np.PrepareNamed(trbRequestCreateSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create trb request with error %s", err),
@@ -50,6 +43,7 @@ func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 	retTRB := models.TRBRequest{}
 
 	err = stmt.Get(&retTRB, trb)
@@ -58,39 +52,6 @@ func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*
 			fmt.Sprintf("Failed to create trb request with error %s", err),
 			zap.String("user", trb.CreatedBy),
 		)
-		return nil, err
-	}
-
-	form := models.TRBRequestForm{
-		TRBRequestID: retTRB.ID,
-		Status:       models.TRBFormStatusReadyToStart,
-		CollabGroups: pq.StringArray{},
-	}
-	form.ID = uuid.New()
-	form.CreatedBy = retTRB.CreatedBy
-
-	stmt, err = tx.PrepareNamed(trbRequestFormCreateSQL)
-
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to update TRB create form %s", err),
-			zap.String("id", form.ID.String()),
-		)
-		return nil, err
-	}
-
-	created := models.TRBRequestForm{}
-	err = stmt.Get(&created, form)
-
-	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to create TRB request form with error %s", zap.Error(err))
-		return nil, err
-	}
-
-	err = tx.Commit()
-
-	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to create TRB request with error %s", zap.Error(err))
 		return nil, err
 	}
 

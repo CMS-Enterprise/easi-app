@@ -91,10 +91,19 @@ func TestStoreTestSuite(t *testing.T) {
 
 // utility function for testing TRB-related methods
 func createTRBRequest(ctx context.Context, s *StoreTestSuite, createdBy string) uuid.UUID {
+	//TODO: this should call the resolver, not the store
+	// resolvers.CreateTRBRequest(ctx,models.TRBTNeedHelp, s.store)
+	/*
+
+		if needed til it can be refactored, set this to create the form as the resolver does
+
+
+	*/
+
 	trbRequest := models.NewTRBRequest(createdBy)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.State = models.TRBRequestStateOpen
-	createdRequest, err := s.store.CreateTRBRequest(ctx, trbRequest)
+	createdRequest, err := s.store.CreateTRBRequest(ctx, s.store, trbRequest)
 	s.NoError(err)
 
 	return createdRequest.ID

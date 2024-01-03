@@ -72,6 +72,17 @@ const (
 	TRBSubjectAreaOptionWebBasedUIService              TRBSubjectAreaOption = "WEB_BASED_UI_SERVICE"
 )
 
+// NewTRBRequestForm instantiates a TRB request form with default field values
+func NewTRBRequestForm(createdBy string) *TRBRequestForm {
+	return &TRBRequestForm{
+		BaseStruct:   NewBaseStruct(createdBy),
+		Status:       TRBFormStatusReadyToStart, //TODO:  This should maybe be handled by SQL constraints
+		CollabGroups: pq.StringArray{},          // TODO: this also might be more appropriate not initialized, and handled in SQL
+
+	}
+
+}
+
 // TRBRequestForm represents the data entered into the TRB request form
 type TRBRequestForm struct {
 	BaseStruct
