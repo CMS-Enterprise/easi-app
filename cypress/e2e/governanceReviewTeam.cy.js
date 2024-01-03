@@ -3,8 +3,8 @@ import { DateTime } from 'luxon';
 import governaceReviewTeam from '../../src/i18n/en-US/articles/governanceReviewTeam';
 
 describe('Governance Review Team', () => {
-  const futureDatetime = DateTime.local().plus({ year: 1 });
-  const futureDateYear = futureDatetime.year;
+  const futureDateTime = DateTime.local().plus({ year: 1 });
+  const futureDateYear = futureDateTime.year;
 
   beforeEach(() => {
     cy.intercept('POST', '/api/graph/query', req => {
@@ -170,7 +170,37 @@ describe('Governance Review Team', () => {
     });
   });
 
-  it.skip('can issue a Life Cycle ID', () => {
+  it.only('can issue a Life Cycle ID', () => {
+    cy.contains('a', 'Closable Request').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__resolutions').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-resolution__issue-lcid').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Fill out action form
+
+    cy.get('#useExistingLcid_false').check({ force: true });
+
+    cy.get('#expiresAt').type(futureDateTime.toFormat('mm/dd/yyyy'));
+
+    cy.get('div#scope').type('Test scope for issuing LCID');
+
+    cy.get('div#nextSteps').type('Test next steps for issuing LCID');
+
+    cy.get('#stronglyRecommended').check({ force: true });
+
+    cy.get('#costBaseline').type('Test cost baseline for issuing LCID');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+  });
+
+  it.skip('can issue a Life Cycle ID v1', () => {
     // Selecting name based on pre-seeded data
     // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
     cy.governanceReviewTeam.grtActions.selectAction({
