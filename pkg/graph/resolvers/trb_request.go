@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/dataloaders"
@@ -26,27 +27,32 @@ func CreateTRBRequest(
 	trb.Type = requestType
 	trb.State = models.TRBRequestStateOpen
 
-	createdTRB, err := store.CreateTRBRequest(ctx, trb)
-	if err != nil {
-		return nil, err
-	}
+	newTRB, err := storage.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+		//TODO:, refactor store calls to use a named preparer instead of initializing a TX in the store method
+		createdTRB, err := store.CreateTRBRequest(ctx, trb)
+		if err != nil {
+			return nil, err
+		}
+		// This should probably be a part of a transaction...
+		initialAttendee := &models.TRBRequestAttendee{
+			TRBRequestID: createdTRB.ID,
+			EUAUserID:    princ.ID(),
+			Component:    nil,
+			Role:         nil,
+		}
+		initialAttendee.CreatedBy = princ.ID()
+		_, err = store.CreateTRBRequestAttendee(ctx, initialAttendee)
+		if err != nil {
+			return nil, err
+		}
 
-	// This should probably be a part of a transaction...
-	initialAttendee := &models.TRBRequestAttendee{
-		TRBRequestID: createdTRB.ID,
-		EUAUserID:    princ.ID(),
-		Component:    nil,
-		Role:         nil,
-	}
-	initialAttendee.CreatedBy = princ.ID()
-	_, err = store.CreateTRBRequestAttendee(ctx, initialAttendee)
-	if err != nil {
-		return nil, err
-	}
+		//TODO create place holders for the rest of the related sections with calls to their stores
 
-	//TODO create place holders for the rest of the related sections with calls to their stores
+		return createdTRB, err
 
-	return createdTRB, err
+	})
+	return newTRB, err
+
 }
 
 // UpdateTRBRequest updates a TRB request
