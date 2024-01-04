@@ -170,7 +170,7 @@ describe('Governance Review Team', () => {
     });
   });
 
-  it.only('can issue a Life Cycle ID', () => {
+  it('can issue a Life Cycle ID', () => {
     cy.contains('a', 'Closable Request').should('be.visible').click();
 
     cy.get('[data-testid="grt-nav-actions-link"]').click();
@@ -198,6 +198,12 @@ describe('Governance Review Team', () => {
     cy.get('#costBaseline').type('Test cost baseline for issuing LCID');
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check decision was issued
+
+    cy.get('[data-testid="grt-current-status"]').contains(
+      /LCID issued: [0-9]{6}/
+    );
   });
 
   it.skip('can issue a Life Cycle ID v1', () => {
