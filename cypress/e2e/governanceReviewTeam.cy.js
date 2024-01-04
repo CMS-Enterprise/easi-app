@@ -3,9 +3,6 @@ import { DateTime } from 'luxon';
 import governaceReviewTeam from '../../src/i18n/en-US/articles/governanceReviewTeam';
 
 describe('Governance Review Team', () => {
-  const futureDateTime = DateTime.local().plus({ year: 1 });
-  const futureDateYear = futureDateTime.year;
-
   beforeEach(() => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'GetSystemIntake') {
@@ -183,11 +180,13 @@ describe('Governance Review Team', () => {
 
     cy.contains('button', 'Next').should('not.be.disabled').click();
 
-    // Fill out action form
+    // Complete action form
+
+    const expirationDate = DateTime.local().plus({ year: 1 });
 
     cy.get('#useExistingLcid_false').check({ force: true });
 
-    cy.get('#expiresAt').type(futureDateTime.toFormat('MM/dd/yyyy'));
+    cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
 
     cy.get('div#scope').type('Test scope for issuing LCID');
 
@@ -204,6 +203,51 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="grt-current-status"]').contains(
       /LCID issued: [0-9]{6}/
     );
+  });
+
+  it('can update a Life Cycle ID', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'Closable Request').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__update').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    const expirationDate = DateTime.local().plus({ year: 2 });
+    const scope = 'Updated test scope for issuing LCID';
+    const nextSteps = 'Updated test next steps for issuing LCID';
+    const costBaseline = 'Updated test cost baseline for issuing LCID';
+
+    cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
+    cy.get('div#scope').type(scope);
+    cy.get('div#nextSteps').type(nextSteps);
+    cy.get('#costBaseline').type(costBaseline);
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+
+    cy.get('div[data-testid="alert"]').contains(
+      /Life Cycle ID [0-9]{6} has been updated./
+    );
+
+    // Check LCID was updated
+
+    cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
+
+    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(scope);
+    cy.get('dd').contains(nextSteps);
+    cy.get('dd').contains(costBaseline);
   });
 
   it.skip('can close a request', () => {
@@ -263,87 +307,5 @@ describe('Governance Review Team', () => {
 
     // Check that contact is automatically selected
     cy.get('input[value="aaron.adams@local.fake"]').should('be.checked');
-  });
-
-  it.skip('can extend a Life Cycle ID', () => {
-    cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'GetAdminNotesAndActions') {
-        req.alias = 'getAdminNotesAndActions';
-      }
-    });
-
-    cy.get('button').contains('Closed requests').click();
-
-    // Navigate to intake and select action
-    cy.governanceReviewTeam.grtActions.selectAction({
-      intakeName: 'With LCID Issued',
-      actionId: 'extend-lcid'
-    });
-
-    cy.get('#ExtendLifecycleId-expirationDateMonth')
-      .type('08')
-      .should('have.value', '08');
-    cy.get('#ExtendLifecycleId-expirationDateDay')
-      .type('31')
-      .should('have.value', '31');
-    cy.get('#ExtendLifecycleId-expirationDateYear')
-      .type(futureDateYear)
-      .should('have.value', futureDateYear);
-
-    cy.get('#ExtendLifecycleIdForm-Scope')
-      .type('Scope')
-      .should('have.value', 'Scope');
-
-    cy.get('#ExtendLifecycleIdForm-NextSteps')
-      .type('Next Steps')
-      .should('have.value', 'Next Steps');
-
-    cy.get('#ExtendLifecycleIdForm-CostBaseline')
-      .type('Cost Baseline')
-      .should('have.value', 'Cost Baseline');
-
-    cy.get('button[type="submit"]').click();
-
-    cy.wait('@getAdminNotesAndActions');
-    cy.get('h1').contains('Admin team notes');
-  });
-
-  it.skip('can extend a Life Cycle ID with no Cost Baseline', () => {
-    cy.intercept('POST', '/api/graph/query', req => {
-      if (req.body.operationName === 'GetAdminNotesAndActions') {
-        req.alias = 'getAdminNotesAndActions';
-      }
-    });
-
-    cy.get('button').contains('Closed requests').click();
-
-    // Navigate to intake and select action
-    cy.governanceReviewTeam.grtActions.selectAction({
-      intakeName: 'With LCID Issued',
-      actionId: 'extend-lcid'
-    });
-
-    cy.get('#ExtendLifecycleId-expirationDateMonth')
-      .type('08')
-      .should('have.value', '08');
-    cy.get('#ExtendLifecycleId-expirationDateDay')
-      .type('31')
-      .should('have.value', '31');
-    cy.get('#ExtendLifecycleId-expirationDateYear')
-      .type(futureDateYear)
-      .should('have.value', futureDateYear);
-
-    cy.get('#ExtendLifecycleIdForm-Scope')
-      .type('Scope')
-      .should('have.value', 'Scope');
-
-    cy.get('#ExtendLifecycleIdForm-NextSteps')
-      .type('Next Steps')
-      .should('have.value', 'Next Steps');
-
-    cy.get('button[type="submit"]').click();
-
-    cy.wait('@getAdminNotesAndActions');
-    cy.get('h1').contains('Admin team notes');
   });
 });
