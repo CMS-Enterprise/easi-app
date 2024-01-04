@@ -19,6 +19,13 @@ func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTi
 	if intake.State == models.SystemIntakeStateCLOSED && intake.DecisionState == models.SIDSNoDecision {
 		return models.SISRClosed, nil
 	}
+	if intake.State == models.SystemIntakeStateCLOSED &&
+		intake.DecisionState != models.SIDSNoDecision &&
+		intake.Step != models.SystemIntakeStepDECISION {
+		// If an intake has a decision but is re-opened, progressed to an earlier step,
+		// and then closed without a decision, show closed.
+		return models.SISRClosed, nil
+	}
 
 	switch intake.Step {
 	case models.SystemIntakeStepINITIALFORM:

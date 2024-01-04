@@ -94,7 +94,7 @@ export default {
         description:
           'If your request is approved, you will receive a unique Life Cycle ID. If it is not approved, you will receive documented next steps or concerns to address in order to proceed.',
         button: 'Read the decision',
-        viewExistingDecision: 'View existing decision'
+        viewPreviousDecision: 'View previous decision'
       }
     }
   }
