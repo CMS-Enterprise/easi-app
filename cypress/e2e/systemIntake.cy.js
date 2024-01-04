@@ -31,7 +31,11 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Continue').click();
     cy.contains('a', 'Get started').click();
     cy.wait(1000);
-    cy.contains('a', 'Start').click();
+
+    cy.get('li[data-testid="fill-out-the-intake-request-form"]')
+      .contains('button', 'Start')
+      .click();
+
     cy.location().should(loc => {
       expect(loc.pathname).to.match(/\/system\/.{36}\/contact-details/);
     });
