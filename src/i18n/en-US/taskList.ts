@@ -1,5 +1,4 @@
 const taskList = {
-  pageHeading: 'Get governance approval',
   withdraw_modal: {
     header: 'Confirm you want to remove {{-requestName}}.',
     warning: 'You will lose any information you have filled in.',
