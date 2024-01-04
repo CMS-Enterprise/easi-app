@@ -206,69 +206,6 @@ describe('Governance Review Team', () => {
     );
   });
 
-  it.skip('can issue a Life Cycle ID v1', () => {
-    // Selecting name based on pre-seeded data
-    // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
-    cy.governanceReviewTeam.grtActions.selectAction({
-      intakeName: 'A Completed Intake Form',
-      actionId: 'issue-lcid'
-    });
-
-    cy.get('#grtActionEmailRecipientFields').should('be.visible');
-
-    cy.get('#IssueLifecycleIdForm-NewLifecycleIdYes').check({ force: true });
-    cy.get('#IssueLifecycleIdForm-NewLifecycleIdYes').should('be.checked');
-
-    cy.get('#IssueLifecycleIdForm-ExpirationDateMonth')
-      .clear()
-      .type('12')
-      .should('have.value', '12');
-    cy.get('#IssueLifecycleIdForm-ExpirationDateDay')
-      .clear()
-      .type('25')
-      .should('have.value', '25');
-
-    cy.get('#IssueLifecycleIdForm-ExpirationDateYear')
-      .clear()
-      .type(futureDateYear)
-      .should('have.value', futureDateYear);
-    cy.get('#IssueLifecycleIdForm-Scope')
-      .type('Scope')
-      .should('have.value', 'Scope');
-    cy.get('#IssueLifecycleIdForm-NextSteps')
-      .type('Next steps')
-      .should('have.value', 'Next steps');
-    cy.get('#IssueLifecycleIdForm-Feedback')
-      .type('Feedback')
-      .should('have.value', 'Feedback');
-    cy.get('button[type="submit"]').click();
-
-    cy.get('[data-testid="action-note"]')
-      .first()
-      .contains('Issued Life Cycle ID with no further governance');
-
-    cy.get(
-      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/decision"]'
-    ).click();
-
-    cy.contains('h1', 'Decision - Approved');
-    cy.get('[data-testid="grt-current-status"]')
-      .invoke('text')
-      .then(text => {
-        expect(text.length).to.equal(28);
-      });
-    cy.contains('p', 'Life Cycle ID issued');
-
-    cy.get(
-      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/lcid"]'
-    ).click();
-    cy.contains('dt', 'Life Cycle ID Expiration')
-      .siblings('dd')
-      .contains(`December 25, ${futureDateYear}`);
-    cy.contains('dt', 'Life Cycle ID Scope').siblings('dd').contains('Scope');
-    cy.contains('dt', 'Next Steps').siblings('dd').contains('Next steps');
-  });
-
   it.skip('can close a request', () => {
     // Selecting name based on pre-seeded data
     // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
