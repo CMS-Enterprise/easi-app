@@ -187,7 +187,7 @@ describe('Governance Review Team', () => {
 
     cy.get('#useExistingLcid_false').check({ force: true });
 
-    cy.get('#expiresAt').type(futureDateTime.toFormat('mm/dd/yyyy'));
+    cy.get('#expiresAt').type(futureDateTime.toFormat('MM/dd/yyyy'));
 
     cy.get('div#scope').type('Test scope for issuing LCID');
 
