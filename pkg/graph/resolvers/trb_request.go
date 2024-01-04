@@ -29,7 +29,6 @@ func CreateTRBRequest(
 		trb := models.NewTRBRequest(princ.ID())
 		trb.Type = requestType
 		trb.State = models.TRBRequestStateOpen
-		//TODO:, refactor store calls to use a named preparer instead of initializing a TX in the store method
 		createdTRB, err := store.CreateTRBRequest(ctx, tx, trb)
 		if err != nil {
 			return nil, err

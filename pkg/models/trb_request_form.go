@@ -76,8 +76,8 @@ const (
 func NewTRBRequestForm(createdBy string) *TRBRequestForm {
 	return &TRBRequestForm{
 		BaseStruct:   NewBaseStruct(createdBy),
-		Status:       TRBFormStatusReadyToStart, //TODO:  This should maybe be handled by SQL constraints
-		CollabGroups: pq.StringArray{},          // TODO: this also might be more appropriate not initialized, and handled in SQL
+		Status:       TRBFormStatusReadyToStart, // This should could be handled by SQL default values
+		CollabGroups: pq.StringArray{},          // This also might be more appropriate not initialized, and handled as null in SQL
 
 	}
 
