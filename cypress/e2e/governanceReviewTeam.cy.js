@@ -197,13 +197,14 @@ describe('Governance Review Team', () => {
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
-    // Check decision was issued
+    // Check decision was issued and request closed
 
+    cy.get('[data-testid="request-state"').contains('Closed');
     cy.get('[data-testid="grt-current-status"]').contains(
       /LCID issued: [0-9]{6}/
     );
 
-    // Check LCID was issued
+    // Check correct values are displayed on Life Cycle ID page
 
     cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
 
@@ -254,13 +255,14 @@ describe('Governance Review Team', () => {
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
-    // Check decision was issued
+    // Check decision was issued and request closed
 
+    cy.get('[data-testid="request-state"').contains('Closed');
     cy.get('[data-testid="grt-current-status"]').contains(
       `LCID issued: ${lcid}`
     );
 
-    // Check LCID was issued
+    // Check correct values are displayed on Life Cycle ID page
 
     cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
 
@@ -307,7 +309,7 @@ describe('Governance Review Team', () => {
       /Life Cycle ID [0-9]{6} has been updated./
     );
 
-    // Check LCID was updated
+    // Check updated values are displayed on Life Cycle ID page
 
     cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
 
