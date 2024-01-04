@@ -1,6 +1,6 @@
 import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
 
-describe.skip('The System Intake Form', () => {
+describe('The System Intake Form', () => {
   beforeEach(() => {
     cy.localLogin({ name: 'E2E1' });
 
