@@ -43,6 +43,7 @@ func CreateTRBRequest(
 			return nil, fmt.Errorf(" unable to create  to create TRB request err :%w", err)
 		}
 
+		// Add requester as an attendee
 		initialAttendee := &models.TRBRequestAttendee{
 			TRBRequestID: createdTRB.ID,
 			EUAUserID:    princ.ID(),
@@ -54,8 +55,6 @@ func CreateTRBRequest(
 		if err != nil {
 			return nil, err
 		}
-
-		//TODO create place holders for the rest of the related sections with calls to their stores
 
 		return createdTRB, err
 
