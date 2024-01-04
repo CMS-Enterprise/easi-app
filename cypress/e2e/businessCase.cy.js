@@ -10,9 +10,9 @@ describe('The Business Case Form', () => {
       .click();
     cy.contains('h1', 'Governance task list');
 
-    cy.get(
-      '[data-testid="fill-out-the-intake-request-form"] [data-testid="button"]'
-    ).click();
+    cy.get('li[data-testid="prepare-a-draft-business-case"]')
+      .contains('button', 'Start')
+      .click();
 
     // General Request Information
     // Autofilled Fields from System Intake
