@@ -137,7 +137,6 @@ const AppRoutes = () => {
         path="/governance-task-list/:systemId/lcid-info"
         component={LcidInfo}
       />
-      <Redirect exact from="/system/new" to="/system/request-type" />
       <Redirect
         exact
         from="/system/:systemId"
