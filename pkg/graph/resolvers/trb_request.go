@@ -13,6 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
@@ -23,7 +24,7 @@ func CreateTRBRequest(
 	store *storage.Store,
 ) (*models.TRBRequest, error) {
 
-	newTRB, err := storage.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	newTRB, err := sqlutils.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		princ := appcontext.Principal(ctx)
 
 		trb := models.NewTRBRequest(princ.ID())
