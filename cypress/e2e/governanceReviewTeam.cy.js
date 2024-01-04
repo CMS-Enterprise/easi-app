@@ -183,18 +183,17 @@ describe('Governance Review Team', () => {
     // Complete action form
 
     const expirationDate = DateTime.local().plus({ year: 1 });
+    const scope = 'Test scope for issuing LCID';
+    const nextSteps = 'Test next steps for issuing LCID';
+    const costBaseline = 'Test next steps for issuing LCID';
 
     cy.get('#useExistingLcid_false').check({ force: true });
 
     cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
-
-    cy.get('div#scope').type('Test scope for issuing LCID');
-
-    cy.get('div#nextSteps').type('Test next steps for issuing LCID');
-
+    cy.get('div#scope').type(scope);
+    cy.get('div#nextSteps').type(nextSteps);
     cy.get('#stronglyRecommended').check({ force: true });
-
-    cy.get('#costBaseline').type('Test cost baseline for issuing LCID');
+    cy.get('#costBaseline').type(costBaseline);
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
@@ -203,6 +202,15 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="grt-current-status"]').contains(
       /LCID issued: [0-9]{6}/
     );
+
+    // Check LCID was issued
+
+    cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
+
+    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(scope);
+    cy.get('dd').contains(nextSteps);
+    cy.get('dd').contains(costBaseline);
   });
 
   it('can update a Life Cycle ID', () => {
