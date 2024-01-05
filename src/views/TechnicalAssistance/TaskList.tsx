@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
-import { Button, Grid, GridContainer, Link } from '@trussworks/react-uswds';
+import { useHistory, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  Button,
+  ButtonGroup,
+  Grid,
+  GridContainer,
+  Link,
+  ModalHeading
+} from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 import { DateTime } from 'luxon';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
@@ -14,11 +22,17 @@ import TaskListItem, {
   TaskListContainer,
   TaskListDescription
 } from 'components/TaskList';
+import useMessage from 'hooks/useMessage';
 import GetTrbTasklistQuery from 'queries/GetTrbTasklistQuery';
 import {
   GetTrbTasklist,
   GetTrbTasklistVariables
 } from 'queries/types/GetTrbTasklist';
+import {
+  UpdateTrbRequestArchived,
+  UpdateTrbRequestArchivedVariables
+} from 'queries/types/UpdateTrbRequestArchived';
+import UpdateTrbRequestArchivedQuery from 'queries/UpdateTrbRequestArchivedQuery';
 import {
   TRBAdviceLetterStatusTaskList,
   TRBAttendConsultStatus,
@@ -46,9 +60,12 @@ function TaskList() {
     }
   );
 
+  const history = useHistory();
   const { id } = useParams<{
     id: string;
   }>();
+
+  const { showMessageOnNextPage } = useMessage();
 
   const { data, error, loading } = useQuery<
     GetTrbTasklist,
@@ -58,6 +75,29 @@ function TaskList() {
       id
     }
   });
+
+  const requestName = data?.trbRequest.name;
+
+  const [archive] = useMutation<
+    UpdateTrbRequestArchived,
+    UpdateTrbRequestArchivedVariables
+  >(UpdateTrbRequestArchivedQuery);
+
+  const [
+    isRemoveRequestModalOpen,
+    setRemoveRequestModalOpen
+  ] = useState<boolean>(false);
+
+  const removeRequest = () => {
+    archive({ variables: { id, archived: true } }).then(result => {
+      const message = t('taskList:withdraw_modal.confirmationText', {
+        context: requestName ? 'name' : 'noName',
+        requestName
+      });
+      showMessageOnNextPage(message, { type: 'success' });
+      history.push('/');
+    });
+  };
 
   if (error) {
     return (
@@ -352,7 +392,12 @@ function TaskList() {
                 </UswdsReactLink>
               </div>
               <div className="margin-top-1">
-                <Button type="button" unstyled className="text-error">
+                <Button
+                  type="button"
+                  unstyled
+                  className="text-error"
+                  onClick={() => setRemoveRequestModalOpen(true)}
+                >
                   {t('button.removeYourRequest')}
                 </Button>
               </div>
@@ -379,6 +424,38 @@ function TaskList() {
               </div>
             </div>
           </Grid>
+
+          {/* Remove request modal */}
+          <Modal
+            isOpen={isRemoveRequestModalOpen}
+            closeModal={() => setRemoveRequestModalOpen(false)}
+          >
+            <ModalHeading>
+              {t('taskList:withdraw_modal:header', {
+                requestName: data.trbRequest.name || 'this request'
+              })}
+            </ModalHeading>
+
+            <p>{t('taskList:withdraw_modal:warning')}</p>
+
+            <ButtonGroup>
+              <Button
+                className="margin-right-1"
+                type="button"
+                onClick={removeRequest}
+              >
+                {t('taskList:withdraw_modal:confirm')}
+              </Button>
+
+              <Button
+                type="button"
+                unstyled
+                onClick={() => setRemoveRequestModalOpen(false)}
+              >
+                {t('taskList:withdraw_modal:cancel')}
+              </Button>
+            </ButtonGroup>
+          </Modal>
         </Grid>
       ) : (
         loading && <PageLoading />
