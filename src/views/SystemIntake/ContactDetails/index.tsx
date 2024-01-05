@@ -19,6 +19,7 @@ import CedarContactSelect from 'components/CedarContactSelect';
 import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
+import PageLoading from 'components/PageLoading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -209,9 +210,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     }
   }, [contacts.loading]);
 
-  // Returns null until GetSystemIntakeContactsQuery has completed
   // Allows initial values to fully load before initializing form
-  if (!contactsLoaded) return null;
+  if (!contactsLoaded) return <PageLoading />;
 
   return (
     <Formik
