@@ -11,6 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils/sqlscripts"
 
 	_ "embed"
 )
@@ -21,17 +22,11 @@ var trbRequestCollectionGetSQL string
 //go:embed SQL/trb_request_collection_get_my.sql
 var trbRequestCollectionGetMySQL string
 
-//go:embed SQL/trb_request_create.sql
-var trbRequestCreateSQL string
-
 //go:embed SQL/trb_request_form_create.sql
 var trbRequestFormCreateSQL string
 
 //go:embed SQL/trb_request_get_by_id.sql
 var trbRequestGetByIDSQL string
-
-//go:embed SQL/trb_request_update.sql
-var trbRequestUpdateSQL string
 
 // CreateTRBRequest creates a new TRBRequest record
 func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*models.TRBRequest, error) {
@@ -42,7 +37,7 @@ func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*
 		trb.ID = uuid.New()
 	}
 
-	stmt, err := tx.PrepareNamed(trbRequestCreateSQL)
+	stmt, err := tx.PrepareNamed(sqlscripts.TRBRequest.Create)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create trb request with error %s", err),
@@ -130,7 +125,7 @@ func (s *Store) GetTRBRequestByID(ctx context.Context, id uuid.UUID) (*models.TR
 
 // UpdateTRBRequest returns an TRBRequest from the db for a given id
 func (s *Store) UpdateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*models.TRBRequest, error) {
-	stmt, err := s.db.PrepareNamed(trbRequestUpdateSQL)
+	stmt, err := s.db.PrepareNamed(sqlscripts.TRBRequest.Update)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update TRB request %s", err),
