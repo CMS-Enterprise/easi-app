@@ -319,6 +319,34 @@ describe('Governance Review Team', () => {
     cy.get('dd').contains(costBaseline);
   });
 
+  it('can expire a Life Cycle ID', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'Updated LCID').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__expire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    cy.get('div#reason').type('Test reason for expiring this Life Cycle ID');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+
+    cy.get('div[data-testid="alert"]').contains(
+      'Life Cycle ID 000009 is now expired.'
+    );
+  });
+
   it('can retire a Life Cycle ID', () => {
     cy.contains('button', 'Closed requests').click();
 
