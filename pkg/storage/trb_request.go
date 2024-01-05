@@ -16,18 +16,6 @@ import (
 	_ "embed"
 )
 
-//go:embed SQL/trb_request_collection_get.sql
-var trbRequestCollectionGetSQL string
-
-//go:embed SQL/trb_request_collection_get_my.sql
-var trbRequestCollectionGetMySQL string
-
-//go:embed SQL/trb_request_form_create.sql
-var trbRequestFormCreateSQL string
-
-//go:embed SQL/trb_request_get_by_id.sql
-var trbRequestGetByIDSQL string
-
 // CreateTRBRequest creates a new TRBRequest record
 func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*models.TRBRequest, error) {
 	tx := s.db.MustBegin()
@@ -64,7 +52,7 @@ func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*
 	form.ID = uuid.New()
 	form.CreatedBy = retTRB.CreatedBy
 
-	stmt, err = tx.PrepareNamed(trbRequestFormCreateSQL)
+	stmt, err = tx.PrepareNamed(sqlscripts.TRBRequestForm.Create)
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
@@ -96,7 +84,7 @@ func (s *Store) CreateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*
 func (s *Store) GetTRBRequestByID(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
 
 	trb := models.TRBRequest{}
-	stmt, err := s.db.PrepareNamed(trbRequestGetByIDSQL)
+	stmt, err := s.db.PrepareNamed(sqlscripts.TRBRequest.GetByID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request",
@@ -155,7 +143,7 @@ func (s *Store) UpdateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*
 func (s *Store) GetTRBRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
 	trbRequests := []*models.TRBRequest{}
 
-	stmt, err := s.db.PrepareNamed(trbRequestCollectionGetSQL)
+	stmt, err := s.db.PrepareNamed(sqlscripts.TRBRequest.CollectionGet)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch trb requests",
@@ -185,7 +173,7 @@ func (s *Store) GetTRBRequests(ctx context.Context, archived bool) ([]*models.TR
 func (s *Store) GetMyTRBRequests(ctx context.Context, archived bool) ([]*models.TRBRequest, error) {
 	trbRequests := []*models.TRBRequest{}
 
-	stmt, err := s.db.PrepareNamed(trbRequestCollectionGetMySQL)
+	stmt, err := s.db.PrepareNamed(sqlscripts.TRBRequest.CollectionGetByUserAndArchivedState)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch user's trb requests",
