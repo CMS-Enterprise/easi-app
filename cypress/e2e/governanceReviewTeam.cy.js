@@ -319,6 +319,37 @@ describe('Governance Review Team', () => {
     cy.get('dd').contains(costBaseline);
   });
 
+  it.only('can retire a Life Cycle ID', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'LCID issued').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__retire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    cy.contains('h3', 'Retire a Life Cycle ID');
+
+    // Complete action form
+
+    const retirementDate = DateTime.local().plus({ year: 2 });
+    cy.get('#retiresAt').type(retirementDate.toFormat('MM/dd/yyyy'));
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+
+    cy.get('div[data-testid="alert"]').contains(
+      'Life Cycle ID 000010 is now retired.'
+    );
+  });
+
   it.skip('can close a request', () => {
     // Selecting name based on pre-seeded data
     // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
