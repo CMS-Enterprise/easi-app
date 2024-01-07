@@ -319,6 +319,117 @@ describe('Governance Review Team', () => {
     cy.get('dd').contains(costBaseline);
   });
 
+  it('can expire a Life Cycle ID', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'Updated LCID').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__expire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    cy.get('div#reason').type('Test reason for expiring this Life Cycle ID');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+
+    cy.get('div[data-testid="alert"]').contains(
+      'Life Cycle ID 000009 is now expired.'
+    );
+  });
+
+  it('can retire a Life Cycle ID', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'LCID issued').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__retire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    cy.contains('h3', 'Retire a Life Cycle ID');
+
+    // Complete action form
+
+    const retirementDate = DateTime.local().plus({ year: 2 });
+    cy.get('#retiresAt').type(retirementDate.toFormat('MM/dd/yyyy'));
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+
+    cy.get('div[data-testid="alert"]').contains(
+      'Life Cycle ID 000010 is now retired.'
+    );
+  });
+
+  it('can update a Life Cycle ID retirement date', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'Retired LCID').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__retire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    cy.contains('h3', 'Change retirement date');
+
+    // Check initial retirement date
+    cy.get('#retiresAt').should('have.value', '01/05/2026');
+
+    // Complete action form
+
+    const retirementDate = DateTime.local()
+      .plus({ month: 1, year: 2 })
+      .toFormat('MM/dd/yyyy');
+
+    cy.get('#retiresAt').clear();
+    cy.get('#retiresAt').type(retirementDate);
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+
+    cy.get('div[data-testid="alert"]').contains(
+      'Life Cycle ID 000006 is now retired.'
+    );
+
+    // Check retirement date updated
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__retire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    cy.get('#retiresAt').should('have.value', retirementDate);
+  });
+
   it.skip('can close a request', () => {
     // Selecting name based on pre-seeded data
     // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
