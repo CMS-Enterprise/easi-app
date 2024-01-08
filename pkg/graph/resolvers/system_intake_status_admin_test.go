@@ -293,6 +293,19 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			expectError:    false,
 		},
 		{
+			testCase: "Decision made, LCID issued, but not added, closed",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepDECISION,
+				DecisionState: models.SIDSLcidIssued,
+				// LifecycleID:        null.StringFrom("fake"), -- If there is no LCID, the status is closed
+				LifecycleExpiresAt: &yesterday,
+				LifecycleRetiresAt: &yesterday,
+				State:              models.SystemIntakeStateCLOSED,
+			},
+			expectedStatus: models.SISALcidIssued,
+			expectError:    false,
+		},
+		{
 			testCase: "Decision LCID Retired, closed",
 			intake: models.SystemIntake{
 				Step:               models.SystemIntakeStepDECISION,
