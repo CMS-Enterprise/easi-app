@@ -263,7 +263,7 @@ const technicalAssistance = {
       '<bold>{{count}}</bold> note{{plural}} about this advice letter',
     done: {
       success:
-        'Your advice letter for has been sent. Selected email notification recipients will receive a confirmation email with a link to the advice letter. Additionally, the original requester can view this letter from their request task list.',
+        'Your advice letter has been sent. Selected email notification recipients will receive a confirmation email with a link to the advice letter. Additionally, the original requester can view this letter from their request task list.',
       error:
         'Your advice letter was not sent. Please either return to the previous page and try again, or try again at a later date. The requester will not be able to view the advice letter until it is successfully sent.',
       returnToRequestHome: 'Return to request home',

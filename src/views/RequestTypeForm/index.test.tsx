@@ -8,14 +8,23 @@ import configureMockStore from 'redux-mock-store';
 import { systemIntake } from 'data/mock/systemIntake';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
+import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 import {
+  ITGovDecisionStatus,
+  ITGovDraftBusinessCaseStatus,
+  ITGovFeedbackStatus,
+  ITGovFinalBusinessCaseStatus,
+  ITGovGRBStatus,
+  ITGovGRTStatus,
+  ITGovIntakeFormStatus,
   SystemIntakeDecisionState,
-  SystemIntakeState
+  SystemIntakeState,
+  SystemIntakeStep
 } from 'types/graphql-global-types';
 import GovernanceOverview from 'views/GovernanceOverview';
-import GovernanceTaskList from 'views/GovernanceTaskListV1';
+import GovernanceTaskList from 'views/GovernanceTaskList';
 import SystemIntake from 'views/SystemIntake';
 
 import RequestTypeForm from './index';
@@ -242,7 +251,46 @@ describe('The request type form page', () => {
       }
     };
 
-    renderPage([intakeMutation, intakeQuery({ requestType: 'MAJOR_CHANGES' })]);
+    renderPage([
+      intakeMutation,
+      intakeQuery({ requestType: 'MAJOR_CHANGES' }),
+      {
+        request: {
+          query: GetGovernanceTaskListQuery,
+          variables: {
+            id: INTAKE_ID
+          }
+        },
+        result: {
+          data: {
+            systemIntake: {
+              __typename: 'SystemIntake',
+              id: INTAKE_ID,
+              requestName: 'Mock system intake',
+              itGovTaskStatuses: {
+                __typename: 'ITGovTaskStatuses',
+                intakeFormStatus: ITGovIntakeFormStatus.READY,
+                feedbackFromInitialReviewStatus: ITGovFeedbackStatus.CANT_START,
+                decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
+                bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
+                grtMeetingStatus: ITGovGRTStatus.CANT_START,
+                bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
+                grbMeetingStatus: ITGovGRBStatus.CANT_START
+              },
+              step: SystemIntakeStep.INITIAL_REQUEST_FORM,
+              state: SystemIntakeState.OPEN,
+              decisionState: SystemIntakeDecisionState.NO_DECISION,
+              governanceRequestFeedbacks: [],
+              submittedAt: null,
+              updatedAt: null,
+              grtDate: null,
+              grbDate: null,
+              businessCase: null
+            }
+          }
+        }
+      }
+    ]);
 
     screen.getByRole('radio', { name: /major changes/i }).click();
     screen.getByRole('button', { name: /continue/i }).click();
@@ -279,7 +327,46 @@ describe('The request type form page', () => {
       }
     };
 
-    renderPage([intakeMutation, intakeQuery({ requestType: 'RECOMPETE' })]);
+    renderPage([
+      intakeMutation,
+      intakeQuery({ requestType: 'RECOMPETE' }),
+      {
+        request: {
+          query: GetGovernanceTaskListQuery,
+          variables: {
+            id: INTAKE_ID
+          }
+        },
+        result: {
+          data: {
+            systemIntake: {
+              __typename: 'SystemIntake',
+              id: INTAKE_ID,
+              requestName: 'Mock system intake',
+              itGovTaskStatuses: {
+                __typename: 'ITGovTaskStatuses',
+                intakeFormStatus: ITGovIntakeFormStatus.READY,
+                feedbackFromInitialReviewStatus: ITGovFeedbackStatus.CANT_START,
+                decisionAndNextStepsStatus: ITGovDecisionStatus.CANT_START,
+                bizCaseDraftStatus: ITGovDraftBusinessCaseStatus.CANT_START,
+                grtMeetingStatus: ITGovGRTStatus.CANT_START,
+                bizCaseFinalStatus: ITGovFinalBusinessCaseStatus.CANT_START,
+                grbMeetingStatus: ITGovGRBStatus.CANT_START
+              },
+              step: SystemIntakeStep.INITIAL_REQUEST_FORM,
+              state: SystemIntakeState.OPEN,
+              decisionState: SystemIntakeDecisionState.NO_DECISION,
+              governanceRequestFeedbacks: [],
+              submittedAt: null,
+              updatedAt: null,
+              grtDate: null,
+              grbDate: null,
+              businessCase: null
+            }
+          }
+        }
+      }
+    ]);
 
     screen.getByRole('radio', { name: /re-compete/i }).click();
     screen.getByRole('button', { name: /continue/i }).click();
