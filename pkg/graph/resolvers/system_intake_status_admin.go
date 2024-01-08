@@ -41,7 +41,7 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 	case models.SystemIntakeStepGRBMEETING:
 		retStatus = calcSystemIntakeGRBMeetingStatusAdmin(intake.GRBDate)
 	case models.SystemIntakeStepDECISION:
-		retStatus, err = calcSystemIntakeDecisionStatusAdmin(intake.DecisionState)
+		retStatus, err = calcSystemIntakeDecisionStatusAdmin(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
 		return retStatus, fmt.Errorf("issue calculating the admin state status, no valid step")
 
@@ -94,9 +94,9 @@ func calcSystemIntakeGRBMeetingStatusAdmin(grbDate *time.Time) models.SystemInta
 	return models.SISAGrbMeetingComplete
 }
 
-func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisionState) (models.SystemIntakeStatusAdmin, error) {
+func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisionState, lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusAdmin, error) {
 	if decisionState == models.SIDSLcidIssued {
-		return models.SISALcidIssued, nil
+		return calcLCIDIssuedDecisionStatus(lcidStatus)
 	}
 	if decisionState == models.SIDSNotGovernance {
 		return models.SISANotGovernance, nil
@@ -106,4 +106,22 @@ func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisi
 	}
 
 	return "", fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
+}
+
+// calcLCIDIssuedDecisionStatus checks an LCID status and appropriately converts it to a SystemIntakeStatusAdmin
+func calcLCIDIssuedDecisionStatus(lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusAdmin, error) {
+	if lcidStatus == nil {
+		return models.SISALcidIssued, nil
+	}
+	if *lcidStatus == models.SystemIntakeLCIDStatusIssued {
+		return models.SISALcidIssued, nil
+	}
+	if *lcidStatus == models.SystemIntakeLCIDStatusExpired {
+		return models.SISALcidExpired, nil
+	}
+	if *lcidStatus == models.SystemIntakeLCIDStatusRetired {
+		return models.SISALcidRetired, nil
+	}
+	return "", fmt.Errorf("invalid lcisd status provided: %v", lcidStatus)
+
 }
