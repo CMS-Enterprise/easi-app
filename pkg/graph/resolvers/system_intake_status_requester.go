@@ -41,7 +41,7 @@ func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTi
 		// this calc function doesn't use a switch statement and can't possibly return an error
 		return calcSystemIntakeGRBMeetingStatusRequester(intake.GRBDate, currentTime), nil
 	case models.SystemIntakeStepDECISION:
-		return calcSystemIntakeDecisionStatusRequester(intake.DecisionState)
+		return calcSystemIntakeDecisionStatusRequester(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
 		return "", fmt.Errorf("issue calculating the requester intake status, no valid step")
 	}
@@ -104,10 +104,10 @@ func calcSystemIntakeGRBMeetingStatusRequester(grbDate *time.Time, currentTime t
 	return models.SISRGrbMeetingAwaitingDecision
 }
 
-func calcSystemIntakeDecisionStatusRequester(decisionState models.SystemIntakeDecisionState) (models.SystemIntakeStatusRequester, error) {
+func calcSystemIntakeDecisionStatusRequester(decisionState models.SystemIntakeDecisionState, lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusRequester, error) {
 	switch decisionState {
 	case models.SIDSLcidIssued:
-		return models.SISRLcidIssued, nil
+		return calcLCIDIssuedDecisionStatusRequester(lcidStatus)
 	case models.SIDSNotApproved:
 		return models.SISRNotApproved, nil
 	case models.SIDSNotGovernance:
@@ -119,4 +119,22 @@ func calcSystemIntakeDecisionStatusRequester(decisionState models.SystemIntakeDe
 	}
 
 	return "", fmt.Errorf("issue calculating the requester intake status, no valid decisionState")
+}
+
+// calcLCIDIssuedDecisionStatusRequester checks an LCID status and appropriately converts it to a SystemIntakeStatusRequester
+func calcLCIDIssuedDecisionStatusRequester(lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusRequester, error) {
+	if lcidStatus == nil {
+		return models.SISRLcidIssued, nil
+	}
+	if *lcidStatus == models.SystemIntakeLCIDStatusIssued {
+		return models.SISRLcidIssued, nil
+	}
+	if *lcidStatus == models.SystemIntakeLCIDStatusExpired {
+		return models.SISRLcidExpired, nil
+	}
+	if *lcidStatus == models.SystemIntakeLCIDStatusRetired {
+		return models.SISRLcidRetired, nil
+	}
+	return "", fmt.Errorf("invalid lcisd status provided: %v", lcidStatus)
+
 }
