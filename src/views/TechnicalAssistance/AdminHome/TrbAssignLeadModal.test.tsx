@@ -8,7 +8,7 @@ import { ModalRef } from '@trussworks/react-uswds';
 import i18next from 'i18next';
 
 import { getTrbLeadOptionsQuery, trbLeadOptions } from 'data/mock/trbRequest';
-import useMessage, { MessageProvider } from 'hooks/useMessage';
+import { MessageProvider } from 'hooks/useMessage';
 import {
   UpdateTrbRequestLead,
   UpdateTrbRequestLeadVariables
@@ -17,16 +17,12 @@ import UpdateTrbRequestLeadQuery from 'queries/UpdateTrbRequestLeadQuery';
 import { TrbRequestIdRef } from 'types/technicalAssistance';
 import { MockedQuery } from 'types/util';
 import easiMockStore from 'utils/testing/easiMockStore';
+import MockMessage from 'utils/testing/MockMessage';
 import { mockTrbRequestId } from 'utils/testing/MockTrbAttendees';
 
 import TrbAssignLeadModal, {
   TrbAssignLeadModalOpener
 } from './TrbAssignLeadModal';
-
-function MockMessage() {
-  const { Message } = useMessage();
-  return <Message />;
-}
 
 const trbLeadInfo = trbLeadOptions[0];
 
