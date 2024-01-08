@@ -3,7 +3,10 @@ import { DateTime } from 'luxon';
 import governaceReviewTeam from '../../src/i18n/en-US/articles/governanceReviewTeam';
 
 describe('Governance Review Team', () => {
-  const futureDate = DateTime.local().plus({ year: 1 });
+  // Expiration and retirement dates
+  // Matches pattern set in seed data: +1 year for expiration, +2 years for retirement
+  const expirationDate = DateTime.local().plus({ year: 1 });
+  const retirementDate = expirationDate.plus({ year: 1 });
 
   beforeEach(() => {
     cy.intercept('POST', '/api/graph/query', req => {
@@ -190,7 +193,7 @@ describe('Governance Review Team', () => {
 
     cy.get('#useExistingLcid_false').check({ force: true });
 
-    cy.get('#expiresAt').type(futureDate.toFormat('MM/dd/yyyy'));
+    cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
     cy.get('div#scope').type(scope);
     cy.get('div#nextSteps').type(nextSteps);
     cy.get('#stronglyRecommended').check({ force: true });
@@ -209,7 +212,7 @@ describe('Governance Review Team', () => {
 
     cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
 
-    cy.get('dd').contains(futureDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains('Yes, strongly recommend');
@@ -240,7 +243,7 @@ describe('Governance Review Team', () => {
     cy.get('#useExistingLcid').select(lcid).should('have.value', lcid);
 
     cy.get('#expiresAt').clear();
-    cy.get('#expiresAt').type(futureDate.toFormat('MM/dd/yyyy'));
+    cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
 
     cy.get('div#scope').clear();
     cy.get('div#scope').type(scope);
@@ -267,7 +270,7 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
 
     cy.get('dd').contains(lcid);
-    cy.get('dd').contains(futureDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains('Yes, strongly recommend');
@@ -295,7 +298,7 @@ describe('Governance Review Team', () => {
     const nextSteps = 'Updated test next steps for issuing LCID';
     const costBaseline = 'Updated test cost baseline for issuing LCID';
 
-    cy.get('#expiresAt').type(futureDate.toFormat('MM/dd/yyyy'));
+    cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
     cy.get('div#scope').type(scope);
     cy.get('div#nextSteps').type(nextSteps);
     cy.get('#costBaseline').type(costBaseline);
@@ -312,7 +315,7 @@ describe('Governance Review Team', () => {
 
     cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
 
-    cy.get('dd').contains(futureDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains(costBaseline);
@@ -365,7 +368,7 @@ describe('Governance Review Team', () => {
 
     // Complete action form
 
-    cy.get('#retiresAt').type(futureDate.toFormat('MM/dd/yyyy'));
+    cy.get('#retiresAt').type(retirementDate.toFormat('MM/dd/yyyy'));
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
@@ -396,12 +399,12 @@ describe('Governance Review Team', () => {
     // Check initial retirement date
     cy.get('#retiresAt').should(
       'have.value',
-      futureDate.toFormat('MM/dd/yyyy')
+      retirementDate.toFormat('MM/dd/yyyy')
     );
 
     // Complete action form
 
-    const updatedRetirementDate = futureDate
+    const updatedRetirementDate = retirementDate
       .plus({ month: 1 })
       .toFormat('MM/dd/yyyy');
 
@@ -429,7 +432,7 @@ describe('Governance Review Team', () => {
     cy.get('#retiresAt').should('have.value', updatedRetirementDate);
   });
 
-  it.skip('can close a request', () => {
+  it('can close a request', () => {
     // Selecting name based on pre-seeded data
     // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
     cy.governanceReviewTeam.grtActions.selectAction({
@@ -455,7 +458,7 @@ describe('Governance Review Team', () => {
     );
   });
 
-  it.skip('can add additional contact as email recipient', () => {
+  it('can add additional contact as email recipient', () => {
     cy.contains('a', 'Ready for business case').should('be.visible').click();
     cy.get('[data-testid="grt-nav-actions-link"]').click();
 
