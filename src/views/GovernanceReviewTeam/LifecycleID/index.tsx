@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageHeading from 'components/PageHeading';
 import ReviewRow from 'components/ReviewRow';
@@ -18,6 +19,7 @@ type LcidProps = {
 
 const LifecycleID = ({ systemIntake }: LcidProps) => {
   const { t } = useTranslation('governanceReviewTeam');
+  const flags = useFlags();
 
   const Issued = () => (
     <>
@@ -72,19 +74,21 @@ const LifecycleID = ({ systemIntake }: LcidProps) => {
             />
           </div>
         </ReviewRow>
-        <ReviewRow>
-          <div>
-            <DescriptionTerm term={t('action:issueLCID.trbFollowup.label')} />
-            <DescriptionDefinition
-              definition={
-                systemIntake?.trbFollowUpRecommendation &&
-                t(
-                  `action:issueLCID.trbFollowup.${systemIntake.trbFollowUpRecommendation}`
-                )
-              }
-            />
-          </div>
-        </ReviewRow>
+        {flags.itGovV2Enabled && (
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('action:issueLCID.trbFollowup.label')} />
+              <DescriptionDefinition
+                definition={
+                  systemIntake?.trbFollowUpRecommendation &&
+                  t(
+                    `action:issueLCID.trbFollowup.${systemIntake.trbFollowUpRecommendation}`
+                  )
+                }
+              />
+            </div>
+          </ReviewRow>
+        )}
         {systemIntake?.lcidCostBaseline && (
           <ReviewRow>
             <div>

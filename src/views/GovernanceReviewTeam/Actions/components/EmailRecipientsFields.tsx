@@ -19,11 +19,9 @@ import TruncatedContent from 'components/shared/TruncatedContent';
 import { IT_GOV_EMAIL, IT_INVESTMENT_EMAIL } from 'constants/externalUrls';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
+import { EmailRecipientsFieldsProps } from 'types/action';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
-import {
-  FormattedContacts,
-  SystemIntakeContactProps
-} from 'types/systemIntake';
+import { SystemIntakeContactProps } from 'types/systemIntake';
 import isExternalEmail from 'utils/externalEmail';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import {
@@ -180,24 +178,10 @@ const Recipient = ({
   );
 };
 
-type EmailRecipientsFieldsProps = {
-  optional?: boolean;
-  className?: string;
-  headerClassName?: string;
-  alertClassName?: string;
-  systemIntakeId: string;
-  activeContact: SystemIntakeContactProps | null;
-  setActiveContact: (contact: SystemIntakeContactProps | null) => void;
-  contacts: FormattedContacts;
-  recipients: EmailNotificationRecipients;
-  setRecipients: (recipients: EmailNotificationRecipients) => void;
-  error: string;
-};
-
 /**
  * Email recipient fields with functionality to verify and add recipients
  */
-const EmailRecipientsFields = ({
+export default ({
   /** Whether email is optional */
   optional = true,
   /** Container className */
@@ -576,5 +560,3 @@ const EmailRecipientsFields = ({
     </div>
   );
 };
-
-export default EmailRecipientsFields;

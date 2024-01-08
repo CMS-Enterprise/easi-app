@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -11,7 +13,9 @@ import (
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -67,440 +71,6 @@ func main() {
 		s3Client: &s3Client,
 	}
 
-	var intake *models.SystemIntake
-	var intakeID uuid.UUID
-	requesterEUA := "USR1"
-
-	// for setting GRT/GRB meeting dates when progressing
-	futureMeetingDate := time.Now().AddDate(0, 2, 0)
-	pastMeetingDate := time.Now().AddDate(0, -2, 0)
-
-	intakeID = uuid.MustParse("3a1d5160-c774-4cd9-9f69-afef824b2e3f")
-	intake = makeSystemIntakeAndProgressToStep(
-		"Rejected Request/Not Approved",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
-		&progressOptions{
-			completeOtherSteps: true,
-			meetingDate:        &pastMeetingDate,
-		},
-	)
-	closeIntakeNotApproved(logger, store, intake, models.TRBFRNotRecommended)
-
-	intakeID = uuid.MustParse("411de072-3019-4bbc-8105-6271ce95ce5d")
-	intake = makeSystemIntakeAndSubmit(
-		"Not ITGov Request",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-	)
-	closeIntakeNotITGovRequest(logger, store, intake)
-
-	intakeID = uuid.MustParse("69f2ef12-938a-4568-8dd4-9fb738953cc0")
-	intake = makeSystemIntakeAndProgressToStep(
-		"Closed Request",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
-		&progressOptions{
-			completeOtherSteps: true,
-		},
-	)
-	closeIntake(logger, store, intake)
-
-	intakeID = uuid.MustParse("e3fab202-70d8-44e1-9904-5a89588b8615")
-	intake = makeSystemIntakeAndSubmit("LCID issued after initial form submitted and reopened", &intakeID, requesterEUA, logger, store)
-	intake = issueLCID(logger, store, intake, time.Now().AddDate(1, 0, 0), models.TRBFRStronglyRecommended)
-	reopenIntake(logger, store, intake)
-
-	intakeID = uuid.MustParse("8edb237e-ad48-49b2-91cf-8534362bc6cf")
-	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened and edits requested", &intakeID, requesterEUA, logger, store)
-	intake = reopenIntake(logger, store, intake)
-	requestEditsToIntakeForm(logger, store, intake, model.SystemIntakeFormStepFinalBusinessCase)
-
-	intakeID = uuid.MustParse("cd795d09-6afb-4fdd-b0a2-c37716297f41")
-	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened and progressed backward", &intakeID, requesterEUA, logger, store)
-	intake = reopenIntake(logger, store, intake)
-	progressIntake(logger, store, intake, model.SystemIntakeStepToProgressToDraftBusinessCase, nil)
-
-	intakeID = uuid.MustParse("fec8e351-809c-4af2-bd0d-197b6b433206")
-	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened", &intakeID, requesterEUA, logger, store)
-	reopenIntake(logger, store, intake)
-
-	intakeID = uuid.MustParse("0f1db17c-9118-4ce2-9491-fa8dd88e60b5")
-	intake = makeSystemIntakeAndIssueLCID("LCID issued, retired, and retirement date changed", &intakeID, requesterEUA, logger, store)
-	intake = retireLCID(logger, store, intake, intake.LifecycleExpiresAt.AddDate(1, 0, 0))
-	changeLCIDRetireDate(logger, store, intake, intake.LifecycleRetiresAt.AddDate(1, 0, 0))
-
-	intakeID = uuid.MustParse("c6332484-b661-4c18-a5bb-6186445ccb9f")
-	intake = makeSystemIntakeAndIssueLCID("Retired LCID", &intakeID, requesterEUA, logger, store)
-	retireLCID(logger, store, intake, intake.LifecycleExpiresAt.AddDate(1, 0, 0))
-
-	intakeID = uuid.MustParse("346d3539-9aac-42c7-bb29-acfd2482455e")
-	intake = makeSystemIntakeAndIssueLCID("Expired LCID", &intakeID, requesterEUA, logger, store)
-	expireLCID(logger, store, intake)
-
-	intakeID = uuid.MustParse("82d96de6-7746-4081-a07e-15b355a928e3")
-	intake = makeSystemIntakeAndIssueLCID("Confirmed LCID", &intakeID, requesterEUA, logger, store)
-	confirmLCID(logger, store, intake, intake.LifecycleExpiresAt.AddDate(1, 0, 0), models.TRBFRNotRecommended)
-
-	intakeID = uuid.MustParse("4ee45041-b21b-4792-a766-4d861d601bdc")
-	intake = makeSystemIntakeAndIssueLCID("Updated LCID", &intakeID, requesterEUA, logger, store)
-	updateLCID(logger, store, intake, intake.LifecycleExpiresAt.AddDate(1, 0, 0))
-
-	intakeID = uuid.MustParse("409c68e1-9b38-462f-8023-8e00e0b62d67")
-	intake = makeSystemIntakeAndSubmit("LCID issued after initial form submitted", &intakeID, requesterEUA, logger, store)
-	issueLCID(logger, store, intake, time.Now().AddDate(1, 0, 0), models.TRBFRStronglyRecommended)
-
-	intakeID = uuid.MustParse("9ab475a8-a691-45e9-b55d-648b6e752efa")
-	makeSystemIntakeAndIssueLCID("LCID issued", &intakeID, requesterEUA, logger, store)
-
-	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")
-	makeSystemIntakeAndProgressToStep(
-		"skip to grb meeting with date set in past",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
-		&progressOptions{
-			meetingDate: &pastMeetingDate,
-		},
-	)
-
-	intakeID = uuid.MustParse("5c82f10a-0413-4a43-9b0f-e9e5c4f2699f")
-	makeSystemIntakeAndProgressToStep(
-		"skip to grb meeting with date set in future",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
-		&progressOptions{
-			meetingDate: &futureMeetingDate,
-		},
-	)
-
-	intakeID = uuid.MustParse("8f0b8dfc-acb2-4cd3-a79e-241c355f551c")
-	makeSystemIntakeAndProgressToStep(
-		"skip to grb meeting without date set",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
-		nil,
-	)
-
-	intakeID = uuid.MustParse("1a261eb8-162d-46a6-afaf-b5c9507dedd1")
-	makeSystemIntakeAndProgressToStep(
-		"grb meeting with date set in past",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
-		&progressOptions{
-			meetingDate:        &pastMeetingDate,
-			completeOtherSteps: true,
-		},
-	)
-
-	intakeID = uuid.MustParse("8ef9d0fb-e673-441c-9876-f874b179f89c")
-	makeSystemIntakeAndProgressToStep(
-		"grb meeting with date set in future",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
-		&progressOptions{
-			meetingDate:        &futureMeetingDate,
-			completeOtherSteps: true,
-		},
-	)
-
-	intakeID = uuid.MustParse("d9c931c6-0858-494d-b991-e02a94a42f38")
-	makeSystemIntakeAndProgressToStep(
-		"grb meeting without date set",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
-		&progressOptions{
-			completeOtherSteps: true,
-		},
-	)
-
-	intakeID = uuid.MustParse("44000b37-55bf-4535-ac2e-6c163a28ca72")
-	makeSystemIntakeAndProgressToStep(
-		"skip to final biz case and request edits",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
-		&progressOptions{
-			fillForm:     true,
-			submitForm:   true,
-			requestEdits: true,
-		},
-	)
-
-	intakeID = uuid.MustParse("18bc6ef2-21c1-451b-bc69-8f489027406d")
-	makeSystemIntakeAndProgressToStep(
-		"skip to final biz case and submit",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
-		&progressOptions{
-			completeOtherSteps: true,
-			submitForm:         true,
-		},
-	)
-
-	intakeID = uuid.MustParse("10395f89-d81e-4ee2-9716-f029788df7d0")
-	makeSystemIntakeAndProgressToStep(
-		"skip to final biz case with form filled",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
-		&progressOptions{
-			completeOtherSteps: false,
-			fillForm:           true,
-		},
-	)
-
-	intakeID = uuid.MustParse("2c8ac23d-ea64-4851-9f8a-0cfb8468ef51")
-	makeSystemIntakeAndProgressToStep(
-		"skip to final biz case",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
-		&progressOptions{
-			completeOtherSteps: false,
-		},
-	)
-
-	intakeID = uuid.MustParse("67eebec8-9242-4f2c-b337-f674686a5ab5")
-	makeSystemIntakeAndProgressToStep(
-		"Edits requested on final biz case",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
-		&progressOptions{
-			completeOtherSteps: true,
-			submitForm:         true,
-			requestEdits:       true,
-		},
-	)
-
-	intakeID = uuid.MustParse("18f245bc-f84c-401f-973a-62af7950f9c1")
-	makeSystemIntakeAndProgressToStep(
-		"final biz case submitted",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
-		&progressOptions{
-			completeOtherSteps: true,
-			submitForm:         true,
-		},
-	)
-
-	// getting to the final business case through the normal process means
-	// the business case was already filled as a draft, so there's no
-	// seed data needed for an unfilled Final business case
-
-	intakeID = uuid.MustParse("561a5cfc-83a6-4600-9531-3a465dddec19")
-	makeSystemIntakeAndProgressToStep(
-		"final biz case with form filled",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
-		&progressOptions{
-			completeOtherSteps: true,
-		},
-	)
-
-	intakeID = uuid.MustParse("19ad5fba-617a-43b8-a503-16bc7b53721e")
-	makeSystemIntakeAndProgressToStep(
-		"skip to grt without date set",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
-		&progressOptions{
-			completeOtherSteps: false,
-		},
-	)
-
-	intakeID = uuid.MustParse("40beb03a-9def-43c2-98e1-9c052405781b")
-	makeSystemIntakeAndProgressToStep(
-		"skip to grt with date set in past",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
-		&progressOptions{
-			meetingDate:        &pastMeetingDate,
-			completeOtherSteps: false,
-		},
-	)
-
-	intakeID = uuid.MustParse("534e01cb-8116-4fce-9bf9-3089ae8b8927")
-	makeSystemIntakeAndProgressToStep(
-		"skip to grt with date set in future",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
-		&progressOptions{
-			meetingDate:        &futureMeetingDate,
-			completeOtherSteps: false,
-		},
-	)
-
-	intakeID = uuid.MustParse("902aa086-b2b0-47ee-8fcf-69c97cd8de12")
-	makeSystemIntakeAndProgressToStep(
-		"grt meeting with date set in past",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
-		&progressOptions{
-			meetingDate:        &pastMeetingDate,
-			completeOtherSteps: true,
-		},
-	)
-
-	intakeID = uuid.MustParse("116eb955-b09a-4377-ba92-04816de2c2ac")
-	makeSystemIntakeAndProgressToStep(
-		"grt meeting with date set in future",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
-		&progressOptions{
-			meetingDate:        &futureMeetingDate,
-			completeOtherSteps: true,
-		},
-	)
-
-	intakeID = uuid.MustParse("58171a68-6bb3-497d-96ef-dcf07c146083")
-	makeSystemIntakeAndProgressToStep(
-		"grt meeting without date set",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
-		&progressOptions{
-			completeOtherSteps: true,
-		},
-	)
-
-	intakeID = uuid.MustParse("ce874e71-de26-46da-bbfe-a8e3af960108")
-	makeSystemIntakeAndProgressToStep(
-		"Edits requested on draft biz case",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToDraftBusinessCase,
-		&progressOptions{
-			fillForm:     true,
-			submitForm:   true,
-			requestEdits: true,
-		},
-	)
-
-	intakeID = uuid.MustParse("782e8bf3-39b7-4f6f-a809-d9936a0bcfc9")
-	makeSystemIntakeAndProgressToStep(
-		"draft biz case submitted",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToDraftBusinessCase,
-		&progressOptions{
-			fillForm:   true,
-			submitForm: true,
-		},
-	)
-
-	intakeID = uuid.MustParse("fba27c4c-aeb2-4e7b-942b-eafa4ecaf620")
-	makeSystemIntakeAndProgressToStep(
-		"draft biz case filled out",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToDraftBusinessCase,
-		&progressOptions{
-			fillForm: true,
-		},
-	)
-
-	// one cannot skip to a draft biz case, so that is omitted
-
-	intakeID = uuid.MustParse("4d3f9821-e043-42bf-9cd0-faa5f053ed32")
-	makeSystemIntakeAndProgressToStep(
-		"starting draft biz case",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToDraftBusinessCase,
-		nil,
-	)
-
-	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
-	makeSystemIntakeAndSubmit(
-		"Edits requested on initial request form",
-		&intakeID,
-		requesterEUA,
-		logger,
-		store,
-	)
-	requestEditsToIntakeForm(logger, store, intake, model.SystemIntakeFormStepInitialRequestForm)
-
-	// initial intake form
-	intakeID = uuid.MustParse("14ecf18c-8367-402d-a48e-92e7d2853f50")
-	makeSystemIntakeAndSubmit("initial form filled and submitted", &intakeID, requesterEUA, logger, store)
-
-	intakeID = uuid.MustParse("43fe5a4e-525c-40da-b0f6-3b36b5f84cc1")
-	createSystemIntake(&intakeID, logger, store, "USR1", "User One", models.SystemIntakeRequestTypeNEW)
-
-	intakeID = uuid.MustParse("d2b96357-3a76-42e3-82ab-978a20f5acad")
-	makeSystemIntake("initial form filled but not yet submitted", nil, requesterEUA, logger, store)
-
-	must(nil, seederConfig.seedTRBRequests(ctx))
-
-	// Legacy Intake Requests used in E2E
 	makeAccessibilityRequest("TACO", store)
 	makeAccessibilityRequest("Big Project", store)
 
@@ -519,24 +89,41 @@ func main() {
 		i.Date = time.Date(yyyy, mm, dd+1, 0, 0, 0, 0, time.UTC)
 	})
 
-	// For Governance Review Cypress Tests
-	intakeID = uuid.MustParse("af7a3924-3ff7-48ec-8a54-b8b4bc95610b")
-	intake = makeSystemIntakeAndSubmit("A Completed Intake Form", &intakeID, requesterEUA, logger, store)
-	createSystemIntakeNote(logger, store, intake, "This is my note")
+	makeSystemIntake("A Completed Intake Form", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("af7a3924-3ff7-48ec-8a54-b8b4bc95610b")
+	})
 
-	intakeID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
-	intake = makeSystemIntakeAndProgressToStep(
-		"For business case Cypress test",
-		&intakeID,
-		"E2E1",
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToDraftBusinessCase,
-		&progressOptions{
-			fillForm: false,
-		},
-	)
-	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
+	makeSystemIntake("With Contract Month and Year", logger, store, func(i *models.SystemIntake) {
+		i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+		i.ContractStartMonth = null.StringFrom("10")
+		i.ContractStartYear = null.StringFrom("2021")
+		i.ContractEndMonth = null.StringFrom("10")
+		i.ContractEndYear = null.StringFrom("2022")
+	})
+
+	makeSystemIntake("With Contract Dates", logger, store, func(i *models.SystemIntake) {
+		i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+		i.ContractStartDate = date(2021, 4, 5)
+		i.ContractEndDate = date(2022, 4, 5)
+	})
+
+	makeSystemIntake("With Both Contract Dates", logger, store, func(i *models.SystemIntake) {
+		i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+		i.ContractStartMonth = null.StringFrom("10")
+		i.ContractStartYear = null.StringFrom("2021")
+		i.ContractEndMonth = null.StringFrom("10")
+		i.ContractEndYear = null.StringFrom("2022")
+		i.ContractStartDate = date(2021, 4, 9)
+		i.ContractEndDate = date(2022, 4, 8)
+	})
+
+	makeSystemIntake("Ready for business case", logger, store, func(i *models.SystemIntake) {
+		i.Status = models.SystemIntakeStatusNEEDBIZCASE
+	})
+
+	makeSystemIntake("For business case Cypress test", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
+		i.EUAUserID = null.StringFrom("E2E1")
 		i.Status = models.SystemIntakeStatusNEEDBIZCASE
 		i.RequestType = models.SystemIntakeRequestTypeNEW
 		i.Requester = "EndToEnd One" // matches pkg/local/cedar_ldap.go, but doesn't really have to :shrug:
@@ -561,72 +148,421 @@ func main() {
 		i.GrtReviewEmailBody = null.StringFrom("")
 	})
 
-	intakeID = uuid.MustParse("20cbcfbf-6459-4c96-943b-e76b83122dbf")
-	makeSystemIntakeAndSubmit("Closable Request", &intakeID, requesterEUA, logger, store)
+	makeSystemIntake("Closable Request", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("20cbcfbf-6459-4c96-943b-e76b83122dbf")
+	})
 
-	intakeID = uuid.MustParse("38e46d77-e474-4d15-a7c0-f6411221e2a4")
-	intake = makeSystemIntakeAndSubmit("Intake with no contract vehicle or number", &intakeID, requesterEUA, logger, store)
-	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
+	makeSystemIntake("Intake with no contract vehicle or number", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("38e46d77-e474-4d15-a7c0-f6411221e2a4")
 		i.ContractVehicle = null.StringFromPtr(nil)
 		i.ContractNumber = null.StringFromPtr(nil)
 	})
 
-	intakeID = uuid.MustParse("2ed89f9f-7fd9-4e92-89d2-cee170a44d0d")
-	intake = makeSystemIntakeAndSubmit("Intake with legacy Contract Vehicle", &intakeID, requesterEUA, logger, store)
-	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
+	makeSystemIntake("Intake with legacy Contract Vehicle", logger, store, func(i *models.SystemIntake) {
+		i.ID = uuid.MustParse("2ed89f9f-7fd9-4e92-89d2-cee170a44d0d")
 		i.ContractVehicle = null.StringFrom("Honda")
 		i.ContractNumber = null.StringFromPtr(nil)
 	})
 
-	intakeID = uuid.MustParse("69357721-1e0c-4a37-a90f-64bb29814e7a")
-	makeSystemIntakeAndProgressToStep(
-		"Draft Business Case",
-		&intakeID,
-		requesterEUA,
+	intake := makeSystemIntake("Draft Business Case", logger, store, func(i *models.SystemIntake) {
+		i.Status = models.SystemIntakeStatusBIZCASEDRAFT
+	})
+	makeBusinessCase("Draft Business Case", logger, store, intake)
+
+	intake = makeSystemIntake("With GRB scheduled", logger, store, func(i *models.SystemIntake) {
+		i.Status = models.SystemIntakeStatusREADYFORGRB
+		tomorrow := time.Now().Add(24 * time.Hour)
+		nextMonth := time.Now().Add(30 * 24 * time.Hour)
+		i.GRBDate = &tomorrow
+		i.GRTDate = &nextMonth
+	})
+	makeBusinessCase("With GRB scheduled", logger, store, intake)
+
+	intake = makeSystemIntake("With GRT scheduled", logger, store, func(i *models.SystemIntake) {
+		i.Status = models.SystemIntakeStatusREADYFORGRT
+		lastMonth := time.Now().AddDate(0, -1, 0)
+		tomorrow := time.Now().AddDate(0, 0, 1)
+		i.GRBDate = &lastMonth
+		i.GRTDate = &tomorrow
+	})
+	makeBusinessCase("With GRT scheduled", logger, store, intake)
+
+	intake = makeSystemIntake("With LCID Issued", logger, store, func(i *models.SystemIntake) {
+		lifecycleExpiresAt := time.Now().AddDate(0, 0, 90)
+		submittedAt := time.Now().AddDate(0, 0, -365)
+		i.LifecycleID = null.StringFrom("210001")
+		issuedAt := time.Now()
+		i.LifecycleIssuedAt = &issuedAt
+		i.LifecycleExpiresAt = &lifecycleExpiresAt
+		i.Status = models.SystemIntakeStatusLCIDISSUED
+		i.SubmittedAt = &submittedAt
+	})
+	makeBusinessCase("With LCID Issued", logger, store, intake, func(c *models.BusinessCase) {
+		c.Status = models.BusinessCaseStatusCLOSED
+	})
+
+	makeSystemIntake("Expiring LCID Intake", logger, store, func(i *models.SystemIntake) {
+		lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
+		submittedAt := time.Now().AddDate(0, 0, -365)
+		i.LifecycleID = null.StringFrom("410001")
+		issuedAt := time.Now().AddDate(0, 0, -300)
+		i.LifecycleIssuedAt = &issuedAt
+		i.LifecycleExpiresAt = &lifecycleExpiresAt
+		i.Status = models.SystemIntakeStatusLCIDISSUED
+		i.State = models.SystemIntakeStateCLOSED
+		i.DecisionState = models.SIDSLcidIssued
+		i.SubmittedAt = &submittedAt
+	})
+
+	makeSystemIntake("Expiring LCID Intake with alert sent 14 days ago", logger, store, func(i *models.SystemIntake) {
+		lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
+		submittedAt := time.Now().AddDate(0, 0, -365)
+		i.LifecycleID = null.StringFrom("510001")
+		issuedAt := time.Now().AddDate(0, 0, -300)
+		i.LifecycleIssuedAt = &issuedAt
+		i.LifecycleExpiresAt = &lifecycleExpiresAt
+		lastAlertSent := time.Now().AddDate(0, 0, -14)
+		i.LifecycleExpirationAlertTS = &lastAlertSent
+		i.Status = models.SystemIntakeStatusLCIDISSUED
+		i.State = models.SystemIntakeStateCLOSED
+		i.DecisionState = models.SIDSLcidIssued
+		i.SubmittedAt = &submittedAt
+	})
+
+	makeSystemIntake("Intake with expiring LCID and no EUA User ID - test case for EASI-3083", logger, store, func(i *models.SystemIntake) {
+		lifecycleExpiresAt := time.Now().AddDate(0, 0, 30)
+		submittedAt := time.Now().AddDate(0, 0, -365)
+		i.LifecycleID = null.StringFrom("300001")
+		issuedAt := time.Now()
+		i.LifecycleIssuedAt = &issuedAt
+		i.LifecycleExpiresAt = &lifecycleExpiresAt
+		i.Status = models.SystemIntakeStatusLCIDISSUED
+		i.SubmittedAt = &submittedAt
+		i.EUAUserID = null.StringFromPtr(nil)
+	})
+
+	intakeID := uuid.MustParse("4d3f9821-e043-42bf-9cd0-faa5f053ed32")
+	makeSystemIntakeWithProgressToNextStep(
+		"Intake with feedback on progression to next step",
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToDraftBusinessCase,
-		&progressOptions{
-			fillForm: true,
-		},
+		"USR1",
+		intakeID,
+		"Feedback to requester",
+		"Recommendations for GRB",
+		"additional info",
+		"admin note",
 	)
 
-	intakeID = uuid.MustParse("a5689bec-e4cf-4f2b-a7de-72020e8d65be")
-	makeSystemIntakeAndProgressToStep(
-		"With GRB scheduled",
-		&intakeID,
-		requesterEUA,
+	intakeID = uuid.MustParse("29486f85-1aba-4eaf-a7dd-6137b9873adc")
+	makeSystemIntakeWithEditsRequested(
+		"Edits requested on intake request",
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
-		&progressOptions{
-			meetingDate:        &futureMeetingDate,
-			completeOtherSteps: true,
-		},
+		"USR1",
+		intakeID,
+		"intake request feedback",
+		models.HTMLPointer("additional info on request form"),
+		"administrative note about request form",
+		model.SystemIntakeFormStepInitialRequestForm,
 	)
 
-	intakeID = uuid.MustParse("a2fa0d4b-909f-45d8-ad8c-90f22cf0db19")
-	makeSystemIntakeAndProgressToStep(
-		"With GRT scheduled",
-		&intakeID,
-		requesterEUA,
+	intakeID = uuid.MustParse("ce874e71-de26-46da-bbfe-a8e3af960108")
+	makeSystemIntakeWithEditsRequested(
+		"Edits requested on draft biz case",
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
-		&progressOptions{
-			meetingDate:        &futureMeetingDate,
-			completeOtherSteps: true,
-		},
+		"USR1",
+		intakeID,
+		"draft biz case feedback",
+		models.HTMLPointer("additional info on draft biz case"),
+		"administrative note about draft biz case",
+		model.SystemIntakeFormStepDraftBusinessCase,
 	)
+
+	intakeID = uuid.MustParse("67eebec8-9242-4f2c-b337-f674686a5ab5")
+	makeSystemIntakeWithEditsRequested(
+		"Edits requested on final biz case",
+		logger,
+		store,
+		"USR1",
+		intakeID,
+		"final biz case feedback",
+		models.HTMLPointer("additional info on final biz case"),
+		"administrative note about final biz case",
+		model.SystemIntakeFormStepFinalBusinessCase,
+	)
+
+	must(nil, seederConfig.seedTRBRequests(ctx))
 }
 
-func date(year, month, day int) *time.Time {
-	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
-	return &date
+func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
+	ctx := appcontext.WithLogger(context.Background(), logger)
+
+	fundingSources := []*models.SystemIntakeFundingSource{
+		{
+			FundingNumber: null.StringFrom("123456"),
+			Source:        null.StringFrom("Research"),
+		},
+		{
+			FundingNumber: null.StringFrom("789012"),
+			Source:        null.StringFrom("DARPA"),
+		},
+	}
+
+	intake := models.SystemIntake{
+		EUAUserID: null.StringFrom(mock.PrincipalUser),
+		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
+
+		RequestType:                 models.SystemIntakeRequestTypeNEW,
+		Requester:                   "User ABCD",
+		Component:                   null.StringFrom("Center for Medicaid and CHIP Services"),
+		BusinessOwner:               null.StringFrom("User ABCD"),
+		BusinessOwnerComponent:      null.StringFrom("Center for Medicaid and CHIP Services"),
+		ProductManager:              null.StringFrom("Project Manager"),
+		ProductManagerComponent:     null.StringFrom("Center for Program Integrity"),
+		ISSOName:                    null.StringFrom("ISSO Name"),
+		TRBCollaboratorName:         null.StringFrom("TRB Collaborator Name"),
+		OITSecurityCollaboratorName: null.StringFrom("OIT Collaborator Name"),
+		EACollaboratorName:          null.StringFrom("EA Collaborator Name"),
+
+		ProjectName:     null.StringFrom(name),
+		ExistingFunding: null.BoolFrom(true),
+		FundingSources:  fundingSources,
+
+		BusinessNeed: null.StringFrom("A business need. TACO is a new tool for customers to access consolidated Active health information and facilitate the new Medicare process. The purpose is to provide a more integrated and unified customer service experience."),
+		Solution:     null.StringFrom("A solution. TACO is a new tool for customers to access consolidated Active health information and facilitate the new Medicare process. The purpose is to provide a more integrated and unified customer service experience."),
+
+		ProcessStatus:      null.StringFrom("I have done some initial research"),
+		EASupportRequest:   null.BoolFrom(true),
+		HasUIChanges:       null.BoolFrom(true),
+		ExistingContract:   null.StringFrom("HAVE_CONTRACT"),
+		CostIncrease:       null.StringFrom("YES"),
+		CostIncreaseAmount: null.StringFrom("10 million dollars?"),
+
+		ContractStartDate: date(2021, 1, 1),
+		ContractEndDate:   date(2023, 12, 31),
+		ContractNumber:    null.StringFrom("123456-7890"),
+		Contractor:        null.StringFrom("Contractor Name"),
+	}
+
+	submittedAt := time.Now()
+	intake.SubmittedAt = &submittedAt
+
+	for _, cb := range callbacks {
+		cb(&intake)
+	}
+
+	must(store.CreateSystemIntake(ctx, &intake))
+	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
+
+	tenMinutesAgo := time.Now().Add(-10 * time.Minute)
+	fiveMinutesAgo := time.Now().Add(-5 * time.Minute)
+
+	must(store.CreateAction(ctx, &models.Action{
+		IntakeID:       &intake.ID,
+		ActionType:     models.ActionTypeSUBMITINTAKE,
+		ActorName:      "Actor Name",
+		ActorEmail:     "actor@example.com",
+		ActorEUAUserID: "ACT1",
+		CreatedAt:      &tenMinutesAgo,
+	}))
+	must(store.CreateAction(ctx, &models.Action{
+		IntakeID:       &intake.ID,
+		ActionType:     models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
+		ActorName:      "Actor Name",
+		ActorEmail:     "actor@example.com",
+		ActorEUAUserID: "ACT2",
+		Feedback:       models.HTMLPointer("This business case needs feedback"),
+	}))
+
+	must(store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
+		SystemIntakeID: intake.ID,
+		AuthorEUAID:    "QQQQ",
+		AuthorName:     null.StringFrom("Author Name"),
+		Content:        models.HTMLPointer("a clever remark"),
+		CreatedAt:      &fiveMinutesAgo,
+	}))
+
+	must(store.UpdateSystemIntakeFundingSources(ctx, intake.ID, fundingSources))
+
+	return &intake
+}
+
+func makeSystemIntakeWithProgressToNextStep(
+	name string,
+	logger *zap.Logger,
+	store *storage.Store,
+	creatingUser string,
+	intakeID uuid.UUID,
+	feedbackText models.HTML,
+	grbRecommendations models.HTML,
+	additionalInfo models.HTML,
+	adminNote models.HTML,
+) {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, creatingUser)
+
+	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
+		i.ID = intakeID
+		i.Step = models.SystemIntakeStepINITIALFORM
+		i.RequestFormState = models.SIRFSSubmitted
+	})
+
+	input := model.SystemIntakeProgressToNewStepsInput{
+		SystemIntakeID:     intakeID,
+		NewStep:            model.SystemIntakeStepToProgressToDraftBusinessCase, // arbitrary choice
+		Feedback:           &feedbackText,
+		GrbRecommendations: &grbRecommendations,
+		AdditionalInfo:     &additionalInfo,
+		AdminNote:          &adminNote,
+	}
+
+	// this will move the intake to the new step and save it to the database, save the feedback, and save a record of the action
+	must(resolvers.ProgressIntake(ctx, store, nil, mock.FetchUserInfoMock, input))
+}
+
+func makeSystemIntakeWithEditsRequested(
+	name string,
+	logger *zap.Logger,
+	store *storage.Store,
+	creatingUser string,
+	intakeID uuid.UUID,
+	feedbackText models.HTML,
+	additionalInfo *models.HTML,
+	adminNote models.HTML,
+	targetedForm model.SystemIntakeFormStep,
+) {
+	ctx := appcontext.WithLogger(context.Background(), logger)
+
+	makeSystemIntake(name, logger, store, func(i *models.SystemIntake) {
+		i.ID = intakeID
+		i.Step = models.SystemIntakeStepINITIALFORM
+		i.RequestFormState = models.SIRFSSubmitted
+	})
+
+	input := &model.SystemIntakeRequestEditsInput{
+		SystemIntakeID: intakeID,
+		IntakeFormStep: targetedForm,
+		NotificationRecipients: &models.EmailNotificationRecipients{
+			RegularRecipientEmails:   []models.EmailAddress{},
+			ShouldNotifyITGovernance: false,
+			ShouldNotifyITInvestment: false,
+		},
+		EmailFeedback:  feedbackText,
+		AdditionalInfo: additionalInfo,
+		AdminNote:      &adminNote,
+	}
+	must(resolvers.CreateSystemIntakeActionRequestEdits(ctx, store, nil, mock.FetchUserInfoMock, *input))
+}
+
+func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) {
+	ctx := appcontext.WithLogger(context.Background(), logger)
+	if intake == nil {
+		intake = makeSystemIntake(name, logger, store)
+	}
+
+	phase := models.LifecycleCostPhaseDEVELOPMENT
+	cost := 123456
+	noCost := 0
+	businessCase := models.BusinessCase{
+		SystemIntakeID:       intake.ID,
+		EUAUserID:            mock.PrincipalUser,
+		Requester:            null.StringFrom("Shane Clark"),
+		RequesterPhoneNumber: null.StringFrom("3124567890"),
+		Status:               models.BusinessCaseStatusOPEN,
+		ProjectName:          null.StringFrom(name),
+		BusinessOwner:        null.StringFrom("Shane Clark"),
+		BusinessNeed:         null.StringFrom("business need"),
+		LifecycleCostLines: []models.EstimatedLifecycleCost{
+			{
+				Solution: models.LifecycleCostSolutionPREFERRED,
+				Year:     models.LifecycleCostYear1,
+				Phase:    &phase,
+				Cost:     &cost,
+			},
+			{
+				Solution: models.LifecycleCostSolutionA,
+				Year:     models.LifecycleCostYear2,
+			},
+			{
+				Solution: models.LifecycleCostSolutionA,
+				Year:     models.LifecycleCostYear3,
+				Cost:     &noCost,
+			},
+		},
+		CurrentSolutionSummary: null.StringFrom(""),
+		CMSBenefit:             null.StringFrom(""),
+		PriorityAlignment:      null.StringFrom(""),
+		SuccessIndicators:      null.StringFrom(""),
+
+		AlternativeATitle:       null.StringFrom(""),
+		AlternativeASummary:     null.StringFrom(""),
+		AlternativeAPros:        null.StringFrom(""),
+		AlternativeACons:        null.StringFrom(""),
+		AlternativeACostSavings: null.StringFrom(""),
+
+		AlternativeBTitle:       null.StringFrom(""),
+		AlternativeBSummary:     null.StringFrom(""),
+		AlternativeBPros:        null.StringFrom(""),
+		AlternativeBCons:        null.StringFrom(""),
+		AlternativeBCostSavings: null.StringFrom(""),
+	}
+	for _, cb := range callbacks {
+		cb(&businessCase)
+	}
+
+	must(store.CreateBusinessCase(ctx, &businessCase))
+}
+
+var lcid = 0
+
+func makeAccessibilityRequest(name string, store *storage.Store, callbacks ...func(*models.AccessibilityRequest)) *models.AccessibilityRequest {
+	ctx := context.Background()
+
+	lifecycleID := fmt.Sprintf("%06d", lcid)
+	lcid = lcid + 1
+
+	intake := models.SystemIntake{
+		Status:                 models.SystemIntakeStatusLCIDISSUED,
+		RequestType:            models.SystemIntakeRequestTypeNEW,
+		ProjectName:            null.StringFrom(name),
+		BusinessOwner:          null.StringFrom("Shane Clark"),
+		BusinessOwnerComponent: null.StringFrom("OIT"),
+		LifecycleID:            null.StringFrom(lifecycleID),
+	}
+	must(store.CreateSystemIntake(ctx, &intake))
+	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
+
+	accessibilityRequest := models.AccessibilityRequest{
+		Name:      fmt.Sprintf("%s v2", name),
+		IntakeID:  &intake.ID,
+		EUAUserID: mock.PrincipalUser,
+	}
+	for _, cb := range callbacks {
+		cb(&accessibilityRequest)
+	}
+	must(store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, &accessibilityRequest))
+	return &accessibilityRequest
+}
+
+func makeTestDate(logger *zap.Logger, store *storage.Store, callbacks ...func(*models.TestDate)) {
+	ctx := appcontext.WithLogger(context.Background(), logger)
+
+	testDate := models.TestDate{}
+	for _, cb := range callbacks {
+		cb(&testDate)
+	}
+
+	must(store.CreateTestDate(ctx, &testDate))
 }
 
 func must(_ interface{}, err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func date(year, month, day int) *time.Time {
+	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	return &date
 }

@@ -375,16 +375,6 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 				errorExpected:  false,
 			},
 			{
-				testName: "Decision made, but re-opened, progressed, then closed",
-				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepFINALBIZCASE,
-					DecisionState: models.SIDSNotApproved,
-					State:         models.SystemIntakeStateCLOSED,
-				},
-				expectedStatus: models.SISRClosed,
-				errorExpected:  false,
-			},
-			{
 				// this state is invalid - an intake that's been closed with no decision should not have reached the decision step
 				testName: "Closed with no decision while in the decision step",
 				intake: models.SystemIntake{

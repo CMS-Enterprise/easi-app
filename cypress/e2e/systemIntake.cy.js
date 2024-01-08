@@ -31,11 +31,7 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Continue').click();
     cy.contains('a', 'Get started').click();
     cy.wait(1000);
-
-    cy.get('li[data-testid="fill-out-the-intake-request-form"]')
-      .contains('button', 'Start')
-      .click();
-
+    cy.contains('a', 'Start').click();
     cy.location().should(loc => {
       expect(loc.pathname).to.match(/\/system\/.{36}\/contact-details/);
     });
@@ -110,6 +106,8 @@ describe('The System Intake Form', () => {
       .should('be.checked');
 
     cy.contains('button', 'Next').click();
+
+    // Skip documents step
 
     cy.contains('button', 'Continue without documents').click();
 
@@ -403,6 +401,70 @@ describe('The System Intake Form', () => {
     cy.get('#systemIntakeDocuments').contains('td', 'test.pdf');
   });
 
+  /**
+   * Test contact details section error messages
+   */
+  it('displays contact details error messages', () => {
+    // Click next button without filling in any values
+    cy.contains('button', 'Next').click();
+
+    // Check for error messages
+    cy.get('[data-testid="contact-details-errors"]');
+  });
+
+  it('displays request details error messages', () => {
+    cy.systemIntake.contactDetails.fillNonBranchingFields();
+
+    cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
+
+    cy.get('#IntakeForm-NoGovernanceTeam')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.contains('button', 'Next').click();
+
+    cy.contains('h1', 'Request details');
+
+    cy.contains('button', 'Next').click();
+
+    cy.get('[data-testid="request-details-errors"]');
+  });
+
+  it('displays funding source error messages', () => {
+    cy.systemIntake.contactDetails.fillNonBranchingFields();
+    cy.contains('button', 'Next').click();
+    cy.systemIntake.requestDetails.fillNonBranchingFields();
+    cy.get('#IntakeForm-CurrentStage')
+      .select('Just an idea')
+      .should('have.value', 'Just an idea');
+    cy.contains('button', 'Next').click();
+
+    // Check empty funding number and funding sources
+    cy.systemIntake.contractDetails.addFundingSource({ restart: true });
+    cy.contains('span', 'Funding number must be exactly 6 digits');
+    cy.contains('span', 'Select a funding source');
+
+    // Check funding source is numeric
+    cy.systemIntake.contractDetails.addFundingSource({
+      fundingNumber: 'abcdef',
+      sources: ['Fed Admin', 'Research']
+    });
+    cy.contains('span', 'Funding number can only contain digits');
+
+    // Add valid funding source
+    cy.systemIntake.contractDetails.addFundingSource({
+      fundingNumber: '123456'
+    });
+
+    // Check funding number is unique
+    cy.systemIntake.contractDetails.addFundingSource({
+      fundingNumber: '123456',
+      sources: ['Fed Admin', 'Research'],
+      restart: true
+    });
+    cy.contains('span', 'Funding number must be unique');
+  });
+
   it('saves on back click', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
     cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
@@ -422,5 +484,15 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Back').click();
     cy.wait('@updateRequestDetails');
+  });
+});
+
+describe('users who got lost', () => {
+  it('redirects to the system type page if somebody managed to skip it', () => {
+    cy.localLogin({ name: 'E2E1' });
+    cy.visit('/system/new');
+    cy.location().should(loc => {
+      expect(loc.pathname).to.equal('/system/request-type');
+    });
   });
 });

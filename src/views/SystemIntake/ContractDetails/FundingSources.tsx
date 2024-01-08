@@ -179,7 +179,7 @@ const FundingSourceForm = ({
           scrollElement="fundingSource.fundingNumber"
           error={!!errors.fundingNumber}
         >
-          <Label htmlFor="IntakeForm-FundingNumber" className="text-normal">
+          <Label htmlFor="fundingNumber" className="text-normal">
             {t('contractDetails.fundingSources.fundingNumber')}
           </Label>
           <HelpText
@@ -215,7 +215,7 @@ const FundingSourceForm = ({
           </HelpText>
         </FieldGroup>
         <FieldGroup error={!!errors.sources} className="margin-y-2">
-          <Label htmlFor="IntakeForm-FundingSources" className="text-normal">
+          <Label htmlFor="fundingSources" className="text-normal">
             {t('contractDetails.fundingSources.fundingSource')}
           </Label>
           <FieldErrorMsg>{errors.sources}</FieldErrorMsg>

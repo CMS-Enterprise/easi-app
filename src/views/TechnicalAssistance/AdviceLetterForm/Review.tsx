@@ -6,7 +6,6 @@ import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Accordion, Form } from '@trussworks/react-uswds';
 
-import { RichTextViewer } from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import useCacheQuery from 'hooks/useCacheQuery';
@@ -121,7 +120,7 @@ const Review = ({
               note.createdAt,
               'MM/dd/yyyy'
             )})`,
-            content: <RichTextViewer value={note.noteText} />,
+            content: note.noteText,
             expanded: false
           }))}
           bordered

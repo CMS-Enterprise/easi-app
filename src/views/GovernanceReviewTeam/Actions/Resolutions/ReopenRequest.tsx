@@ -17,7 +17,6 @@ import { NonNullableProps } from 'types/util';
 
 import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 
-import refetchQueries from './refetchQueries';
 import ResolutionTitleBox from './ResolutionTitleBox';
 import { ResolutionProps } from '.';
 
@@ -37,7 +36,7 @@ const ReopenRequest = ({
     CreateSystemIntakeActionReopenRequest,
     CreateSystemIntakeActionReopenRequestVariables
   >(CreateSystemIntakeActionReopenRequestQuery, {
-    refetchQueries
+    refetchQueries: ['GetSystemIntake']
   });
 
   const form = useForm<ReopenRequestFields>();

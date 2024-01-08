@@ -9,6 +9,7 @@ import { GetSystemIntake_systemIntake_requester as Requester } from 'queries/typ
 import {
   SystemIntakeRequestType,
   SystemIntakeState,
+  SystemIntakeStatus,
   SystemIntakeStatusAdmin
 } from 'types/graphql-global-types';
 
@@ -42,6 +43,7 @@ const summaryProps = {
   id: 'ccdfdcf5-5085-4521-9f77-fa1ea324502b',
   requestName: 'Request Name',
   requestType: SystemIntakeRequestType.NEW,
+  status: SystemIntakeStatus.INTAKE_SUBMITTED,
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
   adminLead: null,
   submittedAt: DateTime.local().toString(),
@@ -71,7 +73,7 @@ describe('The GRT Review page', () => {
         <MockedProvider>
           <Summary
             {...summaryProps}
-            statusAdmin={SystemIntakeStatusAdmin.LCID_ISSUED}
+            status={SystemIntakeStatus.LCID_ISSUED}
             state={SystemIntakeState.CLOSED}
           />
         </MockedProvider>
@@ -91,7 +93,7 @@ describe('The GRT Review page', () => {
         <MockedProvider>
           <Summary
             {...summaryProps}
-            statusAdmin={SystemIntakeStatusAdmin.LCID_ISSUED}
+            status={SystemIntakeStatus.LCID_ISSUED}
             state={SystemIntakeState.CLOSED}
             lcid={lcid}
           />
@@ -101,7 +103,7 @@ describe('The GRT Review page', () => {
 
     expect(
       within(screen.getByTestId('grt-current-status')).getByText(
-        `LCID issued: ${lcid}`
+        `Life Cycle ID issued: ${lcid}`
       )
     ).toBeInTheDocument();
   });

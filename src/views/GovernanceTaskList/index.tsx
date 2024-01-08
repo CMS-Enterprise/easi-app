@@ -29,8 +29,7 @@ import {
 import {
   ITGovIntakeFormStatus,
   SystemIntakeDecisionState,
-  SystemIntakeState,
-  SystemIntakeStep
+  SystemIntakeState
 } from 'types/graphql-global-types';
 import { archiveSystemIntake } from 'types/routines';
 import NotFound from 'views/NotFound';
@@ -83,21 +82,12 @@ function GovernanceTaskList() {
   const hasDecision =
     systemIntake?.decisionState !== SystemIntakeDecisionState.NO_DECISION;
 
-  /** Returns true if request has decision and is either closed OR in the decision step */
-  const showDecisionAlert =
-    hasDecision &&
-    (isClosed ||
-      systemIntake?.step === SystemIntakeStep.DECISION_AND_NEXT_STEPS);
-
   if (error) {
     return <NotFound />;
   }
 
   return (
-    <MainContent
-      className="margin-bottom-5 desktop:margin-bottom-10"
-      data-testid="governance-task-list"
-    >
+    <MainContent className="margin-bottom-5 desktop:margin-bottom-10">
       <GridContainer className="width-full">
         <Breadcrumbs
           items={[
@@ -145,7 +135,7 @@ function GovernanceTaskList() {
 
                 {
                   // Decision issued alert
-                  showDecisionAlert && (
+                  hasDecision && (
                     <Alert
                       type="info"
                       heading={t('taskList.decisionAlert.heading')}

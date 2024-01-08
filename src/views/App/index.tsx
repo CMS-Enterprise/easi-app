@@ -25,8 +25,9 @@ import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GovernanceFeedback from 'views/GovernanceTaskList/Feedback';
-import LcidInfo from 'views/GovernanceTaskList/LcidInfo';
-import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
+import GovernanceTaskListV1 from 'views/GovernanceTaskListV1';
+import LcidInfo from 'views/GovernanceTaskListV1/LcidInfo';
+import RequestDecision from 'views/GovernanceTaskListV1/RequestDecision';
 import Help from 'views/Help';
 import Home from 'views/Home';
 import Login from 'views/Login';
@@ -107,11 +108,23 @@ const AppRoutes = () => {
         path="/governance-overview/:systemId?"
         component={GovernanceOverview}
       />
-      <SecureRoute
-        path="/governance-task-list/:systemId"
-        exact
-        component={GovernanceTaskList}
-      />
+
+      {flags.itGovV2Enabled ? (
+        // IT Gov V2
+        <SecureRoute
+          path="/governance-task-list/:systemId"
+          exact
+          component={GovernanceTaskList}
+        />
+      ) : (
+        // IT Gov V1
+        <SecureRoute
+          path="/governance-task-list/:systemId"
+          exact
+          component={GovernanceTaskListV1}
+        />
+      )}
+
       <SecureRoute
         path="/governance-task-list/:systemId/feedback"
         exact
@@ -137,6 +150,7 @@ const AppRoutes = () => {
         path="/governance-task-list/:systemId/lcid-info"
         component={LcidInfo}
       />
+      <Redirect exact from="/system/new" to="/system/request-type" />
       <Redirect
         exact
         from="/system/:systemId"

@@ -564,6 +564,26 @@ export enum TestDateTestType {
 }
 
 /**
+ * Feedback intended for a business owner before they proceed to writing a
+ * business case for a system request
+ */
+export interface AddGRTFeedbackInput {
+  emailBody: HTML;
+  feedback: HTML;
+  intakeID: UUID;
+  notificationRecipients?: EmailNotificationRecipients | null;
+}
+
+/**
+ * Input to add feedback to a system request
+ */
+export interface BasicActionInput {
+  feedback: HTML;
+  intakeId: UUID;
+  notificationRecipients?: EmailNotificationRecipients | null;
+}
+
+/**
  * The input needed to close a TRB request
  */
 export interface CloseTRBRequestInput {
@@ -609,6 +629,18 @@ export interface CreateAccessibilityRequestNoteInput {
  */
 export interface CreateCedarSystemBookmarkInput {
   cedarSystemId: string;
+}
+
+/**
+ * Input data for extending a system request's lifecycle ID
+ */
+export interface CreateSystemIntakeActionExtendLifecycleIdInput {
+  id: UUID;
+  expirationDate?: Time | null;
+  nextSteps?: HTML | null;
+  scope: HTML;
+  costBaseline?: string | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
 }
 
 /**
@@ -803,6 +835,32 @@ export interface GeneratePresignedUploadURLInput {
   fileName: string;
   mimeType: string;
   size: number;
+}
+
+/**
+ * The input data required to issue a lifecycle ID for a system's IT governance
+ * request
+ */
+export interface IssueLifecycleIdInput {
+  expiresAt: Time;
+  feedback: HTML;
+  intakeId: UUID;
+  lcid?: string | null;
+  nextSteps?: HTML | null;
+  scope: HTML;
+  costBaseline?: string | null;
+  notificationRecipients?: EmailNotificationRecipients | null;
+}
+
+/**
+ * Input data for rejection of a system's IT governance request
+ */
+export interface RejectIntakeInput {
+  feedback: HTML;
+  intakeId: UUID;
+  nextSteps?: HTML | null;
+  reason: HTML;
+  notificationRecipients?: EmailNotificationRecipients | null;
 }
 
 /**

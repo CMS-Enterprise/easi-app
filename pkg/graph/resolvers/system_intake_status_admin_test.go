@@ -331,16 +331,6 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			expectedStatus: models.SISANotApproved,
 			expectError:    false,
 		},
-		{
-			testCase: "Decision made, but re-opened, progressed, then closed",
-			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepFINALBIZCASE,
-				DecisionState: models.SIDSNotApproved,
-				State:         models.SystemIntakeStateCLOSED,
-			},
-			expectedStatus: models.SISAClosed,
-			expectError:    false,
-		},
 		// This case will be handled in application code to ensure this doesn't occur.
 		{
 			testCase: "Decision No Decision, closed",

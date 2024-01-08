@@ -11,6 +11,7 @@ export default gql`
       id
       euaUserId
       requestName
+      status
       statusAdmin
       state
 
