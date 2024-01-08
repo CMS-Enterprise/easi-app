@@ -3,6 +3,8 @@ import { DateTime } from 'luxon';
 import governaceReviewTeam from '../../src/i18n/en-US/articles/governanceReviewTeam';
 
 describe('Governance Review Team', () => {
+  const futureDate = DateTime.local().plus({ year: 1 });
+
   beforeEach(() => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'GetSystemIntake') {
@@ -182,14 +184,13 @@ describe('Governance Review Team', () => {
 
     // Complete action form
 
-    const expirationDate = DateTime.local().plus({ year: 1 });
     const scope = 'Test scope for issuing new LCID';
     const nextSteps = 'Test next steps for issuing new LCID';
     const costBaseline = 'Test next steps for issuing new LCID';
 
     cy.get('#useExistingLcid_false').check({ force: true });
 
-    cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
+    cy.get('#expiresAt').type(futureDate.toFormat('MM/dd/yyyy'));
     cy.get('div#scope').type(scope);
     cy.get('div#nextSteps').type(nextSteps);
     cy.get('#stronglyRecommended').check({ force: true });
@@ -208,7 +209,7 @@ describe('Governance Review Team', () => {
 
     cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
 
-    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(futureDate.toFormat('MMMM d, yyyy'));
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains('Yes, strongly recommend');
@@ -231,7 +232,6 @@ describe('Governance Review Team', () => {
     // Complete action form
 
     const lcid = '000001';
-    const expirationDate = DateTime.local().plus({ year: 1 });
     const scope = 'Test scope for issuing existing LCID';
     const nextSteps = 'Test next steps for issuing existing LCID';
     const costBaseline = 'Test next steps for issuing existing LCID';
@@ -240,7 +240,7 @@ describe('Governance Review Team', () => {
     cy.get('#useExistingLcid').select(lcid).should('have.value', lcid);
 
     cy.get('#expiresAt').clear();
-    cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
+    cy.get('#expiresAt').type(futureDate.toFormat('MM/dd/yyyy'));
 
     cy.get('div#scope').clear();
     cy.get('div#scope').type(scope);
@@ -267,7 +267,7 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
 
     cy.get('dd').contains(lcid);
-    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(futureDate.toFormat('MMMM d, yyyy'));
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains('Yes, strongly recommend');
@@ -291,12 +291,11 @@ describe('Governance Review Team', () => {
 
     // Complete action form
 
-    const expirationDate = DateTime.local().plus({ year: 2 });
     const scope = 'Updated test scope for issuing LCID';
     const nextSteps = 'Updated test next steps for issuing LCID';
     const costBaseline = 'Updated test cost baseline for issuing LCID';
 
-    cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
+    cy.get('#expiresAt').type(futureDate.toFormat('MM/dd/yyyy'));
     cy.get('div#scope').type(scope);
     cy.get('div#nextSteps').type(nextSteps);
     cy.get('#costBaseline').type(costBaseline);
@@ -313,7 +312,7 @@ describe('Governance Review Team', () => {
 
     cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
 
-    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(futureDate.toFormat('MMMM d, yyyy'));
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains(costBaseline);
@@ -366,8 +365,7 @@ describe('Governance Review Team', () => {
 
     // Complete action form
 
-    const retirementDate = DateTime.local().plus({ year: 2 });
-    cy.get('#retiresAt').type(retirementDate.toFormat('MM/dd/yyyy'));
+    cy.get('#retiresAt').type(futureDate.toFormat('MM/dd/yyyy'));
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
@@ -396,16 +394,19 @@ describe('Governance Review Team', () => {
     cy.contains('h3', 'Change retirement date');
 
     // Check initial retirement date
-    cy.get('#retiresAt').should('have.value', '01/05/2026');
+    cy.get('#retiresAt').should(
+      'have.value',
+      futureDate.toFormat('MM/dd/yyyy')
+    );
 
     // Complete action form
 
-    const retirementDate = DateTime.local()
-      .plus({ month: 1, year: 2 })
+    const updatedRetirementDate = futureDate
+      .plus({ month: 1 })
       .toFormat('MM/dd/yyyy');
 
     cy.get('#retiresAt').clear();
-    cy.get('#retiresAt').type(retirementDate);
+    cy.get('#retiresAt').type(updatedRetirementDate);
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
@@ -425,7 +426,7 @@ describe('Governance Review Team', () => {
 
     cy.contains('button', 'Next').should('not.be.disabled').click();
 
-    cy.get('#retiresAt').should('have.value', retirementDate);
+    cy.get('#retiresAt').should('have.value', updatedRetirementDate);
   });
 
   it.skip('can close a request', () => {
