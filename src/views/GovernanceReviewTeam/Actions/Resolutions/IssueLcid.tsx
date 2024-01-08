@@ -42,6 +42,7 @@ import ActionForm, { SystemIntakeActionFields } from '../components/ActionForm';
 import { actionDateInPast } from '../ManageLcid/RetireLcid';
 import { EditsRequestedContext } from '..';
 
+import refetchQueries from './refetchQueries';
 import ResolutionTitleBox from './ResolutionTitleBox';
 import { ResolutionProps } from '.';
 
@@ -83,14 +84,14 @@ const IssueLcid = ({
     CreateSystemIntakeActionIssueLcid,
     CreateSystemIntakeActionIssueLcidVariables
   >(CreateSystemIntakeActionIssueLcidQuery, {
-    refetchQueries: ['GetSystemIntake']
+    refetchQueries
   });
 
   const [mutateConfirmLcid] = useMutation<
     CreateSystemIntakeActionConfirmLcid,
     CreateSystemIntakeActionConfirmLcidVariables
   >(CreateSystemIntakeActionConfirmLcidQuery, {
-    refetchQueries: ['GetSystemIntake']
+    refetchQueries
   });
 
   const { data, loading } = useCacheQuery<GetSystemIntakesWithLCIDSType>(

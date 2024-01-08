@@ -150,6 +150,104 @@ export const documents: SystemIntakeDocument[] = [
   }
 ];
 
+export const emptySystemIntake: SystemIntake = {
+  __typename: 'SystemIntake',
+  requestName: null,
+  id: systemIntakeId,
+  euaUserId: requester.euaUserId,
+  adminLead: '',
+  status: SystemIntakeStatus.INTAKE_DRAFT,
+  statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
+  statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
+  requester: {
+    __typename: 'SystemIntakeRequester',
+    name: requester.commonName!,
+    component: null,
+    email: null
+  },
+  requestType: SystemIntakeRequestType.NEW,
+  businessOwner: {
+    __typename: 'SystemIntakeBusinessOwner',
+    name: null,
+    component: null
+  },
+  productManager: {
+    __typename: 'SystemIntakeProductManager',
+    name: null,
+    component: null
+  },
+  isso: {
+    __typename: 'SystemIntakeISSO',
+    isPresent: false,
+    name: null
+  },
+  governanceTeams: {
+    __typename: 'SystemIntakeGovernanceTeam',
+    isPresent: false,
+    teams: null
+  },
+  existingFunding: null,
+  fundingSources: [],
+  costs: {
+    __typename: 'SystemIntakeCosts',
+    expectedIncreaseAmount: null,
+    isExpectingIncrease: null
+  },
+  annualSpending: {
+    __typename: 'SystemIntakeAnnualSpending',
+    currentAnnualSpending: null,
+    plannedYearOneSpending: null
+  },
+  contract: {
+    __typename: 'SystemIntakeContract',
+    hasContract: null,
+    contractor: null,
+    vehicle: null,
+    number: null,
+    startDate: {
+      __typename: 'ContractDate',
+      month: null,
+      day: null,
+      year: null
+    },
+    endDate: {
+      __typename: 'ContractDate',
+      month: null,
+      day: null,
+      year: null
+    }
+  },
+  decisionNextSteps: null,
+  businessNeed: null,
+  businessSolution: null,
+  currentStage: null,
+  needsEaSupport: null,
+  grtReviewEmailBody: null,
+  decidedAt: null,
+  submittedAt: null,
+  grbDate: null,
+  grtDate: null,
+  governanceRequestFeedbacks: [],
+  lcid: null,
+  lcidIssuedAt: null,
+  lcidExpiresAt: null,
+  lcidRetiresAt: null,
+  lcidScope: null,
+  lcidCostBaseline: null,
+  lcidStatus: null,
+  rejectionReason: null,
+  updatedAt: null,
+  createdAt: '2024-01-02T19:36:50.127999Z',
+  businessCaseId: null,
+  archivedAt: null,
+  hasUiChanges: null,
+  documents: [],
+  state: SystemIntakeState.OPEN,
+  decisionState: SystemIntakeDecisionState.NO_DECISION,
+  trbFollowUpRecommendation: null,
+  requestFormState: SystemIntakeFormState.IN_PROGRESS
+};
+
 export const systemIntake: SystemIntake = {
   __typename: 'SystemIntake',
   requestName: 'Mock System Intake Request',
@@ -301,7 +399,6 @@ export const systemIntakeForTable: TableSystemIntake = {
   id: '1',
   euaUserId: '',
   requestName: '',
-  status: SystemIntakeStatus.INTAKE_SUBMITTED,
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
   state: SystemIntakeState.OPEN,
   requesterName: systemIntake.requester.name,
