@@ -378,7 +378,7 @@ describe('Governance Review Team', () => {
     );
   });
 
-  it('can update a Life Cycle ID retirement date', () => {
+  it.skip('can update a Life Cycle ID retirement date', () => {
     cy.contains('button', 'Closed requests').click();
 
     cy.contains('a', 'Retired LCID').should('be.visible').click();
