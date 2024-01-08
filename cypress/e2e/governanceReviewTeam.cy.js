@@ -417,8 +417,6 @@ describe('Governance Review Team', () => {
 
     // Check retirement date updated
 
-    cy.get('[data-testid="grt-nav-actions-link"]').click();
-
     cy.get('#grt-action__manage-lcid').check({ force: true });
 
     cy.contains('button', 'Continue').click();
