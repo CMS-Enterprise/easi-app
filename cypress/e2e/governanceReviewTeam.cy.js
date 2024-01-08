@@ -3,16 +3,18 @@ import { DateTime } from 'luxon';
 import governaceReviewTeam from '../../src/i18n/en-US/articles/governanceReviewTeam';
 
 describe('Governance Review Team', () => {
-  const futureDatetime = DateTime.local().plus({ year: 1 });
-  const futureDateYear = futureDatetime.year;
+  // Expiration and retirement dates
+  // Matches pattern set in seed data: +1 year for expiration, +2 years for retirement
+  const expirationDate = DateTime.local().plus({ year: 1 });
+  const retirementDate = expirationDate.plus({ year: 1 });
 
   beforeEach(() => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'GetSystemIntake') {
         req.alias = 'getSystemIntake';
       }
-      if (req.body.operationName === 'GetSystemIntakeContactsQuery') {
-        req.alias = 'getSystemIntakeContacts';
+      if (req.body.operationName === 'GetGovernanceTaskList') {
+        req.alias = 'getGovernanceTaskList';
       }
     });
 
@@ -170,15 +172,253 @@ describe('Governance Review Team', () => {
     });
   });
 
-  it('can issue a Life Cycle ID', () => {
-    // Selecting name based on pre-seeded data
-    // A Completed Intake Form - af7a3924-3ff7-48ec-8a54-b8b4bc95610b
-    cy.governanceReviewTeam.grtActions.selectAction({
-      intakeName: 'A Completed Intake Form',
-      actionId: 'issue-lcid'
-    });
+  it('can issue a new Life Cycle ID', () => {
+    cy.contains('a', 'Closable Request').should('be.visible').click();
 
-    cy.get('#grtActionEmailRecipientFields').should('be.visible');
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__resolutions').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-resolution__issue-lcid').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    const scope = 'Test scope for issuing new LCID';
+    const nextSteps = 'Test next steps for issuing new LCID';
+    const costBaseline = 'Test next steps for issuing new LCID';
+
+    cy.get('#useExistingLcid_false').check({ force: true });
+
+    cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
+    cy.get('div#scope').type(scope);
+    cy.get('div#nextSteps').type(nextSteps);
+    cy.get('#stronglyRecommended').check({ force: true });
+    cy.get('#costBaseline').type(costBaseline);
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check decision was issued and request closed
+
+    cy.get('[data-testid="request-state"').contains('Closed');
+    cy.get('[data-testid="grt-current-status"]').contains(
+      /LCID issued: [0-9]{6}/
+    );
+
+    // Check correct values are displayed on Life Cycle ID page
+
+    cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
+
+    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(scope);
+    cy.get('dd').contains(nextSteps);
+    cy.get('dd').contains('Yes, strongly recommend');
+    cy.get('dd').contains(costBaseline);
+  });
+
+  it('can issue an existing Life Cycle ID', () => {
+    cy.contains('a', 'final biz case submitted').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__resolutions').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-resolution__issue-lcid').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    const lcid = '000001';
+    const scope = 'Test scope for issuing existing LCID';
+    const nextSteps = 'Test next steps for issuing existing LCID';
+    const costBaseline = 'Test next steps for issuing existing LCID';
+
+    cy.get('#useExistingLcid_true').check({ force: true });
+    cy.get('#useExistingLcid').select(lcid).should('have.value', lcid);
+
+    cy.get('#expiresAt').clear();
+    cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
+
+    cy.get('div#scope').clear();
+    cy.get('div#scope').type(scope);
+
+    cy.get('div#nextSteps').clear();
+    cy.get('div#nextSteps').type(nextSteps);
+
+    cy.get('#stronglyRecommended').check({ force: true });
+
+    cy.get('#costBaseline').clear();
+    cy.get('#costBaseline').type(costBaseline);
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check decision was issued and request closed
+
+    cy.get('[data-testid="request-state"').contains('Closed');
+    cy.get('[data-testid="grt-current-status"]').contains(
+      `LCID issued: ${lcid}`
+    );
+
+    // Check correct values are displayed on Life Cycle ID page
+
+    cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
+
+    cy.get('dd').contains(lcid);
+    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(scope);
+    cy.get('dd').contains(nextSteps);
+    cy.get('dd').contains('Yes, strongly recommend');
+    cy.get('dd').contains(costBaseline);
+  });
+
+  it('can update a Life Cycle ID', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'Closable Request').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__update').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    const scope = 'Updated test scope for issuing LCID';
+    const nextSteps = 'Updated test next steps for issuing LCID';
+    const costBaseline = 'Updated test cost baseline for issuing LCID';
+
+    cy.get('#expiresAt').type(expirationDate.toFormat('MM/dd/yyyy'));
+    cy.get('div#scope').type(scope);
+    cy.get('div#nextSteps').type(nextSteps);
+    cy.get('#costBaseline').type(costBaseline);
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+    cy.get('div[data-testid="alert"]').contains(
+      /Life Cycle ID [0-9]{6} has been updated./
+    );
+
+    // Check updated values are displayed on Life Cycle ID page
+
+    cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
+
+    // Wait for task list query to complete
+    cy.wait('@getGovernanceTaskList')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
+    cy.get('dd').contains(scope);
+    cy.get('dd').contains(nextSteps);
+    cy.get('dd').contains(costBaseline);
+  });
+
+  it('can expire a Life Cycle ID', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'Updated LCID').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__expire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    cy.get('div#reason').type('Test reason for expiring this Life Cycle ID');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+    cy.get('div[data-testid="alert"]').contains(
+      'Life Cycle ID 000009 is now expired.'
+    );
+  });
+
+  it('can retire a Life Cycle ID', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'LCID issued').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__retire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    cy.contains('h3', 'Retire a Life Cycle ID');
+
+    // Complete action form
+
+    cy.get('#retiresAt').type(retirementDate.toFormat('MM/dd/yyyy'));
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+    cy.get('div[data-testid="alert"]').contains(
+      'Life Cycle ID 000010 is now retired.'
+    );
+  });
+
+  it('can update a Life Cycle ID retirement date', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'Retired LCID').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__retire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    cy.contains('h3', 'Change retirement date');
+
+    // Check initial retirement date
+    cy.get('#retiresAt').should(
+      'have.value',
+      retirementDate.toFormat('MM/dd/yyyy')
+    );
+
+    // Complete action form
+
+    const updatedRetirementDate = retirementDate
+      .plus({ month: 1 })
+      .toFormat('MM/dd/yyyy');
+
+    cy.get('#retiresAt').clear();
+    cy.get('#retiresAt').type(updatedRetirementDate);
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+    cy.get('div[data-testid="alert"]').contains(
+      'Life Cycle ID 000006 is now retired.'
+    );
 
     cy.get('#IssueLifecycleIdForm-NewLifecycleIdYes').check({ force: true });
     cy.get('#IssueLifecycleIdForm-NewLifecycleIdYes').should('be.checked');
@@ -192,20 +432,12 @@ describe('Governance Review Team', () => {
       .type('25')
       .should('have.value', '25');
 
-    cy.get('#IssueLifecycleIdForm-ExpirationDateYear')
-      .clear()
-      .type(futureDateYear)
-      .should('have.value', futureDateYear);
-    cy.get('#IssueLifecycleIdForm-Scope')
-      .type('Scope')
-      .should('have.value', 'Scope');
-    cy.get('#IssueLifecycleIdForm-NextSteps')
-      .type('Next steps')
-      .should('have.value', 'Next steps');
-    cy.get('#IssueLifecycleIdForm-Feedback')
-      .type('Feedback')
-      .should('have.value', 'Feedback');
-    cy.get('button[type="submit"]').click();
+    // Wait for task list query to complete
+    cy.wait('@getGovernanceTaskList')
+      .its('response.statusCode')
+      .should('eq', 200);
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
 
     cy.get('[data-testid="action-note"]')
       .first()
@@ -222,15 +454,7 @@ describe('Governance Review Team', () => {
         expect(text.length).to.equal(28);
       });
     cy.contains('p', 'Life Cycle ID issued');
-
-    cy.get(
-      'a[href="/governance-review-team/af7a3924-3ff7-48ec-8a54-b8b4bc95610b/lcid"]'
-    ).click();
-    cy.contains('dt', 'Life Cycle ID Expiration')
-      .siblings('dd')
-      .contains(`December 25, ${futureDateYear}`);
-    cy.contains('dt', 'Life Cycle ID Scope').siblings('dd').contains('Scope');
-    cy.contains('dt', 'Next Steps').siblings('dd').contains('Next steps');
+    cy.get('#retiresAt').should('have.value', updatedRetirementDate);
   });
 
   it.only('can close a request', () => {
