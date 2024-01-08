@@ -3,13 +3,18 @@ import { DateTime } from 'luxon';
 import governaceReviewTeam from '../../src/i18n/en-US/articles/governanceReviewTeam';
 
 describe('Governance Review Team', () => {
+  // Expiration and retirement dates
+  // Matches pattern set in seed data: +1 year for expiration, +2 years for retirement
+  const expirationDate = DateTime.local().plus({ year: 1 });
+  const retirementDate = expirationDate.plus({ year: 1 });
+
   beforeEach(() => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'GetSystemIntake') {
         req.alias = 'getSystemIntake';
       }
-      if (req.body.operationName === 'GetSystemIntakeContactsQuery') {
-        req.alias = 'getSystemIntakeContacts';
+      if (req.body.operationName === 'GetGovernanceTaskList') {
+        req.alias = 'getGovernanceTaskList';
       }
     });
 
@@ -182,7 +187,6 @@ describe('Governance Review Team', () => {
 
     // Complete action form
 
-    const expirationDate = DateTime.local().plus({ year: 1 });
     const scope = 'Test scope for issuing new LCID';
     const nextSteps = 'Test next steps for issuing new LCID';
     const costBaseline = 'Test next steps for issuing new LCID';
@@ -231,7 +235,6 @@ describe('Governance Review Team', () => {
     // Complete action form
 
     const lcid = '000001';
-    const expirationDate = DateTime.local().plus({ year: 1 });
     const scope = 'Test scope for issuing existing LCID';
     const nextSteps = 'Test next steps for issuing existing LCID';
     const costBaseline = 'Test next steps for issuing existing LCID';
@@ -291,7 +294,6 @@ describe('Governance Review Team', () => {
 
     // Complete action form
 
-    const expirationDate = DateTime.local().plus({ year: 2 });
     const scope = 'Updated test scope for issuing LCID';
     const nextSteps = 'Updated test next steps for issuing LCID';
     const costBaseline = 'Updated test cost baseline for issuing LCID';
@@ -304,7 +306,6 @@ describe('Governance Review Team', () => {
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
     // Check form submit was successful
-
     cy.get('div[data-testid="alert"]').contains(
       /Life Cycle ID [0-9]{6} has been updated./
     );
@@ -312,6 +313,11 @@ describe('Governance Review Team', () => {
     // Check updated values are displayed on Life Cycle ID page
 
     cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
+
+    // Wait for task list query to complete
+    cy.wait('@getGovernanceTaskList')
+      .its('response.statusCode')
+      .should('eq', 200);
 
     cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
     cy.get('dd').contains(scope);
@@ -341,7 +347,6 @@ describe('Governance Review Team', () => {
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
     // Check form submit was successful
-
     cy.get('div[data-testid="alert"]').contains(
       'Life Cycle ID 000009 is now expired.'
     );
@@ -366,19 +371,17 @@ describe('Governance Review Team', () => {
 
     // Complete action form
 
-    const retirementDate = DateTime.local().plus({ year: 2 });
     cy.get('#retiresAt').type(retirementDate.toFormat('MM/dd/yyyy'));
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
     // Check form submit was successful
-
     cy.get('div[data-testid="alert"]').contains(
       'Life Cycle ID 000010 is now retired.'
     );
   });
 
-  it.skip('can update a Life Cycle ID retirement date', () => {
+  it('can update a Life Cycle ID retirement date', () => {
     cy.contains('button', 'Closed requests').click();
 
     cy.contains('a', 'Retired LCID').should('be.visible').click();
@@ -396,21 +399,23 @@ describe('Governance Review Team', () => {
     cy.contains('h3', 'Change retirement date');
 
     // Check initial retirement date
-    cy.get('#retiresAt').should('have.value', '01/05/2026');
+    cy.get('#retiresAt').should(
+      'have.value',
+      retirementDate.toFormat('MM/dd/yyyy')
+    );
 
     // Complete action form
 
-    const retirementDate = DateTime.local()
-      .plus({ month: 1, year: 2 })
+    const updatedRetirementDate = retirementDate
+      .plus({ month: 1 })
       .toFormat('MM/dd/yyyy');
 
     cy.get('#retiresAt').clear();
-    cy.get('#retiresAt').type(retirementDate);
+    cy.get('#retiresAt').type(updatedRetirementDate);
 
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
     // Check form submit was successful
-
     cy.get('div[data-testid="alert"]').contains(
       'Life Cycle ID 000006 is now retired.'
     );
@@ -418,6 +423,11 @@ describe('Governance Review Team', () => {
     // Check retirement date updated
 
     cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    // Wait for task list query to complete
+    cy.wait('@getGovernanceTaskList')
+      .its('response.statusCode')
+      .should('eq', 200);
 
     cy.get('#grt-action__manage-lcid').check({ force: true });
 
@@ -427,7 +437,7 @@ describe('Governance Review Team', () => {
 
     cy.contains('button', 'Next').should('not.be.disabled').click();
 
-    cy.get('#retiresAt').should('have.value', retirementDate);
+    cy.get('#retiresAt').should('have.value', updatedRetirementDate);
   });
 
   it.skip('can close a request', () => {
