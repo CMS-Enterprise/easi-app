@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CreateTRBAdminNoteInput, TRBAdminNoteCategory } from "./../../types/graphql-global-types";
+import {  CreateTRBAdminNoteGeneralRequestInput, TRBAdminNoteCategory } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL mutation operation: CreateTrbAdminNote
@@ -66,6 +66,6 @@ export interface CreateTrbAdminNote {
   createTRBAdminNote: CreateTrbAdminNote_createTRBAdminNote;
 }
 
-export interface CreateTrbAdminNoteVariables {
-  input: CreateTRBAdminNoteInput;
+export interface CreateTrbAdminNoteGeneralVariables {
+  input: CreateTRBAdminNoteGeneralRequestInput;
 }

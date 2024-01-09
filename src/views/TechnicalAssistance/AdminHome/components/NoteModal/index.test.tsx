@@ -7,10 +7,10 @@ import i18next from 'i18next';
 
 import { getTrbAdminNotesQuery } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import CreateTrbAdminNote from 'queries/CreateTrbAdminNote';
+import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
 import {
   CreateTrbAdminNote as CreateTrbAdminNoteType,
-  CreateTrbAdminNoteVariables
+  CreateTrbAdminNoteGeneralVariables
 } from 'queries/types/CreateTrbAdminNote';
 import { TRBAdminNoteFragment } from 'queries/types/TRBAdminNoteFragment';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
@@ -55,14 +55,13 @@ const adminNotes: TRBAdminNoteFragment[] = [
 
 const createAdminNoteQuery: MockedQuery<
   CreateTrbAdminNoteType,
-  CreateTrbAdminNoteVariables
+  CreateTrbAdminNoteGeneralVariables
 > = {
   request: {
-    query: CreateTrbAdminNote,
+    query: CreateTrbAdminNoteGeneralRequestQuery,
     variables: {
       input: {
         trbRequestId: mockTrbRequestId,
-        category: adminNotes[1].category,
         noteText: adminNotes[1].noteText
       }
     }

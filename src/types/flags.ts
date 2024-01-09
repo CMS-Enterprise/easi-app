@@ -11,7 +11,6 @@ export type Flags = {
   technicalAssistance: boolean;
   hide508Workflow: boolean;
   portfolioUpdateReport: boolean;
-  trbAdminNoteUpdates: boolean;
 };
 
 export type FlagsState = {

@@ -2111,11 +2111,6 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 	)
 }
 
-// CreateTRBAdminNote is the resolver for the createTRBAdminNote field.
-func (r *mutationResolver) CreateTRBAdminNote(ctx context.Context, input model.CreateTRBAdminNoteInput) (*models.TRBAdminNote, error) {
-	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, input.Category, input.NoteText)
-}
-
 // CreateTRBAdminNoteGeneralRequest is the resolver for the createTRBAdminNoteGeneralRequest field.
 func (r *mutationResolver) CreateTRBAdminNoteGeneralRequest(ctx context.Context, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
 	return resolvers.CreateTRBAdminNoteGeneralRequest(ctx, r.store, input)
