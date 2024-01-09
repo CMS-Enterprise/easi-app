@@ -1,4 +1,4 @@
-package sqlscripts
+package sqlqueries
 
 import _ "embed"
 
