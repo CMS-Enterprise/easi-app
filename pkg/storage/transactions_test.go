@@ -55,6 +55,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 	})
 
 	suite.Run("With Transaction can also perform discrete db actions not directly part of the transaction", func() {
+		//NOTE: this is not behavior we should expect in production code.
 		var trbGlobal *models.TRBRequest
 		newTRB, err := sqlutils.WithTransaction[models.TRBRequest](suite.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 

@@ -10,6 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 
 	_ "embed"
 )
@@ -30,7 +31,7 @@ var trbRequestGetByIDSQL string
 var trbRequestUpdateSQL string
 
 // CreateTRBRequest creates a new TRBRequest record
-func (s *Store) CreateTRBRequest(ctx context.Context, np NamedPreparer, trb *models.TRBRequest) (*models.TRBRequest, error) {
+func (s *Store) CreateTRBRequest(ctx context.Context, np sqlutils.NamedPreparer, trb *models.TRBRequest) (*models.TRBRequest, error) {
 	if trb.ID == uuid.Nil {
 		trb.ID = uuid.New()
 	}

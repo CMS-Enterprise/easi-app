@@ -11,6 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 
 	_ "embed"
 )
@@ -19,7 +20,7 @@ import (
 var trbRequestFormCreateSQL string
 
 // CreateTRBRequestForm creates a new TRBRequestForm record
-func (s *Store) CreateTRBRequestForm(ctx context.Context, np NamedPreparer, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
+func (s *Store) CreateTRBRequestForm(ctx context.Context, np sqlutils.NamedPreparer, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
 	if form.ID == uuid.Nil {
 		form.ID = uuid.New()
 	}
