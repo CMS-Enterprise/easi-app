@@ -475,8 +475,8 @@ describe('Governance Review Team', () => {
 
     cy.get('[data-testid="grt-nav-dates.heading-link"]').click();
 
-    cy.get('#Dates-GrtDateMonth').should('have.value', '01');
-    cy.get('#Dates-GrtDateDay').should('have.value', '01');
+    cy.get('#Dates-GrtDateMonth').should('have.value', '1');
+    cy.get('#Dates-GrtDateDay').should('have.value', '1');
     cy.get('#Dates-GrtDateYear').should('have.value', '2024');
   });
 
