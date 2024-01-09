@@ -440,6 +440,42 @@ describe('Governance Review Team', () => {
     cy.get('#retiresAt').should('have.value', updatedRetirementDate);
   });
 
+  it('can progress to the GRT meeting step', () => {
+    cy.contains('a', 'Draft Business Case').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__new-step').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    // Complete action form
+
+    cy.get('#GRT_MEETING').check({ force: true });
+
+    cy.get('#meetingDate').type('01/01/2024');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+    cy.get('div[data-testid="alert"]').contains(
+      'Action complete. This request is now ready for a GRT meeting.'
+    );
+
+    // Check for correct status
+    cy.get('[data-testid="grt-current-status"]').contains(
+      'GRT meeting complete'
+    );
+
+    // Check GRT meeting date was set
+
+    cy.get('[data-testid="grt-nav-dates.heading-link"]').click();
+
+    cy.get('#Dates-GrtDateMonth').should('have.value', '01');
+    cy.get('#Dates-GrtDateDay').should('have.value', '01');
+    cy.get('#Dates-GrtDateYear').should('have.value', '2024');
+  });
+
   it.skip('can close a request', () => {
     // Selecting name based on pre-seeded data
     // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
