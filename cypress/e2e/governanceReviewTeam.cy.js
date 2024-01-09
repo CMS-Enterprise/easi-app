@@ -444,29 +444,36 @@ describe('Governance Review Team', () => {
     // cy.get('#retiresAt').should('have.value', updatedRetirementDate);
   });
 
-  it.skip('can close a request', () => {
-    // Selecting name based on pre-seeded data
-    // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
-    cy.governanceReviewTeam.grtActions.selectAction({
-      intakeName: 'Closable Request',
-      actionId: 'no-governance'
-    });
+  it('can close a request', () => {
+    cy.contains('a', 'grt meeting with date set in past')
+      .should('be.visible')
+      .click();
 
-    cy.get('#SubmitActionForm-Feedback')
-      .type('Feedback')
-      .should('have.value', 'Feedback');
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
 
-    cy.get('button[type="submit"]').click();
+    cy.get('#grt-action__resolutions').check({ force: true });
 
-    cy.wait('@getSystemIntake').its('response.statusCode').should('eq', 200);
+    cy.contains('button', 'Continue').click();
 
-    cy.get('[data-testid="request-state"]').contains('Closed');
+    cy.get('#grt-resolution__close-request').check({ force: true });
 
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    cy.get('#reason').type('Reason for closing request');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check request state is set to Closed
+    cy.get('[data-testid="request-state"').contains('Closed');
+
+    // Check intake shows in admin table for closed requests
     cy.visit('/');
-    cy.get('[data-testid="view-closed-intakes-btn"]').click();
-    cy.get('[data-testid="20cbcfbf-6459-4c96-943b-e76b83122dbf-row"]').contains(
-      'td',
-      'Not an IT Governance request'
+    cy.contains('button', 'Closed requests').click();
+    cy.get('#system-intakes-table__closed').contains(
+      'a',
+      'grt meeting with date set in past'
     );
   });
 
