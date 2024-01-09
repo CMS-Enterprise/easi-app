@@ -477,6 +477,35 @@ describe('Governance Review Team', () => {
     );
   });
 
+  it('can re-open a request', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'Closed Request').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__resolutions').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-resolution__re-open-request').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    cy.get('#reason').type('Reason for re-opening request');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check request state is set to Open
+    cy.get('[data-testid="request-state"').contains('Open');
+
+    // Check intake shows in admin table for closed requests
+    cy.visit('/');
+    cy.get('#system-intakes-table__open').contains('a', 'Closed Request');
+  });
+
   it.skip('can add additional contact as email recipient', () => {
     cy.contains('a', 'Ready for business case').should('be.visible').click();
     cy.get('[data-testid="grt-nav-actions-link"]').click();
