@@ -3,16 +3,16 @@ describe('The Business Case Form', () => {
     cy.localLogin({ name: 'E2E1' });
   });
 
-  it.skip('fills out all business case fields', () => {
+  it('fills out all business case fields', () => {
     cy.visit('/');
     cy.get('.accessibility-requests-table')
       .contains('a', 'Easy Access to System Information')
       .click();
     cy.contains('h1', 'Governance task list');
 
-    cy.get(
-      '[data-testid="fill-out-the-intake-request-form"] [data-testid="button"]'
-    ).click();
+    cy.get('li[data-testid="prepare-a-draft-business-case"]')
+      .contains('button', 'Start')
+      .click();
 
     // General Request Information
     // Autofilled Fields from System Intake
