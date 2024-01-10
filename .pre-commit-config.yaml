@@ -5,6 +5,7 @@ repos:
     hooks:
       - id: check-yaml
         name: Check YAML formatting
+        args: [--allow-multiple-documents]
       - id: detect-private-key
         name: Check for private keys
       - id: end-of-file-fixer
