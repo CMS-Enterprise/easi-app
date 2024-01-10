@@ -5,56 +5,100 @@ import {
   screen,
   waitForElementToBeRemoved
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
 
 import { MessageProvider } from 'hooks/useMessage';
 import GetTrbTasklistQuery from 'queries/GetTrbTasklistQuery';
+import {
+  GetTrbTasklist,
+  GetTrbTasklistVariables
+} from 'queries/types/GetTrbTasklist';
+import {
+  UpdateTrbRequestArchived,
+  UpdateTrbRequestArchivedVariables
+} from 'queries/types/UpdateTrbRequestArchived';
+import UpdateTrbRequestArchivedQuery from 'queries/UpdateTrbRequestArchivedQuery';
+import {
+  TRBAdviceLetterStatusTaskList,
+  TRBAttendConsultStatus,
+  TRBConsultPrepStatus,
+  TRBFeedbackStatus,
+  TRBFormStatus,
+  TRBRequestType
+} from 'types/graphql-global-types';
+import { MockedQuery } from 'types/util';
 import { getByRoleWithNameTextKey } from 'utils/testing/helpers';
+import MockMessage from 'utils/testing/MockMessage';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import TaskList from './TaskList';
 
+const trbRequestId = 'a5fdb150-e1e5-41c1-93a4-bc5165aae66c';
+
+const getTrbTasklistQuery: MockedQuery<
+  GetTrbTasklist,
+  GetTrbTasklistVariables
+> = {
+  request: {
+    query: GetTrbTasklistQuery,
+    variables: {
+      id: trbRequestId
+    }
+  },
+  result: {
+    data: {
+      trbRequest: {
+        name: 'Case 1 - Draft request form',
+        type: TRBRequestType.NEED_HELP,
+        form: {
+          status: TRBFormStatus.READY_TO_START,
+          __typename: 'TRBRequestForm'
+        },
+        taskStatuses: {
+          formStatus: TRBFormStatus.READY_TO_START,
+          feedbackStatus: TRBFeedbackStatus.CANNOT_START_YET,
+          consultPrepStatus: TRBConsultPrepStatus.CANNOT_START_YET,
+          attendConsultStatus: TRBAttendConsultStatus.CANNOT_START_YET,
+          adviceLetterStatusTaskList:
+            TRBAdviceLetterStatusTaskList.CANNOT_START_YET,
+          __typename: 'TRBTaskStatuses'
+        },
+        feedback: [],
+        consultMeetingTime: null,
+        __typename: 'TRBRequest'
+      }
+    }
+  }
+};
+
+const updateTrbRequestArchived: MockedQuery<
+  UpdateTrbRequestArchived,
+  UpdateTrbRequestArchivedVariables
+> = {
+  request: {
+    query: UpdateTrbRequestArchivedQuery,
+    variables: {
+      id: trbRequestId,
+      archived: true
+    }
+  },
+  result: {
+    data: {
+      updateTRBRequest: {
+        id: trbRequestId,
+        archived: true,
+        __typename: 'TRBRequest'
+      }
+    }
+  }
+};
+
 describe('Trb Task List', () => {
   it('renders', async () => {
-    const trbRequestId = 'a5fdb150-e1e5-41c1-93a4-bc5165aae66c';
-
     render(
       <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
-        <VerboseMockedProvider
-          mocks={[
-            {
-              request: {
-                query: GetTrbTasklistQuery,
-                variables: {
-                  id: trbRequestId
-                }
-              },
-              result: {
-                data: {
-                  trbRequest: {
-                    name: 'Case 1 - Draft request form',
-                    type: 'NEED_HELP',
-                    form: {
-                      status: 'READY_TO_START',
-                      __typename: 'TRBRequestForm'
-                    },
-                    taskStatuses: {
-                      formStatus: 'READY_TO_START',
-                      feedbackStatus: 'CANNOT_START_YET',
-                      consultPrepStatus: 'CANNOT_START_YET',
-                      attendConsultStatus: 'CANNOT_START_YET',
-                      adviceLetterStatusTaskList: 'CANNOT_START_YET',
-                      __typename: 'TRBTaskStatuses'
-                    },
-                    feedback: [],
-                    consultMeetingTime: null,
-                    __typename: 'TRBRequest'
-                  }
-                }
-              }
-            }
-          ]}
-        >
+        <VerboseMockedProvider mocks={[getTrbTasklistQuery]}>
           <MessageProvider>
             <Route path="/trb/task-list/:id">
               <TaskList />
@@ -87,5 +131,51 @@ describe('Trb Task List', () => {
       level: 3,
       name: i18next.t<string>('technicalAssistance:taskList.taskList.0.heading')
     });
+  });
+
+  it('removes the request', async () => {
+    render(
+      <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
+        <VerboseMockedProvider
+          mocks={[getTrbTasklistQuery, updateTrbRequestArchived]}
+        >
+          <MessageProvider>
+            <Route path="/trb/task-list/:id">
+              <TaskList />
+            </Route>
+            <Route path="/">
+              <MockMessage />
+            </Route>
+          </MessageProvider>
+        </VerboseMockedProvider>
+      </MemoryRouter>
+    );
+
+    await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
+
+    const remove = getByRoleWithNameTextKey(
+      'button',
+      'technicalAssistance:button.removeYourRequest'
+    );
+
+    userEvent.click(remove);
+
+    // Click through the confirmation modal
+
+    const confirm = await screen.findByRole('button', {
+      name: i18next.t<string>('taskList:withdraw_modal:confirm')
+    });
+
+    userEvent.click(confirm);
+
+    const alert = await screen.findByTestId('alert');
+    expect(alert).toHaveClass('usa-alert--success');
+
+    screen.getByText(
+      i18next.t<string>('taskList:withdraw_modal:confirmationText', {
+        context: 'name',
+        requestName: getTrbTasklistQuery.result.data?.trbRequest.name
+      })
+    );
   });
 });
