@@ -93,7 +93,7 @@ func checkForLCIDExpiration(
 
 	for _, currIntake := range allIntakes {
 		// Skip intake if it doesn't have an LCID or if it has a status of "NO GOVERNANCE"
-		if currIntake.LifecycleExpiresAt == nil || currIntake.Status == models.SystemIntakeStatusNOGOVERNANCE {
+		if currIntake.LifecycleExpiresAt == nil || currIntake.IsNoGovernanceState() {
 			continue
 		}
 

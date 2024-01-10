@@ -408,3 +408,10 @@ func (si *SystemIntake) IsIntakeDraftState() bool {
 		si.State == SystemIntakeStateOPEN &&
 		si.RequestFormState == SIRFSInProgress
 }
+
+// IsNoGovernanceState derives if a SystemIntake is in a No Governance State from its properties
+func (si *SystemIntake) IsNoGovernanceState() bool {
+	return si.State == SystemIntakeStateCLOSED &&
+		si.Step == SystemIntakeStepDECISION &&
+		si.DecisionState == SIDSNotGovernance
+}
