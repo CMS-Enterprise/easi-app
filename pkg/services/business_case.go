@@ -125,13 +125,10 @@ func NewCreateBusinessCase(
 		// If you're in the final step, set status = SystemIntakeStatusBIZCASEFINALNEEDED
 		// If you're in _ANY_ other step (usually draft), set status = SystemIntakeStatusBIZCASEDRAFT
 		if intake.Step == models.SystemIntakeStepFINALBIZCASE {
-			intake.Status = models.SystemIntakeStatusBIZCASEFINALNEEDED
+			intake.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusBIZCASEFINALNEEDED)
 		} else { // technically any other step, but typically draft is what it'll be in here
-			intake.Status = models.SystemIntakeStatusBIZCASEDRAFT
+			intake.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusBIZCASEDRAFT)
 		}
-
-		// Set V2 fields based on the now-appropriately-set status
-		intake.SetV2FieldsBasedOnV1Status(intake.Status)
 
 		intake.UpdatedAt = &now
 		if _, err = updateIntake(ctx, intake); err != nil {
