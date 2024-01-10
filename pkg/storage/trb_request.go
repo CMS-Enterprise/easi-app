@@ -17,6 +17,7 @@ import (
 )
 
 // CreateTRBRequest creates a new TRBRequest record
+// Note this will be refactored to not use the store, but is left now for organization
 func (s *Store) CreateTRBRequest(ctx context.Context, np sqlutils.NamedPreparer, trb *models.TRBRequest) (*models.TRBRequest, error) {
 	if trb.ID == uuid.Nil {
 		trb.ID = uuid.New()

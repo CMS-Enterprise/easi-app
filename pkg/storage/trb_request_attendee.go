@@ -17,6 +17,7 @@ import (
 )
 
 // CreateTRBRequestAttendee creates a new TRB request attendee record in the database
+// Note this will be refactored to not use the store, but is left now for organization
 func (s *Store) CreateTRBRequestAttendee(ctx context.Context, np sqlutils.NamedPreparer, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
 	attendee.ID = uuid.New()
 	stmt, err := np.PrepareNamed(`

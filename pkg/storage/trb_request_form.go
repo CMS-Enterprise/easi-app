@@ -18,6 +18,7 @@ import (
 )
 
 // CreateTRBRequestForm creates a new TRBRequestForm record
+// Note this will be refactored to not use the store, but is left now for organization
 func (s *Store) CreateTRBRequestForm(ctx context.Context, np sqlutils.NamedPreparer, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
 	if form.ID == uuid.Nil {
 		form.ID = uuid.New()
