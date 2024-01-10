@@ -440,7 +440,7 @@ function TaskList() {
 
             <ButtonGroup>
               <Button
-                className="margin-right-1"
+                className="margin-right-1 bg-error"
                 type="button"
                 onClick={removeRequest}
               >
