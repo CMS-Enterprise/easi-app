@@ -181,7 +181,7 @@ func NewArchiveSystemIntake(
 		}
 
 		// Do note send email if intake was in a draft state (not submitted)
-		if !intake.IsIntakeDraftState() {
+		if intake.SubmittedAt != nil {
 			err = sendWithdrawEmail(ctx, intake.ProjectName.String)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Withdraw email failed to send: ", zap.Error(err))

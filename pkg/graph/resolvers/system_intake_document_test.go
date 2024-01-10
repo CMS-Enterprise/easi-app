@@ -18,7 +18,6 @@ func (suite *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 
 	// Create a system intake
 	intake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
-		Status:      models.SystemIntakeStatusLCIDISSUED,
 		RequestType: models.SystemIntakeRequestTypeMAJORCHANGES,
 	})
 	suite.NoError(err)

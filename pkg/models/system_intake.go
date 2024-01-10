@@ -402,13 +402,6 @@ func (si *SystemIntake) SetV2FieldsBasedOnV1Status(status SystemIntakeStatus) {
 	}
 }
 
-// IsIntakeDraftState derives if a SystemIntake is in a Draft State from its properties
-func (si *SystemIntake) IsIntakeDraftState() bool {
-	return si.Step == SystemIntakeStepINITIALFORM &&
-		si.State == SystemIntakeStateOPEN &&
-		si.RequestFormState == SIRFSInProgress
-}
-
 // IsNoGovernanceState derives if a SystemIntake is in a No Governance State from its properties
 func (si *SystemIntake) IsNoGovernanceState() bool {
 	return si.State == SystemIntakeStateCLOSED &&

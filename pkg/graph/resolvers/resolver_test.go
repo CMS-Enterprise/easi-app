@@ -147,7 +147,6 @@ func newS3Config() upload.Config {
 func (suite *ResolverSuite) createNewIntake() *models.SystemIntake {
 	newIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, &models.SystemIntake{
 		// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
-		Status:      models.SystemIntakeStatusINTAKEDRAFT,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	suite.NoError(err)

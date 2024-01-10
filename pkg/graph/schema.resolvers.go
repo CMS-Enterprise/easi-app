@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2323,7 +2324,6 @@ func (r *queryResolver) Requests(ctx context.Context, first int) (*model.Request
 			SubmittedAt:     intake.SubmittedAt,
 			Name:            intake.ProjectName.Ptr(),
 			Type:            model.RequestTypeGovernanceRequest,
-			Status:          string(intake.Status),
 			StatusRequester: &requesterStatus,
 			StatusCreatedAt: intake.CreatedAt,
 			Lcid:            intake.LifecycleID.Ptr(),
@@ -2996,6 +2996,11 @@ func (r *systemIntakeResolver) RequesterName(ctx context.Context, obj *models.Sy
 // RequesterComponent is the resolver for the requesterComponent field.
 func (r *systemIntakeResolver) RequesterComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.Component.Ptr(), nil
+}
+
+// Status is the resolver for the status field.
+func (r *systemIntakeResolver) Status(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatus, error) {
+	panic(fmt.Errorf("not implemented: Status - status"))
 }
 
 // TrbCollaborator is the resolver for the trbCollaborator field.
