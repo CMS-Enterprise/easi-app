@@ -401,3 +401,10 @@ func (si *SystemIntake) SetV2FieldsBasedOnV1Status(status SystemIntakeStatus) {
 		// This status is not needed since we don't support shutdowns
 	}
 }
+
+// IsIntakeDraftState derives if a SystemIntake is in a Draft State from its properties
+func (si *SystemIntake) IsIntakeDraftState() bool {
+	return si.Step == SystemIntakeStepINITIALFORM &&
+		si.State == SystemIntakeStateOPEN &&
+		si.RequestFormState == SIRFSInProgress
+}

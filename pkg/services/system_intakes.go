@@ -165,8 +165,6 @@ func NewArchiveSystemIntake(
 			}
 		}
 
-		initialStatus := intake.Status
-
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
 		intake.ArchivedAt = &updatedTime
@@ -183,7 +181,7 @@ func NewArchiveSystemIntake(
 		}
 
 		// Do note send email if intake was in a draft state (not submitted)
-		if initialStatus != models.SystemIntakeStatusINTAKEDRAFT {
+		if !intake.IsIntakeDraftState() {
 			err = sendWithdrawEmail(ctx, intake.ProjectName.String)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Withdraw email failed to send: ", zap.Error(err))
