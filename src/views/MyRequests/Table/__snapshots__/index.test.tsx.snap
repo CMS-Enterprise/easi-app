@@ -325,7 +325,6 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               style="width: 200px; padding-left: 0px;"
             >
               <span>
-                Open
                 <span
                   class="text-base-dark font-body-3xs"
                 >
@@ -372,7 +371,6 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               style="width: 200px; padding-left: 0px;"
             >
               <span>
-                In remediation
                 <span
                   class="text-base-dark font-body-3xs"
                 >
@@ -418,7 +416,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               role="cell"
               style="width: 200px; padding-left: 0px;"
             >
-              Intake draft
+              Intake Request in progress
             </td>
             <td
               role="cell"
@@ -458,7 +456,7 @@ exports[`My Requests Table > when there are requests > matches snapshot 1`] = `
               role="cell"
               style="width: 200px; padding-left: 0px;"
             >
-              Life Cycle ID issued: A123456: A123456
+              LCID issued: A123456
             </td>
             <td
               role="cell"
