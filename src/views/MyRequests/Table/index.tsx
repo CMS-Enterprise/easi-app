@@ -103,6 +103,8 @@ const Table = ({
       },
       {
         Header: t('requestsTable.headers.status'),
+        // The status property is just a generic property available on all request types
+        // See cases below for details on how statuses are determined by type
         accessor: 'status',
         Cell: ({ row, value }: any) => {
           switch (row.original.type) {
