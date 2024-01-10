@@ -35,7 +35,6 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 	obj := &intakemodels.EASIIntake{
 		IntakeID:                    si.ID.String(),
 		UserEUA:                     si.EUAUserID.ValueOrZero(),
-		Status:                      string(si.Status),
 		RequestType:                 string(si.RequestType),
 		Requester:                   si.Requester,
 		Component:                   si.Component.ValueOrZero(),

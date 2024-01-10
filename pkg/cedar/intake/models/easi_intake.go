@@ -48,7 +48,7 @@ type EASIIntake struct {
 	Requester                   string               `json:"requester" jsonschema:"description=Person who submitted request in EASi,example=John Doe"`
 	RequesterEmailAddress       *string              `json:"requesterEmailAddress,omitempty" jsonschema:"description=Email address of the person who submitted this request,example=John.Doe@cms.hhs.gov"`
 	Solution                    string               `json:"solution" jsonschema:"description=Initial solution,example=Build new application in ServiceNow"`
-	Status                      string               `json:"status" jsonschema:"description=Current status of this request,example=INTAKE_SUBMITTED"`
+	Status                      string               `json:"status" jsonschema:"description=Current status of this request,example=INTAKE_SUBMITTED"` // TODO: is this needed?
 	SubmittedAt                 string               `json:"submittedAt" jsonschema:"description=Timestamp of when request was submitted,example=2022-02-17T14:34:43Z"`
 	TrbCollaboratorName         *string              `json:"trbCollaboratorName,omitempty" jsonschema:"description=Technical Review Board (TRB) Collaborator,example=John Doe"`
 	UserEUA                     string               `json:"userEUA" jsonschema:"description=EUA id of the requester,example=J8YN"`
