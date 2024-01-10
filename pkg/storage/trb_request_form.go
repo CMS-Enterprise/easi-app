@@ -11,13 +11,11 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlqueries"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 
 	_ "embed"
 )
-
-//go:embed SQL/trb_request_form_create.sql
-var trbRequestFormCreateSQL string
 
 // CreateTRBRequestForm creates a new TRBRequestForm record
 func (s *Store) CreateTRBRequestForm(ctx context.Context, np sqlutils.NamedPreparer, form *models.TRBRequestForm) (*models.TRBRequestForm, error) {
@@ -25,7 +23,7 @@ func (s *Store) CreateTRBRequestForm(ctx context.Context, np sqlutils.NamedPrepa
 		form.ID = uuid.New()
 	}
 
-	stmt, err := np.PrepareNamed(trbRequestFormCreateSQL)
+	stmt, err := np.PrepareNamed(sqlqueries.TRBRequestForm.Create)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update TRB create form %s", err),
