@@ -135,6 +135,6 @@ func calcLCIDIssuedDecisionStatusRequester(lcidStatus *models.SystemIntakeLCIDSt
 	if *lcidStatus == models.SystemIntakeLCIDStatusRetired {
 		return models.SISRLcidRetired, nil
 	}
-	return "", fmt.Errorf("invalid lcisd status provided: %v", lcidStatus)
+	return "", fmt.Errorf("invalid lcid status provided: %v", lcidStatus)
 
 }
