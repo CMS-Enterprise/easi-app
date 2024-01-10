@@ -28,7 +28,7 @@ Database migrations only happen in the DB context, so we can't query an external
 
 An auxiliary script serves our current need the best. It will ensure that most users are have a record already in place before we attempt a migration. As a result, the migration should be smooth. 
 
-For cases where we cannot create a user account for an existing record, we can add placeholder account information. That will allow us to create a reference to the user table for an EUAID, and handle this edge case where user information is missing.
+For cases where we cannot create a user account for an existing record, we can add placeholder account information. That will allow us to create a reference to the user table for an EUAID, and handle this edge case where user information is missing. As a first pass, we will handle migrating to the user account table for EUAIDs first, and later approach the places that a full name is referenced. 
 
 ### Pros and Cons of the Alternatives <!-- optional -->
 
@@ -66,6 +66,8 @@ With the above decision, we should first implement user accounts, and create acc
 We should implement user account references for all the places that a user besides the currently logged in user account is referenced. By doing so, we will ensure that we have a user account referenced in the database for all referenced users. This should give us confidence that every user referenced in the application has a user account.
 
 It would be ideal to create a reference of the user that is being added and replace the reference with a foreign key to the user table. A first pass alternative would be to create an account for every referenced user. We could then take more time to switch out the logic to reference a user.
+
+As noted previously, we will handle the simpler cases of EUAIDs first, and later approach places that a users full name is referenced.
 
 #### Areas that add Users
 1. System Intake
