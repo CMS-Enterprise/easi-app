@@ -119,8 +119,6 @@ func NewSubmitSystemIntake(
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		// TODO: Remove when Admin Actions v2 is live
-		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		// Set intake state based on v2 logic
 		intake.RequestFormState = models.SIRFSSubmitted
 		intake.SubmittedAt = &updatedTime
@@ -281,9 +279,6 @@ func NewSubmitBusinessCase(
 			isDraft = true
 		}
 
-		// TODO: Remove when Admin Actions v2 is live
-		intake.Status = newIntakeStatus
-
 		// Set intake state based on v2 logic
 		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 			intake.DraftBusinessCaseState = models.SIRFSSubmitted
@@ -326,8 +321,7 @@ func NewSubmitBusinessCase(
 
 		// TODO - EASI-2363 - rework conditional to also trigger on publishing finalized system intakes
 		// need to check intake.Status, *not* businessCase.SystemIntakeStatus - intake is what gets returned from calling updateIntake()
-		if intake.Status == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED ||
-			intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 			err = submitToCEDAR(ctx, *businessCase)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(err))
@@ -381,7 +375,7 @@ func NewTakeActionUpdateStatus(
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		intake.Status = newStatus
+		intake.SetV2FieldsBasedOnV1Status(newStatus)
 
 		intake, err = update(ctx, intake)
 		if err != nil {
@@ -441,8 +435,6 @@ func NewCreateActionUpdateStatus(
 			return nil, err
 		}
 
-		// Update IT Gov V2 fields based on `newStatus`
-		intake.Status = newStatus
 		intake.SetV2FieldsBasedOnV1Status(newStatus)
 		updatedIntake, err := update(ctx, intake)
 		if err != nil {
@@ -515,7 +507,6 @@ func NewCreateActionExtendLifecycleID(
 		}
 
 		intake.LifecycleExpiresAt = expirationDate
-		intake.Status = models.SystemIntakeStatusLCIDISSUED
 		intake.LifecycleScope = &scope
 		intake.DecisionNextSteps = nextSteps
 		intake.LifecycleCostBaseline = null.StringFromPtr(costBaseline)

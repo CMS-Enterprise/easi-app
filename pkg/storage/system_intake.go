@@ -51,7 +51,6 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		INSERT INTO system_intakes (
 			id,
 			eua_user_id,
-			status,
 			state,
 			step,
 			request_form_state,
@@ -106,7 +105,6 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		VALUES (
 			:id,
 			:eua_user_id,
-			:status,
 			:state,
 			:step,
 			:request_form_state,
@@ -180,7 +178,6 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 	const updateSystemIntakeSQL = `
 		UPDATE system_intakes
 		SET
-			status = :status,
 			step = :step,
 			state = :state,
 			request_form_state = :request_form_state,
@@ -644,16 +641,13 @@ func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *ti
 func (s *Store) UpdateSystemIntakeStatus(ctx context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error) {
 	var intake models.SystemIntake
 	now := time.Now()
-	intake.Status = newStatus
 	intake.ID = id
 	intake.UpdatedAt = &now
-	intake.SetV2FieldsBasedOnV1Status(newStatus) // ensure all V2 fields are calculated and set
 
 	const updateSystemIntakeSQL = `
 		UPDATE system_intakes
 		SET
 			updated_at = :updated_at,
-			status = :status,
 			step = :step,
 			state = :state,
 			decision_state = :decision_state,

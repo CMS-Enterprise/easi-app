@@ -140,7 +140,6 @@ func (s *StoreTestSuite) TestMyRequests() {
 		submittedAt, _ = time.Parse("2006-1-2", "2014-2-1")
 		createdIntake.SubmittedAt = &submittedAt
 		createdIntake.LifecycleID = null.StringFrom("B123456")
-		createdIntake.Status = models.SystemIntakeStatusLCIDISSUED
 		intakeWithLifecycleID, err := s.store.UpdateSystemIntake(ctx, createdIntake)
 		s.NoError(err)
 

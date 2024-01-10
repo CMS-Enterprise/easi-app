@@ -112,9 +112,9 @@ const (
 
 // SystemIntake is the model for the system intake form
 type SystemIntake struct {
-	ID                          uuid.UUID                    `json:"id"`
-	EUAUserID                   null.String                  `json:"euaUserId" db:"eua_user_id"`
-	Status                      SystemIntakeStatus           `json:"status"`
+	ID        uuid.UUID   `json:"id"`
+	EUAUserID null.String `json:"euaUserId" db:"eua_user_id"`
+	// Status                      SystemIntakeStatus           `json:"status"`
 	State                       SystemIntakeState            `json:"state" db:"state"`
 	Step                        SystemIntakeStep             `json:"step" db:"step"`
 	RequestType                 SystemIntakeRequestType      `json:"requestType" db:"request_type"`

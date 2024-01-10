@@ -9,7 +9,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
@@ -55,7 +54,6 @@ func (s *StoreTestSuite) TestListSystems() {
 		s.NoError(ferr)
 
 		partial.LifecycleID = null.StringFrom(lcid)
-		partial.Status = models.SystemIntakeStatusLCIDISSUED
 		partial.DecidedAt = &now
 		partial.LifecycleExpiresAt = &later
 
@@ -70,7 +68,6 @@ func (s *StoreTestSuite) TestListSystems() {
 		si := testhelpers.NewSystemIntake()
 		si.CreatedAt = &now
 		si.UpdatedAt = &now
-		si.Status = models.SystemIntakeStatusLCIDISSUED
 		si.ProjectName = null.StringFrom(fmt.Sprintf("%s %d", sig, -1))
 		_, err = s.store.CreateSystemIntake(ctx, &si)
 		s.NoError(err)

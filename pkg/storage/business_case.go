@@ -295,6 +295,7 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			zap.String("EUAUserID", businessCase.EUAUserID),
 			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
 		)
+
 		if err.Error() == "pq: duplicate key value violates unique constraint \"unique_intake_per_biz_case\"" {
 			return nil,
 				&apperrors.ResourceConflictError{
