@@ -30,6 +30,19 @@ type DBConfig struct {
 	MaxConnections int
 }
 
+// PrepareNamed implements the NamedPreparer interface
+// Implementing the  sqlutils.NamedPreparer interface allows us to use a sqlx.Tx or a storage.Store as a parameter in our DB calls
+// (the former for when we want to implement transactions, the latter for when we don't)
+func (s *Store) PrepareNamed(query string) (*sqlx.NamedStmt, error) {
+	return s.db.PrepareNamed(query)
+}
+
+// Beginx implements the TransactionPreparer interface
+// Implementing the sqlutils.TransactionPreparer interfaces allows us to use a sqlx.DB or a storage.Store to create a transaction
+func (s *Store) Beginx() (*sqlx.Tx, error) {
+	return s.db.Beginx()
+}
+
 // NewStore creates a new Store struct
 // The `db` property on the Store will always be a *sqlx.DB, but a notable difference in the DB is that if
 // config.UseIAM is true, that DB instance will be backed by a custom connector in iam_db.go that generates
