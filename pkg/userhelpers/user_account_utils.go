@@ -73,7 +73,7 @@ func GetOrCreateUserAccountFullName(
 	userAccount.HasLoggedIn = hasLoggedIn
 
 	if userAccount.ID == uuid.Nil {
-		newAccount, newErr := store.UserAccountInsertByUsername(np, userAccount)
+		newAccount, newErr := store.UserAccountCreate(np, userAccount)
 		if newErr != nil {
 			return nil, newErr
 		}
@@ -120,7 +120,7 @@ func GetOrCreateUserAccount(
 	userAccount.HasLoggedIn = hasLoggedIn
 
 	if userAccount.ID == uuid.Nil {
-		newAccount, newErr := store.UserAccountInsertByUsername(np, userAccount)
+		newAccount, newErr := store.UserAccountCreate(np, userAccount)
 		if newErr != nil {
 			return nil, newErr
 		}

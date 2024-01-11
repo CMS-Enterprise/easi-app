@@ -7,31 +7,14 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/authentication"
+	"github.com/cmsgov/easi-app/pkg/sqlqueries"
 )
-
-//go:embed SQL/user_account/get_by_username.sql
-var userAccountGetByUsername string
-
-//go:embed SQL/user_account/get_by_common_name.sql
-var userAccountGetByCommonName string
-
-//go:embed SQL/user_account/get_by_id.sql
-var userAccountGetByID string
-
-//go:embed SQL/user_account/get_by_id_LOADER.sql
-var userAccountGetByIDLOADER string
-
-//go:embed SQL/user_account/insert_by_username.sql
-var userAccountInsertByUsername string
-
-//go:embed SQL/user_account/update_by_username.sql
-var userAccountUpdateByUsername string
 
 // UserAccountGetByCommonName gets a user account by a give username
 func (s *Store) UserAccountGetByCommonName(commonName string) (*authentication.UserAccount, error) {
 	user := &authentication.UserAccount{}
 
-	stmt, err := s.db.PrepareNamed(userAccountGetByCommonName)
+	stmt, err := s.db.PrepareNamed(sqlqueries.UserAccount.GetByCommonName)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +39,7 @@ func (s *Store) UserAccountGetByCommonName(commonName string) (*authentication.U
 func (s *Store) UserAccountGetByUsername(username string) (*authentication.UserAccount, error) {
 	user := &authentication.UserAccount{}
 
-	stmt, err := s.db.PrepareNamed(userAccountGetByUsername)
+	stmt, err := s.db.PrepareNamed(sqlqueries.UserAccount.GetByUsername)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +64,7 @@ func (s *Store) UserAccountGetByUsername(username string) (*authentication.UserA
 func (s *Store) UserAccountGetByID(np NamedPreparer, id uuid.UUID) (*authentication.UserAccount, error) {
 	user := &authentication.UserAccount{}
 
-	stmt, err := np.PrepareNamed(userAccountGetByID)
+	stmt, err := np.PrepareNamed(sqlqueries.UserAccount.GetByID)
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +90,7 @@ func (s *Store) UserAccountGetByIDLOADER(
 
 	var userSlice []*authentication.UserAccount
 
-	stmt, err := s.db.PrepareNamed(userAccountGetByIDLOADER)
+	stmt, err := s.db.PrepareNamed(sqlqueries.UserAccount.GetByIDLoader)
 	if err != nil {
 		return nil, err
 	}
@@ -125,15 +108,15 @@ func (s *Store) UserAccountGetByIDLOADER(
 	return userSlice, nil
 }
 
-// UserAccountInsertByUsername creates a new user account for a given username
-func (s *Store) UserAccountInsertByUsername(np NamedPreparer, userAccount *authentication.UserAccount) (*authentication.UserAccount, error) {
+// UserAccountCreate creates a new user account for a given username
+func (s *Store) UserAccountCreate(np NamedPreparer, userAccount *authentication.UserAccount) (*authentication.UserAccount, error) {
 
 	user := &authentication.UserAccount{}
 	if userAccount.ID == uuid.Nil {
 		userAccount.ID = uuid.New()
 	}
 
-	stmt, err := np.PrepareNamed(userAccountInsertByUsername)
+	stmt, err := np.PrepareNamed(sqlqueries.UserAccount.Create)
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +141,7 @@ func (s *Store) UserAccountUpdateByUserName(np NamedPreparer, userAccount *authe
 		userAccount.ID = uuid.New()
 	}
 
-	stmt, err := np.PrepareNamed(userAccountUpdateByUsername)
+	stmt, err := np.PrepareNamed(sqlqueries.UserAccount.UpdateByUsername)
 	if err != nil {
 		return nil, err
 	}
