@@ -12,6 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/storage/loaders"
 )
@@ -43,7 +44,7 @@ type GetUserInfoFunc func(ctx context.Context, username string) (*models.UserInf
 // GetOrCreateUserAccountFullName will return an account if it exists after searching by Full Name, or create and return a new one if not
 func GetOrCreateUserAccountFullName(
 	ctx context.Context,
-	np storage.NamedPreparer,
+	np sqlutils.NamedPreparer,
 	store *storage.Store,
 	fullName string,
 	hasLoggedIn bool,
@@ -90,7 +91,7 @@ func GetOrCreateUserAccountFullName(
 // GetOrCreateUserAccount will return an account if it exists, or create and return a new one if not
 func GetOrCreateUserAccount(
 	ctx context.Context,
-	np storage.NamedPreparer,
+	np sqlutils.NamedPreparer,
 	store *storage.Store,
 	username string,
 	hasLoggedIn bool,

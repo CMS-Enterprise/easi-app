@@ -8,6 +8,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/sqlqueries"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
 // UserAccountGetByCommonName gets a user account by a give username
@@ -61,7 +62,7 @@ func (s *Store) UserAccountGetByUsername(username string) (*authentication.UserA
 }
 
 // UserAccountGetByID gets a User account from the database by its internal id.
-func (s *Store) UserAccountGetByID(np NamedPreparer, id uuid.UUID) (*authentication.UserAccount, error) {
+func (s *Store) UserAccountGetByID(np sqlutils.NamedPreparer, id uuid.UUID) (*authentication.UserAccount, error) {
 	user := &authentication.UserAccount{}
 
 	stmt, err := np.PrepareNamed(sqlqueries.UserAccount.GetByID)
@@ -109,7 +110,7 @@ func (s *Store) UserAccountGetByIDLOADER(
 }
 
 // UserAccountCreate creates a new user account for a given username
-func (s *Store) UserAccountCreate(np NamedPreparer, userAccount *authentication.UserAccount) (*authentication.UserAccount, error) {
+func (s *Store) UserAccountCreate(np sqlutils.NamedPreparer, userAccount *authentication.UserAccount) (*authentication.UserAccount, error) {
 
 	user := &authentication.UserAccount{}
 	if userAccount.ID == uuid.Nil {
@@ -131,7 +132,7 @@ func (s *Store) UserAccountCreate(np NamedPreparer, userAccount *authentication.
 }
 
 // UserAccountUpdateByUserName updates an existing user account for a given username
-func (s *Store) UserAccountUpdateByUserName(np NamedPreparer, userAccount *authentication.UserAccount) (
+func (s *Store) UserAccountUpdateByUserName(np sqlutils.NamedPreparer, userAccount *authentication.UserAccount) (
 	*authentication.UserAccount,
 	error,
 ) {
