@@ -33,7 +33,7 @@ func (u *UserInfoLoader) BatchUserInfos(
 	}
 
 	for _, userInfo := range userInfos {
-		euaUserInfoMap[userInfo.EuaUserID] = userInfo
+		euaUserInfoMap[userInfo.Username] = userInfo
 	}
 
 	for i, key := range keys {

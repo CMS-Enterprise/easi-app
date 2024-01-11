@@ -56,9 +56,9 @@ func TestGetRetireLCIDAction(t *testing.T) {
 
 	mockNewRetirementDate := mockCurrentTime.Add(time.Hour * 24 * 2)
 	userInfo := models.UserInfo{
-		CommonName: "tester",
-		Email:      "test@email.email",
-		EuaUserID:  "TEST",
+		DisplayName: "tester",
+		Email:       "test@email.email",
+		Username:    "TEST",
 	}
 
 	action := GetRetireLCIDAction(intake, mockNewRetirementDate, userInfo)

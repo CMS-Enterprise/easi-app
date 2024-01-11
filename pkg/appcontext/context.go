@@ -17,6 +17,8 @@ const (
 	loggerKey contextKey = iota
 	traceKey
 	principalKey
+	jwtKey
+	userAccountServiceKey
 )
 
 // WithLogger returns a context with the given logger
@@ -66,4 +68,27 @@ func Principal(c context.Context) authentication.Principal {
 		return p
 	}
 	return authentication.ANON
+}
+
+// WithEnhancedJWT returns the context decorated with the enhanced jwt
+func WithEnhancedJWT(c context.Context, jwt authentication.EnhancedJwt) context.Context {
+	return context.WithValue(c, jwtKey, jwt)
+}
+
+// EnhancedJWT returns the enhanced EnhancedJWT defaulting to nil if not present.
+func EnhancedJWT(c context.Context) *authentication.EnhancedJwt {
+	if jwt, ok := c.Value(jwtKey).(authentication.EnhancedJwt); ok {
+		return &jwt
+	}
+	return nil
+}
+
+// UserAccountService returns a GetUserAccountFromDBFunc that is decorating the context
+func UserAccountService(ctx context.Context) authentication.GetUserAccountFromDBFunc {
+	return ctx.Value(userAccountServiceKey).(authentication.GetUserAccountFromDBFunc)
+}
+
+// WithUserAccountService decorates the context with a GetUserAccountFromDBFunc
+func WithUserAccountService(ctx context.Context, accountFunction authentication.GetUserAccountFromDBFunc) context.Context {
+	return context.WithValue(ctx, userAccountServiceKey, accountFunction)
 }

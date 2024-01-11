@@ -75,9 +75,11 @@ func (cw *ClientWrapper) parseOktaProfileResponse(ctx context.Context, profile *
 
 func (o *oktaUserResponse) toUserInfo() *models.UserInfo {
 	return &models.UserInfo{
-		CommonName: o.DisplayName,
-		Email:      models.NewEmailAddress(o.Email),
-		EuaUserID:  o.Login,
+		FirstName:   o.FirstName,
+		LastName:    o.LastName,
+		DisplayName: o.DisplayName,
+		Email:       models.NewEmailAddress(o.Email),
+		Username:    o.Login,
 	}
 }
 
@@ -134,6 +136,29 @@ func (cw *ClientWrapper) FetchUserInfo(ctx context.Context, username string) (*m
 	return profile.toUserInfo(), nil
 }
 
+// FetchUserInfoByCommonName fetches a single user from Okta by commonName
+// It will error if no users are found, and will also error if there are more than one result for that user
+// It is possible that users would share a name, but other functions must be used for to return the array.
+func (cw *ClientWrapper) FetchUserInfoByCommonName(ctx context.Context, commonName string) (*models.UserInfo, error) {
+	users, err := cw.SearchCommonNameContainsExhaustive(ctx, commonName)
+	logger := appcontext.ZLogger(ctx)
+	if err != nil {
+		// Only log the error if it's not a context cancellation, we don't really care about these (but still pass it up the call stack)
+		if !errors.Is(err, context.Canceled) {
+			logger.Error("Error fetching Okta user", zap.Error(err), zap.String("commonName", commonName))
+		}
+		return nil, err
+	}
+	userNum := len(users)
+	if userNum < 1 {
+		return nil, fmt.Errorf("unable to find user by common name: %s", commonName)
+	} else if userNum > 1 {
+		return nil, fmt.Errorf("multiple users found by common name: %s", commonName)
+	}
+	// There is only one user
+	return users[0], nil
+}
+
 const euaSourceType = "EUA"
 const euaADSourceType = "EUA-AD"
 
@@ -153,6 +178,45 @@ func (cw *ClientWrapper) SearchCommonNameContains(ctx context.Context, searchTer
 	isActiveOrStaged := `(status eq "ACTIVE" or status eq "STAGED")`
 	nameSearch := fmt.Sprintf(`(profile.firstName sw "%v" or profile.lastName sw "%v" or profile.displayName sw "%v")`, searchTerm, searchTerm, searchTerm)
 	searchString := fmt.Sprintf(`%v and %v and %v`, isFromEUA, isActiveOrStaged, nameSearch)
+	search := query.NewQueryParams(query.WithSearch(searchString))
+
+	searchedUsers, _, err := cw.oktaClient.User.ListUsers(ctx, search)
+	if err != nil && !errors.Is(err, context.Canceled) {
+		logger.Error("Error searching Okta users", zap.Error(err), zap.String("searchTerm", searchTerm))
+		return nil, err
+	}
+
+	users := []*models.UserInfo{}
+	for _, user := range searchedUsers {
+		profile, err := cw.parseOktaProfileResponse(ctx, user.Profile)
+		if err != nil {
+			return nil, err
+		}
+
+		// If we find EUA users that have logins longer than 4 characters, they're a test user (don't add them to the array)
+		if (profile.SourceType == euaSourceType || profile.SourceType == euaADSourceType) && len(profile.Login) > 4 {
+			continue
+		}
+		users = append(users, profile.toUserInfo())
+	}
+	return users, nil
+}
+
+// SearchCommonNameContainsExhaustive searches for a user by their First/Last name in Okta.
+// It doesn't validate if a user is currently active, which allows us to search for users no longer at CMS
+func (cw *ClientWrapper) SearchCommonNameContainsExhaustive(ctx context.Context, searchTerm string) ([]*models.UserInfo, error) {
+	logger := appcontext.ZLogger(ctx)
+
+	// Sanitize searchTerm for \ and ". These characters cause Okta to error.
+	filterRegex := regexp.MustCompile(`[\\"]`)
+	searchTerm = filterRegex.ReplaceAllString(searchTerm, "")
+
+	// profile.SourceType can be EUA, EUA-AD, or cmsidm
+	// the first 2 represent EUA users, the latter represents users created directly in IDM
+	// Okta API only supports matching by "starts with" (sw) or strict equality and not wildcards or "ends with"
+	isFromEUA := fmt.Sprintf(`(profile.SourceType eq "%v" or profile.SourceType eq "%v")`, euaSourceType, euaADSourceType)
+	nameSearch := fmt.Sprintf(`(profile.firstName sw "%v" or profile.lastName sw "%v" or profile.displayName sw "%v")`, searchTerm, searchTerm, searchTerm)
+	searchString := fmt.Sprintf(`%v and %v`, isFromEUA, nameSearch)
 	search := query.NewQueryParams(query.WithSearch(searchString))
 
 	searchedUsers, _, err := cw.oktaClient.User.ListUsers(ctx, search)
