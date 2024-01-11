@@ -430,13 +430,9 @@ function TaskList() {
             isOpen={isRemoveRequestModalOpen}
             closeModal={() => setRemoveRequestModalOpen(false)}
           >
-            <ModalHeading>
-              {t('taskList:withdraw_modal:header', {
-                requestName: data.trbRequest.name || 'this request'
-              })}
-            </ModalHeading>
+            <ModalHeading>{t('taskList:trbWithdrawModal.header')}</ModalHeading>
 
-            <p>{t('taskList:withdraw_modal:warning')}</p>
+            <p>{t('taskList:trbWithdrawModal.warning')}</p>
 
             <ButtonGroup>
               <Button
@@ -452,7 +448,7 @@ function TaskList() {
                 unstyled
                 onClick={() => setRemoveRequestModalOpen(false)}
               >
-                {t('taskList:withdraw_modal:cancel')}
+                {t('taskList:trbWithdrawModal.cancel')}
               </Button>
             </ButtonGroup>
           </Modal>
