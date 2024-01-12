@@ -15,11 +15,11 @@ import (
 	"github.com/guregu/null"
 )
 
-const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, status, request_type, requester) VALUES (:id, :eua_user_id, :status, :request_type, :requester)"
-const insertRelatedBizCaseSQL = `INSERT INTO business_cases (id, eua_user_id, status, requester, system_intake)
-	VALUES(:id, :eua_user_id, :status, :requester, :system_intake)`
-const insertIntakeWithCedarSystemAndContractSQL = `INSERT INTO system_intakes (id, eua_user_id, status, request_type, requester, cedar_system_id, contract_number)
-	VALUES (:id, :eua_user_id, :status, :request_type, :requester, :cedar_system_id, :contract_number)`
+const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, request_type, requester) VALUES (:id, :eua_user_id, :request_type, :requester)"
+const insertRelatedBizCaseSQL = `INSERT INTO business_cases (id, eua_user_id, requester, system_intake)
+	VALUES(:id, :eua_user_id, :requester, :system_intake)`
+const insertIntakeWithCedarSystemAndContractSQL = `INSERT INTO system_intakes (id, eua_user_id, request_type, requester, cedar_system_id, contract_number)
+	VALUES (:id, :eua_user_id, :request_type, :requester, :cedar_system_id, :contract_number)`
 
 func (s *StoreTestSuite) TestCreateSystemIntake() {
 	ctx := context.Background()
@@ -60,20 +60,6 @@ func (s *StoreTestSuite) TestCreateSystemIntake() {
 			s.Equal("pq: new row for relation \"system_intakes\" violates check constraint \"eua_id_check\"", err.Error())
 		})
 	}
-
-	s.Run("cannot create with invalid status", func() {
-		partialIntake := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			RequestType: models.SystemIntakeRequestTypeNEW,
-			Requester:   "Test requester",
-		}
-
-		created, err := s.store.CreateSystemIntake(ctx, &partialIntake)
-
-		s.Error(err)
-		s.Equal("pq: invalid input value for enum system_intake_status: \"fakeStatus\"", err.Error())
-		s.Nil(created)
-	})
 }
 
 func (s *StoreTestSuite) TestUpdateSystemIntake() {

@@ -33,8 +33,7 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, businessCaseID uuid.U
 	const fetchBusinessCaseSQL = `
 		SELECT
 			business_cases.*,
-			coalesce(json_agg(estimated_lifecycle_costs) filter (where estimated_lifecycle_costs.* IS NOT NULL), '[]') as lifecycle_cost_lines,
-			system_intakes.status as system_intake_status
+			coalesce(json_agg(estimated_lifecycle_costs) filter (where estimated_lifecycle_costs.* IS NOT NULL), '[]') as lifecycle_cost_lines
 		FROM
 			business_cases
 			LEFT JOIN estimated_lifecycle_costs ON business_cases.id = estimated_lifecycle_costs.business_case
@@ -65,8 +64,7 @@ func (s *Store) FetchBusinessCaseBySystemIntakeID(ctx context.Context, systemInt
 	const fetchBusinessCaseSQL = `
 		SELECT
 			business_cases.*,
-			coalesce(json_agg(estimated_lifecycle_costs) filter (where estimated_lifecycle_costs.* is NOT NULL), '[]') as lifecycle_cost_lines,
-			system_intakes.status as system_intake_status
+			coalesce(json_agg(estimated_lifecycle_costs) filter (where estimated_lifecycle_costs.* is NOT NULL), '[]') as lifecycle_cost_lines
 		FROM
 			business_cases
 			LEFT JOIN estimated_lifecycle_costs ON business_cases.id = estimated_lifecycle_costs.business_case
