@@ -10,11 +10,11 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/storage/loaders"
 )
 
 // CreateTRBRequest makes a new TRB request
@@ -414,7 +414,7 @@ func IsRecentTRBRequest(ctx context.Context, obj *models.TRBRequest, now time.Ti
 func GetTRBLeadInfo(ctx context.Context, trbLead *string) (*models.UserInfo, error) {
 	var trbLeadInfo *models.UserInfo
 	if trbLead != nil {
-		info, err := loaders.GetUserInfo(ctx, *trbLead)
+		info, err := dataloaders.GetUserInfo(ctx, *trbLead)
 		if err != nil {
 			return nil, err
 		}
@@ -430,7 +430,7 @@ func GetTRBLeadInfo(ctx context.Context, trbLead *string) (*models.UserInfo, err
 
 // GetTRBRequesterInfo retrieves the user info of a TRB request's requester
 func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.UserInfo, error) {
-	requesterInfo, err := loaders.GetUserInfo(ctx, requesterEUA)
+	requesterInfo, err := dataloaders.GetUserInfo(ctx, requesterEUA)
 	if err != nil {
 		return nil, err
 	}

@@ -5,9 +5,9 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/storage/loaders"
 )
 
 // GetGovernanceRequestFeedbacksByIntakeID returns all governance request feedback items for a given system intake
@@ -28,7 +28,7 @@ func GetGovernanceRequestFeedbackAuthor(
 	}
 
 	// Handled nil value above, safe to dereference and pass to GetUserInfo
-	authorInfo, err := loaders.GetUserInfo(ctx, *feedbackAuthorEUAID)
+	authorInfo, err := dataloaders.GetUserInfo(ctx, *feedbackAuthorEUAID)
 	if err != nil {
 		return nil, err
 	}

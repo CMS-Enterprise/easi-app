@@ -1,4 +1,5 @@
-package loaders
+// Package dataloaders holds functions for batched calls to data sources using the concept of a dataloader
+package dataloaders
 
 import (
 	"context"

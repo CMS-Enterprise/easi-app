@@ -25,8 +25,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
+	loaders "github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/oktaapi"
-	"github.com/cmsgov/easi-app/pkg/storage/loaders"
 	"github.com/cmsgov/easi-app/pkg/usersearch"
 
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"

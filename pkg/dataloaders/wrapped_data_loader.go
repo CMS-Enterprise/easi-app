@@ -1,4 +1,4 @@
-package loaders
+package dataloaders
 
 import "github.com/graph-gophers/dataloader"
 
