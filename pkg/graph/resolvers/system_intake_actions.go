@@ -862,7 +862,7 @@ func UpdateLCID(
 
 		return nil
 	})
-	// TODO: EASI-3109 will send an email from this mutation
+
 	// save admin note
 	if input.AdminNote != nil {
 		errGroup.Go(func() error {
@@ -1199,8 +1199,6 @@ func RetireLCID(
 	// update intake
 	// not currently persisting input.Reason
 	intake.LifecycleRetiresAt = &input.RetiresAt
-
-	// TODO: EASI-3109 will send an email from this mutation
 
 	// save intake, action, admin note
 	// See Note [Database calls from resolvers aren't atomic]
