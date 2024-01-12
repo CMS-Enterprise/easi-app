@@ -1,6 +1,7 @@
 package okta
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -20,6 +21,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cmsgov/easi-app/pkg/userhelpers"
 )
 
 type AuthenticationMiddlewareTestSuite struct {
@@ -79,6 +81,9 @@ func (s *AuthenticationMiddlewareTestSuite) buildMiddleware(verify func(jwt stri
 }
 
 func (s *AuthenticationMiddlewareTestSuite) TestAuthorizeMiddleware() {
+
+	_, err := userhelpers.GetOrCreateUserAccount(context.Background(), s.store, s.store, "EASI", true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+	s.NoError(err)
 
 	s.Run("a valid token sets the principal", func() {
 		authMiddleware := s.buildMiddleware(func(jwt string) (*jwtverifier.Jwt, error) {
