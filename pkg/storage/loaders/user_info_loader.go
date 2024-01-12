@@ -1,4 +1,4 @@
-package dataloaders
+package loaders
 
 import (
 	"context"
@@ -9,13 +9,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// UserInfoLoader reads Users from a database
-type UserInfoLoader struct {
-	FetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error)
-}
-
 // BatchUserInfos implements a batch function to populate UserInfo for EUA IDs
-func (u *UserInfoLoader) BatchUserInfos(
+func (loaders *DataLoaders) BatchUserInfos(
 	ctx context.Context,
 	keys dataloader.Keys,
 ) []*dataloader.Result {
@@ -27,7 +22,7 @@ func (u *UserInfoLoader) BatchUserInfos(
 
 	// Maps EUAs to UserInfo structs
 	euaUserInfoMap := map[string]*models.UserInfo{}
-	userInfos, err := u.FetchUserInfos(ctx, euas)
+	userInfos, err := loaders.FetchUserInfos(ctx, euas)
 	if err != nil {
 		return results
 	}
@@ -50,8 +45,10 @@ func (u *UserInfoLoader) BatchUserInfos(
 // GetUserInfo pulls the user info from the map that was loaded
 // the UserInfoLoader will batch up all requests for user info over a window of 16ms, then make a single request containing all of the EUA IDs
 func GetUserInfo(ctx context.Context, euaID string) (*models.UserInfo, error) {
-	loaders := For(ctx)
-	thunk := loaders.UserInfoLoader.Load(ctx, dataloader.StringKey(euaID))
+	allLoaders := Loaders(ctx)
+	userInfoLoader := allLoaders.UserInfoLoader
+
+	thunk := userInfoLoader.Loader.Load(ctx, dataloader.StringKey(euaID))
 	result, err := thunk()
 	if err != nil {
 		return nil, err

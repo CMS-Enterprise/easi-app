@@ -31,7 +31,6 @@ import (
 
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
 	cedarintake "github.com/cmsgov/easi-app/pkg/cedar/intake"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph"
@@ -284,10 +283,8 @@ func (s *Server) routes(
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(gqlConfig))
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
-	loaderMiddleware := dataloaders.Middleware(userSearchClient.FetchUserInfos) // TODO: EASI-3341 combine this middleware with the new form.
-	s.router.Use(loaderMiddleware)
 
-	dataLoaders := loaders.NewDataLoaders(store)
+	dataLoaders := loaders.NewDataLoaders(store, userSearchClient.FetchUserInfos)
 	dataLoaderMiddleware := loaders.NewDataLoaderMiddleware(dataLoaders)
 	s.router.Use(dataLoaderMiddleware)
 

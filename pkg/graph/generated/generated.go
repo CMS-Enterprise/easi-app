@@ -10453,7 +10453,7 @@ type Query {
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
-  userAccount(username: String!): UserAccount #TODO: should we constrain this to certain roles?
+  userAccount(username: String!): UserAccount 
 }
 
 enum TRBRequestType {
