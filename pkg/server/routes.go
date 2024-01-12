@@ -25,7 +25,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
-	loaders "github.com/cmsgov/easi-app/pkg/dataloaders"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/oktaapi"
 	"github.com/cmsgov/easi-app/pkg/usersearch"
 
@@ -284,8 +284,8 @@ func (s *Server) routes(
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
 
-	dataLoaders := loaders.NewDataLoaders(store, userSearchClient.FetchUserInfos)
-	dataLoaderMiddleware := loaders.NewDataLoaderMiddleware(dataLoaders)
+	dataLoaders := dataloaders.NewDataLoaders(store, userSearchClient.FetchUserInfos)
+	dataLoaderMiddleware := dataloaders.NewDataLoaderMiddleware(dataLoaders)
 	s.router.Use(dataLoaderMiddleware)
 
 	gql.Handle("/query", graphqlServer)
