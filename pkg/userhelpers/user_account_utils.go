@@ -96,7 +96,7 @@ func GetOrCreateUserAccount(
 	username string,
 	hasLoggedIn bool,
 	getAccountInformation GetAccountInfoFunc) (*authentication.UserAccount, error) {
-	userAccount, accErr := store.UserAccountGetByCommonName(username) //TODO: this could be expanded to check by either username or commonName
+	userAccount, accErr := store.UserAccountGetByUsername(username) //TODO: this could be expanded to check by either username or commonName
 	if accErr != nil {
 		return nil, errors.New("failed to get user information from the database")
 	}
