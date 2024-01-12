@@ -34,12 +34,14 @@ type ActionRadioOptionProps = {
   label: string;
   description: string;
   accordionText: string;
+  id?: string;
 } & Omit<ControllerRenderProps, 'ref'>;
 
 const ActionRadioOption = ({
   label,
   description,
   accordionText,
+  id,
   ...field
 }: ActionRadioOptionProps) => {
   const { t } = useTranslation('action');
@@ -48,7 +50,7 @@ const ActionRadioOption = ({
     <Radio
       {...field}
       className="grt-action-radio__option margin-bottom-2 tablet:grid-col-5"
-      id={`grt-action__${field.value}`}
+      id={`grt-action__${id || field.value}`}
       label={t('chooseAction.selectAction')}
       title={label}
       labelDescription={
@@ -200,6 +202,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
                           <ActionRadioOption
                             {...fieldProps}
                             value="actions/request-edits"
+                            id="request-edits"
                             label={t('chooseAction.requestEdits.title')}
                             description={t(
                               'chooseAction.requestEdits.description'
@@ -212,6 +215,7 @@ const Actions = ({ systemIntake }: ActionsProps) => {
                           <ActionRadioOption
                             {...fieldProps}
                             value="actions/new-step"
+                            id="new-step"
                             label={t('chooseAction.progressToNewStep.title')}
                             description={t(
                               'chooseAction.progressToNewStep.description'
