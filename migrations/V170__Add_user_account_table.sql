@@ -1,6 +1,6 @@
 CREATE TABLE user_account (
     id UUID PRIMARY KEY NOT NULL,
-    username ZERO_STRING,
+    username ZERO_STRING NOT NULL,
     common_name ZERO_STRING NOT NULL,
     locale ZERO_STRING NOT NULL,
     email ZERO_STRING NOT NULL,

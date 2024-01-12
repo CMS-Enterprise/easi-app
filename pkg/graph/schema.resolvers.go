@@ -19,6 +19,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
@@ -2660,6 +2661,11 @@ func (r *queryResolver) TrbLeadOptions(ctx context.Context) ([]*models.UserInfo,
 // TrbAdminNote is the resolver for the trbAdminNote field.
 func (r *queryResolver) TrbAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error) {
 	return resolvers.GetTRBAdminNoteByID(ctx, r.store, id)
+}
+
+// UserAccount is the resolver for the userAccount field.
+func (r *queryResolver) UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error) {
+	return resolvers.UserAccountGetByUsername(r.store, username)
 }
 
 // Actions is the resolver for the actions field.

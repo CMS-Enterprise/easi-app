@@ -64,7 +64,7 @@ func GetOrCreateUserAccountFullName(
 	if userAccount == nil {
 		userAccount = &authentication.UserAccount{}
 	}
-	userAccount.Username = &accountInfo.PreferredUsername //TODO: does username need to be a  pointer string?
+	userAccount.Username = accountInfo.PreferredUsername
 	userAccount.CommonName = accountInfo.Name
 	userAccount.Locale = accountInfo.Locale
 	userAccount.Email = accountInfo.Email
@@ -111,7 +111,7 @@ func GetOrCreateUserAccount(
 	if userAccount == nil {
 		userAccount = &authentication.UserAccount{}
 	}
-	userAccount.Username = &accountInfo.PreferredUsername //TODO: does username need to be a  pointer string?
+	userAccount.Username = accountInfo.PreferredUsername
 	userAccount.CommonName = accountInfo.Name
 	userAccount.Locale = accountInfo.Locale
 	userAccount.Email = accountInfo.Email
