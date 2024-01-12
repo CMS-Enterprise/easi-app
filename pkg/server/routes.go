@@ -327,7 +327,6 @@ func (s *Server) routes(
 			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
 			store.FetchSystemIntakes,
-			store.FetchSystemIntakesByStatuses,
 			services.AuthorizeHasEASiRole,
 		),
 	)
@@ -386,7 +385,6 @@ func (s *Server) routes(
 					emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
 					emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
 					publisher.PublishBusinessCase,
-					models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED,
 				),
 				models.ActionTypeSUBMITFINALBIZCASE: services.NewSubmitBusinessCase(
 					serviceConfig,
@@ -399,7 +397,6 @@ func (s *Server) routes(
 					emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
 					emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
 					publisher.PublishBusinessCase,
-					models.SystemIntakeStatusBIZCASEFINALSUBMITTED,
 				), models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
 					serviceConfig,
 					services.AuthorizeUserIsIntakeRequester,

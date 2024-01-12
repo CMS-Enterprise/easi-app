@@ -215,7 +215,6 @@ func NewSubmitBusinessCase(
 		isDraft bool,
 	) error,
 	submitToCEDAR func(ctx context.Context, bc models.BusinessCase) error,
-	newIntakeStatus models.SystemIntakeStatus,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		ok, err := authorize(ctx, intake)
@@ -243,8 +242,7 @@ func NewSubmitBusinessCase(
 		updatedAt := config.clock.Now()
 		businessCase.UpdatedAt = &updatedAt
 
-		if businessCase.SystemIntakeStatus == models.SystemIntakeStatusBIZCASEFINALNEEDED ||
-			intake.Step == models.SystemIntakeStepFINALBIZCASE {
+		if intake.Step == models.SystemIntakeStepFINALBIZCASE {
 			err = validateForSubmit(businessCase)
 			if err != nil {
 				return err
@@ -332,75 +330,6 @@ func NewSubmitBusinessCase(
 	}
 }
 
-// NewTakeActionUpdateStatus returns a function that
-// updates the status of a request
-func NewTakeActionUpdateStatus(
-	config Config,
-	newStatus models.SystemIntakeStatus,
-	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
-	authorize func(context.Context) (bool, error),
-	saveAction func(context.Context, *models.Action) error,
-	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, emailText models.HTML, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
-	shouldCloseBusinessCase bool,
-	closeBusinessCase func(context.Context, uuid.UUID) error,
-) ActionExecuter {
-	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
-		ok, err := authorize(ctx)
-		if err != nil {
-			return err
-		}
-		if !ok {
-			return &apperrors.UnauthorizedError{}
-		}
-
-		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
-		if err != nil {
-			return err
-		}
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			return &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting an action"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
-			}
-		}
-
-		err = saveAction(ctx, action)
-		if err != nil {
-			return err
-		}
-
-		updatedTime := config.clock.Now()
-		intake.UpdatedAt = &updatedTime
-		intake.SetV2FieldsBasedOnV1Status(newStatus)
-
-		intake, err = update(ctx, intake)
-		if err != nil {
-			return &apperrors.QueryError{
-				Err:       err,
-				Model:     intake,
-				Operation: apperrors.QuerySave,
-			}
-		}
-
-		if shouldCloseBusinessCase && intake.BusinessCaseID != nil {
-			if err = closeBusinessCase(ctx, *intake.BusinessCaseID); err != nil {
-				return err
-			}
-		}
-
-		err = sendReviewEmail(ctx, action.Feedback.ValueOrEmptyHTML(), requesterInfo.Email, intake.ID)
-		if err != nil {
-			return err
-		}
-
-		return nil
-	}
-}
-
 // NewCreateActionUpdateStatus returns a function that
 // persists an action and updates a request
 func NewCreateActionUpdateStatus(
@@ -413,7 +342,6 @@ func NewCreateActionUpdateStatus(
 	ctx context.Context,
 	newAction *models.Action,
 	intakeID uuid.UUID,
-	newStatus models.SystemIntakeStatus,
 	shouldCloseBusinessCase bool,
 	recipients *models.EmailNotificationRecipients,
 ) (*models.SystemIntake, error) {
@@ -421,7 +349,6 @@ func NewCreateActionUpdateStatus(
 		ctx context.Context,
 		action *models.Action,
 		id uuid.UUID,
-		newStatus models.SystemIntakeStatus,
 		shouldCloseBusinessCase bool,
 		recipients *models.EmailNotificationRecipients,
 	) (*models.SystemIntake, error) {
@@ -435,7 +362,6 @@ func NewCreateActionUpdateStatus(
 			return nil, err
 		}
 
-		intake.SetV2FieldsBasedOnV1Status(newStatus)
 		updatedIntake, err := update(ctx, intake)
 		if err != nil {
 			return nil, err
@@ -510,8 +436,6 @@ func NewCreateActionExtendLifecycleID(
 		intake.LifecycleScope = &scope
 		intake.DecisionNextSteps = nextSteps
 		intake.LifecycleCostBaseline = null.StringFromPtr(costBaseline)
-
-		intake.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusLCIDISSUED)
 
 		_, updateErr := updateSystemIntake(ctx, intake)
 		if updateErr != nil {

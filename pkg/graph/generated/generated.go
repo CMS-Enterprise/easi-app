@@ -1434,7 +1434,7 @@ type SystemIntakeResolver interface {
 	Requester(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRequester, error)
 	RequesterName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	RequesterComponent(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	Status(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatus, error)
+	Status(ctx context.Context, obj *models.SystemIntake) (model.SystemIntakeStatus, error)
 
 	TrbCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	TrbCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -39527,9 +39527,9 @@ func (ec *executionContext) _SystemIntake_status(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(models.SystemIntakeStatus)
+	res := resTmp.(model.SystemIntakeStatus)
 	fc.Result = res
-	return ec.marshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatus(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -72714,20 +72714,14 @@ func (ec *executionContext) marshalNSystemIntakeState2githubᚗcomᚋcmsgovᚋea
 	return res
 }
 
-func (ec *executionContext) unmarshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatus(ctx context.Context, v interface{}) (models.SystemIntakeStatus, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.SystemIntakeStatus(tmp)
+func (ec *executionContext) unmarshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStatus(ctx context.Context, v interface{}) (model.SystemIntakeStatus, error) {
+	var res model.SystemIntakeStatus
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatus(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeStatus) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+func (ec *executionContext) marshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStatus(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeStatus) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeStatusAdmin2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusAdmin(ctx context.Context, v interface{}) (models.SystemIntakeStatusAdmin, error) {

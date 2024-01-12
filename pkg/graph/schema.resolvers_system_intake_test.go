@@ -1806,7 +1806,6 @@ func (s *GraphQLTestSuite) TestSubmitIntake() {
 
 	respIntake := resp.SubmitIntake.SystemIntake
 	s.Equal(intake.ID.String(), respIntake.ID)
-	s.Equal(string(models.SystemIntakeStatusINTAKESUBMITTED), respIntake.Status)
 }
 
 func (s *GraphQLTestSuite) TestExtendLifecycleId() {

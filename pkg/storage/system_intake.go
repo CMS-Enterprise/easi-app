@@ -9,7 +9,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
-	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -343,7 +342,7 @@ func (s *Store) FetchSystemIntakeByLifecycleID(ctx context.Context, lifecycleID 
 	intakes := []models.SystemIntake{}
 	const matchClause = `
 		WHERE system_intakes.lcid=$1
-			AND system_intakes.archived_at IS NULL AND system_intakes.status != 'WITHDRAWN'
+			AND system_intakes.archived_at IS NULL
 	`
 	err := s.db.Select(&intakes, fetchSystemIntakeSQL+matchClause, lifecycleID)
 	if err != nil {
@@ -375,7 +374,6 @@ func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (mo
 	intakes := []models.SystemIntake{}
 	const whereClause = `
 		WHERE system_intakes.eua_user_id=$1
-			AND system_intakes.status != 'WITHDRAWN'
 			AND system_intakes.archived_at IS NULL
 		ORDER BY created_at DESC
 	`
@@ -401,58 +399,6 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 	return intakes, nil
 }
 
-// FetchIntakesForAdmins queries the DB for all system intakes not in the INTAKE_DRAFT, APPROVED, or CLOSED statuses.
-// This is useful for the admin home page which intends to show admins all intakes that requesters have submitted.
-// This is a bit of a hold-over, and should be simplified when we start to filter based on IT Gov v2 states, which should be
-// much simpler to use
-// TODO: Modify with https://jiraent.cms.gov/browse/EASI-3440
-// TODO: This method is not currently in use.
-func (s *Store) FetchIntakesForAdmins(ctx context.Context) ([]*models.SystemIntake, error) {
-	intakes := []*models.SystemIntake{}
-	err := s.db.Select(&intakes, `
-		SELECT * FROM system_intakes WHERE status NOT IN ('INTAKE_DRAFT','APPROVED','CLOSED')
-		AND archived_at IS NULL AND status != 'WITHDRAWN'
-	`)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
-		return []*models.SystemIntake{}, err
-	}
-	return intakes, nil
-}
-
-// FetchSystemIntakesByStatuses queries the DB for all system intakes matching a status filter
-// Is this in use? It should be removed post admin actions v2 launch or modified
-func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
-	var intakes models.SystemIntakes
-	query := `
-		SELECT
-			system_intakes.*,
-			business_cases.id as business_case_id
-		FROM
-			(	SELECT
-					distinct ON (system_intakes.id) system_intakes.id, notes.content, notes.created_at
-				FROM system_intakes
-					LEFT JOIN notes on notes.system_intake = system_intakes.id AND notes.is_archived = false
-				WHERE system_intakes.status IN (?)
-				ORDER BY system_intakes.id, notes.created_at DESC
-			) AS intakes_and_notes
-		LEFT JOIN system_intakes ON system_intakes.id = intakes_and_notes.id
-		LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
-	`
-	query, args, err := sqlx.In(query, allowedStatuses)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
-		return nil, err
-	}
-	query = s.db.Rebind(query)
-	err = s.db.Select(&intakes, query, args...)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
-		return nil, err
-	}
-	return intakes, nil
-}
-
 // FetchSystemIntakesByStateForAdmins queries the DB for all system intakes with a matching state
 // The intent of this query is to return all intakes that are in a state that is relevant to admins (i.e. not in a draft state, not archived)
 func (s *Store) FetchSystemIntakesByStateForAdmins(ctx context.Context, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
@@ -461,7 +407,7 @@ func (s *Store) FetchSystemIntakesByStateForAdmins(ctx context.Context, state mo
 		SELECT *
 		FROM system_intakes
 		WHERE state=$1
-		AND (status != 'WITHDRAWN' AND archived_at IS NULL)
+		AND archived_at IS NULL
 		AND submitted_at IS NOT NULL
 	`, state)
 
@@ -623,37 +569,6 @@ func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *ti
 			updated_at = :updated_at,
 			grb_date = :grb_date,
 			grt_date = :grt_date
-		WHERE system_intakes.id = :id
-	`
-	_, err := s.db.NamedExec(
-		updateSystemIntakeSQL,
-		intake,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return s.FetchSystemIntakeByID(ctx, intake.ID)
-}
-
-// UpdateSystemIntakeStatus updates the status for an intake
-func (s *Store) UpdateSystemIntakeStatus(ctx context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error) {
-	var intake models.SystemIntake
-	now := time.Now()
-	intake.ID = id
-	intake.UpdatedAt = &now
-
-	const updateSystemIntakeSQL = `
-		UPDATE system_intakes
-		SET
-			updated_at = :updated_at,
-			step = :step,
-			state = :state,
-			decision_state = :decision_state,
-			request_form_state = :request_form_state,
-			draft_business_case_state = :draft_business_case_state,
-			final_business_case_state = :final_business_case_state
 		WHERE system_intakes.id = :id
 	`
 	_, err := s.db.NamedExec(

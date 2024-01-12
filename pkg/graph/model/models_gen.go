@@ -1302,6 +1302,85 @@ func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// The status of a system's IT governence request
+// Note - pre-IT Gov v2 only - for IT Gov v2, use SystemIntakeStatusRequester/SystemIntakeStatusAdmin
+type SystemIntakeStatus string
+
+const (
+	SystemIntakeStatusBizCaseChangesNeeded  SystemIntakeStatus = "BIZ_CASE_CHANGES_NEEDED"
+	SystemIntakeStatusBizCaseDraft          SystemIntakeStatus = "BIZ_CASE_DRAFT"
+	SystemIntakeStatusBizCaseDraftSubmitted SystemIntakeStatus = "BIZ_CASE_DRAFT_SUBMITTED"
+	SystemIntakeStatusBizCaseFinalNeeded    SystemIntakeStatus = "BIZ_CASE_FINAL_NEEDED"
+	SystemIntakeStatusBizCaseFinalSubmitted SystemIntakeStatus = "BIZ_CASE_FINAL_SUBMITTED"
+	SystemIntakeStatusIntakeDraft           SystemIntakeStatus = "INTAKE_DRAFT"
+	SystemIntakeStatusIntakeSubmitted       SystemIntakeStatus = "INTAKE_SUBMITTED"
+	SystemIntakeStatusLcidIssued            SystemIntakeStatus = "LCID_ISSUED"
+	SystemIntakeStatusNeedBizCase           SystemIntakeStatus = "NEED_BIZ_CASE"
+	SystemIntakeStatusNotApproved           SystemIntakeStatus = "NOT_APPROVED"
+	// Request is not an IT request
+	SystemIntakeStatusNotItRequest SystemIntakeStatus = "NOT_IT_REQUEST"
+	// Request requires no further governance
+	SystemIntakeStatusNoGovernance SystemIntakeStatus = "NO_GOVERNANCE"
+	// Request is ready for Governance Review Board meeting
+	SystemIntakeStatusReadyForGrb SystemIntakeStatus = "READY_FOR_GRB"
+	// Request is ready for Governance Review Team meeting
+	SystemIntakeStatusReadyForGrt SystemIntakeStatus = "READY_FOR_GRT"
+	// Request for shutdown of existing system is complete
+	SystemIntakeStatusShutdownComplete SystemIntakeStatus = "SHUTDOWN_COMPLETE"
+	// Request for shutdown of existing system is in progress
+	SystemIntakeStatusShutdownInProgress SystemIntakeStatus = "SHUTDOWN_IN_PROGRESS"
+	SystemIntakeStatusWithdrawn          SystemIntakeStatus = "WITHDRAWN"
+)
+
+var AllSystemIntakeStatus = []SystemIntakeStatus{
+	SystemIntakeStatusBizCaseChangesNeeded,
+	SystemIntakeStatusBizCaseDraft,
+	SystemIntakeStatusBizCaseDraftSubmitted,
+	SystemIntakeStatusBizCaseFinalNeeded,
+	SystemIntakeStatusBizCaseFinalSubmitted,
+	SystemIntakeStatusIntakeDraft,
+	SystemIntakeStatusIntakeSubmitted,
+	SystemIntakeStatusLcidIssued,
+	SystemIntakeStatusNeedBizCase,
+	SystemIntakeStatusNotApproved,
+	SystemIntakeStatusNotItRequest,
+	SystemIntakeStatusNoGovernance,
+	SystemIntakeStatusReadyForGrb,
+	SystemIntakeStatusReadyForGrt,
+	SystemIntakeStatusShutdownComplete,
+	SystemIntakeStatusShutdownInProgress,
+	SystemIntakeStatusWithdrawn,
+}
+
+func (e SystemIntakeStatus) IsValid() bool {
+	switch e {
+	case SystemIntakeStatusBizCaseChangesNeeded, SystemIntakeStatusBizCaseDraft, SystemIntakeStatusBizCaseDraftSubmitted, SystemIntakeStatusBizCaseFinalNeeded, SystemIntakeStatusBizCaseFinalSubmitted, SystemIntakeStatusIntakeDraft, SystemIntakeStatusIntakeSubmitted, SystemIntakeStatusLcidIssued, SystemIntakeStatusNeedBizCase, SystemIntakeStatusNotApproved, SystemIntakeStatusNotItRequest, SystemIntakeStatusNoGovernance, SystemIntakeStatusReadyForGrb, SystemIntakeStatusReadyForGrt, SystemIntakeStatusShutdownComplete, SystemIntakeStatusShutdownInProgress, SystemIntakeStatusWithdrawn:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeStatus) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeStatus", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Steps in the system intake process that a Progress to New Step action can progress to
 type SystemIntakeStepToProgressTo string
 

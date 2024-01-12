@@ -781,7 +781,6 @@ func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.
 			Feedback:   &input.EmailBody,
 			ActionType: models.ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES,
 		},
-		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
 		input.NotificationRecipients,
 	)
 	if err != nil {
@@ -818,7 +817,6 @@ func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx cont
 			Feedback:   &input.EmailBody,
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
-		models.SystemIntakeStatusBIZCASEFINALNEEDED,
 		input.NotificationRecipients,
 	)
 	if err != nil {
@@ -855,7 +853,6 @@ func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Cont
 			Feedback:   &input.EmailBody,
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
-		models.SystemIntakeStatusNEEDBIZCASE,
 		input.NotificationRecipients,
 	)
 	if err != nil {
@@ -1364,7 +1361,6 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx contex
 			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
-		models.SystemIntakeStatusNEEDBIZCASE,
 		false,
 		input.NotificationRecipients,
 	)
@@ -1383,7 +1379,6 @@ func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx 
 			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
-		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
 		false,
 		input.NotificationRecipients,
 	)
@@ -1402,7 +1397,6 @@ func (r *mutationResolver) CreateSystemIntakeActionGuideReceievedClose(ctx conte
 			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
-		models.SystemIntakeStatusSHUTDOWNCOMPLETE,
 		false,
 		input.NotificationRecipients,
 	)
@@ -1421,7 +1415,6 @@ func (r *mutationResolver) CreateSystemIntakeActionNoGovernanceNeeded(ctx contex
 			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
-		models.SystemIntakeStatusNOGOVERNANCE,
 		false,
 		input.NotificationRecipients,
 	)
@@ -1440,7 +1433,6 @@ func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Cont
 			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
-		models.SystemIntakeStatusNOTITREQUEST,
 		false,
 		input.NotificationRecipients,
 	)
@@ -1459,7 +1451,6 @@ func (r *mutationResolver) CreateSystemIntakeActionNotRespondingClose(ctx contex
 			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
-		models.SystemIntakeStatusNOGOVERNANCE,
 		false,
 		input.NotificationRecipients,
 	)
@@ -1478,7 +1469,6 @@ func (r *mutationResolver) CreateSystemIntakeActionReadyForGrt(ctx context.Conte
 			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
-		models.SystemIntakeStatusREADYFORGRT,
 		false,
 		input.NotificationRecipients,
 	)
@@ -1497,7 +1487,6 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 			Feedback:   &input.Feedback,
 		},
 		input.IntakeID,
-		models.SystemIntakeStatusSHUTDOWNINPROGRESS,
 		false,
 		input.NotificationRecipients,
 	)
@@ -1658,7 +1647,6 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 			Feedback:   &input.EmailBody,
 			ActionType: models.ActionTypeREADYFORGRB,
 		},
-		models.SystemIntakeStatusREADYFORGRB,
 		input.NotificationRecipients,
 	)
 	if err != nil {
@@ -2999,7 +2987,7 @@ func (r *systemIntakeResolver) RequesterComponent(ctx context.Context, obj *mode
 }
 
 // Status is the resolver for the status field.
-func (r *systemIntakeResolver) Status(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatus, error) {
+func (r *systemIntakeResolver) Status(ctx context.Context, obj *models.SystemIntake) (model.SystemIntakeStatus, error) {
 	panic(fmt.Errorf("not implemented: Status - status"))
 }
 

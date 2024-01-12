@@ -20,10 +20,9 @@ func NewFetchSystemIntakes(
 	config Config,
 	fetchByID func(c context.Context, euaID string) (models.SystemIntakes, error),
 	fetchAll func(context.Context) (models.SystemIntakes, error),
-	fetchByStatusFilter func(context.Context, []models.SystemIntakeStatus) (models.SystemIntakes, error),
 	authorize func(c context.Context) (bool, error),
-) func(context.Context, models.SystemIntakeStatusFilter) (models.SystemIntakes, error) {
-	return func(ctx context.Context, statusFilter models.SystemIntakeStatusFilter) (models.SystemIntakes, error) {
+) func(context.Context) (models.SystemIntakes, error) {
+	return func(ctx context.Context) (models.SystemIntakes, error) {
 		logger := appcontext.ZLogger(ctx)
 		ok, err := authorize(ctx)
 		if err != nil {
@@ -32,22 +31,13 @@ func NewFetchSystemIntakes(
 		if !ok {
 			return nil, &apperrors.UnauthorizedError{Err: errors.New("failed to authorize fetch system intakes")}
 		}
+
 		var result models.SystemIntakes
 		principal := appcontext.Principal(ctx)
 		if !principal.AllowGRT() {
 			result, err = fetchByID(ctx, principal.ID())
 		} else {
-			if statusFilter == "" {
-				result, err = fetchAll(ctx)
-			} else {
-				statuses, filterErr := models.GetStatusesByFilter(statusFilter)
-				if filterErr != nil {
-					return nil, &apperrors.BadRequestError{
-						Err: filterErr,
-					}
-				}
-				result, err = fetchByStatusFilter(ctx, statuses)
-			}
+			result, err = fetchAll(ctx)
 		}
 		if err != nil {
 			logger.Error("failed to fetch system intakes")
@@ -169,8 +159,6 @@ func NewArchiveSystemIntake(
 		intake.UpdatedAt = &updatedTime
 		intake.ArchivedAt = &updatedTime
 
-		intake.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusWITHDRAWN)
-
 		intake, err = update(ctx, intake)
 		if err != nil {
 			return &apperrors.QueryError{
@@ -285,7 +273,6 @@ func NewUpdateLifecycleFields(
 			return nil, err
 		}
 
-		existing.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusLCIDISSUED)
 		updated, err := update(ctx, existing)
 		if err != nil {
 			return nil, &apperrors.QueryError{
@@ -354,7 +341,6 @@ func NewUpdateRejectionFields(
 		existing.UpdatedAt = &updatedTime
 		existing.RejectionReason = intake.RejectionReason
 		existing.DecisionNextSteps = intake.DecisionNextSteps
-		existing.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusNOTAPPROVED)
 		updated, err := update(ctx, existing)
 		if err != nil {
 			return nil, err
@@ -388,8 +374,8 @@ func NewProvideGRTFeedback(
 	saveAction func(context.Context, *models.Action) error,
 	saveGRTFeedback func(context.Context, *models.GovernanceRequestFeedback) (*models.GovernanceRequestFeedback, error),
 	sendReviewEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, intakeID uuid.UUID, projectName string, requester string, emailText models.HTML) error,
-) func(ctx context.Context, grtFeedback *models.GovernanceRequestFeedback, action *models.Action, newStatus models.SystemIntakeStatus, recipients *models.EmailNotificationRecipients) (*models.GovernanceRequestFeedback, error) {
-	return func(ctx context.Context, grtFeedback *models.GovernanceRequestFeedback, action *models.Action, newStatus models.SystemIntakeStatus, recipients *models.EmailNotificationRecipients) (*models.GovernanceRequestFeedback, error) {
+) func(ctx context.Context, grtFeedback *models.GovernanceRequestFeedback, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.GovernanceRequestFeedback, error) {
+	return func(ctx context.Context, grtFeedback *models.GovernanceRequestFeedback, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.GovernanceRequestFeedback, error) {
 		intake, err := fetch(ctx, grtFeedback.IntakeID)
 		if err != nil {
 			return nil, err
@@ -405,9 +391,6 @@ func NewProvideGRTFeedback(
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-
-		// Update IT Gov V2 fields based on `newStatus`
-		intake.SetV2FieldsBasedOnV1Status(newStatus)
 
 		intake, err = update(ctx, intake)
 		if err != nil {

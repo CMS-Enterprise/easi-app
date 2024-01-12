@@ -1,62 +1,16 @@
 package models
 
 import (
-	"errors"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 )
 
-// SystemIntakeStatus represents the status of a system intake
-type SystemIntakeStatus string
-
 // SystemIntakeRequestType represents the type of a system intake
 type SystemIntakeRequestType string
 
-// SystemIntakeStatusFilter represents a filter in GETting system intakes
-type SystemIntakeStatusFilter string
-
 const (
-	// SystemIntakeStatusINTAKEDRAFT captures enum value "INTAKE_DRAFT"
-	SystemIntakeStatusINTAKEDRAFT SystemIntakeStatus = "INTAKE_DRAFT"
-	// SystemIntakeStatusINTAKESUBMITTED captures enum value "INTAKE_SUBMITTED"
-	SystemIntakeStatusINTAKESUBMITTED SystemIntakeStatus = "INTAKE_SUBMITTED"
-	// SystemIntakeStatusNEEDBIZCASE captures enum value "NEED_BIZ_CASE"
-	SystemIntakeStatusNEEDBIZCASE SystemIntakeStatus = "NEED_BIZ_CASE"
-	// SystemIntakeStatusCLOSED captures enum value "CLOSED"
-	SystemIntakeStatusCLOSED SystemIntakeStatus = "CLOSED"
-	// SystemIntakeStatusAPPROVED captures enum value "APPROVED"
-	SystemIntakeStatusAPPROVED SystemIntakeStatus = "APPROVED"
-	// SystemIntakeStatusREADYFORGRT captures enum value "READY_FOR_GRT"
-	SystemIntakeStatusREADYFORGRT SystemIntakeStatus = "READY_FOR_GRT"
-	// SystemIntakeStatusREADYFORGRB captures enum value "READY_FOR_GRB"
-	SystemIntakeStatusREADYFORGRB SystemIntakeStatus = "READY_FOR_GRB"
-	// SystemIntakeStatusWITHDRAWN captures enum value "WITHDRAWN"
-	SystemIntakeStatusWITHDRAWN SystemIntakeStatus = "WITHDRAWN"
-	// SystemIntakeStatusNOTITREQUEST captures enum value "NOT_IT_REQUEST"
-	SystemIntakeStatusNOTITREQUEST SystemIntakeStatus = "NOT_IT_REQUEST"
-	// SystemIntakeStatusLCIDISSUED captures enum value "LCID_ISSUED"
-	SystemIntakeStatusLCIDISSUED SystemIntakeStatus = "LCID_ISSUED"
-	// SystemIntakeStatusBIZCASEDRAFT captures enum value "BIZ_CASE_DRAFT"
-	SystemIntakeStatusBIZCASEDRAFT SystemIntakeStatus = "BIZ_CASE_DRAFT"
-	// SystemIntakeStatusBIZCASEDRAFTSUBMITTED captures enum value "BIZ_CASE_DRAFT_SUBMITTED"
-	SystemIntakeStatusBIZCASEDRAFTSUBMITTED SystemIntakeStatus = "BIZ_CASE_DRAFT_SUBMITTED"
-	// SystemIntakeStatusBIZCASEFINALSUBMITTED captures enum value "BIZ_CASE_FINAL_SUBMITTED"
-	SystemIntakeStatusBIZCASEFINALSUBMITTED SystemIntakeStatus = "BIZ_CASE_FINAL_SUBMITTED"
-	// SystemIntakeStatusBIZCASECHANGESNEEDED captures enum value "BIZ_CASE_CHANGES_NEEDED"
-	SystemIntakeStatusBIZCASECHANGESNEEDED SystemIntakeStatus = "BIZ_CASE_CHANGES_NEEDED"
-	// SystemIntakeStatusBIZCASEFINALNEEDED captures enum value "BIZ_CASE_FINAL_NEEDED"
-	SystemIntakeStatusBIZCASEFINALNEEDED SystemIntakeStatus = "BIZ_CASE_FINAL_NEEDED"
-	// SystemIntakeStatusNOTAPPROVED captures enum value "NOT_APPROVED"
-	SystemIntakeStatusNOTAPPROVED SystemIntakeStatus = "NOT_APPROVED"
-	// SystemIntakeStatusNOGOVERNANCE captures enum value "NO_GOVERNANCE"
-	SystemIntakeStatusNOGOVERNANCE SystemIntakeStatus = "NO_GOVERNANCE"
-	// SystemIntakeStatusSHUTDOWNINPROGRESS captures enum value "SHUTDOWN_IN_PROGRESS"
-	SystemIntakeStatusSHUTDOWNINPROGRESS SystemIntakeStatus = "SHUTDOWN_IN_PROGRESS"
-	// SystemIntakeStatusSHUTDOWNCOMPLETE captures enum value "SHUTDOWN_COMPLETE"
-	SystemIntakeStatusSHUTDOWNCOMPLETE SystemIntakeStatus = "SHUTDOWN_COMPLETE"
-
 	// SystemIntakeRequestTypeNEW captures enum value of "NEW"
 	SystemIntakeRequestTypeNEW SystemIntakeRequestType = "NEW"
 	// SystemIntakeRequestTypeMAJORCHANGES captures enum value of "MAJOR_CHANGES"
@@ -65,11 +19,6 @@ const (
 	SystemIntakeRequestTypeRECOMPETE SystemIntakeRequestType = "RECOMPETE"
 	// SystemIntakeRequestTypeSHUTDOWN captures enum value of "SHUTDOWN"
 	SystemIntakeRequestTypeSHUTDOWN SystemIntakeRequestType = "SHUTDOWN"
-
-	// SystemIntakeStatusFilterOPEN captures enum value "OPEN"
-	SystemIntakeStatusFilterOPEN SystemIntakeStatusFilter = "OPEN"
-	// SystemIntakeStatusFilterCLOSED captures enum value "CLOSED"
-	SystemIntakeStatusFilterCLOSED SystemIntakeStatusFilter = "CLOSED"
 )
 
 // SystemIntakeState represents whether the intake is open or closed
@@ -199,37 +148,6 @@ type SystemIntakeMetrics struct {
 	Funded             int       `json:"funded"`
 }
 
-// GetStatusesByFilter returns a list of status corresponding to a /system_intakes/ filter
-func GetStatusesByFilter(filter SystemIntakeStatusFilter) ([]SystemIntakeStatus, error) {
-	switch filter {
-	case SystemIntakeStatusFilterOPEN:
-		return []SystemIntakeStatus{
-			SystemIntakeStatusINTAKESUBMITTED,
-			SystemIntakeStatusNEEDBIZCASE,
-			SystemIntakeStatusBIZCASEDRAFT,
-			SystemIntakeStatusBIZCASEDRAFTSUBMITTED,
-			SystemIntakeStatusBIZCASECHANGESNEEDED,
-			SystemIntakeStatusBIZCASEFINALNEEDED,
-			SystemIntakeStatusBIZCASEFINALSUBMITTED,
-			SystemIntakeStatusREADYFORGRT,
-			SystemIntakeStatusREADYFORGRB,
-			SystemIntakeStatusSHUTDOWNINPROGRESS,
-		}, nil
-	case SystemIntakeStatusFilterCLOSED:
-		return []SystemIntakeStatus{
-			SystemIntakeStatusLCIDISSUED,
-			// prevents withdrawn intakes from appearing in "CLOSED" tab of admin view
-			// SystemIntakeStatusWITHDRAWN,
-			SystemIntakeStatusNOTITREQUEST,
-			SystemIntakeStatusNOTAPPROVED,
-			SystemIntakeStatusNOGOVERNANCE,
-			SystemIntakeStatusSHUTDOWNCOMPLETE,
-		}, nil
-	default:
-		return []SystemIntakeStatus{}, errors.New("unexpected system intake status filter name")
-	}
-}
-
 // SystemIntakeFormState represents the possible states of of any System Intake form types.
 type SystemIntakeFormState string
 
@@ -311,100 +229,4 @@ func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatu
 	}
 
 	return &issuedStatus
-}
-
-// SetV2FieldsBasedOnV1Status sets all IT Gov V2 fields based on a V1 status. This is effectively
-// an attempt to map V1 statuses to V2 fields.
-// NOTE: This could (and probably should) be the same mapping we use when running a DB migration to migrate
-// existing data
-func (si *SystemIntake) SetV2FieldsBasedOnV1Status(status SystemIntakeStatus) {
-	// TODO Figure out if the cases where we set `si.DecisionState` make sense
-	// TODO Figure out if RequestFormState, DraftBusinessCaseState, and FinalBusinessCaseState are all set properly
-	switch status {
-	case SystemIntakeStatusINTAKEDRAFT:
-		si.Step = SystemIntakeStepINITIALFORM
-		si.State = SystemIntakeStateOPEN
-		// handled through resolvers and formstate
-		si.RequestFormState = SIRFSInProgress
-	case SystemIntakeStatusINTAKESUBMITTED:
-		si.Step = SystemIntakeStepINITIALFORM
-		si.State = SystemIntakeStateOPEN
-		// handled in submit function
-		si.RequestFormState = SIRFSSubmitted
-	case SystemIntakeStatusNEEDBIZCASE:
-		si.Step = SystemIntakeStepDRAFTBIZCASE
-		si.State = SystemIntakeStateOPEN
-		// not setting si.DraftBusinessCaseState since `SIRFSNotStarted` is the default in the table
-	case SystemIntakeStatusCLOSED:
-		si.State = SystemIntakeStateCLOSED
-	case SystemIntakeStatusAPPROVED:
-		// This status doesn't appear to be referenced in any V1 actions -- good riddance!
-	case SystemIntakeStatusREADYFORGRT:
-		si.Step = SystemIntakeStepGRTMEETING
-		si.State = SystemIntakeStateOPEN
-	case SystemIntakeStatusREADYFORGRB:
-		si.Step = SystemIntakeStepGRBMEETING
-		si.State = SystemIntakeStateOPEN
-	case SystemIntakeStatusWITHDRAWN:
-		si.State = SystemIntakeStateCLOSED
-	case SystemIntakeStatusNOTITREQUEST:
-		si.Step = SystemIntakeStepDECISION
-		si.State = SystemIntakeStateCLOSED
-		si.DecisionState = SIDSNotGovernance
-	case SystemIntakeStatusLCIDISSUED:
-		si.Step = SystemIntakeStepDECISION
-		si.State = SystemIntakeStateCLOSED
-		si.DecisionState = SIDSLcidIssued
-	// Biz Case Needed
-	case SystemIntakeStatusBIZCASEDRAFT:
-		si.Step = SystemIntakeStepDRAFTBIZCASE
-		si.State = SystemIntakeStateOPEN
-		// handled in services/business_case.go by calling formstate.GetNewStateForUpdatedForm
-		// si.DraftBusinessCaseState = SIRFSInProgress
-	case SystemIntakeStatusBIZCASEDRAFTSUBMITTED:
-		si.Step = SystemIntakeStepDRAFTBIZCASE
-		si.State = SystemIntakeStateOPEN
-		// handled in services/action.go
-		si.DraftBusinessCaseState = SIRFSSubmitted
-	case SystemIntakeStatusBIZCASEFINALSUBMITTED:
-		si.Step = SystemIntakeStepFINALBIZCASE
-		si.State = SystemIntakeStateOPEN
-		// handled in services/action.go
-		si.FinalBusinessCaseState = SIRFSSubmitted
-	case SystemIntakeStatusBIZCASECHANGESNEEDED:
-		if si.Step == SystemIntakeStepFINALBIZCASE {
-			si.FinalBusinessCaseState = SIRFSEditsRequested
-		} else {
-			si.Step = SystemIntakeStepDRAFTBIZCASE
-			si.DraftBusinessCaseState = SIRFSEditsRequested
-		}
-		si.State = SystemIntakeStateOPEN
-	// describes either progressing or requesting edits
-	case SystemIntakeStatusBIZCASEFINALNEEDED:
-		if si.FinalBusinessCaseState == SIRFSSubmitted {
-			si.FinalBusinessCaseState = SIRFSEditsRequested
-		}
-		si.Step = SystemIntakeStepFINALBIZCASE
-		si.State = SystemIntakeStateOPEN
-		// not setting si.FinalBusinessCaseState since `SIRFSNotStarted` is the default in the table
-	case SystemIntakeStatusNOTAPPROVED:
-		si.State = SystemIntakeStateCLOSED
-		si.Step = SystemIntakeStepDECISION
-		si.DecisionState = SIDSNotApproved
-	case SystemIntakeStatusNOGOVERNANCE:
-		si.State = SystemIntakeStateCLOSED
-		si.Step = SystemIntakeStepDECISION
-		si.DecisionState = SIDSNotGovernance
-	case SystemIntakeStatusSHUTDOWNINPROGRESS:
-		// This status is not needed since we don't support shutdowns
-	case SystemIntakeStatusSHUTDOWNCOMPLETE:
-		// This status is not needed since we don't support shutdowns
-	}
-}
-
-// IsNoGovernanceState derives if a SystemIntake is in a No Governance State from its properties
-func (si *SystemIntake) IsNoGovernanceState() bool {
-	return si.State == SystemIntakeStateCLOSED &&
-		si.Step == SystemIntakeStepDECISION &&
-		si.DecisionState == SIDSNotGovernance
 }
