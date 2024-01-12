@@ -76,9 +76,9 @@ func (s *EmailTestSuite) TestIntakeRetireLCIDNotification() {
 		if issuedAt != nil {
 			issuedAtStr = fmt.Sprintf(`<p><strong>Original date issued:</strong> %s</p>`, issuedAt.Format("01/02/2006"))
 		}
-		return fmt.Sprintf(`<h1 style="margin-bottom: 0">EASi</h1>
-			<p style="font-size:15px; color: #71767A; margin: 0.5rem 0 2rem;">Easy Access to System Information</p>
-
+		return fmt.Sprintf(`
+			<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
 
 			<p class="no-margin-bottom">The Governance Team has retired a previously-issued Life Cycle ID (LCID).</p>
 			<br>

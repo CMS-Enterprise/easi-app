@@ -79,17 +79,8 @@ func (s *EmailTestSuite) TestIntakeExpireLCIDNotification() {
 		}
 
 		return fmt.Sprintf(`
-			<style>
-			  .no-margin,
-			  .no-margin * {
-				margin: 0;
-			  }
-			  .no-margin-bottom {
-				margin-bottom: 0;
-			  }
-			</style>
-			<h1 style="margin-bottom: 0">EASi</h1>
-			<p style="font-size:15px; color: #71767A; margin: 0.5rem 0 2rem;">Easy Access to System Information</p>
+			<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
 
 			<p>A previously-issued Life Cycle ID (LCID) has expired.</p>
 

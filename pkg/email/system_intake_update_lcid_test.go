@@ -52,6 +52,7 @@ func (s *EmailTestSuite) TestIntakeUpdateLCIDNotification() {
 		if additionalInfo != nil {
 			additionalInfoStr = fmt.Sprintf(
 				`<br>
+				<br>
 				<hr>
 				<br>
 				<p class="no-margin-top">
@@ -219,8 +220,8 @@ func (s *EmailTestSuite) TestIntakeUpdateLCIDNotification() {
 
 			%s
 			<br>
-			<hr>
 			<br>
+			<hr>
 
 			<p>Depending on the request, the Governance Team may follow up with this project team at a later date.</p>`,
 			expiresNewAndOldStr,

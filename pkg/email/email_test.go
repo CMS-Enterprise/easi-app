@@ -30,8 +30,8 @@ func (s *EmailTestSuite) EqualHTML(expected string, actual string) bool {
 		breaksAndTabs := regexp.MustCompile(`[\n\r\t]`)
 		str = breaksAndTabs.ReplaceAllString(str, "")
 		// don't test the CSS
-		removeStyleTag := regexp.MustCompile(`<style>[\s\S]*</style>`)
-		str = removeStyleTag.ReplaceAllString(str, "")
+		removeHeadTag := regexp.MustCompile(`<head>[\s\S]*</head>`)
+		str = removeHeadTag.ReplaceAllString(str, "")
 		// remove leading/trailing spaces
 		str = strings.Trim(str, " ")
 		// normalize multiple spaces to be 1 space

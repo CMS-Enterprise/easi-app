@@ -162,7 +162,7 @@ func main() {
 
 func sendITGovEmails(ctx context.Context, client *email.Client) {
 	loremSentence1 := "<p>Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia.</p>"
-	loremSentence2 := "<p>Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident.</p><ul><li><p>Nostrud officia pariatur ut officia.</p></li><li><p>Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate.</p></li></ul><p>Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod.</p>"
+	loremSentence2 := "<ul><li><p>Nostrud officia pariatur ut officia.</p></li><li><p>Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate.</p></li></ul><p>Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod.</p>"
 	loremSentence3 := "<p>Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.</p>"
 	loremParagraphs := loremSentence1 + loremSentence2 + loremSentence3
 	intakeID := uuid.New()
@@ -170,7 +170,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	lifecycleExpiresAt := time.Now().AddDate(30, 0, 0)
 	lifecycleIssuedAt := time.Now()
 	lifecycleRetiresAt := time.Now().AddDate(3, 0, 0)
-	lifecycleScope := models.HTMLPointer(loremSentence1)
+	lifecycleScope := models.HTMLPointer(loremSentence2)
 	lifecycleCostBaseline := "a baseline"
 	submittedAt := time.Now()
 	requesterEmail := models.NewEmailAddress("TEST@local.fake")
@@ -181,7 +181,6 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	}
 	reason := models.HTMLPointer(loremParagraphs)
 	feedback := models.HTMLPointer(loremParagraphs)
-	newStep := model.SystemIntakeStepToProgressToDraftBusinessCase
 	nextSteps := models.HTMLPointer(loremParagraphs)
 	additionalInfo := models.HTMLPointer(loremParagraphs)
 
@@ -227,17 +226,19 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
-	err = client.SystemIntake.SendProgressToNewStepNotification(
-		ctx,
-		emailNotificationRecipients,
-		intakeID,
-		newStep,
-		"Super Secret Bonus Form",
-		"Whatchamacallit",
-		feedback,
-		additionalInfo,
-	)
-	noErr(err)
+	for _, step := range model.AllSystemIntakeStepToProgressTo {
+		err = client.SystemIntake.SendProgressToNewStepNotification(
+			ctx,
+			emailNotificationRecipients,
+			intakeID,
+			step,
+			"Super Secret Bonus Form",
+			"Whatchamacallit",
+			feedback,
+			additionalInfo,
+		)
+		noErr(err)
+	}
 
 	err = client.SystemIntake.SendNotApprovedNotification(
 		ctx,

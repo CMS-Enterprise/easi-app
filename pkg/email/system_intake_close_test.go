@@ -74,8 +74,8 @@ func (s *EmailTestSuite) TestCloseIntakeRequestNotification() {
 			)
 		}
 		return fmt.Sprintf(`
-			<h1 style="margin-bottom: 0">EASi</h1>
-			<p style="font-size:15px; color: #71767A; margin: 0.5rem 0 2rem;">Easy Access to System Information</p>
+			<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
 
 			<p>The IT Governance Request titled %s, submitted on %s, has been closed in EASi.</p>
 			%s
