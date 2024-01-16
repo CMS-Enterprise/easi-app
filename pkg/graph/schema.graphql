@@ -808,48 +808,6 @@ type BusinessCase {
 }
 
 """
-The status of a system's IT governence request
-Note - pre-IT Gov v2 only - for IT Gov v2, use SystemIntakeStatusRequester/SystemIntakeStatusAdmin
-"""
-enum SystemIntakeStatus {
-  BIZ_CASE_CHANGES_NEEDED
-  BIZ_CASE_DRAFT
-  BIZ_CASE_DRAFT_SUBMITTED
-  BIZ_CASE_FINAL_NEEDED
-  BIZ_CASE_FINAL_SUBMITTED
-  INTAKE_DRAFT
-  INTAKE_SUBMITTED
-  LCID_ISSUED
-  NEED_BIZ_CASE
-  NOT_APPROVED
-  """
-  Request is not an IT request
-  """
-  NOT_IT_REQUEST
-  """
-  Request requires no further governance
-  """
-  NO_GOVERNANCE
-  """
-  Request is ready for Governance Review Board meeting
-  """
-  READY_FOR_GRB
-  """
-  Request is ready for Governance Review Team meeting
-  """
-  READY_FOR_GRT
-  """
-  Request for shutdown of existing system is complete
-  """
-  SHUTDOWN_COMPLETE
-  """
-  Request for shutdown of existing system is in progress
-  """
-  SHUTDOWN_IN_PROGRESS
-  WITHDRAWN
-}
-
-"""
 The type of an IT governance (system) request
 """
 enum SystemIntakeRequestType {
@@ -1021,7 +979,6 @@ type SystemIntake {
   # TODO Remove them when email is not always fetched on the `requester` type
   requesterName: String
   requesterComponent: String
-  status: SystemIntakeStatus!
   state: SystemIntakeState!
   step: SystemIntakeStep!
   submittedAt: Time

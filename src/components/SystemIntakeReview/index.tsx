@@ -11,7 +11,6 @@ import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { SystemIntake } from 'queries/types/SystemIntake';
-import { SystemIntakeStatus } from 'types/graphql-global-types';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
 import { FundingSourcesListItem } from 'views/SystemIntake/ContractDetails/FundingSources';
@@ -33,7 +32,7 @@ type FundingSourcesObject = {
 export const SystemIntakeReview = ({
   systemIntake
 }: SystemIntakeReviewProps) => {
-  const { contract, status, submittedAt } = systemIntake;
+  const { contract, submittedAt } = systemIntake;
   const {
     contacts: {
       data: { requester, businessOwner, productManager, isso }
@@ -91,10 +90,6 @@ export const SystemIntakeReview = ({
   };
 
   const getSubmissionDate = () => {
-    if (status === SystemIntakeStatus.INTAKE_DRAFT) {
-      return t('review.notSubmitted');
-    }
-
     if (submittedAt) {
       return formatDateLocal(submittedAt, 'MMMM d, yyyy');
     }

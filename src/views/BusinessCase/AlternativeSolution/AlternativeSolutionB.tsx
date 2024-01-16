@@ -138,10 +138,8 @@ const AlternativeSolutionB = ({
                 type="button"
                 onClick={() => {
                   dispatchSave();
-                  // If final business case OR any field is filled
+                  // If any field is filled
                   if (
-                    businessCase.systemIntakeStatus ===
-                      'BIZ_CASE_FINAL_NEEDED' &&
                     alternativeSolutionHasFilledFields(
                       formikRef?.current?.values?.alternativeB
                     )

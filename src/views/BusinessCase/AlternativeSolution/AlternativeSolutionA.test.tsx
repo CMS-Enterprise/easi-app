@@ -146,8 +146,7 @@ describe('Business case alternative a solution', () => {
       businessCase: {
         form: {
           ...businessCaseInitialData,
-          id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
-          systemIntakeStatus: 'BIZ_CASE_FINAL_NEEDED'
+          id: '75746af8-9a9b-4558-a375-cf9848eb2b0d'
         },
         isLoading: false,
         isSaving: false,
