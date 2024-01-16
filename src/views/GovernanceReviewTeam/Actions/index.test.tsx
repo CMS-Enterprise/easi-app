@@ -11,7 +11,7 @@ import {
   requester,
   systemIntake
 } from 'data/mock/systemIntake';
-import useMessage, { MessageProvider } from 'hooks/useMessage';
+import { MessageProvider } from 'hooks/useMessage';
 import CreateSystemIntakeActionRequestEditsQuery from 'queries/CreateSystemIntakeActionRequestEditsQuery';
 import {
   CreateSystemIntakeActionRequestEdits,
@@ -22,15 +22,11 @@ import {
   SystemIntakeStep
 } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
+import MockMessage from 'utils/testing/MockMessage';
 import typeRichText from 'utils/testing/typeRichText';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import Actions from '.';
-
-const MockMessage = () => {
-  const { Message } = useMessage();
-  return <Message />;
-};
 
 const renderActionPage = ({
   mocks,
