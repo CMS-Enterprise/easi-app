@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/guregu/null"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -289,6 +290,45 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				State:         models.SystemIntakeStateCLOSED,
 			},
 			expectedStatus: models.SISALcidIssued,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision made, LCID issued, but not added, closed",
+			intake: models.SystemIntake{
+				Step:          models.SystemIntakeStepDECISION,
+				DecisionState: models.SIDSLcidIssued,
+				// LifecycleID:        null.StringFrom("fake"), -- If there is no LCID, the status is closed
+				LifecycleExpiresAt: &yesterday,
+				LifecycleRetiresAt: &yesterday,
+				State:              models.SystemIntakeStateCLOSED,
+			},
+			expectedStatus: models.SISALcidIssued,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision LCID Retired, closed",
+			intake: models.SystemIntake{
+				Step:               models.SystemIntakeStepDECISION,
+				LifecycleID:        null.StringFrom("fake"),
+				LifecycleRetiresAt: &yesterday,
+
+				DecisionState: models.SIDSLcidIssued,
+				State:         models.SystemIntakeStateCLOSED,
+			},
+			expectedStatus: models.SISALcidRetired,
+			expectError:    false,
+		},
+		{
+			testCase: "Decision LCID Expired, closed",
+			intake: models.SystemIntake{
+				Step:               models.SystemIntakeStepDECISION,
+				LifecycleID:        null.StringFrom("fake"),
+				LifecycleExpiresAt: &yesterday,
+
+				DecisionState: models.SIDSLcidIssued,
+				State:         models.SystemIntakeStateCLOSED,
+			},
+			expectedStatus: models.SISALcidExpired,
 			expectError:    false,
 		},
 		{
