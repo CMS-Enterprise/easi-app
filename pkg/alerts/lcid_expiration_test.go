@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -142,6 +143,51 @@ func TestLCIDExpirationAlert(t *testing.T) {
 		err = checkForLCIDExpiration(ctx, testDate, mockFetchUserInfo, mockFetchAllIntakes, mockUpdateIntake, mockLcidExpirationAlertEmail)
 		assert.NoError(t, err)
 		assert.Equal(t, 0, lcidExpirationAlertCount)
+	})
+
+	t.Run("getAlertRecipients should return gov team even if EUA ID not stored", func(t *testing.T) {
+		intakeWithNoEUA := testhelpers.NewSystemIntake()
+		intakeWithNoEUA.EUAUserID = null.StringFromPtr(nil)
+		intakeWithNoEUA.LifecycleExpiresAt = &fortySixDaysFromDate
+
+		assert.Equal(t, intakeWithNoEUA.EUAUserID.ValueOrZero(), "")
+
+		recipients, err := getAlertRecipients(
+			ctx,
+			intakeWithNoEUA,
+			func(context.Context, string) (*models.UserInfo, error) {
+				return nil, errors.New("this should never get called")
+			},
+		)
+		assert.NoError(t, err)
+		assert.Equal(t, len(recipients.RegularRecipientEmails), 0)
+		assert.Equal(t, recipients.ShouldNotifyITGovernance, true)
+	})
+
+	t.Run("sends alert for intake with no EUA", func(t *testing.T) {
+		intakeWithNoEUA := testhelpers.NewSystemIntake()
+		intakeWithNoEUA.EUAUserID = null.StringFromPtr(nil)
+		intakeWithNoEUA.LifecycleExpiresAt = &fortySixDaysFromDate
+
+		assert.Equal(t, intakeWithNoEUA.EUAUserID.ValueOrZero(), "")
+
+		lcidExpirationAlertCount = 0
+		err := checkForLCIDExpiration(
+			ctx,
+			testDate,
+			func(context.Context, string) (*models.UserInfo, error) {
+				return nil, errors.New("this should never get called")
+			},
+			func(ctx context.Context) (models.SystemIntakes, error) {
+				return models.SystemIntakes{
+					intakeWithNoEUA,
+				}, nil
+			},
+			mockUpdateIntake,
+			mockLcidExpirationAlertEmail,
+		)
+		assert.NoError(t, err)
+		assert.Equal(t, 1, lcidExpirationAlertCount)
 	})
 
 	t.Run("does not send for \"no governance\" status", func(t *testing.T) {
