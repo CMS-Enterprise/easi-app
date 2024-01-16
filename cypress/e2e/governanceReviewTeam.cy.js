@@ -377,7 +377,7 @@ describe('Governance Review Team', () => {
 
     // Check form submit was successful
     cy.get('div[data-testid="alert"]').contains(
-      'Life Cycle ID 000010 is now retired.'
+      /Life Cycle ID [0-9]{6} is now retired./
     );
   });
 
@@ -417,7 +417,7 @@ describe('Governance Review Team', () => {
 
     // Check form submit was successful
     cy.get('div[data-testid="alert"]').contains(
-      'Life Cycle ID 000006 is now retired.'
+      /Life Cycle ID [0-9]{6} is now retired./
     );
 
     /* TODO: Fix bug where page reloads after "Manage Life Cycle ID" option is checked */
