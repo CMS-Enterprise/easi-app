@@ -40,7 +40,6 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 				}
 			}) {
 				id
-				status
 				requestType
 				requester {
 					name
@@ -93,7 +92,6 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 			systemIntake(id: "%s") {
 				id
 				requestName
-				status
 				requestType
 				businessOwner {
 					name
@@ -538,125 +536,6 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 	s.Equal("SUBMIT_INTAKE", respAction1.Type)
 	s.Equal("First Actor", respAction1.Actor.Name)
 	s.Equal("first.actor@example.com", respAction1.Actor.Email)
-}
-
-func (s *GraphQLTestSuite) TestIssueLifecycleIDWithPassedLCID() {
-	ctx := context.Background()
-	projectName := "My cool project"
-
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		EUAUserID:   null.StringFrom("TEST"),
-		ProjectName: null.StringFrom(projectName),
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
-		RequestType: models.SystemIntakeRequestTypeNEW,
-	})
-	s.NoError(intakeErr)
-
-	var resp struct {
-		IssueLifecycleID struct {
-			SystemIntake struct {
-				ID                string
-				Lcid              string
-				LcidExpiresAt     string
-				LcidScope         string
-				LcidCostBaseline  string
-				DecisionNextSteps string
-				Status            string
-			}
-		}
-	}
-
-	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
-	// but it wasn't working for me.
-	s.client.MustPost(fmt.Sprintf(
-		`mutation {
-			issueLifecycleId(input: {
-				intakeId: "%s",
-				expiresAt: "2021-03-18T00:00:00Z",
-				scope: "Your scope",
-				feedback: "My feedback",
-				lcid: "123456A",
-				costBaseline: "Your cost baseline",
-				nextSteps: "Your next steps"
-			}) {
-				systemIntake {
-					id
-					lcid
-					lcidExpiresAt
-					lcidScope
-					lcidCostBaseline
-					decisionNextSteps
-					status
-				}
-			}
-		}`, intake.ID), &resp)
-
-	s.Equal(intake.ID.String(), resp.IssueLifecycleID.SystemIntake.ID)
-
-	respIntake := resp.IssueLifecycleID.SystemIntake
-	s.Equal(respIntake.LcidExpiresAt, "2021-03-18T00:00:00Z")
-	s.Equal(respIntake.Lcid, "123456A")
-	s.Equal(respIntake.LcidCostBaseline, "Your cost baseline")
-}
-
-func (s *GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
-	ctx := context.Background()
-	projectName := "My cool project"
-
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		EUAUserID:   null.StringFrom("TEST"),
-		ProjectName: null.StringFrom(projectName),
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
-		RequestType: models.SystemIntakeRequestTypeNEW,
-	})
-	s.NoError(intakeErr)
-
-	var resp struct {
-		IssueLifecycleID struct {
-			SystemIntake struct {
-				ID                string
-				Lcid              string
-				LcidExpiresAt     string
-				LcidScope         string
-				LcidCostBaseline  string
-				DecisionNextSteps string
-				Status            string
-			}
-		}
-	}
-
-	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
-	// but it wasn't working for me.
-	s.client.MustPost(fmt.Sprintf(
-		`mutation {
-			issueLifecycleId(input: {
-				intakeId: "%s",
-				expiresAt: "2021-03-18T00:00:00Z",
-				scope: "Your scope",
-				feedback: "My feedback",
-				lcid: "",
-				nextSteps: "Your next steps",
-				costBaseline: "Test cost baseline"
-			}) {
-				systemIntake {
-					id
-					lcid
-					lcidExpiresAt
-					lcidScope
-					lcidCostBaseline
-					decisionNextSteps
-					status
-				}
-			}
-		}`, intake.ID), &resp)
-
-	s.Equal(intake.ID.String(), resp.IssueLifecycleID.SystemIntake.ID)
-
-	respIntake := resp.IssueLifecycleID.SystemIntake
-	s.Equal(respIntake.LcidExpiresAt, "2021-03-18T00:00:00Z")
-	s.Equal(respIntake.Lcid, "654321B")
-	s.Equal(respIntake.LcidCostBaseline, "Test cost baseline")
-
 }
 
 func (s *GraphQLTestSuite) TestUpdateContactDetails() {
@@ -1823,7 +1702,6 @@ func (s *GraphQLTestSuite) TestSubmitIntake() {
 			}) {
 				systemIntake {
 					id
-					status
 				}
 			}
 		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("TEST"))

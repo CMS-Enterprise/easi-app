@@ -226,23 +226,6 @@ func (s *Server) routes(
 				store.UpdateSystemIntake,
 				emailClient.SendExtendLCIDEmails,
 			),
-			IssueLifecycleID: services.NewUpdateLifecycleFields(
-				serviceConfig,
-				services.AuthorizeRequireGRTJobCode,
-				store.FetchSystemIntakeByID,
-				store.UpdateSystemIntake,
-				saveAction,
-				emailClient.SendIssueLCIDEmails,
-				store.GenerateLifecycleID,
-			),
-			RejectIntake: services.NewUpdateRejectionFields(
-				serviceConfig,
-				services.AuthorizeRequireGRTJobCode,
-				store.FetchSystemIntakeByID,
-				store.UpdateSystemIntake,
-				saveAction,
-				emailClient.SendRejectRequestEmails,
-			),
 			SubmitIntake: services.NewSubmitSystemIntake(
 				serviceConfig,
 				services.AuthorizeUserIsIntakeRequester,

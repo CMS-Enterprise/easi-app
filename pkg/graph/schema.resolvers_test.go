@@ -15,7 +15,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
-	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -155,13 +154,6 @@ func TestGraphQLTestSuite(t *testing.T) {
 		return next(ctx)
 	}}
 
-	issueLifecycleID := func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
-		if intake.LifecycleID.ValueOrZero() == "" {
-			intake.LifecycleID = null.StringFrom("654321B")
-		}
-		return intake, nil
-	}
-
 	submitIntake := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		_, err := store.CreateAction(ctx, action)
 		if err != nil {
@@ -184,7 +176,6 @@ func TestGraphQLTestSuite(t *testing.T) {
 	serviceConfig := services.NewConfig(logger, ldClient)
 
 	var resolverService ResolverService
-	resolverService.IssueLifecycleID = issueLifecycleID
 	resolverService.SubmitIntake = submitIntake
 	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
 	resolverService.SearchCommonNameContains = cedarLdapClient.SearchCommonNameContains
