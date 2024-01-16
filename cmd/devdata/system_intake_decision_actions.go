@@ -22,18 +22,32 @@ func makeSystemIntakeAndIssueLCID(
 	store *storage.Store,
 ) *models.SystemIntake {
 	pastMeetingDate := time.Now().AddDate(0, -1, 0)
-	intake := makeSystemIntakeAndProgressToStep(
-		requestName,
-		intakeID,
-		requesterEUA,
-		logger,
-		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
-		&progressOptions{
-			completeOtherSteps: true,
-			meetingDate:        &pastMeetingDate,
-		},
-	)
+	var intake *models.SystemIntake
+	// business cases require EUA ID to be set in DB constraint
+	if requesterEUA == "" {
+		intake = makeSystemIntakeAndProgressToStep(
+			requestName,
+			intakeID,
+			requesterEUA,
+			logger,
+			store,
+			model.SystemIntakeStepToProgressToDraftBusinessCase,
+			nil,
+		)
+	} else {
+		intake = makeSystemIntakeAndProgressToStep(
+			requestName,
+			intakeID,
+			requesterEUA,
+			logger,
+			store,
+			model.SystemIntakeStepToProgressToGrbMeeting,
+			&progressOptions{
+				completeOtherSteps: true,
+				meetingDate:        &pastMeetingDate,
+			},
+		)
+	}
 	intake = issueLCID(
 		logger,
 		store,

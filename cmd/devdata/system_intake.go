@@ -100,7 +100,11 @@ func submitSystemIntake(
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, intake.EUAUserID.ValueOrZero())
+	userEUA := intake.EUAUserID.ValueOrZero()
+	if userEUA == "" {
+		userEUA = mock.PrincipalUser
+	}
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, userEUA)
 	// until the submit function is refactored out of services, manually submit
 	// NOTE: does not send emails
 	mockSubmitIntake := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
@@ -140,9 +144,14 @@ func createSystemIntake(
 	requesterName string,
 	requestType models.SystemIntakeRequestType,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, requesterEUAID)
+	var ctx context.Context
+	var requesterEUAIDPtr *string
+	if requesterEUAID != "" {
+		ctx = mock.CtxWithLoggerAndPrincipal(logger, requesterEUAID)
+		requesterEUAIDPtr = &requesterEUAID
+	}
 	// if there's no given intakeID, we can default to the resolver
-	if intakeID == nil {
+	if intakeID == nil && requesterEUAIDPtr != nil {
 		input := model.CreateSystemIntakeInput{
 			RequestType: requestType,
 			Requester: &model.SystemIntakeRequesterInput{
@@ -158,7 +167,7 @@ func createSystemIntake(
 	// however, if given an intakeID we must use the store method
 	i := models.SystemIntake{
 		ID:          *intakeID,
-		EUAUserID:   null.StringFrom(requesterEUAID),
+		EUAUserID:   null.StringFromPtr(requesterEUAIDPtr),
 		RequestType: requestType,
 		Requester:   requesterName,
 		Status:      models.SystemIntakeStatusINTAKEDRAFT,
