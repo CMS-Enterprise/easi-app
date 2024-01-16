@@ -9,7 +9,6 @@ import {
 } from 'react-table';
 import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Spinner from 'components/Spinner';
@@ -60,8 +59,6 @@ const Table = ({
     fetchPolicy: 'cache-and-network'
   });
 
-  const flags = useFlags();
-
   const columns: any = useMemo(() => {
     return [
       {
@@ -106,6 +103,8 @@ const Table = ({
       },
       {
         Header: t('requestsTable.headers.status'),
+        // The status property is just a generic property available on all request types
+        // See cases below for details on how statuses are determined by type
         accessor: 'status',
         Cell: ({ row, value }: any) => {
           switch (row.original.type) {
@@ -125,16 +124,10 @@ const Table = ({
                 </span>
               );
             case t(`requestsTable.types.GOVERNANCE_REQUEST`):
-              if (flags.itGovV2Enabled) {
-                return t(
-                  `governanceReviewTeam:systemIntakeStatusRequester.${row.original.statusRequester}`,
-                  { lcid: row.original.lcid }
-                );
-              }
-              if (row.original.lcid) {
-                return `${value}: ${row.original.lcid}`;
-              }
-              return value;
+              return t(
+                `governanceReviewTeam:systemIntakeStatusRequester.${row.original.statusRequester}`,
+                { lcid: row.original.lcid }
+              );
             case t(`requestsTable.types.TRB`):
               return value;
             default:
