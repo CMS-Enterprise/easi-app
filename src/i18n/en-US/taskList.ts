@@ -7,6 +7,12 @@ const taskList = {
     confirmationText_name: 'The request for {{-requestName}} has been removed',
     confirmationText_noName: 'The request has been removed'
   },
+  trbWithdrawModal: {
+    header: 'Are you sure you want to remove this request?',
+    warning:
+      'This action cannot be undone. You will have to create a new technical assistance request if you change your mind.',
+    cancel: 'Go back'
+  },
   decision: {
     bizCaseApproved: 'Your business case has been approved.',
     bizCaseRejected: 'Your business case has been rejected.',
