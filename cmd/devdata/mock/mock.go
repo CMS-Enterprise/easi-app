@@ -17,8 +17,10 @@ const PrincipalUser = "ABCD"
 func FetchUserInfoMock(ctx context.Context, eua string) (*models.UserInfo, error) {
 	return &models.UserInfo{
 		Username:    eua,
-		DisplayName: "Test Man",
-		Email:       "testman@example.com",
+		FirstName:   eua,
+		LastName:    "Doe",
+		DisplayName: eua + "Doe",
+		Email:       models.EmailAddress(eua + "@example.com"),
 	}, nil
 }
 
