@@ -63,12 +63,6 @@ const tableMap = (
             }
             status = accessibilityRequestStatusMap[request.status];
             break;
-          case RequestType.GOVERNANCE_REQUEST:
-            status = t(`intake:statusMap.${request.status}`);
-            if (request.lcid) {
-              status = `${status}: ${request.lcid}`;
-            }
-            break;
           default:
             status = '';
             break;
