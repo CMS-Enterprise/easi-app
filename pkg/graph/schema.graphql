@@ -190,6 +190,8 @@ type CedarSystemBookmark {
 Represents a person response from CEDAR LDAP
 """
 type UserInfo {
+  firstName: String!
+  lastName: String!
   commonName: String!
   email: EmailAddress!
   euaUserId: String!

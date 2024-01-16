@@ -3278,13 +3278,13 @@ func (r *tRBRequestFormResolver) SubjectAreaOptions(ctx context.Context, obj *mo
 // CommonName is the resolver for the commonName field.
 func (r *userInfoResolver) CommonName(ctx context.Context, obj *models.UserInfo) (string, error) {
 	return obj.DisplayName, nil
-	//TODO: EASI-3341 --> Refactot the schema to use the new field names
+	//TODO: this user info struct should eventually be refactored so that the schema matches the backend.
 }
 
 // EuaUserID is the resolver for the euaUserId field.
 func (r *userInfoResolver) EuaUserID(ctx context.Context, obj *models.UserInfo) (string, error) {
 	return obj.Username, nil
-	//TODO: EASI-3341 --> Refactot the schema to use the new field names
+	//TODO: this user info struct should eventually be refactored so that the schema matches the backend.
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.

@@ -1134,6 +1134,8 @@ type ComplexityRoot struct {
 		CommonName func(childComplexity int) int
 		Email      func(childComplexity int) int
 		EuaUserID  func(childComplexity int) int
+		FirstName  func(childComplexity int) int
+		LastName   func(childComplexity int) int
 	}
 }
 
@@ -7417,6 +7419,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UserInfo.EuaUserID(childComplexity), true
 
+	case "UserInfo.firstName":
+		if e.complexity.UserInfo.FirstName == nil {
+			break
+		}
+
+		return e.complexity.UserInfo.FirstName(childComplexity), true
+
+	case "UserInfo.lastName":
+		if e.complexity.UserInfo.LastName == nil {
+			break
+		}
+
+		return e.complexity.UserInfo.LastName(childComplexity), true
+
 	}
 	return 0, false
 }
@@ -7794,6 +7810,8 @@ type CedarSystemBookmark {
 Represents a person response from CEDAR LDAP
 """
 type UserInfo {
+  firstName: String!
+  lastName: String!
   commonName: String!
   email: EmailAddress!
   euaUserId: String!
@@ -26003,6 +26021,10 @@ func (ec *executionContext) fieldContext_GovernanceRequestFeedback_author(ctx co
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "firstName":
+				return ec.fieldContext_UserInfo_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserInfo_lastName(ctx, field)
 			case "commonName":
 				return ec.fieldContext_UserInfo_commonName(ctx, field)
 			case "email":
@@ -34189,6 +34211,10 @@ func (ec *executionContext) fieldContext_Mutation_createTrbLeadOption(ctx contex
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "firstName":
+				return ec.fieldContext_UserInfo_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserInfo_lastName(ctx, field)
 			case "commonName":
 				return ec.fieldContext_UserInfo_commonName(ctx, field)
 			case "email":
@@ -35310,6 +35336,10 @@ func (ec *executionContext) fieldContext_Query_cedarPersonsByCommonName(ctx cont
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "firstName":
+				return ec.fieldContext_UserInfo_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserInfo_lastName(ctx, field)
 			case "commonName":
 				return ec.fieldContext_UserInfo_commonName(ctx, field)
 			case "email":
@@ -36701,6 +36731,10 @@ func (ec *executionContext) fieldContext_Query_trbLeadOptions(ctx context.Contex
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "firstName":
+				return ec.fieldContext_UserInfo_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserInfo_lastName(ctx, field)
 			case "commonName":
 				return ec.fieldContext_UserInfo_commonName(ctx, field)
 			case "email":
@@ -43796,6 +43830,10 @@ func (ec *executionContext) fieldContext_SystemIntakeNote_editor(ctx context.Con
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "firstName":
+				return ec.fieldContext_UserInfo_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserInfo_lastName(ctx, field)
 			case "commonName":
 				return ec.fieldContext_UserInfo_commonName(ctx, field)
 			case "email":
@@ -44364,6 +44402,10 @@ func (ec *executionContext) fieldContext_TRBAdminNote_author(ctx context.Context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "firstName":
+				return ec.fieldContext_UserInfo_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserInfo_lastName(ctx, field)
 			case "commonName":
 				return ec.fieldContext_UserInfo_commonName(ctx, field)
 			case "email":
@@ -45192,6 +45234,10 @@ func (ec *executionContext) fieldContext_TRBAdviceLetter_author(ctx context.Cont
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "firstName":
+				return ec.fieldContext_UserInfo_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserInfo_lastName(ctx, field)
 			case "commonName":
 				return ec.fieldContext_UserInfo_commonName(ctx, field)
 			case "email":
@@ -45907,6 +45953,10 @@ func (ec *executionContext) fieldContext_TRBAdviceLetterRecommendation_author(ct
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "firstName":
+				return ec.fieldContext_UserInfo_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserInfo_lastName(ctx, field)
 			case "commonName":
 				return ec.fieldContext_UserInfo_commonName(ctx, field)
 			case "email":
@@ -47286,6 +47336,10 @@ func (ec *executionContext) fieldContext_TRBRequest_trbLeadInfo(ctx context.Cont
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "firstName":
+				return ec.fieldContext_UserInfo_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserInfo_lastName(ctx, field)
 			case "commonName":
 				return ec.fieldContext_UserInfo_commonName(ctx, field)
 			case "email":
@@ -47338,6 +47392,10 @@ func (ec *executionContext) fieldContext_TRBRequest_requesterInfo(ctx context.Co
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "firstName":
+				return ec.fieldContext_UserInfo_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserInfo_lastName(ctx, field)
 			case "commonName":
 				return ec.fieldContext_UserInfo_commonName(ctx, field)
 			case "email":
@@ -47822,6 +47880,10 @@ func (ec *executionContext) fieldContext_TRBRequestAttendee_userInfo(ctx context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "firstName":
+				return ec.fieldContext_UserInfo_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserInfo_lastName(ctx, field)
 			case "commonName":
 				return ec.fieldContext_UserInfo_commonName(ctx, field)
 			case "email":
@@ -48830,6 +48892,10 @@ func (ec *executionContext) fieldContext_TRBRequestFeedback_author(ctx context.C
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "firstName":
+				return ec.fieldContext_UserInfo_firstName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_UserInfo_lastName(ctx, field)
 			case "commonName":
 				return ec.fieldContext_UserInfo_commonName(ctx, field)
 			case "email":
@@ -51976,6 +52042,94 @@ func (ec *executionContext) _UserError_path(ctx context.Context, field graphql.C
 func (ec *executionContext) fieldContext_UserError_path(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "UserError",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserInfo_firstName(ctx context.Context, field graphql.CollectedField, obj *models.UserInfo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserInfo_firstName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FirstName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserInfo_firstName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserInfo",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserInfo_lastName(ctx context.Context, field graphql.CollectedField, obj *models.UserInfo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserInfo_lastName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LastName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserInfo_lastName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserInfo",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -70682,6 +70836,16 @@ func (ec *executionContext) _UserInfo(ctx context.Context, sel ast.SelectionSet,
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UserInfo")
+		case "firstName":
+			out.Values[i] = ec._UserInfo_firstName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "lastName":
+			out.Values[i] = ec._UserInfo_lastName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
 		case "commonName":
 			field := field
 
