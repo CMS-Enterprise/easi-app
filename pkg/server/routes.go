@@ -199,26 +199,6 @@ func (s *Server) routes(
 				services.AuthorizeHasEASiRole,
 				store.CreateTestDate,
 			),
-			AddGRTFeedback: services.NewProvideGRTFeedback(
-				serviceConfig,
-				store.FetchSystemIntakeByID,
-				store.UpdateSystemIntake,
-				saveAction,
-				store.CreateGovernanceRequestFeedback,
-				emailClient.SendSystemIntakeReviewEmails,
-			),
-			CreateActionUpdateStatus: services.NewCreateActionUpdateStatus(
-				serviceConfig,
-				store.FetchSystemIntakeByID,
-				store.UpdateSystemIntake,
-				saveAction,
-				emailClient.SendSystemIntakeReviewEmails,
-				services.NewCloseBusinessCase(
-					serviceConfig,
-					store.FetchBusinessCaseByID,
-					store.UpdateBusinessCase,
-				),
-			),
 			CreateActionExtendLifecycleID: services.NewCreateActionExtendLifecycleID(
 				serviceConfig,
 				saveAction,
