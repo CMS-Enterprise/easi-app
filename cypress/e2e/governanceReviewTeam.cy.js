@@ -542,19 +542,23 @@ describe('Governance Review Team', () => {
     cy.get('#system-intakes-table__open').contains('a', 'Closed Request');
   });
 
-  it.skip('can add additional contact as email recipient', () => {
-    cy.contains('a', 'Ready for business case').should('be.visible').click();
+  it('can add additional contact as email recipient', () => {
+    cy.contains('a', 'initial form filled and submitted')
+      .should('be.visible')
+      .click();
+
     cy.get('[data-testid="grt-nav-actions-link"]').click();
 
-    cy.contains('.usa-radio', 'Request a draft business case').click();
+    cy.get('#grt-action__new-step').check({ force: true });
 
     cy.contains('button', 'Continue').click();
+
+    // Add additional contact
 
     cy.contains('button', 'more recipients').click();
 
     cy.contains('button', 'Add another recipient').click();
 
-    // Add additional contact
     cy.get('#react-select-IntakeForm-ContactCommonName-input')
       .type('Aaron A')
       .wait(1000)
