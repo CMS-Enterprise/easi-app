@@ -1,7 +1,7 @@
 package models
 
 // UserInfo is the model for personal details of a user
-type UserInfo struct { //TODO, this needs to be updated to allow for new fields from OKTA
+type UserInfo struct {
 	FirstName   string
 	LastName    string
 	DisplayName string
