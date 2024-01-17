@@ -8,9 +8,3 @@ type UserInfo struct {
 	Email       EmailAddress
 	Username    string
 }
-
-// type UserInfo struct {
-// 	CommonName string
-// 	Email      EmailAddress
-// 	EuaUserID  string
-// }
