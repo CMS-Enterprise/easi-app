@@ -95,7 +95,7 @@ func (f oktaMiddlewareFactory) newPrincipal(ctx context.Context) (*authenticatio
 		euaID,
 		true,
 		userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetOktaAccountInfo),
-	) //TODO, do we need to do anything with the user? Should we pass the id around?
+	)
 	if err != nil {
 		return nil, err
 	}
