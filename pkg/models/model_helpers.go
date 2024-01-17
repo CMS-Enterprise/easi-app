@@ -16,11 +16,3 @@ func HTMLPointer(input string) *HTML {
 	html := HTML(input)
 	return &html
 }
-
-// ValueOrEmpty returns a string if the input is not nil, otherwise returns an empty string
-func ValueOrEmpty(st *string) string {
-	if st != nil {
-		return *st
-	}
-	return ""
-}
