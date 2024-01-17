@@ -16,6 +16,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+const maxEUAIDLength = 4
+
 // ClientWrapper is a wrapper around github.com/okta/okta-sdk-golang/v2/okta Client type.
 // The purpose of this package is to act as a drop-in replacement for the CEDAR LDAP API, so this package should implement the same
 // methods that the Client interface defined in package usersearch
@@ -194,7 +196,7 @@ func (cw *ClientWrapper) SearchCommonNameContains(ctx context.Context, searchTer
 		}
 
 		// If we find EUA users that have logins longer than 4 characters, they're a test user (don't add them to the array)
-		if (profile.SourceType == euaSourceType || profile.SourceType == euaADSourceType) && len(profile.Login) > 4 {
+		if (profile.SourceType == euaSourceType || profile.SourceType == euaADSourceType) && len(profile.Login) > maxEUAIDLength {
 			continue
 		}
 		users = append(users, profile.toUserInfo())
@@ -233,7 +235,7 @@ func (cw *ClientWrapper) SearchCommonNameContainsExhaustive(ctx context.Context,
 		}
 
 		// If we find EUA users that have logins longer than 4 characters, they're a test user (don't add them to the array)
-		if (profile.SourceType == euaSourceType || profile.SourceType == euaADSourceType) && len(profile.Login) > 4 {
+		if (profile.SourceType == euaSourceType || profile.SourceType == euaADSourceType) && len(profile.Login) > maxEUAIDLength {
 			continue
 		}
 		users = append(users, profile.toUserInfo())
