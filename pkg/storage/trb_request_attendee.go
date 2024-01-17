@@ -13,12 +13,14 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
 // CreateTRBRequestAttendee creates a new TRB request attendee record in the database
-func (s *Store) CreateTRBRequestAttendee(ctx context.Context, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
+// Note this will be refactored to not use the store, but is left now for organization
+func (s *Store) CreateTRBRequestAttendee(ctx context.Context, np sqlutils.NamedPreparer, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
 	attendee.ID = uuid.New()
-	stmt, err := s.db.PrepareNamed(`
+	stmt, err := np.PrepareNamed(`
 		INSERT INTO trb_request_attendees (
 			id,
 			eua_user_id,
@@ -46,6 +48,7 @@ func (s *Store) CreateTRBRequestAttendee(ctx context.Context, attendee *models.T
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	created := models.TRBRequestAttendee{}
 	err = stmt.Get(&created, attendee)

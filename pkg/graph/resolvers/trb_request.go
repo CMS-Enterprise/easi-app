@@ -3,14 +3,17 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
@@ -20,33 +23,44 @@ func CreateTRBRequest(
 	requestType models.TRBRequestType,
 	store *storage.Store,
 ) (*models.TRBRequest, error) {
-	princ := appcontext.Principal(ctx)
 
-	trb := models.NewTRBRequest(princ.ID())
-	trb.Type = requestType
-	trb.State = models.TRBRequestStateOpen
+	newTRB, err := sqlutils.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+		princ := appcontext.Principal(ctx)
 
-	createdTRB, err := store.CreateTRBRequest(ctx, trb)
-	if err != nil {
-		return nil, err
-	}
+		trb := models.NewTRBRequest(princ.ID())
+		trb.Type = requestType
+		trb.State = models.TRBRequestStateOpen
+		createdTRB, err := store.CreateTRBRequest(ctx, tx, trb)
+		if err != nil {
+			return nil, err
+		}
+		form := models.NewTRBRequestForm(princ.ID())
+		form.TRBRequestID = createdTRB.ID
 
-	// This should probably be a part of a transaction...
-	initialAttendee := &models.TRBRequestAttendee{
-		TRBRequestID: createdTRB.ID,
-		EUAUserID:    princ.ID(),
-		Component:    nil,
-		Role:         nil,
-	}
-	initialAttendee.CreatedBy = princ.ID()
-	_, err = store.CreateTRBRequestAttendee(ctx, initialAttendee)
-	if err != nil {
-		return nil, err
-	}
+		// Create request form
+		_, err = store.CreateTRBRequestForm(ctx, tx, form)
+		if err != nil {
+			return nil, fmt.Errorf(" unable to create  to create TRB request err :%w", err)
+		}
 
-	//TODO create place holders for the rest of the related sections with calls to their stores
+		// Add requester as an attendee
+		initialAttendee := &models.TRBRequestAttendee{
+			TRBRequestID: createdTRB.ID,
+			EUAUserID:    princ.ID(),
+			Component:    nil,
+			Role:         nil,
+		}
+		initialAttendee.CreatedBy = princ.ID()
+		_, err = store.CreateTRBRequestAttendee(ctx, tx, initialAttendee)
+		if err != nil {
+			return nil, err
+		}
 
-	return createdTRB, err
+		return createdTRB, err
+
+	})
+	return newTRB, err
+
 }
 
 // UpdateTRBRequest updates a TRB request

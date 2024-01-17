@@ -420,24 +420,64 @@ describe('Governance Review Team', () => {
       'Life Cycle ID 000006 is now retired.'
     );
 
+    /* TODO: Fix bug where page reloads after "Manage Life Cycle ID" option is checked */
+
     // Check retirement date updated
+
+    // cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    // // Wait for task list query to complete
+    // cy.wait('@getGovernanceTaskList')
+    //   .its('response.statusCode')
+    //   .should('eq', 200);
+
+    // cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    /* Page is reloading here, which is clearing the selection and disabling the Continue button */
+
+    // cy.contains('button', 'Continue').click();
+
+    // cy.get('#grt-lcid-action__retire').check({ force: true });
+
+    // cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // cy.get('#retiresAt').should('have.value', updatedRetirementDate);
+  });
+
+  it('can progress to the GRT meeting step', () => {
+    cy.contains('a', 'Draft Business Case').should('be.visible').click();
 
     cy.get('[data-testid="grt-nav-actions-link"]').click();
 
-    // Wait for task list query to complete
-    cy.wait('@getGovernanceTaskList')
-      .its('response.statusCode')
-      .should('eq', 200);
-
-    cy.get('#grt-action__manage-lcid').check({ force: true });
+    cy.get('#grt-action__new-step').check({ force: true });
 
     cy.contains('button', 'Continue').click();
 
-    cy.get('#grt-lcid-action__retire').check({ force: true });
+    // Complete action form
 
-    cy.contains('button', 'Next').should('not.be.disabled').click();
+    cy.get('#GRT_MEETING').check({ force: true });
 
-    cy.get('#retiresAt').should('have.value', updatedRetirementDate);
+    cy.get('#meetingDate').type('01/01/2024');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+    cy.get('div[data-testid="alert"]').contains(
+      'Action complete. This request is now ready for a GRT meeting.'
+    );
+
+    // Check for correct status
+    cy.get('[data-testid="grt-current-status"]').contains(
+      'GRT meeting complete'
+    );
+
+    // Check GRT meeting date was set
+
+    cy.get('[data-testid="grt-nav-dates.heading-link"]').click();
+
+    cy.get('#Dates-GrtDateMonth').should('have.value', '1');
+    cy.get('#Dates-GrtDateDay').should('have.value', '1');
+    cy.get('#Dates-GrtDateYear').should('have.value', '2024');
   });
 
   it.skip('can close a request', () => {

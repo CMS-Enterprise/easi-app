@@ -54,25 +54,6 @@ const intake = {
     }
   },
   lifecycleId: 'Life Cycle ID',
-  statusMap: {
-    INTAKE_DRAFT: 'Intake draft',
-    INTAKE_SUBMITTED: 'Intake request received',
-    NEED_BIZ_CASE: 'Waiting for draft business case',
-    BIZ_CASE_DRAFT: 'Waiting for draft business case',
-    BIZ_CASE_DRAFT_SUBMITTED: 'Draft business case received',
-    BIZ_CASE_CHANGES_NEEDED: 'Waiting for draft business case',
-    BIZ_CASE_FINAL_NEEDED: 'Waiting for final business case',
-    BIZ_CASE_FINAL_SUBMITTED: 'Final business case received',
-    READY_FOR_GRT: 'Ready for GRT meeting',
-    READY_FOR_GRB: 'Ready for GRB meeting',
-    LCID_ISSUED: 'Life Cycle ID issued',
-    WITHDRAWN: 'Withdrawn',
-    NOT_IT_REQUEST: 'Closed',
-    NOT_APPROVED: 'Business case not approved',
-    NO_GOVERNANCE: 'Closed',
-    SHUTDOWN_IN_PROGRESS: 'Decomission in progress',
-    SHUTDOWN_COMPLETE: 'Decommissioned'
-  },
   banner: {
     title: {
       intakeIncomplete: 'Intake request incomplete',
