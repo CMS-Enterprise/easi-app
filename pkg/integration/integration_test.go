@@ -109,13 +109,13 @@ func TestIntegrationTestSuite(t *testing.T) {
 		store:       store,
 		base:        handlers.NewHandlerBase(),
 	}
-	//TODO create user
-	getTestPrincipal(store, testSuite.user.euaID)
+	createTestPrincipal(store, testSuite.user.euaID)
 
 	suite.Run(t, testSuite)
 }
 
-func getTestPrincipal(store *storage.Store, userName string) *authentication.EUAPrincipal {
+// createTestPrincipal creates a test principal in the database. It bypasses a call to OKTA, and just creates mock data
+func createTestPrincipal(store *storage.Store, userName string) *authentication.EUAPrincipal {
 
 	// userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
 	tAccount := authentication.UserAccount{

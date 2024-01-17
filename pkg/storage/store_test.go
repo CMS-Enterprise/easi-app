@@ -79,7 +79,7 @@ func TestStoreTestSuite(t *testing.T) {
 		fmt.Printf("Failed to get new database: %v", err)
 		t.Fail()
 	}
-	princ := getTestPrincipal(store, "ANON")
+	princ := createTestPrincipal(store, "ANON")
 
 	store.clock = clock.NewMock()
 
@@ -108,7 +108,8 @@ func createTRBRequest(ctx context.Context, s *StoreTestSuite, createdBy string) 
 	return createdRequest.ID
 }
 
-func getTestPrincipal(store *Store, userName string) *authentication.EUAPrincipal {
+// createTestPrincipal creates a test principal in the database. It bypasses a call to OKTA, and just creates mock data
+func createTestPrincipal(store *Store, userName string) *authentication.EUAPrincipal {
 
 	tAccount := authentication.UserAccount{
 		Username:    userName,
