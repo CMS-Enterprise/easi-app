@@ -24,8 +24,8 @@ func (mbr *modifiedByRelation) ModifiedByUserAccount(ctx context.Context) *authe
 	if mbr.ModifiedBy == nil {
 		return nil
 	}
-	service := appcontext.UserAccountService(ctx)
-	account, _ := service(ctx, *mbr.ModifiedBy)
+	getUserAccountService := appcontext.UserAccountService(ctx)
+	account, _ := getUserAccountService(ctx, *mbr.ModifiedBy)
 	return account
 
 }

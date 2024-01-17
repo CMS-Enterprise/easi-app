@@ -21,8 +21,8 @@ type createdByRelation struct {
 // CreatedByUserAccount returns the user account of the user who created the struct from the DB using the UserAccount service
 func (cbr *createdByRelation) CreatedByUserAccount(ctx context.Context) *authentication.UserAccount {
 
-	service := appcontext.UserAccountService(ctx)
-	account, _ := service(ctx, cbr.CreatedBy)
+	getUserAccountService := appcontext.UserAccountService(ctx)
+	account, _ := getUserAccountService(ctx, cbr.CreatedBy)
 	return account
 
 }
