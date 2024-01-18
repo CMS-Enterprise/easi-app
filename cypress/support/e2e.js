@@ -21,7 +21,6 @@ import './seed';
 import '@cypress/code-coverage/support';
 import './login';
 import './systemIntake';
-import './governanceReviewTeam';
 import './trbRequest';
 
 // Code to hide the annoying XHR/fetch requests in the cypress command log.
