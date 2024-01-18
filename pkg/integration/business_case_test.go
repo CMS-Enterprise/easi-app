@@ -61,7 +61,6 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		req, err := http.NewRequest(http.MethodGet, getURL.String(), nil)
 		s.NoError(err)
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
-
 		resp, err := client.Do(req)
 
 		s.NoError(err)

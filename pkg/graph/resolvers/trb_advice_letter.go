@@ -87,14 +87,14 @@ func RequestReviewForTRBAdviceLetter(
 		if err2 != nil {
 			return nil, err2
 		}
-		leadName = leadInfo.CommonName
+		leadName = leadInfo.DisplayName
 	}
 
 	emailInput := email.SendTRBAdviceLetterInternalReviewEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.GetName(),
 		TRBLeadName:    leadName,
-		RequesterName:  requesterInfo.CommonName,
+		RequesterName:  requesterInfo.DisplayName,
 	}
 
 	// Email client can be nil when this is called from tests - the email client itself tests this
@@ -174,7 +174,7 @@ func SendTRBAdviceLetter(ctx context.Context,
 		TRBRequestID:   trb.ID,
 		RequestName:    trb.GetName(),
 		RequestType:    string(trb.Type),
-		RequesterName:  requester.CommonName,
+		RequesterName:  requester.DisplayName,
 		Component:      component,
 		SubmissionDate: letter.ModifiedAt,
 		ConsultDate:    trb.ConsultMeetingTime,

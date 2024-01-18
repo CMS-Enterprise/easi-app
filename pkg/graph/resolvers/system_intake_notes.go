@@ -45,7 +45,7 @@ func UpdateSystemIntakeNote(
 		Content:    &input.Content,
 		IsArchived: input.IsArchived,
 		ID:         input.ID,
-		ModifiedBy: &userInfo.EuaUserID,
+		ModifiedBy: &userInfo.Username,
 	})
 	return systemIntakeNote, err
 }
