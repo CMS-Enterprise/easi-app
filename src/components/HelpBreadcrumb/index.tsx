@@ -21,7 +21,7 @@ export default function HelpBreadcrumb({
     if (type === 'close') {
       window.close();
     } else {
-      history.goBack();
+      history.push('/help');
     }
   };
 
