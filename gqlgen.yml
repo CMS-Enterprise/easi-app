@@ -66,6 +66,9 @@ models:
   EmailAddress:
     model:
       - github.com/cmsgov/easi-app/pkg/models.EmailAddress
+  UserAccount:
+    model:
+      - github.com/cmsgov/easi-app/pkg/authentication.UserAccount
   SystemIntake:
     fields:
       fundingSources:

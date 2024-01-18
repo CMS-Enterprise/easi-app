@@ -857,9 +857,9 @@ func (s *ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 	}
 	fetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			Email:      "name@site.com",
-			CommonName: "NAME",
-			EuaUserID:  testhelpers.RandomEUAID(),
+			Email:       "name@site.com",
+			DisplayName: "NAME",
+			Username:    testhelpers.RandomEUAID(),
 		}, nil
 	}
 	reviewEmailCount := 0
@@ -1091,9 +1091,9 @@ func (s *ServicesTestSuite) TestNewSaveAction() {
 
 	fetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			CommonName: "name",
-			Email:      "email",
-			EuaUserID:  "ABCD",
+			DisplayName: "name",
+			Email:       "email",
+			Username:    "ABCD",
 		}, nil
 	}
 

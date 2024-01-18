@@ -43,9 +43,9 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 
 	stubFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			EuaUserID:  anonEua,
-			CommonName: "Anonymous",
-			Email:      models.NewEmailAddress("anon@local.fake"),
+			Username:    anonEua,
+			DisplayName: "Anonymous",
+			Email:       models.NewEmailAddress("anon@local.fake"),
 		}, nil
 	}
 
@@ -54,9 +54,9 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 
 		for i, euaID := range euaIDs {
 			userInfo := &models.UserInfo{
-				EuaUserID:  euaID,
-				CommonName: strconv.Itoa(i),
-				Email:      models.NewEmailAddress(fmt.Sprintf("%v@local.fake", i)),
+				Username:    euaID,
+				DisplayName: strconv.Itoa(i),
+				Email:       models.NewEmailAddress(fmt.Sprintf("%v@local.fake", i)),
 			}
 			userInfos = append(userInfos, userInfo)
 		}
