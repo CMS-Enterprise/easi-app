@@ -25,12 +25,12 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/oktaapi"
 	"github.com/cmsgov/easi-app/pkg/usersearch"
 
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
 	cedarintake "github.com/cmsgov/easi-app/pkg/cedar/intake"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph"
@@ -53,9 +53,23 @@ func (s *Server) routes(
 	oktaConfig := s.NewOktaClientConfig()
 	jwtVerifier := okta.NewJwtVerifier(oktaConfig.OktaClientID, oktaConfig.OktaIssuer)
 
+	// set up Feature Flagging utilities
+	ldClient, err := flags.NewLaunchDarklyClient(s.NewFlagConfig())
+	if err != nil {
+		s.logger.Fatal("Failed to create LaunchDarkly client", zap.Error(err))
+	}
+	store, storeErr := storage.NewStore(
+		s.NewDBConfig(),
+		ldClient,
+	)
+	if storeErr != nil {
+		s.logger.Fatal("Failed to create store", zap.Error(storeErr))
+	}
+
 	oktaAuthenticationMiddleware := okta.NewOktaAuthenticationMiddleware(
 		handlers.NewHandlerBase(),
 		jwtVerifier,
+		store,
 		oktaConfig.AltJobCodes,
 	)
 
@@ -67,7 +81,7 @@ func (s *Server) routes(
 	)
 
 	if s.NewLocalAuthIsEnabled() {
-		localAuthenticationMiddleware := local.NewLocalAuthenticationMiddleware()
+		localAuthenticationMiddleware := local.NewLocalAuthenticationMiddleware(store)
 		s.router.Use(localAuthenticationMiddleware)
 	}
 
@@ -79,12 +93,6 @@ func (s *Server) routes(
 	// endpoints that dont require authorization go directly on the main router
 	s.router.HandleFunc("/api/v1/healthcheck", handlers.NewHealthCheckHandler(base, s.Config).Handle())
 	s.router.HandleFunc("/api/graph/playground", playground.Handler("GraphQL playground", "/api/graph/query"))
-
-	// set up Feature Flagging utilities
-	ldClient, err := flags.NewLaunchDarklyClient(s.NewFlagConfig())
-	if err != nil {
-		s.logger.Fatal("Failed to create LaunchDarkly client", zap.Error(err))
-	}
 
 	// set up CEDAR intake client
 	publisher := cedarintake.NewClient(
@@ -171,14 +179,6 @@ func (s *Server) routes(
 
 	s3Client := upload.NewS3Client(s3Config)
 
-	store, storeErr := storage.NewStore(
-		s.NewDBConfig(),
-		ldClient,
-	)
-	if storeErr != nil {
-		s.logger.Fatal("Failed to create store", zap.Error(storeErr))
-	}
-
 	serviceConfig := services.NewConfig(s.logger, ldClient)
 
 	// set up GraphQL routes
@@ -246,8 +246,10 @@ func (s *Server) routes(
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(gqlConfig))
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
-	loaderMiddleware := dataloaders.Middleware(userSearchClient.FetchUserInfos)
-	s.router.Use(loaderMiddleware)
+
+	dataLoaders := dataloaders.NewDataLoaders(store, userSearchClient.FetchUserInfos)
+	dataLoaderMiddleware := dataloaders.NewDataLoaderMiddleware(dataLoaders)
+	s.router.Use(dataLoaderMiddleware)
 
 	gql.Handle("/query", graphqlServer)
 

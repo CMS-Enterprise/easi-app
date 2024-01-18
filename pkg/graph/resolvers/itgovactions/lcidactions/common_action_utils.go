@@ -23,9 +23,9 @@ func getBaseLCIDAction(
 	// this follows the existing paradigm for the legacy extend LCID action
 	action := models.Action{
 		IntakeID:       &intake.ID,
-		ActorName:      userInfo.CommonName,
+		ActorName:      userInfo.DisplayName,
 		ActorEmail:     userInfo.Email,
-		ActorEUAUserID: userInfo.EuaUserID,
+		ActorEUAUserID: userInfo.Username,
 		Step:           &intake.Step,
 
 		LCIDExpirationChangeNewDate:      intake.LifecycleExpiresAt,

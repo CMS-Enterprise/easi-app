@@ -53,7 +53,7 @@ func NewSaveAction(
 		if err != nil {
 			return err
 		}
-		if actorInfo == nil || actorInfo.Email == "" || actorInfo.CommonName == "" || actorInfo.EuaUserID == "" {
+		if actorInfo == nil || actorInfo.Email == "" || actorInfo.DisplayName == "" || actorInfo.Username == "" {
 			return &apperrors.ExternalAPIError{
 				Err:       errors.New("user info fetch was not successful"),
 				Operation: apperrors.Fetch,
@@ -61,9 +61,9 @@ func NewSaveAction(
 			}
 		}
 
-		action.ActorName = actorInfo.CommonName
+		action.ActorName = actorInfo.DisplayName
 		action.ActorEmail = actorInfo.Email
-		action.ActorEUAUserID = actorInfo.EuaUserID
+		action.ActorEUAUserID = actorInfo.Username
 		_, err = createAction(ctx, action)
 		if err != nil {
 			return &apperrors.QueryError{

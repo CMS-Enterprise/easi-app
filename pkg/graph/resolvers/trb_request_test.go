@@ -189,9 +189,9 @@ func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
 
 	fetchUserInfo := func(ctx context.Context, eua string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			EuaUserID:  eua,
-			CommonName: "Mc Lovin",
-			Email:      "mclovin@example.com",
+			Username:    eua,
+			DisplayName: "Mc Lovin",
+			Email:       "mclovin@example.com",
 		}, nil
 	}
 
@@ -199,9 +199,9 @@ func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
 		userInfos := make([]*models.UserInfo, len(euas))
 		for _, eua := range euas {
 			userInfos = append(userInfos, &models.UserInfo{
-				EuaUserID:  eua,
-				CommonName: "Mc Lovin",
-				Email:      "mclovin@example.com",
+				Username:    eua,
+				DisplayName: "Mc Lovin",
+				Email:       "mclovin@example.com",
 			})
 		}
 		return userInfos, nil
@@ -235,9 +235,9 @@ func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
 
 	fetchUserInfo := func(ctx context.Context, eua string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			EuaUserID:  eua,
-			CommonName: "Mc Lovin",
-			Email:      "mclovin@example.com",
+			Username:    eua,
+			DisplayName: "Mc Lovin",
+			Email:       "mclovin@example.com",
 		}, nil
 	}
 
