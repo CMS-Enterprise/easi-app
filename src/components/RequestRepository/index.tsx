@@ -501,7 +501,10 @@ const RequestRepository = () => {
               </tr>
             ))}
           </thead>
-          <tbody {...getTableBodyProps()}>
+          <tbody
+            {...getTableBodyProps()}
+            id={`system-intakes-table__${activeTable}`}
+          >
             {page.map((row: Row) => {
               return (
                 <tr
