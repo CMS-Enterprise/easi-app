@@ -72,9 +72,9 @@ func TestGetExpireLCIDAction(t *testing.T) {
 
 	newNextSteps := models.HTML("new next steps")
 	userInfo := models.UserInfo{
-		CommonName: "tester",
-		Email:      "test@email.email",
-		EuaUserID:  "TEST",
+		DisplayName: "tester",
+		Email:       "test@email.email",
+		Username:    "TEST",
 	}
 
 	action := GetExpireLCIDAction(intake, mockCurrentTime, &newNextSteps, userInfo)

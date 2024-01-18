@@ -71,7 +71,7 @@ func CreateTRBRequestAttendee(
 		ctx,
 		attendeeInfo.Email,
 		request.GetName(),
-		requester.CommonName,
+		requester.DisplayName,
 	)
 	if err != nil {
 		return nil, err

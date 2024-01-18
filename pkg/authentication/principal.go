@@ -93,6 +93,7 @@ type EUAPrincipal struct {
 	JobCode508User   bool
 	JobCode508Tester bool
 	JobCodeTRBAdmin  bool
+	UserAccount      *UserAccount
 }
 
 // String satisfies the fmt.Stringer interface

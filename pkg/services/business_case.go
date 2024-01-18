@@ -79,7 +79,7 @@ func NewCreateBusinessCase(
 		if err != nil {
 			return &models.BusinessCase{}, err
 		}
-		if userInfo == nil || userInfo.Email == "" || userInfo.CommonName == "" || userInfo.EuaUserID == "" {
+		if userInfo == nil || userInfo.Email == "" || userInfo.DisplayName == "" || userInfo.Username == "" {
 			return &models.BusinessCase{}, &apperrors.ExternalAPIError{
 				Err:       errors.New("user info fetch was not successful"),
 				Model:     intake,
@@ -92,9 +92,9 @@ func NewCreateBusinessCase(
 		action := models.Action{
 			IntakeID:       &intake.ID,
 			ActionType:     models.ActionTypeCREATEBIZCASE,
-			ActorName:      userInfo.CommonName,
+			ActorName:      userInfo.DisplayName,
 			ActorEmail:     userInfo.Email,
-			ActorEUAUserID: userInfo.EuaUserID,
+			ActorEUAUserID: userInfo.Username,
 		}
 		_, err = createAction(ctx, &action)
 		if err != nil {

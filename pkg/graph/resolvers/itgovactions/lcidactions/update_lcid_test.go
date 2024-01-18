@@ -18,9 +18,9 @@ func TestGetUpdateLCIDAction(t *testing.T) {
 	nextSteps := models.HTML("<strong> My Next Steps! </strong>")
 	newScope := models.HTML("Scope Scope Scope")
 	userInfo := models.UserInfo{
-		CommonName: "tester",
-		Email:      "test@email.email",
-		EuaUserID:  "TEST",
+		DisplayName: "tester",
+		Email:       "test@email.email",
+		Username:    "TEST",
 	}
 	intake := models.SystemIntake{
 		LifecycleID:           lcid,

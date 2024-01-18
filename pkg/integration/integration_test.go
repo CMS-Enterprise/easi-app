@@ -17,6 +17,7 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/server"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -108,6 +109,35 @@ func TestIntegrationTestSuite(t *testing.T) {
 		store:       store,
 		base:        handlers.NewHandlerBase(),
 	}
+	createTestPrincipal(store, testSuite.user.euaID)
 
 	suite.Run(t, testSuite)
+}
+
+// createTestPrincipal creates a test principal in the database. It bypasses a call to OKTA, and just creates mock data
+func createTestPrincipal(store *storage.Store, userName string) *authentication.EUAPrincipal {
+
+	// userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+	tAccount := authentication.UserAccount{
+		Username:    userName,
+		CommonName:  userName + "Doe",
+		Locale:      "en_US",
+		Email:       userName + "@local.cms.gov",
+		GivenName:   userName,
+		FamilyName:  "Doe",
+		ZoneInfo:    "America/Los_Angeles",
+		HasLoggedIn: true,
+	}
+
+	userAccount, _ := store.UserAccountCreate(store, &tAccount) //swallow error
+	princ := &authentication.EUAPrincipal{
+		EUAID:            userName,
+		JobCodeEASi:      true,
+		JobCodeGRT:       true,
+		JobCode508User:   true,
+		JobCode508Tester: true,
+		UserAccount:      userAccount,
+	}
+	return princ
+
 }
