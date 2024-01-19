@@ -1,5 +1,5 @@
 import { LifecycleCosts } from 'types/estimatedLifecycle';
-import { SystemIntakeStatusV1 } from 'types/systemIntake';
+// import { SystemIntakeStatusV1 } from 'types/systemIntake';
 
 // Base Solution
 export type BusinessCaseSolution = {
@@ -69,7 +69,7 @@ export type BusinessCaseModel = GeneralRequestInfoForm &
     euaUserId?: string;
     status: BusinessCaseStatus;
     systemIntakeId: string;
-    systemIntakeStatus: SystemIntakeStatusV1;
+    // systemIntakeStatus: SystemIntakeStatusV1;
     createdAt: string;
   };
 

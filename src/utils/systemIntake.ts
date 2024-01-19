@@ -2,8 +2,8 @@ import i18next from 'i18next';
 
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import {
-  closedIntakeStatusesV1,
-  openIntakeStatusesV1,
+  // closedIntakeStatusesV1,
+  // openIntakeStatusesV1,
   RequestType
 } from 'types/systemIntake';
 
@@ -16,17 +16,17 @@ import {
  * Checks whenther an intake is closed
  * @param status - the intake's status
  */
-export const isIntakeClosed = (status: string) => {
-  return closedIntakeStatusesV1.includes(status);
-};
+// export const isIntakeClosed = (status: string) => {
+//   return closedIntakeStatusesV1.includes(status);
+// };
 
 /**
  * Checks whenther an intake is open
  * @param status - the intake's status
  */
-export const isIntakeOpen = (status: string) => {
-  return openIntakeStatusesV1.includes(status);
-};
+// export const isIntakeOpen = (status: string) => {
+//   return openIntakeStatusesV1.includes(status);
+// };
 
 /**
  * Checks whether an intake has a "decision"

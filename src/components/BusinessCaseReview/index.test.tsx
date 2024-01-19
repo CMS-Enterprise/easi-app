@@ -16,7 +16,7 @@ describe('The Business Case Review Component', () => {
     status: 'OPEN',
     createdAt: '2021-06-10T19:22:40Z',
     systemIntakeId: '048c26ea-07be-4f40-b29e-761fc17bf414',
-    systemIntakeStatus: 'BIZ_CASE_DRAFT',
+    // systemIntakeStatus: 'BIZ_CASE_DRAFT',
     requestName: 'EASi Test',
     requester: {
       name: 'Jane Smith',

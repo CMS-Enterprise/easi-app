@@ -143,8 +143,8 @@ const AlternativeSolutionA = ({
                     ? 'alternative-solution-b'
                     : 'review';
                   if (
-                    businessCase.systemIntakeStatus ===
-                      'BIZ_CASE_FINAL_NEEDED' &&
+                    // businessCase.systemIntakeStatus ===
+                    //   'BIZ_CASE_FINAL_NEEDED' &&
                     alternativeSolutionHasFilledFields(values)
                   ) {
                     validateForm().then(err => {

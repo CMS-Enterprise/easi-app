@@ -140,8 +140,8 @@ const AlternativeSolutionB = ({
                   dispatchSave();
                   // If final business case OR any field is filled
                   if (
-                    businessCase.systemIntakeStatus ===
-                      'BIZ_CASE_FINAL_NEEDED' &&
+                    // businessCase.systemIntakeStatus ===
+                    //   'BIZ_CASE_FINAL_NEEDED' &&
                     alternativeSolutionHasFilledFields(
                       formikRef?.current?.values?.alternativeB
                     )

@@ -8,6 +8,7 @@ export type GovernanceCollaborationTeam = {
   key: string;
 };
 
+/*
 export const openIntakeStatusesV1 = [
   'INTAKE_DRAFT',
   'INTAKE_SUBMITTED',
@@ -35,9 +36,10 @@ export const intakeStatusesV1 = [
   ...openIntakeStatusesV1,
   ...closedIntakeStatusesV1
 ] as const;
+*/
 
 // TODO: Remove old intake statuses once they're deprecated
-export type SystemIntakeStatusV1 = typeof intakeStatusesV1[number];
+// export type SystemIntakeStatusV1 = typeof intakeStatusesV1[number];
 
 export type RequestType = 'NEW' | 'MAJOR_CHANGES' | 'RECOMPETE' | 'SHUTDOWN';
 
@@ -49,7 +51,7 @@ export type SystemIntakeForm = {
   id: string;
   euaUserId: string;
   requestName: string;
-  status: SystemIntakeStatusV1;
+  // status: SystemIntakeStatusV1;
   statusAdmin: SystemIntakeStatusAdmin;
   requestType: RequestType;
   requester: {
