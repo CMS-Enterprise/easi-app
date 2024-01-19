@@ -480,45 +480,85 @@ describe('Governance Review Team', () => {
     cy.get('#Dates-GrtDateYear').should('have.value', '2024');
   });
 
-  it.skip('can close a request', () => {
-    // Selecting name based on pre-seeded data
-    // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
-    cy.governanceReviewTeam.grtActions.selectAction({
-      intakeName: 'Closable Request',
-      actionId: 'no-governance'
-    });
+  it('can close a request', () => {
+    cy.contains('a', 'grt meeting with date set in past')
+      .should('be.visible')
+      .click();
 
-    cy.get('#SubmitActionForm-Feedback')
-      .type('Feedback')
-      .should('have.value', 'Feedback');
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
 
-    cy.get('button[type="submit"]').click();
+    cy.get('#grt-action__resolutions').check({ force: true });
 
-    cy.wait('@getSystemIntake').its('response.statusCode').should('eq', 200);
+    cy.contains('button', 'Continue').click();
 
-    cy.get('[data-testid="request-state"]').contains('Closed');
+    cy.get('#grt-resolution__close-request').check({ force: true });
 
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    cy.get('#reason').type('Reason for closing request');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check request state is set to Closed
+    cy.get('[data-testid="request-state"').contains('Closed');
+
+    // Check intake shows in admin table for closed requests
     cy.visit('/');
-    cy.get('[data-testid="view-closed-intakes-btn"]').click();
-    cy.get('[data-testid="20cbcfbf-6459-4c96-943b-e76b83122dbf-row"]').contains(
-      'td',
-      'Not an IT Governance request'
+    cy.contains('button', 'Closed requests').click();
+    cy.get('#system-intakes-table__closed').contains(
+      'a',
+      'grt meeting with date set in past'
     );
   });
 
-  it.skip('can add additional contact as email recipient', () => {
-    cy.contains('a', 'Ready for business case').should('be.visible').click();
+  it('can re-open a request', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'Closed Request').should('be.visible').click();
+
     cy.get('[data-testid="grt-nav-actions-link"]').click();
 
-    cy.contains('.usa-radio', 'Request a draft business case').click();
+    cy.get('#grt-action__resolutions').check({ force: true });
 
     cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-resolution__re-open-request').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    cy.get('#reason').type('Reason for re-opening request');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check request state is set to Open
+    cy.get('[data-testid="request-state"').contains('Open');
+
+    // Check intake shows in admin table for closed requests
+    cy.visit('/');
+    cy.get('#system-intakes-table__open').contains('a', 'Closed Request');
+  });
+
+  it('can add additional contact as email recipient', () => {
+    cy.contains('a', 'initial form filled and submitted')
+      .should('be.visible')
+      .click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__new-step').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    // Add additional contact
 
     cy.contains('button', 'more recipients').click();
 
     cy.contains('button', 'Add another recipient').click();
 
-    // Add additional contact
     cy.get('#react-select-IntakeForm-ContactCommonName-input')
       .type('Aaron A')
       .wait(1000)
