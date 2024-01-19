@@ -55,8 +55,7 @@ describe('Business case alternative b solution', () => {
         ...businessCaseInitialData,
         id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
         alternativeB: {
-          ...defaultProposedSolution,
-          title: 'Alt B'
+          ...defaultProposedSolution
         }
       },
       isLoading: false,
