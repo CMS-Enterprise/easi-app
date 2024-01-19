@@ -40,9 +40,9 @@ func TestResolverSuite(t *testing.T) {
 	rs.testConfigs = GetDefaultTestConfigs()
 	rs.fetchUserInfoStub = func(context.Context, string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			EuaUserID:  "ANON",
-			CommonName: "Anonymous",
-			Email:      models.NewEmailAddress("anon@local.fake"),
+			Username:    "ANON",
+			DisplayName: "Anonymous",
+			Email:       models.NewEmailAddress("anon@local.fake"),
 		}, nil
 	}
 	suite.Run(t, rs)
@@ -78,14 +78,14 @@ func (tc *TestConfigs) GetDefaults() {
 
 	tc.Logger = zap.NewNop()
 	tc.UserInfo = &models.UserInfo{
-		CommonName: "Test User",
-		Email:      "testuser@test.com",
-		EuaUserID:  "TEST",
+		DisplayName: "Test User",
+		Email:       "testuser@test.com",
+		Username:    "TEST",
 	}
 	tc.Store, _ = storage.NewStore(tc.DBConfig, tc.LDClient)
 
 	tc.Principal = &authentication.EUAPrincipal{
-		EUAID:            tc.UserInfo.EuaUserID,
+		EUAID:            tc.UserInfo.Username,
 		JobCodeEASi:      true,
 		JobCodeGRT:       true,
 		JobCode508User:   true,

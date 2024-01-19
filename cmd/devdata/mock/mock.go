@@ -16,9 +16,11 @@ const PrincipalUser = "ABCD"
 // FetchUserInfoMock mocks the fetch user info logic
 func FetchUserInfoMock(ctx context.Context, eua string) (*models.UserInfo, error) {
 	return &models.UserInfo{
-		EuaUserID:  eua,
-		CommonName: "Test Man",
-		Email:      "testman@example.com",
+		Username:    eua,
+		FirstName:   eua,
+		LastName:    "Doe",
+		DisplayName: eua + "Doe",
+		Email:       models.EmailAddress(eua + "@example.com"),
 	}, nil
 }
 

@@ -71,7 +71,7 @@ func ProgressIntake(
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
 			ActionType:     models.ActionTypePROGRESSTONEWSTEP,
-			ActorName:      adminUserInfo.CommonName,
+			ActorName:      adminUserInfo.DisplayName,
 			ActorEmail:     adminUserInfo.Email,
 			ActorEUAUserID: adminEUAID,
 			Step:           &stepForAction,
@@ -136,7 +136,7 @@ func ProgressIntake(
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -223,8 +223,8 @@ func CreateSystemIntakeActionRequestEdits(
 	}
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeREQUESTEDITS,
-		ActorName:      adminTakingAction.CommonName,
-		ActorEUAUserID: adminTakingAction.EuaUserID,
+		ActorName:      adminTakingAction.DisplayName,
+		ActorEUAUserID: adminTakingAction.Username,
 		ActorEmail:     adminTakingAction.Email,
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
@@ -237,7 +237,7 @@ func CreateSystemIntakeActionRequestEdits(
 
 	govReqFeedback := &models.GovernanceRequestFeedback{}
 	govReqFeedback.IntakeID = intake.ID
-	govReqFeedback.CreatedBy = &adminTakingAction.EuaUserID
+	govReqFeedback.CreatedBy = &adminTakingAction.Username
 	govReqFeedback.SourceAction = models.GRFSARequestEdits
 	govReqFeedback.TargetForm = targetForm
 	govReqFeedback.Feedback = input.EmailFeedback
@@ -249,8 +249,8 @@ func CreateSystemIntakeActionRequestEdits(
 	if input.AdminNote != nil {
 		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
-			AuthorEUAID:    adminTakingAction.EuaUserID,
-			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
+			AuthorEUAID:    adminTakingAction.Username,
+			AuthorName:     null.StringFrom(adminTakingAction.DisplayName),
 			Content:        input.AdminNote,
 		})
 		if err != nil {
@@ -334,7 +334,7 @@ func RejectIntakeAsNotApproved(
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
 			ActionType:     models.ActionTypeREJECT,
-			ActorName:      adminUserInfo.CommonName,
+			ActorName:      adminUserInfo.DisplayName,
 			ActorEmail:     adminUserInfo.Email,
 			ActorEUAUserID: adminEUAID,
 			Step:           &intake.Step,
@@ -357,7 +357,7 @@ func RejectIntakeAsNotApproved(
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -468,7 +468,7 @@ func IssueLCID(
 		action := models.Action{
 			IntakeID:       &input.SystemIntakeID,
 			ActionType:     models.ActionTypeISSUELCID,
-			ActorName:      adminUserInfo.CommonName,
+			ActorName:      adminUserInfo.DisplayName,
 			ActorEmail:     adminUserInfo.Email,
 			ActorEUAUserID: adminEUAID,
 			Step:           &intake.Step,
@@ -491,7 +491,7 @@ func IssueLCID(
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -573,8 +573,8 @@ func CreateSystemIntakeActionReopenRequest(
 
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeREOPENREQUEST,
-		ActorName:      adminTakingAction.CommonName,
-		ActorEUAUserID: adminTakingAction.EuaUserID,
+		ActorName:      adminTakingAction.DisplayName,
+		ActorEUAUserID: adminTakingAction.Username,
 		ActorEmail:     adminTakingAction.Email,
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
@@ -587,8 +587,8 @@ func CreateSystemIntakeActionReopenRequest(
 	if input.AdminNote != nil {
 		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
-			AuthorEUAID:    adminTakingAction.EuaUserID,
-			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
+			AuthorEUAID:    adminTakingAction.Username,
+			AuthorName:     null.StringFrom(adminTakingAction.DisplayName),
 			Content:        input.AdminNote,
 		})
 		if err != nil {
@@ -650,8 +650,8 @@ func CreateSystemIntakeActionCloseRequest(
 
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeCLOSEREQUEST,
-		ActorName:      adminTakingAction.CommonName,
-		ActorEUAUserID: adminTakingAction.EuaUserID,
+		ActorName:      adminTakingAction.DisplayName,
+		ActorEUAUserID: adminTakingAction.Username,
 		ActorEmail:     adminTakingAction.Email,
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
@@ -664,8 +664,8 @@ func CreateSystemIntakeActionCloseRequest(
 	if input.AdminNote != nil {
 		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
-			AuthorEUAID:    adminTakingAction.EuaUserID,
-			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
+			AuthorEUAID:    adminTakingAction.Username,
+			AuthorName:     null.StringFrom(adminTakingAction.DisplayName),
 			Content:        input.AdminNote,
 		})
 		if err != nil {
@@ -723,8 +723,8 @@ func CreateSystemIntakeActionNotITGovRequest(
 
 	_, err = store.CreateAction(ctx, &models.Action{
 		ActionType:     models.ActionTypeNOTITGOVREQUEST,
-		ActorName:      adminTakingAction.CommonName,
-		ActorEUAUserID: adminTakingAction.EuaUserID,
+		ActorName:      adminTakingAction.DisplayName,
+		ActorEUAUserID: adminTakingAction.Username,
 		ActorEmail:     adminTakingAction.Email,
 		BusinessCaseID: intake.BusinessCaseID,
 		IntakeID:       &intake.ID,
@@ -737,8 +737,8 @@ func CreateSystemIntakeActionNotITGovRequest(
 	if input.AdminNote != nil {
 		_, err = store.CreateSystemIntakeNote(ctx, &models.SystemIntakeNote{
 			SystemIntakeID: intake.ID,
-			AuthorEUAID:    adminTakingAction.EuaUserID,
-			AuthorName:     null.StringFrom(adminTakingAction.CommonName),
+			AuthorEUAID:    adminTakingAction.Username,
+			AuthorName:     null.StringFrom(adminTakingAction.DisplayName),
 			Content:        input.AdminNote,
 		})
 		if err != nil {
@@ -862,14 +862,14 @@ func UpdateLCID(
 
 		return nil
 	})
-	// TODO: EASI-3109 will send an email from this mutation
+
 	// save admin note
 	if input.AdminNote != nil {
 		errGroup.Go(func() error {
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -996,7 +996,7 @@ func ConfirmLCID(ctx context.Context,
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -1128,7 +1128,7 @@ func ExpireLCID(
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -1200,8 +1200,6 @@ func RetireLCID(
 	// not currently persisting input.Reason
 	intake.LifecycleRetiresAt = &input.RetiresAt
 
-	// TODO: EASI-3109 will send an email from this mutation
-
 	// save intake, action, admin note
 	// See Note [Database calls from resolvers aren't atomic]
 
@@ -1239,7 +1237,7 @@ func RetireLCID(
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 
@@ -1350,7 +1348,7 @@ func ChangeLCIDRetirementDate(
 			adminNote := &models.SystemIntakeNote{
 				SystemIntakeID: input.SystemIntakeID,
 				AuthorEUAID:    adminEUAID,
-				AuthorName:     null.StringFrom(adminUserInfo.CommonName),
+				AuthorName:     null.StringFrom(adminUserInfo.DisplayName),
 				Content:        input.AdminNote,
 			}
 

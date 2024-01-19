@@ -11,24 +11,24 @@ func (s *ResolverSuite) TestTRBLeadOptions() {
 	ctx := context.Background()
 	leadUsers := map[string]*models.UserInfo{
 		"ABCD": {
-			CommonName: "Adeline Aarons",
-			Email:      "adeline.aarons@local.fake",
-			EuaUserID:  "ABCD",
+			DisplayName: "Adeline Aarons",
+			Email:       "adeline.aarons@local.fake",
+			Username:    "ABCD",
 		},
 		"TEST": {
-			CommonName: "Terry Thompson",
-			Email:      "terry.thompson@local.fake",
-			EuaUserID:  "TEST",
+			DisplayName: "Terry Thompson",
+			Email:       "terry.thompson@local.fake",
+			Username:    "TEST",
 		},
 		"A11Y": {
-			CommonName: "Ally Anderson",
-			Email:      "ally.anderson@local.fake",
-			EuaUserID:  "A11Y",
+			DisplayName: "Ally Anderson",
+			Email:       "ally.anderson@local.fake",
+			Username:    "A11Y",
 		},
 		"GRTB": {
-			CommonName: "Gary Gordon",
-			Email:      "gary.gordon@local.fake",
-			EuaUserID:  "GRTB",
+			DisplayName: "Gary Gordon",
+			Email:       "gary.gordon@local.fake",
+			Username:    "GRTB",
 		},
 	}
 

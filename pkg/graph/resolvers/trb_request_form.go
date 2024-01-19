@@ -139,7 +139,7 @@ func UpdateTRBRequestForm(
 				ctx,
 				id,
 				request.GetName(),
-				requesterInfo.CommonName,
+				requesterInfo.DisplayName,
 				componentText,
 			)
 		})
@@ -150,7 +150,7 @@ func UpdateTRBRequestForm(
 				request.ID,
 				request.GetName(),
 				requesterInfo.Email,
-				requesterInfo.CommonName,
+				requesterInfo.DisplayName,
 			)
 		})
 
