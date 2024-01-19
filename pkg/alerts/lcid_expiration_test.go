@@ -65,9 +65,9 @@ func TestLCIDExpirationAlert(t *testing.T) {
 	// Mock Functions
 	mockFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			CommonName: "name",
-			Email:      "email",
-			EuaUserID:  "ABCD",
+			DisplayName: "name",
+			Email:       "email",
+			Username:    "ABCD",
 		}, nil
 	}
 

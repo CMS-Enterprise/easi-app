@@ -281,7 +281,7 @@ func SubmitIntake(
 			IntakeID:       &input.ID,
 			ActionType:     models.ActionTypeSUBMITINTAKE,
 			ActorEUAUserID: actorEUAID,
-			ActorName:      actorInfo.CommonName,
+			ActorName:      actorInfo.DisplayName,
 			ActorEmail:     actorInfo.Email,
 			Step:           &intake.Step,
 		})

@@ -168,7 +168,7 @@ func UpdateTRBRequestConsultMeetingTime(
 		CopyTRBMailbox:     copyTRBMailbox,
 		NotifyEmails:       notifyEmails,
 		Notes:              notes,
-		RequesterName:      requesterInfo.CommonName,
+		RequesterName:      requesterInfo.DisplayName,
 	}
 
 	// Email client can be nil when this is called from tests - the email client itself tests this
@@ -234,8 +234,8 @@ func UpdateTRBRequestTRBLead(
 	emailInput := email.SendTRBRequestTRBLeadEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.GetName(),
-		TRBLeadName:    leadInfo.CommonName,
-		RequesterName:  requesterInfo.CommonName,
+		TRBLeadName:    leadInfo.DisplayName,
+		RequesterName:  requesterInfo.DisplayName,
 		Component:      component,
 		TRBLeadEmail:   leadInfo.Email,
 	}
@@ -306,7 +306,7 @@ func CloseTRBRequest(
 	emailInput := email.SendTRBRequestClosedEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.GetName(),
-		RequesterName:  requester.CommonName,
+		RequesterName:  requester.DisplayName,
 		Recipients:     recipientEmails,
 		CopyTRBMailbox: copyTRBMailbox,
 		ReasonClosed:   reasonClosed,
@@ -379,7 +379,7 @@ func ReopenTRBRequest(
 	emailInput := email.SendTRBRequestReopenedEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.GetName(),
-		RequesterName:  requester.CommonName,
+		RequesterName:  requester.DisplayName,
 		Recipients:     recipientEmails,
 		ReasonReopened: reasonReopened,
 		CopyTRBMailbox: copyTRBMailbox,
