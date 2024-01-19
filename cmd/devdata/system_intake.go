@@ -150,7 +150,8 @@ func createSystemIntake(
 		ctx = mock.CtxWithLoggerAndPrincipal(logger, requesterEUAID)
 		requesterEUAIDPtr = &requesterEUAID
 	}
-	// if there's no given intakeID, we can default to the resolver
+	// The resolver requires an EUA ID and creates a random intake ID.
+	// Only use the resolver if there is no pre-made intake ID and the Requester EUA is given.
 	if intakeID == nil && requesterEUAIDPtr != nil {
 		input := model.CreateSystemIntakeInput{
 			RequestType: requestType,
@@ -164,7 +165,7 @@ func createSystemIntake(
 		}
 		return intake
 	}
-	// however, if given an intakeID we must use the store method
+	// We must use the store method to use a pre-made ID or if the requester EUA isn't given
 	i := models.SystemIntake{
 		ID:          *intakeID,
 		EUAUserID:   null.StringFromPtr(requesterEUAIDPtr),
