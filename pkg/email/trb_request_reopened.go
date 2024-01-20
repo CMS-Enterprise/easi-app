@@ -3,6 +3,7 @@ package email
 import (
 	"bytes"
 	"context"
+	"html/template"
 	"path"
 
 	"github.com/google/uuid"
@@ -26,7 +27,7 @@ type SendTRBRequestReopenedEmailInput struct {
 // the TRB request re-opened email
 type trbRequestReopenedEmailTemplateParams struct {
 	TRBRequestName      string
-	ReasonReopened      models.HTML
+	ReasonReopened      template.HTML
 	TRBRequestLink      string
 	TRBAdminRequestLink string
 	RequesterName       string
@@ -46,7 +47,7 @@ func (c Client) SendTRBRequestReopenedEmail(ctx context.Context, input SendTRBRe
 	templateParams := trbRequestReopenedEmailTemplateParams{
 		TRBRequestName:      input.TRBRequestName,
 		RequesterName:       input.RequesterName,
-		ReasonReopened:      input.ReasonReopened,
+		ReasonReopened:      input.ReasonReopened.ToTemplate(),
 		TRBRequestLink:      c.urlFromPath(path.Join("trb", "task-list", input.TRBRequestID.String())),
 		TRBAdminRequestLink: c.urlFromPath(path.Join("trb", input.TRBRequestID.String(), "request")),
 		TRBEmail:            c.config.TRBEmail,

@@ -89,7 +89,7 @@ func (s *EmailTestSuite) TestIntakeRetireLCIDNotification() {
 			<br>
 			<div class="no-margin">
 				<p><u>Summary of retired Life Cycle ID</u></p>
-				<p><strong>Lifecycle ID:</strong> %s</p>%s
+				<p><strong>Life Cycle ID:</strong> %s</p>%s
 				<p><strong>Expiration date:</strong> %s</p>
 				<p><strong>Scope:</strong></p>%s
 				<p><strong>Project Cost Baseline:</strong> %s</p>

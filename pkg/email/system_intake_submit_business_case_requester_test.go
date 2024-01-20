@@ -40,15 +40,15 @@ func (s *EmailTestSuite) TestSubmitBizCaseRequester() {
 		var openingDraftText2 string
 		var nextStepsDraftText string
 		if isResubmitted {
-			openingResubmittedText1 = "made changes to"
+			openingResubmittedText1 = "made changes to the"
 			openingResubmittedText2 = "your changes"
 		} else {
-			openingResubmittedText1 = "completed"
+			openingResubmittedText1 = "completed a"
 			openingResubmittedText2 = "it"
 		}
 		if isDraft {
 			openingDraftText1 = "draft"
-			openingDraftText2 = "will either get back to you within two business days or share feedback at your scheduled GRT meeting."
+			openingDraftText2 = "will either get back to you within two business days or share feedback at your scheduled GRT meeting"
 			nextStepsDraftText = `<li>additional steps in the Governance Review process are needed such as a meeting with the full GRT or a meeting with the Governance Review Board (GRB), or</li>`
 		} else {
 			openingDraftText1 = "final"
@@ -59,7 +59,7 @@ func (s *EmailTestSuite) TestSubmitBizCaseRequester() {
 		return fmt.Sprintf(`<h1 class="header-title">EASi</h1>
 			<p class="header-subtitle">Easy Access to System Information</p>
 
-			<p>You have %s a %s Business Case for your IT Governance request (%s). The Governance Review Team (GRT) will review %s and %s.</p>
+			<p>You have %s %s Business Case for your IT Governance request (%s). The Governance Review Team (GRT) will review %s and %s.</p>
 
 			<br>
 			<div class="no-margin">

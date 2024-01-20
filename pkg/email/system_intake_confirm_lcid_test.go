@@ -76,11 +76,11 @@ func (s *EmailTestSuite) TestIntakeConfirmLCIDNotification() {
 			<h1 class="header-title">EASi</h1>
 			<p class="header-subtitle">Easy Access to System Information</p>
 
-			<p>The Governance Team has confirmed a Life Cycle ID (LCID) for %s</p>
+			<p>The Governance Team has confirmed a Life Cycle ID (LCID) for %s.</p>
 
 			<br>
 			<div class="no-margin">
-				<p><strong>Lifecycle ID:</strong> %s</p>%s
+				<p><strong>Life Cycle ID:</strong> %s</p>%s
 				<p><strong>Expiration date:</strong> %s</p>
 				<p><strong>Scope:</strong></p>%s%s
 				<p><strong>Next steps:</strong></p>%s

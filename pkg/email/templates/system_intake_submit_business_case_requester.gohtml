@@ -1,6 +1,6 @@
 {{template "easi_header.gohtml"}}
 
-<p>You have {{if .IsResubmitted}}made changes to{{else}}completed{{end}} a {{if .IsDraft}}draft{{else}}final{{end}} Business Case for your IT Governance request ({{.RequestName}}). The Governance Review Team (GRT) will review {{if .IsResubmitted}}your changes{{else}}it{{end}} and {{if .IsDraft}}will either get back to you within two business days or share feedback at your scheduled GRT meeting.{{else}}get back to you within two business days. In the meantime, you may review guidance in EASi about <a href="{{.PreparingForGRBLink}}">preparing for the GRB</a>{{end}}.</p>
+<p>You have {{if .IsResubmitted}}made changes to the{{else}}completed a{{end}} {{if .IsDraft}}draft{{else}}final{{end}} Business Case for your IT Governance request ({{.RequestName}}). The Governance Review Team (GRT) will review {{if .IsResubmitted}}your changes{{else}}it{{end}} and {{if .IsDraft}}will either get back to you within two business days or share feedback at your scheduled GRT meeting{{else}}get back to you within two business days. In the meantime, you may review guidance in EASi about <a href="{{.PreparingForGRBLink}}">preparing for the GRB</a>{{end}}.</p>
 
 <br>
 <div class="no-margin">

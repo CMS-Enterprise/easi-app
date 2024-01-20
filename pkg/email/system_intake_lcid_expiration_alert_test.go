@@ -88,7 +88,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 <h1 class="header-title">EASi</h1>
 <p class="header-subtitle">Easy Access to System Information</p>
 
-<p>The Life Cycle ID that was issued for %s%s is set to expire on %s. If your Lifecycle ID expires, your project will be operating under an expired Lifecycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>
+<p>The Life Cycle ID that was issued for %s%s is set to expire on %s. If your Life Cycle ID expires, your project will be operating under an expired Life Cycle ID and will be added to the Capital Planning Investment Control (CPIC) risk register.</p>
 <p>To avoid this, please email the Governance Team at <a href="mailto:%s">%s</a> within one week to update them with the current status of your project.</p>
 
 <br>
@@ -133,7 +133,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 <br>
 <div class="no-margin">
   <p><u>Current Life Cycle ID Summary</u></p>
-  <p><strong>Lifecycle ID:</strong> %s</p>
+  <p><strong>Life Cycle ID:</strong> %s</p>
   %s
   <p><strong>Expiration Date:</strong> %s</p>
   %s
@@ -198,7 +198,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
-		s.Equal(fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lifecycleID, requestName), sender.subject)
+		s.Equal(fmt.Sprintf("Warning: Your Life Cycle ID (%s) for %s is about to expire", lifecycleID, requestName), sender.subject)
 		s.EqualHTML(expectedEmail, sender.body)
 	})
 
@@ -235,7 +235,7 @@ func (s *EmailTestSuite) TestSendLCIDExpirationAlertEmail() {
 
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
-		s.Equal(fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lifecycleID, requestName), sender.subject)
+		s.Equal(fmt.Sprintf("Warning: Your Life Cycle ID (%s) for %s is about to expire", lifecycleID, requestName), sender.subject)
 		s.EqualHTML(expectedEmail, sender.body)
 	})
 

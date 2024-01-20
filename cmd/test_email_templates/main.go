@@ -57,28 +57,104 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 	adminEmail := models.NewEmailAddress("admin@local.fake")
 	emailRecipients := []models.EmailAddress{requesterEmail, adminEmail}
 	leadEmail := models.NewEmailAddress("TEST_LEAD@local.fake")
+	leadName := "Bob"
+	submissionDate := time.Now()
+	consultDate := time.Now().AddDate(0, 2, 0)
 
-	err := client.SendTRBFormSubmissionNotificationToRequester(ctx, requestID, requestName, requesterEmail, requesterName)
+	err := client.SendTRBAdviceLetterSubmittedEmail(ctx,
+		email.SendTRBAdviceLetterSubmittedEmailInput{
+			TRBRequestID:   requestID,
+			RequestName:    requestName,
+			RequestType:    string(models.TRBTBrainstorm),
+			RequesterName:  requesterName,
+			Component:      component,
+			SubmissionDate: &submissionDate,
+			ConsultDate:    &consultDate,
+			CopyTRBMailbox: true,
+			Recipients:     emailRecipients,
+		},
+	)
 	noErr(err)
 
-	err = client.SendTRBFormSubmissionNotificationToAdmins(ctx, requestID, requestName, requesterName, component)
+	err = client.SendTRBAdviceLetterInternalReviewEmail(ctx,
+		email.SendTRBAdviceLetterInternalReviewEmailInput{
+			TRBRequestID:   requestID,
+			TRBRequestName: requestName,
+			TRBLeadName:    "",
+		},
+	)
+	noErr(err)
+
+	err = client.SendTRBAdviceLetterInternalReviewEmail(ctx,
+		email.SendTRBAdviceLetterInternalReviewEmailInput{
+			TRBRequestID:   requestID,
+			TRBRequestName: requestName,
+			TRBLeadName:    leadName,
+		},
+	)
+	noErr(err)
+
+	err = client.SendTRBFormSubmissionNotificationToRequester(
+		ctx,
+		requestID,
+		requestName,
+		requesterEmail,
+		requesterName,
+	)
+	noErr(err)
+
+	err = client.SendTRBFormSubmissionNotificationToAdmins(
+		ctx,
+		requestID,
+		requestName,
+		requesterName,
+		component,
+	)
 	noErr(err)
 
 	// Ready for Consult (Feedback and No Feedback)
-	err = client.SendTRBReadyForConsultNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, "You're good to go for the consult meeting!")
-	noErr(err)
-	err = client.SendTRBReadyForConsultNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, "")
+	err = client.SendTRBReadyForConsultNotification(
+		ctx,
+		emailRecipients,
+		true,
+		requestID,
+		requestName,
+		requesterName,
+		models.HTML("<p>You're good to go for the consult meeting!</p>"),
+	)
 	noErr(err)
 
-	editsRequestedFeedback := "Please provide a better form."
-	err = client.SendTRBEditsNeededOnFormNotification(ctx, emailRecipients, true, requestID, requestName, requesterName, models.HTML(editsRequestedFeedback))
+	err = client.SendTRBReadyForConsultNotification(
+		ctx,
+		emailRecipients,
+		true,
+		requestID,
+		requestName,
+		requesterName,
+		models.HTML(""),
+	)
+	noErr(err)
+
+	err = client.SendTRBEditsNeededOnFormNotification(
+		ctx,
+		emailRecipients,
+		true,
+		requestID,
+		requestName,
+		requesterName,
+		models.HTML("<p>Please provide a better form.</p>"),
+	)
 	noErr(err)
 
 	attendeeEmail := models.NewEmailAddress("subject_matter_expert@local.fake")
-	err = client.SendTRBAttendeeAddedNotification(ctx, attendeeEmail, requestName, requesterName)
+	err = client.SendTRBAttendeeAddedNotification(
+		ctx,
+		attendeeEmail,
+		requestName,
+		requesterName,
+	)
 	noErr(err)
 
-	leadName := "The Leader"
 	err = client.SendTRBRequestTRBLeadAssignedEmails(ctx, email.SendTRBRequestTRBLeadEmailInput{
 		TRBRequestID:   requestID,
 		TRBRequestName: requestName,
@@ -106,7 +182,7 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 		TRBRequestName: requestName,
 		RequesterName:  requesterName,
 		CopyTRBMailbox: true,
-		ReasonClosed:   "This is a reason",
+		ReasonClosed:   models.HTML("<p>This is a reason to close</p>"),
 		Recipients:     emailRecipients,
 	})
 	noErr(err)
@@ -116,7 +192,7 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 		TRBRequestName: requestName,
 		RequesterName:  requesterName,
 		CopyTRBMailbox: true,
-		ReasonReopened: "This is a reason to reopen",
+		ReasonReopened: models.HTML("<p>This is a reason to reopen</p>"),
 		Recipients:     emailRecipients,
 	})
 	noErr(err)
@@ -126,7 +202,7 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 		TRBRequestName: requestName,
 		RequesterName:  requesterName,
 		CopyTRBMailbox: false,
-		ReasonClosed:   "",
+		ReasonClosed:   models.HTML(""),
 		Recipients:     emailRecipients,
 	})
 	noErr(err)
@@ -136,15 +212,36 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 		TRBRequestName: requestName,
 		RequesterName:  requesterName,
 		CopyTRBMailbox: false,
-		ReasonReopened: "",
+		ReasonReopened: models.HTML(""),
 		Recipients:     emailRecipients,
 	})
 	noErr(err)
 
-	err = client.SendCedarRolesChangedEmail(ctx, "Requester Jones", "Johnothan Roleadd", true, false, []string{}, []string{"System API Contact"}, "CMSGovNetSystem", time.Now())
+	err = client.SendCedarRolesChangedEmail(
+		ctx,
+		"Requester Jones",
+		"Johnothan Roleadd",
+		true,
+		false,
+		[]string{},
+		[]string{"System API Contact"},
+		"CMSGovNetSystem",
+		time.Now(),
+	)
 	noErr(err)
 
-	err = client.SendCedarRolesChangedEmail(ctx, "Requester Jones", "Johnothan Roledelete", false, true, []string{"System API Contact", "System Manager"}, []string{"System API Contact"}, "CMSGovNetSystem", time.Now())
+	err = client.SendCedarRolesChangedEmail(
+		ctx,
+		"Requester Jones",
+		"Johnothan Roledelete",
+		false,
+		true,
+		[]string{"System API Contact",
+			"System Manager"},
+		[]string{"System API Contact"},
+		"CMSGovNetSystem",
+		time.Now(),
+	)
 	noErr(err)
 }
 

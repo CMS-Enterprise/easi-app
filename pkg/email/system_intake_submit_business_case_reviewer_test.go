@@ -33,7 +33,7 @@ func (s *EmailTestSuite) TestSubmitBizCaseReviewer() {
 		var draftText string
 		var nextSteps string
 		if isResubmitted {
-			openingResubmittedText1 = "made changes to their"
+			openingResubmittedText1 = "made changes to the"
 			openingResubmittedText2 = "changes"
 		} else {
 			openingResubmittedText1 = "submitted a"

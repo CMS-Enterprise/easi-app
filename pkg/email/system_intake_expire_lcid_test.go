@@ -96,7 +96,7 @@ func (s *EmailTestSuite) TestIntakeExpireLCIDNotification() {
 			<br>
 			<div class="no-margin">
 				<p><u>Summary of expired Life Cycle ID</u></p>
-				<p><strong>Lifecycle ID:</strong> %s</p>
+				<p><strong>Life Cycle ID:</strong> %s</p>
 				%s
 				<p><strong>Expiration date:</strong> %s</p>
 				<p><strong>Scope:</strong></p>%s

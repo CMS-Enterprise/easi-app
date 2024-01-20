@@ -209,7 +209,7 @@ func (s *EmailTestSuite) TestIntakeUpdateLCIDNotification() {
 			<br>
 			<div class="no-margin">
 				<p><u>Summary of updated Life Cycle ID</u></p>
-				<p><strong>Lifecycle ID:</strong> %s</p>
+				<p><strong>Life Cycle ID:</strong> %s</p>
 				%s
 				<p><strong>Amendment date:</strong> %s</p>
 				%s
