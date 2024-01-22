@@ -15,7 +15,7 @@ const ITGovernance = () => {
   const { t } = useTranslation('help');
   return (
     <MainContent className="grid-container">
-      <HelpBreadcrumb type="Back" />
+      <HelpBreadcrumb />
       <HelpPageIntro
         heading={t('itGovernance.heading')}
         subheading={t('itGovernance.subheading')}

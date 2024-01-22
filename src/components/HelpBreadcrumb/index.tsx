@@ -5,25 +5,26 @@ import { Button, IconArrowBack, IconClose } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
 type HelpBreadcrumbProps = {
-  type: 'Back' | 'Close tab';
+  type?: 'back' | 'close';
   className?: string;
   text?: string;
 };
 
 export default function HelpBreadcrumb({
-  type = 'Back',
+  type = 'back',
   className,
   text
 }: HelpBreadcrumbProps) {
   const history = useHistory();
-  const { t } = useTranslation();
+  const { t } = useTranslation('help');
   const handleClick = () => {
-    if (type === 'Close tab') {
+    if (type === 'close') {
       window.close();
     } else {
-      history.goBack();
+      history.push('/help');
     }
   };
+
   return (
     <Button
       type="button"
@@ -31,7 +32,7 @@ export default function HelpBreadcrumb({
       onClick={() => handleClick()}
       className={classNames('margin-top-6', className)}
     >
-      {type === 'Close tab' ? (
+      {type === 'close' ? (
         <IconClose className="margin-right-05 margin-top-3px text-tbottom" />
       ) : (
         <IconArrowBack className="margin-right-05 margin-top-3px text-tbottom" />
