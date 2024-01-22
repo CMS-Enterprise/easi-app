@@ -10,7 +10,7 @@ import sampleBusinessCaseData from './sampleBusinessCaseData';
 export default function SampleBusinessCase() {
   return (
     <MainContent className="grid-container">
-      <HelpBreadcrumb type="Close tab" />
+      <HelpBreadcrumb type="close" />
       <HelpPageIntro
         heading="Sample Business Case"
         subheading="This sample Business Case can help you as you fill out your own Business Case. The content here is an example of how complete and precise to be when completing your Business Case."
