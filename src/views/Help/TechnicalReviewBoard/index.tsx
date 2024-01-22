@@ -16,7 +16,7 @@ const TechnicalReviewBoard = () => {
 
   return (
     <MainContent className="grid-container">
-      <HelpBreadcrumb type="Back" />
+      <HelpBreadcrumb />
       <HelpPageIntro
         heading={t('technicalReviewBoard.heading')}
         subheading={t('technicalReviewBoard.subheading')}
