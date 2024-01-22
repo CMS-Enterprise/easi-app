@@ -17,7 +17,7 @@ const AllHelp = () => {
 
   return (
     <MainContent className="grid-container margin-bottom-10">
-      <HelpBreadcrumb type="Back" />
+      <HelpBreadcrumb />
       <HelpPageIntro heading={t('allHelpArticles')} />
       <CardGroup className="margin-y-2">
         {allArticles.map(article => (

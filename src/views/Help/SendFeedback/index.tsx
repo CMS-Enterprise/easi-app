@@ -397,7 +397,7 @@ export const HelpFormHeading = ({
   return (
     <>
       <HelpBreadcrumb
-        type="Close tab"
+        type="close"
         text={!isDone ? t('sendFeedback.closeTab') : undefined}
       />
       <h1 className="margin-top-2 margin-bottom-1">
