@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1754,6 +1755,21 @@ func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input 
 	return &model.DeleteCedarSystemBookmarkPayload{CedarSystemID: input.CedarSystemID}, nil
 }
 
+// SetSystemIntakeRelationNewSystem is the resolver for the setSystemIntakeRelationNewSystem field.
+func (r *mutationResolver) SetSystemIntakeRelationNewSystem(ctx context.Context, input *model.SetSystemIntakeRelationNewSystemInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented: SetSystemIntakeRelationNewSystem - setSystemIntakeRelationNewSystem"))
+}
+
+// SetSystemIntakeRelationExistingSystem is the resolver for the setSystemIntakeRelationExistingSystem field.
+func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Context, input *model.SetSystemIntakeRelationExistingSystemInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented: SetSystemIntakeRelationExistingSystem - setSystemIntakeRelationExistingSystem"))
+}
+
+// SetSystemIntakeRelationExistingService is the resolver for the setSystemIntakeRelationExistingService field.
+func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Context, input *model.SetSystemIntakeRelationExistingServiceInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented: SetSystemIntakeRelationExistingService - setSystemIntakeRelationExistingService"))
+}
+
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input model.CreateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error) {
 	return resolvers.CreateSystemIntakeContact(ctx, r.store, input)
@@ -3054,6 +3070,11 @@ func (r *systemIntakeResolver) StatusAdmin(ctx context.Context, obj *models.Syst
 // LcidStatus is the resolver for the lcidStatus field.
 func (r *systemIntakeResolver) LcidStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeLCIDStatus, error) {
 	return obj.LCIDStatus(time.Now()), nil
+}
+
+// LinkedSystemChoice is the resolver for the linkedSystemChoice field.
+func (r *systemIntakeResolver) LinkedSystemChoice(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeLinkedSystemChoice, error) {
+	panic(fmt.Errorf("not implemented: LinkedSystemChoice - linkedSystemChoice"))
 }
 
 // DocumentType is the resolver for the documentType field.

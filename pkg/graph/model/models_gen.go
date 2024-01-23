@@ -515,6 +515,22 @@ type SetRolesForUserOnSystemInput struct {
 	DesiredRoleTypeIDs []string `json:"desiredRoleTypeIDs"`
 }
 
+type SetSystemIntakeRelationExistingServiceInput struct {
+	SystemIntakeID  uuid.UUID `json:"systemIntakeID"`
+	ContractName    string    `json:"contractName"`
+	ContractNumbers []string  `json:"contractNumbers"`
+}
+
+type SetSystemIntakeRelationExistingSystemInput struct {
+	SystemIntakeID  uuid.UUID `json:"systemIntakeID"`
+	CedarSystemIDs  []string  `json:"cedarSystemIDs"`
+	ContractNumbers []string  `json:"contractNumbers"`
+}
+
+type SetSystemIntakeRelationNewSystemInput struct {
+	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
+}
+
 // Input to submit an intake for review
 type SubmitIntakeInput struct {
 	ID uuid.UUID `json:"id"`
@@ -1299,6 +1315,49 @@ func (e *SystemIntakeFormStep) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type SystemIntakeLinkedSystemChoice string
+
+const (
+	SystemIntakeLinkedSystemChoiceNewSystem       SystemIntakeLinkedSystemChoice = "NEW_SYSTEM"
+	SystemIntakeLinkedSystemChoiceExistingSystem  SystemIntakeLinkedSystemChoice = "EXISTING_SYSTEM"
+	SystemIntakeLinkedSystemChoiceExistingService SystemIntakeLinkedSystemChoice = "EXISTING_SERVICE"
+)
+
+var AllSystemIntakeLinkedSystemChoice = []SystemIntakeLinkedSystemChoice{
+	SystemIntakeLinkedSystemChoiceNewSystem,
+	SystemIntakeLinkedSystemChoiceExistingSystem,
+	SystemIntakeLinkedSystemChoiceExistingService,
+}
+
+func (e SystemIntakeLinkedSystemChoice) IsValid() bool {
+	switch e {
+	case SystemIntakeLinkedSystemChoiceNewSystem, SystemIntakeLinkedSystemChoiceExistingSystem, SystemIntakeLinkedSystemChoiceExistingService:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeLinkedSystemChoice) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeLinkedSystemChoice) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeLinkedSystemChoice(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeLinkedSystemChoice", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeLinkedSystemChoice) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
