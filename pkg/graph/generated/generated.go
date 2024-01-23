@@ -9443,7 +9443,7 @@ TRBRequestChanges represents the possible changes you can make to a TRB request 
 Fields explicitly set with NULL will be unset, and omitted fields will be left unchanged.
 https://gqlgen.com/reference/changesets/
 """
-input TRBRequestChanges @goModel(model: "map[string]interface{}") {
+input TRBRequestChanges @goModel(model: "map[string]interface{}") { # no change, i think
     name: String
     archived: Boolean
     type: TRBRequestType
@@ -10081,7 +10081,7 @@ Creating and reading admin notes with category-specific data was added in https:
 If updating admin notes needs to handle category-specific data, break it up into five separate mutations with their own input types,
 similar to the different CreateTRBAdminNote* inputs.
 """
-input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") { # done
   id: UUID!
   category: TRBAdminNoteCategory
   noteText: HTML
@@ -10090,7 +10090,7 @@ input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
 """
 The data needed to update a TRB advice letter
 """
-input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") { # done
   trbRequestId: UUID!
   meetingSummary: HTML
   nextSteps: HTML
@@ -10137,7 +10137,7 @@ input CreateTRBAdviceLetterRecommendationInput {
 """
 The input required to update a recommendation to a TRB advice letter
 """
-input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
+input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") { # done
   id: UUID!
   title: String
   recommendation: HTML

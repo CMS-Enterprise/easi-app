@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
@@ -30,17 +31,17 @@ func CreateTRBAdviceLetter(ctx context.Context, store *storage.Store, trbRequest
 
 // UpdateTRBAdviceLetter handles general updates to a TRB advice letter
 func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdviceLetter, error) {
-	trbRequestIDStr, idFound := input["trbRequestId"]
+	idIface, idFound := input["trbRequestId"]
 	if !idFound {
 		return nil, errors.New("missing required property trbRequestId")
 	}
 
-	trbRequestID, err := uuid.Parse(trbRequestIDStr.(string))
-	if err != nil {
-		return nil, err
+	id, ok := idIface.(uuid.UUID)
+	if !ok {
+		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid: %v", idIface)
 	}
 
-	letter, err := store.GetTRBAdviceLetterByTRBRequestID(ctx, trbRequestID)
+	letter, err := store.GetTRBAdviceLetterByTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

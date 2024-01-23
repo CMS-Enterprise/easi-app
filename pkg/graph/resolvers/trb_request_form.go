@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -24,14 +25,14 @@ func UpdateTRBRequestForm(
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	input map[string]interface{},
 ) (*models.TRBRequestForm, error) {
-	idStr, idFound := input["trbRequestId"]
+	idIface, idFound := input["trbRequestId"]
 	if !idFound {
 		return nil, errors.New("missing required property trbRequestId")
 	}
 
-	id, err := uuid.Parse(idStr.(string))
-	if err != nil {
-		return nil, err
+	id, ok := idIface.(uuid.UUID)
+	if !ok {
+		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid: %v", idIface)
 	}
 
 	isSubmitted := false
@@ -83,17 +84,7 @@ func UpdateTRBRequestForm(
 	if systemIntakes, systemIntakesProvided := input["systemIntakes"]; systemIntakesProvided {
 		delete(input, "systemIntakes")
 
-		systemIntakeUUIDs := []uuid.UUID{}
-		if systemIntakeIFCs, ok := systemIntakes.([]interface{}); ok {
-			for _, systemIntakeIFC := range systemIntakeIFCs {
-				if systemIntakeStr, ok := systemIntakeIFC.(string); ok {
-					systemIntakeUUID, parseErr := uuid.Parse(systemIntakeStr)
-					if parseErr != nil {
-						return nil, parseErr
-					}
-					systemIntakeUUIDs = append(systemIntakeUUIDs, systemIntakeUUID)
-				}
-			}
+		if systemIntakeUUIDs, ok := systemIntakes.([]uuid.UUID); ok {
 			_, err = store.CreateTRBRequestSystemIntakes(ctx, id, systemIntakeUUIDs)
 			if err != nil {
 				return nil, err

@@ -267,14 +267,14 @@ func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Sto
 // as well as updating the fields on the admin note record, many-to-many links to documents/recommendations may need to be deleted
 // (which would require implementing storage methods to delete those records)
 func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdminNote, error) {
-	idStr, idFound := input["id"]
+	idIface, idFound := input["id"]
 	if !idFound {
 		return nil, errors.New("missing required property id")
 	}
 
-	id, err := uuid.Parse(idStr.(string))
-	if err != nil {
-		return nil, err
+	id, ok := idIface.(uuid.UUID)
+	if !ok {
+		return nil, fmt.Errorf("unable to convert incoming updateTRBAdminNote id to uuid: %v", idIface)
 	}
 
 	note, err := store.GetTRBAdminNoteByID(ctx, id)
