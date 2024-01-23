@@ -1,12 +1,15 @@
 module github.com/cmsgov/easi-app
 
-go 1.21
+go 1.21.0
+
+toolchain go1.21.1
 
 require (
 	github.com/99designs/gqlgen v0.17.39
 	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
 	github.com/aws/aws-sdk-go v1.49.21
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
+	github.com/gkampitakis/go-snaps v0.5.0
 	github.com/go-openapi/errors v0.21.0
 	github.com/go-openapi/runtime v0.26.2
 	github.com/go-openapi/strfmt v0.22.0
@@ -37,8 +40,13 @@ require (
 require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/containerd/console v1.0.4-0.20230313162750-1ae8d489ac81 // indirect
+	github.com/gkampitakis/ciinfo v0.3.0 // indirect
+	github.com/gkampitakis/go-diff v1.3.2 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.3 // indirect
+	github.com/kr/pretty v0.3.1 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
+	github.com/maruel/natural v1.1.1 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
@@ -47,10 +55,15 @@ require (
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/muesli/termenv v0.15.2 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sosodev/duration v1.1.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
+	github.com/tidwall/gjson v1.17.0 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.1 // indirect
+	github.com/tidwall/sjson v1.2.5 // indirect
 	go.opentelemetry.io/otel/metric v1.17.0 // indirect
 	golang.org/x/term v0.15.0 // indirect
 )
