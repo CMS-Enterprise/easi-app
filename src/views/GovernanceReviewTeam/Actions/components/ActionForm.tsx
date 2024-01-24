@@ -181,7 +181,7 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
   // Set default form values
   useEffect(() => {
-    if (!!requester.euaUserId && isLoading) {
+    if (isLoading) {
       reset(
         {
           adminNote: '',
