@@ -741,7 +741,6 @@ type ComplexityRoot struct {
 		LifecycleExpiresAt          func(childComplexity int) int
 		LifecycleIssuedAt           func(childComplexity int) int
 		LifecycleRetiresAt          func(childComplexity int) int
-		LinkedSystemChoice          func(childComplexity int) int
 		NeedsEaSupport              func(childComplexity int) int
 		Notes                       func(childComplexity int) int
 		OitSecurityCollaborator     func(childComplexity int) int
@@ -749,6 +748,7 @@ type ComplexityRoot struct {
 		ProductManager              func(childComplexity int) int
 		ProjectAcronym              func(childComplexity int) int
 		RejectionReason             func(childComplexity int) int
+		RelationType                func(childComplexity int) int
 		RequestFormState            func(childComplexity int) int
 		RequestName                 func(childComplexity int) int
 		RequestType                 func(childComplexity int) int
@@ -1474,7 +1474,7 @@ type SystemIntakeResolver interface {
 	StatusAdmin(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusAdmin, error)
 	LcidStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeLCIDStatus, error)
 
-	LinkedSystemChoice(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeLinkedSystemChoice, error)
+	RelationType(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRelationType, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*model.SystemIntakeDocumentType, error)
@@ -5595,13 +5595,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.LifecycleRetiresAt(childComplexity), true
 
-	case "SystemIntake.linkedSystemChoice":
-		if e.complexity.SystemIntake.LinkedSystemChoice == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.LinkedSystemChoice(childComplexity), true
-
 	case "SystemIntake.needsEaSupport":
 		if e.complexity.SystemIntake.NeedsEaSupport == nil {
 			break
@@ -5650,6 +5643,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.RejectionReason(childComplexity), true
+
+	case "SystemIntake.relationType":
+		if e.complexity.SystemIntake.RelationType == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.RelationType(childComplexity), true
 
 	case "SystemIntake.requestFormState":
 		if e.complexity.SystemIntake.RequestFormState == nil {
@@ -8731,11 +8731,12 @@ type SystemIntake {
   """
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
-  linkedSystemChoice: SystemIntakeLinkedSystemChoice
+  relationType: SystemIntakeRelationType
 }
 
-# TODO Implement
-enum SystemIntakeLinkedSystemChoice {
+# TODO Figure out if there's any better way to name this.
+# The name currently feels a bit abstract, but it's the best I could come up with.
+enum SystemIntakeRelationType {
   NEW_SYSTEM
   EXISTING_SYSTEM
   EXISTING_SERVICE
@@ -8940,12 +8941,12 @@ input UpdateSystemIntakeLinkedCedarSystemInput {
   cedarSystemId: String
 }
 
-# SystemIntakeLinkedSystemChoice.NEW_SYSTEM
+# SystemIntakeRelationType.NEW_SYSTEM
 input SetSystemIntakeRelationNewSystemInput {
   systemIntakeID: UUID!
 }
 
-# SystemIntakeLinkedSystemChoice.EXISTING_SYSTEM
+# SystemIntakeRelationType.EXISTING_SYSTEM
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemIDs: [String!]!
@@ -8953,7 +8954,7 @@ input SetSystemIntakeRelationExistingSystemInput {
   # DELETE contractName
 }
 
-# SystemIntakeLinkedSystemChoice.EXISTING_SERVICE
+# SystemIntakeRelationType.EXISTING_SERVICE
 input SetSystemIntakeRelationExistingServiceInput {
   systemIntakeID: UUID!
   contractName: String!
@@ -15826,8 +15827,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
-			case "linkedSystemChoice":
-				return ec.fieldContext_SystemIntake_linkedSystemChoice(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -24712,8 +24713,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
-			case "linkedSystemChoice":
-				return ec.fieldContext_SystemIntake_linkedSystemChoice(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -29543,8 +29544,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
-			case "linkedSystemChoice":
-				return ec.fieldContext_SystemIntake_linkedSystemChoice(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -34986,8 +34987,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
-			case "linkedSystemChoice":
-				return ec.fieldContext_SystemIntake_linkedSystemChoice(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -35201,8 +35202,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
-			case "linkedSystemChoice":
-				return ec.fieldContext_SystemIntake_linkedSystemChoice(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -35448,8 +35449,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
-			case "linkedSystemChoice":
-				return ec.fieldContext_SystemIntake_linkedSystemChoice(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -36659,8 +36660,8 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
-			case "linkedSystemChoice":
-				return ec.fieldContext_SystemIntake_linkedSystemChoice(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -41130,8 +41131,8 @@ func (ec *executionContext) fieldContext_SystemIntake_trbFollowUpRecommendation(
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntake_linkedSystemChoice(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntake_linkedSystemChoice(ctx, field)
+func (ec *executionContext) _SystemIntake_relationType(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_relationType(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -41144,7 +41145,7 @@ func (ec *executionContext) _SystemIntake_linkedSystemChoice(ctx context.Context
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().LinkedSystemChoice(rctx, obj)
+		return ec.resolvers.SystemIntake().RelationType(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -41153,19 +41154,19 @@ func (ec *executionContext) _SystemIntake_linkedSystemChoice(ctx context.Context
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.SystemIntakeLinkedSystemChoice)
+	res := resTmp.(*model.SystemIntakeRelationType)
 	fc.Result = res
-	return ec.marshalOSystemIntakeLinkedSystemChoice2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeLinkedSystemChoice(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRelationType(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_SystemIntake_linkedSystemChoice(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntake_relationType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntake",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type SystemIntakeLinkedSystemChoice does not have child fields")
+			return nil, errors.New("field of type SystemIntakeRelationType does not have child fields")
 		},
 	}
 	return fc, nil
@@ -41386,8 +41387,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
-			case "linkedSystemChoice":
-				return ec.fieldContext_SystemIntake_linkedSystemChoice(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -50545,8 +50546,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
-			case "linkedSystemChoice":
-				return ec.fieldContext_SystemIntake_linkedSystemChoice(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -51784,8 +51785,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
-			case "linkedSystemChoice":
-				return ec.fieldContext_SystemIntake_linkedSystemChoice(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -67818,7 +67819,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "trbFollowUpRecommendation":
 			out.Values[i] = ec._SystemIntake_trbFollowUpRecommendation(ctx, field, obj)
-		case "linkedSystemChoice":
+		case "relationType":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -67827,7 +67828,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._SystemIntake_linkedSystemChoice(ctx, field, obj)
+				res = ec._SystemIntake_relationType(ctx, field, obj)
 				return res
 			}
 
@@ -76289,27 +76290,27 @@ func (ec *executionContext) marshalOSystemIntakeLCIDStatus2ᚖgithubᚗcomᚋcms
 	return res
 }
 
-func (ec *executionContext) unmarshalOSystemIntakeLinkedSystemChoice2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeLinkedSystemChoice(ctx context.Context, v interface{}) (*model.SystemIntakeLinkedSystemChoice, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var res = new(model.SystemIntakeLinkedSystemChoice)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOSystemIntakeLinkedSystemChoice2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeLinkedSystemChoice(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeLinkedSystemChoice) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return v
-}
-
 func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeNote(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeNote) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._SystemIntakeNote(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRelationType(ctx context.Context, v interface{}) (*model.SystemIntakeRelationType, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.SystemIntakeRelationType)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRelationType(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeRelationType) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeStatusRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusRequester(ctx context.Context, v interface{}) (*models.SystemIntakeStatusRequester, error) {

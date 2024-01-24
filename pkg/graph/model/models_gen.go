@@ -1318,46 +1318,46 @@ func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-type SystemIntakeLinkedSystemChoice string
+type SystemIntakeRelationType string
 
 const (
-	SystemIntakeLinkedSystemChoiceNewSystem       SystemIntakeLinkedSystemChoice = "NEW_SYSTEM"
-	SystemIntakeLinkedSystemChoiceExistingSystem  SystemIntakeLinkedSystemChoice = "EXISTING_SYSTEM"
-	SystemIntakeLinkedSystemChoiceExistingService SystemIntakeLinkedSystemChoice = "EXISTING_SERVICE"
+	SystemIntakeRelationTypeNewSystem       SystemIntakeRelationType = "NEW_SYSTEM"
+	SystemIntakeRelationTypeExistingSystem  SystemIntakeRelationType = "EXISTING_SYSTEM"
+	SystemIntakeRelationTypeExistingService SystemIntakeRelationType = "EXISTING_SERVICE"
 )
 
-var AllSystemIntakeLinkedSystemChoice = []SystemIntakeLinkedSystemChoice{
-	SystemIntakeLinkedSystemChoiceNewSystem,
-	SystemIntakeLinkedSystemChoiceExistingSystem,
-	SystemIntakeLinkedSystemChoiceExistingService,
+var AllSystemIntakeRelationType = []SystemIntakeRelationType{
+	SystemIntakeRelationTypeNewSystem,
+	SystemIntakeRelationTypeExistingSystem,
+	SystemIntakeRelationTypeExistingService,
 }
 
-func (e SystemIntakeLinkedSystemChoice) IsValid() bool {
+func (e SystemIntakeRelationType) IsValid() bool {
 	switch e {
-	case SystemIntakeLinkedSystemChoiceNewSystem, SystemIntakeLinkedSystemChoiceExistingSystem, SystemIntakeLinkedSystemChoiceExistingService:
+	case SystemIntakeRelationTypeNewSystem, SystemIntakeRelationTypeExistingSystem, SystemIntakeRelationTypeExistingService:
 		return true
 	}
 	return false
 }
 
-func (e SystemIntakeLinkedSystemChoice) String() string {
+func (e SystemIntakeRelationType) String() string {
 	return string(e)
 }
 
-func (e *SystemIntakeLinkedSystemChoice) UnmarshalGQL(v interface{}) error {
+func (e *SystemIntakeRelationType) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = SystemIntakeLinkedSystemChoice(str)
+	*e = SystemIntakeRelationType(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid SystemIntakeLinkedSystemChoice", str)
+		return fmt.Errorf("%s is not a valid SystemIntakeRelationType", str)
 	}
 	return nil
 }
 
-func (e SystemIntakeLinkedSystemChoice) MarshalGQL(w io.Writer) {
+func (e SystemIntakeRelationType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

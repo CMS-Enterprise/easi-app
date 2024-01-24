@@ -1056,11 +1056,12 @@ type SystemIntake {
   """
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
-  linkedSystemChoice: SystemIntakeLinkedSystemChoice
+  relationType: SystemIntakeRelationType
 }
 
-# TODO Implement
-enum SystemIntakeLinkedSystemChoice {
+# TODO Figure out if there's any better way to name this.
+# The name currently feels a bit abstract, but it's the best I could come up with.
+enum SystemIntakeRelationType {
   NEW_SYSTEM
   EXISTING_SYSTEM
   EXISTING_SERVICE
@@ -1265,12 +1266,12 @@ input UpdateSystemIntakeLinkedCedarSystemInput {
   cedarSystemId: String
 }
 
-# SystemIntakeLinkedSystemChoice.NEW_SYSTEM
+# SystemIntakeRelationType.NEW_SYSTEM
 input SetSystemIntakeRelationNewSystemInput {
   systemIntakeID: UUID!
 }
 
-# SystemIntakeLinkedSystemChoice.EXISTING_SYSTEM
+# SystemIntakeRelationType.EXISTING_SYSTEM
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemIDs: [String!]!
@@ -1278,7 +1279,7 @@ input SetSystemIntakeRelationExistingSystemInput {
   # DELETE contractName
 }
 
-# SystemIntakeLinkedSystemChoice.EXISTING_SERVICE
+# SystemIntakeRelationType.EXISTING_SERVICE
 input SetSystemIntakeRelationExistingServiceInput {
   systemIntakeID: UUID!
   contractName: String!
