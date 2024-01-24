@@ -528,7 +528,8 @@ type SetSystemIntakeRelationExistingSystemInput struct {
 }
 
 type SetSystemIntakeRelationNewSystemInput struct {
-	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
+	SystemIntakeID  uuid.UUID `json:"systemIntakeID"`
+	ContractNumbers []string  `json:"contractNumbers"`
 }
 
 // Input to submit an intake for review

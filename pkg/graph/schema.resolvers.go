@@ -1757,13 +1757,14 @@ func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input 
 
 // SetSystemIntakeRelationNewSystem is the resolver for the setSystemIntakeRelationNewSystem field.
 func (r *mutationResolver) SetSystemIntakeRelationNewSystem(ctx context.Context, input *model.SetSystemIntakeRelationNewSystemInput) (*model.UpdateSystemIntakePayload, error) {
-	// This resolver's only real purpose is to delete any existing relations that might have been set previously by selecting other options when
+	// This resolver's only real purpose is to delete existing relations or data that might have been set previously by selecting other options when
 	// selecting if the intake relates to another system, service, or contract.
+	// It is also responsible for creating contract number relationships for this intake
 	//
-	// Pseudo-code for this resolver:
+	// Pseudo-code for this resolver (best if handled in a transaction):
 	// 1. Delete (if any) existing CEDAR System ID relations that were set by SetSystemIntakeRelationExistingSystem()
-	// 2. Delete (if any) existing contractNumbers relations that were set by SetSystemIntakeRelationExistingSystem() or SetSystemIntakeRelationExistingService()
-	// 3. Delete (if any) existing free-text contract/service name that might have been set by SetSystemIntakeRelationExistingService()
+	// 2. Delete (if any) existing free-text contract/service name that might have been set by SetSystemIntakeRelationExistingService()
+	// 3. Delete & Create Contract Number relations (Delete & Create because this mutation always receives the full state of the relations)
 	panic(fmt.Errorf("not implemented: SetSystemIntakeRelationNewSystem - setSystemIntakeRelationNewSystem"))
 }
 

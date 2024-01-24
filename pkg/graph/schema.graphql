@@ -1269,6 +1269,7 @@ input UpdateSystemIntakeLinkedCedarSystemInput {
 # SystemIntakeRelationType.NEW_SYSTEM
 input SetSystemIntakeRelationNewSystemInput {
   systemIntakeID: UUID!
+  contractNumbers: [String!]!
 }
 
 # SystemIntakeRelationType.EXISTING_SYSTEM
@@ -1276,7 +1277,6 @@ input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemIDs: [String!]!
   contractNumbers: [String!]!
-  # DELETE contractName
 }
 
 # SystemIntakeRelationType.EXISTING_SERVICE
@@ -1284,7 +1284,6 @@ input SetSystemIntakeRelationExistingServiceInput {
   systemIntakeID: UUID!
   contractName: String!
   contractNumbers: [String!]!
-  # DELETE cedarSystemIDs
 }
 
 """

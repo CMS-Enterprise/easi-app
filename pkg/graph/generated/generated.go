@@ -8944,6 +8944,7 @@ input UpdateSystemIntakeLinkedCedarSystemInput {
 # SystemIntakeRelationType.NEW_SYSTEM
 input SetSystemIntakeRelationNewSystemInput {
   systemIntakeID: UUID!
+  contractNumbers: [String!]!
 }
 
 # SystemIntakeRelationType.EXISTING_SYSTEM
@@ -8951,7 +8952,6 @@ input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemIDs: [String!]!
   contractNumbers: [String!]!
-  # DELETE contractName
 }
 
 # SystemIntakeRelationType.EXISTING_SERVICE
@@ -8959,7 +8959,6 @@ input SetSystemIntakeRelationExistingServiceInput {
   systemIntakeID: UUID!
   contractName: String!
   contractNumbers: [String!]!
-  # DELETE cedarSystemIDs
 }
 
 """
@@ -56521,7 +56520,7 @@ func (ec *executionContext) unmarshalInputSetSystemIntakeRelationNewSystemInput(
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"systemIntakeID"}
+	fieldsInOrder := [...]string{"systemIntakeID", "contractNumbers"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -56537,6 +56536,15 @@ func (ec *executionContext) unmarshalInputSetSystemIntakeRelationNewSystemInput(
 				return it, err
 			}
 			it.SystemIntakeID = data
+		case "contractNumbers":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contractNumbers"))
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ContractNumbers = data
 		}
 	}
 
