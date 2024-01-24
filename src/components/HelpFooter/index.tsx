@@ -27,6 +27,7 @@ export default () => {
               icon={<IconLaunch />}
               iconPosition="after"
               to="/help/report-a-problem"
+              target="_blank"
             >
               {t('footer.reportProblem')}
             </IconLink>
@@ -36,6 +37,7 @@ export default () => {
               icon={<IconLaunch />}
               iconPosition="after"
               to="/help/send-feedback"
+              target="_blank"
             >
               {t('footer.sendFeedback')}
             </IconLink>
@@ -46,14 +48,13 @@ export default () => {
               icon={<IconLaunch />}
               iconPosition="after"
               to={SLACK_OIT_DEV_FEEDBACK}
+              target="_blank"
             >
               {t('footer.chatOnSlack')}
             </IconLink> */}
           </div>
         </div>
-        <div className="flex-auto">
-          <IconLightbulbOutline className="text-primary-light" size={3} />
-        </div>
+        <IconLightbulbOutline className="text-primary-light" size={3} />
       </GridContainer>
     </div>
   );
