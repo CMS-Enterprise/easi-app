@@ -8731,7 +8731,7 @@ type SystemIntake {
   """
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
-  relationType: SystemIntakeRelationType
+  relationType: SystemIntakeRelationType # TODO: NOT IMPLEMENTED
 }
 
 # TODO Figure out if there's any better way to name this.
@@ -10442,9 +10442,14 @@ type Mutation {
   deleteCedarSystemBookmark(
     input: CreateCedarSystemBookmarkInput!
   ): DeleteCedarSystemBookmarkPayload
+
+  # TODO: NOT IMPLEMENTED
   setSystemIntakeRelationNewSystem(input: SetSystemIntakeRelationNewSystemInput): UpdateSystemIntakePayload
+  # TODO: NOT IMPLEMENTED
   setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
+  # TODO: NOT IMPLEMENTED
   setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
+
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
