@@ -95,7 +95,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		s.NotNil(form)
 		formChanges := map[string]interface{}{
 			"isSubmitted":  false,
-			"trbRequestId": trb.ID.String(),
+			"trbRequestId": trb.ID,
 			"component":    "Taco Cart",
 		}
 		_, err = UpdateTRBRequestForm(ctx, store, &emailClient, stubFetchUserInfo, formChanges)
@@ -123,7 +123,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		s.NotNil(form)
 		formChanges = map[string]interface{}{
 			"isSubmitted":  true,
-			"trbRequestId": trb.ID.String(),
+			"trbRequestId": trb.ID,
 			"component":    "Taco Cart",
 		}
 		_, err = UpdateTRBRequestForm(ctx, store, &emailClient, stubFetchUserInfo, formChanges)
@@ -251,7 +251,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 		s.NoError(err)
 		s.NotNil(adviceLetter)
 		adviceLetterChanges := map[string]interface{}{
-			"trbRequestId":   trb.ID.String(),
+			"trbRequestId":   trb.ID,
 			"meetingSummary": "Talked about stuff",
 		}
 		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
@@ -315,7 +315,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 
 		// Test the "FOLLOW_UP_REQUESTED" status by updating the advice letter to recommend follow up
 		adviceLetterChanges = map[string]interface{}{
-			"trbRequestId":          trb.ID.String(),
+			"trbRequestId":          trb.ID,
 			"isFollowupRecommended": true,
 		}
 		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
