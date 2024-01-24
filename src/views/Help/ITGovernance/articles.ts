@@ -12,7 +12,6 @@ const itGovernanceArticles: ArticleProps[] = [
     type: 'IT Governance',
     translation: 'governanceReviewBoard'
   },
-  // TODO: Renable once sample business case article component completed
   {
     route: '/it-governance/sample-business-case',
     type: 'IT Governance',
