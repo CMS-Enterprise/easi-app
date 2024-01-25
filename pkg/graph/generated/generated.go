@@ -602,6 +602,9 @@ type ComplexityRoot struct {
 		SendReportAProblemEmail                          func(childComplexity int, input model.SendReportAProblemEmailInput) int
 		SendTRBAdviceLetter                              func(childComplexity int, input model.SendTRBAdviceLetterInput) int
 		SetRolesForUserOnSystem                          func(childComplexity int, input model.SetRolesForUserOnSystemInput) int
+		SetSystemIntakeRelationExistingService           func(childComplexity int, input *model.SetSystemIntakeRelationExistingServiceInput) int
+		SetSystemIntakeRelationExistingSystem            func(childComplexity int, input *model.SetSystemIntakeRelationExistingSystemInput) int
+		SetSystemIntakeRelationNewSystem                 func(childComplexity int, input *model.SetSystemIntakeRelationNewSystemInput) int
 		SetTRBAdminNoteArchived                          func(childComplexity int, id uuid.UUID, isArchived bool) int
 		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
 		UpdateAccessibilityRequestCedarSystem            func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
@@ -745,6 +748,7 @@ type ComplexityRoot struct {
 		ProductManager              func(childComplexity int) int
 		ProjectAcronym              func(childComplexity int) int
 		RejectionReason             func(childComplexity int) int
+		RelationType                func(childComplexity int) int
 		RequestFormState            func(childComplexity int) int
 		RequestName                 func(childComplexity int) int
 		RequestType                 func(childComplexity int) int
@@ -1337,6 +1341,9 @@ type MutationResolver interface {
 	UpdateSystemIntakeContractDetails(ctx context.Context, input model.UpdateSystemIntakeContractDetailsInput) (*model.UpdateSystemIntakePayload, error)
 	CreateCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.CreateCedarSystemBookmarkPayload, error)
 	DeleteCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.DeleteCedarSystemBookmarkPayload, error)
+	SetSystemIntakeRelationNewSystem(ctx context.Context, input *model.SetSystemIntakeRelationNewSystemInput) (*model.UpdateSystemIntakePayload, error)
+	SetSystemIntakeRelationExistingSystem(ctx context.Context, input *model.SetSystemIntakeRelationExistingSystemInput) (*model.UpdateSystemIntakePayload, error)
+	SetSystemIntakeRelationExistingService(ctx context.Context, input *model.SetSystemIntakeRelationExistingServiceInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeContact(ctx context.Context, input model.CreateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error)
 	UpdateSystemIntakeContact(ctx context.Context, input model.UpdateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error)
 	DeleteSystemIntakeContact(ctx context.Context, input model.DeleteSystemIntakeContactInput) (*model.DeleteSystemIntakeContactPayload, error)
@@ -1466,6 +1473,8 @@ type SystemIntakeResolver interface {
 	StatusRequester(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusRequester, error)
 	StatusAdmin(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusAdmin, error)
 	LcidStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeLCIDStatus, error)
+
+	RelationType(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRelationType, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*model.SystemIntakeDocumentType, error)
@@ -4536,6 +4545,42 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.SetRolesForUserOnSystem(childComplexity, args["input"].(model.SetRolesForUserOnSystemInput)), true
 
+	case "Mutation.setSystemIntakeRelationExistingService":
+		if e.complexity.Mutation.SetSystemIntakeRelationExistingService == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_setSystemIntakeRelationExistingService_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SetSystemIntakeRelationExistingService(childComplexity, args["input"].(*model.SetSystemIntakeRelationExistingServiceInput)), true
+
+	case "Mutation.setSystemIntakeRelationExistingSystem":
+		if e.complexity.Mutation.SetSystemIntakeRelationExistingSystem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_setSystemIntakeRelationExistingSystem_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SetSystemIntakeRelationExistingSystem(childComplexity, args["input"].(*model.SetSystemIntakeRelationExistingSystemInput)), true
+
+	case "Mutation.setSystemIntakeRelationNewSystem":
+		if e.complexity.Mutation.SetSystemIntakeRelationNewSystem == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_setSystemIntakeRelationNewSystem_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SetSystemIntakeRelationNewSystem(childComplexity, args["input"].(*model.SetSystemIntakeRelationNewSystemInput)), true
+
 	case "Mutation.setTRBAdminNoteArchived":
 		if e.complexity.Mutation.SetTRBAdminNoteArchived == nil {
 			break
@@ -5598,6 +5643,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.RejectionReason(childComplexity), true
+
+	case "SystemIntake.relationType":
+		if e.complexity.SystemIntake.RelationType == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.RelationType(childComplexity), true
 
 	case "SystemIntake.requestFormState":
 		if e.complexity.SystemIntake.RequestFormState == nil {
@@ -7479,6 +7531,9 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSendReportAProblemEmailInput,
 		ec.unmarshalInputSendTRBAdviceLetterInput,
 		ec.unmarshalInputSetRolesForUserOnSystemInput,
+		ec.unmarshalInputSetSystemIntakeRelationExistingServiceInput,
+		ec.unmarshalInputSetSystemIntakeRelationExistingSystemInput,
+		ec.unmarshalInputSetSystemIntakeRelationNewSystemInput,
 		ec.unmarshalInputSubmitIntakeInput,
 		ec.unmarshalInputSystemIntakeAnnualSpendingInput,
 		ec.unmarshalInputSystemIntakeBusinessOwnerInput,
@@ -8676,6 +8731,15 @@ type SystemIntake {
   """
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
+  relationType: SystemIntakeRelationType # TODO: NOT IMPLEMENTED
+}
+
+# TODO Figure out if there's any better way to name this.
+# The name currently feels a bit abstract, but it's the best I could come up with.
+enum SystemIntakeRelationType {
+  NEW_SYSTEM
+  EXISTING_SYSTEM
+  EXISTING_SERVICE
 }
 
 """
@@ -8875,6 +8939,26 @@ Input data for updating a system intake's relationship to a CEDAR system
 input UpdateSystemIntakeLinkedCedarSystemInput {
   id: UUID!
   cedarSystemId: String
+}
+
+# SystemIntakeRelationType.NEW_SYSTEM
+input SetSystemIntakeRelationNewSystemInput {
+  systemIntakeID: UUID!
+  contractNumbers: [String!]!
+}
+
+# SystemIntakeRelationType.EXISTING_SYSTEM
+input SetSystemIntakeRelationExistingSystemInput {
+  systemIntakeID: UUID!
+  cedarSystemIDs: [String!]!
+  contractNumbers: [String!]!
+}
+
+# SystemIntakeRelationType.EXISTING_SERVICE
+input SetSystemIntakeRelationExistingServiceInput {
+  systemIntakeID: UUID!
+  contractName: String!
+  contractNumbers: [String!]!
 }
 
 """
@@ -10357,6 +10441,14 @@ type Mutation {
   deleteCedarSystemBookmark(
     input: CreateCedarSystemBookmarkInput!
   ): DeleteCedarSystemBookmarkPayload
+
+  # TODO: NOT IMPLEMENTED
+  setSystemIntakeRelationNewSystem(input: SetSystemIntakeRelationNewSystemInput): UpdateSystemIntakePayload
+  # TODO: NOT IMPLEMENTED
+  setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
+  # TODO: NOT IMPLEMENTED
+  setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
+
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
@@ -11940,6 +12032,51 @@ func (ec *executionContext) field_Mutation_setRolesForUserOnSystem_args(ctx cont
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNSetRolesForUserOnSystemInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetRolesForUserOnSystemInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_setSystemIntakeRelationExistingService_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.SetSystemIntakeRelationExistingServiceInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOSetSystemIntakeRelationExistingServiceInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetSystemIntakeRelationExistingServiceInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_setSystemIntakeRelationExistingSystem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.SetSystemIntakeRelationExistingSystemInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOSetSystemIntakeRelationExistingSystemInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetSystemIntakeRelationExistingSystemInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_setSystemIntakeRelationNewSystem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.SetSystemIntakeRelationNewSystemInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOSetSystemIntakeRelationNewSystemInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetSystemIntakeRelationNewSystemInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -15694,6 +15831,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -24578,6 +24717,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -29407,6 +29548,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -30475,6 +30618,180 @@ func (ec *executionContext) fieldContext_Mutation_deleteCedarSystemBookmark(ctx 
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_deleteCedarSystemBookmark_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_setSystemIntakeRelationNewSystem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_setSystemIntakeRelationNewSystem(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SetSystemIntakeRelationNewSystem(rctx, fc.Args["input"].(*model.SetSystemIntakeRelationNewSystemInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_setSystemIntakeRelationNewSystem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_setSystemIntakeRelationNewSystem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_setSystemIntakeRelationExistingSystem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_setSystemIntakeRelationExistingSystem(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SetSystemIntakeRelationExistingSystem(rctx, fc.Args["input"].(*model.SetSystemIntakeRelationExistingSystemInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_setSystemIntakeRelationExistingSystem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_setSystemIntakeRelationExistingSystem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_setSystemIntakeRelationExistingService(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_setSystemIntakeRelationExistingService(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SetSystemIntakeRelationExistingService(rctx, fc.Args["input"].(*model.SetSystemIntakeRelationExistingServiceInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_setSystemIntakeRelationExistingService(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "systemIntake":
+				return ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
+			case "userErrors":
+				return ec.fieldContext_UpdateSystemIntakePayload_userErrors(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateSystemIntakePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_setSystemIntakeRelationExistingService_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -34674,6 +34991,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -34887,6 +35206,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -35132,6 +35453,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -36341,6 +36664,8 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -40810,6 +41135,47 @@ func (ec *executionContext) fieldContext_SystemIntake_trbFollowUpRecommendation(
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_relationType(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_relationType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().RelationType(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.SystemIntakeRelationType)
+	fc.Result = res
+	return ec.marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRelationType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_relationType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SystemIntakeRelationType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeAction_id(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeAction_id(ctx, field)
 	if err != nil {
@@ -41025,6 +41391,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -50182,6 +50550,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -51419,6 +51789,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -56041,6 +56413,138 @@ func (ec *executionContext) unmarshalInputSetRolesForUserOnSystemInput(ctx conte
 				return it, err
 			}
 			it.DesiredRoleTypeIDs = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSetSystemIntakeRelationExistingServiceInput(ctx context.Context, obj interface{}) (model.SetSystemIntakeRelationExistingServiceInput, error) {
+	var it model.SetSystemIntakeRelationExistingServiceInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "contractName", "contractNumbers"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "contractName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contractName"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ContractName = data
+		case "contractNumbers":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contractNumbers"))
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ContractNumbers = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSetSystemIntakeRelationExistingSystemInput(ctx context.Context, obj interface{}) (model.SetSystemIntakeRelationExistingSystemInput, error) {
+	var it model.SetSystemIntakeRelationExistingSystemInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "cedarSystemIDs", "contractNumbers"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "cedarSystemIDs":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemIDs"))
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CedarSystemIDs = data
+		case "contractNumbers":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contractNumbers"))
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ContractNumbers = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputSetSystemIntakeRelationNewSystemInput(ctx context.Context, obj interface{}) (model.SetSystemIntakeRelationNewSystemInput, error) {
+	var it model.SetSystemIntakeRelationNewSystemInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "contractNumbers"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "contractNumbers":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contractNumbers"))
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ContractNumbers = data
 		}
 	}
 
@@ -64622,6 +65126,18 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteCedarSystemBookmark(ctx, field)
 			})
+		case "setSystemIntakeRelationNewSystem":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_setSystemIntakeRelationNewSystem(ctx, field)
+			})
+		case "setSystemIntakeRelationExistingSystem":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_setSystemIntakeRelationExistingSystem(ctx, field)
+			})
+		case "setSystemIntakeRelationExistingService":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_setSystemIntakeRelationExistingService(ctx, field)
+			})
 		case "createSystemIntakeContact":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createSystemIntakeContact(ctx, field)
@@ -67316,6 +67832,39 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "trbFollowUpRecommendation":
 			out.Values[i] = ec._SystemIntake_trbFollowUpRecommendation(ctx, field, obj)
+		case "relationType":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_relationType(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -75486,6 +76035,30 @@ func (ec *executionContext) marshalORequestsConnection2ᚖgithubᚗcomᚋcmsgov�
 	return ec._RequestsConnection(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOSetSystemIntakeRelationExistingServiceInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetSystemIntakeRelationExistingServiceInput(ctx context.Context, v interface{}) (*model.SetSystemIntakeRelationExistingServiceInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputSetSystemIntakeRelationExistingServiceInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOSetSystemIntakeRelationExistingSystemInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetSystemIntakeRelationExistingSystemInput(ctx context.Context, v interface{}) (*model.SetSystemIntakeRelationExistingSystemInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputSetSystemIntakeRelationExistingSystemInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOSetSystemIntakeRelationNewSystemInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetSystemIntakeRelationNewSystemInput(ctx context.Context, v interface{}) (*model.SetSystemIntakeRelationNewSystemInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputSetSystemIntakeRelationNewSystemInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -75735,6 +76308,22 @@ func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋ
 		return graphql.Null
 	}
 	return ec._SystemIntakeNote(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRelationType(ctx context.Context, v interface{}) (*model.SystemIntakeRelationType, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.SystemIntakeRelationType)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRelationType(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeRelationType) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeStatusRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusRequester(ctx context.Context, v interface{}) (*models.SystemIntakeStatusRequester, error) {
