@@ -27,7 +27,7 @@ require (
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
 	github.com/stretchr/testify v1.8.4
-	github.com/vektah/gqlparser/v2 v2.5.11
+	github.com/vektah/gqlparser/v2 v2.5.10
 	go.uber.org/zap v1.26.0
 	golang.org/x/sync v0.6.0
 	gopkg.in/launchdarkly/go-sdk-common.v2 v2.5.1
