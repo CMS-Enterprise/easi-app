@@ -19,7 +19,7 @@ function PrepareTrbConsultMeeting() {
   return (
     <>
       <MainContent className="grid-container margin-bottom-7">
-        <HelpBreadcrumb type="Close tab" />
+        <HelpBreadcrumb type="close" />
         <HelpPageIntro
           type="Technical Review Board"
           heading={t('title')}
