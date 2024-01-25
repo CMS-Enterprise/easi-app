@@ -1013,6 +1013,15 @@ type SystemIntake {
   """
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
+  relationType: SystemIntakeRelationType # TODO: NOT IMPLEMENTED
+}
+
+# TODO Figure out if there's any better way to name this.
+# The name currently feels a bit abstract, but it's the best I could come up with.
+enum SystemIntakeRelationType {
+  NEW_SYSTEM
+  EXISTING_SYSTEM
+  EXISTING_SERVICE
 }
 
 """
@@ -1212,6 +1221,26 @@ Input data for updating a system intake's relationship to a CEDAR system
 input UpdateSystemIntakeLinkedCedarSystemInput {
   id: UUID!
   cedarSystemId: String
+}
+
+# SystemIntakeRelationType.NEW_SYSTEM
+input SetSystemIntakeRelationNewSystemInput {
+  systemIntakeID: UUID!
+  contractNumbers: [String!]!
+}
+
+# SystemIntakeRelationType.EXISTING_SYSTEM
+input SetSystemIntakeRelationExistingSystemInput {
+  systemIntakeID: UUID!
+  cedarSystemIDs: [String!]!
+  contractNumbers: [String!]!
+}
+
+# SystemIntakeRelationType.EXISTING_SERVICE
+input SetSystemIntakeRelationExistingServiceInput {
+  systemIntakeID: UUID!
+  contractName: String!
+  contractNumbers: [String!]!
 }
 
 """
@@ -2535,6 +2564,14 @@ type Mutation {
   deleteCedarSystemBookmark(
     input: CreateCedarSystemBookmarkInput!
   ): DeleteCedarSystemBookmarkPayload
+
+  # TODO: NOT IMPLEMENTED
+  setSystemIntakeRelationNewSystem(input: SetSystemIntakeRelationNewSystemInput): UpdateSystemIntakePayload
+  # TODO: NOT IMPLEMENTED
+  setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
+  # TODO: NOT IMPLEMENTED
+  setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
+
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
