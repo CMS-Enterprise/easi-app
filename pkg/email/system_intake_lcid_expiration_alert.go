@@ -92,7 +92,7 @@ func (c Client) SendLCIDExpirationAlertEmail(
 	lifecycleCostBaseline string,
 	nextSteps models.HTML,
 ) error {
-	subject := fmt.Sprintf("Warning: Your Lifecycle ID (%s) for %s is about to expire", lcid, projectName)
+	subject := fmt.Sprintf("Warning: Your Life Cycle ID (%s) for %s is about to expire", lcid, projectName)
 	body, err := c.lcidExpirationBody(
 		ctx,
 		systemIntakeID,
