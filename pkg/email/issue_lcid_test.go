@@ -45,7 +45,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmails() {
 			"You are receiving this email as a part of ongoing work for " + projectName + " in EASi.\n" +
 			"If you have any questions, please contact the IT Governance team at " + string(s.config.GRTEmail) +
 			" or contact this request's original author, " + requester + ".</pre></p>\n" +
-			"<p>Lifecycle ID: " + lcid + "</p>\n" +
+			"<p>Life Cycle ID: " + lcid + "</p>\n" +
 			"<p>Expiration Date: " + expiresAt.Format("January 02, 2006") + "</p>\n" +
 			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(scope) + "</pre></p>\n" +
 			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + lifecycleCostBaseline + "</pre></p>\n" +
@@ -57,7 +57,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmails() {
 		err = client.SendIssueLCIDEmails(ctx, recipients, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, nextSteps, feedback)
 
 		s.NoError(err)
-		s.Equal("Lifecycle ID request approved", sender.subject)
+		s.Equal("Life Cycle ID request approved", sender.subject)
 		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{recipient})
 		s.Equal(expectedEmail, sender.body)
 	})
@@ -70,7 +70,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmails() {
 			"You are receiving this email as a part of ongoing work for " + projectName + " in EASi.\n" +
 			"If you have any questions, please contact the IT Governance team at " + string(s.config.GRTEmail) +
 			" or contact this request's original author, " + requester + ".</pre></p>\n" +
-			"<p>Lifecycle ID: " + string(lcid) + "</p>\n" +
+			"<p>Life Cycle ID: " + string(lcid) + "</p>\n" +
 			"<p>Expiration Date: " + expiresAt.Format("January 02, 2006") + "</p>\n" +
 			"<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + string(scope) + "</pre></p>\n" +
 			"<p>Project Cost Baseline: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">" + lifecycleCostBaseline + "</pre></p>\n" +
@@ -82,7 +82,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmails() {
 		err = client.SendIssueLCIDEmails(ctx, recipients, intakeID, projectName, requester, lcid, &expiresAt, scope, lifecycleCostBaseline, "", feedback)
 
 		s.NoError(err)
-		s.Equal("Lifecycle ID request approved", sender.subject)
+		s.Equal("Life Cycle ID request approved", sender.subject)
 		s.ElementsMatch(sender.toAddresses, []models.EmailAddress{recipient})
 		s.Equal(expectedEmail, sender.body)
 	})

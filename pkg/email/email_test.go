@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"io"
+	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -19,6 +21,30 @@ type EmailTestSuite struct {
 	logger                      *zap.Logger
 	config                      Config
 	multipleRecipientsTestCases []multipleRecipientsTestCase
+}
+
+// EqualHTML removes extra whitespace and linebreaks from HTML strings before comparing
+func (s *EmailTestSuite) EqualHTML(expected string, actual string) bool {
+	clean := func(str string) string {
+		// remove linebreaks and tabs
+		breaksAndTabs := regexp.MustCompile(`[\n\r\t]`)
+		str = breaksAndTabs.ReplaceAllString(str, "")
+		// don't test the CSS
+		removeHeadTag := regexp.MustCompile(`<head>[\s\S]*</head>`)
+		str = removeHeadTag.ReplaceAllString(str, "")
+		// remove leading/trailing spaces
+		str = strings.Trim(str, " ")
+		// normalize multiple spaces to be 1 space
+		multipleSpaces := regexp.MustCompile(`[\s]{2,}`)
+		str = multipleSpaces.ReplaceAllString(str, " ")
+		// trim strings inside and before/after tags
+		spacesBeforeTags := regexp.MustCompile(`[\s]+<`)
+		str = spacesBeforeTags.ReplaceAllString(str, "<")
+		spacesAfterTags := regexp.MustCompile(`>[\s]+`)
+		str = spacesAfterTags.ReplaceAllString(str, ">")
+		return str
+	}
+	return s.Equal(clean(expected), clean(actual))
 }
 
 type mockSender struct {
