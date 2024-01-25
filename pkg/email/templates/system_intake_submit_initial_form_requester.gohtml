@@ -2,17 +2,21 @@
 
 <p>You have {{if .IsResubmitted}}made changes to{{else}}completed{{end}} the Intake Request form for your IT Governance request ({{.RequestName}}). The Governance Review Team (GRT) will review {{if .IsResubmitted}}your changes{{else}}it{{end}} and get back to you within two business days.</p>
 
-<p>
-  The Governance Team will inform you if any next steps need to be taken with your request when they communicate one of the following possible outcomes. They will either:
+<br>
+<div class="no-margin">
+  <p>The Governance Team will inform you if any next steps need to be taken with your request when they communicate one of the following possible outcomes. They will either:</p>
   <ul>
     <li>process your request and issue a Life Cycle ID without any additional work on your part{{if .IsResubmitted}}, or{{else}},{{end}}</li>
     <li>direct you to go through additional steps in the Governance Review process such as drafting a Business Case, meeting with the full GRT, or meeting with the Governance Review Board (GRB){{if .IsResubmitted}}.</li>{{else}}, or</li>
     <li>decide that the IT Governance process is not applicable and close your request.</li>{{end}}
   </ul>
-</p>
+</div>
 
-<p><a href="{{.SystemIntakeRequestLink}}">View your request in EASi</a></p>
+<br>
+<p><strong><a href="{{.SystemIntakeRequestLink}}">View your request in EASi</a></strong></p>
 
+<br>
 <p>If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
+<br>
 <hr>
 <p>You will continue to receive email notifications about your request until it is closed.</p>

@@ -22,6 +22,15 @@ func getAlertRecipients(
 	intake models.SystemIntake,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 ) (*models.EmailNotificationRecipients, error) {
+	// don't fetch recipients if there is no EUA
+	if intake.EUAUserID.ValueOrZero() == "" {
+		return &models.EmailNotificationRecipients{
+			RegularRecipientEmails:   []models.EmailAddress{},
+			ShouldNotifyITGovernance: true,
+			ShouldNotifyITInvestment: false,
+		}, nil
+	}
+
 	requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
 	var emailsToNotify []models.EmailAddress
 
@@ -94,11 +103,6 @@ func checkForLCIDExpiration(
 	for _, currIntake := range allIntakes {
 		// Skip intake if it doesn't have an LCID or if it has a status of "NO GOVERNANCE"
 		if currIntake.LifecycleExpiresAt == nil || currIntake.Status == models.SystemIntakeStatusNOGOVERNANCE {
-			continue
-		}
-
-		// skip intake if it doesn't have an EUA User ID set (and thus we can't find recipients to send to)
-		if currIntake.EUAUserID.IsZero() {
 			continue
 		}
 
