@@ -158,6 +158,20 @@ func main() {
 	intake = makeSystemIntakeAndSubmit("LCID issued after initial form submitted", &intakeID, requesterEUA, logger, store)
 	issueLCID(logger, store, intake, time.Now().AddDate(1, 0, 0), models.TRBFRStronglyRecommended)
 
+	intakeID = uuid.MustParse("98edbd5a-f97d-47f2-9ea1-9369509da398")
+	intake = makeSystemIntakeAndIssueLCID("Intake with Expiring LCID and no EUA ID", &intakeID, "", logger, store)
+	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
+		expireTime := time.Now().AddDate(0, 0, 30) // expires in 30 days
+		i.LifecycleExpiresAt = &expireTime
+	})
+
+	intakeID = uuid.MustParse("1fecf78f-e309-4540-9f44-6e41ea686c56")
+	intake = makeSystemIntakeAndIssueLCID("Intake with Expiring LCID", &intakeID, requesterEUA, logger, store)
+	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
+		expireTime := time.Now().AddDate(0, 0, 30) // expires in 30 days
+		i.LifecycleExpiresAt = &expireTime
+	})
+
 	intakeID = uuid.MustParse("9ab475a8-a691-45e9-b55d-648b6e752efa")
 	makeSystemIntakeAndIssueLCID("LCID issued", &intakeID, requesterEUA, logger, store)
 

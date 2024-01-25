@@ -2,24 +2,40 @@
 
 <p>The Technical Review Board (TRB) has reviewed the initial request form for {{.RequestName}} and is now ready to schedule a consult session.</p>
 
-{{if .Feedback}}<p>Feedback: {{.Feedback}}</p>{{end}}
+{{ if .Feedback -}}
+<br>
+<div class="no-margin">
+  <p><strong>Feedback:</strong></p>
+  {{.Feedback}}
+</div>
+<br>
+{{end}}
 
-Next steps:
-<ul>
-<li>If they haven't already, the TRB will assign a TRB lead for this request to help process the request and facilitate the consult session.</li>
-<li>The TRB lead will work with {{.RequesterName}} and their project team to decide on a day and time for the TRB consult session.</li>
-<li>Then they will add the date in EASi and send a separate calendar invite with a remote video conferencing meeting link.</li>
-</ul>
+<br>
+<div class="no-margin">
+  <p>Next steps:</p>
+  <ul>
+    <li>If they haven't already, the TRB will assign a TRB lead for this request to help process the request and facilitate the consult session.</li>
+    <li>The TRB lead will work with {{.RequesterName}} and their project team to decide on a day and time for the TRB consult session.</li>
+    <li>Then they will add the date in EASi and send a separate calendar invite with a remote video conferencing meeting link.</li>
+  </ul>
+</div>
 
-View this request in EASi:
-<ul>
-<li>If you are the initial requester, you may <a href="{{.TRBRequestLink}}">click here</a> to view your request task list.</li>
-<li>TRB team members may <a href="{{.TRBAdminRequestLink}}">click here</a> to view the request details.</li>
-<li>Others should contact {{.RequesterName}} or the TRB for more information about this request.</li>
-</ul>
+<br>
+<div class="no-margin">
+  <p>View this request in EASi:</p>
+  <ul>
+    <li>If you are the initial requester, you may <a href="{{.TRBRequestLink}}">click here</a> to view your request task list.</li>
+    <li>TRB team members may <a href="{{.TRBAdminRequestLink}}">click here</a> to view the request details.</li>
+    <li>Others should contact {{.RequesterName}} or the TRB for more information about this request.</li>
+  </ul>
+</div>
 
-<p>If you have questions, please email the TRB at <a href="mailto:{{.TRBInboxAddress}}">{{.TRBInboxAddress}}</a>.</p>
+<br>
+<br>
+<p class="no-margin-top">If you have questions, please email the TRB at <a href="mailto:{{.TRBInboxAddress}}">{{.TRBInboxAddress}}</a>.</p>
 
+<br>
 <hr>
 
 <p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>

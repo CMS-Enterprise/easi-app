@@ -10,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s *EmailTestSuite) TestTRBRequestClosedEmail() {
+func (s *EmailTestSuite) TestTRBRequestReopenedEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
 
@@ -48,7 +48,7 @@ func (s *EmailTestSuite) TestTRBRequestClosedEmail() {
 			reasonStr = fmt.Sprintf(
 				`<br>
 				<div class="no-margin">
-				  <p><strong>Reason for closing:</strong></p>
+				  <p><strong>Reason for re-opening:</strong></p>
 				  %s
 				</div>`,
 				*reason.StringPointer(),
@@ -58,7 +58,7 @@ func (s *EmailTestSuite) TestTRBRequestClosedEmail() {
 			`<h1 class="header-title">EASi</h1>
 			<p class="header-subtitle">Easy Access to System Information</p>
 
-			<p>The Technical Review Board (TRB) has closed %s.</p>
+			<p>The Technical Review Board (TRB) has re-opened %s.</p>
 
 			%s
 
@@ -85,44 +85,44 @@ func (s *EmailTestSuite) TestTRBRequestClosedEmail() {
 	}
 
 	s.Run("successful call has the right content", func() {
-		input := SendTRBRequestClosedEmailInput{
+		input := SendTRBRequestReopenedEmailInput{
 			TRBRequestID:   trbID,
 			TRBRequestName: "Test TRB Request",
 			RequesterName:  "Mc Lovin",
 			Recipients:     recipients,
-			ReasonClosed:   models.HTML("<p>Just felt like closing it.</p>"),
 			CopyTRBMailbox: true,
+			ReasonReopened: models.HTML("<p>Just felt like it</p>"),
 		}
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 		expectedBody := getExpectedEmail(
 			input.TRBRequestName,
 			input.RequesterName,
-			input.ReasonClosed,
+			input.ReasonReopened,
 		)
-		err = client.SendTRBRequestClosedEmail(ctx, input)
+		err = client.SendTRBRequestReopenedEmail(ctx, input)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, allRecipients)
 		s.EqualHTML(expectedBody, sender.body)
 	})
 
-	s.Run("omits reason if blank", func() {
-		input := SendTRBRequestClosedEmailInput{
+	s.Run("omits reason", func() {
+		input := SendTRBRequestReopenedEmailInput{
 			TRBRequestID:   trbID,
 			TRBRequestName: "Test TRB Request",
 			RequesterName:  "Mc Lovin",
 			Recipients:     recipients,
-			ReasonClosed:   models.HTML(""),
 			CopyTRBMailbox: true,
+			ReasonReopened: models.HTML(""),
 		}
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 		expectedBody := getExpectedEmail(
 			input.TRBRequestName,
 			input.RequesterName,
-			input.ReasonClosed,
+			input.ReasonReopened,
 		)
-		err = client.SendTRBRequestClosedEmail(ctx, input)
+		err = client.SendTRBRequestReopenedEmail(ctx, input)
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, allRecipients)
 		s.EqualHTML(expectedBody, sender.body)

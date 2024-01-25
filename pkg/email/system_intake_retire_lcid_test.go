@@ -48,45 +48,80 @@ func (s *EmailTestSuite) TestIntakeRetireLCIDNotification() {
 	expectedSubject := fmt.Sprintf("A Life Cycle ID (%s) has been retired", lifecycleID)
 	s.Equal(expectedSubject, sender.subject)
 
-	expectedEmail := fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+	getExpectedEmail := func(
+		issuedAt *time.Time,
+		reason *models.HTML,
+		additionalInfo *models.HTML,
+	) string {
+		var reasonStr string
+		var additionalInfoStr string
+		var issuedAtStr string
+		if reason != nil {
+			reasonStr = fmt.Sprintf(
+				`<p class="no-margin"><strong>Reason:</strong></p>
+				<div class="no-margin">%s</div>
+				<br>`,
+				*reason.StringPointer(),
+			)
+		}
+		if additionalInfo != nil {
+			additionalInfoStr = fmt.Sprintf(
+				`<br>
+				<hr>
+				<br>
+				<p><strong>Additional information from the Governance Team:</strong></p><div class="no-margin">%s</div>`,
+				*additionalInfo.StringPointer(),
+			)
+		}
+		if issuedAt != nil {
+			issuedAtStr = fmt.Sprintf(`<p><strong>Original date issued:</strong> %s</p>`, issuedAt.Format("01/02/2006"))
+		}
+		return fmt.Sprintf(`
+			<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
 
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+			<p class="no-margin-bottom">The Governance Team has retired a previously-issued Life Cycle ID (LCID).</p>
+			<br>
+			<p class="no-margin"><strong>Retirement date:</strong> %s</p>
+			<br>%s
+			<p>If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.</p>
 
-<p>The Governance Team has retired a previously-issued Life Cycle ID (LCID).</p>
+			<br>
+			<div class="no-margin">
+				<p><u>Summary of retired Life Cycle ID</u></p>
+				<p><strong>Life Cycle ID:</strong> %s</p>%s
+				<p><strong>Expiration date:</strong> %s</p>
+				<p><strong>Scope:</strong></p>%s
+				<p><strong>Project Cost Baseline:</strong> %s</p>
+				<p><strong>Next steps:</strong></p>%s
+			</div>
+			%s
+			`,
+			retiresAt.Format("01/02/2006"),
+			reasonStr,
+			ITGovInboxAddress,
+			ITGovInboxAddress,
+			lifecycleID,
+			issuedAtStr,
+			expiresAt.Format("01/02/2006"),
+			*lifecycleScope.StringPointer(),
+			lifecycleCostBaseline,
+			*decisionNextSteps.StringPointer(),
+			additionalInfoStr,
+		)
 
-<p>Retirement date: %s<br>
-Reason: %s</p>
+	}
 
-If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-<p><u>Summary of retired Life Cycle ID</u><br>
-<strong>Lifecycle ID:</strong> %s<br>
-<strong>Original date issued:</strong> %s<br>
-<strong>Expiration date:</strong> %s<br>
-<strong>Scope:</strong> %s<br>
-<strong>Project Cost Baseline:</strong> %s<br>
-<strong>Next steps:</strong> %s</p>
-
-<hr><p><strong>Additional information from the Governance Team:</strong></p><p>%s</p>
-`,
-		retiresAt.Format("01/02/2006"),
-		*reason.StringPointer(),
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		lifecycleID,
-		issuedAt.Format("01/02/2006"),
-		expiresAt.Format("01/02/2006"),
-		*lifecycleScope.StringPointer(),
-		lifecycleCostBaseline,
-		*decisionNextSteps.StringPointer(),
-		*additionalInfo.StringPointer(),
-	)
-	s.Equal(expectedEmail, sender.body)
+	expectedEmail := getExpectedEmail(&issuedAt, reason, additionalInfo)
 	s.Run("Recipient is correct", func() {
 		allRecipients := []models.EmailAddress{
 			recipient,
 		}
 		s.ElementsMatch(sender.toAddresses, allRecipients)
+	})
+
+	s.Run("all info is included", func() {
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 	err = client.SystemIntake.SendRetireLCIDNotification(
@@ -103,41 +138,9 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		nil,
 	)
 	s.NoError(err)
-	expectedEmail = fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
-
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>The Governance Team has retired a previously-issued Life Cycle ID (LCID).</p>
-
-<p>Retirement date: %s<br>
-Reason: %s</p>
-
-If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-<p><u>Summary of retired Life Cycle ID</u><br>
-<strong>Lifecycle ID:</strong> %s<br>
-<strong>Original date issued:</strong> %s<br>
-<strong>Expiration date:</strong> %s<br>
-<strong>Scope:</strong> %s<br>
-<strong>Project Cost Baseline:</strong> %s<br>
-<strong>Next steps:</strong> %s</p>
-
-
-`,
-		retiresAt.Format("01/02/2006"),
-		*reason.StringPointer(),
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		lifecycleID,
-		issuedAt.Format("01/02/2006"),
-		expiresAt.Format("01/02/2006"),
-		*lifecycleScope.StringPointer(),
-		lifecycleCostBaseline,
-		*decisionNextSteps.StringPointer(),
-	)
-
+	expectedEmail = getExpectedEmail(&issuedAt, reason, nil)
 	s.Run("Should omit additional info if absent", func() {
-		s.Equal(expectedEmail, sender.body)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 	err = client.SystemIntake.SendRetireLCIDNotification(
@@ -151,40 +154,12 @@ If you have questions, please contact the Governance Team at <a href="mailto:%s"
 		lifecycleCostBaseline,
 		nil,
 		*decisionNextSteps,
-		nil,
+		additionalInfo,
 	)
 	s.NoError(err)
-	expectedEmail = fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
-
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
-
-<p>The Governance Team has retired a previously-issued Life Cycle ID (LCID).</p>
-
-<p>Retirement date: %s</p>
-
-If you have questions, please contact the Governance Team at <a href="mailto:%s">%s</a>.
-
-<p><u>Summary of retired Life Cycle ID</u><br>
-<strong>Lifecycle ID:</strong> %s<br>
-<strong>Expiration date:</strong> %s<br>
-<strong>Scope:</strong> %s<br>
-<strong>Project Cost Baseline:</strong> %s<br>
-<strong>Next steps:</strong> %s</p>
-
-
-`,
-		retiresAt.Format("01/02/2006"),
-		ITGovInboxAddress,
-		ITGovInboxAddress,
-		lifecycleID,
-		expiresAt.Format("01/02/2006"),
-		*lifecycleScope.StringPointer(),
-		lifecycleCostBaseline,
-		*decisionNextSteps.StringPointer(),
-	)
-
+	expectedEmail = getExpectedEmail(nil, nil, additionalInfo)
 	s.Run("Should omit reason and issuedAt if absent", func() {
-		s.Equal(expectedEmail, sender.body)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 }

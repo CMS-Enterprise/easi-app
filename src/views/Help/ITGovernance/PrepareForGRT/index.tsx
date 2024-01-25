@@ -9,7 +9,7 @@ const PrepareForGRT = () => {
   return (
     <>
       <MainContent className="grid-container">
-        <HelpBreadcrumb type="Close tab" />
+        <HelpBreadcrumb type="close" />
         <PrepareForGRTBase helpArticle />
       </MainContent>
       <div className="margin-top-7">
