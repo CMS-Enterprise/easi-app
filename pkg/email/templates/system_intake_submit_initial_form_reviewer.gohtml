@@ -1,21 +1,27 @@
 {{template "easi_header.gohtml"}}
 
-<p>{{.RequesterName}} has {{if .IsResubmitted}}made changes to their{{else}}submitted a new{{end}} Intake Request, {{.RequestName}}. Use the link below to review the {{if .IsResubmitted}}changes{{else}}request{{end}} in EASi and assign a lead. A member of the Governance Team should respond within two business days with any feedback about the request or to move the request to the next step in the Governance Review process.</p>
+<p>{{.RequesterName}} has {{if .IsResubmitted}}made changes to their{{else}}submitted a new{{end}} Intake Request, {{.RequestName}}. Use the link below to review the {{if .IsResubmitted}}changes{{else}}request{{end}} in EASi. A member of the Governance Team should respond within two business days with any feedback about the request or to move the request to the next step in the Governance Review process.</p>
 
-<p><u>Request Summary</u><br>
-<strong>Requester name:</strong> {{.RequesterName}}<br>
-<strong>Requester component:</strong> {{.RequesterComponent}}<br>
-<strong>Request name:</strong> {{.RequestName}}<br>
-<strong>Request type:</strong> {{.RequestType}}<br>
-<strong>Process stage:</strong> {{.ProcessStage}}</p>
+<br>
+<div class="no-margin">
+  <p><u>Request Summary</u></p>
+  <p><strong>Requester name:</strong> {{.RequesterName}}</p>
+  <p><strong>Requester component:</strong> {{.RequesterComponent}}</p>
+  <p><strong>Request name:</strong> {{.RequestName}}</p>
+  <p><strong>Request type:</strong> {{.RequestType}}</p>
+  <p><strong>Process stage:</strong> {{.ProcessStage}}</p>
+</div>
 
-<p><a href="{{.SystemIntakeAdminLink}}">View this request in EASi</a></p>
+<br>
+<p><strong><a href="{{.SystemIntakeAdminLink}}">View this request in EASi</a></strong></p>
 
-<p>Next steps:
-  <ul>
-    <li>Assign a lead.</li>
-    <li>Review the Intake Request form and decide what (if any) next steps are needed.</li>
-    <li>Determine if a small group meeting is needed.</li>
-    <li>Take the appropriate actions within EASi.</li>
-  </ul>
-</p>
+<br>
+<div class="no-margin">
+  <p>Next steps:</p>
+    <ul>
+      <li>Assign a lead if one is not already assigned.</li>
+      <li>Review the Intake Request form and decide what (if any) next steps are needed.</li>
+      <li>Determine if a small group meeting is needed.</li>
+      <li>Take the appropriate actions within EASi.</li>
+    </ul>
+</div>
