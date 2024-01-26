@@ -20,10 +20,10 @@ import (
 	_ "embed"
 )
 
-//go:embed SQL/get_all_usernames.sql
+//go:embed sql/get_all_usernames.sql
 var getAllUserNamesSQL string
 
-//go:embed SQL/get_all_full_names.sql
+//go:embed sql/get_all_full_names.sql
 var getAllFullNamesSQL string
 
 // Uploader handles functionality for uploading data to the DB
