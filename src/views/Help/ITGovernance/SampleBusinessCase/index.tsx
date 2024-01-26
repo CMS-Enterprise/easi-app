@@ -22,8 +22,11 @@ export default function SampleBusinessCase() {
       </MainContent>
 
       <RelatedArticles
-        type="IT Governance"
-        currentArticle="sampleBusinessCase"
+        articles={[
+          'newSystem',
+          'governanceReviewTeam',
+          'governanceReviewBoard'
+        ]}
       />
     </>
   );

@@ -14,8 +14,7 @@ const PrepareForGRB = () => {
       </MainContent>
       <div className="margin-top-7">
         <RelatedArticles
-          type="IT Governance"
-          currentArticle="governanceReviewBoard"
+          articles={['newSystem', 'sampleBusinessCase', 'governanceReviewTeam']}
         />
       </div>
     </>

@@ -8,7 +8,13 @@ describe('RelatedArticle', () => {
   it('matches the snapshot', () => {
     const { asFragment } = render(
       <MemoryRouter>
-        <RelatedArticle type="IT Governance" currentArticle="newSystem" />
+        <RelatedArticle
+          articles={[
+            'governanceReviewBoard',
+            'governanceReviewTeam',
+            'newSystem'
+          ]}
+        />
       </MemoryRouter>
     );
     expect(asFragment()).toMatchSnapshot();
@@ -17,7 +23,7 @@ describe('RelatedArticle', () => {
   it('renders correct itgovernance article type', () => {
     const { queryAllByText } = render(
       <MemoryRouter>
-        <RelatedArticle type="IT Governance" currentArticle="newSystem" />
+        <RelatedArticle articles={['governanceReviewBoard']} />
       </MemoryRouter>
     );
 

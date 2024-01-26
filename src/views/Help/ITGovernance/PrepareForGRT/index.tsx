@@ -14,8 +14,11 @@ const PrepareForGRT = () => {
       </MainContent>
       <div className="margin-top-7">
         <RelatedArticles
-          type="IT Governance"
-          currentArticle="governanceReviewTeam"
+          articles={[
+            'newSystem',
+            'sampleBusinessCase',
+            'governanceReviewBoard'
+          ]}
         />
       </div>
     </>

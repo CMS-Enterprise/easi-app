@@ -1,7 +1,5 @@
-import { ArticleProps } from 'types/articles';
-
 // IT Governance Articles
-const itGovernanceArticles: ArticleProps[] = [
+const itGovernanceArticles = [
   {
     route: '/it-governance/prepare-for-grt', // route for hitting rendered article component
     type: 'IT Governance', // Used for tagging of article
@@ -22,6 +20,6 @@ const itGovernanceArticles: ArticleProps[] = [
     type: 'IT Governance',
     translation: 'newSystem'
   }
-];
+] as const;
 
 export default itGovernanceArticles;
