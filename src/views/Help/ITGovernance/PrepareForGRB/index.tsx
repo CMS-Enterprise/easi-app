@@ -12,11 +12,10 @@ const PrepareForGRB = () => {
         <HelpBreadcrumb type="close" />
         <PrepareForGRBBase helpArticle />
       </MainContent>
-      <div className="margin-top-7">
-        <RelatedArticles
-          articles={['newSystem', 'sampleBusinessCase', 'governanceReviewTeam']}
-        />
-      </div>
+      <RelatedArticles
+        articles={['newSystem', 'sampleBusinessCase', 'governanceReviewTeam']}
+        className="margin-top-7"
+      />
     </>
   );
 };

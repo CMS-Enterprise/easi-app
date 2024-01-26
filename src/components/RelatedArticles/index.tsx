@@ -25,11 +25,11 @@ const RelatedArticles = ({ className, articles }: RelatedArticlesProps) => {
   );
 
   return (
-    <div className="bg-base-lightest">
+    <div className={classnames('bg-base-lightest', className)}>
       <MainContent className="grid-container padding-y-2">
         <h2 className="margin-bottom-1">{t('relatedHelp')}</h2>
         <dt className="margin-bottom-4">{t('relatedDescription')}</dt>
-        <CardGroup className={classnames('margin-y-2', className)}>
+        <CardGroup className="margin-y-2">
           {selectedArticles.map(article => (
             <ArticleCard key={article.route} {...article} isLink />
           ))}

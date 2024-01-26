@@ -11,7 +11,7 @@ import sampleBusinessCaseData from './sampleBusinessCaseData';
 export default function SampleBusinessCase() {
   return (
     <>
-      <MainContent className="grid-container margin-bottom-7">
+      <MainContent className="grid-container">
         <HelpBreadcrumb type="close" />
         <HelpPageIntro
           heading="Sample Business Case"
@@ -22,6 +22,7 @@ export default function SampleBusinessCase() {
       </MainContent>
 
       <RelatedArticles
+        className="margin-top-7"
         articles={[
           'newSystem',
           'governanceReviewTeam',
