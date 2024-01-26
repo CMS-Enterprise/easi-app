@@ -16,7 +16,6 @@ import (
 type SendTRBAdviceLetterInternalReviewEmailInput struct {
 	TRBRequestID   uuid.UUID
 	TRBRequestName string
-	RequesterName  string
 	TRBLeadName    string
 }
 

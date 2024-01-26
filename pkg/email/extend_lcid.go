@@ -61,7 +61,7 @@ func (c Client) SendExtendLCIDEmails(
 	newNextSteps models.HTML,
 	newCostBaseline string,
 ) error {
-	subject := "Lifecycle ID extended"
+	subject := "Life Cycle ID extended"
 	body, err := c.extendLCIDBody(systemIntakeID, projectName, requester, newExpiresAt, newScope, newNextSteps, newCostBaseline)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
