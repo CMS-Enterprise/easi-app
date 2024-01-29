@@ -5,7 +5,8 @@ WORKDIR /easi/
 COPY config/tls/*.crt /usr/local/share/ca-certificates/
 RUN update-ca-certificates
 
-COPY go.mod go.sum ./
+COPY easi-shared/ ./easi-shared/
+COPY go.mod go.sum go.work go.work.sum ./
 RUN go mod download
 
 FROM base AS dev
@@ -21,8 +22,6 @@ COPY pkg/ ./pkg/
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/easi ./cmd/easi
 
 FROM gcr.io/distroless/base:latest
-
-WORKDIR /easi/
 
 COPY --from=base /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /easi/pkg/email/templates ./templates
