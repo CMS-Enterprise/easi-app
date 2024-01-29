@@ -2,28 +2,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   GridContainer,
-  IconLightbulbOutline,
-  Link
+  IconLaunch,
+  IconLightbulbOutline
 } from '@trussworks/react-uswds';
 
-// import { SLACK_OIT_DEV_FEEDBACK } from 'constants/externalUrls';
+import IconLink from 'components/shared/IconLink';
 
-const NewWindowLink = ({
-  href,
-  children
-}: {
-  href: string;
-  children: React.ReactNode;
-}) => (
-  <Link
-    className="font-body-3xs text-white text-no-underline"
-    href={href}
-    variant="external"
-    target="_blank"
-  >
-    {children}
-  </Link>
-);
+// import { SLACK_OIT_DEV_FEEDBACK } from 'constants/externalUrls';
 
 export default () => {
   const { t } = useTranslation('help');
@@ -36,30 +21,40 @@ export default () => {
               {t('footer.wantToHelp')}
             </h4>
           </div>
-          <div className="display-flex margin-top-2 desktop:margin-top-0">
-            <div className="margin-right-6">
-              <NewWindowLink href="/help/report-a-problem">
-                {t('footer.reportProblem')}
-              </NewWindowLink>
-            </div>
-            {/* <div className="margin-right-6"> */}
-            <div>
-              <NewWindowLink href="/help/send-feedback">
-                {t('footer.sendFeedback')}
-              </NewWindowLink>
-            </div>
-            {/* Temp hide slack chat link
-            <div>
-              <NewWindowLink href={SLACK_OIT_DEV_FEEDBACK}>
-                {t('footer.chatOnSlack')}
-              </NewWindowLink>
-            </div>
-            */}
+          <div className="grid-row grid-gap margin-top-2 desktop:margin-top-0">
+            <IconLink
+              className="font-body-3xs text-white text-no-underline"
+              icon={<IconLaunch />}
+              iconPosition="after"
+              to="/help/report-a-problem"
+              target="_blank"
+            >
+              {t('footer.reportProblem')}
+            </IconLink>
+
+            <IconLink
+              className="font-body-3xs text-white text-no-underline"
+              icon={<IconLaunch />}
+              iconPosition="after"
+              to="/help/send-feedback"
+              target="_blank"
+            >
+              {t('footer.sendFeedback')}
+            </IconLink>
+
+            {/* Temp hide slack chat link */}
+            {/* <IconLink
+              className="font-body-3xs text-white text-no-underline"
+              icon={<IconLaunch />}
+              iconPosition="after"
+              to={SLACK_OIT_DEV_FEEDBACK}
+              target="_blank"
+            >
+              {t('footer.chatOnSlack')}
+            </IconLink> */}
           </div>
         </div>
-        <div className="flex-auto">
-          <IconLightbulbOutline className="text-primary-light" size={3} />
-        </div>
+        <IconLightbulbOutline className="text-primary-light" size={3} />
       </GridContainer>
     </div>
   );
