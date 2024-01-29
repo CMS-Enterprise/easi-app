@@ -43,7 +43,8 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             cedar508Requests: false,
             technicalAssistance: true,
             hide508Workflow: true,
-            portfolioUpdateReport: false
+            portfolioUpdateReport: false,
+            itgovLinkRequestsRequester: false
           }
         });
 
