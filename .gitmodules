@@ -1,0 +1,3 @@
+[submodule "easi-shared"]
+	path = easi-shared
+	url = git@github.com:CMSgov/easi-shared.git
