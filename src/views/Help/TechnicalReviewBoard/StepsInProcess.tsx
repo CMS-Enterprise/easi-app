@@ -36,10 +36,7 @@ const StepsInProcess = () => {
         />
       </MainContent>
 
-      <RelatedArticles
-        type="Technical Review Board"
-        currentArticle="stepsInTRBProcess"
-      />
+      <RelatedArticles articles={['prepareTrbConsultMeeting']} />
     </>
   );
 };

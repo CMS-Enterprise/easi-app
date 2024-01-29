@@ -474,7 +474,7 @@ exports[`The GRT business case review > matches the snapshot 1`] = `
     </div>
     <a
       class="usa-button margin-top-5"
-      href="/governance-review-team//actions"
+      href="/governance-review-team/34ded286-02fa-4457-b1a5-0fc6ec00ecf5/actions"
     >
       Take an action
     </a>
