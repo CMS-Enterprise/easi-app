@@ -3096,6 +3096,11 @@ func (r *systemIntakeResolver) LcidStatus(ctx context.Context, obj *models.Syste
 	return obj.LCIDStatus(time.Now()), nil
 }
 
+// ContractName is the resolver for the contractName field.
+func (r *systemIntakeResolver) ContractName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented: ContractName - contractName"))
+}
+
 // RelationType is the resolver for the relationType field.
 func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRelationType, error) {
 	// The purpose of this resolver is to return the kind of relation that has been set for this System Intake
