@@ -1,6 +1,4 @@
-import { ArticleProps } from 'types/articles';
-
-const trbArticles: ArticleProps[] = [
+const trbArticles = [
   {
     route: '/trb/prepare-consult-meeting',
     type: 'Technical Review Board',
@@ -11,6 +9,6 @@ const trbArticles: ArticleProps[] = [
     type: 'Technical Review Board',
     translation: 'stepsInTRBProcess'
   }
-];
+] as const;
 
 export default trbArticles;
