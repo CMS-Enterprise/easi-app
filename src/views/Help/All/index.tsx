@@ -13,7 +13,7 @@ import trbArticles from '../TechnicalReviewBoard/articles';
 const AllHelp = () => {
   const { t } = useTranslation('help');
 
-  const allArticles = itGovernanceArticles.concat(trbArticles);
+  const allArticles = [...itGovernanceArticles, ...trbArticles];
 
   return (
     <MainContent className="grid-container margin-bottom-10">

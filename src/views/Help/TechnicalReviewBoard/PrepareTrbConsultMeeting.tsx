@@ -101,10 +101,7 @@ function PrepareTrbConsultMeeting() {
         />
       </MainContent>
 
-      <RelatedArticles
-        type="Technical Review Board"
-        currentArticle="prepareTrbConsultMeeting"
-      />
+      <RelatedArticles articles={['stepsInTRBProcess']} />
     </>
   );
 }
