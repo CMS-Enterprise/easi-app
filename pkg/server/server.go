@@ -3,15 +3,12 @@ package server
 
 import (
 	"crypto/tls"
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-
-	same "github.com/cmsgov/easi-shared/go/same"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 )
@@ -67,8 +64,6 @@ func NewServer(config *viper.Viper) *Server {
 // Serve runs the server
 func Serve(config *viper.Viper) {
 	s := NewServer(config)
-
-	fmt.Println("Checking if numbers are the same:", same.Same(0, 1))
 
 	useTLS := config.GetBool("USE_TLS")
 	if useTLS {

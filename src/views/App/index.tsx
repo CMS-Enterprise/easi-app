@@ -49,7 +49,6 @@ import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
 import UserInfoWrapper from 'views/UserInfoWrapper';
 
-import { Alert } from '../../../easi-shared/src/components/Alert';
 import { NavContextProvider } from '../../components/Header/navContext';
 
 import shouldScroll from './scrollConfig';
@@ -238,7 +237,6 @@ const App = () => {
                     <TableStateWrapper>
                       <PageWrapper>
                         <GovBanner />
-                        <Alert type="success">Wowwie, great job!</Alert>
                         <Header />
                         <Navigation>
                           <AppRoutes />
