@@ -2843,8 +2843,10 @@ func (r *systemIntakeResolver) Costs(ctx context.Context, obj *models.SystemInta
 // AnnualSpending is the resolver for the annualSpending field.
 func (r *systemIntakeResolver) AnnualSpending(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeAnnualSpending, error) {
 	return &model.SystemIntakeAnnualSpending{
-		CurrentAnnualSpending:  obj.CurrentAnnualSpending.Ptr(),
-		PlannedYearOneSpending: obj.PlannedYearOneSpending.Ptr(),
+		CurrentAnnualSpending:           obj.CurrentAnnualSpending.Ptr(),
+		CurrentAnnualSpendingITPortion:  obj.CurrentAnnualSpendingITPortion.Ptr(),
+		PlannedYearOneSpending:          obj.PlannedYearOneSpending.Ptr(),
+		PlannedYearOneSpendingITPortion: obj.PlannedYearOneSpendingITPortion.Ptr(),
 	}, nil
 }
 
