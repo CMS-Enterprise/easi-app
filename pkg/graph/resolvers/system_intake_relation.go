@@ -3,7 +3,7 @@ package resolvers
 import (
 	"context"
 
-	"github.com/guregu/null"
+	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
 	"github.com/cmsgov/easi-app/pkg/graph/model"
@@ -28,7 +28,7 @@ func SetSystemIntakeRelationExistingService(
 		}
 
 		// Set contract name
-		intake.ContractName = null.StringFrom(input.ContractName)
+		intake.ContractName = zero.StringFrom(input.ContractName)
 		updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
 		if err != nil {
 			return nil, err
@@ -57,7 +57,7 @@ func SetSystemIntakeRelationNewSystem(
 		}
 
 		// Clear contract name
-		intake.ContractName = null.NewString("", false)
+		intake.ContractName = zero.StringFromPtr(nil)
 		updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
 		if err != nil {
 			return nil, err
@@ -86,7 +86,7 @@ func SetSystemIntakeRelationExistingSystem(
 		}
 
 		// Clear contract name
-		intake.ContractName = null.NewString("", false)
+		intake.ContractName = zero.StringFromPtr(nil)
 		updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
 		if err != nil {
 			return nil, err

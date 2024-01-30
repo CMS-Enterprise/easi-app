@@ -3,7 +3,7 @@ package resolvers
 import (
 	"time"
 
-	"github.com/guregu/null"
+	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -21,7 +21,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 		Status:       models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType:  models.SystemIntakeRequestTypeNEW,
 		SubmittedAt:  &submittedAt,
-		ContractName: null.StringFrom("My Test Contract Name"),
+		ContractName: zero.StringFrom("My Test Contract Name"),
 	})
 	suite.NoError(err)
 	suite.NotNil(openIntake)
@@ -55,7 +55,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 		Status:       models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType:  models.SystemIntakeRequestTypeNEW,
 		SubmittedAt:  &submittedAt,
-		ContractName: null.StringFrom("My Test Contract Name"),
+		ContractName: zero.StringFrom("My Test Contract Name"),
 	})
 	suite.NoError(err)
 	suite.NotNil(openIntake)
