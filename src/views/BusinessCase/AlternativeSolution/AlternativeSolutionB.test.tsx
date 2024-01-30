@@ -54,6 +54,7 @@ describe('Business case alternative b solution', () => {
       form: {
         ...businessCaseInitialData,
         id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
+        systemIntakeId: '34ded286-02fa-4457-b1a5-0fc6ec00ecf5',
         alternativeB: {
           ...defaultProposedSolution
         }
@@ -109,6 +110,7 @@ describe('Business case alternative b solution', () => {
         form: {
           ...businessCaseInitialData,
           id: '75746af8-9a9b-4558-a375-cf9848eb2b0d',
+          systemIntakeId: '34ded286-02fa-4457-b1a5-0fc6ec00ecf5',
           alternativeB: defaultProposedSolution
         },
         isLoading: false,
