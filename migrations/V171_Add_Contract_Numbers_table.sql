@@ -6,16 +6,20 @@ CREATE TABLE IF NOT EXISTS contract_numbers (
     created_by TEXT NOT NULL CHECK (created_by ~ '^[A-Z0-9]{4}$'),
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_by TEXT CHECK (modified_by ~ '^[A-Z0-9]{4}$'),
-    modified_at TIMESTAMP WITH TIME ZONE
+    modified_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- allow one link between a unique intake id and a unique contract number
 CREATE UNIQUE INDEX IF NOT EXISTS
     contract_number_intake_id_unique_idx ON contract_numbers
-        USING btree (intake_id, contract_number);
+        USING btree (intake_id, contract_number)
+            WHERE intake_id IS NOT NULL;
 
+-- allow one link between a unique trb id and a unique contract number
 CREATE UNIQUE INDEX IF NOT EXISTS
     contract_number_trb_id_unique_idx ON contract_numbers
-        USING btree (trb_id, contract_number);
+        USING btree (trb_id, contract_number)
+            WHERE trb_id IS NOT NULL;
 
 ALTER TABLE IF EXISTS contract_numbers ADD CONSTRAINT exactly_one_fkey check (
     ((intake_id IS NOT NULL) AND (trb_id IS NULL))
