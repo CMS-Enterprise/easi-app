@@ -16,6 +16,7 @@ describe('The GRT business case review', () => {
   const mockBusinessCase: BusinessCaseModel = {
     ...businessCaseInitialData,
     id: '54e829a9-6ce3-4b4b-81b0-7781b1e22821',
+    systemIntakeId: 'c9dcaca2-c500-45ae-96ce-a4ae527b4c8a',
     requestName: 'Easy Access to System Information',
     requester: {
       name: 'Jane Doe',
