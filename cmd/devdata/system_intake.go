@@ -329,7 +329,9 @@ func updateSystemIntakeContractDetails(
 	source2 := "Fed Admin"
 	source3 := "MIP Base"
 	currentAnnualSpending := "It's kind of a lot"
+	currentAnnualSpendingITPortion := "75%"
 	plannedYearOneSpending := "A little bit more"
+	plannedYearOneSpendingITPortion := "25%"
 	contractor := "Dr Doom"
 	startDate := time.Now().AddDate(-1, 0, 0)
 	hasContract := "HAVE_CONTRACT"
@@ -356,8 +358,10 @@ func updateSystemIntakeContractDetails(
 		},
 		Costs: &model.SystemIntakeCostsInput{}, //doesn't appear in current form
 		AnnualSpending: &model.SystemIntakeAnnualSpendingInput{
-			CurrentAnnualSpending:  &currentAnnualSpending,
-			PlannedYearOneSpending: &plannedYearOneSpending,
+			CurrentAnnualSpending:           &currentAnnualSpending,
+			CurrentAnnualSpendingITPortion:  &currentAnnualSpendingITPortion,
+			PlannedYearOneSpending:          &plannedYearOneSpending,
+			PlannedYearOneSpendingITPortion: &plannedYearOneSpendingITPortion,
 		},
 		Contract: &model.SystemIntakeContractInput{
 			Contractor:  &contractor,
