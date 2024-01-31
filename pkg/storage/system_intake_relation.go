@@ -5,38 +5,48 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // TODO Implement store methods that have to deal with setting System Intake linking/relation data
-func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, link *model.SetSystemIntakeRelationNewSystemInput) error {
-	if link == nil || link.SystemIntakeID == uuid.Nil {
-		return errors.New("unexpected nil link/system intake ID when linking system intake to contract number")
+func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, contractNumbers []string) error {
+	if systemIntakeID == uuid.Nil {
+		return errors.New("unexpected nil system intake ID when linking system intake to contract number")
 	}
 
-	// delete where intake_id first
-	// return sqlutils.WithTransaction[int](s.db, func(tx *sqlx.Tx) (*int, error) {
+	deleteStatement := `
+		DELETE FROM contract_numbers
+		WHERE intake_id = $1
+	`
 
-	// })
+	if _, err := tx.ExecContext(ctx, deleteStatement, systemIntakeID); err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to delete contract numbers linked to system intake", zap.Error(err))
+		return err
+	}
+
+	// no need to run insert if we are not inserting new contracts
+	if len(contractNumbers) < 1 {
+		return nil
+	}
 
 	euaUserID := appcontext.Principal(ctx).ID()
 
-	ceateSystemIntakeContractNumbersLinks := make([]models.CreateSystemIntakeContractNumbersLink, len(link.ContractNumbers))
+	ceateSystemIntakeContractNumbersLinks := make([]models.CreateSystemIntakeContractNumbersLink, len(contractNumbers))
 
-	for i, contractNumber := range link.ContractNumbers {
+	for i, contractNumber := range contractNumbers {
 		ceateSystemIntakeContractNumbersLinks[i] = models.CreateSystemIntakeContractNumbersLink{
-			IntakeID:       link.SystemIntakeID,
+			IntakeID:       systemIntakeID,
 			ContractNumber: contractNumber,
 			CreatedBy:      euaUserID,
 			ModifiedBy:     euaUserID,
 		}
 	}
 
-	sqlStatement := `INSERT INTO contract_numbers (
+	insertStatement := `INSERT INTO contract_numbers (
 		intake_id,
 		contract_number,
 		created_by,
@@ -49,7 +59,7 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, link *model
 		:modified_by
 	) ON CONFLICT DO NOTHING`
 
-	if _, err := s.db.NamedExecContext(ctx, sqlStatement, ceateSystemIntakeContractNumbersLinks); err != nil {
+	if _, err := tx.NamedExecContext(ctx, insertStatement, ceateSystemIntakeContractNumbersLinks); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to insert linked system intake to contract numbers", zap.Error(err))
 		return err
 	}

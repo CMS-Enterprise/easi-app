@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS contract_numbers (
+CREATE TABLE IF NOT EXISTS system_intake_contract_numbers (
     id UUID PRIMARY KEY NOT NULL,
     intake_id UUID REFERENCES system_intakes(id) ON DELETE CASCADE,
     -- trb_id UUID REFERENCES trb_request(id) ON DELETE CASCADE,
@@ -12,8 +12,7 @@ CREATE TABLE IF NOT EXISTS contract_numbers (
 -- allow one link between a unique intake id and a unique contract number
 CREATE UNIQUE INDEX IF NOT EXISTS
     contract_number_intake_id_unique_idx ON contract_numbers
-        USING btree (intake_id, contract_number)
-            WHERE intake_id IS NOT NULL;
+        USING btree (intake_id, contract_number);
 
 -- allow one link between a unique trb id and a unique contract number
 -- CREATE UNIQUE INDEX IF NOT EXISTS
