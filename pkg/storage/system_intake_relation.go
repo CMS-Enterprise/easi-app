@@ -14,6 +14,7 @@ import (
 
 // TODO Implement store methods that have to deal with setting System Intake linking/relation data
 func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, contractNumbers []string) error {
+
 	if systemIntakeID == uuid.Nil {
 		return errors.New("unexpected nil system intake ID when linking system intake to contract number")
 	}

@@ -67,7 +67,6 @@ func SetSystemIntakeRelationNewSystem(
 		}
 
 		// TODO: STORE -> Delete CEDAR system relationships
-
 		// Delete & recreate contract number relationships
 		if err := store.LinkSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
 			return nil, err
