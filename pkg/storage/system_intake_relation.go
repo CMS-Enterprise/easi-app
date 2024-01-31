@@ -19,7 +19,7 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 	}
 
 	deleteStatement := `
-		DELETE FROM contract_numbers
+		DELETE FROM system_intake_contract_numbers
 		WHERE intake_id = $1
 	`
 
@@ -46,7 +46,7 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 		}
 	}
 
-	insertStatement := `INSERT INTO contract_numbers (
+	insertStatement := `INSERT INTO system_intake_contract_numbers (
 		intake_id,
 		contract_number,
 		created_by,
