@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"fmt"
+
 	"go.uber.org/zap"
 )
 
@@ -38,7 +40,7 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	trb_request
 	`
 
-	_, err := s.db.Exec("TRUNCATE " + tables)
+	_, err := s.db.Exec(fmt.Sprintf("TRUNCATE %s CASCADE", tables))
 	if err != nil {
 		return err
 	}

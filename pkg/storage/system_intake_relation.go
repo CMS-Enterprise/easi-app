@@ -14,7 +14,6 @@ import (
 
 // TODO Implement store methods that have to deal with setting System Intake linking/relation data
 func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, contractNumbers []string) error {
-
 	if systemIntakeID == uuid.Nil {
 		return errors.New("unexpected nil system intake ID when linking system intake to contract number")
 	}
@@ -40,6 +39,7 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 
 	for i, contractNumber := range contractNumbers {
 		ceateSystemIntakeContractNumbersLinks[i] = models.CreateSystemIntakeContractNumbersLink{
+			ID:             uuid.New(),
 			IntakeID:       systemIntakeID,
 			ContractNumber: contractNumber,
 			CreatedBy:      euaUserID,
@@ -48,12 +48,14 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 	}
 
 	insertStatement := `INSERT INTO system_intake_contract_numbers (
+		id,
 		intake_id,
 		contract_number,
 		created_by,
 		modified_by
 	)
 	VALUES (
+		:id,
 		:intake_id,
 		:contract_number,
 		:created_by,
