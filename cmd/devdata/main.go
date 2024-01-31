@@ -632,6 +632,18 @@ func main() {
 			completeOtherSteps: true,
 		},
 	)
+
+	// Intakes with Relation data
+	// 1. Intake with no related systems/services
+	// TODO
+
+	// 2. Intake related to CEDAR System(s)
+	// TODO
+
+	// 3. Intake related to an existing contract/service
+	intakeID = uuid.MustParse("b8e3fbf3-73af-4bac-bac3-fd6167a36166")
+	intake = makeSystemIntakeAndSubmit("System Intake Relation (Existing Contract/Service)", &intakeID, requesterEUA, logger, store)
+	setSystemIntakeRelationExistingService(logger, store, intake, "My Cool Existing Contract/Service")
 }
 
 func date(year, month, day int) *time.Time {
