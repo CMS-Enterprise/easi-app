@@ -326,8 +326,8 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 	defer intakeStmt.Close()
 
 	intake := models.SystemIntake{}
-	err = intakeStmt.Get(&intake, struct{ id uuid.UUID }{
-		id: id,
+	err = intakeStmt.Get(&intake, map[string]interface{}{
+		"id": id.String(),
 	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -368,8 +368,8 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 		return nil, err
 	}
 	sources := []*models.SystemIntakeFundingSource{}
-	err = fundingSourcesStmt.Select(&sources, struct{ id uuid.UUID }{
-		id: id,
+	err = fundingSourcesStmt.Select(&sources, map[string]interface{}{
+		"id": id.String(),
 	})
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
