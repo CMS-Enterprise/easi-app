@@ -22,14 +22,14 @@ func SetSystemIntakeRelationExistingService(
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
-		intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
 			return nil, err
 		}
 
 		// Set contract name
 		intake.ContractName = zero.StringFrom(input.ContractName)
-		updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
+		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
 		}
@@ -51,14 +51,14 @@ func SetSystemIntakeRelationNewSystem(
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
-		intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
 			return nil, err
 		}
 
 		// Clear contract name
 		intake.ContractName = zero.StringFromPtr(nil)
-		updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
+		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
 		}
@@ -80,14 +80,14 @@ func SetSystemIntakeRelationExistingSystem(
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
-		intake, err := store.FetchSystemIntakeByID(ctx, input.SystemIntakeID)
+		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
 			return nil, err
 		}
 
 		// Clear contract name
 		intake.ContractName = zero.StringFromPtr(nil)
-		updatedIntake, err := store.UpdateSystemIntake(ctx, intake)
+		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
 		}

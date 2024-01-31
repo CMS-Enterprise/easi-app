@@ -175,11 +175,25 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
 
-// UpdateSystemIntake does an upsert for a system intake
-// caller is responsible for setting intake.UpdatedAt if they want to update that field
+// UpdateSystemIntake serves as a wrapper for UpdateSystemIntakeNP, which is the actual implementation
+// for updating System Intakes.
+//
+// This method only exists to provide a transactional wrapper around the actual implementation, as a vast majority of the codebase
+// was written before the introduction of transactions in the storage layer. This method should eventually be removed in favor of
+// using UpdateSystemIntakeNP directly (and that function renamed).
 func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
+	return sqlutils.WithTransaction[models.SystemIntake](s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+		return s.UpdateSystemIntakeNP(ctx, tx, intake)
+	})
+}
 
+// UpdateSystemIntakeNP does an upsert for a system intake
+// The caller is responsible for setting intake.UpdatedAt if they want to update that field
+//
+// The "NP" suffix stands for "NamedPreparer", as this function was written to avoid the need to update all
+// of the existing code that uses UpdateSystemIntake to use a transactional wrapper.
+func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPreparer, intake *models.SystemIntake) (*models.SystemIntake, error) {
+	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
 	const updateSystemIntakeSQL = `
 		UPDATE system_intakes
 		SET
@@ -249,11 +263,12 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			contract_name = :contract_name
 		WHERE system_intakes.id = :id
 	`
-	_, err := s.db.NamedExec(
-		updateSystemIntakeSQL,
-		intake,
-	)
+	updateStmt, err := np.PrepareNamed(updateSystemIntakeSQL)
+	if err != nil {
+		return nil, err
+	}
 
+	_, err = updateStmt.Exec(intake)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update system intake %s", err),
@@ -268,7 +283,9 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 	}
 	// the SystemIntake may have been updated to Archived, so we want to use
 	// the un-filtered fetch to return the saved object
-	return s.FetchSystemIntakeByID(ctx, intake.ID)
+	//
+	// Using the "NP" version of the fetch method to allow the update and fetch to be part of a transaction
+	return s.FetchSystemIntakeByIDNP(ctx, np, intake.ID)
 }
 
 const fetchSystemIntakeSQL = `
