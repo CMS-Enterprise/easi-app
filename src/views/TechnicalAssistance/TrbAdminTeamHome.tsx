@@ -425,7 +425,7 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
-        sortBy: useMemo(() => [{ id: 'form.submittedAt', desc: true }], []),
+        sortBy: useMemo(() => [{ id: 'consultMeetingTime', desc: true }], []),
         pageIndex: 0,
         pageSize: 10
       }
