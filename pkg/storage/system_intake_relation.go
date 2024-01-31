@@ -18,6 +18,11 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, link *model
 		return errors.New("unexpected nil link/system intake ID when linking system intake to contract number")
 	}
 
+	// delete where intake_id first
+	// return sqlutils.WithTransaction[int](s.db, func(tx *sqlx.Tx) (*int, error) {
+
+	// })
+
 	euaUserID := appcontext.Principal(ctx).ID()
 
 	ceateSystemIntakeContractNumbersLinks := make([]models.CreateSystemIntakeContractNumbersLink, len(link.ContractNumbers))
