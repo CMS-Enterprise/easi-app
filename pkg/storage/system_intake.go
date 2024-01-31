@@ -310,6 +310,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 }
 
 // FetchSystemIntakeByIDNP queries the DB for a system intake matching the given ID
+//
 // The "NP" suffix stands for "NamedPreparer", as this function was written to avoid the need to update all
 // of the existing code that uses FetchSystemIntakeByID to use a transactional wrapper.
 func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id uuid.UUID) (*models.SystemIntake, error) {
