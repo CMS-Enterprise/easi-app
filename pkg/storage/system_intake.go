@@ -267,6 +267,7 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 	if err != nil {
 		return nil, err
 	}
+	defer updateStmt.Close()
 
 	_, err = updateStmt.Exec(intake)
 	if err != nil {
@@ -322,6 +323,7 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 	if err != nil {
 		return nil, err
 	}
+	defer intakeStmt.Close()
 
 	intake := models.SystemIntake{}
 	err = intakeStmt.Get(&intake, struct{ id uuid.UUID }{
