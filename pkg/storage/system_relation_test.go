@@ -48,7 +48,6 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 			return nil, nil
 		})
 		s.NoError(err)
-
 	})
 
 	s.Run("retrieves the contracts", func() {
