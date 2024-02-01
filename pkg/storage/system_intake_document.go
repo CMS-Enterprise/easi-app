@@ -165,6 +165,7 @@ func (s *Store) DeleteSystemIntakeDocument(ctx context.Context, id uuid.UUID) (*
 	arg := map[string]interface{}{
 		"id": id,
 	}
+
 	retDoc := models.SystemIntakeDocument{}
 	err = stmt.Get(&retDoc, arg)
 	if err != nil {
