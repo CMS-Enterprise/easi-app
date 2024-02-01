@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+	"github.com/guregu/null/zero"
 )
 
 // SystemIntakeStatus represents the status of a system intake
@@ -184,6 +185,7 @@ type SystemIntake struct {
 	FinalBusinessCaseState      SystemIntakeFormState        `json:"finalBusinessCaseState" db:"final_business_case_state"`
 	DecisionState               SystemIntakeDecisionState    `json:"decisionState" db:"decision_state"`
 	TRBFollowUpRecommendation   *SystemIntakeTRBFollowUp     `json:"trbFollowUpRecommendation" db:"trb_follow_up_recommendation"`
+	ContractName                zero.String                  `json:"contractName" db:"contract_name"`
 }
 
 // SystemIntakes is a list of System Intakes

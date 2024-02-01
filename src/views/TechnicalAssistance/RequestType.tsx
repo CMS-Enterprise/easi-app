@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Button,
@@ -36,7 +36,7 @@ function RequestType() {
   const { t } = useTranslation('technicalAssistance');
 
   const history = useHistory();
-  const { pathname } = useLocation();
+  const { path: pathname } = useRouteMatch();
   const isNew = pathname.startsWith('/trb/start');
 
   const { id } = useParams<{

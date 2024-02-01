@@ -1385,7 +1385,14 @@ func (r *mutationResolver) SetSystemIntakeRelationNewSystem(ctx context.Context,
 	// 1. Delete (if any) existing CEDAR System ID relations that were set by SetSystemIntakeRelationExistingSystem()
 	// 2. Delete (if any) existing free-text contract/service name that might have been set by SetSystemIntakeRelationExistingService()
 	// 3. Delete & Create Contract Number relations (Delete & Create because this mutation always receives the full state of the relations)
-	panic(fmt.Errorf("not implemented: SetSystemIntakeRelationNewSystem - setSystemIntakeRelationNewSystem"))
+	intake, err := resolvers.SetSystemIntakeRelationNewSystem(ctx, r.store, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
 }
 
 // SetSystemIntakeRelationExistingSystem is the resolver for the setSystemIntakeRelationExistingSystem field.
@@ -1398,7 +1405,14 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Con
 	// 1. Delete (if any) existing free-text contract/service name that might have been set by SetSystemIntakeRelationExistingService()
 	// 2. Delete & Create CEDAR System ID relations (Delete & Create because this mutation always receives the full state of the relations)
 	// 3. Delete & Create Contract Number relations (Delete & Create because this mutation always receives the full state of the relations)
-	panic(fmt.Errorf("not implemented: SetSystemIntakeRelationExistingSystem - setSystemIntakeRelationExistingSystem"))
+	intake, err := resolvers.SetSystemIntakeRelationExistingSystem(ctx, r.store, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
 }
 
 // SetSystemIntakeRelationExistingService is the resolver for the setSystemIntakeRelationExistingService field.
@@ -1411,7 +1425,14 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Co
 	// 1. Delete (if any) existing CEDAR System ID relations that might have been set by SetSystemIntakeRelationExistingSystem()
 	// 2. Set the free-text contract/service name
 	// 3. Delete & Create Contract Number relations (Delete & Create because this mutation always receives the full state of the relations)
-	panic(fmt.Errorf("not implemented: SetSystemIntakeRelationExistingService - setSystemIntakeRelationExistingService"))
+	intake, err := resolvers.SetSystemIntakeRelationExistingService(ctx, r.store, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
 }
 
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
@@ -2714,6 +2735,11 @@ func (r *systemIntakeResolver) StatusAdmin(ctx context.Context, obj *models.Syst
 // LcidStatus is the resolver for the lcidStatus field.
 func (r *systemIntakeResolver) LcidStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeLCIDStatus, error) {
 	return obj.LCIDStatus(time.Now()), nil
+}
+
+// ContractName is the resolver for the contractName field.
+func (r *systemIntakeResolver) ContractName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ContractName.Ptr(), nil
 }
 
 // RelationType is the resolver for the relationType field.
