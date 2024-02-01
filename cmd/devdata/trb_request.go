@@ -582,7 +582,7 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 	}
 
 	adviceLetterChanges := map[string]interface{}{
-		"trbRequestId":          trb.ID.String(),
+		"trbRequestId":          trb.ID,
 		"meetingSummary":        "Talked about stuff",
 		"isFollowupRecommended": isFollowUpRequested,
 	}
