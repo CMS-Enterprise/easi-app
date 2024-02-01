@@ -2,20 +2,39 @@
 
 <p>The Governance Team has decided that {{.RequestName}} is ready to move to the next step in the IT Governance process.</p>
 
-<p>Next step: {{.Step}}</p>
+<br>
+<p class="no-margin-top"><strong>Next step:</strong> {{.Step}}</p>
 
-{{if .Feedback}}<p>Feedback about your request: {{.Feedback}}</p>{{end}}
+{{ if .Feedback -}}
+<br>
+<div class="no-margin">
+  <p><strong>Feedback about your request:</strong></p>
+  {{.Feedback}}
+</div>
+{{ end -}}
 
-<p>View this request in EASi:
-<ul>
-<li>The person who initially submitted this request, {{.RequesterName}}, may <a href="{{.SystemIntakeRequestLink}}">click here</a> to view the request task list.</li>
-<li>Governance Team members may <a href="{{.SystemIntakeAdminLink}}">click here</a> to view the request details.</li>
-<li>Others should contact {{.RequesterName}} or the Governance Team for more information about this request.</li>
-</ul></p>
+<br>
+<br>
+<div class="no-margin">
+  <p>View this request in EASi:</p>
+  <ul>
+    <li>The person who initially submitted this request, {{.RequesterName}}, may <a href="{{.SystemIntakeRequestLink}}">click here</a> to view the request task list.</li>
+    <li>Governance Team members may <a href="{{.SystemIntakeAdminLink}}">click here</a> to view the request details.</li>
+    <li>Others should contact {{.RequesterName}} or the Governance Team for more information about this request.</li>
+  </ul>
+</div>
 
-If you have questions about your request, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.
+<br>
+<p>If you have questions about your request, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
 
-{{if .AdditionalInfo}}<hr><p><strong>Additional information from the Governance Team:</strong></p><p>{{.AdditionalInfo}}</p>{{end}}
+{{ if .AdditionalInfo -}}
+<br>
+<br>
+<hr>
+<p><strong>Additional information from the Governance Team:</strong></p><div class="no-margin">{{.AdditionalInfo}}</div>
+{{ end -}}
+<br>
+<br>
 <hr>
 
 <p>Depending on the request, you may continue to receive email notifications about this request until it is closed.</p>

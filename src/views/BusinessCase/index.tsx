@@ -86,7 +86,8 @@ export const BusinessCase = () => {
   >(GetGovernanceTaskListQuery, {
     variables: {
       id: businessCase.systemIntakeId
-    }
+    },
+    skip: !businessCase?.systemIntakeId
   });
 
   const isFinal: boolean =

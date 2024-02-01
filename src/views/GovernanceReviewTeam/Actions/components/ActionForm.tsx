@@ -181,7 +181,11 @@ const ActionForm = <TFieldValues extends SystemIntakeActionFields>({
 
   // Set default form values
   useEffect(() => {
-    if (!!requester.euaUserId && isLoading) {
+    if (
+      // Check that formatted contacts have been loaded before updating default values
+      !!requester?.systemIntakeId &&
+      isLoading
+    ) {
       reset(
         {
           adminNote: '',
