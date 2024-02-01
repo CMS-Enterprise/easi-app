@@ -15,6 +15,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
 // CreateSystemIntake creates a system intake, though without saving values for LCID-related fields
@@ -174,11 +175,25 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
 
-// UpdateSystemIntake does an upsert for a system intake
-// caller is responsible for setting intake.UpdatedAt if they want to update that field
+// UpdateSystemIntake serves as a wrapper for UpdateSystemIntakeNP, which is the actual implementation
+// for updating System Intakes.
+//
+// This method only exists to provide a transactional wrapper around the actual implementation, as a vast majority of the codebase
+// was written before the introduction of transactions in the storage layer. This method should eventually be removed in favor of
+// using UpdateSystemIntakeNP directly (and that function renamed).
 func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
+	return sqlutils.WithTransaction[models.SystemIntake](s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+		return s.UpdateSystemIntakeNP(ctx, tx, intake)
+	})
+}
 
+// UpdateSystemIntakeNP does an upsert for a system intake
+// The caller is responsible for setting intake.UpdatedAt if they want to update that field
+//
+// The "NP" suffix stands for "NamedPreparer", as this function was written to avoid the need to update all
+// of the existing code that uses UpdateSystemIntake to use a transactional wrapper.
+func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPreparer, intake *models.SystemIntake) (*models.SystemIntake, error) {
+	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
 	const updateSystemIntakeSQL = `
 		UPDATE system_intakes
 		SET
@@ -248,11 +263,13 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			contract_name = :contract_name
 		WHERE system_intakes.id = :id
 	`
-	_, err := s.db.NamedExec(
-		updateSystemIntakeSQL,
-		intake,
-	)
+	updateStmt, err := np.PrepareNamed(updateSystemIntakeSQL)
+	if err != nil {
+		return nil, err
+	}
+	defer updateStmt.Close()
 
+	_, err = updateStmt.Exec(intake)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update system intake %s", err),
@@ -267,7 +284,9 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 	}
 	// the SystemIntake may have been updated to Archived, so we want to use
 	// the un-filtered fetch to return the saved object
-	return s.FetchSystemIntakeByID(ctx, intake.ID)
+	//
+	// Using the "NP" version of the fetch method to allow the update and fetch to be part of a transaction
+	return s.FetchSystemIntakeByIDNP(ctx, np, intake.ID)
 }
 
 const fetchSystemIntakeSQL = `
@@ -279,14 +298,37 @@ const fetchSystemIntakeSQL = `
 		    LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
 `
 
-// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
+// FetchSystemIntakeByID serves as a wrapper for FetchSystemIntakeByIDNP, which is the actual implementation
+// for fetching System Intakes by ID.
+//
+// This method only exists to provide a transactional wrapper around the actual implementation, as a vast majority of the codebase
+// was written before the introduction of transactions in the storage layer. This method should eventually be removed in favor of
+// using FetchSystemIntakeByIDNP directly (and that function renamed).
 func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-	intake := models.SystemIntake{}
+	return sqlutils.WithTransaction[models.SystemIntake](s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+		return s.FetchSystemIntakeByIDNP(ctx, tx, id)
+	})
+}
+
+// FetchSystemIntakeByIDNP queries the DB for a system intake matching the given ID
+//
+// The "NP" suffix stands for "NamedPreparer", as this function was written to avoid the need to update all
+// of the existing code that uses FetchSystemIntakeByID to use a transactional wrapper.
+func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id uuid.UUID) (*models.SystemIntake, error) {
+	// we do not filter for archived because the update method relies on this method to return the archived intake
 	const whereClause = `
-		WHERE system_intakes.id=$1
+		WHERE system_intakes.id = :id
 	`
-	// should not filter for archived because the update method relies on this method to return the archived intake
-	err := s.db.Get(&intake, fetchSystemIntakeSQL+whereClause, id)
+	intakeStmt, err := np.PrepareNamed(fetchSystemIntakeSQL + whereClause)
+	if err != nil {
+		return nil, err
+	}
+	defer intakeStmt.Close()
+
+	intake := models.SystemIntake{}
+	err = intakeStmt.Get(&intake, map[string]interface{}{
+		"id": id.String(),
+	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			appcontext.ZLogger(ctx).Info(
@@ -308,8 +350,6 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 		}
 	}
 
-	sources := []*models.SystemIntakeFundingSource{}
-
 	// TODO: Rather than two separate queries/round-trips to the database, the funding sources should be
 	// queried via a single query that includes a left join on system_intake_funding_sources. This code
 	// works and can unblock frontend work that relies on this function, but should be revisited. I was
@@ -318,17 +358,19 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 	// required explicitly specifying all of the system intake columns, which seemed less than ideal
 	// given that any changes made to the models.SystemIntake struct would require also code changes to
 	// the code that would handle the joined query result.
-	err = s.db.Select(&sources, `
+	fundingSourcesSQL := `
 		SELECT *
 		FROM system_intake_funding_sources
-		WHERE system_intake_id=$1
-	`, id)
-
+		WHERE system_intake_id= :id;
+	`
+	fundingSourcesStmt, err := np.PrepareNamed(fundingSourcesSQL)
 	if err != nil {
 		return nil, err
 	}
-
-	intake.FundingSources = sources
+	sources := []*models.SystemIntakeFundingSource{}
+	err = fundingSourcesStmt.Select(&sources, map[string]interface{}{
+		"id": id.String(),
+	})
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contacts", zap.Error(err), zap.String("id", id.String()))
@@ -338,6 +380,8 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 			Operation: apperrors.QueryFetch,
 		}
 	}
+
+	intake.FundingSources = sources
 
 	return &intake, nil
 }
