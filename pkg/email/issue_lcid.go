@@ -76,7 +76,7 @@ func (c Client) SendIssueLCIDEmails(
 	nextSteps models.HTML,
 	feedback models.HTML,
 ) error {
-	subject := "Lifecycle ID request approved"
+	subject := "Life Cycle ID request approved"
 	body, err := c.issueLCIDBody(systemIntakeID, projectName, requester, lcid, expirationDate, scope, lifecycleCostBaseline, nextSteps, feedback)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
