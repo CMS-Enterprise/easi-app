@@ -2,8 +2,6 @@ name: PR Build and Test
 
 on:
   pull_request:
-    branches:
-      - "**"
 
 # This concurrency group exists with cancel-in-progress: true so that only the latest run of the workflow is executed (as its all that should matter).
 concurrency:
