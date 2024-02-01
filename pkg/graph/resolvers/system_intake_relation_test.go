@@ -18,7 +18,6 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 	// Create an inital intake that has an existing contract name
 	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:        models.SystemIntakeStateOPEN,
-		Status:       models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType:  models.SystemIntakeRequestTypeNEW,
 		SubmittedAt:  &submittedAt,
 		ContractName: zero.StringFrom("My Test Contract Name"),
@@ -52,7 +51,6 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 	// Create an inital intake that has an existing contract name
 	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:        models.SystemIntakeStateOPEN,
-		Status:       models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType:  models.SystemIntakeRequestTypeNEW,
 		SubmittedAt:  &submittedAt,
 		ContractName: zero.StringFrom("My Test Contract Name"),
@@ -87,7 +85,6 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 	// Create an inital intake
 	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateOPEN,
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 		SubmittedAt: &submittedAt,
 	})
