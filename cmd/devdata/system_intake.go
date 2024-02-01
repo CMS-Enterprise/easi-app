@@ -254,6 +254,24 @@ func updateSystemIntakeContact(
 	}
 }
 
+func setSystemIntakeRelationExistingService(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+	contractName string,
+) {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, intake.EUAUserID.ValueOrZero())
+	input := &model.SetSystemIntakeRelationExistingServiceInput{
+		SystemIntakeID: intake.ID,
+		ContractName:   contractName,
+		// ContractNumbers: []string{"1234567890"},
+	}
+	_, err := resolvers.SetSystemIntakeRelationExistingService(ctx, store, input)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func updateSystemIntakeContactDetails(
 	logger *zap.Logger,
 	store *storage.Store,

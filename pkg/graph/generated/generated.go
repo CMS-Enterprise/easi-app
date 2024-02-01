@@ -709,6 +709,7 @@ type ComplexityRoot struct {
 		BusinessSolution            func(childComplexity int) int
 		CedarSystemID               func(childComplexity int) int
 		Contract                    func(childComplexity int) int
+		ContractName                func(childComplexity int) int
 		Costs                       func(childComplexity int) int
 		CreatedAt                   func(childComplexity int) int
 		CurrentStage                func(childComplexity int) int
@@ -1475,6 +1476,7 @@ type SystemIntakeResolver interface {
 	StatusAdmin(ctx context.Context, obj *models.SystemIntake) (models.SystemIntakeStatusAdmin, error)
 	LcidStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeLCIDStatus, error)
 
+	ContractName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	RelationType(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRelationType, error)
 }
 type SystemIntakeDocumentResolver interface {
@@ -5372,6 +5374,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.Contract(childComplexity), true
 
+	case "SystemIntake.contractName":
+		if e.complexity.SystemIntake.ContractName == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.ContractName(childComplexity), true
+
 	case "SystemIntake.costs":
 		if e.complexity.SystemIntake.Costs == nil {
 			break
@@ -8732,6 +8741,7 @@ type SystemIntake {
   """
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
+  contractName: String
   relationType: SystemIntakeRelationType # TODO: NOT IMPLEMENTED
 }
 
@@ -10447,7 +10457,7 @@ type Mutation {
   setSystemIntakeRelationNewSystem(input: SetSystemIntakeRelationNewSystemInput): UpdateSystemIntakePayload
   # TODO: NOT IMPLEMENTED
   setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
-  # TODO: NOT IMPLEMENTED
+  # TODO: NOT FULLY IMPLEMENTED
   setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
 
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
@@ -15832,6 +15842,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "contractName":
+				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
@@ -24718,6 +24730,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "contractName":
+				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
@@ -29549,6 +29563,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "contractName":
+				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
@@ -34992,6 +35008,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "contractName":
+				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
@@ -35207,6 +35225,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "contractName":
+				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
@@ -35454,6 +35474,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "contractName":
+				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
@@ -36665,6 +36687,8 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "contractName":
+				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
@@ -41136,6 +41160,47 @@ func (ec *executionContext) fieldContext_SystemIntake_trbFollowUpRecommendation(
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_contractName(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_contractName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().ContractName(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_contractName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntake_relationType(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntake_relationType(ctx, field)
 	if err != nil {
@@ -41392,6 +41457,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "contractName":
+				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
@@ -50551,6 +50618,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "contractName":
+				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
@@ -51790,6 +51859,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
 			case "trbFollowUpRecommendation":
 				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "contractName":
+				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
 			}
@@ -67864,6 +67935,39 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "trbFollowUpRecommendation":
 			out.Values[i] = ec._SystemIntake_trbFollowUpRecommendation(ctx, field, obj)
+		case "contractName":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_contractName(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "relationType":
 			field := field
 
