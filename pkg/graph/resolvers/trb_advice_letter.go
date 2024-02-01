@@ -38,7 +38,7 @@ func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[
 
 	id, ok := idIface.(uuid.UUID)
 	if !ok {
-		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid: %v", idIface)
+		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid when updating TRB advice letter: %v", idIface)
 	}
 
 	letter, err := store.GetTRBAdviceLetterByTRBRequestID(ctx, id)

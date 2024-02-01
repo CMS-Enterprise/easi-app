@@ -32,7 +32,7 @@ func UpdateTRBRequestForm(
 
 	id, ok := idIface.(uuid.UUID)
 	if !ok {
-		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid: %v", idIface)
+		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid when updating TRB request form: %v", idIface)
 	}
 
 	isSubmitted := false

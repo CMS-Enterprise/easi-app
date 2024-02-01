@@ -49,7 +49,7 @@ func UpdateTRBAdviceLetterRecommendation(ctx context.Context, store *storage.Sto
 	// conv uuid first
 	id, ok := idIface.(uuid.UUID)
 	if !ok {
-		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid: %v", idIface)
+		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid when updating TRB advice letter recommendation: %v", idIface)
 	}
 
 	// This will fail to fetch an existing recommendation if the recommendation is deleted, which is sufficient protection
