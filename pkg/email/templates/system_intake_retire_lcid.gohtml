@@ -19,9 +19,13 @@
 <p><strong>Original date issued:</strong> {{.LifecycleIssuedAt}}</p>
 {{ end -}}
 <p><strong>Expiration date:</strong> {{.LifecycleExpiresAt}}</p>
+{{ if .LifecycleScope -}}
 <p><strong>Scope:</strong></p>{{.LifecycleScope}}
+{{ end -}}
 <p><strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}</p>
+{{ if .DecisionNextSteps -}}
 <p><strong>Next steps:</strong></p>{{.DecisionNextSteps}}
+{{ end -}}
 </div>
 
 {{if .AdditionalInfo -}}
