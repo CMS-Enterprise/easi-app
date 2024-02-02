@@ -401,10 +401,10 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		&lifecycleRetiresAt,
 		&lifecycleExpiresAt,
 		&lifecycleIssuedAt,
-		*lifecycleScope,
+		lifecycleScope,
 		lifecycleCostBaseline,
 		reason,
-		*nextSteps,
+		nextSteps,
 		additionalInfo,
 	)
 	noErr(err)
@@ -415,7 +415,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		lifecycleID,
 		&lifecycleExpiresAt,
 		&lifecycleIssuedAt,
-		*lifecycleScope,
+		lifecycleScope,
 		lifecycleCostBaseline,
 		*reason,
 		nextSteps,
@@ -448,9 +448,9 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		&lifecycleRetiresAt,
 		&lifecycleExpiresAt,
 		&lifecycleIssuedAt,
-		*lifecycleScope,
+		lifecycleScope,
 		lifecycleCostBaseline,
-		*nextSteps,
+		nextSteps,
 		additionalInfo,
 	)
 	noErr(err)
