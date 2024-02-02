@@ -3,16 +3,19 @@ package models
 import (
 	"time"
 
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 )
 
 // IBaseStruct is an interface that all models must implement
 type IBaseStruct interface {
-	GetBaseStruct() *BaseStruct
+	// GetBaseStruct() *BaseStruct
 	GetID() uuid.UUID
 	GetCreatedBy() string
 	GetModifiedBy() *string
+	// This method sets the modified properties of a BaseStruct using the information provided by a principal object
+	SetModifiedBy(principal authentication.Principal) error
 }
 
 // BaseStruct represents the shared data in common betwen all models
@@ -29,6 +32,14 @@ func NewBaseStruct(createdBy string) BaseStruct {
 	return BaseStruct{
 		CreatedBy: createdBy,
 	}
+}
+
+// SetModifiedBy sets the modifiedBy information based off a Principal object
+func (b *BaseStruct) SetModifiedBy(principal authentication.Principal) error {
+	euaid := principal.ID()
+
+	b.ModifiedBy = &euaid
+	return nil
 }
 
 // GetBaseStruct returns the Base Struct
