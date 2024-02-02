@@ -9,6 +9,4 @@ CREATE TABLE IF NOT EXISTS system_intake_contract_numbers (
 );
 
 -- allow one link between a unique intake id and a unique contract number
-CREATE UNIQUE INDEX IF NOT EXISTS
-    contract_number_intake_id_unique_idx ON system_intake_contract_numbers
-        USING btree (intake_id, contract_number);
+CREATE UNIQUE INDEX IF NOT EXISTS contract_number_intake_id_unique_idx ON system_intake_contract_numbers (intake_id, contract_number);
