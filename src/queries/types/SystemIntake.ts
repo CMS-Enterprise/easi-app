@@ -48,7 +48,9 @@ export interface SystemIntake_costs {
 export interface SystemIntake_annualSpending {
   __typename: "SystemIntakeAnnualSpending";
   currentAnnualSpending: string | null;
+  currentAnnualSpendingITPortion: string | null;
   plannedYearOneSpending: string | null;
+  plannedYearOneSpendingITPortion: string | null;
 }
 
 export interface SystemIntake_governanceRequestFeedbacks_author {

@@ -567,14 +567,18 @@ type SystemIntakeActionActor struct {
 
 // Represents current and planned annual costs for a system
 type SystemIntakeAnnualSpending struct {
-	CurrentAnnualSpending  *string `json:"currentAnnualSpending,omitempty"`
-	PlannedYearOneSpending *string `json:"plannedYearOneSpending,omitempty"`
+	CurrentAnnualSpending           *string `json:"currentAnnualSpending,omitempty"`
+	CurrentAnnualSpendingITPortion  *string `json:"currentAnnualSpendingITPortion,omitempty"`
+	PlannedYearOneSpending          *string `json:"plannedYearOneSpending,omitempty"`
+	PlannedYearOneSpendingITPortion *string `json:"plannedYearOneSpendingITPortion,omitempty"`
 }
 
 // Input data for current and planned year one annual costs associated with a system request
 type SystemIntakeAnnualSpendingInput struct {
-	CurrentAnnualSpending  *string `json:"currentAnnualSpending,omitempty"`
-	PlannedYearOneSpending *string `json:"plannedYearOneSpending,omitempty"`
+	CurrentAnnualSpending           *string `json:"currentAnnualSpending,omitempty"`
+	CurrentAnnualSpendingITPortion  *string `json:"currentAnnualSpendingITPortion,omitempty"`
+	PlannedYearOneSpending          *string `json:"plannedYearOneSpending,omitempty"`
+	PlannedYearOneSpendingITPortion *string `json:"plannedYearOneSpendingITPortion,omitempty"`
 }
 
 // Represents the OIT business owner of a system

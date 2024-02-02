@@ -112,7 +112,9 @@ const intake = {
     isExpectingCostIncrease: 'Expecting Cost Increase',
     expectedIncreaseAmount: 'Expected Increase Amount',
     currentAnnualSpend: 'Current Annual Spend',
+    currentAnnualSpendITPortion: 'Current Annual Spend IT Portion',
     plannedAnnualSpend: 'Planned Annual Spend',
+    plannedAnnualSpendITPortion: 'Planned Annual Spend IT Portion',
     existingContract: 'Existing Contract',
     contractors: 'Contractor(s)',
     contractVehicle: 'Contract Vehicle',
@@ -271,8 +273,12 @@ const intake = {
       }
     },
     currentAnnualSpending: 'What is the current annual spending?',
+    currentAnnualSpendingITPortion:
+      'What portion (% or amount) of the current annual spending is IT?',
     plannedYearOneSpending:
       'What is the planned annual spending of the first year of the new contract?',
+    plannedYearOneSpendingITPortion:
+      'What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?',
     hasContract:
       'Do you already have a contract in place to support this effort?',
     hasContractHelpText:
@@ -317,8 +323,12 @@ const intake = {
       'Do the costs for this request exceed what you are currently spending to meet your business need?',
     increase: 'Approximately how much do you expect the cost to increase?',
     currentAnnualSpending: 'What is the current annual spending?',
+    currentAnnualSpendingITPortion:
+      'What portion (% or amount) of the current annual spending is IT?',
     plannedYearOneSpending:
       'What is the planned annual spending of the first year of the new contract?',
+    plannedYearOneSpendingITPortion:
+      'What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?',
     contract: 'Do you already have a contract in place to support this effort?',
     contractors: 'Contractors',
     contractVehicle: 'Contract vehicle',
