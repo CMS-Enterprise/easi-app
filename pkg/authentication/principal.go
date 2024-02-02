@@ -85,8 +85,10 @@ func (*anonymous) Allow508Tester() bool {
 func (*anonymous) AllowTRBAdmin() bool {
 	return false
 }
+
+// Account returns an empty UserAccount for an Anonymous user
 func (*anonymous) Account() *UserAccount {
-	return nil
+	return &UserAccount{}
 }
 
 // EUAPrincipal represents information

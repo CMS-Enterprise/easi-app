@@ -33,16 +33,17 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 		return nil
 	}
 
-	// euaUserID := appcontext.Principal(ctx).ID()
-	principal := appcontext.Principal(ctx)
+	userID := appcontext.Principal(ctx).Account().ID
 
-	ceateSystemIntakeContractNumbersLinks := make([]models.SystemIntakeContractNumber, len(contractNumbers))
+	createSystemIntakeContractNumbersLinks := make([]models.SystemIntakeContractNumber, len(contractNumbers))
 
 	for i, contractNumber := range contractNumbers {
-		contractNumberLink := models.NewSystemIntakeContractNumber(principal.Account().ID)
+		contractNumberLink := models.NewSystemIntakeContractNumber(userID)
+		contractNumberLink.ID = uuid.New()
+		contractNumberLink.ModifiedBy = &userID
 		contractNumberLink.IntakeID = systemIntakeID
 		contractNumberLink.ContractNumber = contractNumber
-		ceateSystemIntakeContractNumbersLinks[i] = contractNumberLink
+		createSystemIntakeContractNumbersLinks[i] = contractNumberLink
 	}
 
 	insertStatement := `INSERT INTO system_intake_contract_numbers (
@@ -60,7 +61,7 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 		:modified_by
 	) ON CONFLICT DO NOTHING`
 
-	if _, err := tx.NamedExecContext(ctx, insertStatement, ceateSystemIntakeContractNumbersLinks); err != nil {
+	if _, err := tx.NamedExecContext(ctx, insertStatement, createSystemIntakeContractNumbersLinks); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to insert linked system intake to contract numbers", zap.Error(err))
 		return err
 	}

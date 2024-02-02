@@ -2,9 +2,9 @@ CREATE TABLE IF NOT EXISTS system_intake_contract_numbers (
     id UUID PRIMARY KEY NOT NULL,
     intake_id UUID REFERENCES system_intakes(id) ON DELETE CASCADE,
     contract_number ZERO_STRING NOT NULL,
-    created_by TEXT NOT NULL CHECK (created_by ~ '^[A-Z0-9]{4}$'),
+    created_by UUID REFERENCES user_account(id),
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_by TEXT CHECK (modified_by ~ '^[A-Z0-9]{4}$'),
+    modified_by UUID REFERENCES user_account(id),
     modified_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

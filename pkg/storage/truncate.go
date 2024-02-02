@@ -24,6 +24,7 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	system_intake_contacts,
 	system_intake_funding_sources,
 	system_intake_documents,
+	system_intake_contract_numbers,
 	system_intakes,
 	trb_admin_notes_trb_request_documents_links,
 	trb_admin_notes_trb_admin_note_recommendations_links,
@@ -40,7 +41,7 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	trb_request
 	`
 
-	_, err := s.db.Exec(fmt.Sprintf("TRUNCATE %s CASCADE", tables))
+	_, err := s.db.Exec(fmt.Sprintf("TRUNCATE %s", tables))
 	if err != nil {
 		return err
 	}
