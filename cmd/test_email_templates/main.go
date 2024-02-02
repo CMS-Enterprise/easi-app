@@ -401,10 +401,10 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		&lifecycleRetiresAt,
 		&lifecycleExpiresAt,
 		&lifecycleIssuedAt,
-		*lifecycleScope,
+		lifecycleScope,
 		lifecycleCostBaseline,
 		reason,
-		*nextSteps,
+		nextSteps,
 		additionalInfo,
 	)
 	noErr(err)

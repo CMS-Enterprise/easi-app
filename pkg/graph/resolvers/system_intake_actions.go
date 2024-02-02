@@ -1258,10 +1258,10 @@ func RetireLCID(
 				&input.RetiresAt,
 				intake.LifecycleExpiresAt,
 				intake.LifecycleIssuedAt,
-				*intake.LifecycleScope,
+				intake.LifecycleScope,
 				intake.LifecycleCostBaseline.ValueOrZero(),
 				input.Reason,
-				*intake.DecisionNextSteps,
+				intake.DecisionNextSteps,
 				input.AdditionalInfo,
 			)
 			if err != nil {
