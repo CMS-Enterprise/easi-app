@@ -42,6 +42,10 @@ type IntegrationTestSuite struct {
 }
 
 func TestIntegrationTestSuite(t *testing.T) {
+	// TODO: Address this
+	// Since, on 01/25/2024, the Okta API disabled the implicit auth flow, we need to identify another way to
+	// fetch an access token for testing. For now, we need to skip these tests.
+	t.Skip("integration tests are skipped")
 	if testing.Short() {
 		t.Skip("skipping integration tests in `-short` mode")
 	}

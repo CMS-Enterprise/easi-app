@@ -2,7 +2,7 @@ name: PR Label Checks
 
 on:
   pull_request:
-    types: [labeled, unlabeled, opened, synchronize, ready_for_review]
+    types: [labeled, unlabeled, opened, reopened, synchronize, ready_for_review]
 
 # This concurrency group exists with cancel-in-progress: true so that only the latest run of the workflow is executed (as its all that should matter).
 concurrency:

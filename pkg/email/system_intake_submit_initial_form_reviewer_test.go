@@ -40,30 +40,35 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormReviewer() {
 			openingResubmittedText1 = "submitted a new"
 			openingResubmittedText2 = "request"
 		}
-		return fmt.Sprintf(`<h1 style="margin-bottom: 0.5rem;">EASi</h1>
+		return fmt.Sprintf(`
+			<h1 class="header-title">EASi</h1>
+			<p class="header-subtitle">Easy Access to System Information</p>
 
-<span style="font-size:15px; line-height: 18px; color: #71767A">Easy Access to System Information</span>
+			<p>%s has %s Intake Request, %s. Use the link below to review the %s in EASi. A member of the Governance Team should respond within two business days with any feedback about the request or to move the request to the next step in the Governance Review process.</p>
 
-<p>%s has %s Intake Request, %s. Use the link below to review the %s in EASi and assign a lead. A member of the Governance Team should respond within two business days with any feedback about the request or to move the request to the next step in the Governance Review process.</p>
+			<br>
+			<div class="no-margin">
+			<p><u>Request Summary</u></p>
+			<p><strong>Requester name:</strong> %s</p>
+			<p><strong>Requester component:</strong> %s</p>
+			<p><strong>Request name:</strong> %s</p>
+			<p><strong>Request type:</strong> %s</p>
+			<p><strong>Process stage:</strong> %s</p>
+			</div>
 
-<p><u>Request Summary</u><br>
-<strong>Requester name:</strong> %s<br>
-<strong>Requester component:</strong> %s<br>
-<strong>Request name:</strong> %s<br>
-<strong>Request type:</strong> %s<br>
-<strong>Process stage:</strong> %s</p>
+			<br>
+			<p><strong><a href="%s">View this request in EASi</a></strong></p>
 
-<p><a href="%s">View this request in EASi</a></p>
-
-<p>Next steps:
-  <ul>
-    <li>Assign a lead.</li>
-    <li>Review the Intake Request form and decide what (if any) next steps are needed.</li>
-    <li>Determine if a small group meeting is needed.</li>
-    <li>Take the appropriate actions within EASi.</li>
-  </ul>
-</p>
-`,
+			<br>
+			<div class="no-margin">
+			<p>Next steps:</p>
+			  <ul>
+				<li>Assign a lead if one is not already assigned.</li>
+				<li>Review the Intake Request form and decide what (if any) next steps are needed.</li>
+				<li>Determine if a small group meeting is needed.</li>
+				<li>Take the appropriate actions within EASi.</li>
+			  </ul>
+			</div>`,
 			requesterName,
 			openingResubmittedText1,
 			requestName,
@@ -98,7 +103,7 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormReviewer() {
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
 		s.Equal(fmt.Sprintf("A new Intake Request has been submitted (%s)", requestName), sender.subject)
-		s.Equal(expectedEmail, sender.body)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 	s.Run("successful resubmit call has the right content", func() {
@@ -122,7 +127,7 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormReviewer() {
 		s.NoError(err)
 		s.ElementsMatch(sender.toAddresses, client.listAllRecipients(recipients))
 		s.Equal(fmt.Sprintf("Changes made to Intake Request (%s)", requestName), sender.subject)
-		s.Equal(expectedEmail, sender.body)
+		s.EqualHTML(expectedEmail, sender.body)
 	})
 
 	s.Run("if the template is nil, we get the error from it", func() {

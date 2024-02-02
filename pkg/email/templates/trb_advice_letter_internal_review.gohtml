@@ -1,7 +1,11 @@
 {{template "easi_header.gohtml"}}
 
 <p>{{.TRBRequestName}} has a draft advice letter that is now ready for internal review. Please take a moment to look over the draft and make any suggestions for improvement.</p>
-{{if .TRBLeadName}}
-<p>TRB Lead: {{.TRBLeadName}}</p>
-{{end}}
-<p><a href="{{.TRBAdminAdviceLetterLink}}" style="font-weight: bold">View the Advice Letter</a></p>
+
+{{ if .TRBLeadName -}}
+  <br>
+  <p class="no-margin"><strong>TRB Lead:</strong> {{.TRBLeadName}}</p>
+{{ end -}}
+
+<br>
+<p><strong><a href="{{.TRBAdminAdviceLetterLink}}">View the Advice Letter</a></strong></p>

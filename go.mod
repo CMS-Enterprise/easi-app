@@ -5,12 +5,12 @@ go 1.21
 require (
 	github.com/99designs/gqlgen v0.17.39
 	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
-	github.com/aws/aws-sdk-go v1.50.3
+	github.com/aws/aws-sdk-go v1.50.5
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-openapi/errors v0.21.0
-	github.com/go-openapi/runtime v0.27.0
+	github.com/go-openapi/runtime v0.27.1
 	github.com/go-openapi/strfmt v0.22.0
-	github.com/go-openapi/swag v0.22.8
+	github.com/go-openapi/swag v0.22.9
 	github.com/go-openapi/validate v0.22.6
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
@@ -94,10 +94,10 @@ require (
 	github.com/launchdarkly/eventsource v1.6.2 // indirect
 	github.com/launchdarkly/go-semver v1.0.2 // indirect
 	github.com/lestrrat-go/backoff/v2 v2.0.8 // indirect
-	github.com/lestrrat-go/blackmagic v1.0.1 // indirect
+	github.com/lestrrat-go/blackmagic v1.0.2 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
 	github.com/lestrrat-go/iter v1.0.2 // indirect
-	github.com/lestrrat-go/jwx v1.2.26 // indirect
+	github.com/lestrrat-go/jwx v1.2.28 // indirect
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect

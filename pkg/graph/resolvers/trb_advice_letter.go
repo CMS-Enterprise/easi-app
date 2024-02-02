@@ -76,11 +76,6 @@ func RequestReviewForTRBAdviceLetter(
 		return nil, err
 	}
 
-	requesterInfo, err := fetchUserInfo(ctx, trb.GetCreatedBy())
-	if err != nil {
-		return nil, err
-	}
-
 	var leadName string
 	if trb.TRBLead != nil {
 		leadInfo, err2 := fetchUserInfo(ctx, *trb.TRBLead)
@@ -94,7 +89,6 @@ func RequestReviewForTRBAdviceLetter(
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.GetName(),
 		TRBLeadName:    leadName,
-		RequesterName:  requesterInfo.DisplayName,
 	}
 
 	// Email client can be nil when this is called from tests - the email client itself tests this
