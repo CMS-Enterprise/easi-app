@@ -30,10 +30,10 @@ func (sie systemIntakeEmails) SystemIntakeRetireLCIDBody(
 	lifecycleRetiresAt *time.Time,
 	lifecycleExpiresAt *time.Time,
 	lifecycleIssuedAt *time.Time,
-	lifecycleScope models.HTML,
+	lifecycleScope *models.HTML,
 	lifecycleCostBaseline string,
 	reason *models.HTML,
-	decisionNextSteps models.HTML,
+	decisionNextSteps *models.HTML,
 	additionalInfo *models.HTML,
 ) (string, error) {
 	var retiresAt string
@@ -80,10 +80,10 @@ func (sie systemIntakeEmails) SendRetireLCIDNotification(
 	lifecycleRetiresAt *time.Time,
 	lifecycleExpiresAt *time.Time,
 	lifecycleIssuedAt *time.Time,
-	lifecycleScope models.HTML,
+	lifecycleScope *models.HTML,
 	lifecycleCostBaseline string,
 	reason *models.HTML,
-	decisionNextSteps models.HTML,
+	decisionNextSteps *models.HTML,
 	additionalInfo *models.HTML,
 ) error {
 
