@@ -29,19 +29,6 @@ import {
 // };
 
 /**
- * Checks whether an intake has a "decision"
- * @param status - the intake's status
- */
-export const intakeHasDecision = (status: string) => {
-  return [
-    'NO_GOVERNANCE',
-    'NOT_IT_REQUEST',
-    'LCID_ISSUED',
-    'NOT_APPROVED'
-  ].includes(status || '');
-};
-
-/**
  * Translate the API enum to a human readable string
  */
 export const translateRequestType = (requestType: RequestType) => {
