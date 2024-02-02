@@ -19,11 +19,6 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 		return errors.New("unexpected nil system intake ID when linking system intake to contract number")
 	}
 
-	// deleteStatement := `
-	// 	DELETE FROM system_intake_contract_numbers
-	// 	WHERE intake_id = $1
-	// `
-
 	if _, err := tx.ExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.Delete, systemIntakeID); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to delete contract numbers linked to system intake", zap.Error(err))
 		return err
@@ -46,21 +41,6 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 		contractNumberLink.ContractNumber = contractNumber
 		createSystemIntakeContractNumbersLinks[i] = contractNumberLink
 	}
-
-	// insertStatement := `INSERT INTO system_intake_contract_numbers (
-	// 	id,
-	// 	intake_id,
-	// 	contract_number,
-	// 	created_by,
-	// 	modified_by
-	// )
-	// VALUES (
-	// 	:id,
-	// 	:intake_id,
-	// 	:contract_number,
-	// 	:created_by,
-	// 	:modified_by
-	// ) ON CONFLICT DO NOTHING`
 
 	if _, err := tx.NamedExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.Create, createSystemIntakeContractNumbersLinks); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to insert linked system intake to contract numbers", zap.Error(err))
