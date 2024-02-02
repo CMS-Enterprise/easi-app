@@ -33,20 +33,16 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 		return nil
 	}
 
-	euaUserID := appcontext.Principal(ctx).ID()
+	// euaUserID := appcontext.Principal(ctx).ID()
+	principal := appcontext.Principal(ctx)
 
 	ceateSystemIntakeContractNumbersLinks := make([]models.SystemIntakeContractNumber, len(contractNumbers))
 
 	for i, contractNumber := range contractNumbers {
-		ceateSystemIntakeContractNumbersLinks[i] = models.SystemIntakeContractNumber{
-			BaseStruct: models.BaseStruct{
-				ID:         uuid.New(),
-				CreatedBy:  euaUserID,
-				ModifiedBy: &euaUserID,
-			},
-			IntakeID:       systemIntakeID,
-			ContractNumber: contractNumber,
-		}
+		contractNumberLink := models.NewSystemIntakeContractNumber(principal.Account().ID)
+		contractNumberLink.IntakeID = systemIntakeID
+		contractNumberLink.ContractNumber = contractNumber
+		ceateSystemIntakeContractNumbersLinks[i] = contractNumberLink
 	}
 
 	insertStatement := `INSERT INTO system_intake_contract_numbers (
