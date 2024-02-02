@@ -51,7 +51,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 	})
 
 	s.Run("retrieves the contracts", func() {
-		var results []models.CreateSystemIntakeContractNumbersLink
+		var results []models.SystemIntakeContractNumber
 		s.NoError(s.db.SelectContext(ctx, &results, `
 			SELECT
 				intake_id,
@@ -94,7 +94,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 	})
 
 	s.Run("confirm linked contract rows were deleted as well", func() {
-		var results []models.CreateSystemIntakeContractNumbersLink
+		var results []models.SystemIntakeContractNumber
 		s.NoError(s.db.SelectContext(ctx, &results, `
 			SELECT
 				intake_id,

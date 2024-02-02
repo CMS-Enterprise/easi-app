@@ -35,15 +35,17 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 
 	euaUserID := appcontext.Principal(ctx).ID()
 
-	ceateSystemIntakeContractNumbersLinks := make([]models.CreateSystemIntakeContractNumbersLink, len(contractNumbers))
+	ceateSystemIntakeContractNumbersLinks := make([]models.SystemIntakeContractNumber, len(contractNumbers))
 
 	for i, contractNumber := range contractNumbers {
-		ceateSystemIntakeContractNumbersLinks[i] = models.CreateSystemIntakeContractNumbersLink{
-			ID:             uuid.New(),
+		ceateSystemIntakeContractNumbersLinks[i] = models.SystemIntakeContractNumber{
+			BaseStruct: models.BaseStruct{
+				ID:         uuid.New(),
+				CreatedBy:  euaUserID,
+				ModifiedBy: &euaUserID,
+			},
 			IntakeID:       systemIntakeID,
 			ContractNumber: contractNumber,
-			CreatedBy:      euaUserID,
-			ModifiedBy:     euaUserID,
 		}
 	}
 
