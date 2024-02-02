@@ -175,7 +175,9 @@ export type ContractDetailsForm = {
   fundingSources: FundingSource[] | [];
   annualSpending: {
     currentAnnualSpending: string;
+    currentAnnualSpendingITPortion: string;
     plannedYearOneSpending: string;
+    plannedYearOneSpendingITPortion: string;
   };
   contract: {
     hasContract: string;

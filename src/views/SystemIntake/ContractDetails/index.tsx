@@ -7,7 +7,6 @@ import {
   IconNavigateBefore,
   Label,
   Radio,
-  Textarea,
   TextInput
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -67,7 +66,11 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     fundingSources,
     annualSpending: {
       currentAnnualSpending: annualSpending?.currentAnnualSpending || '',
-      plannedYearOneSpending: annualSpending?.plannedYearOneSpending || ''
+      currentAnnualSpendingITPortion:
+        annualSpending?.currentAnnualSpendingITPortion || '',
+      plannedYearOneSpending: annualSpending?.plannedYearOneSpending || '',
+      plannedYearOneSpendingITPortion:
+        annualSpending?.plannedYearOneSpendingITPortion || ''
     },
     contract: {
       contractor: contract.contractor || '',
@@ -238,12 +241,34 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     {flatErrors['annualSpending.currentAnnualSpending']}
                   </FieldErrorMsg>
                   <Field
-                    as={Textarea}
+                    as={TextInput}
                     className="system-intake__current-annual-spending"
                     error={!!flatErrors['annualSpending.currentAnnualSpending']}
                     id="IntakeForm-CurrentAnnualSpending"
                     name="annualSpending.currentAnnualSpending"
-                    maxLength={100}
+                    maxLength={200}
+                  />
+                  <legend className="usa-label margin-bottom-1">
+                    {t('contractDetails.currentAnnualSpendingITPortion')}
+                  </legend>
+                  <FieldErrorMsg>
+                    {
+                      flatErrors[
+                        'annualSpending.currentAnnualSpendingITPortion'
+                      ]
+                    }
+                  </FieldErrorMsg>
+                  <Field
+                    as={TextInput}
+                    className="system-intake__current-annual-spending-it-portion"
+                    error={
+                      !!flatErrors[
+                        'annualSpending.currentAnnualSpendingITPortion'
+                      ]
+                    }
+                    id="IntakeForm-CurrentAnnualSpendingITPortion"
+                    name="annualSpending.currentAnnualSpendingITPortion"
+                    maxLength={200}
                   />
                   <legend className="usa-label margin-bottom-1">
                     {t('contractDetails.plannedYearOneSpending')}
@@ -252,14 +277,36 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     {flatErrors['annualSpending.plannedYearOneSpending']}
                   </FieldErrorMsg>
                   <Field
-                    as={Textarea}
+                    as={TextInput}
                     className="system-intake__year-one-annual-spending"
                     error={
                       !!flatErrors['annualSpending.plannedYearOneSpending']
                     }
                     id="IntakeForm-PlannedYearOneAnnualSpending"
                     name="annualSpending.plannedYearOneSpending"
-                    maxLength={100}
+                    maxLength={200}
+                  />
+                  <legend className="usa-label margin-bottom-1">
+                    {t('contractDetails.plannedYearOneSpendingITPortion')}
+                  </legend>
+                  <FieldErrorMsg>
+                    {
+                      flatErrors[
+                        'annualSpending.plannedYearOneSpendingITPortion'
+                      ]
+                    }
+                  </FieldErrorMsg>
+                  <Field
+                    as={TextInput}
+                    className="system-intake__year-one-annual-spending-it-portion"
+                    error={
+                      !!flatErrors[
+                        'annualSpending.plannedYearOneSpendingITPortion'
+                      ]
+                    }
+                    id="IntakeForm-PlannedYearOneAnnualSpendingITPortion"
+                    name="annualSpending.plannedYearOneSpendingITPortion"
+                    maxLength={200}
                   />
                 </fieldset>
               </FieldGroup>
