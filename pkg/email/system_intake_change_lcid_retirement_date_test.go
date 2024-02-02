@@ -36,9 +36,9 @@ func (s *EmailTestSuite) TestIntakeChangeLCIDRetirementDateNotification() {
 		&retiresAt,
 		&expiresAt,
 		&issuedAt,
-		*lifecycleScope,
+		lifecycleScope,
 		lifecycleCostBaseline,
-		*decisionNextSteps,
+		decisionNextSteps,
 		additionalInfo,
 	)
 	s.NoError(err)
@@ -118,9 +118,9 @@ func (s *EmailTestSuite) TestIntakeChangeLCIDRetirementDateNotification() {
 		&retiresAt,
 		&expiresAt,
 		nil,
-		*lifecycleScope,
+		lifecycleScope,
 		lifecycleCostBaseline,
-		*decisionNextSteps,
+		decisionNextSteps,
 		nil,
 	)
 	s.NoError(err)
