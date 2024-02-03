@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	"github.com/google/uuid"
@@ -13,7 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/sqlqueries"
 )
 
-// TODO Implement store methods that have to deal with setting System Intake linking/relation data
+// LinkSystemIntakeContractNumbers links given Contract Numbers to given System Intake ID
 func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, contractNumbers []string) error {
 	if systemIntakeID == uuid.Nil {
 		return errors.New("unexpected nil system intake ID when linking system intake to contract number")
@@ -48,4 +49,20 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 	}
 
 	return nil
+}
+
+// GetSystemIntakeContractNumbersBySystemIntakeID retreives all Contract Numbers for a given System Intake ID
+func (s *Store) GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]models.SystemIntakeContractNumber, error) {
+	var results []models.SystemIntakeContractNumber
+
+	if err := s.db.SelectContext(ctx, &results, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeID, systemIntakeID); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+
+		appcontext.ZLogger(ctx).Error("Failed to select contract numbers by system intake ID", zap.Error(err))
+		return nil, err
+	}
+
+	return results, nil
 }
