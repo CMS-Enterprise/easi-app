@@ -11,4 +11,4 @@ INSERT INTO system_intake_contract_numbers (
 		:contract_number,
 		:created_by,
 		:modified_by
-	) ON CONFLICT DO NOTHING
+	) ON CONFLICT DO NOTHING;

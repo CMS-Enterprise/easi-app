@@ -7,4 +7,4 @@ SELECT
     modified_by,
     modified_at
 FROM system_intake_contract_numbers
-WHERE intake_id = $1
+WHERE intake_id = $1;

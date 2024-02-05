@@ -22,10 +22,16 @@ var selectSystemIntakeContractNumbersBySystemIntakeIDSQL string
 //go:embed SQL/system_intake_contract_number/get_by_id.sql
 var selectSystemIntakeContractNumberByIDSQL string
 
+// deleteLinkedSystemIntakeContractNumbersByIDs holds the SQL command to delete linked Contract Numbers by their IDs
+//
+//go:embed SQL/system_intake_contract_number/delete_by_ids.sql
+var deleteLinkedSystemIntakeContractNumbersByIDs string
+
 // SystemIntakeContractNumberForm holds all relevant SQL scripts for a TRB request form
 var SystemIntakeContractNumberForm = systemIntakeContractNumberScripts{
 	Create:                 createSystemIntakeContractNumbersSQL,
 	Delete:                 deleteSystemIntakeContractNumbersSQL,
+	DeleteByIDs:            deleteLinkedSystemIntakeContractNumbersByIDs,
 	SelectByID:             selectSystemIntakeContractNumberByIDSQL,
 	SelectBySystemIntakeID: selectSystemIntakeContractNumbersBySystemIntakeIDSQL,
 }
@@ -33,6 +39,7 @@ var SystemIntakeContractNumberForm = systemIntakeContractNumberScripts{
 type systemIntakeContractNumberScripts struct {
 	Create                 string
 	Delete                 string
+	DeleteByIDs            string
 	SelectByID             string
 	SelectBySystemIntakeID string
 }

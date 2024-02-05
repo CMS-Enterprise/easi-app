@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -25,7 +26,7 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 		return err
 	}
 
-	// no need to run insert if we are not inserting new contracts
+	// no need to run insert if we are not inserting new Contract Numbers
 	if len(contractNumbers) < 1 {
 		return nil
 	}
@@ -67,7 +68,7 @@ func (s *Store) GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Conte
 	return results, nil
 }
 
-// GetSystemIntakeContractNumberByID retrieves a linked contract number by ID
+// GetSystemIntakeContractNumberByID retrieves a linked Contract Number by ID
 func (s *Store) GetSystemIntakeContractNumberByID(ctx context.Context, id uuid.UUID) (models.SystemIntakeContractNumber, error) {
 	var result models.SystemIntakeContractNumber
 
@@ -81,4 +82,14 @@ func (s *Store) GetSystemIntakeContractNumberByID(ctx context.Context, id uuid.U
 	}
 
 	return result, nil
+}
+
+// DeleteLinkedSystemIntakeContractNumbersByIDs removes linked Contract Numbers by their IDs
+func (s *Store) DeleteLinkedSystemIntakeContractNumbersByIDs(ctx context.Context, ids []uuid.UUID) error {
+	if _, err := s.db.ExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.DeleteByIDs, pq.Array(ids)); err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to delete linked system intake contract numbers by IDs", zap.Error(err))
+		return err
+	}
+
+	return nil
 }
