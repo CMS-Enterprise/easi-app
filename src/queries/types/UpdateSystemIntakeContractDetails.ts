@@ -23,7 +23,9 @@ export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDet
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_annualSpending {
   __typename: "SystemIntakeAnnualSpending";
   currentAnnualSpending: string | null;
+  currentAnnualSpendingITPortion: string | null;
   plannedYearOneSpending: string | null;
+  plannedYearOneSpendingITPortion: string | null;
 }
 
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_endDate {
