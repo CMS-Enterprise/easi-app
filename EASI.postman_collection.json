@@ -1203,8 +1203,15 @@
 										"query": "mutation DeleteSystemIntakeLinkedContractNumbers ($input: DeleteLinkedSystemIntakeContractNumbersInput!) {\r\n    deleteSystemIntakeLinkedContractNumbers(input:$input) {\r\n        contractNumbers    }\r\n}",
 										"variables": "{\r\n    \"input\": {\r\n        \"ids\": []\r\n    }\r\n}"
 									}									
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
 								}
-							}
+							},
+							"response": []
 						}
 					]
 				},
