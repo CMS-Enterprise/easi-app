@@ -91,10 +91,6 @@ func (s *Store) DeleteLinkedSystemIntakeContractNumbersByIDs(ctx context.Context
 		appcontext.ZLogger(ctx).Error("Failed to delete linked system intake contract numbers by IDs", zap.Error(err))
 		return nil, err
 	}
-	// if _, err := s.db.ExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.DeleteByIDs, pq.Array(ids)); err != nil {
-	// 	appcontext.ZLogger(ctx).Error("Failed to delete linked system intake contract numbers by IDs", zap.Error(err))
-	// 	return err
-	// }
 
 	return deletedContractNumbers, nil
 }
