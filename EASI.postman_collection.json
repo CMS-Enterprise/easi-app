@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "58c4718f-c2b8-4800-afb9-b71f6f2edb93",
+		"_postman_id": "8bc65a07-079e-436e-a30a-b0e9c62b1fde",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12341016"
+		"_exporter_id": "32724285"
 	},
 	"item": [
 		{
@@ -1194,15 +1194,15 @@
 						},
 						{
 							"name": "Delete System Intake Linked Contract Numbers",
-							"request":{
+							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation DeleteSystemIntakeLinkedContractNumbers ($input: DeleteLinkedSystemIntakeContractNumbersInput!) {\r\n    deleteSystemIntakeLinkedContractNumbers(input:$input) {\r\n        contractNumbers    }\r\n}",
+										"query": "mutation DeleteSystemIntakeLinkedContractNumbers ($input: DeleteLinkedSystemIntakeContractNumbersInput!) {\r\n    deleteSystemIntakeLinkedContractNumbers(input:$input) {\r\n        contractNumbers\r\n    }\r\n}",
 										"variables": "{\r\n    \"input\": {\r\n        \"ids\": []\r\n    }\r\n}"
-									}									
+									}
 								},
 								"url": {
 									"raw": "{{url}}",
