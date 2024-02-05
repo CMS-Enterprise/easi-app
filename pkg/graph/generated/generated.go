@@ -786,8 +786,10 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeAnnualSpending struct {
-		CurrentAnnualSpending  func(childComplexity int) int
-		PlannedYearOneSpending func(childComplexity int) int
+		CurrentAnnualSpending           func(childComplexity int) int
+		CurrentAnnualSpendingITPortion  func(childComplexity int) int
+		PlannedYearOneSpending          func(childComplexity int) int
+		PlannedYearOneSpendingITPortion func(childComplexity int) int
 	}
 
 	SystemIntakeBusinessOwner struct {
@@ -5849,12 +5851,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeAnnualSpending.CurrentAnnualSpending(childComplexity), true
 
+	case "SystemIntakeAnnualSpending.currentAnnualSpendingITPortion":
+		if e.complexity.SystemIntakeAnnualSpending.CurrentAnnualSpendingITPortion == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAnnualSpending.CurrentAnnualSpendingITPortion(childComplexity), true
+
 	case "SystemIntakeAnnualSpending.plannedYearOneSpending":
 		if e.complexity.SystemIntakeAnnualSpending.PlannedYearOneSpending == nil {
 			break
 		}
 
 		return e.complexity.SystemIntakeAnnualSpending.PlannedYearOneSpending(childComplexity), true
+
+	case "SystemIntakeAnnualSpending.plannedYearOneSpendingITPortion":
+		if e.complexity.SystemIntakeAnnualSpending.PlannedYearOneSpendingITPortion == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAnnualSpending.PlannedYearOneSpendingITPortion(childComplexity), true
 
 	case "SystemIntakeBusinessOwner.component":
 		if e.complexity.SystemIntakeBusinessOwner.Component == nil {
@@ -8572,7 +8588,9 @@ Represents current and planned annual costs for a system
 """
 type SystemIntakeAnnualSpending {
   currentAnnualSpending: String
+  currentAnnualSpendingITPortion: String
   plannedYearOneSpending: String
+  plannedYearOneSpendingITPortion: String
 }
 
 """
@@ -8903,7 +8921,9 @@ Input data for current and planned year one annual costs associated with a syste
 """
 input SystemIntakeAnnualSpendingInput {
   currentAnnualSpending: String
+  currentAnnualSpendingITPortion: String
   plannedYearOneSpending: String
+  plannedYearOneSpendingITPortion: String
 }
 
 """
@@ -38557,8 +38577,12 @@ func (ec *executionContext) fieldContext_SystemIntake_annualSpending(ctx context
 			switch field.Name {
 			case "currentAnnualSpending":
 				return ec.fieldContext_SystemIntakeAnnualSpending_currentAnnualSpending(ctx, field)
+			case "currentAnnualSpendingITPortion":
+				return ec.fieldContext_SystemIntakeAnnualSpending_currentAnnualSpendingITPortion(ctx, field)
 			case "plannedYearOneSpending":
 				return ec.fieldContext_SystemIntakeAnnualSpending_plannedYearOneSpending(ctx, field)
+			case "plannedYearOneSpendingITPortion":
+				return ec.fieldContext_SystemIntakeAnnualSpending_plannedYearOneSpendingITPortion(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeAnnualSpending", field.Name)
 		},
@@ -41835,6 +41859,47 @@ func (ec *executionContext) fieldContext_SystemIntakeAnnualSpending_currentAnnua
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntakeAnnualSpending_currentAnnualSpendingITPortion(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAnnualSpending) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeAnnualSpending_currentAnnualSpendingITPortion(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CurrentAnnualSpendingITPortion, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeAnnualSpending_currentAnnualSpendingITPortion(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeAnnualSpending",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeAnnualSpending_plannedYearOneSpending(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAnnualSpending) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeAnnualSpending_plannedYearOneSpending(ctx, field)
 	if err != nil {
@@ -41864,6 +41929,47 @@ func (ec *executionContext) _SystemIntakeAnnualSpending_plannedYearOneSpending(c
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeAnnualSpending_plannedYearOneSpending(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeAnnualSpending",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeAnnualSpending_plannedYearOneSpendingITPortion(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAnnualSpending) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeAnnualSpending_plannedYearOneSpendingITPortion(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PlannedYearOneSpendingITPortion, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeAnnualSpending_plannedYearOneSpendingITPortion(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeAnnualSpending",
 		Field:      field,
@@ -56489,7 +56595,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeAnnualSpendingInput(ctx co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"currentAnnualSpending", "plannedYearOneSpending"}
+	fieldsInOrder := [...]string{"currentAnnualSpending", "currentAnnualSpendingITPortion", "plannedYearOneSpending", "plannedYearOneSpendingITPortion"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -56505,6 +56611,15 @@ func (ec *executionContext) unmarshalInputSystemIntakeAnnualSpendingInput(ctx co
 				return it, err
 			}
 			it.CurrentAnnualSpending = data
+		case "currentAnnualSpendingITPortion":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentAnnualSpendingITPortion"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CurrentAnnualSpendingITPortion = data
 		case "plannedYearOneSpending":
 			var err error
 
@@ -56514,6 +56629,15 @@ func (ec *executionContext) unmarshalInputSystemIntakeAnnualSpendingInput(ctx co
 				return it, err
 			}
 			it.PlannedYearOneSpending = data
+		case "plannedYearOneSpendingITPortion":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedYearOneSpendingITPortion"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PlannedYearOneSpendingITPortion = data
 		}
 	}
 
@@ -67942,8 +68066,12 @@ func (ec *executionContext) _SystemIntakeAnnualSpending(ctx context.Context, sel
 			out.Values[i] = graphql.MarshalString("SystemIntakeAnnualSpending")
 		case "currentAnnualSpending":
 			out.Values[i] = ec._SystemIntakeAnnualSpending_currentAnnualSpending(ctx, field, obj)
+		case "currentAnnualSpendingITPortion":
+			out.Values[i] = ec._SystemIntakeAnnualSpending_currentAnnualSpendingITPortion(ctx, field, obj)
 		case "plannedYearOneSpending":
 			out.Values[i] = ec._SystemIntakeAnnualSpending_plannedYearOneSpending(ctx, field, obj)
+		case "plannedYearOneSpendingITPortion":
+			out.Values[i] = ec._SystemIntakeAnnualSpending_plannedYearOneSpendingITPortion(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

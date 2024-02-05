@@ -861,7 +861,9 @@ export interface SubmitIntakeInput {
  */
 export interface SystemIntakeAnnualSpendingInput {
   currentAnnualSpending?: string | null;
+  currentAnnualSpendingITPortion?: string | null;
   plannedYearOneSpending?: string | null;
+  plannedYearOneSpendingITPortion?: string | null;
 }
 
 /**
