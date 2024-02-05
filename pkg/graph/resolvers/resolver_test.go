@@ -17,6 +17,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 	"github.com/cmsgov/easi-app/pkg/upload"
+	"github.com/cmsgov/easi-app/pkg/userhelpers"
 
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 )
@@ -32,6 +33,10 @@ type ResolverSuite struct {
 func (suite *ResolverSuite) SetupTest() {
 	err := suite.testConfigs.Store.TruncateAllTablesDANGEROUS(suite.testConfigs.Logger)
 	assert.NoError(suite.T(), err)
+
+	//GET USER ACCOUNT EACH TIME!
+	princ := getTestPrincipal(suite.testConfigs.Store, suite.testConfigs.UserInfo.Username)
+	suite.testConfigs.Principal = princ
 }
 
 // TestResolverSuite runs the resolver test suite
@@ -84,13 +89,8 @@ func (tc *TestConfigs) GetDefaults() {
 	}
 	tc.Store, _ = storage.NewStore(tc.DBConfig, tc.LDClient)
 
-	tc.Principal = &authentication.EUAPrincipal{
-		EUAID:            tc.UserInfo.Username,
-		JobCodeEASi:      true,
-		JobCodeGRT:       true,
-		JobCode508User:   true,
-		JobCode508Tester: true,
-	}
+	// principal is fetched between each test in SetupTest()
+
 	ctx := appcontext.WithLogger(context.Background(), tc.Logger)
 	ctx = appcontext.WithPrincipal(ctx, tc.Principal)
 	tc.Context = ctx
@@ -116,6 +116,22 @@ func NewEmailClient() *email.Client {
 
 	emailClient, _ := email.NewClient(emailConfig, localSender)
 	return &emailClient
+
+}
+
+func getTestPrincipal(store *storage.Store, userName string) *authentication.EUAPrincipal {
+
+	userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+
+	princ := &authentication.EUAPrincipal{
+		EUAID:            userName,
+		JobCodeEASi:      true,
+		JobCodeGRT:       true,
+		JobCode508User:   true,
+		JobCode508Tester: true,
+		UserAccount:      userAccount,
+	}
+	return princ
 
 }
 
