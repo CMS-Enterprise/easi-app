@@ -90,6 +90,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		result, err := s.store.GetSystemIntakeContractNumberByID(ctx, results[0].ID)
 		s.NoError(err)
 		s.NotZero(result.ID)
+		s.Equal(results[0].ID, result.ID)
 	})
 
 	s.Run("deletes the test intake", func() {
