@@ -85,11 +85,16 @@ func (s *Store) GetSystemIntakeContractNumberByID(ctx context.Context, id uuid.U
 }
 
 // DeleteLinkedSystemIntakeContractNumbersByIDs removes linked Contract Numbers by their IDs
-func (s *Store) DeleteLinkedSystemIntakeContractNumbersByIDs(ctx context.Context, ids []uuid.UUID) error {
-	if _, err := s.db.ExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.DeleteByIDs, pq.Array(ids)); err != nil {
+func (s *Store) DeleteLinkedSystemIntakeContractNumbersByIDs(ctx context.Context, ids []uuid.UUID) ([]string, error) {
+	var deletedContractNumbers []string
+	if err := s.db.SelectContext(ctx, &deletedContractNumbers, sqlqueries.SystemIntakeContractNumberForm.DeleteByIDs, pq.Array(ids)); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to delete linked system intake contract numbers by IDs", zap.Error(err))
-		return err
+		return nil, err
 	}
+	// if _, err := s.db.ExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.DeleteByIDs, pq.Array(ids)); err != nil {
+	// 	appcontext.ZLogger(ctx).Error("Failed to delete linked system intake contract numbers by IDs", zap.Error(err))
+	// 	return err
+	// }
 
-	return nil
+	return deletedContractNumbers, nil
 }

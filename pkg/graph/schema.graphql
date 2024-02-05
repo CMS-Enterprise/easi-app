@@ -1292,6 +1292,13 @@ input SetSystemIntakeRelationExistingServiceInput {
 }
 
 """
+Input for deleting linked system intake contract numbers by their IDs
+"""
+input DeleteLinkedSystemIntakeContractNumbersInput {
+  ids: [UUID!]!
+}
+
+"""
 Input data for updating a system intake's relationship to a contract
 """
 input UpdateSystemIntakeLinkedContractInput {
@@ -1488,6 +1495,9 @@ type UpdateSystemIntakePayload {
   userErrors: [UserError!]
 }
 
+type DeleteLinkedSystemIntakeContractNumbersPayload {
+  contractNumbers: [String!]!
+}
 
 """
 Steps in the system intake process that a Progress to New Step action can progress to
@@ -2796,6 +2806,7 @@ type Mutation {
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   createSystemIntakeDocument(input: CreateSystemIntakeDocumentInput!): CreateSystemIntakeDocumentPayload
   deleteSystemIntakeDocument(id: UUID!): DeleteSystemIntakeDocumentPayload
+  deleteSystemIntakeLinkedContractNumbers(input: DeleteLinkedSystemIntakeContractNumbersInput!): DeleteLinkedSystemIntakeContractNumbersPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   updateTRBRequestFundingSources(input: UpdateTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
   deleteTRBRequestFundingSources(input: DeleteTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
@@ -2893,7 +2904,7 @@ type Query {
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
-  userAccount(username: String!): UserAccount 
+  userAccount(username: String!): UserAccount
 }
 
 enum TRBRequestType {

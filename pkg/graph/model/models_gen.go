@@ -369,6 +369,15 @@ type DeleteCedarSystemBookmarkPayload struct {
 	CedarSystemID string `json:"cedarSystemId"`
 }
 
+// Input for deleting linked system intake contract numbers by their IDs
+type DeleteLinkedSystemIntakeContractNumbersInput struct {
+	Ids []uuid.UUID `json:"ids"`
+}
+
+type DeleteLinkedSystemIntakeContractNumbersPayload struct {
+	ContractNumbers []string `json:"contractNumbers"`
+}
+
 // The data needed to delete a system intake contact
 type DeleteSystemIntakeContactInput struct {
 	ID uuid.UUID `json:"id"`

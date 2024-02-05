@@ -107,3 +107,13 @@ func SetSystemIntakeRelationExistingSystem(
 		return updatedIntake, nil
 	})
 }
+
+// DeleteSystemIntakeLinkedContractNumbers removes linked contract numbers by their IDs
+func DeleteSystemIntakeLinkedContractNumbers(
+	ctx context.Context,
+	store *storage.Store,
+	input model.DeleteLinkedSystemIntakeContractNumbersInput,
+) ([]string, error) {
+	// delete linked contract numbers with given ids
+	return store.DeleteLinkedSystemIntakeContractNumbersByIDs(ctx, input.Ids)
+}

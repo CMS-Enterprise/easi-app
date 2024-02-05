@@ -60,7 +60,9 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 			ids = append(ids, result.ID)
 		}
 
-		s.NoError(s.store.DeleteLinkedSystemIntakeContractNumbersByIDs(ctx, ids))
+		deleted, err := s.store.DeleteLinkedSystemIntakeContractNumbersByIDs(ctx, ids)
+		s.NoError(err)
+		s.Len(deleted, 3)
 
 		// confirm the contracts are gone
 		results, err = s.store.GetSystemIntakeContractNumbersBySystemIntakeID(ctx, createdID)
