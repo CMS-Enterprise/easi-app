@@ -12,20 +12,27 @@ var deleteSystemIntakeContractNumbersSQL string
 //go:embed SQL/system_intake_contract_number/create.sql
 var createSystemIntakeContractNumbersSQL string
 
-// selectSystemIntakeContractNumbersSQL holds the SQL command to get Contract Numbers related to a given System Intake
+// selectSystemIntakeContractNumbersBySystemIntakeIDSQL holds the SQL command to get Contract Numbers related to a given System Intake
 //
 //go:embed SQL/system_intake_contract_number/get_by_system_intake_id.sql
-var selectSystemIntakeContractNumbersSQL string
+var selectSystemIntakeContractNumbersBySystemIntakeIDSQL string
+
+// selectSystemIntakeContractNumberByIDSQL holds the SQL command to get a linked Contract Number by ID
+//
+//go:embed SQL/system_intake_contract_number/get_by_id.sql
+var selectSystemIntakeContractNumberByIDSQL string
 
 // SystemIntakeContractNumberForm holds all relevant SQL scripts for a TRB request form
 var SystemIntakeContractNumberForm = systemIntakeContractNumberScripts{
 	Create:                 createSystemIntakeContractNumbersSQL,
 	Delete:                 deleteSystemIntakeContractNumbersSQL,
-	SelectBySystemIntakeID: selectSystemIntakeContractNumbersSQL,
+	SelectByID:             selectSystemIntakeContractNumberByIDSQL,
+	SelectBySystemIntakeID: selectSystemIntakeContractNumbersBySystemIntakeIDSQL,
 }
 
 type systemIntakeContractNumberScripts struct {
 	Create                 string
 	Delete                 string
+	SelectByID             string
 	SelectBySystemIntakeID string
 }

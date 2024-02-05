@@ -51,7 +51,7 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 	return nil
 }
 
-// GetSystemIntakeContractNumbersBySystemIntakeID retreives all Contract Numbers for a given System Intake ID
+// GetSystemIntakeContractNumbersBySystemIntakeID retrieves all Contract Numbers for a given System Intake ID
 func (s *Store) GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]models.SystemIntakeContractNumber, error) {
 	var results []models.SystemIntakeContractNumber
 
@@ -65,4 +65,20 @@ func (s *Store) GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Conte
 	}
 
 	return results, nil
+}
+
+// GetSystemIntakeContractNumberByID retrieves a linked contract number by ID
+func (s *Store) GetSystemIntakeContractNumberByID(ctx context.Context, id uuid.UUID) (models.SystemIntakeContractNumber, error) {
+	var result models.SystemIntakeContractNumber
+
+	if err := s.db.GetContext(ctx, &result, sqlqueries.SystemIntakeContractNumberForm.SelectByID, id); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return result, nil
+		}
+
+		appcontext.ZLogger(ctx).Error("Failed to select contract number by ID", zap.Error(err))
+		return result, err
+	}
+
+	return result, nil
 }

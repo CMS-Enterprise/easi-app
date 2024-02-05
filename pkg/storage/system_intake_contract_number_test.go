@@ -82,6 +82,16 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		s.True(found3)
 	})
 
+	s.Run("retrieves one contract number by id", func() {
+		results, err := s.store.GetSystemIntakeContractNumbersBySystemIntakeID(ctx, createdID)
+		s.NoError(err)
+		s.Len(results, 3)
+
+		result, err := s.store.GetSystemIntakeContractNumberByID(ctx, results[0].ID)
+		s.NoError(err)
+		s.NotZero(result.ID)
+	})
+
 	s.Run("deletes the test intake", func() {
 		_, err := s.db.ExecContext(ctx, "DELETE FROM system_intakes WHERE id = $1", createdID)
 		s.NoError(err)
