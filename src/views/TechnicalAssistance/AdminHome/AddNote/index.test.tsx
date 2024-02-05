@@ -23,9 +23,9 @@ import GetTrbRequestDocumentsQuery from 'queries/GetTrbRequestDocumentsQuery';
 import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
 import { GetTrbRecommendationsQuery } from 'queries/TrbAdviceLetterQueries';
 import {
-  CreateTrbAdminNote as CreateTrbAdminNoteType,
-  CreateTrbAdminNoteGeneralVariables
-} from 'queries/types/CreateTrbAdminNote';
+  CreateTRBAdminNoteGeneralRequest,
+  CreateTRBAdminNoteGeneralRequestVariables
+} from 'queries/types/CreateTRBAdminNoteGeneralRequest';
 import {
   GetTrbRecommendations,
   GetTrbRecommendationsVariables
@@ -75,8 +75,8 @@ const getTrbRecommendationsQuery: MockedQuery<
 };
 
 const createTrbAdminNoteQuery: MockedQuery<
-  CreateTrbAdminNoteType,
-  CreateTrbAdminNoteGeneralVariables
+  CreateTRBAdminNoteGeneralRequest,
+  CreateTRBAdminNoteGeneralRequestVariables
 > = {
   request: {
     query: CreateTrbAdminNoteGeneralRequestQuery,
@@ -89,7 +89,7 @@ const createTrbAdminNoteQuery: MockedQuery<
   },
   result: {
     data: {
-      createTRBAdminNote: {
+      createTRBAdminNoteGeneralRequest: {
         __typename: 'TRBAdminNote',
         createdAt: '2023-02-16T15:21:34.156885Z',
         id: 'd35a1f08-e04e-48f9-8d58-7f2409bae8fe',

@@ -8,10 +8,11 @@ import i18next from 'i18next';
 import { getTrbAdminNotesQuery } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
 import { CreateTrbAdminNoteGeneralRequestQuery } from 'queries/TrbAdminNoteQueries';
+// import { CreateTrbAdminNoteGeneralVariables } from 'queries/types/CreateTrbAdminNote';
 import {
-  CreateTrbAdminNote as CreateTrbAdminNoteType,
-  CreateTrbAdminNoteGeneralVariables
-} from 'queries/types/CreateTrbAdminNote';
+  CreateTRBAdminNoteGeneralRequest,
+  CreateTRBAdminNoteGeneralRequestVariables
+} from 'queries/types/CreateTRBAdminNoteGeneralRequest';
 import { TRBAdminNoteFragment } from 'queries/types/TRBAdminNoteFragment';
 import { TRBAdminNoteCategory } from 'types/graphql-global-types';
 import { MockedQuery } from 'types/util';
@@ -54,8 +55,8 @@ const adminNotes: TRBAdminNoteFragment[] = [
 ];
 
 const createAdminNoteQuery: MockedQuery<
-  CreateTrbAdminNoteType,
-  CreateTrbAdminNoteGeneralVariables
+  CreateTRBAdminNoteGeneralRequest,
+  CreateTRBAdminNoteGeneralRequestVariables
 > = {
   request: {
     query: CreateTrbAdminNoteGeneralRequestQuery,
@@ -68,7 +69,7 @@ const createAdminNoteQuery: MockedQuery<
   },
   result: {
     data: {
-      createTRBAdminNote: adminNotes[1]
+      createTRBAdminNoteGeneralRequest: adminNotes[1]
     }
   }
 };
