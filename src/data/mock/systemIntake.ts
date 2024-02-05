@@ -196,7 +196,9 @@ export const emptySystemIntake: SystemIntake = {
   annualSpending: {
     __typename: 'SystemIntakeAnnualSpending',
     currentAnnualSpending: null,
-    plannedYearOneSpending: null
+    currentAnnualSpendingITPortion: null,
+    plannedYearOneSpending: null,
+    plannedYearOneSpendingITPortion: null
   },
   contract: {
     __typename: 'SystemIntakeContract',
@@ -294,7 +296,9 @@ export const systemIntake: SystemIntake = {
   annualSpending: {
     __typename: 'SystemIntakeAnnualSpending',
     currentAnnualSpending: '',
-    plannedYearOneSpending: ''
+    currentAnnualSpendingITPortion: '',
+    plannedYearOneSpending: '',
+    plannedYearOneSpendingITPortion: ''
   },
   contract: {
     __typename: 'SystemIntakeContract',
@@ -414,7 +418,9 @@ export const systemIntakeForTable: TableSystemIntake = {
   annualSpending: {
     __typename: 'SystemIntakeAnnualSpending',
     currentAnnualSpending: 'Current annual spending',
-    plannedYearOneSpending: 'Planned year one spending'
+    currentAnnualSpendingITPortion: 'Current annual spending IT portion',
+    plannedYearOneSpending: 'Planned year one spending',
+    plannedYearOneSpendingITPortion: 'Planned year one spending IT portion'
   },
   contract: systemIntake.contract,
   businessNeed: systemIntake.businessNeed,

@@ -45,7 +45,9 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   fundingSources: [],
   annualSpending: {
     currentAnnualSpending: '',
-    plannedYearOneSpending: ''
+    currentAnnualSpendingITPortion: '',
+    plannedYearOneSpending: '',
+    plannedYearOneSpendingITPortion: ''
   },
   contract: {
     hasContract: '',
@@ -192,7 +194,11 @@ export const prepareSystemIntakeForApp = (
     fundingSources: systemIntake.fundingSources || [],
     annualSpending: {
       currentAnnualSpending: systemIntake.currentAnnualSpending || '',
-      plannedYearOneSpending: systemIntake.plannedYearOneSpending || ''
+      currentAnnualSpendingITPortion:
+        systemIntake.currentAnnualSpendingITPortion || '',
+      plannedYearOneSpending: systemIntake.plannedYearOneSpending || '',
+      plannedYearOneSpendingITPortion:
+        systemIntake.plannedYearOneSpendingITPortion || ''
     },
     contract: {
       hasContract: systemIntake.existingContract || '',

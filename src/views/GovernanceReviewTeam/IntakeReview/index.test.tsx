@@ -99,7 +99,9 @@ describe('The GRT intake review view', () => {
                 annualSpending: {
                   __typename: 'SystemIntakeAnnualSpending',
                   currentAnnualSpending: 'about $3.50',
-                  plannedYearOneSpending: 'more than $1 million'
+                  currentAnnualSpendingITPortion: '35%',
+                  plannedYearOneSpending: 'more than $1 million',
+                  plannedYearOneSpendingITPortion: '50%'
                 }
               }}
             />
