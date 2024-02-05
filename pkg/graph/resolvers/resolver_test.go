@@ -92,7 +92,7 @@ func (tc *TestConfigs) GetDefaults() {
 	// principal is fetched between each test in SetupTest()
 
 	ctx := appcontext.WithLogger(context.Background(), tc.Logger)
-	ctx = appcontext.WithPrincipal(ctx, tc.Principal)
+	ctx = appcontext.WithPrincipal(ctx, getTestPrincipal(tc.Store, tc.UserInfo.Username))
 	tc.Context = ctx
 
 	emailClient := NewEmailClient()
