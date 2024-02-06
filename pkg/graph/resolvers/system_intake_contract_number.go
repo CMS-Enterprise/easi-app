@@ -29,6 +29,8 @@ func SetSystemIntakeRelationExistingService(
 
 		// Set contract name
 		intake.ContractName = zero.StringFrom(input.ContractName)
+		relationType := models.SIRelationTypeExistingService
+		intake.SystemRelationType = &relationType
 		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
@@ -61,6 +63,8 @@ func SetSystemIntakeRelationNewSystem(
 
 		// Clear contract name
 		intake.ContractName = zero.StringFromPtr(nil)
+		relationType := models.SIRelationTypeNewSystem
+		intake.SystemRelationType = &relationType
 		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
@@ -93,6 +97,8 @@ func SetSystemIntakeRelationExistingSystem(
 
 		// Clear contract name
 		intake.ContractName = zero.StringFromPtr(nil)
+		relationType := models.SIRelationTypeExistingSystem
+		intake.SystemRelationType = &relationType
 		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err

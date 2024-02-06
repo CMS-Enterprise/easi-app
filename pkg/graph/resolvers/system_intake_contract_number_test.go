@@ -45,6 +45,8 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 
 	// Ensure the contract name was deleted properly
 	suite.True(updatedIntake.ContractName.IsZero())
+	suite.NotNil(updatedIntake.SystemRelationType)
+	suite.Equal(models.SIRelationTypeNewSystem, *updatedIntake.SystemRelationType)
 }
 func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 	ctx := suite.testConfigs.Context
@@ -63,7 +65,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 	suite.NoError(err)
 	suite.NotNil(openIntake)
 
-	// Set the "new system" relationship
+	// Set the "existing system" relationship
 	input := &model.SetSystemIntakeRelationExistingSystemInput{
 		SystemIntakeID: openIntake.ID,
 		// TODO: ContractNumbers
@@ -79,6 +81,8 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 	// Ensure the contract name was deleted properly
 	suite.True(updatedIntake.ContractName.IsZero())
+	suite.NotNil(updatedIntake.SystemRelationType)
+	suite.Equal(models.SIRelationTypeExistingSystem, *updatedIntake.SystemRelationType)
 }
 
 func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
@@ -115,6 +119,8 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 
 	// Ensure the contract name was set properly
 	suite.Equal(updatedIntake.ContractName.ValueOrZero(), contractName)
+	suite.NotNil(updatedIntake.SystemRelationType)
+	suite.Equal(models.SIRelationTypeExistingService, *updatedIntake.SystemRelationType)
 }
 
 func (suite *ResolverSuite) TestDeleteSystemIntakeLinkedContractNumbers() {

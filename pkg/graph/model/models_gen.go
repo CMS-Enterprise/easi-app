@@ -1332,49 +1332,6 @@ func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-type SystemIntakeRelationType string
-
-const (
-	SystemIntakeRelationTypeNewSystem       SystemIntakeRelationType = "NEW_SYSTEM"
-	SystemIntakeRelationTypeExistingSystem  SystemIntakeRelationType = "EXISTING_SYSTEM"
-	SystemIntakeRelationTypeExistingService SystemIntakeRelationType = "EXISTING_SERVICE"
-)
-
-var AllSystemIntakeRelationType = []SystemIntakeRelationType{
-	SystemIntakeRelationTypeNewSystem,
-	SystemIntakeRelationTypeExistingSystem,
-	SystemIntakeRelationTypeExistingService,
-}
-
-func (e SystemIntakeRelationType) IsValid() bool {
-	switch e {
-	case SystemIntakeRelationTypeNewSystem, SystemIntakeRelationTypeExistingSystem, SystemIntakeRelationTypeExistingService:
-		return true
-	}
-	return false
-}
-
-func (e SystemIntakeRelationType) String() string {
-	return string(e)
-}
-
-func (e *SystemIntakeRelationType) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = SystemIntakeRelationType(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid SystemIntakeRelationType", str)
-	}
-	return nil
-}
-
-func (e SystemIntakeRelationType) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
 // Steps in the system intake process that a Progress to New Step action can progress to
 type SystemIntakeStepToProgressTo string
 

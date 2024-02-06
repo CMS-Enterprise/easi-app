@@ -266,7 +266,8 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			cedar_system_id = :cedar_system_id,
 			has_ui_changes = :has_ui_changes,
 			trb_follow_up_recommendation = :trb_follow_up_recommendation,
-			contract_name = :contract_name
+			contract_name = :contract_name,
+			system_relation_type = :system_relation_type
 		WHERE system_intakes.id = :id
 	`
 	updateStmt, err := np.PrepareNamed(updateSystemIntakeSQL)
