@@ -398,8 +398,9 @@ namespace :gql do
   namespace :generate do
     task :yarn do
       ENV["FORCE_COLOR"] = "true"
-
-      sh "yarn generate"
+      sh "rm -rf src/queries/types" do |ok|
+        sh "yarn generate" if ok
+      end
     end
 
     task :go do
