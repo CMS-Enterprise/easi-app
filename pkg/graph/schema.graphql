@@ -2416,16 +2416,6 @@ type TRBAdviceLetter {
 }
 
 """
-The data needed to create any category of TRB admin note, without any category-specific data
-TODO - EASI-3458 - remove
-"""
-input CreateTRBAdminNoteInput {
-  trbRequestId: UUID!
-  category: TRBAdminNoteCategory!
-  noteText: HTML!
-}
-
-"""
 The data needed to create a TRB admin note with the General Request category
 """
 input CreateTRBAdminNoteGeneralRequestInput {
@@ -2807,9 +2797,6 @@ type Mutation {
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
 
-  # Retained to support existing queries while support for category-specific notes is added
-  # TODO - EASI-3458 - remove
-  createTRBAdminNote(input: CreateTRBAdminNoteInput!): TRBAdminNote!
 
   # separate mutations for each category of admin note
   createTRBAdminNoteGeneralRequest(input: CreateTRBAdminNoteGeneralRequestInput!): TRBAdminNote!

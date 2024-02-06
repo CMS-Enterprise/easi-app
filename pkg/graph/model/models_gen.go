@@ -269,14 +269,6 @@ type CreateTRBAdminNoteInitialRequestFormInput struct {
 	AppliesToAttendees           bool        `json:"appliesToAttendees"`
 }
 
-// The data needed to create any category of TRB admin note, without any category-specific data
-// TODO - EASI-3458 - remove
-type CreateTRBAdminNoteInput struct {
-	TrbRequestID uuid.UUID                   `json:"trbRequestId"`
-	Category     models.TRBAdminNoteCategory `json:"category"`
-	NoteText     models.HTML                 `json:"noteText"`
-}
-
 // The data needed to create a TRB admin note with the Supporting Documents category
 type CreateTRBAdminNoteSupportingDocumentsInput struct {
 	TrbRequestID uuid.UUID   `json:"trbRequestId"`

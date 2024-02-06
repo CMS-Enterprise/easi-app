@@ -2085,27 +2085,6 @@
 								}
 							},
 							"response": []
-						},
-						{
-							"name": "Create TRB Admin Note (no category-specific fields)",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "mutation CreateTRBNote($input:CreateTRBAdminNoteInput!) {\r\n    createTRBAdminNote(input: $input) {\r\n        id\r\n    }\r\n}",
-										"variables": "{\r\n    \"input\": {\r\n        \"trbRequestId\": \"{{trbRequestID}}\",\r\n        \"category\": \"GENERAL_REQUEST\",\r\n        \"noteText\": \"test note 1\"\r\n    }\r\n}"
-									}
-								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
-								}
-							},
-							"response": []
 						}
 					]
 				}
