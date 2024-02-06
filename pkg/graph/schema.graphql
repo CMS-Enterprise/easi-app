@@ -903,7 +903,9 @@ Represents current and planned annual costs for a system
 """
 type SystemIntakeAnnualSpending {
   currentAnnualSpending: String
+  currentAnnualSpendingITPortion: String
   plannedYearOneSpending: String
+  plannedYearOneSpendingITPortion: String
 }
 
 """
@@ -1234,7 +1236,9 @@ Input data for current and planned year one annual costs associated with a syste
 """
 input SystemIntakeAnnualSpendingInput {
   currentAnnualSpending: String
+  currentAnnualSpendingITPortion: String
   plannedYearOneSpending: String
+  plannedYearOneSpendingITPortion: String
 }
 
 """

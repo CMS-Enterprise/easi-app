@@ -33,7 +33,7 @@ type FundingSourcesObject = {
 export const SystemIntakeReview = ({
   systemIntake
 }: SystemIntakeReviewProps) => {
-  const { contract, status, submittedAt } = systemIntake;
+  const { annualSpending, costs, contract, status, submittedAt } = systemIntake;
   const {
     contacts: {
       data: { requester, businessOwner, productManager, isso }
@@ -100,6 +100,101 @@ export const SystemIntakeReview = ({
     }
 
     return 'N/A';
+  };
+
+  /* Conditionally render cost and annual spending information depending on what info is present.
+      Original: Display only "costs" info
+      Intermediate: Display annual spending info
+      Current: Display annual spending and IT portion info
+  */
+  const formatCostAndSpendingInfo = () => {
+    // If IT portion field is present, display annual spending and IT portion info
+    if (annualSpending?.currentAnnualSpendingITPortion) {
+      return (
+        <>
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.currentAnnualSpending')} />
+              <DescriptionDefinition
+                definition={annualSpending.currentAnnualSpending}
+              />
+            </div>
+            <div>
+              <DescriptionTerm
+                term={t('review.currentAnnualSpendingITPortion')}
+              />
+              <DescriptionDefinition
+                definition={annualSpending.currentAnnualSpendingITPortion}
+              />
+            </div>
+          </ReviewRow>
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.plannedYearOneSpending')} />
+              <DescriptionDefinition
+                definition={annualSpending.plannedYearOneSpending}
+              />
+            </div>
+            <div>
+              <DescriptionTerm
+                term={t('review.plannedYearOneSpendingITPortion')}
+              />
+              <DescriptionDefinition
+                definition={annualSpending.plannedYearOneSpendingITPortion}
+              />
+            </div>
+          </ReviewRow>
+        </>
+      );
+    }
+
+    // If IT portion field is NOT present but annual spending is - display only annual spending info
+    if (annualSpending?.currentAnnualSpending) {
+      return (
+        <>
+          <ReviewRow>
+            <div>
+              <DescriptionTerm term={t('review.currentAnnualSpending')} />
+              <DescriptionDefinition
+                definition={annualSpending.currentAnnualSpending}
+              />
+            </div>
+            <div>
+              <DescriptionTerm term={t('review.plannedYearOneSpending')} />
+              <DescriptionDefinition
+                definition={annualSpending.plannedYearOneSpending}
+              />
+            </div>
+          </ReviewRow>
+        </>
+      );
+    }
+
+    // If IT portion AND annual spending fields are not present - it is an old intake so display legacy cost info
+    // TODO: add logic for checking that costs isnt empty here to be safe? diplay error message?
+    return (
+      <>
+        <ReviewRow>
+          <div>
+            <DescriptionTerm term={t('review.costs')} />
+            <DescriptionDefinition
+              definition={
+                systemIntake.costs?.isExpectingIncrease &&
+                yesNoMap[systemIntake.costs.isExpectingIncrease]
+              }
+            />
+          </div>
+          {costs?.isExpectingIncrease === 'YES' && (
+            <div>
+              <DescriptionTerm term={t('review.increase')} />
+              <DescriptionDefinition
+                definition={costs.expectedIncreaseAmount}
+              />
+            </div>
+          )}
+        </ReviewRow>
+      </>
+    );
   };
 
   return (
@@ -231,42 +326,7 @@ export const SystemIntakeReview = ({
           </div>
         </ReviewRow>
         {/* Conditionally render annual spending (current) or cost (legacy) questions and answers */}
-        {systemIntake.annualSpending?.currentAnnualSpending ? (
-          <ReviewRow>
-            <div>
-              <DescriptionTerm term={t('review.currentAnnualSpending')} />
-              <DescriptionDefinition
-                definition={systemIntake.annualSpending.currentAnnualSpending}
-              />
-            </div>
-            <div>
-              <DescriptionTerm term={t('review.plannedYearOneSpending')} />
-              <DescriptionDefinition
-                definition={systemIntake.annualSpending.plannedYearOneSpending}
-              />
-            </div>
-          </ReviewRow>
-        ) : (
-          <ReviewRow>
-            <div>
-              <DescriptionTerm term={t('review.costs')} />
-              <DescriptionDefinition
-                definition={
-                  systemIntake.costs?.isExpectingIncrease &&
-                  yesNoMap[systemIntake.costs.isExpectingIncrease]
-                }
-              />
-            </div>
-            {systemIntake.costs?.isExpectingIncrease === 'YES' && (
-              <div>
-                <DescriptionTerm term={t('review.increase')} />
-                <DescriptionDefinition
-                  definition={systemIntake.costs.expectedIncreaseAmount}
-                />
-              </div>
-            )}
-          </ReviewRow>
-        )}
+        {formatCostAndSpendingInfo()}
         <ReviewRow>
           <div>
             <DescriptionTerm term={t('review.contract')} />
