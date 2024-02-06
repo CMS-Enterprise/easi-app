@@ -92,7 +92,11 @@ const intakeQuery = (intakeData: any) => {
           },
           annualSpending: {
             currentAnnualSpending: 'Test Current Annual Spending',
-            plannedYearOneSpending: 'Test Planned Year One Spending'
+            currentAnnualSpendingITPortion:
+              'Test Current Annual Spending IT portion',
+            plannedYearOneSpending: 'Test Planned Year One Spending',
+            plannedYearOneSpendingITPortion:
+              'Test Planned Year One Spending IT portion'
           },
           currentStage: null,
           decisionNextSteps: null,

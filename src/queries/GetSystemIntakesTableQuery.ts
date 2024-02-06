@@ -43,7 +43,9 @@ export default gql`
 
       annualSpending {
         currentAnnualSpending
+        currentAnnualSpendingITPortion
         plannedYearOneSpending
+        plannedYearOneSpendingITPortion
       }
 
       contract {

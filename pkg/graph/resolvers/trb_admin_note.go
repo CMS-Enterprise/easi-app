@@ -15,37 +15,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-// CreateTRBAdminNote creates a new TRB admin note in the database
-// TODO - EASI-3458 - remove
-func CreateTRBAdminNote(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID, category models.TRBAdminNoteCategory, noteText models.HTML) (*models.TRBAdminNote, error) {
-	noteToCreate := models.TRBAdminNote{
-		TRBRequestID: trbRequestID,
-		Category:     category,
-		NoteText:     noteText,
-	}
-	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
-
-	// set category-specific fields to default values for that data, so that the created data/SQL records are still valid
-	switch category {
-	case models.TRBAdminNoteCategoryInitialRequestForm:
-		noteToCreate.AppliesToBasicRequestDetails = null.BoolFrom(false)
-		noteToCreate.AppliesToSubjectAreas = null.BoolFrom(false)
-		noteToCreate.AppliesToAttendees = null.BoolFrom(false)
-	case models.TRBAdminNoteCategoryAdviceLetter:
-		noteToCreate.AppliesToMeetingSummary = null.BoolFrom(false)
-		noteToCreate.AppliesToNextSteps = null.BoolFrom(false)
-	case models.TRBAdminNoteCategoryGeneralRequest, models.TRBAdminNoteCategorySupportingDocuments, models.TRBAdminNoteCategoryConsultSession:
-		// intentional no-op - no fields to set
-	}
-
-	createdNote, err := store.CreateTRBAdminNote(ctx, &noteToCreate)
-	if err != nil {
-		return nil, err
-	}
-
-	return createdNote, nil
-}
-
 func CreateTRBAdminNoteGeneralRequest(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,

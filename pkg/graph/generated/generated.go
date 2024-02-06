@@ -566,7 +566,6 @@ type ComplexityRoot struct {
 		CreateSystemIntakeContact                        func(childComplexity int, input model.CreateSystemIntakeContactInput) int
 		CreateSystemIntakeDocument                       func(childComplexity int, input model.CreateSystemIntakeDocumentInput) int
 		CreateSystemIntakeNote                           func(childComplexity int, input model.CreateSystemIntakeNoteInput) int
-		CreateTRBAdminNote                               func(childComplexity int, input model.CreateTRBAdminNoteInput) int
 		CreateTRBAdminNoteAdviceLetter                   func(childComplexity int, input model.CreateTRBAdminNoteAdviceLetterInput) int
 		CreateTRBAdminNoteConsultSession                 func(childComplexity int, input model.CreateTRBAdminNoteConsultSessionInput) int
 		CreateTRBAdminNoteGeneralRequest                 func(childComplexity int, input model.CreateTRBAdminNoteGeneralRequestInput) int
@@ -787,8 +786,10 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeAnnualSpending struct {
-		CurrentAnnualSpending  func(childComplexity int) int
-		PlannedYearOneSpending func(childComplexity int) int
+		CurrentAnnualSpending           func(childComplexity int) int
+		CurrentAnnualSpendingITPortion  func(childComplexity int) int
+		PlannedYearOneSpending          func(childComplexity int) int
+		PlannedYearOneSpendingITPortion func(childComplexity int) int
 	}
 
 	SystemIntakeBusinessOwner struct {
@@ -1369,7 +1370,6 @@ type MutationResolver interface {
 	CreateTRBRequestFeedback(ctx context.Context, input model.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error)
 	UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error)
 	UpdateTRBRequestTRBLead(ctx context.Context, input model.UpdateTRBRequestTRBLeadInput) (*models.TRBRequest, error)
-	CreateTRBAdminNote(ctx context.Context, input model.CreateTRBAdminNoteInput) (*models.TRBAdminNote, error)
 	CreateTRBAdminNoteGeneralRequest(ctx context.Context, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error)
 	CreateTRBAdminNoteInitialRequestForm(ctx context.Context, input model.CreateTRBAdminNoteInitialRequestFormInput) (*models.TRBAdminNote, error)
 	CreateTRBAdminNoteSupportingDocuments(ctx context.Context, input model.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error)
@@ -1476,7 +1476,7 @@ type SystemIntakeResolver interface {
 	LcidStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeLCIDStatus, error)
 
 	ContractName(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	RelationType(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRelationType, error)
+	RelationType(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRelationType, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*model.SystemIntakeDocumentType, error)
@@ -4115,18 +4115,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateSystemIntakeNote(childComplexity, args["input"].(model.CreateSystemIntakeNoteInput)), true
 
-	case "Mutation.createTRBAdminNote":
-		if e.complexity.Mutation.CreateTRBAdminNote == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createTRBAdminNote_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateTRBAdminNote(childComplexity, args["input"].(model.CreateTRBAdminNoteInput)), true
-
 	case "Mutation.createTRBAdminNoteAdviceLetter":
 		if e.complexity.Mutation.CreateTRBAdminNoteAdviceLetter == nil {
 			break
@@ -5863,12 +5851,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeAnnualSpending.CurrentAnnualSpending(childComplexity), true
 
+	case "SystemIntakeAnnualSpending.currentAnnualSpendingITPortion":
+		if e.complexity.SystemIntakeAnnualSpending.CurrentAnnualSpendingITPortion == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAnnualSpending.CurrentAnnualSpendingITPortion(childComplexity), true
+
 	case "SystemIntakeAnnualSpending.plannedYearOneSpending":
 		if e.complexity.SystemIntakeAnnualSpending.PlannedYearOneSpending == nil {
 			break
 		}
 
 		return e.complexity.SystemIntakeAnnualSpending.PlannedYearOneSpending(childComplexity), true
+
+	case "SystemIntakeAnnualSpending.plannedYearOneSpendingITPortion":
+		if e.complexity.SystemIntakeAnnualSpending.PlannedYearOneSpendingITPortion == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAnnualSpending.PlannedYearOneSpendingITPortion(childComplexity), true
 
 	case "SystemIntakeBusinessOwner.component":
 		if e.complexity.SystemIntakeBusinessOwner.Component == nil {
@@ -7518,7 +7520,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateTRBAdminNoteConsultSessionInput,
 		ec.unmarshalInputCreateTRBAdminNoteGeneralRequestInput,
 		ec.unmarshalInputCreateTRBAdminNoteInitialRequestFormInput,
-		ec.unmarshalInputCreateTRBAdminNoteInput,
 		ec.unmarshalInputCreateTRBAdminNoteSupportingDocumentsInput,
 		ec.unmarshalInputCreateTRBAdviceLetterRecommendationInput,
 		ec.unmarshalInputCreateTRBRequestAttendeeInput,
@@ -8592,7 +8593,9 @@ Represents current and planned annual costs for a system
 """
 type SystemIntakeAnnualSpending {
   currentAnnualSpending: String
+  currentAnnualSpendingITPortion: String
   plannedYearOneSpending: String
+  plannedYearOneSpendingITPortion: String
 }
 
 """
@@ -8923,7 +8926,9 @@ Input data for current and planned year one annual costs associated with a syste
 """
 input SystemIntakeAnnualSpendingInput {
   currentAnnualSpending: String
+  currentAnnualSpendingITPortion: String
   plannedYearOneSpending: String
+  plannedYearOneSpendingITPortion: String
 }
 
 """
@@ -10101,16 +10106,6 @@ type TRBAdviceLetter {
 }
 
 """
-The data needed to create any category of TRB admin note, without any category-specific data
-TODO - EASI-3458 - remove
-"""
-input CreateTRBAdminNoteInput {
-  trbRequestId: UUID!
-  category: TRBAdminNoteCategory!
-  noteText: HTML!
-}
-
-"""
 The data needed to create a TRB admin note with the General Request category
 """
 input CreateTRBAdminNoteGeneralRequestInput {
@@ -10492,9 +10487,6 @@ type Mutation {
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
 
-  # Retained to support existing queries while support for category-specific notes is added
-  # TODO - EASI-3458 - remove
-  createTRBAdminNote(input: CreateTRBAdminNoteInput!): TRBAdminNote!
 
   # separate mutations for each category of admin note
   createTRBAdminNoteGeneralRequest(input: CreateTRBAdminNoteGeneralRequestInput!): TRBAdminNote!
@@ -10578,7 +10570,7 @@ type Query {
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
-  userAccount(username: String!): UserAccount 
+  userAccount(username: String!): UserAccount
 }
 
 enum TRBRequestType {
@@ -11582,21 +11574,6 @@ func (ec *executionContext) field_Mutation_createTRBAdminNoteSupportingDocuments
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNCreateTRBAdminNoteSupportingDocumentsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBAdminNoteSupportingDocumentsInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_createTRBAdminNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.CreateTRBAdminNoteInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateTRBAdminNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBAdminNoteInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -32592,85 +32569,6 @@ func (ec *executionContext) fieldContext_Mutation_updateTRBRequestTRBLead(ctx co
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_createTRBAdminNote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createTRBAdminNote(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateTRBAdminNote(rctx, fc.Args["input"].(model.CreateTRBAdminNoteInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.TRBAdminNote)
-	fc.Result = res
-	return ec.marshalNTRBAdminNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNote(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_createTRBAdminNote(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_TRBAdminNote_id(ctx, field)
-			case "trbRequestId":
-				return ec.fieldContext_TRBAdminNote_trbRequestId(ctx, field)
-			case "category":
-				return ec.fieldContext_TRBAdminNote_category(ctx, field)
-			case "noteText":
-				return ec.fieldContext_TRBAdminNote_noteText(ctx, field)
-			case "author":
-				return ec.fieldContext_TRBAdminNote_author(ctx, field)
-			case "isArchived":
-				return ec.fieldContext_TRBAdminNote_isArchived(ctx, field)
-			case "categorySpecificData":
-				return ec.fieldContext_TRBAdminNote_categorySpecificData(ctx, field)
-			case "createdBy":
-				return ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_TRBAdminNote_createdAt(ctx, field)
-			case "modifiedBy":
-				return ec.fieldContext_TRBAdminNote_modifiedBy(ctx, field)
-			case "modifiedAt":
-				return ec.fieldContext_TRBAdminNote_modifiedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBAdminNote", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createTRBAdminNote_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Mutation_createTRBAdminNoteGeneralRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createTRBAdminNoteGeneralRequest(ctx, field)
 	if err != nil {
@@ -38684,8 +38582,12 @@ func (ec *executionContext) fieldContext_SystemIntake_annualSpending(ctx context
 			switch field.Name {
 			case "currentAnnualSpending":
 				return ec.fieldContext_SystemIntakeAnnualSpending_currentAnnualSpending(ctx, field)
+			case "currentAnnualSpendingITPortion":
+				return ec.fieldContext_SystemIntakeAnnualSpending_currentAnnualSpendingITPortion(ctx, field)
 			case "plannedYearOneSpending":
 				return ec.fieldContext_SystemIntakeAnnualSpending_plannedYearOneSpending(ctx, field)
+			case "plannedYearOneSpendingITPortion":
+				return ec.fieldContext_SystemIntakeAnnualSpending_plannedYearOneSpendingITPortion(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeAnnualSpending", field.Name)
 		},
@@ -41228,9 +41130,9 @@ func (ec *executionContext) _SystemIntake_relationType(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.SystemIntakeRelationType)
+	res := resTmp.(*models.SystemIntakeRelationType)
 	fc.Result = res
-	return ec.marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRelationType(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRelationType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_relationType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -41962,6 +41864,47 @@ func (ec *executionContext) fieldContext_SystemIntakeAnnualSpending_currentAnnua
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntakeAnnualSpending_currentAnnualSpendingITPortion(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAnnualSpending) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeAnnualSpending_currentAnnualSpendingITPortion(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CurrentAnnualSpendingITPortion, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeAnnualSpending_currentAnnualSpendingITPortion(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeAnnualSpending",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeAnnualSpending_plannedYearOneSpending(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAnnualSpending) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeAnnualSpending_plannedYearOneSpending(ctx, field)
 	if err != nil {
@@ -41991,6 +41934,47 @@ func (ec *executionContext) _SystemIntakeAnnualSpending_plannedYearOneSpending(c
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeAnnualSpending_plannedYearOneSpending(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeAnnualSpending",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeAnnualSpending_plannedYearOneSpendingITPortion(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAnnualSpending) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeAnnualSpending_plannedYearOneSpendingITPortion(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PlannedYearOneSpendingITPortion, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeAnnualSpending_plannedYearOneSpendingITPortion(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeAnnualSpending",
 		Field:      field,
@@ -55335,53 +55319,6 @@ func (ec *executionContext) unmarshalInputCreateTRBAdminNoteInitialRequestFormIn
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateTRBAdminNoteInput(ctx context.Context, obj interface{}) (model.CreateTRBAdminNoteInput, error) {
-	var it model.CreateTRBAdminNoteInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"trbRequestId", "category", "noteText"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "trbRequestId":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("trbRequestId"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TrbRequestID = data
-		case "category":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalNTRBAdminNoteCategory2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Category = data
-		case "noteText":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("noteText"))
-			data, err := ec.unmarshalNHTML2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NoteText = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputCreateTRBAdminNoteSupportingDocumentsInput(ctx context.Context, obj interface{}) (model.CreateTRBAdminNoteSupportingDocumentsInput, error) {
 	var it model.CreateTRBAdminNoteSupportingDocumentsInput
 	asMap := map[string]interface{}{}
@@ -56663,7 +56600,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeAnnualSpendingInput(ctx co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"currentAnnualSpending", "plannedYearOneSpending"}
+	fieldsInOrder := [...]string{"currentAnnualSpending", "currentAnnualSpendingITPortion", "plannedYearOneSpending", "plannedYearOneSpendingITPortion"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -56679,6 +56616,15 @@ func (ec *executionContext) unmarshalInputSystemIntakeAnnualSpendingInput(ctx co
 				return it, err
 			}
 			it.CurrentAnnualSpending = data
+		case "currentAnnualSpendingITPortion":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentAnnualSpendingITPortion"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CurrentAnnualSpendingITPortion = data
 		case "plannedYearOneSpending":
 			var err error
 
@@ -56688,6 +56634,15 @@ func (ec *executionContext) unmarshalInputSystemIntakeAnnualSpendingInput(ctx co
 				return it, err
 			}
 			it.PlannedYearOneSpending = data
+		case "plannedYearOneSpendingITPortion":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plannedYearOneSpendingITPortion"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PlannedYearOneSpendingITPortion = data
 		}
 	}
 
@@ -65785,13 +65740,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "createTRBAdminNote":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createTRBAdminNote(ctx, field)
-			})
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "createTRBAdminNoteGeneralRequest":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createTRBAdminNoteGeneralRequest(ctx, field)
@@ -68565,8 +68513,12 @@ func (ec *executionContext) _SystemIntakeAnnualSpending(ctx context.Context, sel
 			out.Values[i] = graphql.MarshalString("SystemIntakeAnnualSpending")
 		case "currentAnnualSpending":
 			out.Values[i] = ec._SystemIntakeAnnualSpending_currentAnnualSpending(ctx, field, obj)
+		case "currentAnnualSpendingITPortion":
+			out.Values[i] = ec._SystemIntakeAnnualSpending_currentAnnualSpendingITPortion(ctx, field, obj)
 		case "plannedYearOneSpending":
 			out.Values[i] = ec._SystemIntakeAnnualSpending_plannedYearOneSpending(ctx, field, obj)
+		case "plannedYearOneSpendingITPortion":
+			out.Values[i] = ec._SystemIntakeAnnualSpending_plannedYearOneSpendingITPortion(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -73377,11 +73329,6 @@ func (ec *executionContext) unmarshalNCreateTRBAdminNoteInitialRequestFormInput2
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateTRBAdminNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBAdminNoteInput(ctx context.Context, v interface{}) (model.CreateTRBAdminNoteInput, error) {
-	res, err := ec.unmarshalInputCreateTRBAdminNoteInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNCreateTRBAdminNoteSupportingDocumentsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTRBAdminNoteSupportingDocumentsInput(ctx context.Context, v interface{}) (model.CreateTRBAdminNoteSupportingDocumentsInput, error) {
 	res, err := ec.unmarshalInputCreateTRBAdminNoteSupportingDocumentsInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -76865,20 +76812,21 @@ func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋ
 	return ec._SystemIntakeNote(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRelationType(ctx context.Context, v interface{}) (*model.SystemIntakeRelationType, error) {
+func (ec *executionContext) unmarshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRelationType(ctx context.Context, v interface{}) (*models.SystemIntakeRelationType, error) {
 	if v == nil {
 		return nil, nil
 	}
-	var res = new(model.SystemIntakeRelationType)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeRelationType(tmp)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRelationType(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeRelationType) graphql.Marshaler {
+func (ec *executionContext) marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRelationType(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeRelationType) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return v
+	res := graphql.MarshalString(string(*v))
+	return res
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeStatusRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusRequester(ctx context.Context, v interface{}) (*models.SystemIntakeStatusRequester, error) {
