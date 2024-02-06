@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -3120,18 +3119,8 @@ func (r *systemIntakeResolver) ContractName(ctx context.Context, obj *models.Sys
 }
 
 // RelationType is the resolver for the relationType field.
-func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRelationType, error) {
-	// The purpose of this resolver is to return the kind of relation that has been set for this System Intake
-	// It is a calculated type that should be based on the values of the fields that are set by the following other resolvers:
-	// - setSystemIntakeRelationNewSystem
-	// - setSystemIntakeRelationExistingSystem
-	// - setSystemIntakeRelationExistingService
-	//
-	// The following is pseudo-code for how this resolver should work:
-	// 1. Check to see if there are any CEDAR System ID relations. If so, return "SystemIntakeRelationTypeExistingSystem"
-	// 2. Check to see if there is a free-text service/contract name set on the intake. If so, return "SystemIntakeRelationTypeExistingService"
-	// 3. Else, return "SystemIntakeRelationTypeNewSystem"
-	panic(fmt.Errorf("not implemented: RelationType - relationType"))
+func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRelationType, error) {
+	return obj.SystemRelationType, nil
 }
 
 // DocumentType is the resolver for the documentType field.

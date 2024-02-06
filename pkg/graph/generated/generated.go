@@ -1476,7 +1476,7 @@ type SystemIntakeResolver interface {
 	LcidStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeLCIDStatus, error)
 
 	ContractName(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	RelationType(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRelationType, error)
+	RelationType(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRelationType, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*model.SystemIntakeDocumentType, error)
@@ -10565,7 +10565,7 @@ type Query {
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
-  userAccount(username: String!): UserAccount 
+  userAccount(username: String!): UserAccount
 }
 
 enum TRBRequestType {
@@ -41125,9 +41125,9 @@ func (ec *executionContext) _SystemIntake_relationType(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.SystemIntakeRelationType)
+	res := resTmp.(*models.SystemIntakeRelationType)
 	fc.Result = res
-	return ec.marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRelationType(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRelationType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_relationType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -76361,20 +76361,21 @@ func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋ
 	return ec._SystemIntakeNote(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRelationType(ctx context.Context, v interface{}) (*model.SystemIntakeRelationType, error) {
+func (ec *executionContext) unmarshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRelationType(ctx context.Context, v interface{}) (*models.SystemIntakeRelationType, error) {
 	if v == nil {
 		return nil, nil
 	}
-	var res = new(model.SystemIntakeRelationType)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeRelationType(tmp)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRelationType(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeRelationType) graphql.Marshaler {
+func (ec *executionContext) marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRelationType(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeRelationType) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return v
+	res := graphql.MarshalString(string(*v))
+	return res
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeStatusRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusRequester(ctx context.Context, v interface{}) (*models.SystemIntakeStatusRequester, error) {
