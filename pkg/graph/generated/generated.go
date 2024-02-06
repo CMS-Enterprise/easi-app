@@ -715,6 +715,7 @@ type ComplexityRoot struct {
 		CedarSystemID               func(childComplexity int) int
 		Contract                    func(childComplexity int) int
 		ContractName                func(childComplexity int) int
+		ContractNumbers             func(childComplexity int) int
 		Costs                       func(childComplexity int) int
 		CreatedAt                   func(childComplexity int) int
 		CurrentStage                func(childComplexity int) int
@@ -5407,6 +5408,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.ContractName(childComplexity), true
 
+	case "SystemIntake.contractNumbers":
+		if e.complexity.SystemIntake.ContractNumbers == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.ContractNumbers(childComplexity), true
+
 	case "SystemIntake.costs":
 		if e.complexity.SystemIntake.Costs == nil {
 			break
@@ -8786,6 +8794,11 @@ type SystemIntake {
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
   contractName: String
   relationType: SystemIntakeRelationType # TODO: NOT IMPLEMENTED
+
+  """
+  Linked contract numbers
+  """
+  contractNumbers: [String!]!
 }
 
 # TODO Figure out if there's any better way to name this.
@@ -15917,6 +15930,8 @@ func (ec *executionContext) fieldContext_BusinessCase_systemIntake(ctx context.C
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "contractNumbers":
+				return ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -24805,6 +24820,8 @@ func (ec *executionContext) fieldContext_CreateSystemIntakeActionExtendLifecycle
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "contractNumbers":
+				return ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -29682,6 +29699,8 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "contractNumbers":
+				return ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -35183,6 +35202,8 @@ func (ec *executionContext) fieldContext_Query_systemIntake(ctx context.Context,
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "contractNumbers":
+				return ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -35400,6 +35421,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "contractNumbers":
+				return ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -35649,6 +35672,8 @@ func (ec *executionContext) fieldContext_Query_systemIntakesWithLcids(ctx contex
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "contractNumbers":
+				return ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -36862,6 +36887,8 @@ func (ec *executionContext) fieldContext_Query_relatedSystemIntakes(ctx context.
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "contractNumbers":
+				return ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -41417,6 +41444,50 @@ func (ec *executionContext) fieldContext_SystemIntake_relationType(ctx context.C
 	return fc, nil
 }
 
+func (ec *executionContext) _SystemIntake_contractNumbers(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ContractNumbers, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntake_contractNumbers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SystemIntakeAction_id(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SystemIntakeAction_id(ctx, field)
 	if err != nil {
@@ -41636,6 +41707,8 @@ func (ec *executionContext) fieldContext_SystemIntakeAction_systemIntake(ctx con
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "contractNumbers":
+				return ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -50879,6 +50952,8 @@ func (ec *executionContext) fieldContext_TRBRequestForm_systemIntakes(ctx contex
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "contractNumbers":
+				return ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -52120,6 +52195,8 @@ func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_systemIntake(
 				return ec.fieldContext_SystemIntake_contractName(ctx, field)
 			case "relationType":
 				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "contractNumbers":
+				return ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
@@ -68317,6 +68394,11 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "contractNumbers":
+			out.Values[i] = ec._SystemIntake_contractNumbers(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

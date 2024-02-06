@@ -1060,6 +1060,11 @@ type SystemIntake {
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
   contractName: String
   relationType: SystemIntakeRelationType # TODO: NOT IMPLEMENTED
+
+  """
+  Linked contract numbers
+  """
+  contractNumbers: [String!]!
 }
 
 # TODO Figure out if there's any better way to name this.
