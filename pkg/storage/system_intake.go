@@ -299,7 +299,8 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 const fetchSystemIntakeSQL = `
 		SELECT
 			system_intakes.*,
-		    business_cases.id as business_case_id
+		    business_cases.id as business_case_id,
+			(select CAST(COALESCE(JSONB_AGG(contract_number),'[]') AS JSONB) from system_intake_contract_numbers where intake_id = system_intakes.id) AS contract_numbers
 		FROM
 		    system_intakes
 		    LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
@@ -374,6 +375,8 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 	if err != nil {
 		return nil, err
 	}
+	defer fundingSourcesStmt.Close()
+
 	sources := []*models.SystemIntakeFundingSource{}
 	err = fundingSourcesStmt.Select(&sources, map[string]interface{}{
 		"id": id.String(),
