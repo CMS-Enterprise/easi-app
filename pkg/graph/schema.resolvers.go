@@ -3142,13 +3142,6 @@ func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.Sys
 
 // ContractNumbers is the resolver for the contractNumbers field.
 func (r *systemIntakeResolver) ContractNumbers(ctx context.Context, obj *models.SystemIntake) ([]string, error) {
-	// ret := make([]string, len(obj.ContractNumbers))
-
-	// for i := range ret {
-	// 	ret[i] = obj.ContractNumbers[i].String
-	// }
-
-	// return ret, nil
 	return obj.ContractNumbers, nil
 }
 

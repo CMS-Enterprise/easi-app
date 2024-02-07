@@ -300,7 +300,7 @@ const fetchSystemIntakeSQL = `
 		SELECT
 			system_intakes.*,
 		    business_cases.id as business_case_id,
-			(select CAST(COALESCE(JSONB_AGG(contract_number),'[]') AS JSONB) from system_intake_contract_numbers where intake_id = system_intakes.id) AS contract_numbers
+			(SELECT CAST(COALESCE(JSONB_AGG(contract_number),'[]') AS JSONB) FROM system_intake_contract_numbers WHERE intake_id = system_intakes.id) AS contract_numbers
 		FROM
 		    system_intakes
 		    LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
