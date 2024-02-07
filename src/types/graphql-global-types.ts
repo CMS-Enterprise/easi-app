@@ -286,30 +286,6 @@ export enum SystemIntakeState {
 }
 
 /**
- * The status of a system's IT governence request
- * Note - pre-IT Gov v2 only - for IT Gov v2, use SystemIntakeStatusRequester/SystemIntakeStatusAdmin
- */
-export enum SystemIntakeStatus {
-  BIZ_CASE_CHANGES_NEEDED = "BIZ_CASE_CHANGES_NEEDED",
-  BIZ_CASE_DRAFT = "BIZ_CASE_DRAFT",
-  BIZ_CASE_DRAFT_SUBMITTED = "BIZ_CASE_DRAFT_SUBMITTED",
-  BIZ_CASE_FINAL_NEEDED = "BIZ_CASE_FINAL_NEEDED",
-  BIZ_CASE_FINAL_SUBMITTED = "BIZ_CASE_FINAL_SUBMITTED",
-  INTAKE_DRAFT = "INTAKE_DRAFT",
-  INTAKE_SUBMITTED = "INTAKE_SUBMITTED",
-  LCID_ISSUED = "LCID_ISSUED",
-  NEED_BIZ_CASE = "NEED_BIZ_CASE",
-  NOT_APPROVED = "NOT_APPROVED",
-  NOT_IT_REQUEST = "NOT_IT_REQUEST",
-  NO_GOVERNANCE = "NO_GOVERNANCE",
-  READY_FOR_GRB = "READY_FOR_GRB",
-  READY_FOR_GRT = "READY_FOR_GRT",
-  SHUTDOWN_COMPLETE = "SHUTDOWN_COMPLETE",
-  SHUTDOWN_IN_PROGRESS = "SHUTDOWN_IN_PROGRESS",
-  WITHDRAWN = "WITHDRAWN",
-}
-
-/**
  * This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
  */
 export enum SystemIntakeStatusAdmin {
