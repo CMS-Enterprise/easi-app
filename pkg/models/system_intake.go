@@ -111,6 +111,16 @@ const (
 	SystemIntakeLCIDStatusRetired SystemIntakeLCIDStatus = "RETIRED"
 )
 
+// SystemIntakeRelationType represents an enum for different relation types of intakes
+type SystemIntakeRelationType string
+
+// Possible values of SystemIntakeRelationType
+const (
+	SIRelationTypeNewSystem       SystemIntakeRelationType = "NEW_SYSTEM"
+	SIRelationTypeExistingSystem  SystemIntakeRelationType = "EXISTING_SYSTEM"
+	SIRelationTypeExistingService SystemIntakeRelationType = "EXISTING_SERVICE"
+)
+
 // SystemIntake is the model for the system intake form
 type SystemIntake struct {
 	ID                              uuid.UUID                    `json:"id"`
@@ -188,6 +198,7 @@ type SystemIntake struct {
 	DecisionState                   SystemIntakeDecisionState    `json:"decisionState" db:"decision_state"`
 	TRBFollowUpRecommendation       *SystemIntakeTRBFollowUp     `json:"trbFollowUpRecommendation" db:"trb_follow_up_recommendation"`
 	ContractName                    zero.String                  `json:"contractName" db:"contract_name"`
+	SystemRelationType              *SystemIntakeRelationType    `json:"relationType" db:"system_relation_type"`
 }
 
 // SystemIntakes is a list of System Intakes
