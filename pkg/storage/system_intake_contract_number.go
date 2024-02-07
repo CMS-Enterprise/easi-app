@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -31,6 +32,15 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 		return nil
 	}
 
+	princ := appcontext.Principal(ctx)
+	fmt.Println("==== princ ====")
+	fmt.Printf("%+v\n", princ)
+	fmt.Println("==== princ ====")
+
+	acct := princ.Account()
+	fmt.Println("==== acct ====")
+	fmt.Println(acct)
+	fmt.Println("==== acct ====")
 	userID := appcontext.Principal(ctx).Account().ID
 
 	createSystemIntakeContractNumbersLinks := make([]models.SystemIntakeContractNumber, len(contractNumbers))

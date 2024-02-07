@@ -60,7 +60,7 @@ func main() {
 
 	s3Client := upload.NewS3Client(s3Cfg)
 
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser)
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
 	seederConfig := &seederConfig{
 		logger:   logger,
 		store:    store,
@@ -643,7 +643,7 @@ func main() {
 	// 3. Intake related to an existing contract/service
 	intakeID = uuid.MustParse("b8e3fbf3-73af-4bac-bac3-fd6167a36166")
 	intake = makeSystemIntakeAndSubmit("System Intake Relation (Existing Contract/Service)", &intakeID, requesterEUA, logger, store)
-	setSystemIntakeRelationExistingService(logger, store, intake, "My Cool Existing Contract/Service")
+	setSystemIntakeRelationExistingService(ctx, logger, store, intake, "My Cool Existing Contract/Service")
 }
 
 func date(year, month, day int) *time.Time {
