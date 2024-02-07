@@ -18,7 +18,6 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   id: '',
   euaUserId: '',
   requestName: '',
-  status: 'INTAKE_DRAFT',
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
   requestType: 'NEW',
   requester: {
@@ -46,7 +45,9 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   fundingSources: [],
   annualSpending: {
     currentAnnualSpending: '',
-    plannedYearOneSpending: ''
+    currentAnnualSpendingITPortion: '',
+    plannedYearOneSpending: '',
+    plannedYearOneSpendingITPortion: ''
   },
   contract: {
     hasContract: '',
@@ -100,7 +101,6 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     ...(systemIntake.id && {
       id: systemIntake.id
     }),
-    status: systemIntake.status,
     requestType: systemIntake.requestType,
     requester: systemIntake.requester.name,
     component: systemIntake.requester.component,
@@ -167,7 +167,6 @@ export const prepareSystemIntakeForApp = (
     id: systemIntake.id || '',
     euaUserId: systemIntake.euaUserId || '',
     requestName: systemIntake.projectName || '',
-    status: systemIntake.status || 'INTAKE_DRAFT',
     statusAdmin: systemIntake.statusAdmin,
     requestType: systemIntake.requestType || 'NEW',
     requester: {
@@ -195,7 +194,11 @@ export const prepareSystemIntakeForApp = (
     fundingSources: systemIntake.fundingSources || [],
     annualSpending: {
       currentAnnualSpending: systemIntake.currentAnnualSpending || '',
-      plannedYearOneSpending: systemIntake.plannedYearOneSpending || ''
+      currentAnnualSpendingITPortion:
+        systemIntake.currentAnnualSpendingITPortion || '',
+      plannedYearOneSpending: systemIntake.plannedYearOneSpending || '',
+      plannedYearOneSpendingITPortion:
+        systemIntake.plannedYearOneSpendingITPortion || ''
     },
     contract: {
       hasContract: systemIntake.existingContract || '',

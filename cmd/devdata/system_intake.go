@@ -257,6 +257,24 @@ func updateSystemIntakeContact(
 	}
 }
 
+func setSystemIntakeRelationExistingService(
+	logger *zap.Logger,
+	store *storage.Store,
+	intake *models.SystemIntake,
+	contractName string,
+) {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, intake.EUAUserID.ValueOrZero())
+	input := &model.SetSystemIntakeRelationExistingServiceInput{
+		SystemIntakeID: intake.ID,
+		ContractName:   contractName,
+		// ContractNumbers: []string{"1234567890"},
+	}
+	_, err := resolvers.SetSystemIntakeRelationExistingService(ctx, store, input)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func updateSystemIntakeContactDetails(
 	logger *zap.Logger,
 	store *storage.Store,
@@ -329,7 +347,9 @@ func updateSystemIntakeContractDetails(
 	source2 := "Fed Admin"
 	source3 := "MIP Base"
 	currentAnnualSpending := "It's kind of a lot"
+	currentAnnualSpendingITPortion := "75%"
 	plannedYearOneSpending := "A little bit more"
+	plannedYearOneSpendingITPortion := "25%"
 	contractor := "Dr Doom"
 	startDate := time.Now().AddDate(-1, 0, 0)
 	hasContract := "HAVE_CONTRACT"
@@ -356,8 +376,10 @@ func updateSystemIntakeContractDetails(
 		},
 		Costs: &model.SystemIntakeCostsInput{}, //doesn't appear in current form
 		AnnualSpending: &model.SystemIntakeAnnualSpendingInput{
-			CurrentAnnualSpending:  &currentAnnualSpending,
-			PlannedYearOneSpending: &plannedYearOneSpending,
+			CurrentAnnualSpending:           &currentAnnualSpending,
+			CurrentAnnualSpendingITPortion:  &currentAnnualSpendingITPortion,
+			PlannedYearOneSpending:          &plannedYearOneSpending,
+			PlannedYearOneSpendingITPortion: &plannedYearOneSpendingITPortion,
 		},
 		Contract: &model.SystemIntakeContractInput{
 			Contractor:  &contractor,

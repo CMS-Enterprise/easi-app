@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1765,7 +1764,14 @@ func (r *mutationResolver) SetSystemIntakeRelationNewSystem(ctx context.Context,
 	// 1. Delete (if any) existing CEDAR System ID relations that were set by SetSystemIntakeRelationExistingSystem()
 	// 2. Delete (if any) existing free-text contract/service name that might have been set by SetSystemIntakeRelationExistingService()
 	// 3. Delete & Create Contract Number relations (Delete & Create because this mutation always receives the full state of the relations)
-	panic(fmt.Errorf("not implemented: SetSystemIntakeRelationNewSystem - setSystemIntakeRelationNewSystem"))
+	intake, err := resolvers.SetSystemIntakeRelationNewSystem(ctx, r.store, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
 }
 
 // SetSystemIntakeRelationExistingSystem is the resolver for the setSystemIntakeRelationExistingSystem field.
@@ -1778,7 +1784,14 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Con
 	// 1. Delete (if any) existing free-text contract/service name that might have been set by SetSystemIntakeRelationExistingService()
 	// 2. Delete & Create CEDAR System ID relations (Delete & Create because this mutation always receives the full state of the relations)
 	// 3. Delete & Create Contract Number relations (Delete & Create because this mutation always receives the full state of the relations)
-	panic(fmt.Errorf("not implemented: SetSystemIntakeRelationExistingSystem - setSystemIntakeRelationExistingSystem"))
+	intake, err := resolvers.SetSystemIntakeRelationExistingSystem(ctx, r.store, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
 }
 
 // SetSystemIntakeRelationExistingService is the resolver for the setSystemIntakeRelationExistingService field.
@@ -1791,7 +1804,14 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Co
 	// 1. Delete (if any) existing CEDAR System ID relations that might have been set by SetSystemIntakeRelationExistingSystem()
 	// 2. Set the free-text contract/service name
 	// 3. Delete & Create Contract Number relations (Delete & Create because this mutation always receives the full state of the relations)
-	panic(fmt.Errorf("not implemented: SetSystemIntakeRelationExistingService - setSystemIntakeRelationExistingService"))
+	intake, err := resolvers.SetSystemIntakeRelationExistingService(ctx, r.store, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
 }
 
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
@@ -2150,11 +2170,6 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 		input.TrbRequestID,
 		input.TrbLead,
 	)
-}
-
-// CreateTRBAdminNote is the resolver for the createTRBAdminNote field.
-func (r *mutationResolver) CreateTRBAdminNote(ctx context.Context, input model.CreateTRBAdminNoteInput) (*models.TRBAdminNote, error) {
-	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, input.Category, input.NoteText)
 }
 
 // CreateTRBAdminNoteGeneralRequest is the resolver for the createTRBAdminNoteGeneralRequest field.
@@ -2843,8 +2858,10 @@ func (r *systemIntakeResolver) Costs(ctx context.Context, obj *models.SystemInta
 // AnnualSpending is the resolver for the annualSpending field.
 func (r *systemIntakeResolver) AnnualSpending(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeAnnualSpending, error) {
 	return &model.SystemIntakeAnnualSpending{
-		CurrentAnnualSpending:  obj.CurrentAnnualSpending.Ptr(),
-		PlannedYearOneSpending: obj.PlannedYearOneSpending.Ptr(),
+		CurrentAnnualSpending:           obj.CurrentAnnualSpending.Ptr(),
+		CurrentAnnualSpendingITPortion:  obj.CurrentAnnualSpendingITPortion.Ptr(),
+		PlannedYearOneSpending:          obj.PlannedYearOneSpending.Ptr(),
+		PlannedYearOneSpendingITPortion: obj.PlannedYearOneSpendingITPortion.Ptr(),
 	}, nil
 }
 
@@ -3096,19 +3113,14 @@ func (r *systemIntakeResolver) LcidStatus(ctx context.Context, obj *models.Syste
 	return obj.LCIDStatus(time.Now()), nil
 }
 
+// ContractName is the resolver for the contractName field.
+func (r *systemIntakeResolver) ContractName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ContractName.Ptr(), nil
+}
+
 // RelationType is the resolver for the relationType field.
-func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRelationType, error) {
-	// The purpose of this resolver is to return the kind of relation that has been set for this System Intake
-	// It is a calculated type that should be based on the values of the fields that are set by the following other resolvers:
-	// - setSystemIntakeRelationNewSystem
-	// - setSystemIntakeRelationExistingSystem
-	// - setSystemIntakeRelationExistingService
-	//
-	// The following is pseudo-code for how this resolver should work:
-	// 1. Check to see if there are any CEDAR System ID relations. If so, return "SystemIntakeRelationTypeExistingSystem"
-	// 2. Check to see if there is a free-text service/contract name set on the intake. If so, return "SystemIntakeRelationTypeExistingService"
-	// 3. Else, return "SystemIntakeRelationTypeNewSystem"
-	panic(fmt.Errorf("not implemented: RelationType - relationType"))
+func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRelationType, error) {
+	return obj.SystemRelationType, nil
 }
 
 // DocumentType is the resolver for the documentType field.

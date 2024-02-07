@@ -38,10 +38,10 @@ func (s *EmailTestSuite) TestIntakeRetireLCIDNotification() {
 		&retiresAt,
 		&expiresAt,
 		&issuedAt,
-		*lifecycleScope,
+		lifecycleScope,
 		lifecycleCostBaseline,
 		reason,
-		*decisionNextSteps,
+		decisionNextSteps,
 		additionalInfo,
 	)
 	s.NoError(err)
@@ -51,11 +51,15 @@ func (s *EmailTestSuite) TestIntakeRetireLCIDNotification() {
 	getExpectedEmail := func(
 		issuedAt *time.Time,
 		reason *models.HTML,
+		scope *models.HTML,
+		nextSteps *models.HTML,
 		additionalInfo *models.HTML,
 	) string {
 		var reasonStr string
 		var additionalInfoStr string
 		var issuedAtStr string
+		var scopeStr string
+		var nextStepsStr string
 		if reason != nil {
 			reasonStr = fmt.Sprintf(
 				`<p class="no-margin"><strong>Reason:</strong></p>
@@ -71,6 +75,16 @@ func (s *EmailTestSuite) TestIntakeRetireLCIDNotification() {
 				<br>
 				<p><strong>Additional information from the Governance Team:</strong></p><div class="no-margin">%s</div>`,
 				*additionalInfo.StringPointer(),
+			)
+		}
+		if scope != nil {
+			scopeStr = fmt.Sprintf(`<p><strong>Scope:</strong></p>%s`,
+				*scope.StringPointer(),
+			)
+		}
+		if nextSteps != nil {
+			nextStepsStr = fmt.Sprintf(`<p><strong>Next steps:</strong></p>%s`,
+				*nextSteps.StringPointer(),
 			)
 		}
 		if issuedAt != nil {
@@ -91,9 +105,9 @@ func (s *EmailTestSuite) TestIntakeRetireLCIDNotification() {
 				<p><u>Summary of retired Life Cycle ID</u></p>
 				<p><strong>Life Cycle ID:</strong> %s</p>%s
 				<p><strong>Expiration date:</strong> %s</p>
-				<p><strong>Scope:</strong></p>%s
+				%s
 				<p><strong>Project Cost Baseline:</strong> %s</p>
-				<p><strong>Next steps:</strong></p>%s
+				%s
 			</div>
 			%s
 			`,
@@ -104,15 +118,15 @@ func (s *EmailTestSuite) TestIntakeRetireLCIDNotification() {
 			lifecycleID,
 			issuedAtStr,
 			expiresAt.Format("01/02/2006"),
-			*lifecycleScope.StringPointer(),
+			scopeStr,
 			lifecycleCostBaseline,
-			*decisionNextSteps.StringPointer(),
+			nextStepsStr,
 			additionalInfoStr,
 		)
 
 	}
 
-	expectedEmail := getExpectedEmail(&issuedAt, reason, additionalInfo)
+	expectedEmail := getExpectedEmail(&issuedAt, reason, lifecycleScope, decisionNextSteps, additionalInfo)
 	s.Run("Recipient is correct", func() {
 		allRecipients := []models.EmailAddress{
 			recipient,
@@ -131,14 +145,14 @@ func (s *EmailTestSuite) TestIntakeRetireLCIDNotification() {
 		&retiresAt,
 		&expiresAt,
 		&issuedAt,
-		*lifecycleScope,
+		lifecycleScope,
 		lifecycleCostBaseline,
 		reason,
-		*decisionNextSteps,
+		decisionNextSteps,
 		nil,
 	)
 	s.NoError(err)
-	expectedEmail = getExpectedEmail(&issuedAt, reason, nil)
+	expectedEmail = getExpectedEmail(&issuedAt, reason, lifecycleScope, decisionNextSteps, nil)
 	s.Run("Should omit additional info if absent", func() {
 		s.EqualHTML(expectedEmail, sender.body)
 	})
@@ -150,16 +164,55 @@ func (s *EmailTestSuite) TestIntakeRetireLCIDNotification() {
 		&retiresAt,
 		&expiresAt,
 		nil,
-		*lifecycleScope,
+		lifecycleScope,
 		lifecycleCostBaseline,
 		nil,
-		*decisionNextSteps,
+		decisionNextSteps,
 		additionalInfo,
 	)
 	s.NoError(err)
-	expectedEmail = getExpectedEmail(nil, nil, additionalInfo)
+	expectedEmail = getExpectedEmail(nil, nil, lifecycleScope, decisionNextSteps, additionalInfo)
 	s.Run("Should omit reason and issuedAt if absent", func() {
 		s.EqualHTML(expectedEmail, sender.body)
 	})
 
+	s.Run("Should omit scope if absent", func() {
+		err = client.SystemIntake.SendRetireLCIDNotification(
+			ctx,
+			recipients,
+			lifecycleID,
+			&retiresAt,
+			&expiresAt,
+			nil,
+			nil, // scope is nil
+			lifecycleCostBaseline,
+			nil,
+			decisionNextSteps,
+			additionalInfo,
+		)
+		s.NoError(err)
+
+		expectedEmail = getExpectedEmail(nil, nil, nil, decisionNextSteps, additionalInfo)
+		s.EqualHTML(expectedEmail, sender.body)
+	})
+
+	s.Run("Should omit next steps if absent", func() {
+		err = client.SystemIntake.SendRetireLCIDNotification(
+			ctx,
+			recipients,
+			lifecycleID,
+			&retiresAt,
+			&expiresAt,
+			nil,
+			lifecycleScope,
+			lifecycleCostBaseline,
+			nil,
+			nil, //next steps is nil
+			additionalInfo,
+		)
+		s.NoError(err)
+
+		expectedEmail = getExpectedEmail(nil, nil, lifecycleScope, nil, additionalInfo)
+		s.EqualHTML(expectedEmail, sender.body)
+	})
 }
