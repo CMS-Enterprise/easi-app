@@ -1,5 +1,4 @@
 import { LifecycleCosts } from 'types/estimatedLifecycle';
-// import { SystemIntakeStatusV1 } from 'types/systemIntake';
 
 // Base Solution
 export type BusinessCaseSolution = {
