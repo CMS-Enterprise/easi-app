@@ -40,7 +40,6 @@ import {
   SystemIntakeFormState,
   SystemIntakeRequestType,
   SystemIntakeState,
-  SystemIntakeStatus,
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester,
   SystemIntakeStep,
@@ -156,7 +155,6 @@ export const emptySystemIntake: SystemIntake = {
   id: systemIntakeId,
   euaUserId: requester.euaUserId,
   adminLead: '',
-  status: SystemIntakeStatus.INTAKE_DRAFT,
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
   requester: {
@@ -256,7 +254,6 @@ export const systemIntake: SystemIntake = {
   id: systemIntakeId,
   euaUserId: requester.euaUserId,
   adminLead: '',
-  status: SystemIntakeStatus.INTAKE_SUBMITTED,
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_SUBMITTED,
   requester: {
@@ -354,7 +351,6 @@ export const systemIntake: SystemIntake = {
 export const initialSystemIntakeForm: SystemIntake = {
   ...systemIntake,
   requestName: '',
-  status: SystemIntakeStatus.INTAKE_DRAFT,
   requester: {
     ...systemIntake.requester,
     component: ''
