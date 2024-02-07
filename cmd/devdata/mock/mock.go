@@ -42,9 +42,12 @@ func FetchUserInfosMock(ctx context.Context, euas []string) ([]*models.UserInfo,
 
 // CtxWithLoggerAndPrincipal makes a context with a mocked logger and principal
 func CtxWithLoggerAndPrincipal(logger *zap.Logger, store *storage.Store, euaID string) context.Context {
+	if len(euaID) < 1 {
+		euaID = PrincipalUser
+	}
 	userAccount, err := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, euaID, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
 	if err != nil {
-		panic(fmt.Errorf("failed to get or create user account for mock data"))
+		panic(fmt.Errorf("failed to get or create user account for mock data: %w", err))
 	}
 
 	princ := &authentication.EUAPrincipal{

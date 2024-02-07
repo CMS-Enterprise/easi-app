@@ -258,12 +258,12 @@ func updateSystemIntakeContact(
 }
 
 func setSystemIntakeRelationExistingService(
-	ctx context.Context,
 	logger *zap.Logger,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	contractName string,
 ) {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	input := &model.SetSystemIntakeRelationExistingServiceInput{
 		SystemIntakeID:  intake.ID,
 		ContractName:    contractName,
