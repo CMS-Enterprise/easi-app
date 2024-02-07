@@ -39,7 +39,7 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 		contractNumberLink := models.NewSystemIntakeContractNumber(userID)
 		contractNumberLink.ID = uuid.New()
 		contractNumberLink.ModifiedBy = &userID
-		contractNumberLink.IntakeID = systemIntakeID
+		contractNumberLink.SystemIntakeID = systemIntakeID
 		contractNumberLink.ContractNumber = contractNumber
 		createSystemIntakeContractNumbersLinks[i] = contractNumberLink
 	}

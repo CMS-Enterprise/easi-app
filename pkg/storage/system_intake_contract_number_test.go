@@ -94,7 +94,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		)
 
 		for _, result := range results {
-			s.Equal(result.IntakeID, createdID)
+			s.Equal(result.SystemIntakeID, createdID)
 
 			if result.ContractNumber == contract1 {
 				found1 = true

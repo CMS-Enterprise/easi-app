@@ -6,7 +6,7 @@ import "github.com/google/uuid"
 // contract number(s)
 type SystemIntakeContractNumber struct {
 	BaseStructUser
-	IntakeID       uuid.UUID `db:"intake_id"`
+	SystemIntakeID uuid.UUID `db:"system_intake_id"`
 	ContractNumber string    `db:"contract_number"`
 }
 

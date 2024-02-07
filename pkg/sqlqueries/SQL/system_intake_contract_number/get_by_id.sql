@@ -1,6 +1,6 @@
 SELECT
     id,
-    intake_id,
+    system_intake_id,
     contract_number,
     created_by,
     created_at,
