@@ -5,7 +5,6 @@ const sampleBusinessCaseData: BusinessCaseModel = {
   euaUserId: 'ABCD',
   status: 'OPEN',
   systemIntakeId: 'b6dce250-c13e-4704-b09c-cbcee8541479',
-  // systemIntakeStatus: 'BIZ_CASE_DRAFT',
   requestName: 'Workflow Improvement Project (WIP)',
   requester: {
     name: 'Jane Doe',

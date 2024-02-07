@@ -226,7 +226,6 @@ describe('The business case data', () => {
       id: '879dec4a-6bab-4cfa-bd55-e6e4b91ea8f0',
       euaUserId: 'ABCD',
       systemIntakeId: 'b6dce250-c13e-4704-b09c-cbcee8541479',
-      systemIntakeStatus: 'BIZ_CASE_DRAFT',
       status: 'OPEN',
       projectName: 'Test System',
       requester: 'User ABCD',

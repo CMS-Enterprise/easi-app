@@ -69,7 +69,6 @@ export type BusinessCaseModel = GeneralRequestInfoForm &
     euaUserId?: string;
     status: BusinessCaseStatus;
     systemIntakeId: string;
-    // systemIntakeStatus: SystemIntakeStatusV1;
     createdAt: string;
   };
 
