@@ -23,7 +23,7 @@ func NewKeyArgs() KeyArgs {
 type KeyArgsArray []KeyArgs
 
 // ToJSONArray converts CompoundKeys to JSON array notation
-func (ck KeyArgsArray) ToJSONArray() (string, *error) {
+func (ck KeyArgsArray) ToJSONArray() (string, error) {
 
 	mapSlice := []map[string]interface{}{}
 	for _, v := range ck {
@@ -31,13 +31,13 @@ func (ck KeyArgsArray) ToJSONArray() (string, *error) {
 	}
 	byteArr, err := json.Marshal(mapSlice)
 	if err != nil {
-		return "", &err
+		return "", err
 	}
 	return string(byteArr), nil
 }
 
 // ConvertToKeyArgsArray casts a dataloader.Keys object to a KeyArgsArray object
-func ConvertToKeyArgsArray(Keys dataloader.Keys) (KeyArgsArray, *error) {
+func ConvertToKeyArgsArray(Keys dataloader.Keys) KeyArgsArray {
 
 	cKeys := []KeyArgs{}
 	for _, ck := range Keys {
@@ -47,7 +47,7 @@ func ConvertToKeyArgsArray(Keys dataloader.Keys) (KeyArgsArray, *error) {
 		}
 
 	}
-	return cKeys, nil
+	return cKeys
 
 }
 

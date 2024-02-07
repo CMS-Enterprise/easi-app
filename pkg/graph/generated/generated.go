@@ -833,6 +833,16 @@ type ComplexityRoot struct {
 		Vehicle     func(childComplexity int) int
 	}
 
+	SystemIntakeContractNumber struct {
+		ContractNumber func(childComplexity int) int
+		CreatedAt      func(childComplexity int) int
+		CreatedBy      func(childComplexity int) int
+		ID             func(childComplexity int) int
+		ModifiedAt     func(childComplexity int) int
+		ModifiedBy     func(childComplexity int) int
+		SystemIntakeID func(childComplexity int) int
+	}
+
 	SystemIntakeCosts struct {
 		ExpectedIncreaseAmount func(childComplexity int) int
 		IsExpectingIncrease    func(childComplexity int) int
@@ -1484,7 +1494,7 @@ type SystemIntakeResolver interface {
 
 	ContractName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	RelationType(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRelationType, error)
-	ContractNumbers(ctx context.Context, obj *models.SystemIntake) ([]string, error)
+	ContractNumbers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeContractNumber, error)
 }
 type SystemIntakeDocumentResolver interface {
 	DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*model.SystemIntakeDocumentType, error)
@@ -6046,6 +6056,55 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeContract.Vehicle(childComplexity), true
 
+	case "SystemIntakeContractNumber.contractNumber":
+		if e.complexity.SystemIntakeContractNumber.ContractNumber == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContractNumber.ContractNumber(childComplexity), true
+
+	case "SystemIntakeContractNumber.createdAt":
+		if e.complexity.SystemIntakeContractNumber.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContractNumber.CreatedAt(childComplexity), true
+
+	case "SystemIntakeContractNumber.createdBy":
+		if e.complexity.SystemIntakeContractNumber.CreatedBy == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContractNumber.CreatedBy(childComplexity), true
+
+	case "SystemIntakeContractNumber.id":
+		if e.complexity.SystemIntakeContractNumber.ID == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContractNumber.ID(childComplexity), true
+
+	case "SystemIntakeContractNumber.modifiedAt":
+		if e.complexity.SystemIntakeContractNumber.ModifiedAt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContractNumber.ModifiedAt(childComplexity), true
+
+	case "SystemIntakeContractNumber.modifiedBy":
+		if e.complexity.SystemIntakeContractNumber.ModifiedBy == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContractNumber.ModifiedBy(childComplexity), true
+
+	case "SystemIntakeContractNumber.systemIntakeID":
+		if e.complexity.SystemIntakeContractNumber.SystemIntakeID == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContractNumber.SystemIntakeID(childComplexity), true
+
 	case "SystemIntakeCosts.expectedIncreaseAmount":
 		if e.complexity.SystemIntakeCosts.ExpectedIncreaseAmount == nil {
 			break
@@ -8784,7 +8843,17 @@ type SystemIntake {
   """
   Linked contract numbers
   """
-  contractNumbers: [String!]!
+  contractNumbers: [SystemIntakeContractNumber!]!
+}
+
+type SystemIntakeContractNumber {
+  id: UUID!
+  systemIntakeID: UUID!
+  contractNumber: String!
+  createdBy: UUID!
+  createdAt: Time!
+  modifiedBy: UUID!
+  modifiedAt: Time!
 }
 
 # TODO Figure out if there's any better way to name this.
@@ -41349,9 +41418,9 @@ func (ec *executionContext) _SystemIntake_contractNumbers(ctx context.Context, f
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]string)
+	res := resTmp.([]*models.SystemIntakeContractNumber)
 	fc.Result = res
-	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeContractNumber2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContractNumberᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_contractNumbers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -41361,7 +41430,23 @@ func (ec *executionContext) fieldContext_SystemIntake_contractNumbers(ctx contex
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeContractNumber_id(ctx, field)
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeContractNumber_systemIntakeID(ctx, field)
+			case "contractNumber":
+				return ec.fieldContext_SystemIntakeContractNumber_contractNumber(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeContractNumber_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeContractNumber_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeContractNumber_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeContractNumber_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeContractNumber", field.Name)
 		},
 	}
 	return fc, nil
@@ -43097,6 +43182,314 @@ func (ec *executionContext) fieldContext_SystemIntakeContract_number(ctx context
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContractNumber_id(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContractNumber) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContractNumber_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContractNumber_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContractNumber",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContractNumber_systemIntakeID(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContractNumber) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContractNumber_systemIntakeID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemIntakeID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContractNumber_systemIntakeID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContractNumber",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContractNumber_contractNumber(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContractNumber) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContractNumber_contractNumber(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ContractNumber, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContractNumber_contractNumber(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContractNumber",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContractNumber_createdBy(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContractNumber) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContractNumber_createdBy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedBy, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContractNumber_createdBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContractNumber",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContractNumber_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContractNumber) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContractNumber_createdAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContractNumber_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContractNumber",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContractNumber_modifiedBy(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContractNumber) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContractNumber_modifiedBy(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ModifiedBy, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContractNumber_modifiedBy(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContractNumber",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SystemIntakeContractNumber_modifiedAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeContractNumber) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeContractNumber_modifiedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ModifiedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SystemIntakeContractNumber_modifiedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SystemIntakeContractNumber",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -68685,6 +69078,75 @@ func (ec *executionContext) _SystemIntakeContract(ctx context.Context, sel ast.S
 	return out
 }
 
+var systemIntakeContractNumberImplementors = []string{"SystemIntakeContractNumber"}
+
+func (ec *executionContext) _SystemIntakeContractNumber(ctx context.Context, sel ast.SelectionSet, obj *models.SystemIntakeContractNumber) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeContractNumberImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeContractNumber")
+		case "id":
+			out.Values[i] = ec._SystemIntakeContractNumber_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "systemIntakeID":
+			out.Values[i] = ec._SystemIntakeContractNumber_systemIntakeID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "contractNumber":
+			out.Values[i] = ec._SystemIntakeContractNumber_contractNumber(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createdBy":
+			out.Values[i] = ec._SystemIntakeContractNumber_createdBy(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._SystemIntakeContractNumber_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "modifiedBy":
+			out.Values[i] = ec._SystemIntakeContractNumber_modifiedBy(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "modifiedAt":
+			out.Values[i] = ec._SystemIntakeContractNumber_modifiedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var systemIntakeCostsImplementors = []string{"SystemIntakeCosts"}
 
 func (ec *executionContext) _SystemIntakeCosts(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeCosts) graphql.Marshaler {
@@ -74103,6 +74565,60 @@ func (ec *executionContext) marshalNSystemIntakeContract2ᚖgithubᚗcomᚋcmsgo
 	return ec._SystemIntakeContract(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNSystemIntakeContractNumber2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContractNumberᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeContractNumber) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSystemIntakeContractNumber2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContractNumber(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNSystemIntakeContractNumber2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeContractNumber(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeContractNumber) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeContractNumber(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNSystemIntakeDecisionState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDecisionState(ctx context.Context, v interface{}) (models.SystemIntakeDecisionState, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.SystemIntakeDecisionState(tmp)
@@ -75573,6 +76089,27 @@ func (ec *executionContext) marshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUID�
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalNUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v interface{}) (*uuid.UUID, error) {
+	res, err := models.UnmarshalUUID(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, sel ast.SelectionSet, v *uuid.UUID) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	res := models.MarshalUUID(*v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNUpdateSystemIntakeAdminLeadInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeAdminLeadInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeAdminLeadInput, error) {

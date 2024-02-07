@@ -203,7 +203,7 @@ type SystemIntake struct {
 	ContractNumbers                 contractNumbers              `json:"contractNumbers" db:"contract_numbers"`
 }
 
-type contractNumbers []string
+type contractNumbers []*SystemIntakeContractNumber
 
 // Scan implements the sql.Scanner interface
 func (cn *contractNumbers) Scan(src interface{}) error {
