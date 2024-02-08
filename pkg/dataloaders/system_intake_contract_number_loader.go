@@ -13,8 +13,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// GetSystemIntakeContractNumberByID uses a DataLoader to return many System Intake Contract Numbers by ID
-func (loaders *DataLoaders) GetSystemIntakeContractNumberByID(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
+// getSystemIntakeContractNumberByID uses a DataLoader to return many System Intake Contract Numbers by ID
+func (loaders *DataLoaders) getSystemIntakeContractNumberByID(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
 	logger := appcontext.ZLogger(ctx)
 
 	arrayCK := ConvertToKeyArgsArray(keys)
@@ -60,8 +60,8 @@ func (loaders *DataLoaders) GetSystemIntakeContractNumberByID(ctx context.Contex
 	return output
 }
 
-// GetSystemIntakeContractNumbersBySystemIntakeID uses a DataLoader to return many System Intake Contract Numbers by System Intake ID
-func (loaders *DataLoaders) GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
+// getSystemIntakeContractNumbersBySystemIntakeID uses a DataLoader to return many System Intake Contract Numbers by System Intake ID
+func (loaders *DataLoaders) getSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
 	logger := appcontext.ZLogger(ctx)
 
 	arrayCK := ConvertToKeyArgsArray(keys)
@@ -110,7 +110,7 @@ func (loaders *DataLoaders) GetSystemIntakeContractNumbersBySystemIntakeID(ctx c
 // GetSystemIntakeContractNumberByID will batch all requests for Contract Numbers based on ID and make a single request
 func GetSystemIntakeContractNumberByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContractNumber, error) {
 	allLoaders := Loaders(ctx)
-	loader := allLoaders.ContractNumbersLoader
+	loader := allLoaders.contractNumbersLoader
 
 	thunk := loader.Loader.Load(ctx, dataloader.StringKey(id.String()))
 	result, err := thunk()
@@ -124,7 +124,7 @@ func GetSystemIntakeContractNumberByID(ctx context.Context, id uuid.UUID) (*mode
 // GetSystemIntakeContractNumbersBySystemIntakeID will batch all requests for Contract Numbers based on System Intake ID and make a single request
 func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContractNumber, error) {
 	allLoaders := Loaders(ctx)
-	loader := allLoaders.SystemIntakeContractNumbersLoader
+	loader := allLoaders.systemIntakeContractNumbersLoader
 
 	thunk := loader.Loader.Load(ctx, dataloader.StringKey(systemIntakeID.String()))
 	result, err := thunk()

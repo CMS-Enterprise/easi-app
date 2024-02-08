@@ -13,8 +13,8 @@ type DataLoaders struct {
 	UserAccountLoader                 *WrappedDataLoader
 	DataReader                        *DataReader
 	UserInfoLoader                    *WrappedDataLoader
-	ContractNumbersLoader             *WrappedDataLoader
-	SystemIntakeContractNumbersLoader *WrappedDataLoader
+	contractNumbersLoader             *WrappedDataLoader
+	systemIntakeContractNumbersLoader *WrappedDataLoader
 	FetchUserInfos                    func(context.Context, []string) ([]*models.UserInfo, error)
 }
 
@@ -31,8 +31,8 @@ func NewDataLoaders(store *storage.Store, fetchUserInfos func(context.Context, [
 
 	loaders.UserInfoLoader = newWrappedDataLoader(loaders.BatchUserInfos)
 
-	loaders.ContractNumbersLoader = newWrappedDataLoader(loaders.GetSystemIntakeContractNumberByID)
-	loaders.SystemIntakeContractNumbersLoader = newWrappedDataLoader(loaders.GetSystemIntakeContractNumbersBySystemIntakeID)
+	loaders.contractNumbersLoader = newWrappedDataLoader(loaders.getSystemIntakeContractNumberByID)
+	loaders.systemIntakeContractNumbersLoader = newWrappedDataLoader(loaders.getSystemIntakeContractNumbersBySystemIntakeID)
 
 	return loaders
 }
