@@ -69,19 +69,44 @@ func (s *Store) GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Conte
 }
 
 // SystemIntakeContractNumbersBySystemIntakeIDLOADER gets multiple groups of Contract Numbers by System Intake ID
-func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx context.Context, paramTableJSON string) ([]*models.SystemIntakeContractNumber, error) {
+func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx context.Context, paramTableJSON string) (map[string][]*models.SystemIntakeContractNumber, error) {
 	stmt, err := s.db.PrepareNamedContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
 
-	var data []*models.SystemIntakeContractNumber
-	if err := stmt.SelectContext(ctx, &data, map[string]interface{}{
-		"paramTableJSON": paramTableJSON,
-	}); err != nil {
+	store := map[string][]*models.SystemIntakeContractNumber{}
+
+	rows, err := stmt.QueryContext(ctx, map[string]interface{}{"paramTableJSON": paramTableJSON})
+	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
-	return data, nil
+	for rows.Next() {
+		var contractNumber models.SystemIntakeContractNumber
+
+		if err := rows.Scan(
+			&contractNumber.ID,
+			&contractNumber.SystemIntakeID,
+			&contractNumber.ContractNumber,
+			&contractNumber.CreatedBy,
+			&contractNumber.CreatedAt,
+			&contractNumber.ModifiedBy,
+			&contractNumber.ModifiedAt,
+		); err != nil {
+			return nil, err
+		}
+
+		key := contractNumber.SystemIntakeID.String()
+		val, ok := store[key]
+		if !ok {
+			store[key] = []*models.SystemIntakeContractNumber{&contractNumber}
+		} else {
+			store[key] = append(val, &contractNumber)
+		}
+	}
+
+	return store, nil
 }
