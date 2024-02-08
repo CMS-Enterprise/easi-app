@@ -44,7 +44,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 			contract3,
 		}
 		_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
-			s.NoError(s.store.LinkSystemIntakeContractNumbers(ctx, tx, createdID, contractNumbers))
+			s.NoError(s.store.SetSystemIntakeContractNumbers(ctx, tx, createdID, contractNumbers))
 			return nil, nil
 		})
 		s.NoError(err)
@@ -80,17 +80,6 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		s.True(found1)
 		s.True(found2)
 		s.True(found3)
-	})
-
-	s.Run("retrieves one contract number by id", func() {
-		results, err := s.store.GetSystemIntakeContractNumbersBySystemIntakeID(ctx, createdID)
-		s.NoError(err)
-		s.Len(results, 3)
-
-		result, err := s.store.GetSystemIntakeContractNumberByID(ctx, results[0].ID)
-		s.NoError(err)
-		s.NotZero(result.ID)
-		s.Equal(results[0].ID, result.ID)
 	})
 
 	s.Run("deletes the test intake", func() {

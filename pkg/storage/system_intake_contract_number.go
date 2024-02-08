@@ -14,8 +14,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/sqlqueries"
 )
 
-// LinkSystemIntakeContractNumbers links given Contract Numbers to given System Intake ID
-func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, contractNumbers []string) error {
+// SetSystemIntakeContractNumbers links given Contract Numbers to given System Intake ID
+func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, contractNumbers []string) error {
 	if systemIntakeID == uuid.Nil {
 		return errors.New("unexpected nil system intake ID when linking system intake to contract number")
 	}
@@ -32,7 +32,7 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 
 	userID := appcontext.Principal(ctx).Account().ID
 
-	createSystemIntakeContractNumbersLinks := make([]models.SystemIntakeContractNumber, len(contractNumbers))
+	setSystemIntakeContractNumbersLinks := make([]models.SystemIntakeContractNumber, len(contractNumbers))
 
 	for i, contractNumber := range contractNumbers {
 		contractNumberLink := models.NewSystemIntakeContractNumber(userID)
@@ -40,10 +40,11 @@ func (s *Store) LinkSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx
 		contractNumberLink.ModifiedBy = &userID
 		contractNumberLink.SystemIntakeID = systemIntakeID
 		contractNumberLink.ContractNumber = contractNumber
-		createSystemIntakeContractNumbersLinks[i] = contractNumberLink
+
+		setSystemIntakeContractNumbersLinks[i] = contractNumberLink
 	}
 
-	if _, err := tx.NamedExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.Create, createSystemIntakeContractNumbersLinks); err != nil {
+	if _, err := tx.NamedExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.Set, setSystemIntakeContractNumbersLinks); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to insert linked system intake to contract numbers", zap.Error(err))
 		return err
 	}
@@ -65,40 +66,6 @@ func (s *Store) GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Conte
 	}
 
 	return results, nil
-}
-
-// GetSystemIntakeContractNumberByID retrieves a linked Contract Number by ID
-func (s *Store) GetSystemIntakeContractNumberByID(ctx context.Context, id uuid.UUID) (models.SystemIntakeContractNumber, error) {
-	var result models.SystemIntakeContractNumber
-
-	if err := s.db.GetContext(ctx, &result, sqlqueries.SystemIntakeContractNumberForm.SelectByID, id); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return result, nil
-		}
-
-		appcontext.ZLogger(ctx).Error("Failed to select contract number by ID", zap.Error(err))
-		return result, err
-	}
-
-	return result, nil
-}
-
-// SystemIntakeContractNumbersByIDLOADER gets multiple groups of Contract Numbers by ID
-func (s *Store) SystemIntakeContractNumbersByIDLOADER(ctx context.Context, paramTableJSON string) ([]*models.SystemIntakeContractNumber, error) {
-	stmt, err := s.db.PrepareNamedContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectByIDLOADER)
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-
-	var data []*models.SystemIntakeContractNumber
-	if err := stmt.SelectContext(ctx, &data, map[string]interface{}{
-		"paramTableJSON": paramTableJSON,
-	}); err != nil {
-		return nil, err
-	}
-
-	return data, nil
 }
 
 // SystemIntakeContractNumbersBySystemIntakeIDLOADER gets multiple groups of Contract Numbers by System Intake ID

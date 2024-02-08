@@ -7,46 +7,32 @@ import _ "embed"
 //go:embed SQL/system_intake_contract_number/delete.sql
 var deleteSystemIntakeContractNumbersSQL string
 
-// createSystemIntakeContractNumbersSQL holds the SQL command to link Contract Numbers to a System Intake
+// setSystemIntakeContractNumbersSQL holds the SQL command to link Contract Numbers to a System Intake
 //
-//go:embed SQL/system_intake_contract_number/create.sql
-var createSystemIntakeContractNumbersSQL string
+//go:embed SQL/system_intake_contract_number/set.sql
+var setSystemIntakeContractNumbersSQL string
 
 // selectSystemIntakeContractNumbersBySystemIntakeIDSQL holds the SQL command to get Contract Numbers related to a given System Intake
 //
 //go:embed SQL/system_intake_contract_number/get_by_system_intake_id.sql
 var selectSystemIntakeContractNumbersBySystemIntakeIDSQL string
 
-// selectSystemIntakeContractNumberByIDSQL holds the SQL command to get a linked Contract Number by ID
-//
-//go:embed SQL/system_intake_contract_number/get_by_id.sql
-var selectSystemIntakeContractNumberByIDSQL string
-
 // selectContractNumbersBySystemIntakeIDLOADERSQL holds the SQL command to get linked Contract Numbers by System Intake ID via dataloader
 //
 //go:embed SQL/system_intake_contract_number/get_by_system_intake_id_LOADER.sql
 var selectContractNumbersBySystemIntakeIDLOADERSQL string
 
-// selectContractNumbersByIDLOADERSQL holds the SQL command to get Contract Numbers by IDs via dataloader
-//
-//go:embed SQL/system_intake_contract_number/get_by_id_LOADER.sql
-var selectContractNumbersByIDLOADERSQL string
-
 // SystemIntakeContractNumberForm holds all relevant SQL scripts for a System Intake Contract Number
 var SystemIntakeContractNumberForm = systemIntakeContractNumberScripts{
-	Create:                       createSystemIntakeContractNumbersSQL,
+	Set:                          setSystemIntakeContractNumbersSQL,
 	Delete:                       deleteSystemIntakeContractNumbersSQL,
-	SelectByID:                   selectSystemIntakeContractNumberByIDSQL,
-	SelectByIDLOADER:             selectContractNumbersByIDLOADERSQL,
 	SelectBySystemIntakeID:       selectSystemIntakeContractNumbersBySystemIntakeIDSQL,
 	SelectBySystemIntakeIDLOADER: selectContractNumbersBySystemIntakeIDLOADERSQL,
 }
 
 type systemIntakeContractNumberScripts struct {
-	Create                       string
+	Set                          string
 	Delete                       string
-	SelectByID                   string
-	SelectByIDLOADER             string
 	SelectBySystemIntakeID       string
 	SelectBySystemIntakeIDLOADER string
 }
