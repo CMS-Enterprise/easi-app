@@ -1307,13 +1307,6 @@ input SetSystemIntakeRelationExistingServiceInput {
 }
 
 """
-Input for deleting linked system intake contract numbers by their IDs
-"""
-input DeleteLinkedSystemIntakeContractNumbersInput {
-  ids: [UUID!]!
-}
-
-"""
 Input data for updating a system intake's relationship to a contract
 """
 input UpdateSystemIntakeLinkedContractInput {
@@ -1508,10 +1501,6 @@ The payload for updating a system's IT governance request
 type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
-}
-
-type DeleteLinkedSystemIntakeContractNumbersPayload {
-  contractNumbers: [String!]!
 }
 
 """
@@ -2811,7 +2800,6 @@ type Mutation {
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   createSystemIntakeDocument(input: CreateSystemIntakeDocumentInput!): CreateSystemIntakeDocumentPayload
   deleteSystemIntakeDocument(id: UUID!): DeleteSystemIntakeDocumentPayload
-  deleteSystemIntakeLinkedContractNumbers(input: DeleteLinkedSystemIntakeContractNumbersInput!): DeleteLinkedSystemIntakeContractNumbersPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   updateTRBRequestFundingSources(input: UpdateTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
   deleteTRBRequestFundingSources(input: DeleteTRBRequestFundingSourcesInput!): [TRBFundingSource!]!

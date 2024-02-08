@@ -472,10 +472,6 @@ type ComplexityRoot struct {
 		CedarSystemID func(childComplexity int) int
 	}
 
-	DeleteLinkedSystemIntakeContractNumbersPayload struct {
-		ContractNumbers func(childComplexity int) int
-	}
-
 	DeleteSystemIntakeContactPayload struct {
 		SystemIntakeContact func(childComplexity int) int
 	}
@@ -588,7 +584,6 @@ type ComplexityRoot struct {
 		DeleteCedarSystemBookmark                        func(childComplexity int, input model.CreateCedarSystemBookmarkInput) int
 		DeleteSystemIntakeContact                        func(childComplexity int, input model.DeleteSystemIntakeContactInput) int
 		DeleteSystemIntakeDocument                       func(childComplexity int, id uuid.UUID) int
-		DeleteSystemIntakeLinkedContractNumbers          func(childComplexity int, input model.DeleteLinkedSystemIntakeContractNumbersInput) int
 		DeleteTRBAdviceLetterRecommendation              func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestDocument                         func(childComplexity int, id uuid.UUID) int
@@ -1379,7 +1374,6 @@ type MutationResolver interface {
 	DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*model.DeleteTRBRequestDocumentPayload, error)
 	CreateSystemIntakeDocument(ctx context.Context, input model.CreateSystemIntakeDocumentInput) (*model.CreateSystemIntakeDocumentPayload, error)
 	DeleteSystemIntakeDocument(ctx context.Context, id uuid.UUID) (*model.DeleteSystemIntakeDocumentPayload, error)
-	DeleteSystemIntakeLinkedContractNumbers(ctx context.Context, input model.DeleteLinkedSystemIntakeContractNumbersInput) (*model.DeleteLinkedSystemIntakeContractNumbersPayload, error)
 	UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error)
 	UpdateTRBRequestFundingSources(ctx context.Context, input model.UpdateTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error)
 	DeleteTRBRequestFundingSources(ctx context.Context, input model.DeleteTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error)
@@ -3506,13 +3500,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.DeleteCedarSystemBookmarkPayload.CedarSystemID(childComplexity), true
 
-	case "DeleteLinkedSystemIntakeContractNumbersPayload.contractNumbers":
-		if e.complexity.DeleteLinkedSystemIntakeContractNumbersPayload.ContractNumbers == nil {
-			break
-		}
-
-		return e.complexity.DeleteLinkedSystemIntakeContractNumbersPayload.ContractNumbers(childComplexity), true
-
 	case "DeleteSystemIntakeContactPayload.systemIntakeContact":
 		if e.complexity.DeleteSystemIntakeContactPayload.SystemIntakeContact == nil {
 			break
@@ -4355,18 +4342,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteSystemIntakeDocument(childComplexity, args["id"].(uuid.UUID)), true
-
-	case "Mutation.deleteSystemIntakeLinkedContractNumbers":
-		if e.complexity.Mutation.DeleteSystemIntakeLinkedContractNumbers == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_deleteSystemIntakeLinkedContractNumbers_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.DeleteSystemIntakeLinkedContractNumbers(childComplexity, args["input"].(model.DeleteLinkedSystemIntakeContractNumbersInput)), true
 
 	case "Mutation.deleteTRBAdviceLetterRecommendation":
 		if e.complexity.Mutation.DeleteTRBAdviceLetterRecommendation == nil {
@@ -7621,7 +7596,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateTestDateInput,
 		ec.unmarshalInputDeleteAccessibilityRequestDocumentInput,
 		ec.unmarshalInputDeleteAccessibilityRequestInput,
-		ec.unmarshalInputDeleteLinkedSystemIntakeContractNumbersInput,
 		ec.unmarshalInputDeleteSystemIntakeContactInput,
 		ec.unmarshalInputDeleteTRBRequestFundingSourcesInput,
 		ec.unmarshalInputDeleteTestDateInput,
@@ -9086,13 +9060,6 @@ input SetSystemIntakeRelationExistingServiceInput {
 }
 
 """
-Input for deleting linked system intake contract numbers by their IDs
-"""
-input DeleteLinkedSystemIntakeContractNumbersInput {
-  ids: [UUID!]!
-}
-
-"""
 Input data for updating a system intake's relationship to a contract
 """
 input UpdateSystemIntakeLinkedContractInput {
@@ -9287,10 +9254,6 @@ The payload for updating a system's IT governance request
 type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
-}
-
-type DeleteLinkedSystemIntakeContractNumbersPayload {
-  contractNumbers: [String!]!
 }
 
 """
@@ -10590,7 +10553,6 @@ type Mutation {
   deleteTRBRequestDocument(id: UUID!): DeleteTRBRequestDocumentPayload
   createSystemIntakeDocument(input: CreateSystemIntakeDocumentInput!): CreateSystemIntakeDocumentPayload
   deleteSystemIntakeDocument(id: UUID!): DeleteSystemIntakeDocumentPayload
-  deleteSystemIntakeLinkedContractNumbers(input: DeleteLinkedSystemIntakeContractNumbersInput!): DeleteLinkedSystemIntakeContractNumbersPayload
   updateTRBRequestForm(input: UpdateTRBRequestFormInput!): TRBRequestForm!
   updateTRBRequestFundingSources(input: UpdateTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
   deleteTRBRequestFundingSources(input: DeleteTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
@@ -11889,21 +11851,6 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeDocument_args(ctx c
 		}
 	}
 	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_deleteSystemIntakeLinkedContractNumbers_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.DeleteLinkedSystemIntakeContractNumbersInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNDeleteLinkedSystemIntakeContractNumbersInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteLinkedSystemIntakeContractNumbersInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
 	return args, nil
 }
 
@@ -25389,50 +25336,6 @@ func (ec *executionContext) fieldContext_DeleteCedarSystemBookmarkPayload_cedarS
 	return fc, nil
 }
 
-func (ec *executionContext) _DeleteLinkedSystemIntakeContractNumbersPayload_contractNumbers(ctx context.Context, field graphql.CollectedField, obj *model.DeleteLinkedSystemIntakeContractNumbersPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_DeleteLinkedSystemIntakeContractNumbersPayload_contractNumbers(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ContractNumbers, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]string)
-	fc.Result = res
-	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_DeleteLinkedSystemIntakeContractNumbersPayload_contractNumbers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "DeleteLinkedSystemIntakeContractNumbersPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _DeleteSystemIntakeContactPayload_systemIntakeContact(ctx context.Context, field graphql.CollectedField, obj *model.DeleteSystemIntakeContactPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_DeleteSystemIntakeContactPayload_systemIntakeContact(ctx, field)
 	if err != nil {
@@ -32071,62 +31974,6 @@ func (ec *executionContext) fieldContext_Mutation_deleteSystemIntakeDocument(ctx
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_deleteSystemIntakeDocument_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_deleteSystemIntakeLinkedContractNumbers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_deleteSystemIntakeLinkedContractNumbers(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteSystemIntakeLinkedContractNumbers(rctx, fc.Args["input"].(model.DeleteLinkedSystemIntakeContractNumbersInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.DeleteLinkedSystemIntakeContractNumbersPayload)
-	fc.Result = res
-	return ec.marshalODeleteLinkedSystemIntakeContractNumbersPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteLinkedSystemIntakeContractNumbersPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_deleteSystemIntakeLinkedContractNumbers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "contractNumbers":
-				return ec.fieldContext_DeleteLinkedSystemIntakeContractNumbersPayload_contractNumbers(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type DeleteLinkedSystemIntakeContractNumbersPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_deleteSystemIntakeLinkedContractNumbers_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -56340,35 +56187,6 @@ func (ec *executionContext) unmarshalInputDeleteAccessibilityRequestInput(ctx co
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputDeleteLinkedSystemIntakeContractNumbersInput(ctx context.Context, obj interface{}) (model.DeleteLinkedSystemIntakeContractNumbersInput, error) {
-	var it model.DeleteLinkedSystemIntakeContractNumbersInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"ids"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "ids":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ids"))
-			data, err := ec.unmarshalNUUID2ᚕgithubᚗcomᚋgoogleᚋuuidᚐUUIDᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Ids = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputDeleteSystemIntakeContactInput(ctx context.Context, obj interface{}) (model.DeleteSystemIntakeContactInput, error) {
 	var it model.DeleteSystemIntakeContactInput
 	asMap := map[string]interface{}{}
@@ -64909,45 +64727,6 @@ func (ec *executionContext) _DeleteCedarSystemBookmarkPayload(ctx context.Contex
 	return out
 }
 
-var deleteLinkedSystemIntakeContractNumbersPayloadImplementors = []string{"DeleteLinkedSystemIntakeContractNumbersPayload"}
-
-func (ec *executionContext) _DeleteLinkedSystemIntakeContractNumbersPayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteLinkedSystemIntakeContractNumbersPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, deleteLinkedSystemIntakeContractNumbersPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("DeleteLinkedSystemIntakeContractNumbersPayload")
-		case "contractNumbers":
-			out.Values[i] = ec._DeleteLinkedSystemIntakeContractNumbersPayload_contractNumbers(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
 var deleteSystemIntakeContactPayloadImplementors = []string{"DeleteSystemIntakeContactPayload"}
 
 func (ec *executionContext) _DeleteSystemIntakeContactPayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteSystemIntakeContactPayload) graphql.Marshaler {
@@ -65937,10 +65716,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "deleteSystemIntakeDocument":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteSystemIntakeDocument(ctx, field)
-			})
-		case "deleteSystemIntakeLinkedContractNumbers":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_deleteSystemIntakeLinkedContractNumbers(ctx, field)
 			})
 		case "updateTRBRequestForm":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -73722,11 +73497,6 @@ func (ec *executionContext) unmarshalNDeleteAccessibilityRequestInput2githubᚗc
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNDeleteLinkedSystemIntakeContractNumbersInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteLinkedSystemIntakeContractNumbersInput(ctx context.Context, v interface{}) (model.DeleteLinkedSystemIntakeContractNumbersInput, error) {
-	res, err := ec.unmarshalInputDeleteLinkedSystemIntakeContractNumbersInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNDeleteSystemIntakeContactInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteSystemIntakeContactInput(ctx context.Context, v interface{}) (model.DeleteSystemIntakeContactInput, error) {
 	res, err := ec.unmarshalInputDeleteSystemIntakeContactInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -76741,13 +76511,6 @@ func (ec *executionContext) marshalODeleteCedarSystemBookmarkPayload2ᚖgithub�
 		return graphql.Null
 	}
 	return ec._DeleteCedarSystemBookmarkPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalODeleteLinkedSystemIntakeContractNumbersPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteLinkedSystemIntakeContractNumbersPayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteLinkedSystemIntakeContractNumbersPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._DeleteLinkedSystemIntakeContractNumbersPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalODeleteSystemIntakeContactPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteSystemIntakeContactPayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteSystemIntakeContactPayload) graphql.Marshaler {

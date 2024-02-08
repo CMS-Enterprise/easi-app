@@ -50,38 +50,6 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		s.NoError(err)
 	})
 
-	s.Run("removes linked contract numbers by their IDs (and re-adds for later tests)", func() {
-		results, err := s.store.GetSystemIntakeContractNumbersBySystemIntakeID(ctx, createdID)
-		s.NoError(err)
-		s.Len(results, 3)
-
-		var ids []uuid.UUID
-		for _, result := range results {
-			ids = append(ids, result.ID)
-		}
-
-		deleted, err := s.store.DeleteLinkedSystemIntakeContractNumbersByIDs(ctx, ids)
-		s.NoError(err)
-		s.Len(deleted, 3)
-
-		// confirm the contracts are gone
-		results, err = s.store.GetSystemIntakeContractNumbersBySystemIntakeID(ctx, createdID)
-		s.NoError(err)
-		s.Len(results, 0)
-
-		// re-add same contracts for next tests
-		contractNumbers := []string{
-			contract1,
-			contract2,
-			contract3,
-		}
-		_, err = sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
-			s.NoError(s.store.LinkSystemIntakeContractNumbers(ctx, tx, createdID, contractNumbers))
-			return nil, nil
-		})
-		s.NoError(err)
-	})
-
 	s.Run("retrieves the contracts", func() {
 		results, err := s.store.GetSystemIntakeContractNumbersBySystemIntakeID(ctx, createdID)
 		s.NoError(err)

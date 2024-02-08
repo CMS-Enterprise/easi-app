@@ -2056,18 +2056,6 @@ func (r *mutationResolver) DeleteSystemIntakeDocument(ctx context.Context, id uu
 	}, nil
 }
 
-// DeleteSystemIntakeLinkedContractNumbers is the resolver for the deleteSystemIntakeLinkedContractNumbers field.
-func (r *mutationResolver) DeleteSystemIntakeLinkedContractNumbers(ctx context.Context, input model.DeleteLinkedSystemIntakeContractNumbersInput) (*model.DeleteLinkedSystemIntakeContractNumbersPayload, error) {
-	deleted, err := resolvers.DeleteSystemIntakeLinkedContractNumbers(ctx, r.store, input)
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.DeleteLinkedSystemIntakeContractNumbersPayload{
-		ContractNumbers: deleted,
-	}, nil
-}
-
 // UpdateTRBRequestForm is the resolver for the updateTRBRequestForm field.
 func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[string]interface{}) (*models.TRBRequestForm, error) {
 	return resolvers.UpdateTRBRequestForm(

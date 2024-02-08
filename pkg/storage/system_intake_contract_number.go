@@ -7,7 +7,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
-	"github.com/lib/pq"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -82,17 +81,6 @@ func (s *Store) GetSystemIntakeContractNumberByID(ctx context.Context, id uuid.U
 	}
 
 	return result, nil
-}
-
-// DeleteLinkedSystemIntakeContractNumbersByIDs removes linked Contract Numbers by their IDs
-func (s *Store) DeleteLinkedSystemIntakeContractNumbersByIDs(ctx context.Context, ids []uuid.UUID) ([]string, error) {
-	var deletedContractNumbers []string
-	if err := s.db.SelectContext(ctx, &deletedContractNumbers, sqlqueries.SystemIntakeContractNumberForm.DeleteByIDs, pq.Array(ids)); err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to delete linked system intake contract numbers by IDs", zap.Error(err))
-		return nil, err
-	}
-
-	return deletedContractNumbers, nil
 }
 
 // SystemIntakeContractNumbersByIDLOADER gets multiple groups of Contract Numbers by ID
