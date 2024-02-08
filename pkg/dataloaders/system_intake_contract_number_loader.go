@@ -2,6 +2,7 @@ package dataloaders
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -36,25 +37,30 @@ func (loaders *DataLoaders) getSystemIntakeContractNumbersBySystemIntakeID(ctx c
 		return output
 	}
 
+	// return in order requested
 	for index, key := range keys {
 		ck, ok := key.Raw().(KeyArgs)
 		if !ok {
 			output[index] = &dataloader.Result{Data: nil, Error: fmt.Errorf("could not retrieve system intake contract number by key %s", key.String())}
-			break
+			continue
 		}
 
-		resKey := fmt.Sprint(ck.Args["system_intake_id"])
-		systemIntakeContractNumbers, ok := systemIntakeContractNumbersMap[resKey]
-		if ok {
-			output[index] = &dataloader.Result{Data: systemIntakeContractNumbers, Error: nil}
-		} else {
-			output[index] = &dataloader.Result{Data: nil, Error: fmt.Errorf("system intake contract number not found for id %s", resKey)}
+		rawKey, ok := ck.Args["system_intake_id"]
+		if !ok {
+			output[index] = &dataloader.Result{Data: nil, Error: errors.New("args map missing system_intake_id key")}
+			continue
 		}
+
+		resKey := fmt.Sprint(rawKey)
+		systemIntakeContractNumbers, ok := systemIntakeContractNumbersMap[resKey]
+		if !ok {
+			output[index] = &dataloader.Result{Data: nil, Error: fmt.Errorf("system intake contract number not found for id %s", resKey)}
+			continue
+		}
+
+		output[index] = &dataloader.Result{Data: systemIntakeContractNumbers, Error: nil}
 	}
 
-	fmt.Println("==== output ====")
-	fmt.Println(output)
-	fmt.Println("==== output ====")
 	return output
 }
 
