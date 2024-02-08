@@ -15,7 +15,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlqueries"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
@@ -297,6 +296,15 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 	return s.FetchSystemIntakeByIDNP(ctx, np, intake.ID)
 }
 
+const fetchSystemIntakeSQL = `
+		SELECT
+			system_intakes.*,
+		    business_cases.id as business_case_id
+		FROM
+		    system_intakes
+		    LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
+`
+
 // FetchSystemIntakeByID serves as a wrapper for FetchSystemIntakeByIDNP, which is the actual implementation
 // for fetching System Intakes by ID.
 //
@@ -315,7 +323,10 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 // of the existing code that uses FetchSystemIntakeByID to use a transactional wrapper.
 func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id uuid.UUID) (*models.SystemIntake, error) {
 	// we do not filter for archived because the update method relies on this method to return the archived intake
-	intakeStmt, err := np.PrepareNamed(sqlqueries.SystemIntakeForm.SelectByID)
+	const whereClause = `
+		WHERE system_intakes.id = :id
+	`
+	intakeStmt, err := np.PrepareNamed(fetchSystemIntakeSQL + whereClause)
 	if err != nil {
 		return nil, err
 	}
@@ -363,8 +374,6 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 	if err != nil {
 		return nil, err
 	}
-	defer fundingSourcesStmt.Close()
-
 	sources := []*models.SystemIntakeFundingSource{}
 	err = fundingSourcesStmt.Select(&sources, map[string]interface{}{
 		"id": id.String(),
@@ -389,7 +398,11 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 // since there isn't a uniqueness constraint in the database.
 func (s *Store) FetchSystemIntakeByLifecycleID(ctx context.Context, lifecycleID string) (*models.SystemIntake, error) {
 	intakes := []models.SystemIntake{}
-	err := s.db.Select(&intakes, sqlqueries.SystemIntakeForm.SelectByLifecycleID, lifecycleID)
+	const matchClause = `
+		WHERE system_intakes.lcid=$1
+			AND system_intakes.archived_at IS NULL AND system_intakes.status != 'WITHDRAWN'
+	`
+	err := s.db.Select(&intakes, fetchSystemIntakeSQL+matchClause, lifecycleID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),
@@ -417,7 +430,13 @@ func (s *Store) FetchSystemIntakeByLifecycleID(ctx context.Context, lifecycleID 
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
 func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	err := s.db.Select(&intakes, sqlqueries.SystemIntakeForm.SelectByEuaID, euaID)
+	const whereClause = `
+		WHERE system_intakes.eua_user_id=$1
+			AND system_intakes.status != 'WITHDRAWN'
+			AND system_intakes.archived_at IS NULL
+		ORDER BY created_at DESC
+	`
+	err := s.db.Select(&intakes, fetchSystemIntakeSQL+whereClause, euaID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intakes %s", err),
@@ -431,7 +450,7 @@ func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (mo
 // FetchSystemIntakes queries the DB for all system intakes
 func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	err := s.db.Select(&intakes, sqlqueries.SystemIntakeForm.Select)
+	err := s.db.Select(&intakes, fetchSystemIntakeSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
 		return models.SystemIntakes{}, err
@@ -799,7 +818,10 @@ func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]
 // GetSystemIntakesWithLCIDs retrieves all LCIDs that are in use
 func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.SystemIntake, error) {
 	intakes := []*models.SystemIntake{}
-	err := s.db.Select(&intakes, sqlqueries.SystemIntakeForm.SelectWithLCID)
+	err := s.db.Select(&intakes,
+		fetchSystemIntakeSQL+`
+		WHERE lcid IS NOT NULL;
+	`)
 	if err != nil {
 		return nil, err
 	}

@@ -122,7 +122,7 @@ func GetSystemIntakeContractNumberByID(ctx context.Context, id uuid.UUID) (*mode
 }
 
 // GetSystemIntakeContractNumbersBySystemIntakeID will batch all requests for Contract Numbers based on System Intake ID and make a single request
-func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContractNumber, error) {
+func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {
 	allLoaders := Loaders(ctx)
 	loader := allLoaders.systemIntakeContractNumbersLoader
 
@@ -132,5 +132,5 @@ func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemI
 		return nil, err
 	}
 
-	return result.(*models.SystemIntakeContractNumber), nil
+	return result.([]*models.SystemIntakeContractNumber), nil
 }
