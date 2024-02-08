@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 
 	"github.com/google/uuid"
@@ -50,22 +49,6 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 	}
 
 	return nil
-}
-
-// GetSystemIntakeContractNumbersBySystemIntakeID retrieves all Contract Numbers for a given System Intake ID
-func (s *Store) GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]models.SystemIntakeContractNumber, error) {
-	var results []models.SystemIntakeContractNumber
-
-	if err := s.db.SelectContext(ctx, &results, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeID, systemIntakeID); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
-		}
-
-		appcontext.ZLogger(ctx).Error("Failed to select contract numbers by system intake ID", zap.Error(err))
-		return nil, err
-	}
-
-	return results, nil
 }
 
 // SystemIntakeContractNumbersBySystemIntakeIDLOADER gets multiple groups of Contract Numbers by System Intake ID

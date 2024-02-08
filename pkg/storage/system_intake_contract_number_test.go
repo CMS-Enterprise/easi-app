@@ -50,46 +50,8 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		s.NoError(err)
 	})
 
-	s.Run("retrieves the contracts", func() {
-		results, err := s.store.GetSystemIntakeContractNumbersBySystemIntakeID(ctx, createdID)
-		s.NoError(err)
-		s.Len(results, 3)
-
-		var (
-			found1 bool
-			found2 bool
-			found3 bool
-		)
-
-		for _, result := range results {
-			s.Equal(result.SystemIntakeID, createdID)
-
-			if result.ContractNumber == contract1 {
-				found1 = true
-			}
-
-			if result.ContractNumber == contract2 {
-				found2 = true
-			}
-
-			if result.ContractNumber == contract3 {
-				found3 = true
-			}
-		}
-
-		s.True(found1)
-		s.True(found2)
-		s.True(found3)
-	})
-
 	s.Run("deletes the test intake", func() {
 		_, err := s.db.ExecContext(ctx, "DELETE FROM system_intakes WHERE id = $1", createdID)
 		s.NoError(err)
-	})
-
-	s.Run("confirm linked contract rows were deleted as well", func() {
-		results, err := s.store.GetSystemIntakeContractNumbersBySystemIntakeID(ctx, createdID)
-		s.NoError(err)
-		s.Empty(results)
 	})
 }
