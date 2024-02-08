@@ -94,3 +94,39 @@ func (s *Store) DeleteLinkedSystemIntakeContractNumbersByIDs(ctx context.Context
 
 	return deletedContractNumbers, nil
 }
+
+// SystemIntakeContractNumbersByIDLOADER gets multiple groups of Contract Numbers by ID
+func (s *Store) SystemIntakeContractNumbersByIDLOADER(ctx context.Context, paramTableJSON string) ([]*models.SystemIntakeContractNumber, error) {
+	stmt, err := s.db.PrepareNamedContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectByIDLOADER)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	var data []*models.SystemIntakeContractNumber
+	if err := stmt.SelectContext(ctx, &data, map[string]interface{}{
+		"paramTableJSON": paramTableJSON,
+	}); err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+// SystemIntakeContractNumbersBySystemIntakeIDLOADER gets multiple groups of Contract Numbers by System Intake ID
+func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx context.Context, paramTableJSON string) ([]*models.SystemIntakeContractNumber, error) {
+	stmt, err := s.db.PrepareNamedContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	var data []*models.SystemIntakeContractNumber
+	if err := stmt.SelectContext(ctx, &data, map[string]interface{}{
+		"paramTableJSON": paramTableJSON,
+	}); err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
