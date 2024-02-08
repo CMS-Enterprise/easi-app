@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/graph-gophers/dataloader"
 	"github.com/samber/lo"
 	"go.uber.org/zap"
@@ -11,6 +12,53 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
+
+// GetSystemIntakeContractNumberByID uses a DataLoader to return many System Intake Contract Numbers by ID
+func (loaders *DataLoaders) GetSystemIntakeContractNumberByID(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
+	logger := appcontext.ZLogger(ctx)
+
+	arrayCK := ConvertToKeyArgsArray(keys)
+	marshaledParams, err := arrayCK.ToJSONArray()
+	if err != nil {
+		logger.Error("issue converting keys to JSON for data loader in System Intake Contract Numbers by IDs", zap.Error(err))
+		return nil
+	}
+
+	output := make([]*dataloader.Result, len(keys))
+	systemIntakeContractNumbers, err := loaders.DataReader.Store.SystemIntakeContractNumbersByIDLOADER(ctx, marshaledParams)
+	if err != nil {
+		for i := range output {
+			output[i] = &dataloader.Result{
+				Error: err,
+				Data:  nil,
+			}
+		}
+
+		return output
+	}
+
+	contractNumbersByIDs := lo.Associate(systemIntakeContractNumbers, func(systemIntakeContractNumber *models.SystemIntakeContractNumber) (string, *models.SystemIntakeContractNumber) {
+		return systemIntakeContractNumber.ID.String(), systemIntakeContractNumber
+	})
+
+	for index, key := range keys {
+		ck, ok := key.Raw().(KeyArgs)
+		if ok {
+			resKey := fmt.Sprint(ck.Args["id"])
+			systemIntakeContractNumber, ok := contractNumbersByIDs[resKey]
+			if ok {
+				output[index] = &dataloader.Result{Data: systemIntakeContractNumber, Error: nil}
+			} else {
+				output[index] = &dataloader.Result{Data: nil, Error: fmt.Errorf("contract number not found for id %s", resKey)}
+			}
+
+		} else {
+			output[index] = &dataloader.Result{Data: nil, Error: fmt.Errorf("could not retrieve contract number by key %s", key.String())}
+		}
+	}
+
+	return output
+}
 
 // GetSystemIntakeContractNumbersBySystemIntakeID uses a DataLoader to return many System Intake Contract Numbers by System Intake ID
 func (loaders *DataLoaders) GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
@@ -59,49 +107,30 @@ func (loaders *DataLoaders) GetSystemIntakeContractNumbersBySystemIntakeID(ctx c
 	return output
 }
 
-// GetSystemIntakeContractNumberByID uses a DataLoader to return many System Intake Contract Numbers by ID
-func (loaders *DataLoaders) GetSystemIntakeContractNumberByID(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
-	logger := appcontext.ZLogger(ctx)
+// GetSystemIntakeContractNumberByID will batch all requests for Contract Numbers based on ID and make a single request
+func GetSystemIntakeContractNumberByID(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContractNumber, error) {
+	allLoaders := Loaders(ctx)
+	loader := allLoaders.ContractNumbersLoader
 
-	arrayCK := ConvertToKeyArgsArray(keys)
-	marshaledParams, err := arrayCK.ToJSONArray()
+	thunk := loader.Loader.Load(ctx, dataloader.StringKey(id.String()))
+	result, err := thunk()
 	if err != nil {
-		logger.Error("issue converting keys to JSON for data loader in System Intake Contract Numbers by IDs", zap.Error(err))
-		return nil
+		return nil, err
 	}
 
-	output := make([]*dataloader.Result, len(keys))
-	systemIntakeContractNumbers, err := loaders.DataReader.Store.SystemIntakeContractNumbersByIDLOADER(ctx, marshaledParams)
+	return result.(*models.SystemIntakeContractNumber), nil
+}
+
+// GetSystemIntakeContractNumbersBySystemIntakeID will batch all requests for Contract Numbers based on System Intake ID and make a single request
+func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContractNumber, error) {
+	allLoaders := Loaders(ctx)
+	loader := allLoaders.SystemIntakeContractNumbersLoader
+
+	thunk := loader.Loader.Load(ctx, dataloader.StringKey(systemIntakeID.String()))
+	result, err := thunk()
 	if err != nil {
-		for i := range output {
-			output[i] = &dataloader.Result{
-				Error: err,
-				Data:  nil,
-			}
-		}
-
-		return output
+		return nil, err
 	}
 
-	contractNumbersByIDs := lo.Associate(systemIntakeContractNumbers, func(systemIntakeContractNumber *models.SystemIntakeContractNumber) (string, *models.SystemIntakeContractNumber) {
-		return systemIntakeContractNumber.ID.String(), systemIntakeContractNumber
-	})
-
-	for index, key := range keys {
-		ck, ok := key.Raw().(KeyArgs)
-		if ok {
-			resKey := fmt.Sprint(ck.Args["id"])
-			systemIntakeContractNumber, ok := contractNumbersByIDs[resKey]
-			if ok {
-				output[index] = &dataloader.Result{Data: systemIntakeContractNumber, Error: nil}
-			} else {
-				output[index] = &dataloader.Result{Data: nil, Error: fmt.Errorf("contract number not found for id %s", resKey)}
-			}
-
-		} else {
-			output[index] = &dataloader.Result{Data: nil, Error: fmt.Errorf("could not retrieve contract number by key %s", key.String())}
-		}
-	}
-
-	return output
+	return result.(*models.SystemIntakeContractNumber), nil
 }
