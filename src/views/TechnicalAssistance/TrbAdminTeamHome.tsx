@@ -390,7 +390,22 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
             >
               {t('adminTeamHome.actions.addDate')}
             </UswdsReactLink>
-          )
+          ),
+        sortType: (a, b) => {
+          // The consult date property can be null if not set
+          // Allow actual null types to be compared against so that they move towards the end of a sort
+
+          // Fallback sort on submitted date if consult is not set
+          if (a.values.consultMeetingTime === null) {
+            return a.values['form.submittedAt'] > b.values['form.submittedAt']
+              ? 1
+              : -1;
+          }
+
+          return a.values.consultMeetingTime > b.values.consultMeetingTime
+            ? 1
+            : -1;
+        }
       }
     ];
   }, [t]);
