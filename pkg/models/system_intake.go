@@ -1,7 +1,6 @@
 package models
 
 import (
-	"encoding/json"
 	"errors"
 	"time"
 
@@ -200,14 +199,6 @@ type SystemIntake struct {
 	TRBFollowUpRecommendation       *SystemIntakeTRBFollowUp     `json:"trbFollowUpRecommendation" db:"trb_follow_up_recommendation"`
 	ContractName                    zero.String                  `json:"contractName" db:"contract_name"`
 	SystemRelationType              *SystemIntakeRelationType    `json:"relationType" db:"system_relation_type"`
-	ContractNumbers                 contractNumbers              `json:"contractNumbers" db:"contract_numbers"`
-}
-
-type contractNumbers []*SystemIntakeContractNumber
-
-// Scan implements the sql.Scanner interface
-func (cn *contractNumbers) Scan(src interface{}) error {
-	return json.Unmarshal(src.([]byte), cn)
 }
 
 // SystemIntakes is a list of System Intakes
