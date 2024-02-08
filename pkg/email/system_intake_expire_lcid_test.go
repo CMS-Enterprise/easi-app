@@ -16,7 +16,7 @@ func (s *EmailTestSuite) TestIntakeExpireLCIDNotification() {
 	expiresAt := time.Now().AddDate(1, 0, 0)
 	issuedAt := time.Now()
 	ITGovInboxAddress := s.config.GRTEmail.String()
-	reason := models.HTMLPointer("<p><strong>This LCID is TERRIBLE anyway</strong></p>")
+	reason := models.HTML("<p><strong>This LCID is TERRIBLE anyway</strong></p>")
 	additionalInfo := models.HTMLPointer("<p>An apple a day keeps the doctor away.</p>")
 
 	decisionNextSteps := models.HTMLPointer("<p>Decision: Make lunch</p><p>Steps:</p><ol><li>Decide what to eat</li><li>Eat</li></ol>")
@@ -30,24 +30,12 @@ func (s *EmailTestSuite) TestIntakeExpireLCIDNotification() {
 	}
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
-	err = client.SystemIntake.SendExpireLCIDNotification(
-		ctx,
-		recipients,
-		lifecycleID,
-		&expiresAt,
-		&issuedAt,
-		lifecycleScope,
-		lifecycleCostBaseline,
-		*reason,
-		decisionNextSteps,
-		additionalInfo,
-	)
-	s.NoError(err)
-	expectedSubject := fmt.Sprintf("A Life Cycle ID (%s) has expired", lifecycleID)
-	s.Equal(expectedSubject, sender.subject)
+
 	getExpectedEmail := func(
 		nextSteps *models.HTML,
 		issuedAt *time.Time,
+		scope *models.HTML,
+		costBaseline string,
 		additionalInfo *models.HTML,
 	) string {
 		var nextStepsStr string
@@ -116,23 +104,12 @@ func (s *EmailTestSuite) TestIntakeExpireLCIDNotification() {
 			lifecycleID,
 			issuedAtStr,
 			expiresAt.Format("01/02/2006"),
-			*lifecycleScope.StringPointer(),
-			lifecycleCostBaseline,
+			scope.ToTemplate(),
+			costBaseline,
 			additionalInfoStr,
 		)
 
 	}
-
-	expectedEmail := getExpectedEmail(decisionNextSteps, &issuedAt, additionalInfo)
-	s.Run("included info is correct", func() {
-		s.EqualHTML(expectedEmail, sender.body)
-	})
-	s.Run("Recipient is correct", func() {
-		allRecipients := []models.EmailAddress{
-			recipient,
-		}
-		s.ElementsMatch(sender.toAddresses, allRecipients)
-	})
 
 	err = client.SystemIntake.SendExpireLCIDNotification(
 		ctx,
@@ -142,33 +119,105 @@ func (s *EmailTestSuite) TestIntakeExpireLCIDNotification() {
 		&issuedAt,
 		lifecycleScope,
 		lifecycleCostBaseline,
-		*reason,
+		reason,
 		decisionNextSteps,
-		nil,
+		additionalInfo,
 	)
 	s.NoError(err)
-	expectedEmail = getExpectedEmail(decisionNextSteps, &issuedAt, nil)
+
+	s.Run("Subject is correct", func() {
+		expectedSubject := fmt.Sprintf("A Life Cycle ID (%s) has expired", lifecycleID)
+		s.Equal(expectedSubject, sender.subject)
+	})
+
+	s.Run("included info is correct", func() {
+		expectedEmail := getExpectedEmail(
+			decisionNextSteps,
+			&issuedAt,
+			lifecycleScope,
+			lifecycleCostBaseline,
+			additionalInfo,
+		)
+		s.EqualHTML(expectedEmail, sender.body)
+	})
+	s.Run("Recipient is correct", func() {
+		allRecipients := []models.EmailAddress{
+			recipient,
+		}
+		s.ElementsMatch(sender.toAddresses, allRecipients)
+	})
 
 	s.Run("Should omit additional info if absent", func() {
+		err = client.SystemIntake.SendExpireLCIDNotification(
+			ctx,
+			recipients,
+			lifecycleID,
+			&expiresAt,
+			&issuedAt,
+			lifecycleScope,
+			lifecycleCostBaseline,
+			reason,
+			decisionNextSteps,
+			nil,
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			decisionNextSteps,
+			&issuedAt,
+			lifecycleScope,
+			lifecycleCostBaseline,
+			nil,
+		)
+
 		s.EqualHTML(expectedEmail, sender.body)
 	})
 
-	err = client.SystemIntake.SendExpireLCIDNotification(
-		ctx,
-		recipients,
-		lifecycleID,
-		&expiresAt,
-		nil,
-		lifecycleScope,
-		lifecycleCostBaseline,
-		*reason,
-		nil,
-		nil,
-	)
-	s.NoError(err)
-	expectedEmail = getExpectedEmail(nil, nil, nil)
-
 	s.Run("Should omit next steps and issuedAt if absent", func() {
+		err = client.SystemIntake.SendExpireLCIDNotification(
+			ctx,
+			recipients,
+			lifecycleID,
+			&expiresAt,
+			nil,
+			lifecycleScope,
+			lifecycleCostBaseline,
+			reason,
+			nil,
+			nil,
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			nil,
+			nil,
+			lifecycleScope,
+			lifecycleCostBaseline,
+			nil,
+		)
+
+		s.EqualHTML(expectedEmail, sender.body)
+	})
+	s.Run("Should omit scope and cost baseline if absent", func() {
+		err = client.SystemIntake.SendExpireLCIDNotification(
+			ctx,
+			recipients,
+			lifecycleID,
+			&expiresAt,
+			nil, // issuedAt
+			nil, // scope
+			"",  // cost baseline
+			reason,
+			nil, // next steps
+			nil, // add'l info
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			nil, // next steps
+			nil, // issued at
+			nil, // scope
+			"",  // cost baseline
+			nil, // add'l info
+		)
+
 		s.EqualHTML(expectedEmail, sender.body)
 	})
 }
