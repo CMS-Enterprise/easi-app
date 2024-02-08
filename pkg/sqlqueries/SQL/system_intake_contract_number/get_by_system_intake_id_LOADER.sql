@@ -13,4 +13,4 @@ SELECT
     sicn.modified_by,
     sicn.modified_at
 FROM queried_system_intake_ids qsid
-INNER JOIN system_intake_contract_numbers sicn ON sicn.system_intake_id = qsid.id;
+INNER JOIN system_intake_contract_numbers sicn ON sicn.system_intake_id = qsid.system_intake_id;
