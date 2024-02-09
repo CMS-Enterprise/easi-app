@@ -2,9 +2,12 @@ package storage
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
@@ -20,38 +23,60 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		contract3 = "3"
 	)
 
-	var createdID uuid.UUID
+	var createdIDs []uuid.UUID
 
-	// first, create system intake
-	s.Run("create system intake for test", func() {
-		intake := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
-			RequestType: models.SystemIntakeRequestTypeNEW,
-			Requester:   "link to contracts",
+	s.Run("sets contracts on a system intake", func() {
+		// create three intakes
+		for i := 0; i < 3; i++ {
+			intake := models.SystemIntake{
+				EUAUserID:   testhelpers.RandomEUAIDNull(),
+				Status:      models.SystemIntakeStatusINTAKEDRAFT,
+				RequestType: models.SystemIntakeRequestTypeNEW,
+				Requester:   fmt.Sprintf("link to contracts %d", i),
+			}
+
+			created, err := s.store.CreateSystemIntake(ctx, &intake)
+			s.NoError(err)
+			createdIDs = append(createdIDs, created.ID)
 		}
 
-		created, err := s.store.CreateSystemIntake(ctx, &intake)
-		s.NoError(err)
-		createdID = created.ID
-	})
-
-	s.Run("links the system intake to contracts", func() {
 		// insert contracts for this created system intake
 		contractNumbers := []string{
 			contract1,
 			contract2,
 			contract3,
 		}
-		_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
-			s.NoError(s.store.SetSystemIntakeContractNumbers(ctx, tx, createdID, contractNumbers))
-			return nil, nil
-		})
-		s.NoError(err)
-	})
+		for _, systemIntakeID := range createdIDs {
+			_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+				s.NoError(s.store.SetSystemIntakeContractNumbers(ctx, tx, systemIntakeID, contractNumbers))
+				return nil, nil
+			})
+			s.NoError(err)
+		}
 
-	s.Run("deletes the test intake", func() {
-		_, err := s.db.ExecContext(ctx, "DELETE FROM system_intakes WHERE id = $1", createdID)
+		params := formatParamTableJSON("system_intake_id", createdIDs)
+
+		data, err := s.store.SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx, params)
+		s.NoError(err)
+
+		for _, systemIntakeID := range createdIDs {
+			contactsFound, ok := data[systemIntakeID.String()]
+			s.True(ok)
+			s.Len(contactsFound, 3)
+		}
+
+		_, err = s.db.ExecContext(ctx, "DELETE FROM system_intakes WHERE id = ANY($1)", pq.Array(createdIDs))
 		s.NoError(err)
 	})
+}
+
+// formatParamTableJSON returns a string in this format `[{"system_intake_id":"84f41936-9d81-4c06-aa8e-df8010bfec72"}]`
+func formatParamTableJSON(key string, ids []uuid.UUID) string {
+	var out []string
+
+	for _, id := range ids {
+		out = append(out, fmt.Sprintf(`{"%[1]s":"%[2]s"}`, key, id.String()))
+	}
+
+	return fmt.Sprintf(`[%s]`, strings.Join(out, ","))
 }
