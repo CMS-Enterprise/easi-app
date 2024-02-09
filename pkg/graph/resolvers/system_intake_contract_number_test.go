@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -25,23 +26,23 @@ func (s *ResolverSuite) TestContractNumbers() {
 		contract3 = "3"
 	)
 
-	var createdID uuid.UUID
+	var createdIDs []uuid.UUID
 
 	// create system intake
 	s.Run("create system intake for test", func() {
-		intake := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
-			RequestType: models.SystemIntakeRequestTypeNEW,
-			Requester:   "system intake contract number data loader",
+		for i := 0; i < 2; i++ {
+			intake := models.SystemIntake{
+				EUAUserID:   testhelpers.RandomEUAIDNull(),
+				Status:      models.SystemIntakeStatusINTAKEDRAFT,
+				RequestType: models.SystemIntakeRequestTypeNEW,
+				Requester:   fmt.Sprintf("system intake contract number data loader %d", i),
+			}
+
+			created, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake)
+			s.NoError(err)
+			createdIDs = append(createdIDs, created.ID)
 		}
 
-		created, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake)
-		s.NoError(err)
-		createdID = created.ID
-	})
-
-	s.Run("set contract numbers for the test intake", func() {
 		// set contract for the created system intake
 		// insert contracts for this created system intake
 		contractNumbers := []string{
@@ -49,15 +50,14 @@ func (s *ResolverSuite) TestContractNumbers() {
 			contract2,
 			contract3,
 		}
+
 		_, err := sqlutils.WithTransaction[any](s.testConfigs.Store, func(tx *sqlx.Tx) (*any, error) {
-			s.NoError(s.testConfigs.Store.SetSystemIntakeContractNumbers(ctx, tx, createdID, contractNumbers))
+			s.NoError(s.testConfigs.Store.SetSystemIntakeContractNumbers(ctx, tx, createdIDs[0], contractNumbers))
 			return nil, nil
 		})
 		s.NoError(err)
-	})
 
-	s.Run("retrieves contracts through resolver", func() {
-		data, err := ContractNumbers(ctx, createdID)
+		data, err := ContractNumbers(ctx, createdIDs[0])
 		s.NoError(err)
 		s.Len(data, 3)
 
@@ -68,7 +68,7 @@ func (s *ResolverSuite) TestContractNumbers() {
 		)
 
 		for _, result := range data {
-			s.Equal(result.SystemIntakeID, createdID)
+			s.Equal(result.SystemIntakeID, createdIDs[0])
 
 			if result.ContractNumber == contract1 {
 				found1 = true
@@ -86,5 +86,10 @@ func (s *ResolverSuite) TestContractNumbers() {
 		s.True(found1)
 		s.True(found2)
 		s.True(found3)
+
+		// attempt to get contract numbers for a system intake without linked contracts
+		data, err = ContractNumbers(ctx, createdIDs[1])
+		s.NoError(err)
+		s.Empty(data)
 	})
 }

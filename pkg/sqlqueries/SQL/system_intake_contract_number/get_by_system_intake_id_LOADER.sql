@@ -1,6 +1,6 @@
 WITH queried_system_intake_ids AS (
     SELECT system_intake_id AS system_intake_id
-    FROM JSON_TO_RECORDSET(:paramTableJSON)
+    FROM JSON_TO_RECORDSET($1)
         AS x("system_intake_id" UUID) --noqa
     
 )

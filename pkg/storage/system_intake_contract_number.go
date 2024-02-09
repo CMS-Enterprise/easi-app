@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 
 	"github.com/google/uuid"
@@ -54,29 +55,45 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 
 // SystemIntakeContractNumbersBySystemIntakeIDLOADER gets multiple groups of Contract Numbers by System Intake ID
 func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx context.Context, paramTableJSON string) (map[string][]*models.SystemIntakeContractNumber, error) {
-	stmt, err := s.db.PrepareNamedContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER)
+	var contracts []*models.SystemIntakeContractNumber
+	if err := s.db.SelectContext(ctx, &contracts, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER, paramTableJSON); err != nil {
+		return nil, err
+	}
+
+	ids, err := extractSystemIntakeIDs(paramTableJSON)
 	if err != nil {
 		return nil, err
 	}
-	defer stmt.Close()
 
 	store := map[string][]*models.SystemIntakeContractNumber{}
 
-	var nums []*models.SystemIntakeContractNumber
-	err = stmt.Select(&nums, map[string]interface{}{"paramTableJSON": paramTableJSON})
-	if err != nil {
-		return nil, err
+	for _, id := range ids {
+		store[id] = []*models.SystemIntakeContractNumber{}
 	}
 
-	for _, num := range nums {
-		key := num.SystemIntakeID.String()
-		val, ok := store[key]
-		if !ok {
-			store[key] = []*models.SystemIntakeContractNumber{num}
-		} else {
-			store[key] = append(val, num)
-		}
+	for _, contract := range contracts {
+		key := contract.SystemIntakeID.String()
+		store[key] = append(store[key], contract)
 	}
 
 	return store, nil
+}
+
+type extract struct {
+	SystemIntakeID string `json:"system_intake_id"`
+}
+
+func extractSystemIntakeIDs(paramsAsJSON string) ([]string, error) {
+	var extracted []extract
+	if err := json.Unmarshal([]byte(paramsAsJSON), &extracted); err != nil {
+		return nil, err
+	}
+
+	out := make([]string, len(extracted))
+
+	for i := range extracted {
+		out[i] = extracted[i].SystemIntakeID
+	}
+
+	return out, nil
 }
