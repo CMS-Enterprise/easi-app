@@ -395,11 +395,15 @@ function TrbExistingRequestsTable({ requests }: TrbRequestsTableProps) {
           // The consult date property can be null if not set
           // Allow actual null types to be compared against so that they move towards the end of a sort
 
-          // Fallback sort on submitted date if consult is not set
           if (a.values.consultMeetingTime === null) {
-            return a.values['form.submittedAt'] > b.values['form.submittedAt']
-              ? 1
-              : -1;
+            // Fallback sort on submitted date if consult is not set
+            if (b.values.consultMeetingTime === null) {
+              return a.values['form.submittedAt'] > b.values['form.submittedAt']
+                ? 1
+                : -1;
+            }
+            // Move null consult dates ahead of defined
+            return 1;
           }
 
           return a.values.consultMeetingTime > b.values.consultMeetingTime
