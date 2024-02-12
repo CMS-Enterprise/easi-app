@@ -1803,6 +1803,19 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Co
 	}, nil
 }
 
+// UnlinkSystemIntakeRelation is the resolver for the unlinkSystemIntakeRelation field.
+func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intakeID uuid.UUID) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.UnlinkSystemIntakeRelation(ctx, r.store, intakeID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
+}
+
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input model.CreateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error) {
 	return resolvers.CreateSystemIntakeContact(ctx, r.store, input)
