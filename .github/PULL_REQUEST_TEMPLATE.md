@@ -1,5 +1,5 @@
 # EASI-0000, EASI-0000
-<!-- Follow the pattern of Parent ticket - Subtask ticket, if appropriate -->
+<!-- Follow the pattern of Parent issue, Child issue, if appropriate -->
 
 ## Changes and Description
 
