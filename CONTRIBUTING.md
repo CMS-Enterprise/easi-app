@@ -9,7 +9,7 @@ Branches need to follow a naming pattern based on the type of branch being creat
 - `task/EASI-####_description` should be used when developing a task branch that will be merged into a feature branch. Task branches should merge into the feature branch they are associated with.
   - `EASI-####` is a the Jira issue number for the *parent* Jira issue, *NOT* the child issue.
   - `description` is a short description of the work
-- `EASI-####/description` should be used for any other branch that is not a feature or task branch. The most common case for this pattern will be a development task in Jira that doesn't have any parent or child issues (e.g. a bugfix). These branches should merge directly into `main`.
+- `EASI-####/description` should be used for any other branch that is not a feature or task branch. The most common case for this pattern will be an issue in Jira that doesn't have any parent or child issues (e.g. a bugfix). These branches should merge directly into `main`.
   - `EASI-####` is a the Jira issue number for the related Jira issue.
   - `description` is a short description of the work being completed in this branch
 - `NOREF/description` should be used for any branch that is not associated with a Jira issue. These branches should merge directly into `main`.
