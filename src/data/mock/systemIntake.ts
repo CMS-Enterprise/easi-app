@@ -40,7 +40,6 @@ import {
   SystemIntakeFormState,
   SystemIntakeRequestType,
   SystemIntakeState,
-  SystemIntakeStatus,
   SystemIntakeStatusAdmin,
   SystemIntakeStatusRequester,
   SystemIntakeStep,
@@ -156,7 +155,6 @@ export const emptySystemIntake: SystemIntake = {
   id: systemIntakeId,
   euaUserId: requester.euaUserId,
   adminLead: '',
-  status: SystemIntakeStatus.INTAKE_DRAFT,
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_IN_PROGRESS,
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
   requester: {
@@ -196,7 +194,9 @@ export const emptySystemIntake: SystemIntake = {
   annualSpending: {
     __typename: 'SystemIntakeAnnualSpending',
     currentAnnualSpending: null,
-    plannedYearOneSpending: null
+    currentAnnualSpendingITPortion: null,
+    plannedYearOneSpending: null,
+    plannedYearOneSpendingITPortion: null
   },
   contract: {
     __typename: 'SystemIntakeContract',
@@ -254,7 +254,6 @@ export const systemIntake: SystemIntake = {
   id: systemIntakeId,
   euaUserId: requester.euaUserId,
   adminLead: '',
-  status: SystemIntakeStatus.INTAKE_SUBMITTED,
   statusAdmin: SystemIntakeStatusAdmin.INITIAL_REQUEST_FORM_SUBMITTED,
   statusRequester: SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_SUBMITTED,
   requester: {
@@ -294,7 +293,9 @@ export const systemIntake: SystemIntake = {
   annualSpending: {
     __typename: 'SystemIntakeAnnualSpending',
     currentAnnualSpending: '',
-    plannedYearOneSpending: ''
+    currentAnnualSpendingITPortion: '',
+    plannedYearOneSpending: '',
+    plannedYearOneSpendingITPortion: ''
   },
   contract: {
     __typename: 'SystemIntakeContract',
@@ -350,7 +351,6 @@ export const systemIntake: SystemIntake = {
 export const initialSystemIntakeForm: SystemIntake = {
   ...systemIntake,
   requestName: '',
-  status: SystemIntakeStatus.INTAKE_DRAFT,
   requester: {
     ...systemIntake.requester,
     component: ''
@@ -414,7 +414,9 @@ export const systemIntakeForTable: TableSystemIntake = {
   annualSpending: {
     __typename: 'SystemIntakeAnnualSpending',
     currentAnnualSpending: 'Current annual spending',
-    plannedYearOneSpending: 'Planned year one spending'
+    currentAnnualSpendingITPortion: 'Current annual spending IT portion',
+    plannedYearOneSpending: 'Planned year one spending',
+    plannedYearOneSpendingITPortion: 'Planned year one spending IT portion'
   },
   contract: systemIntake.contract,
   businessNeed: systemIntake.businessNeed,

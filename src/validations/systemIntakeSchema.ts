@@ -102,8 +102,14 @@ const SystemIntakeValidationSchema: any = {
       currentAnnualSpending: Yup.string().required(
         'Tell us what the current annual spending for the contract'
       ),
+      currentAnnualSpendingITPortion: Yup.string().required(
+        'Tell us what portion (% of amount) of the current annual spending is IT'
+      ),
       plannedYearOneSpending: Yup.string().required(
         'Tell us the planned annual spending of the first year of the new contract?'
+      ),
+      plannedYearOneSpendingITPortion: Yup.string().required(
+        'Tell us what portion (% of amount) planned annual spending of the first year of the new contract is IT?'
       )
     }),
     contract: Yup.object().shape({

@@ -58,7 +58,7 @@ func submitBusinessCaseV1(
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, intake.EUAUserID.ValueOrZero())
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 		intake.DraftBusinessCaseState = models.SIRFSSubmitted
 	}

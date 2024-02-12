@@ -29,24 +29,11 @@ func (s *EmailTestSuite) TestIntakeChangeLCIDRetirementDateNotification() {
 	}
 	client, err := NewClient(s.config, &sender)
 	s.NoError(err)
-	err = client.SystemIntake.SendChangeLCIDRetirementDateNotification(
-		ctx,
-		recipients,
-		lifecycleID,
-		&retiresAt,
-		&expiresAt,
-		&issuedAt,
-		*lifecycleScope,
-		lifecycleCostBaseline,
-		*decisionNextSteps,
-		additionalInfo,
-	)
-	s.NoError(err)
-	expectedSubject := fmt.Sprintf("The retirement date for a Life Cycle ID (%s) has been changed", lifecycleID)
-	s.Equal(expectedSubject, sender.subject)
 
 	getExpectedEmail := func(
 		issuedAt *time.Time,
+		scope *models.HTML,
+		nextSteps *models.HTML,
 		additionalInfo *models.HTML,
 	) string {
 		var additionalInfoStr string
@@ -93,23 +80,12 @@ func (s *EmailTestSuite) TestIntakeChangeLCIDRetirementDateNotification() {
 			lifecycleID,
 			issuedAtStr,
 			expiresAt.Format("01/02/2006"),
-			*lifecycleScope.StringPointer(),
+			scope.ToTemplate(),
 			lifecycleCostBaseline,
-			*decisionNextSteps.StringPointer(),
+			nextSteps.ToTemplate(),
 			additionalInfoStr,
 		)
 	}
-
-	expectedEmail := getExpectedEmail(&issuedAt, additionalInfo)
-	s.Run("Recipient is correct", func() {
-		allRecipients := []models.EmailAddress{
-			recipient,
-		}
-		s.ElementsMatch(sender.toAddresses, allRecipients)
-	})
-	s.Run("Includes all info", func() {
-		s.EqualHTML(expectedEmail, sender.body)
-	})
 
 	err = client.SystemIntake.SendChangeLCIDRetirementDateNotification(
 		ctx,
@@ -117,17 +93,79 @@ func (s *EmailTestSuite) TestIntakeChangeLCIDRetirementDateNotification() {
 		lifecycleID,
 		&retiresAt,
 		&expiresAt,
-		nil,
-		*lifecycleScope,
+		&issuedAt,
+		lifecycleScope,
 		lifecycleCostBaseline,
-		*decisionNextSteps,
-		nil,
+		decisionNextSteps,
+		additionalInfo,
 	)
 	s.NoError(err)
-	expectedEmail = getExpectedEmail(nil, nil)
 
-	s.Run("Should omit additional info and issuedAt if absent", func() {
+	s.Run("Subject is correct", func() {
+		expectedSubject := fmt.Sprintf("The retirement date for a Life Cycle ID (%s) has been changed", lifecycleID)
+		s.Equal(expectedSubject, sender.subject)
+	})
+
+	s.Run("Recipient is correct", func() {
+		allRecipients := []models.EmailAddress{
+			recipient,
+		}
+		s.ElementsMatch(sender.toAddresses, allRecipients)
+	})
+
+	s.Run("Includes all info", func() {
+		expectedEmail := getExpectedEmail(
+			&issuedAt,
+			lifecycleScope,
+			decisionNextSteps,
+			additionalInfo,
+		)
 		s.EqualHTML(expectedEmail, sender.body)
 	})
 
+	s.Run("Should omit additional info and issuedAt if absent", func() {
+		err = client.SystemIntake.SendChangeLCIDRetirementDateNotification(
+			ctx,
+			recipients,
+			lifecycleID,
+			&retiresAt,
+			&expiresAt,
+			nil, //issuedAt
+			lifecycleScope,
+			lifecycleCostBaseline,
+			decisionNextSteps,
+			nil, // add'l info
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			nil, //issuedAt
+			lifecycleScope,
+			decisionNextSteps,
+			nil, // add'l info
+		)
+		s.EqualHTML(expectedEmail, sender.body)
+	})
+
+	s.Run("Should omit scope and next steps if absent", func() {
+		err = client.SystemIntake.SendChangeLCIDRetirementDateNotification(
+			ctx,
+			recipients,
+			lifecycleID,
+			&retiresAt,
+			&expiresAt,
+			nil, //issuedAt
+			nil, // scope
+			lifecycleCostBaseline,
+			nil, // next steps
+			nil, // add'l info
+		)
+		s.NoError(err)
+		expectedEmail := getExpectedEmail(
+			nil, //issuedAt
+			nil, // scope
+			nil, // next steps
+			nil, // add'l info
+		)
+		s.EqualHTML(expectedEmail, sender.body)
+	})
 }

@@ -21,15 +21,6 @@ import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 import Notes from './Notes';
 import TRBRequestInfoWrapper from './RequestContext';
 
-/** TODO EASI-3467: Remove with `trbAdminNoteUpdates` flag */
-vi.mock('launchdarkly-react-client-sdk', () => ({
-  useFlags: () => {
-    return {
-      trbAdminNoteUpdates: true
-    };
-  }
-}));
-
 const adminNotes: TRBAdminNoteFragment[] = [
   {
     __typename: 'TRBAdminNote',

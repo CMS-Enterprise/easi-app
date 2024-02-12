@@ -903,7 +903,9 @@ Represents current and planned annual costs for a system
 """
 type SystemIntakeAnnualSpending {
   currentAnnualSpending: String
+  currentAnnualSpendingITPortion: String
   plannedYearOneSpending: String
+  plannedYearOneSpendingITPortion: String
 }
 
 """
@@ -1058,6 +1060,21 @@ type SystemIntake {
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
   contractName: String
   relationType: SystemIntakeRelationType # TODO: NOT IMPLEMENTED
+
+  """
+  Linked contract numbers
+  """
+  contractNumbers: [SystemIntakeContractNumber!]!
+}
+
+type SystemIntakeContractNumber {
+  id: UUID!
+  systemIntakeID: UUID!
+  contractNumber: String!
+  createdBy: UUID!
+  createdAt: Time!
+  modifiedBy: UUID
+  modifiedAt: Time
 }
 
 # TODO Figure out if there's any better way to name this.
@@ -1234,7 +1251,9 @@ Input data for current and planned year one annual costs associated with a syste
 """
 input SystemIntakeAnnualSpendingInput {
   currentAnnualSpending: String
+  currentAnnualSpendingITPortion: String
   plannedYearOneSpending: String
+  plannedYearOneSpendingITPortion: String
 }
 
 """
@@ -1483,7 +1502,6 @@ type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
-
 
 """
 Steps in the system intake process that a Progress to New Step action can progress to
@@ -2412,16 +2430,6 @@ type TRBAdviceLetter {
 }
 
 """
-The data needed to create any category of TRB admin note, without any category-specific data
-TODO - EASI-3458 - remove
-"""
-input CreateTRBAdminNoteInput {
-  trbRequestId: UUID!
-  category: TRBAdminNoteCategory!
-  noteText: HTML!
-}
-
-"""
 The data needed to create a TRB admin note with the General Request category
 """
 input CreateTRBAdminNoteGeneralRequestInput {
@@ -2803,9 +2811,6 @@ type Mutation {
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
 
-  # Retained to support existing queries while support for category-specific notes is added
-  # TODO - EASI-3458 - remove
-  createTRBAdminNote(input: CreateTRBAdminNoteInput!): TRBAdminNote!
 
   # separate mutations for each category of admin note
   createTRBAdminNoteGeneralRequest(input: CreateTRBAdminNoteGeneralRequestInput!): TRBAdminNote!
@@ -2889,7 +2894,7 @@ type Query {
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
-  userAccount(username: String!): UserAccount 
+  userAccount(username: String!): UserAccount
 }
 
 enum TRBRequestType {
