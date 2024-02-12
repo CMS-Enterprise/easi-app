@@ -37,7 +37,10 @@ func SetSystemIntakeRelationExistingService(
 		}
 
 		// TODO: STORE -> Remove CEDAR system relationships
-		// TODO: STORE -> Delete & recreate contract number relationships
+		// Delete & recreate contract number relationships
+		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+			return nil, err
+		}
 
 		return updatedIntake, nil
 	})
@@ -68,7 +71,10 @@ func SetSystemIntakeRelationNewSystem(
 		}
 
 		// TODO: STORE -> Delete CEDAR system relationships
-		// TODO: STORE -> Delete & recreate contract number relationships
+		// Delete & recreate contract number relationships
+		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+			return nil, err
+		}
 
 		return updatedIntake, nil
 	})
@@ -99,7 +105,10 @@ func SetSystemIntakeRelationExistingSystem(
 		}
 
 		// TODO: STORE -> Add CEDAR system relationships
-		// TODO: STORE -> Delete & recreate contract number relationships
+		// Delete & recreate contract number relationships
+		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+			return nil, err
+		}
 
 		return updatedIntake, nil
 	})

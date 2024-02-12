@@ -27,12 +27,14 @@ type AlternativeSolutionProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
+  isFinal: boolean;
 };
 
 const AlternativeSolutionA = ({
   businessCase,
   formikRef,
-  dispatchSave
+  dispatchSave,
+  isFinal
 }: AlternativeSolutionProps) => {
   const history = useHistory();
   const { t } = useTranslation('businessCase');
@@ -142,11 +144,7 @@ const AlternativeSolutionA = ({
                   )
                     ? 'alternative-solution-b'
                     : 'review';
-                  if (
-                    businessCase.systemIntakeStatus ===
-                      'BIZ_CASE_FINAL_NEEDED' &&
-                    alternativeSolutionHasFilledFields(values)
-                  ) {
+                  if (isFinal && alternativeSolutionHasFilledFields(values)) {
                     validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
                         history.push(newUrl);

@@ -3123,6 +3123,11 @@ func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.Sys
 	return obj.SystemRelationType, nil
 }
 
+// ContractNumbers is the resolver for the contractNumbers field.
+func (r *systemIntakeResolver) ContractNumbers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeContractNumber, error) {
+	return resolvers.ContractNumbers(ctx, obj.ID)
+}
+
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*model.SystemIntakeDocumentType, error) {
 	return &model.SystemIntakeDocumentType{

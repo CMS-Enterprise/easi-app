@@ -39,6 +39,8 @@ type Principal interface {
 	// AllowTRBAdmin says whether this principal
 	// is authorized to operate as an admin of the TRB process within EASi
 	AllowTRBAdmin() bool
+
+	Account() *UserAccount
 }
 
 type anonymous struct{}
@@ -82,6 +84,11 @@ func (*anonymous) Allow508Tester() bool {
 // AllowTRBAdmin says Anonymous users are not explicitly ruled in as TRB admins
 func (*anonymous) AllowTRBAdmin() bool {
 	return false
+}
+
+// Account returns an empty UserAccount for an Anonymous user
+func (*anonymous) Account() *UserAccount {
+	return &UserAccount{}
 }
 
 // EUAPrincipal represents information
@@ -138,4 +145,9 @@ func (p *EUAPrincipal) Allow508Tester() bool {
 // is authorized to operate as an admin of the TRB process within EASi
 func (p *EUAPrincipal) AllowTRBAdmin() bool {
 	return p.JobCodeTRBAdmin
+}
+
+// Account returns the UserAccount of an EUAPrincipal
+func (p *EUAPrincipal) Account() *UserAccount {
+	return p.UserAccount
 }
