@@ -1073,8 +1073,8 @@ type SystemIntakeContractNumber {
   contractNumber: String!
   createdBy: UUID!
   createdAt: Time!
-  modifiedBy: UUID!
-  modifiedAt: Time!
+  modifiedBy: UUID
+  modifiedAt: Time
 }
 
 # TODO Figure out if there's any better way to name this.
