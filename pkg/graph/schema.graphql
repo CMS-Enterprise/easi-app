@@ -2782,6 +2782,7 @@ type Mutation {
   setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
   # TODO: NOT FULLY IMPLEMENTED
   setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
+  unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
 
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
