@@ -30,7 +30,9 @@ export const UpdateSystemIntakeContractDetails = gql`
         }
         annualSpending {
           currentAnnualSpending
+          currentAnnualSpendingITPortion
           plannedYearOneSpending
+          plannedYearOneSpendingITPortion
         }
         contract {
           contractor

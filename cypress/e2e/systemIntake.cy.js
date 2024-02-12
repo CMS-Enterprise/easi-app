@@ -101,9 +101,17 @@ describe('The System Intake Form', () => {
       .type('Mock Current Annual Spend')
       .should('have.value', 'Mock Current Annual Spend');
 
+    cy.get('#IntakeForm-CurrentAnnualSpendingITPortion')
+      .type('Mock Current Annual Spend IT Portion')
+      .should('have.value', 'Mock Current Annual Spend IT Portion');
+
     cy.get('#IntakeForm-PlannedYearOneAnnualSpending')
       .type('Mock Planned First Year Annual Spend')
       .should('have.value', 'Mock Planned First Year Annual Spend');
+
+    cy.get('#IntakeForm-PlannedYearOneAnnualSpendingITPortion')
+      .type('Mock Planned First Year Annual Spend IT Portion')
+      .should('have.value', 'Mock Planned First Year Annual Spend IT Portion');
 
     cy.get('#IntakeForm-ContractNotNeeded')
       .check({ force: true })
@@ -208,9 +216,17 @@ describe('The System Intake Form', () => {
       .type('Mock Current Annual Spend')
       .should('have.value', 'Mock Current Annual Spend');
 
+    cy.get('#IntakeForm-CurrentAnnualSpendingITPortion')
+      .type('Mock Current Annual Spend IT Portion')
+      .should('have.value', 'Mock Current Annual Spend IT Portion');
+
     cy.get('#IntakeForm-PlannedYearOneAnnualSpending')
       .type('Mock Planned First Year Annual Spend')
       .should('have.value', 'Mock Planned First Year Annual Spend');
+
+    cy.get('#IntakeForm-PlannedYearOneAnnualSpendingITPortion')
+      .type('Mock Planned First Year Annual Spend IT Portion')
+      .should('have.value', 'Mock Planned First Year Annual Spend IT Portion');
 
     cy.get('#IntakeForm-ContractHaveContract')
       .check({ force: true })

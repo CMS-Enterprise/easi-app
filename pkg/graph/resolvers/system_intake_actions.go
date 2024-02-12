@@ -1147,7 +1147,7 @@ func ExpireLCID(
 				intake.LifecycleID.ValueOrZero(),
 				intake.LifecycleExpiresAt,
 				intake.LifecycleIssuedAt,
-				*intake.LifecycleScope,
+				intake.LifecycleScope,
 				intake.LifecycleCostBaseline.ValueOrZero(),
 				input.Reason,
 				input.NextSteps,
@@ -1257,10 +1257,10 @@ func RetireLCID(
 				&input.RetiresAt,
 				intake.LifecycleExpiresAt,
 				intake.LifecycleIssuedAt,
-				*intake.LifecycleScope,
+				intake.LifecycleScope,
 				intake.LifecycleCostBaseline.ValueOrZero(),
 				input.Reason,
-				*intake.DecisionNextSteps,
+				intake.DecisionNextSteps,
 				input.AdditionalInfo,
 			)
 			if err != nil {
@@ -1368,9 +1368,9 @@ func ChangeLCIDRetirementDate(
 				&input.RetiresAt,
 				intake.LifecycleExpiresAt,
 				intake.LifecycleIssuedAt,
-				*intake.LifecycleScope,
+				intake.LifecycleScope,
 				intake.LifecycleCostBaseline.ValueOrZero(),
-				*intake.DecisionNextSteps,
+				intake.DecisionNextSteps,
 				input.AdditionalInfo,
 			)
 			if err != nil {

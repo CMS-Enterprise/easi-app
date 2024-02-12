@@ -37,7 +37,9 @@ export const SystemIntake = gql`
     }
     annualSpending {
       currentAnnualSpending
+      currentAnnualSpendingITPortion
       plannedYearOneSpending
+      plannedYearOneSpendingITPortion
     }
     currentStage
     decisionNextSteps

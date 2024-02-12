@@ -17,13 +17,10 @@ func (loaders *DataLoaders) GetUserAccountsByIDLoader(ctx context.Context, keys 
 	dr := loaders.DataReader
 
 	logger := appcontext.ZLogger(ctx)
-	arrayCK, err := ConvertToKeyArgsArray(keys)
-	if err != nil {
-		logger.Error("issue converting keys for data loader in User Account", zap.Error(*err))
-	}
+	arrayCK := ConvertToKeyArgsArray(keys)
 	marshaledParams, err := arrayCK.ToJSONArray()
 	if err != nil {
-		logger.Error("issue converting keys to JSON for data loader in User Account", zap.Error(*err))
+		logger.Error("issue converting keys to JSON for data loader in User Account", zap.Error(err))
 	}
 	output := make([]*dataloader.Result, len(keys))
 

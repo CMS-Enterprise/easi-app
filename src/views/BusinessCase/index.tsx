@@ -196,6 +196,7 @@ export const BusinessCase = () => {
                 formikRef={formikRef}
                 dispatchSave={dispatchSave}
                 businessCase={businessCase}
+                isFinal={isFinal}
               />
             )}
           />
@@ -206,6 +207,7 @@ export const BusinessCase = () => {
                 formikRef={formikRef}
                 dispatchSave={dispatchSave}
                 businessCase={businessCase}
+                isFinal={isFinal}
               />
             )}
           />

@@ -128,7 +128,7 @@ func progressIntake(
 	newStep model.SystemIntakeStepToProgressTo,
 	meetingDate *time.Time,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser)
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
 
 	feedbackText := models.HTML(fmt.Sprintf("feedback for %s progressing to %s", string(intake.Step), string(newStep)))
 	grbRecommendations := models.HTML(fmt.Sprintf("grb recommendations for %s progressing to %s", string(intake.Step), string(newStep)))
@@ -161,7 +161,7 @@ func requestEditsToIntakeForm(
 	intake *models.SystemIntake,
 	targetedForm model.SystemIntakeFormStep,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser)
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
 	adminNote := models.HTML(fmt.Sprintf("admin note that edits were requested to %s form", string(targetedForm)))
 	additionalInfo := models.HTML(fmt.Sprintf("add'l info about edits requested on %s form", string(targetedForm)))
 

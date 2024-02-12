@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -1793,11 +1792,6 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 	)
 }
 
-// CreateTRBAdminNote is the resolver for the createTRBAdminNote field.
-func (r *mutationResolver) CreateTRBAdminNote(ctx context.Context, input model.CreateTRBAdminNoteInput) (*models.TRBAdminNote, error) {
-	return resolvers.CreateTRBAdminNote(ctx, r.store, input.TrbRequestID, input.Category, input.NoteText)
-}
-
 // CreateTRBAdminNoteGeneralRequest is the resolver for the createTRBAdminNoteGeneralRequest field.
 func (r *mutationResolver) CreateTRBAdminNoteGeneralRequest(ctx context.Context, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
 	return resolvers.CreateTRBAdminNoteGeneralRequest(ctx, r.store, input)
@@ -2484,8 +2478,10 @@ func (r *systemIntakeResolver) Costs(ctx context.Context, obj *models.SystemInta
 // AnnualSpending is the resolver for the annualSpending field.
 func (r *systemIntakeResolver) AnnualSpending(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeAnnualSpending, error) {
 	return &model.SystemIntakeAnnualSpending{
-		CurrentAnnualSpending:  obj.CurrentAnnualSpending.Ptr(),
-		PlannedYearOneSpending: obj.PlannedYearOneSpending.Ptr(),
+		CurrentAnnualSpending:           obj.CurrentAnnualSpending.Ptr(),
+		CurrentAnnualSpendingITPortion:  obj.CurrentAnnualSpendingITPortion.Ptr(),
+		PlannedYearOneSpending:          obj.PlannedYearOneSpending.Ptr(),
+		PlannedYearOneSpendingITPortion: obj.PlannedYearOneSpendingITPortion.Ptr(),
 	}, nil
 }
 
@@ -2743,18 +2739,13 @@ func (r *systemIntakeResolver) ContractName(ctx context.Context, obj *models.Sys
 }
 
 // RelationType is the resolver for the relationType field.
-func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRelationType, error) {
-	// The purpose of this resolver is to return the kind of relation that has been set for this System Intake
-	// It is a calculated type that should be based on the values of the fields that are set by the following other resolvers:
-	// - setSystemIntakeRelationNewSystem
-	// - setSystemIntakeRelationExistingSystem
-	// - setSystemIntakeRelationExistingService
-	//
-	// The following is pseudo-code for how this resolver should work:
-	// 1. Check to see if there are any CEDAR System ID relations. If so, return "SystemIntakeRelationTypeExistingSystem"
-	// 2. Check to see if there is a free-text service/contract name set on the intake. If so, return "SystemIntakeRelationTypeExistingService"
-	// 3. Else, return "SystemIntakeRelationTypeNewSystem"
-	panic(fmt.Errorf("not implemented: RelationType - relationType"))
+func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRelationType, error) {
+	return obj.SystemRelationType, nil
+}
+
+// ContractNumbers is the resolver for the contractNumbers field.
+func (r *systemIntakeResolver) ContractNumbers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeContractNumber, error) {
+	return resolvers.ContractNumbers(ctx, obj.ID)
 }
 
 // DocumentType is the resolver for the documentType field.

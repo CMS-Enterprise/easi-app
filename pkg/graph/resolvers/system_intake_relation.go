@@ -29,13 +29,18 @@ func SetSystemIntakeRelationExistingService(
 
 		// Set contract name
 		intake.ContractName = zero.StringFrom(input.ContractName)
+		relationType := models.SIRelationTypeExistingService
+		intake.SystemRelationType = &relationType
 		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
 		}
 
 		// TODO: STORE -> Remove CEDAR system relationships
-		// TODO: STORE -> Delete & recreate contract number relationships
+		// Delete & recreate contract number relationships
+		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+			return nil, err
+		}
 
 		return updatedIntake, nil
 	})
@@ -58,13 +63,18 @@ func SetSystemIntakeRelationNewSystem(
 
 		// Clear contract name
 		intake.ContractName = zero.StringFromPtr(nil)
+		relationType := models.SIRelationTypeNewSystem
+		intake.SystemRelationType = &relationType
 		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
 		}
 
 		// TODO: STORE -> Delete CEDAR system relationships
-		// TODO: STORE -> Delete & recreate contract number relationships
+		// Delete & recreate contract number relationships
+		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+			return nil, err
+		}
 
 		return updatedIntake, nil
 	})
@@ -87,13 +97,18 @@ func SetSystemIntakeRelationExistingSystem(
 
 		// Clear contract name
 		intake.ContractName = zero.StringFromPtr(nil)
+		relationType := models.SIRelationTypeExistingSystem
+		intake.SystemRelationType = &relationType
 		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
 		}
 
 		// TODO: STORE -> Add CEDAR system relationships
-		// TODO: STORE -> Delete & recreate contract number relationships
+		// Delete & recreate contract number relationships
+		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+			return nil, err
+		}
 
 		return updatedIntake, nil
 	})

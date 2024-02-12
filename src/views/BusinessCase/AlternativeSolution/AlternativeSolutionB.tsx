@@ -26,12 +26,14 @@ type AlternativeSolutionBProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
+  isFinal: boolean;
 };
 
 const AlternativeSolutionB = ({
   businessCase,
   formikRef,
-  dispatchSave
+  dispatchSave,
+  isFinal
 }: AlternativeSolutionBProps) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -140,6 +142,7 @@ const AlternativeSolutionB = ({
                   dispatchSave();
                   // If any field is filled
                   if (
+                    isFinal &&
                     alternativeSolutionHasFilledFields(
                       formikRef?.current?.values?.alternativeB
                     )

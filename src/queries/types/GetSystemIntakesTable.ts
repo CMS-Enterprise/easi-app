@@ -35,7 +35,9 @@ export interface GetSystemIntakesTable_systemIntakes_fundingSources {
 export interface GetSystemIntakesTable_systemIntakes_annualSpending {
   __typename: "SystemIntakeAnnualSpending";
   currentAnnualSpending: string | null;
+  currentAnnualSpendingITPortion: string | null;
   plannedYearOneSpending: string | null;
+  plannedYearOneSpendingITPortion: string | null;
 }
 
 export interface GetSystemIntakesTable_systemIntakes_contract_startDate {
