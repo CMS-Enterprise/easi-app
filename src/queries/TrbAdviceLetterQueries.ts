@@ -38,13 +38,17 @@ export const GetTrbAdviceLetterQuery = gql`
     trbRequest(id: $id) {
       id
       name
+      type
+      consultMeetingTime
+      requesterInfo {
+        commonName
+      }
       taskStatuses {
         adviceLetterStatus
       }
       adviceLetter {
         ...TRBAdviceLetter
       }
-      consultMeetingTime
     }
   }
 `;

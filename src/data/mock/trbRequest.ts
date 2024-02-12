@@ -429,12 +429,17 @@ export const getTrbAdviceLetterQuery: MockedQuery<
         __typename: 'TRBRequest',
         id: trbRequestId,
         name: trbRequest.name,
+        type: TRBRequestType.NEED_HELP,
+        consultMeetingTime: null,
+        requesterInfo: {
+          __typename: 'UserInfo',
+          commonName: attendees[0].userInfo.commonName
+        },
         taskStatuses: {
           __typename: 'TRBTaskStatuses',
           adviceLetterStatus: TRBAdviceLetterStatus.COMPLETED
         },
-        adviceLetter,
-        consultMeetingTime: null
+        adviceLetter
       }
     }
   }
