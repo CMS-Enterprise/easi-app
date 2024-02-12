@@ -433,7 +433,8 @@ export const getTrbAdviceLetterQuery: MockedQuery<
           __typename: 'TRBTaskStatuses',
           adviceLetterStatus: TRBAdviceLetterStatus.COMPLETED
         },
-        adviceLetter
+        adviceLetter,
+        consultMeetingTime: null
       }
     }
   }

@@ -44,6 +44,7 @@ export const GetTrbAdviceLetterQuery = gql`
       adviceLetter {
         ...TRBAdviceLetter
       }
+      consultMeetingTime
     }
   }
 `;

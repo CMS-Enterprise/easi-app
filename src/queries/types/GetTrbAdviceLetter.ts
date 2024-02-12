@@ -51,6 +51,7 @@ export interface GetTrbAdviceLetter_trbRequest {
   name: string | null;
   taskStatuses: GetTrbAdviceLetter_trbRequest_taskStatuses;
   adviceLetter: GetTrbAdviceLetter_trbRequest_adviceLetter | null;
+  consultMeetingTime: Time | null;
 }
 
 export interface GetTrbAdviceLetter {
