@@ -21,7 +21,10 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 		return errors.New("unexpected nil system intake ID when linking system intake to contract number")
 	}
 
-	if _, err := tx.ExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.Delete, pq.StringArray(contractNumbers), systemIntakeID); err != nil {
+	if _, err := tx.NamedExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.Delete, map[string]interface{}{
+		"contract_numbers": pq.StringArray(contractNumbers),
+		"system_intake_id": systemIntakeID,
+	}); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to delete contract numbers linked to system intake", zap.Error(err))
 		return err
 	}
@@ -55,8 +58,17 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 
 // SystemIntakeContractNumbersBySystemIntakeIDLOADER gets multiple groups of Contract Numbers by System Intake ID
 func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx context.Context, paramTableJSON string) (map[string][]*models.SystemIntakeContractNumber, error) {
+	stmt, err := s.db.PrepareNamedContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
 	var contracts []*models.SystemIntakeContractNumber
-	if err := s.db.SelectContext(ctx, &contracts, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER, paramTableJSON); err != nil {
+	err = stmt.SelectContext(ctx, &contracts, map[string]interface{}{
+		"param_table_json": paramTableJSON,
+	})
+	if err != nil {
 		return nil, err
 	}
 
