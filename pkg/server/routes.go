@@ -199,13 +199,6 @@ func (s *Server) routes(
 				services.AuthorizeHasEASiRole,
 				store.CreateTestDate,
 			),
-			CreateActionExtendLifecycleID: services.NewCreateActionExtendLifecycleID(
-				serviceConfig,
-				saveAction,
-				store.FetchSystemIntakeByID,
-				store.UpdateSystemIntake,
-				emailClient.SendExtendLCIDEmails,
-			),
 			SubmitIntake: services.NewSubmitSystemIntake(
 				serviceConfig,
 				services.AuthorizeUserIsIntakeRequester,

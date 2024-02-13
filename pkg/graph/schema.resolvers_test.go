@@ -29,7 +29,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 	"github.com/cmsgov/easi-app/pkg/upload"
@@ -168,24 +167,10 @@ func TestGraphQLTestSuite(t *testing.T) {
 		return nil
 	}
 
-	saveAction := services.NewSaveAction(
-		store.CreateAction,
-		cedarLdapClient.FetchUserInfo,
-	)
-
-	serviceConfig := services.NewConfig(logger, ldClient)
-
 	var resolverService ResolverService
 	resolverService.SubmitIntake = submitIntake
 	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
 	resolverService.SearchCommonNameContains = cedarLdapClient.SearchCommonNameContains
-	resolverService.CreateActionExtendLifecycleID = services.NewCreateActionExtendLifecycleID(
-		serviceConfig,
-		saveAction,
-		store.FetchSystemIntakeByID,
-		store.UpdateSystemIntake,
-		emailClient.SendExtendLCIDEmails,
-	)
 
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})

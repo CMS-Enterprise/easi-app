@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -404,82 +403,5 @@ func NewTakeActionUpdateStatus(
 		}
 
 		return nil
-	}
-}
-
-// NewCreateActionExtendLifecycleID returns a function that
-// persists an action and updates an intake's LCID
-func NewCreateActionExtendLifecycleID(
-	config Config,
-	saveAction func(context.Context, *models.Action) error,
-	fetchSystemIntake func(context.Context, uuid.UUID) (*models.SystemIntake, error),
-	updateSystemIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	sendExtendLCIDEmails func(ctx context.Context, recipients models.EmailNotificationRecipients, systemIntakeID uuid.UUID, projectName string, requester string, newExpiresAt *time.Time, newScope models.HTML, newNextSteps models.HTML, newCostBaseline string) error,
-) func(ctx context.Context, action *models.Action, id uuid.UUID, expirationDate *time.Time, nextSteps *models.HTML, scope models.HTML, costBaseline *string, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
-	return func(
-		ctx context.Context,
-		action *models.Action,
-		id uuid.UUID,
-		expirationDate *time.Time,
-		nextSteps *models.HTML,
-		scope models.HTML,
-		costBaseline *string,
-		recipients *models.EmailNotificationRecipients,
-	) (*models.SystemIntake, error) {
-		intake, err := fetchSystemIntake(ctx, id)
-		if err != nil {
-			return nil, err
-		}
-
-		action.LCIDExpirationChangeNewDate = expirationDate
-		action.LCIDExpirationChangePreviousDate = intake.LifecycleExpiresAt
-
-		action.LCIDExpirationChangeNewScope = &scope
-		action.LCIDExpirationChangePreviousScope = intake.LifecycleScope
-
-		action.LCIDExpirationChangeNewNextSteps = nextSteps
-		action.LCIDExpirationChangePreviousNextSteps = intake.DecisionNextSteps
-
-		action.LCIDExpirationChangeNewCostBaseline = null.StringFromPtr(costBaseline)
-		action.LCIDExpirationChangePreviousCostBaseline = null.StringFrom(intake.LifecycleCostBaseline.String)
-
-		actionErr := saveAction(ctx, action)
-		if actionErr != nil {
-			return nil, actionErr
-		}
-
-		intake.LifecycleExpiresAt = expirationDate
-		intake.Status = models.SystemIntakeStatusLCIDISSUED
-		intake.LifecycleScope = &scope
-		intake.DecisionNextSteps = nextSteps
-		intake.LifecycleCostBaseline = null.StringFromPtr(costBaseline)
-
-		intake.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusLCIDISSUED)
-
-		_, updateErr := updateSystemIntake(ctx, intake)
-		if updateErr != nil {
-			return nil, updateErr
-		}
-
-		if recipients != nil {
-			err = sendExtendLCIDEmails(
-				ctx,
-				*recipients,
-				id,
-				intake.ProjectName.ValueOrZero(),
-				intake.Requester,
-				expirationDate,
-				intake.LifecycleScope.ValueOrEmptyHTML(),
-				intake.DecisionNextSteps.ValueOrEmptyHTML(),
-				intake.LifecycleCostBaseline.ValueOrZero(),
-			)
-			if err != nil {
-				return nil, err
-			}
-
-			return intake, nil
-		}
-
-		return intake, nil
 	}
 }

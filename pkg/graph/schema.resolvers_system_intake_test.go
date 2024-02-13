@@ -21,7 +21,6 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 	var resp struct {
 		CreateSystemIntake struct {
 			ID          string
-			Status      string
 			RequestType string
 			Requester   struct {
 				Name string
@@ -72,7 +71,6 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 		SystemIntake struct {
 			ID            string
 			RequestName   string
-			Status        string
 			RequestType   string
 			BusinessOwner struct {
 				Name      string
@@ -1687,8 +1685,7 @@ func (s *GraphQLTestSuite) TestSubmitIntake() {
 	var resp struct {
 		SubmitIntake struct {
 			SystemIntake struct {
-				ID     string
-				Status string
+				ID string
 			}
 		}
 	}

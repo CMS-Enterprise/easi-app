@@ -2,9 +2,7 @@ package graph
 
 import (
 	"context"
-	"time"
 
-	"github.com/google/uuid"
 	ldclient "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
@@ -32,12 +30,11 @@ type Resolver struct {
 
 // ResolverService holds service methods for use in resolvers
 type ResolverService struct {
-	CreateTestDate                func(context.Context, *models.TestDate) (*models.TestDate, error)
-	CreateActionExtendLifecycleID func(context.Context, *models.Action, uuid.UUID, *time.Time, *models.HTML, models.HTML, *string, *models.EmailNotificationRecipients) (*models.SystemIntake, error)
-	FetchUserInfo                 func(context.Context, string) (*models.UserInfo, error)
-	FetchUserInfos                func(context.Context, []string) ([]*models.UserInfo, error)
-	SearchCommonNameContains      func(context.Context, string) ([]*models.UserInfo, error)
-	SubmitIntake                  func(context.Context, *models.SystemIntake, *models.Action) error
+	CreateTestDate           func(context.Context, *models.TestDate) (*models.TestDate, error)
+	FetchUserInfo            func(context.Context, string) (*models.UserInfo, error)
+	FetchUserInfos           func(context.Context, []string) ([]*models.UserInfo, error)
+	SearchCommonNameContains func(context.Context, string) ([]*models.UserInfo, error)
+	SubmitIntake             func(context.Context, *models.SystemIntake, *models.Action) error
 }
 
 // NewResolver constructs a resolver
