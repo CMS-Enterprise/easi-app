@@ -37,8 +37,7 @@ func UpdateTRBRequestForm(
 
 	isSubmitted := false
 	if isSubmittedVal, isSubmittedFound := input["isSubmitted"]; isSubmittedFound {
-		isSubmittedBool, isSubmittedOk := isSubmittedVal.(*bool)
-		if isSubmittedOk && isSubmittedBool != nil {
+		if isSubmittedBool, isSubmittedOk := isSubmittedVal.(*bool); isSubmittedOk && isSubmittedBool != nil {
 			isSubmitted = *isSubmittedBool
 			delete(input, "isSubmitted")
 		}
