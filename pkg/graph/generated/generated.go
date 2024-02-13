@@ -618,7 +618,6 @@ type ComplexityRoot struct {
 		UpdateSystemIntakeNote                           func(childComplexity int, input model.UpdateSystemIntakeNoteInput) int
 		UpdateSystemIntakeRequestDetails                 func(childComplexity int, input model.UpdateSystemIntakeRequestDetailsInput) int
 		UpdateSystemIntakeReviewDates                    func(childComplexity int, input model.UpdateSystemIntakeReviewDatesInput) int
-		UpdateTRBAdminNote                               func(childComplexity int, input map[string]interface{}) int
 		UpdateTRBAdviceLetter                            func(childComplexity int, input map[string]interface{}) int
 		UpdateTRBAdviceLetterRecommendation              func(childComplexity int, input map[string]interface{}) int
 		UpdateTRBAdviceLetterRecommendationOrder         func(childComplexity int, input model.UpdateTRBAdviceLetterRecommendationOrderInput) int
@@ -1388,7 +1387,6 @@ type MutationResolver interface {
 	CreateTRBAdminNoteSupportingDocuments(ctx context.Context, input model.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error)
 	CreateTRBAdminNoteConsultSession(ctx context.Context, input model.CreateTRBAdminNoteConsultSessionInput) (*models.TRBAdminNote, error)
 	CreateTRBAdminNoteAdviceLetter(ctx context.Context, input model.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error)
-	UpdateTRBAdminNote(ctx context.Context, input map[string]interface{}) (*models.TRBAdminNote, error)
 	SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool) (*models.TRBAdminNote, error)
 	CreateTRBAdviceLetter(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error)
 	UpdateTRBAdviceLetter(ctx context.Context, input map[string]interface{}) (*models.TRBAdviceLetter, error)
@@ -4753,18 +4751,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateSystemIntakeReviewDates(childComplexity, args["input"].(model.UpdateSystemIntakeReviewDatesInput)), true
 
-	case "Mutation.updateTRBAdminNote":
-		if e.complexity.Mutation.UpdateTRBAdminNote == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updateTRBAdminNote_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdateTRBAdminNote(childComplexity, args["input"].(map[string]interface{})), true
-
 	case "Mutation.updateTRBAdviceLetter":
 		if e.complexity.Mutation.UpdateTRBAdviceLetter == nil {
 			break
@@ -7663,7 +7649,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateSystemIntakeNoteInput,
 		ec.unmarshalInputUpdateSystemIntakeRequestDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeReviewDatesInput,
-		ec.unmarshalInputUpdateTRBAdminNoteInput,
 		ec.unmarshalInputUpdateTRBAdviceLetterInput,
 		ec.unmarshalInputUpdateTRBAdviceLetterRecommendationInput,
 		ec.unmarshalInputUpdateTRBAdviceLetterRecommendationOrderInput,
@@ -10264,23 +10249,9 @@ input CreateTRBAdminNoteAdviceLetterInput {
 }
 
 """
-The data needed for updating a TRB admin note, not including any category-specific data
-As of 10/17/2023, this mutation isn't being used anywhere within EASi
-Creating and reading admin notes with category-specific data was added in https://jiraent.cms.gov/browse/EASI-3277
-
-If updating admin notes needs to handle category-specific data, break it up into five separate mutations with their own input types,
-similar to the different CreateTRBAdminNote* inputs.
-"""
-input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") { # done
-  id: UUID!
-  category: TRBAdminNoteCategory
-  noteText: HTML
-}
-
-"""
 The data needed to update a TRB advice letter
 """
-input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") { # done
+input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
   trbRequestId: UUID!
   meetingSummary: HTML
   nextSteps: HTML
@@ -10327,7 +10298,7 @@ input CreateTRBAdviceLetterRecommendationInput {
 """
 The input required to update a recommendation to a TRB advice letter
 """
-input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") { # done
+input UpdateTRBAdviceLetterRecommendationInput @goModel(model: "map[string]interface{}") {
   id: UUID!
   title: String
   recommendation: HTML
@@ -10595,9 +10566,6 @@ type Mutation {
   createTRBAdminNoteConsultSession(input: CreateTRBAdminNoteConsultSessionInput!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteAdviceLetter(input: CreateTRBAdminNoteAdviceLetterInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
-
-  updateTRBAdminNote(input: UpdateTRBAdminNoteInput!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
@@ -12385,21 +12353,6 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeReviewDates_args(ct
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateSystemIntakeReviewDatesInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeReviewDatesInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_updateTRBAdminNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 map[string]interface{}
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateTRBAdminNoteInput2map(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -33254,109 +33207,6 @@ func (ec *executionContext) fieldContext_Mutation_createTRBAdminNoteAdviceLetter
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createTRBAdminNoteAdviceLetter_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_updateTRBAdminNote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateTRBAdminNote(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateTRBAdminNote(rctx, fc.Args["input"].(map[string]interface{}))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_TRB_ADMIN")
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*models.TRBAdminNote); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.TRBAdminNote`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.TRBAdminNote)
-	fc.Result = res
-	return ec.marshalNTRBAdminNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNote(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_updateTRBAdminNote(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_TRBAdminNote_id(ctx, field)
-			case "trbRequestId":
-				return ec.fieldContext_TRBAdminNote_trbRequestId(ctx, field)
-			case "category":
-				return ec.fieldContext_TRBAdminNote_category(ctx, field)
-			case "noteText":
-				return ec.fieldContext_TRBAdminNote_noteText(ctx, field)
-			case "author":
-				return ec.fieldContext_TRBAdminNote_author(ctx, field)
-			case "isArchived":
-				return ec.fieldContext_TRBAdminNote_isArchived(ctx, field)
-			case "categorySpecificData":
-				return ec.fieldContext_TRBAdminNote_categorySpecificData(ctx, field)
-			case "createdBy":
-				return ec.fieldContext_TRBAdminNote_createdBy(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_TRBAdminNote_createdAt(ctx, field)
-			case "modifiedBy":
-				return ec.fieldContext_TRBAdminNote_modifiedBy(ctx, field)
-			case "modifiedAt":
-				return ec.fieldContext_TRBAdminNote_modifiedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TRBAdminNote", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateTRBAdminNote_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -59242,53 +59092,6 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeReviewDatesInput(ctx
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateTRBAdminNoteInput(ctx context.Context, obj interface{}) (map[string]interface{}, error) {
-	it := make(map[string]interface{}, len(obj.(map[string]interface{})))
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id", "category", "noteText"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["id"] = data
-		case "category":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalOTRBAdminNoteCategory2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["category"] = data
-		case "noteText":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("noteText"))
-			data, err := ec.unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it["noteText"] = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputUpdateTRBAdviceLetterInput(ctx context.Context, obj interface{}) (map[string]interface{}, error) {
 	it := make(map[string]interface{}, len(obj.(map[string]interface{})))
 	asMap := map[string]interface{}{}
@@ -66327,13 +66130,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createTRBAdminNoteAdviceLetter":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createTRBAdminNoteAdviceLetter(ctx, field)
-			})
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "updateTRBAdminNote":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateTRBAdminNote(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -76433,11 +76229,6 @@ func (ec *executionContext) unmarshalNUpdateSystemIntakeReviewDatesInput2github�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateTRBAdminNoteInput2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
-	res, err := ec.unmarshalInputUpdateTRBAdminNoteInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNUpdateTRBAdviceLetterInput2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
 	res, err := ec.unmarshalInputUpdateTRBAdviceLetterInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -77582,23 +77373,6 @@ func (ec *executionContext) unmarshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋ
 }
 
 func (ec *executionContext) marshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTRBFollowUp(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeTRBFollowUp) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	res := graphql.MarshalString(string(*v))
-	return res
-}
-
-func (ec *executionContext) unmarshalOTRBAdminNoteCategory2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx context.Context, v interface{}) (*models.TRBAdminNoteCategory, error) {
-	if v == nil {
-		return nil, nil
-	}
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBAdminNoteCategory(tmp)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOTRBAdminNoteCategory2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx context.Context, sel ast.SelectionSet, v *models.TRBAdminNoteCategory) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
