@@ -32,10 +32,6 @@ func TestLCIDExpirationAlert(t *testing.T) {
 	fiftyNineDaysFromDate, _ := time.Parse(DateLayout, "2023-04-20")
 	fortySixDaysFromDate, _ := time.Parse(DateLayout, "2023-04-06")
 
-	// mock retirement dates
-	// twoDaysFromDate, _ := time.Parse(DateLayout, "2023-02-22")
-	// oneDayBeforeDate, _ := time.Parse(DateLayout, "2023-02-19")
-
 	var intakePtr *models.SystemIntake
 	intake := testhelpers.NewSystemIntake()
 	intakePtr = &intake

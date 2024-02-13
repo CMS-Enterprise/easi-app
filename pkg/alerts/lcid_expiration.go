@@ -84,6 +84,10 @@ var alertsInAdvance = []time.Duration{
 	time.Duration(day * 14),  // 14 days
 }
 
+// shouldSendAlertForIntake determines if it's valid to send an LCID expiration alert for a given System Intake
+// It does this by first comparing the current date to the LCID expiration date to see if it's within the range of a specific alert
+// Then, in order to ensure we don't send an alert for the same alert period twice, we check to see if the last alert's timestamp is _also_ before the date period
+// If both of these are true, we're good to fire an alert off
 func shouldSendAlertForIntake(intake models.SystemIntake, now time.Time) bool {
 	// Skip intake or if it has a status of "NO GOVERNANCE"
 	if intake.Status == models.SystemIntakeStatusNOGOVERNANCE {
@@ -106,6 +110,7 @@ func shouldSendAlertForIntake(intake models.SystemIntake, now time.Time) bool {
 		return false
 	}
 
+	// Iterate over each alert period to see if we should send an alert
 	for _, daysInAdvance := range alertsInAdvance {
 		// Calculate the target alert date by subtracting daysInAdvance from the expiration date
 		targetAlertDate := intake.LifecycleExpiresAt.Add(-daysInAdvance)
