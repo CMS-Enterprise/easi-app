@@ -1060,6 +1060,21 @@ type SystemIntake {
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
   contractName: String
   relationType: SystemIntakeRelationType # TODO: NOT IMPLEMENTED
+
+  """
+  Linked contract numbers
+  """
+  contractNumbers: [SystemIntakeContractNumber!]!
+}
+
+type SystemIntakeContractNumber {
+  id: UUID!
+  systemIntakeID: UUID!
+  contractNumber: String!
+  createdBy: UUID!
+  createdAt: Time!
+  modifiedBy: UUID
+  modifiedAt: Time
 }
 
 # TODO Figure out if there's any better way to name this.
@@ -1487,7 +1502,6 @@ type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
-
 
 """
 Steps in the system intake process that a Progress to New Step action can progress to
@@ -2768,6 +2782,7 @@ type Mutation {
   setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
   # TODO: NOT FULLY IMPLEMENTED
   setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
+  unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
 
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload

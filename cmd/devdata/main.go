@@ -60,7 +60,7 @@ func main() {
 
 	s3Client := upload.NewS3Client(s3Cfg)
 
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, mock.PrincipalUser)
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
 	seederConfig := &seederConfig{
 		logger:   logger,
 		store:    store,

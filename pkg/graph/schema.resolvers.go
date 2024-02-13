@@ -1814,6 +1814,19 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Co
 	}, nil
 }
 
+// UnlinkSystemIntakeRelation is the resolver for the unlinkSystemIntakeRelation field.
+func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intakeID uuid.UUID) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := resolvers.UnlinkSystemIntakeRelation(ctx, r.store, intakeID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, nil
+}
+
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
 func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input model.CreateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error) {
 	return resolvers.CreateSystemIntakeContact(ctx, r.store, input)
@@ -3121,6 +3134,11 @@ func (r *systemIntakeResolver) ContractName(ctx context.Context, obj *models.Sys
 // RelationType is the resolver for the relationType field.
 func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRelationType, error) {
 	return obj.SystemRelationType, nil
+}
+
+// ContractNumbers is the resolver for the contractNumbers field.
+func (r *systemIntakeResolver) ContractNumbers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeContractNumber, error) {
+	return resolvers.ContractNumbers(ctx, obj.ID)
 }
 
 // DocumentType is the resolver for the documentType field.
