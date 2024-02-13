@@ -1,10 +1,13 @@
 package resolvers
 
 import (
+	"context"
 	"time"
 
 	"github.com/guregu/null/zero"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -118,4 +121,48 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 	suite.Equal(updatedIntake.ContractName.ValueOrZero(), contractName)
 	suite.NotNil(updatedIntake.SystemRelationType)
 	suite.Equal(models.SIRelationTypeExistingService, *updatedIntake.SystemRelationType)
+}
+
+// TODO maybe we should have a test for each of the different types of relationships (and their data) being unlinked
+// once those resolvers are all implemented?
+func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
+	ctx := suite.testConfigs.Context
+	store := suite.testConfigs.Store
+
+	ctx = appcontext.WithLogger(ctx, suite.testConfigs.Logger)
+	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(suite.testConfigs.Store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
+
+	submittedAt := time.Now()
+	// Create an inital intake
+	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+		State:       models.SystemIntakeStateOPEN,
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+		SubmittedAt: &submittedAt,
+	})
+	suite.NoError(err)
+	suite.NotNil(openIntake)
+
+	// Set the existing service relationship
+	contractName := "My Test Contract Name"
+	input := &model.SetSystemIntakeRelationExistingServiceInput{
+		SystemIntakeID:  openIntake.ID,
+		ContractName:    contractName,
+		ContractNumbers: []string{"12345", "67890"},
+	}
+	_, err = SetSystemIntakeRelationExistingService(ctx, store, input)
+	suite.NoError(err) // we don't need to test the SetSystemIntakeRelationExistingService function here
+
+	// Now unlink the relationship
+	unlinkedIntake, err := UnlinkSystemIntakeRelation(ctx, store, openIntake.ID)
+	suite.NoError(err)
+
+	// Assert that all values are cleared appropriately
+	suite.Equal("", unlinkedIntake.ContractName.ValueOrZero())
+	suite.Nil(unlinkedIntake.SystemRelationType)
+
+	// Check contract numbers are cleared
+	nums, err := ContractNumbers(ctx, unlinkedIntake.ID)
+	suite.NoError(err)
+	suite.Empty(nums)
 }

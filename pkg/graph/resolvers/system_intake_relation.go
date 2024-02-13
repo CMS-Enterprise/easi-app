@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
@@ -37,7 +38,10 @@ func SetSystemIntakeRelationExistingService(
 		}
 
 		// TODO: STORE -> Remove CEDAR system relationships
-		// TODO: STORE -> Delete & recreate contract number relationships
+		// Delete & recreate contract number relationships
+		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+			return nil, err
+		}
 
 		return updatedIntake, nil
 	})
@@ -68,7 +72,10 @@ func SetSystemIntakeRelationNewSystem(
 		}
 
 		// TODO: STORE -> Delete CEDAR system relationships
-		// TODO: STORE -> Delete & recreate contract number relationships
+		// Delete & recreate contract number relationships
+		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+			return nil, err
+		}
 
 		return updatedIntake, nil
 	})
@@ -99,7 +106,47 @@ func SetSystemIntakeRelationExistingSystem(
 		}
 
 		// TODO: STORE -> Add CEDAR system relationships
-		// TODO: STORE -> Delete & recreate contract number relationships
+		// Delete & recreate contract number relationships
+		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+			return nil, err
+		}
+
+		return updatedIntake, nil
+	})
+}
+
+// UnlinkSystemIntakeRelation clears all the relationship information on a system intake.
+// This includes clearing the system relation type, contract name, contract number relationships, and CEDAR system relationships (TODO).
+func UnlinkSystemIntakeRelation(
+	ctx context.Context,
+	store *storage.Store,
+	intakeID uuid.UUID,
+) (*models.SystemIntake, error) {
+	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+		// Fetch intake by ID
+		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
+		if err != nil {
+			return nil, err
+		}
+
+		// Clear system relation type by setting to nil
+		intake.SystemRelationType = nil
+
+		// Clear contract name
+		intake.ContractName = zero.StringFromPtr(nil)
+
+		// Clear contract number relationships by setting an empty array of contract #'s
+		if err = store.SetSystemIntakeContractNumbers(ctx, tx, intakeID, []string{}); err != nil {
+			return nil, err
+		}
+
+		// TODO Clear CEDAR system relationships
+
+		// Update system intake
+		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
+		if err != nil {
+			return nil, err
+		}
 
 		return updatedIntake, nil
 	})
