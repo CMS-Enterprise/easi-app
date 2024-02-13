@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"reflect"
 	"time"
 
 	"github.com/google/uuid"
@@ -45,7 +44,7 @@ func UpdateTRBRequestForm(
 		case bool:
 			isSubmitted = v
 		default:
-			return nil, fmt.Errorf("expected bool or *bool value for isSubmitted, got: %v", reflect.TypeOf(v))
+			return nil, fmt.Errorf("expected bool or *bool value for isSubmitted, got: %T", v)
 		}
 
 		delete(input, "isSubmitted")
