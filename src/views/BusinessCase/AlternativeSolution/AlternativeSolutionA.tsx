@@ -66,14 +66,16 @@ const AlternativeSolutionA = ({
             description={
               <>
                 <p className="margin-bottom-0">
-                  {t('alternativesDescription.examples')}
+                  {t('alternativesDescription.text.1')}
                 </p>
                 <ul className="padding-left-205 margin-top-0">
-                  <li>{t('alternativesDescription.buy')}</li>
-                  <li>{t('alternativesDescription.commercial')}</li>
-                  <li>{t('alternativesDescription.mainframe')}</li>
+                  <li>{t('alternativesDescription.list.0')}</li>
+                  <li>{t('alternativesDescription.list.1')}</li>
+                  <li>{t('alternativesDescription.list.2')}</li>
+                  <li>{t('alternativesDescription.list.3')}</li>
+                  <li>{t('alternativesDescription.list.4')}</li>
                 </ul>
-                <p>{t('alternativesDescription.include')}</p>
+                <p>{t('alternativesDescription.text.2')}</p>
               </>
             }
             errors={flatErrors}
