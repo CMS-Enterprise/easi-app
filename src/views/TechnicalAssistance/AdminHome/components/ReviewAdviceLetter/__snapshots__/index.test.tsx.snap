@@ -8,16 +8,26 @@ exports[`TRB Advice Letter review component > Matches the snapshot 1`] = `
     >
       Thank you for attending the TRB consult session!
     </p>
-    <p
-      class="text-bold margin-bottom-0 easi-no-print"
+    <div
+      class="grid-row grid-gap margin-bottom-neg-2"
+      data-testid="grid"
     >
-      Send date
-    </p>
-    <p
-      class="margin-top-1 easi-no-print"
-    >
-      Not yet sent
-    </p>
+      <div
+        class="tablet:grid-col-12 desktop:grid-col-6"
+        data-testid="grid"
+      >
+        <p
+          class="text-bold margin-y-0 easi-no-print"
+        >
+          Send date
+        </p>
+        <p
+          class="margin-top-1 easi-no-print"
+        >
+          Not yet sent
+        </p>
+      </div>
+    </div>
     <div
       class="easi-section easi-section__border-top margin-top-6 padding-top-1"
       data-testid="section-wrapper"
