@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/google/uuid"
@@ -37,10 +38,17 @@ func UpdateTRBRequestForm(
 
 	isSubmitted := false
 	if isSubmittedVal, isSubmittedFound := input["isSubmitted"]; isSubmittedFound {
-		if isSubmittedBool, isSubmittedOk := isSubmittedVal.(*bool); isSubmittedOk && isSubmittedBool != nil {
-			isSubmitted = *isSubmittedBool
-			delete(input, "isSubmitted")
+
+		switch v := isSubmittedVal.(type) {
+		case *bool:
+			isSubmitted = *v
+		case bool:
+			isSubmitted = v
+		default:
+			return nil, fmt.Errorf("expected bool or *bool value for isSubmitted, got: %v", reflect.TypeOf(v))
 		}
+
+		delete(input, "isSubmitted")
 	}
 
 	form, err := store.GetTRBRequestFormByTRBRequestID(ctx, id)
