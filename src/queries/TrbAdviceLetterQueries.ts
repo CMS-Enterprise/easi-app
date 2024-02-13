@@ -39,10 +39,8 @@ export const GetTrbAdviceLetterQuery = gql`
       id
       name
       type
+      createdAt
       consultMeetingTime
-      requesterInfo {
-        commonName
-      }
       taskStatuses {
         adviceLetterStatus
       }

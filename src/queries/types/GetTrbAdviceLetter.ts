@@ -9,11 +9,6 @@ import { TRBRequestType, TRBAdviceLetterStatus } from "./../../types/graphql-glo
 // GraphQL query operation: GetTrbAdviceLetter
 // ====================================================
 
-export interface GetTrbAdviceLetter_trbRequest_requesterInfo {
-  __typename: "UserInfo";
-  commonName: string;
-}
-
 export interface GetTrbAdviceLetter_trbRequest_taskStatuses {
   __typename: "TRBTaskStatuses";
   adviceLetterStatus: TRBAdviceLetterStatus;
@@ -55,8 +50,8 @@ export interface GetTrbAdviceLetter_trbRequest {
   id: UUID;
   name: string | null;
   type: TRBRequestType;
+  createdAt: Time;
   consultMeetingTime: Time | null;
-  requesterInfo: GetTrbAdviceLetter_trbRequest_requesterInfo;
   taskStatuses: GetTrbAdviceLetter_trbRequest_taskStatuses;
   adviceLetter: GetTrbAdviceLetter_trbRequest_adviceLetter | null;
 }
