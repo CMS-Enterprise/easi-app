@@ -111,8 +111,21 @@ const AlternativeSolutionA = ({
                     icon={<IconAdd />}
                     className="margin-top-2"
                     onClick={() => {
-                      dispatchSave();
-                      history.push('alternative-solution-b');
+                      if (
+                        isFinal &&
+                        alternativeSolutionHasFilledFields(values)
+                      ) {
+                        validateForm().then(err => {
+                          if (Object.keys(err).length === 0) {
+                            dispatchSave();
+                            history.push('alternative-solution-b');
+                          } else {
+                            window.scrollTo(0, 0);
+                          }
+                        });
+                      } else {
+                        history.push('alternative-solution-b');
+                      }
                     }}
                     base
                   >
