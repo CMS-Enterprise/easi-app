@@ -1871,7 +1871,7 @@ TRBRequestChanges represents the possible changes you can make to a TRB request 
 Fields explicitly set with NULL will be unset, and omitted fields will be left unchanged.
 https://gqlgen.com/reference/changesets/
 """
-input TRBRequestChanges @goModel(model: "map[string]interface{}") { # no change, i think
+input TRBRequestChanges @goModel(model: "map[string]interface{}") {
     name: String
     archived: Boolean
     type: TRBRequestType
