@@ -810,48 +810,6 @@ type BusinessCase {
 }
 
 """
-The status of a system's IT governence request
-Note - pre-IT Gov v2 only - for IT Gov v2, use SystemIntakeStatusRequester/SystemIntakeStatusAdmin
-"""
-enum SystemIntakeStatus {
-  BIZ_CASE_CHANGES_NEEDED
-  BIZ_CASE_DRAFT
-  BIZ_CASE_DRAFT_SUBMITTED
-  BIZ_CASE_FINAL_NEEDED
-  BIZ_CASE_FINAL_SUBMITTED
-  INTAKE_DRAFT
-  INTAKE_SUBMITTED
-  LCID_ISSUED
-  NEED_BIZ_CASE
-  NOT_APPROVED
-  """
-  Request is not an IT request
-  """
-  NOT_IT_REQUEST
-  """
-  Request requires no further governance
-  """
-  NO_GOVERNANCE
-  """
-  Request is ready for Governance Review Board meeting
-  """
-  READY_FOR_GRB
-  """
-  Request is ready for Governance Review Team meeting
-  """
-  READY_FOR_GRT
-  """
-  Request for shutdown of existing system is complete
-  """
-  SHUTDOWN_COMPLETE
-  """
-  Request for shutdown of existing system is in progress
-  """
-  SHUTDOWN_IN_PROGRESS
-  WITHDRAWN
-}
-
-"""
 The type of an IT governance (system) request
 """
 enum SystemIntakeRequestType {
@@ -1025,7 +983,6 @@ type SystemIntake {
   # TODO Remove them when email is not always fetched on the `requester` type
   requesterName: String
   requesterComponent: String
-  status: SystemIntakeStatus!
   state: SystemIntakeState!
   step: SystemIntakeStep!
   submittedAt: Time
@@ -1315,26 +1272,6 @@ input UpdateSystemIntakeLinkedContractInput {
 }
 
 """
-Input data for extending a system request's lifecycle ID
-"""
-input CreateSystemIntakeActionExtendLifecycleIdInput {
-  id: UUID!
-  expirationDate: Time
-  nextSteps: HTML
-  scope: HTML!
-  costBaseline: String
-  notificationRecipients: EmailNotificationRecipients
-}
-
-"""
-Payload data for extending a system request's lifecycle ID
-"""
-type CreateSystemIntakeActionExtendLifecycleIdPayload {
-  systemIntake: SystemIntake
-  userErrors: [UserError!]
-}
-
-"""
 Represents the type of an action that is being done to a system request
 """
 enum SystemIntakeActionType {
@@ -1412,51 +1349,6 @@ The contact who is associated with an action being done to a system request
 type SystemIntakeActionActor {
   name: String!
   email: String!
-}
-
-"""
-Feedback intended for a business owner before they proceed to writing a
-business case for a system request
-"""
-input AddGRTFeedbackInput {
-  emailBody: HTML!
-  feedback: HTML!
-  intakeID: UUID!
-  notificationRecipients: EmailNotificationRecipients
-}
-
-"""
-Payload for adding GRT feedback to a system request (contains the system
-request ID)
-"""
-type AddGRTFeedbackPayload {
-  id: UUID
-}
-
-"""
-The input data required to issue a lifecycle ID for a system's IT governance
-request
-"""
-input IssueLifecycleIdInput {
-  expiresAt: Time!
-  feedback: HTML!
-  intakeId: UUID!
-  lcid: String
-  nextSteps: HTML
-  scope: HTML!
-  costBaseline: String
-  notificationRecipients: EmailNotificationRecipients
-}
-
-"""
-Input data for rejection of a system's IT governance request
-"""
-input RejectIntakeInput {
-  feedback: HTML!
-  intakeId: UUID!
-  nextSteps: HTML
-  reason: HTML!
-  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -1683,15 +1575,6 @@ input SystemIntakeReopenRequestInput {
   reason: HTML
   additionalInfo: HTML
   adminNote: HTML
-}
-
-"""
-Input to add feedback to a system request
-"""
-input BasicActionInput {
-  feedback: HTML!
-  intakeId: UUID!
-  notificationRecipients: EmailNotificationRecipients
 }
 
 """
@@ -2582,27 +2465,6 @@ input ReopenTRBRequestInput {
 Defines the mutations for the schema
 """
 type Mutation {
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  addGRTFeedbackAndKeepBusinessCaseInDraft(
-    input: AddGRTFeedbackInput!
-  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  addGRTFeedbackAndProgressToFinalBusinessCase(
-    input: AddGRTFeedbackInput!
-  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  addGRTFeedbackAndRequestBusinessCase(
-    input: AddGRTFeedbackInput!
-  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
-
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput!
   ): CreateAccessibilityRequestPayload
@@ -2665,51 +2527,6 @@ type Mutation {
     input: SystemIntakeNotITGovReqInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  createSystemIntakeActionBusinessCaseNeeded(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  createSystemIntakeActionBusinessCaseNeedsChanges(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-
-  createSystemIntakeActionGuideReceievedClose(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionNoGovernanceNeeded(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionNotItRequest(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionNotRespondingClose(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  createSystemIntakeActionReadyForGRT(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-
-  createSystemIntakeActionSendEmail(
-    input: BasicActionInput!
-  ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-
-  """
-   Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionUpdateLCID
-  """
-  createSystemIntakeActionExtendLifecycleId(
-    input: CreateSystemIntakeActionExtendLifecycleIdInput!
-  ): CreateSystemIntakeActionExtendLifecycleIdPayload @hasRole(role: EASI_GOVTEAM)
-
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeNote(input: UpdateSystemIntakeNoteInput!): SystemIntakeNote!
@@ -2725,25 +2542,6 @@ type Mutation {
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionIssueLCID
-  """
-  issueLifecycleId(input: IssueLifecycleIdInput!): UpdateSystemIntakePayload
-    @hasRole(role: EASI_GOVTEAM)
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionProgressToNewStep
-  """
-  markSystemIntakeReadyForGRB(
-    input: AddGRTFeedbackInput!
-  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
-
-  """
-  Used for IT Gov v1 workflow; for v2, use createSystemIntakeActionRejectIntake
-  """
-  rejectIntake(input: RejectIntakeInput!): UpdateSystemIntakePayload
-    @hasRole(role: EASI_GOVTEAM)
 
   submitIntake(
     input: SubmitIntakeInput!
