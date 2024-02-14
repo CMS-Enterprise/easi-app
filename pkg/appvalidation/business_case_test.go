@@ -76,7 +76,6 @@ func (s *AppValidateTestSuite) TestBusinessCaseForCreation() {
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
 		}
-
 		err := BusinessCaseForCreation(&businessCase, &intake)
 		s.Error(err)
 		s.IsType(&apperrors.ValidationError{}, err)
