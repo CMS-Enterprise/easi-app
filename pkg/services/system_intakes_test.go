@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/guregu/null"
 
@@ -92,6 +93,10 @@ func (s *ServicesTestSuite) TestFetchSystemIntakes() {
 	for name, tc := range testCases {
 		s.Run(name, func() {
 			intakes, err := tc.fn(tc.ctx)
+
+			fmt.Println("==== name ====")
+			fmt.Println(name)
+			fmt.Println("==== name ====")
 
 			if tc.fail {
 				s.Error(err)
