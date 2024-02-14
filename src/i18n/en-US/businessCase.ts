@@ -38,22 +38,27 @@ const businessCase = {
   priorityAlignment:
     'How does this effort align with organizational priorities?',
   priorityAlignmentHelpText:
-    'List out any administrator priorities or new legislative/regulatory mandates this effort supports. If applicable, include any relevant deadlines',
+    'Does this effort support any Administrator priorities or new legislative or regulatory mandates? Include any relevant deadlines.',
   successIndicators:
     'How will you determine whether or not this effort is successful?',
   successIndicatorsHelpText:
-    'Include any indicators that you think would demonstrate success',
+    'Include any performance indicators that you think would demonstrate improved business outcomes - i.e. because of this effort, WHO is going to do exactly WHAT, by exactly HOW MUCH, by exactly WHEN?',
   alternatives: 'Alternatives analysis',
   alternativesOptional:
     "This section is optional. You can skip it if you don't have any alternative solutions.",
   alternativesDescription: {
-    examples: 'Some examples of options to consider may include:',
-    buy: 'Buy vs. build vs. lease vs. reuse of existing system',
-    commercial:
-      'Commercial off-the-shelf (COTS) vs. Government off-the-shelf (GOTS)',
-    mainframe: 'Mainframe vs. server-based vs. clustering vs. Cloud',
-    include:
-      "In your options, include details such as differences between system capabilities, user friendliness, technical and security considerations, ease and timing of integration with CMS' IT infrastructure, etc."
+    text: [
+      'Below you should identify options and alternatives to meet your business need. Include a summary of the approaches, how you will acquire the solution, and describe the pros, cons, total life cycle costs, and potential cost savings/avoidance for each alternative considered. Include at least three viable alternatives, starting with your preferred solution.',
+      'You should not describe the proposed solutions in technical detail, but instead should describe the "alternative concepts", such as:',
+      "In your alternatives, include details such as differences between system capabilities, user friendliness, technical and security considerations, ease and timing of integration with CMS' IT infrastructure, etc."
+    ],
+    list: [
+      'Buying a Commercial off the shelf (COTS) product/tool vs.',
+      'Buying a Government off the shelf (GOTS) product/tool vs.',
+      'Developing a Custom-built solution vs.',
+      'Using/repurposing an existing CMS system vs.',
+      'Using an Enterprise Shared Service'
+    ]
   },
   preferredSolution: 'Preferred solution',
   preferredSolutionTitle: 'Preferred solution: Title',
