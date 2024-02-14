@@ -429,6 +429,14 @@ type LaunchDarklySettings struct {
 	SignedHash string `json:"signedHash"`
 }
 
+// Defines the mutations for the schema
+type Mutation struct {
+}
+
+// Query definition for the schema
+type Query struct {
+}
+
 // Input data for rejection of a system's IT governance request
 type RejectIntakeInput struct {
 	Feedback               models.HTML                         `json:"feedback"`
