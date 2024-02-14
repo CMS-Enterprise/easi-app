@@ -15,7 +15,7 @@ import (
 	"github.com/guregu/null"
 )
 
-const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, request_type, requester) VALUES (:id, :eua_user_id, :request_type, :requester)"
+const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, request_type, requester, archived_at) VALUES (:id, :eua_user_id, :request_type, :requester, :archived_at)"
 const insertRelatedBizCaseSQL = `INSERT INTO business_cases (id, eua_user_id, requester, system_intake)
 	VALUES(:id, :eua_user_id, :requester, :system_intake)`
 const insertIntakeWithCedarSystemAndContractSQL = `INSERT INTO system_intakes (id, eua_user_id, request_type, requester, cedar_system_id, contract_number)
@@ -462,6 +462,11 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		intake := testhelpers.NewSystemIntake()
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
+
+		// set archived at for intake2
+		now := time.Now()
+		intake2.ArchivedAt = &now
+
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
@@ -469,6 +474,10 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		s.NoError(err)
 		err = tx.Commit()
 		s.NoError(err)
+
+		// set intake2 to archived
+		// _, err = s.store.UpdateSystemIntake(ctx, &intake2)
+		// s.NoError(err)
 
 		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
 
