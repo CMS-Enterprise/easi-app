@@ -475,10 +475,6 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		// set intake2 to archived
-		// _, err = s.store.UpdateSystemIntake(ctx, &intake2)
-		// s.NoError(err)
-
 		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
 
 		s.NoError(err, "failed to fetch system intakes")
