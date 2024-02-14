@@ -15,7 +15,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
-	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -30,7 +29,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 	"github.com/cmsgov/easi-app/pkg/upload"
@@ -155,13 +153,6 @@ func TestGraphQLTestSuite(t *testing.T) {
 		return next(ctx)
 	}}
 
-	issueLifecycleID := func(ctx context.Context, intake *models.SystemIntake, action *models.Action, recipients *models.EmailNotificationRecipients) (*models.SystemIntake, error) {
-		if intake.LifecycleID.ValueOrZero() == "" {
-			intake.LifecycleID = null.StringFrom("654321B")
-		}
-		return intake, nil
-	}
-
 	submitIntake := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		_, err := store.CreateAction(ctx, action)
 		if err != nil {
@@ -176,25 +167,10 @@ func TestGraphQLTestSuite(t *testing.T) {
 		return nil
 	}
 
-	saveAction := services.NewSaveAction(
-		store.CreateAction,
-		cedarLdapClient.FetchUserInfo,
-	)
-
-	serviceConfig := services.NewConfig(logger, ldClient)
-
 	var resolverService ResolverService
-	resolverService.IssueLifecycleID = issueLifecycleID
 	resolverService.SubmitIntake = submitIntake
 	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
 	resolverService.SearchCommonNameContains = cedarLdapClient.SearchCommonNameContains
-	resolverService.CreateActionExtendLifecycleID = services.NewCreateActionExtendLifecycleID(
-		serviceConfig,
-		saveAction,
-		store.FetchSystemIntakeByID,
-		store.UpdateSystemIntake,
-		emailClient.SendExtendLCIDEmails,
-	)
 
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})
