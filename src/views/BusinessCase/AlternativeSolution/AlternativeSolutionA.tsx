@@ -65,6 +65,7 @@ const AlternativeSolutionA = ({
             title={t('alternatives')}
             description={
               <>
+                <p className="">{t('alternativesDescription.text.0')}</p>
                 <p className="margin-bottom-0">
                   {t('alternativesDescription.text.1')}
                 </p>
