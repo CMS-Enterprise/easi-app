@@ -208,6 +208,9 @@ k8s_dev.sh
 Kustomize
 namespace
 create-local-development-k8s-manifests
+subtask
+subtasks
+bugfix
 
 # Jira ticket numbers
 # The underlying spellchecking package doesn't currently support patterns; see https://github.com/lukeapage/node-markdown-spellcheck/issues/49

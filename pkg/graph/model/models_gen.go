@@ -32,28 +32,6 @@ type AccessibilityRequestsConnection struct {
 	Edges []*AccessibilityRequestEdge `json:"edges"`
 }
 
-// Feedback intended for a business owner before they proceed to writing a
-// business case for a system request
-type AddGRTFeedbackInput struct {
-	EmailBody              models.HTML                         `json:"emailBody"`
-	Feedback               models.HTML                         `json:"feedback"`
-	IntakeID               uuid.UUID                           `json:"intakeID"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
-}
-
-// Payload for adding GRT feedback to a system request (contains the system
-// request ID)
-type AddGRTFeedbackPayload struct {
-	ID *uuid.UUID `json:"id,omitempty"`
-}
-
-// Input to add feedback to a system request
-type BasicActionInput struct {
-	Feedback               models.HTML                         `json:"feedback"`
-	IntakeID               uuid.UUID                           `json:"intakeId"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
-}
-
 // A solution proposal within a business case
 type BusinessCaseSolution struct {
 	AcquisitionApproach     *string `json:"acquisitionApproach,omitempty"`
@@ -182,22 +160,6 @@ type CreateCedarSystemBookmarkInput struct {
 // The payload when bookmarking a cedar system
 type CreateCedarSystemBookmarkPayload struct {
 	CedarSystemBookmark *models.CedarSystemBookmark `json:"cedarSystemBookmark,omitempty"`
-}
-
-// Input data for extending a system request's lifecycle ID
-type CreateSystemIntakeActionExtendLifecycleIDInput struct {
-	ID                     uuid.UUID                           `json:"id"`
-	ExpirationDate         *time.Time                          `json:"expirationDate,omitempty"`
-	NextSteps              *models.HTML                        `json:"nextSteps,omitempty"`
-	Scope                  models.HTML                         `json:"scope"`
-	CostBaseline           *string                             `json:"costBaseline,omitempty"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
-}
-
-// Payload data for extending a system request's lifecycle ID
-type CreateSystemIntakeActionExtendLifecycleIDPayload struct {
-	SystemIntake *models.SystemIntake `json:"systemIntake,omitempty"`
-	UserErrors   []*UserError         `json:"userErrors,omitempty"`
 }
 
 // The data needed to associate a contact with a system intake
@@ -410,32 +372,18 @@ type GeneratePresignedUploadURLPayload struct {
 	UserErrors []*UserError `json:"userErrors,omitempty"`
 }
 
-// The input data required to issue a lifecycle ID for a system's IT governance
-// request
-type IssueLifecycleIDInput struct {
-	ExpiresAt              time.Time                           `json:"expiresAt"`
-	Feedback               models.HTML                         `json:"feedback"`
-	IntakeID               uuid.UUID                           `json:"intakeId"`
-	Lcid                   *string                             `json:"lcid,omitempty"`
-	NextSteps              *models.HTML                        `json:"nextSteps,omitempty"`
-	Scope                  models.HTML                         `json:"scope"`
-	CostBaseline           *string                             `json:"costBaseline,omitempty"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
-}
-
 // The current user's Launch Darkly key
 type LaunchDarklySettings struct {
 	UserKey    string `json:"userKey"`
 	SignedHash string `json:"signedHash"`
 }
 
-// Input data for rejection of a system's IT governance request
-type RejectIntakeInput struct {
-	Feedback               models.HTML                         `json:"feedback"`
-	IntakeID               uuid.UUID                           `json:"intakeId"`
-	NextSteps              *models.HTML                        `json:"nextSteps,omitempty"`
-	Reason                 models.HTML                         `json:"reason"`
-	NotificationRecipients *models.EmailNotificationRecipients `json:"notificationRecipients,omitempty"`
+// Defines the mutations for the schema
+type Mutation struct {
+}
+
+// Query definition for the schema
+type Query struct {
 }
 
 // The data needed to reopen a TRB request
@@ -1312,85 +1260,6 @@ func (e *SystemIntakeFormStep) UnmarshalGQL(v interface{}) error {
 }
 
 func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-// The status of a system's IT governence request
-// Note - pre-IT Gov v2 only - for IT Gov v2, use SystemIntakeStatusRequester/SystemIntakeStatusAdmin
-type SystemIntakeStatus string
-
-const (
-	SystemIntakeStatusBizCaseChangesNeeded  SystemIntakeStatus = "BIZ_CASE_CHANGES_NEEDED"
-	SystemIntakeStatusBizCaseDraft          SystemIntakeStatus = "BIZ_CASE_DRAFT"
-	SystemIntakeStatusBizCaseDraftSubmitted SystemIntakeStatus = "BIZ_CASE_DRAFT_SUBMITTED"
-	SystemIntakeStatusBizCaseFinalNeeded    SystemIntakeStatus = "BIZ_CASE_FINAL_NEEDED"
-	SystemIntakeStatusBizCaseFinalSubmitted SystemIntakeStatus = "BIZ_CASE_FINAL_SUBMITTED"
-	SystemIntakeStatusIntakeDraft           SystemIntakeStatus = "INTAKE_DRAFT"
-	SystemIntakeStatusIntakeSubmitted       SystemIntakeStatus = "INTAKE_SUBMITTED"
-	SystemIntakeStatusLcidIssued            SystemIntakeStatus = "LCID_ISSUED"
-	SystemIntakeStatusNeedBizCase           SystemIntakeStatus = "NEED_BIZ_CASE"
-	SystemIntakeStatusNotApproved           SystemIntakeStatus = "NOT_APPROVED"
-	// Request is not an IT request
-	SystemIntakeStatusNotItRequest SystemIntakeStatus = "NOT_IT_REQUEST"
-	// Request requires no further governance
-	SystemIntakeStatusNoGovernance SystemIntakeStatus = "NO_GOVERNANCE"
-	// Request is ready for Governance Review Board meeting
-	SystemIntakeStatusReadyForGrb SystemIntakeStatus = "READY_FOR_GRB"
-	// Request is ready for Governance Review Team meeting
-	SystemIntakeStatusReadyForGrt SystemIntakeStatus = "READY_FOR_GRT"
-	// Request for shutdown of existing system is complete
-	SystemIntakeStatusShutdownComplete SystemIntakeStatus = "SHUTDOWN_COMPLETE"
-	// Request for shutdown of existing system is in progress
-	SystemIntakeStatusShutdownInProgress SystemIntakeStatus = "SHUTDOWN_IN_PROGRESS"
-	SystemIntakeStatusWithdrawn          SystemIntakeStatus = "WITHDRAWN"
-)
-
-var AllSystemIntakeStatus = []SystemIntakeStatus{
-	SystemIntakeStatusBizCaseChangesNeeded,
-	SystemIntakeStatusBizCaseDraft,
-	SystemIntakeStatusBizCaseDraftSubmitted,
-	SystemIntakeStatusBizCaseFinalNeeded,
-	SystemIntakeStatusBizCaseFinalSubmitted,
-	SystemIntakeStatusIntakeDraft,
-	SystemIntakeStatusIntakeSubmitted,
-	SystemIntakeStatusLcidIssued,
-	SystemIntakeStatusNeedBizCase,
-	SystemIntakeStatusNotApproved,
-	SystemIntakeStatusNotItRequest,
-	SystemIntakeStatusNoGovernance,
-	SystemIntakeStatusReadyForGrb,
-	SystemIntakeStatusReadyForGrt,
-	SystemIntakeStatusShutdownComplete,
-	SystemIntakeStatusShutdownInProgress,
-	SystemIntakeStatusWithdrawn,
-}
-
-func (e SystemIntakeStatus) IsValid() bool {
-	switch e {
-	case SystemIntakeStatusBizCaseChangesNeeded, SystemIntakeStatusBizCaseDraft, SystemIntakeStatusBizCaseDraftSubmitted, SystemIntakeStatusBizCaseFinalNeeded, SystemIntakeStatusBizCaseFinalSubmitted, SystemIntakeStatusIntakeDraft, SystemIntakeStatusIntakeSubmitted, SystemIntakeStatusLcidIssued, SystemIntakeStatusNeedBizCase, SystemIntakeStatusNotApproved, SystemIntakeStatusNotItRequest, SystemIntakeStatusNoGovernance, SystemIntakeStatusReadyForGrb, SystemIntakeStatusReadyForGrt, SystemIntakeStatusShutdownComplete, SystemIntakeStatusShutdownInProgress, SystemIntakeStatusWithdrawn:
-		return true
-	}
-	return false
-}
-
-func (e SystemIntakeStatus) String() string {
-	return string(e)
-}
-
-func (e *SystemIntakeStatus) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = SystemIntakeStatus(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid SystemIntakeStatus", str)
-	}
-	return nil
-}
-
-func (e SystemIntakeStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

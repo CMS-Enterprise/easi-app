@@ -133,7 +133,6 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 	// Create an inital intake
 	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateOPEN,
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 		SubmittedAt: &submittedAt,
 	})
