@@ -317,7 +317,6 @@ func NewSubmitBusinessCase(
 		}
 
 		// TODO - EASI-2363 - rework conditional to also trigger on publishing finalized system intakes
-		// need to check intake.Status, *not* businessCase.SystemIntakeStatus - intake is what gets returned from calling updateIntake()
 		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 			err = submitToCEDAR(ctx, *businessCase)
 			if err != nil {
