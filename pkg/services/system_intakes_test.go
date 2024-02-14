@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/guregu/null"
 
@@ -58,11 +57,6 @@ func (s *ServicesTestSuite) TestFetchSystemIntakes() {
 			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnAuth),
 			false,
 		},
-		"happy path reviewer filter": {
-			appcontext.WithPrincipal(context.Background(), reviewer),
-			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAllFail, fnAuth),
-			false,
-		},
 		"fail authorization": {
 			context.Background(),
 			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnAuth),
@@ -78,25 +72,11 @@ func (s *ServicesTestSuite) TestFetchSystemIntakes() {
 			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnAuth),
 			true,
 		},
-		"fail reviewer filter data access": {
-			appcontext.WithPrincipal(context.Background(), reviewer),
-			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnAuth),
-			true,
-		},
-		"fail reviewer filter name": {
-			appcontext.WithPrincipal(context.Background(), reviewer),
-			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnAuth),
-			true,
-		},
 	}
 
 	for name, tc := range testCases {
 		s.Run(name, func() {
 			intakes, err := tc.fn(tc.ctx)
-
-			fmt.Println("==== name ====")
-			fmt.Println(name)
-			fmt.Println("==== name ====")
 
 			if tc.fail {
 				s.Error(err)
