@@ -2375,20 +2375,6 @@ input CreateTRBAdminNoteAdviceLetterInput {
 }
 
 """
-The data needed for updating a TRB admin note, not including any category-specific data
-As of 10/17/2023, this mutation isn't being used anywhere within EASi
-Creating and reading admin notes with category-specific data was added in https://jiraent.cms.gov/browse/EASI-3277
-
-If updating admin notes needs to handle category-specific data, break it up into five separate mutations with their own input types,
-similar to the different CreateTRBAdminNote* inputs.
-"""
-input UpdateTRBAdminNoteInput @goModel(model: "map[string]interface{}") {
-  id: UUID!
-  category: TRBAdminNoteCategory
-  noteText: HTML
-}
-
-"""
 The data needed to update a TRB advice letter
 """
 input UpdateTRBAdviceLetterInput @goModel(model: "map[string]interface{}") {
@@ -2621,9 +2607,6 @@ type Mutation {
   createTRBAdminNoteConsultSession(input: CreateTRBAdminNoteConsultSessionInput!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteAdviceLetter(input: CreateTRBAdminNoteAdviceLetterInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
-
-  updateTRBAdminNote(input: UpdateTRBAdminNoteInput!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
