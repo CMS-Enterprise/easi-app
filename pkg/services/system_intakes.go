@@ -29,7 +29,6 @@ func NewFetchSystemIntakes(
 		if !ok {
 			return nil, &apperrors.UnauthorizedError{Err: errors.New("failed to authorize fetch system intakes")}
 		}
-
 		var result models.SystemIntakes
 		principal := appcontext.Principal(ctx)
 		if !principal.AllowGRT() {
