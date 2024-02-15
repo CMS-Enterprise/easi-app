@@ -429,6 +429,9 @@ export const getTrbAdviceLetterQuery: MockedQuery<
         __typename: 'TRBRequest',
         id: trbRequestId,
         name: trbRequest.name,
+        type: TRBRequestType.NEED_HELP,
+        createdAt: '2023-01-08T07:26:16.036618Z',
+        consultMeetingTime: null,
         taskStatuses: {
           __typename: 'TRBTaskStatuses',
           adviceLetterStatus: TRBAdviceLetterStatus.COMPLETED

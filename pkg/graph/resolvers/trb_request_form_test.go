@@ -74,7 +74,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 
 		formChanges := map[string]interface{}{
 			"isSubmitted":                      false,
-			"trbRequestId":                     trbRequest.ID.String(),
+			"trbRequestId":                     trbRequest.ID,
 			"component":                        "Taco Cart",
 			"needsAssistanceWith":              "Some of the things",
 			"hasSolutionInMind":                true,
@@ -133,7 +133,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		s.Nil(updatedForm.SubmittedAt)
 
 		submitChanges := map[string]interface{}{
-			"trbRequestId": trbRequest.ID.String(),
+			"trbRequestId": trbRequest.ID,
 			"isSubmitted":  true,
 		}
 		submittedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, &emailClient, stubFetchUserInfo, submitChanges)

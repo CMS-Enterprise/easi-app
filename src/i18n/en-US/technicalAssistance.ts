@@ -155,6 +155,7 @@ const technicalAssistance = {
     },
     downloadAsPdf: 'Download advice letter as PDF',
     sendDate: 'Send date',
+    consultSessionDate: 'Consult session date',
     notYetSent: 'Not yet sent',
     whatWeHeard: 'What we heard',
     meetingSummary: 'Meeting summary',

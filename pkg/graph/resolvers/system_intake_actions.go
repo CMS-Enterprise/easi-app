@@ -1073,7 +1073,6 @@ func ExpireLCID(
 
 	// set the expiration date's year/month/day based on current values, but leave the time as 00:00:00 (in UTC)
 	// matches the (v1) frontend logic for setting the expiration date:
-	// see src/views/GovernanceReviewTeam/ActionsV1/IssueLifecycleId.tsx, the definition of expiresAt
 	currentTimeUTC := currentTime.UTC()
 	expirationDate := time.Date(
 		currentTimeUTC.Year(),
