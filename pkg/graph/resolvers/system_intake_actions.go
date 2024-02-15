@@ -14,6 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -820,8 +821,10 @@ func UpdateLCID(
 
 	// update LCID-related fields when they are set
 	if input.ExpiresAt != nil {
-		intake.LifecycleExpiresAt = input.ExpiresAt
-		intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
+		if !helpers.DatesEqual(intake.LifecycleExpiresAt, input.ExpiresAt) { // if the expiration date has changed, update the expiration date and alert TS accordingly
+			intake.LifecycleExpiresAt = input.ExpiresAt
+			intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
+		}
 	}
 	if input.Scope != nil {
 		intake.LifecycleScope = input.Scope
@@ -952,8 +955,10 @@ func ConfirmLCID(ctx context.Context,
 
 	// update LCID-related fields
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
-	intake.LifecycleExpiresAt = &input.ExpiresAt
-	intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
+	if !helpers.DatesEqual(intake.LifecycleExpiresAt, &input.ExpiresAt) { // if the expiration date has changed, update the expiration date and alert TS accordingly
+		intake.LifecycleExpiresAt = &input.ExpiresAt
+		intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
+	}
 	intake.LifecycleScope = &input.Scope
 	intake.DecisionNextSteps = &input.NextSteps
 	if input.CostBaseline != nil {
