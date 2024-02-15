@@ -171,10 +171,10 @@ func main() {
 	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (59 days)", &intakeID, requesterEUA, logger, store, time.Now().AddDate(0, 0, 59))
 
 	intakeID = uuid.MustParse("1fecf78f-e309-4540-9f44-6e41ea686c56")
-	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (13 days)", &intakeID, requesterEUA, logger, store, time.Now().AddDate(0, 0, 13))
+	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (45 days)", &intakeID, requesterEUA, logger, store, time.Now().AddDate(0, 0, 45))
 
 	intakeID = uuid.MustParse("98edbd5a-f97d-47f2-9ea1-9369509da398")
-	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (13 days) and no EUA ID", &intakeID, "", logger, store, time.Now().AddDate(0, 0, 13))
+	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (45 days) and no EUA ID", &intakeID, "", logger, store, time.Now().AddDate(0, 0, 45))
 
 	intakeID = uuid.MustParse("9ab475a8-a691-45e9-b55d-648b6e752efa")
 	makeSystemIntakeAndIssueLCID("LCID issued", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
