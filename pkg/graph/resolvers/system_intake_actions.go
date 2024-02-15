@@ -820,11 +820,9 @@ func UpdateLCID(
 	prevCostBaseline = intake.LifecycleCostBaseline.ValueOrZero()
 
 	// update LCID-related fields when they are set
-	if input.ExpiresAt != nil {
-		if !helpers.DatesEqual(intake.LifecycleExpiresAt, input.ExpiresAt) { // if the expiration date has changed, update the expiration date and alert TS accordingly
-			intake.LifecycleExpiresAt = input.ExpiresAt
-			intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
-		}
+	if input.ExpiresAt != nil && !helpers.DatesEqual(intake.LifecycleExpiresAt, input.ExpiresAt) { // if the expiration date has changed, update the expiration date and alert TS accordingly
+		intake.LifecycleExpiresAt = input.ExpiresAt
+		intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
 	}
 	if input.Scope != nil {
 		intake.LifecycleScope = input.Scope
