@@ -241,7 +241,7 @@ func StartLcidExpirationCheck(
 	ticker := time.NewTicker(lcidExpirationCheckTime)
 	go func(ctx context.Context) {
 		for {
-			err := checkForLCIDExpiration(ctx, time.Now().AddDate(0, 0, 2), fetchUserInfo, fetchSystemIntakes, updateSystemIntake, sendLCIDExpirationEmail)
+			err := checkForLCIDExpiration(ctx, time.Now(), fetchUserInfo, fetchSystemIntakes, updateSystemIntake, sendLCIDExpirationEmail)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Failed to check for LCID Expiration", zap.Error(err))
 			}
