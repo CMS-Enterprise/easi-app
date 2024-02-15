@@ -114,66 +114,70 @@ func main() {
 	)
 	closeIntake(logger, store, intake)
 
+	// lcid issued expiration date will be 1 year from now
+	lcidExpirationDate := time.Now().AddDate(1, 0, 0)
+
 	intakeID = uuid.MustParse("e3fab202-70d8-44e1-9904-5a89588b8615")
 	intake = makeSystemIntakeAndSubmit("LCID issued after initial form submitted and reopened", &intakeID, requesterEUA, logger, store)
 	intake = issueLCID(logger, store, intake, time.Now().AddDate(1, 0, 0), models.TRBFRStronglyRecommended)
 	reopenIntake(logger, store, intake)
 
 	intakeID = uuid.MustParse("8edb237e-ad48-49b2-91cf-8534362bc6cf")
-	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened and edits requested", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened and edits requested", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
 	intake = reopenIntake(logger, store, intake)
 	requestEditsToIntakeForm(logger, store, intake, model.SystemIntakeFormStepFinalBusinessCase)
 
 	intakeID = uuid.MustParse("cd795d09-6afb-4fdd-b0a2-c37716297f41")
-	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened and progressed backward", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened and progressed backward", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
 	intake = reopenIntake(logger, store, intake)
 	progressIntake(logger, store, intake, model.SystemIntakeStepToProgressToDraftBusinessCase, nil)
 
 	intakeID = uuid.MustParse("fec8e351-809c-4af2-bd0d-197b6b433206")
-	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
 	reopenIntake(logger, store, intake)
 
 	intakeID = uuid.MustParse("0f1db17c-9118-4ce2-9491-fa8dd88e60b5")
-	intake = makeSystemIntakeAndIssueLCID("LCID issued, retired, and retirement date changed", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndIssueLCID("LCID issued, retired, and retirement date changed", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
 	intake = retireLCID(logger, store, intake, intake.LifecycleExpiresAt.AddDate(1, 0, 0))
 	changeLCIDRetireDate(logger, store, intake, intake.LifecycleRetiresAt.AddDate(1, 0, 0))
 
 	intakeID = uuid.MustParse("c6332484-b661-4c18-a5bb-6186445ccb9f")
-	intake = makeSystemIntakeAndIssueLCID("Retired LCID", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndIssueLCID("Retired LCID", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
 	retireLCID(logger, store, intake, intake.LifecycleExpiresAt.AddDate(1, 0, 0))
 
 	intakeID = uuid.MustParse("346d3539-9aac-42c7-bb29-acfd2482455e")
-	intake = makeSystemIntakeAndIssueLCID("Expired LCID", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndIssueLCID("Expired LCID", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
 	expireLCID(logger, store, intake)
 
 	intakeID = uuid.MustParse("82d96de6-7746-4081-a07e-15b355a928e3")
-	intake = makeSystemIntakeAndIssueLCID("Confirmed LCID", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndIssueLCID("Confirmed LCID", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
 	confirmLCID(logger, store, intake, intake.LifecycleExpiresAt.AddDate(1, 0, 0), models.TRBFRNotRecommended)
 
 	intakeID = uuid.MustParse("4ee45041-b21b-4792-a766-4d861d601bdc")
-	intake = makeSystemIntakeAndIssueLCID("Updated LCID", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndIssueLCID("Updated LCID", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
 	updateLCID(logger, store, intake, intake.LifecycleExpiresAt.AddDate(1, 0, 0))
 
 	intakeID = uuid.MustParse("409c68e1-9b38-462f-8023-8e00e0b62d67")
 	intake = makeSystemIntakeAndSubmit("LCID issued after initial form submitted", &intakeID, requesterEUA, logger, store)
-	issueLCID(logger, store, intake, time.Now().AddDate(1, 0, 0), models.TRBFRStronglyRecommended)
+	issueLCID(logger, store, intake, lcidExpirationDate, models.TRBFRStronglyRecommended)
 
-	intakeID = uuid.MustParse("98edbd5a-f97d-47f2-9ea1-9369509da398")
-	intake = makeSystemIntakeAndIssueLCID("Intake with Expiring LCID and no EUA ID", &intakeID, "", logger, store)
-	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
-		expireTime := time.Now().AddDate(0, 0, 30) // expires in 30 days
-		i.LifecycleExpiresAt = &expireTime
-	})
+	intakeID = uuid.MustParse("37bd26a1-b0a8-48ee-a080-471e0e581e41")
+	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (121 days)", &intakeID, requesterEUA, logger, store, time.Now().AddDate(0, 0, 121))
+
+	intakeID = uuid.MustParse("1aca9946-79df-4fc9-9851-a79f23423236")
+	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (119 days)", &intakeID, requesterEUA, logger, store, time.Now().AddDate(0, 0, 119))
+
+	intakeID = uuid.MustParse("969e8ce8-810d-4492-b0b3-422b2f9a91a1")
+	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (59 days)", &intakeID, requesterEUA, logger, store, time.Now().AddDate(0, 0, 59))
 
 	intakeID = uuid.MustParse("1fecf78f-e309-4540-9f44-6e41ea686c56")
-	intake = makeSystemIntakeAndIssueLCID("Intake with Expiring LCID", &intakeID, requesterEUA, logger, store)
-	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
-		expireTime := time.Now().AddDate(0, 0, 30) // expires in 30 days
-		i.LifecycleExpiresAt = &expireTime
-	})
+	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (13 days)", &intakeID, requesterEUA, logger, store, time.Now().AddDate(0, 0, 13))
+
+	intakeID = uuid.MustParse("98edbd5a-f97d-47f2-9ea1-9369509da398")
+	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (13 days) and no EUA ID", &intakeID, "", logger, store, time.Now().AddDate(0, 0, 13))
 
 	intakeID = uuid.MustParse("9ab475a8-a691-45e9-b55d-648b6e752efa")
-	makeSystemIntakeAndIssueLCID("LCID issued", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndIssueLCID("LCID issued", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
 
 	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")
 	makeSystemIntakeAndProgressToStep(
