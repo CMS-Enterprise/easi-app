@@ -437,6 +437,7 @@ func IssueLCID(
 	// update LCID-related fields
 	intake.LifecycleID = null.StringFrom(newLCID)
 	intake.LifecycleExpiresAt = &input.ExpiresAt
+	intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
 	intake.LifecycleIssuedAt = &currTime
 	intake.LifecycleScope = &input.Scope
 	intake.DecisionNextSteps = &input.NextSteps
@@ -820,6 +821,7 @@ func UpdateLCID(
 	// update LCID-related fields when they are set
 	if input.ExpiresAt != nil {
 		intake.LifecycleExpiresAt = input.ExpiresAt
+		intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
 	}
 	if input.Scope != nil {
 		intake.LifecycleScope = input.Scope
@@ -951,6 +953,7 @@ func ConfirmLCID(ctx context.Context,
 	// update LCID-related fields
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
 	intake.LifecycleExpiresAt = &input.ExpiresAt
+	intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
 	intake.LifecycleScope = &input.Scope
 	intake.DecisionNextSteps = &input.NextSteps
 	if input.CostBaseline != nil {
@@ -1086,7 +1089,10 @@ func ExpireLCID(
 	// create action record before updating intake, while we still have access to intake's previous expiration date/next step
 	action := lcidactions.GetExpireLCIDAction(*intake, expirationDate, input.NextSteps, *adminUserInfo)
 
+	// Update LCID Expiry info
+	// NOTE: In most other places we need to update intake.LifecycleExpirationAlertTS = nil, but not here, since we don't alert on already-expired LCIDs
 	intake.LifecycleExpiresAt = &expirationDate
+
 	intake.DecisionNextSteps = input.NextSteps
 	// not currently persisting input.Reason
 	intake.UpdatedAt = &currentTime
