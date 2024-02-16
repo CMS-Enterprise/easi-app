@@ -1153,6 +1153,8 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 		})
 		s.NoError(err)
 		intakeWLCID.LifecycleID = null.StringFrom("123456")
+		alertTS := time.Now()
+		intakeWLCID.LifecycleExpirationAlertTS = &alertTS // set an alert timestamp that we expect to be cleared later
 		_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, intakeWLCID)
 		s.NoError(err)
 		scope := models.HTML("A really great new scope")
@@ -1179,6 +1181,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 		s.NoError(err)
 		s.EqualValues(&scope, confirmedIntakeLCID.LifecycleScope)
 		s.EqualValues(null.StringFrom(costBaseline), confirmedIntakeLCID.LifecycleCostBaseline)
+		s.Nil(confirmedIntakeLCID.LifecycleExpirationAlertTS)
 
 		// assert action is created
 		allActionsForIntake, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, confirmedIntakeLCID.ID)
@@ -1196,6 +1199,11 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 
 		s.Run("Can confirm an already confirmd LCID", func() {
 			adminNote := models.HTML("test admin note for updating LCID")
+
+			// Set an alert timestamp that we expect to NOT be cleared later (since we're confirming with the same date as the original confirmation)
+			alertTS := time.Now()
+			confirmedIntakeLCID.LifecycleExpirationAlertTS = &alertTS // set an alert timestamp that we expect to be cleared later
+			_, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, confirmedIntakeLCID)
 
 			confirmedScope := models.HTML("A really great new scope")
 			additionalInfoconfirm := models.HTMLPointer("My feedback for second confirm")
@@ -1220,6 +1228,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 			s.NoError(err)
 			s.EqualValues(&confirmedScope, secondconfirmIntake.LifecycleScope)
 			s.EqualValues(null.StringFrom(costBaseline), secondconfirmIntake.LifecycleCostBaseline) // This should not be confirmd since it wasn't included
+			s.NotNil(secondconfirmIntake)                                                           // Shouldn't be reset since we passed the same date as before
 
 			allActionsForIntake2, err := s.testConfigs.Store.GetActionsByRequestID(s.testConfigs.Context, secondconfirmIntake.ID)
 			s.NoError(err)
