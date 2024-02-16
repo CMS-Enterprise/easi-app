@@ -227,9 +227,9 @@ func TestShouldSendAlertForIntake_False(t *testing.T) {
 		assert.False(t, shouldSendAlertForIntake(intakeWithoutExpirationDate, now))
 	})
 
-	t.Run("skips intakes with a status of NO GOVERNANCE", func(t *testing.T) {
+	t.Run("skips intakes with a decision state of SIDS Not Governance", func(t *testing.T) {
 		intakeWithNoGovernance := testhelpers.NewSystemIntake()
-		intakeWithNoGovernance.Status = models.SystemIntakeStatusNOGOVERNANCE
+		intakeWithNoGovernance.DecisionState = models.SIDSNotGovernance
 		intakeWithNoGovernance.LifecycleExpiresAt = &now
 		assert.False(t, shouldSendAlertForIntake(intakeWithNoGovernance, oneHundredThirtyDaysAgo))
 	})

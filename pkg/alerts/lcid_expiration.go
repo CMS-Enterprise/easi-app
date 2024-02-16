@@ -90,7 +90,7 @@ var alertsInAdvance = []time.Duration{
 // If both of these are true, we're good to fire an alert off
 func shouldSendAlertForIntake(intake models.SystemIntake, now time.Time) bool {
 	// Skip intake or if it has a status of "NO GOVERNANCE"
-	if intake.Status == models.SystemIntakeStatusNOGOVERNANCE {
+	if intake.DecisionState == models.SIDSNotGovernance {
 		return false
 	}
 
