@@ -1062,9 +1062,24 @@ type SystemIntake {
   relationType: SystemIntakeRelationType # TODO: NOT IMPLEMENTED
 
   """
+  Linked systems
+  """
+  systems: [SystemIntakeSystem!]!
+
+  """
   Linked contract numbers
   """
   contractNumbers: [SystemIntakeContractNumber!]!
+}
+
+type SystemIntakeSystem {
+  id: UUID!
+  systemIntakeID: UUID!
+  systemID: String!
+  createdBy: UUID!
+  createdAt: Time!
+  modifiedBy: UUID
+  modifiedAt: Time
 }
 
 type SystemIntakeContractNumber {

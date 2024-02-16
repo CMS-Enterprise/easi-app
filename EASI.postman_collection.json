@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "92068f28-f9bb-4718-86f4-a331efa467c3",
+		"_postman_id": "8a2b77ce-bea6-480d-8cbb-2bc7502cf8ee",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12341016"
+		"_exporter_id": "11253221"
 	},
 	"item": [
 		{
@@ -1137,8 +1137,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation SetSystemIntakeRelationNewSystem ($input: SetSystemIntakeRelationNewSystemInput!) {\r\n    setSystemIntakeRelationNewSystem(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n        }\r\n    }\r\n}",
-										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractNumbers\": []\r\n    }\r\n}"
+										"query": "mutation SetSystemIntakeRelationNewSystem ($input: SetSystemIntakeRelationNewSystemInput!) {\r\n    setSystemIntakeRelationNewSystem(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n            contractNumbers {\r\n                contractNumber\r\n            }\r\n            systems {\r\n                systemID\r\n            }\r\n        }\r\n    }\r\n}",
+										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractNumbers\": [\r\n            \"12345\",\r\n            \"67890\"\r\n        ]\r\n    }\r\n}"
 									}
 								},
 								"url": {
@@ -1158,8 +1158,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation SetSystemIntakeRelationExistingService ($input: SetSystemIntakeRelationExistingServiceInput!) {\r\n    setSystemIntakeRelationExistingService(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n        }\r\n    }\r\n}",
-										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractName\": \"New name!\",\r\n        \"contractNumbers\": []\r\n    }\r\n}"
+										"query": "mutation SetSystemIntakeRelationExistingService ($input: SetSystemIntakeRelationExistingServiceInput!) {\r\n    setSystemIntakeRelationExistingService(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n            contractNumbers {\r\n                contractNumber\r\n            }\r\n            systems {\r\n                systemID\r\n            }\r\n        }\r\n    }\r\n}",
+										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractName\": \"New name!\",\r\n        \"contractNumbers\": [\r\n            \"09876\",\r\n            \"54321\"\r\n        ]\r\n    }\r\n}"
 									}
 								},
 								"url": {
@@ -1179,8 +1179,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation SetSystemIntakeRelationExistingSystem ($input: SetSystemIntakeRelationExistingSystemInput!) {\r\n    setSystemIntakeRelationExistingSystem(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n        }\r\n    }\r\n}",
-										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractNumbers\": [],\r\n        \"cedarSystemIDs\": []\r\n    }\r\n}"
+										"query": "mutation SetSystemIntakeRelationExistingSystem ($input: SetSystemIntakeRelationExistingSystemInput!) {\r\n    setSystemIntakeRelationExistingSystem(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n            contractNumbers {\r\n                contractNumber\r\n            }\r\n            systems {\r\n                systemID\r\n            }\r\n        }\r\n    }\r\n}",
+										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractNumbers\": [\r\n            \"abcde\",\r\n            \"fghij\"\r\n        ],\r\n        \"cedarSystemIDs\": [\r\n            \"klmnop\",\r\n            \"qrstuv\"\r\n        ]\r\n    }\r\n}"
 									}
 								},
 								"url": {

@@ -37,7 +37,10 @@ func SetSystemIntakeRelationExistingService(
 			return nil, err
 		}
 
-		// TODO: STORE -> Remove CEDAR system relationships
+		// Remove CEDAR system relationships
+		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}); err != nil {
+			return nil, err
+		}
 		// Delete & recreate contract number relationships
 		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
 			return nil, err
@@ -71,7 +74,10 @@ func SetSystemIntakeRelationNewSystem(
 			return nil, err
 		}
 
-		// TODO: STORE -> Delete CEDAR system relationships
+		// Remove CEDAR system relationships
+		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}); err != nil {
+			return nil, err
+		}
 		// Delete & recreate contract number relationships
 		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
 			return nil, err
@@ -87,6 +93,7 @@ func SetSystemIntakeRelationNewSystem(
 func SetSystemIntakeRelationExistingSystem(
 	ctx context.Context,
 	store *storage.Store,
+	getCedarSystem func(ctx context.Context, systemID string) (*models.CedarSystem, error),
 	input *model.SetSystemIntakeRelationExistingSystemInput,
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
@@ -105,7 +112,18 @@ func SetSystemIntakeRelationExistingSystem(
 			return nil, err
 		}
 
-		// TODO: STORE -> Add CEDAR system relationships
+		// ensure all given CEDAR system IDs are valid by checking with CEDAR
+		for _, systemID := range input.CedarSystemIDs {
+			// in local dev (where cedar core is disabled), this function returns a blank system struct
+			if _, err = getCedarSystem(ctx, systemID); err != nil {
+				return nil, err
+			}
+		}
+
+		// Add CEDAR system relationships
+		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, input.CedarSystemIDs); err != nil {
+			return nil, err
+		}
 		// Delete & recreate contract number relationships
 		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
 			return nil, err
@@ -140,7 +158,10 @@ func UnlinkSystemIntakeRelation(
 			return nil, err
 		}
 
-		// TODO Clear CEDAR system relationships
+		// Clear CEDAR system relationships
+		if err = store.SetSystemIntakeSystems(ctx, tx, intakeID, []string{}); err != nil {
+			return nil, err
+		}
 
 		// Update system intake
 		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
