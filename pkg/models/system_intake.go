@@ -72,49 +72,48 @@ const (
 
 // SystemIntake is the model for the system intake form
 type SystemIntake struct {
-	ID                              uuid.UUID               `json:"id"`
-	EUAUserID                       null.String             `json:"euaUserId" db:"eua_user_id"`
-	State                           SystemIntakeState       `json:"state" db:"state"`
-	Step                            SystemIntakeStep        `json:"step" db:"step"`
-	RequestType                     SystemIntakeRequestType `json:"requestType" db:"request_type"`
-	Requester                       string                  `json:"requester"`
-	Component                       null.String             `json:"component"`
-	BusinessOwner                   null.String             `json:"businessOwner" db:"business_owner"`
-	BusinessOwnerComponent          null.String             `json:"businessOwnerComponent" db:"business_owner_component"`
-	ProductManager                  null.String             `json:"productManager" db:"product_manager"`
-	ProductManagerComponent         null.String             `json:"productManagerComponent" db:"product_manager_component"`
-	ISSO                            null.String             `json:"isso"`
-	ISSOName                        null.String             `json:"issoName" db:"isso_name"`
-	TRBCollaborator                 null.String             `json:"trbCollaborator" db:"trb_collaborator"`
-	TRBCollaboratorName             null.String             `json:"trbCollaboratorName" db:"trb_collaborator_name"`
-	OITSecurityCollaborator         null.String             `json:"oitSecurityCollaborator" db:"oit_security_collaborator"`
-	OITSecurityCollaboratorName     null.String             `json:"oitSecurityCollaboratorName" db:"oit_security_collaborator_name"`
-	EACollaborator                  null.String             `json:"eaCollaborator" db:"ea_collaborator"`
-	EACollaboratorName              null.String             `json:"eaCollaboratorName" db:"ea_collaborator_name"`
-	ProjectName                     null.String             `json:"projectName" db:"project_name"`
-	ProjectAcronym                  null.String             `json:"projectAcronym" db:"project_acronym"`
-	BusinessNeed                    null.String             `json:"businessNeed" db:"business_need"`
-	Solution                        null.String             `json:"solution"`
-	ProcessStatus                   null.String             `json:"processStatus" db:"process_status"`
-	EASupportRequest                null.Bool               `json:"eaSupportRequest" db:"ea_support_request"`
-	ExistingContract                null.String             `json:"existingContract" db:"existing_contract"`
-	CostIncrease                    null.String             `json:"costIncrease" db:"cost_increase"`
-	CostIncreaseAmount              null.String             `json:"costIncreaseAmount" db:"cost_increase_amount"`
-	CurrentAnnualSpending           null.String             `json:"currentAnnualSpending" db:"current_annual_spending"`
-	CurrentAnnualSpendingITPortion  null.String             `json:"currentAnnualSpendingITPortion" db:"current_annual_spending_it_portion"`
-	PlannedYearOneSpending          null.String             `json:"plannedYearOneSpending" db:"planned_year_one_spending"`
-	PlannedYearOneSpendingITPortion null.String             `json:"plannedYearOneSpendingITPortion" db:"planned_year_one_spending_it_portion"`
-	Contractor                      null.String             `json:"contractor" db:"contractor"`
-	ContractVehicle                 null.String             `json:"contractVehicle" db:"contract_vehicle"`
-	ContractNumber                  null.String             `json:"contractNumber" db:"contract_number"` // replaces contract vehicle - see EASI-1977
-	ContractStartDate               *time.Time              `json:"contractStartDate" db:"contract_start_date"`
-	ContractStartMonth              null.String             `json:"contractStartMonth" db:"contract_start_month"`
-	ContractStartYear               null.String             `json:"contractStartYear" db:"contract_start_year"`
-	ContractEndDate                 *time.Time              `json:"contractEndDate" db:"contract_end_date"`
-	ContractEndMonth                null.String             `json:"contractEndMonth" db:"contract_end_month"`
-	ContractEndYear                 null.String             `json:"contractEndYear" db:"contract_end_year"`
-	CreatedAt                       *time.Time              `json:"createdAt" db:"created_at"`
-	Status                          string
+	ID                              uuid.UUID                    `json:"id"`
+	EUAUserID                       null.String                  `json:"euaUserId" db:"eua_user_id"`
+	State                           SystemIntakeState            `json:"state" db:"state"`
+	Step                            SystemIntakeStep             `json:"step" db:"step"`
+	RequestType                     SystemIntakeRequestType      `json:"requestType" db:"request_type"`
+	Requester                       string                       `json:"requester"`
+	Component                       null.String                  `json:"component"`
+	BusinessOwner                   null.String                  `json:"businessOwner" db:"business_owner"`
+	BusinessOwnerComponent          null.String                  `json:"businessOwnerComponent" db:"business_owner_component"`
+	ProductManager                  null.String                  `json:"productManager" db:"product_manager"`
+	ProductManagerComponent         null.String                  `json:"productManagerComponent" db:"product_manager_component"`
+	ISSO                            null.String                  `json:"isso"`
+	ISSOName                        null.String                  `json:"issoName" db:"isso_name"`
+	TRBCollaborator                 null.String                  `json:"trbCollaborator" db:"trb_collaborator"`
+	TRBCollaboratorName             null.String                  `json:"trbCollaboratorName" db:"trb_collaborator_name"`
+	OITSecurityCollaborator         null.String                  `json:"oitSecurityCollaborator" db:"oit_security_collaborator"`
+	OITSecurityCollaboratorName     null.String                  `json:"oitSecurityCollaboratorName" db:"oit_security_collaborator_name"`
+	EACollaborator                  null.String                  `json:"eaCollaborator" db:"ea_collaborator"`
+	EACollaboratorName              null.String                  `json:"eaCollaboratorName" db:"ea_collaborator_name"`
+	ProjectName                     null.String                  `json:"projectName" db:"project_name"`
+	ProjectAcronym                  null.String                  `json:"projectAcronym" db:"project_acronym"`
+	BusinessNeed                    null.String                  `json:"businessNeed" db:"business_need"`
+	Solution                        null.String                  `json:"solution"`
+	ProcessStatus                   null.String                  `json:"processStatus" db:"process_status"`
+	EASupportRequest                null.Bool                    `json:"eaSupportRequest" db:"ea_support_request"`
+	ExistingContract                null.String                  `json:"existingContract" db:"existing_contract"`
+	CostIncrease                    null.String                  `json:"costIncrease" db:"cost_increase"`
+	CostIncreaseAmount              null.String                  `json:"costIncreaseAmount" db:"cost_increase_amount"`
+	CurrentAnnualSpending           null.String                  `json:"currentAnnualSpending" db:"current_annual_spending"`
+	CurrentAnnualSpendingITPortion  null.String                  `json:"currentAnnualSpendingITPortion" db:"current_annual_spending_it_portion"`
+	PlannedYearOneSpending          null.String                  `json:"plannedYearOneSpending" db:"planned_year_one_spending"`
+	PlannedYearOneSpendingITPortion null.String                  `json:"plannedYearOneSpendingITPortion" db:"planned_year_one_spending_it_portion"`
+	Contractor                      null.String                  `json:"contractor" db:"contractor"`
+	ContractVehicle                 null.String                  `json:"contractVehicle" db:"contract_vehicle"`
+	ContractNumber                  null.String                  `json:"contractNumber" db:"contract_number"` // replaces contract vehicle - see EASI-1977
+	ContractStartDate               *time.Time                   `json:"contractStartDate" db:"contract_start_date"`
+	ContractStartMonth              null.String                  `json:"contractStartMonth" db:"contract_start_month"`
+	ContractStartYear               null.String                  `json:"contractStartYear" db:"contract_start_year"`
+	ContractEndDate                 *time.Time                   `json:"contractEndDate" db:"contract_end_date"`
+	ContractEndMonth                null.String                  `json:"contractEndMonth" db:"contract_end_month"`
+	ContractEndYear                 null.String                  `json:"contractEndYear" db:"contract_end_year"`
+	CreatedAt                       *time.Time                   `json:"createdAt" db:"created_at"`
 	UpdatedAt                       *time.Time                   `json:"updatedAt" db:"updated_at"`
 	SubmittedAt                     *time.Time                   `json:"submittedAt" db:"submitted_at"`
 	DecidedAt                       *time.Time                   `json:"decidedAt" db:"decided_at"`
