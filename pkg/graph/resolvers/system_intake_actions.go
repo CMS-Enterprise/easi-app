@@ -14,6 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep"
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -437,6 +438,7 @@ func IssueLCID(
 	// update LCID-related fields
 	intake.LifecycleID = null.StringFrom(newLCID)
 	intake.LifecycleExpiresAt = &input.ExpiresAt
+	intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
 	intake.LifecycleIssuedAt = &currTime
 	intake.LifecycleScope = &input.Scope
 	intake.DecisionNextSteps = &input.NextSteps
@@ -818,8 +820,9 @@ func UpdateLCID(
 	prevCostBaseline = intake.LifecycleCostBaseline.ValueOrZero()
 
 	// update LCID-related fields when they are set
-	if input.ExpiresAt != nil {
+	if input.ExpiresAt != nil && !helpers.DatesEqual(intake.LifecycleExpiresAt, input.ExpiresAt) { // if the expiration date has changed, update the expiration date and alert TS accordingly
 		intake.LifecycleExpiresAt = input.ExpiresAt
+		intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
 	}
 	if input.Scope != nil {
 		intake.LifecycleScope = input.Scope
@@ -950,7 +953,10 @@ func ConfirmLCID(ctx context.Context,
 
 	// update LCID-related fields
 	intake.TRBFollowUpRecommendation = &input.TrbFollowUp
-	intake.LifecycleExpiresAt = &input.ExpiresAt
+	if !helpers.DatesEqual(intake.LifecycleExpiresAt, &input.ExpiresAt) { // if the expiration date has changed, update the expiration date and alert TS accordingly
+		intake.LifecycleExpiresAt = &input.ExpiresAt
+		intake.LifecycleExpirationAlertTS = nil // whenever we update intake.LifecycleExpiresAt (above), we should clear this field so alerts fire properly
+	}
 	intake.LifecycleScope = &input.Scope
 	intake.DecisionNextSteps = &input.NextSteps
 	if input.CostBaseline != nil {
@@ -1070,7 +1076,6 @@ func ExpireLCID(
 
 	// set the expiration date's year/month/day based on current values, but leave the time as 00:00:00 (in UTC)
 	// matches the (v1) frontend logic for setting the expiration date:
-	// see src/views/GovernanceReviewTeam/ActionsV1/IssueLifecycleId.tsx, the definition of expiresAt
 	currentTimeUTC := currentTime.UTC()
 	expirationDate := time.Date(
 		currentTimeUTC.Year(),
@@ -1086,7 +1091,10 @@ func ExpireLCID(
 	// create action record before updating intake, while we still have access to intake's previous expiration date/next step
 	action := lcidactions.GetExpireLCIDAction(*intake, expirationDate, input.NextSteps, *adminUserInfo)
 
+	// Update LCID Expiry info
+	// NOTE: In most other places we need to update intake.LifecycleExpirationAlertTS = nil, but not here, since we don't alert on already-expired LCIDs
 	intake.LifecycleExpiresAt = &expirationDate
+
 	intake.DecisionNextSteps = input.NextSteps
 	// not currently persisting input.Reason
 	intake.UpdatedAt = &currentTime

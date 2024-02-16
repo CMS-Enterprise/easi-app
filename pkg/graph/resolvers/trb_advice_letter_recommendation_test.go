@@ -44,7 +44,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 
 		linksChanges := []string{"bing.com", "yahoo.com", "pets.com"}
 		changes := map[string]interface{}{
-			"id":             created.ID.String(),
+			"id":             created.ID,
 			"trbRequestId":   trbRequest.ID.String(),
 			"title":          "Restart your PC",
 			"recommendation": "I recommend you restart your PC",
@@ -93,7 +93,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 		// Attempt to update the recommendation
 		linksChanges := []string{"bing.com", "yahoo.com", "pets.com"}
 		changes := map[string]interface{}{
-			"id":             created.ID.String(),
+			"id":             created.ID,
 			"trbRequestId":   trbRequest.ID.String(),
 			"title":          "Restart your PC",
 			"recommendation": "I recommend you restart your PC",
