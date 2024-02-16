@@ -229,41 +229,6 @@ func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Sto
 	return nil, apperrors.NewInvalidEnumError(fmt.Errorf("admin note has an unrecognized category"), note.Category, "TRBAdminNoteCategory")
 }
 
-// UpdateTRBAdminNote handles general updates to a TRB admin note, without handling category-specific data
-// If updating admin notes requires handling category-specific data, see note on UpdateTRBAdminNoteInput in GraphQL schema;
-// break this up into separate resolvers
-// Also, if updating with category-specific data allows changing a note's category, the resolvers will need to null out any previous category-specific data;
-// as well as updating the fields on the admin note record, many-to-many links to documents/recommendations may need to be deleted
-// (which would require implementing storage methods to delete those records)
-func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdminNote, error) {
-	idStr, idFound := input["id"]
-	if !idFound {
-		return nil, errors.New("missing required property id")
-	}
-
-	id, err := uuid.Parse(idStr.(string))
-	if err != nil {
-		return nil, err
-	}
-
-	note, err := store.GetTRBAdminNoteByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	err = ApplyChangesAndMetaData(input, note, appcontext.Principal(ctx))
-	if err != nil {
-		return nil, err
-	}
-
-	updatedNote, err := store.UpdateTRBAdminNote(ctx, note)
-	if err != nil {
-		return nil, err
-	}
-
-	return updatedNote, nil
-}
-
 // SetTRBAdminNoteArchived sets whether a TRB admin note is archived (soft-deleted)
 func SetTRBAdminNoteArchived(ctx context.Context, store *storage.Store, id uuid.UUID, isArchived bool) (*models.TRBAdminNote, error) {
 	updatedNote, err := store.SetTRBAdminNoteArchived(ctx, id, isArchived, appcontext.Principal(ctx).ID())

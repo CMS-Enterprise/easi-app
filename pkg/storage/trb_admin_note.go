@@ -140,54 +140,6 @@ func (s *Store) GetTRBAdminNoteByID(ctx context.Context, id uuid.UUID) (*models.
 	return &note, nil
 }
 
-// UpdateTRBAdminNote updates all of a TRB admin note's mutable fields.
-// The note's IsArchived field _can_ be set, though ArchiveTRBAdminNote() should be used when archiving a note.
-func (s *Store) UpdateTRBAdminNote(ctx context.Context, note *models.TRBAdminNote) (*models.TRBAdminNote, error) {
-	stmt, err := s.db.PrepareNamed(`
-		UPDATE trb_admin_notes
-		SET
-			category = :category,
-			note_text = :note_text,
-			is_archived = :is_archived,
-			applies_to_basic_request_details = :applies_to_basic_request_details,
-			applies_to_subject_areas = :applies_to_subject_areas,
-			applies_to_attendees = :applies_to_attendees,
-			applies_to_meeting_summary = :applies_to_meeting_summary,
-			applies_to_next_steps = :applies_to_next_steps,
-			modified_by = :modified_by,
-			modified_at = CURRENT_TIMESTAMP
-		WHERE id = :id
-		RETURNING *;
-	`)
-
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to update TRB admin note with error %s", err),
-			zap.Error(err),
-			zap.String("id", note.ID.String()),
-		)
-		return nil, err
-	}
-
-	updated := models.TRBAdminNote{}
-
-	err = stmt.Get(&updated, note)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to update TRB admin note with error %s", err),
-			zap.Error(err),
-			zap.String("id", note.ID.String()),
-		)
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     note,
-			Operation: apperrors.QueryUpdate,
-		}
-	}
-
-	return &updated, nil
-}
-
 // SetTRBAdminNoteArchived sets whether a TRB admin note is archived (soft-deleted)
 // It takes a modifiedBy argument because it doesn't take a full TRBAdminNote as an argument, and ModifiedBy fields are usually set by the resolver.
 func (s *Store) SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArchived bool, modifiedBy string) (*models.TRBAdminNote, error) {

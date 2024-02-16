@@ -378,6 +378,14 @@ type LaunchDarklySettings struct {
 	SignedHash string `json:"signedHash"`
 }
 
+// Defines the mutations for the schema
+type Mutation struct {
+}
+
+// Query definition for the schema
+type Query struct {
+}
+
 // The data needed to reopen a TRB request
 type ReopenTRBRequestInput struct {
 	TrbRequestID   uuid.UUID   `json:"trbRequestId"`
