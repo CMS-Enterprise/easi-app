@@ -48,7 +48,10 @@ const useRequestTableColumns = (
       SystemIntakeForTable['requestName']
     >) => {
       return (
-        <Link to={`/governance-review-team/${row.original.id}/intake-request`}>
+        <Link
+          className="usa-link"
+          to={`/governance-review-team/${row.original.id}/intake-request`}
+        >
           {value}
         </Link>
       );
