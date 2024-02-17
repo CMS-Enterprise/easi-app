@@ -15,6 +15,8 @@ type DataLoaders struct {
 	UserInfoLoader                    *WrappedDataLoader
 	systemIntakeContractNumbersLoader *WrappedDataLoader
 	FetchUserInfos                    func(context.Context, []string) ([]*models.UserInfo, error)
+
+	trbRequestContractNumbersLoader *WrappedDataLoader
 }
 
 // NewDataLoaders instantiates data loaders for the middleware
@@ -31,6 +33,7 @@ func NewDataLoaders(store *storage.Store, fetchUserInfos func(context.Context, [
 	loaders.UserInfoLoader = newWrappedDataLoader(loaders.BatchUserInfos)
 
 	loaders.systemIntakeContractNumbersLoader = newWrappedDataLoader(loaders.getSystemIntakeContractNumbersBySystemIntakeID)
+	loaders.trbRequestContractNumbersLoader = newWrappedDataLoader(loaders.getTRBRequestContractNumbersByTRBRequestID)
 
 	return loaders
 }

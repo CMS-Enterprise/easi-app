@@ -162,7 +162,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 	suite.Nil(unlinkedIntake.SystemRelationType)
 
 	// Check contract numbers are cleared
-	nums, err := ContractNumbers(ctx, unlinkedIntake.ID)
+	nums, err := SystemIntakeContractNumbers(ctx, unlinkedIntake.ID)
 	suite.NoError(err)
 	suite.Empty(nums)
 }

@@ -57,7 +57,7 @@ func (s *ResolverSuite) TestContractNumbers() {
 		})
 		s.NoError(err)
 
-		data, err := ContractNumbers(ctx, createdIDs[0])
+		data, err := SystemIntakeContractNumbers(ctx, createdIDs[0])
 		s.NoError(err)
 		s.Len(data, 3)
 
@@ -88,7 +88,7 @@ func (s *ResolverSuite) TestContractNumbers() {
 		s.True(found3)
 
 		// attempt to get contract numbers for a system intake without linked contracts
-		data, err = ContractNumbers(ctx, createdIDs[1])
+		data, err = SystemIntakeContractNumbers(ctx, createdIDs[1])
 		s.NoError(err)
 		s.Empty(data)
 	})

@@ -1735,6 +1735,21 @@ type TRBRequest {
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
   modifiedAt: Time
+
+  """
+  Linked contract numbers
+  """
+  contractNumbers: [TRBRequestContractNumber!]!
+}
+
+type TRBRequestContractNumber {
+  id: UUID!
+  trbRequestID: UUID!
+  contractNumber: String!
+  createdBy: UUID!
+  createdAt: Time!
+  modifiedBy: UUID
+  modifiedAt: Time
 }
 
 """
