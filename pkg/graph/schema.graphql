@@ -1016,7 +1016,7 @@ type SystemIntake {
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
   contractName: String
-  relationType: SystemIntakeRelationType # TODO: NOT IMPLEMENTED
+  relationType: RequestRelationType # TODO: NOT IMPLEMENTED
 
   """
   Linked contract numbers
@@ -1036,7 +1036,7 @@ type SystemIntakeContractNumber {
 
 # TODO Figure out if there's any better way to name this.
 # The name currently feels a bit abstract, but it's the best I could come up with.
-enum SystemIntakeRelationType {
+enum RequestRelationType {
   NEW_SYSTEM
   EXISTING_SYSTEM
   EXISTING_SERVICE
@@ -1243,20 +1243,20 @@ input UpdateSystemIntakeLinkedCedarSystemInput {
   cedarSystemId: String
 }
 
-# SystemIntakeRelationType.NEW_SYSTEM
+# RequestRelationType.NEW_SYSTEM
 input SetSystemIntakeRelationNewSystemInput {
   systemIntakeID: UUID!
   contractNumbers: [String!]!
 }
 
-# SystemIntakeRelationType.EXISTING_SYSTEM
+# RequestRelationType.EXISTING_SYSTEM
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemIDs: [String!]!
   contractNumbers: [String!]!
 }
 
-# SystemIntakeRelationType.EXISTING_SERVICE
+# RequestRelationType.EXISTING_SERVICE
 input SetSystemIntakeRelationExistingServiceInput {
   systemIntakeID: UUID!
   contractName: String!
@@ -1736,7 +1736,7 @@ type TRBRequest {
   modifiedBy: String
   modifiedAt: Time
   contractName: String
-  relationType: TRBRequestRelationType # TODO: NOT IMPLEMENTED
+  relationType: RequestRelationType # TODO: NOT IMPLEMENTED
 }
 
 """
@@ -1749,12 +1749,6 @@ type TRBTaskStatuses {
   attendConsultStatus: TRBAttendConsultStatus!
   adviceLetterStatus: TRBAdviceLetterStatus!
   adviceLetterStatusTaskList: TRBAdviceLetterStatusTaskList!
-}
-
-enum TRBRequestRelationType {
-  NEW_SYSTEM
-  EXISTING_SYSTEM
-  EXISTING_SERVICE
 }
 
 """
@@ -2219,20 +2213,20 @@ input UpdateTRBRequestTRBLeadInput {
   trbLead: String!
 }
 
-# TRBRequestRelationType.NEW_SYSTEM
+# RequestRelationType.NEW_SYSTEM
 input SetTRBRequestRelationNewSystemInput {
   trbRequestID: UUID!
   contractNumbers: [String!]!
 }
 
-# TRBRequestRelationType.EXISTING_SYSTEM
+# RequestRelationType.EXISTING_SYSTEM
 input SetTRBRequestRelationExistingSystemInput {
   trbRequestID: UUID!
   cedarSystemIDs: [String!]!
   contractNumbers: [String!]!
 }
 
-# TRBRequestRelationType.EXISTING_SERVICE
+# RequestRelationType.EXISTING_SERVICE
 input SetTRBRequestRelationExistingServiceInput {
   trbRequestID: UUID!
   contractName: String!

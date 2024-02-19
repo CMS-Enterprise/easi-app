@@ -9,14 +9,14 @@ import (
 // TRBRequest represents a TRB request object
 type TRBRequest struct {
 	BaseStruct
-	Name               *string                 `json:"name" db:"name"`
-	Archived           bool                    `json:"archived" db:"archived"`
-	Type               TRBRequestType          `json:"type" db:"type"`
-	State              TRBRequestState         `json:"state" db:"state"`
-	ConsultMeetingTime *time.Time              `json:"consultMeetingTime" db:"consult_meeting_time"`
-	TRBLead            *string                 `json:"trbLead" db:"trb_lead"`
-	ContractName       zero.String             `json:"contractName" db:"contract_name"`
-	SystemRelationType *TRBRequestRelationType `json:"relationType" db:"system_relation_type"`
+	Name               *string              `json:"name" db:"name"`
+	Archived           bool                 `json:"archived" db:"archived"`
+	Type               TRBRequestType       `json:"type" db:"type"`
+	State              TRBRequestState      `json:"state" db:"state"`
+	ConsultMeetingTime *time.Time           `json:"consultMeetingTime" db:"consult_meeting_time"`
+	TRBLead            *string              `json:"trbLead" db:"trb_lead"`
+	ContractName       zero.String          `json:"contractName" db:"contract_name"`
+	SystemRelationType *RequestRelationType `json:"relationType" db:"system_relation_type"`
 }
 
 // NewTRBRequest returns a new trb request object
@@ -115,13 +115,3 @@ func (t *TRBRequest) GetName() string {
 
 	return "Draft"
 }
-
-// TRBRequestRelationType represents an enum for different relation types of TRB Requests
-type TRBRequestRelationType string
-
-// Possible values of TRBRequestRelationType
-const (
-	TRBRelationTypeNewSystem       TRBRequestRelationType = "NEW_SYSTEM"
-	TRBRelationTypeExistingSystem  TRBRequestRelationType = "EXISTING_SYSTEM"
-	TRBRelationTypeExistingService TRBRequestRelationType = "EXISTING_SERVICE"
-)

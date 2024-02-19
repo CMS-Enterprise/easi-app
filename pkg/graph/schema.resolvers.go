@@ -2767,7 +2767,7 @@ func (r *systemIntakeResolver) ContractName(ctx context.Context, obj *models.Sys
 }
 
 // RelationType is the resolver for the relationType field.
-func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRelationType, error) {
+func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*models.RequestRelationType, error) {
 	return obj.SystemRelationType, nil
 }
 
@@ -2932,7 +2932,7 @@ func (r *tRBRequestResolver) ContractName(ctx context.Context, obj *models.TRBRe
 }
 
 // RelationType is the resolver for the relationType field.
-func (r *tRBRequestResolver) RelationType(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestRelationType, error) {
+func (r *tRBRequestResolver) RelationType(ctx context.Context, obj *models.TRBRequest) (*models.RequestRelationType, error) {
 	return obj.SystemRelationType, nil
 }
 
