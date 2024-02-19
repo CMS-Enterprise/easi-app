@@ -1918,27 +1918,6 @@
 								}
 							},
 							"response": []
-						},
-						{
-							"name": "Update TRB Admin Note (no category-specific fields)",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "mutation UpdateNote($input: UpdateTRBAdminNoteInput!) {\r\n    updateTRBAdminNote(input: $input) {\r\n        id\r\n        category\r\n        noteText\r\n    }\r\n}",
-										"variables": "{\r\n    \"input\": {\r\n        \"id\": \"71fb32c1-52f5-47a1-8350-c7349caf2770\",\r\n        \"category\": \"INITIAL_REQUEST_FORM\",\r\n        \"noteText\": \"test note 1 - edit1\"\r\n    }\r\n}"
-									}
-								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
-								}
-							},
-							"response": []
 						}
 					]
 				}

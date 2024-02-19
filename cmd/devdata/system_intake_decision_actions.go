@@ -20,6 +20,7 @@ func makeSystemIntakeAndIssueLCID(
 	requesterEUA string,
 	logger *zap.Logger,
 	store *storage.Store,
+	lcidExpirationDate time.Time,
 ) *models.SystemIntake {
 	pastMeetingDate := time.Now().AddDate(0, -1, 0)
 	var intake *models.SystemIntake
@@ -52,7 +53,7 @@ func makeSystemIntakeAndIssueLCID(
 		logger,
 		store,
 		intake,
-		time.Now().AddDate(1, 0, 0),
+		lcidExpirationDate,
 		models.TRBFRNotRecommended,
 	)
 	return intake
