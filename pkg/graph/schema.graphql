@@ -1016,7 +1016,7 @@ type SystemIntake {
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
   contractName: String
-  relationType: SystemRelationType # TODO: NOT IMPLEMENTED
+  relationType: RequestRelationType # TODO: NOT IMPLEMENTED
 
   """
   Linked contract numbers
@@ -1036,7 +1036,7 @@ type SystemIntakeContractNumber {
 
 # TODO Figure out if there's any better way to name this.
 # The name currently feels a bit abstract, but it's the best I could come up with.
-enum SystemRelationType {
+enum RequestRelationType {
   NEW_SYSTEM
   EXISTING_SYSTEM
   EXISTING_SERVICE
@@ -1243,20 +1243,20 @@ input UpdateSystemIntakeLinkedCedarSystemInput {
   cedarSystemId: String
 }
 
-# SystemRelationType.NEW_SYSTEM
+# RequestRelationType.NEW_SYSTEM
 input SetSystemIntakeRelationNewSystemInput {
   systemIntakeID: UUID!
   contractNumbers: [String!]!
 }
 
-# SystemRelationType.EXISTING_SYSTEM
+# RequestRelationType.EXISTING_SYSTEM
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemIDs: [String!]!
   contractNumbers: [String!]!
 }
 
-# SystemRelationType.EXISTING_SERVICE
+# RequestRelationType.EXISTING_SERVICE
 input SetSystemIntakeRelationExistingServiceInput {
   systemIntakeID: UUID!
   contractName: String!
@@ -1736,7 +1736,7 @@ type TRBRequest {
   modifiedBy: String
   modifiedAt: Time
   contractName: String
-  relationType: SystemRelationType # TODO: NOT IMPLEMENTED
+  relationType: RequestRelationType # TODO: NOT IMPLEMENTED
 }
 
 """
@@ -2213,20 +2213,20 @@ input UpdateTRBRequestTRBLeadInput {
   trbLead: String!
 }
 
-# SystemRelationType.NEW_SYSTEM
+# RequestRelationType.NEW_SYSTEM
 input SetTRBRequestRelationNewSystemInput {
   trbRequestID: UUID!
   contractNumbers: [String!]!
 }
 
-# SystemRelationType.EXISTING_SYSTEM
+# RequestRelationType.EXISTING_SYSTEM
 input SetTRBRequestRelationExistingSystemInput {
   trbRequestID: UUID!
   cedarSystemIDs: [String!]!
   contractNumbers: [String!]!
 }
 
-# SystemRelationType.EXISTING_SERVICE
+# RequestRelationType.EXISTING_SERVICE
 input SetTRBRequestRelationExistingServiceInput {
   trbRequestID: UUID!
   contractName: String!
