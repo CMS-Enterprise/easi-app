@@ -1735,6 +1735,8 @@ type TRBRequest {
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
   modifiedAt: Time
+  contractName: String
+  relationType: TRBRequestRelationType # TODO: NOT IMPLEMENTED
 }
 
 """
@@ -1747,6 +1749,12 @@ type TRBTaskStatuses {
   attendConsultStatus: TRBAttendConsultStatus!
   adviceLetterStatus: TRBAdviceLetterStatus!
   adviceLetterStatusTaskList: TRBAdviceLetterStatusTaskList!
+}
+
+enum TRBRequestRelationType {
+  NEW_SYSTEM
+  EXISTING_SYSTEM
+  EXISTING_SERVICE
 }
 
 """
@@ -2211,6 +2219,26 @@ input UpdateTRBRequestTRBLeadInput {
   trbLead: String!
 }
 
+# TRBRequestRelationType.NEW_SYSTEM
+input SetTRBRequestRelationNewSystemInput {
+  trbRequestID: UUID!
+  contractNumbers: [String!]!
+}
+
+# TRBRequestRelationType.EXISTING_SYSTEM
+input SetTRBRequestRelationExistingSystemInput {
+  trbRequestID: UUID!
+  cedarSystemIDs: [String!]!
+  contractNumbers: [String!]!
+}
+
+# TRBRequestRelationType.EXISTING_SERVICE
+input SetTRBRequestRelationExistingServiceInput {
+  trbRequestID: UUID!
+  contractName: String!
+  contractNumbers: [String!]!
+}
+
 """
 Represents the category of a single TRB admin note
 """
@@ -2596,6 +2624,10 @@ type Mutation {
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
 
+  setTRBRequestRelationNewSystem(input: SetTRBRequestRelationNewSystemInput): TRBRequest
+  setTRBRequestRelationExistingSystem(input: SetTRBRequestRelationExistingSystemInput): TRBRequest
+  setTRBRequestRelationExistingService(input: SetTRBRequestRelationExistingServiceInput): TRBRequest
+  unlinkTRBRequestRelation(trbRequestID: UUID!): TRBRequest
 
   # separate mutations for each category of admin note
   createTRBAdminNoteGeneralRequest(input: CreateTRBAdminNoteGeneralRequestInput!): TRBAdminNote!
