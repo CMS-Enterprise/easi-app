@@ -1457,7 +1457,7 @@ type SystemIntakeResolver interface {
 	LcidStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeLCIDStatus, error)
 
 	ContractName(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	RelationType(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRelationType, error)
+	RelationType(ctx context.Context, obj *models.SystemIntake) (*model.SystemRelationType, error)
 	ContractNumbers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeContractNumber, error)
 }
 type SystemIntakeDocumentResolver interface {
@@ -1506,7 +1506,7 @@ type TRBRequestResolver interface {
 	IsRecent(ctx context.Context, obj *models.TRBRequest) (bool, error)
 
 	ContractName(ctx context.Context, obj *models.TRBRequest) (*string, error)
-	RelationType(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestRelationType, error)
+	RelationType(ctx context.Context, obj *models.TRBRequest) (*model.SystemRelationType, error)
 }
 type TRBRequestAttendeeResolver interface {
 	UserInfo(ctx context.Context, obj *models.TRBRequestAttendee) (*models.UserInfo, error)
@@ -8598,7 +8598,7 @@ type SystemIntake {
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
   contractName: String
-  relationType: SystemIntakeRelationType # TODO: NOT IMPLEMENTED
+  relationType: SystemRelationType # TODO: NOT IMPLEMENTED
 
   """
   Linked contract numbers
@@ -8618,7 +8618,7 @@ type SystemIntakeContractNumber {
 
 # TODO Figure out if there's any better way to name this.
 # The name currently feels a bit abstract, but it's the best I could come up with.
-enum SystemIntakeRelationType {
+enum SystemRelationType {
   NEW_SYSTEM
   EXISTING_SYSTEM
   EXISTING_SERVICE
@@ -8825,20 +8825,20 @@ input UpdateSystemIntakeLinkedCedarSystemInput {
   cedarSystemId: String
 }
 
-# SystemIntakeRelationType.NEW_SYSTEM
+# SystemRelationType.NEW_SYSTEM
 input SetSystemIntakeRelationNewSystemInput {
   systemIntakeID: UUID!
   contractNumbers: [String!]!
 }
 
-# SystemIntakeRelationType.EXISTING_SYSTEM
+# SystemRelationType.EXISTING_SYSTEM
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemIDs: [String!]!
   contractNumbers: [String!]!
 }
 
-# SystemIntakeRelationType.EXISTING_SERVICE
+# SystemRelationType.EXISTING_SERVICE
 input SetSystemIntakeRelationExistingServiceInput {
   systemIntakeID: UUID!
   contractName: String!
@@ -9318,7 +9318,7 @@ type TRBRequest {
   modifiedBy: String
   modifiedAt: Time
   contractName: String
-  relationType: TRBRequestRelationType # TODO: NOT IMPLEMENTED
+  relationType: SystemRelationType # TODO: NOT IMPLEMENTED
 }
 
 """
@@ -9331,12 +9331,6 @@ type TRBTaskStatuses {
   attendConsultStatus: TRBAttendConsultStatus!
   adviceLetterStatus: TRBAdviceLetterStatus!
   adviceLetterStatusTaskList: TRBAdviceLetterStatusTaskList!
-}
-
-enum TRBRequestRelationType {
-  NEW_SYSTEM
-  EXISTING_SYSTEM
-  EXISTING_SERVICE
 }
 
 """
@@ -9801,20 +9795,20 @@ input UpdateTRBRequestTRBLeadInput {
   trbLead: String!
 }
 
-# TRBRequestRelationType.NEW_SYSTEM
+# SystemRelationType.NEW_SYSTEM
 input SetTRBRequestRelationNewSystemInput {
   trbRequestID: UUID!
   contractNumbers: [String!]!
 }
 
-# TRBRequestRelationType.EXISTING_SYSTEM
+# SystemRelationType.EXISTING_SYSTEM
 input SetTRBRequestRelationExistingSystemInput {
   trbRequestID: UUID!
   cedarSystemIDs: [String!]!
   contractNumbers: [String!]!
 }
 
-# TRBRequestRelationType.EXISTING_SERVICE
+# SystemRelationType.EXISTING_SERVICE
 input SetTRBRequestRelationExistingServiceInput {
   trbRequestID: UUID!
   contractName: String!
@@ -39559,9 +39553,9 @@ func (ec *executionContext) _SystemIntake_relationType(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.SystemIntakeRelationType)
+	res := resTmp.(*model.SystemRelationType)
 	fc.Result = res
-	return ec.marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRelationType(ctx, field.Selections, res)
+	return ec.marshalOSystemRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemRelationType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_relationType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -39571,7 +39565,7 @@ func (ec *executionContext) fieldContext_SystemIntake_relationType(ctx context.C
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type SystemIntakeRelationType does not have child fields")
+			return nil, errors.New("field of type SystemRelationType does not have child fields")
 		},
 	}
 	return fc, nil
@@ -47035,9 +47029,9 @@ func (ec *executionContext) _TRBRequest_relationType(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.TRBRequestRelationType)
+	res := resTmp.(*model.SystemRelationType)
 	fc.Result = res
-	return ec.marshalOTRBRequestRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestRelationType(ctx, field.Selections, res)
+	return ec.marshalOSystemRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemRelationType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TRBRequest_relationType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -47047,7 +47041,7 @@ func (ec *executionContext) fieldContext_TRBRequest_relationType(ctx context.Con
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type TRBRequestRelationType does not have child fields")
+			return nil, errors.New("field of type SystemRelationType does not have child fields")
 		},
 	}
 	return fc, nil
@@ -74833,23 +74827,6 @@ func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋ
 	return ec._SystemIntakeNote(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRelationType(ctx context.Context, v interface{}) (*models.SystemIntakeRelationType, error) {
-	if v == nil {
-		return nil, nil
-	}
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.SystemIntakeRelationType(tmp)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOSystemIntakeRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRelationType(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeRelationType) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	res := graphql.MarshalString(string(*v))
-	return res
-}
-
 func (ec *executionContext) unmarshalOSystemIntakeStatusRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatusRequester(ctx context.Context, v interface{}) (*models.SystemIntakeStatusRequester, error) {
 	if v == nil {
 		return nil, nil
@@ -74899,6 +74876,22 @@ func (ec *executionContext) marshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcm
 	}
 	res := graphql.MarshalString(string(*v))
 	return res
+}
+
+func (ec *executionContext) unmarshalOSystemRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemRelationType(ctx context.Context, v interface{}) (*model.SystemRelationType, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.SystemRelationType)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOSystemRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemRelationType(ctx context.Context, sel ast.SelectionSet, v *model.SystemRelationType) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalOTRBAdviceLetter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetter(ctx context.Context, sel ast.SelectionSet, v *models.TRBAdviceLetter) graphql.Marshaler {
@@ -75042,23 +75035,6 @@ func (ec *executionContext) marshalOTRBRequestDocument2ᚖgithubᚗcomᚋcmsgov�
 		return graphql.Null
 	}
 	return ec._TRBRequestDocument(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOTRBRequestRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestRelationType(ctx context.Context, v interface{}) (*models.TRBRequestRelationType, error) {
-	if v == nil {
-		return nil, nil
-	}
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBRequestRelationType(tmp)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOTRBRequestRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestRelationType(ctx context.Context, sel ast.SelectionSet, v *models.TRBRequestRelationType) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	res := graphql.MarshalString(string(*v))
-	return res
 }
 
 func (ec *executionContext) unmarshalOTRBRequestType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestType(ctx context.Context, v interface{}) (*models.TRBRequestType, error) {

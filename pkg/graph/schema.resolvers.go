@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -2767,8 +2768,8 @@ func (r *systemIntakeResolver) ContractName(ctx context.Context, obj *models.Sys
 }
 
 // RelationType is the resolver for the relationType field.
-func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRelationType, error) {
-	return obj.SystemRelationType, nil
+func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*model.SystemRelationType, error) {
+	panic(fmt.Errorf("not implemented: RelationType - relationType"))
 }
 
 // ContractNumbers is the resolver for the contractNumbers field.
@@ -2932,8 +2933,8 @@ func (r *tRBRequestResolver) ContractName(ctx context.Context, obj *models.TRBRe
 }
 
 // RelationType is the resolver for the relationType field.
-func (r *tRBRequestResolver) RelationType(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestRelationType, error) {
-	return obj.SystemRelationType, nil
+func (r *tRBRequestResolver) RelationType(ctx context.Context, obj *models.TRBRequest) (*model.SystemRelationType, error) {
+	panic(fmt.Errorf("not implemented: RelationType - relationType"))
 }
 
 // UserInfo is the resolver for the userInfo field.

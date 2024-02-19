@@ -1325,3 +1325,46 @@ func (e *SystemIntakeStepToProgressTo) UnmarshalGQL(v interface{}) error {
 func (e SystemIntakeStepToProgressTo) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
+
+type SystemRelationType string
+
+const (
+	SystemRelationTypeNewSystem       SystemRelationType = "NEW_SYSTEM"
+	SystemRelationTypeExistingSystem  SystemRelationType = "EXISTING_SYSTEM"
+	SystemRelationTypeExistingService SystemRelationType = "EXISTING_SERVICE"
+)
+
+var AllSystemRelationType = []SystemRelationType{
+	SystemRelationTypeNewSystem,
+	SystemRelationTypeExistingSystem,
+	SystemRelationTypeExistingService,
+}
+
+func (e SystemRelationType) IsValid() bool {
+	switch e {
+	case SystemRelationTypeNewSystem, SystemRelationTypeExistingSystem, SystemRelationTypeExistingService:
+		return true
+	}
+	return false
+}
+
+func (e SystemRelationType) String() string {
+	return string(e)
+}
+
+func (e *SystemRelationType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemRelationType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemRelationType", str)
+	}
+	return nil
+}
+
+func (e SystemRelationType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
