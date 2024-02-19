@@ -1806,17 +1806,17 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 }
 
 // SetTRBRequestRelationNewSystem is the resolver for the setTRBRequestRelationNewSystem field.
-func (r *mutationResolver) SetTRBRequestRelationNewSystem(ctx context.Context, input *model.SetTRBRequestRelationNewSystemInput) (*models.TRBRequest, error) {
+func (r *mutationResolver) SetTRBRequestRelationNewSystem(ctx context.Context, input model.SetTRBRequestRelationNewSystemInput) (*models.TRBRequest, error) {
 	return resolvers.SetTRBRequestRelationNewSystem(ctx, r.store, input)
 }
 
 // SetTRBRequestRelationExistingSystem is the resolver for the setTRBRequestRelationExistingSystem field.
-func (r *mutationResolver) SetTRBRequestRelationExistingSystem(ctx context.Context, input *model.SetTRBRequestRelationExistingSystemInput) (*models.TRBRequest, error) {
+func (r *mutationResolver) SetTRBRequestRelationExistingSystem(ctx context.Context, input model.SetTRBRequestRelationExistingSystemInput) (*models.TRBRequest, error) {
 	return resolvers.SetTRBRequestRelationExistingSystem(ctx, r.store, input)
 }
 
 // SetTRBRequestRelationExistingService is the resolver for the setTRBRequestRelationExistingService field.
-func (r *mutationResolver) SetTRBRequestRelationExistingService(ctx context.Context, input *model.SetTRBRequestRelationExistingServiceInput) (*models.TRBRequest, error) {
+func (r *mutationResolver) SetTRBRequestRelationExistingService(ctx context.Context, input model.SetTRBRequestRelationExistingServiceInput) (*models.TRBRequest, error) {
 	return resolvers.SetTRBRequestRelationExistingService(ctx, r.store, input)
 }
 

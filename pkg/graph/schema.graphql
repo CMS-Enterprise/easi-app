@@ -2618,9 +2618,9 @@ type Mutation {
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
 
-  setTRBRequestRelationNewSystem(input: SetTRBRequestRelationNewSystemInput): TRBRequest
-  setTRBRequestRelationExistingSystem(input: SetTRBRequestRelationExistingSystemInput): TRBRequest
-  setTRBRequestRelationExistingService(input: SetTRBRequestRelationExistingServiceInput): TRBRequest
+  setTRBRequestRelationNewSystem(input: SetTRBRequestRelationNewSystemInput!): TRBRequest
+  setTRBRequestRelationExistingSystem(input: SetTRBRequestRelationExistingSystemInput!): TRBRequest
+  setTRBRequestRelationExistingService(input: SetTRBRequestRelationExistingServiceInput!): TRBRequest
   unlinkTRBRequestRelation(trbRequestID: UUID!): TRBRequest
 
   # separate mutations for each category of admin note

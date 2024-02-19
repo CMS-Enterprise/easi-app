@@ -581,9 +581,9 @@ type ComplexityRoot struct {
 		SetSystemIntakeRelationExistingSystem            func(childComplexity int, input *model.SetSystemIntakeRelationExistingSystemInput) int
 		SetSystemIntakeRelationNewSystem                 func(childComplexity int, input *model.SetSystemIntakeRelationNewSystemInput) int
 		SetTRBAdminNoteArchived                          func(childComplexity int, id uuid.UUID, isArchived bool) int
-		SetTRBRequestRelationExistingService             func(childComplexity int, input *model.SetTRBRequestRelationExistingServiceInput) int
-		SetTRBRequestRelationExistingSystem              func(childComplexity int, input *model.SetTRBRequestRelationExistingSystemInput) int
-		SetTRBRequestRelationNewSystem                   func(childComplexity int, input *model.SetTRBRequestRelationNewSystemInput) int
+		SetTRBRequestRelationExistingService             func(childComplexity int, input model.SetTRBRequestRelationExistingServiceInput) int
+		SetTRBRequestRelationExistingSystem              func(childComplexity int, input model.SetTRBRequestRelationExistingSystemInput) int
+		SetTRBRequestRelationNewSystem                   func(childComplexity int, input model.SetTRBRequestRelationNewSystemInput) int
 		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
 		UnlinkSystemIntakeRelation                       func(childComplexity int, intakeID uuid.UUID) int
 		UnlinkTRBRequestRelation                         func(childComplexity int, trbRequestID uuid.UUID) int
@@ -1348,9 +1348,9 @@ type MutationResolver interface {
 	CreateTRBRequestFeedback(ctx context.Context, input model.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error)
 	UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error)
 	UpdateTRBRequestTRBLead(ctx context.Context, input model.UpdateTRBRequestTRBLeadInput) (*models.TRBRequest, error)
-	SetTRBRequestRelationNewSystem(ctx context.Context, input *model.SetTRBRequestRelationNewSystemInput) (*models.TRBRequest, error)
-	SetTRBRequestRelationExistingSystem(ctx context.Context, input *model.SetTRBRequestRelationExistingSystemInput) (*models.TRBRequest, error)
-	SetTRBRequestRelationExistingService(ctx context.Context, input *model.SetTRBRequestRelationExistingServiceInput) (*models.TRBRequest, error)
+	SetTRBRequestRelationNewSystem(ctx context.Context, input model.SetTRBRequestRelationNewSystemInput) (*models.TRBRequest, error)
+	SetTRBRequestRelationExistingSystem(ctx context.Context, input model.SetTRBRequestRelationExistingSystemInput) (*models.TRBRequest, error)
+	SetTRBRequestRelationExistingService(ctx context.Context, input model.SetTRBRequestRelationExistingServiceInput) (*models.TRBRequest, error)
 	UnlinkTRBRequestRelation(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequest, error)
 	CreateTRBAdminNoteGeneralRequest(ctx context.Context, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error)
 	CreateTRBAdminNoteInitialRequestForm(ctx context.Context, input model.CreateTRBAdminNoteInitialRequestFormInput) (*models.TRBAdminNote, error)
@@ -4377,7 +4377,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.SetTRBRequestRelationExistingService(childComplexity, args["input"].(*model.SetTRBRequestRelationExistingServiceInput)), true
+		return e.complexity.Mutation.SetTRBRequestRelationExistingService(childComplexity, args["input"].(model.SetTRBRequestRelationExistingServiceInput)), true
 
 	case "Mutation.setTRBRequestRelationExistingSystem":
 		if e.complexity.Mutation.SetTRBRequestRelationExistingSystem == nil {
@@ -4389,7 +4389,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.SetTRBRequestRelationExistingSystem(childComplexity, args["input"].(*model.SetTRBRequestRelationExistingSystemInput)), true
+		return e.complexity.Mutation.SetTRBRequestRelationExistingSystem(childComplexity, args["input"].(model.SetTRBRequestRelationExistingSystemInput)), true
 
 	case "Mutation.setTRBRequestRelationNewSystem":
 		if e.complexity.Mutation.SetTRBRequestRelationNewSystem == nil {
@@ -4401,7 +4401,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.SetTRBRequestRelationNewSystem(childComplexity, args["input"].(*model.SetTRBRequestRelationNewSystemInput)), true
+		return e.complexity.Mutation.SetTRBRequestRelationNewSystem(childComplexity, args["input"].(model.SetTRBRequestRelationNewSystemInput)), true
 
 	case "Mutation.submitIntake":
 		if e.complexity.Mutation.SubmitIntake == nil {
@@ -10200,9 +10200,9 @@ type Mutation {
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
 
-  setTRBRequestRelationNewSystem(input: SetTRBRequestRelationNewSystemInput): TRBRequest
-  setTRBRequestRelationExistingSystem(input: SetTRBRequestRelationExistingSystemInput): TRBRequest
-  setTRBRequestRelationExistingService(input: SetTRBRequestRelationExistingServiceInput): TRBRequest
+  setTRBRequestRelationNewSystem(input: SetTRBRequestRelationNewSystemInput!): TRBRequest
+  setTRBRequestRelationExistingSystem(input: SetTRBRequestRelationExistingSystemInput!): TRBRequest
+  setTRBRequestRelationExistingService(input: SetTRBRequestRelationExistingServiceInput!): TRBRequest
   unlinkTRBRequestRelation(trbRequestID: UUID!): TRBRequest
 
   # separate mutations for each category of admin note
@@ -11593,10 +11593,10 @@ func (ec *executionContext) field_Mutation_setTRBAdminNoteArchived_args(ctx cont
 func (ec *executionContext) field_Mutation_setTRBRequestRelationExistingService_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.SetTRBRequestRelationExistingServiceInput
+	var arg0 model.SetTRBRequestRelationExistingServiceInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOSetTRBRequestRelationExistingServiceInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationExistingServiceInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSetTRBRequestRelationExistingServiceInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationExistingServiceInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -11608,10 +11608,10 @@ func (ec *executionContext) field_Mutation_setTRBRequestRelationExistingService_
 func (ec *executionContext) field_Mutation_setTRBRequestRelationExistingSystem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.SetTRBRequestRelationExistingSystemInput
+	var arg0 model.SetTRBRequestRelationExistingSystemInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOSetTRBRequestRelationExistingSystemInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationExistingSystemInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSetTRBRequestRelationExistingSystemInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationExistingSystemInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -11623,10 +11623,10 @@ func (ec *executionContext) field_Mutation_setTRBRequestRelationExistingSystem_a
 func (ec *executionContext) field_Mutation_setTRBRequestRelationNewSystem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.SetTRBRequestRelationNewSystemInput
+	var arg0 model.SetTRBRequestRelationNewSystemInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOSetTRBRequestRelationNewSystemInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationNewSystemInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSetTRBRequestRelationNewSystemInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationNewSystemInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -30717,7 +30717,7 @@ func (ec *executionContext) _Mutation_setTRBRequestRelationNewSystem(ctx context
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().SetTRBRequestRelationNewSystem(rctx, fc.Args["input"].(*model.SetTRBRequestRelationNewSystemInput))
+		return ec.resolvers.Mutation().SetTRBRequestRelationNewSystem(rctx, fc.Args["input"].(model.SetTRBRequestRelationNewSystemInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -30821,7 +30821,7 @@ func (ec *executionContext) _Mutation_setTRBRequestRelationExistingSystem(ctx co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().SetTRBRequestRelationExistingSystem(rctx, fc.Args["input"].(*model.SetTRBRequestRelationExistingSystemInput))
+		return ec.resolvers.Mutation().SetTRBRequestRelationExistingSystem(rctx, fc.Args["input"].(model.SetTRBRequestRelationExistingSystemInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -30925,7 +30925,7 @@ func (ec *executionContext) _Mutation_setTRBRequestRelationExistingService(ctx c
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().SetTRBRequestRelationExistingService(rctx, fc.Args["input"].(*model.SetTRBRequestRelationExistingServiceInput))
+		return ec.resolvers.Mutation().SetTRBRequestRelationExistingService(rctx, fc.Args["input"].(model.SetTRBRequestRelationExistingServiceInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -71838,6 +71838,21 @@ func (ec *executionContext) unmarshalNSetRolesForUserOnSystemInput2githubᚗcom�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNSetTRBRequestRelationExistingServiceInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationExistingServiceInput(ctx context.Context, v interface{}) (model.SetTRBRequestRelationExistingServiceInput, error) {
+	res, err := ec.unmarshalInputSetTRBRequestRelationExistingServiceInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSetTRBRequestRelationExistingSystemInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationExistingSystemInput(ctx context.Context, v interface{}) (model.SetTRBRequestRelationExistingSystemInput, error) {
+	res, err := ec.unmarshalInputSetTRBRequestRelationExistingSystemInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNSetTRBRequestRelationNewSystemInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationNewSystemInput(ctx context.Context, v interface{}) (model.SetTRBRequestRelationNewSystemInput, error) {
+	res, err := ec.unmarshalInputSetTRBRequestRelationNewSystemInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -74566,30 +74581,6 @@ func (ec *executionContext) unmarshalOSetSystemIntakeRelationNewSystemInput2ᚖg
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputSetSystemIntakeRelationNewSystemInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalOSetTRBRequestRelationExistingServiceInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationExistingServiceInput(ctx context.Context, v interface{}) (*model.SetTRBRequestRelationExistingServiceInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputSetTRBRequestRelationExistingServiceInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalOSetTRBRequestRelationExistingSystemInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationExistingSystemInput(ctx context.Context, v interface{}) (*model.SetTRBRequestRelationExistingSystemInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputSetTRBRequestRelationExistingSystemInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalOSetTRBRequestRelationNewSystemInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationNewSystemInput(ctx context.Context, v interface{}) (*model.SetTRBRequestRelationNewSystemInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputSetTRBRequestRelationNewSystemInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 

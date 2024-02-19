@@ -20,7 +20,7 @@ import (
 func SetTRBRequestRelationNewSystem(
 	ctx context.Context,
 	store *storage.Store,
-	input *model.SetTRBRequestRelationNewSystemInput,
+	input model.SetTRBRequestRelationNewSystemInput,
 ) (*models.TRBRequest, error) {
 	return sqlutils.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
@@ -50,7 +50,7 @@ func SetTRBRequestRelationNewSystem(
 func SetTRBRequestRelationExistingSystem(
 	ctx context.Context,
 	store *storage.Store,
-	input *model.SetTRBRequestRelationExistingSystemInput,
+	input model.SetTRBRequestRelationExistingSystemInput,
 ) (*models.TRBRequest, error) {
 	return sqlutils.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
@@ -78,7 +78,7 @@ func SetTRBRequestRelationExistingSystem(
 func SetTRBRequestRelationExistingService(
 	ctx context.Context,
 	store *storage.Store,
-	input *model.SetTRBRequestRelationExistingServiceInput,
+	input model.SetTRBRequestRelationExistingServiceInput,
 ) (*models.TRBRequest, error) {
 	return sqlutils.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
