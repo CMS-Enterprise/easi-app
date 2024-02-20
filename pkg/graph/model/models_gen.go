@@ -472,6 +472,23 @@ type SetSystemIntakeRelationNewSystemInput struct {
 	ContractNumbers []string  `json:"contractNumbers"`
 }
 
+type SetTRBRequestRelationExistingServiceInput struct {
+	TrbRequestID    uuid.UUID `json:"trbRequestID"`
+	ContractName    string    `json:"contractName"`
+	ContractNumbers []string  `json:"contractNumbers"`
+}
+
+type SetTRBRequestRelationExistingSystemInput struct {
+	TrbRequestID    uuid.UUID `json:"trbRequestID"`
+	CedarSystemIDs  []string  `json:"cedarSystemIDs"`
+	ContractNumbers []string  `json:"contractNumbers"`
+}
+
+type SetTRBRequestRelationNewSystemInput struct {
+	TrbRequestID    uuid.UUID `json:"trbRequestID"`
+	ContractNumbers []string  `json:"contractNumbers"`
+}
+
 // Input to submit an intake for review
 type SubmitIntakeInput struct {
 	ID uuid.UUID `json:"id"`
