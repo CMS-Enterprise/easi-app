@@ -60,7 +60,7 @@ func SetTRBRequestRelationExistingSystem(
 		}
 
 		trbRequest.ContractName = zero.StringFromPtr(nil)
-		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeExistingService)
+		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeExistingSystem)
 		updatedTRBRequest, err := store.UpdateTRBRequestNP(ctx, tx, trbRequest)
 		if err != nil {
 			return nil, err

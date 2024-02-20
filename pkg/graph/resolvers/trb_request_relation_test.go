@@ -18,13 +18,13 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 	suite.False(trbRequest.ID == uuid.Nil)
 
 	// TODO: check this value for containing contract numbers
-	_, err = SetTRBRequestRelationNewSystem(ctx, store, model.SetTRBRequestRelationNewSystemInput{
+	updatedReq, err := SetTRBRequestRelationNewSystem(ctx, store, model.SetTRBRequestRelationNewSystemInput{
 		TrbRequestID:    trbRequest.ID,
 		ContractNumbers: []string{"11111", "22222"},
 	})
 
 	suite.NoError(err)
-
+	suite.Equal(models.RelationTypeNewSystem, *updatedReq.SystemRelationType)
 }
 
 func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
@@ -38,12 +38,13 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 	suite.False(trbRequest.ID == uuid.Nil)
 
 	// TODO: check this value for containing cedar system ids and contract numbers
-	_, err = SetTRBRequestRelationExistingSystem(ctx, store, model.SetTRBRequestRelationExistingSystemInput{
+	updatedReq, err := SetTRBRequestRelationExistingSystem(ctx, store, model.SetTRBRequestRelationExistingSystemInput{
 		TrbRequestID:    trbRequest.ID,
 		CedarSystemIDs:  []string{"hello", "cedar!"},
 		ContractNumbers: []string{"2468", "13579"},
 	})
 	suite.NoError(err)
+	suite.Equal(models.RelationTypeExistingSystem, *updatedReq.SystemRelationType)
 }
 
 func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
@@ -65,6 +66,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 	strVal, _ := withExistingService.ContractName.Value()
 	suite.NotNil(strVal)
 	suite.Equal(strVal, "existing service")
+	suite.Equal(models.RelationTypeExistingService, *withExistingService.SystemRelationType)
 }
 
 func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
