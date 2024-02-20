@@ -37,8 +37,8 @@ func SetTRBRequestRelationNewSystem(
 			return nil, err
 		}
 
-		// TODO: Store -> Add CEDAR  relationships
-		// Delete & recreate contract number relationships
+		// TODO: Store -> Delete CEDAR relationships
+		// TODO: Store -> Set contract number relationships
 
 		return updatedTRBRequest, nil
 	})
@@ -65,8 +65,8 @@ func SetTRBRequestRelationExistingSystem(
 		if err != nil {
 			return nil, err
 		}
-		// TODO: Store -> Add CEDAR  relationships
-		// Delete & recreate contract number relationships
+		// TODO: Store -> Add CEDAR relationships
+		// TODO: Store -> Set contract number relationships
 
 		return updatedTRBRequest, nil
 	})
@@ -94,8 +94,8 @@ func SetTRBRequestRelationExistingService(
 		if err != nil {
 			return nil, err
 		}
-		// TODO: Store -> Add CEDAR  relationships
-		// Delete & recreate contract number relationships
+		// TODO: Store -> Delete CEDAR relationships
+		// TODO: Store -> Set contract number relationships
 
 		return updatedTRBRequest, nil
 	})
@@ -121,9 +121,8 @@ func UnlinkTRBRequestRelation(
 		// Clear contract name
 		trbRequest.ContractName = zero.StringFromPtr(nil)
 
-		// TODO: Clear contract number relations by setting empty array of contract numbers
-
-		// TODO: Clear CEDAR system relationships
+		// TODO: Store -> Delete CEDAR relationships
+		// TODO: Store -> Delete contract number relationships
 
 		// update TRB Request
 		updatedTRBRequest, err := store.UpdateTRBRequestNP(ctx, tx, trbRequest)
