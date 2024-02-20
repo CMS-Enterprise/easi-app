@@ -1,16 +1,22 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/guregu/null/zero"
+)
 
 // TRBRequest represents a TRB request object
 type TRBRequest struct {
 	BaseStruct
-	Name               *string         `json:"name" db:"name"`
-	Archived           bool            `json:"archived" db:"archived"`
-	Type               TRBRequestType  `json:"type" db:"type"`
-	State              TRBRequestState `json:"state" db:"state"`
-	ConsultMeetingTime *time.Time      `json:"consultMeetingTime" db:"consult_meeting_time"`
-	TRBLead            *string         `json:"trbLead" db:"trb_lead"`
+	Name               *string              `json:"name" db:"name"`
+	Archived           bool                 `json:"archived" db:"archived"`
+	Type               TRBRequestType       `json:"type" db:"type"`
+	State              TRBRequestState      `json:"state" db:"state"`
+	ConsultMeetingTime *time.Time           `json:"consultMeetingTime" db:"consult_meeting_time"`
+	TRBLead            *string              `json:"trbLead" db:"trb_lead"`
+	ContractName       zero.String          `json:"contractName" db:"contract_name"`
+	SystemRelationType *RequestRelationType `json:"relationType" db:"system_relation_type"`
 }
 
 // NewTRBRequest returns a new trb request object

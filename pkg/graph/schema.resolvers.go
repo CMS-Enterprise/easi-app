@@ -1805,6 +1805,26 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 	)
 }
 
+// SetTRBRequestRelationNewSystem is the resolver for the setTRBRequestRelationNewSystem field.
+func (r *mutationResolver) SetTRBRequestRelationNewSystem(ctx context.Context, input model.SetTRBRequestRelationNewSystemInput) (*models.TRBRequest, error) {
+	return resolvers.SetTRBRequestRelationNewSystem(ctx, r.store, input)
+}
+
+// SetTRBRequestRelationExistingSystem is the resolver for the setTRBRequestRelationExistingSystem field.
+func (r *mutationResolver) SetTRBRequestRelationExistingSystem(ctx context.Context, input model.SetTRBRequestRelationExistingSystemInput) (*models.TRBRequest, error) {
+	return resolvers.SetTRBRequestRelationExistingSystem(ctx, r.store, input)
+}
+
+// SetTRBRequestRelationExistingService is the resolver for the setTRBRequestRelationExistingService field.
+func (r *mutationResolver) SetTRBRequestRelationExistingService(ctx context.Context, input model.SetTRBRequestRelationExistingServiceInput) (*models.TRBRequest, error) {
+	return resolvers.SetTRBRequestRelationExistingService(ctx, r.store, input)
+}
+
+// UnlinkTRBRequestRelation is the resolver for the unlinkTRBRequestRelation field.
+func (r *mutationResolver) UnlinkTRBRequestRelation(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequest, error) {
+	return resolvers.UnlinkTRBRequestRelation(ctx, r.store, trbRequestID)
+}
+
 // CreateTRBAdminNoteGeneralRequest is the resolver for the createTRBAdminNoteGeneralRequest field.
 func (r *mutationResolver) CreateTRBAdminNoteGeneralRequest(ctx context.Context, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
 	return resolvers.CreateTRBAdminNoteGeneralRequest(ctx, r.store, input)
@@ -2747,7 +2767,7 @@ func (r *systemIntakeResolver) ContractName(ctx context.Context, obj *models.Sys
 }
 
 // RelationType is the resolver for the relationType field.
-func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRelationType, error) {
+func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.SystemIntake) (*models.RequestRelationType, error) {
 	return obj.SystemRelationType, nil
 }
 
@@ -2904,6 +2924,16 @@ func (r *tRBRequestResolver) AdminNotes(ctx context.Context, obj *models.TRBRequ
 // IsRecent is the resolver for the isRecent field.
 func (r *tRBRequestResolver) IsRecent(ctx context.Context, obj *models.TRBRequest) (bool, error) {
 	return resolvers.IsRecentTRBRequest(ctx, obj, time.Now()), nil
+}
+
+// ContractName is the resolver for the contractName field.
+func (r *tRBRequestResolver) ContractName(ctx context.Context, obj *models.TRBRequest) (*string, error) {
+	return obj.ContractName.Ptr(), nil
+}
+
+// RelationType is the resolver for the relationType field.
+func (r *tRBRequestResolver) RelationType(ctx context.Context, obj *models.TRBRequest) (*models.RequestRelationType, error) {
+	return obj.SystemRelationType, nil
 }
 
 // ContractNumbers is the resolver for the contractNumbers field.

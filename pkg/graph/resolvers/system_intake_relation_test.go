@@ -46,7 +46,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 	// Ensure the contract name was deleted properly
 	suite.True(updatedIntake.ContractName.IsZero())
 	suite.NotNil(updatedIntake.SystemRelationType)
-	suite.Equal(models.SIRelationTypeNewSystem, *updatedIntake.SystemRelationType)
+	suite.Equal(models.RelationTypeNewSystem, *updatedIntake.SystemRelationType)
 }
 func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 	ctx := suite.testConfigs.Context
@@ -82,7 +82,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 	// Ensure the contract name was deleted properly
 	suite.True(updatedIntake.ContractName.IsZero())
 	suite.NotNil(updatedIntake.SystemRelationType)
-	suite.Equal(models.SIRelationTypeExistingSystem, *updatedIntake.SystemRelationType)
+	suite.Equal(models.RelationTypeExistingSystem, *updatedIntake.SystemRelationType)
 }
 
 func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
@@ -120,7 +120,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 	// Ensure the contract name was set properly
 	suite.Equal(updatedIntake.ContractName.ValueOrZero(), contractName)
 	suite.NotNil(updatedIntake.SystemRelationType)
-	suite.Equal(models.SIRelationTypeExistingService, *updatedIntake.SystemRelationType)
+	suite.Equal(models.RelationTypeExistingService, *updatedIntake.SystemRelationType)
 }
 
 // TODO maybe we should have a test for each of the different types of relationships (and their data) being unlinked
