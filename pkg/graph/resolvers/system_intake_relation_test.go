@@ -1,13 +1,10 @@
 package resolvers
 
 import (
-	"context"
 	"time"
 
 	"github.com/guregu/null/zero"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -128,9 +125,6 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 	ctx := suite.testConfigs.Context
 	store := suite.testConfigs.Store
-
-	ctx = appcontext.WithLogger(ctx, suite.testConfigs.Logger)
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(suite.testConfigs.Store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
 
 	submittedAt := time.Now()
 	// Create an inital intake

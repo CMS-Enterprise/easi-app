@@ -1,13 +1,9 @@
 package resolvers
 
 import (
-	"context"
-
 	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -15,9 +11,6 @@ import (
 func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 	ctx := suite.testConfigs.Context
 	store := suite.testConfigs.Store
-
-	ctx = appcontext.WithLogger(ctx, suite.testConfigs.Logger)
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(suite.testConfigs.Store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
 
 	// Create an initial TRB Request
 	trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
@@ -48,11 +41,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 	ctx := suite.testConfigs.Context
 	store := suite.testConfigs.Store
 
-	ctx = appcontext.WithLogger(ctx, suite.testConfigs.Logger)
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(suite.testConfigs.Store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
-
 	// Create an initial TRB Request
-
 	trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
 	suite.NoError(err)
 	suite.NotEqual(trbRequest.ID, uuid.Nil)
@@ -81,9 +70,6 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 	ctx := suite.testConfigs.Context
 	store := suite.testConfigs.Store
-
-	ctx = appcontext.WithLogger(ctx, suite.testConfigs.Logger)
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(suite.testConfigs.Store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
 
 	// Create an initial TRB Request
 	trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
@@ -116,9 +102,6 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 	ctx := suite.testConfigs.Context
 	store := suite.testConfigs.Store
-
-	ctx = appcontext.WithLogger(ctx, suite.testConfigs.Logger)
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(suite.testConfigs.Store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
 
 	// Create an initial TRB Request
 	trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)

@@ -1,22 +1,15 @@
 package resolvers
 
 import (
-	"context"
-
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
 func (s *ResolverSuite) TestTRBRequestContractNumbers() {
-	ctx := context.Background()
-	ctx = appcontext.WithLogger(ctx, s.testConfigs.Logger)
-
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(s.testConfigs.Store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
+	ctx := s.testConfigs.Context
 
 	const (
 		contract1 = "1"
