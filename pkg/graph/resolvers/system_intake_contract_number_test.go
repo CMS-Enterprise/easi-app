@@ -14,7 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s *ResolverSuite) TestContractNumbers() {
+func (s *ResolverSuite) TestSystemIntakeContractNumbers() {
 	ctx := context.Background()
 	ctx = appcontext.WithLogger(ctx, s.testConfigs.Logger)
 

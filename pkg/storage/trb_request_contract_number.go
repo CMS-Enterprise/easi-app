@@ -37,6 +37,7 @@ func (s *Store) SetTRBRequestContractNumbers(ctx context.Context, tx *sqlx.Tx, t
 	userID := appcontext.Principal(ctx).Account().ID
 
 	setTRBRequestContractNumbersLinks := make([]models.TRBRequestContractNumber, len(contractNumbers))
+
 	for i, contractNumber := range contractNumbers {
 		contractNumberLink := models.NewTRBRequestContractNumber(userID)
 		contractNumberLink.ID = uuid.New()

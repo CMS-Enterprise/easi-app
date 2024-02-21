@@ -1,6 +1,8 @@
 package storage
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type extractTRBRequestID struct {
 	TRBRequestID string `json:"trb_request_id"`
