@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -46,11 +47,18 @@ func (s *Store) CreateTRBRequest(ctx context.Context, np sqlutils.NamedPreparer,
 	return &retTRB, nil
 }
 
-// GetTRBRequestByID returns an TRBRequest from the db  for a given id
+// GetTRBRequestByID takes in a NamedPreparer (db, tx) and returns an TRBRequest from the db  for a given id
 func (s *Store) GetTRBRequestByID(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
+	return sqlutils.WithTransaction[models.TRBRequest](s, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+		return s.GetTRBRequestByIDNP(ctx, tx, id)
+	})
+}
+
+// GetTRBRequestByIDNP returns an TRBRequest from the db  for a given id
+func (s *Store) GetTRBRequestByIDNP(ctx context.Context, np sqlutils.NamedPreparer, id uuid.UUID) (*models.TRBRequest, error) {
 
 	trb := models.TRBRequest{}
-	stmt, err := s.db.PrepareNamed(sqlqueries.TRBRequest.GetByID)
+	stmt, err := np.PrepareNamed(sqlqueries.TRBRequest.GetByID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request",
@@ -78,8 +86,15 @@ func (s *Store) GetTRBRequestByID(ctx context.Context, id uuid.UUID) (*models.TR
 }
 
 // UpdateTRBRequest returns an TRBRequest from the db for a given id
-func (s *Store) UpdateTRBRequest(ctx context.Context, trb *models.TRBRequest) (*models.TRBRequest, error) {
-	stmt, err := s.db.PrepareNamed(sqlqueries.TRBRequest.Update)
+func (s *Store) UpdateTRBRequest(ctx context.Context, trbRequest *models.TRBRequest) (*models.TRBRequest, error) {
+	return sqlutils.WithTransaction[models.TRBRequest](s, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+		return s.UpdateTRBRequestNP(ctx, tx, trbRequest)
+	})
+}
+
+// UpdateTRBRequestNP takes in a NamedPreparer (db, tx) and returns an TRBRequest from the db for a given id
+func (s *Store) UpdateTRBRequestNP(ctx context.Context, np sqlutils.NamedPreparer, trb *models.TRBRequest) (*models.TRBRequest, error) {
+	stmt, err := np.PrepareNamed(sqlqueries.TRBRequest.Update)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update TRB request %s", err),

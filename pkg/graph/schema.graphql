@@ -1016,7 +1016,7 @@ type SystemIntake {
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
   contractName: String
-  relationType: SystemIntakeRelationType # TODO: NOT IMPLEMENTED
+  relationType: RequestRelationType # TODO: NOT IMPLEMENTED
 
   """
   Linked systems
@@ -1051,7 +1051,7 @@ type SystemIntakeContractNumber {
 
 # TODO Figure out if there's any better way to name this.
 # The name currently feels a bit abstract, but it's the best I could come up with.
-enum SystemIntakeRelationType {
+enum RequestRelationType {
   NEW_SYSTEM
   EXISTING_SYSTEM
   EXISTING_SERVICE
@@ -1258,20 +1258,20 @@ input UpdateSystemIntakeLinkedCedarSystemInput {
   cedarSystemId: String
 }
 
-# SystemIntakeRelationType.NEW_SYSTEM
+# RequestRelationType.NEW_SYSTEM
 input SetSystemIntakeRelationNewSystemInput {
   systemIntakeID: UUID!
   contractNumbers: [String!]!
 }
 
-# SystemIntakeRelationType.EXISTING_SYSTEM
+# RequestRelationType.EXISTING_SYSTEM
 input SetSystemIntakeRelationExistingSystemInput {
   systemIntakeID: UUID!
   cedarSystemIDs: [String!]!
   contractNumbers: [String!]!
 }
 
-# SystemIntakeRelationType.EXISTING_SERVICE
+# RequestRelationType.EXISTING_SERVICE
 input SetSystemIntakeRelationExistingServiceInput {
   systemIntakeID: UUID!
   contractName: String!
@@ -1750,6 +1750,8 @@ type TRBRequest {
   createdAt: Time! # will be used for UploadedAt in frontend
   modifiedBy: String
   modifiedAt: Time
+  contractName: String
+  relationType: RequestRelationType # TODO: NOT IMPLEMENTED
 }
 
 """
@@ -2226,6 +2228,26 @@ input UpdateTRBRequestTRBLeadInput {
   trbLead: String!
 }
 
+# RequestRelationType.NEW_SYSTEM
+input SetTRBRequestRelationNewSystemInput {
+  trbRequestID: UUID!
+  contractNumbers: [String!]!
+}
+
+# RequestRelationType.EXISTING_SYSTEM
+input SetTRBRequestRelationExistingSystemInput {
+  trbRequestID: UUID!
+  cedarSystemIDs: [String!]!
+  contractNumbers: [String!]!
+}
+
+# RequestRelationType.EXISTING_SERVICE
+input SetTRBRequestRelationExistingServiceInput {
+  trbRequestID: UUID!
+  contractName: String!
+  contractNumbers: [String!]!
+}
+
 """
 Represents the category of a single TRB admin note
 """
@@ -2611,6 +2633,10 @@ type Mutation {
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
     @hasRole(role: EASI_TRB_ADMIN)
 
+  setTRBRequestRelationNewSystem(input: SetTRBRequestRelationNewSystemInput!): TRBRequest
+  setTRBRequestRelationExistingSystem(input: SetTRBRequestRelationExistingSystemInput!): TRBRequest
+  setTRBRequestRelationExistingService(input: SetTRBRequestRelationExistingServiceInput!): TRBRequest
+  unlinkTRBRequestRelation(trbRequestID: UUID!): TRBRequest
 
   # separate mutations for each category of admin note
   createTRBAdminNoteGeneralRequest(input: CreateTRBAdminNoteGeneralRequestInput!): TRBAdminNote!
