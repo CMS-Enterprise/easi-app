@@ -9,7 +9,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// ContractNumbers utilizies a dataloader to retrieve contract numbers linked to a given system intake ID
-func ContractNumbers(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {
+// SystemIntakeContractNumbers utilizies a dataloader to retrieve contract numbers linked to a given system intake ID
+func SystemIntakeContractNumbers(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {
 	return dataloaders.GetSystemIntakeContractNumbersBySystemIntakeID(ctx, systemIntakeID)
 }
