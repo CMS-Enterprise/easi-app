@@ -14,6 +14,7 @@ type DataLoaders struct {
 	DataReader                        *DataReader
 	UserInfoLoader                    *WrappedDataLoader
 	systemIntakeContractNumbersLoader *WrappedDataLoader
+	trbRequestContractNumbersLoader   *WrappedDataLoader
 	FetchUserInfos                    func(context.Context, []string) ([]*models.UserInfo, error)
 }
 
@@ -31,6 +32,7 @@ func NewDataLoaders(store *storage.Store, fetchUserInfos func(context.Context, [
 	loaders.UserInfoLoader = newWrappedDataLoader(loaders.BatchUserInfos)
 
 	loaders.systemIntakeContractNumbersLoader = newWrappedDataLoader(loaders.getSystemIntakeContractNumbersBySystemIntakeID)
+	loaders.trbRequestContractNumbersLoader = newWrappedDataLoader(loaders.getTRBRequestContractNumbersByTRBRequestID)
 
 	return loaders
 }
