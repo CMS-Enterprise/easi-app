@@ -18,7 +18,7 @@ import (
 // This function opts to take a *sqlx.Tx instead of a NamedPreparer because the SQL calls inside this function are heavily intertwined, and we never want to call them outside the scope of a transaction
 func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, contractNumbers []string) error {
 	if systemIntakeID == uuid.Nil {
-		return errors.New("unexpected nil system intake ID when linking system intake to contract number")
+		return errors.New("unexpected nil system intake ID when linking system intake to contract numbers")
 	}
 
 	if _, err := tx.NamedExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.Delete, map[string]interface{}{
@@ -29,7 +29,7 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 		return err
 	}
 
-	// no need to run insert if we are not inserting new Contract Numbers
+	// no need to run insert if we are not inserting new contract numbers for this System Intake ID
 	if len(contractNumbers) < 1 {
 		return nil
 	}

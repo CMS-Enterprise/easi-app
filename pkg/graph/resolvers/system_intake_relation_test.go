@@ -87,7 +87,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			})
 			suite.NoError(err)
 
-			updatedIntakeContractNumbers, err := ContractNumbers(ctx, openIntake.ID)
+			updatedIntakeContractNumbers, err := SystemIntakeContractNumbers(ctx, openIntake.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedIntakeContractNumbers))
 
@@ -116,7 +116,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			suite.True(updatedIntake.ContractName.IsZero())
 
 			// refetch contract numbers and system IDs
-			updatedIntakeContractNumbers, err = ContractNumbers(ctx, updatedIntake.ID)
+			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(ctx, updatedIntake.ID)
 			suite.NoError(err)
 
 			updatedIntakeSystemIDs, err = Systems(ctx, mockGetCedarSystem, openIntake.ID)
@@ -207,7 +207,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			})
 			suite.NoError(err)
 
-			updatedIntakeContractNumbers, err := ContractNumbers(ctx, openIntake.ID)
+			updatedIntakeContractNumbers, err := SystemIntakeContractNumbers(ctx, openIntake.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedIntakeContractNumbers))
 
@@ -243,7 +243,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			suite.True(updatedIntake.ContractName.IsZero())
 
 			// refetch contract numbers and system IDs
-			updatedIntakeContractNumbers, err = ContractNumbers(ctx, updatedIntake.ID)
+			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(ctx, updatedIntake.ID)
 			suite.NoError(err)
 
 			updatedIntakeSystemIDs, err = Systems(ctx, mockGetCedarSystem, openIntake.ID)
@@ -335,7 +335,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			})
 			suite.NoError(err)
 
-			updatedIntakeContractNumbers, err := ContractNumbers(ctx, openIntake.ID)
+			updatedIntakeContractNumbers, err := SystemIntakeContractNumbers(ctx, openIntake.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedIntakeContractNumbers))
 
@@ -364,7 +364,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			suite.Equal(newContractName, updatedIntake.ContractName.String)
 
 			// refetch contract numbers and system IDs
-			updatedIntakeContractNumbers, err = ContractNumbers(ctx, updatedIntake.ID)
+			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(ctx, updatedIntake.ID)
 			suite.NoError(err)
 
 			updatedIntakeSystemIDs, err = Systems(ctx, mockGetCedarSystem, openIntake.ID)
@@ -432,7 +432,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.Nil(unlinkedIntake.SystemRelationType)
 
 		// Check contract numbers are cleared
-		nums, err := ContractNumbers(ctx, unlinkedIntake.ID)
+		nums, err := SystemIntakeContractNumbers(ctx, unlinkedIntake.ID)
 		suite.NoError(err)
 		suite.Empty(nums)
 
@@ -479,7 +479,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.Nil(unlinkedIntake.SystemRelationType)
 
 		// Check contract numbers are cleared
-		nums, err := ContractNumbers(ctx, unlinkedIntake.ID)
+		nums, err := SystemIntakeContractNumbers(ctx, unlinkedIntake.ID)
 		suite.NoError(err)
 		suite.Empty(nums)
 
@@ -519,7 +519,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.Nil(unlinkedIntake.SystemRelationType)
 
 		// Check contract numbers are cleared
-		nums, err := ContractNumbers(ctx, unlinkedIntake.ID)
+		nums, err := SystemIntakeContractNumbers(ctx, unlinkedIntake.ID)
 		suite.NoError(err)
 		suite.Empty(nums)
 

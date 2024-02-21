@@ -12,6 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -96,10 +97,13 @@ func (tc *TestConfigs) GetDefaults() {
 	}
 	tc.Store, _ = storage.NewStore(tc.DBConfig, tc.LDClient)
 
+	// create the test context
 	// principal is fetched between each test in SetupTest()
-
 	ctx := appcontext.WithLogger(context.Background(), tc.Logger)
 	ctx = appcontext.WithPrincipal(ctx, getTestPrincipal(tc.Store, tc.UserInfo.Username))
+	// Set up mocked dataloaders for the test context
+	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(tc.Store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
+
 	tc.Context = ctx
 
 	emailClient := NewEmailClient()

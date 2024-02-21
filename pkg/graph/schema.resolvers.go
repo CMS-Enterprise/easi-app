@@ -2773,7 +2773,7 @@ func (r *systemIntakeResolver) Systems(ctx context.Context, obj *models.SystemIn
 
 // ContractNumbers is the resolver for the contractNumbers field.
 func (r *systemIntakeResolver) ContractNumbers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeContractNumber, error) {
-	return resolvers.ContractNumbers(ctx, obj.ID)
+	return resolvers.SystemIntakeContractNumbers(ctx, obj.ID)
 }
 
 // DocumentType is the resolver for the documentType field.
@@ -2934,6 +2934,11 @@ func (r *tRBRequestResolver) ContractName(ctx context.Context, obj *models.TRBRe
 // RelationType is the resolver for the relationType field.
 func (r *tRBRequestResolver) RelationType(ctx context.Context, obj *models.TRBRequest) (*models.RequestRelationType, error) {
 	return obj.SystemRelationType, nil
+}
+
+// ContractNumbers is the resolver for the contractNumbers field.
+func (r *tRBRequestResolver) ContractNumbers(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestContractNumber, error) {
+	return resolvers.TRBRequestContractNumbers(ctx, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.

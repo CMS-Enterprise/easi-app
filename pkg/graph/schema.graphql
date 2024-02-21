@@ -1742,6 +1742,21 @@ type TRBRequest {
   modifiedAt: Time
   contractName: String
   relationType: RequestRelationType # TODO: NOT IMPLEMENTED
+
+  """
+  Linked contract numbers
+  """
+  contractNumbers: [TRBRequestContractNumber!]!
+}
+
+type TRBRequestContractNumber {
+  id: UUID!
+  trbRequestID: UUID!
+  contractNumber: String!
+  createdBy: UUID!
+  createdAt: Time!
+  modifiedBy: UUID
+  modifiedAt: Time
 }
 
 """
