@@ -98,7 +98,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			})
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err := Systems(ctx, openIntake.ID)
+			updatedIntakeSystemIDs, err := Systems(ctx, mockGetSystem, openIntake.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
@@ -119,14 +119,14 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			updatedIntakeContractNumbers, err = ContractNumbers(ctx, updatedIntake.ID)
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err = Systems(ctx, openIntake.ID)
+			updatedIntakeSystemIDs, err = Systems(ctx, mockGetSystem, openIntake.ID)
 			suite.NoError(err)
 
 			// Ensure the system IDs were modified properly
 			// New System relation should always remove existing system IDs
 			suite.Equal(len(caseValues.NewSystemIDs), len(updatedIntakeSystemIDs))
 			for _, v := range updatedIntakeSystemIDs {
-				suite.Contains(caseValues.NewSystemIDs, v.SystemID)
+				suite.Contains(caseValues.NewSystemIDs, v.ID)
 			}
 
 			// Ensure the contract numbers were modified properly
@@ -218,7 +218,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			})
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err := Systems(ctx, openIntake.ID)
+			updatedIntakeSystemIDs, err := Systems(ctx, mockGetSystem, openIntake.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
@@ -246,13 +246,13 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			updatedIntakeContractNumbers, err = ContractNumbers(ctx, updatedIntake.ID)
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err = Systems(ctx, openIntake.ID)
+			updatedIntakeSystemIDs, err = Systems(ctx, mockGetSystem, openIntake.ID)
 			suite.NoError(err)
 
 			// Ensure the system IDs were modified properly
 			suite.Equal(len(caseValues.NewSystemIDs), len(updatedIntakeSystemIDs))
 			for _, v := range updatedIntakeSystemIDs {
-				suite.Contains(caseValues.NewSystemIDs, v.SystemID)
+				suite.Contains(caseValues.NewSystemIDs, v.ID)
 			}
 
 			// Ensure the contract numbers were modified properly
@@ -346,7 +346,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			})
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err := Systems(ctx, openIntake.ID)
+			updatedIntakeSystemIDs, err := Systems(ctx, mockGetSystem, openIntake.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
@@ -367,13 +367,13 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			updatedIntakeContractNumbers, err = ContractNumbers(ctx, updatedIntake.ID)
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err = Systems(ctx, openIntake.ID)
+			updatedIntakeSystemIDs, err = Systems(ctx, mockGetSystem, openIntake.ID)
 			suite.NoError(err)
 
 			// Ensure the system IDs were modified properly
 			suite.Equal(len(caseValues.NewSystemIDs), len(updatedIntakeSystemIDs))
 			for _, v := range updatedIntakeSystemIDs {
-				suite.Contains(caseValues.NewSystemIDs, v.SystemID)
+				suite.Contains(caseValues.NewSystemIDs, v.ID)
 			}
 
 			// Ensure the contract numbers were modified properly
@@ -437,7 +437,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := Systems(ctx, unlinkedIntake.ID)
+		systemIDs, err := Systems(ctx, mockGetSystem, unlinkedIntake.ID)
 		suite.NoError(err)
 		suite.Empty(systemIDs)
 	})
@@ -484,7 +484,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := Systems(ctx, unlinkedIntake.ID)
+		systemIDs, err := Systems(ctx, mockGetSystem, unlinkedIntake.ID)
 		suite.NoError(err)
 		suite.Empty(systemIDs)
 	})
@@ -524,7 +524,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := Systems(ctx, unlinkedIntake.ID)
+		systemIDs, err := Systems(ctx, mockGetSystem, unlinkedIntake.ID)
 		suite.NoError(err)
 		suite.Empty(systemIDs)
 	})
