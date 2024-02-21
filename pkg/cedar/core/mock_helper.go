@@ -1,9 +1,6 @@
 package cedarcore
 
 import (
-	"fmt"
-
-	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -81,7 +78,7 @@ func getMockSystems() ([]*models.CedarSystem, error) {
 func getMockSystem(systemID string) (*models.CedarSystem, error) {
 	system, ok := mockSystems[systemID]
 	if !ok {
-		return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
+		return nil, nil
 	}
 	return system, nil
 }
