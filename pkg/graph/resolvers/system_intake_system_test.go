@@ -63,7 +63,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		})
 		s.NoError(err)
 
-		data, err := Systems(ctx, mockGetSystem, createdIDs[0])
+		data, err := Systems(ctx, mockGetCedarSystem, createdIDs[0])
 		s.NoError(err)
 		s.Len(data, 3)
 
@@ -92,14 +92,8 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		s.True(found3)
 
 		// attempt to get systems for a system intake without linked systems
-		data, err = Systems(ctx, mockGetSystem, createdIDs[1])
+		data, err = Systems(ctx, mockGetCedarSystem, createdIDs[1])
 		s.NoError(err)
 		s.Empty(data)
 	})
-}
-
-func mockGetSystem(_ context.Context, systemID string) (*models.CedarSystem, error) {
-	return &models.CedarSystem{
-		ID: systemID,
-	}, nil
 }

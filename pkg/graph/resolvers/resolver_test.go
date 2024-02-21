@@ -177,3 +177,9 @@ func (suite *ResolverSuite) createNewIntake() *models.SystemIntake {
 
 	return newIntake
 }
+
+func mockGetCedarSystem(_ context.Context, systemID string) (*models.CedarSystem, error) {
+	return &models.CedarSystem{
+		ID: systemID,
+	}, nil
+}
