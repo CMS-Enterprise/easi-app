@@ -1,0 +1,85 @@
+package resolvers
+
+import (
+	"context"
+
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
+
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
+	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
+)
+
+func (s *ResolverSuite) TestTRBRequestContractNumbers() {
+	ctx := context.Background()
+	ctx = appcontext.WithLogger(ctx, s.testConfigs.Logger)
+
+	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(s.testConfigs.Store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
+
+	const (
+		contract1 = "1"
+		contract2 = "2"
+		contract3 = "3"
+	)
+
+	var createdIDs []uuid.UUID
+
+	s.Run("create TRB Requests for test", func() {
+		for i := 0; i < 2; i++ {
+			created, err := CreateTRBRequest(ctx, models.TRBTBrainstorm, s.testConfigs.Store)
+			s.NoError(err)
+			createdIDs = append(createdIDs, created.ID)
+		}
+
+		contractNumbers := []string{
+			contract1,
+			contract2,
+			contract3,
+		}
+
+		// set contract numbers on these TRB Requests
+		_, err := sqlutils.WithTransaction[any](s.testConfigs.Store, func(tx *sqlx.Tx) (*any, error) {
+			s.NoError(s.testConfigs.Store.SetTRBRequestContractNumbers(ctx, tx, createdIDs[0], contractNumbers))
+			return nil, nil
+		})
+		s.NoError(err)
+
+		data, err := TRBRequestContractNumbers(ctx, createdIDs[0])
+		s.NoError(err)
+		s.Len(data, 3)
+
+		var (
+			found1 bool
+			found2 bool
+			found3 bool
+		)
+
+		for _, result := range data {
+			s.Equal(result.TRBRequestID, createdIDs[0])
+
+			if result.ContractNumber == contract1 {
+				found1 = true
+			}
+
+			if result.ContractNumber == contract2 {
+				found2 = true
+			}
+
+			if result.ContractNumber == contract3 {
+				found3 = true
+			}
+		}
+
+		s.True(found1)
+		s.True(found2)
+		s.True(found3)
+
+		// confirm second TRB Request does not have any contract numbers on it
+		data, err = TRBRequestContractNumbers(ctx, createdIDs[1])
+		s.NoError(err)
+		s.Empty(data)
+	})
+
+}
