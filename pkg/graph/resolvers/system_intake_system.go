@@ -27,7 +27,7 @@ func Systems(
 		cedarSystemSummary, err := getCedarSystem(ctx, v.SystemID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("unable to retrieve system from cedar")
-			return nil, err
+			continue
 		}
 		systems = append(systems, cedarSystemSummary)
 	}
