@@ -41,11 +41,19 @@ func (s *AppValidateTestSuite) TestCheckUniqLifecycleCosts() {
 }
 
 func (s *AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
-	s.Run("returns empty strings when intake is submitted", func() {
+	s.Run("returns empty strings when intake is not in initial form step", func() {
 		submittedIntake := testhelpers.NewSystemIntake()
-		submittedIntake.Step = models.SystemIntakeStepINITIALFORM
+		submittedIntake.Step = models.SystemIntakeStepDRAFTBIZCASE
 		k, _ := checkSystemIntakeSubmitted(&submittedIntake)
 		s.Equal("", k)
+	})
+
+	s.Run("returns strings when intake is in initial form step", func() {
+		submittedIntake := testhelpers.NewSystemIntake()
+		submittedIntake.Step = models.SystemIntakeStepINITIALFORM
+		k, v := checkSystemIntakeSubmitted(&submittedIntake)
+		s.Equal("SystemIntake", k)
+		s.Equal("must have already been submitted", v)
 	})
 
 	s.Run("returns false when the lifecycle costs are invalid", func() {
@@ -62,6 +70,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForCreation() {
 		now := time.Now()
 		submittedIntake.SubmittedAt = &now
 		submittedIntake.RequestFormState = models.SIRFSSubmitted
+		submittedIntake.Step = models.SystemIntakeStepDRAFTBIZCASE
 
 		businessCase := models.BusinessCase{
 			SystemIntakeID:     submittedIntake.ID,

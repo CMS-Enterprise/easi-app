@@ -57,6 +57,7 @@ func (s *ServicesTestSuite) TestBusinessCaseCreator() {
 		EUAUserID:        euaID,
 		RequestType:      models.SystemIntakeRequestTypeNEW,
 		RequestFormState: models.SIRFSSubmitted,
+		Step:             models.SystemIntakeStepDRAFTBIZCASE,
 	}
 	intake, err := s.store.CreateSystemIntake(ctx, intake)
 	s.NoError(err)
