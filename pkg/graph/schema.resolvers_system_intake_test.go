@@ -21,7 +21,6 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 	var resp struct {
 		CreateSystemIntake struct {
 			ID          string
-			Status      string
 			RequestType string
 			Requester   struct {
 				Name string
@@ -40,7 +39,6 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 				}
 			}) {
 				id
-				status
 				requestType
 				requester {
 					name
@@ -50,7 +48,6 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 
 	s.NotNil(resp.CreateSystemIntake.ID)
 	s.Equal("Test User", resp.CreateSystemIntake.Requester.Name)
-	s.Equal("INTAKE_DRAFT", resp.CreateSystemIntake.Status)
 	s.Equal("NEW", resp.CreateSystemIntake.RequestType)
 }
 
@@ -74,7 +71,6 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 		SystemIntake struct {
 			ID            string
 			RequestName   string
-			Status        string
 			RequestType   string
 			BusinessOwner struct {
 				Name      string
@@ -93,7 +89,6 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 			systemIntake(id: "%s") {
 				id
 				requestName
-				status
 				requestType
 				businessOwner {
 					name
@@ -105,7 +100,6 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.Equal(projectName, resp.SystemIntake.RequestName)
-	s.Equal("INTAKE_SUBMITTED", resp.SystemIntake.Status)
 	s.Equal("NEW", resp.SystemIntake.RequestType)
 	s.Equal(businessOwner, resp.SystemIntake.BusinessOwner.Name)
 	s.Equal(businessOwnerComponent, resp.SystemIntake.BusinessOwner.Component)
@@ -538,125 +532,6 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 	s.Equal("SUBMIT_INTAKE", respAction1.Type)
 	s.Equal("First Actor", respAction1.Actor.Name)
 	s.Equal("first.actor@example.com", respAction1.Actor.Email)
-}
-
-func (s *GraphQLTestSuite) TestIssueLifecycleIDWithPassedLCID() {
-	ctx := context.Background()
-	projectName := "My cool project"
-
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		EUAUserID:   null.StringFrom("TEST"),
-		ProjectName: null.StringFrom(projectName),
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
-		RequestType: models.SystemIntakeRequestTypeNEW,
-	})
-	s.NoError(intakeErr)
-
-	var resp struct {
-		IssueLifecycleID struct {
-			SystemIntake struct {
-				ID                string
-				Lcid              string
-				LcidExpiresAt     string
-				LcidScope         string
-				LcidCostBaseline  string
-				DecisionNextSteps string
-				Status            string
-			}
-		}
-	}
-
-	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
-	// but it wasn't working for me.
-	s.client.MustPost(fmt.Sprintf(
-		`mutation {
-			issueLifecycleId(input: {
-				intakeId: "%s",
-				expiresAt: "2021-03-18T00:00:00Z",
-				scope: "Your scope",
-				feedback: "My feedback",
-				lcid: "123456A",
-				costBaseline: "Your cost baseline",
-				nextSteps: "Your next steps"
-			}) {
-				systemIntake {
-					id
-					lcid
-					lcidExpiresAt
-					lcidScope
-					lcidCostBaseline
-					decisionNextSteps
-					status
-				}
-			}
-		}`, intake.ID), &resp)
-
-	s.Equal(intake.ID.String(), resp.IssueLifecycleID.SystemIntake.ID)
-
-	respIntake := resp.IssueLifecycleID.SystemIntake
-	s.Equal(respIntake.LcidExpiresAt, "2021-03-18T00:00:00Z")
-	s.Equal(respIntake.Lcid, "123456A")
-	s.Equal(respIntake.LcidCostBaseline, "Your cost baseline")
-}
-
-func (s *GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
-	ctx := context.Background()
-	projectName := "My cool project"
-
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		EUAUserID:   null.StringFrom("TEST"),
-		ProjectName: null.StringFrom(projectName),
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
-		RequestType: models.SystemIntakeRequestTypeNEW,
-	})
-	s.NoError(intakeErr)
-
-	var resp struct {
-		IssueLifecycleID struct {
-			SystemIntake struct {
-				ID                string
-				Lcid              string
-				LcidExpiresAt     string
-				LcidScope         string
-				LcidCostBaseline  string
-				DecisionNextSteps string
-				Status            string
-			}
-		}
-	}
-
-	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
-	// but it wasn't working for me.
-	s.client.MustPost(fmt.Sprintf(
-		`mutation {
-			issueLifecycleId(input: {
-				intakeId: "%s",
-				expiresAt: "2021-03-18T00:00:00Z",
-				scope: "Your scope",
-				feedback: "My feedback",
-				lcid: "",
-				nextSteps: "Your next steps",
-				costBaseline: "Test cost baseline"
-			}) {
-				systemIntake {
-					id
-					lcid
-					lcidExpiresAt
-					lcidScope
-					lcidCostBaseline
-					decisionNextSteps
-					status
-				}
-			}
-		}`, intake.ID), &resp)
-
-	s.Equal(intake.ID.String(), resp.IssueLifecycleID.SystemIntake.ID)
-
-	respIntake := resp.IssueLifecycleID.SystemIntake
-	s.Equal(respIntake.LcidExpiresAt, "2021-03-18T00:00:00Z")
-	s.Equal(respIntake.Lcid, "654321B")
-	s.Equal(respIntake.LcidCostBaseline, "Test cost baseline")
-
 }
 
 func (s *GraphQLTestSuite) TestUpdateContactDetails() {
@@ -1810,8 +1685,7 @@ func (s *GraphQLTestSuite) TestSubmitIntake() {
 	var resp struct {
 		SubmitIntake struct {
 			SystemIntake struct {
-				ID     string
-				Status string
+				ID string
 			}
 		}
 	}
@@ -1823,250 +1697,10 @@ func (s *GraphQLTestSuite) TestSubmitIntake() {
 			}) {
 				systemIntake {
 					id
-					status
 				}
 			}
 		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	respIntake := resp.SubmitIntake.SystemIntake
 	s.Equal(intake.ID.String(), respIntake.ID)
-	s.Equal(string(models.SystemIntakeStatusINTAKESUBMITTED), respIntake.Status)
-}
-
-func (s *GraphQLTestSuite) TestExtendLifecycleId() {
-	ctx := context.Background()
-
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		EUAUserID:   null.StringFrom("TEST"),
-		Status:      models.SystemIntakeStatusLCIDISSUED,
-		RequestType: models.SystemIntakeRequestTypeNEW,
-	})
-	s.NoError(intakeErr)
-
-	intake.LifecycleID = null.StringFrom("123456")
-	intake.LifecycleExpiresAt = date(2021, 12, 1)
-	intake.LifecycleScope = models.HTMLPointer("Original Scope")
-	intake.DecisionNextSteps = models.HTMLPointer("Original Next Steps")
-	intake.LifecycleCostBaseline = null.StringFrom("Original Cost Baseline")
-
-	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)
-	s.NoError(updateErr)
-
-	type userErrors []struct {
-		Message string
-		Path    []string
-	}
-
-	var resp struct {
-		CreateSystemIntakeActionExtendLifecycleID struct {
-			SystemIntake struct {
-				ID                string
-				LcidExpiresAt     string
-				LcidScope         string
-				DecisionNextSteps string
-				LcidCostBaseline  string
-				Lcid              string
-				Actions           []struct {
-					ID    string
-					Type  string
-					Actor struct {
-						Name  string
-						Email string
-					}
-					Feedback             string
-					LcidExpirationChange struct {
-						NewDate              string
-						PreviousDate         string
-						NewScope             string
-						PreviousScope        string
-						NewNextSteps         string
-						PreviousNextSteps    string
-						NewCostBaseline      string
-						PreviousCostBaseline string
-					}
-				}
-			}
-			UserErrors userErrors
-		}
-	}
-
-	s.client.MustPost(fmt.Sprintf(
-		`mutation {
-			createSystemIntakeActionExtendLifecycleId(input: {
-				id: "%s",
-				expirationDate: "%s",
-				scope: "%s",
-				nextSteps: "%s",
-				costBaseline: "%s",
-			}) {
-				systemIntake {
-					id
-					lcid
-					lcidExpiresAt
-					lcidScope
-					decisionNextSteps
-					lcidCostBaseline
-					actions {
-						type
-						actor {
-							name
-							email
-						}
-						feedback
-						lcidExpirationChange {
-							previousDate
-							newDate
-							previousScope
-							newScope
-							previousNextSteps
-							newNextSteps
-							previousCostBaseline
-							newCostBaseline
-						}
-					}
-				}
-				userErrors {
-					message
-					path
-				}
-			}
-		}`, intake.ID, date(2025, 5, 14).Format(time.RFC3339), "New Scope", "New Next Steps", "New Cost Baseline"), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("TEST"))
-
-	s.Equal(0, len(resp.CreateSystemIntakeActionExtendLifecycleID.UserErrors))
-
-	respIntake := resp.CreateSystemIntakeActionExtendLifecycleID.SystemIntake
-	s.Equal(intake.ID.String(), respIntake.ID)
-	s.Equal("2025-05-14T00:00:00Z", respIntake.LcidExpiresAt)
-	s.Equal("New Scope", respIntake.LcidScope)
-	s.Equal("New Next Steps", respIntake.DecisionNextSteps)
-	s.Equal("New Cost Baseline", respIntake.LcidCostBaseline)
-
-	s.Equal(1, len(respIntake.Actions))
-	action := respIntake.Actions[0]
-	s.Equal("EXTEND_LCID", action.Type)
-	s.Equal("Terry Thompson", action.Actor.Name)
-	s.Equal("terry.thompson@local.fake", action.Actor.Email)
-
-	s.Equal("2025-05-14T00:00:00Z", action.LcidExpirationChange.NewDate)
-	s.Equal("2021-12-01T00:00:00Z", action.LcidExpirationChange.PreviousDate)
-	s.Equal("New Scope", action.LcidExpirationChange.NewScope)
-	s.Equal("Original Scope", action.LcidExpirationChange.PreviousScope)
-	s.Equal("New Next Steps", action.LcidExpirationChange.NewNextSteps)
-	s.Equal("Original Next Steps", action.LcidExpirationChange.PreviousNextSteps)
-	s.Equal("New Cost Baseline", action.LcidExpirationChange.NewCostBaseline)
-	s.Equal("Original Cost Baseline", action.LcidExpirationChange.PreviousCostBaseline)
-
-	// TODO check for dates in returned action
-	// TODO verify that email was sent
-}
-
-func (s *GraphQLTestSuite) TestExtendLifecycleIdRequiresExpirationDate() {
-	ctx := context.Background()
-
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		EUAUserID:   null.StringFrom("TEST"),
-		Status:      models.SystemIntakeStatusLCIDISSUED,
-		RequestType: models.SystemIntakeRequestTypeNEW,
-	})
-	s.NoError(intakeErr)
-
-	type userErrors []struct {
-		Message string
-		Path    []string
-	}
-
-	var resp struct {
-		CreateSystemIntakeActionExtendLifecycleID struct {
-			SystemIntake struct {
-				ID                string
-				LcidExpiresAt     string
-				LcidScope         string
-				DecisionNextSteps string
-				LcidCostBaseline  string
-				Lcid              string
-			}
-			UserErrors userErrors
-		}
-	}
-
-	s.client.MustPost(fmt.Sprintf(
-		`mutation {
-			createSystemIntakeActionExtendLifecycleId(input: {
-				id: "%s",
-				scope: "%s",
-				nextSteps: "%s",
-			}) {
-				systemIntake {
-					id
-					lcid
-					lcidExpiresAt
-					lcidScope
-					lcidCostBaseline
-					decisionNextSteps
-				}
-				userErrors {
-					message
-					path
-				}
-			}
-		}`, intake.ID, "Scope", "Next Steps"), &resp)
-
-	s.Empty(resp.CreateSystemIntakeActionExtendLifecycleID.SystemIntake.ID)
-	s.Equal(userErrors{{Message: "Must provide a valid future date", Path: []string{"expirationDate"}}}, resp.CreateSystemIntakeActionExtendLifecycleID.UserErrors)
-}
-
-func (s *GraphQLTestSuite) TestExtendLifecycleIdRequiresScope() {
-	ctx := context.Background()
-
-	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		EUAUserID:   null.StringFrom("TEST"),
-		Status:      models.SystemIntakeStatusLCIDISSUED,
-		RequestType: models.SystemIntakeRequestTypeNEW,
-	})
-	s.NoError(intakeErr)
-
-	type userErrors []struct {
-		Message string
-		Path    []string
-	}
-
-	var resp struct {
-		CreateSystemIntakeActionExtendLifecycleID struct {
-			SystemIntake struct {
-				ID                string
-				LcidExpiresAt     string
-				LcidScope         string
-				DecisionNextSteps string
-				LcidCostBaseline  string
-				Lcid              string
-			}
-			UserErrors userErrors
-		}
-	}
-
-	s.client.MustPost(fmt.Sprintf(
-		`mutation {
-			createSystemIntakeActionExtendLifecycleId(input: {
-				id: "%s",
-				expirationDate: "%s",
-				scope: "%s"
-				nextSteps: "%s",
-			}) {
-				systemIntake {
-					id
-					lcid
-					lcidExpiresAt
-					lcidScope
-					lcidCostBaseline
-					decisionNextSteps
-				}
-				userErrors {
-					message
-					path
-				}
-			}
-		}`, intake.ID, date(2025, 5, 14).Format(time.RFC3339), "", "Next Steps"), &resp)
-
-	s.Empty(resp.CreateSystemIntakeActionExtendLifecycleID.SystemIntake.ID)
-	s.Equal(userErrors{{Message: "Must provide a non-empty scope", Path: []string{"scope"}}}, resp.CreateSystemIntakeActionExtendLifecycleID.UserErrors)
 }

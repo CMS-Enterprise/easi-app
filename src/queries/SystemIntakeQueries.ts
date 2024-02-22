@@ -5,7 +5,6 @@ export const CreateSystemIntake = gql`
   mutation CreateSystemIntake($input: CreateSystemIntakeInput!) {
     createSystemIntake(input: $input) {
       id
-      status
       requestType
       requester {
         name
@@ -31,7 +30,9 @@ export const UpdateSystemIntakeContractDetails = gql`
         }
         annualSpending {
           currentAnnualSpending
+          currentAnnualSpendingITPortion
           plannedYearOneSpending
+          plannedYearOneSpendingITPortion
         }
         contract {
           contractor
@@ -111,7 +112,6 @@ export const SubmitIntake = gql`
   mutation SubmitIntake($input: SubmitIntakeInput!) {
     submitIntake(input: $input) {
       systemIntake {
-        status
         id
       }
     }

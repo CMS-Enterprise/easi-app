@@ -37,7 +37,9 @@ export const SystemIntake = gql`
     }
     annualSpending {
       currentAnnualSpending
+      currentAnnualSpendingITPortion
       plannedYearOneSpending
+      plannedYearOneSpendingITPortion
     }
     currentStage
     decisionNextSteps
@@ -85,7 +87,6 @@ export const SystemIntake = gql`
     }
     requestName
     requestType
-    status
     statusAdmin
     statusRequester
     grtReviewEmailBody

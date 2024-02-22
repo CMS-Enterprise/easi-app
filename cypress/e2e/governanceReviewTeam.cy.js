@@ -3,13 +3,18 @@ import { DateTime } from 'luxon';
 import governaceReviewTeam from '../../src/i18n/en-US/articles/governanceReviewTeam';
 
 describe('Governance Review Team', () => {
+  // Expiration and retirement dates
+  // Matches pattern set in seed data: +1 year for expiration, +2 years for retirement
+  const expirationDate = DateTime.local().plus({ year: 1 });
+  const retirementDate = expirationDate.plus({ year: 1 });
+
   beforeEach(() => {
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'GetSystemIntake') {
         req.alias = 'getSystemIntake';
       }
-      if (req.body.operationName === 'GetSystemIntakeContactsQuery') {
-        req.alias = 'getSystemIntakeContacts';
+      if (req.body.operationName === 'GetGovernanceTaskList') {
+        req.alias = 'getGovernanceTaskList';
       }
     });
 
@@ -182,7 +187,6 @@ describe('Governance Review Team', () => {
 
     // Complete action form
 
-    const expirationDate = DateTime.local().plus({ year: 1 });
     const scope = 'Test scope for issuing new LCID';
     const nextSteps = 'Test next steps for issuing new LCID';
     const costBaseline = 'Test next steps for issuing new LCID';
@@ -231,7 +235,6 @@ describe('Governance Review Team', () => {
     // Complete action form
 
     const lcid = '000001';
-    const expirationDate = DateTime.local().plus({ year: 1 });
     const scope = 'Test scope for issuing existing LCID';
     const nextSteps = 'Test next steps for issuing existing LCID';
     const costBaseline = 'Test next steps for issuing existing LCID';
@@ -291,7 +294,6 @@ describe('Governance Review Team', () => {
 
     // Complete action form
 
-    const expirationDate = DateTime.local().plus({ year: 2 });
     const scope = 'Updated test scope for issuing LCID';
     const nextSteps = 'Updated test next steps for issuing LCID';
     const costBaseline = 'Updated test cost baseline for issuing LCID';
@@ -304,7 +306,6 @@ describe('Governance Review Team', () => {
     cy.contains('button', 'Complete action').should('not.be.disabled').click();
 
     // Check form submit was successful
-
     cy.get('div[data-testid="alert"]').contains(
       /Life Cycle ID [0-9]{6} has been updated./
     );
@@ -313,51 +314,251 @@ describe('Governance Review Team', () => {
 
     cy.get('[data-testid="grt-nav-lifecycleID.title-link"]').click();
 
+    // Wait for task list query to complete
+    cy.wait('@getGovernanceTaskList')
+      .its('response.statusCode')
+      .should('eq', 200);
+
     cy.get('dd').contains(expirationDate.toFormat('MMMM d, yyyy'));
     cy.get('dd').contains(scope);
     cy.get('dd').contains(nextSteps);
     cy.get('dd').contains(costBaseline);
   });
 
-  it.skip('can close a request', () => {
-    // Selecting name based on pre-seeded data
-    // Closable Request - 20cbcfbf-6459-4c96-943b-e76b83122dbf
-    cy.governanceReviewTeam.grtActions.selectAction({
-      intakeName: 'Closable Request',
-      actionId: 'no-governance'
-    });
+  it('can expire a Life Cycle ID', () => {
+    cy.contains('button', 'Closed requests').click();
 
-    cy.get('#SubmitActionForm-Feedback')
-      .type('Feedback')
-      .should('have.value', 'Feedback');
+    cy.contains('a', 'Updated LCID').should('be.visible').click();
 
-    cy.get('button[type="submit"]').click();
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
 
-    cy.wait('@getSystemIntake').its('response.statusCode').should('eq', 200);
+    cy.get('#grt-action__manage-lcid').check({ force: true });
 
-    cy.get('[data-testid="request-state"]').contains('Closed');
+    cy.contains('button', 'Continue').click();
 
-    cy.visit('/');
-    cy.get('[data-testid="view-closed-intakes-btn"]').click();
-    cy.get('[data-testid="20cbcfbf-6459-4c96-943b-e76b83122dbf-row"]').contains(
-      'td',
-      'Not an IT Governance request'
+    cy.get('#grt-lcid-action__expire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    cy.get('div#reason').type('Test reason for expiring this Life Cycle ID');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+    cy.get('div[data-testid="alert"]').contains(
+      'Life Cycle ID 000009 is now expired.'
     );
   });
 
-  it.skip('can add additional contact as email recipient', () => {
-    cy.contains('a', 'Ready for business case').should('be.visible').click();
+  it('can retire a Life Cycle ID', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'LCID issued').should('be.visible').click();
+
     cy.get('[data-testid="grt-nav-actions-link"]').click();
 
-    cy.contains('.usa-radio', 'Request a draft business case').click();
+    cy.get('#grt-action__manage-lcid').check({ force: true });
 
     cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__retire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    cy.contains('h3', 'Retire a Life Cycle ID');
+
+    // Complete action form
+
+    cy.get('#retiresAt').type(retirementDate.toFormat('MM/dd/yyyy'));
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+    cy.get('div[data-testid="alert"]').contains(
+      /Life Cycle ID [0-9]{6} is now retired./
+    );
+  });
+
+  it('can update a Life Cycle ID retirement date', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'Retired LCID').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-lcid-action__retire').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    cy.contains('h3', 'Change retirement date');
+
+    // Check initial retirement date
+    cy.get('#retiresAt').should(
+      'have.value',
+      retirementDate.toFormat('MM/dd/yyyy')
+    );
+
+    // Complete action form
+
+    const updatedRetirementDate = retirementDate
+      .plus({ month: 1 })
+      .toFormat('MM/dd/yyyy');
+
+    cy.get('#retiresAt').clear();
+    cy.get('#retiresAt').type(updatedRetirementDate);
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+    cy.get('div[data-testid="alert"]').contains(
+      /Life Cycle ID [0-9]{6} is now retired./
+    );
+
+    /* TODO: Fix bug where page reloads after "Manage Life Cycle ID" option is checked */
+
+    // Check retirement date updated
+
+    // cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    // // Wait for task list query to complete
+    // cy.wait('@getGovernanceTaskList')
+    //   .its('response.statusCode')
+    //   .should('eq', 200);
+
+    // cy.get('#grt-action__manage-lcid').check({ force: true });
+
+    /* Page is reloading here, which is clearing the selection and disabling the Continue button */
+
+    // cy.contains('button', 'Continue').click();
+
+    // cy.get('#grt-lcid-action__retire').check({ force: true });
+
+    // cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // cy.get('#retiresAt').should('have.value', updatedRetirementDate);
+  });
+
+  it('can progress to the GRT meeting step', () => {
+    cy.contains('a', 'Draft Business Case').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__new-step').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    // Complete action form
+
+    cy.get('#GRT_MEETING').check({ force: true });
+
+    cy.get('#meetingDate').type('01/01/2024');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check form submit was successful
+    cy.get('div[data-testid="alert"]').contains(
+      'Action complete. This request is now ready for a GRT meeting.'
+    );
+
+    // Check for correct status
+    cy.get('[data-testid="grt-current-status"]').contains(
+      'GRT meeting complete'
+    );
+
+    // Check GRT meeting date was set
+
+    cy.get('[data-testid="grt-nav-dates.heading-link"]').click();
+
+    cy.get('#Dates-GrtDateMonth').should('have.value', '1');
+    cy.get('#Dates-GrtDateDay').should('have.value', '1');
+    cy.get('#Dates-GrtDateYear').should('have.value', '2024');
+  });
+
+  it('can close a request', () => {
+    cy.contains('a', 'grt meeting with date set in past')
+      .should('be.visible')
+      .click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__resolutions').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-resolution__close-request').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    cy.get('#reason').type('Reason for closing request');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check request state is set to Closed
+    cy.get('[data-testid="request-state"').contains('Closed');
+
+    // Check intake shows in admin table for closed requests
+    cy.visit('/');
+    cy.contains('button', 'Closed requests').click();
+    cy.get('#system-intakes-table__closed').contains(
+      'a',
+      'grt meeting with date set in past'
+    );
+  });
+
+  it('can re-open a request', () => {
+    cy.contains('button', 'Closed requests').click();
+
+    cy.contains('a', 'Closed Request').should('be.visible').click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__resolutions').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    cy.get('#grt-resolution__re-open-request').check({ force: true });
+
+    cy.contains('button', 'Next').should('not.be.disabled').click();
+
+    // Complete action form
+
+    cy.get('#reason').type('Reason for re-opening request');
+
+    cy.contains('button', 'Complete action').should('not.be.disabled').click();
+
+    // Check request state is set to Open
+    cy.get('[data-testid="request-state"').contains('Open');
+
+    // Check intake shows in admin table for closed requests
+    cy.visit('/');
+    cy.get('#system-intakes-table__open').contains('a', 'Closed Request');
+  });
+
+  it('can add additional contact as email recipient', () => {
+    cy.contains('a', 'initial form filled and submitted')
+      .should('be.visible')
+      .click();
+
+    cy.get('[data-testid="grt-nav-actions-link"]').click();
+
+    cy.get('#grt-action__new-step').check({ force: true });
+
+    cy.contains('button', 'Continue').click();
+
+    // Add additional contact
 
     cy.contains('button', 'more recipients').click();
 
     cy.contains('button', 'Add another recipient').click();
 
-    // Add additional contact
     cy.get('#react-select-IntakeForm-ContactCommonName-input')
       .type('Aaron A')
       .wait(1000)

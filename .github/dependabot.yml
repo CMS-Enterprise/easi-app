@@ -36,8 +36,6 @@ updates:
         update-types:
           - "minor"
           - "patch"
-    ignore:
-      - dependency-name: "github.com/99designs/gqlgen" # Ignoring until https://github.com/99designs/gqlgen/issues/2026 and https://jiraent.cms.gov/browse/EASI-3510 are fixed
   - package-ecosystem: "npm"
     directory: "/"
     schedule:

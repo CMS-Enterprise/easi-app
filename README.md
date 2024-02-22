@@ -12,6 +12,7 @@ This application has the following main components:
 
 - [Program Background](./docs/background_how_we_work_composition.md)
 - [Development environment setup](./docs/dev_environment_setup.md)
+- [Contributing](./CONTRIBUTING.md)
 - [Architecture Decision Records (ADRs)](./docs/adr)
 - [Frontend docs](./src/README.md)
 - [Backend docs](./pkg/README.md)

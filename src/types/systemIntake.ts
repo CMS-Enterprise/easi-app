@@ -8,37 +8,6 @@ export type GovernanceCollaborationTeam = {
   key: string;
 };
 
-export const openIntakeStatusesV1 = [
-  'INTAKE_DRAFT',
-  'INTAKE_SUBMITTED',
-  'NEED_BIZ_CASE',
-  'BIZ_CASE_DRAFT',
-  'BIZ_CASE_DRAFT_SUBMITTED',
-  'BIZ_CASE_CHANGES_NEEDED',
-  'BIZ_CASE_FINAL_NEEDED',
-  'BIZ_CASE_FINAL_SUBMITTED',
-  'READY_FOR_GRT',
-  'READY_FOR_GRB',
-  'SHUTDOWN_IN_PROGRESS'
-];
-
-export const closedIntakeStatusesV1 = [
-  'LCID_ISSUED',
-  'WITHDRAWN',
-  'NOT_IT_REQUEST',
-  'NOT_APPROVED',
-  'NO_GOVERNANCE',
-  'SHUTDOWN_COMPLETE'
-];
-
-export const intakeStatusesV1 = [
-  ...openIntakeStatusesV1,
-  ...closedIntakeStatusesV1
-] as const;
-
-// TODO: Remove old intake statuses once they're deprecated
-export type SystemIntakeStatusV1 = typeof intakeStatusesV1[number];
-
 export type RequestType = 'NEW' | 'MAJOR_CHANGES' | 'RECOMPETE' | 'SHUTDOWN';
 
 /**
@@ -49,7 +18,6 @@ export type SystemIntakeForm = {
   id: string;
   euaUserId: string;
   requestName: string;
-  status: SystemIntakeStatusV1;
   statusAdmin: SystemIntakeStatusAdmin;
   requestType: RequestType;
   requester: {
@@ -175,7 +143,9 @@ export type ContractDetailsForm = {
   fundingSources: FundingSource[] | [];
   annualSpending: {
     currentAnnualSpending: string;
+    currentAnnualSpendingITPortion: string;
     plannedYearOneSpending: string;
+    plannedYearOneSpendingITPortion: string;
   };
   contract: {
     hasContract: string;

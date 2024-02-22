@@ -54,25 +54,6 @@ const intake = {
     }
   },
   lifecycleId: 'Life Cycle ID',
-  statusMap: {
-    INTAKE_DRAFT: 'Intake draft',
-    INTAKE_SUBMITTED: 'Intake request received',
-    NEED_BIZ_CASE: 'Waiting for draft business case',
-    BIZ_CASE_DRAFT: 'Waiting for draft business case',
-    BIZ_CASE_DRAFT_SUBMITTED: 'Draft business case received',
-    BIZ_CASE_CHANGES_NEEDED: 'Waiting for draft business case',
-    BIZ_CASE_FINAL_NEEDED: 'Waiting for final business case',
-    BIZ_CASE_FINAL_SUBMITTED: 'Final business case received',
-    READY_FOR_GRT: 'Ready for GRT meeting',
-    READY_FOR_GRB: 'Ready for GRB meeting',
-    LCID_ISSUED: 'Life Cycle ID issued',
-    WITHDRAWN: 'Withdrawn',
-    NOT_IT_REQUEST: 'Closed',
-    NOT_APPROVED: 'Business case not approved',
-    NO_GOVERNANCE: 'Closed',
-    SHUTDOWN_IN_PROGRESS: 'Decomission in progress',
-    SHUTDOWN_COMPLETE: 'Decommissioned'
-  },
   banner: {
     title: {
       intakeIncomplete: 'Intake request incomplete',
@@ -131,7 +112,9 @@ const intake = {
     isExpectingCostIncrease: 'Expecting Cost Increase',
     expectedIncreaseAmount: 'Expected Increase Amount',
     currentAnnualSpend: 'Current Annual Spend',
+    currentAnnualSpendITPortion: 'Current Annual Spend IT Portion',
     plannedAnnualSpend: 'Planned Annual Spend',
+    plannedAnnualSpendITPortion: 'Planned Annual Spend IT Portion',
     existingContract: 'Existing Contract',
     contractors: 'Contractor(s)',
     contractVehicle: 'Contract Vehicle',
@@ -290,8 +273,12 @@ const intake = {
       }
     },
     currentAnnualSpending: 'What is the current annual spending?',
+    currentAnnualSpendingITPortion:
+      'What portion (% or amount) of the current annual spending is IT?',
     plannedYearOneSpending:
       'What is the planned annual spending of the first year of the new contract?',
+    plannedYearOneSpendingITPortion:
+      'What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?',
     hasContract:
       'Do you already have a contract in place to support this effort?',
     hasContractHelpText:
@@ -336,8 +323,12 @@ const intake = {
       'Do the costs for this request exceed what you are currently spending to meet your business need?',
     increase: 'Approximately how much do you expect the cost to increase?',
     currentAnnualSpending: 'What is the current annual spending?',
+    currentAnnualSpendingITPortion:
+      'What portion (% or amount) of the current annual spending is IT?',
     plannedYearOneSpending:
       'What is the planned annual spending of the first year of the new contract?',
+    plannedYearOneSpendingITPortion:
+      'What portion (% or amount) of the planned annual spending of the first year of the new contract is IT?',
     contract: 'Do you already have a contract in place to support this effort?',
     contractors: 'Contractors',
     contractVehicle: 'Contract vehicle',

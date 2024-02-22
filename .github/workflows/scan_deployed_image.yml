@@ -7,7 +7,7 @@ on:
 env:
   AWS_DEFAULT_REGION: us-west-2
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  GIT_HASH: ${{ github.event.pull_request.head.sha || github.sha }}
+  GIT_HASH: ${{ github.sha }}
 
 jobs:
   rescan_deployed_image:
@@ -15,10 +15,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ env.GIT_HASH }}
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4.0.1
+        uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

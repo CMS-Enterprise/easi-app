@@ -381,24 +381,24 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 func (s *seederConfig) seedTRBLeadOptions(ctx context.Context) ([]*models.UserInfo, error) {
 	leadUsers := map[string]*models.UserInfo{
 		"ABCD": {
-			CommonName: "Adeline Aarons",
-			Email:      "adeline.aarons@local.fake",
-			EuaUserID:  "ABCD",
+			DisplayName: "Adeline Aarons",
+			Email:       "adeline.aarons@local.fake",
+			Username:    "ABCD",
 		},
 		"TEST": {
-			CommonName: "Terry Thompson",
-			Email:      "terry.thompson@local.fake",
-			EuaUserID:  "TEST",
+			DisplayName: "Terry Thompson",
+			Email:       "terry.thompson@local.fake",
+			Username:    "TEST",
 		},
 		"A11Y": {
-			CommonName: "Ally Anderson",
-			Email:      "ally.anderson@local.fake",
-			EuaUserID:  "A11Y",
+			DisplayName: "Ally Anderson",
+			Email:       "ally.anderson@local.fake",
+			Username:    "A11Y",
 		},
 		"GRTB": {
-			CommonName: "Gary Gordon",
-			Email:      "gary.gordon@local.fake",
-			EuaUserID:  "GRTB",
+			DisplayName: "Gary Gordon",
+			Email:       "gary.gordon@local.fake",
+			Username:    "GRTB",
 		},
 	}
 
@@ -428,7 +428,7 @@ func (s *seederConfig) seedTRBWithForm(ctx context.Context, trbName *string, isS
 	}
 
 	_, err = s.updateTRBRequestForm(ctx, map[string]interface{}{
-		"trbRequestId":             trb.ID.String(),
+		"trbRequestId":             trb.ID,
 		"isSubmitted":              isSubmitted,
 		"component":                "Center for Medicare",
 		"needsAssistanceWith":      "Something is wrong with my system",
@@ -582,7 +582,7 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 	}
 
 	adviceLetterChanges := map[string]interface{}{
-		"trbRequestId":          trb.ID.String(),
+		"trbRequestId":          trb.ID,
 		"meetingSummary":        "Talked about stuff",
 		"isFollowupRecommended": isFollowUpRequested,
 	}

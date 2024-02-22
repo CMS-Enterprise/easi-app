@@ -1,20 +1,36 @@
 {{template "easi_header.gohtml"}}
 
-<p>The Governance Team has retired a previously-issued Life Cycle ID (LCID).</p>
-
-<p>Retirement date: {{.LifecycleRetiresAt}}{{if .Reason}}<br>
-Reason: {{.Reason}}{{end}}</p>
-
-If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.
-
-<p><u>Summary of retired Life Cycle ID</u><br>
-<strong>Lifecycle ID:</strong> {{.LifecycleID}}<br>
-{{ if .LifecycleIssuedAt -}}
-<strong>Original date issued:</strong> {{.LifecycleIssuedAt}}<br>
+<p class="no-margin-bottom">The Governance Team has retired a previously-issued Life Cycle ID (LCID).</p>
+<br>
+<p class="no-margin"><strong>Retirement date:</strong> {{.LifecycleRetiresAt}}</p>
+<br>
+{{ if .Reason -}}
+<p class="no-margin"><strong>Reason:</strong></p><div class="no-margin">{{.Reason}}</div>
+<br>
 {{ end -}}
-<strong>Expiration date:</strong> {{.LifecycleExpiresAt}}<br>
-<strong>Scope:</strong> {{.LifecycleScope}}<br>
-<strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}<br>
-<strong>Next steps:</strong> {{.DecisionNextSteps}}</p>
 
-{{if .AdditionalInfo}}<hr><p><strong>Additional information from the Governance Team:</strong></p><p>{{.AdditionalInfo}}</p>{{end}}
+<p>If you have questions, please contact the Governance Team at <a href="mailto:{{.ITGovernanceInboxAddress}}">{{.ITGovernanceInboxAddress}}</a>.</p>
+
+<br>
+<div class="no-margin">
+<p><u>Summary of retired Life Cycle ID</u></p>
+<p><strong>Life Cycle ID:</strong> {{.LifecycleID}}</p>
+{{ if .LifecycleIssuedAt -}}
+<p><strong>Original date issued:</strong> {{.LifecycleIssuedAt}}</p>
+{{ end -}}
+<p><strong>Expiration date:</strong> {{.LifecycleExpiresAt}}</p>
+{{ if .LifecycleScope -}}
+<p><strong>Scope:</strong></p>{{.LifecycleScope}}
+{{ end -}}
+<p><strong>Project Cost Baseline:</strong> {{.LifecycleCostBaseline}}</p>
+{{ if .DecisionNextSteps -}}
+<p><strong>Next steps:</strong></p>{{.DecisionNextSteps}}
+{{ end -}}
+</div>
+
+{{if .AdditionalInfo -}}
+<br>
+<hr>
+<br>
+<p><strong>Additional information from the Governance Team:</strong></p><div class="no-margin">{{.AdditionalInfo}}</div>
+{{ end -}}

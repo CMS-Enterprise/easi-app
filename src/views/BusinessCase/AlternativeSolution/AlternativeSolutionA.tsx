@@ -27,12 +27,14 @@ type AlternativeSolutionProps = {
   businessCase: BusinessCaseModel;
   formikRef: any;
   dispatchSave: () => void;
+  isFinal: boolean;
 };
 
 const AlternativeSolutionA = ({
   businessCase,
   formikRef,
-  dispatchSave
+  dispatchSave,
+  isFinal
 }: AlternativeSolutionProps) => {
   const history = useHistory();
   const { t } = useTranslation('businessCase');
@@ -63,15 +65,18 @@ const AlternativeSolutionA = ({
             title={t('alternatives')}
             description={
               <>
+                <p>{t('alternativesDescription.text.0')}</p>
                 <p className="margin-bottom-0">
-                  {t('alternativesDescription.examples')}
+                  {t('alternativesDescription.text.1')}
                 </p>
                 <ul className="padding-left-205 margin-top-0">
-                  <li>{t('alternativesDescription.buy')}</li>
-                  <li>{t('alternativesDescription.commercial')}</li>
-                  <li>{t('alternativesDescription.mainframe')}</li>
+                  <li>{t('alternativesDescription.list.0')}</li>
+                  <li>{t('alternativesDescription.list.1')}</li>
+                  <li>{t('alternativesDescription.list.2')}</li>
+                  <li>{t('alternativesDescription.list.3')}</li>
+                  <li>{t('alternativesDescription.list.4')}</li>
                 </ul>
-                <p>{t('alternativesDescription.include')}</p>
+                <p>{t('alternativesDescription.text.2')}</p>
               </>
             }
             errors={flatErrors}
@@ -109,8 +114,21 @@ const AlternativeSolutionA = ({
                     icon={<IconAdd />}
                     className="margin-top-2"
                     onClick={() => {
-                      dispatchSave();
-                      history.push('alternative-solution-b');
+                      if (
+                        isFinal &&
+                        alternativeSolutionHasFilledFields(values)
+                      ) {
+                        validateForm().then(err => {
+                          if (Object.keys(err).length === 0) {
+                            dispatchSave();
+                            history.push('alternative-solution-b');
+                          } else {
+                            window.scrollTo(0, 0);
+                          }
+                        });
+                      } else {
+                        history.push('alternative-solution-b');
+                      }
                     }}
                     base
                   >
@@ -142,11 +160,7 @@ const AlternativeSolutionA = ({
                   )
                     ? 'alternative-solution-b'
                     : 'review';
-                  if (
-                    businessCase.systemIntakeStatus ===
-                      'BIZ_CASE_FINAL_NEEDED' &&
-                    alternativeSolutionHasFilledFields(values)
-                  ) {
+                  if (isFinal && alternativeSolutionHasFilledFields(values)) {
                     validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
                         history.push(newUrl);

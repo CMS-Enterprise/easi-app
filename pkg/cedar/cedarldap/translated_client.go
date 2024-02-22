@@ -92,9 +92,9 @@ func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*mod
 	person := resp.Payload.Persons[0]
 
 	return &models2.UserInfo{
-		CommonName: person.CommonName,
-		Email:      models2.NewEmailAddress(person.Email),
-		EuaUserID:  person.UserName,
+		DisplayName: person.CommonName,
+		Email:       models2.NewEmailAddress(person.Email),
+		Username:    person.UserName,
 	}, nil
 }
 
@@ -133,9 +133,9 @@ func (c TranslatedClient) FetchUserInfos(ctx context.Context, euaIDs []string) (
 	userInfos := []*models2.UserInfo{}
 	for _, person := range resp.Payload.Persons {
 		userInfo := &models2.UserInfo{
-			CommonName: person.CommonName,
-			Email:      models2.NewEmailAddress(person.Email),
-			EuaUserID:  person.UserName,
+			DisplayName: person.CommonName,
+			Email:       models2.NewEmailAddress(person.Email),
+			Username:    person.UserName,
 		}
 		userInfos = append(userInfos, userInfo)
 	}
@@ -180,9 +180,9 @@ func (c TranslatedClient) SearchCommonNameContains(ctx context.Context, commonNa
 
 	for idx, person := range resp.Payload.Persons {
 		userInfoList[idx] = &models2.UserInfo{
-			CommonName: person.CommonName,
-			Email:      models2.NewEmailAddress(person.Email),
-			EuaUserID:  person.UserName,
+			DisplayName: person.CommonName,
+			Email:       models2.NewEmailAddress(person.Email),
+			Username:    person.UserName,
 		}
 	}
 

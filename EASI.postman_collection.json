@@ -1,155 +1,14 @@
 {
 	"info": {
-		"_postman_id": "4964f9c7-75e0-4405-9373-569ba488d5e4",
+		"_postman_id": "6937a1d8-30a6-4375-b851-473bb5ba1c00",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "11253221"
+		"_exporter_id": "32724285"
 	},
 	"item": [
 		{
 			"name": "System Intake",
 			"item": [
-				{
-					"name": "Admin Actions (Old)",
-					"item": [
-						{
-							"name": "CreateSystemIntakeActionBusinessCaseNeeded ( Action #1)",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Correct status returned\", function() {",
-											"    pm.response.to.have.status(200);",
-											"})"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "mutation CreateSystemIntakeActionBusinessCaseNeeded($input: BasicActionInput!) {\n  createSystemIntakeActionBusinessCaseNeeded(input: $input) {\n    systemIntake {\n      status\n      id\n      __typename\n    }\n    __typename\n  }\n}",
-										"variables": "{\n  \"input\": {\n    \"intakeId\": \"{{systemIntakeID}}\",\n    \"feedback\": \"Hooray!\",\n    \"notificationRecipients\": {\n      \"regularRecipientEmails\": [\n        \"{{testEmailAddress}}\"\n      ],\n      \"shouldNotifyITGovernance\": true,\n      \"shouldNotifyITInvestment\": false\n    }\n  }\n}"
-									}
-								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "AddGRTFeedbackAndRequestBusinessCase",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Correct status returned\", function() {",
-											"    pm.response.to.have.status(200);",
-											"})"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "mutation AddGRTFeedbackAndRequestBusinessCase($input: AddGRTFeedbackInput!) {\n  addGRTFeedbackAndRequestBusinessCase(input: $input) {\n    id\n    __typename\n  }\n}",
-										"variables": "{\n  \"input\": {\n    \"emailBody\": \"<h1>Feedback! Go to biz case</h1><p>this is an email btw</p>\",\n    \"feedback\": \"<h1>Feedback! Go to biz case</h1>\",\n    \"intakeID\": \"{{systemIntakeID}}\",\n    \"notificationRecipients\": {\n      \"regularRecipientEmails\": [\n        \"{{testEmailAddress}}\"\n      ],\n      \"shouldNotifyITGovernance\": true,\n      \"shouldNotifyITInvestment\": false\n    }\n  }\n}"
-									}
-								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "AddGRTFeedbackAndKeepBusinessCaseInDraft",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Correct status returned\", function() {",
-											"    pm.response.to.have.status(200);",
-											"})"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "mutation AddGRTFeedbackAndKeepBusinessCaseInDraft($input: AddGRTFeedbackInput!) {\n  addGRTFeedbackAndKeepBusinessCaseInDraft(input: $input) {\n    id\n    __typename\n  }\n}",
-										"variables": "{\n  \"input\": {\n    \"emailBody\": \"<h1>Feedback, but stay in draft</h1><p>this is an email btw</p>\",\n    \"feedback\": \"<h1>Feedback, but stay in draft</h1><p>this is an email btw</p>\",\n    \"intakeID\": \"{{systemIntakeID}}\",\n    \"notificationRecipients\": {\n      \"regularRecipientEmails\": [\n        \"{{testEmailAddress}}\"\n      ],\n      \"shouldNotifyITGovernance\": true,\n      \"shouldNotifyITInvestment\": false\n    }\n  }\n}"
-									}
-								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "AddGRTFeedbackAndProgressToFinalBusinessCase",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Correct status returned\", function() {",
-											"    pm.response.to.have.status(200);",
-											"})"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "mutation AddGRTFeedbackAndProgressToFinalBusinessCase($input: AddGRTFeedbackInput!) {\n  addGRTFeedbackAndProgressToFinalBusinessCase(input: $input) {\n    id\n    __typename\n  }\n}",
-										"variables": "{\n  \"input\": {\n    \"emailBody\": \"<h1>Feedback! Go to final</h1><p>this is an email btw</p>\",\n    \"feedback\": \"<h1>Feedback! Go to final</h1>\",\n    \"intakeID\": \"{{systemIntakeID}}\",\n    \"notificationRecipients\": {\n      \"regularRecipientEmails\": [\n        \"{{testEmailAddress}}\"\n      ],\n      \"shouldNotifyITGovernance\": true,\n      \"shouldNotifyITInvestment\": false\n    }\n  }\n}"
-									}
-								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
 				{
 					"name": "Admin Actions (v2)",
 					"item": [
@@ -187,32 +46,6 @@
 											"graphql": {
 												"query": "mutation IssueLCID ($input: SystemIntakeIssueLCIDInput!) {\r\n    createSystemIntakeActionIssueLCID(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            step\r\n            state\r\n            decisionState\r\n            lcid\r\n            lcidExpiresAt\r\n            lcidScope\r\n            decisionNextSteps\r\n            trbFollowUpRecommendation\r\n            lcidCostBaseline\r\n        }\r\n    }\r\n}",
 												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"expiresAt\": \"2040-07-28T20:12:31.703Z\",\r\n        \"scope\": \"scope for generated LCID\",\r\n        \"nextSteps\": \"do what you want with your fancy new LCID\",\r\n        \"trbFollowUp\": \"RECOMMENDED_BUT_NOT_CRITICAL\",\r\n        \"costBaseline\": \"one billion dollars\",\r\n        \"additionalInfo\": \"some info for the email about the new LCID\",\r\n        \"adminNote\": \"a billion here, a billion there, sooner or later you're talking real money\"\r\n    }\r\n}"
-											}
-										},
-										"url": {
-											"raw": "{{url}}",
-											"host": [
-												"{{url}}"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "Not Approved by GRB",
-							"item": [
-								{
-									"name": "Reject Intake",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "graphql",
-											"graphql": {
-												"query": "mutation RejectIntake($input: SystemIntakeRejectIntakeInput!) {\r\n    createSystemIntakeActionRejectIntake(input:$input) {\r\n        userErrors {\r\n            message \r\n            path\r\n        }\r\n        systemIntake {\r\n            step\r\n            state\r\n            decisionState\r\n            rejectionReason\r\n            decisionNextSteps\r\n            trbFollowUpRecommendation\r\n            updatedAt\r\n            actions {\r\n                actor {\r\n                    name\r\n                    email\r\n                }\r\n                feedback\r\n                type\r\n            }\r\n            notes {\r\n                author {\r\n                    name\r\n                    eua\r\n                }\r\n                content\r\n            }\r\n\r\n        }\r\n    }\r\n}",
-												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"reason\": \"insufficiently reticulated splines\",\r\n        \"nextSteps\": \"reticulate splines more\",\r\n        \"trbFollowUp\": \"STRONGLY_RECOMMENDED\",\r\n        \"additionalInfo\": \"some info for the email\",\r\n        \"adminNote\": \"lol look how unreticulated this is\"\r\n    }\r\n}\r\n"
 											}
 										},
 										"url": {
@@ -681,7 +514,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation createSystemIntake{\n  \n  createSystemIntake(input:{\n      requestType :MAJOR_CHANGES\n      requester: {\n          name: \"Mr. Fun Person\"\n      }\n    } )\n  \n  {\n    id\n    step\n    state\n    requestFormState\n\n  adminLead\n  archivedAt\n#   businessCase\n  businessNeed\n#   businessOwner\n  businessSolution\n  createdAt\n  currentStage\n  decisionNextSteps\n  eaCollaborator\n  eaCollaboratorName\n  euaUserId\n  existingFunding\n  grbDate\n  grtDate\n  id\n  lcid\n  lcidExpiresAt\n  lcidScope\n  lcidCostBaseline\n  needsEaSupport\n#   notes\n  oitSecurityCollaborator\n  oitSecurityCollaboratorName\n#   productManager\n  projectAcronym\n  rejectionReason\n  requestName\n  requestType\n#   requester\n  status\n  submittedAt\n  trbCollaborator\n  trbCollaboratorName\n  updatedAt\n  grtReviewEmailBody\n  decidedAt\n  businessCaseId\n#   lastAdminNote\n  cedarSystemId\n#   documents\n  hasUiChanges\n    \n    \n  }\n  \n  \n}",
+										"query": "mutation createSystemIntake{\n  \n  createSystemIntake(input:{\n      requestType :MAJOR_CHANGES\n      requester: {\n          name: \"Mr. Fun Person\"\n      }\n    } )\n  \n  {\n    id\n    step\n    state\n    requestFormState\n\n  adminLead\n  archivedAt\n#   businessCase\n  businessNeed\n#   businessOwner\n  businessSolution\n  createdAt\n  currentStage\n  decisionNextSteps\n  eaCollaborator\n  eaCollaboratorName\n  euaUserId\n  existingFunding\n  grbDate\n  grtDate\n  id\n  lcid\n  lcidExpiresAt\n  lcidScope\n  lcidCostBaseline\n  needsEaSupport\n#   notes\n  oitSecurityCollaborator\n  oitSecurityCollaboratorName\n#   productManager\n  projectAcronym\n  rejectionReason\n  requestName\n  requestType\n#   requester\n#   status\n  submittedAt\n  trbCollaborator\n  trbCollaboratorName\n  updatedAt\n  grtReviewEmailBody\n  decidedAt\n  businessCaseId\n#   lastAdminNote\n  cedarSystemId\n#   documents\n  hasUiChanges\n    \n    \n  }\n  \n  \n}",
 										"variables": ""
 									}
 								},
@@ -1127,6 +960,95 @@
 					]
 				},
 				{
+					"name": "Set Intake Relations",
+					"item": [
+						{
+							"name": "Set New System",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation SetSystemIntakeRelationNewSystem ($input: SetSystemIntakeRelationNewSystemInput!) {\r\n    setSystemIntakeRelationNewSystem(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n        }\r\n    }\r\n}",
+										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractNumbers\": []\r\n    }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Set Existing Service/Contract",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation SetSystemIntakeRelationExistingService ($input: SetSystemIntakeRelationExistingServiceInput!) {\r\n    setSystemIntakeRelationExistingService(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n        }\r\n    }\r\n}",
+										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractName\": \"New name!\",\r\n        \"contractNumbers\": []\r\n    }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Set Existing System",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation SetSystemIntakeRelationExistingSystem ($input: SetSystemIntakeRelationExistingSystemInput!) {\r\n    setSystemIntakeRelationExistingSystem(input:$input) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n        }\r\n    }\r\n}",
+										"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"contractNumbers\": [],\r\n        \"cedarSystemIDs\": []\r\n    }\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unlink",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation UnlinkSystemIntakeRelation ($intakeID: UUID!) {\r\n    unlinkSystemIntakeRelation(intakeID: $intakeID) {\r\n        userErrors {\r\n            message\r\n            path\r\n        }\r\n        systemIntake {\r\n            id\r\n            step\r\n            state\r\n            relationType\r\n            contractName\r\n            contractNumbers {\r\n                contractNumber\r\n            }\r\n        }\r\n    }\r\n}",
+										"variables": "{\r\n    \"intakeID\": \"{{systemIntakeID}}\"\r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "SystemIntake Get",
 					"event": [
 						{
@@ -1145,7 +1067,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query systemIntake {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    step\n    state\n    status\n    archivedAt\n    requestFormState\n    draftBusinessCaseState\n    grtMeetingState\n    finalBusinessCaseState\n    grbMeetingState\n    decisionState\n    itGovTaskStatuses {      \n        intakeFormStatus\n        feedbackFromInitialReviewStatus\n        decisionAndNextStepsStatus\n        bizCaseDraftStatus\n        grtMeetingStatus\n        bizCaseFinalStatus\n        grbMeetingStatus\n    }\n    id\n    actions {\n        type\n        actor {\n            name\n        }\n        step\n        feedback\n    }\n#   adminLead\n# #   businessCase\n#   businessNeed\n# #   businessOwner\n#   businessSolution\n# #   contract\n# #   costs\n#   createdAt\n#   currentStage\n#   decisionNextSteps\n#   eaCollaborator\n#   eaCollaboratorName\n#   euaUserId\n#   existingFunding\n# #   fundingSources\n# #   governanceTeams\n#   grbDate\n#   grtDate\n# #   grtFeedbacks\n#   id\n# #   isso\n#   lcid\n#   lcidExpiresAt\n#   lcidScope\n#   lcidCostBaseline\n#   needsEaSupport\n# #   notes\n#   oitSecurityCollaborator\n#   oitSecurityCollaboratorName\n# #   productManager\n#   projectAcronym\n#   rejectionReason\n#   requestName\n#   requestType\n# #   requester\n#   status\n#   submittedAt\n#   trbCollaborator\n#   trbCollaboratorName\n#   updatedAt\n#   grtReviewEmailBody\n#   decidedAt\n#   businessCaseId\n# #   lastAdminNote\n#   cedarSystemId\n# #   documents\n#   hasUiChanges\n    \n    \n  }\n  \n  \n}",
+								"query": "query systemIntake {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    step\n    state\n    status\n    archivedAt\n    requestFormState\n    draftBusinessCaseState\n    grtMeetingState\n    finalBusinessCaseState\n    grbMeetingState\n    decisionState\n    itGovTaskStatuses {      \n        intakeFormStatus\n        feedbackFromInitialReviewStatus\n        decisionAndNextStepsStatus\n        bizCaseDraftStatus\n        grtMeetingStatus\n        bizCaseFinalStatus\n        grbMeetingStatus\n    }\n    id\n    actions {\n        type\n        actor {\n            name\n        }\n        step\n        feedback\n    }\n    contractName\n#   adminLead\n# #   businessCase\n#   businessNeed\n# #   businessOwner\n#   businessSolution\n# #   contract\n# #   costs\n#   createdAt\n#   currentStage\n#   decisionNextSteps\n#   eaCollaborator\n#   eaCollaboratorName\n#   euaUserId\n#   existingFunding\n# #   fundingSources\n# #   governanceTeams\n#   grbDate\n#   grtDate\n# #   grtFeedbacks\n#   id\n# #   isso\n#   lcid\n#   lcidExpiresAt\n#   lcidScope\n#   lcidCostBaseline\n#   needsEaSupport\n# #   notes\n#   oitSecurityCollaborator\n#   oitSecurityCollaboratorName\n# #   productManager\n#   projectAcronym\n#   rejectionReason\n#   requestName\n#   requestType\n# #   requester\n#   status\n#   submittedAt\n#   trbCollaborator\n#   trbCollaboratorName\n#   updatedAt\n#   grtReviewEmailBody\n#   decidedAt\n#   businessCaseId\n# #   lastAdminNote\n#   cedarSystemId\n# #   documents\n#   hasUiChanges\n    \n    \n  }\n  \n  \n}",
 								"variables": ""
 							}
 						},
@@ -1520,7 +1442,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query trbRequests{\n  \n  trbRequests(archived: false){\n    id\n    name\n    archived\n    type\n    status\n    createdBy\n    createdAt\n    modifiedBy\n    modifiedAt\n    \n    \n  }\n  \n  \n}",
+										"query": "query trbRequests{\n trbRequests(archived: false){\n id\n name\n archived\n type\n status\n relationType\n contractName\n contractNumbers {\n contractNumber\n }\n createdBy\n createdAt\n modifiedBy\n modifiedAt\n }\n}",
 										"variables": ""
 									}
 								},
@@ -1996,17 +1918,22 @@
 								}
 							},
 							"response": []
-						},
+						}
+					]
+				},
+				{
+					"name": "Set TRB Relations",
+					"item": [
 						{
-							"name": "Update TRB Admin Note (no category-specific fields)",
+							"name": "Set New System",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation UpdateNote($input: UpdateTRBAdminNoteInput!) {\r\n    updateTRBAdminNote(input: $input) {\r\n        id\r\n        category\r\n        noteText\r\n    }\r\n}",
-										"variables": "{\r\n    \"input\": {\r\n        \"id\": \"71fb32c1-52f5-47a1-8350-c7349caf2770\",\r\n        \"category\": \"INITIAL_REQUEST_FORM\",\r\n        \"noteText\": \"test note 1 - edit1\"\r\n    }\r\n}"
+										"query": "mutation SetTRBRequestRelationNewSystem ($input: SetTRBRequestRelationNewSystemInput!) {\n    setTRBRequestRelationNewSystem(input:$input) {\n        id\n        relationType\n    }\n}",
+										"variables": "{\n    \"input\": {\n        \"trbRequestID\": \"{{trbRequestID}}\",\n        \"contractNumbers\": [\"new\", \"system\"]\n    }\n}"
 									}
 								},
 								"url": {
@@ -2019,15 +1946,57 @@
 							"response": []
 						},
 						{
-							"name": "Create TRB Admin Note (no category-specific fields)",
+							"name": "Set Existing Service/Contract",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation CreateTRBNote($input:CreateTRBAdminNoteInput!) {\r\n    createTRBAdminNote(input: $input) {\r\n        id\r\n    }\r\n}",
-										"variables": "{\r\n    \"input\": {\r\n        \"trbRequestId\": \"{{trbRequestID}}\",\r\n        \"category\": \"GENERAL_REQUEST\",\r\n        \"noteText\": \"test note 1\"\r\n    }\r\n}"
+										"query": "mutation SetTRBRequestRelationExistingService ($input: SetTRBRequestRelationExistingServiceInput!) {\n    setTRBRequestRelationExistingService(input:$input) {\n        id\n        contractName\n        relationType\n    }\n}",
+										"variables": "{\n    \"input\": {\n        \"systemIntakeID\": \"{{trbRequestID}}\",\n        \"contractName\": \"New name!\",\n        \"contractNumbers\": [\"existing service\"]\n    }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Set Existing System",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation SetTRBRequestRelationExistingSystem ($input: SetTRBRequestRelationExistingSystemInput!) {\n    setTRBRequestRelationExistingSystem(input:$input) {\n        id\n        contractName\n        relationType\n    }\n}",
+										"variables": "{\n    \"input\": {\n        \"trbRequestID\": \"{{trbRequestID}}\",\n        \"contractNumbers\": [],\n        \"cedarSystemIDs\": []\n    }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unlink",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation UnlinkTRBRequestRelation($trbRequestID: UUID!) {\n    unlinkTRBRequestRelation(trbRequestID: $trbRequestID) {\n        id\n        name\n        contractName\n        relationType\n    }\n}",
+										"variables": "{\n    \"trbRequestID\": \"{{trbRequestID}}\"\n}"
 									}
 								},
 								"url": {
@@ -2167,6 +2136,43 @@
 							"mode": "graphql",
 							"graphql": {
 								"query": "query {\n  cedarPersonsByCommonName(commonName: \"Aaron\") {\n   commonName\n   email\n   euaUserId\n  \n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UserAccount",
+			"item": [
+				{
+					"name": "UserAccountGetByUsername",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  userAccount(username: \"EASI_SYSTEM\") {\n    id\n    username\n    commonName\n    familyName\n    givenName\n    email\n    locale\n    }\n}",
 								"variables": ""
 							}
 						},

@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
@@ -30,17 +31,17 @@ func CreateTRBAdviceLetter(ctx context.Context, store *storage.Store, trbRequest
 
 // UpdateTRBAdviceLetter handles general updates to a TRB advice letter
 func UpdateTRBAdviceLetter(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdviceLetter, error) {
-	trbRequestIDStr, idFound := input["trbRequestId"]
+	idIface, idFound := input["trbRequestId"]
 	if !idFound {
 		return nil, errors.New("missing required property trbRequestId")
 	}
 
-	trbRequestID, err := uuid.Parse(trbRequestIDStr.(string))
-	if err != nil {
-		return nil, err
+	id, ok := idIface.(uuid.UUID)
+	if !ok {
+		return nil, fmt.Errorf("unable to convert incoming trbRequestId to uuid when updating TRB advice letter: %v", idIface)
 	}
 
-	letter, err := store.GetTRBAdviceLetterByTRBRequestID(ctx, trbRequestID)
+	letter, err := store.GetTRBAdviceLetterByTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -76,25 +77,19 @@ func RequestReviewForTRBAdviceLetter(
 		return nil, err
 	}
 
-	requesterInfo, err := fetchUserInfo(ctx, trb.GetCreatedBy())
-	if err != nil {
-		return nil, err
-	}
-
 	var leadName string
 	if trb.TRBLead != nil {
 		leadInfo, err2 := fetchUserInfo(ctx, *trb.TRBLead)
 		if err2 != nil {
 			return nil, err2
 		}
-		leadName = leadInfo.CommonName
+		leadName = leadInfo.DisplayName
 	}
 
 	emailInput := email.SendTRBAdviceLetterInternalReviewEmailInput{
 		TRBRequestID:   trb.ID,
 		TRBRequestName: trb.GetName(),
 		TRBLeadName:    leadName,
-		RequesterName:  requesterInfo.CommonName,
 	}
 
 	// Email client can be nil when this is called from tests - the email client itself tests this
@@ -174,7 +169,7 @@ func SendTRBAdviceLetter(ctx context.Context,
 		TRBRequestID:   trb.ID,
 		RequestName:    trb.GetName(),
 		RequestType:    string(trb.Type),
-		RequesterName:  requester.CommonName,
+		RequesterName:  requester.DisplayName,
 		Component:      component,
 		SubmissionDate: letter.ModifiedAt,
 		ConsultDate:    trb.ConsultMeetingTime,

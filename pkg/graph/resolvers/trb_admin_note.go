@@ -15,37 +15,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-// CreateTRBAdminNote creates a new TRB admin note in the database
-// TODO - EASI-3458 - remove
-func CreateTRBAdminNote(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID, category models.TRBAdminNoteCategory, noteText models.HTML) (*models.TRBAdminNote, error) {
-	noteToCreate := models.TRBAdminNote{
-		TRBRequestID: trbRequestID,
-		Category:     category,
-		NoteText:     noteText,
-	}
-	noteToCreate.CreatedBy = appcontext.Principal(ctx).ID()
-
-	// set category-specific fields to default values for that data, so that the created data/SQL records are still valid
-	switch category {
-	case models.TRBAdminNoteCategoryInitialRequestForm:
-		noteToCreate.AppliesToBasicRequestDetails = null.BoolFrom(false)
-		noteToCreate.AppliesToSubjectAreas = null.BoolFrom(false)
-		noteToCreate.AppliesToAttendees = null.BoolFrom(false)
-	case models.TRBAdminNoteCategoryAdviceLetter:
-		noteToCreate.AppliesToMeetingSummary = null.BoolFrom(false)
-		noteToCreate.AppliesToNextSteps = null.BoolFrom(false)
-	case models.TRBAdminNoteCategoryGeneralRequest, models.TRBAdminNoteCategorySupportingDocuments, models.TRBAdminNoteCategoryConsultSession:
-		// intentional no-op - no fields to set
-	}
-
-	createdNote, err := store.CreateTRBAdminNote(ctx, &noteToCreate)
-	if err != nil {
-		return nil, err
-	}
-
-	return createdNote, nil
-}
-
 func CreateTRBAdminNoteGeneralRequest(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,
@@ -258,41 +227,6 @@ func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Sto
 
 	// this should never happen, all five categories should be handled, but in case it does, error and alert on it
 	return nil, apperrors.NewInvalidEnumError(fmt.Errorf("admin note has an unrecognized category"), note.Category, "TRBAdminNoteCategory")
-}
-
-// UpdateTRBAdminNote handles general updates to a TRB admin note, without handling category-specific data
-// If updating admin notes requires handling category-specific data, see note on UpdateTRBAdminNoteInput in GraphQL schema;
-// break this up into separate resolvers
-// Also, if updating with category-specific data allows changing a note's category, the resolvers will need to null out any previous category-specific data;
-// as well as updating the fields on the admin note record, many-to-many links to documents/recommendations may need to be deleted
-// (which would require implementing storage methods to delete those records)
-func UpdateTRBAdminNote(ctx context.Context, store *storage.Store, input map[string]interface{}) (*models.TRBAdminNote, error) {
-	idStr, idFound := input["id"]
-	if !idFound {
-		return nil, errors.New("missing required property id")
-	}
-
-	id, err := uuid.Parse(idStr.(string))
-	if err != nil {
-		return nil, err
-	}
-
-	note, err := store.GetTRBAdminNoteByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	err = ApplyChangesAndMetaData(input, note, appcontext.Principal(ctx))
-	if err != nil {
-		return nil, err
-	}
-
-	updatedNote, err := store.UpdateTRBAdminNote(ctx, note)
-	if err != nil {
-		return nil, err
-	}
-
-	return updatedNote, nil
 }
 
 // SetTRBAdminNoteArchived sets whether a TRB admin note is archived (soft-deleted)

@@ -9,15 +9,13 @@ const PrepareForGRT = () => {
   return (
     <>
       <MainContent className="grid-container">
-        <HelpBreadcrumb type="Close tab" />
+        <HelpBreadcrumb type="close" />
         <PrepareForGRTBase helpArticle />
       </MainContent>
-      <div className="margin-top-7">
-        <RelatedArticles
-          type="IT Governance"
-          currentArticle="governanceReviewTeam"
-        />
-      </div>
+      <RelatedArticles
+        className="margin-top-7"
+        articles={['newSystem', 'sampleBusinessCase', 'governanceReviewBoard']}
+      />
     </>
   );
 };

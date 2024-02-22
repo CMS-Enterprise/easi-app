@@ -220,7 +220,9 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 
 	if input.AnnualSpending != nil {
 		intake.CurrentAnnualSpending = null.StringFromPtr(input.AnnualSpending.CurrentAnnualSpending)
+		intake.CurrentAnnualSpendingITPortion = null.StringFromPtr(input.AnnualSpending.CurrentAnnualSpendingITPortion)
 		intake.PlannedYearOneSpending = null.StringFromPtr(input.AnnualSpending.PlannedYearOneSpending)
+		intake.PlannedYearOneSpendingITPortion = null.StringFromPtr(input.AnnualSpending.PlannedYearOneSpendingITPortion)
 	}
 
 	if input.Contract != nil {
@@ -281,7 +283,7 @@ func SubmitIntake(
 			IntakeID:       &input.ID,
 			ActionType:     models.ActionTypeSUBMITINTAKE,
 			ActorEUAUserID: actorEUAID,
-			ActorName:      actorInfo.CommonName,
+			ActorName:      actorInfo.DisplayName,
 			ActorEmail:     actorInfo.Email,
 			Step:           &intake.Step,
 		})

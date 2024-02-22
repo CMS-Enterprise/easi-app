@@ -5,18 +5,21 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 	"github.com/cmsgov/easi-app/pkg/upload"
+	"github.com/cmsgov/easi-app/pkg/userhelpers"
 
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 )
@@ -24,14 +27,24 @@ import (
 // ResolverSuite is the testify suite for the resolver package
 type ResolverSuite struct {
 	suite.Suite
-	testConfigs       *TestConfigs
-	fetchUserInfoStub func(context.Context, string) (*models.UserInfo, error)
+	*require.Assertions // included so that calls to things like ResolverSuite.NoError or ResolverSuite.Equal() use the "require" version instead of "assert"
+	testConfigs         *TestConfigs
+	fetchUserInfoStub   func(context.Context, string) (*models.UserInfo, error)
 }
 
 // SetupTest clears the database between each test
 func (suite *ResolverSuite) SetupTest() {
+	// We need to set the *require.Assertions here, as we need to have already called suite.Run() to ensure the
+	// test suite has been constructed before we call suite.Require()
+	suite.Assertions = suite.Require()
+
+	// Clean all tables before each test
 	err := suite.testConfigs.Store.TruncateAllTablesDANGEROUS(suite.testConfigs.Logger)
 	assert.NoError(suite.T(), err)
+
+	// Get the user account from the DB fresh for each test
+	princ := getTestPrincipal(suite.testConfigs.Store, suite.testConfigs.UserInfo.Username)
+	suite.testConfigs.Principal = princ
 }
 
 // TestResolverSuite runs the resolver test suite
@@ -40,9 +53,9 @@ func TestResolverSuite(t *testing.T) {
 	rs.testConfigs = GetDefaultTestConfigs()
 	rs.fetchUserInfoStub = func(context.Context, string) (*models.UserInfo, error) {
 		return &models.UserInfo{
-			EuaUserID:  "ANON",
-			CommonName: "Anonymous",
-			Email:      models.NewEmailAddress("anon@local.fake"),
+			Username:    "ANON",
+			DisplayName: "Anonymous",
+			Email:       models.NewEmailAddress("anon@local.fake"),
 		}, nil
 	}
 	suite.Run(t, rs)
@@ -78,21 +91,19 @@ func (tc *TestConfigs) GetDefaults() {
 
 	tc.Logger = zap.NewNop()
 	tc.UserInfo = &models.UserInfo{
-		CommonName: "Test User",
-		Email:      "testuser@test.com",
-		EuaUserID:  "TEST",
+		DisplayName: "Test User",
+		Email:       "testuser@test.com",
+		Username:    "TEST",
 	}
 	tc.Store, _ = storage.NewStore(tc.DBConfig, tc.LDClient)
 
-	tc.Principal = &authentication.EUAPrincipal{
-		EUAID:            tc.UserInfo.EuaUserID,
-		JobCodeEASi:      true,
-		JobCodeGRT:       true,
-		JobCode508User:   true,
-		JobCode508Tester: true,
-	}
+	// create the test context
+	// principal is fetched between each test in SetupTest()
 	ctx := appcontext.WithLogger(context.Background(), tc.Logger)
-	ctx = appcontext.WithPrincipal(ctx, tc.Principal)
+	ctx = appcontext.WithPrincipal(ctx, getTestPrincipal(tc.Store, tc.UserInfo.Username))
+	// Set up mocked dataloaders for the test context
+	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(tc.Store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
+
 	tc.Context = ctx
 
 	emailClient := NewEmailClient()
@@ -116,6 +127,22 @@ func NewEmailClient() *email.Client {
 
 	emailClient, _ := email.NewClient(emailConfig, localSender)
 	return &emailClient
+
+}
+
+func getTestPrincipal(store *storage.Store, userName string) *authentication.EUAPrincipal {
+
+	userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+
+	princ := &authentication.EUAPrincipal{
+		EUAID:            userName,
+		JobCodeEASi:      true,
+		JobCodeGRT:       true,
+		JobCode508User:   true,
+		JobCode508Tester: true,
+		UserAccount:      userAccount,
+	}
+	return princ
 
 }
 

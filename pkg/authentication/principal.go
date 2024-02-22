@@ -39,6 +39,8 @@ type Principal interface {
 	// AllowTRBAdmin says whether this principal
 	// is authorized to operate as an admin of the TRB process within EASi
 	AllowTRBAdmin() bool
+
+	Account() *UserAccount
 }
 
 type anonymous struct{}
@@ -84,6 +86,11 @@ func (*anonymous) AllowTRBAdmin() bool {
 	return false
 }
 
+// Account returns an empty UserAccount for an Anonymous user
+func (*anonymous) Account() *UserAccount {
+	return &UserAccount{}
+}
+
 // EUAPrincipal represents information
 // gleaned from the Okta JWT
 type EUAPrincipal struct {
@@ -93,6 +100,7 @@ type EUAPrincipal struct {
 	JobCode508User   bool
 	JobCode508Tester bool
 	JobCodeTRBAdmin  bool
+	UserAccount      *UserAccount
 }
 
 // String satisfies the fmt.Stringer interface
@@ -137,4 +145,9 @@ func (p *EUAPrincipal) Allow508Tester() bool {
 // is authorized to operate as an admin of the TRB process within EASi
 func (p *EUAPrincipal) AllowTRBAdmin() bool {
 	return p.JobCodeTRBAdmin
+}
+
+// Account returns the UserAccount of an EUAPrincipal
+func (p *EUAPrincipal) Account() *UserAccount {
+	return p.UserAccount
 }
