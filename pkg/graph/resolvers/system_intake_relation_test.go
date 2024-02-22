@@ -98,7 +98,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			})
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err := Systems(ctx, mockGetCedarSystem, openIntake.ID)
+			updatedIntakeSystemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, openIntake.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
@@ -119,7 +119,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(ctx, updatedIntake.ID)
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err = Systems(ctx, mockGetCedarSystem, openIntake.ID)
+			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, mockGetCedarSystem, openIntake.ID)
 			suite.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -218,7 +218,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			})
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err := Systems(ctx, mockGetCedarSystem, openIntake.ID)
+			updatedIntakeSystemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, openIntake.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
@@ -246,7 +246,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(ctx, updatedIntake.ID)
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err = Systems(ctx, mockGetCedarSystem, openIntake.ID)
+			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, mockGetCedarSystem, openIntake.ID)
 			suite.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -346,7 +346,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			})
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err := Systems(ctx, mockGetCedarSystem, openIntake.ID)
+			updatedIntakeSystemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, openIntake.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
@@ -367,7 +367,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(ctx, updatedIntake.ID)
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err = Systems(ctx, mockGetCedarSystem, openIntake.ID)
+			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, mockGetCedarSystem, openIntake.ID)
 			suite.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -437,7 +437,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := Systems(ctx, mockGetCedarSystem, unlinkedIntake.ID)
+		systemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, unlinkedIntake.ID)
 		suite.NoError(err)
 		suite.Empty(systemIDs)
 	})
@@ -484,7 +484,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := Systems(ctx, mockGetCedarSystem, unlinkedIntake.ID)
+		systemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, unlinkedIntake.ID)
 		suite.NoError(err)
 		suite.Empty(systemIDs)
 	})
@@ -524,7 +524,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := Systems(ctx, mockGetCedarSystem, unlinkedIntake.ID)
+		systemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, unlinkedIntake.ID)
 		suite.NoError(err)
 		suite.Empty(systemIDs)
 	})

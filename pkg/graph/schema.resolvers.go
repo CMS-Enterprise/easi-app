@@ -2766,12 +2766,12 @@ func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.Sys
 	return obj.SystemRelationType, nil
 }
 
-// Systems is the resolver for the systems field.
+// Systems is the resolver for the systems field on system intakes.
 func (r *systemIntakeResolver) Systems(ctx context.Context, obj *models.SystemIntake) ([]*models.CedarSystem, error) {
-	return resolvers.Systems(ctx, r.cedarCoreClient.GetSystem, obj.ID)
+	return resolvers.SystemIntakeSystems(ctx, r.cedarCoreClient.GetSystem, obj.ID)
 }
 
-// ContractNumbers is the resolver for the contractNumbers field.
+// ContractNumbers is the resolver for the contractNumbers field on system intakes.
 func (r *systemIntakeResolver) ContractNumbers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeContractNumber, error) {
 	return resolvers.SystemIntakeContractNumbers(ctx, obj.ID)
 }

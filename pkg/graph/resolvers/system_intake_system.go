@@ -10,8 +10,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// Systems utilizies a dataloader to retrieve systems linked to a given system intake ID
-func Systems(
+// SystemIntakeSystems utilizies a dataloader to retrieve systems linked to a given system intake ID
+func SystemIntakeSystems(
 	ctx context.Context,
 	getCedarSystem func(context.Context, string) (*models.CedarSystem, error),
 	systemIntakeID uuid.UUID,
