@@ -5,6 +5,8 @@ import (
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -86,9 +88,15 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		return nil, err
 	}
 
+	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(helpers.PointerTo(models.SystemIntake(*si)))
+	if err != nil {
+		return nil, err
+	}
+
 	result := wire.IntakeInput{
-		ClientID: pStr(si.ID.String()),
-		Body:     pStr(string(blob)),
+		ClientID:     pStr(si.ID.String()),
+		Body:         pStr(string(blob)),
+		ClientStatus: pStr(string(clientStatus)),
 
 		// invariants for this type
 		Type:       typeStr(intakeInputSystemIntake),

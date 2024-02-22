@@ -31,7 +31,6 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		for i := 0; i < 3; i++ {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
-				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Requester:   fmt.Sprintf("link to systems %d", i),
 			}
