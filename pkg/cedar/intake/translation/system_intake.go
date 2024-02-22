@@ -34,9 +34,15 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		})
 	}
 
+	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(helpers.PointerTo(models.SystemIntake(*si)))
+	if err != nil {
+		return nil, err
+	}
+
 	obj := &intakemodels.EASIIntake{
 		IntakeID:                    si.ID.String(),
 		UserEUA:                     si.EUAUserID.ValueOrZero(),
+		Status:                      string(clientStatus),
 		RequestType:                 string(si.RequestType),
 		Requester:                   si.Requester,
 		Component:                   si.Component.ValueOrZero(),
@@ -84,11 +90,6 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 	}
 
 	blob, err := json.Marshal(&obj)
-	if err != nil {
-		return nil, err
-	}
-
-	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(helpers.PointerTo(models.SystemIntake(*si)))
 	if err != nil {
 		return nil, err
 	}
