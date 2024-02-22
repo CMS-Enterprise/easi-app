@@ -145,8 +145,9 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, erro
 	}
 
 	result := &wire.IntakeInput{
-		ClientID: pStr(bcID),
-		Body:     pStr(string(blob)),
+		ClientID:     pStr(bcID),
+		Body:         pStr(string(blob)),
+		ClientStatus: statusStr(inputStatusInitiated),
 
 		// invariants for this type
 		BodyFormat: pStr(wire.IntakeInputBodyFormatJSON),
