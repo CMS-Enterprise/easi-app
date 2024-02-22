@@ -254,20 +254,70 @@ func updateSystemIntakeContact(
 	}
 }
 
+func setSystemIntakeRelationNewSystem(
+	logger *zap.Logger,
+	store *storage.Store,
+	intakeID uuid.UUID,
+	contractNumbers []string,
+) {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
+	input := &model.SetSystemIntakeRelationNewSystemInput{
+		SystemIntakeID:  intakeID,
+		ContractNumbers: contractNumbers,
+	}
+	if _, err := resolvers.SetSystemIntakeRelationNewSystem(ctx, store, input); err != nil {
+		panic(err)
+	}
+}
+
+func setSystemIntakeRelationExistingSystem(
+	logger *zap.Logger,
+	store *storage.Store,
+	intakeID uuid.UUID,
+	contractNumbers []string,
+	cedarSystemIDs []string,
+) {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
+	input := &model.SetSystemIntakeRelationExistingSystemInput{
+		SystemIntakeID:  intakeID,
+		ContractNumbers: contractNumbers,
+		CedarSystemIDs:  cedarSystemIDs,
+	}
+	_, err := resolvers.SetSystemIntakeRelationExistingSystem(
+		ctx,
+		store,
+		func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+			return &models.CedarSystem{}, nil
+		},
+		input,
+	)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func setSystemIntakeRelationExistingService(
 	logger *zap.Logger,
 	store *storage.Store,
-	intake *models.SystemIntake,
+	intakeID uuid.UUID,
 	contractName string,
+	contractNumbers []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
 	input := &model.SetSystemIntakeRelationExistingServiceInput{
-		SystemIntakeID:  intake.ID,
+		SystemIntakeID:  intakeID,
 		ContractName:    contractName,
-		ContractNumbers: []string{"1234567890", "0987654321"},
+		ContractNumbers: contractNumbers,
 	}
 	_, err := resolvers.SetSystemIntakeRelationExistingService(ctx, store, input)
 	if err != nil {
+		panic(err)
+	}
+}
+
+func unlinkSystemIntakeRelation(logger *zap.Logger, store *storage.Store, intakeID uuid.UUID) {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
+	if _, err := resolvers.UnlinkSystemIntakeRelation(ctx, store, intakeID); err != nil {
 		panic(err)
 	}
 }
