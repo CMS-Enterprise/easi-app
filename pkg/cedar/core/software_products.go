@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/guregu/null/zero"
+
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 
@@ -43,19 +45,19 @@ func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID 
 
 	for _, softwareProduct := range resp.Payload.SoftwareProducts {
 		softwareProductItems = append(softwareProductItems, &models.SoftwareProductItem{
-			APIGatewayUse:                  softwareProduct.APIGatewayUse,
-			ElaPurchase:                    softwareProduct.ElaPurchase,
-			ElaVendorID:                    softwareProduct.ElaVendorID,
-			ProvidesAiCapability:           softwareProduct.ProvidesAiCapability,
-			Refstr:                         softwareProduct.Refstr,
-			SoftwareCatagoryConnectionGUID: softwareProduct.SoftwareCatagoryConnectionGUID,
-			SoftwareVendorConnectionGUID:   softwareProduct.SoftwareVendorConnectionGUID,
-			SoftwareCost:                   softwareProduct.SoftwareCost,
-			SoftwareElaOrganization:        softwareProduct.SoftwareElaOrganization,
-			SoftwareName:                   softwareProduct.SoftwareName,
-			SystemSoftwareConnectionGUID:   softwareProduct.SystemSoftwareConnectionGUID,
-			TechnopediaCategory:            softwareProduct.TechnopediaCategory,
-			TechnopediaID:                  softwareProduct.TechnopediaID,
+			APIGatewayUse:                  zero.BoolFrom(softwareProduct.APIGatewayUse),
+			ElaPurchase:                    zero.StringFrom(softwareProduct.ElaPurchase),
+			ElaVendorID:                    zero.StringFrom(softwareProduct.ElaVendorID),
+			ProvidesAiCapability:           zero.BoolFrom(softwareProduct.ProvidesAiCapability),
+			Refstr:                         zero.StringFrom(softwareProduct.Refstr),
+			SoftwareCatagoryConnectionGUID: zero.StringFrom(softwareProduct.SoftwareCatagoryConnectionGUID),
+			SoftwareVendorConnectionGUID:   zero.StringFrom(softwareProduct.SoftwareVendorConnectionGUID),
+			SoftwareCost:                   zero.StringFrom(softwareProduct.SoftwareCost),
+			SoftwareElaOrganization:        zero.StringFrom(softwareProduct.SoftwareElaOrganization),
+			SoftwareName:                   zero.StringFrom(softwareProduct.SoftwareName),
+			SystemSoftwareConnectionGUID:   zero.StringFrom(softwareProduct.SystemSoftwareConnectionGUID),
+			TechnopediaCategory:            zero.StringFrom(softwareProduct.TechnopediaCategory),
+			TechnopediaID:                  zero.StringFrom(softwareProduct.TechnopediaID),
 		})
 	}
 
@@ -65,17 +67,17 @@ func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID 
 		ApiDataArea:      resp.Payload.APIDataArea,
 		SoftwareProducts: softwareProductItems,
 
-		AISolnCatgOther:     resp.Payload.AiSolnCatgOther,
-		ApiDescPubLocation:  resp.Payload.APIDescPubLocation,
-		ApiDescPublished:    resp.Payload.APIDescPublished,
-		ApiFHIRUse:          resp.Payload.APIFHIRUse,
-		ApiFHIRUseOther:     resp.Payload.APIFHIRUseOther,
-		ApiHasPortal:        resp.Payload.APIHasPortal,
-		ApisAccessibility:   resp.Payload.ApisAccessibility,
-		ApisDeveloped:       resp.Payload.ApisDeveloped,
-		DevelopmentStage:    resp.Payload.DevelopmentStage,
-		SystemHasApiGateway: resp.Payload.SystemHasAPIGateway,
-		UsesAiTech:          resp.Payload.UsesAiTech,
+		AISolnCatgOther:     zero.StringFrom(resp.Payload.AiSolnCatgOther),
+		APIDescPubLocation:  zero.StringFrom(resp.Payload.APIDescPubLocation),
+		APIDescPublished:    zero.StringFrom(resp.Payload.APIDescPublished),
+		APIFHIRUse:          zero.StringFrom(resp.Payload.APIFHIRUse),
+		APIFHIRUseOther:     zero.StringFrom(resp.Payload.APIFHIRUseOther),
+		APIHasPortal:        zero.BoolFrom(resp.Payload.APIHasPortal),
+		ApisAccessibility:   zero.StringFrom(resp.Payload.ApisAccessibility),
+		ApisDeveloped:       zero.StringFrom(resp.Payload.ApisDeveloped),
+		DevelopmentStage:    zero.StringFrom(resp.Payload.DevelopmentStage),
+		SystemHasAPIGateway: zero.BoolFrom(resp.Payload.SystemHasAPIGateway),
+		UsesAiTech:          zero.StringFrom(resp.Payload.UsesAiTech),
 	}
 
 	return retVal, nil

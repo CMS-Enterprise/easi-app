@@ -1,21 +1,25 @@
 package models
 
+import (
+	"github.com/guregu/null/zero"
+)
+
 // SoftwareProductItem represents a single SoftwareProductSearchItem object which is an internal struct used in SoftwareProduct
 type SoftwareProductItem struct {
-	APIGatewayUse                  bool   `json:"api_gateway_use,omitempty"`
-	ElaPurchase                    string `json:"ela_purchase,omitempty"`
-	ElaVendorID                    string `json:"ela_vendor_id,omitempty"`
-	ProvidesAiCapability           bool   `json:"provides_ai_capability,omitempty"`
-	Refstr                         string `json:"refstr,omitempty"`
-	SoftwareCatagoryConnectionGUID string `json:"softwareCatagoryConnectionGuid,omitempty"`
-	SoftwareVendorConnectionGUID   string `json:"softwareVendorConnectionGuid,omitempty"`
-	SoftwareCost                   string `json:"software_cost,omitempty"`
-	SoftwareElaOrganization        string `json:"software_ela_organization,omitempty"`
-	SoftwareName                   string `json:"software_name,omitempty"`
-	SystemSoftwareConnectionGUID   string `json:"systemSoftwareConnectionGuid,omitempty"`
-	TechnopediaCategory            string `json:"technopedia_category,omitempty"`
-	TechnopediaID                  string `json:"technopedia_id,omitempty"`
-	VendorName                     string `json:"vendor_name,omitempty"`
+	APIGatewayUse                  zero.Bool   `json:"api_gateway_use,omitempty"`
+	ElaPurchase                    zero.String `json:"ela_purchase,omitempty"`
+	ElaVendorID                    zero.String `json:"ela_vendor_id,omitempty"`
+	ProvidesAiCapability           zero.Bool   `json:"provides_ai_capability,omitempty"`
+	Refstr                         zero.String `json:"refstr,omitempty"`
+	SoftwareCatagoryConnectionGUID zero.String `json:"softwareCatagoryConnectionGuid,omitempty"`
+	SoftwareVendorConnectionGUID   zero.String `json:"softwareVendorConnectionGuid,omitempty"`
+	SoftwareCost                   zero.String `json:"software_cost,omitempty"`
+	SoftwareElaOrganization        zero.String `json:"software_ela_organization,omitempty"`
+	SoftwareName                   zero.String `json:"software_name,omitempty"`
+	SystemSoftwareConnectionGUID   zero.String `json:"systemSoftwareConnectionGuid,omitempty"`
+	TechnopediaCategory            zero.String `json:"technopedia_category,omitempty"`
+	TechnopediaID                  zero.String `json:"technopedia_id,omitempty"`
+	VendorName                     zero.String `json:"vendor_name,omitempty"`
 }
 
 // CedarSoftwareProduct represents a single SoftwareProduct object returned from the CEDAR API
@@ -26,15 +30,15 @@ type CedarSoftwareProducts struct {
 	SoftwareProducts []*SoftwareProductItem `json:"softwareProducts"`
 
 	// Possibly null fields
-	AISolnCatgOther     string `json:"aiSolnCatgOther,omitempty"`
-	ApiDescPubLocation  string `json:"apiDescPubLocation,omitempty"`
-	ApiDescPublished    string `json:"apiDescPublished,omitempty"`
-	ApiFHIRUse          string `json:"apiFHIRUse,omitempty"`
-	ApiFHIRUseOther     string `json:"apiFHIRUseOther,omitempty"`
-	ApiHasPortal        bool   `json:"apiHasPortal,omitempty"`
-	ApisAccessibility   string `json:"apisAccessibility,omitempty"`
-	ApisDeveloped       string `json:"apisDeveloped,omitempty"`
-	DevelopmentStage    string `json:"developmentStage,omitempty"`
-	SystemHasApiGateway bool   `json:"systemHasApiGateway,omitempty"`
-	UsesAiTech          string `json:"usesAiTech,omitempty"`
+	AISolnCatgOther     zero.String `json:"aiSolnCatgOther,omitempty"`
+	APIDescPubLocation  zero.String `json:"apiDescPubLocation,omitempty"`
+	APIDescPublished    zero.String `json:"apiDescPublished,omitempty"`
+	APIFHIRUse          zero.String `json:"apiFHIRUse,omitempty"`
+	APIFHIRUseOther     zero.String `json:"apiFHIRUseOther,omitempty"`
+	APIHasPortal        zero.Bool   `json:"apiHasPortal,omitempty"`
+	ApisAccessibility   zero.String `json:"apisAccessibility,omitempty"`
+	ApisDeveloped       zero.String `json:"apisDeveloped,omitempty"`
+	DevelopmentStage    zero.String `json:"developmentStage,omitempty"`
+	SystemHasAPIGateway zero.Bool   `json:"systemHasApiGateway,omitempty"`
+	UsesAiTech          zero.String `json:"usesAiTech,omitempty"`
 }

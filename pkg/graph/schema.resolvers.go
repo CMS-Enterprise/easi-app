@@ -629,6 +629,51 @@ func (r *cedarRoleTypeResolver) Description(ctx context.Context, obj *models.Ced
 	return obj.Description.Ptr(), nil
 }
 
+// AiSolnCatgOther is the resolver for the aiSolnCatgOther field.
+func (r *cedarSoftwareProductsResolver) AiSolnCatgOther(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.AISolnCatgOther.Ptr(), nil
+}
+
+// APIDescPubLocation is the resolver for the apiDescPubLocation field.
+func (r *cedarSoftwareProductsResolver) APIDescPubLocation(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.APIDescPubLocation.Ptr(), nil
+}
+
+// APIDescPublished is the resolver for the apiDescPublished field.
+func (r *cedarSoftwareProductsResolver) APIDescPublished(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.APIDescPublished.Ptr(), nil
+}
+
+// APIFHIRUse is the resolver for the apiFHIRUse field.
+func (r *cedarSoftwareProductsResolver) APIFHIRUse(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.APIFHIRUse.Ptr(), nil
+}
+
+// APIFHIRUseOther is the resolver for the apiFHIRUseOther field.
+func (r *cedarSoftwareProductsResolver) APIFHIRUseOther(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.APIFHIRUseOther.Ptr(), nil
+}
+
+// APIHasPortal is the resolver for the apiHasPortal field.
+func (r *cedarSoftwareProductsResolver) APIHasPortal(ctx context.Context, obj *models.CedarSoftwareProducts) (*bool, error) {
+	return obj.APIHasPortal.Ptr(), nil
+}
+
+// ApisAccessibility is the resolver for the apisAccessibility field.
+func (r *cedarSoftwareProductsResolver) ApisAccessibility(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.ApisAccessibility.Ptr(), nil
+}
+
+// ApisDeveloped is the resolver for the apisDeveloped field.
+func (r *cedarSoftwareProductsResolver) ApisDeveloped(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.ApisDeveloped.Ptr(), nil
+}
+
+// DevelopmentStage is the resolver for the developmentStage field.
+func (r *cedarSoftwareProductsResolver) DevelopmentStage(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.DevelopmentStage.Ptr(), nil
+}
+
 // SoftwareProducts is the resolver for the softwareProducts field.
 func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error) {
 	softwareProducts := obj.SoftwareProducts
@@ -640,24 +685,34 @@ func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, ob
 	var softwareProductItems []*model.CedarSoftwareProductItem
 	for _, softwareProduct := range softwareProducts {
 		softwareProductItem := &model.CedarSoftwareProductItem{
-			APIGatewayUse:                  &softwareProduct.APIGatewayUse,
-			ElaPurchase:                    &softwareProduct.ElaPurchase,
-			ElaVendorID:                    &softwareProduct.ElaVendorID,
-			ProvidesAiCapability:           &softwareProduct.ProvidesAiCapability,
-			Refstr:                         &softwareProduct.Refstr,
-			SoftwareCatagoryConnectionGUID: &softwareProduct.SoftwareCatagoryConnectionGUID,
-			SoftwareVendorConnectionGUID:   &softwareProduct.SoftwareVendorConnectionGUID,
-			SoftwareCost:                   &softwareProduct.SoftwareCost,
-			SoftwareElaOrganization:        &softwareProduct.SoftwareElaOrganization,
-			SoftwareName:                   &softwareProduct.SoftwareName,
-			SystemSoftwareConnectionGUID:   &softwareProduct.SystemSoftwareConnectionGUID,
-			TechnopediaCategory:            &softwareProduct.TechnopediaCategory,
-			TechnopediaID:                  &softwareProduct.TechnopediaID,
+			APIGatewayUse:                  softwareProduct.APIGatewayUse.Ptr(),
+			ElaPurchase:                    softwareProduct.ElaPurchase.Ptr(),
+			ElaVendorID:                    softwareProduct.ElaVendorID.Ptr(),
+			ProvidesAiCapability:           softwareProduct.ProvidesAiCapability.Ptr(),
+			Refstr:                         softwareProduct.Refstr.Ptr(),
+			SoftwareCatagoryConnectionGUID: softwareProduct.SoftwareCatagoryConnectionGUID.Ptr(),
+			SoftwareVendorConnectionGUID:   softwareProduct.SoftwareVendorConnectionGUID.Ptr(),
+			SoftwareCost:                   softwareProduct.SoftwareCost.Ptr(),
+			SoftwareElaOrganization:        softwareProduct.SoftwareElaOrganization.Ptr(),
+			SoftwareName:                   softwareProduct.SoftwareName.Ptr(),
+			SystemSoftwareConnectionGUID:   softwareProduct.SystemSoftwareConnectionGUID.Ptr(),
+			TechnopediaCategory:            softwareProduct.TechnopediaCategory.Ptr(),
+			TechnopediaID:                  softwareProduct.TechnopediaID.Ptr(),
 		}
 		softwareProductItems = append(softwareProductItems, softwareProductItem)
 	}
 
 	return softwareProductItems, nil
+}
+
+// SystemHasAPIGateway is the resolver for the systemHasAPIGateway field.
+func (r *cedarSoftwareProductsResolver) SystemHasAPIGateway(ctx context.Context, obj *models.CedarSoftwareProducts) (*bool, error) {
+	return obj.SystemHasAPIGateway.Ptr(), nil
+}
+
+// UsesAiTech is the resolver for the usesAiTech field.
+func (r *cedarSoftwareProductsResolver) UsesAiTech(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.UsesAiTech.Ptr(), nil
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
