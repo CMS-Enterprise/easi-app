@@ -506,6 +506,51 @@ func main() {
 	)
 	requestEditsToIntakeForm(logger, store, intake, model.SystemIntakeFormStepInitialRequestForm)
 
+	// Intakes with Relation data
+	// 1. Intake with no related systems/services
+	intakeID = uuid.MustParse("6a825f1d-e935-4d9b-b09f-f3761385d349")
+	makeSystemIntakeAndSubmit("System Intake Relation (New System)", &intakeID, requesterEUA, logger, store)
+	setSystemIntakeRelationNewSystem(
+		logger,
+		store,
+		intakeID,
+		[]string{"12345", "67890"},
+	)
+
+	// 2. Intake related to CEDAR System(s)
+	intakeID = uuid.MustParse("29d73aa0-3a29-478e-afb4-374a7594be47")
+	makeSystemIntakeAndSubmit("System Intake Relation (Existing System)", &intakeID, requesterEUA, logger, store)
+	setSystemIntakeRelationExistingSystem(
+		logger,
+		store,
+		intakeID,
+		[]string{"12345", "67890"},
+		[]string{"54321", "09876"},
+	)
+
+	// 3. Intake related to an existing contract/service
+	intakeID = uuid.MustParse("b8e3fbf3-73af-4bac-bac3-fd6167a36166")
+	makeSystemIntakeAndSubmit("System Intake Relation (Existing Contract/Service)", &intakeID, requesterEUA, logger, store)
+	setSystemIntakeRelationExistingService(
+		logger,
+		store,
+		intakeID,
+		"My Cool Existing Contract/Service",
+		[]string{"12345", "67890"},
+	)
+
+	// 4. Unlinked from system/contract intake
+	intakeID = uuid.MustParse("964cc832-827b-4744-b503-eb1f04af1e10")
+	makeSystemIntakeAndSubmit("System Intake Relation (Unlinked)", &intakeID, requesterEUA, logger, store)
+	setSystemIntakeRelationExistingSystem(
+		logger,
+		store,
+		intakeID,
+		[]string{"12345", "67890"},
+		[]string{"54321", "09876"},
+	)
+	unlinkSystemIntakeRelation(logger, store, intakeID)
+
 	// initial intake form
 	intakeID = uuid.MustParse("14ecf18c-8367-402d-a48e-92e7d2853f50")
 	makeSystemIntakeAndSubmit("initial form filled and submitted", &intakeID, requesterEUA, logger, store)
@@ -636,18 +681,7 @@ func main() {
 			completeOtherSteps: true,
 		},
 	)
-
-	// Intakes with Relation data
-	// 1. Intake with no related systems/services
-	// TODO
-
-	// 2. Intake related to CEDAR System(s)
-	// TODO
-
-	// 3. Intake related to an existing contract/service
-	intakeID = uuid.MustParse("b8e3fbf3-73af-4bac-bac3-fd6167a36166")
-	intake = makeSystemIntakeAndSubmit("System Intake Relation (Existing Contract/Service)", &intakeID, requesterEUA, logger, store)
-	setSystemIntakeRelationExistingService(logger, store, intake, "My Cool Existing Contract/Service")
+	// Don't add new requests here as the Cypress tests are reliant on their intakes showing up on the first page of results
 }
 
 func date(year, month, day int) *time.Time {
