@@ -43,7 +43,7 @@ func (s *AppValidateTestSuite) TestCheckUniqLifecycleCosts() {
 func (s *AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
 	s.Run("returns empty strings when intake is submitted", func() {
 		submittedIntake := testhelpers.NewSystemIntake()
-		submittedIntake.RequestFormState = models.SIRFSSubmitted
+		submittedIntake.Step = models.SystemIntakeStepINITIALFORM
 		k, _ := checkSystemIntakeSubmitted(&submittedIntake)
 		s.Equal("", k)
 	})
