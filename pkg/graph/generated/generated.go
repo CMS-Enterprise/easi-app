@@ -8675,7 +8675,7 @@ type SystemIntake {
   lcidStatus: SystemIntakeLCIDStatus
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp
   contractName: String
-  relationType: RequestRelationType # TODO: NOT IMPLEMENTED
+  relationType: RequestRelationType
 
   """
   Linked systems
@@ -10261,11 +10261,8 @@ type Mutation {
     input: CreateCedarSystemBookmarkInput!
   ): DeleteCedarSystemBookmarkPayload
 
-  # TODO: NOT IMPLEMENTED
   setSystemIntakeRelationNewSystem(input: SetSystemIntakeRelationNewSystemInput): UpdateSystemIntakePayload
-  # TODO: NOT IMPLEMENTED
   setSystemIntakeRelationExistingSystem(input: SetSystemIntakeRelationExistingSystemInput): UpdateSystemIntakePayload
-  # TODO: NOT FULLY IMPLEMENTED
   setSystemIntakeRelationExistingService(input: SetSystemIntakeRelationExistingServiceInput): UpdateSystemIntakePayload
   unlinkSystemIntakeRelation(intakeID: UUID!): UpdateSystemIntakePayload
 
