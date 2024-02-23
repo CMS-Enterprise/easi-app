@@ -425,19 +425,4 @@ func (s *Server) routes(
 		emailClient.SendLCIDExpirationAlertEmail,
 		time.Hour*24)
 
-	// endpoint for short-lived backfill process
-	// backfillHandler := handlers.NewBackfillHandler(
-	// 	base,
-	// 	services.NewBackfill(
-	// 		serviceConfig,
-	// 		store.FetchSystemIntakeByID,
-	// 		store.FetchSystemIntakeByLifecycleID,
-	// 		store.CreateSystemIntake,
-	// 		store.UpdateSystemIntake,
-	// 		store.CreateNote,
-	// 		services.AuthorizeHasEASiRole,
-	// 	),
-	// )
-	// api.Handle("/backfill", backfillHandler.Handle())
-
 }
