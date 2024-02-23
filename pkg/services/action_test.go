@@ -444,6 +444,125 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		s.IsType(&apperrors.QueryError{}, err)
 	})
 
+	s.Run("does not return error for validation if status is not biz case final", func() {
+		sendRequesterEmailCount := 0
+		sendReviewerEmailCount := 0
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendRequesterEmailCount++
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendReviewerEmailCount++
+			return nil
+		}
+
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+			return nil
+		}
+
+		intake := models.SystemIntake{Step: models.SystemIntakeStepDRAFTBIZCASE}
+		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
+		failValidation := func(businessCase *models.BusinessCase) error {
+			return &apperrors.ValidationError{
+				Err:     errors.New("validation failed on these fields: ID"),
+				ModelID: businessCase.ID.String(),
+				Model:   businessCase,
+			}
+		}
+		submitBusinessCase := NewSubmitBusinessCase(
+			serviceConfig,
+			authorize,
+			fetchOpenBusinessCase,
+			failValidation,
+			saveAction,
+			updateIntake,
+			updateBusinessCase,
+			sendRequesterEmail,
+			sendReviewerEmail,
+			submitToCEDARStub,
+		)
+		err := submitBusinessCase(ctx, &intake, &action)
+
+		s.NoError(err)
+		s.Equal(1, sendRequesterEmailCount)
+		s.Equal(1, sendReviewerEmailCount)
+	})
+
+	s.Run("returns error when status is biz case final and validation fails", func() {
+		sendRequesterEmailCount := 0
+		sendReviewerEmailCount := 0
+		sendRequesterEmail := func(
+			ctx context.Context,
+			requesterEmail models.EmailAddress,
+			requestName string,
+			intakeID uuid.UUID,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendRequesterEmailCount++
+			return nil
+		}
+		sendReviewerEmail := func(
+			ctx context.Context,
+			intakeID uuid.UUID,
+			requesterName string,
+			requestName string,
+			isResubmitted bool,
+			isDraft bool,
+		) error {
+			sendReviewerEmailCount++
+			return nil
+		}
+
+		submitToCEDARStub := func(ctx context.Context, bc models.BusinessCase) error {
+			return nil
+		}
+
+		intake := models.SystemIntake{Step: models.SystemIntakeStepFINALBIZCASE}
+		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
+		failValidation := func(businessCase *models.BusinessCase) error {
+			return &apperrors.ValidationError{
+				Err:     errors.New("validation failed on these fields: ID"),
+				ModelID: businessCase.ID.String(),
+				Model:   businessCase,
+			}
+		}
+		fetchOpenBusinessCase = func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
+			return &models.BusinessCase{}, nil
+		}
+		submitBusinessCase := NewSubmitBusinessCase(
+			serviceConfig,
+			authorize,
+			fetchOpenBusinessCase,
+			failValidation,
+			saveAction,
+			updateIntake,
+			updateBusinessCase,
+			sendRequesterEmail,
+			sendReviewerEmail,
+			submitToCEDARStub,
+		)
+		err := submitBusinessCase(ctx, &intake, &action)
+
+		s.IsType(&apperrors.ValidationError{}, err)
+		s.Equal(0, sendRequesterEmailCount)
+		s.Equal(0, sendReviewerEmailCount)
+	})
+
 	s.Run("returns query error if update intake fails", func() {
 		sendRequesterEmail := func(
 			ctx context.Context,
