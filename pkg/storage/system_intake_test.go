@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 
@@ -464,8 +465,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		intake2.EUAUserID = intake.EUAUserID
 
 		// set archived at for intake2
-		now := time.Now()
-		intake2.ArchivedAt = &now
+		intake2.ArchivedAt = helpers.PointerTo(time.Now())
 
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
