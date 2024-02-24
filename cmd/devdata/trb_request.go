@@ -34,6 +34,9 @@ func (s *seederConfig) seedTRBRequests(ctx context.Context) error {
 		s.seedTRBCase9,
 		s.seedTRBCase10,
 		s.seedTRBCase11,
+		s.seedTRBCase12,
+		s.seedTRBCase13,
+		s.seedTRBCase14,
 	}
 
 	for _, seedFunc := range cases {
@@ -378,6 +381,50 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	return nil
 }
 
+func (s *seederConfig) seedTRBCase12(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 12 - Completed request form with New System Relation").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBNewSystemRelation(ctx, trbRequest.ID, []string{"123", "456"})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase13(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 13 - Completed request form with Existing Service Relation").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"123", "456"})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase14(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 14 - Completed request form with Existing System Relation").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingSystemRelation(
+		ctx,
+		trbRequest.ID,
+		[]string{"123", "456"}, // contract numbers
+		[]string{ // cedar system IDs, these mock IDs are from the client helper
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}",
+		},
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *seederConfig) seedTRBLeadOptions(ctx context.Context) ([]*models.UserInfo, error) {
 	leadUsers := map[string]*models.UserInfo{
 		"ABCD": {
@@ -709,4 +756,48 @@ func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, 
 	}
 
 	return document, nil
+}
+
+func (s *seederConfig) addTRBNewSystemRelation(
+	ctx context.Context,
+	trbRequestID uuid.UUID,
+	contractNumbers []string,
+) (*models.TRBRequest, error) {
+	return resolvers.SetTRBRequestRelationNewSystem(ctx, s.store, model.SetTRBRequestRelationNewSystemInput{
+		TrbRequestID:    trbRequestID,
+		ContractNumbers: contractNumbers,
+	})
+}
+
+func (s *seederConfig) addTRBExistingServiceRelation(
+	ctx context.Context,
+	trbRequestID uuid.UUID,
+	contractName string,
+	contractNumbers []string,
+) (*models.TRBRequest, error) {
+	return resolvers.SetTRBRequestRelationExistingService(ctx, s.store, model.SetTRBRequestRelationExistingServiceInput{
+		TrbRequestID:    trbRequestID,
+		ContractName:    contractName,
+		ContractNumbers: contractNumbers,
+	})
+}
+
+func (s *seederConfig) addTRBExistingSystemRelation(
+	ctx context.Context,
+	trbRequestID uuid.UUID,
+	contractNumbers []string,
+	cedarSystemIDs []string,
+) (*models.TRBRequest, error) {
+	return resolvers.SetTRBRequestRelationExistingSystem(
+		ctx,
+		s.store,
+		func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+			return &models.CedarSystem{}, nil
+		},
+		model.SetTRBRequestRelationExistingSystemInput{
+			TrbRequestID:    trbRequestID,
+			ContractNumbers: contractNumbers,
+			CedarSystemIDs:  cedarSystemIDs,
+		},
+	)
 }
