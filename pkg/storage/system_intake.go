@@ -3,7 +3,6 @@ package storage
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
@@ -827,23 +826,4 @@ func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.System
 		return nil, err
 	}
 	return intakes, nil
-}
-
-type extract struct {
-	SystemIntakeID string `json:"system_intake_id"`
-}
-
-func extractSystemIntakeIDs(paramsAsJSON string) ([]string, error) {
-	var extracted []extract
-	if err := json.Unmarshal([]byte(paramsAsJSON), &extracted); err != nil {
-		return nil, err
-	}
-
-	out := make([]string, len(extracted))
-
-	for i := range extracted {
-		out[i] = extracted[i].SystemIntakeID
-	}
-
-	return out, nil
 }

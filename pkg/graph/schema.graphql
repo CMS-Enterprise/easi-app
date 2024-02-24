@@ -1747,6 +1747,11 @@ type TRBRequest {
   Linked contract numbers
   """
   contractNumbers: [TRBRequestContractNumber!]!
+
+  """
+  Linked systems
+  """
+  systems: [CedarSystem!]!
 }
 
 type TRBRequestContractNumber {

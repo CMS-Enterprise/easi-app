@@ -38,6 +38,7 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	trb_advice_letters,
 	trb_request_system_intakes,
 	trb_request_contract_numbers,
+	trb_request_systems,
 	trb_request
 	`
 

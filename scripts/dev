@@ -384,6 +384,7 @@ namespace :db do
       trb_admin_notes
       trb_advice_letters
       trb_request_contract_numbers
+      trb_request_systems
       trb_request
     }
     sql = tables.map { |table| "DELETE FROM #{table};" }.join
