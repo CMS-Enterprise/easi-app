@@ -536,6 +536,47 @@ export const result: { data: GetSystemProfile } = {
         __typename: 'CedarThreat'
       }
     ],
+    cedarSoftwareProducts: {
+      aiSolnCatg: ['AI Solution Categories'],
+      apiDataArea: [
+        'Beneficiary and Consumer',
+        'Healthcare Payment',
+        'Organization',
+        'Supporting Resoruce'
+      ],
+      softwareProducts: [
+        {
+          apiGatewayUse: true,
+          elaPurchase: 'ELA Purchase',
+          elaVendorId: 'ELA Vendor ID',
+          providesAiCapability: true,
+          refstr: 'Ref String',
+          softwareCatagoryConnectionGuid: 'Software Catagory Connection GUID',
+          softwareVendorConnectionGuid: 'Software Vendor Connection GUID',
+          softwareCost: 'about $3.50',
+          softwareElaOrganization: 'ELA Organization',
+          softwareName: 'Terraform',
+          systemSoftwareConnectionGuid: 'System Software Connection GUID',
+          technopediaCategory: 'Tecnhopedia Category',
+          technopediaID: 'Technopedia ID',
+          vendorName: 'hashiCorp',
+          __typename: 'CedarSoftwareProductItem'
+        }
+      ],
+      aiSolnCatgOther: null,
+      apiDescPubLocation: 'API Publishing Location',
+      apiDescPublished: 'No, published elsewhere',
+      apiFHIRUse: 'Hl7',
+      apiFHIRUseOther: null,
+      apiHasPortal: true,
+      apisAccessibility: 'Internal Access',
+      apisDeveloped: 'API in development but not yet launched',
+      developmentStage: 'O&M',
+      systemHasAPIGateway: true,
+      usesAiTech:
+        'Plans (No - But there currently are plans to use AI capabilities in the next two years)',
+      __typename: 'CedarSoftwareProducts'
+    },
     cedarSystemDetails: {
       businessOwnerInformation: {
         isCmsOwned: true,
