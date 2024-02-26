@@ -38,9 +38,9 @@ type ClientService interface {
 }
 
 /*
-  SoftwareProductsAdd adds a software product that is used by the system
+SoftwareProductsAdd adds a software product that is used by the system
 
-  Add the software product and version details that is used by the system. Software produt can be operating sytems, database, middleware etc. that are needed to perform business function
+Add the software product and version details that is used by the system. Software produt can be operating sytems, database, middleware etc. that are needed to perform business function
 */
 func (a *Client) SoftwareProductsAdd(params *SoftwareProductsAddParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SoftwareProductsAddOK, error) {
 	// TODO: Validate the params before sending
@@ -79,9 +79,9 @@ func (a *Client) SoftwareProductsAdd(params *SoftwareProductsAddParams, authInfo
 }
 
 /*
-  SoftwareProductsFindList retrieves a list of software products this interface takes in id and version
+SoftwareProductsFindList retrieves a list of software products this interface takes in id and version
 
-  Retrieve a list of softwareProducts. This interface takes in id and version.
+Retrieve a list of softwareProducts. This interface takes in id and version.
 */
 func (a *Client) SoftwareProductsFindList(params *SoftwareProductsFindListParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SoftwareProductsFindListOK, error) {
 	// TODO: Validate the params before sending

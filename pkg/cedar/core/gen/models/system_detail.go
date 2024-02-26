@@ -151,6 +151,8 @@ func (m *SystemDetail) validateBusinessOwnerInformation(formats strfmt.Registry)
 		if err := m.BusinessOwnerInformation.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("BusinessOwnerInformation")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("BusinessOwnerInformation")
 			}
 			return err
 		}
@@ -168,6 +170,8 @@ func (m *SystemDetail) validateDataCenterHosting(formats strfmt.Registry) error 
 		if err := m.DataCenterHosting.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("DataCenterHosting")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("DataCenterHosting")
 			}
 			return err
 		}
@@ -185,6 +189,8 @@ func (m *SystemDetail) validateSoftwareProductDetails(formats strfmt.Registry) e
 		if err := m.SoftwareProductDetails.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("SoftwareProductDetails")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("SoftwareProductDetails")
 			}
 			return err
 		}
@@ -202,6 +208,8 @@ func (m *SystemDetail) validateSystemMaintainerInformation(formats strfmt.Regist
 		if err := m.SystemMaintainerInformation.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("SystemMaintainerInformation")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("SystemMaintainerInformation")
 			}
 			return err
 		}
@@ -275,9 +283,16 @@ func (m *SystemDetail) ContextValidate(ctx context.Context, formats strfmt.Regis
 func (m *SystemDetail) contextValidateBusinessOwnerInformation(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.BusinessOwnerInformation != nil {
+
+		if swag.IsZero(m.BusinessOwnerInformation) { // not required
+			return nil
+		}
+
 		if err := m.BusinessOwnerInformation.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("BusinessOwnerInformation")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("BusinessOwnerInformation")
 			}
 			return err
 		}
@@ -289,9 +304,16 @@ func (m *SystemDetail) contextValidateBusinessOwnerInformation(ctx context.Conte
 func (m *SystemDetail) contextValidateDataCenterHosting(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.DataCenterHosting != nil {
+
+		if swag.IsZero(m.DataCenterHosting) { // not required
+			return nil
+		}
+
 		if err := m.DataCenterHosting.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("DataCenterHosting")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("DataCenterHosting")
 			}
 			return err
 		}
@@ -303,9 +325,16 @@ func (m *SystemDetail) contextValidateDataCenterHosting(ctx context.Context, for
 func (m *SystemDetail) contextValidateSoftwareProductDetails(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.SoftwareProductDetails != nil {
+
+		if swag.IsZero(m.SoftwareProductDetails) { // not required
+			return nil
+		}
+
 		if err := m.SoftwareProductDetails.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("SoftwareProductDetails")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("SoftwareProductDetails")
 			}
 			return err
 		}
@@ -317,9 +346,16 @@ func (m *SystemDetail) contextValidateSoftwareProductDetails(ctx context.Context
 func (m *SystemDetail) contextValidateSystemMaintainerInformation(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.SystemMaintainerInformation != nil {
+
+		if swag.IsZero(m.SystemMaintainerInformation) { // not required
+			return nil
+		}
+
 		if err := m.SystemMaintainerInformation.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("SystemMaintainerInformation")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("SystemMaintainerInformation")
 			}
 			return err
 		}

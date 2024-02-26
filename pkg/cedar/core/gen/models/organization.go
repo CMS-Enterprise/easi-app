@@ -96,6 +96,8 @@ func (m *Organization) validateOrganization(formats strfmt.Registry) error {
 			if err := m.Organization[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Organization" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("Organization" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -143,9 +145,16 @@ func (m *Organization) contextValidateOrganization(ctx context.Context, formats 
 	for i := 0; i < len(m.Organization); i++ {
 
 		if m.Organization[i] != nil {
+
+			if swag.IsZero(m.Organization[i]) { // not required
+				return nil
+			}
+
 			if err := m.Organization[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("Organization" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("Organization" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

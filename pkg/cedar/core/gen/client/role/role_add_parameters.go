@@ -54,10 +54,12 @@ func NewRoleAddParamsWithHTTPClient(client *http.Client) *RoleAddParams {
 	}
 }
 
-/* RoleAddParams contains all the parameters to send to the API endpoint
-   for the role add operation.
+/*
+RoleAddParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the role add operation.
+
+	Typically these are written to a http.Request.
 */
 type RoleAddParams struct {
 

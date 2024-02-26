@@ -60,6 +60,8 @@ func (m *AuthorityToOperateFindResponse) validateAuthorityToOperateList(formats 
 			if err := m.AuthorityToOperateList[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("AuthorityToOperateList" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("AuthorityToOperateList" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -98,9 +100,16 @@ func (m *AuthorityToOperateFindResponse) contextValidateAuthorityToOperateList(c
 	for i := 0; i < len(m.AuthorityToOperateList); i++ {
 
 		if m.AuthorityToOperateList[i] != nil {
+
+			if swag.IsZero(m.AuthorityToOperateList[i]) { // not required
+				return nil
+			}
+
 			if err := m.AuthorityToOperateList[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("AuthorityToOperateList" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("AuthorityToOperateList" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

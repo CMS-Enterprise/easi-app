@@ -48,7 +48,7 @@ func (o *AuthorityToOperateFindListReader) ReadResponse(response runtime.ClientR
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /authorityToOperate] authorityToOperateFindList", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewAuthorityToOperateFindListOK() *AuthorityToOperateFindListOK {
 	return &AuthorityToOperateFindListOK{}
 }
 
-/* AuthorityToOperateFindListOK describes a response with status code 200, with default header values.
+/*
+AuthorityToOperateFindListOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type AuthorityToOperateFindListOK struct {
 	Payload *models.AuthorityToOperateFindResponse
 }
 
+// IsSuccess returns true when this authority to operate find list o k response has a 2xx status code
+func (o *AuthorityToOperateFindListOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this authority to operate find list o k response has a 3xx status code
+func (o *AuthorityToOperateFindListOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this authority to operate find list o k response has a 4xx status code
+func (o *AuthorityToOperateFindListOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this authority to operate find list o k response has a 5xx status code
+func (o *AuthorityToOperateFindListOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this authority to operate find list o k response a status code equal to that given
+func (o *AuthorityToOperateFindListOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the authority to operate find list o k response
+func (o *AuthorityToOperateFindListOK) Code() int {
+	return 200
+}
+
 func (o *AuthorityToOperateFindListOK) Error() string {
 	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListOK  %+v", 200, o.Payload)
 }
+
+func (o *AuthorityToOperateFindListOK) String() string {
+	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListOK  %+v", 200, o.Payload)
+}
+
 func (o *AuthorityToOperateFindListOK) GetPayload() *models.AuthorityToOperateFindResponse {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewAuthorityToOperateFindListBadRequest() *AuthorityToOperateFindListBadReq
 	return &AuthorityToOperateFindListBadRequest{}
 }
 
-/* AuthorityToOperateFindListBadRequest describes a response with status code 400, with default header values.
+/*
+AuthorityToOperateFindListBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type AuthorityToOperateFindListBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this authority to operate find list bad request response has a 2xx status code
+func (o *AuthorityToOperateFindListBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this authority to operate find list bad request response has a 3xx status code
+func (o *AuthorityToOperateFindListBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this authority to operate find list bad request response has a 4xx status code
+func (o *AuthorityToOperateFindListBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this authority to operate find list bad request response has a 5xx status code
+func (o *AuthorityToOperateFindListBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this authority to operate find list bad request response a status code equal to that given
+func (o *AuthorityToOperateFindListBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the authority to operate find list bad request response
+func (o *AuthorityToOperateFindListBadRequest) Code() int {
+	return 400
+}
+
 func (o *AuthorityToOperateFindListBadRequest) Error() string {
 	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *AuthorityToOperateFindListBadRequest) String() string {
+	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *AuthorityToOperateFindListBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewAuthorityToOperateFindListUnauthorized() *AuthorityToOperateFindListUnau
 	return &AuthorityToOperateFindListUnauthorized{}
 }
 
-/* AuthorityToOperateFindListUnauthorized describes a response with status code 401, with default header values.
+/*
+AuthorityToOperateFindListUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type AuthorityToOperateFindListUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this authority to operate find list unauthorized response has a 2xx status code
+func (o *AuthorityToOperateFindListUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this authority to operate find list unauthorized response has a 3xx status code
+func (o *AuthorityToOperateFindListUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this authority to operate find list unauthorized response has a 4xx status code
+func (o *AuthorityToOperateFindListUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this authority to operate find list unauthorized response has a 5xx status code
+func (o *AuthorityToOperateFindListUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this authority to operate find list unauthorized response a status code equal to that given
+func (o *AuthorityToOperateFindListUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the authority to operate find list unauthorized response
+func (o *AuthorityToOperateFindListUnauthorized) Code() int {
+	return 401
+}
+
 func (o *AuthorityToOperateFindListUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *AuthorityToOperateFindListUnauthorized) String() string {
+	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *AuthorityToOperateFindListUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewAuthorityToOperateFindListInternalServerError() *AuthorityToOperateFindL
 	return &AuthorityToOperateFindListInternalServerError{}
 }
 
-/* AuthorityToOperateFindListInternalServerError describes a response with status code 500, with default header values.
+/*
+AuthorityToOperateFindListInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type AuthorityToOperateFindListInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this authority to operate find list internal server error response has a 2xx status code
+func (o *AuthorityToOperateFindListInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this authority to operate find list internal server error response has a 3xx status code
+func (o *AuthorityToOperateFindListInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this authority to operate find list internal server error response has a 4xx status code
+func (o *AuthorityToOperateFindListInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this authority to operate find list internal server error response has a 5xx status code
+func (o *AuthorityToOperateFindListInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this authority to operate find list internal server error response a status code equal to that given
+func (o *AuthorityToOperateFindListInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the authority to operate find list internal server error response
+func (o *AuthorityToOperateFindListInternalServerError) Code() int {
+	return 500
+}
+
 func (o *AuthorityToOperateFindListInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *AuthorityToOperateFindListInternalServerError) String() string {
+	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *AuthorityToOperateFindListInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

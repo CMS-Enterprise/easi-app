@@ -310,6 +310,8 @@ func (m *Exchange) validateTypeOfData(formats strfmt.Registry) error {
 			if err := m.TypeOfData[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("typeOfData" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("typeOfData" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -339,9 +341,16 @@ func (m *Exchange) contextValidateTypeOfData(ctx context.Context, formats strfmt
 	for i := 0; i < len(m.TypeOfData); i++ {
 
 		if m.TypeOfData[i] != nil {
+
+			if swag.IsZero(m.TypeOfData[i]) { // not required
+				return nil
+			}
+
 			if err := m.TypeOfData[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("typeOfData" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("typeOfData" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

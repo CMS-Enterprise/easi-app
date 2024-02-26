@@ -48,7 +48,7 @@ func (o *ContractUpdateReader) ReadResponse(response runtime.ClientResponse, con
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[PUT /contract] contractUpdate", response, response.Code())
 	}
 }
 
@@ -57,7 +57,8 @@ func NewContractUpdateOK() *ContractUpdateOK {
 	return &ContractUpdateOK{}
 }
 
-/* ContractUpdateOK describes a response with status code 200, with default header values.
+/*
+ContractUpdateOK describes a response with status code 200, with default header values.
 
 OK
 */
@@ -65,9 +66,44 @@ type ContractUpdateOK struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this contract update o k response has a 2xx status code
+func (o *ContractUpdateOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this contract update o k response has a 3xx status code
+func (o *ContractUpdateOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract update o k response has a 4xx status code
+func (o *ContractUpdateOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this contract update o k response has a 5xx status code
+func (o *ContractUpdateOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this contract update o k response a status code equal to that given
+func (o *ContractUpdateOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the contract update o k response
+func (o *ContractUpdateOK) Code() int {
+	return 200
+}
+
 func (o *ContractUpdateOK) Error() string {
 	return fmt.Sprintf("[PUT /contract][%d] contractUpdateOK  %+v", 200, o.Payload)
 }
+
+func (o *ContractUpdateOK) String() string {
+	return fmt.Sprintf("[PUT /contract][%d] contractUpdateOK  %+v", 200, o.Payload)
+}
+
 func (o *ContractUpdateOK) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -89,7 +125,8 @@ func NewContractUpdateBadRequest() *ContractUpdateBadRequest {
 	return &ContractUpdateBadRequest{}
 }
 
-/* ContractUpdateBadRequest describes a response with status code 400, with default header values.
+/*
+ContractUpdateBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -97,9 +134,44 @@ type ContractUpdateBadRequest struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this contract update bad request response has a 2xx status code
+func (o *ContractUpdateBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this contract update bad request response has a 3xx status code
+func (o *ContractUpdateBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract update bad request response has a 4xx status code
+func (o *ContractUpdateBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this contract update bad request response has a 5xx status code
+func (o *ContractUpdateBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this contract update bad request response a status code equal to that given
+func (o *ContractUpdateBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the contract update bad request response
+func (o *ContractUpdateBadRequest) Code() int {
+	return 400
+}
+
 func (o *ContractUpdateBadRequest) Error() string {
 	return fmt.Sprintf("[PUT /contract][%d] contractUpdateBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *ContractUpdateBadRequest) String() string {
+	return fmt.Sprintf("[PUT /contract][%d] contractUpdateBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *ContractUpdateBadRequest) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -121,7 +193,8 @@ func NewContractUpdateUnauthorized() *ContractUpdateUnauthorized {
 	return &ContractUpdateUnauthorized{}
 }
 
-/* ContractUpdateUnauthorized describes a response with status code 401, with default header values.
+/*
+ContractUpdateUnauthorized describes a response with status code 401, with default header values.
 
 Access Denied
 */
@@ -129,9 +202,44 @@ type ContractUpdateUnauthorized struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this contract update unauthorized response has a 2xx status code
+func (o *ContractUpdateUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this contract update unauthorized response has a 3xx status code
+func (o *ContractUpdateUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract update unauthorized response has a 4xx status code
+func (o *ContractUpdateUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this contract update unauthorized response has a 5xx status code
+func (o *ContractUpdateUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this contract update unauthorized response a status code equal to that given
+func (o *ContractUpdateUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the contract update unauthorized response
+func (o *ContractUpdateUnauthorized) Code() int {
+	return 401
+}
+
 func (o *ContractUpdateUnauthorized) Error() string {
 	return fmt.Sprintf("[PUT /contract][%d] contractUpdateUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *ContractUpdateUnauthorized) String() string {
+	return fmt.Sprintf("[PUT /contract][%d] contractUpdateUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *ContractUpdateUnauthorized) GetPayload() *models.Response {
 	return o.Payload
 }
@@ -153,7 +261,8 @@ func NewContractUpdateInternalServerError() *ContractUpdateInternalServerError {
 	return &ContractUpdateInternalServerError{}
 }
 
-/* ContractUpdateInternalServerError describes a response with status code 500, with default header values.
+/*
+ContractUpdateInternalServerError describes a response with status code 500, with default header values.
 
 Internal Server Error
 */
@@ -161,9 +270,44 @@ type ContractUpdateInternalServerError struct {
 	Payload *models.Response
 }
 
+// IsSuccess returns true when this contract update internal server error response has a 2xx status code
+func (o *ContractUpdateInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this contract update internal server error response has a 3xx status code
+func (o *ContractUpdateInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this contract update internal server error response has a 4xx status code
+func (o *ContractUpdateInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this contract update internal server error response has a 5xx status code
+func (o *ContractUpdateInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this contract update internal server error response a status code equal to that given
+func (o *ContractUpdateInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the contract update internal server error response
+func (o *ContractUpdateInternalServerError) Code() int {
+	return 500
+}
+
 func (o *ContractUpdateInternalServerError) Error() string {
 	return fmt.Sprintf("[PUT /contract][%d] contractUpdateInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *ContractUpdateInternalServerError) String() string {
+	return fmt.Sprintf("[PUT /contract][%d] contractUpdateInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *ContractUpdateInternalServerError) GetPayload() *models.Response {
 	return o.Payload
 }

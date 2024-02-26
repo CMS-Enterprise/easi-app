@@ -60,6 +60,8 @@ func (m *SystemSummaryResponse) validateSystemSummary(formats strfmt.Registry) e
 			if err := m.SystemSummary[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("SystemSummary" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("SystemSummary" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -98,9 +100,16 @@ func (m *SystemSummaryResponse) contextValidateSystemSummary(ctx context.Context
 	for i := 0; i < len(m.SystemSummary); i++ {
 
 		if m.SystemSummary[i] != nil {
+
+			if swag.IsZero(m.SystemSummary[i]) { // not required
+				return nil
+			}
+
 			if err := m.SystemSummary[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("SystemSummary" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("SystemSummary" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

@@ -54,10 +54,12 @@ func NewSupportContactAddParamsWithHTTPClient(client *http.Client) *SupportConta
 	}
 }
 
-/* SupportContactAddParams contains all the parameters to send to the API endpoint
-   for the support contact add operation.
+/*
+SupportContactAddParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the support contact add operation.
+
+	Typically these are written to a http.Request.
 */
 type SupportContactAddParams struct {
 

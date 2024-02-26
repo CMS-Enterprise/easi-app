@@ -90,6 +90,8 @@ func (m *SoftwareProductsFindResponse) validateSoftwareProducts(formats strfmt.R
 			if err := m.SoftwareProducts[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("softwareProducts" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("softwareProducts" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -119,9 +121,16 @@ func (m *SoftwareProductsFindResponse) contextValidateSoftwareProducts(ctx conte
 	for i := 0; i < len(m.SoftwareProducts); i++ {
 
 		if m.SoftwareProducts[i] != nil {
+
+			if swag.IsZero(m.SoftwareProducts[i]) { // not required
+				return nil
+			}
+
 			if err := m.SoftwareProducts[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("softwareProducts" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("softwareProducts" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

@@ -52,10 +52,12 @@ func NewRoleFindByIDParamsWithHTTPClient(client *http.Client) *RoleFindByIDParam
 	}
 }
 
-/* RoleFindByIDParams contains all the parameters to send to the API endpoint
-   for the role find by Id operation.
+/*
+RoleFindByIDParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the role find by Id operation.
+
+	Typically these are written to a http.Request.
 */
 type RoleFindByIDParams struct {
 

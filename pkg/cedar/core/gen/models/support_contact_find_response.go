@@ -60,6 +60,8 @@ func (m *SupportContactFindResponse) validateSupportContacts(formats strfmt.Regi
 			if err := m.SupportContacts[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("SupportContacts" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("SupportContacts" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -98,9 +100,16 @@ func (m *SupportContactFindResponse) contextValidateSupportContacts(ctx context.
 	for i := 0; i < len(m.SupportContacts); i++ {
 
 		if m.SupportContacts[i] != nil {
+
+			if swag.IsZero(m.SupportContacts[i]) { // not required
+				return nil
+			}
+
 			if err := m.SupportContacts[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("SupportContacts" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("SupportContacts" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

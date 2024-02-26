@@ -59,6 +59,8 @@ func (m *CostTypeFindResponse) validateCostTypes(formats strfmt.Registry) error 
 			if err := m.CostTypes[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("CostTypes" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("CostTypes" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -88,9 +90,16 @@ func (m *CostTypeFindResponse) contextValidateCostTypes(ctx context.Context, for
 	for i := 0; i < len(m.CostTypes); i++ {
 
 		if m.CostTypes[i] != nil {
+
+			if swag.IsZero(m.CostTypes[i]) { // not required
+				return nil
+			}
+
 			if err := m.CostTypes[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("CostTypes" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("CostTypes" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
