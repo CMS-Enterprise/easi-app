@@ -30,7 +30,7 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarSystem{}, nil
+		return getMockSystems()
 	}
 
 	// Check and use cache before making API call
@@ -145,7 +145,7 @@ func (c *Client) getSystemFromCache(ctx context.Context, systemID string) *model
 func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return &models.CedarSystem{}, nil
+		return getMockSystem(systemID)
 	}
 
 	// Try the cache first
