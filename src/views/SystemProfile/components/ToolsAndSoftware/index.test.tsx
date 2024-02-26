@@ -18,8 +18,7 @@ describe('System Tools and Software subpage', () => {
       </MemoryRouter>
     );
     expect(asFragment()).toMatchSnapshot();
-    expect(getByText('Drupal')).toBeInTheDocument();
-    expect(getByText('Software Development')).toBeInTheDocument();
-    expect(getByText('API Gateway')).toBeInTheDocument();
+    expect(getByText('Terraform')).toBeInTheDocument();
+    expect(getByText('Used for Artificial Intelligence')).toBeInTheDocument();
   });
 });
