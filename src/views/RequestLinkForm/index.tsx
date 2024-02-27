@@ -1,25 +1,82 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-// import { useQuery } from '@apollo/client';
+import { Link, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/client';
 import {
   Breadcrumb,
   BreadcrumbBar,
-  BreadcrumbLink
+  BreadcrumbLink,
+  Button,
+  Fieldset,
+  Form,
+  FormGroup,
+  Label,
+  Radio,
+  TextInput
 } from '@trussworks/react-uswds';
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import MultiSelect from 'components/shared/MultiSelect';
-// import GetCedarSystemIdsQuery from 'queries/GetCedarSystemIdsQuery';
-// import { GetCedarSystemIds } from 'queries/types/GetCedarSystemIds';
+import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import GetCedarSystemIdsQuery from 'queries/GetCedarSystemIdsQuery';
+import {
+  SetSystemIntakeRelationExistingServiceQuery,
+  SetSystemIntakeRelationExistingSystemQuery,
+  SetSystemIntakeRelationNewSystemQuery
+} from 'queries/SystemIntakeRelationQueries';
+import { GetCedarSystemIds } from 'queries/types/GetCedarSystemIds';
+import {
+  SetSystemIntakeRelationExistingService,
+  SetSystemIntakeRelationExistingServiceVariables
+} from 'queries/types/SetSystemIntakeRelationExistingService';
+import {
+  SetSystemIntakeRelationExistingSystem,
+  SetSystemIntakeRelationExistingSystemVariables
+} from 'queries/types/SetSystemIntakeRelationExistingSystem';
+import {
+  SetSystemIntakeRelationNewSystem,
+  SetSystemIntakeRelationNewSystemVariables
+} from 'queries/types/SetSystemIntakeRelationNewSystem';
 
 const RequestLinkForm = () => {
-  const { t } = useTranslation('intake');
+  const { systemId } = useParams<{
+    systemId: string;
+  }>();
 
-  // const { data, loading, error } = useQuery<GetCedarSystemIds>(
-  //   GetCedarSystemIdsQuery
-  // );
+  const { t } = useTranslation('itGov'); // intake
+
+  const {
+    data: cedarSystemsData,
+    loading,
+    error: formError
+  } = useQuery<GetCedarSystemIds>(GetCedarSystemIdsQuery);
+
+  const [setSystemIntakeRelationNewSystem] = useMutation<
+    SetSystemIntakeRelationNewSystem,
+    SetSystemIntakeRelationNewSystemVariables
+  >(SetSystemIntakeRelationNewSystemQuery);
+
+  const [setSystemIntakeRelationExistingSystem] = useMutation<
+    SetSystemIntakeRelationExistingSystem,
+    SetSystemIntakeRelationExistingSystemVariables
+  >(SetSystemIntakeRelationExistingSystemQuery);
+
+  const [setSystemIntakeRelationExistingService] = useMutation<
+    SetSystemIntakeRelationExistingService,
+    SetSystemIntakeRelationExistingServiceVariables
+  >(SetSystemIntakeRelationExistingServiceQuery);
+
+  const { control, watch, handleSubmit } = useForm({
+    defaultValues: {
+      systemIntakeID: systemId,
+      cedarSystemIDs: [],
+      contractNumbers: '',
+      contractName: ''
+    }
+  });
 
   const cedarSystemIdOptions = useMemo(() => {
     const data = {
@@ -61,14 +118,204 @@ const RequestLinkForm = () => {
         </Breadcrumb>
         <Breadcrumb current>{t('navigation.startRequest')}</Breadcrumb>
       </BreadcrumbBar>
-      <PageHeading>{t('requestTypeForm.heading')}</PageHeading>
-      <MultiSelect
-        name="cedarSystemIds"
-        options={cedarSystemIdOptions}
-        onChange={values => {
-          // console.log('values', values);
-        }}
-      />
+      <PageHeading>{t('link.header')}</PageHeading>
+      <p>{t('link.description')}</p>
+      {/* required fields text */}
+      <Form onSubmit={e => e.preventDefault()}>
+        {/* hasErrors */}
+
+        <Fieldset legend={t('link.form.field.systemOrService.label')}>
+          {/* New system or service */}
+          <Radio
+            id="relationType-newSystem"
+            name="relationType"
+            value="newSystem"
+            label={t('link.form.field.systemOrService.options.0')}
+          />
+
+          <Controller
+            name="contractNumbers"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <FormGroup error={!!error}>
+                <Label
+                  htmlFor="contractNumber"
+                  hint={t('link.form.field.contractNumberNew.help')}
+                  error={!!error}
+                >
+                  {t('link.form.field.contractNumberNew.label')}
+                </Label>
+                <TextInput
+                  {...field}
+                  ref={null}
+                  id="contractNumbers"
+                  type="text"
+                  validationStatus={error && 'error'}
+                />
+              </FormGroup>
+            )}
+          />
+
+          {/* Existing system */}
+          <Radio
+            id="relationType-existingSystem"
+            name="relationType"
+            value="existingSystem"
+            label={t('link.form.field.systemOrService.options.1')}
+          />
+
+          <Controller
+            name="cedarSystemIDs"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <FormGroup error={!!error}>
+                <Label
+                  htmlFor="cedarSystemIDs"
+                  hint={t('link.form.field.cmsSystem.help')}
+                  error={!!error}
+                >
+                  {t('link.form.field.cmsSystem.label')} <RequiredAsterisk />
+                </Label>
+                <MultiSelect
+                  name={field.name}
+                  options={cedarSystemIdOptions}
+                  onChange={values => {
+                    // console.log('values', values);
+                    field.onChange(values);
+                  }}
+                />
+              </FormGroup>
+            )}
+          />
+
+          <Controller
+            name="contractNumbers"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <FormGroup error={!!error}>
+                <Label
+                  htmlFor="contractNumber"
+                  hint={t('link.form.field.contractNumberExisting.help')}
+                  error={!!error}
+                >
+                  {t('link.form.field.contractNumberExisting.label')}
+                </Label>
+                <TextInput
+                  {...field}
+                  ref={null}
+                  id="contractNumbers"
+                  type="text"
+                  validationStatus={error && 'error'}
+                />
+              </FormGroup>
+            )}
+          />
+
+          {/* Existing service or contract */}
+          <Radio
+            id="relationType-existingService"
+            name="relationType"
+            value="existingService"
+            label={t('link.form.field.systemOrService.options.2')}
+          />
+
+          <Controller
+            name="contractName"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <FormGroup error={!!error}>
+                <Label htmlFor="contractName" error={!!error}>
+                  {t('link.form.field.serviceOrContractName.label')}{' '}
+                  <RequiredAsterisk />
+                </Label>
+                <TextInput
+                  {...field}
+                  ref={null}
+                  id="contractName"
+                  type="text"
+                  validationStatus={error && 'error'}
+                />
+              </FormGroup>
+            )}
+          />
+
+          <Controller
+            name="contractNumbers"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <FormGroup error={!!error}>
+                <Label
+                  htmlFor="contractNumber"
+                  hint={t('link.form.field.contractNumberExisting.help')}
+                  error={!!error}
+                >
+                  {t('link.form.field.contractNumberExisting.label')}
+                </Label>
+                <TextInput
+                  {...field}
+                  ref={null}
+                  id="contractNumbers"
+                  type="text"
+                  validationStatus={error && 'error'}
+                />
+              </FormGroup>
+            )}
+          />
+        </Fieldset>
+
+        <Button
+          type="submit"
+          onClick={() => {
+            // console.log('values', watch());
+            handleSubmit(
+              data => {
+                // console.log('submit', data);
+                /*
+                setSystemIntakeRelationNewSystem({
+                  variables: {
+                    input: {
+                      systemIntakeID: data.systemIntakeID,
+                      contractNumbers: data.contractNumbers
+                        .split(',')
+                        .map((v: string) => v.trim())
+                    }
+                  }
+                });
+
+                setSystemIntakeRelationExistingSystem({
+                  variables: {
+                    input: {
+                      systemIntakeID: data.systemIntakeID,
+                      cedarSystemIDs: data.cedarSystemIDs,
+                      contractNumbers: data.contractNumbers
+                        .split(',')
+                        .map((v: string) => v.trim())
+                    }
+                  }
+                });
+
+                setSystemIntakeRelationExistingService({
+                  variables: {
+                    input: {
+                      systemIntakeID: data.systemIntakeID,
+                      contractName: data.contractName,
+                      contractNumbers: data.contractNumbers
+                        .split(',')
+                        .map((v: string) => v.trim())
+                    }
+                  }
+                });
+                */
+              },
+              e => {
+                // console.log('submit error', e);
+              }
+            )();
+          }}
+        >
+          {t('link.form.next')}
+        </Button>
+      </Form>
     </MainContent>
   );
 };

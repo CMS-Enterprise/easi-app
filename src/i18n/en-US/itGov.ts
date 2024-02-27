@@ -125,16 +125,12 @@ export default {
             'This field searches existing CMS systems. Select all that apply.'
         },
         contractNumberExisting: {
+          label: 'Contract number',
           help:
             'If your work is associated with existing contract(s), please input the contract number(s) here. If it is not, you may leave this field blank. Comma-separate multiple values.'
         },
         serviceOrContractName: {
           label: 'Service or contract name'
-        },
-        contractNumber: {
-          label: 'Contract number',
-          help:
-            'If your work is associated with existing contract(s), please input the contract number(s) here. If it is not, you may leave this field blank. Comma-separate multiple values.'
         }
       },
       continueTaskList: 'Continue to task list',

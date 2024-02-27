@@ -825,6 +825,23 @@ export interface SetRolesForUserOnSystemInput {
   desiredRoleTypeIDs: string[];
 }
 
+export interface SetSystemIntakeRelationExistingServiceInput {
+  systemIntakeID: UUID;
+  contractName: string;
+  contractNumbers: string[];
+}
+
+export interface SetSystemIntakeRelationExistingSystemInput {
+  systemIntakeID: UUID;
+  cedarSystemIDs: string[];
+  contractNumbers: string[];
+}
+
+export interface SetSystemIntakeRelationNewSystemInput {
+  systemIntakeID: UUID;
+  contractNumbers: string[];
+}
+
 /**
  * Input to submit an intake for review
  */
