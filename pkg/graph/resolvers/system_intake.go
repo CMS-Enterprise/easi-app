@@ -22,7 +22,6 @@ func CreateSystemIntake(
 		EUAUserID:   null.StringFrom(appcontext.Principal(ctx).ID()),
 		RequestType: models.SystemIntakeRequestType(input.RequestType),
 		Requester:   input.Requester.Name,
-		Status:      models.SystemIntakeStatusINTAKEDRAFT,
 		State:       models.SystemIntakeStateOPEN,
 		Step:        models.SystemIntakeStepINITIALFORM,
 	}

@@ -28,7 +28,6 @@ const sqlListSystems = `
 		business_owner_component
 	FROM system_intakes
 	WHERE
-		status='LCID_ISSUED' AND
 		request_type='NEW' AND
 		lcid IS NOT NULL;
 `
@@ -56,7 +55,6 @@ const sqlFetchSystemByIntakeID = `
 		lcid
 	FROM system_intakes
 	WHERE
-		status='LCID_ISSUED' AND
 		request_type='NEW' AND
 		lcid IS NOT NULL AND
 		id = $1;

@@ -15,7 +15,6 @@ func (suite *ResolverSuite) TestSystemIntakesQuery() {
 	// Create an open intake
 	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateOPEN,
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 		SubmittedAt: &submittedAt,
 	})
@@ -30,7 +29,6 @@ func (suite *ResolverSuite) TestSystemIntakesQuery() {
 	// Create a closed intake
 	closedIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateCLOSED,
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 		SubmittedAt: &submittedAt,
 	})
@@ -62,7 +60,6 @@ func (suite *ResolverSuite) TestSystemIntakesQueryUnsubmitted() {
 	// Create an open intake
 	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateOPEN,
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	suite.NoError(err)
@@ -71,7 +68,6 @@ func (suite *ResolverSuite) TestSystemIntakesQueryUnsubmitted() {
 	// Create a closed intake
 	closedIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateCLOSED,
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	suite.NoError(err)
@@ -97,7 +93,6 @@ func (suite *ResolverSuite) TestSystemIntakesQueryArchived() {
 	// Create an open intake with an `archived_at`
 	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateOPEN,
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	suite.NoError(err)
@@ -111,7 +106,6 @@ func (suite *ResolverSuite) TestSystemIntakesQueryArchived() {
 	// Create a closed intake with an `archived_at`
 	closedIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateCLOSED,
-		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	suite.NoError(err)

@@ -25,7 +25,6 @@ func (s *ResolverSuite) TestTRBRequestLCID() {
 	intakes := make([]*models.SystemIntake, 3)
 	for i, lcid := range lcids {
 		intake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
-			Status:      models.SystemIntakeStatusLCIDISSUED,
 			RequestType: models.SystemIntakeRequestTypeMAJORCHANGES,
 		})
 		s.NoError(err)

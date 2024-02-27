@@ -285,7 +285,6 @@ func (s *Server) routes(
 			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
 			store.FetchSystemIntakes,
-			store.FetchSystemIntakesByStatuses,
 			services.AuthorizeHasEASiRole,
 		),
 	)
@@ -344,7 +343,6 @@ func (s *Server) routes(
 					emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
 					emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
 					publisher.PublishBusinessCase,
-					models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED,
 				),
 				models.ActionTypeSUBMITFINALBIZCASE: services.NewSubmitBusinessCase(
 					serviceConfig,
@@ -357,7 +355,6 @@ func (s *Server) routes(
 					emailClient.SystemIntake.SendSubmitBizCaseRequesterNotification,
 					emailClient.SystemIntake.SendSubmitBizCaseReviewerNotification,
 					publisher.PublishBusinessCase,
-					models.SystemIntakeStatusBIZCASEFINALSUBMITTED,
 				), models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
 					serviceConfig,
 					services.AuthorizeUserIsIntakeRequester,
@@ -427,20 +424,5 @@ func (s *Server) routes(
 		store.UpdateSystemIntake,
 		emailClient.SendLCIDExpirationAlertEmail,
 		time.Hour*24)
-
-	// endpoint for short-lived backfill process
-	// backfillHandler := handlers.NewBackfillHandler(
-	// 	base,
-	// 	services.NewBackfill(
-	// 		serviceConfig,
-	// 		store.FetchSystemIntakeByID,
-	// 		store.FetchSystemIntakeByLifecycleID,
-	// 		store.CreateSystemIntake,
-	// 		store.UpdateSystemIntake,
-	// 		store.CreateNote,
-	// 		services.AuthorizeHasEASiRole,
-	// 	),
-	// )
-	// api.Handle("/backfill", backfillHandler.Handle())
 
 }

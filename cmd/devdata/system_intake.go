@@ -112,8 +112,6 @@ func submitSystemIntake(
 		intake.SubmittedAt = &updatedTime
 		intake.UpdatedAt = &updatedTime
 
-		// TODO: Remove when Admin Actions v2 is live
-		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		intake.RequestFormState = models.SIRFSSubmitted
 		_, err := store.UpdateSystemIntake(ctx, intake)
 		if err != nil {
@@ -171,7 +169,6 @@ func createSystemIntake(
 		EUAUserID:   null.StringFromPtr(requesterEUAIDPtr),
 		RequestType: requestType,
 		Requester:   requesterName,
-		Status:      models.SystemIntakeStatusINTAKEDRAFT,
 		State:       models.SystemIntakeStateOPEN,
 		Step:        models.SystemIntakeStepINITIALFORM,
 	}
