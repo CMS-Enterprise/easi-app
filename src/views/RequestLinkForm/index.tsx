@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
@@ -41,6 +41,9 @@ import {
   SetSystemIntakeRelationNewSystemVariables
 } from 'queries/types/SetSystemIntakeRelationNewSystem';
 
+// schema.graphql#RequestRelationType
+type RequestRelation = 'newSystem' | 'existingSystem' | 'existingService';
+
 const RequestLinkForm = () => {
   const { systemId } = useParams<{
     systemId: string;
@@ -69,9 +72,10 @@ const RequestLinkForm = () => {
     SetSystemIntakeRelationExistingServiceVariables
   >(SetSystemIntakeRelationExistingServiceQuery);
 
+  const [relation, setRelation] = useState<RequestRelation | null>(null);
+
   const { control, watch, handleSubmit } = useForm({
     defaultValues: {
-      systemIntakeID: systemId,
       cedarSystemIDs: [],
       contractNumbers: '',
       contractName: ''
@@ -131,30 +135,33 @@ const RequestLinkForm = () => {
             name="relationType"
             value="newSystem"
             label={t('link.form.field.systemOrService.options.0')}
+            onClick={() => setRelation('newSystem')}
           />
 
-          <Controller
-            name="contractNumbers"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <FormGroup error={!!error}>
-                <Label
-                  htmlFor="contractNumber"
-                  hint={t('link.form.field.contractNumberNew.help')}
-                  error={!!error}
-                >
-                  {t('link.form.field.contractNumberNew.label')}
-                </Label>
-                <TextInput
-                  {...field}
-                  ref={null}
-                  id="contractNumbers"
-                  type="text"
-                  validationStatus={error && 'error'}
-                />
-              </FormGroup>
-            )}
-          />
+          {relation === 'newSystem' && (
+            <Controller
+              name="contractNumbers"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormGroup error={!!error}>
+                  <Label
+                    htmlFor="contractNumber"
+                    hint={t('link.form.field.contractNumberNew.help')}
+                    error={!!error}
+                  >
+                    {t('link.form.field.contractNumberNew.label')}
+                  </Label>
+                  <TextInput
+                    {...field}
+                    ref={null}
+                    id="contractNumbers"
+                    type="text"
+                    validationStatus={error && 'error'}
+                  />
+                </FormGroup>
+              )}
+            />
+          )}
 
           {/* Existing system */}
           <Radio
@@ -162,54 +169,60 @@ const RequestLinkForm = () => {
             name="relationType"
             value="existingSystem"
             label={t('link.form.field.systemOrService.options.1')}
+            onClick={() => setRelation('existingSystem')}
           />
 
-          <Controller
-            name="cedarSystemIDs"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <FormGroup error={!!error}>
-                <Label
-                  htmlFor="cedarSystemIDs"
-                  hint={t('link.form.field.cmsSystem.help')}
-                  error={!!error}
-                >
-                  {t('link.form.field.cmsSystem.label')} <RequiredAsterisk />
-                </Label>
-                <MultiSelect
-                  name={field.name}
-                  options={cedarSystemIdOptions}
-                  onChange={values => {
-                    // console.log('values', values);
-                    field.onChange(values);
-                  }}
-                />
-              </FormGroup>
-            )}
-          />
+          {relation === 'existingSystem' && (
+            <>
+              <Controller
+                name="cedarSystemIDs"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <FormGroup error={!!error}>
+                    <Label
+                      htmlFor="cedarSystemIDs"
+                      hint={t('link.form.field.cmsSystem.help')}
+                      error={!!error}
+                    >
+                      {t('link.form.field.cmsSystem.label')}{' '}
+                      <RequiredAsterisk />
+                    </Label>
+                    <MultiSelect
+                      name={field.name}
+                      options={cedarSystemIdOptions}
+                      onChange={values => {
+                        // console.log('values', values);
+                        field.onChange(values);
+                      }}
+                    />
+                  </FormGroup>
+                )}
+              />
 
-          <Controller
-            name="contractNumbers"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <FormGroup error={!!error}>
-                <Label
-                  htmlFor="contractNumber"
-                  hint={t('link.form.field.contractNumberExisting.help')}
-                  error={!!error}
-                >
-                  {t('link.form.field.contractNumberExisting.label')}
-                </Label>
-                <TextInput
-                  {...field}
-                  ref={null}
-                  id="contractNumbers"
-                  type="text"
-                  validationStatus={error && 'error'}
-                />
-              </FormGroup>
-            )}
-          />
+              <Controller
+                name="contractNumbers"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <FormGroup error={!!error}>
+                    <Label
+                      htmlFor="contractNumber"
+                      hint={t('link.form.field.contractNumberExisting.help')}
+                      error={!!error}
+                    >
+                      {t('link.form.field.contractNumberExisting.label')}
+                    </Label>
+                    <TextInput
+                      {...field}
+                      ref={null}
+                      id="contractNumbers"
+                      type="text"
+                      validationStatus={error && 'error'}
+                    />
+                  </FormGroup>
+                )}
+              />
+            </>
+          )}
 
           {/* Existing service or contract */}
           <Radio
@@ -217,50 +230,54 @@ const RequestLinkForm = () => {
             name="relationType"
             value="existingService"
             label={t('link.form.field.systemOrService.options.2')}
+            onClick={() => setRelation('existingService')}
           />
+          {relation === 'existingService' && (
+            <>
+              <Controller
+                name="contractName"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <FormGroup error={!!error}>
+                    <Label htmlFor="contractName" error={!!error}>
+                      {t('link.form.field.serviceOrContractName.label')}{' '}
+                      <RequiredAsterisk />
+                    </Label>
+                    <TextInput
+                      {...field}
+                      ref={null}
+                      id="contractName"
+                      type="text"
+                      validationStatus={error && 'error'}
+                    />
+                  </FormGroup>
+                )}
+              />
 
-          <Controller
-            name="contractName"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <FormGroup error={!!error}>
-                <Label htmlFor="contractName" error={!!error}>
-                  {t('link.form.field.serviceOrContractName.label')}{' '}
-                  <RequiredAsterisk />
-                </Label>
-                <TextInput
-                  {...field}
-                  ref={null}
-                  id="contractName"
-                  type="text"
-                  validationStatus={error && 'error'}
-                />
-              </FormGroup>
-            )}
-          />
-
-          <Controller
-            name="contractNumbers"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <FormGroup error={!!error}>
-                <Label
-                  htmlFor="contractNumber"
-                  hint={t('link.form.field.contractNumberExisting.help')}
-                  error={!!error}
-                >
-                  {t('link.form.field.contractNumberExisting.label')}
-                </Label>
-                <TextInput
-                  {...field}
-                  ref={null}
-                  id="contractNumbers"
-                  type="text"
-                  validationStatus={error && 'error'}
-                />
-              </FormGroup>
-            )}
-          />
+              <Controller
+                name="contractNumbers"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <FormGroup error={!!error}>
+                    <Label
+                      htmlFor="contractNumber"
+                      hint={t('link.form.field.contractNumberExisting.help')}
+                      error={!!error}
+                    >
+                      {t('link.form.field.contractNumberExisting.label')}
+                    </Label>
+                    <TextInput
+                      {...field}
+                      ref={null}
+                      id="contractNumbers"
+                      type="text"
+                      validationStatus={error && 'error'}
+                    />
+                  </FormGroup>
+                )}
+              />
+            </>
+          )}
         </Fieldset>
 
         <Button
@@ -270,42 +287,41 @@ const RequestLinkForm = () => {
             handleSubmit(
               data => {
                 // console.log('submit', data);
-                /*
-                setSystemIntakeRelationNewSystem({
-                  variables: {
-                    input: {
-                      systemIntakeID: data.systemIntakeID,
-                      contractNumbers: data.contractNumbers
-                        .split(',')
-                        .map((v: string) => v.trim())
-                    }
-                  }
-                });
 
-                setSystemIntakeRelationExistingSystem({
-                  variables: {
-                    input: {
-                      systemIntakeID: data.systemIntakeID,
-                      cedarSystemIDs: data.cedarSystemIDs,
-                      contractNumbers: data.contractNumbers
-                        .split(',')
-                        .map((v: string) => v.trim())
-                    }
-                  }
-                });
+                const contractNumbers = data.contractNumbers
+                  .split(',')
+                  .map((v: string) => v.trim());
 
-                setSystemIntakeRelationExistingService({
-                  variables: {
-                    input: {
-                      systemIntakeID: data.systemIntakeID,
-                      contractName: data.contractName,
-                      contractNumbers: data.contractNumbers
-                        .split(',')
-                        .map((v: string) => v.trim())
+                if (relation === 'newSystem') {
+                  setSystemIntakeRelationNewSystem({
+                    variables: {
+                      input: {
+                        systemIntakeID: systemId,
+                        contractNumbers
+                      }
                     }
-                  }
-                });
-                */
+                  });
+                } else if (relation === 'existingSystem') {
+                  setSystemIntakeRelationExistingSystem({
+                    variables: {
+                      input: {
+                        systemIntakeID: systemId,
+                        cedarSystemIDs: data.cedarSystemIDs,
+                        contractNumbers
+                      }
+                    }
+                  });
+                } else if (relation === 'existingService') {
+                  setSystemIntakeRelationExistingService({
+                    variables: {
+                      input: {
+                        systemIntakeID: systemId,
+                        contractName: data.contractName,
+                        contractNumbers
+                      }
+                    }
+                  });
+                }
               },
               e => {
                 // console.log('submit error', e);
