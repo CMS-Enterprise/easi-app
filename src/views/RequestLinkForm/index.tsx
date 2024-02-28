@@ -244,6 +244,9 @@ const RequestLinkForm = () => {
                         </Label>
                         <MultiSelect
                           name={field.name}
+                          selectedLabel={t(
+                            'link.form.field.cmsSystem.selectedLabel'
+                          )}
                           options={cedarSystemIdOptions}
                           onChange={values => {
                             // console.log('values', values);

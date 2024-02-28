@@ -121,6 +121,7 @@ export default {
         },
         cmsSystem: {
           label: 'Which CMS system?',
+          selectedLabel: 'Selected system',
           help:
             'This field searches existing CMS systems. Select all that apply.'
         },
