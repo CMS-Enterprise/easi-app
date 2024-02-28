@@ -18,14 +18,14 @@ import (
 // This function opts to take a *sqlx.Tx instead of a NamedPreparer because the SQL calls inside this function are heavily intertwined, and we never want to call them outside the scope of a transaction
 func (s *Store) SetTRBRequestSystems(ctx context.Context, tx *sqlx.Tx, trbRequestID uuid.UUID, systemIDs []string) error {
 	if trbRequestID == uuid.Nil {
-		return errors.New("unexpected nil system intake ID when linking system intake to system id")
+		return errors.New("unexpected nil trb request ID when linking trb request to system id")
 	}
 
 	if _, err := tx.NamedExecContext(ctx, sqlqueries.TRBRequestSystemForm.Delete, map[string]interface{}{
 		"system_ids":     pq.StringArray(systemIDs),
 		"trb_request_id": trbRequestID,
 	}); err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to system intake", zap.Error(err))
+		appcontext.ZLogger(ctx).Error("Failed to delete system ids linked to trb request", zap.Error(err))
 		return err
 	}
 
@@ -49,7 +49,7 @@ func (s *Store) SetTRBRequestSystems(ctx context.Context, tx *sqlx.Tx, trbReques
 	}
 
 	if _, err := tx.NamedExecContext(ctx, sqlqueries.TRBRequestSystemForm.Set, setTRBRequestSystemsLinks); err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to insert linked system intake to system ids", zap.Error(err))
+		appcontext.ZLogger(ctx).Error("Failed to insert linked trb request to system ids", zap.Error(err))
 		return err
 	}
 

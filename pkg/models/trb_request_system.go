@@ -2,7 +2,7 @@ package models
 
 import "github.com/google/uuid"
 
-// TRBRequestSystem is the insertion type for linking a system intake to
+// TRBRequestSystem is the insertion type for linking a trb request to
 // system(s)
 type TRBRequestSystem struct {
 	BaseStructUser
