@@ -21,6 +21,7 @@ import {
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
+import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
@@ -363,6 +364,25 @@ const RequestLinkForm = () => {
             {t('link.form.skip')}
           </UswdsReactLink>
         </ButtonGroup>
+
+        {/* Skip confirm modal */}
+        <Modal
+          title={t('link.skipConfirm.heading')}
+          isOpen={false}
+          closeModal={() => {}}
+        >
+          <p>{t('link.skipConfirm.heading')}</p>
+          <ul>
+            <li>{t('link.skipConfirm.list.0')}</li>
+            <li>{t('link.skipConfirm.list.1')}</li>
+          </ul>
+          <ButtonGroup>
+            <Button type="button">{t('link.skipConfirm.submit')}</Button>
+            <Button type="button" unstyled>
+              {t('link.skipConfirm.cancel')}
+            </Button>
+          </ButtonGroup>
+        </Modal>
       </Form>
     </MainContent>
   );

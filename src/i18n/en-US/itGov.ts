@@ -137,7 +137,7 @@ export default {
       next: 'Next',
       skip: 'I’m not sure (skip this step)'
     },
-    confirm: {
+    skipConfirm: {
       heading: 'Are you sure you want to skip this step?',
       text:
         'Linking this request to its system, service, or other contract provides additional benefits:',
