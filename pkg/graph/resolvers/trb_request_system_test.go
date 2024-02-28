@@ -2,7 +2,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -11,10 +10,9 @@ import (
 	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s *ResolverSuite) TestIntakeRelatedSystems() {
+func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 	ctx := context.Background()
 	ctx = appcontext.WithLogger(ctx, s.testConfigs.Logger)
 
@@ -34,22 +32,16 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 
 	var createdIDs []uuid.UUID
 
-	// create system intake
-	s.Run("create system intakes for test", func() {
+	// create trb request
+	s.Run("create trb requests for test", func() {
 		for i := 0; i < 2; i++ {
-			intake := models.SystemIntake{
-				EUAUserID:   testhelpers.RandomEUAIDNull(),
-				RequestType: models.SystemIntakeRequestTypeNEW,
-				Requester:   fmt.Sprintf("system intake system data loader %d", i),
-			}
-
-			created, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake)
+			created, err := CreateTRBRequest(ctx, models.TRBTBrainstorm, s.testConfigs.Store)
 			s.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
 		}
 
-		// set contract for the created system intake
-		// insert systems for this created system intake
+		// set contract for the created trb request
+		// insert systems for this created trb request
 		systemIDs := []string{
 			systemID1,
 			systemID2,
@@ -57,12 +49,12 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		}
 
 		_, err := sqlutils.WithTransaction[any](s.testConfigs.Store, func(tx *sqlx.Tx) (*any, error) {
-			s.NoError(s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], systemIDs))
+			s.NoError(s.testConfigs.Store.SetTRBRequestSystems(ctx, tx, createdIDs[0], systemIDs))
 			return nil, nil
 		})
 		s.NoError(err)
 
-		data, err := SystemIntakeSystems(ctx, mockGetCedarSystem, createdIDs[0])
+		data, err := TRBRequestSystems(ctx, mockGetCedarSystem, createdIDs[0])
 		s.NoError(err)
 		s.Len(data, 3)
 
@@ -90,8 +82,8 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		s.True(found2)
 		s.True(found3)
 
-		// attempt to get systems for a system intake without linked systems
-		data, err = SystemIntakeSystems(ctx, mockGetCedarSystem, createdIDs[1])
+		// attempt to get systems for a trb request without linked systems
+		data, err = TRBRequestSystems(ctx, mockGetCedarSystem, createdIDs[1])
 		s.NoError(err)
 		s.Empty(data)
 	})

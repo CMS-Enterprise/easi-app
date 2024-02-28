@@ -99,7 +99,6 @@ func makeAccessibilityRequest(accessibilityRequest *models.AccessibilityRequest,
 
 	if accessibilityRequest.IntakeID == nil {
 		intake := models.SystemIntake{
-			Status:                 models.SystemIntakeStatusLCIDISSUED,
 			RequestType:            models.SystemIntakeRequestTypeNEW,
 			ProjectName:            null.StringFrom("System Intake"),
 			BusinessOwner:          null.StringFrom("Shane Clark"),

@@ -63,7 +63,6 @@ func UpdateIntake(intake *models.SystemIntake, newStep model.SystemIntakeStepToP
 		return nil
 
 	case model.SystemIntakeStepToProgressToFinalBusinessCase:
-		intake.Status = models.SystemIntakeStatusBIZCASEFINALNEEDED // TODO Remove this when we're on IT Gov v2 - after https://jiraent.cms.gov/browse/EASI-2887 is run in all envs
 		intake.Step = models.SystemIntakeStepFINALBIZCASE
 		return nil
 

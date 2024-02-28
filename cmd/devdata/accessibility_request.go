@@ -23,7 +23,6 @@ func makeAccessibilityRequest(name string, store *storage.Store, callbacks ...fu
 	lcid = lcid + 1
 
 	intake := models.SystemIntake{
-		Status:                 models.SystemIntakeStatusLCIDISSUED,
 		RequestType:            models.SystemIntakeRequestTypeNEW,
 		ProjectName:            null.StringFrom(name),
 		BusinessOwner:          null.StringFrom("Shane Clark"),

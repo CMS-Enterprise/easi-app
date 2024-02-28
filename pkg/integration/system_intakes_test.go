@@ -31,7 +31,6 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 	systemIntake := models.SystemIntake{
 		Requester:   "TEST REQUESTER",
-		Status:      models.SystemIntakeStatusINTAKEDRAFT,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 		EUAUserID:   null.StringFrom(s.user.euaID),
 	}
@@ -118,7 +117,6 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		intakeToUpdate.EASupportRequest = null.BoolFrom(true)
 		intakeToUpdate.ExistingContract = null.StringFrom("Test Requester")
 		*intakeToUpdate.UpdatedAt = time.Now().UTC()
-		intakeToUpdate.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		intakeToUpdate.HasUIChanges = null.BoolFrom(false)
 		body, err := json.Marshal(intakeToUpdate)
 		s.NoError(err)
@@ -140,7 +138,6 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		intakeToUpdate, err := s.store.FetchSystemIntakeByID(context.Background(), id)
 		s.NoError(err)
 		intakeToUpdate.Requester = "Test Requester"
-		intakeToUpdate.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		body, err := json.Marshal(intakeToUpdate)
 		s.NoError(err)
 		var intakeWithWrongInfo map[string]interface{}

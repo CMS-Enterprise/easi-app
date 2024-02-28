@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -14,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
+func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 	ctx := context.Background()
 
 	const (
@@ -26,40 +25,40 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 
 	var createdIDs []uuid.UUID
 
-	s.Run("sets systems on a system intake", func() {
-		// create three intakes
-		for i := 0; i < 3; i++ {
-			intake := models.SystemIntake{
-				EUAUserID:   testhelpers.RandomEUAIDNull(),
-				Status:      models.SystemIntakeStatusINTAKEDRAFT,
-				RequestType: models.SystemIntakeRequestTypeNEW,
-				Requester:   fmt.Sprintf("link to systems %d", i),
+	s.Run("sets systems on a trb request", func() {
+		// create three trb requests
+		_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+			for i := 0; i < 3; i++ {
+				trbRequest := models.NewTRBRequest(testhelpers.RandomEUAIDNull().String)
+				trbRequest.Type = models.TRBTBrainstorm
+				trbRequest.State = models.TRBRequestStateOpen
+				created, err := s.store.CreateTRBRequest(ctx, tx, trbRequest)
+				s.NoError(err)
+				createdIDs = append(createdIDs, created.ID)
 			}
+			return nil, nil
+		})
+		s.NoError(err)
 
-			created, err := s.store.CreateSystemIntake(ctx, &intake)
-			s.NoError(err)
-			createdIDs = append(createdIDs, created.ID)
-		}
-
-		// insert systems for this created system intake
+		// insert systems for this created trb request
 		systemNumbers := []string{
 			system1,
 			system2,
 			system3,
 		}
-		for _, systemIntakeID := range createdIDs {
-			_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
-				s.NoError(s.store.SetSystemIntakeSystems(ctx, tx, systemIntakeID, systemNumbers))
-				return nil, nil
-			})
-			s.NoError(err)
-		}
-
-		data, err := s.store.SystemIntakeSystemsBySystemIntakeIDLOADER(ctx, formatParamTableJSON("system_intake_id", createdIDs))
+		_, err = sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+			for _, trbRequestID := range createdIDs {
+				s.NoError(s.store.SetTRBRequestSystems(ctx, tx, trbRequestID, systemNumbers))
+			}
+			return nil, nil
+		})
 		s.NoError(err)
 
-		for _, systemIntakeID := range createdIDs {
-			systemsFound, ok := data[systemIntakeID.String()]
+		data, err := s.store.TRBRequestSystemsByTRBRequestIDLOADER(ctx, formatParamTableJSON("trb_request_id", createdIDs))
+		s.NoError(err)
+
+		for _, trbRequestID := range createdIDs {
+			systemsFound, ok := data[trbRequestID.String()]
 			s.True(ok)
 			s.Len(systemsFound, 3)
 
@@ -88,14 +87,14 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 			s.True(found3)
 		}
 
-		// now, we can add system 4 to one of the system intakes and verify that the created_at dates for the first three remain unchanged
+		// now, we can add system 4 to one of the trb requests and verify that the created_at dates for the first three remain unchanged
 		_, err = sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
-			s.NoError(s.store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], append(systemNumbers, system4)))
+			s.NoError(s.store.SetTRBRequestSystems(ctx, tx, createdIDs[0], append(systemNumbers, system4)))
 			return nil, nil
 		})
 		s.NoError(err)
 
-		data, err = s.store.SystemIntakeSystemsBySystemIntakeIDLOADER(ctx, formatParamTableJSON("system_intake_id", []uuid.UUID{createdIDs[0]}))
+		data, err = s.store.TRBRequestSystemsByTRBRequestIDLOADER(ctx, formatParamTableJSON("trb_request_id", []uuid.UUID{createdIDs[0]}))
 		s.NoError(err)
 		systemsFound, ok := data[createdIDs[0].String()]
 		s.True(ok)
@@ -123,7 +122,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 
 		s.True(fourthsystemTime.After(firstThreesystemsTime))
 
-		_, err = s.db.ExecContext(ctx, "DELETE FROM system_intakes WHERE id = ANY($1)", pq.Array(createdIDs))
+		_, err = s.db.ExecContext(ctx, "DELETE FROM trb_request WHERE id = ANY($1)", pq.Array(createdIDs))
 		s.NoError(err)
 	})
 }

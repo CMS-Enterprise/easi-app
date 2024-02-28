@@ -13,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
-type testCase struct {
+type systemIntakeRelationTestCase struct {
 	InitialContractNumbers []string
 	NewContractNumbers     []string
 	InitialSystemIDs       []string
@@ -33,7 +33,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 
 	submittedAt := time.Now()
 
-	var contractNumberCases = map[string]testCase{
+	var contractNumberCases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers when no initial contract numbers exist": {
 			InitialContractNumbers: []string{},
 			NewContractNumbers:     []string{"1", "2"},
@@ -72,7 +72,6 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 		suite.Run(caseName, func() {
 			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 				State:        models.SystemIntakeStateOPEN,
-				Status:       models.SystemIntakeStatusINTAKESUBMITTED,
 				RequestType:  models.SystemIntakeRequestTypeNEW,
 				SubmittedAt:  &submittedAt,
 				ContractName: zero.StringFrom("My Test Contract Name"),
@@ -155,7 +154,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 	submittedAt := time.Now()
 
-	var cases = map[string]testCase{
+	var cases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers and system IDs when no initial ones exist": {
 			InitialContractNumbers: []string{},
 			InitialSystemIDs:       []string{},
@@ -192,7 +191,6 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 		suite.Run(caseName, func() {
 			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 				State:        models.SystemIntakeStateOPEN,
-				Status:       models.SystemIntakeStatusINTAKESUBMITTED,
 				RequestType:  models.SystemIntakeRequestTypeNEW,
 				SubmittedAt:  &submittedAt,
 				ContractName: zero.StringFrom("My Test Contract Name"),
@@ -281,7 +279,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 
 	submittedAt := time.Now()
 
-	var cases = map[string]testCase{
+	var cases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers when no initial ones exist": {
 			InitialContractNumbers: []string{},
 			NewContractNumbers:     []string{"1", "2"},
@@ -320,7 +318,6 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 		suite.Run(caseName, func() {
 			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 				State:        models.SystemIntakeStateOPEN,
-				Status:       models.SystemIntakeStatusINTAKESUBMITTED,
 				RequestType:  models.SystemIntakeRequestTypeNEW,
 				SubmittedAt:  &submittedAt,
 				ContractName: zero.StringFrom("My Test Contract Name"),
@@ -407,7 +404,6 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		// Create an inital intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			State:        models.SystemIntakeStateOPEN,
-			Status:       models.SystemIntakeStatusINTAKESUBMITTED,
 			RequestType:  models.SystemIntakeRequestTypeNEW,
 			SubmittedAt:  &submittedAt,
 			ContractName: zero.StringFrom("My Test Contract Name"),
@@ -446,7 +442,6 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		// Create an inital intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			State:        models.SystemIntakeStateOPEN,
-			Status:       models.SystemIntakeStatusINTAKESUBMITTED,
 			RequestType:  models.SystemIntakeRequestTypeNEW,
 			SubmittedAt:  &submittedAt,
 			ContractName: zero.StringFrom("My Test Contract Name"),
@@ -493,7 +488,6 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		// Create an inital intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			State:       models.SystemIntakeStateOPEN,
-			Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			SubmittedAt: &submittedAt,
 		})
