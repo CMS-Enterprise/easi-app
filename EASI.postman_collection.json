@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "11ea32a5-7465-4052-9ded-6d813b0df6c4",
+		"_postman_id": "94388143-8d11-43b1-ad27-ce846949b74b",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "11253221"
@@ -1932,8 +1932,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation SetTRBRequestRelationNewSystem ($input: SetTRBRequestRelationNewSystemInput!) {\n    setTRBRequestRelationNewSystem(input:$input) {\n        id\n        relationType\n    }\n}",
-										"variables": "{\n    \"input\": {\n        \"trbRequestID\": \"{{trbRequestID}}\",\n        \"contractNumbers\": [\"new\", \"system\"]\n    }\n}"
+										"query": "mutation SetTRBRequestRelationNewSystem ($input: SetTRBRequestRelationNewSystemInput!) {\n    setTRBRequestRelationNewSystem(input:$input) {\n        id\n        relationType\n        contractName\n        contractNumbers {\n            contractNumber\n        }\n        systems {\n            id\n            name\n        }\n    }\n}",
+										"variables": "{\n    \"input\": {\n        \"trbRequestID\": \"{{trbRequestID}}\",\n        \"contractNumbers\": [\"123\", \"456\"]\n    }\n}"
 									}
 								},
 								"url": {
@@ -1953,8 +1953,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation SetTRBRequestRelationExistingService ($input: SetTRBRequestRelationExistingServiceInput!) {\n    setTRBRequestRelationExistingService(input:$input) {\n        id\n        contractName\n        relationType\n    }\n}",
-										"variables": "{\n    \"input\": {\n        \"systemIntakeID\": \"{{trbRequestID}}\",\n        \"contractName\": \"New name!\",\n        \"contractNumbers\": [\"existing service\"]\n    }\n}"
+										"query": "mutation SetTRBRequestRelationExistingService ($input: SetTRBRequestRelationExistingServiceInput!) {\n    setTRBRequestRelationExistingService(input:$input) {\n        id\n        contractName\n        relationType\n        contractNumbers {\n            contractNumber\n        }\n        systems {\n            id\n            name\n        }\n    }\n}",
+										"variables": "{\n    \"input\": {\n        \"trbRequestID\": \"{{trbRequestID}}\",\n        \"contractName\": \"New name!\",\n        \"contractNumbers\": [\n            \"123\",\n            \"456\",\n            \"789\"\n        ]\n    }\n}"
 									}
 								},
 								"url": {
@@ -1974,8 +1974,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation SetTRBRequestRelationExistingSystem ($input: SetTRBRequestRelationExistingSystemInput!) {\n    setTRBRequestRelationExistingSystem(input:$input) {\n        id\n        contractName\n        relationType\n    }\n}",
-										"variables": "{\n    \"input\": {\n        \"trbRequestID\": \"{{trbRequestID}}\",\n        \"contractNumbers\": [],\n        \"cedarSystemIDs\": []\n    }\n}"
+										"query": "mutation SetTRBRequestRelationExistingSystem ($input: SetTRBRequestRelationExistingSystemInput!) {\n    setTRBRequestRelationExistingSystem(input:$input) {\n        id\n        contractName\n        relationType\n        contractNumbers {\n            contractNumber\n        }\n        systems {\n            id\n            name\n        }\n    }\n}",
+										"variables": "{\n    \"input\": {\n        \"trbRequestID\": \"{{trbRequestID}}\",\n        \"contractNumbers\": [\"123\"],\n        \"cedarSystemIDs\": [\n            \"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}\",\n            \"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}\"\n        ]\n    }\n}"
 									}
 								},
 								"url": {
@@ -1995,7 +1995,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation UnlinkTRBRequestRelation($trbRequestID: UUID!) {\n    unlinkTRBRequestRelation(trbRequestID: $trbRequestID) {\n        id\n        name\n        contractName\n        relationType\n    }\n}",
+										"query": "mutation UnlinkTRBRequestRelation($trbRequestID: UUID!) {\n    unlinkTRBRequestRelation(trbRequestID: $trbRequestID) {\n        id\n        name\n        contractName\n        relationType\n        contractNumbers {\n            contractNumber\n        }\n        systems {\n            id\n            name\n        }\n    }\n}",
 										"variables": "{\n    \"trbRequestID\": \"{{trbRequestID}}\"\n}"
 									}
 								},
