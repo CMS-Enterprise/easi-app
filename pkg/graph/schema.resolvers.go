@@ -2022,7 +2022,6 @@ func (r *queryResolver) Requests(ctx context.Context, first int) (*model.Request
 			SubmittedAt:     intake.SubmittedAt,
 			Name:            intake.ProjectName.Ptr(),
 			Type:            model.RequestTypeGovernanceRequest,
-			Status:          string(intake.Status),
 			StatusRequester: &requesterStatus,
 			StatusCreatedAt: intake.CreatedAt,
 			Lcid:            intake.LifecycleID.Ptr(),

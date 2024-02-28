@@ -118,8 +118,6 @@ func NewSubmitSystemIntake(
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		// TODO: Remove when Admin Actions v2 is live
-		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		// Set intake state based on v2 logic
 		intake.RequestFormState = models.SIRFSSubmitted
 		intake.SubmittedAt = &updatedTime
@@ -216,7 +214,6 @@ func NewSubmitBusinessCase(
 		isDraft bool,
 	) error,
 	submitToCEDAR func(ctx context.Context, bc models.BusinessCase) error,
-	newIntakeStatus models.SystemIntakeStatus,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		ok, err := authorize(ctx, intake)
@@ -244,8 +241,7 @@ func NewSubmitBusinessCase(
 		updatedAt := config.clock.Now()
 		businessCase.UpdatedAt = &updatedAt
 
-		if businessCase.SystemIntakeStatus == models.SystemIntakeStatusBIZCASEFINALNEEDED ||
-			intake.Step == models.SystemIntakeStepFINALBIZCASE {
+		if intake.Step == models.SystemIntakeStepFINALBIZCASE {
 			err = validateForSubmit(businessCase)
 			if err != nil {
 				return err
@@ -279,9 +275,6 @@ func NewSubmitBusinessCase(
 		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 			isDraft = true
 		}
-
-		// TODO: Remove when Admin Actions v2 is live
-		intake.Status = newIntakeStatus
 
 		// Set intake state based on v2 logic
 		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
@@ -324,82 +317,11 @@ func NewSubmitBusinessCase(
 		}
 
 		// TODO - EASI-2363 - rework conditional to also trigger on publishing finalized system intakes
-		// need to check intake.Status, *not* businessCase.SystemIntakeStatus - intake is what gets returned from calling updateIntake()
-		if intake.Status == models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED ||
-			intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 			err = submitToCEDAR(ctx, *businessCase)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(err))
 			}
-		}
-
-		return nil
-	}
-}
-
-// NewTakeActionUpdateStatus returns a function that
-// updates the status of a request
-func NewTakeActionUpdateStatus(
-	config Config,
-	newStatus models.SystemIntakeStatus,
-	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
-	authorize func(context.Context) (bool, error),
-	saveAction func(context.Context, *models.Action) error,
-	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, emailText models.HTML, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
-	shouldCloseBusinessCase bool,
-	closeBusinessCase func(context.Context, uuid.UUID) error,
-) ActionExecuter {
-	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
-		ok, err := authorize(ctx)
-		if err != nil {
-			return err
-		}
-		if !ok {
-			return &apperrors.UnauthorizedError{}
-		}
-
-		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
-		if err != nil {
-			return err
-		}
-		if requesterInfo == nil || requesterInfo.Email == "" {
-			return &apperrors.ExternalAPIError{
-				Err:       errors.New("requester info fetch was not successful when submitting an action"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
-			}
-		}
-
-		err = saveAction(ctx, action)
-		if err != nil {
-			return err
-		}
-
-		updatedTime := config.clock.Now()
-		intake.UpdatedAt = &updatedTime
-		intake.Status = newStatus
-
-		intake, err = update(ctx, intake)
-		if err != nil {
-			return &apperrors.QueryError{
-				Err:       err,
-				Model:     intake,
-				Operation: apperrors.QuerySave,
-			}
-		}
-
-		if shouldCloseBusinessCase && intake.BusinessCaseID != nil {
-			if err = closeBusinessCase(ctx, *intake.BusinessCaseID); err != nil {
-				return err
-			}
-		}
-
-		err = sendReviewEmail(ctx, action.Feedback.ValueOrEmptyHTML(), requesterInfo.Email, intake.ID)
-		if err != nil {
-			return err
 		}
 
 		return nil

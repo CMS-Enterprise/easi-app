@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 
@@ -15,11 +16,11 @@ import (
 	"github.com/guregu/null"
 )
 
-const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, status, request_type, requester) VALUES (:id, :eua_user_id, :status, :request_type, :requester)"
-const insertRelatedBizCaseSQL = `INSERT INTO business_cases (id, eua_user_id, status, requester, system_intake)
-	VALUES(:id, :eua_user_id, :status, :requester, :system_intake)`
-const insertIntakeWithCedarSystemAndContractSQL = `INSERT INTO system_intakes (id, eua_user_id, status, request_type, requester, cedar_system_id, contract_number)
-	VALUES (:id, :eua_user_id, :status, :request_type, :requester, :cedar_system_id, :contract_number)`
+const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, request_type, requester, archived_at) VALUES (:id, :eua_user_id, :request_type, :requester, :archived_at)"
+const insertRelatedBizCaseSQL = `INSERT INTO business_cases (id, eua_user_id, requester, system_intake)
+	VALUES(:id, :eua_user_id, :requester, :system_intake)`
+const insertIntakeWithCedarSystemAndContractSQL = `INSERT INTO system_intakes (id, eua_user_id, request_type, requester, cedar_system_id, contract_number)
+	VALUES (:id, :eua_user_id, :request_type, :requester, :cedar_system_id, :contract_number)`
 
 func (s *StoreTestSuite) TestCreateSystemIntake() {
 	ctx := context.Background()
@@ -27,7 +28,6 @@ func (s *StoreTestSuite) TestCreateSystemIntake() {
 	s.Run("create a new system intake", func() {
 		intake := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 		}
@@ -35,7 +35,6 @@ func (s *StoreTestSuite) TestCreateSystemIntake() {
 		created, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 		s.Equal(intake.EUAUserID, created.EUAUserID)
-		s.Equal(intake.Status, created.Status)
 		s.Equal(intake.Requester, created.Requester)
 		epochTime := time.Unix(0, 0)
 		s.Equal(intake.CreatedAt, &epochTime)
@@ -52,7 +51,6 @@ func (s *StoreTestSuite) TestCreateSystemIntake() {
 	for _, tc := range euaTests {
 		s.Run(fmt.Sprintf("cannot save with invalid EUA ID: %s", tc), func() {
 			partialIntake := models.SystemIntake{
-				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 			}
 			partialIntake.EUAUserID = null.StringFrom(tc)
@@ -63,21 +61,6 @@ func (s *StoreTestSuite) TestCreateSystemIntake() {
 			s.Equal("pq: new row for relation \"system_intakes\" violates check constraint \"eua_id_check\"", err.Error())
 		})
 	}
-
-	s.Run("cannot create with invalid status", func() {
-		partialIntake := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			Status:      "fakeStatus",
-			RequestType: models.SystemIntakeRequestTypeNEW,
-			Requester:   "Test requester",
-		}
-
-		created, err := s.store.CreateSystemIntake(ctx, &partialIntake)
-
-		s.Error(err)
-		s.Equal("pq: invalid input value for enum system_intake_status: \"fakeStatus\"", err.Error())
-		s.Nil(created)
-	})
 }
 
 func (s *StoreTestSuite) TestUpdateSystemIntake() {
@@ -86,7 +69,6 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("update an existing system intake", func() {
 		intake, err := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 		})
@@ -104,7 +86,6 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("EUA ID will not update", func() {
 		originalIntake := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 		}
@@ -126,7 +107,6 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 		now := time.Now()
 		originalIntake := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 
@@ -170,7 +150,6 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("Rejection fields only upon update", func() {
 		originalIntake := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 
@@ -205,7 +184,6 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("Update contract details information", func() {
 		originalIntake := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 
@@ -262,7 +240,6 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("LifecycleID format", func() {
 		originalIntake := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 		}
@@ -293,7 +270,6 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 		for ix := 0; ix < 10; ix++ {
 			original := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
-				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Requester:   fmt.Sprintf("LCID Exhaust %d", ix),
 			}
@@ -316,7 +292,6 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 		// and this should violate the db constraint of a 6-digit LCID
 		original := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "LCID Exhaust 10",
 		}
@@ -340,7 +315,6 @@ func (s *StoreTestSuite) TestUpdateSystemIntake() {
 		t2 := clock.NewMock().Now().UTC()
 		original := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 
 			ProjectAcronym: null.StringFrom("JIT"),
@@ -489,7 +463,10 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		intake := testhelpers.NewSystemIntake()
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
-		intake2.Status = models.SystemIntakeStatusWITHDRAWN
+
+		// set archived at for intake2
+		intake2.ArchivedAt = helpers.PointerTo(time.Now())
+
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
@@ -575,52 +552,6 @@ func (s *StoreTestSuite) TestFetchSystemIntakes() {
 		for _, intake := range intakes {
 			id := intake.ID.String()
 			expected[id] = true
-		}
-
-		// failure if we did not see all the expected seeded not-WITHDRAWN intakes
-		for id, found := range expected {
-			s.True(found, "did not receive expected intake", id)
-		}
-	})
-}
-
-func (s *StoreTestSuite) TestFetchSystemIntakesByFilter() {
-	s.Run("ensure positive and negative cases", func() {
-		ctx := context.Background()
-
-		// seed the db with intakes that we DO expect to be returned
-		expected := map[string]bool{}
-		for ix := 0; ix < 5; ix++ {
-			intake := testhelpers.NewSystemIntake()
-
-			result, err := s.store.CreateSystemIntake(ctx, &intake)
-			s.NoError(err)
-			expected[result.ID.String()] = false
-		}
-
-		// seed the db with WITHDRAWN intakes that should NOT be returned
-		unexpected := map[string]bool{}
-		for ix := 0; ix < 5; ix++ {
-			intake := testhelpers.NewSystemIntake()
-			result, err := s.store.CreateSystemIntake(ctx, &intake)
-			s.NoError(err)
-
-			result.Status = models.SystemIntakeStatusWITHDRAWN
-			_, err = s.store.UpdateSystemIntake(ctx, result)
-			s.NoError(err)
-
-			unexpected[result.ID.String()] = true
-		}
-
-		intakes, err := s.store.FetchSystemIntakesByStatuses(ctx, []models.SystemIntakeStatus{models.SystemIntakeStatusINTAKEDRAFT, models.SystemIntakeStatusINTAKESUBMITTED})
-		s.NoError(err)
-
-		for _, intake := range intakes {
-			id := intake.ID.String()
-			expected[id] = true
-
-			// failure if we got back one of the WITHDRAWN intakes
-			s.False(unexpected[id], "unexpected intake", id)
 		}
 
 		// failure if we did not see all the expected seeded not-WITHDRAWN intakes

@@ -20,7 +20,6 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:              null.StringFrom("TEST"),
 		ProjectName:            null.StringFrom("Big Project"),
-		Status:                 models.SystemIntakeStatusLCIDISSUED,
 		RequestType:            models.SystemIntakeRequestTypeNEW,
 		BusinessOwner:          null.StringFrom("Firstname Lastname"),
 		BusinessOwnerComponent: null.StringFrom("OIT"),
@@ -159,7 +158,6 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		ProjectName:            null.StringFrom("Big Project"),
-		Status:                 models.SystemIntakeStatusLCIDISSUED,
 		RequestType:            models.SystemIntakeRequestTypeNEW,
 		BusinessOwner:          null.StringFrom("Firstname Lastname"),
 		BusinessOwnerComponent: null.StringFrom("OIT"),
@@ -263,7 +261,6 @@ func (s *GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		ProjectName:            null.StringFrom("Big Project"),
-		Status:                 models.SystemIntakeStatusLCIDISSUED,
 		RequestType:            models.SystemIntakeRequestTypeNEW,
 		BusinessOwner:          null.StringFrom("Firstname Lastname"),
 		BusinessOwnerComponent: null.StringFrom("OIT"),
@@ -346,7 +343,6 @@ func (s *GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		ProjectName:            null.StringFrom("Big Project"),
-		Status:                 models.SystemIntakeStatusLCIDISSUED,
 		RequestType:            models.SystemIntakeRequestTypeNEW,
 		BusinessOwner:          null.StringFrom("Firstname Lastname"),
 		BusinessOwnerComponent: null.StringFrom("OIT"),
@@ -413,7 +409,6 @@ func (s *GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		ProjectName:            null.StringFrom("Big Project"),
-		Status:                 models.SystemIntakeStatusLCIDISSUED,
 		RequestType:            models.SystemIntakeRequestTypeNEW,
 		BusinessOwner:          null.StringFrom("Firstname Lastname"),
 		BusinessOwnerComponent: null.StringFrom("OIT"),
@@ -462,7 +457,6 @@ func (s *GraphQLTestSuite) TestCreateAccessibilityRequestNoteMutation() {
 
 		intake, intakeErr = s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 			ProjectName:            null.StringFrom("Another Project"),
-			Status:                 models.SystemIntakeStatusLCIDISSUED,
 			RequestType:            models.SystemIntakeRequestTypeNEW,
 			BusinessOwner:          null.StringFrom("Firstname Lastname"),
 			BusinessOwnerComponent: null.StringFrom("OIT"),

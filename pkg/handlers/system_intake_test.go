@@ -142,7 +142,6 @@ func (s *HandlerTestSuite) TestSystemIntakeHandler() {
 		rr := httptest.NewRecorder()
 		body, err := json.Marshal(map[string]string{
 			"id":         id.String(),
-			"status":     string(models.SystemIntakeStatusINTAKESUBMITTED),
 			"alfabet_id": "123-345-19",
 		})
 		s.NoError(err)
@@ -166,8 +165,7 @@ func (s *HandlerTestSuite) TestSystemIntakeHandler() {
 	s.Run("PUT fails with failed validation", func() {
 		rr := httptest.NewRecorder()
 		body, err := json.Marshal(map[string]string{
-			"id":     id.String(),
-			"status": string(models.SystemIntakeStatusINTAKESUBMITTED),
+			"id": id.String(),
 		})
 		s.NoError(err)
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
@@ -190,8 +188,7 @@ func (s *HandlerTestSuite) TestSystemIntakeHandler() {
 	s.Run("PUT fails with failed submit", func() {
 		rr := httptest.NewRecorder()
 		body, err := json.Marshal(map[string]string{
-			"id":     id.String(),
-			"status": string(models.SystemIntakeStatusINTAKESUBMITTED),
+			"id": id.String(),
 		})
 		s.NoError(err)
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
@@ -214,8 +211,7 @@ func (s *HandlerTestSuite) TestSystemIntakeHandler() {
 	s.Run("PUT fails with failed email", func() {
 		rr := httptest.NewRecorder()
 		body, err := json.Marshal(map[string]string{
-			"id":     id.String(),
-			"status": string(models.SystemIntakeStatusINTAKESUBMITTED),
+			"id": id.String(),
 		})
 		s.NoError(err)
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBuffer(body))

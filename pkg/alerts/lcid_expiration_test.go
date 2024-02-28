@@ -227,13 +227,6 @@ func TestShouldSendAlertForIntake_False(t *testing.T) {
 		assert.False(t, shouldSendAlertForIntake(intakeWithoutExpirationDate, now))
 	})
 
-	t.Run("skips intakes with a status of NO GOVERNANCE", func(t *testing.T) {
-		intakeWithNoGovernance := testhelpers.NewSystemIntake()
-		intakeWithNoGovernance.Status = models.SystemIntakeStatusNOGOVERNANCE
-		intakeWithNoGovernance.LifecycleExpiresAt = &now
-		assert.False(t, shouldSendAlertForIntake(intakeWithNoGovernance, oneHundredThirtyDaysAgo))
-	})
-
 	t.Run("skips intakes with an expiration date in the past", func(t *testing.T) {
 		intakeWithExpiredDate := testhelpers.NewSystemIntake()
 		intakeWithExpiredDate.LifecycleExpiresAt = &tenDaysAgo
