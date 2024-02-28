@@ -267,7 +267,7 @@ export function getSystemProfileData(
     // Remaining mock data stubs
     activities: mockActivies,
     budgets: mockBudgets,
-    products: cedarSoftwareProducts?.softwareProducts, // TODO: NJD - error checking?
+    products: cedarSoftwareProducts?.softwareProducts,
     subSystems: mockSubSystems,
     systemData: mockSystemData
   };

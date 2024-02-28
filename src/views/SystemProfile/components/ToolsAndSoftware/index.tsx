@@ -32,6 +32,7 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
               <Card
                 key={product.systemSoftwareConnectionGuid}
                 className="grid-col-12 margin-bottom-2"
+                data-testid="software-product-card"
               >
                 <CardHeader className="padding-2 padding-bottom-1">
                   <h3 className="margin-top-0 margin-bottom-1 line-height-sans-2">
@@ -59,7 +60,7 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
                     {product.providesAiCapability && (
                       <Tag
                         className="text-base-darker bg-base-lighter margin-bottom-1"
-                        key={product.technopediaCategory} // TODO: NJD - need unique key
+                        key="provides-ai-capability-tag"
                       >
                         {t('singleSystem.toolsAndSoftware.usedForAI')}
                       </Tag>
@@ -67,7 +68,7 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
                     {product.apiGatewayUse && (
                       <Tag
                         className="text-base-darker bg-base-lighter margin-bottom-1"
-                        key={product.technopediaCategory} // TODO: NJD - need unique key
+                        key="used-as-api-gateway-tag"
                       >
                         {t('singleSystem.toolsAndSoftware.apiGateway')}
                       </Tag>
