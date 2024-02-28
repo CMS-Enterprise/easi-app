@@ -37,7 +37,10 @@ func SetTRBRequestRelationNewSystem(
 			return nil, err
 		}
 
-		// TODO: Store -> Delete CEDAR relationships
+		// Delete CEDAR relationships
+		if err := store.SetTRBRequestSystems(ctx, tx, input.TrbRequestID, []string{}); err != nil {
+			return nil, err
+		}
 
 		// Set contract number relationships
 		if err := store.SetTRBRequestContractNumbers(ctx, tx, input.TrbRequestID, input.ContractNumbers); err != nil {
@@ -54,6 +57,7 @@ func SetTRBRequestRelationNewSystem(
 func SetTRBRequestRelationExistingSystem(
 	ctx context.Context,
 	store *storage.Store,
+	getCedarSystem func(ctx context.Context, systemID string) (*models.CedarSystem, error),
 	input model.SetTRBRequestRelationExistingSystemInput,
 ) (*models.TRBRequest, error) {
 	return sqlutils.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
@@ -69,8 +73,17 @@ func SetTRBRequestRelationExistingSystem(
 		if err != nil {
 			return nil, err
 		}
-		// TODO: Store -> Add CEDAR relationships
+		// ensure all given CEDAR system IDs are valid by checking with CEDAR
+		for _, systemID := range input.CedarSystemIDs {
+			if _, err = getCedarSystem(ctx, systemID); err != nil {
+				return nil, err
+			}
+		}
 
+		// Add CEDAR system relationships
+		if err := store.SetTRBRequestSystems(ctx, tx, input.TrbRequestID, input.CedarSystemIDs); err != nil {
+			return nil, err
+		}
 		// Set contract number relationships
 		if err := store.SetTRBRequestContractNumbers(ctx, tx, input.TrbRequestID, input.ContractNumbers); err != nil {
 			return nil, err
@@ -102,8 +115,10 @@ func SetTRBRequestRelationExistingService(
 		if err != nil {
 			return nil, err
 		}
-		// TODO: Store -> Delete CEDAR relationships
-
+		// Delete CEDAR relationships
+		if err := store.SetTRBRequestSystems(ctx, tx, input.TrbRequestID, []string{}); err != nil {
+			return nil, err
+		}
 		// Set contract number relationships
 		if err := store.SetTRBRequestContractNumbers(ctx, tx, input.TrbRequestID, input.ContractNumbers); err != nil {
 			return nil, err
@@ -139,9 +154,12 @@ func UnlinkTRBRequestRelation(
 			return nil, err
 		}
 
-		// TODO: Store -> Delete CEDAR relationships
+		// Delete CEDAR relationships
+		if err := store.SetTRBRequestSystems(ctx, tx, trbRequestID, []string{}); err != nil {
+			return nil, err
+		}
 
-		// TODO: Store -> Delete contract number relationships
+		// Delete contract number relationships
 		if err := store.SetTRBRequestContractNumbers(ctx, tx, trbRequestID, []string{}); err != nil {
 			return nil, err
 		}

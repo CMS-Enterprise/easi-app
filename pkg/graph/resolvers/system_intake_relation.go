@@ -114,7 +114,6 @@ func SetSystemIntakeRelationExistingSystem(
 
 		// ensure all given CEDAR system IDs are valid by checking with CEDAR
 		for _, systemID := range input.CedarSystemIDs {
-			// in local dev (where cedar core is disabled), this function returns a blank system struct
 			if _, err = getCedarSystem(ctx, systemID); err != nil {
 				return nil, err
 			}
