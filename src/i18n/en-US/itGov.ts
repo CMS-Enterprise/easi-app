@@ -103,7 +103,6 @@ export default {
     description:
       'If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, service, or contract (such as a major change based on a new business need or the creation of a new sub-system) please include additional details below.',
     form: {
-      required: 'Fields marked with an asterisk ( * ) are required.',
       field: {
         systemOrService: {
           label:
@@ -148,6 +147,7 @@ export default {
       ],
       submit: 'Skip step',
       cancel: 'Don’t skip this step'
-    }
+    },
+    cancelAndExit: 'Cancel request and exit'
   }
 };

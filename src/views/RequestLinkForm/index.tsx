@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import {
@@ -45,7 +44,7 @@ import {
   SetSystemIntakeRelationNewSystemVariables
 } from 'queries/types/SetSystemIntakeRelationNewSystem';
 
-// schema.graphql#RequestRelationType
+// Reflects schema.graphql#RequestRelationType
 type RequestRelation = 'newSystem' | 'existingSystem' | 'existingService';
 
 const RequestLinkForm = () => {
@@ -54,38 +53,16 @@ const RequestLinkForm = () => {
   }>();
   const history = useHistory();
 
-  const { t } = useTranslation(['itGov', 'intake']);
+  const { t } = useTranslation(['itGov', 'intake', 'action']);
 
   const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     data: cedarSystemsData,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     loading,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error: formError
   } = useQuery<GetCedarSystemIds>(GetCedarSystemIdsQuery);
-
-  const [setSystemIntakeRelationNewSystem] = useMutation<
-    SetSystemIntakeRelationNewSystem,
-    SetSystemIntakeRelationNewSystemVariables
-  >(SetSystemIntakeRelationNewSystemQuery);
-
-  const [setSystemIntakeRelationExistingSystem] = useMutation<
-    SetSystemIntakeRelationExistingSystem,
-    SetSystemIntakeRelationExistingSystemVariables
-  >(SetSystemIntakeRelationExistingSystemQuery);
-
-  const [setSystemIntakeRelationExistingService] = useMutation<
-    SetSystemIntakeRelationExistingService,
-    SetSystemIntakeRelationExistingServiceVariables
-  >(SetSystemIntakeRelationExistingServiceQuery);
-
-  const [relation, setRelation] = useState<RequestRelation | null>(null);
-
-  const { control, watch, handleSubmit } = useForm({
-    defaultValues: {
-      cedarSystemIDs: [],
-      contractNumbers: '',
-      contractName: ''
-    }
-  });
 
   const cedarSystemIdOptions = useMemo(() => {
     const data = {
@@ -115,17 +92,72 @@ const RequestLinkForm = () => {
     // }, [data]);
   }, []);
 
+  const [setSystemIntakeRelationNewSystem] = useMutation<
+    SetSystemIntakeRelationNewSystem,
+    SetSystemIntakeRelationNewSystemVariables
+  >(SetSystemIntakeRelationNewSystemQuery);
+
+  const [setSystemIntakeRelationExistingSystem] = useMutation<
+    SetSystemIntakeRelationExistingSystem,
+    SetSystemIntakeRelationExistingSystemVariables
+  >(SetSystemIntakeRelationExistingSystemQuery);
+
+  const [setSystemIntakeRelationExistingService] = useMutation<
+    SetSystemIntakeRelationExistingService,
+    SetSystemIntakeRelationExistingServiceVariables
+  >(SetSystemIntakeRelationExistingServiceQuery);
+
+  const [relation, setRelation] = useState<RequestRelation | null>(null);
+
   const taskListUrl = `/governance-task-list/${systemId}`;
+
+  const { control, watch, handleSubmit } = useForm({
+    defaultValues: {
+      cedarSystemIDs: [],
+      contractNumbers: '',
+      contractName: ''
+    }
+  });
+
+  // Ref fields for some form behavior
+  const fields = watch();
+
+  // This form uses bare minimum validation
+  // The submission button is disabled according to required fields
+  // console.log('watch fields', fields);
+  const submitEnabled = (() => {
+    if (relation === null) return false;
+
+    if (relation === 'newSystem') return true;
+
+    if (relation === 'existingSystem' && fields.cedarSystemIDs.length)
+      return true;
+
+    if (relation === 'existingService' && fields.contractName.trim() !== '')
+      return true;
+
+    // Default to disabled
+    return false;
+  })();
 
   const submit = handleSubmit(
     data => {
       // console.log('submit', data);
 
+      // The new system relation form is entirely optional
+      // If it's empty then just treat this submit handler as a link
+      if (relation === 'newSystem' && fields.contractNumbers.trim() === '') {
+        history.push(taskListUrl);
+        return;
+      }
+
+      // Otherwise do some field parsing and correlate `relation` to mutation
+
       const contractNumbers = data.contractNumbers
         .split(',')
         .map((v: string) => v.trim());
 
-      let p: Promise<any> | null = null;
+      let p: Promise<any> | undefined;
 
       if (relation === 'newSystem') {
         p = setSystemIntakeRelationNewSystem({
@@ -179,7 +211,13 @@ const RequestLinkForm = () => {
       </BreadcrumbBar>
       <PageHeading>{t('link.header')}</PageHeading>
       <p>{t('link.description')}</p>
-      {/* required fields text */}
+      <p className="margin-top-1 text-base">
+        <Trans
+          i18nKey="action:fieldsMarkedRequired"
+          components={{ asterisk: <RequiredAsterisk /> }}
+        />
+      </p>
+
       <Form className="maxw-full" onSubmit={e => e.preventDefault()}>
         <Grid row>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
@@ -347,7 +385,7 @@ const RequestLinkForm = () => {
         <ButtonGroup>
           <Button
             type="submit"
-            disabled={!relation}
+            disabled={!submitEnabled}
             onClick={() => {
               // console.log('values', watch());
               submit();
@@ -367,6 +405,10 @@ const RequestLinkForm = () => {
             {t('link.form.skip')}
           </UswdsReactLink>
         </ButtonGroup>
+
+        <Button type="button" unstyled>
+          {t('link.cancelAndExit')}
+        </Button>
 
         {/* Skip confirm modal */}
         <Modal
