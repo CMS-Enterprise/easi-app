@@ -5,12 +5,12 @@ WITH queried_trb_request_ids AS (
 
 )
 SELECT
-    sis.id,
-    sis.trb_request_id,
-    sis.system_id,
-    sis.created_by,
-    sis.created_at,
-    sis.modified_by,
-    sis.modified_at
-FROM queried_trb_request_ids qsid
-INNER JOIN trb_request_systems sis ON sis.trb_request_id = qsid.trb_request_id;
+    trbsys.id,
+    trbsys.trb_request_id,
+    trbsys.system_id,
+    trbsys.created_by,
+    trbsys.created_at,
+    trbsys.modified_by,
+    trbsys.modified_at
+FROM queried_trb_request_ids qtid
+INNER JOIN trb_request_systems trbsys ON trbsys.trb_request_id = qtid.trb_request_id;

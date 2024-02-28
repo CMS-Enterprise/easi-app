@@ -10,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// TRBRequestSystems utilizies a dataloader to retrieve systems linked to a given system intake ID
+// TRBRequestSystems utilizies a dataloader to retrieve systems linked to a given trb request ID
 func TRBRequestSystems(
 	ctx context.Context,
 	getCedarSystem func(context.Context, string) (*models.CedarSystem, error),

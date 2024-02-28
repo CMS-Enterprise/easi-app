@@ -40,7 +40,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 		})
 		s.NoError(err)
 
-		// insert systems for this created system intake
+		// insert systems for this created trb request
 		systemNumbers := []string{
 			system1,
 			system2,
