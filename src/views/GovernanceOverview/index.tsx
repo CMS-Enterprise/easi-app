@@ -12,6 +12,7 @@ import GovernanceOverviewContent from 'components/GovernanceOverview';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
+import { RELATION } from 'constants/systemIntake';
 
 import './index.scss';
 
@@ -54,7 +55,11 @@ const GovernanceOverview = () => {
         <UswdsReactLink
           className="usa-button margin-bottom-5"
           variant="unstyled"
-          to={`/governance-task-list/${systemId}`}
+          to={
+            RELATION
+              ? `/system/link/${systemId}`
+              : `/governance-task-list/${systemId}`
+          }
         >
           {t('getStarted')}
         </UswdsReactLink>

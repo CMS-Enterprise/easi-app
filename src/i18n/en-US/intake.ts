@@ -1,7 +1,7 @@
 const intake = {
   navigation: {
     itGovernance: 'IT Governance',
-    startRequest: 'Start a request',
+    startRequest: 'Start an IT Governance request',
     changeRequestType: 'Change request type'
   },
   feedback:

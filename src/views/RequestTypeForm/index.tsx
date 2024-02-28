@@ -17,6 +17,7 @@ import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import { RadioField } from 'components/shared/RadioField';
+import { RELATION } from 'constants/systemIntake';
 import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -47,7 +48,10 @@ const RequestTypeForm = () => {
       mutate({ variables: { input } }).then(response => {
         if (!response.errors) {
           const { id } = response.data.createSystemIntake;
-          const navigationLink = `/governance-task-list/${id}`;
+          const navigationLink = RELATION
+            ? `/system/link/${id}`
+            : `/governance-task-list/${id}`;
+
           switch (requestType) {
             case 'NEW':
               history.push(`/governance-overview/${id}`);
