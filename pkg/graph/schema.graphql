@@ -109,23 +109,23 @@ type CedarSoftwareProductItem {
 
 """
 CedarSoftwareProducts represents the response from the /softwareProducts endpoint from the CEDAR Core API.
-Right now, this does not tie in with any other types defined here, and is a root node until that changes. - NJD is this right about root node?
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
 """
 type CedarSoftwareProducts {
   aiSolnCatg: [String]!
-	aiSolnCatgOther: String
+  aiSolnCatgOther: String
   apiDataArea: [String]!
   apiDescPubLocation: String
-	apiDescPublished: String
-	apiFHIRUse: String
-	apiFHIRUseOther: String
-	apiHasPortal: Boolean
-	apisAccessibility: String
-	apisDeveloped: String
-	developmentStage: String
+  apiDescPublished: String
+  apiFHIRUse: String
+  apiFHIRUseOther: String
+  apiHasPortal: Boolean
+  apisAccessibility: String
+  apisDeveloped: String
+  developmentStage: String
   softwareProducts: [CedarSoftwareProductItem!]!
-	systemHasAPIGateway: Boolean
-	usesAiTech: String
+  systemHasAPIGateway: Boolean
+  usesAiTech: String
 }
 
 """
