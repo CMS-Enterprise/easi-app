@@ -15,7 +15,6 @@ func NewSystemIntake() models.SystemIntake {
 	return models.SystemIntake{
 		ID:                      uuid.New(),
 		EUAUserID:               null.StringFrom(RandomEUAID()),
-		Status:                  models.SystemIntakeStatusINTAKEDRAFT,
 		State:                   models.SystemIntakeStateOPEN,
 		Step:                    models.SystemIntakeStepINITIALFORM,
 		RequestType:             models.SystemIntakeRequestTypeNEW,

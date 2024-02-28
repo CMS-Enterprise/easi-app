@@ -198,7 +198,6 @@ func convert(row []string) (*entry, error) {
 		fmt.Fprintf(os.Stdout, "skipping %v: status - %s\n", id, row[colStatus])
 		return nil, nil
 	}
-	data.Intake.Status = models.SystemIntakeStatusCLOSED
 
 	// labelled "Request Date"
 	if dt, err := convertDate(row[colDate]); err == nil {

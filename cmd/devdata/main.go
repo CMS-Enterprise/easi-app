@@ -600,7 +600,6 @@ func main() {
 		},
 	)
 	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
-		i.Status = models.SystemIntakeStatusNEEDBIZCASE
 		i.RequestType = models.SystemIntakeRequestTypeNEW
 		i.Requester = "EndToEnd One" // matches pkg/local/cedar_ldap.go, but doesn't really have to :shrug:
 		i.Component = null.StringFrom("Center for Consumer Information and Insurance Oversight")

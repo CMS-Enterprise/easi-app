@@ -27,7 +27,6 @@ func (s *ResolverSuite) TestSystemIntakeContractNumbers() {
 		for i := 0; i < 2; i++ {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
-				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Requester:   fmt.Sprintf("system intake contract number data loader %d", i),
 			}
