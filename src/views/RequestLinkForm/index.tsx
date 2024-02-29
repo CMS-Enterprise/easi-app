@@ -56,42 +56,17 @@ const RequestLinkForm = () => {
 
   const { t } = useTranslation(['itGov', 'intake', 'action']);
 
-  const {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    data: cedarSystemsData,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    loading,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    error: formError
-  } = useQuery<GetCedarSystemIds>(GetCedarSystemIdsQuery);
+  const { data: cedarSystemsData } = useQuery<GetCedarSystemIds>(
+    GetCedarSystemIdsQuery
+  );
 
   const cedarSystemIdOptions = useMemo(() => {
-    const data = {
-      cedarSystems: [
-        {
-          id: '000-0000-1',
-          name: 'Application Programming Interface Gateway'
-        },
-        {
-          id: '000-0000-2',
-          name: 'Blueprint'
-        },
-        {
-          id: '000-0000-3',
-          name: 'Value Based Care Management System'
-        },
-        {
-          id: '000-0000-4',
-          name: 'CMS Operations Information Network'
-        }
-      ]
-    };
-    return (data?.cedarSystems || []).map(system => ({
-      label: system!.name!,
-      value: system!.id!
+    if (!cedarSystemsData) return [];
+    return cedarSystemsData.cedarSystems.map(system => ({
+      label: system.name,
+      value: system.id
     }));
-    // }, [data]);
-  }, []);
+  }, [cedarSystemsData]);
 
   const [setSystemIntakeRelationNewSystem] = useMutation<
     SetSystemIntakeRelationNewSystem,
