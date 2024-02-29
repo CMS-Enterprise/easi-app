@@ -89,11 +89,6 @@ var alertsInAdvance = []time.Duration{
 // Then, in order to ensure we don't send an alert for the same alert period twice, we check to see if the last alert's timestamp is _also_ before the date period
 // If both of these are true, we're good to fire an alert off
 func shouldSendAlertForIntake(intake models.SystemIntake, now time.Time) bool {
-	// Skip intake or if it has a status of "NO GOVERNANCE"
-	if intake.Status == models.SystemIntakeStatusNOGOVERNANCE {
-		return false
-	}
-
 	// skip intake if it has an LCID retirement date set, regardless of whether that date's been reached or not
 	if intake.LifecycleRetiresAt != nil {
 		return false

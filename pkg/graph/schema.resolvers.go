@@ -1893,7 +1893,7 @@ func (r *mutationResolver) SetTRBRequestRelationNewSystem(ctx context.Context, i
 
 // SetTRBRequestRelationExistingSystem is the resolver for the setTRBRequestRelationExistingSystem field.
 func (r *mutationResolver) SetTRBRequestRelationExistingSystem(ctx context.Context, input model.SetTRBRequestRelationExistingSystemInput) (*models.TRBRequest, error) {
-	return resolvers.SetTRBRequestRelationExistingSystem(ctx, r.store, input)
+	return resolvers.SetTRBRequestRelationExistingSystem(ctx, r.store, r.cedarCoreClient.GetSystem, input)
 }
 
 // SetTRBRequestRelationExistingService is the resolver for the setTRBRequestRelationExistingService field.
@@ -2108,7 +2108,6 @@ func (r *queryResolver) Requests(ctx context.Context, first int) (*model.Request
 			SubmittedAt:     intake.SubmittedAt,
 			Name:            intake.ProjectName.Ptr(),
 			Type:            model.RequestTypeGovernanceRequest,
-			Status:          string(intake.Status),
 			StatusRequester: &requesterStatus,
 			StatusCreatedAt: intake.CreatedAt,
 			Lcid:            intake.LifecycleID.Ptr(),
@@ -3034,6 +3033,11 @@ func (r *tRBRequestResolver) RelationType(ctx context.Context, obj *models.TRBRe
 // ContractNumbers is the resolver for the contractNumbers field.
 func (r *tRBRequestResolver) ContractNumbers(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestContractNumber, error) {
 	return resolvers.TRBRequestContractNumbers(ctx, obj.ID)
+}
+
+// Systems is the resolver for the systems field.
+func (r *tRBRequestResolver) Systems(ctx context.Context, obj *models.TRBRequest) ([]*models.CedarSystem, error) {
+	return resolvers.TRBRequestSystems(ctx, r.cedarCoreClient.GetSystem, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.

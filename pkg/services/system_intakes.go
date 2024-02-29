@@ -18,10 +18,9 @@ func NewFetchSystemIntakes(
 	config Config,
 	fetchByID func(c context.Context, euaID string) (models.SystemIntakes, error),
 	fetchAll func(context.Context) (models.SystemIntakes, error),
-	fetchByStatusFilter func(context.Context, []models.SystemIntakeStatus) (models.SystemIntakes, error),
 	authorize func(c context.Context) (bool, error),
-) func(context.Context, models.SystemIntakeStatusFilter) (models.SystemIntakes, error) {
-	return func(ctx context.Context, statusFilter models.SystemIntakeStatusFilter) (models.SystemIntakes, error) {
+) func(context.Context) (models.SystemIntakes, error) {
+	return func(ctx context.Context) (models.SystemIntakes, error) {
 		logger := appcontext.ZLogger(ctx)
 		ok, err := authorize(ctx)
 		if err != nil {
@@ -35,17 +34,7 @@ func NewFetchSystemIntakes(
 		if !principal.AllowGRT() {
 			result, err = fetchByID(ctx, principal.ID())
 		} else {
-			if statusFilter == "" {
-				result, err = fetchAll(ctx)
-			} else {
-				statuses, filterErr := models.GetStatusesByFilter(statusFilter)
-				if filterErr != nil {
-					return nil, &apperrors.BadRequestError{
-						Err: filterErr,
-					}
-				}
-				result, err = fetchByStatusFilter(ctx, statuses)
-			}
+			result, err = fetchAll(ctx)
 		}
 		if err != nil {
 			logger.Error("failed to fetch system intakes")
@@ -163,14 +152,9 @@ func NewArchiveSystemIntake(
 			}
 		}
 
-		initialStatus := intake.Status
-
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		intake.Status = models.SystemIntakeStatusWITHDRAWN
 		intake.ArchivedAt = &updatedTime
-
-		intake.SetV2FieldsBasedOnV1Status(models.SystemIntakeStatusWITHDRAWN)
 
 		intake, err = update(ctx, intake)
 		if err != nil {
@@ -182,7 +166,7 @@ func NewArchiveSystemIntake(
 		}
 
 		// Do note send email if intake was in a draft state (not submitted)
-		if initialStatus != models.SystemIntakeStatusINTAKEDRAFT {
+		if intake.SubmittedAt != nil {
 			err = sendWithdrawEmail(ctx, intake.ProjectName.String)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Withdraw email failed to send: ", zap.Error(err))

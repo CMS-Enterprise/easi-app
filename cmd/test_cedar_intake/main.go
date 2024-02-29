@@ -69,7 +69,6 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 		ArchivedAt:  nil,
 
 		EUAUserID: null.StringFrom("SWKJ"),
-		Status:    models.SystemIntakeStatusBIZCASEFINALNEEDED,
 
 		RequestType: models.SystemIntakeRequestTypeNEW,
 
@@ -161,9 +160,8 @@ func makeTestNote(systemIntake models.SystemIntake) *models.SystemIntakeNote {
 
 func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *models.BusinessCase {
 	businessCase := &models.BusinessCase{
-		ID:                 uuid.New(),
-		SystemIntakeID:     systemIntake.ID,
-		SystemIntakeStatus: systemIntake.Status,
+		ID:             uuid.New(),
+		SystemIntakeID: systemIntake.ID,
 
 		CreatedAt:  &times.fiveMinutesAgo,
 		UpdatedAt:  &times.now,

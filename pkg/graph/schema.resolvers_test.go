@@ -159,7 +159,6 @@ func TestGraphQLTestSuite(t *testing.T) {
 			return err
 		}
 
-		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		_, err = store.UpdateSystemIntake(ctx, intake)
 		if err != nil {
 			return err

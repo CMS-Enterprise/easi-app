@@ -5,6 +5,8 @@ import (
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -32,10 +34,15 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		})
 	}
 
+	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(helpers.PointerTo(models.SystemIntake(*si)))
+	if err != nil {
+		return nil, err
+	}
+
 	obj := &intakemodels.EASIIntake{
 		IntakeID:                    si.ID.String(),
 		UserEUA:                     si.EUAUserID.ValueOrZero(),
-		Status:                      string(si.Status),
+		Status:                      string(clientStatus),
 		RequestType:                 string(si.RequestType),
 		Requester:                   si.Requester,
 		Component:                   si.Component.ValueOrZero(),
@@ -87,23 +94,10 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		return nil, err
 	}
 
-	closedStatuses, err := models.GetStatusesByFilter(models.SystemIntakeStatusFilterCLOSED)
-	if err != nil {
-		return nil, err
-	}
-
-	status := inputStatusInitiated
-	for _, stat := range closedStatuses {
-		if si.Status == stat {
-			status = inputStatusFinal
-			break
-		}
-	}
-
 	result := wire.IntakeInput{
 		ClientID:     pStr(si.ID.String()),
 		Body:         pStr(string(blob)),
-		ClientStatus: statusStr(status),
+		ClientStatus: pStr(string(clientStatus)),
 
 		// invariants for this type
 		Type:       typeStr(intakeInputSystemIntake),
