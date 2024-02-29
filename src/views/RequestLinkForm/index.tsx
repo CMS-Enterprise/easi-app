@@ -122,7 +122,7 @@ const RequestLinkForm = () => {
 
       // The new system relation form is entirely optional
       // If it's empty then just treat this submit handler as a link
-      if (relation === 'newSystem' && fields.contractNumbers.trim() === '') {
+      if (relation === 'newSystem' && data.contractNumbers.trim() === '') {
         history.push(taskListUrl);
         return;
       }
