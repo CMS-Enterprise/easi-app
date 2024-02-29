@@ -13,6 +13,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+	"github.com/jmoiron/sqlx"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
@@ -28,6 +29,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
@@ -1490,8 +1492,13 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 
 // UpdateSystemIntakeLinkedContract is the resolver for the updateSystemIntakeLinkedContract field.
 func (r *mutationResolver) UpdateSystemIntakeLinkedContract(ctx context.Context, input model.UpdateSystemIntakeLinkedContractInput) (*model.UpdateSystemIntakePayload, error) {
-	intake, err := r.store.UpdateSystemIntakeLinkedContract(ctx, input.ID, null.StringFromPtr(input.ContractNumber))
+	intake, err := sqlutils.WithTransaction[models.SystemIntake](r.store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+		if err := r.store.SetSystemIntakeContractNumbers(ctx, tx, input.ID, input.ContractNumber); err != nil {
+			return nil, err
+		}
 
+		return r.store.FetchSystemIntakeByIDNP(ctx, tx, input.ID)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -2323,16 +2330,6 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 		SystemIntakeContacts: augmentedContacts,
 		InvalidEUAIDs:        invalidEUAIDs,
 	}, nil
-}
-
-// RelatedSystemIntakes is the resolver for the relatedSystemIntakes field.
-func (r *queryResolver) RelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]*models.SystemIntake, error) {
-	intakes, err := r.store.FetchRelatedSystemIntakes(ctx, id)
-
-	if err != nil {
-		return nil, err
-	}
-	return intakes, nil
 }
 
 // TrbRequest is the resolver for the trbRequest field.

@@ -39,6 +39,12 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		return nil, err
 	}
 
+	// ctx := context.Background()
+	// contractNumbers, err := resolvers.SystemIntakeContractNumbers(dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders()), si.ID)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
 	obj := &intakemodels.EASIIntake{
 		IntakeID:                    si.ID.String(),
 		UserEUA:                     si.EUAUserID.ValueOrZero(),

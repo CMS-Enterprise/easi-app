@@ -630,14 +630,12 @@ func main() {
 	intake = makeSystemIntakeAndSubmit("Intake with no contract vehicle or number", &intakeID, requesterEUA, logger, store)
 	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
 		i.ContractVehicle = null.StringFromPtr(nil)
-		i.ContractNumber = null.StringFromPtr(nil)
 	})
 
 	intakeID = uuid.MustParse("2ed89f9f-7fd9-4e92-89d2-cee170a44d0d")
 	intake = makeSystemIntakeAndSubmit("Intake with legacy Contract Vehicle", &intakeID, requesterEUA, logger, store)
 	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
 		i.ContractVehicle = null.StringFrom("Honda")
-		i.ContractNumber = null.StringFromPtr(nil)
 	})
 
 	intakeID = uuid.MustParse("69357721-1e0c-4a37-a90f-64bb29814e7a")

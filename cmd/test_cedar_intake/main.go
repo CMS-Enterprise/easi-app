@@ -116,7 +116,6 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 		ContractStartDate:  date(2021, 1, 1),
 		ContractEndDate:    date(2023, 12, 31),
 		ContractVehicle:    null.StringFrom("Sole source"),
-		ContractNumber:     null.StringFrom("22288144"),
 		Contractor:         null.StringFrom("ACME Co."),
 		AdminLead:          null.StringFrom("Valerie Hartz"),
 		GRTDate:            &times.oneHourInTheFuture,
