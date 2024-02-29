@@ -13,15 +13,16 @@ import {
   Form,
   FormGroup,
   Grid,
+  IconArrowBack,
   Label,
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import IconButton from 'components/shared/IconButton';
 import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import GetCedarSystemIdsQuery from 'queries/GetCedarSystemIdsQuery';
@@ -209,19 +210,29 @@ const RequestLinkForm = () => {
         </Breadcrumb>
         <Breadcrumb current>{t('intake:navigation.startRequest')}</Breadcrumb>
       </BreadcrumbBar>
-      <PageHeading>{t('link.header')}</PageHeading>
-      <p>{t('link.description')}</p>
-      <p className="margin-top-1 text-base">
+      <PageHeading className="margin-top-4 margin-bottom-0">
+        {t('link.header')}
+      </PageHeading>
+      <p className="font-body-lg line-height-body-5 text-light margin-y-0">
+        {t('link.description')}
+      </p>
+      <p className="margin-top-2 text-base">
         <Trans
           i18nKey="action:fieldsMarkedRequired"
           components={{ asterisk: <RequiredAsterisk /> }}
         />
       </p>
 
-      <Form className="maxw-full" onSubmit={e => e.preventDefault()}>
+      <Form className="easi-form maxw-full" onSubmit={e => e.preventDefault()}>
         <Grid row>
           <Grid tablet={{ col: 12 }} desktop={{ col: 6 }}>
-            <Fieldset legend={t('link.form.field.systemOrService.label')}>
+            <Fieldset
+              legend={
+                <h4 className="margin-top-0 margin-bottom-1 line-height-heading-2">
+                  {t('link.form.field.systemOrService.label')}
+                </h4>
+              }
+            >
               {/* New system or service */}
               <Radio
                 id="relationType-newSystem"
@@ -397,18 +408,18 @@ const RequestLinkForm = () => {
               }`
             )}
           </Button>
-          <UswdsReactLink
-            variant="unstyled"
-            to={taskListUrl}
-            className="usa-button usa-button--unstyled"
+
+          <Button
+            type="submit"
+            unstyled
+            onClick={() => {
+              history.push(taskListUrl);
+            }}
+            className="usa-button usa-button--unstyled margin-left-1"
           >
             {t('link.form.skip')}
-          </UswdsReactLink>
+          </Button>
         </ButtonGroup>
-
-        <Button type="button" unstyled>
-          {t('link.cancelAndExit')}
-        </Button>
 
         {/* Skip confirm modal */}
         <Modal
@@ -417,7 +428,7 @@ const RequestLinkForm = () => {
           closeModal={() => {}}
         >
           <p>{t('link.skipConfirm.heading')}</p>
-          <ul>
+          <ul className="easi-list">
             <li>{t('link.skipConfirm.list.0')}</li>
             <li>{t('link.skipConfirm.list.1')}</li>
           </ul>
@@ -428,6 +439,17 @@ const RequestLinkForm = () => {
             </Button>
           </ButtonGroup>
         </Modal>
+
+        <IconButton
+          icon={<IconArrowBack className="margin-right-05" />}
+          type="button"
+          unstyled
+          onClick={() => {
+            history.goBack();
+          }}
+        >
+          {t('link.cancelAndExit')}
+        </IconButton>
       </Form>
     </MainContent>
   );
