@@ -201,7 +201,7 @@ const RequestLinkForm = () => {
   );
 
   return (
-    <MainContent className="grid-container margin-bottom-5">
+    <MainContent className="grid-container margin-bottom-15">
       <BreadcrumbBar variant="wrap">
         <Breadcrumb>
           <BreadcrumbLink asCustom={Link} to="/">
