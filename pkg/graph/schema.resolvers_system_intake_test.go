@@ -8,6 +8,7 @@ import (
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -44,7 +45,7 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 					name
 				}
 			}
-		}`, &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("TEST"))
+		}`, &resp, addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	s.NotNil(resp.CreateSystemIntake.ID)
 	s.Equal("Test User", resp.CreateSystemIntake.Requester.Name)
@@ -95,7 +96,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 				}
 				businessNeed
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.Equal(projectName, resp.SystemIntake.RequestName)
@@ -170,7 +171,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("WWWW"))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest("WWWW"))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -192,7 +193,8 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 }
 
 func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() {
-	ctx := context.Background()
+	ctx := s.context
+
 	contracStartMonth := "10"
 	contractStartYear := "2002"
 	contractEndMonth := "08"
@@ -247,7 +249,11 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() 
 					}
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID),
+		&resp,
+		addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()),
+		addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)),
+	)
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -263,7 +269,8 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() 
 }
 
 func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
-	ctx := context.Background()
+	ctx := s.context
+
 	projectName := "My cool project"
 	contractStartDate, _ := time.Parse("2006-1-2", "2002-8-24")
 	contractEndDate, _ := time.Parse("2006-1-2", "2020-10-31")
@@ -314,7 +321,10 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID),
+		&resp,
+		addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()),
+		addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -376,7 +386,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.False(resp.SystemIntake.GovernanceTeams.IsPresent)
@@ -433,7 +443,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 	s.True(resp.SystemIntake.GovernanceTeams.IsPresent)
@@ -506,7 +516,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 					createdAt
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(2, len(resp.SystemIntake.Actions))
 
@@ -1238,8 +1248,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
 }
 
 func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreation() {
-
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
@@ -1273,7 +1282,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 						Month string
 						Year  string
 					}
-					Number string
+					Number []string
 				}
 			}
 		}
@@ -1301,7 +1310,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 					endDate: "2022-02-03T00:00:00Z"
 					hasContract: "HAVE_CONTRACT"
 					startDate: "2021-11-12T00:00:00Z"
-					number: "123456-7890"
+					number: ["123456-7890"]
 				}
 			}) {
 				systemIntake {
@@ -1332,7 +1341,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 					}
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)))
 
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
 
@@ -1350,7 +1359,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 	contract := respIntake.Contract
 	s.Equal(contract.HasContract, "HAVE_CONTRACT")
 	s.Equal(contract.Contractor, "Best Contractor Evar")
-	s.Equal(contract.Number, "123456-7890")
+	s.Contains(contract.Number, "123456-7890")
 
 	startDate := contract.StartDate
 	s.Equal(startDate.Day, "12")
@@ -1366,7 +1375,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 // make sure that for system intakes that haven't had their contract vehicles updated to contract numbers (see EASI-1977),
 // we still return the contract vehicle
 func (s *GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
-	ctx := context.Background()
+	ctx := s.context
 
 	contractVehicle := "Ford"
 
@@ -1381,28 +1390,29 @@ func (s *GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
 		SystemIntake struct {
 			Contract struct {
 				Vehicle *string
-				Number  *string
+				Number  []*string
 			}
 		}
 	}
 
-	s.client.MustPost(fmt.Sprintf(
-		`query {
+	s.client.MustPost(
+		fmt.Sprintf(
+			`query {
 			systemIntake(id: "%s") {
 				contract {
 					vehicle
 					number
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()), addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)))
 
 	s.Equal(contractVehicle, *resp.SystemIntake.Contract.Vehicle)
-	s.Nil(resp.SystemIntake.Contract.Number)
+	s.Empty(resp.SystemIntake.Contract.Number)
 }
 
 // when a system intake has a contract vehicle stored but no contract number, updating the contract number should clear the contract vehicle (see EASI-1977)
 func (s *GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithContractNumber() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:       null.StringFrom("TEST"),
@@ -1416,7 +1426,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithC
 			SystemIntake struct {
 				Contract struct {
 					Vehicle *string
-					Number  *string
+					Number  []string
 				}
 			}
 		}
@@ -1429,7 +1439,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithC
 			updateSystemIntakeContractDetails(input: {
 				id: "%s",
 				contract: {
-					number: "%s"
+					number: ["%s"]
 				}
 			}) {
 				systemIntake {
@@ -1439,9 +1449,9 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithC
 					}
 				}
 			}
-		}`, intake.ID, contractNumber), &resp)
+		}`, intake.ID, contractNumber), &resp, addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)))
 
-	s.Equal(contractNumber, *resp.UpdateSystemIntakeContractDetails.SystemIntake.Contract.Number)
+	s.Contains(resp.UpdateSystemIntakeContractDetails.SystemIntake.Contract.Number, contractNumber)
 	s.Nil(resp.UpdateSystemIntakeContractDetails.SystemIntake.Contract.Vehicle)
 }
 
@@ -1557,7 +1567,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
 }
 
 func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
-	ctx := context.Background()
+	ctx := s.context
 
 	contractStartDate, _ := time.Parse("2006-1-2", "2002-8-24")
 	contractEndDate, _ := time.Parse("2006-1-2", "2020-10-31")
@@ -1592,7 +1602,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 						Year  *string
 					}
 					Vehicle *string
-					Number  *string
+					Number  []*string
 				}
 			}
 		}
@@ -1607,6 +1617,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 					startDate: null
 					hasContract: "NOT_STARTED"
 					endDate: null
+					number: []
 				}
 			}) {
 				systemIntake {
@@ -1629,7 +1640,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 					}
 				}
 			}
-		}`, intake.ID), &resp)
+		}`, intake.ID), &resp, addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)))
 
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
 
@@ -1638,7 +1649,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 	s.Equal(contract.HasContract, "NOT_STARTED")
 	s.Nil(contract.Contractor)
 	s.Nil(contract.Vehicle)
-	s.Nil(contract.Number)
+	s.Empty(contract.Number)
 
 	startDate := contract.StartDate
 	s.Nil(startDate.Day)
@@ -1677,7 +1688,7 @@ func (s *GraphQLTestSuite) TestSubmitIntake() {
 					id
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("TEST"))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	respIntake := resp.SubmitIntake.SystemIntake
 	s.Equal(intake.ID.String(), respIntake.ID)

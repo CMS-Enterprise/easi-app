@@ -36,7 +36,7 @@ export interface SystemIntake_contract {
   hasContract: string | null;
   startDate: SystemIntake_contract_startDate;
   vehicle: string | null;
-  number: string | null;
+  number: string[];
 }
 
 export interface SystemIntake_costs {

@@ -8513,7 +8513,7 @@ type SystemIntakeContract {
   hasContract: String
   startDate: ContractDate!
   vehicle: String
-  number: String
+  number: [String!]!
 }
 
 """
@@ -8894,7 +8894,7 @@ input SystemIntakeContractInput {
   endDate: Time
   hasContract: String
   startDate: Time
-  number: String
+  number: [String!]!
 }
 
 """
@@ -41584,11 +41584,14 @@ func (ec *executionContext) _SystemIntakeContract_number(ctx context.Context, fi
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.([]string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeContract_number(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -56038,7 +56041,7 @@ func (ec *executionContext) unmarshalInputSystemIntakeContractInput(ctx context.
 			it.StartDate = data
 		case "number":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("number"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -67347,6 +67350,9 @@ func (ec *executionContext) _SystemIntakeContract(ctx context.Context, sel ast.S
 			out.Values[i] = ec._SystemIntakeContract_vehicle(ctx, field, obj)
 		case "number":
 			out.Values[i] = ec._SystemIntakeContract_number(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

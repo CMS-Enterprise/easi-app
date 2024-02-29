@@ -52,7 +52,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   contract: {
     hasContract: '',
     contractor: '',
-    number: '',
+    number: [],
     startDate: {
       month: '',
       day: '',
@@ -203,7 +203,7 @@ export const prepareSystemIntakeForApp = (
     contract: {
       hasContract: systemIntake.existingContract || '',
       contractor: systemIntake.contractor || '',
-      number: systemIntake.contractNumber || '',
+      number: systemIntake.contractNumber || [],
       startDate: {
         month: contractStartDate.month
           ? contractStartDate.month.toString()
@@ -321,7 +321,7 @@ export const isIntakeStarted = (intake: SystemIntake | SystemIntakeForm) => {
     intake.annualSpending?.plannedYearOneSpending ||
     intake.contract.hasContract ||
     intake.contract.contractor ||
-    intake.contract.number ||
+    intake.contract.number.length > 0 ||
     intake.contract.startDate.month ||
     intake.contract.startDate.year ||
     intake.contract.endDate.month ||

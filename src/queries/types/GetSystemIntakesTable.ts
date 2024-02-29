@@ -58,7 +58,7 @@ export interface GetSystemIntakesTable_systemIntakes_contract {
   __typename: "SystemIntakeContract";
   hasContract: string | null;
   contractor: string | null;
-  number: string | null;
+  number: string[];
   vehicle: string | null;
   startDate: GetSystemIntakesTable_systemIntakes_contract_startDate;
   endDate: GetSystemIntakesTable_systemIntakes_contract_endDate;

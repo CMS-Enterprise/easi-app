@@ -48,7 +48,7 @@ export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDet
   endDate: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_endDate;
   hasContract: string | null;
   startDate: UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake_contract_startDate;
-  number: string | null;
+  number: string[];
 }
 
 export interface UpdateSystemIntakeContractDetails_updateSystemIntakeContractDetails_systemIntake {

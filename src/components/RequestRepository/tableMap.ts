@@ -25,7 +25,7 @@ export interface SystemIntakeForTable
   contract: {
     hasContract: string | null;
     contractor: string | null;
-    number: string | null;
+    number: string[];
     vehicle: string | null;
     /** Contract start date converted to string */
     startDate: string;

@@ -2479,13 +2479,24 @@ func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemI
 		contractStart.Year = &yearStr
 	}
 
+	// retrieve contract numbers
+	contractNumbers, err := resolvers.SystemIntakeContractNumbers(ctx, obj.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	numbers := make([]string, len(contractNumbers))
+	for i := range numbers {
+		numbers[i] = contractNumbers[i].ContractNumber
+	}
+
 	return &model.SystemIntakeContract{
 		Contractor:  obj.Contractor.Ptr(),
 		EndDate:     &contractEnd,
 		HasContract: obj.ExistingContract.Ptr(),
 		StartDate:   &contractStart,
 		Vehicle:     obj.ContractVehicle.Ptr(),
-		Number:      obj.ContractNumber.Ptr(),
+		Number:      numbers,
 	}, nil
 }
 

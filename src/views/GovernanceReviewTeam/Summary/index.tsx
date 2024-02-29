@@ -42,7 +42,7 @@ type RequestSummaryProps = {
   adminLead: string | null;
   submittedAt: string | null;
   lcid: string | null;
-  contractNumber: string | null;
+  contractNumber: string[];
   state: SystemIntakeState;
 };
 
@@ -55,7 +55,7 @@ const RequestSummary = ({
   adminLead,
   submittedAt,
   lcid,
-  contractNumber,
+  contractNumber = [],
   state
 }: RequestSummaryProps) => {
   const { t } = useTranslation('governanceReviewTeam');
@@ -166,7 +166,9 @@ const RequestSummary = ({
                 {t('intake:review.contractNumber')}
               </h5>
               <h4 className="margin-top-05 margin-bottom-2">
-                {contractNumber || t('intake:review.noContractNumber')}
+                {/* TODO: (Sam) review */}
+                {contractNumber.map(num => num) ||
+                  t('intake:review.noContractNumber')}
               </h4>
             </Grid>
 

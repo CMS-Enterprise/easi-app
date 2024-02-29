@@ -611,7 +611,7 @@ type SystemIntakeContract struct {
 	HasContract *string       `json:"hasContract,omitempty"`
 	StartDate   *ContractDate `json:"startDate"`
 	Vehicle     *string       `json:"vehicle,omitempty"`
-	Number      *string       `json:"number,omitempty"`
+	Number      []string      `json:"number"`
 }
 
 // Input data containing information about a contract related to a system request
@@ -620,7 +620,7 @@ type SystemIntakeContractInput struct {
 	EndDate     *time.Time `json:"endDate,omitempty"`
 	HasContract *string    `json:"hasContract,omitempty"`
 	StartDate   *time.Time `json:"startDate,omitempty"`
-	Number      *string    `json:"number,omitempty"`
+	Number      []string   `json:"number"`
 }
 
 // Represents expectations about a system's additional costs

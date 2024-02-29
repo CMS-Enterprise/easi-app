@@ -85,7 +85,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         month: contract.startDate.month || '',
         year: contract.startDate.year || ''
       },
-      number: contract.number || ''
+      number: contract.number || []
     }
   };
 

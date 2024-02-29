@@ -23,7 +23,9 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
@@ -41,6 +43,7 @@ type GraphQLTestSuite struct {
 	client   *client.Client
 	s3Client *mockS3Client
 	resolver *Resolver
+	context  context.Context
 }
 
 func (s *GraphQLTestSuite) BeforeTest() {
@@ -173,7 +176,12 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})
-	graphQLClient := client.New(handler.NewDefaultServer(schema))
+	graphQLClient := client.New(
+		handler.NewDefaultServer(schema),
+	)
+
+	ctx := context.Background()
+	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
 
 	storeTestSuite := &GraphQLTestSuite{
 		Suite:    suite.Suite{},
@@ -182,7 +190,36 @@ func TestGraphQLTestSuite(t *testing.T) {
 		client:   graphQLClient,
 		s3Client: &mockClient,
 		resolver: resolver,
+		context:  ctx,
 	}
 
 	suite.Run(t, storeTestSuite)
+}
+
+// addDataLoadersToGraphQLClientTest adds all dataloaders into the test context for use in tests
+func addDataLoadersToGraphQLClientTest(loaders *dataloaders.DataLoaders) func(*client.Request) {
+	return func(request *client.Request) {
+		ctx := request.HTTP.Context()
+		ctx = dataloaders.CTXWithLoaders(ctx, loaders)
+		request.HTTP = request.HTTP.WithContext(ctx)
+	}
+}
+
+// addAuthPrincipalToGraphQLClientTest returns a function to add an auth principal to a graphql client test
+func addAuthPrincipalToGraphQLClientTest(principal authentication.EUAPrincipal) func(*client.Request) {
+	return func(request *client.Request) {
+		ctx := appcontext.WithPrincipal(context.Background(), &principal)
+		request.HTTP = request.HTTP.WithContext(ctx)
+	}
+}
+
+// addAuthWithAllJobCodesToGraphQLClientTest adds authentication for all job codes
+func addAuthWithAllJobCodesToGraphQLClientTest(euaID string) func(*client.Request) {
+	return addAuthPrincipalToGraphQLClientTest(authentication.EUAPrincipal{
+		EUAID:            euaID,
+		JobCodeEASi:      true,
+		JobCodeGRT:       true,
+		JobCode508User:   true,
+		JobCode508Tester: true,
+	})
 }

@@ -904,7 +904,7 @@ export interface SystemIntakeContractInput {
   endDate?: Time | null;
   hasContract?: string | null;
   startDate?: Time | null;
-  number?: string | null;
+  number: string[];
 }
 
 /**

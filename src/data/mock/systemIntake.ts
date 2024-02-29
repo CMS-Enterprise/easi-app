@@ -203,7 +203,7 @@ export const emptySystemIntake: SystemIntake = {
     hasContract: null,
     contractor: null,
     vehicle: null,
-    number: null,
+    number: [],
     startDate: {
       __typename: 'ContractDate',
       month: null,
@@ -302,7 +302,7 @@ export const systemIntake: SystemIntake = {
     hasContract: 'IN_PROGRESS',
     contractor: 'TrussWorks, Inc.',
     vehicle: 'Sole Source',
-    number: '123456-7890',
+    number: ['123456-7890'],
     startDate: {
       __typename: 'ContractDate',
       month: '1',
@@ -374,7 +374,7 @@ export const initialSystemIntakeForm: SystemIntake = {
     __typename: 'SystemIntakeContract',
     hasContract: '',
     contractor: '',
-    number: '',
+    number: [],
     vehicle: '',
     startDate: {
       __typename: 'ContractDate',
