@@ -73,7 +73,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		CostIncreaseAmount:          si.CostIncreaseAmount.Ptr(),
 		Contractor:                  si.Contractor.Ptr(),
 		ContractVehicle:             si.ContractVehicle.Ptr(),
-		ContractNumber:              si.ContractNumber.Ptr(),
+		ContractNumber:              helpers.PointerTo(""), // TODO: populate with linked contract numbers?
 		RequesterEmailAddress:       si.RequesterEmailAddress.Ptr(),
 		LifecycleID:                 si.LifecycleID.Ptr(),
 		LifecycleScope:              si.LifecycleScope.StringPointer(),
