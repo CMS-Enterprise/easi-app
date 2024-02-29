@@ -98,7 +98,7 @@ const RequestLinkForm = () => {
   // Ref fields for some form behavior
   const fields = watch();
 
-  // This form uses bare minimum validation
+  // This form doesn't use validation
   // The submission button is disabled according to required fields
   // console.log('watch fields', fields);
   const submitEnabled = (() => {
@@ -129,9 +129,12 @@ const RequestLinkForm = () => {
 
       // Otherwise do some field parsing and correlate `relation` to mutation
 
+      // Parse contract numbers from csv text input to string[]
+      // Make sure an empty string input is sent as an empty list
       const contractNumbers = data.contractNumbers
         .split(',')
-        .map((v: string) => v.trim());
+        .map(v => v.trim())
+        .filter(v => v !== '');
 
       let p: Promise<any> | undefined;
 
