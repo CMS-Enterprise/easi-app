@@ -12,25 +12,9 @@ SELECT
     gen_random_uuid(),
     si.id,
     si.contract_number,
-    (SELECT
-        CASE
-            WHEN
-                si.eua_user_id IS NULL
-            THEN
-                '00000001-0001-0001-0001-000000000001' -- EASI SYSTEM USER
-            ELSE
-                (SELECT ua.id FROM user_account ua WHERE ua.username = si.eua_user_id)
-	    END),
+    '00000001-0001-0001-0001-000000000001',
     si.created_at,
-    (SELECT
-        CASE
-            WHEN
-                si.eua_user_id IS NULL
-            THEN
-                '00000001-0001-0001-0001-000000000001' -- EASI SYSTEM USER
-            ELSE
-                (SELECT ua.id FROM user_account ua WHERE ua.username = si.eua_user_id)
-        END),
+    '00000001-0001-0001-0001-000000000001',
     si.updated_at
 FROM system_intakes si
 WHERE si.contract_number IS NOT NULL
