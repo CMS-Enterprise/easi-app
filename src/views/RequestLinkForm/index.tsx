@@ -182,6 +182,8 @@ const RequestLinkForm = () => {
     }
   );
 
+  const [isSkipModalOpen, setSkipModalOpen] = useState<boolean>(false);
+
   return (
     <MainContent className="grid-container margin-bottom-15">
       <BreadcrumbBar variant="wrap">
@@ -394,10 +396,8 @@ const RequestLinkForm = () => {
           <Button
             type="submit"
             unstyled
-            onClick={() => {
-              history.push(taskListUrl);
-            }}
-            className="usa-button usa-button--unstyled margin-left-1"
+            onClick={() => setSkipModalOpen(true)}
+            className="margin-left-1"
           >
             {t('link.form.skip')}
           </Button>
@@ -405,18 +405,27 @@ const RequestLinkForm = () => {
 
         {/* Skip confirm modal */}
         <Modal
-          title={t('link.skipConfirm.heading')}
-          isOpen={false}
-          closeModal={() => {}}
+          isOpen={isSkipModalOpen}
+          closeModal={() => setSkipModalOpen(false)}
         >
-          <p>{t('link.skipConfirm.heading')}</p>
-          <ul className="easi-list">
+          <h2 className="usa-modal__heading margin-bottom-2">
+            {t('link.skipConfirm.heading')}
+          </h2>
+          <p className="margin-y-0">{t('link.skipConfirm.text')}</p>
+          <ul className="easi-list margin-top-0">
             <li>{t('link.skipConfirm.list.0')}</li>
             <li>{t('link.skipConfirm.list.1')}</li>
           </ul>
-          <ButtonGroup>
-            <Button type="button">{t('link.skipConfirm.submit')}</Button>
-            <Button type="button" unstyled>
+          <ButtonGroup className="margin-top-3">
+            <Button type="button" onClick={() => history.push(taskListUrl)}>
+              {t('link.skipConfirm.submit')}
+            </Button>
+            <Button
+              type="button"
+              unstyled
+              className="margin-left-1"
+              onClick={() => setSkipModalOpen(false)}
+            >
               {t('link.skipConfirm.cancel')}
             </Button>
           </ButtonGroup>
