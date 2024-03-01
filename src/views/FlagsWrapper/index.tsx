@@ -44,7 +44,8 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             technicalAssistance: true,
             hide508Workflow: true,
             portfolioUpdateReport: false,
-            itgovLinkRequestsRequester: false
+            itgovLinkRequestsRequester: false,
+            trbLinkRequestsRequester: false
           }
         });
 
