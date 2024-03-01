@@ -12,9 +12,9 @@ SELECT
     gen_random_uuid(),
     si.id,
     si.contract_number,
-    '00000001-0001-0001-0001-000000000001',
+    '00000001-0001-0001-0001-000000000001', -- EASI SYSTEM USER
     si.created_at,
-    '00000001-0001-0001-0001-000000000001',
+    '00000001-0001-0001-0001-000000000001', -- EASI SYSTEM USER
     si.updated_at
 FROM system_intakes si
 WHERE si.contract_number IS NOT NULL
