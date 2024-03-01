@@ -454,7 +454,7 @@ const RequestLinkForm = () => {
             history.goBack();
           }}
         >
-          {t('link.cancelAndExit')}
+          Back
         </IconButton>
       </Form>
     </MainContent>
