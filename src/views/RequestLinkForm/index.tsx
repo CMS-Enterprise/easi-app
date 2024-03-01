@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
@@ -22,6 +22,7 @@ import {
 import MainContent from 'components/MainContent';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import IconButton from 'components/shared/IconButton';
 import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
@@ -54,7 +55,7 @@ const RequestLinkForm = () => {
   }>();
   const history = useHistory();
 
-  const { t } = useTranslation(['itGov', 'intake', 'action']);
+  const { t } = useTranslation(['itGov', 'intake', 'action', 'error']);
 
   const { data: cedarSystemsData } = useQuery<GetCedarSystemIds>(
     GetCedarSystemIdsQuery
@@ -68,17 +69,26 @@ const RequestLinkForm = () => {
     }));
   }, [cedarSystemsData]);
 
-  const [setSystemIntakeRelationNewSystem] = useMutation<
+  const [
+    setSystemIntakeRelationNewSystem,
+    { error: newSystemError }
+  ] = useMutation<
     SetSystemIntakeRelationNewSystem,
     SetSystemIntakeRelationNewSystemVariables
   >(SetSystemIntakeRelationNewSystemQuery);
 
-  const [setSystemIntakeRelationExistingSystem] = useMutation<
+  const [
+    setSystemIntakeRelationExistingSystem,
+    { error: existingSystemError }
+  ] = useMutation<
     SetSystemIntakeRelationExistingSystem,
     SetSystemIntakeRelationExistingSystemVariables
   >(SetSystemIntakeRelationExistingSystemQuery);
 
-  const [setSystemIntakeRelationExistingService] = useMutation<
+  const [
+    setSystemIntakeRelationExistingService,
+    { error: existingServiceError }
+  ] = useMutation<
     SetSystemIntakeRelationExistingService,
     SetSystemIntakeRelationExistingServiceVariables
   >(SetSystemIntakeRelationExistingServiceQuery);
@@ -169,15 +179,34 @@ const RequestLinkForm = () => {
       });
     }
 
-    p?.then(() => {
-      history.push(taskListUrl);
-    });
+    p?.then(
+      () => {
+        history.push(taskListUrl);
+      },
+      () => {}
+    );
   });
+
+  // Error feedback
+  const hasErrors =
+    existingServiceError || existingSystemError || newSystemError;
+
+  useEffect(() => {
+    if (hasErrors) {
+      const err = document.getElementById('link-form-error');
+      err?.scrollIntoView();
+    }
+  }, [hasErrors]);
 
   const [isSkipModalOpen, setSkipModalOpen] = useState<boolean>(false);
 
   return (
     <MainContent className="grid-container margin-bottom-15">
+      {hasErrors && (
+        <Alert id="link-form-error" type="error" slim className="margin-top-2">
+          {t('error:encounteredIssueTryAgain')}
+        </Alert>
+      )}
       <BreadcrumbBar variant="wrap">
         <Breadcrumb>
           <BreadcrumbLink asCustom={Link} to="/">
