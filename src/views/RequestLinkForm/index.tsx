@@ -87,7 +87,11 @@ const RequestLinkForm = () => {
 
   const taskListUrl = `/governance-task-list/${systemId}`;
 
-  const { control, watch, handleSubmit } = useForm({
+  const { control, watch, handleSubmit } = useForm<{
+    cedarSystemIDs: string[];
+    contractNumbers: string;
+    contractName: string;
+  }>({
     defaultValues: {
       cedarSystemIDs: [],
       contractNumbers: '',
