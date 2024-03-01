@@ -120,6 +120,7 @@ const intake = {
     contractVehicle: 'Contract Vehicle',
     contractStart: 'Period of Performance Start',
     contractEnd: 'Period of Performance End',
+    contractNumber: 'Contract number',
     status: 'Status',
     lcidScope: 'LCID Scope',
     lastAdminNote: 'Last Admin Team Note',
