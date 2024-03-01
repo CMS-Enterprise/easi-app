@@ -17,5 +17,3 @@ export const initialContactsObject: FormattedContacts = {
   isso: { ...initialContactDetails, role: 'ISSO' },
   additionalContacts: []
 };
-
-export const RELATION = true;

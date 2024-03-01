@@ -7,16 +7,17 @@ import {
   BreadcrumbLink,
   IconNavigateBefore
 } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import GovernanceOverviewContent from 'components/GovernanceOverview';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
-import { RELATION } from 'constants/systemIntake';
 
 import './index.scss';
 
 const GovernanceOverview = () => {
+  const flags = useFlags();
   const { t } = useTranslation('governanceOverview');
   const { systemId } = useParams<{
     systemId: string;
@@ -56,7 +57,7 @@ const GovernanceOverview = () => {
           className="usa-button margin-bottom-5"
           variant="unstyled"
           to={
-            RELATION
+            flags.itgovLinkRequestsRequester
               ? `/system/link/${systemId}`
               : `/governance-task-list/${systemId}`
           }

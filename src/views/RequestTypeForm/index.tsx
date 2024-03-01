@@ -10,6 +10,7 @@ import {
   Button
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -17,12 +18,12 @@ import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import { RadioField } from 'components/shared/RadioField';
-import { RELATION } from 'constants/systemIntake';
 import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 const RequestTypeForm = () => {
+  const flags = useFlags();
   const { t } = useTranslation('intake');
   const { oktaAuth } = useOktaAuth();
   const history = useHistory();
@@ -48,7 +49,7 @@ const RequestTypeForm = () => {
       mutate({ variables: { input } }).then(response => {
         if (!response.errors) {
           const { id } = response.data.createSystemIntake;
-          const navigationLink = RELATION
+          const navigationLink = flags.itgovLinkRequestsRequester
             ? `/system/link/${id}`
             : `/governance-task-list/${id}`;
 
