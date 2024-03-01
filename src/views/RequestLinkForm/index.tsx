@@ -104,7 +104,6 @@ const RequestLinkForm = () => {
 
   // This form doesn't use validation
   // The submission button is disabled according to required fields
-  // console.log('watch fields', fields);
   const submitEnabled = (() => {
     if (relation === null) return false;
 
@@ -120,67 +119,60 @@ const RequestLinkForm = () => {
     return false;
   })();
 
-  const submit = handleSubmit(
-    data => {
-      // console.log('submit', data);
-
-      // The new system relation form is entirely optional
-      // If it's empty then just treat this submit handler as a link
-      if (relation === 'newSystem' && data.contractNumbers.trim() === '') {
-        history.push(taskListUrl);
-        return;
-      }
-
-      // Otherwise do some field parsing and correlate `relation` to mutation
-
-      // Parse contract numbers from csv text input to string[]
-      // Make sure an empty string input is sent as an empty list
-      const contractNumbers = data.contractNumbers
-        .split(',')
-        .map(v => v.trim())
-        .filter(v => v !== '');
-
-      let p: Promise<any> | undefined;
-
-      if (relation === 'newSystem') {
-        p = setSystemIntakeRelationNewSystem({
-          variables: {
-            input: {
-              systemIntakeID: systemId,
-              contractNumbers
-            }
-          }
-        });
-      } else if (relation === 'existingSystem') {
-        p = setSystemIntakeRelationExistingSystem({
-          variables: {
-            input: {
-              systemIntakeID: systemId,
-              cedarSystemIDs: data.cedarSystemIDs,
-              contractNumbers
-            }
-          }
-        });
-      } else if (relation === 'existingService') {
-        p = setSystemIntakeRelationExistingService({
-          variables: {
-            input: {
-              systemIntakeID: systemId,
-              contractName: data.contractName,
-              contractNumbers
-            }
-          }
-        });
-      }
-
-      p?.then(() => {
-        history.push(taskListUrl);
-      });
-    },
-    e => {
-      // console.log('submit error', e);
+  const submit = handleSubmit(data => {
+    // The new system relation form is entirely optional
+    // If it's empty then just treat this submit handler as a link
+    if (relation === 'newSystem' && data.contractNumbers.trim() === '') {
+      history.push(taskListUrl);
+      return;
     }
-  );
+
+    // Otherwise do some field parsing and correlate `relation` to mutation
+
+    // Parse contract numbers from csv text input to string[]
+    // Make sure an empty string input is sent as an empty list
+    const contractNumbers = data.contractNumbers
+      .split(',')
+      .map(v => v.trim())
+      .filter(v => v !== '');
+
+    let p: Promise<any> | undefined;
+
+    if (relation === 'newSystem') {
+      p = setSystemIntakeRelationNewSystem({
+        variables: {
+          input: {
+            systemIntakeID: systemId,
+            contractNumbers
+          }
+        }
+      });
+    } else if (relation === 'existingSystem') {
+      p = setSystemIntakeRelationExistingSystem({
+        variables: {
+          input: {
+            systemIntakeID: systemId,
+            cedarSystemIDs: data.cedarSystemIDs,
+            contractNumbers
+          }
+        }
+      });
+    } else if (relation === 'existingService') {
+      p = setSystemIntakeRelationExistingService({
+        variables: {
+          input: {
+            systemIntakeID: systemId,
+            contractName: data.contractName,
+            contractNumbers
+          }
+        }
+      });
+    }
+
+    p?.then(() => {
+      history.push(taskListUrl);
+    });
+  });
 
   const [isSkipModalOpen, setSkipModalOpen] = useState<boolean>(false);
 
@@ -281,10 +273,7 @@ const RequestLinkForm = () => {
                             'link.form.field.cmsSystem.selectedLabel'
                           )}
                           options={cedarSystemIdOptions}
-                          onChange={values => {
-                            // console.log('values', values);
-                            field.onChange(values);
-                          }}
+                          onChange={values => field.onChange(values)}
                         />
                       </FormGroup>
                     )}
@@ -381,10 +370,7 @@ const RequestLinkForm = () => {
           <Button
             type="submit"
             disabled={!submitEnabled}
-            onClick={() => {
-              // console.log('values', watch());
-              submit();
-            }}
+            onClick={() => submit()}
           >
             {t(
               `link.form.${
