@@ -232,10 +232,6 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 			// set the fields to the values we receive
 			intake.ExistingContract = null.StringFromPtr(input.Contract.HasContract)
 			intake.Contractor = null.StringFromPtr(input.Contract.Contractor)
-			// intake.ContractNumber = null.StringFromPtr(input.Contract.Number)
-
-			// set contract numbers here
-
 			intake.ContractVehicle = null.StringFromPtr(nil) // blank this out in favor of the newer ContractNumber field (see EASI-1977)
 
 			if input.Contract.StartDate != nil {
