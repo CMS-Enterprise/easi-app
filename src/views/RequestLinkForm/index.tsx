@@ -301,6 +301,7 @@ const RequestLinkForm = () => {
                           selectedLabel={t(
                             'link.form.field.cmsSystem.selectedLabel'
                           )}
+                          initialValues={field.value}
                           options={cedarSystemIdOptions}
                           onChange={values => field.onChange(values)}
                         />
