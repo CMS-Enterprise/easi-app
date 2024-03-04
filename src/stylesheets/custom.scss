@@ -92,6 +92,15 @@
 // Use this style adjacent to `.usa-form`
 // Copied from TechnicalAssistance/index .technical-assistance .usa-form
 .easi-form.usa-form {
+  /* These input types and containers expand to their container width */
+  .usa-input,
+  .usa-textarea,
+  .usa-combo-box,
+  .usa-file-input,
+  .usa-legend {
+    max-width: 100%;
+  }
+
   /* Top margin for 1st level form groups */
   > .usa-form-group {
     margin-top: 2rem;
@@ -130,13 +139,7 @@
       margin-top: 0;
     }
 
-    /* These input types and containers expand to their container width */
-    .usa-input,
-    .usa-textarea,
-    .usa-combo-box,
-    .usa-file-input {
-      max-width: 100%;
-    }
+
 
     /* Textarea max height */
     .usa-textarea {
