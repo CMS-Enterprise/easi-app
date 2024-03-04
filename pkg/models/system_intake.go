@@ -96,6 +96,7 @@ type SystemIntake struct {
 	PlannedYearOneSpendingITPortion null.String                  `json:"plannedYearOneSpendingITPortion" db:"planned_year_one_spending_it_portion"`
 	Contractor                      null.String                  `json:"contractor" db:"contractor"`
 	ContractVehicle                 null.String                  `json:"contractVehicle" db:"contract_vehicle"`
+	ContractNumber                  null.String                  `json:"contractNumber" db:"contract_number"` // replaces contract vehicle - see EASI-1977
 	ContractStartDate               *time.Time                   `json:"contractStartDate" db:"contract_start_date"`
 	ContractStartMonth              null.String                  `json:"contractStartMonth" db:"contract_start_month"`
 	ContractStartYear               null.String                  `json:"contractStartYear" db:"contract_start_year"`

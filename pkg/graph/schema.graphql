@@ -1273,7 +1273,7 @@ Input data for updating a system intake's relationship to a contract
 """
 input UpdateSystemIntakeLinkedContractInput {
   id: UUID!
-  contractNumber: [String!]!
+  contractNumber: String
 }
 
 """

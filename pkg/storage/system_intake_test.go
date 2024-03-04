@@ -778,6 +778,41 @@ func (s *StoreTestSuite) TestUpdateReviewDates() {
 	})
 }
 
+func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedContract() {
+	ctx := context.Background()
+
+	s.Run("update linked contract number", func() {
+		intake := testhelpers.NewSystemIntake()
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		contractNumber := null.StringFrom("555-55-5")
+		updatedIntake, err := s.store.UpdateSystemIntakeLinkedContract(ctx, intake.ID, contractNumber)
+
+		s.NoError(err)
+		s.Equal(updatedIntake.ContractNumber, contractNumber)
+	})
+
+	s.Run("update linked contract number to null", func() {
+		intake := testhelpers.NewSystemIntake()
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		var contractNumber *string
+		updatedIntake, err := s.store.UpdateSystemIntakeLinkedContract(ctx, intake.ID, null.StringFromPtr(contractNumber))
+
+		s.NoError(err)
+		s.False(updatedIntake.ContractNumber.Valid)
+	})
+}
 func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
 	ctx := context.Background()
 

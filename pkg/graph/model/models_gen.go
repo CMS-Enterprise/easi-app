@@ -952,7 +952,7 @@ type UpdateSystemIntakeLinkedCedarSystemInput struct {
 // Input data for updating a system intake's relationship to a contract
 type UpdateSystemIntakeLinkedContractInput struct {
 	ID             uuid.UUID `json:"id"`
-	ContractNumber []string  `json:"contractNumber"`
+	ContractNumber *string   `json:"contractNumber,omitempty"`
 }
 
 // Input data for updating an IT governance admin note

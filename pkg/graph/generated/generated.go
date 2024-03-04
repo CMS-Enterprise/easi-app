@@ -8927,7 +8927,7 @@ Input data for updating a system intake's relationship to a contract
 """
 input UpdateSystemIntakeLinkedContractInput {
   id: UUID!
-  contractNumber: [String!]!
+  contractNumber: String
 }
 
 """
@@ -57078,7 +57078,7 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeLinkedContractInput(
 			it.ID = data
 		case "contractNumber":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contractNumber"))
-			data, err := ec.unmarshalNString2ᚕstringᚄ(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
