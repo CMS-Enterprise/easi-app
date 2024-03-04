@@ -627,7 +627,7 @@ func main() {
 	makeSystemIntakeAndSubmit("Closable Request", &intakeID, requesterEUA, logger, store)
 
 	intakeID = uuid.MustParse("38e46d77-e474-4d15-a7c0-f6411221e2a4")
-	intake = makeSystemIntakeAndSubmit("Intake with no contract vehicle or number", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndSubmit("Intake with no contract vehicle", &intakeID, requesterEUA, logger, store)
 	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
 		i.ContractVehicle = null.StringFromPtr(nil)
 	})
