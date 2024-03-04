@@ -221,7 +221,7 @@ const RequestLinkForm = () => {
       <p className="font-body-lg line-height-body-5 text-light margin-y-0">
         {t('link.description')}
       </p>
-      <p className="margin-top-2 text-base">
+      <p className="margin-top-2 margin-bottom-5 text-base">
         <Trans
           i18nKey="action:fieldsMarkedRequired"
           components={{ asterisk: <RequiredAsterisk /> }}
@@ -252,7 +252,7 @@ const RequestLinkForm = () => {
                   name="contractNumbers"
                   control={control}
                   render={({ field, fieldState: { error } }) => (
-                    <FormGroup error={!!error}>
+                    <FormGroup className="margin-left-4" error={!!error}>
                       <Label
                         htmlFor="contractNumber"
                         hint={t('link.form.field.contractNumberNew.help')}
@@ -282,7 +282,7 @@ const RequestLinkForm = () => {
               />
 
               {relation === 'existingSystem' && (
-                <>
+                <div className="margin-left-4">
                   <Controller
                     name="cedarSystemIDs"
                     control={control}
@@ -332,7 +332,7 @@ const RequestLinkForm = () => {
                       </FormGroup>
                     )}
                   />
-                </>
+                </div>
               )}
 
               {/* Existing service or contract */}
@@ -344,7 +344,7 @@ const RequestLinkForm = () => {
                 onClick={() => setRelation('existingService')}
               />
               {relation === 'existingService' && (
-                <>
+                <div className="margin-left-4">
                   <Controller
                     name="contractName"
                     control={control}
@@ -389,7 +389,7 @@ const RequestLinkForm = () => {
                       </FormGroup>
                     )}
                   />
-                </>
+                </div>
               )}
             </Fieldset>
           </Grid>

@@ -48,7 +48,7 @@ exports[`IT Gov Request relation link form > renders 1`] = `
       If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, service, or contract (such as a major change based on a new business need or the creation of a new sub-system) please include additional details below.
     </p>
     <p
-      class="margin-top-2 text-base"
+      class="margin-top-2 margin-bottom-5 text-base"
     >
       Fields marked with an asterisk (
       <span

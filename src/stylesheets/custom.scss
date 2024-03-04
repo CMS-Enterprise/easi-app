@@ -167,6 +167,15 @@
     }
   }
 
+  /* Nested form groups within field sets */
+  .usa-fieldset {
+    .usa-form-group {
+      margin-top: .5rem;
+    }
+    .usa-form-group + .usa-form-group {
+      margin-top: 1rem;
+    }
+  }
 }
 
 // The default font for this project should be Public Sans
