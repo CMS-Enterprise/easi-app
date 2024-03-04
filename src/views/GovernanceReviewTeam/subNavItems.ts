@@ -33,6 +33,12 @@ const subNavItems = (systemId: string): SubNavItems => [
     text: 'decision.title',
     aria: 'aria.openDecision'
   },
+  // TODO: Add LD flag around sub nav item
+  {
+    route: `/governance-review-team/${systemId}/additional-information`,
+    text: 'additionalInformation.title',
+    aria: 'aria.openAdditionalInformation'
+  },
   {
     route: `/governance-review-team/${systemId}/lcid`,
     text: 'lifecycleID.title',

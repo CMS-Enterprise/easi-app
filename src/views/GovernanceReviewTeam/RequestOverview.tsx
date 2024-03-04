@@ -21,6 +21,7 @@ import NotFound from 'views/NotFound';
 
 import AccordionNavigation from './AccordionNavigation';
 import Actions from './Actions';
+import AdditionalInformation from './AdditionalInformation';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
@@ -205,6 +206,15 @@ const RequestOverview = () => {
                 path="/governance-review-team/:systemId/decision"
                 render={() => <Decision {...systemIntake} />}
               />
+
+              {/* TODO: Add LD flag around route */}
+              <Route
+                path="/governance-review-team/:systemId/additional-information"
+                render={() => (
+                  <AdditionalInformation systemIntake={systemIntake} />
+                )}
+              />
+
               <Route
                 path="/governance-review-team/:systemId/lcid"
                 render={() => <LifecycleID systemIntake={systemIntake} />}
