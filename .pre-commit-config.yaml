@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.5.0
     hooks:
       - id: check-yaml
         name: Check YAML formatting
@@ -31,7 +31,7 @@ repos:
           )$
 
   - repo: https://github.com/Bahjat/pre-commit-golang
-    rev: v1.0.1
+    rev: v1.0.3
     hooks:
       - id: go-fmt-import
         name: Run "goimports" on go files
@@ -45,7 +45,7 @@ repos:
           )$
 
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.54.2
+    rev: v1.56.2
     hooks:
       - id: golangci-lint
         name: Lint go files
