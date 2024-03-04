@@ -101,75 +101,64 @@
     max-width: 100%;
   }
 
+  /* Labels and legends */
+  legend {
+    font-weight: 700;
+  }
+  .usa-legend {
+    margin-bottom: 0;
+  }
+  .usa-label {
+    max-width: none;
+    margin-bottom: .5rem;
+    .usa-hint {
+      display: block; /* line break between label and hint */
+      font-weight: normal;
+      margin-top: .25rem;
+    }
+  }
+
+  /* Radio & checkbox label spacing */
+  .usa-radio__label,
+  .usa-checkbox__label {
+    margin-top: .75rem;
+    letter-spacing: -.01em;
+
+  }
+  .easi-multiselect .usa-checkbox__label {
+    margin-top: 0;
+  }
+
+  /* Textarea max height */
+  .usa-textarea {
+    max-height: 155px;
+  }
+
+  /* Datepicker has extra margin space to remove */
+  .usa-date-picker {
+    .usa-date-picker__external-input,
+    .usa-date-picker__button {
+      margin-top: 0;
+    }
+  }
+
+  /* Timepicker has an extra form-group wrapper with space to remove */
+  > .usa-form-group:has(> .usa-time-picker) {
+    margin-top: 0;
+  }
+  /* The Timepicker component generates its own label; remove it */
+  > .usa-form-group > .usa-label:has(+ .usa-time-picker) {
+    display: none;
+  }
+
   /* Top margin for 1st level form groups */
   > .usa-form-group {
     margin-top: 2rem;
-
   }
   .usa-form-group {
     /* Smaller top margin for nested form groups */
     .usa-fieldset .usa-form-group {
       margin-top: .5rem;
-    }
-
-    /* Labels and legends */
-    legend {
-      font-weight: 700;
-    }
-    .usa-legend {
-      margin-bottom: 0;
-    }
-    .usa-label {
-      max-width: none;
-      margin-bottom: .5rem;
-      .usa-hint {
-        display: block; /* line break between label and hint */
-        font-weight: normal;
-        margin-top: .25rem;
-      }
-    }
-    /* Radio & checkbox label spacing */
-    .usa-radio__label,
-    .usa-checkbox__label {
-      margin-top: .75rem;
-      letter-spacing: -.01em;
-
-    }
-    .easi-multiselect .usa-checkbox__label {
-      margin-top: 0;
-    }
-
-
-
-    /* Textarea max height */
-    .usa-textarea {
-      max-height: 155px;
-    }
-
-    /* Datepicker has extra margin space to remove */
-    .usa-date-picker {
-      .usa-date-picker__external-input,
-      .usa-date-picker__button {
-        margin-top: 0;
-      }
-    }
-
-    /* Date picker undo width wrapping */
-    /*
-    .usa-date-picker__calendar {
-      @media (min-width: $desktop) {
-        width: 20rem;
-      }
-    }
-    */
-
-    /* Timepicker has an extra form-group wrapper with space to remove */
-    > .usa-form-group:has(> .usa-time-picker) {
-      margin-top: 0;
-    }
-    /* The Timepicker component generates its own label; remove it */
-    > .usa-form-group > .usa-label:has(+ .usa-time-picker) {
-      display: none;
     }
 
     /* Errors messages under group field labels */
