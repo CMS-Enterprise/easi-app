@@ -94,9 +94,9 @@ const RequestOverview = () => {
           adminLead={systemIntake.adminLead}
           submittedAt={systemIntake.submittedAt}
           lcid={systemIntake.lcid}
-          contractNumber={systemIntake?.contractNumbers.map(
-            c => c.contractNumber
-          )}
+          contractNumber={
+            systemIntake?.contractNumbers?.map(c => c.contractNumber) || []
+          }
           state={systemIntake?.state}
         />
       )}
