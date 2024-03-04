@@ -58,10 +58,16 @@ export interface GetSystemIntakesTable_systemIntakes_contract {
   __typename: "SystemIntakeContract";
   hasContract: string | null;
   contractor: string | null;
-  number: string[];
   vehicle: string | null;
   startDate: GetSystemIntakesTable_systemIntakes_contract_startDate;
   endDate: GetSystemIntakesTable_systemIntakes_contract_endDate;
+}
+
+export interface GetSystemIntakesTable_systemIntakes_contractNumbers {
+  __typename: "SystemIntakeContractNumber";
+  id: UUID;
+  systemIntakeID: UUID;
+  contractNumber: string;
 }
 
 export interface GetSystemIntakesTable_systemIntakes_notes {
@@ -96,6 +102,10 @@ export interface GetSystemIntakesTable_systemIntakes {
   fundingSources: GetSystemIntakesTable_systemIntakes_fundingSources[];
   annualSpending: GetSystemIntakesTable_systemIntakes_annualSpending | null;
   contract: GetSystemIntakesTable_systemIntakes_contract;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: GetSystemIntakesTable_systemIntakes_contractNumbers[];
   businessNeed: string | null;
   businessSolution: string | null;
   currentStage: string | null;

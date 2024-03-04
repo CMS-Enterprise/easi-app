@@ -1282,7 +1282,11 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 						Month string
 						Year  string
 					}
-					Number []string
+				}
+				ContractNumbers []struct {
+					Id             string
+					SystemIntakeID string
+					ContractNumber string
 				}
 			}
 		}
@@ -1310,7 +1314,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 					endDate: "2022-02-03T00:00:00Z"
 					hasContract: "HAVE_CONTRACT"
 					startDate: "2021-11-12T00:00:00Z"
-					number: ["123456-7890"]
+					numbers: ["123456-7890"]
 				}
 			}) {
 				systemIntake {
@@ -1337,7 +1341,11 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 							month
 							year
 						}
-						number
+					}
+					contractNumbers {
+						id
+						systemIntakeID
+						contractNumber
 					}
 				}
 			}
@@ -1359,7 +1367,16 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 	contract := respIntake.Contract
 	s.Equal(contract.HasContract, "HAVE_CONTRACT")
 	s.Equal(contract.Contractor, "Best Contractor Evar")
-	s.Contains(contract.Number, "123456-7890")
+
+	found := false
+
+	for _, val := range respIntake.ContractNumbers {
+		if val.ContractNumber == "123456-7890" {
+			found = true
+		}
+	}
+
+	s.True(found)
 
 	startDate := contract.StartDate
 	s.Equal(startDate.Day, "12")
@@ -1390,7 +1407,11 @@ func (s *GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
 		SystemIntake struct {
 			Contract struct {
 				Vehicle *string
-				Number  []*string
+			}
+			ContractNumbers []struct {
+				id             string
+				systemIntakeID string
+				contractNumber string
 			}
 		}
 	}
@@ -1401,13 +1422,17 @@ func (s *GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
 			systemIntake(id: "%s") {
 				contract {
 					vehicle
-					number
+				}
+				contractNumbers {
+					id
+					systemIntakeID
+					contractNumber
 				}
 			}
 		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()), addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)))
 
 	s.Equal(contractVehicle, *resp.SystemIntake.Contract.Vehicle)
-	s.Empty(resp.SystemIntake.Contract.Number)
+	s.Empty(resp.SystemIntake.ContractNumbers)
 }
 
 // when a system intake has a contract vehicle stored but no contract number, updating the contract number should clear the contract vehicle (see EASI-1977)
@@ -1426,7 +1451,11 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithC
 			SystemIntake struct {
 				Contract struct {
 					Vehicle *string
-					Number  []string
+				}
+				ContractNumbers []struct {
+					Id             string
+					SystemIntakeID string
+					ContractNumber string
 				}
 			}
 		}
@@ -1439,19 +1468,31 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithC
 			updateSystemIntakeContractDetails(input: {
 				id: "%s",
 				contract: {
-					number: ["%s"]
+					numbers: ["%s"]
 				}
 			}) {
 				systemIntake {
 					contract {
 						vehicle
-						number
+					}
+					contractNumbers {
+						id
+						systemIntakeID
+						contractNumber
 					}
 				}
 			}
 		}`, intake.ID, contractNumber), &resp, addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)))
 
-	s.Contains(resp.UpdateSystemIntakeContractDetails.SystemIntake.Contract.Number, contractNumber)
+	found := false
+
+	for _, val := range resp.UpdateSystemIntakeContractDetails.SystemIntake.ContractNumbers {
+		if val.ContractNumber == contractNumber {
+			found = true
+		}
+	}
+
+	s.True(found)
 	s.Nil(resp.UpdateSystemIntakeContractDetails.SystemIntake.Contract.Vehicle)
 }
 
@@ -1602,7 +1643,11 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 						Year  *string
 					}
 					Vehicle *string
-					Number  []*string
+				}
+				ContractNumbers []struct {
+					Id             string
+					SystemIntakeID string
+					ContractNumber string
 				}
 			}
 		}
@@ -1617,7 +1662,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 					startDate: null
 					hasContract: "NOT_STARTED"
 					endDate: null
-					number: []
+					numbers: []
 				}
 			}) {
 				systemIntake {
@@ -1636,7 +1681,11 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 							year
 						}
 						vehicle
-						number
+					}
+					contractNumbers {
+						id
+						systemIntakeID
+						contractNumber
 					}
 				}
 			}
@@ -1649,7 +1698,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 	s.Equal(contract.HasContract, "NOT_STARTED")
 	s.Nil(contract.Contractor)
 	s.Nil(contract.Vehicle)
-	s.Empty(contract.Number)
+	s.Empty(respIntake.ContractNumbers)
 
 	startDate := contract.StartDate
 	s.Nil(startDate.Day)

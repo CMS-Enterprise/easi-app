@@ -227,7 +227,7 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 		}
 
 		if input.Contract != nil {
-			contractNumbers := input.Contract.Number
+			contractNumbers := input.Contract.Numbers
 
 			// set the fields to the values we receive
 			intake.ExistingContract = null.StringFromPtr(input.Contract.HasContract)
