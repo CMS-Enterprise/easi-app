@@ -180,11 +180,11 @@ const RequestLinkForm = () => {
     }
 
     p?.then(
-      () => {
-        history.push(taskListUrl);
+      res => {
+        if (res?.data) history.push(taskListUrl);
       },
       () => {}
-    );
+    ).catch(() => {});
   });
 
   // Error feedback
