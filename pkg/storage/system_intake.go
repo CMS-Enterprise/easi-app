@@ -601,38 +601,6 @@ func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *ti
 	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
 
-// UpdateSystemIntakeLinkedContract updates the contract number that is linked to a system intake
-func (s *Store) UpdateSystemIntakeLinkedContract(ctx context.Context, id uuid.UUID, contractNumber null.String) (*models.SystemIntake, error) {
-	intake := struct {
-		ID             uuid.UUID
-		ContractNumber null.String `db:"contract_number"`
-		UpdatedAt      time.Time   `db:"updated_at"`
-	}{
-		ID:             id,
-		ContractNumber: contractNumber,
-		UpdatedAt:      time.Now(),
-	}
-
-	const updateSystemIntakeSQL = `
-		UPDATE system_intakes
-		SET
-			updated_at = :updated_at,
-			contract_number = :contract_number
-		WHERE system_intakes.id = :id
-	`
-
-	_, err := s.db.NamedExec(
-		updateSystemIntakeSQL,
-		intake,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return s.FetchSystemIntakeByID(ctx, id)
-}
-
 // UpdateSystemIntakeLinkedCedarSystem updates the CEDAR system ID that is linked to a system intake
 func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid.UUID, cedarSystemID null.String) (*models.SystemIntake, error) {
 	intake := struct {

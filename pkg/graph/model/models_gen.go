@@ -949,12 +949,6 @@ type UpdateSystemIntakeLinkedCedarSystemInput struct {
 	CedarSystemID *string   `json:"cedarSystemId,omitempty"`
 }
 
-// Input data for updating a system intake's relationship to a contract
-type UpdateSystemIntakeLinkedContractInput struct {
-	ID             uuid.UUID `json:"id"`
-	ContractNumber *string   `json:"contractNumber,omitempty"`
-}
-
 // Input data for updating an IT governance admin note
 type UpdateSystemIntakeNoteInput struct {
 	Content    models.HTML `json:"content"`
