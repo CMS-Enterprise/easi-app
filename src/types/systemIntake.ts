@@ -150,7 +150,6 @@ export type ContractDetailsForm = {
   contract: {
     hasContract: string;
     contractor: string;
-    number: string[];
     startDate: {
       month: string;
       day: string;
@@ -162,6 +161,7 @@ export type ContractDetailsForm = {
       year: string;
     };
   };
+  contractNumbers: string[];
 };
 
 export type IntakeNote = {

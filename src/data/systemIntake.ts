@@ -52,7 +52,6 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   contract: {
     hasContract: '',
     contractor: '',
-    number: [],
     startDate: {
       month: '',
       day: '',
@@ -85,7 +84,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   adminLead: '',
   lcidCostBaseline: '',
   requesterNameAndComponent: '',
-  hasUiChanges: null
+  hasUiChanges: null,
+  contractNumbers: []
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
@@ -124,7 +124,7 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     existingContract: systemIntake.contract.hasContract,
     grtReviewEmailBody: systemIntake.grtReviewEmailBody,
     contractor: systemIntake.contract.contractor,
-    contractNumber: systemIntake.contract.number,
+    contractNumber: systemIntake.contractNumbers, // TODO(Sam): change `contractNumber` -> `contractNumbers`?
     contractStartDate: DateTime.fromObject({
       day: Number(systemIntake.contract.startDate.day),
       month: Number(systemIntake.contract.startDate.month),
@@ -203,7 +203,6 @@ export const prepareSystemIntakeForApp = (
     contract: {
       hasContract: systemIntake.existingContract || '',
       contractor: systemIntake.contractor || '',
-      number: systemIntake.contractNumber || [],
       startDate: {
         month: contractStartDate.month
           ? contractStartDate.month.toString()
@@ -223,6 +222,7 @@ export const prepareSystemIntakeForApp = (
           : systemIntake.contractEndYear || ''
       }
     },
+    contractNumbers: systemIntake.contractNumbers || [],
     businessNeed: systemIntake.businessNeed || '',
     businessSolution: systemIntake.solution || '',
     currentStage: systemIntake.processStatus || '',
@@ -321,7 +321,7 @@ export const isIntakeStarted = (intake: SystemIntake | SystemIntakeForm) => {
     intake.annualSpending?.plannedYearOneSpending ||
     intake.contract.hasContract ||
     intake.contract.contractor ||
-    intake.contract.number.length > 0 ||
+    intake.contractNumbers.length > 0 ||
     intake.contract.startDate.month ||
     intake.contract.startDate.year ||
     intake.contract.endDate.month ||

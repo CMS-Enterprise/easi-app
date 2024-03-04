@@ -59,7 +59,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     fundingSources,
     annualSpending,
     contract,
-    existingFunding
+    existingFunding,
+    contractNumbers
   } = systemIntake;
   const initialValues: ContractDetailsForm = {
     existingFunding,
@@ -84,9 +85,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         day: contract.startDate.day || '',
         month: contract.startDate.month || '',
         year: contract.startDate.year || ''
-      },
-      number: contract.number || []
-    }
+      }
+    },
+    contractNumbers: contractNumbers.map(c => c.contractNumber) || []
   };
 
   const saveExitLink = (() => {
@@ -142,6 +143,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       annualSpending: values.annualSpending,
       contract: {
         ...values.contract,
+        numbers: values.contractNumbers,
         startDate,
         endDate
       }
