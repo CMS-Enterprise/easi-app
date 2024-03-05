@@ -22,6 +22,18 @@ export default gql`
       adminNotes {
         id
       }
+      contractName
+      contractNumbers {
+        id
+        contractNumber
+      }
+      systems {
+        id
+        name
+        description
+        acronym
+        businessOwnerOrg
+      }
     }
   }
 `;
