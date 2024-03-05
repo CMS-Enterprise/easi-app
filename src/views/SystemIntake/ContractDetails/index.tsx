@@ -85,9 +85,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         day: contract.startDate.day || '',
         month: contract.startDate.month || '',
         year: contract.startDate.year || ''
-      }
-    },
-    contractNumbers: contractNumbers.map(c => c.contractNumber).join(', ') || ''
+      },
+      numbers: contractNumbers.map(c => c.contractNumber).join(', ') || ''
+    }
   };
 
   const saveExitLink = (() => {
@@ -143,9 +143,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       annualSpending: values.annualSpending,
       contract: {
         ...values.contract,
-        numbers: values.contractNumbers.split(','),
         startDate,
-        endDate
+        endDate,
+        numbers: values.contract.numbers.split(',')
       }
     };
   };

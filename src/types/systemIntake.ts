@@ -160,8 +160,8 @@ export type ContractDetailsForm = {
       day: string;
       year: string;
     };
+    numbers: string;
   };
-  contractNumbers: string;
 };
 
 export type IntakeNote = {
