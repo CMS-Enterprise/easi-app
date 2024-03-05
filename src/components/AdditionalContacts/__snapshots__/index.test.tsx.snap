@@ -310,6 +310,11 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 Select an option
               </option>
               <option
+                value="Business owner"
+              >
+                Business owner
+              </option>
+              <option
                 value="Product Owner"
               >
                 Product Owner
@@ -335,14 +340,19 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
                 Cloud Navigator
               </option>
               <option
+                value="Information System Security Advisor (ISSO)"
+              >
+                Information System Security Advisor (ISSO)
+              </option>
+              <option
                 value="Privacy Advisor"
               >
                 Privacy Advisor
               </option>
               <option
-                value="CRA"
+                value="Cyber Risk Advisor (CRA)"
               >
-                CRA
+                Cyber Risk Advisor (CRA)
               </option>
               <option
                 value="Other"
