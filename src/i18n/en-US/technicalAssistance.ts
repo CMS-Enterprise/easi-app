@@ -715,7 +715,8 @@ const technicalAssistance = {
       subtitle:
         'Choose a document to upload, such as a presentation slide deck, concept paper, or other system information document.',
       documentUpload: 'Document upload',
-      docType: 'Select a PDF, DOC, DOCX, XLS, or XLSX',
+      docType:
+        'Supported file types: DOC, DOCX, JPG, JPEG, PDF, PNG, PPT, PPTX, XLS, and XLSX',
       dragFile: 'Drag file here or choose from folder',
       selectedFile: 'Selected file',
       changeFile: 'Change file',
