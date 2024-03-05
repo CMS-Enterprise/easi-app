@@ -25,7 +25,7 @@ const (
 	PersonRoleInformationSystemSecurityAdvisor PersonRole = "INFORMATION_SYSTEM_SECURITY_ADVISOR"
 	// PersonRolePrivacyAdvisor is a person with the "Privacy Advisor" role
 	PersonRolePrivacyAdvisor PersonRole = "PRIVACY_ADVISOR"
-	// PersonRoleCRA is a person with the "CRA" role
+	// PersonRoleCRA is a person with the "Cyber Risk Advisor (CRA)" role
 	PersonRoleCRA PersonRole = "CRA"
 	// PersonRoleOther is a person with the "Other" role
 	PersonRoleOther PersonRole = "OTHER"
