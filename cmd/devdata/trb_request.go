@@ -818,7 +818,20 @@ func (s *seederConfig) addAttendee(
 		Component:    &component,
 	}
 	attendee.CreatedBy = mock.PrincipalUser
-	return resolvers.CreateTRBRequestAttendee(ctx, s.store, mock.EmailClientMock(ctx), mock.FetchUserInfoMock, &attendee)
+	return resolvers.CreateTRBRequestAttendee(
+		ctx,
+		s.store,
+		func(
+			ctx context.Context,
+			attendeeEmail models.EmailAddress,
+			requestName string,
+			requesterName string,
+		) error {
+			return nil
+		},
+		mock.FetchUserInfoMock,
+		&attendee,
+	)
 }
 
 func (s *seederConfig) addTRBNewSystemRelation(
