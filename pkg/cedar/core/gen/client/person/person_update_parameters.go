@@ -63,7 +63,10 @@ PersonUpdateParams contains all the parameters to send to the API endpoint
 */
 type PersonUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   Person information to be updated in Alfabet.
+	*/
 	Body *models.Person
 
 	timeout    time.Duration

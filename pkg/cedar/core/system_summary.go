@@ -9,6 +9,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -27,14 +28,14 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 // If tryCache is true, it will try and retrieve the data from the cache first and make an API call if the cache is empty
-func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models.CedarSystem, error) {
+func (c *Client) GetSystemSummary(ctx context.Context, filter *model.CedarSystemFilterInput) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return getMockSystems()
 	}
 
-	// Check and use cache before making API call
-	if tryCache {
+	// Check and use cache before making API call if there are no search filters
+	if filterEmpty(filter) {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
 			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
@@ -98,6 +99,10 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models
 	return retVal, nil
 }
 
+func filterEmpty(filter *model.CedarSystemFilterInput) bool {
+	return filter == nil || filter.EuaUserID == nil || len(*filter.EuaUserID) < 1
+}
+
 // populateSystemSummaryCache is a method used internally by the CEDAR Core client
 // to populate the in-memory cache with the results of a call to the /system/summary endpoint
 //
@@ -111,7 +116,7 @@ func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
 	appcontext.ZLogger(ctx).Info("Refreshing System Summary cache")
 
 	// Get data from API - don't use cache to populate cache!
-	systemSummary, err := c.GetSystemSummary(ctx, false)
+	systemSummary, err := c.GetSystemSummary(ctx, nil)
 	if err != nil {
 		return err
 	}

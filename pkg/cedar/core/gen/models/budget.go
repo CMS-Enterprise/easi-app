@@ -19,6 +19,15 @@ import (
 // swagger:model Budget
 type Budget struct {
 
+	// fiscal year
+	FiscalYear string `json:"FiscalYear,omitempty"`
+
+	// funding source
+	FundingSource string `json:"FundingSource,omitempty"`
+
+	// name
+	Name string `json:"Name,omitempty"`
+
 	// Description of the allocation of this budget to the system in question
 	// Example: Most of this funding is directly and only for this system (over 80%)
 	Funding string `json:"funding,omitempty"`

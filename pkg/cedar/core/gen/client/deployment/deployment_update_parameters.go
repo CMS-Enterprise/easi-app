@@ -63,7 +63,10 @@ DeploymentUpdateParams contains all the parameters to send to the API endpoint
 */
 type DeploymentUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   Deployment list to be updated in Alfabet.
+	*/
 	Body *models.DeploymentUpdateRequest
 
 	timeout    time.Duration

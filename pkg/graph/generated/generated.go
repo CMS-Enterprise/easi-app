@@ -618,7 +618,7 @@ type ComplexityRoot struct {
 		CedarSystem              func(childComplexity int, cedarSystemID string) int
 		CedarSystemBookmarks     func(childComplexity int) int
 		CedarSystemDetails       func(childComplexity int, cedarSystemID string) int
-		CedarSystems             func(childComplexity int) int
+		CedarSystems             func(childComplexity int, filter *model.CedarSystemFilterInput) int
 		CedarThreat              func(childComplexity int, cedarSystemID string) int
 		CurrentUser              func(childComplexity int) int
 		Deployments              func(childComplexity int, cedarSystemID string, deploymentType *string, state *string, status *string) int
@@ -1396,7 +1396,7 @@ type QueryResolver interface {
 	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error)
 	CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error)
 	CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error)
-	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
+	CedarSystems(ctx context.Context, filter *model.CedarSystemFilterInput) ([]*models.CedarSystem, error)
 	CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error)
 	CedarThreat(ctx context.Context, cedarSystemID string) ([]*models.CedarThreat, error)
 	Deployments(ctx context.Context, cedarSystemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error)
@@ -4791,7 +4791,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Query.CedarSystems(childComplexity), true
+		args, err := ec.field_Query_cedarSystems_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CedarSystems(childComplexity, args["filter"].(*model.CedarSystemFilterInput)), true
 
 	case "Query.cedarThreat":
 		if e.complexity.Query.CedarThreat == nil {
@@ -7485,6 +7490,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputCedarSystemFilterInput,
 		ec.unmarshalInputCloseTRBRequestInput,
 		ec.unmarshalInputCreateAccessibilityRequestDocumentInput,
 		ec.unmarshalInputCreateAccessibilityRequestInput,
@@ -7852,6 +7858,13 @@ Represents a user's bookmark of a cedar system
 type CedarSystemBookmark {
   euaUserId: String!
   cedarSystemId: String!
+}
+
+"""
+Represents a filter for querying Cedar Systems
+"""
+input CedarSystemFilterInput {
+  euaUserId: String
 }
 
 """
@@ -10375,7 +10388,7 @@ type Query {
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSystem(cedarSystemId: String!): CedarSystem
-  cedarSystems: [CedarSystem!]!
+  cedarSystems(filter: CedarSystemFilterInput): [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
@@ -12223,6 +12236,21 @@ func (ec *executionContext) field_Query_cedarSystem_args(ctx context.Context, ra
 		}
 	}
 	args["cedarSystemId"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cedarSystems_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.CedarSystemFilterInput
+	if tmp, ok := rawArgs["filter"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("filter"))
+		arg0, err = ec.unmarshalOCedarSystemFilterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarSystemFilterInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["filter"] = arg0
 	return args, nil
 }
 
@@ -34313,7 +34341,7 @@ func (ec *executionContext) _Query_cedarSystems(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().CedarSystems(rctx)
+		return ec.resolvers.Query().CedarSystems(rctx, fc.Args["filter"].(*model.CedarSystemFilterInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -34361,6 +34389,17 @@ func (ec *executionContext) fieldContext_Query_cedarSystems(ctx context.Context,
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_cedarSystems_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }
@@ -54015,6 +54054,33 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 // endregion **************************** field.gotpl *****************************
 
 // region    **************************** input.gotpl *****************************
+
+func (ec *executionContext) unmarshalInputCedarSystemFilterInput(ctx context.Context, obj interface{}) (model.CedarSystemFilterInput, error) {
+	var it model.CedarSystemFilterInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"euaUserId"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "euaUserId":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("euaUserId"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.EuaUserID = data
+		}
+	}
+
+	return it, nil
+}
 
 func (ec *executionContext) unmarshalInputCloseTRBRequestInput(ctx context.Context, obj interface{}) (model.CloseTRBRequestInput, error) {
 	var it model.CloseTRBRequestInput
@@ -75131,6 +75197,14 @@ func (ec *executionContext) marshalOCedarSystemDetails2ᚖgithubᚗcomᚋcmsgov�
 		return graphql.Null
 	}
 	return ec._CedarSystemDetails(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOCedarSystemFilterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarSystemFilterInput(ctx context.Context, v interface{}) (*model.CedarSystemFilterInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputCedarSystemFilterInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOCreateAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateAccessibilityRequestDocumentPayload) graphql.Marshaler {
