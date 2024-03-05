@@ -369,8 +369,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                         />
                       </FieldGroup>
                       <FieldGroup
-                        scrollElement="contractNumbers"
-                        error={!!flatErrors.contractNumbers}
+                        scrollElement="contract.numbers"
+                        error={!!flatErrors['contract.numbers']}
                       >
                         <Label
                           className="system-intake__label-margin-top-1"
@@ -379,14 +379,14 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           {t('fields.contractNumber')}
                         </Label>
                         <FieldErrorMsg>
-                          {flatErrors.contractNumbers}
+                          {flatErrors['contract.numbers']}
                         </FieldErrorMsg>
                         <Field
                           as={TextInput}
-                          error={!!flatErrors.contractNumbers}
+                          error={!!flatErrors['contract.numbers']}
                           id="IntakeForm-Number"
                           maxLength={100}
-                          name="contractNumbers"
+                          name="contract.numbers"
                         />
                       </FieldGroup>
 
@@ -578,8 +578,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                         />
                       </FieldGroup>
                       <FieldGroup
-                        scrollElement="contractNumbers"
-                        error={!!flatErrors.contractNumbers}
+                        scrollElement="contract.numbers"
+                        error={!!flatErrors['contract.numbers']}
                       >
                         <Label
                           className="system-intake__label-margin-top-1"
@@ -588,14 +588,14 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           {t('fields.contractNumber')}
                         </Label>
                         <FieldErrorMsg>
-                          {flatErrors.contractNumbers}
+                          {flatErrors['contract.numbers']}
                         </FieldErrorMsg>
                         <Field
                           as={TextInput}
-                          error={!!flatErrors.contractNumbers}
+                          error={!!flatErrors['contract.numbers']}
                           id="IntakeForm-Number"
                           maxLength={100}
-                          name="contractNumbers"
+                          name="contract.numbers"
                         />
                       </FieldGroup>
 
