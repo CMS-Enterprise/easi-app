@@ -146,7 +146,7 @@ const RequestLinkForm = () => {
       .map(v => v.trim())
       .filter(v => v !== '');
 
-    let p: Promise<any> | undefined;
+    let p;
 
     if (relation === 'newSystem') {
       p = setSystemIntakeRelationNewSystem({
