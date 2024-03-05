@@ -35,7 +35,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, filter *model.CedarSystem
 	}
 
 	// Check and use cache before making API call if there are no search filters
-	if filterEmpty(filter) {
+	if isFilterEmpty(filter) {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
 			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
@@ -56,6 +56,12 @@ func (c *Client) GetSystemSummary(ctx context.Context, filter *model.CedarSystem
 	params := apisystems.NewSystemSummaryFindListParams()
 	params.SetState(null.StringFrom("active").Ptr())
 	params.SetIncludeInSurvey(null.BoolFrom(true).Ptr())
+
+	if !isFilterEmpty(filter) {
+		params.SetUserName(filter.EuaUserID)
+		// as we add more filters, we can set them here
+	}
+
 	params.HTTPClient = c.hc
 
 	// Make the API call
@@ -99,8 +105,12 @@ func (c *Client) GetSystemSummary(ctx context.Context, filter *model.CedarSystem
 	return retVal, nil
 }
 
-func filterEmpty(filter *model.CedarSystemFilterInput) bool {
-	return filter == nil || filter.EuaUserID == nil || len(*filter.EuaUserID) < 1
+// isFilterEmpty is a convenience function to easily check if the filter does not contain any search filters
+// TODO(Sam): is it possible tp attach methods to gql generated types? (in this case, `model.CedarSystemFilterInput`). If so, move this to `model`
+func isFilterEmpty(filter *model.CedarSystemFilterInput) bool {
+	return filter == nil ||
+		filter.EuaUserID == nil ||
+		len(*filter.EuaUserID) < 1
 }
 
 // populateSystemSummaryCache is a method used internally by the CEDAR Core client
