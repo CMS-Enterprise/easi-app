@@ -20,24 +20,26 @@ const AdditionalInformation = ({
         {t('additionalInformation.title')}
       </PageHeading>
 
-      <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-2">
+      <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-1">
         {t('additionalInformation.description')}
       </p>
 
-      <div className="margin-bottom-4">
-        <span className="font-body-md line-height-body-4 margin-right-1 text-base">
-          {t('additionalInformation.somethingIncorrect')}
-        </span>
-
-        <UswdsReactLink to={`/system/link/${systemIntake.id}`}>
-          {t('additionalInformation.editInformation')}
-        </UswdsReactLink>
-      </div>
-
       {systemIntake.systems.length > 0 ? (
-        <SystemCardTable systems={systemIntake.systems} />
-      ) : (
         <>
+          <div className="margin-bottom-3">
+            <span className="font-body-md line-height-body-4 margin-right-1 text-base">
+              {t('additionalInformation.somethingIncorrect')}
+            </span>
+
+            <UswdsReactLink to={`/system/link/${systemIntake.id}`}>
+              {t('additionalInformation.editInformation')}
+            </UswdsReactLink>
+          </div>
+
+          <SystemCardTable systems={systemIntake.systems} />
+        </>
+      ) : (
+        <div className="margin-top-3">
           <Alert type="info" slim className="margin-top-0 margin-bottom-2">
             {t('additionalInformation.noLinkedSystemAlert')}
           </Alert>
@@ -47,11 +49,11 @@ const AdditionalInformation = ({
           >
             {t('additionalInformation.linkSystem')}
           </UswdsReactLink>
-        </>
+        </div>
       )}
 
       {systemIntake.contract?.number && (
-        <div className="margin-top-4">
+        <div className="margin-top-3">
           <strong>
             {t('additionalInformation.contractNumber', {
               plural:
