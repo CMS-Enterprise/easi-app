@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Row, useFlexLayout, usePagination, useTable } from 'react-table';
-import { CardGroup, Table as UswdsTable } from '@trussworks/react-uswds';
+import { Table as UswdsTable } from '@trussworks/react-uswds';
 
 import TablePagination from 'components/TablePagination';
 import { SystemIntake_systems as SystemsType } from 'queries/types/SystemIntake';
@@ -25,16 +25,14 @@ const SystemCardTable = ({ systems }: SystemCardTableProps) => {
         disableGlobalFilter: true,
         Cell: ({ row }: { row: Row<SystemsType> }) => {
           return (
-            <CardGroup>
-              <SystemCard
-                id={row.original.id}
-                name={row.original.name}
-                description={row.original.description}
-                acronym={row.original.acronym}
-                businessOwnerOrg={row.original.businessOwnerOrg}
-                businessOwners="Patrick Segura" // TODO: fill with role info once BE is done
-              />
-            </CardGroup>
+            <SystemCard
+              id={row.original.id}
+              name={row.original.name}
+              description={row.original.description}
+              acronym={row.original.acronym}
+              businessOwnerOrg={row.original.businessOwnerOrg}
+              businessOwners="John Doe" // TODO: fill with role info once BE is done
+            />
           );
         }
       }

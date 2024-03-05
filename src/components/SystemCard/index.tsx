@@ -12,7 +12,7 @@ import Divider from 'components/shared/Divider';
 
 import './index.scss';
 
-type SystemCardProps = {
+export type SystemCardProps = {
   className?: string;
   id: string;
   name: string;
@@ -63,7 +63,7 @@ const SystemCard = ({
                 term={t('additionalInformation.businessOwner')}
               />
               {/* TODO: populate with business owner once be is complete */}
-              <DescriptionDefinition definition="Patrick Segura" />
+              <DescriptionDefinition definition="John Doe" />
             </Grid>
           </Grid>
         </dl>
