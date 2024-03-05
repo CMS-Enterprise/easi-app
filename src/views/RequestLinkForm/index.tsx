@@ -109,6 +109,8 @@ const RequestLinkForm = () => {
     }
   });
 
+  const [hasUserError, setUserError] = useState<boolean>(false);
+
   // Ref fields for some form behavior
   const fields = watch();
 
@@ -184,12 +186,17 @@ const RequestLinkForm = () => {
         if (res?.data) history.push(taskListUrl);
       },
       () => {}
-    ).catch(() => {});
+    ).catch(() => {
+      setUserError(true);
+    });
   });
 
   // Error feedback
   const hasErrors =
-    existingServiceError || existingSystemError || newSystemError;
+    existingServiceError ||
+    existingSystemError ||
+    newSystemError ||
+    hasUserError;
 
   useEffect(() => {
     if (hasErrors) {
