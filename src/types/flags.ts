@@ -12,7 +12,9 @@ export type Flags = {
   hide508Workflow: boolean;
   portfolioUpdateReport: boolean;
   itgovLinkRequestsRequester: boolean;
+  itgovLinkRequestsAdmin: boolean;
   trbLinkRequestsRequester: boolean;
+  trbLinkRequestsAdmin: boolean;
 };
 
 export type FlagsState = {
