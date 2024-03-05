@@ -294,8 +294,10 @@ const governanceReviewTeam = {
     component: 'CMS component owner',
     businessOwner: 'Business owner',
     viewSystem: 'View system profile',
-    contractNumber_one: 'Contract number',
-    contractNumber_other: 'Contract numbers'
+    contractNumber: 'Contract number{{plural}}',
+    noLinkedSystemAlert:
+      'This request is for a completely new system, service, or contract and may not have other requests related to it. If this is an error, please use the button below to link the request to a system, service, or contract.',
+    linkSystem: 'Link this request to a system, service, or contract'
   },
   feedback: {
     title: 'Feedback',

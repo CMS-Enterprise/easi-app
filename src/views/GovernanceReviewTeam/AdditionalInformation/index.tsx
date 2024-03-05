@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Alert } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -33,13 +34,28 @@ const AdditionalInformation = ({
         </UswdsReactLink>
       </div>
 
-      <SystemCardTable systems={systemIntake.systems} />
+      {systemIntake.systems.length > 0 ? (
+        <SystemCardTable systems={systemIntake.systems} />
+      ) : (
+        <>
+          <Alert type="info" slim className="margin-top-0 margin-bottom-2">
+            {t('additionalInformation.noLinkedSystemAlert')}
+          </Alert>
+          <UswdsReactLink
+            to={`/system/link/${systemIntake.id}`}
+            className="usa-button usa-button--outline"
+          >
+            {t('additionalInformation.linkSystem')}
+          </UswdsReactLink>
+        </>
+      )}
 
       {systemIntake.contract?.number && (
         <div className="margin-top-4">
           <strong>
             {t('additionalInformation.contractNumber', {
-              count: systemIntake.contract?.number.split(',').length
+              plural:
+                systemIntake.contract?.number.split(',').length > 1 ? 's' : ''
             })}
           </strong>
           <p className="margin-top-1">{systemIntake.contract?.number}</p>
