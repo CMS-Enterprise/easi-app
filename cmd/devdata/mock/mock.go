@@ -56,6 +56,12 @@ func (s Sender) Send(
 	return nil
 }
 
+type SMTPSender struct{}
+
+func (sender SMTPSender) Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error {
+	return nil
+}
+
 func EmailClientMock(ctx context.Context) *email.Client {
 	config := testhelpers.NewConfig()
 
