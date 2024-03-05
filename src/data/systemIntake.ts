@@ -85,7 +85,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   lcidCostBaseline: '',
   requesterNameAndComponent: '',
   hasUiChanges: null,
-  contractNumbers: []
+  contractNumbers: ''
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {

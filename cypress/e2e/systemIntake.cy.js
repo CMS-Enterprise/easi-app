@@ -236,7 +236,7 @@ describe('The System Intake Form', () => {
       .type('TrussWorks, Inc.')
       .should('have.value', 'TrussWorks, Inc.');
 
-    cy.get('#IntakeForm-ContractNumber')
+    cy.get('#IntakeForm-Number')
       .type('123456-7890')
       .should('have.value', '123456-7890');
 

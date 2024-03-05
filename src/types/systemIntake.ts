@@ -161,7 +161,7 @@ export type ContractDetailsForm = {
       year: string;
     };
   };
-  contractNumbers: string[];
+  contractNumbers: string;
 };
 
 export type IntakeNote = {

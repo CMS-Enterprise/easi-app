@@ -87,7 +87,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         year: contract.startDate.year || ''
       }
     },
-    contractNumbers: contractNumbers.map(c => c.contractNumber) || []
+    contractNumbers: contractNumbers.map(c => c.contractNumber).join(', ') || ''
   };
 
   const saveExitLink = (() => {
@@ -143,7 +143,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       annualSpending: values.annualSpending,
       contract: {
         ...values.contract,
-        numbers: values.contractNumbers,
+        numbers: values.contractNumbers.split(','),
         startDate,
         endDate
       }
@@ -369,8 +369,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                         />
                       </FieldGroup>
                       <FieldGroup
-                        scrollElement="contract.number"
-                        error={!!flatErrors['contract.number']}
+                        scrollElement="contractNumbers"
+                        error={!!flatErrors.contractNumbers}
                       >
                         <Label
                           className="system-intake__label-margin-top-1"
@@ -379,14 +379,14 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           {t('fields.contractNumber')}
                         </Label>
                         <FieldErrorMsg>
-                          {flatErrors['contract.number']}
+                          {flatErrors.contractNumbers}
                         </FieldErrorMsg>
                         <Field
                           as={TextInput}
-                          error={!!flatErrors['contract.number']}
+                          error={!!flatErrors.contractNumbers}
                           id="IntakeForm-Number"
                           maxLength={100}
-                          name="contract.number"
+                          name="contractNumbers"
                         />
                       </FieldGroup>
 
@@ -578,8 +578,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                         />
                       </FieldGroup>
                       <FieldGroup
-                        scrollElement="contract.number"
-                        error={!!flatErrors['contract.number']}
+                        scrollElement="contractNumbers"
+                        error={!!flatErrors.contractNumbers}
                       >
                         <Label
                           className="system-intake__label-margin-top-1"
@@ -588,14 +588,14 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                           {t('fields.contractNumber')}
                         </Label>
                         <FieldErrorMsg>
-                          {flatErrors['contract.number']}
+                          {flatErrors.contractNumbers}
                         </FieldErrorMsg>
                         <Field
                           as={TextInput}
-                          error={!!flatErrors['contract.number']}
+                          error={!!flatErrors.contractNumbers}
                           id="IntakeForm-Number"
                           maxLength={100}
-                          name="contract.number"
+                          name="contractNumbers"
                         />
                       </FieldGroup>
 
@@ -785,7 +785,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     onChange={() => {
                       setFieldValue('contract.hasContract', 'NOT_STARTED');
                       setFieldValue('contract.contractor', '');
-                      setFieldValue('contract.number', '');
+                      setFieldValue('contractNumbers', '');
                       setFieldValue('contract.startDate.month', '');
                       setFieldValue('contract.startDate.day', '');
                       setFieldValue('contract.startDate.year', '');
@@ -806,7 +806,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     onChange={() => {
                       setFieldValue('contract.hasContract', 'NOT_NEEDED');
                       setFieldValue('contract.contractor', '');
-                      setFieldValue('contract.number', '');
+                      setFieldValue('contractNumbers', '');
                       setFieldValue('contract.startDate.month', '');
                       setFieldValue('contract.startDate.day', '');
                       setFieldValue('contract.startDate.year', '');
