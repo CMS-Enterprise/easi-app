@@ -184,6 +184,7 @@ export interface GetSystemIntake_systemIntake {
   decisionState: SystemIntakeDecisionState;
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp | null;
   requestFormState: SystemIntakeFormState;
+  contractName: string | null;
   /**
    * Linked systems
    */

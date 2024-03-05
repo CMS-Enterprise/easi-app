@@ -24,7 +24,7 @@ const AdditionalInformation = ({
         {t('additionalInformation.description')}
       </p>
 
-      {systemIntake.systems.length > 0 ? (
+      {systemIntake.systems.length > 0 && (
         <>
           <div className="margin-bottom-3">
             <span className="font-body-md line-height-body-4 margin-right-1 text-base">
@@ -38,7 +38,9 @@ const AdditionalInformation = ({
 
           <SystemCardTable systems={systemIntake.systems} />
         </>
-      ) : (
+      )}
+
+      {systemIntake.systems.length === 0 && !systemIntake.contractName && (
         <div className="margin-top-3">
           <Alert type="info" slim className="margin-top-0 margin-bottom-2">
             {t('additionalInformation.noLinkedSystemAlert')}
@@ -49,6 +51,13 @@ const AdditionalInformation = ({
           >
             {t('additionalInformation.linkSystem')}
           </UswdsReactLink>
+        </div>
+      )}
+
+      {systemIntake.contractName && (
+        <div className="margin-top-3">
+          <strong>{t('additionalInformation.serviceOrContract')}</strong>
+          <p className="margin-top-1">{systemIntake.contractName}</p>
         </div>
       )}
 

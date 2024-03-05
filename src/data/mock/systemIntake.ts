@@ -246,6 +246,7 @@ export const emptySystemIntake: SystemIntake = {
   decisionState: SystemIntakeDecisionState.NO_DECISION,
   trbFollowUpRecommendation: null,
   requestFormState: SystemIntakeFormState.IN_PROGRESS,
+  contractName: 'My contract',
   systems: [
     {
       __typename: 'CedarSystem',
@@ -355,6 +356,7 @@ export const systemIntake: SystemIntake = {
   decisionState: SystemIntakeDecisionState.NO_DECISION,
   trbFollowUpRecommendation: null,
   requestFormState: SystemIntakeFormState.SUBMITTED,
+  contractName: 'My contract',
   systems: [
     {
       __typename: 'CedarSystem',
