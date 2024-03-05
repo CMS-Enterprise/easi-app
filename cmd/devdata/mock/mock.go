@@ -6,10 +6,13 @@ import (
 
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 	"github.com/cmsgov/easi-app/pkg/userhelpers"
 )
 
@@ -38,6 +41,37 @@ func FetchUserInfosMock(ctx context.Context, euas []string) ([]*models.UserInfo,
 		userInfos = append(userInfos, userInfo)
 	}
 	return userInfos, nil
+}
+
+// set up Email Client
+type Sender struct{}
+
+func (s Sender) Send(
+	ctx context.Context,
+	toAddresses []models.EmailAddress,
+	ccAddresses []models.EmailAddress,
+	subject string,
+	body string,
+) error {
+	return nil
+}
+
+func EmailClientMock(ctx context.Context) *email.Client {
+	config := testhelpers.NewConfig()
+
+	emailConfig := email.Config{
+		GRTEmail:          models.NewEmailAddress("grt_email@cms.fake"),     // unique email address that can't get confused with ITInvestmentEmail
+		ITInvestmentEmail: models.NewEmailAddress("it_investment@cms.fake"), // unique email address that can't get confused with GRTEmail
+		TRBEmail:          models.NewEmailAddress("trb_email@cms.fake"),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
+	}
+	emailClient, err := email.NewClient(emailConfig, Sender{})
+	if err != nil {
+		panic(err)
+	}
+	return &emailClient
 }
 
 // CtxWithLoggerAndPrincipal makes a context with a mocked logger and principal

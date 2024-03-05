@@ -37,6 +37,7 @@ func (s *seederConfig) seedTRBRequests(ctx context.Context) error {
 		s.seedTRBCase12,
 		s.seedTRBCase13,
 		s.seedTRBCase14,
+		s.seedTRBCase15,
 	}
 
 	for _, seedFunc := range cases {
@@ -425,6 +426,18 @@ func (s *seederConfig) seedTRBCase14(ctx context.Context) error {
 	return nil
 }
 
+func (s *seederConfig) seedTRBCase15(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 15 - Completed request form with Attendees").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	err = s.seedTRBWithAttendees(ctx, trbRequest.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *seederConfig) seedTRBLeadOptions(ctx context.Context) ([]*models.UserInfo, error) {
 	leadUsers := map[string]*models.UserInfo{
 		"ABCD": {
@@ -528,6 +541,39 @@ func (s *seederConfig) seedTRBWithForm(ctx context.Context, trbName *string, isS
 	return resolvers.GetTRBRequestByID(ctx, trb.ID, s.store)
 }
 
+func (s *seederConfig) seedTRBWithAttendees(ctx context.Context, trbRequestID uuid.UUID) error {
+	_, err := s.addAttendee(
+		ctx,
+		trbRequestID,
+		"USR1",
+		models.PersonRoleInformationSystemSecurityAdvisor,
+		"Security Component",
+	)
+	if err != nil {
+		return err
+	}
+	_, err = s.addAttendee(
+		ctx,
+		trbRequestID,
+		"TEST",
+		models.PersonRoleBusinessOwner,
+		"Business Component",
+	)
+	if err != nil {
+		return err
+	}
+	_, err = s.addAttendee(
+		ctx,
+		trbRequestID,
+		"A11Y",
+		models.PersonRoleCRA,
+		"Cyber Component",
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func (s *seederConfig) addTRBRequest(ctx context.Context, rType models.TRBRequestType, name *string) (*models.TRBRequest, error) {
 	trb, err := resolvers.CreateTRBRequest(ctx, rType, s.store)
 	if err != nil {
@@ -756,6 +802,23 @@ func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, 
 	}
 
 	return document, nil
+}
+
+func (s *seederConfig) addAttendee(
+	ctx context.Context,
+	trbRequestID uuid.UUID,
+	euaID string,
+	role models.PersonRole,
+	component string,
+) (*models.TRBRequestAttendee, error) {
+	attendee := models.TRBRequestAttendee{
+		TRBRequestID: trbRequestID,
+		EUAUserID:    euaID,
+		Role:         &role,
+		Component:    &component,
+	}
+	attendee.CreatedBy = mock.PrincipalUser
+	return resolvers.CreateTRBRequestAttendee(ctx, s.store, mock.EmailClientMock(ctx), mock.FetchUserInfoMock, &attendee)
 }
 
 func (s *seederConfig) addTRBNewSystemRelation(
