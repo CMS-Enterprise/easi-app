@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, Grid } from '@trussworks/react-uswds';
+import { Card, Grid, IconArrowForward } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -31,7 +31,7 @@ const SystemCard = ({
   businessOwnerOrg,
   businessOwners
 }: SystemCardProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('governanceReviewTeam');
 
   return (
     <Card
@@ -51,22 +51,31 @@ const SystemCard = ({
           {description}
         </p>
 
-        <Grid row className="margin-bottom-2">
-          <Grid desktop={{ col: 6 }}>
-            <DescriptionTerm term="CMS component owner" />
-            <DescriptionDefinition definition={businessOwnerOrg || ''} />
-          </Grid>
+        <dl>
+          <Grid row className="margin-bottom-2">
+            <Grid tablet={{ col: 6 }}>
+              <DescriptionTerm term={t('additionalInformation.component')} />
+              <DescriptionDefinition definition={businessOwnerOrg || ''} />
+            </Grid>
 
-          <Grid desktop={{ col: 6 }}>
-            <DescriptionTerm term="Business Owner" />
-            <DescriptionDefinition definition="Patrick Segura" />
+            <Grid tablet={{ col: 6 }}>
+              <DescriptionTerm
+                term={t('additionalInformation.businessOwner')}
+              />
+              {/* TODO: populate with business owner once be is complete */}
+              <DescriptionDefinition definition="Patrick Segura" />
+            </Grid>
           </Grid>
-        </Grid>
+        </dl>
 
         <Divider className="margin-bottom-2" />
 
-        <UswdsReactLink to={`/systems/${id}/home/top`}>
-          View system profile
+        <UswdsReactLink
+          to={`/systems/${id}/home/top`}
+          className="display-flex flex-align-center"
+        >
+          {t('additionalInformation.viewSystem')}
+          <IconArrowForward className="margin-left-1" />
         </UswdsReactLink>
       </Grid>
     </Card>
