@@ -462,7 +462,7 @@ const RequestLinkForm = () => {
             history.goBack();
           }}
         >
-          Back
+          {t('link.form.back')}
         </IconButton>
       </Form>
     </MainContent>

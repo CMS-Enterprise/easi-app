@@ -135,7 +135,8 @@ export default {
       },
       continueTaskList: 'Continue to task list',
       next: 'Next',
-      skip: 'I’m not sure (skip this step)'
+      skip: 'I’m not sure (skip this step)',
+      back: 'Back'
     },
     skipConfirm: {
       heading: 'Are you sure you want to skip this step?',
