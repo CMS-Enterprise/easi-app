@@ -124,6 +124,15 @@ export interface SystemIntake_documents {
   url: string;
 }
 
+export interface SystemIntake_systems {
+  __typename: "CedarSystem";
+  id: string;
+  name: string;
+  description: string | null;
+  acronym: string | null;
+  businessOwnerOrg: string | null;
+}
+
 export interface SystemIntake {
   __typename: "SystemIntake";
   id: UUID;
@@ -175,4 +184,8 @@ export interface SystemIntake {
   decisionState: SystemIntakeDecisionState;
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp | null;
   requestFormState: SystemIntakeFormState;
+  /**
+   * Linked systems
+   */
+  systems: SystemIntake_systems[];
 }

@@ -288,7 +288,9 @@ const governanceReviewTeam = {
   additionalInformation: {
     title: 'Additional information',
     description:
-      'This request is a part of the system, service, or contract indicated below. Any related requests are displayed because they are linked to the same system or service, or because they include the same contract number as this request.'
+      'This request is a part of the system, service, or contract indicated below. Any related requests are displayed because they are linked to the same system or service, or because they include the same contract number as this request.',
+    somethingIncorrect: 'See something incorrect?',
+    editInformation: 'Edit information'
   },
   feedback: {
     title: 'Feedback',

@@ -105,6 +105,13 @@ export const SystemIntake = gql`
     decisionState
     trbFollowUpRecommendation
     requestFormState
+    systems {
+      id
+      name
+      description
+      acronym
+      businessOwnerOrg
+    }
   }
 `;
 

@@ -245,7 +245,17 @@ export const emptySystemIntake: SystemIntake = {
   state: SystemIntakeState.OPEN,
   decisionState: SystemIntakeDecisionState.NO_DECISION,
   trbFollowUpRecommendation: null,
-  requestFormState: SystemIntakeFormState.IN_PROGRESS
+  requestFormState: SystemIntakeFormState.IN_PROGRESS,
+  systems: [
+    {
+      __typename: 'CedarSystem',
+      id: '123',
+      name: 'My system',
+      description: 'A fun system',
+      acronym: 'MS',
+      businessOwnerOrg: 'Oddball'
+    }
+  ]
 };
 
 export const systemIntake: SystemIntake = {
@@ -344,7 +354,17 @@ export const systemIntake: SystemIntake = {
   state: SystemIntakeState.OPEN,
   decisionState: SystemIntakeDecisionState.NO_DECISION,
   trbFollowUpRecommendation: null,
-  requestFormState: SystemIntakeFormState.SUBMITTED
+  requestFormState: SystemIntakeFormState.SUBMITTED,
+  systems: [
+    {
+      __typename: 'CedarSystem',
+      id: '123',
+      name: 'My system',
+      description: 'A fun system',
+      acronym: 'MS',
+      businessOwnerOrg: 'Oddball'
+    }
+  ]
 };
 
 /** System intake form that has NOT been started */
