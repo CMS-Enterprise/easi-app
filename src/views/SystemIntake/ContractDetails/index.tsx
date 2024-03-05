@@ -785,7 +785,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     onChange={() => {
                       setFieldValue('contract.hasContract', 'NOT_STARTED');
                       setFieldValue('contract.contractor', '');
-                      setFieldValue('contractNumbers', '');
+                      setFieldValue('contract.numbers', '');
                       setFieldValue('contract.startDate.month', '');
                       setFieldValue('contract.startDate.day', '');
                       setFieldValue('contract.startDate.year', '');
@@ -806,7 +806,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     onChange={() => {
                       setFieldValue('contract.hasContract', 'NOT_NEEDED');
                       setFieldValue('contract.contractor', '');
-                      setFieldValue('contractNumbers', '');
+                      setFieldValue('contract.numbers', '');
                       setFieldValue('contract.startDate.month', '');
                       setFieldValue('contract.startDate.day', '');
                       setFieldValue('contract.startDate.year', '');
