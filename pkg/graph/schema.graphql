@@ -1268,14 +1268,6 @@ input SetSystemIntakeRelationExistingServiceInput {
 }
 
 """
-Input data for updating a system intake's relationship to a contract
-"""
-input UpdateSystemIntakeLinkedContractInput {
-  id: UUID!
-  contractNumber: String
-}
-
-"""
 Represents the type of an action that is being done to a system request
 """
 enum SystemIntakeActionType {
@@ -2615,7 +2607,6 @@ type Mutation {
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
-  updateSystemIntakeLinkedContract(input: UpdateSystemIntakeLinkedContractInput!): UpdateSystemIntakePayload
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String

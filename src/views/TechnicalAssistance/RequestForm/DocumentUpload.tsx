@@ -212,7 +212,7 @@ const DocumentUpload = ({
                       onChange={e => {
                         field.onChange(e.currentTarget?.files?.[0]);
                       }}
-                      accept=".pdf,.doc,.docx,.xls,.xlsx"
+                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.ppt,.pptx,.xls,.xlsx"
                     />
                   </FormGroup>
                 );
