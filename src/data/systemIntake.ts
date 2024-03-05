@@ -128,7 +128,10 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     existingContract: systemIntake.contract.hasContract,
     grtReviewEmailBody: systemIntake.grtReviewEmailBody,
     contractor: systemIntake.contract.contractor,
-    contractNumber: systemIntake.contract.numbers.split(','), // TODO(Sam): change `contractNumber` -> `contractNumbers`?
+    contractNumber:
+      systemIntake.contract.numbers.length > 0
+        ? systemIntake.contract.numbers.split(',')
+        : null, // TODO(Sam): change `contractNumber` -> `contractNumbers`?
     contractStartDate: DateTime.fromObject({
       day: Number(systemIntake.contract.startDate.day),
       month: Number(systemIntake.contract.startDate.month),
