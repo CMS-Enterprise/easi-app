@@ -145,7 +145,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         ...values.contract,
         startDate,
         endDate,
-        numbers: values.contract.numbers.split(',')
+        numbers:
+          values.contract.numbers.length > 0
+            ? values.contract.numbers.split(',').map(c => c.trim())
+            : []
       }
     };
   };
