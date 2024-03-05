@@ -24,20 +24,28 @@ const AdditionalInformation = ({
         {t('additionalInformation.description')}
       </p>
 
+      {(systemIntake.systems.length > 0 || systemIntake.contractName) && (
+        <div className="margin-bottom-3">
+          <span className="font-body-md line-height-body-4 margin-right-1 text-base">
+            {t('additionalInformation.somethingIncorrect')}
+          </span>
+
+          <UswdsReactLink to={`/system/link/${systemIntake.id}`}>
+            {t('additionalInformation.editInformation')}
+          </UswdsReactLink>
+        </div>
+      )}
+
       {systemIntake.systems.length > 0 && (
-        <>
-          <div className="margin-bottom-3">
-            <span className="font-body-md line-height-body-4 margin-right-1 text-base">
-              {t('additionalInformation.somethingIncorrect')}
-            </span>
+        <SystemCardTable systems={systemIntake.systems} />
+      )}
 
-            <UswdsReactLink to={`/system/link/${systemIntake.id}`}>
-              {t('additionalInformation.editInformation')}
-            </UswdsReactLink>
-          </div>
+      {systemIntake.contractName && (
+        <div className="margin-top-3">
+          <strong>{t('additionalInformation.serviceOrContract')}</strong>
 
-          <SystemCardTable systems={systemIntake.systems} />
-        </>
+          <p className="margin-top-1">{systemIntake.contractName}</p>
+        </div>
       )}
 
       {systemIntake.systems.length === 0 && !systemIntake.contractName && (
@@ -51,13 +59,6 @@ const AdditionalInformation = ({
           >
             {t('additionalInformation.linkSystem')}
           </UswdsReactLink>
-        </div>
-      )}
-
-      {systemIntake.contractName && (
-        <div className="margin-top-3">
-          <strong>{t('additionalInformation.serviceOrContract')}</strong>
-          <p className="margin-top-1">{systemIntake.contractName}</p>
         </div>
       )}
 
