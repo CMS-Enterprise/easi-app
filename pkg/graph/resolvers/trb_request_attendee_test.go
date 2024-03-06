@@ -67,7 +67,7 @@ func (s *ResolverSuite) TestCreateTRBRequestAttendee() {
 		createdAttendee, err := CreateTRBRequestAttendee(
 			ctx,
 			s.testConfigs.Store,
-			&emailClient,
+			emailClient.SendTRBAttendeeAddedNotification,
 			stubFetchUserInfo,
 			&attendee,
 		)
