@@ -34,7 +34,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, filter *models.CedarSyste
 	}
 
 	// Check and use cache before making API call if there are no search filters
-	if !filter.Empty() {
+	if filter.Empty() {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
 			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
