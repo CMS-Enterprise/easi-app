@@ -252,17 +252,6 @@ func (s *Server) routes(
 
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
 		base,
-		services.NewUpdateSystemIntake(
-			serviceConfig,
-			store.FetchSystemIntakeByID,
-			store.UpdateSystemIntake,
-			services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode,
-		),
-		services.NewFetchSystemIntakeByID(
-			serviceConfig,
-			store.FetchSystemIntakeByID,
-			services.AuthorizeHasEASiRole,
-		),
 		services.NewArchiveSystemIntake(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
@@ -277,18 +266,6 @@ func (s *Server) routes(
 		),
 	)
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
-	api.Handle("/system_intake", systemIntakeHandler.Handle())
-
-	systemIntakesHandler := handlers.NewSystemIntakesHandler(
-		base,
-		services.NewFetchSystemIntakes(
-			serviceConfig,
-			store.FetchSystemIntakesByEuaID,
-			store.FetchSystemIntakes,
-			services.AuthorizeHasEASiRole,
-		),
-	)
-	api.Handle("/system_intakes", systemIntakesHandler.Handle())
 
 	businessCaseHandler := handlers.NewBusinessCaseHandler(
 		base,
