@@ -8,7 +8,7 @@ import {
   GetSystemProfile,
   /* eslint-disable camelcase */
   GetSystemProfile_cedarAuthorityToOperate,
-  GetSystemProfile_cedarSoftwareProducts_softwareProducts,
+  GetSystemProfile_cedarSoftwareProducts,
   GetSystemProfile_cedarSystemDetails_cedarSystem,
   GetSystemProfile_cedarSystemDetails_deployments_dataCenter,
   GetSystemProfile_cedarSystemDetails_roles,
@@ -147,7 +147,7 @@ export interface SystemProfileData extends GetSystemProfile {
   activities?: tempATOProp[];
   budgets?: tempBudgetProp[];
   // eslint-disable-next-line camelcase
-  products?: GetSystemProfile_cedarSoftwareProducts_softwareProducts[];
+  toolsAndSoftware?: GetSystemProfile_cedarSoftwareProducts;
   subSystems?: tempSubSystemProp[];
   systemData?: tempSystemDataProp[];
 }

@@ -215,7 +215,8 @@ export function getSystemProfileData(
   const { cedarSystemDetails, cedarSoftwareProducts } = data;
   const cedarSystem = cedarSystemDetails?.cedarSystem;
 
-  if (!cedarSystemDetails || !cedarSystem) return undefined;
+  if (!cedarSystemDetails || !cedarSystem || !cedarSoftwareProducts)
+    return undefined;
 
   // Save CedarAssigneeType.PERSON roles for convenience
   const personRoles = cedarSystemDetails.roles.filter(
@@ -267,7 +268,7 @@ export function getSystemProfileData(
     // Remaining mock data stubs
     activities: mockActivies,
     budgets: mockBudgets,
-    products: cedarSoftwareProducts?.softwareProducts,
+    toolsAndSoftware: cedarSoftwareProducts,
     subSystems: mockSubSystems,
     systemData: mockSystemData
   };

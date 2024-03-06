@@ -205,7 +205,10 @@ const systemProfile = {
       apiGateway: 'API Gateway',
       usedForAI: 'Used for Artificial Intelligence',
       noToolsOrSoftware:
-        'This system does not have any tools or software listed.'
+        'This system does not have any tools or software listed.',
+      viewMore: 'View {{count}} more software product',
+      viewMore_plural: 'View {{count}} more software products',
+      viewLess: 'View fewer software products'
     },
     systemData: {
       header: 'System Data',
