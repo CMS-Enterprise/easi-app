@@ -9,7 +9,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -28,14 +27,14 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 // If tryCache is true, it will try and retrieve the data from the cache first and make an API call if the cache is empty
-func (c *Client) GetSystemSummary(ctx context.Context, filter *model.CedarSystemFilterInput) ([]*models.CedarSystem, error) {
+func (c *Client) GetSystemSummary(ctx context.Context, filter *models.CedarSystemFilterInput) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return getMockSystems()
 	}
 
 	// Check and use cache before making API call if there are no search filters
-	if isFilterEmpty(filter) {
+	if !filter.Empty() {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
 			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
@@ -57,10 +56,8 @@ func (c *Client) GetSystemSummary(ctx context.Context, filter *model.CedarSystem
 	params.SetState(null.StringFrom("active").Ptr())
 	params.SetIncludeInSurvey(null.BoolFrom(true).Ptr())
 
-	if !isFilterEmpty(filter) {
-		params.SetUserName(filter.EuaUserID)
-		// as we add more filters, we can set them here
-	}
+	params.SetUserName(&filter.EuaUserID)
+	// as we add more filters, we can set them here
 
 	params.HTTPClient = c.hc
 
@@ -103,14 +100,6 @@ func (c *Client) GetSystemSummary(ctx context.Context, filter *model.CedarSystem
 	}
 
 	return retVal, nil
-}
-
-// isFilterEmpty is a convenience function to easily check if the filter does not contain any search filters
-// TODO(Sam): is it possible tp attach methods to gql generated types? (in this case, `model.CedarSystemFilterInput`). If so, move this to `model`
-func isFilterEmpty(filter *model.CedarSystemFilterInput) bool {
-	return filter == nil ||
-		filter.EuaUserID == nil ||
-		len(*filter.EuaUserID) < 1
 }
 
 // populateSystemSummaryCache is a method used internally by the CEDAR Core client
