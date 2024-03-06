@@ -56,8 +56,10 @@ func (c *Client) GetSystemSummary(ctx context.Context, filter *models.CedarSyste
 	params.SetState(null.StringFrom("active").Ptr())
 	params.SetIncludeInSurvey(null.BoolFrom(true).Ptr())
 
-	params.SetUserName(&filter.EuaUserID)
-	// as we add more filters, we can set them here
+	if !filter.Empty() {
+		params.SetUserName(&filter.EuaUserID)
+		// as we add more filters, we can set them here
+	}
 
 	params.HTTPClient = c.hc
 
