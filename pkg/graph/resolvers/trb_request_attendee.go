@@ -7,7 +7,6 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -16,7 +15,12 @@ import (
 func CreateTRBRequestAttendee(
 	ctx context.Context,
 	store *storage.Store,
-	emailClient *email.Client,
+	sendTRBAttendeeAddedNotification func(
+		ctx context.Context,
+		attendeeEmail models.EmailAddress,
+		requestName string,
+		requesterName string,
+	) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	attendee *models.TRBRequestAttendee,
 ) (*models.TRBRequestAttendee, error) {
@@ -67,7 +71,7 @@ func CreateTRBRequestAttendee(
 	}
 
 	// send email notification
-	err = emailClient.SendTRBAttendeeAddedNotification(
+	err = sendTRBAttendeeAddedNotification(
 		ctx,
 		attendeeInfo.Email,
 		request.GetName(),

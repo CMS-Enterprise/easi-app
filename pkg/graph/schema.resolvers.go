@@ -1695,7 +1695,7 @@ func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input m
 	return resolvers.CreateTRBRequestAttendee(
 		ctx,
 		r.store,
-		r.emailClient,
+		r.emailClient.SendTRBAttendeeAddedNotification,
 		r.service.FetchUserInfo,
 		&models.TRBRequestAttendee{
 			TRBRequestID: input.TrbRequestID,
