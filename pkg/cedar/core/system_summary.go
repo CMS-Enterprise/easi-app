@@ -9,7 +9,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -28,7 +27,7 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 // If the filter is empty will try and retrieve the data from the cache first and make an API call if the cache is empty
-func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, filter *model.CedarSystemFilterInput) ([]*models.CedarSystem, error) {
+func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, filter *models.CedarSystemFilterInput) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return getMockSystems()
@@ -60,7 +59,6 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, filter *mo
 
 	if filter != nil {
 		params.SetUserName(filter.EuaUserID)
-		params.SetRoleType(filter.RoleType)
 		// as we add more filters, we can set them here
 	}
 	params.HTTPClient = c.hc

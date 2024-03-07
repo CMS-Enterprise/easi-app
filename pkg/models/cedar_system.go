@@ -69,3 +69,7 @@ type CedarSystemDetails struct {
 	Threats                     []*CedarThreat     `json:"threats"`
 	URLs                        []*CedarURL        `json:"urls"`
 }
+
+type CedarSystemFilterInput struct {
+	EuaUserID *string `json:"euaUserId"`
+}

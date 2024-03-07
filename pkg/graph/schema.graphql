@@ -189,14 +189,6 @@ type CedarSystemBookmark {
 }
 
 """
-Represents a filter for querying Cedar Systems
-"""
-input CedarSystemFilterInput {
-  euaUserId: String
-  roleType: String
-}
-
-"""
 Represents a person response from CEDAR LDAP
 """
 type UserInfo {
@@ -2717,7 +2709,8 @@ type Query {
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSystem(cedarSystemId: String!): CedarSystem
-  cedarSystems(input: CedarSystemFilterInput): [CedarSystem!]!
+  cedarSystems: [CedarSystem!]!
+  myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!

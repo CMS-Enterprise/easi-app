@@ -20,7 +20,7 @@ import (
 
 const (
 	cedarCoreEnabledKey           = "cedarCoreEnabled"
-	cedarCoreEnabledDefault       = false
+	cedarCoreEnabledDefault       = true
 	cedarCoreCacheDurationDefault = time.Hour * 6
 )
 
