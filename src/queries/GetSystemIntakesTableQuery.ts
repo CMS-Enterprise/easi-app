@@ -64,6 +64,9 @@ export default gql`
           year
         }
       }
+      contractNumbers {
+        contractNumber
+      }
 
       businessNeed
       businessSolution

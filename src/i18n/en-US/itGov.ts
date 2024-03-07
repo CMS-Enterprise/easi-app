@@ -97,5 +97,99 @@ export default {
         viewPreviousDecision: 'View previous decision'
       }
     }
+  },
+  additionalRequestInfo: {
+    header: 'Additional request information',
+    existingSystem:
+      'You have identified this request as part of an existing system.',
+    existingService:
+      'You have identified this request as part of an existing service or other contract.',
+    newSystem:
+      'You have identified this request as for a completely new system, service, or contract.',
+    edit: 'Edit information',
+    viewSystemProfile: 'View system profile',
+    contractName: 'Service or contract name',
+    contractNumber: 'Contract number',
+    noContractNumber: 'No contract number listed',
+    actionRequiredAlert: {
+      header: 'Action required',
+      text:
+        'Is this request part of an existing system, service, or other contract?',
+      answer: 'Answer'
+    },
+    show: {
+      more: 'Show {{count}} more',
+      less: 'Show {{count}} less'
+    }
+  },
+  link: {
+    header: 'Is this request part of an existing system, service, or contract?',
+    description:
+      'If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, service, or contract (such as a major change based on a new business need or the creation of a new sub-system) please include additional details below.',
+    form: {
+      field: {
+        systemOrService: {
+          label:
+            'Is this IT Governance request related to an existing system, service, or contract?',
+          options: [
+            'No, this is a completely new system, service, or contract',
+            'Yes, an existing system',
+            'Yes, an existing service or other contract'
+          ]
+        },
+        contractNumberNew: {
+          label: 'Contract number',
+          help:
+            'If this new work has one or more contract numbers, please add them here. If not, you may leave this field blank. Comma-separate multiple values.'
+        },
+        cmsSystem: {
+          label: 'Which CMS system?',
+          selectedLabel: 'Selected system',
+          help:
+            'This field searches existing CMS systems. Select all that apply.'
+        },
+        contractNumberExisting: {
+          label: 'Contract number',
+          help:
+            'If your work is associated with existing contract(s), please input the contract number(s) here. If it is not, you may leave this field blank. Comma-separate multiple values.'
+        },
+        serviceOrContractName: {
+          label: 'Service or contract name'
+        }
+      },
+      continueTaskList: 'Continue to task list',
+      next: 'Next',
+      skip: 'I’m not sure (skip this step)',
+      back: 'Back',
+      save: 'Save',
+      saveChanges: 'Save changes',
+      unlink: 'or, unlink all information'
+    },
+    cancelAndExit: 'Cancel request and exit',
+    dontUpdate: 'Don’t update and return to task list',
+    skipConfirm: {
+      heading: 'Are you sure you want to skip this step?',
+      text:
+        'Linking this request to its system, service, or other contract provides additional benefits:',
+      list: [
+        'The Governance Team can assist you in a more streamlined and comprehensive manner if they have information about your system, service, or contract.',
+        'EASi can offer increased capabilities and features such as reminders, updates, and other notifications.'
+      ],
+      submit: 'Skip step',
+      cancel: 'Don’t skip this step'
+    },
+    unlinkConfirm: {
+      heading: 'Unlink all information?',
+      text: [
+        "If you clear the information previously input for this question and remove this request's link to a system, service, or other contract, you may re-link it again later.",
+        'Benefits of linking a request to a system, service, or other contract:'
+      ],
+      list: [
+        'The Governance Admin Team can assist you in a more streamlined and comprehensive manner if they have information about your system, service, or contract.',
+        'EASi can offer increased capabilities and features such as reminders, updates, and other notifications.'
+      ],
+      submit: 'Unlink',
+      cancel: 'Go back and don’t unlink'
+    }
   }
 };
