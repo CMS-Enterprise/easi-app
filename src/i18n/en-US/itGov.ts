@@ -97,5 +97,58 @@ export default {
         viewPreviousDecision: 'View previous decision'
       }
     }
+  },
+  link: {
+    header: 'Is this request part of an existing system, service, or contract?',
+    description:
+      'If you are requesting a Life Cycle ID (LCID) and governance approval for a new IT investment that is a part of an existing system, service, or contract (such as a major change based on a new business need or the creation of a new sub-system) please include additional details below.',
+    form: {
+      field: {
+        systemOrService: {
+          label:
+            'Is this IT Governance request related to an existing system, service, or contract?',
+          options: [
+            'No, this is a completely new system, service, or contract',
+            'Yes, an existing system',
+            'Yes, an existing service or other contract'
+          ]
+        },
+        contractNumberNew: {
+          label: 'Contract number',
+          help:
+            'If this new work has one or more contract numbers, please add them here. If not, you may leave this field blank. Comma-separate multiple values.'
+        },
+        cmsSystem: {
+          label: 'Which CMS system?',
+          selectedLabel: 'Selected system',
+          help:
+            'This field searches existing CMS systems. Select all that apply.'
+        },
+        contractNumberExisting: {
+          label: 'Contract number',
+          help:
+            'If your work is associated with existing contract(s), please input the contract number(s) here. If it is not, you may leave this field blank. Comma-separate multiple values.'
+        },
+        serviceOrContractName: {
+          label: 'Service or contract name'
+        }
+      },
+      continueTaskList: 'Continue to task list',
+      next: 'Next',
+      skip: 'I’m not sure (skip this step)',
+      back: 'Back'
+    },
+    skipConfirm: {
+      heading: 'Are you sure you want to skip this step?',
+      text:
+        'Linking this request to its system, service, or other contract provides additional benefits:',
+      list: [
+        'The Governance Team can assist you in a more streamlined and comprehensive manner if they have information about your system, service, or contract.',
+        'EASi can offer increased capabilities and features such as reminders, updates, and other notifications.'
+      ],
+      submit: 'Skip step',
+      cancel: 'Don’t skip this step'
+    },
+    cancelAndExit: 'Cancel request and exit'
   }
 };
