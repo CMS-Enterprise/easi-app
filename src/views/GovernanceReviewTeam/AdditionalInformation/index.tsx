@@ -30,7 +30,9 @@ const AdditionalInformation = ({
             {t('additionalInformation.somethingIncorrect')}
           </span>
 
-          <UswdsReactLink to={`/system/link/${systemIntake.id}`}>
+          <UswdsReactLink
+            to={`/system/link/${systemIntake.id}?edit-type=admin`}
+          >
             {t('additionalInformation.editInformation')}
           </UswdsReactLink>
         </div>
@@ -54,7 +56,7 @@ const AdditionalInformation = ({
             {t('additionalInformation.noLinkedSystemAlert')}
           </Alert>
           <UswdsReactLink
-            to={`/system/link/${systemIntake.id}`}
+            to={`/system/link/${systemIntake.id}?edit-type=admin`}
             className="usa-button usa-button--outline"
           >
             {t('additionalInformation.linkSystem')}

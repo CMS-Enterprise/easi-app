@@ -1,7 +1,8 @@
 const intake = {
   navigation: {
     itGovernance: 'IT Governance',
-    startRequest: 'Start a request',
+    startRequest: 'Start an IT Governance request',
+    editLinkRelation: 'Edit linked system, service, or contract',
     changeRequestType: 'Change request type'
   },
   feedback:
@@ -120,6 +121,7 @@ const intake = {
     contractVehicle: 'Contract Vehicle',
     contractStart: 'Period of Performance Start',
     contractEnd: 'Period of Performance End',
+    contractNumber: 'Contract number',
     status: 'Status',
     lcidScope: 'LCID Scope',
     lastAdminNote: 'Last Admin Team Note',

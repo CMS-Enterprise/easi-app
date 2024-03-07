@@ -157,14 +157,22 @@ export enum ITGovIntakeFormStatus {
  * PersonRole is an enumeration of values for a person's role
  */
 export enum PersonRole {
+  BUSINESS_OWNER = "BUSINESS_OWNER",
   CLOUD_NAVIGATOR = "CLOUD_NAVIGATOR",
   CONTRACT_OFFICE_RSREPRESENTATIVE = "CONTRACT_OFFICE_RSREPRESENTATIVE",
   CRA = "CRA",
+  INFORMATION_SYSTEM_SECURITY_ADVISOR = "INFORMATION_SYSTEM_SECURITY_ADVISOR",
   OTHER = "OTHER",
   PRIVACY_ADVISOR = "PRIVACY_ADVISOR",
   PRODUCT_OWNER = "PRODUCT_OWNER",
   SYSTEM_MAINTAINER = "SYSTEM_MAINTAINER",
   SYSTEM_OWNER = "SYSTEM_OWNER",
+}
+
+export enum RequestRelationType {
+  EXISTING_SERVICE = "EXISTING_SERVICE",
+  EXISTING_SYSTEM = "EXISTING_SYSTEM",
+  NEW_SYSTEM = "NEW_SYSTEM",
 }
 
 /**
@@ -823,6 +831,23 @@ export interface SetRolesForUserOnSystemInput {
   cedarSystemID: string;
   euaUserId: string;
   desiredRoleTypeIDs: string[];
+}
+
+export interface SetSystemIntakeRelationExistingServiceInput {
+  systemIntakeID: UUID;
+  contractName: string;
+  contractNumbers: string[];
+}
+
+export interface SetSystemIntakeRelationExistingSystemInput {
+  systemIntakeID: UUID;
+  cedarSystemIDs: string[];
+  contractNumbers: string[];
+}
+
+export interface SetSystemIntakeRelationNewSystemInput {
+  systemIntakeID: UUID;
+  contractNumbers: string[];
 }
 
 /**
