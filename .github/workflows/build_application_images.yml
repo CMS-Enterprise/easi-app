@@ -136,7 +136,7 @@ jobs:
           provenance: false
       - name: Check for vulnerability scan findings
         run: |
-          ./scripts/check_ecr_findings "easi-backend" "$GIT_HASH" "7"
+          ./scripts/check_ecr_findings.sh "easi-backend" "$GIT_HASH"
       - name: Announce failure
         if: ${{ failure() }}
         run: |
