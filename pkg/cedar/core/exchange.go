@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -56,31 +57,31 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 
 		retVal = append(retVal, &models.CedarExchange{
 			ConnectionFrequency:        exch.ConnectionFrequency,
-			ContainsBankingData:        exch.ContainsBankingData,
-			ContainsBeneficiaryAddress: exch.ContainsBeneficiaryAddress,
-			ContainsPhi:                exch.ContainsPhi,
-			ContainsPii:                exch.ContainsPii,
-			DataExchangeAgreement:      exch.DataExchangeAgreement,
-			DataFormat:                 exch.DataFormat,
-			DataFormatOther:            exch.DataFormatOther,
-			ExchangeDescription:        exch.ExchangeDescription,
+			ContainsBankingData:        null.BoolFrom(exch.ContainsBankingData),
+			ContainsBeneficiaryAddress: null.BoolFrom(exch.ContainsBeneficiaryAddress),
+			ContainsPhi:                null.BoolFrom(exch.ContainsPhi),
+			ContainsPii:                null.BoolFrom(exch.ContainsPii),
+			DataExchangeAgreement:      zero.StringFrom(exch.DataExchangeAgreement),
+			DataFormat:                 zero.StringFrom(exch.DataFormat),
+			DataFormatOther:            zero.StringFrom(exch.DataFormatOther),
+			ExchangeDescription:        zero.StringFrom(exch.ExchangeDescription),
 			ExchangeEndDate:            zero.TimeFrom(time.Time(exch.ExchangeEndDate)),
-			ExchangeID:                 exch.ExchangeID,
-			ExchangeName:               exch.ExchangeName,
+			ExchangeID:                 zero.StringFrom(exch.ExchangeID),
+			ExchangeName:               zero.StringFrom(exch.ExchangeName),
 			ExchangeRetiredDate:        zero.TimeFrom(time.Time(exch.ExchangeRetiredDate)),
 			ExchangeStartDate:          zero.TimeFrom(time.Time(exch.ExchangeStartDate)),
-			ExchangeState:              exch.ExchangeState,
-			ExchangeVersion:            exch.ExchangeVersion,
+			ExchangeState:              zero.StringFrom(exch.ExchangeState),
+			ExchangeVersion:            zero.StringFrom(exch.ExchangeVersion),
 			ExchangeDirection:          direction,
-			FromOwnerID:                exch.FromOwnerID,
-			FromOwnerName:              exch.FromOwnerName,
-			FromOwnerType:              exch.FromOwnerType,
-			IsBeneficiaryMailingFile:   exch.IsBeneficiaryMailingFile,
-			NumOfRecords:               exch.NumOfRecords,
-			SharedViaAPI:               exch.SharedViaAPI,
-			ToOwnerID:                  exch.ToOwnerID,
-			ToOwnerName:                exch.ToOwnerName,
-			ToOwnerType:                exch.ToOwnerType,
+			FromOwnerID:                zero.StringFrom(exch.FromOwnerID),
+			FromOwnerName:              zero.StringFrom(exch.FromOwnerName),
+			FromOwnerType:              zero.StringFrom(exch.FromOwnerType),
+			IsBeneficiaryMailingFile:   null.BoolFrom(exch.IsBeneficiaryMailingFile),
+			NumOfRecords:               zero.StringFrom(exch.NumOfRecords),
+			SharedViaAPI:               null.BoolFrom(exch.SharedViaAPI),
+			ToOwnerID:                  zero.StringFrom(exch.ToOwnerID),
+			ToOwnerName:                zero.StringFrom(exch.ToOwnerName),
+			ToOwnerType:                zero.StringFrom(exch.ToOwnerType),
 			TypeOfData:                 typeOfData,
 		})
 	}

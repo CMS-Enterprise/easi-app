@@ -10,6 +10,7 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type SystemSummaryTestSuite struct {
@@ -36,11 +37,8 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 		resp, err := c.GetSystemSummary(ctx, false)
 		s.NoError(err)
 
-		// ensure mock data is returned
-		s.Equal(len(mockSystems), len(resp))
-		for _, v := range mockSystems {
-			s.Contains(resp, v)
-		}
+		blankSummary := []*models.CedarSystem{}
+		s.Equal(resp, blankSummary)
 	})
 }
 func (s *SystemSummaryTestSuite) TestGetSystem() {
@@ -51,16 +49,10 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 
 	s.Run("LD defaults protects invocation of GetSystem", func() {
 		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, ldClient)
-		// fake, non-mocked systemID should not return system
 		resp, err := c.GetSystem(ctx, "fake")
 		s.NoError(err)
-		s.Empty(resp)
 
-		// should return mocked system when given corresponding mockKey
-		for k, v := range mockSystems {
-			resp, err = c.GetSystem(ctx, k)
-			s.NoError(err)
-			s.Equal(v, resp)
-		}
+		blankSummary := models.CedarSystem{}
+		s.Equal(*resp, blankSummary)
 	})
 }
