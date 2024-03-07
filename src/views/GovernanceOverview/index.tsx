@@ -56,11 +56,12 @@ const GovernanceOverview = () => {
         <UswdsReactLink
           className="usa-button margin-bottom-5"
           variant="unstyled"
-          to={
-            flags.itgovLinkRequestsRequester
+          to={{
+            pathname: flags.itgovLinkRequestsRequester
               ? `/system/link/${systemId}`
-              : `/governance-task-list/${systemId}`
-          }
+              : `/governance-task-list/${systemId}`,
+            state: { isNew: true }
+          }}
         >
           {t('getStarted')}
         </UswdsReactLink>

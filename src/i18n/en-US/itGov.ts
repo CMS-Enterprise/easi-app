@@ -98,6 +98,30 @@ export default {
       }
     }
   },
+  additionalRequestInfo: {
+    header: 'Additional request information',
+    existingSystem:
+      'You have identified this request as part of an existing system.',
+    existingService:
+      'You have identified this request as part of an existing service or other contract.',
+    newSystem:
+      'You have identified this request as for a completely new system, service, or contract.',
+    edit: 'Edit information',
+    viewSystemProfile: 'View system profile',
+    contractName: 'Service or contract name',
+    contractNumber: 'Contract number',
+    noContractNumber: 'No contract number listed',
+    actionRequiredAlert: {
+      header: 'Action required',
+      text:
+        'Is this request part of an existing system, service, or other contract?',
+      answer: 'Answer'
+    },
+    show: {
+      more: 'Show {{count}} more',
+      less: 'Show {{count}} less'
+    }
+  },
   link: {
     header: 'Is this request part of an existing system, service, or contract?',
     description:
@@ -136,8 +160,13 @@ export default {
       continueTaskList: 'Continue to task list',
       next: 'Next',
       skip: 'I’m not sure (skip this step)',
-      back: 'Back'
+      back: 'Back',
+      save: 'Save',
+      saveChanges: 'Save changes',
+      unlink: 'or, unlink all information'
     },
+    cancelAndExit: 'Cancel request and exit',
+    dontUpdate: 'Don’t update and return to task list',
     skipConfirm: {
       heading: 'Are you sure you want to skip this step?',
       text:
@@ -149,6 +178,18 @@ export default {
       submit: 'Skip step',
       cancel: 'Don’t skip this step'
     },
-    cancelAndExit: 'Cancel request and exit'
+    unlinkConfirm: {
+      heading: 'Unlink all information?',
+      text: [
+        "If you clear the information previously input for this question and remove this request's link to a system, service, or other contract, you may re-link it again later.",
+        'Benefits of linking a request to a system, service, or other contract:'
+      ],
+      list: [
+        'The Governance Admin Team can assist you in a more streamlined and comprehensive manner if they have information about your system, service, or contract.',
+        'EASi can offer increased capabilities and features such as reminders, updates, and other notifications.'
+      ],
+      submit: 'Unlink',
+      cancel: 'Go back and don’t unlink'
+    }
   }
 };
