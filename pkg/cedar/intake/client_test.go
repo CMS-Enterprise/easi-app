@@ -3,34 +3,72 @@ package intake
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
 	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
+	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 type ClientTestSuite struct {
 	suite.Suite
 	logger *zap.Logger
+	store  *storage.Store
+	ctx    context.Context
 }
 
 func TestClientTestSuite(t *testing.T) {
+
+	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	assert.NoError(t, err)
+
+	config := testhelpers.NewConfig()
+
+	dbconfig := storage.DBConfig{
+		Host:           config.GetString(appconfig.DBHostConfigKey),
+		Port:           config.GetString(appconfig.DBPortConfigKey),
+		Database:       config.GetString(appconfig.DBNameConfigKey),
+		Username:       config.GetString(appconfig.DBUsernameConfigKey),
+		Password:       config.GetString(appconfig.DBPasswordConfigKey),
+		SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
+		MaxConnections: config.GetInt(appconfig.DBMaxConnections),
+	}
+
+	store, err := storage.NewStore(dbconfig, ldClient)
+	if err != nil {
+		t.Fail()
+		fmt.Printf("Failed to connect to database in Cedar Intake tests: %s", err.Error())
+		return
+	}
+
+	ctx := context.Background()
+
+	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
+
 	tests := &ClientTestSuite{
 		Suite:  suite.Suite{},
 		logger: zap.NewExample(),
+		store:  store,
+		ctx:    ctx,
 	}
+
 	suite.Run(t, tests)
 }
 
 func (s *ClientTestSuite) TestClient() {
-	ctx := appcontext.WithLogger(context.Background(), s.logger)
+	ctx := appcontext.WithLogger(s.ctx, s.logger)
 
 	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
 	s.NoError(err)
@@ -73,23 +111,21 @@ func (s *ClientTestSuite) TestClient() {
 
 func (s *ClientTestSuite) TestTranslation() {
 	s.Run("action", func() {
-		ctx := context.Background()
 		action := translation.TranslatableAction(testhelpers.NewAction())
 		id := uuid.New()
 		action.IntakeID = &id
 
-		ii, err := action.CreateIntakeModel(ctx)
+		ii, err := action.CreateIntakeModel(s.ctx)
 		s.NoError(err)
 		s.NotNil(ii)
 	})
 
 	s.Run("system intake", func() {
-		ctx := context.Background()
 		si := translation.TranslatableSystemIntake(testhelpers.NewSystemIntake())
 		si.CreatedAt = si.ContractStartDate
 		si.UpdatedAt = si.ContractStartDate
 
-		ii, err := si.CreateIntakeModel(ctx)
+		ii, err := si.CreateIntakeModel(s.ctx)
 		s.NoError(err)
 		s.NotNil(ii)
 
@@ -107,19 +143,17 @@ func (s *ClientTestSuite) TestTranslation() {
 	})
 
 	s.Run("note", func() {
-		ctx := context.Background()
 		note := translation.TranslatableNote(testhelpers.NewNote())
 
-		ii, err := note.CreateIntakeModel(ctx)
+		ii, err := note.CreateIntakeModel(s.ctx)
 		s.NoError(err)
 		s.NotNil(ii)
 	})
 
 	s.Run("biz case", func() {
-		ctx := context.Background()
 		bc := translation.TranslatableBusinessCase(testhelpers.NewBusinessCase(uuid.New()))
 
-		ii, err := bc.CreateIntakeModel(ctx)
+		ii, err := bc.CreateIntakeModel(s.ctx)
 		s.NoError(err)
 		s.NotNil(ii)
 	})
