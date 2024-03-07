@@ -9,6 +9,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -27,7 +28,7 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 // If the filter is empty will try and retrieve the data from the cache first and make an API call if the cache is empty
-func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, filter *models.CedarSystemFilterInput) ([]*models.CedarSystem, error) {
+func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, filter *model.CedarSystemFilterInput) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return getMockSystems()
@@ -35,7 +36,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, filter *mo
 
 	// Check and use cache before making API call if there are no search filters
 	// if there are filters, we do not want to access cache as we do not have the ability to filter on our end
-	if tryCache && filter.Empty() {
+	if tryCache {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
 			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
@@ -57,10 +58,9 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, filter *mo
 	params.SetState(null.StringFrom("active").Ptr())
 	params.SetIncludeInSurvey(null.BoolFrom(true).Ptr())
 
-	if !filter.Empty() {
-		params.SetUserName(&filter.EuaUserID)
-		// as we add more filters, we can set them here
-	}
+	params.SetUserName(filter.EuaUserID)
+	params.SetRoleType(filter.RoleType)
+	// as we add more filters, we can set them here
 
 	params.HTTPClient = c.hc
 

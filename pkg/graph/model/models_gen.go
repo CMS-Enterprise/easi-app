@@ -63,6 +63,12 @@ type CedarBusinessOwnerInformation struct {
 	StoresBeneficiaryAddress       *bool    `json:"storesBeneficiaryAddress,omitempty"`
 }
 
+// Represents a filter for querying Cedar Systems
+type CedarSystemFilterInput struct {
+	EuaUserID *string `json:"euaUserId,omitempty"`
+	RoleType  *string `json:"roleType,omitempty"`
+}
+
 // SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
 type CedarSystemMaintainerInformation struct {
 	AgileUsed                  *bool    `json:"agileUsed,omitempty"`

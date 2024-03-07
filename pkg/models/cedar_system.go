@@ -69,22 +69,3 @@ type CedarSystemDetails struct {
 	Threats                     []*CedarThreat     `json:"threats"`
 	URLs                        []*CedarURL        `json:"urls"`
 }
-
-type CedarSystemFilterInput struct {
-	EuaUserID string `json:"euaUserId"`
-	// as we add more potential filters here, please update the below `Empty()` method
-}
-
-func (c *CedarSystemFilterInput) Empty() bool {
-	if c == nil {
-		return true
-	}
-
-	if len(c.EuaUserID) > 0 {
-		return false
-	}
-
-	// add additional filter checks here
-
-	return true
-}

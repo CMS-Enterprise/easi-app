@@ -618,7 +618,7 @@ type ComplexityRoot struct {
 		CedarSystem              func(childComplexity int, cedarSystemID string) int
 		CedarSystemBookmarks     func(childComplexity int) int
 		CedarSystemDetails       func(childComplexity int, cedarSystemID string) int
-		CedarSystems             func(childComplexity int, input *models.CedarSystemFilterInput) int
+		CedarSystems             func(childComplexity int, input *model.CedarSystemFilterInput) int
 		CedarThreat              func(childComplexity int, cedarSystemID string) int
 		CurrentUser              func(childComplexity int) int
 		Deployments              func(childComplexity int, cedarSystemID string, deploymentType *string, state *string, status *string) int
@@ -1396,7 +1396,7 @@ type QueryResolver interface {
 	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error)
 	CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error)
 	CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error)
-	CedarSystems(ctx context.Context, input *models.CedarSystemFilterInput) ([]*models.CedarSystem, error)
+	CedarSystems(ctx context.Context, input *model.CedarSystemFilterInput) ([]*models.CedarSystem, error)
 	CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error)
 	CedarThreat(ctx context.Context, cedarSystemID string) ([]*models.CedarThreat, error)
 	Deployments(ctx context.Context, cedarSystemID string, deploymentType *string, state *string, status *string) ([]*models.CedarDeployment, error)
@@ -4796,7 +4796,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.CedarSystems(childComplexity, args["input"].(*models.CedarSystemFilterInput)), true
+		return e.complexity.Query.CedarSystems(childComplexity, args["input"].(*model.CedarSystemFilterInput)), true
 
 	case "Query.cedarThreat":
 		if e.complexity.Query.CedarThreat == nil {
@@ -7867,6 +7867,7 @@ Represents a filter for querying Cedar Systems
 """
 input CedarSystemFilterInput {
   euaUserId: String
+  roleType: String
 }
 
 """
@@ -12244,10 +12245,10 @@ func (ec *executionContext) field_Query_cedarSystem_args(ctx context.Context, ra
 func (ec *executionContext) field_Query_cedarSystems_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *models.CedarSystemFilterInput
+	var arg0 *model.CedarSystemFilterInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOCedarSystemFilterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemFilterInput(ctx, tmp)
+		arg0, err = ec.unmarshalOCedarSystemFilterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarSystemFilterInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -34343,7 +34344,7 @@ func (ec *executionContext) _Query_cedarSystems(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().CedarSystems(rctx, fc.Args["input"].(*models.CedarSystemFilterInput))
+		return ec.resolvers.Query().CedarSystems(rctx, fc.Args["input"].(*model.CedarSystemFilterInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -54057,14 +54058,14 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputCedarSystemFilterInput(ctx context.Context, obj interface{}) (models.CedarSystemFilterInput, error) {
-	var it models.CedarSystemFilterInput
+func (ec *executionContext) unmarshalInputCedarSystemFilterInput(ctx context.Context, obj interface{}) (model.CedarSystemFilterInput, error) {
+	var it model.CedarSystemFilterInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"euaUserId"}
+	fieldsInOrder := [...]string{"euaUserId", "roleType"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -54073,11 +54074,18 @@ func (ec *executionContext) unmarshalInputCedarSystemFilterInput(ctx context.Con
 		switch k {
 		case "euaUserId":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("euaUserId"))
-			data, err := ec.unmarshalOString2string(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.EuaUserID = data
+		case "roleType":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("roleType"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RoleType = data
 		}
 	}
 
@@ -75201,7 +75209,7 @@ func (ec *executionContext) marshalOCedarSystemDetails2ᚖgithubᚗcomᚋcmsgov�
 	return ec._CedarSystemDetails(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOCedarSystemFilterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemFilterInput(ctx context.Context, v interface{}) (*models.CedarSystemFilterInput, error) {
+func (ec *executionContext) unmarshalOCedarSystemFilterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarSystemFilterInput(ctx context.Context, v interface{}) (*model.CedarSystemFilterInput, error) {
 	if v == nil {
 		return nil, nil
 	}

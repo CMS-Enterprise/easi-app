@@ -193,6 +193,7 @@ Represents a filter for querying Cedar Systems
 """
 input CedarSystemFilterInput {
   euaUserId: String
+  roleType: String
 }
 
 """
