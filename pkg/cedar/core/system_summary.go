@@ -58,10 +58,11 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, filter *mo
 	params.SetState(null.StringFrom("active").Ptr())
 	params.SetIncludeInSurvey(null.BoolFrom(true).Ptr())
 
-	params.SetUserName(filter.EuaUserID)
-	params.SetRoleType(filter.RoleType)
-	// as we add more filters, we can set them here
-
+	if filter != nil {
+		params.SetUserName(filter.EuaUserID)
+		params.SetRoleType(filter.RoleType)
+		// as we add more filters, we can set them here
+	}
 	params.HTTPClient = c.hc
 
 	// Make the API call
