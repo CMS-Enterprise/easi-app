@@ -58,10 +58,10 @@ const RequestTypeForm = () => {
               history.push(`/governance-overview/${id}`);
               break;
             case 'MAJOR_CHANGES':
-              history.push(navigationLink);
+              history.push(navigationLink, { isNew: true });
               break;
             case 'RECOMPETE':
-              history.push(navigationLink);
+              history.push(navigationLink, { isNew: true });
               break;
             default:
               // console.warn(`Unknown request type: ${systemIntake.requestType}`);

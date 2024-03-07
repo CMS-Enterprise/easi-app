@@ -546,7 +546,11 @@ export const taskListSystemIntake: TaskListSystemIntake = {
   updatedAt: null,
   grtDate: null,
   grbDate: null,
-  businessCase: null
+  businessCase: null,
+  relationType: null,
+  contractName: null,
+  contractNumbers: [],
+  systems: []
 };
 
 export const getGovernanceTaskListQuery = (
