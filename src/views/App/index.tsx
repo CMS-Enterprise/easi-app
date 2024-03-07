@@ -37,6 +37,7 @@ import NotFound from 'views/NotFound';
 import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
+import RequestLinkForm from 'views/RequestLinkForm';
 import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
@@ -103,6 +104,13 @@ const AppRoutes = () => {
         path="/system/request-type"
         component={RequestTypeForm}
       />
+      {flags.itgovLinkRequestsRequester && (
+        <SecureRoute
+          exact
+          path="/system/link/:systemId?"
+          component={RequestLinkForm}
+        />
+      )}
       <SecureRoute
         path="/governance-overview/:systemId?"
         component={GovernanceOverview}

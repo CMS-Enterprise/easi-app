@@ -419,6 +419,7 @@ export const systemIntakeForTable: TableSystemIntake = {
     plannedYearOneSpendingITPortion: 'Planned year one spending IT portion'
   },
   contract: systemIntake.contract,
+  contractNumbers: [],
   businessNeed: systemIntake.businessNeed,
   businessSolution: systemIntake.businessSolution,
   currentStage: systemIntake.currentStage,
