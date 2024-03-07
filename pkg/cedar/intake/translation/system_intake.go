@@ -1,7 +1,9 @@
 package translation
 
 import (
+	"context"
 	"encoding/json"
+	"strings"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
@@ -39,6 +41,16 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		return nil, err
 	}
 
+	contracts, err := resolvers.SystemIntakeContractNumbers(context.Background(), si.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	var numbers []string
+	for _, contract := range contracts {
+		numbers = append(numbers, contract.ContractNumber)
+	}
+
 	obj := &intakemodels.EASIIntake{
 		IntakeID:                    si.ID.String(),
 		UserEUA:                     si.EUAUserID.ValueOrZero(),
@@ -67,7 +79,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		CostIncreaseAmount:          si.CostIncreaseAmount.Ptr(),
 		Contractor:                  si.Contractor.Ptr(),
 		ContractVehicle:             si.ContractVehicle.Ptr(),
-		ContractNumber:              helpers.PointerTo(""), // TODO: populate with linked contract numbers?
+		ContractNumber:              helpers.PointerTo(strings.Join(numbers, ", ")),
 		RequesterEmailAddress:       si.RequesterEmailAddress.Ptr(),
 		LifecycleID:                 si.LifecycleID.Ptr(),
 		LifecycleScope:              si.LifecycleScope.StringPointer(),
