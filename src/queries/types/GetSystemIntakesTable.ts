@@ -65,9 +65,9 @@ export interface GetSystemIntakesTable_systemIntakes_contract {
 
 export interface GetSystemIntakesTable_systemIntakes_contractNumbers {
   __typename: "SystemIntakeContractNumber";
+  contractNumber: string;
   id: UUID;
   systemIntakeID: UUID;
-  contractNumber: string;
 }
 
 export interface GetSystemIntakesTable_systemIntakes_notes {

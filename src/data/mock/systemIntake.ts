@@ -425,6 +425,7 @@ export const systemIntakeForTable: TableSystemIntake = {
     plannedYearOneSpendingITPortion: 'Planned year one spending IT portion'
   },
   contract: systemIntake.contract,
+  contractNumbers: [],
   businessNeed: systemIntake.businessNeed,
   businessSolution: systemIntake.businessSolution,
   currentStage: systemIntake.currentStage,
@@ -442,8 +443,7 @@ export const systemIntakeForTable: TableSystemIntake = {
   updatedAt: null,
   createdAt: systemIntake.createdAt,
   archivedAt: null,
-  hasUiChanges: null,
-  contractNumbers: []
+  hasUiChanges: null
 };
 
 export const getSystemIntakeQuery = (

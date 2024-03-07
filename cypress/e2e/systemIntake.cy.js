@@ -32,6 +32,9 @@ describe('The System Intake Form', () => {
     cy.contains('a', 'Get started').click();
     cy.wait(1000);
 
+    cy.get('#relationType-newSystem').check({ force: true });
+    cy.contains('button', 'Continue to task list').click();
+
     cy.get('li[data-testid="fill-out-the-intake-request-form"]')
       .contains('button', 'Start')
       .click();

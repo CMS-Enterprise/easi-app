@@ -63,6 +63,9 @@ export default gql`
           year
         }
       }
+      contractNumbers {
+        contractNumber
+      }
 
       contractNumbers {
         id

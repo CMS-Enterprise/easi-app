@@ -56,7 +56,7 @@ const Modal = ({
       shouldCloseOnOverlayClick={shouldCloseOnOverlayClick}
       appElement={root!}
       // Fix for "App element is not defined" unit test error
-      {...(root ? {} : { ariaHideApp: false })}
+      ariaHideApp={root ? undefined : false}
     >
       <button
         type="button"

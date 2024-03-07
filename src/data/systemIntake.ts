@@ -296,6 +296,9 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
   // Override all applicable fields with CSV formatting
   return cleanCSVData({
     ...intake,
+    contractNumber: intake.contractNumbers
+      .map(v => v.contractNumber)
+      .join(', '),
     lastAdminNote,
     // Formatted booleans
     existingFunding,
