@@ -490,27 +490,33 @@ const RequestLinkForm = () => {
                 onClick={() => submit()}
               >
                 {t(
-                  `link.form.${
-                    relation === RequestRelationType.NEW_SYSTEM
-                      ? 'continueTaskList'
-                      : 'next'
-                  }`
+                  `link.form.${(() => {
+                    if (isNew) {
+                      return relation === RequestRelationType.NEW_SYSTEM
+                        ? 'continueTaskList'
+                        : 'next';
+                    }
+                    return 'save';
+                  })()}`
                 )}
               </Button>
 
-              <Button
-                type="submit"
-                unstyled
-                onClick={() => {
-                  if (isNew) setSkipModalOpen(true);
-                  else setUnlinkModalOpen(true);
-                }}
-                className={classNames('margin-left-1', {
-                  'text-error': !isNew
-                })}
-              >
-                {t(`link.form.${isNew ? 'skip' : 'unlink'}`)}
-              </Button>
+              {(isNew ||
+                (!isNew && data.systemIntake?.relationType !== null)) && (
+                <Button
+                  type="submit"
+                  unstyled
+                  onClick={() => {
+                    if (isNew) setSkipModalOpen(true);
+                    else setUnlinkModalOpen(true);
+                  }}
+                  className={classNames('margin-left-1', {
+                    'text-error': !isNew
+                  })}
+                >
+                  {t(`link.form.${isNew ? 'skip' : 'unlink'}`)}
+                </Button>
+              )}
             </ButtonGroup>
 
             <IconButton
@@ -521,7 +527,7 @@ const RequestLinkForm = () => {
                 history.goBack();
               }}
             >
-              Back
+              {t('link.form.back')}
             </IconButton>
 
             {/* Skip confirm modal */}

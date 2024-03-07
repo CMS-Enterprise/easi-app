@@ -164,20 +164,12 @@ exports[`IT Gov Request relation link form > renders 1`] = `
             disabled=""
             type="submit"
           >
-            Next
+            Save
           </button>
         </li>
         <li
           class="usa-button-group__item"
-        >
-          <button
-            class="usa-button usa-button--unstyled margin-left-1 text-error"
-            data-testid="button"
-            type="submit"
-          >
-            or, unlink all information
-          </button>
-        </li>
+        />
       </ul>
       <button
         class="usa-button usa-button--unstyled display-flex flex-align-center"

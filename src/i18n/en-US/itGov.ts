@@ -161,6 +161,7 @@ export default {
       next: 'Next',
       skip: 'I’m not sure (skip this step)',
       back: 'Back',
+      save: 'Save',
       saveChanges: 'Save changes',
       unlink: 'or, unlink all information'
     },
