@@ -85,9 +85,6 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, filter *mo
 	retVal := []*models.CedarSystem{}
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
 	for _, sys := range resp.Payload.SystemSummary {
-		fmt.Println("==== sys ====")
-		fmt.Printf("%+v\n", sys)
-		fmt.Println("==== sys ====")
 		if sys.IctObjectID != nil {
 			cedarSys := &models.CedarSystem{
 				VersionID:               *sys.ID,
