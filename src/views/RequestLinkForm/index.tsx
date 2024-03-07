@@ -65,11 +65,17 @@ const RequestLinkForm = () => {
 
   const { t } = useTranslation(['itGov', 'intake', 'action', 'error']);
 
+  // Fetch query param to check if coming from admin home for redirect and text changes
+  const params = new URLSearchParams(useLocation().search);
+  const isAdmin = params.get('edit-type') === 'admin';
+
   // Form mode is either new or edit
   const { state } = useLocation<{ isNew?: boolean }>();
   const isNew = !!state?.isNew;
 
   const taskListUrl = `/governance-task-list/${systemId}`;
+  const adminUrl = `/governance-review-team/${systemId}/additional-information`;
+  const redirectUrl = isAdmin ? adminUrl : taskListUrl;
 
   const [hasUserError, setUserError] = useState<boolean>(false);
 
@@ -217,7 +223,7 @@ const RequestLinkForm = () => {
 
     p?.then(
       res => {
-        if (res?.data) history.push(taskListUrl);
+        if (res?.data) history.push(redirectUrl);
       },
       () => {}
     ).catch(() => {
@@ -229,7 +235,7 @@ const RequestLinkForm = () => {
     unlinkSystemIntakeRelation({ variables: { intakeID: systemId } })
       .then(
         res => {
-          if (res?.data) history.push(taskListUrl);
+          if (res?.data) history.push(redirectUrl);
         },
         () => {}
       )
@@ -277,8 +283,12 @@ const RequestLinkForm = () => {
             ) : (
               <>
                 <Breadcrumb>
-                  <BreadcrumbLink asCustom={Link} to={taskListUrl}>
-                    <span>{t('Task list')}</span>
+                  <BreadcrumbLink asCustom={Link} to={redirectUrl}>
+                    <span>
+                      {isAdmin
+                        ? t('additionalRequestInfo.requestDetailsBreadcrumb')
+                        : t('additionalRequestInfo.taskListBreadCrumb')}
+                    </span>
                   </BreadcrumbLink>
                 </Breadcrumb>
                 <Breadcrumb current>
@@ -496,7 +506,7 @@ const RequestLinkForm = () => {
                         ? 'continueTaskList'
                         : 'next';
                     }
-                    return 'save';
+                    return 'saveChanges';
                   })()}`
                 )}
               </Button>

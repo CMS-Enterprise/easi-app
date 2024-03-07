@@ -100,6 +100,8 @@ export default {
   },
   additionalRequestInfo: {
     header: 'Additional request information',
+    taskListBreadCrumb: 'Task list',
+    requestDetailsBreadcrumb: 'IT Governance request details',
     existingSystem:
       'You have identified this request as part of an existing system.',
     existingService:
