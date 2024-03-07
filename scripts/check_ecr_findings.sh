@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Exit on any error
 set -eu -o pipefail
 
 # Set the repository name and image tag
