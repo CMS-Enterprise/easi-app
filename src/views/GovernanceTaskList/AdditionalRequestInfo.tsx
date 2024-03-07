@@ -1,11 +1,84 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, IconArrowForward } from '@trussworks/react-uswds';
+import {
+  Alert,
+  Button,
+  IconArrowForward,
+  IconExpandMore
+} from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
 import { GetGovernanceTaskList_systemIntake as SystemIntake } from 'queries/types/GetGovernanceTaskList';
 import { RequestRelationType } from 'types/graphql-global-types';
+
+type SystemCardItemProps = {
+  id: string;
+  name: string;
+  acronym: string | null;
+};
+
+function SystemCardItem({ item }: { item: SystemCardItemProps }) {
+  const { t } = useTranslation('itGov');
+  return (
+    <div className="margin-top-2 padding-3 border border-base-lighter radius-md box-shadow-2">
+      <h4 className="margin-top-0 margin-bottom-1 line-height-heading-2">
+        {item.name}
+      </h4>
+      {item.acronym && (
+        <h5 className="margin-y-0 text-normal line-height-heading-1">
+          {item.acronym}
+        </h5>
+      )}
+      <Divider className="margin-y-2" />
+      <UswdsReactLink to={`/systems/${item.id}`}>
+        {t('additionalRequestInfo.viewSystemProfile')}
+        <IconArrowForward className="text-middle margin-left-05" />
+      </UswdsReactLink>
+    </div>
+  );
+}
+
+function SystemCardList({ items }: { items: SystemCardItemProps[] }) {
+  const { t } = useTranslation('itGov');
+
+  const [isShowMore, setShowMore] = useState<boolean>(false);
+
+  // Initially only show 1 card
+  const numInitial = 1;
+  const numMore = items.length - numInitial;
+
+  if (items.length === 0) return null;
+
+  return (
+    <div className="margin-y-2">
+      <SystemCardItem item={items[0]} />
+      {numMore > 0 && (
+        <>
+          <Button
+            type="button"
+            unstyled
+            className="margin-top-2"
+            onClick={() => setShowMore(!isShowMore)}
+          >
+            {t(`additionalRequestInfo.show.${isShowMore ? 'less' : 'more'}`, {
+              count: numMore
+            })}
+            <IconExpandMore
+              className="text-middle margin-left-05"
+              style={{ transform: `scaleY(${isShowMore ? -1 : 1})` }}
+            />
+          </Button>
+
+          {isShowMore &&
+            items
+              .slice(numInitial)
+              .map(i => <SystemCardItem key={i.id} item={i} />)}
+        </>
+      )}
+    </div>
+  );
+}
 
 function AdditionalRequestInfo({ ...system }: SystemIntake) {
   const { t } = useTranslation('itGov');
@@ -43,24 +116,7 @@ function AdditionalRequestInfo({ ...system }: SystemIntake) {
         </p>
       )}
 
-      {system.systems.length > 0 && (
-        <div>
-          {system.systems.map(s => (
-            <div
-              key={s.id}
-              className="margin-y-1 padding-3 border-1px box-shadow-2"
-            >
-              <h4 className="margin-top-0 margin-bottom-1">{s.name}</h4>{' '}
-              <span>{s.acronym}</span>
-              <Divider className="margin-top-1 margin-bottom-2" />
-              <UswdsReactLink to={`/systems/${s.id}`}>
-                {t('additionalRequestInfo.viewSystemProfile')}
-                <IconArrowForward className="text-middle margin-left-05" />
-              </UswdsReactLink>
-            </div>
-          ))}
-        </div>
-      )}
+      <SystemCardList items={system.systems} />
 
       {system.contractName !== null && (
         <p>

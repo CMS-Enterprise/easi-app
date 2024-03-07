@@ -116,6 +116,10 @@ export default {
       text:
         'Is this request part of an existing system, service, or other contract?',
       answer: 'Answer'
+    },
+    show: {
+      more: 'Show {{count}} more',
+      less: 'Show {{count}} less'
     }
   },
   link: {
