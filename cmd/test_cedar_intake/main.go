@@ -379,9 +379,10 @@ func submitToCEDAR() {
 }
 
 func dumpIntakeObject(obj translation.IntakeObject, directory string) {
+	ctx := context.Background()
 	filename := filepath.Join(directory, obj.ObjectType()+".json")
 
-	intakeModel, err := obj.CreateIntakeModel()
+	intakeModel, err := obj.CreateIntakeModel(ctx)
 	noErr(err)
 
 	err = os.WriteFile(filename, []byte(*intakeModel.Body), 0600)

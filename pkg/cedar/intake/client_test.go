@@ -73,21 +73,23 @@ func (s *ClientTestSuite) TestClient() {
 
 func (s *ClientTestSuite) TestTranslation() {
 	s.Run("action", func() {
+		ctx := context.Background()
 		action := translation.TranslatableAction(testhelpers.NewAction())
 		id := uuid.New()
 		action.IntakeID = &id
 
-		ii, err := action.CreateIntakeModel()
+		ii, err := action.CreateIntakeModel(ctx)
 		s.NoError(err)
 		s.NotNil(ii)
 	})
 
 	s.Run("system intake", func() {
+		ctx := context.Background()
 		si := translation.TranslatableSystemIntake(testhelpers.NewSystemIntake())
 		si.CreatedAt = si.ContractStartDate
 		si.UpdatedAt = si.ContractStartDate
 
-		ii, err := si.CreateIntakeModel()
+		ii, err := si.CreateIntakeModel(ctx)
 		s.NoError(err)
 		s.NotNil(ii)
 
@@ -105,17 +107,19 @@ func (s *ClientTestSuite) TestTranslation() {
 	})
 
 	s.Run("note", func() {
+		ctx := context.Background()
 		note := translation.TranslatableNote(testhelpers.NewNote())
 
-		ii, err := note.CreateIntakeModel()
+		ii, err := note.CreateIntakeModel(ctx)
 		s.NoError(err)
 		s.NotNil(ii)
 	})
 
 	s.Run("biz case", func() {
+		ctx := context.Background()
 		bc := translation.TranslatableBusinessCase(testhelpers.NewBusinessCase(uuid.New()))
 
-		ii, err := bc.CreateIntakeModel()
+		ii, err := bc.CreateIntakeModel(ctx)
 		s.NoError(err)
 		s.NotNil(ii)
 	})

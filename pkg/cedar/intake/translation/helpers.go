@@ -1,6 +1,7 @@
 package translation
 
 import (
+	"context"
 	"time"
 
 	"github.com/go-openapi/strfmt"
@@ -12,7 +13,7 @@ import (
 type IntakeObject interface {
 	ObjectID() string
 	ObjectType() string
-	CreateIntakeModel() (*wire.IntakeInput, error)
+	CreateIntakeModel(context.Context) (*wire.IntakeInput, error)
 }
 
 func strDate(t *time.Time) string {

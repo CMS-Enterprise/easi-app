@@ -26,7 +26,7 @@ func (si *TranslatableSystemIntake) ObjectType() string {
 }
 
 // CreateIntakeModel translates a SystemIntake into an IntakeInput
-func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, error) {
+func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wire.IntakeInput, error) {
 	fundingSources := make([]*intakemodels.EASIFundingSource, 0, len(si.FundingSources))
 	for _, fundingSource := range si.FundingSources {
 		fundingSources = append(fundingSources, &intakemodels.EASIFundingSource{
@@ -41,7 +41,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		return nil, err
 	}
 
-	contracts, err := resolvers.SystemIntakeContractNumbers(context.Background(), si.ID)
+	contracts, err := resolvers.SystemIntakeContractNumbers(ctx, si.ID)
 	if err != nil {
 		return nil, err
 	}
