@@ -65,17 +65,25 @@ const RequestLinkForm = () => {
 
   const { t } = useTranslation(['itGov', 'intake', 'action', 'error']);
 
-  // Fetch query param to check if coming from admin home for redirect and text changes
-  const params = new URLSearchParams(useLocation().search);
-  const isAdmin = params.get('edit-type') === 'admin';
-
   // Form mode is either new or edit
   const { state } = useLocation<{ isNew?: boolean }>();
   const isNew = !!state?.isNew;
 
+  // Fetch query param to check if coming from ITGov/TRB admin home for redirect and text changes
+  const params = new URLSearchParams(useLocation().search);
+  const editType = params.get('edit-type');
+
   const taskListUrl = `/governance-task-list/${systemId}`;
-  const adminUrl = `/governance-review-team/${systemId}/additional-information`;
-  const redirectUrl = isAdmin ? adminUrl : taskListUrl;
+  let breadCrumb = t('additionalRequestInfo.taskListBreadCrumb');
+
+  let redirectUrl = taskListUrl;
+  if (editType === 'it-gov-admin') {
+    redirectUrl = `/governance-review-team/${systemId}/additional-information`;
+    breadCrumb = t('additionalRequestInfo.itGovBreadcrumb');
+  } else if (editType === 'trb-admin') {
+    redirectUrl = `/trb/${systemId}/additional-information`;
+    breadCrumb = t('additionalRequestInfo.trbBreadcrumb');
+  }
 
   const [hasUserError, setUserError] = useState<boolean>(false);
 
@@ -284,11 +292,7 @@ const RequestLinkForm = () => {
               <>
                 <Breadcrumb>
                   <BreadcrumbLink asCustom={Link} to={redirectUrl}>
-                    <span>
-                      {isAdmin
-                        ? t('additionalRequestInfo.requestDetailsBreadcrumb')
-                        : t('additionalRequestInfo.taskListBreadCrumb')}
-                    </span>
+                    <span>{breadCrumb}</span>
                   </BreadcrumbLink>
                 </Breadcrumb>
                 <Breadcrumb current>
