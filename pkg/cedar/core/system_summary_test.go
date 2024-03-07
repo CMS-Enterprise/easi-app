@@ -33,7 +33,7 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 
 	s.Run("LD defaults protects invocation of GetSystemSummary", func() {
 		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, ldClient)
-		resp, err := c.GetSystemSummary(ctx, nil)
+		resp, err := c.GetSystemSummary(ctx, false, nil)
 		s.NoError(err)
 
 		// ensure mock data is returned

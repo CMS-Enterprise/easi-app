@@ -26,15 +26,16 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 }
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
-// If tryCache is true, it will try and retrieve the data from the cache first and make an API call if the cache is empty
-func (c *Client) GetSystemSummary(ctx context.Context, filter *models.CedarSystemFilterInput) ([]*models.CedarSystem, error) {
+// If the filter is empty will try and retrieve the data from the cache first and make an API call if the cache is empty
+func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, filter *models.CedarSystemFilterInput) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return getMockSystems()
 	}
 
 	// Check and use cache before making API call if there are no search filters
-	if filter.Empty() {
+	// if there are filters, we do not want to access cache as we do not have the ability to filter on our end
+	if tryCache && filter.Empty() {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
 			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
@@ -84,6 +85,9 @@ func (c *Client) GetSystemSummary(ctx context.Context, filter *models.CedarSyste
 	retVal := []*models.CedarSystem{}
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
 	for _, sys := range resp.Payload.SystemSummary {
+		fmt.Println("==== sys ====")
+		fmt.Printf("%+v\n", sys)
+		fmt.Println("==== sys ====")
 		if sys.IctObjectID != nil {
 			cedarSys := &models.CedarSystem{
 				VersionID:               *sys.ID,
@@ -117,7 +121,7 @@ func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
 	appcontext.ZLogger(ctx).Info("Refreshing System Summary cache")
 
 	// Get data from API - don't use cache to populate cache!
-	systemSummary, err := c.GetSystemSummary(ctx, nil)
+	systemSummary, err := c.GetSystemSummary(ctx, false, nil)
 	if err != nil {
 		return err
 	}

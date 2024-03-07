@@ -2129,7 +2129,7 @@ func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (
 
 // CedarSystems is the resolver for the cedarSystems field.
 func (r *queryResolver) CedarSystems(ctx context.Context, input *models.CedarSystemFilterInput) ([]*models.CedarSystem, error) {
-	return r.cedarCoreClient.GetSystemSummary(ctx, input)
+	return r.cedarCoreClient.GetSystemSummary(ctx, true, input)
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.
