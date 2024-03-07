@@ -28,10 +28,22 @@ exports[`IT Gov Request relation link form > renders 1`] = `
           </a>
         </li>
         <li
+          class="usa-breadcrumb__list-item"
+        >
+          <a
+            class="usa-breadcrumb__link"
+            href="/governance-task-list/fa93173c-2e8c-4371-b464-4b3dd649f940"
+          >
+            <span>
+              Task list
+            </span>
+          </a>
+        </li>
+        <li
           aria-current="page"
           class="usa-breadcrumb__list-item usa-current"
         >
-          Start an IT Governance request
+          Edit linked system, service, or contract
         </li>
       </ol>
     </nav>
@@ -92,7 +104,7 @@ exports[`IT Gov Request relation link form > renders 1`] = `
                 id="relationType-newSystem"
                 name="relationType"
                 type="radio"
-                value="newSystem"
+                value="NEW_SYSTEM"
               />
               <label
                 class="usa-radio__label"
@@ -110,7 +122,7 @@ exports[`IT Gov Request relation link form > renders 1`] = `
                 id="relationType-existingSystem"
                 name="relationType"
                 type="radio"
-                value="existingSystem"
+                value="EXISTING_SYSTEM"
               />
               <label
                 class="usa-radio__label"
@@ -128,7 +140,7 @@ exports[`IT Gov Request relation link form > renders 1`] = `
                 id="relationType-existingService"
                 name="relationType"
                 type="radio"
-                value="existingService"
+                value="EXISTING_SERVICE"
               />
               <label
                 class="usa-radio__label"
@@ -159,11 +171,11 @@ exports[`IT Gov Request relation link form > renders 1`] = `
           class="usa-button-group__item"
         >
           <button
-            class="usa-button usa-button--unstyled margin-left-1"
+            class="usa-button usa-button--unstyled margin-left-1 text-error"
             data-testid="button"
             type="submit"
           >
-            I’m not sure (skip this step)
+            or, unlink all information
           </button>
         </li>
       </ul>
