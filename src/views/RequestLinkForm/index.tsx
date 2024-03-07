@@ -71,8 +71,6 @@ const RequestLinkForm = () => {
 
   const taskListUrl = `/governance-task-list/${systemId}`;
 
-  const [relation, setRelation] = useState<RequestRelationType | null>(null);
-
   const [hasUserError, setUserError] = useState<boolean>(false);
 
   const [isSkipModalOpen, setSkipModalOpen] = useState<boolean>(false);
@@ -82,13 +80,6 @@ const RequestLinkForm = () => {
     GetSystemIntakeRelation,
     GetSystemIntakeRelationVariables
   >(GetSystemIntakeRelationQuery, { variables: { id: systemId } });
-
-  // console.log(data);
-
-  useEffect(() => {
-    const r = data?.systemIntake?.relationType;
-    if (r) setRelation(r);
-  }, [data]);
 
   const cedarSystemIdOptions = useMemo(() => {
     const cedarSystemsData = data?.cedarSystems;
@@ -129,7 +120,7 @@ const RequestLinkForm = () => {
     UnlinkSystemIntakeRelationVariables
   >(UnlinkSystemIntakeRelationQuery);
 
-  const { control, watch, handleSubmit } = useForm<{
+  const { control, watch, setValue, handleSubmit } = useForm<{
     relationType: RequestRelationType | null;
     cedarSystemIDs: string[];
     contractNumbers: string;
@@ -156,6 +147,7 @@ const RequestLinkForm = () => {
 
   // Ref fields for some form behavior
   const fields = watch();
+  const relation = fields.relationType;
 
   // This form doesn't use field validation feedback
   // Instead the submission button is disabled according to field requirements
@@ -327,7 +319,9 @@ const RequestLinkForm = () => {
                     name="relationType"
                     value={RequestRelationType.NEW_SYSTEM}
                     label={t('link.form.field.systemOrService.options.0')}
-                    onChange={() => setRelation(RequestRelationType.NEW_SYSTEM)}
+                    onChange={() =>
+                      setValue('relationType', RequestRelationType.NEW_SYSTEM)
+                    }
                     checked={relation === RequestRelationType.NEW_SYSTEM}
                   />
 
@@ -361,7 +355,10 @@ const RequestLinkForm = () => {
                     value={RequestRelationType.EXISTING_SYSTEM}
                     label={t('link.form.field.systemOrService.options.1')}
                     onChange={() =>
-                      setRelation(RequestRelationType.EXISTING_SYSTEM)
+                      setValue(
+                        'relationType',
+                        RequestRelationType.EXISTING_SYSTEM
+                      )
                     }
                     checked={relation === RequestRelationType.EXISTING_SYSTEM}
                   />
@@ -427,7 +424,10 @@ const RequestLinkForm = () => {
                     value={RequestRelationType.EXISTING_SERVICE}
                     label={t('link.form.field.systemOrService.options.2')}
                     onChange={() =>
-                      setRelation(RequestRelationType.EXISTING_SERVICE)
+                      setValue(
+                        'relationType',
+                        RequestRelationType.EXISTING_SERVICE
+                      )
                     }
                     checked={relation === RequestRelationType.EXISTING_SERVICE}
                   />
