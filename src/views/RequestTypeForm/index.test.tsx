@@ -289,7 +289,11 @@ describe('The request type form page', () => {
               updatedAt: null,
               grtDate: null,
               grbDate: null,
-              businessCase: null
+              businessCase: null,
+              relationType: null,
+              contractName: null,
+              contractNumbers: [],
+              systems: []
             }
           }
         }
@@ -365,7 +369,11 @@ describe('The request type form page', () => {
               updatedAt: null,
               grtDate: null,
               grbDate: null,
-              businessCase: null
+              businessCase: null,
+              relationType: null,
+              contractName: null,
+              contractNumbers: [],
+              systems: []
             }
           }
         }

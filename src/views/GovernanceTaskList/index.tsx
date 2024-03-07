@@ -36,6 +36,7 @@ import { archiveSystemIntake } from 'types/routines';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
+import AdditionalRequestInfo from './AdditionalRequestInfo';
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
 import GovTaskBizCaseFinal from './GovTaskBizCaseFinal';
 import GovTaskDecisionAndNextSteps from './GovTaskDecisionAndNextSteps';
@@ -229,6 +230,8 @@ function GovernanceTaskList() {
                     </Button>
                   </div>
                 )}
+
+                <AdditionalRequestInfo {...systemIntake} />
 
                 <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
                   {t('taskList.help')}
