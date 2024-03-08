@@ -33,6 +33,11 @@ export default gql`
         description
         acronym
         businessOwnerOrg
+        businessOwnerRoles {
+          objectID
+          assigneeFirstName
+          assigneeLastName
+        }
       }
     }
   }

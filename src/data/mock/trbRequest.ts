@@ -205,7 +205,15 @@ export const trbRequestSummary: Summary = {
       name: 'My system',
       description: 'A fun system',
       acronym: 'MS',
-      businessOwnerOrg: 'Oddball'
+      businessOwnerOrg: 'Oddball',
+      businessOwnerRoles: [
+        {
+          __typename: 'CedarRole',
+          objectID: '9787620',
+          assigneeFirstName: 'John',
+          assigneeLastName: 'Doe'
+        }
+      ]
     }
   ]
 };

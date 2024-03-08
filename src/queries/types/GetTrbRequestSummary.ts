@@ -34,6 +34,13 @@ export interface GetTrbRequestSummary_trbRequest_contractNumbers {
   contractNumber: string;
 }
 
+export interface GetTrbRequestSummary_trbRequest_systems_businessOwnerRoles {
+  __typename: "CedarRole";
+  objectID: string;
+  assigneeFirstName: string | null;
+  assigneeLastName: string | null;
+}
+
 export interface GetTrbRequestSummary_trbRequest_systems {
   __typename: "CedarSystem";
   id: string;
@@ -41,6 +48,7 @@ export interface GetTrbRequestSummary_trbRequest_systems {
   description: string | null;
   acronym: string | null;
   businessOwnerOrg: string | null;
+  businessOwnerRoles: GetTrbRequestSummary_trbRequest_systems_businessOwnerRoles[];
 }
 
 export interface GetTrbRequestSummary_trbRequest {
