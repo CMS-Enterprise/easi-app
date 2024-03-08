@@ -4,6 +4,7 @@ import { Table as UswdsTable } from '@trussworks/react-uswds';
 
 import TablePagination from 'components/TablePagination';
 import { SystemIntake_systems as SystemsType } from 'queries/types/SystemIntake';
+import { getPersonFullName } from 'views/SystemProfile';
 
 import SystemCard from '.';
 
@@ -32,9 +33,7 @@ const SystemCardTable = ({ systems }: SystemCardTableProps) => {
               acronym={row.original.acronym}
               businessOwnerOrg={row.original.businessOwnerOrg}
               businessOwners={row.original.businessOwnerRoles
-                .map(
-                  role => `${role.assigneeFirstName} ${role.assigneeLastName}`
-                )
+                .map(role => getPersonFullName(role))
                 .join(', ')}
             />
           );
