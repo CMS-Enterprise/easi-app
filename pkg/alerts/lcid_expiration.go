@@ -12,7 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// Uses CEDAR LDAP functions to get and build out recipient list for alert
+// Uses Okta API functions to get and build out recipient list for alert
 // This should behave as follows:
 // -- Send to requester and Governance Mailbox in case of no errors
 // -- Send only to the Governance Mailbox in cases of "expected" errors (InvalidParameters and InvalidEUAID)

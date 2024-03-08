@@ -7870,7 +7870,7 @@ type CedarSystemBookmark {
 }
 
 """
-Represents a person response from CEDAR LDAP
+Represents a person response from Okta
 """
 type UserInfo {
   firstName: String!

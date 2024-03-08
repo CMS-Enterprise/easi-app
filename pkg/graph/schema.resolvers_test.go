@@ -145,8 +145,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 		t.FailNow()
 	}
 
-	cedarLdapClient := local.NewCedarLdapClient(logger)
-
+	oktaAPIClient := local.NewOktaAPIClient()
 	cedarCoreClient := cedarcore.NewClient(appcontext.WithLogger(context.Background(), logger), "fake", "fake", "1.0.0", time.Minute, ldClient)
 
 	directives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
@@ -168,8 +167,8 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	var resolverService ResolverService
 	resolverService.SubmitIntake = submitIntake
-	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
-	resolverService.SearchCommonNameContains = cedarLdapClient.SearchCommonNameContains
+	resolverService.FetchUserInfo = oktaAPIClient.FetchUserInfo
+	resolverService.SearchCommonNameContains = oktaAPIClient.SearchCommonNameContains
 
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})

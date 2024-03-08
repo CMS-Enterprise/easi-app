@@ -607,7 +607,7 @@ func main() {
 	)
 	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
 		i.RequestType = models.SystemIntakeRequestTypeNEW
-		i.Requester = "EndToEnd One" // matches pkg/local/cedar_ldap.go, but doesn't really have to :shrug:
+		i.Requester = "EndToEnd One" // matches pkg/local/okta_api.go, but doesn't really have to :shrug:
 		i.Component = null.StringFrom("Center for Consumer Information and Insurance Oversight")
 		i.BusinessOwner = null.StringFrom("John BusinessOwner")
 		i.BusinessOwnerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
