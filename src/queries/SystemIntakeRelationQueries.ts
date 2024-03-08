@@ -67,3 +67,25 @@ export const UnlinkSystemIntakeRelationQuery = gql`
     }
   }
 `;
+
+export const GetTrbRequestRelationQuery = gql`
+  query GetTrbRequestRelation($id: UUID!) {
+    trbRequest(id: $id) {
+      id
+      relationType
+      contractName
+      contractNumbers {
+        contractNumber
+      }
+      systems {
+        id
+        name
+        acronym
+      }
+    }
+    cedarSystems {
+      id
+      name
+    }
+  }
+`;

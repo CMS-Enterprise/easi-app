@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -30,6 +31,7 @@ import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import {
   GetSystemIntakeRelationQuery,
+  GetTrbRequestRelationQuery,
   SetSystemIntakeRelationExistingServiceQuery,
   SetSystemIntakeRelationExistingSystemQuery,
   SetSystemIntakeRelationNewSystemQuery,
@@ -39,6 +41,10 @@ import {
   GetSystemIntakeRelation,
   GetSystemIntakeRelationVariables
 } from 'queries/types/GetSystemIntakeRelation';
+import {
+  GetTrbRequestRelation,
+  GetTrbRequestRelationVariables
+} from 'queries/types/GetTrbRequestRelation';
 import {
   SetSystemIntakeRelationExistingService,
   SetSystemIntakeRelationExistingServiceVariables
@@ -57,9 +63,14 @@ import {
 } from 'queries/types/UnlinkSystemIntakeRelation';
 import { RequestRelationType } from 'types/graphql-global-types';
 
+// requestType: trb | itgov
+
 const RequestLinkForm = () => {
-  const { systemId } = useParams<{
-    systemId: string;
+  // const { systemId } = useParams<{
+  //   systemId: string;
+  // }>();
+  const { id: systemId } = useParams<{
+    id: string;
   }>();
   const history = useHistory();
 
@@ -69,7 +80,8 @@ const RequestLinkForm = () => {
   const { state } = useLocation<{ isNew?: boolean }>();
   const isNew = !!state?.isNew;
 
-  const taskListUrl = `/governance-task-list/${systemId}`;
+  // const taskListUrl = `/governance-task-list/${systemId}`;
+  const taskListUrl = `/trb/task-list/${systemId}`;
 
   const [hasUserError, setUserError] = useState<boolean>(false);
 
@@ -77,9 +89,15 @@ const RequestLinkForm = () => {
   const [isUnlinkModalOpen, setUnlinkModalOpen] = useState<boolean>(false);
 
   const { data, error, loading } = useQuery<
+    GetTrbRequestRelation,
+    GetTrbRequestRelationVariables
+  >(GetTrbRequestRelationQuery, { variables: { id: systemId } });
+  /*
+  const { data, error, loading } = useQuery<
     GetSystemIntakeRelation,
     GetSystemIntakeRelationVariables
   >(GetSystemIntakeRelationQuery, { variables: { id: systemId } });
+  */
 
   const cedarSystemIdOptions = useMemo(() => {
     const cedarSystemsData = data?.cedarSystems;
@@ -98,6 +116,7 @@ const RequestLinkForm = () => {
     SetSystemIntakeRelationNewSystem,
     SetSystemIntakeRelationNewSystemVariables
   >(SetSystemIntakeRelationNewSystemQuery);
+  // setTRBRequestRelationNewSystem
 
   const [
     setSystemIntakeRelationExistingSystem,
@@ -106,6 +125,7 @@ const RequestLinkForm = () => {
     SetSystemIntakeRelationExistingSystem,
     SetSystemIntakeRelationExistingSystemVariables
   >(SetSystemIntakeRelationExistingSystemQuery);
+  // setTRBRequestRelationExistingSystem
 
   const [
     setSystemIntakeRelationExistingService,
@@ -114,11 +134,13 @@ const RequestLinkForm = () => {
     SetSystemIntakeRelationExistingService,
     SetSystemIntakeRelationExistingServiceVariables
   >(SetSystemIntakeRelationExistingServiceQuery);
+  // setTRBRequestRelationExistingService
 
   const [unlinkSystemIntakeRelation, { error: unlinkError }] = useMutation<
     UnlinkSystemIntakeRelation,
     UnlinkSystemIntakeRelationVariables
   >(UnlinkSystemIntakeRelationQuery);
+  // unlinkTRBRequestRelation
 
   const { control, watch, setValue, handleSubmit } = useForm<{
     relationType: RequestRelationType | null;
@@ -142,7 +164,8 @@ const RequestLinkForm = () => {
           .join(', '),
         contractName: values.contractName || ''
       };
-    })(data?.systemIntake)
+      // })(data?.systemIntake)
+    })(data?.trbRequest)
   });
 
   // Ref fields for some form behavior
@@ -502,7 +525,8 @@ const RequestLinkForm = () => {
               </Button>
 
               {(isNew ||
-                (!isNew && data.systemIntake?.relationType !== null)) && (
+                // (!isNew && data.systemIntake?.relationType !== null)) && (
+                (!isNew && data.trbRequest?.relationType !== null)) && (
                 <Button
                   type="submit"
                   unstyled

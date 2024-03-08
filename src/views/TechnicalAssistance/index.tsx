@@ -1,9 +1,11 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { GridContainer } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
+import RequestLinkForm from 'views/RequestLinkForm';
 
 import AddNote from './AdminHome/AddNote';
 import CloseRequest from './AdminHome/CloseRequest';
@@ -26,6 +28,7 @@ import './index.scss';
 
 function TechnicalAssistance() {
   const { path } = useRouteMatch();
+  const flags = useFlags();
 
   return (
     <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
@@ -46,6 +49,12 @@ function TechnicalAssistance() {
         <Route exact path={`${path}/process`}>
           <ProcessFlow />
         </Route>
+
+        {flags.trbLinkRequestsRequester && (
+          <Route exact path={`${path}/link/:id?`}>
+            <RequestLinkForm />
+          </Route>
+        )}
 
         {/* Task list after request steps are completed */}
         <Route exact path={`${path}/task-list/:id`}>
