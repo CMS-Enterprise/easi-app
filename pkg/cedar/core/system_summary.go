@@ -27,16 +27,15 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 }
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
-// If the filter is empty will try and retrieve the data from the cache first and make an API call if the cache is empty
-func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, filter *models.CedarSystemFilterInput) ([]*models.CedarSystem, error) {
+// If `tryCache` is true the `euaUserID` is nil, we will try to hit the cache. Otherwise, we will make an API call
+func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID *string) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return local.GetMockSystems(), nil
 	}
 
 	// Check and use cache before making API call if there are no search filters
-	// if there are filters, we do not want to access cache as we do not have the ability to filter on our end
-	if tryCache {
+	if tryCache && euaUserID != nil {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
 			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
@@ -58,10 +57,9 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, filter *mo
 	params.SetState(null.StringFrom("active").Ptr())
 	params.SetIncludeInSurvey(null.BoolFrom(true).Ptr())
 
-	if filter != nil {
-		params.SetUserName(filter.EuaUserID)
-		// as we add more filters, we can set them here
-	}
+	params.SetUserName(euaUserID)
+	// as we add more filters, we can set them here
+
 	params.HTTPClient = c.hc
 
 	// Make the API call

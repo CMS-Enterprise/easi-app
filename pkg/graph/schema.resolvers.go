@@ -2144,9 +2144,7 @@ func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
-	return r.cedarCoreClient.GetSystemSummary(ctx, false, &models.CedarSystemFilterInput{
-		EuaUserID: &requesterEUAID,
-	})
+	return r.cedarCoreClient.GetSystemSummary(ctx, false, &requesterEUAID)
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.
