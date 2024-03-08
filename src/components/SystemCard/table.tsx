@@ -31,7 +31,11 @@ const SystemCardTable = ({ systems }: SystemCardTableProps) => {
               description={row.original.description}
               acronym={row.original.acronym}
               businessOwnerOrg={row.original.businessOwnerOrg}
-              businessOwners="John Doe" // TODO: fill with role info once BE is done
+              businessOwners={row.original.businessOwnerRoles
+                .map(
+                  role => `${role.assigneeFirstName} ${role.assigneeLastName}`
+                )
+                .join(', ')}
             />
           );
         }

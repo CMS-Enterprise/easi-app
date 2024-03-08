@@ -55,15 +55,14 @@ const SystemCard = ({
           <Grid row className="margin-bottom-2">
             <Grid tablet={{ col: 6 }}>
               <DescriptionTerm term={t('additionalInformation.component')} />
-              <DescriptionDefinition definition={businessOwnerOrg || ''} />
+              <DescriptionDefinition definition={businessOwnerOrg} />
             </Grid>
 
             <Grid tablet={{ col: 6 }}>
               <DescriptionTerm
                 term={t('additionalInformation.businessOwner')}
               />
-              {/* TODO: populate with business owner once be is complete */}
-              <DescriptionDefinition definition="John Doe" />
+              <DescriptionDefinition definition={businessOwners} />
             </Grid>
           </Grid>
         </dl>

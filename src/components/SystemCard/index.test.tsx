@@ -23,8 +23,15 @@ const systems: SystemIntakeType[] = [
     name: 'Large system',
     description: 'An big system',
     acronym: 'LS',
-    businessOwnerOrg: 'Oddball'
-    // businessOwners: 'John Doe'
+    businessOwnerOrg: 'Oddball',
+    businessOwnerRoles: [
+      {
+        __typename: 'CedarRole',
+        objectID: '9787620',
+        assigneeFirstName: 'John',
+        assigneeLastName: 'Doe'
+      }
+    ]
   },
   {
     __typename: 'CedarSystem',
@@ -32,8 +39,15 @@ const systems: SystemIntakeType[] = [
     name: 'Small system',
     description: 'An tiny system',
     acronym: 'SS',
-    businessOwnerOrg: 'Oddball'
-    // businessOwners: 'Jane Doe'
+    businessOwnerOrg: 'Oddball',
+    businessOwnerRoles: [
+      {
+        __typename: 'CedarRole',
+        objectID: '9787620',
+        assigneeFirstName: 'John',
+        assigneeLastName: 'Doe'
+      }
+    ]
   }
 ];
 
