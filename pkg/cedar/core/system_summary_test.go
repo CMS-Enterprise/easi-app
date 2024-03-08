@@ -10,6 +10,7 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/local"
 )
 
 type SystemSummaryTestSuite struct {
@@ -37,8 +38,8 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 		s.NoError(err)
 
 		// ensure mock data is returned
-		s.Equal(len(mockSystems), len(resp))
-		for _, v := range mockSystems {
+		s.Equal(len(local.GetMockSystems()), len(resp))
+		for _, v := range local.GetMockSystems() {
 			s.Contains(resp, v)
 		}
 	})
@@ -57,8 +58,8 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 		s.Empty(resp)
 
 		// should return mocked system when given corresponding mockKey
-		for k, v := range mockSystems {
-			resp, err = c.GetSystem(ctx, k)
+		for _, v := range local.GetMockSystems() {
+			resp, err = c.GetSystem(ctx, v.ID)
 			s.NoError(err)
 			s.Equal(v, resp)
 		}
