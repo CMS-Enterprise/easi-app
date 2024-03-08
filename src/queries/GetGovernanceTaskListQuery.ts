@@ -33,6 +33,17 @@ export default gql`
       businessCase {
         id
       }
+
+      relationType
+      contractName
+      contractNumbers {
+        contractNumber
+      }
+      systems {
+        id
+        name
+        acronym
+      }
     }
   }
 `;

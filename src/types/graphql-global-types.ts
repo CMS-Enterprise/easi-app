@@ -169,6 +169,12 @@ export enum PersonRole {
   SYSTEM_OWNER = "SYSTEM_OWNER",
 }
 
+export enum RequestRelationType {
+  EXISTING_SERVICE = "EXISTING_SERVICE",
+  EXISTING_SYSTEM = "EXISTING_SYSTEM",
+  NEW_SYSTEM = "NEW_SYSTEM",
+}
+
 /**
  * Indicates the type of a request being made with the EASi system
  */
