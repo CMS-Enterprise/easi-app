@@ -69,8 +69,10 @@ Make sure the `cedarCoreEnabled` LaunchDarkly flag is set to true. If you're not
 `.envrc.local` will need to define environment variables for connecting to and authenticating with CEDAR. Add the following:
 
 ```
+export CEDAR_ENV=impl
 export CEDAR_API_URL="webmethods-apigw.cedarimpl.cms.gov"
-export CEDAR_API_KEY=[insert API key from 1Password here]
+export CEDAR_API_KEY=[insert IMPL API key from 1Password here]
+export CEDAR_CORE_API_VERSION=2.0.0
 ```
 
 Additionally, if you're using the `openconnect-tinyproxy` VPN container for selective proxying, add the following to your `.envrc.local` file to instruct Go to use the proxy:
