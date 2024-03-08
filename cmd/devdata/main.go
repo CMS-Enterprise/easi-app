@@ -525,7 +525,10 @@ func main() {
 		store,
 		intakeID,
 		[]string{"12345", "67890"},
-		[]string{"54321", "09876"},
+		[]string{
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+		},
 	)
 
 	// 3. Intake related to an existing contract/service
@@ -547,7 +550,10 @@ func main() {
 		store,
 		intakeID,
 		[]string{"12345", "67890"},
-		[]string{"54321", "09876"},
+		[]string{
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+		},
 	)
 	unlinkSystemIntakeRelation(logger, store, intakeID)
 

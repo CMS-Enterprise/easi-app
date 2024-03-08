@@ -9,6 +9,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
+	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -30,7 +31,7 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return getMockSystems()
+		return local.GetMockSystems(), nil
 	}
 
 	// Check and use cache before making API call
@@ -145,7 +146,7 @@ func (c *Client) getSystemFromCache(ctx context.Context, systemID string) *model
 func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return getMockSystem(systemID)
+		return local.GetMockSystem(systemID), nil
 	}
 
 	// Try the cache first

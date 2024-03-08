@@ -52,6 +52,7 @@ type ResolverRoot interface {
 	CedarExchange() CedarExchangeResolver
 	CedarRole() CedarRoleResolver
 	CedarRoleType() CedarRoleTypeResolver
+	CedarSystem() CedarSystemResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
 	CedarThreat() CedarThreatResolver
 	GovernanceRequestFeedback() GovernanceRequestFeedbackResolver
@@ -332,6 +333,7 @@ type ComplexityRoot struct {
 		Acronym                 func(childComplexity int) int
 		BusinessOwnerOrg        func(childComplexity int) int
 		BusinessOwnerOrgComp    func(childComplexity int) int
+		BusinessOwnerRoles      func(childComplexity int) int
 		Description             func(childComplexity int) int
 		ID                      func(childComplexity int) int
 		Name                    func(childComplexity int) int
@@ -1272,6 +1274,9 @@ type CedarRoleResolver interface {
 }
 type CedarRoleTypeResolver interface {
 	Description(ctx context.Context, obj *models.CedarRoleType) (*string, error)
+}
+type CedarSystemResolver interface {
+	BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error)
 }
 type CedarSystemDetailsResolver interface {
 	SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error)
@@ -2942,6 +2947,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarSystem.BusinessOwnerOrgComp(childComplexity), true
+
+	case "CedarSystem.businessOwnerRoles":
+		if e.complexity.CedarSystem.BusinessOwnerRoles == nil {
+			break
+		}
+
+		return e.complexity.CedarSystem.BusinessOwnerRoles(childComplexity), true
 
 	case "CedarSystem.description":
 		if e.complexity.CedarSystem.Description == nil {
@@ -7768,6 +7780,7 @@ type CedarSystem {
 	status: String
 	businessOwnerOrg: String
 	businessOwnerOrgComp: String
+  businessOwnerRoles: [CedarRole!]!
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
   versionId: String
@@ -21344,6 +21357,84 @@ func (ec *executionContext) fieldContext_CedarSystem_businessOwnerOrgComp(ctx co
 	return fc, nil
 }
 
+func (ec *executionContext) _CedarSystem_businessOwnerRoles(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSystem_businessOwnerRoles(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSystem().BusinessOwnerRoles(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarRole)
+	fc.Result = res
+	return ec.marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSystem_businessOwnerRoles(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystem",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "application":
+				return ec.fieldContext_CedarRole_application(ctx, field)
+			case "objectID":
+				return ec.fieldContext_CedarRole_objectID(ctx, field)
+			case "roleTypeID":
+				return ec.fieldContext_CedarRole_roleTypeID(ctx, field)
+			case "assigneeType":
+				return ec.fieldContext_CedarRole_assigneeType(ctx, field)
+			case "assigneeUsername":
+				return ec.fieldContext_CedarRole_assigneeUsername(ctx, field)
+			case "assigneeEmail":
+				return ec.fieldContext_CedarRole_assigneeEmail(ctx, field)
+			case "assigneeOrgID":
+				return ec.fieldContext_CedarRole_assigneeOrgID(ctx, field)
+			case "assigneeOrgName":
+				return ec.fieldContext_CedarRole_assigneeOrgName(ctx, field)
+			case "assigneeFirstName":
+				return ec.fieldContext_CedarRole_assigneeFirstName(ctx, field)
+			case "assigneeLastName":
+				return ec.fieldContext_CedarRole_assigneeLastName(ctx, field)
+			case "assigneePhone":
+				return ec.fieldContext_CedarRole_assigneePhone(ctx, field)
+			case "assigneeDesc":
+				return ec.fieldContext_CedarRole_assigneeDesc(ctx, field)
+			case "roleTypeName":
+				return ec.fieldContext_CedarRole_roleTypeName(ctx, field)
+			case "roleTypeDesc":
+				return ec.fieldContext_CedarRole_roleTypeDesc(ctx, field)
+			case "roleID":
+				return ec.fieldContext_CedarRole_roleID(ctx, field)
+			case "objectType":
+				return ec.fieldContext_CedarRole_objectType(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarRole", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CedarSystem_systemMaintainerOrg(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarSystem_systemMaintainerOrg(ctx, field)
 	if err != nil {
@@ -21608,6 +21699,8 @@ func (ec *executionContext) fieldContext_CedarSystemDetails_cedarSystem(ctx cont
 				return ec.fieldContext_CedarSystem_businessOwnerOrg(ctx, field)
 			case "businessOwnerOrgComp":
 				return ec.fieldContext_CedarSystem_businessOwnerOrgComp(ctx, field)
+			case "businessOwnerRoles":
+				return ec.fieldContext_CedarSystem_businessOwnerRoles(ctx, field)
 			case "systemMaintainerOrg":
 				return ec.fieldContext_CedarSystem_systemMaintainerOrg(ctx, field)
 			case "systemMaintainerOrgComp":
@@ -34277,6 +34370,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystem(ctx context.Context, 
 				return ec.fieldContext_CedarSystem_businessOwnerOrg(ctx, field)
 			case "businessOwnerOrgComp":
 				return ec.fieldContext_CedarSystem_businessOwnerOrgComp(ctx, field)
+			case "businessOwnerRoles":
+				return ec.fieldContext_CedarSystem_businessOwnerRoles(ctx, field)
 			case "systemMaintainerOrg":
 				return ec.fieldContext_CedarSystem_systemMaintainerOrg(ctx, field)
 			case "systemMaintainerOrgComp":
@@ -34354,6 +34449,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystems(ctx context.Context,
 				return ec.fieldContext_CedarSystem_businessOwnerOrg(ctx, field)
 			case "businessOwnerOrgComp":
 				return ec.fieldContext_CedarSystem_businessOwnerOrgComp(ctx, field)
+			case "businessOwnerRoles":
+				return ec.fieldContext_CedarSystem_businessOwnerRoles(ctx, field)
 			case "systemMaintainerOrg":
 				return ec.fieldContext_CedarSystem_systemMaintainerOrg(ctx, field)
 			case "systemMaintainerOrgComp":
@@ -39798,6 +39895,8 @@ func (ec *executionContext) fieldContext_SystemIntake_systems(ctx context.Contex
 				return ec.fieldContext_CedarSystem_businessOwnerOrg(ctx, field)
 			case "businessOwnerOrgComp":
 				return ec.fieldContext_CedarSystem_businessOwnerOrgComp(ctx, field)
+			case "businessOwnerRoles":
+				return ec.fieldContext_CedarSystem_businessOwnerRoles(ctx, field)
 			case "systemMaintainerOrg":
 				return ec.fieldContext_CedarSystem_systemMaintainerOrg(ctx, field)
 			case "systemMaintainerOrgComp":
@@ -47402,6 +47501,8 @@ func (ec *executionContext) fieldContext_TRBRequest_systems(ctx context.Context,
 				return ec.fieldContext_CedarSystem_businessOwnerOrg(ctx, field)
 			case "businessOwnerOrgComp":
 				return ec.fieldContext_CedarSystem_businessOwnerOrgComp(ctx, field)
+			case "businessOwnerRoles":
+				return ec.fieldContext_CedarSystem_businessOwnerRoles(ctx, field)
 			case "systemMaintainerOrg":
 				return ec.fieldContext_CedarSystem_systemMaintainerOrg(ctx, field)
 			case "systemMaintainerOrgComp":
@@ -62147,12 +62248,12 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 		case "id":
 			out.Values[i] = ec._CedarSystem_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "name":
 			out.Values[i] = ec._CedarSystem_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "description":
 			out.Values[i] = ec._CedarSystem_description(ctx, field, obj)
@@ -62164,6 +62265,42 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 			out.Values[i] = ec._CedarSystem_businessOwnerOrg(ctx, field, obj)
 		case "businessOwnerOrgComp":
 			out.Values[i] = ec._CedarSystem_businessOwnerOrgComp(ctx, field, obj)
+		case "businessOwnerRoles":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSystem_businessOwnerRoles(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "systemMaintainerOrg":
 			out.Values[i] = ec._CedarSystem_systemMaintainerOrg(ctx, field, obj)
 		case "systemMaintainerOrgComp":
