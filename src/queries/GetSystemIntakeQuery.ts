@@ -112,6 +112,11 @@ export const SystemIntake = gql`
       description
       acronym
       businessOwnerOrg
+      businessOwnerRoles {
+        objectID
+        assigneeFirstName
+        assigneeLastName
+      }
     }
   }
 `;

@@ -124,6 +124,13 @@ export interface GetSystemIntake_systemIntake_documents {
   url: string;
 }
 
+export interface GetSystemIntake_systemIntake_systems_businessOwnerRoles {
+  __typename: "CedarRole";
+  objectID: string;
+  assigneeFirstName: string | null;
+  assigneeLastName: string | null;
+}
+
 export interface GetSystemIntake_systemIntake_systems {
   __typename: "CedarSystem";
   id: string;
@@ -131,6 +138,7 @@ export interface GetSystemIntake_systemIntake_systems {
   description: string | null;
   acronym: string | null;
   businessOwnerOrg: string | null;
+  businessOwnerRoles: GetSystemIntake_systemIntake_systems_businessOwnerRoles[];
 }
 
 export interface GetSystemIntake_systemIntake {
