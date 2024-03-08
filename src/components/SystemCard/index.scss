@@ -7,7 +7,8 @@
 
     .usa-card__container {
         margin: 0;
-        box-shadow: 0rem .25rem .5rem 0rem rgba(0, 0, 0, 0.1)
+        box-shadow: 0rem .25rem .5rem 0rem rgba(0, 0, 0, 0.1);
+        max-width: 100%;
     }
 
     &__container {        
