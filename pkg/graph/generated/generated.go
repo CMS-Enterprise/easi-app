@@ -34527,6 +34527,8 @@ func (ec *executionContext) fieldContext_Query_myCedarSystems(ctx context.Contex
 				return ec.fieldContext_CedarSystem_businessOwnerOrg(ctx, field)
 			case "businessOwnerOrgComp":
 				return ec.fieldContext_CedarSystem_businessOwnerOrgComp(ctx, field)
+			case "businessOwnerRoles":
+				return ec.fieldContext_CedarSystem_businessOwnerRoles(ctx, field)
 			case "systemMaintainerOrg":
 				return ec.fieldContext_CedarSystem_systemMaintainerOrg(ctx, field)
 			case "systemMaintainerOrgComp":
