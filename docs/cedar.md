@@ -28,7 +28,11 @@ The CEDAR web UI (where you can view documentation, try out APIs, and browse dat
 
 ### webMethods API Portal
 
-The webMethods API Portal is where you can view CEDARs API documentation, and is probably the most useful tool for developers. Once you're there, you can click "API Gallery" at the top of the page to view the details of each CEDAR API.
+The [webMethods API Portal](https://webmethods-apiportal.cedar.cms.gov/portal/) is where you can view CEDARs API documentation, and is probably the most useful tool for developers. You will need to be on the VPN to access the portal. Once you're there, you can click "API Gallery" at the top of the page to view the details of each CEDAR API.
+
+To obtain the latest `swagger` file, click into the desired API (for example, CEDAR Core API) from the API Gallery, and navigate to "API Documentation" on the left.
+
+Download the file ending `_swagger.json`, place in the corresponding directory in the `easi-app`. In this example, place the file in `pkg/cedar/core/` and rename to `cedar_core.json`.
 
 ### Alfabet
 
