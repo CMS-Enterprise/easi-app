@@ -106,6 +106,10 @@ export const SystemIntake = gql`
     trbFollowUpRecommendation
     requestFormState
     contractName
+    contractNumbers {
+      id
+      contractNumber
+    }
     systems {
       id
       name

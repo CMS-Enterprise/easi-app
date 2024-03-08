@@ -124,6 +124,12 @@ export interface GetSystemIntake_systemIntake_documents {
   url: string;
 }
 
+export interface GetSystemIntake_systemIntake_contractNumbers {
+  __typename: "SystemIntakeContractNumber";
+  id: UUID;
+  contractNumber: string;
+}
+
 export interface GetSystemIntake_systemIntake_systems_businessOwnerRoles {
   __typename: "CedarRole";
   objectID: string;
@@ -193,6 +199,10 @@ export interface GetSystemIntake_systemIntake {
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp | null;
   requestFormState: SystemIntakeFormState;
   contractName: string | null;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: GetSystemIntake_systemIntake_contractNumbers[];
   /**
    * Linked systems
    */

@@ -247,6 +247,13 @@ export const emptySystemIntake: SystemIntake = {
   trbFollowUpRecommendation: null,
   requestFormState: SystemIntakeFormState.IN_PROGRESS,
   contractName: 'My contract',
+  contractNumbers: [
+    {
+      __typename: 'SystemIntakeContractNumber',
+      id: '34t53432',
+      contractNumber: '64231435'
+    }
+  ],
   systems: [
     {
       __typename: 'CedarSystem',
@@ -365,6 +372,13 @@ export const systemIntake: SystemIntake = {
   trbFollowUpRecommendation: null,
   requestFormState: SystemIntakeFormState.SUBMITTED,
   contractName: 'My contract',
+  contractNumbers: [
+    {
+      __typename: 'SystemIntakeContractNumber',
+      id: '34t53432',
+      contractNumber: '64231435'
+    }
+  ],
   systems: [
     {
       __typename: 'CedarSystem',
