@@ -27,14 +27,14 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 }
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
-// If `tryCache` is true the `euaUserID` is nil, we will try to hit the cache. Otherwise, we will make an API call
+// If `tryCache` is true the `euaUserID` is nil, we will try to hit the cache. Otherwise, we will make an API call as we cannot filter on EUA on our end
 func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID *string) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return local.GetMockSystems(), nil
 	}
 
-	// Check and use cache before making API call if there are no search filters
+	// Check and use cache before making API call
 	if tryCache && euaUserID != nil {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
