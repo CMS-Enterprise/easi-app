@@ -2138,11 +2138,13 @@ func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (
 
 // CedarSystems is the resolver for the cedarSystems field.
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	cedarSystems, err := r.cedarCoreClient.GetSystemSummary(ctx, true)
-	if err != nil {
-		return nil, err
-	}
-	return cedarSystems, nil
+	return r.cedarCoreClient.GetSystemSummary(ctx, true, nil)
+}
+
+// MyCedarSystems is the resolver for the myCedarSystems field.
+func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
+	requesterEUAID := appcontext.Principal(ctx).ID()
+	return r.cedarCoreClient.GetSystemSummary(ctx, false, &requesterEUAID)
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.

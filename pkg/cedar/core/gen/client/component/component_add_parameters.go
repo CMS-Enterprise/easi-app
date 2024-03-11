@@ -63,7 +63,10 @@ ComponentAddParams contains all the parameters to send to the API endpoint
 */
 type ComponentAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Component record to be added to Alfabet.
+	*/
 	Body *models.ComponentAddRequest
 
 	timeout    time.Duration
