@@ -31,6 +31,13 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID *string) ([]*models.CedarSystem, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+
+		// Simulate a filter by only returning a subset of the mock systems
+		if euaUserID != nil {
+			return local.GetFilteredMockSystems(), nil
+		}
+
+		// Else return entire set
 		return local.GetMockSystems(), nil
 	}
 

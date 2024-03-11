@@ -2,6 +2,7 @@ package local
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
@@ -79,6 +80,20 @@ func GetMockSystems() []*models.CedarSystem {
 	for _, v := range mockSystems {
 		systems = append(systems, v)
 	}
+	return systems
+}
+
+// GetFilteredMockSystems returns the first two mocked Cedar Systems, ordered by ID
+func GetFilteredMockSystems() []*models.CedarSystem {
+	systems := GetMockSystems()
+	sort.Slice(systems, func(i, j int) bool {
+		return systems[i].ID < systems[j].ID
+	})
+
+	if len(systems) >= 2 {
+		return systems[:2]
+	}
+
 	return systems
 }
 
