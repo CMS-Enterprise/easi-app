@@ -20,7 +20,10 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/cedar/intake"
 	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func noErr(err error) {
@@ -338,11 +341,11 @@ func makeCedarIntakeClient() *intake.Client {
 	return client
 }
 
-func submitToCEDAR() {
+func submitToCEDAR(ctx context.Context) {
 	zapLogger, err := zap.NewDevelopment()
 	noErr(err)
 
-	ctx := appcontext.WithLogger(context.Background(), zapLogger)
+	ctx = appcontext.WithLogger(ctx, zapLogger)
 
 	client := makeCedarIntakeClient()
 
@@ -389,7 +392,7 @@ func dumpIntakeObject(obj translation.IntakeObject, directory string) {
 	noErr(err)
 }
 
-func dumpPayload() {
+func dumpPayload(ctx context.Context) {
 	// os.Executable() doesn't work properly with "go run", so use runtime.Caller() instead
 	// see https://stackoverflow.com/a/70491592
 	_, sourceFilename, _, _ := runtime.Caller(0)
@@ -413,22 +416,72 @@ func dumpPayload() {
 	fmt.Println("System intake data dumped inside " + execDir + string(filepath.Separator))
 }
 
-var submitCmd = &cobra.Command{
-	Use:   "submit",
-	Short: "Submit test data to CEDAR Intake",
-	Long:  "Submit test data to CEDAR Intake",
-	Run: func(cmd *cobra.Command, args []string) {
-		submitToCEDAR()
-	},
+func submitCmd(ctx context.Context) *cobra.Command {
+	return &cobra.Command{
+		Use:   "submit",
+		Short: "Submit test data to CEDAR Intake",
+		Long:  "Submit test data to CEDAR Intake",
+		Run: func(cmd *cobra.Command, args []string) {
+			config := testhelpers.NewConfig()
+			dbConfig := storage.DBConfig{
+				Host:           config.GetString(appconfig.DBHostConfigKey),
+				Port:           config.GetString(appconfig.DBPortConfigKey),
+				Database:       config.GetString(appconfig.DBNameConfigKey),
+				Username:       config.GetString(appconfig.DBUsernameConfigKey),
+				Password:       config.GetString(appconfig.DBPasswordConfigKey),
+				SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
+				MaxConnections: config.GetInt(appconfig.DBMaxConnections),
+			}
+
+			ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+			if err != nil {
+				panic(err)
+			}
+
+			store, err := storage.NewStore(dbConfig, ldClient)
+			if err != nil {
+				panic(err)
+			}
+
+			ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
+
+			submitToCEDAR(ctx)
+		},
+	}
 }
 
-var dumpCmd = &cobra.Command{
-	Use:   "dump",
-	Short: "Dump test data payloads to local files",
-	Long:  "Dump test data payloads to local files",
-	Run: func(cmd *cobra.Command, args []string) {
-		dumpPayload()
-	},
+func dumpCmd(ctx context.Context) *cobra.Command {
+	return &cobra.Command{
+		Use:   "dump",
+		Short: "Dump test data payloads to local files",
+		Long:  "Dump test data payloads to local files",
+		Run: func(cmd *cobra.Command, args []string) {
+			config := testhelpers.NewConfig()
+			dbConfig := storage.DBConfig{
+				Host:           config.GetString(appconfig.DBHostConfigKey),
+				Port:           config.GetString(appconfig.DBPortConfigKey),
+				Database:       config.GetString(appconfig.DBNameConfigKey),
+				Username:       config.GetString(appconfig.DBUsernameConfigKey),
+				Password:       config.GetString(appconfig.DBPasswordConfigKey),
+				SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
+				MaxConnections: config.GetInt(appconfig.DBMaxConnections),
+			}
+
+			ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+			if err != nil {
+				panic(err)
+			}
+
+			store, err := storage.NewStore(dbConfig, ldClient)
+			if err != nil {
+				panic(err)
+			}
+
+			ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
+
+			dumpPayload(ctx)
+		},
+	}
 }
 
 var rootCmd = &cobra.Command{
@@ -437,12 +490,14 @@ var rootCmd = &cobra.Command{
 	Long:  `Utility for either submitting test data to the CEDAR Intake API or dumping the JSON payload that would be submitted to a local file`,
 }
 
-func init() {
-	rootCmd.AddCommand(submitCmd)
-	rootCmd.AddCommand(dumpCmd)
-}
-
 func execute() {
+	ctx := context.Background()
+
+	rootCmd.AddCommand(
+		submitCmd(ctx),
+		dumpCmd(ctx),
+	)
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
