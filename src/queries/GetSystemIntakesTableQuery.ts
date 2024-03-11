@@ -66,13 +66,6 @@ export default gql`
       contractNumbers {
         contractNumber
       }
-
-      contractNumbers {
-        id
-        systemIntakeID
-        contractNumber
-      }
-
       businessNeed
       businessSolution
       currentStage

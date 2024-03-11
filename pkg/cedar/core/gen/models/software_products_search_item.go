@@ -8,34 +8,32 @@ package models
 import (
 	"context"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
-// Products products
+// SoftwareProductsSearchItem software products search item
 //
-// swagger:model Products
-type Products struct {
+// swagger:model SoftwareProductsSearchItem
+type SoftwareProductsSearchItem struct {
 
 	// api gateway use
 	APIGatewayUse bool `json:"api_gateway_use,omitempty"`
 
-	// ela organization
-	ElaOrganization string `json:"ela_organization,omitempty"`
-
 	// ela purchase
 	ElaPurchase string `json:"ela_purchase,omitempty"`
+
+	// ela vendor id
+	ElaVendorID string `json:"ela_vendor_id,omitempty"`
 
 	// provides ai capability
 	ProvidesAiCapability bool `json:"provides_ai_capability,omitempty"`
 
+	// refstr
+	Refstr string `json:"refstr,omitempty"`
+
 	// software catagory connection Guid
 	SoftwareCatagoryConnectionGUID string `json:"softwareCatagoryConnectionGuid,omitempty"`
-
-	// software product Id
-	SoftwareProductID string `json:"softwareProductId,omitempty"`
 
 	// software vendor connection Guid
 	SoftwareVendorConnectionGUID string `json:"softwareVendorConnectionGuid,omitempty"`
@@ -43,44 +41,37 @@ type Products struct {
 	// software cost
 	SoftwareCost string `json:"software_cost,omitempty"`
 
+	// software ela organization
+	SoftwareElaOrganization string `json:"software_ela_organization,omitempty"`
+
+	// software name
+	SoftwareName string `json:"software_name,omitempty"`
+
 	// system software connection Guid
 	SystemSoftwareConnectionGUID string `json:"systemSoftwareConnectionGuid,omitempty"`
 
+	// technopedia category
+	TechnopediaCategory string `json:"technopedia_category,omitempty"`
+
 	// technopedia id
-	// Required: true
-	TechnopediaID *string `json:"technopedia_id"`
+	TechnopediaID string `json:"technopedia_id,omitempty"`
+
+	// vendor name
+	VendorName string `json:"vendor_name,omitempty"`
 }
 
-// Validate validates this products
-func (m *Products) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateTechnopediaID(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
+// Validate validates this software products search item
+func (m *SoftwareProductsSearchItem) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Products) validateTechnopediaID(formats strfmt.Registry) error {
-
-	if err := validate.Required("technopedia_id", "body", m.TechnopediaID); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this products based on context it is used
-func (m *Products) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this software products search item based on context it is used
+func (m *SoftwareProductsSearchItem) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *Products) MarshalBinary() ([]byte, error) {
+func (m *SoftwareProductsSearchItem) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -88,8 +79,8 @@ func (m *Products) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Products) UnmarshalBinary(b []byte) error {
-	var res Products
+func (m *SoftwareProductsSearchItem) UnmarshalBinary(b []byte) error {
+	var res SoftwareProductsSearchItem
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

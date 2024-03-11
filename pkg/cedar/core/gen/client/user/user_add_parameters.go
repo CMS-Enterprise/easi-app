@@ -63,7 +63,10 @@ UserAddParams contains all the parameters to send to the API endpoint
 */
 type UserAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   User information to be added to a CEDAR application.
+	*/
 	Body *models.UserAddRequest
 
 	timeout    time.Duration

@@ -245,7 +245,32 @@ export const emptySystemIntake: SystemIntake = {
   decisionState: SystemIntakeDecisionState.NO_DECISION,
   trbFollowUpRecommendation: null,
   requestFormState: SystemIntakeFormState.IN_PROGRESS,
-  contractNumbers: []
+  contractName: 'My contract',
+  contractNumbers: [
+    {
+      __typename: 'SystemIntakeContractNumber',
+      id: '34t53432',
+      contractNumber: '123456-7890'
+    }
+  ],
+  systems: [
+    {
+      __typename: 'CedarSystem',
+      id: '123',
+      name: 'My system',
+      description: 'A fun system',
+      acronym: 'MS',
+      businessOwnerOrg: 'Oddball',
+      businessOwnerRoles: [
+        {
+          __typename: 'CedarRole',
+          objectID: '9787620',
+          assigneeFirstName: 'John',
+          assigneeLastName: 'Doe'
+        }
+      ]
+    }
+  ]
 };
 
 export const systemIntake: SystemIntake = {
@@ -344,12 +369,30 @@ export const systemIntake: SystemIntake = {
   decisionState: SystemIntakeDecisionState.NO_DECISION,
   trbFollowUpRecommendation: null,
   requestFormState: SystemIntakeFormState.SUBMITTED,
+  contractName: 'My contract',
   contractNumbers: [
     {
       __typename: 'SystemIntakeContractNumber',
-      id: '',
-      systemIntakeID: '',
+      id: '34t53432',
       contractNumber: '123456-7890'
+    }
+  ],
+  systems: [
+    {
+      __typename: 'CedarSystem',
+      id: '123',
+      name: 'My system',
+      description: 'A fun system',
+      acronym: 'MS',
+      businessOwnerOrg: 'Oddball',
+      businessOwnerRoles: [
+        {
+          __typename: 'CedarRole',
+          objectID: '9787620',
+          assigneeFirstName: 'John',
+          assigneeLastName: 'Doe'
+        }
+      ]
     }
   ]
 };

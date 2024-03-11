@@ -32,7 +32,6 @@ export const SystemIntake = gql`
     }
     contractNumbers {
       id
-      systemIntakeID
       contractNumber
     }
     costs {
@@ -109,6 +108,23 @@ export const SystemIntake = gql`
     decisionState
     trbFollowUpRecommendation
     requestFormState
+    contractName
+    contractNumbers {
+      id
+      contractNumber
+    }
+    systems {
+      id
+      name
+      description
+      acronym
+      businessOwnerOrg
+      businessOwnerRoles {
+        objectID
+        assigneeFirstName
+        assigneeLastName
+      }
+    }
   }
 `;
 

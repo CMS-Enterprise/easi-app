@@ -41,7 +41,6 @@ export interface GetSystemIntake_systemIntake_contract {
 export interface GetSystemIntake_systemIntake_contractNumbers {
   __typename: "SystemIntakeContractNumber";
   id: UUID;
-  systemIntakeID: UUID;
   contractNumber: string;
 }
 
@@ -130,6 +129,23 @@ export interface GetSystemIntake_systemIntake_documents {
   url: string;
 }
 
+export interface GetSystemIntake_systemIntake_systems_businessOwnerRoles {
+  __typename: "CedarRole";
+  objectID: string;
+  assigneeFirstName: string | null;
+  assigneeLastName: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_systems {
+  __typename: "CedarSystem";
+  id: string;
+  name: string;
+  description: string | null;
+  acronym: string | null;
+  businessOwnerOrg: string | null;
+  businessOwnerRoles: GetSystemIntake_systemIntake_systems_businessOwnerRoles[];
+}
+
 export interface GetSystemIntake_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
@@ -185,6 +201,11 @@ export interface GetSystemIntake_systemIntake {
   decisionState: SystemIntakeDecisionState;
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp | null;
   requestFormState: SystemIntakeFormState;
+  contractName: string | null;
+  /**
+   * Linked systems
+   */
+  systems: GetSystemIntake_systemIntake_systems[];
 }
 
 export interface GetSystemIntake {
