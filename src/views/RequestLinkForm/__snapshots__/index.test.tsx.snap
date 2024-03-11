@@ -164,7 +164,7 @@ exports[`IT Gov Request relation link form > renders 1`] = `
             disabled=""
             type="submit"
           >
-            Save changes
+            Save
           </button>
         </li>
         <li

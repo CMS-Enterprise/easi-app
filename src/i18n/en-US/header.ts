@@ -3,7 +3,6 @@ const header = {
   add508Request: 'Section 508',
   help: 'Help',
   home: 'Home',
-  adminHome: 'Admin home',
   navigation: 'Navigation Bar',
   returnHome: 'EASi home',
   signIn: 'Sign In',

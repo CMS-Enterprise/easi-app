@@ -256,7 +256,6 @@ const governanceReviewTeam = {
     openBusiness: 'Open business case',
     openNotes: 'Open admin team notes',
     openDecision: 'Open decision',
-    openAdditionalInformation: 'Open additional information',
     openLcid: 'Open LCID',
     openFeedback: 'Open feedback'
   },
@@ -284,21 +283,6 @@ const governanceReviewTeam = {
     rejectionReason: 'Rejection Reason',
     noRejectionReasons: 'No reasons specified',
     decisionSectionTitle: 'Decision Details'
-  },
-  additionalInformation: {
-    title: 'Additional information',
-    description:
-      'This request is a part of the system, service, or contract indicated below. Any related requests are displayed because they are linked to the same system or service, or because they include the same contract number as this request.',
-    somethingIncorrect: 'See something incorrect?',
-    editInformation: 'Edit information',
-    component: 'CMS component owner',
-    businessOwner: 'Business owner',
-    viewSystem: 'View system profile',
-    serviceOrContract: 'Service or contract names',
-    contractNumber: 'Contract number{{plural}}',
-    noLinkedSystemAlert:
-      'This request is for a completely new system, service, or contract and may not have other requests related to it. If this is an error, please use the button below to link the request to a system, service, or contract.',
-    linkSystem: 'Link this request to a system, service, or contract'
   },
   feedback: {
     title: 'Feedback',
