@@ -525,7 +525,10 @@ func main() {
 		store,
 		intakeID,
 		[]string{"12345", "67890"},
-		[]string{"54321", "09876"},
+		[]string{
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+		},
 	)
 
 	// 3. Intake related to an existing contract/service
@@ -547,7 +550,10 @@ func main() {
 		store,
 		intakeID,
 		[]string{"12345", "67890"},
-		[]string{"54321", "09876"},
+		[]string{
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+		},
 	)
 	unlinkSystemIntakeRelation(logger, store, intakeID)
 
@@ -601,7 +607,7 @@ func main() {
 	)
 	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
 		i.RequestType = models.SystemIntakeRequestTypeNEW
-		i.Requester = "EndToEnd One" // matches pkg/local/cedar_ldap.go, but doesn't really have to :shrug:
+		i.Requester = "EndToEnd One" // matches pkg/local/okta_api.go, but doesn't really have to :shrug:
 		i.Component = null.StringFrom("Center for Consumer Information and Insurance Oversight")
 		i.BusinessOwner = null.StringFrom("John BusinessOwner")
 		i.BusinessOwnerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")

@@ -2,6 +2,7 @@ package cedarcore
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -14,6 +15,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiroles "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
 	apimodels "github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -25,7 +27,32 @@ const (
 	// the enums in pkg/models/cedar_role.go represent what's returned by our GraphQL API to our frontend
 	cedarPersonAssignee       = "person"
 	cedarOrganizationAssignee = "organization"
+
+	// the name of the business owner role in the CEDAR role/role types responses
+	cedarBusinessOwnerRoleName = "Business Owner"
 )
+
+// TODO: cache this properly
+var cedarBusinessOwnerRoleTypeID string
+
+// getCedarBusinessOwnerRoleTypeID is a helper for fetching the business owner role type ID because role type IDs will differ per ENV
+func getCedarBusinessOwnerRoleTypeID(ctx context.Context, c *Client) (string, error) {
+	// grab global and return role ID to prevent additional calls to CEDAR
+	if cedarBusinessOwnerRoleTypeID != "" {
+		return cedarBusinessOwnerRoleTypeID, nil
+	}
+	roleTypes, err := c.GetRoleTypes(ctx)
+	if err != nil {
+		return "", err
+	}
+	for _, role := range roleTypes {
+		if role.Name == cedarBusinessOwnerRoleName {
+			cedarBusinessOwnerRoleTypeID = role.ID
+			return role.ID, nil
+		}
+	}
+	return "", errors.New("no business owner role type found")
+}
 
 func cedarRoleApplicationPtr() *string {
 	str := cedarRoleApplication
@@ -46,12 +73,21 @@ func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool)
 	}
 }
 
+// GetBusinessOwnerRolesBySystem makes a GET call to the /role endpoint using a system ID and a business owner role type ID
+func (c *Client) GetBusinessOwnerRolesBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarRole, error) {
+	businessOwnerRoleID, err := getCedarBusinessOwnerRoleTypeID(ctx, c)
+	if err != nil {
+		return nil, err
+	}
+	return c.GetRolesBySystem(ctx, cedarSystemID, null.StringFrom(businessOwnerRoleID))
+}
+
 // GetRolesBySystem makes a GET call to the /role endpoint using a system ID and an optional role type ID
 // we don't currently have a use case for querying /role by role ID, so that's not implemented
 func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, roleTypeID null.String) ([]*models.CedarRole, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarRole{}, nil
+		return local.GetMockSystemRoles(cedarSystemID, roleTypeID), nil
 	}
 
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
@@ -139,7 +175,7 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 func (c *Client) GetRoleTypes(ctx context.Context) ([]*models.CedarRoleType, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarRoleType{}, nil
+		return local.GetMockRoleTypes(), nil
 	}
 
 	// Construct the parameters
