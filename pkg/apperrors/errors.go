@@ -264,7 +264,7 @@ func (e *InvalidParametersError) Error() string {
 	return fmt.Sprint("Unable to run ", e.FunctionName, " due to invalid parameters")
 }
 
-// InvalidEUAIDError indicates that the CEDAR LDAP API didn't find a matching user for the given EUAID
+// InvalidEUAIDError indicates that the Okta API didn't find a matching user for the given EUAID
 type InvalidEUAIDError struct {
 	EUAID string
 }

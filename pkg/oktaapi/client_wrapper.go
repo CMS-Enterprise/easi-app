@@ -19,8 +19,8 @@ import (
 const maxEUAIDLength = 4
 
 // ClientWrapper is a wrapper around github.com/okta/okta-sdk-golang/v2/okta Client type.
-// The purpose of this package is to act as a drop-in replacement for the CEDAR LDAP API, so this package should implement the same
-// methods that the Client interface defined in package usersearch
+// The purpose of this package is to act as a simplified client for the Okta API. The methods expected to be used for that client are
+// defined in the Client interface in pkg/usersearch.
 type ClientWrapper struct {
 	oktaClient *okta.Client
 }

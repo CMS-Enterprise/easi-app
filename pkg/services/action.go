@@ -56,7 +56,7 @@ func NewSaveAction(
 			return &apperrors.ExternalAPIError{
 				Err:       errors.New("user info fetch was not successful"),
 				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
+				Source:    "Okta",
 			}
 		}
 
