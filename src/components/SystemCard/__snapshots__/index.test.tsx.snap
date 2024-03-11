@@ -1,0 +1,103 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`System Card Componenet > matches snapshot 1`] = `
+<DocumentFragment>
+   
+  <li
+    class="usa-card grid-col-12 system-card"
+    data-testid="system-card"
+  >
+    <div
+      class="usa-card__container"
+    >
+      <div
+        class="mobile:grid-col-12"
+        data-testid="grid"
+      >
+        <div
+          class="system-card__header easi-header__basic"
+        >
+          <h3
+            class="system-card__title margin-top-0 margin-bottom-1"
+          >
+            System Overload
+          </h3>
+        </div>
+        <p
+          class="margin-0"
+        >
+          SO
+        </p>
+        <p
+          class="system-card__body-text line-height-body-4"
+        >
+          An awesome system
+        </p>
+        <dl>
+          <div
+            class="grid-row margin-bottom-2"
+            data-testid="grid"
+          >
+            <div
+              class="tablet:grid-col-6"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                CMS component owner
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                Oddball
+              </dd>
+            </div>
+            <div
+              class="tablet:grid-col-6"
+              data-testid="grid"
+            >
+              <dt
+                class="text-bold margin-bottom-05"
+              >
+                Business owner
+              </dt>
+              <dd
+                class="description-definition margin-0"
+              >
+                John Doe
+              </dd>
+            </div>
+          </div>
+        </dl>
+        <div
+          class="easi-divider margin-bottom-2"
+        />
+        <a
+          class="usa-link display-flex flex-align-center"
+          href="/systems/123/home/top"
+        >
+          View system profile
+          <svg
+            class="usa-icon margin-left-1"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="m12 4-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </li>
+</DocumentFragment>
+`;
