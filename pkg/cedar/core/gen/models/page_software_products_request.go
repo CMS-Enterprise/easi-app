@@ -12,18 +12,25 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
-// SoftwareProductsFindResponse software products find response
+// PageSoftwareProductsRequest page software products request
 //
-// swagger:model SoftwareProductsFindResponse
-type SoftwareProductsFindResponse struct {
+// swagger:model PageSoftwareProductsRequest
+type PageSoftwareProductsRequest struct {
+
+	// software products
+	SoftwareProducts []*SoftwareProducts `json:"SoftwareProducts"`
 
 	// ai soln catg
 	AiSolnCatg []string `json:"aiSolnCatg"`
 
 	// ai soln catg other
 	AiSolnCatgOther string `json:"aiSolnCatgOther,omitempty"`
+
+	// ai life cycle stage
+	AiLifeCycleStage string `json:"ai_life_cycle_stage,omitempty"`
 
 	// api data area
 	APIDataArea []string `json:"apiDataArea"`
@@ -49,11 +56,9 @@ type SoftwareProductsFindResponse struct {
 	// apis developed
 	ApisDeveloped string `json:"apisDeveloped,omitempty"`
 
-	// development stage
-	DevelopmentStage string `json:"developmentStage,omitempty"`
-
-	// software products
-	SoftwareProducts []*SoftwareProductsSearchItem `json:"softwareProducts"`
+	// application Id
+	// Required: true
+	ApplicationID *string `json:"applicationId"`
 
 	// system has Api gateway
 	SystemHasAPIGateway bool `json:"systemHasApiGateway,omitempty"`
@@ -62,11 +67,15 @@ type SoftwareProductsFindResponse struct {
 	UsesAiTech string `json:"usesAiTech,omitempty"`
 }
 
-// Validate validates this software products find response
-func (m *SoftwareProductsFindResponse) Validate(formats strfmt.Registry) error {
+// Validate validates this page software products request
+func (m *PageSoftwareProductsRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateSoftwareProducts(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateApplicationID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -76,7 +85,7 @@ func (m *SoftwareProductsFindResponse) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *SoftwareProductsFindResponse) validateSoftwareProducts(formats strfmt.Registry) error {
+func (m *PageSoftwareProductsRequest) validateSoftwareProducts(formats strfmt.Registry) error {
 	if swag.IsZero(m.SoftwareProducts) { // not required
 		return nil
 	}
@@ -89,9 +98,9 @@ func (m *SoftwareProductsFindResponse) validateSoftwareProducts(formats strfmt.R
 		if m.SoftwareProducts[i] != nil {
 			if err := m.SoftwareProducts[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("softwareProducts" + "." + strconv.Itoa(i))
+					return ve.ValidateName("SoftwareProducts" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("softwareProducts" + "." + strconv.Itoa(i))
+					return ce.ValidateName("SoftwareProducts" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -102,8 +111,17 @@ func (m *SoftwareProductsFindResponse) validateSoftwareProducts(formats strfmt.R
 	return nil
 }
 
-// ContextValidate validate this software products find response based on the context it is used
-func (m *SoftwareProductsFindResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+func (m *PageSoftwareProductsRequest) validateApplicationID(formats strfmt.Registry) error {
+
+	if err := validate.Required("applicationId", "body", m.ApplicationID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this page software products request based on the context it is used
+func (m *PageSoftwareProductsRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateSoftwareProducts(ctx, formats); err != nil {
@@ -116,7 +134,7 @@ func (m *SoftwareProductsFindResponse) ContextValidate(ctx context.Context, form
 	return nil
 }
 
-func (m *SoftwareProductsFindResponse) contextValidateSoftwareProducts(ctx context.Context, formats strfmt.Registry) error {
+func (m *PageSoftwareProductsRequest) contextValidateSoftwareProducts(ctx context.Context, formats strfmt.Registry) error {
 
 	for i := 0; i < len(m.SoftwareProducts); i++ {
 
@@ -128,9 +146,9 @@ func (m *SoftwareProductsFindResponse) contextValidateSoftwareProducts(ctx conte
 
 			if err := m.SoftwareProducts[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("softwareProducts" + "." + strconv.Itoa(i))
+					return ve.ValidateName("SoftwareProducts" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("softwareProducts" + "." + strconv.Itoa(i))
+					return ce.ValidateName("SoftwareProducts" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -142,7 +160,7 @@ func (m *SoftwareProductsFindResponse) contextValidateSoftwareProducts(ctx conte
 }
 
 // MarshalBinary interface implementation
-func (m *SoftwareProductsFindResponse) MarshalBinary() ([]byte, error) {
+func (m *PageSoftwareProductsRequest) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -150,8 +168,8 @@ func (m *SoftwareProductsFindResponse) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *SoftwareProductsFindResponse) UnmarshalBinary(b []byte) error {
-	var res SoftwareProductsFindResponse
+func (m *PageSoftwareProductsRequest) UnmarshalBinary(b []byte) error {
+	var res PageSoftwareProductsRequest
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -63,7 +63,10 @@ UserNameUpdateParams contains all the parameters to send to the API endpoint
 */
 type UserNameUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   User information to be updated in CEDAR.
+	*/
 	Body *models.UserUpdateRequest
 
 	/* Username.
