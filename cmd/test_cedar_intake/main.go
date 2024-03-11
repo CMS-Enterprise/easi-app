@@ -128,6 +128,10 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 		LifecycleScope:        models.HTMLPointer("This LCID covers stuff for 3 years"),
 		LifecycleCostBaseline: null.StringFrom("about 10,000,000"),
 		LifecycleExpiresAt:    &times.threeYearsInTheFuture,
+
+		Step:          models.SystemIntakeStepDECISION,
+		State:         models.SystemIntakeStateOPEN,
+		DecisionState: models.SIDSNotApproved,
 	}
 
 	return systemIntake
@@ -381,8 +385,8 @@ func submitToCEDAR(ctx context.Context) {
 	fmt.Println("Successfully sent system intake")
 }
 
-func dumpIntakeObject(obj translation.IntakeObject, directory string) {
-	ctx := context.Background()
+func dumpIntakeObject(ctx context.Context, obj translation.IntakeObject, directory string) {
+
 	filename := filepath.Join(directory, obj.ObjectType()+".json")
 
 	intakeModel, err := obj.CreateIntakeModel(ctx)
@@ -402,7 +406,7 @@ func dumpPayload(ctx context.Context) {
 
 	fmt.Println("Dumping business case data")
 	businessCaseIntakeObject := translation.TranslatableBusinessCase(*testData.businessCase)
-	dumpIntakeObject(&businessCaseIntakeObject, execDir)
+	dumpIntakeObject(ctx, &businessCaseIntakeObject, execDir)
 	fmt.Println("Business case data dumped inside " + execDir + string(filepath.Separator))
 
 	// fmt.Println("Dumping GRT feedback data")
@@ -412,7 +416,7 @@ func dumpPayload(ctx context.Context) {
 
 	fmt.Println("Dumping system intake data")
 	systemIntakeIntakeObject := translation.TranslatableSystemIntake(*testData.systemIntake)
-	dumpIntakeObject(&systemIntakeIntakeObject, execDir)
+	dumpIntakeObject(ctx, &systemIntakeIntakeObject, execDir)
 	fmt.Println("System intake data dumped inside " + execDir + string(filepath.Separator))
 }
 
@@ -422,29 +426,6 @@ func submitCmd(ctx context.Context) *cobra.Command {
 		Short: "Submit test data to CEDAR Intake",
 		Long:  "Submit test data to CEDAR Intake",
 		Run: func(cmd *cobra.Command, args []string) {
-			config := testhelpers.NewConfig()
-			dbConfig := storage.DBConfig{
-				Host:           config.GetString(appconfig.DBHostConfigKey),
-				Port:           config.GetString(appconfig.DBPortConfigKey),
-				Database:       config.GetString(appconfig.DBNameConfigKey),
-				Username:       config.GetString(appconfig.DBUsernameConfigKey),
-				Password:       config.GetString(appconfig.DBPasswordConfigKey),
-				SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
-				MaxConnections: config.GetInt(appconfig.DBMaxConnections),
-			}
-
-			ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
-			if err != nil {
-				panic(err)
-			}
-
-			store, err := storage.NewStore(dbConfig, ldClient)
-			if err != nil {
-				panic(err)
-			}
-
-			ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
-
 			submitToCEDAR(ctx)
 		},
 	}
@@ -456,29 +437,6 @@ func dumpCmd(ctx context.Context) *cobra.Command {
 		Short: "Dump test data payloads to local files",
 		Long:  "Dump test data payloads to local files",
 		Run: func(cmd *cobra.Command, args []string) {
-			config := testhelpers.NewConfig()
-			dbConfig := storage.DBConfig{
-				Host:           config.GetString(appconfig.DBHostConfigKey),
-				Port:           config.GetString(appconfig.DBPortConfigKey),
-				Database:       config.GetString(appconfig.DBNameConfigKey),
-				Username:       config.GetString(appconfig.DBUsernameConfigKey),
-				Password:       config.GetString(appconfig.DBPasswordConfigKey),
-				SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
-				MaxConnections: config.GetInt(appconfig.DBMaxConnections),
-			}
-
-			ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
-			if err != nil {
-				panic(err)
-			}
-
-			store, err := storage.NewStore(dbConfig, ldClient)
-			if err != nil {
-				panic(err)
-			}
-
-			ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
-
 			dumpPayload(ctx)
 		},
 	}
@@ -492,6 +450,35 @@ var rootCmd = &cobra.Command{
 
 func execute() {
 	ctx := context.Background()
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		panic(fmt.Errorf("problem initializing dev logger in test_cedar_intake: %w", err))
+	}
+
+	ctx = appcontext.WithLogger(ctx, logger)
+
+	config := testhelpers.NewConfig()
+	dbConfig := storage.DBConfig{
+		Host:           config.GetString(appconfig.DBHostConfigKey),
+		Port:           config.GetString(appconfig.DBPortConfigKey),
+		Database:       config.GetString(appconfig.DBNameConfigKey),
+		Username:       config.GetString(appconfig.DBUsernameConfigKey),
+		Password:       config.GetString(appconfig.DBPasswordConfigKey),
+		SSLMode:        config.GetString(appconfig.DBSSLModeConfigKey),
+		MaxConnections: config.GetInt(appconfig.DBMaxConnections),
+	}
+
+	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	if err != nil {
+		panic(fmt.Errorf("problem creating custom launchDarkly client in test_cedar_intake: %w", err))
+	}
+
+	store, err := storage.NewStore(dbConfig, ldClient)
+	if err != nil {
+		panic(fmt.Errorf("problem intializing store in test_cedar_intake: %w", err))
+	}
+
+	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
 
 	rootCmd.AddCommand(
 		submitCmd(ctx),
