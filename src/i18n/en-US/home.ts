@@ -1,7 +1,7 @@
 const home = {
-  title: 'Welcome to EASi',
+  title: 'Welcome, {{user}}',
   subtitle:
-    'The place to find CMS IT Governance, assistance with technical issues, Section 508 services, as well as comprehensive information about CMS systems.',
+    'Use EASi to manage your systems, governance processes, security processes, and much more.',
   startNow: 'Start now',
   welcome: {
     title:
@@ -85,16 +85,19 @@ const home = {
     }
   },
   requestsTable: {
-    empty: 'Requests will display in a table once you add them',
+    empty:
+      'You do not have any open requests in EASi. To start a new IT Governance request or technical assistance request, use the buttons above.',
     id: 'request-table',
-    title: 'Request Table',
+    title: 'My open requests',
+    subtitle:
+      'You have access to edit and manage all of the requests below. You may have created them, or they may have been created by another team member',
     breadcrumb: {
       home: 'Home',
       table: 'My requests'
     },
-    heading: 'My requests',
+    heading: 'Governance processes and other services',
     headers: {
-      name: 'Project title',
+      name: 'Request name',
       type: 'Governance',
       submittedAt: 'Submission date',
       status: 'Status',
