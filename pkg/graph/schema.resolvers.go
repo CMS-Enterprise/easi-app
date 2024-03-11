@@ -2680,14 +2680,14 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		Name:      obj.Requester,
 	}
 
-	// if the EUA doesn't exist (Sharepoint imports), don't bother calling CEDAR LDAP
+	// if the EUA doesn't exist (Sharepoint imports), don't bother calling Okta
 	if !obj.EUAUserID.Valid {
 		return requesterWithoutEmail, nil
 	}
 
 	user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID.ValueOrZero())
 	if err != nil {
-		// check if the EUA ID is just invalid in CEDAR LDAP (i.e. the requester no longer has an active EUA account)
+		// check if the EUA ID is just invalid in Okta (i.e. the requester no longer has an active EUA account)
 		if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
 			return requesterWithoutEmail, nil
 		}

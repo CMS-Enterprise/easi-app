@@ -7,26 +7,23 @@ import (
 
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
-
-	ldapmodels "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 )
 
-// NewCedarLdapClient returns a fake Cedar LDAP client
-func NewCedarLdapClient(logger *zap.Logger) CedarLdapClient {
-	return CedarLdapClient{logger: logger}
+// client is a mock client for pkg/oktaapi
+type client struct{}
+
+// NewOktaAPIClient returns an Okta API client that returns mock data
+func NewOktaAPIClient() *client {
+	return &client{}
 }
 
-// CedarLdapClient mocks the CEDAR LDAP client for local/test use
-type CedarLdapClient struct {
-	logger *zap.Logger
-}
-
-// getMockUserData returns a slice of *models.UserInfo that represents a response from the CEDAR LDAP server.
+// getMockUserData returns a slice of *models.UserInfo that represents a response from the Okta server.
 // Most of the data here is generated randomly, though some of it was curated specifically for the purpose of making tests pass.
 func getMockUserData() []*models.UserInfo {
-	return []*models.UserInfo{ // TODO: EASI-3341 implement First Name and Last Name fields
+	return []*models.UserInfo{
 		{
 			DisplayName: "Adeline Aarons",
 			Email:       "adeline.aarons@local.fake",
@@ -479,7 +476,8 @@ func getMockUserData() []*models.UserInfo {
 }
 
 // FetchUserInfo fetches a user's personal details
-func (c CedarLdapClient) FetchUserInfo(_ context.Context, euaID string) (*models.UserInfo, error) {
+func (c *client) FetchUserInfo(ctx context.Context, euaID string) (*models.UserInfo, error) {
+	logger := appcontext.ZLogger(ctx)
 	if euaID == "" {
 		return nil, &apperrors.ValidationError{
 			Err:     errors.New("invalid EUA ID"),
@@ -487,24 +485,19 @@ func (c CedarLdapClient) FetchUserInfo(_ context.Context, euaID string) (*models
 			ModelID: euaID,
 		}
 	}
-	c.logger.Info("Mock FetchUserInfo from LDAP", zap.String("euaID", euaID))
+	logger.Info("Mock FetchUserInfo from Okta", zap.String("euaID", euaID))
 	for _, mockUser := range getMockUserData() {
 		if mockUser.Username == euaID {
 			return mockUser, nil
 		}
 	}
-	return nil, &apperrors.ExternalAPIError{
-		Err:       errors.New("failed to return person from CEDAR LDAP"),
-		ModelID:   euaID,
-		Model:     ldapmodels.Person{},
-		Operation: apperrors.Fetch,
-		Source:    "CEDAR LDAP",
-	}
+	return nil, errors.New("failed to fetch user from Okta API")
 }
 
 // FetchUserInfos fetches multiple users' personal details
-func (c CedarLdapClient) FetchUserInfos(_ context.Context, euaIDs []string) ([]*models.UserInfo, error) {
-	c.logger.Info("Mock FetchUserInfos from LDAP", zap.Strings("euaIDs", euaIDs))
+func (c *client) FetchUserInfos(ctx context.Context, euaIDs []string) ([]*models.UserInfo, error) {
+	logger := appcontext.ZLogger(ctx)
+	logger.Info("Mock FetchUserInfos from Okta", zap.Strings("euaIDs", euaIDs))
 
 	userInfos := make([]*models.UserInfo, len(euaIDs))
 	for i, euaID := range euaIDs {
@@ -519,8 +512,9 @@ func (c CedarLdapClient) FetchUserInfos(_ context.Context, euaIDs []string) ([]*
 }
 
 // SearchCommonNameContains fetches a user's personal details by their common name
-func (c CedarLdapClient) SearchCommonNameContains(_ context.Context, commonName string) ([]*models.UserInfo, error) {
-	c.logger.Info("Mock SearchCommonNameContains from LDAP")
+func (c *client) SearchCommonNameContains(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
+	logger := appcontext.ZLogger(ctx)
+	logger.Info("Mock SearchCommonNameContains from Okta")
 
 	mockUserData := getMockUserData()
 	searchResults := []*models.UserInfo{}

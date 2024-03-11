@@ -52,7 +52,6 @@ data:
   ALT_JOB_CODES: 'true'
   OKTA_API_URL: https://test.idp.idm.cms.gov
   OKTA_API_TOKEN: ''
-  USE_OKTA_API: 'true'
   LOCAL_AUTH_ENABLED: 'true'
 
 

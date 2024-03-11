@@ -85,7 +85,7 @@ func NewCreateBusinessCase(
 				Model:     intake,
 				ModelID:   intake.ID.String(),
 				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
+				Source:    "Okta",
 			}
 		}
 
