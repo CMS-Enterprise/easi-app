@@ -46,9 +46,9 @@ func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wir
 		return nil, err
 	}
 
-	var numbers []string
-	for _, contract := range contracts {
-		numbers = append(numbers, contract.ContractNumber)
+	numbers := make([]string, len(contracts))
+	for i := range contracts {
+		numbers[i] = contracts[i].ContractNumber
 	}
 
 	obj := &intakemodels.EASIIntake{
