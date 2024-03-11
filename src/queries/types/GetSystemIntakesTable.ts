@@ -58,7 +58,6 @@ export interface GetSystemIntakesTable_systemIntakes_contract {
   __typename: "SystemIntakeContract";
   hasContract: string | null;
   contractor: string | null;
-  number: string | null;
   vehicle: string | null;
   startDate: GetSystemIntakesTable_systemIntakes_contract_startDate;
   endDate: GetSystemIntakesTable_systemIntakes_contract_endDate;
@@ -67,6 +66,8 @@ export interface GetSystemIntakesTable_systemIntakes_contract {
 export interface GetSystemIntakesTable_systemIntakes_contractNumbers {
   __typename: "SystemIntakeContractNumber";
   contractNumber: string;
+  id: UUID;
+  systemIntakeID: UUID;
 }
 
 export interface GetSystemIntakesTable_systemIntakes_notes {

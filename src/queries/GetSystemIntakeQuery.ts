@@ -29,7 +29,11 @@ export const SystemIntake = gql`
         year
       }
       vehicle
-      number
+    }
+    contractNumbers {
+      id
+      systemIntakeID
+      contractNumber
     }
     costs {
       isExpectingIncrease

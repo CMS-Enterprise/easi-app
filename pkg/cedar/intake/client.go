@@ -148,7 +148,7 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 		return nil
 	}
 
-	input, err := model.CreateIntakeModel()
+	input, err := model.CreateIntakeModel(ctx)
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(

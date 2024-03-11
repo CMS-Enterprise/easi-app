@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "94388143-8d11-43b1-ad27-ce846949b74b",
+		"_postman_id": "7296b5ce-c451-46ad-b755-1fae427d376b",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "11253221"
+		"_exporter_id": "32724285"
 	},
 	"item": [
 		{
@@ -201,7 +201,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+												"query": "mutation CreateSystemIntakeActionRequestEdits($input: SystemIntakeRequestEditsInput!) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n      }\r\n      contractNumbers {\r\n        id\r\n        systemIntakeID\r\n        contractNumber\r\n        createdBy\r\n        createdAt\r\n        modifiedBy\r\n        modifiedAt\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
 												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"intakeFormStep\": \"INITIAL_REQUEST_FORM\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"emailFeedback\": \"email feedback goes here\",\r\n        \"additionalInfo\": \"additional info\",\r\n        \"adminNote\": \"my admin note\"\r\n    }\r\n}"
 											}
 										},
@@ -222,7 +222,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+												"query": "mutation CreateSystemIntakeActionRequestEdits($input: SystemIntakeRequestEditsInput!) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        __typename\r\n      }\r\n      contractNumbers {\r\n        id\r\n        systemIntakeID\r\n        contractNumber\r\n        createdBy\r\n        createdAt\r\n        modifiedBy\r\n        modifiedAt\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
 												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"intakeFormStep\": \"DRAFT_BUSINESS_CASE\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"emailFeedback\": \"email feedback goes here\",\r\n        \"additionalInfo\": \"additional info\",\r\n        \"adminNote\": \"my admin note\"\r\n    }\r\n}"
 											}
 										},
@@ -243,7 +243,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+												"query": "mutation CreateSystemIntakeActionRequestEdits($input: SystemIntakeRequestEditsInput!) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        __typename\r\n      }\r\n      contractNumbers {\r\n        id\r\n        systemIntakeID\r\n        contractNumber\r\n        createdBy\r\n        createdAt\r\n        modifiedBy\r\n        modifiedAt\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
 												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"intakeFormStep\": \"FINAL_BUSINESS_CASE\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"emailFeedback\": \"email feedback goes here\",\r\n        \"additionalInfo\": \"additional info\",\r\n        \"adminNote\": \"my admin note\"\r\n    }\r\n}"
 											}
 										},
@@ -264,7 +264,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+												"query": "mutation CreateSystemIntakeActionRequestEdits($input: SystemIntakeRequestEditsInput!) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        __typename\r\n      }\r\n      contractNumbers {\r\n        id\r\n        systemIntakeID\r\n        contractNumber\r\n        createdBy\r\n        createdAt\r\n        modifiedBy\r\n        modifiedAt\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
 												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"intakeFormStep\": \"GRT_MEETING\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"emailFeedback\": \"email feedback goes here\",\r\n        \"additionalInfo\": \"additional info\",\r\n        \"adminNote\": \"my admin note\"\r\n    }\r\n}"
 											}
 										},
@@ -711,8 +711,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation UpdateSystemIntakeContractDetails($input: UpdateSystemIntakeContractDetailsInput!) {\n  updateSystemIntakeContractDetails(input: $input) {\n    systemIntake {\n      id\n      status\n      requestFormState\n      currentStage\n      statusRequester\n      statusAdmin\n      fundingSources {\n        source\n        fundingNumber\n        __typename\n      }\n      costs {\n        expectedIncreaseAmount\n        isExpectingIncrease\n        __typename\n      }\n      contract {\n        contractor\n        endDate {\n          day\n          month\n          year\n          __typename\n        }\n        hasContract\n        startDate {\n          day\n          month\n          year\n          __typename\n        }\n        number\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}",
-										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"fundingSources\": {\n      \"existingFunding\": true,\n      \"fundingSources\": [\n        {\n          \"fundingNumber\": \"656909\",\n          \"source\": \"Other\"\n        },\n        {\n          \"fundingNumber\": \"867530\",\n          \"source\": \"Recovery Audit Contractors\"\n        }\n      ]\n    },\n    \"costs\": {\n      \"expectedIncreaseAmount\": \"$10 every 3 hours\",\n      \"isExpectingIncrease\": \"YES\"\n    },\n    \"contract\": {\n      \"contractor\": \"\",\n      \"endDate\": null,\n      \"hasContract\": \"NOT_STARTED\",\n      \"startDate\": null,\n      \"number\": \"\"\n    }\n  }\n}"
+										"query": "mutation UpdateSystemIntakeContractDetails($input: UpdateSystemIntakeContractDetailsInput!) {\n  updateSystemIntakeContractDetails(input: $input) {\n    systemIntake {\n      id\n      requestFormState\n      currentStage\n      statusRequester\n      statusAdmin\n      fundingSources {\n        source\n        fundingNumber\n        __typename\n      }\n      costs {\n        expectedIncreaseAmount\n        isExpectingIncrease\n        __typename\n      }\n      contract {\n        contractor\n        endDate {\n          day\n          month\n          year\n          __typename\n        }\n        hasContract\n        startDate {\n          day\n          month\n          year\n          __typename\n        }\n        __typename\n      }\n      contractNumbers {\n        id\n        systemIntakeID\n        contractNumber\n        createdBy\n        createdAt\n        modifiedBy\n        modifiedAt\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"fundingSources\": {\n      \"existingFunding\": true,\n      \"fundingSources\": [\n        {\n          \"fundingNumber\": \"656909\",\n          \"source\": \"Other\"\n        },\n        {\n          \"fundingNumber\": \"867530\",\n          \"source\": \"Recovery Audit Contractors\"\n        }\n      ]\n    },\n    \"costs\": {\n      \"expectedIncreaseAmount\": \"$10 every 3 hours\",\n      \"isExpectingIncrease\": \"YES\"\n    },\n    \"contract\": {\n      \"contractor\": \"\",\n      \"endDate\": null,\n      \"hasContract\": \"NOT_STARTED\",\n      \"startDate\": null,\n      \"numbers\": []\n    }\n  }\n}"
 									}
 								},
 								"url": {
@@ -1293,38 +1293,6 @@
 							"graphql": {
 								"query": "query {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    state\n    decisionState\n    decisionNextSteps\n    trbFollowUpRecommendation\n    lcid\n    lcidExpiresAt\n    lcidScope\n    lcidCostBaseline\n    lcidStatus\n    rejectionReason\n    lcidRetiresAt\n  }\n}",
 								"variables": "{\r\n    \"id\": \"{{systemIntakeID}}\"\r\n}"
-							}
-						},
-						"url": {
-							"raw": "{{url}}",
-							"host": [
-								"{{url}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "SystemIntake Get (RELATED)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "query relatedSystemIntakes{\n  \n  relatedSystemIntakes(id:\"{{systemIntakeID}}\")\n  \n  {\n    id\n#   actions\n  adminLead\n  archivedAt\n#   businessCase\n  businessNeed\n#   businessOwner\n  businessSolution\n#   contract\n#   costs\n  createdAt\n  currentStage\n  decisionNextSteps\n  eaCollaborator\n  eaCollaboratorName\n  euaUserId\n  existingFunding\n#   fundingSources\n#   governanceTeams\n  grbDate\n  grtDate\n#   grtFeedbacks\n  id\n#   isso\n  lcid\n  lcidExpiresAt\n  lcidScope\n  lcidCostBaseline\n  needsEaSupport\n#   notes\n  oitSecurityCollaborator\n  oitSecurityCollaboratorName\n#   productManager\n  projectAcronym\n  rejectionReason\n  requestName\n  requestType\n#   requester\n  submittedAt\n  trbCollaborator\n  trbCollaboratorName\n  updatedAt\n  grtReviewEmailBody\n  decidedAt\n  businessCaseId\n#   lastAdminNote\n  cedarSystemId\n#   documents\n  hasUiChanges\n    \n    \n  }\n  \n  \n}",
-								"variables": ""
 							}
 						},
 						"url": {

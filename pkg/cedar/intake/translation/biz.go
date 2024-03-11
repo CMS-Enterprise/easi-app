@@ -1,6 +1,7 @@
 package translation
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 
@@ -23,7 +24,7 @@ func (bc *TranslatableBusinessCase) ObjectType() string {
 }
 
 // CreateIntakeModel translates a BusinessCase into an IntakeInput
-func (bc *TranslatableBusinessCase) CreateIntakeModel() (*wire.IntakeInput, error) {
+func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wire.IntakeInput, error) {
 	obj := intakemodels.EASIBizCase{
 		UserEUA:                bc.EUAUserID,
 		BusinessCaseID:         bc.ID.String(),

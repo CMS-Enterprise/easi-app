@@ -401,7 +401,7 @@ func updateSystemIntakeContractDetails(
 	startDate := time.Now().AddDate(-1, 0, 0)
 	hasContract := "HAVE_CONTRACT"
 	endDate := time.Now().AddDate(3, 0, 0)
-	contractNumber := "123456789"
+	contractNumbers := []string{"123456789"}
 	input := model.UpdateSystemIntakeContractDetailsInput{
 		ID: intake.ID,
 		FundingSources: &model.SystemIntakeFundingSourcesInput{
@@ -433,7 +433,7 @@ func updateSystemIntakeContractDetails(
 			StartDate:   &startDate,
 			HasContract: &hasContract,
 			EndDate:     &endDate,
-			Number:      &contractNumber,
+			Numbers:     contractNumbers,
 		},
 	}
 	payload, err := resolvers.SystemIntakeUpdateContractDetails(ctx, store, input)

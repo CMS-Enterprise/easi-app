@@ -32,7 +32,13 @@ type FundingSourcesObject = {
 export const SystemIntakeReview = ({
   systemIntake
 }: SystemIntakeReviewProps) => {
-  const { annualSpending, costs, contract, submittedAt } = systemIntake;
+  const {
+    annualSpending,
+    costs,
+    contract,
+    submittedAt,
+    contractNumbers
+  } = systemIntake;
   const {
     contacts: {
       data: { requester, businessOwner, productManager, isso }
@@ -345,10 +351,14 @@ export const SystemIntakeReview = ({
                 If the intake has a "contract vehicle", render it and "Not Entered" for "contract number"
                   (since this intake was before we introduced contract numbers)
               */}
-              {contract.number !== null ? (
+              {contractNumbers && contractNumbers.length > 0 ? (
                 <div>
                   <DescriptionTerm term={t('review.contractNumber')} />
-                  <DescriptionDefinition definition={contract.number} />
+                  <DescriptionDefinition
+                    definition={contractNumbers
+                      .map(c => c.contractNumber)
+                      .join(', ')}
+                  />
                 </div>
               ) : (
                 contract.vehicle !== null && (

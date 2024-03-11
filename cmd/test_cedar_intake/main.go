@@ -116,7 +116,6 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 		ContractStartDate:  date(2021, 1, 1),
 		ContractEndDate:    date(2023, 12, 31),
 		ContractVehicle:    null.StringFrom("Sole source"),
-		ContractNumber:     null.StringFrom("22288144"),
 		Contractor:         null.StringFrom("ACME Co."),
 		AdminLead:          null.StringFrom("Valerie Hartz"),
 		GRTDate:            &times.oneHourInTheFuture,
@@ -380,9 +379,10 @@ func submitToCEDAR() {
 }
 
 func dumpIntakeObject(obj translation.IntakeObject, directory string) {
+	ctx := context.Background()
 	filename := filepath.Join(directory, obj.ObjectType()+".json")
 
-	intakeModel, err := obj.CreateIntakeModel()
+	intakeModel, err := obj.CreateIntakeModel(ctx)
 	noErr(err)
 
 	err = os.WriteFile(filename, []byte(*intakeModel.Body), 0600)
