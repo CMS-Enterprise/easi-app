@@ -73,9 +73,9 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID 
 	}
 
 	// This may look like an odd block of code, but should never expect an empty response from CEDAR with the
-	// hard-coded parameters we have set.
+	// hard-coded parameters we have set when we are not filtering by EUA.
 	// This is defensive programming against this case.
-	if len(resp.Payload.SystemSummary) == 0 {
+	if len(resp.Payload.SystemSummary) == 0 && euaUserID == nil {
 		return []*models.CedarSystem{}, fmt.Errorf("empty response array received")
 	}
 
