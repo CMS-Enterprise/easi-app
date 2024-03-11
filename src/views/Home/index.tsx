@@ -29,7 +29,10 @@ import WelcomePage from './WelcomePage';
 
 const Home = () => {
   const { t } = useTranslation();
-  const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
+  const { groups, isUserSet, name } = useSelector(
+    (state: AppState) => state.auth
+  );
+
   const flags = useFlags();
 
   const { Message } = useMessage();
@@ -78,19 +81,20 @@ const Home = () => {
             <div className="grid-container margin-top-6">
               <Message />
             </div>
-            <Grid tablet={{ col: 12 }}>
+
+            <Grid tablet={{ col: 12 }} className="margin-bottom-4">
               <PageHeading className="margin-bottom-0">
-                {t('home:title')}
+                {t('home:title', {
+                  user: name
+                })}
               </PageHeading>
 
               <p className="line-height-body-5 font-body-lg text-light margin-bottom-5 margin-top-1">
                 {t('home:subtitle')}
               </p>
 
-              <hr className="margin-bottom-3" aria-hidden />
-
-              <h2 className="margin-top-2 margin-bottom-1">
-                {t('home:actionTitle')}
+              <h2 className="margin-top-4">
+                {t('home:requestsTable.heading')}
               </h2>
 
               <Grid row gap={2}>
@@ -98,12 +102,9 @@ const Home = () => {
                   { ITGov: requestTypes.ITGov },
                   ...(flags.technicalAssistance
                     ? [{ TRB: requestTypes.TRB }]
-                    : []),
-                  ...(!flags.hide508Workflow
-                    ? [{ 508: requestTypes[508] }]
                     : [])
                 ].map(requestType => (
-                  <Grid tablet={{ col: 4 }} key={Object.keys(requestType)[0]}>
+                  <Grid tablet={{ col: 6 }} key={Object.keys(requestType)[0]}>
                     <LinkCard
                       className="margin-top-1"
                       type={Object.keys(requestType)[0] as LinkRequestType}
@@ -111,11 +112,12 @@ const Home = () => {
                   </Grid>
                 ))}
               </Grid>
-
-              <h3 className="margin-top-4">
-                {t('home:requestsTable.heading')}
-              </h3>
             </Grid>
+
+            <h3 className="margin-top-4">{t('home:requestsTable.title')}</h3>
+            <p className="margin-bottom-4">
+              {t('home:requestsTable.subtitle')}
+            </p>
 
             <Grid tablet={{ col: 12 }}>
               <Table defaultPageSize={10} />
