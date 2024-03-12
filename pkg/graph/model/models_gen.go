@@ -63,6 +63,25 @@ type CedarBusinessOwnerInformation struct {
 	StoresBeneficiaryAddress       *bool    `json:"storesBeneficiaryAddress,omitempty"`
 }
 
+// CedarSoftwareProductItem represents an individual software product; this information is returned from the CEDAR Core API
+// as a part of the CedarSoftwareProducts object
+type CedarSoftwareProductItem struct {
+	APIGatewayUse                  *bool   `json:"apiGatewayUse,omitempty"`
+	ElaPurchase                    *string `json:"elaPurchase,omitempty"`
+	ElaVendorID                    *string `json:"elaVendorId,omitempty"`
+	ProvidesAiCapability           *bool   `json:"providesAiCapability,omitempty"`
+	Refstr                         *string `json:"refstr,omitempty"`
+	SoftwareCatagoryConnectionGUID *string `json:"softwareCatagoryConnectionGuid,omitempty"`
+	SoftwareVendorConnectionGUID   *string `json:"softwareVendorConnectionGuid,omitempty"`
+	SoftwareCost                   *string `json:"softwareCost,omitempty"`
+	SoftwareElaOrganization        *string `json:"softwareElaOrganization,omitempty"`
+	SoftwareName                   *string `json:"softwareName,omitempty"`
+	SystemSoftwareConnectionGUID   *string `json:"systemSoftwareConnectionGuid,omitempty"`
+	TechnopediaCategory            *string `json:"technopediaCategory,omitempty"`
+	TechnopediaID                  *string `json:"technopediaID,omitempty"`
+	VendorName                     *string `json:"vendorName,omitempty"`
+}
+
 // SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
 type CedarSystemMaintainerInformation struct {
 	AgileUsed                  *bool    `json:"agileUsed,omitempty"`
