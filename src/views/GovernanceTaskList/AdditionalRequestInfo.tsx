@@ -9,7 +9,6 @@ import {
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
-import { GetGovernanceTaskList_systemIntake as SystemIntake } from 'queries/types/GetGovernanceTaskList';
 import { RequestRelationType } from 'types/graphql-global-types';
 
 type SystemCardItemProps = {
@@ -80,7 +79,15 @@ function SystemCardList({ items }: { items: SystemCardItemProps[] }) {
   );
 }
 
-function AdditionalRequestInfo({ ...system }: SystemIntake) {
+function AdditionalRequestInfo({
+  ...system
+}: {
+  id: string;
+  systems: SystemCardItemProps[];
+  relationType: string | null;
+  contractName: string | null;
+  contractNumbers: any[];
+}) {
   const { t } = useTranslation('itGov');
 
   return (
