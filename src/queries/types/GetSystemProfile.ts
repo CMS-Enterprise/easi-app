@@ -23,6 +23,42 @@ export interface GetSystemProfile_cedarThreat {
   weaknessRiskLevel: string | null;
 }
 
+export interface GetSystemProfile_cedarSoftwareProducts_softwareProducts {
+  __typename: "CedarSoftwareProductItem";
+  apiGatewayUse: boolean | null;
+  elaPurchase: string | null;
+  elaVendorId: string | null;
+  providesAiCapability: boolean | null;
+  refstr: string | null;
+  softwareCatagoryConnectionGuid: string | null;
+  softwareVendorConnectionGuid: string | null;
+  softwareCost: string | null;
+  softwareElaOrganization: string | null;
+  softwareName: string | null;
+  systemSoftwareConnectionGuid: string | null;
+  technopediaCategory: string | null;
+  technopediaID: string | null;
+  vendorName: string | null;
+}
+
+export interface GetSystemProfile_cedarSoftwareProducts {
+  __typename: "CedarSoftwareProducts";
+  aiSolnCatg: (string | null)[];
+  aiSolnCatgOther: string | null;
+  apiDataArea: (string | null)[];
+  apiDescPubLocation: string | null;
+  apiDescPublished: string | null;
+  apiFHIRUse: string | null;
+  apiFHIRUseOther: string | null;
+  apiHasPortal: boolean | null;
+  apisAccessibility: string | null;
+  apisDeveloped: string | null;
+  developmentStage: string | null;
+  softwareProducts: GetSystemProfile_cedarSoftwareProducts_softwareProducts[];
+  systemHasAPIGateway: boolean | null;
+  usesAiTech: string | null;
+}
+
 export interface GetSystemProfile_cedarSystemDetails_businessOwnerInformation {
   __typename: "CedarBusinessOwnerInformation";
   isCmsOwned: boolean | null;
@@ -105,6 +141,7 @@ export interface GetSystemProfile_cedarSystemDetails {
 export interface GetSystemProfile {
   cedarAuthorityToOperate: GetSystemProfile_cedarAuthorityToOperate[];
   cedarThreat: GetSystemProfile_cedarThreat[];
+  cedarSoftwareProducts: GetSystemProfile_cedarSoftwareProducts | null;
   cedarSystemDetails: GetSystemProfile_cedarSystemDetails | null;
 }
 

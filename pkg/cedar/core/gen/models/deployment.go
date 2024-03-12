@@ -23,6 +23,14 @@ type Deployment struct {
 	// data center
 	DataCenter *DataCenter `json:"DataCenter,omitempty"`
 
+	// aws enclave
+	// Example: AWS East
+	AwsEnclave string `json:"awsEnclave,omitempty"`
+
+	// aws enclave other
+	// Example: AWS Pacific
+	AwsEnclaveOther string `json:"awsEnclaveOther,omitempty"`
+
 	// contractor name
 	// Example: Acumen
 	ContractorName string `json:"contractorName,omitempty"`
@@ -55,10 +63,27 @@ type Deployment struct {
 	// Example: yes
 	IsHotSite string `json:"isHotSite,omitempty"`
 
+	// moving to cloud
+	// Example: Yes
+	MovingToCloud string `json:"movingToCloud,omitempty"`
+
+	// moving to cloud date
+	// Example: 2021-10-01
+	// Format: date
+	MovingToCloudDate strfmt.Date `json:"movingToCloudDate,omitempty"`
+
 	// name
 	// Example: Accountable Care Organization Management System v.1.0 (COOP DR)
 	// Required: true
 	Name *string `json:"name"`
+
+	// network encryption
+	// Example: We do not encrypt network traffic leaving our system,We encrypt network traffic leaving our system to other systems on the CMS-internal network
+	NetworkEncryption string `json:"networkEncryption,omitempty"`
+
+	// other special users
+	// Example: end users
+	OtherSpecialUsers string `json:"otherSpecialUsers,omitempty"`
 
 	// replicated system elements
 	ReplicatedSystemElements []string `json:"replicatedSystemElements"`
@@ -88,6 +113,10 @@ type Deployment struct {
 	// Example: 1
 	SystemVersion string `json:"systemVersion,omitempty"`
 
+	// users requiring m f a
+	// Example: End-users,Developers,System Administrators,Other Special Users
+	UsersRequiringMFA string `json:"usersRequiringMFA,omitempty"`
+
 	// wan type
 	// Example: Internet - Contractor
 	WanType string `json:"wanType,omitempty"`
@@ -110,6 +139,10 @@ func (m *Deployment) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMovingToCloudDate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -236,6 +269,18 @@ func (m *Deployment) validateEndDate(formats strfmt.Registry) error {
 func (m *Deployment) validateID(formats strfmt.Registry) error {
 
 	if err := validate.Required("id", "body", m.ID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Deployment) validateMovingToCloudDate(formats strfmt.Registry) error {
+	if swag.IsZero(m.MovingToCloudDate) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("movingToCloudDate", "body", "date", m.MovingToCloudDate.String(), formats); err != nil {
 		return err
 	}
 

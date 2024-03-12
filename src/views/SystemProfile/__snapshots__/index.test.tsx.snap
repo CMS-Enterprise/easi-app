@@ -282,6 +282,16 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                     ATO
                   </a>
                 </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class="nav-group-border"
+                    href="/systems/000-100-0/tools-and-software"
+                  >
+                    Tools and Software
+                  </a>
+                </li>
               </ul>
             </div>
             <div

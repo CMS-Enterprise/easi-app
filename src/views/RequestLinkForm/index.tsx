@@ -81,7 +81,22 @@ const RequestLinkForm = () => {
   const isNew = !!state?.isNew;
 
   // const taskListUrl = `/governance-task-list/${systemId}`;
-  const taskListUrl = `/trb/task-list/${systemId}`;
+  // const taskListUrl = `/trb/task-list/${systemId}`;
+  // Fetch query param to check if coming from ITGov/TRB admin home for redirect and text changes
+  const params = new URLSearchParams(useLocation().search);
+  const editType = params.get('edit-type');
+
+  const taskListUrl = `/governance-task-list/${systemId}`;
+  let breadCrumb = t('additionalRequestInfo.taskListBreadCrumb');
+
+  let redirectUrl = taskListUrl;
+  if (editType === 'it-gov-admin') {
+    redirectUrl = `/governance-review-team/${systemId}/additional-information`;
+    breadCrumb = t('additionalRequestInfo.itGovBreadcrumb');
+  } else if (editType === 'trb-admin') {
+    redirectUrl = `/trb/${systemId}/additional-information`;
+    breadCrumb = t('additionalRequestInfo.trbBreadcrumb');
+  }
 
   const [hasUserError, setUserError] = useState<boolean>(false);
 
@@ -240,7 +255,7 @@ const RequestLinkForm = () => {
 
     p?.then(
       res => {
-        if (res?.data) history.push(taskListUrl);
+        if (res?.data) history.push(redirectUrl);
       },
       () => {}
     ).catch(() => {
@@ -252,7 +267,7 @@ const RequestLinkForm = () => {
     unlinkSystemIntakeRelation({ variables: { intakeID: systemId } })
       .then(
         res => {
-          if (res?.data) history.push(taskListUrl);
+          if (res?.data) history.push(redirectUrl);
         },
         () => {}
       )
@@ -300,8 +315,8 @@ const RequestLinkForm = () => {
             ) : (
               <>
                 <Breadcrumb>
-                  <BreadcrumbLink asCustom={Link} to={taskListUrl}>
-                    <span>{t('Task list')}</span>
+                  <BreadcrumbLink asCustom={Link} to={redirectUrl}>
+                    <span>{breadCrumb}</span>
                   </BreadcrumbLink>
                 </Breadcrumb>
                 <Breadcrumb current>
@@ -519,7 +534,7 @@ const RequestLinkForm = () => {
                         ? 'continueTaskList'
                         : 'next';
                     }
-                    return 'save';
+                    return 'saveChanges';
                   })()}`
                 )}
               </Button>

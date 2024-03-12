@@ -11,6 +11,7 @@ import {
   Link,
   ModalHeading
 } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -50,6 +51,8 @@ function GovernanceTaskList() {
   const { t } = useTranslation('itGov');
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const flags = useFlags();
 
   const { showMessageOnNextPage } = useMessage();
 
@@ -231,7 +234,9 @@ function GovernanceTaskList() {
                   </div>
                 )}
 
-                <AdditionalRequestInfo {...systemIntake} />
+                {flags.itgovLinkRequestsRequester && (
+                  <AdditionalRequestInfo {...systemIntake} />
+                )}
 
                 <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
                   {t('taskList.help')}

@@ -32,6 +32,8 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
+/* eslint-disable camelcase */
+import { GetSystemIntake_systemIntake_systems_businessOwnerRoles } from 'queries/types/GetSystemIntake';
 import {
   GetSystemProfile,
   /* eslint-disable camelcase */
@@ -58,7 +60,6 @@ import NotFound from 'views/NotFound';
 import {
   activities as mockActivies,
   budgetsInfo as mockBudgets,
-  products as mockProducts,
   subSystems as mockSubSystems,
   systemData as mockSystemData
 } from 'views/Sandbox/mockSystemData';
@@ -165,8 +166,10 @@ function getLocations(
  * Format the name in title case if the full name is in all caps.
  */
 export function getPersonFullName(
-  // eslint-disable-next-line camelcase
-  role: GetSystemProfile_cedarSystemDetails_roles
+  role: // eslint-disable-next-line camelcase
+  | GetSystemProfile_cedarSystemDetails_roles
+    // eslint-disable-next-line camelcase
+    | GetSystemIntake_systemIntake_systems_businessOwnerRoles
 ): string {
   const fullname = `${role.assigneeFirstName} ${role.assigneeLastName}`;
   return fullname === fullname.toUpperCase()
@@ -213,10 +216,11 @@ export function getSystemProfileData(
   // System profile data is generally unavailable if `data.cedarSystemDetails` is empty
   if (!data) return undefined;
 
-  const { cedarSystemDetails } = data;
+  const { cedarSystemDetails, cedarSoftwareProducts } = data;
   const cedarSystem = cedarSystemDetails?.cedarSystem;
 
-  if (!cedarSystemDetails || !cedarSystem) return undefined;
+  if (!cedarSystemDetails || !cedarSystem || !cedarSoftwareProducts)
+    return undefined;
 
   // Save CedarAssigneeType.PERSON roles for convenience
   const personRoles = cedarSystemDetails.roles.filter(
@@ -268,7 +272,7 @@ export function getSystemProfileData(
     // Remaining mock data stubs
     activities: mockActivies,
     budgets: mockBudgets,
-    products: mockProducts,
+    toolsAndSoftware: cedarSoftwareProducts,
     subSystems: mockSubSystems,
     systemData: mockSystemData
   };

@@ -629,6 +629,101 @@ func (r *cedarRoleTypeResolver) Description(ctx context.Context, obj *models.Ced
 	return obj.Description.Ptr(), nil
 }
 
+// AiSolnCatgOther is the resolver for the aiSolnCatgOther field.
+func (r *cedarSoftwareProductsResolver) AiSolnCatgOther(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.AISolnCatgOther.Ptr(), nil
+}
+
+// APIDescPubLocation is the resolver for the apiDescPubLocation field.
+func (r *cedarSoftwareProductsResolver) APIDescPubLocation(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.APIDescPubLocation.Ptr(), nil
+}
+
+// APIDescPublished is the resolver for the apiDescPublished field.
+func (r *cedarSoftwareProductsResolver) APIDescPublished(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.APIDescPublished.Ptr(), nil
+}
+
+// APIFHIRUse is the resolver for the apiFHIRUse field.
+func (r *cedarSoftwareProductsResolver) APIFHIRUse(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.APIFHIRUse.Ptr(), nil
+}
+
+// APIFHIRUseOther is the resolver for the apiFHIRUseOther field.
+func (r *cedarSoftwareProductsResolver) APIFHIRUseOther(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.APIFHIRUseOther.Ptr(), nil
+}
+
+// APIHasPortal is the resolver for the apiHasPortal field.
+func (r *cedarSoftwareProductsResolver) APIHasPortal(ctx context.Context, obj *models.CedarSoftwareProducts) (*bool, error) {
+	return obj.APIHasPortal.Ptr(), nil
+}
+
+// ApisAccessibility is the resolver for the apisAccessibility field.
+func (r *cedarSoftwareProductsResolver) ApisAccessibility(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.ApisAccessibility.Ptr(), nil
+}
+
+// ApisDeveloped is the resolver for the apisDeveloped field.
+func (r *cedarSoftwareProductsResolver) ApisDeveloped(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.ApisDeveloped.Ptr(), nil
+}
+
+// DevelopmentStage is the resolver for the developmentStage field.
+func (r *cedarSoftwareProductsResolver) DevelopmentStage(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.DevelopmentStage.Ptr(), nil
+}
+
+// SoftwareProducts is the resolver for the softwareProducts field.
+func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error) {
+	softwareProducts := obj.SoftwareProducts
+
+	if len(softwareProducts) == 0 {
+		return nil, nil
+	}
+
+	var softwareProductItems []*model.CedarSoftwareProductItem
+	for _, softwareProduct := range softwareProducts {
+		softwareProductItem := &model.CedarSoftwareProductItem{
+			APIGatewayUse:                  softwareProduct.APIGatewayUse.Ptr(),
+			ElaPurchase:                    softwareProduct.ElaPurchase.Ptr(),
+			ElaVendorID:                    softwareProduct.ElaVendorID.Ptr(),
+			ProvidesAiCapability:           softwareProduct.ProvidesAiCapability.Ptr(),
+			Refstr:                         softwareProduct.Refstr.Ptr(),
+			SoftwareCatagoryConnectionGUID: softwareProduct.SoftwareCatagoryConnectionGUID.Ptr(),
+			SoftwareVendorConnectionGUID:   softwareProduct.SoftwareVendorConnectionGUID.Ptr(),
+			SoftwareCost:                   softwareProduct.SoftwareCost.Ptr(),
+			SoftwareElaOrganization:        softwareProduct.SoftwareElaOrganization.Ptr(),
+			SoftwareName:                   softwareProduct.SoftwareName.Ptr(),
+			SystemSoftwareConnectionGUID:   softwareProduct.SystemSoftwareConnectionGUID.Ptr(),
+			TechnopediaCategory:            softwareProduct.TechnopediaCategory.Ptr(),
+			TechnopediaID:                  softwareProduct.TechnopediaID.Ptr(),
+		}
+		softwareProductItems = append(softwareProductItems, softwareProductItem)
+	}
+
+	return softwareProductItems, nil
+}
+
+// SystemHasAPIGateway is the resolver for the systemHasAPIGateway field.
+func (r *cedarSoftwareProductsResolver) SystemHasAPIGateway(ctx context.Context, obj *models.CedarSoftwareProducts) (*bool, error) {
+	return obj.SystemHasAPIGateway.Ptr(), nil
+}
+
+// UsesAiTech is the resolver for the usesAiTech field.
+func (r *cedarSoftwareProductsResolver) UsesAiTech(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
+	return obj.UsesAiTech.Ptr(), nil
+}
+
+// BusinessOwnerRoles is the resolver for the businessOwnerRoles field.
+func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error) {
+	cedarRoles, err := r.cedarCoreClient.GetBusinessOwnerRolesBySystem(ctx, obj.ID)
+	if err != nil {
+		return nil, err
+	}
+	return cedarRoles, nil
+}
+
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
 func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error) {
 	ipEnabledCt := int(obj.SystemMaintainerInformation.IPEnabledAssetCount)
@@ -2118,6 +2213,15 @@ func (r *queryResolver) CedarPersonsByCommonName(ctx context.Context, commonName
 	return response, nil
 }
 
+// CedarSoftwareProducts is the resolver for the cedarSoftwareProducts field.
+func (r *queryResolver) CedarSoftwareProducts(ctx context.Context, cedarSystemID string) (*models.CedarSoftwareProducts, error) {
+	cedarSoftwareProducts, err := r.cedarCoreClient.GetSoftwareProductsBySystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+	return cedarSoftwareProducts, nil
+}
+
 // CedarSystem is the resolver for the cedarSystem field.
 func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error) {
 	cedarSystem, err := r.cedarCoreClient.GetSystem(ctx, cedarSystemID)
@@ -2129,11 +2233,13 @@ func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (
 
 // CedarSystems is the resolver for the cedarSystems field.
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	cedarSystems, err := r.cedarCoreClient.GetSystemSummary(ctx, true)
-	if err != nil {
-		return nil, err
-	}
-	return cedarSystems, nil
+	return r.cedarCoreClient.GetSystemSummary(ctx, true, nil)
+}
+
+// MyCedarSystems is the resolver for the myCedarSystems field.
+func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
+	requesterEUAID := appcontext.Principal(ctx).ID()
+	return r.cedarCoreClient.GetSystemSummary(ctx, false, &requesterEUAID)
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.
@@ -2669,14 +2775,14 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		Name:      obj.Requester,
 	}
 
-	// if the EUA doesn't exist (Sharepoint imports), don't bother calling CEDAR LDAP
+	// if the EUA doesn't exist (Sharepoint imports), don't bother calling Okta
 	if !obj.EUAUserID.Valid {
 		return requesterWithoutEmail, nil
 	}
 
 	user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID.ValueOrZero())
 	if err != nil {
-		// check if the EUA ID is just invalid in CEDAR LDAP (i.e. the requester no longer has an active EUA account)
+		// check if the EUA ID is just invalid in Okta (i.e. the requester no longer has an active EUA account)
 		if _, ok := err.(*apperrors.InvalidEUAIDError); ok {
 			return requesterWithoutEmail, nil
 		}
@@ -3068,6 +3174,14 @@ func (r *Resolver) CedarRole() generated.CedarRoleResolver { return &cedarRoleRe
 // CedarRoleType returns generated.CedarRoleTypeResolver implementation.
 func (r *Resolver) CedarRoleType() generated.CedarRoleTypeResolver { return &cedarRoleTypeResolver{r} }
 
+// CedarSoftwareProducts returns generated.CedarSoftwareProductsResolver implementation.
+func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolver {
+	return &cedarSoftwareProductsResolver{r}
+}
+
+// CedarSystem returns generated.CedarSystemResolver implementation.
+func (r *Resolver) CedarSystem() generated.CedarSystemResolver { return &cedarSystemResolver{r} }
+
 // CedarSystemDetails returns generated.CedarSystemDetailsResolver implementation.
 func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
 	return &cedarSystemDetailsResolver{r}
@@ -3159,6 +3273,8 @@ type cedarDeploymentResolver struct{ *Resolver }
 type cedarExchangeResolver struct{ *Resolver }
 type cedarRoleResolver struct{ *Resolver }
 type cedarRoleTypeResolver struct{ *Resolver }
+type cedarSoftwareProductsResolver struct{ *Resolver }
+type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
 type cedarThreatResolver struct{ *Resolver }
 type governanceRequestFeedbackResolver struct{ *Resolver }

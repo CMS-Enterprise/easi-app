@@ -63,7 +63,10 @@ RoleAddParams contains all the parameters to send to the API endpoint
 */
 type RoleAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Role assignment information to be added to a CEDAR application.
+	*/
 	Body *models.RoleAddRequest
 
 	timeout    time.Duration
