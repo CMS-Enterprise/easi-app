@@ -4,9 +4,9 @@
  * UX review, etc.
  */
 
-import React, { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import {
   Column,
   Row,
@@ -16,15 +16,18 @@ import {
   useSortBy,
   useTable
 } from 'react-table';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
+  IconArrowForward,
   IconBookmark,
   Table as UswdsTable
 } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import PageLoading from 'components/PageLoading';
+import Alert from 'components/shared/Alert';
 // import SystemHealthIcon from 'components/SystemHealthIcon';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
@@ -33,9 +36,11 @@ import TableResults from 'components/TableResults';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
 import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQuery';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
+import GetMyCedarSystemsQuery from 'queries/GetMyCedarSystemsQuery';
 // import { mapCedarStatusToIcon } from 'types/iconStatus';
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
 import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
+import { GetMyCedarSystems as GetMyCedarSystemsType } from 'queries/types/GetMyCedarSystems';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   getColumnSortStatus,
@@ -45,49 +50,75 @@ import {
 
 import './index.scss';
 
-type SystemTableType = 'allSystems' | 'mySystems' | 'bookmarkedSystems';
+type SystemTableType = 'all-systems' | 'my-systems' | 'bookmarked-systems';
 
 type TableProps = {
-  systems: CedarSystem[];
-  savedBookmarks: CedarSystemBookmark[];
-  refetchBookmarks: () => any;
+  systems?: CedarSystem[];
+  savedBookmarks?: CedarSystemBookmark[];
+  refetchBookmarks?: () => any;
   defaultPageSize?: number;
+  isMySystems?: boolean;
 };
 
 export const Table = ({
-  systems,
-  savedBookmarks,
-  refetchBookmarks,
-  defaultPageSize = 10
+  systems = [],
+  savedBookmarks = [],
+  refetchBookmarks = () => null,
+  defaultPageSize = 10,
+  isMySystems
 }: TableProps) => {
   const { t } = useTranslation('systemProfile');
 
   const location = useLocation();
+  const history = useHistory();
 
-  const params = new URLSearchParams(location.search);
+  const params = useMemo(() => {
+    return new URLSearchParams(location.search);
+  }, [location.search]);
   const tableType = params.get('table-type') as SystemTableType;
 
   const [systemTableType, setSystemTableType] = useState<SystemTableType>(
-    tableType || 'allSystems'
+    tableType || 'all-systems'
   );
+
+  const { loading, data: mySystems } = useQuery<GetMyCedarSystemsType>(
+    GetMyCedarSystemsQuery
+  );
+
+  useLayoutEffect(() => {
+    if (!tableType && !isMySystems) {
+      history.replace({
+        search: 'table-type=all-systems'
+      });
+    }
+    if (isMySystems) {
+      setSystemTableType('my-systems');
+    }
+  }, [history, params, systemTableType, tableType, isMySystems]);
+
+  useEffect(() => {
+    if (!isMySystems) {
+      setSystemTableType(tableType);
+    }
+  }, [tableType, isMySystems]);
 
   const [createMutate] = useMutation(CreateCedarSystemBookmarkQuery);
   const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
 
   const filteredSystems = useMemo(() => {
     switch (systemTableType) {
-      case 'allSystems':
+      case 'all-systems':
         return systems;
-      case 'mySystems':
-        return systems; // TODO: return myCedarSystems
-      case 'bookmarkedSystems':
+      case 'my-systems':
+        return mySystems?.myCedarSystems || [];
+      case 'bookmarked-systems':
         return systems.filter(system =>
           savedBookmarks.find(bookmark => bookmark.cedarSystemId === system.id)
         );
       default:
         return systems;
     }
-  }, [systemTableType, systems, savedBookmarks]);
+  }, [systemTableType, systems, savedBookmarks, mySystems]);
 
   const columns = useMemo<Column<CedarSystem>[]>(() => {
     const handleCreateBookmark = (cedarSystemId: string) => {
@@ -237,35 +268,64 @@ export const Table = ({
 
   rows.map(row => prepareRow(row));
 
+  if (
+    (isMySystems || tableType === 'my-systems') &&
+    loading &&
+    filteredSystems.length === 0
+  ) {
+    return <PageLoading />;
+  }
+
   return (
-    <>
-      <p className="text-bold margin-0 margin-top-3">{t('systemTable.view')}</p>
+    <div className="margin-bottom-6">
+      {!isMySystems && (
+        <>
+          <p className="text-bold margin-0 margin-top-3">
+            {t('systemTable.view')}
+          </p>
 
-      <ButtonGroup type="segmented" className="margin-y-2">
-        <Button
-          type="button"
-          outline={systemTableType !== 'allSystems'}
-          onClick={() => setSystemTableType('allSystems')}
-        >
-          {t('systemTable.buttonGroup.allSystems')}
-        </Button>
-        <Button
-          type="button"
-          outline={systemTableType !== 'mySystems'}
-          onClick={() => setSystemTableType('mySystems')}
-        >
-          {t('systemTable.buttonGroup.mySystems')}
-        </Button>
-        <Button
-          type="button"
-          outline={systemTableType !== 'bookmarkedSystems'}
-          onClick={() => setSystemTableType('bookmarkedSystems')}
-        >
-          {t('systemTable.buttonGroup.bookmarkedSystems')}
-        </Button>
-      </ButtonGroup>
+          <ButtonGroup type="segmented" className="margin-y-2">
+            <Button
+              type="button"
+              outline={systemTableType !== 'all-systems'}
+              onClick={() => {
+                params.delete('table-type');
+                history.replace({
+                  search: 'table-type=all-systems'
+                });
+              }}
+            >
+              {t('systemTable.buttonGroup.allSystems')}
+            </Button>
+            <Button
+              type="button"
+              outline={systemTableType !== 'my-systems'}
+              onClick={() => {
+                params.delete('table-type');
+                history.replace({
+                  search: 'table-type=my-systems'
+                });
+              }}
+            >
+              {t('systemTable.buttonGroup.mySystems')}
+            </Button>
+            <Button
+              type="button"
+              outline={systemTableType !== 'bookmarked-systems'}
+              onClick={() => {
+                params.delete('table-type');
+                history.replace({
+                  search: 'table-type=bookmarked-systems'
+                });
+              }}
+            >
+              {t('systemTable.buttonGroup.bookmarkedSystems')}
+            </Button>
+          </ButtonGroup>
+        </>
+      )}
 
-      {systems.length > state.pageSize && (
+      {filteredSystems.length > state.pageSize && (
         <>
           <GlobalClientFilter
             setGlobalFilter={setGlobalFilter}
@@ -337,30 +397,72 @@ export const Table = ({
         </tbody>
       </UswdsTable>
 
-      <div className="grid-row grid-gap grid-gap-lg">
-        {systems.length > state.pageSize && (
-          <TablePagination
-            gotoPage={gotoPage}
-            previousPage={previousPage}
-            nextPage={nextPage}
-            canNextPage={canNextPage}
-            pageIndex={state.pageIndex}
-            pageOptions={pageOptions}
-            canPreviousPage={canPreviousPage}
-            pageCount={pageCount}
-            pageSize={state.pageSize}
-            setPageSize={setPageSize}
-            page={[]}
-            className="desktop:grid-col-fill"
-          />
+      {filteredSystems.length > 0 && (
+        <div className="grid-row grid-gap grid-gap-lg">
+          {filteredSystems.length > state.pageSize && (
+            <TablePagination
+              gotoPage={gotoPage}
+              previousPage={previousPage}
+              nextPage={nextPage}
+              canNextPage={canNextPage}
+              pageIndex={state.pageIndex}
+              pageOptions={pageOptions}
+              canPreviousPage={canPreviousPage}
+              pageCount={pageCount}
+              pageSize={state.pageSize}
+              setPageSize={setPageSize}
+              page={[]}
+              className="desktop:grid-col-fill"
+            />
+          )}
+          {filteredSystems.length > 5 && (
+            <TablePageSize
+              className="desktop:grid-col-auto"
+              pageSize={state.pageSize}
+              setPageSize={setPageSize}
+            />
+          )}
+        </div>
+      )}
+
+      {filteredSystems.length === 0 &&
+        (tableType === 'my-systems' || isMySystems) && (
+          <Alert
+            type="info"
+            heading={t('systemTable.noMySystem.header')}
+            className="margin-top-5"
+          >
+            {isMySystems ? (
+              <Trans
+                i18nKey="systemProfile:systemTable.noMySystem.description"
+                components={{
+                  link1: (
+                    // @ts-ignore
+                    <Link href="EnterpriseArchitecture@cms.hhs.gov" />
+                  ),
+                  link2: (
+                    // @ts-ignore
+                    <UswdsReactLink to="/systems" />
+                  ),
+                  iconForward: (
+                    <IconArrowForward className="icon-top margin-left-05" />
+                  )
+                }}
+              />
+            ) : (
+              <Trans
+                i18nKey="systemProfile:systemTable.noMySystem.descriptionAlt"
+                components={{
+                  link1: (
+                    // @ts-ignore
+                    <Link href="EnterpriseArchitecture@cms.hhs.gov" />
+                  )
+                }}
+              />
+            )}
+          </Alert>
         )}
-        <TablePageSize
-          className="desktop:grid-col-auto"
-          pageSize={state.pageSize}
-          setPageSize={setPageSize}
-        />
-      </div>
-    </>
+    </div>
   );
 };
 

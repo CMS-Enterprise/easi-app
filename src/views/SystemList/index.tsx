@@ -72,7 +72,7 @@ export const SystemList = () => {
         </SummaryBox>
       </SectionWrapper>
 
-      {loadingSystems ? (
+      {loadingSystems && systemsTableData.length === 0 ? (
         <PageLoading />
       ) : (
         <>

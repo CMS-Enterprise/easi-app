@@ -113,6 +113,9 @@ const home = {
     caption:
       'Below is a list of governance requests that are in draft or submitted.'
   },
+  dontSeeSystemHeader: 'Don’t see the system you’re looking for?',
+  dontSeeSystemDescription:
+    'Use the Systems section of EASi to view information about all CMS systems.  <link1>Go to all CMS systems<iconForward /></link1>',
   easiIntro:
     'The place to find CMS IT Governance, assistance with technical issues, as well as comprehensive information about CMS systems.',
   easiPurpose: 'You can use EASi to make:',
