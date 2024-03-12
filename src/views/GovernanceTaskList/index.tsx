@@ -11,6 +11,7 @@ import {
   Link,
   ModalHeading
 } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
@@ -36,6 +37,7 @@ import { archiveSystemIntake } from 'types/routines';
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
+import AdditionalRequestInfo from './AdditionalRequestInfo';
 import GovTaskBizCaseDraft from './GovTaskBizCaseDraft';
 import GovTaskBizCaseFinal from './GovTaskBizCaseFinal';
 import GovTaskDecisionAndNextSteps from './GovTaskDecisionAndNextSteps';
@@ -49,6 +51,8 @@ function GovernanceTaskList() {
   const { t } = useTranslation('itGov');
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const flags = useFlags();
 
   const { showMessageOnNextPage } = useMessage();
 
@@ -228,6 +232,10 @@ function GovernanceTaskList() {
                       {t('button.removeYourRequest')}
                     </Button>
                   </div>
+                )}
+
+                {flags.itgovLinkRequestsRequester && (
+                  <AdditionalRequestInfo {...systemIntake} />
                 )}
 
                 <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">

@@ -30,9 +30,11 @@ const tableMap = (
   requestType?: RequestType
 ) => {
   const requests: GetRequestsType[] =
-    tableData?.requests?.edges.map(edge => {
-      return edge.node;
-    }) || ([] as GetRequestsType[]);
+    tableData?.requests?.edges
+      .filter(data => data.node.statusRequester !== 'CLOSED')
+      .map(edge => {
+        return edge.node;
+      }) || ([] as GetRequestsType[]);
 
   const myTrbRequests: GetTRBRequestsType[] = tableData?.myTrbRequests || [];
 

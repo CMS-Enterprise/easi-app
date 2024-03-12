@@ -6,6 +6,7 @@ import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Grid, IconArrowBack } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
@@ -21,6 +22,7 @@ import NotFound from 'views/NotFound';
 
 import AccordionNavigation from './AccordionNavigation';
 import Actions from './Actions';
+import AdditionalInformation from './AdditionalInformation';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
@@ -36,6 +38,7 @@ import './index.scss';
 
 const RequestOverview = () => {
   const { t } = useTranslation('governanceReviewTeam');
+  const flags = useFlags();
 
   const { Message } = useMessage();
 
@@ -101,7 +104,7 @@ const RequestOverview = () => {
       {!fullPageLayout && (
         <AccordionNavigation
           activePage={activePage}
-          subNavItems={subNavItems(systemId)}
+          subNavItems={subNavItems(systemId, flags)}
         />
       )}
       <section
@@ -123,7 +126,7 @@ const RequestOverview = () => {
                     {t('back.allRequests')}
                   </Link>
                 </li>
-                {subNavItems(systemId).map(
+                {subNavItems(systemId, flags).map(
                   ({ aria, groupEnd, route, text }) => (
                     <li
                       key={`desktop-sidenav-${text}`}
@@ -205,6 +208,16 @@ const RequestOverview = () => {
                 path="/governance-review-team/:systemId/decision"
                 render={() => <Decision {...systemIntake} />}
               />
+
+              {flags.itgovLinkRequestsAdmin && (
+                <Route
+                  path="/governance-review-team/:systemId/additional-information"
+                  render={() => (
+                    <AdditionalInformation systemIntake={systemIntake} />
+                  )}
+                />
+              )}
+
               <Route
                 path="/governance-review-team/:systemId/lcid"
                 render={() => <LifecycleID systemIntake={systemIntake} />}
