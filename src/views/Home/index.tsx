@@ -81,6 +81,7 @@ const Home = () => {
                   savedBookmarks={[]}
                   refetchBookmarks={() => null}
                   isMySystems
+                  defaultPageSize={5}
                 />
               </Grid>
 
