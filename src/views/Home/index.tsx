@@ -1,12 +1,11 @@
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Alert, Grid, IconArrowForward } from '@trussworks/react-uswds';
+import { Grid } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import LinkCard, { LinkRequestType } from 'components/LinkCard';
-import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
@@ -83,21 +82,6 @@ const Home = () => {
                   refetchBookmarks={() => null}
                   isMySystems
                 />
-
-                <Alert type="info" heading={t('home:dontSeeSystemHeader')}>
-                  <Trans
-                    i18nKey="home:dontSeeSystemDescription"
-                    components={{
-                      link1: (
-                        // @ts-ignore
-                        <UswdsReactLink to="/systems" />
-                      ),
-                      iconForward: (
-                        <IconArrowForward className="icon-top margin-left-05" />
-                      )
-                    }}
-                  />
-                </Alert>
               </Grid>
 
               <hr className="margin-bottom-3 margin-top-4" aria-hidden />

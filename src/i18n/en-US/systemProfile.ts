@@ -324,6 +324,11 @@ const systemProfile = {
         'If you believe this to be an error, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>. If you wish to browse other CMS systems, use the Systems section of EASi to view information about all CMS systems.  <link2>Go to all CMS systems <iconForward /></link2>',
       descriptionAlt:
         'If you believe this to be an error, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>.'
+    },
+    dontSeeSystem: {
+      header: 'Don’t see the system you’re looking for?',
+      description:
+        'Use the Systems section of EASi to view information about all CMS systems.  <link1>Go to all CMS systems<iconForward /></link1>'
     }
   },
   bookmark: {

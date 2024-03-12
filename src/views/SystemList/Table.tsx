@@ -145,13 +145,13 @@ export const Table = ({
       savedBookmarks.map(bm => bm.cedarSystemId)
     );
 
-    return [
+    const tableColumns = [
       {
         Header: <IconBookmark />,
         accessor: 'id',
         id: 'systemId',
         disableGlobalFilter: true,
-        sortType: (rowOne, rowTwo, columnName) => {
+        sortType: (rowOne: any, rowTwo: any, columnName: any) => {
           const rowOneElem = rowOne.values[columnName];
           return bookmarkIdSet.has(rowOneElem) ? 1 : -1;
         },
@@ -219,7 +219,20 @@ export const Table = ({
       }
       */
     ];
-  }, [t, savedBookmarks, createMutate, deleteMutate, refetchBookmarks]);
+
+    if (isMySystems) {
+      tableColumns.splice(0, 1);
+    }
+
+    return tableColumns;
+  }, [
+    t,
+    savedBookmarks,
+    createMutate,
+    deleteMutate,
+    refetchBookmarks,
+    isMySystems
+  ]);
 
   const {
     getTableProps,
@@ -462,6 +475,26 @@ export const Table = ({
             )}
           </Alert>
         )}
+
+      {filteredSystems.length > 0 && isMySystems && (
+        <Alert
+          type="info"
+          heading={t('systemProfile:systemTable:dontSeeSystem.header')}
+        >
+          <Trans
+            i18nKey="systemProfile:systemTable:dontSeeSystem.description"
+            components={{
+              link1: (
+                // @ts-ignore
+                <UswdsReactLink to="/systems" />
+              ),
+              iconForward: (
+                <IconArrowForward className="icon-top margin-left-05" />
+              )
+            }}
+          />
+        </Alert>
+      )}
     </div>
   );
 };
