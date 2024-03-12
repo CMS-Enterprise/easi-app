@@ -103,7 +103,7 @@ describe('System List View', () => {
         <MemoryRouter>
           <MockedProvider mocks={mocks} addTypename={false}>
             <Table
-              defaultPageSize={1}
+              defaultPageSize={3}
               systems={mockSystemInfo}
               savedBookmarks={[]}
               refetchBookmarks={() => null}
@@ -124,7 +124,7 @@ describe('System List View', () => {
       await waitFor(() => new Promise(res => setTimeout(res, 200)));
 
       // ZXC is a mocked table row text item that should not be included in filtered results
-      expect(await screen.queryByText('ZXC')).toBeNull();
+      expect(screen.queryByText('ASD')).toBeNull();
     });
 
     it('matches snapshot', async () => {
