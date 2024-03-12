@@ -4,7 +4,7 @@
  * UX review, etc.
  */
 
-import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import {
@@ -88,23 +88,23 @@ export const Table = ({
   const [createMutate] = useMutation(CreateCedarSystemBookmarkQuery);
   const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
 
-  useLayoutEffect(() => {
+  // Sets the systemTableType state to the query param, defaults to all-systems if no param present
+  // If the query param changes, update the component state
+  useEffect(() => {
     if (!tableType && !isMySystems) {
       history.replace({
         search: 'table-type=all-systems'
       });
     }
+
     if (isMySystems) {
       setSystemTableType('my-systems');
-    }
-  }, [history, params, systemTableType, tableType, isMySystems]);
-
-  useEffect(() => {
-    if (!isMySystems) {
+    } else {
       setSystemTableType(tableType);
     }
-  }, [tableType, isMySystems]);
+  }, [tableType, isMySystems, history]);
 
+  // On button group toggle, change query param
   const switchTableType = (type: SystemTableType) => {
     params.delete('table-type');
     history.replace({
@@ -228,6 +228,7 @@ export const Table = ({
     ];
   }, [t, savedBookmarks, createMutate, deleteMutate, refetchBookmarks]);
 
+  // Remove bookmark column if showing My systems table
   if (isMySystems) {
     columns.splice(0, 1);
   }
@@ -421,6 +422,7 @@ export const Table = ({
         </div>
       )}
 
+      {/* Alerts to show if there is no system/data */}
       {filteredSystems.length === 0 &&
         (tableType === 'my-systems' || isMySystems) && (
           <Alert
@@ -459,6 +461,7 @@ export const Table = ({
           </Alert>
         )}
 
+      {/* Alery to show to direct to Systems tab when viewing My sytems */}
       {filteredSystems.length > 0 && isMySystems && (
         <Alert
           type="info"

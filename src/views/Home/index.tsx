@@ -76,6 +76,7 @@ const Home = () => {
                   {t('systemProfile:systemTable.mySystemsSubtitle')}
                 </p>
 
+                {/* TODO: figure out why need to pass empty params here when they are optional with defaults */}
                 <SystemsListTable
                   systems={[]}
                   savedBookmarks={[]}
