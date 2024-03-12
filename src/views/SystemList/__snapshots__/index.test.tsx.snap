@@ -68,66 +68,71 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
       />
     </div>
     <h2
-      class="margin-bottom-0"
+      class="margin-bottom-2"
     >
-      All systems
+      All CMS systems
     </h2>
-    <p
-      class="margin-bottom-5"
+    Click the bookmark icon (
+    <svg
+      class="usa-icon text-bookmark-icon"
+      focusable="false"
+      height="1em"
+      role="img"
+      viewBox="0 0 24 24"
+      width="1em"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      Bookmark systems that you want to access more quickly.
-    </p>
-    <form
-      class="usa-form usa-search margin-bottom-4"
-      data-testid="table-client-filter"
-      role="search"
-    >
-      <label
-        class="usa-sr-only"
-        data-testid="label"
-        for="system-list-search"
-      >
-        Search Table
-      </label>
-      <input
-        class="usa-input"
-        data-testid="textInput"
-        id="system-list-search"
-        name="All systems Search"
-        role="searchbox"
-        type="search"
-        value=""
+      <path
+        d="M0 0h24v24H0z"
+        fill="none"
       />
-      <button
-        class="usa-button grid-row flex-justify-center flex-align-center no-pointer"
-        data-testid="button"
-        type="submit"
-      >
-        <svg
-          class="usa-icon usa-icon--size-3"
-          focusable="false"
-          height="1em"
-          role="img"
-          viewBox="0 0 24 24"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-          />
-        </svg>
-      </button>
-    </form>
-    <div
-      class="margin-bottom-4 display-flex flex-align-center"
-      data-testid="page-results"
+      <path
+        d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+      />
+    </svg>
+    ) to bookmark systems that you want to access more quickly.
+    <p
+      class="text-bold margin-0 margin-top-3"
     >
-      Showing 1-4 of 4 results 
-    </div>
+      View
+    </p>
+    <ul
+      class="usa-button-group usa-button-group--segmented margin-y-2"
+    >
+      <li
+        class="usa-button-group__item"
+      >
+        <button
+          class="usa-button"
+          data-testid="button"
+          type="button"
+        >
+          All systems
+        </button>
+      </li>
+      <li
+        class="usa-button-group__item"
+      >
+        <button
+          class="usa-button usa-button--outline"
+          data-testid="button"
+          type="button"
+        >
+          My systems
+        </button>
+      </li>
+      <li
+        class="usa-button-group__item"
+      >
+        <button
+          class="usa-button usa-button--outline"
+          data-testid="button"
+          type="button"
+        >
+          Bookmarked systems
+        </button>
+      </li>
+    </ul>
     <div
       class="usa-table-container--scrollable"
       data-testid="scrollable-table-container"
@@ -528,33 +533,6 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
     <div
       class="grid-row grid-gap grid-gap-lg"
     >
-      <nav
-        aria-label="Pagination"
-        class="usa-pagination padding-bottom-1 desktop:grid-col-fill"
-        data-testid="table-pagination"
-      >
-        <ul
-          class="usa-pagination__list"
-        >
-          <li
-            class="usa-pagination__item usa-pagination__page-no"
-          >
-            <div>
-              <div
-                class="usa-pagination__item"
-              >
-                <button
-                  aria-label="Page 1"
-                  class="usa-pagination__button usa-current"
-                  type="button"
-                >
-                  1
-                </button>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </nav>
       <div
         class="desktop:margin-top-2 desktop:grid-col-auto"
       >

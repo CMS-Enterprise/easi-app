@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
 import {
   CardGroup,
@@ -117,13 +117,16 @@ export const SystemList = () => {
             </SectionWrapper>
           )}
 
-          <h2 className="margin-bottom-0">
+          <h2 className="margin-bottom-2">
             {t('systemProfile:systemTable.title')}
           </h2>
 
-          <p className="margin-bottom-5">
-            {t('systemProfile:systemTable.subtitle')}
-          </p>
+          <Trans
+            i18nKey="systemProfile:systemTable.subtitle"
+            components={{
+              icon: <IconBookmark className="text-bookmark-icon" />
+            }}
+          />
 
           {/* TODO: standardize/format error messages from CEDAR - either on FE or BE */}
 
