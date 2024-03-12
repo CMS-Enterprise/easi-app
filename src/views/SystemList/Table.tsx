@@ -4,8 +4,9 @@
  * UX review, etc.
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import {
   Column,
   Row,
@@ -18,6 +19,7 @@ import {
 import { useMutation } from '@apollo/client';
 import {
   Button,
+  ButtonGroup,
   IconBookmark,
   Table as UswdsTable
 } from '@trussworks/react-uswds';
@@ -31,10 +33,10 @@ import TableResults from 'components/TableResults';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
 import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQuery';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
+// import { mapCedarStatusToIcon } from 'types/iconStatus';
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
 import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
 import globalFilterCellText from 'utils/globalFilterCellText';
-// import { mapCedarStatusToIcon } from 'types/iconStatus';
 import {
   getColumnSortStatus,
   getHeaderSortIcon,
@@ -43,21 +45,49 @@ import {
 
 import './index.scss';
 
+type SystemTableType = 'allSystems' | 'mySystems' | 'bookmarkedSystems';
+
 type TableProps = {
   systems: CedarSystem[];
   savedBookmarks: CedarSystemBookmark[];
   refetchBookmarks: () => any;
+  defaultPageSize?: number;
 };
 
 export const Table = ({
   systems,
   savedBookmarks,
-  refetchBookmarks
+  refetchBookmarks,
+  defaultPageSize = 10
 }: TableProps) => {
   const { t } = useTranslation('systemProfile');
 
+  const location = useLocation();
+
+  const params = new URLSearchParams(location.search);
+  const tableType = params.get('table-type') as SystemTableType;
+
+  const [systemTableType, setSystemTableType] = useState<SystemTableType>(
+    tableType || 'allSystems'
+  );
+
   const [createMutate] = useMutation(CreateCedarSystemBookmarkQuery);
   const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
+
+  const filteredSystems = useMemo(() => {
+    switch (systemTableType) {
+      case 'allSystems':
+        return systems;
+      case 'mySystems':
+        return systems; // TODO: return myCedarSystems
+      case 'bookmarkedSystems':
+        return systems.filter(system =>
+          savedBookmarks.find(bookmark => bookmark.cedarSystemId === system.id)
+        );
+      default:
+        return systems;
+    }
+  }, [systemTableType, systems, savedBookmarks]);
 
   const columns = useMemo<Column<CedarSystem>[]>(() => {
     const handleCreateBookmark = (cedarSystemId: string) => {
@@ -189,14 +219,14 @@ export const Table = ({
         }
       },
       columns,
-      data: systems as CedarSystem[],
+      data: filteredSystems as CedarSystem[],
       globalFilter: useMemo(() => globalFilterCellText, []),
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
         sortBy: useMemo(() => [{ id: 'systemName', desc: false }], []),
         pageIndex: 0,
-        pageSize: 10
+        pageSize: defaultPageSize
       }
     },
     useFilters,
@@ -209,21 +239,51 @@ export const Table = ({
 
   return (
     <>
-      <GlobalClientFilter
-        setGlobalFilter={setGlobalFilter}
-        tableID={t('systemTable.id')}
-        tableName={t('systemTable.title')}
-        className="margin-bottom-4"
-      />
+      <p className="text-bold margin-0 margin-top-3">{t('systemTable.view')}</p>
 
-      <TableResults
-        globalFilter={state.globalFilter}
-        pageIndex={pageIndex}
-        pageSize={pageSize}
-        filteredRowLength={rows.length}
-        rowLength={systems.length}
-        className="margin-bottom-4"
-      />
+      <ButtonGroup type="segmented" className="margin-y-2">
+        <Button
+          type="button"
+          outline={systemTableType !== 'allSystems'}
+          onClick={() => setSystemTableType('allSystems')}
+        >
+          {t('systemTable.buttonGroup.allSystems')}
+        </Button>
+        <Button
+          type="button"
+          outline={systemTableType !== 'mySystems'}
+          onClick={() => setSystemTableType('mySystems')}
+        >
+          {t('systemTable.buttonGroup.mySystems')}
+        </Button>
+        <Button
+          type="button"
+          outline={systemTableType !== 'bookmarkedSystems'}
+          onClick={() => setSystemTableType('bookmarkedSystems')}
+        >
+          {t('systemTable.buttonGroup.bookmarkedSystems')}
+        </Button>
+      </ButtonGroup>
+
+      {systems.length > state.pageSize && (
+        <>
+          <GlobalClientFilter
+            setGlobalFilter={setGlobalFilter}
+            tableID={t('systemTable.id')}
+            tableName={t('systemTable.title')}
+            className="margin-bottom-4 width-mobile-lg maxw-none"
+          />
+
+          <TableResults
+            globalFilter={state.globalFilter}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            filteredRowLength={rows.length}
+            rowLength={systems.length}
+            className="margin-bottom-4"
+          />
+        </>
+      )}
 
       <UswdsTable bordered={false} fullWidth scrollable {...getTableProps()}>
         <caption className="usa-sr-only">{t('systemTable.caption')}</caption>
@@ -278,20 +338,22 @@ export const Table = ({
       </UswdsTable>
 
       <div className="grid-row grid-gap grid-gap-lg">
-        <TablePagination
-          gotoPage={gotoPage}
-          previousPage={previousPage}
-          nextPage={nextPage}
-          canNextPage={canNextPage}
-          pageIndex={state.pageIndex}
-          pageOptions={pageOptions}
-          canPreviousPage={canPreviousPage}
-          pageCount={pageCount}
-          pageSize={state.pageSize}
-          setPageSize={setPageSize}
-          page={[]}
-          className="desktop:grid-col-fill"
-        />
+        {systems.length > state.pageSize && (
+          <TablePagination
+            gotoPage={gotoPage}
+            previousPage={previousPage}
+            nextPage={nextPage}
+            canNextPage={canNextPage}
+            pageIndex={state.pageIndex}
+            pageOptions={pageOptions}
+            canPreviousPage={canPreviousPage}
+            pageCount={pageCount}
+            pageSize={state.pageSize}
+            setPageSize={setPageSize}
+            page={[]}
+            className="desktop:grid-col-fill"
+          />
+        )}
         <TablePageSize
           className="desktop:grid-col-auto"
           pageSize={state.pageSize}

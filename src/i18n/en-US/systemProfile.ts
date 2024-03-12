@@ -298,8 +298,9 @@ const systemProfile = {
     }
   },
   systemTable: {
-    title: 'All systems',
-    subtitle: 'Bookmark systems that you want to access more quickly.',
+    title: 'All CMS systems',
+    subtitle:
+      'Click the bookmark icon (<icon />) to bookmark systems that you want to access more quickly.',
     id: 'system-list',
     search: 'Search Table',
     header: {
@@ -307,6 +308,12 @@ const systemProfile = {
       systemOwner: 'CMS Component',
       systemAcronym: 'Acronym',
       systemStatus: 'ATO Status'
+    },
+    view: 'View',
+    buttonGroup: {
+      allSystems: 'All systems',
+      mySystems: 'My systems',
+      bookmarkedSystems: 'Bookmarked systems'
     }
   },
   bookmark: {
