@@ -11,7 +11,7 @@ INSERT INTO system_intake_contract_numbers
 SELECT
     gen_random_uuid(),
     si.id,
-    si.contract_number,
+    TRIM(si.contract_number),
     '00000001-0001-0001-0001-000000000001', -- EASI SYSTEM USER
     si.created_at,
     '00000001-0001-0001-0001-000000000001', -- EASI SYSTEM USER
