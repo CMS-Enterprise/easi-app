@@ -19,9 +19,8 @@ import (
 )
 
 const (
-	cedarCoreEnabledKey = "cedarCoreEnabled"
-	//cedarCoreEnabledDefault       = false
-	cedarCoreEnabledDefault       = true
+	cedarCoreEnabledKey           = "cedarCoreEnabled"
+	cedarCoreEnabledDefault       = false
 	cedarCoreCacheDurationDefault = time.Hour * 6
 )
 
