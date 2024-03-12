@@ -85,6 +85,9 @@ export const Table = ({
     GetMyCedarSystemsQuery
   );
 
+  const [createMutate] = useMutation(CreateCedarSystemBookmarkQuery);
+  const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
+
   useLayoutEffect(() => {
     if (!tableType && !isMySystems) {
       history.replace({
@@ -102,8 +105,12 @@ export const Table = ({
     }
   }, [tableType, isMySystems]);
 
-  const [createMutate] = useMutation(CreateCedarSystemBookmarkQuery);
-  const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
+  const switchTableType = (type: SystemTableType) => {
+    params.delete('table-type');
+    history.replace({
+      search: `table-type=${type}`
+    });
+  };
 
   const filteredSystems = useMemo(() => {
     switch (systemTableType) {
@@ -292,36 +299,21 @@ export const Table = ({
             <Button
               type="button"
               outline={systemTableType !== 'all-systems'}
-              onClick={() => {
-                params.delete('table-type');
-                history.replace({
-                  search: 'table-type=all-systems'
-                });
-              }}
+              onClick={() => switchTableType('all-systems')}
             >
               {t('systemTable.buttonGroup.allSystems')}
             </Button>
             <Button
               type="button"
               outline={systemTableType !== 'my-systems'}
-              onClick={() => {
-                params.delete('table-type');
-                history.replace({
-                  search: 'table-type=my-systems'
-                });
-              }}
+              onClick={() => switchTableType('my-systems')}
             >
               {t('systemTable.buttonGroup.mySystems')}
             </Button>
             <Button
               type="button"
               outline={systemTableType !== 'bookmarked-systems'}
-              onClick={() => {
-                params.delete('table-type');
-                history.replace({
-                  search: 'table-type=bookmarked-systems'
-                });
-              }}
+              onClick={() => switchTableType('bookmarked-systems')}
             >
               {t('systemTable.buttonGroup.bookmarkedSystems')}
             </Button>
