@@ -145,13 +145,13 @@ export const Table = ({
       savedBookmarks.map(bm => bm.cedarSystemId)
     );
 
-    const tableColumns = [
+    return [
       {
         Header: <IconBookmark />,
         accessor: 'id',
         id: 'systemId',
         disableGlobalFilter: true,
-        sortType: (rowOne: any, rowTwo: any, columnName: any) => {
+        sortType: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName];
           return bookmarkIdSet.has(rowOneElem) ? 1 : -1;
         },
@@ -219,20 +219,11 @@ export const Table = ({
       }
       */
     ];
+  }, [t, savedBookmarks, createMutate, deleteMutate, refetchBookmarks]);
 
-    if (isMySystems) {
-      tableColumns.splice(0, 1);
-    }
-
-    return tableColumns;
-  }, [
-    t,
-    savedBookmarks,
-    createMutate,
-    deleteMutate,
-    refetchBookmarks,
-    isMySystems
-  ]);
+  if (isMySystems) {
+    columns.splice(0, 1);
+  }
 
   const {
     getTableProps,
