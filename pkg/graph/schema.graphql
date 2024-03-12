@@ -100,6 +100,7 @@ type CedarSystem {
 	status: String
 	businessOwnerOrg: String
 	businessOwnerOrgComp: String
+  businessOwnerRoles: [CedarRole!]!
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
   versionId: String
@@ -189,7 +190,7 @@ type CedarSystemBookmark {
 }
 
 """
-Represents a person response from CEDAR LDAP
+Represents a person response from Okta
 """
 type UserInfo {
   firstName: String!
@@ -2710,6 +2711,7 @@ type Query {
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem!]!
+  myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!

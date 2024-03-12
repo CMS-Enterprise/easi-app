@@ -77,7 +77,7 @@ func TestLCIDExpirationAlert(t *testing.T) {
 
 	mockFetchUserInfoInvalidParams := func(context.Context, string) (*models.UserInfo, error) {
 		return nil, &apperrors.InvalidParametersError{
-			FunctionName: "cedarldap.FetchUserInfo",
+			FunctionName: "oktaapi.FetchUserInfo",
 		}
 	}
 
@@ -89,11 +89,11 @@ func TestLCIDExpirationAlert(t *testing.T) {
 
 	mockFetchUserInfoExternalAPIError := func(context.Context, string) (*models.UserInfo, error) {
 		return nil, &apperrors.ExternalAPIError{
-			Err:       errors.New("failed to return person from CEDAR LDAP"),
+			Err:       errors.New("failed to return person from Okta"),
 			ModelID:   "ABCD",
 			Model:     nil,
 			Operation: apperrors.Fetch,
-			Source:    "CEDAR LDAP",
+			Source:    "Okta",
 		}
 	}
 

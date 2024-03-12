@@ -32,6 +32,8 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
+/* eslint-disable camelcase */
+import { GetSystemIntake_systemIntake_systems_businessOwnerRoles } from 'queries/types/GetSystemIntake';
 import {
   GetSystemProfile,
   /* eslint-disable camelcase */
@@ -165,8 +167,10 @@ function getLocations(
  * Format the name in title case if the full name is in all caps.
  */
 export function getPersonFullName(
-  // eslint-disable-next-line camelcase
-  role: GetSystemProfile_cedarSystemDetails_roles
+  role: // eslint-disable-next-line camelcase
+  | GetSystemProfile_cedarSystemDetails_roles
+    // eslint-disable-next-line camelcase
+    | GetSystemIntake_systemIntake_systems_businessOwnerRoles
 ): string {
   const fullname = `${role.assigneeFirstName} ${role.assigneeLastName}`;
   return fullname === fullname.toUpperCase()
