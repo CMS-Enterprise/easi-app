@@ -53,6 +53,12 @@ const sideNavItems = (
           component: <ATO system={system} />,
           route: `/systems/${system.id}/ato`,
           componentId: 'ato'
+        },
+        'tools-and-software': {
+          groupEnd: true,
+          component: <ToolsAndSoftware system={system} />,
+          route: `/systems/${system.id}/tools-and-software`,
+          componentId: 'system-section-508'
         }
       }
     : {
@@ -77,12 +83,6 @@ const sideNavItems = (
           component: <FundingAndBudget system={system} />,
           route: `/systems/${system.id}/funding-and-budget`,
           componentId: 'funding-and-budget'
-        },
-        'tools-and-software': {
-          groupEnd: true,
-          component: <ToolsAndSoftware system={system} />,
-          route: `/systems/${system.id}/tools-and-software`,
-          componentId: 'system-section-508'
         },
         ato: {
           component: <ATO system={system} />,

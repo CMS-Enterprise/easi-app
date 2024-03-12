@@ -52,6 +52,7 @@ type ResolverRoot interface {
 	CedarExchange() CedarExchangeResolver
 	CedarRole() CedarRoleResolver
 	CedarRoleType() CedarRoleTypeResolver
+	CedarSoftwareProducts() CedarSoftwareProductsResolver
 	CedarSystem() CedarSystemResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
 	CedarThreat() CedarThreatResolver
@@ -327,6 +328,40 @@ type ComplexityRoot struct {
 		Description func(childComplexity int) int
 		ID          func(childComplexity int) int
 		Name        func(childComplexity int) int
+	}
+
+	CedarSoftwareProductItem struct {
+		APIGatewayUse                  func(childComplexity int) int
+		ElaPurchase                    func(childComplexity int) int
+		ElaVendorID                    func(childComplexity int) int
+		ProvidesAiCapability           func(childComplexity int) int
+		Refstr                         func(childComplexity int) int
+		SoftwareCatagoryConnectionGUID func(childComplexity int) int
+		SoftwareCost                   func(childComplexity int) int
+		SoftwareElaOrganization        func(childComplexity int) int
+		SoftwareName                   func(childComplexity int) int
+		SoftwareVendorConnectionGUID   func(childComplexity int) int
+		SystemSoftwareConnectionGUID   func(childComplexity int) int
+		TechnopediaCategory            func(childComplexity int) int
+		TechnopediaID                  func(childComplexity int) int
+		VendorName                     func(childComplexity int) int
+	}
+
+	CedarSoftwareProducts struct {
+		APIDescPubLocation  func(childComplexity int) int
+		APIDescPublished    func(childComplexity int) int
+		APIFHIRUse          func(childComplexity int) int
+		APIFHIRUseOther     func(childComplexity int) int
+		APIHasPortal        func(childComplexity int) int
+		AiSolnCatg          func(childComplexity int) int
+		AiSolnCatgOther     func(childComplexity int) int
+		ApiDataArea         func(childComplexity int) int
+		ApisAccessibility   func(childComplexity int) int
+		ApisDeveloped       func(childComplexity int) int
+		DevelopmentStage    func(childComplexity int) int
+		SoftwareProducts    func(childComplexity int) int
+		SystemHasAPIGateway func(childComplexity int) int
+		UsesAiTech          func(childComplexity int) int
 	}
 
 	CedarSystem struct {
@@ -617,6 +652,7 @@ type ComplexityRoot struct {
 		AccessibilityRequests    func(childComplexity int, after *string, first int) int
 		CedarAuthorityToOperate  func(childComplexity int, cedarSystemID string) int
 		CedarPersonsByCommonName func(childComplexity int, commonName string) int
+		CedarSoftwareProducts    func(childComplexity int, cedarSystemID string) int
 		CedarSystem              func(childComplexity int, cedarSystemID string) int
 		CedarSystemBookmarks     func(childComplexity int) int
 		CedarSystemDetails       func(childComplexity int, cedarSystemID string) int
@@ -1276,6 +1312,21 @@ type CedarRoleResolver interface {
 type CedarRoleTypeResolver interface {
 	Description(ctx context.Context, obj *models.CedarRoleType) (*string, error)
 }
+type CedarSoftwareProductsResolver interface {
+	AiSolnCatgOther(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error)
+
+	APIDescPubLocation(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error)
+	APIDescPublished(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error)
+	APIFHIRUse(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error)
+	APIFHIRUseOther(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error)
+	APIHasPortal(ctx context.Context, obj *models.CedarSoftwareProducts) (*bool, error)
+	ApisAccessibility(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error)
+	ApisDeveloped(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error)
+	DevelopmentStage(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error)
+	SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error)
+	SystemHasAPIGateway(ctx context.Context, obj *models.CedarSoftwareProducts) (*bool, error)
+	UsesAiTech(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error)
+}
 type CedarSystemResolver interface {
 	BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error)
 }
@@ -1401,6 +1452,7 @@ type QueryResolver interface {
 	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
 	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error)
 	CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error)
+	CedarSoftwareProducts(ctx context.Context, cedarSystemID string) (*models.CedarSoftwareProducts, error)
 	CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error)
 	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
 	MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
@@ -2928,6 +2980,202 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarRoleType.Name(childComplexity), true
+
+	case "CedarSoftwareProductItem.apiGatewayUse":
+		if e.complexity.CedarSoftwareProductItem.APIGatewayUse == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.APIGatewayUse(childComplexity), true
+
+	case "CedarSoftwareProductItem.elaPurchase":
+		if e.complexity.CedarSoftwareProductItem.ElaPurchase == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.ElaPurchase(childComplexity), true
+
+	case "CedarSoftwareProductItem.elaVendorId":
+		if e.complexity.CedarSoftwareProductItem.ElaVendorID == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.ElaVendorID(childComplexity), true
+
+	case "CedarSoftwareProductItem.providesAiCapability":
+		if e.complexity.CedarSoftwareProductItem.ProvidesAiCapability == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.ProvidesAiCapability(childComplexity), true
+
+	case "CedarSoftwareProductItem.refstr":
+		if e.complexity.CedarSoftwareProductItem.Refstr == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.Refstr(childComplexity), true
+
+	case "CedarSoftwareProductItem.softwareCatagoryConnectionGuid":
+		if e.complexity.CedarSoftwareProductItem.SoftwareCatagoryConnectionGUID == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.SoftwareCatagoryConnectionGUID(childComplexity), true
+
+	case "CedarSoftwareProductItem.softwareCost":
+		if e.complexity.CedarSoftwareProductItem.SoftwareCost == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.SoftwareCost(childComplexity), true
+
+	case "CedarSoftwareProductItem.softwareElaOrganization":
+		if e.complexity.CedarSoftwareProductItem.SoftwareElaOrganization == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.SoftwareElaOrganization(childComplexity), true
+
+	case "CedarSoftwareProductItem.softwareName":
+		if e.complexity.CedarSoftwareProductItem.SoftwareName == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.SoftwareName(childComplexity), true
+
+	case "CedarSoftwareProductItem.softwareVendorConnectionGuid":
+		if e.complexity.CedarSoftwareProductItem.SoftwareVendorConnectionGUID == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.SoftwareVendorConnectionGUID(childComplexity), true
+
+	case "CedarSoftwareProductItem.systemSoftwareConnectionGuid":
+		if e.complexity.CedarSoftwareProductItem.SystemSoftwareConnectionGUID == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.SystemSoftwareConnectionGUID(childComplexity), true
+
+	case "CedarSoftwareProductItem.technopediaCategory":
+		if e.complexity.CedarSoftwareProductItem.TechnopediaCategory == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.TechnopediaCategory(childComplexity), true
+
+	case "CedarSoftwareProductItem.technopediaID":
+		if e.complexity.CedarSoftwareProductItem.TechnopediaID == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.TechnopediaID(childComplexity), true
+
+	case "CedarSoftwareProductItem.vendorName":
+		if e.complexity.CedarSoftwareProductItem.VendorName == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProductItem.VendorName(childComplexity), true
+
+	case "CedarSoftwareProducts.apiDescPubLocation":
+		if e.complexity.CedarSoftwareProducts.APIDescPubLocation == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.APIDescPubLocation(childComplexity), true
+
+	case "CedarSoftwareProducts.apiDescPublished":
+		if e.complexity.CedarSoftwareProducts.APIDescPublished == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.APIDescPublished(childComplexity), true
+
+	case "CedarSoftwareProducts.apiFHIRUse":
+		if e.complexity.CedarSoftwareProducts.APIFHIRUse == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.APIFHIRUse(childComplexity), true
+
+	case "CedarSoftwareProducts.apiFHIRUseOther":
+		if e.complexity.CedarSoftwareProducts.APIFHIRUseOther == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.APIFHIRUseOther(childComplexity), true
+
+	case "CedarSoftwareProducts.apiHasPortal":
+		if e.complexity.CedarSoftwareProducts.APIHasPortal == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.APIHasPortal(childComplexity), true
+
+	case "CedarSoftwareProducts.aiSolnCatg":
+		if e.complexity.CedarSoftwareProducts.AiSolnCatg == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.AiSolnCatg(childComplexity), true
+
+	case "CedarSoftwareProducts.aiSolnCatgOther":
+		if e.complexity.CedarSoftwareProducts.AiSolnCatgOther == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.AiSolnCatgOther(childComplexity), true
+
+	case "CedarSoftwareProducts.apiDataArea":
+		if e.complexity.CedarSoftwareProducts.ApiDataArea == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.ApiDataArea(childComplexity), true
+
+	case "CedarSoftwareProducts.apisAccessibility":
+		if e.complexity.CedarSoftwareProducts.ApisAccessibility == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.ApisAccessibility(childComplexity), true
+
+	case "CedarSoftwareProducts.apisDeveloped":
+		if e.complexity.CedarSoftwareProducts.ApisDeveloped == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.ApisDeveloped(childComplexity), true
+
+	case "CedarSoftwareProducts.developmentStage":
+		if e.complexity.CedarSoftwareProducts.DevelopmentStage == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.DevelopmentStage(childComplexity), true
+
+	case "CedarSoftwareProducts.softwareProducts":
+		if e.complexity.CedarSoftwareProducts.SoftwareProducts == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.SoftwareProducts(childComplexity), true
+
+	case "CedarSoftwareProducts.systemHasAPIGateway":
+		if e.complexity.CedarSoftwareProducts.SystemHasAPIGateway == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.SystemHasAPIGateway(childComplexity), true
+
+	case "CedarSoftwareProducts.usesAiTech":
+		if e.complexity.CedarSoftwareProducts.UsesAiTech == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.UsesAiTech(childComplexity), true
 
 	case "CedarSystem.acronym":
 		if e.complexity.CedarSystem.Acronym == nil {
@@ -4768,6 +5016,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.CedarPersonsByCommonName(childComplexity, args["commonName"].(string)), true
+
+	case "Query.cedarSoftwareProducts":
+		if e.complexity.Query.CedarSoftwareProducts == nil {
+			break
+		}
+
+		args, err := ec.field_Query_cedarSoftwareProducts_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CedarSoftwareProducts(childComplexity, args["cedarSystemId"].(string)), true
 
 	case "Query.cedarSystem":
 		if e.complexity.Query.CedarSystem == nil {
@@ -7778,6 +8038,48 @@ type CedarAuthorityToOperate {
 }
 
 """
+CedarSoftwareProductItem represents an individual software product; this information is returned from the CEDAR Core API
+as a part of the CedarSoftwareProducts object
+"""
+type CedarSoftwareProductItem {
+  apiGatewayUse: Boolean
+  elaPurchase: String
+  elaVendorId: String
+  providesAiCapability: Boolean
+  refstr: String
+  softwareCatagoryConnectionGuid: String
+  softwareVendorConnectionGuid: String
+  softwareCost: String
+  softwareElaOrganization: String
+  softwareName: String
+  systemSoftwareConnectionGuid: String
+  technopediaCategory: String
+  technopediaID: String
+  vendorName: String
+}
+
+"""
+CedarSoftwareProducts represents the response from the /softwareProducts endpoint from the CEDAR Core API.
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarSoftwareProducts {
+  aiSolnCatg: [String]!
+  aiSolnCatgOther: String
+  apiDataArea: [String]!
+  apiDescPubLocation: String
+  apiDescPublished: String
+  apiFHIRUse: String
+  apiFHIRUseOther: String
+  apiHasPortal: Boolean
+  apisAccessibility: String
+  apisDeveloped: String
+  developmentStage: String
+  softwareProducts: [CedarSoftwareProductItem!]!
+  systemHasAPIGateway: Boolean
+  usesAiTech: String
+}
+
+"""
 CedarSystem represents the response from the /system/detail endpoint from the CEDAR Core API.
 Right now, this does not tie in with any other types defined here, and is a root node until that changes.
 """
@@ -10398,6 +10700,7 @@ type Query {
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
+  cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem!]!
   myCedarSystems: [CedarSystem!]!
@@ -12218,6 +12521,21 @@ func (ec *executionContext) field_Query_cedarPersonsByCommonName_args(ctx contex
 		}
 	}
 	args["commonName"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cedarSoftwareProducts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["cedarSystemId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["cedarSystemId"] = arg0
 	return args, nil
 }
 
@@ -21064,6 +21382,1193 @@ func (ec *executionContext) _CedarRoleType_description(ctx context.Context, fiel
 func (ec *executionContext) fieldContext_CedarRoleType_description(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarRoleType",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_apiGatewayUse(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_apiGatewayUse(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.APIGatewayUse, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_apiGatewayUse(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_elaPurchase(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_elaPurchase(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ElaPurchase, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_elaPurchase(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_elaVendorId(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_elaVendorId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ElaVendorID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_elaVendorId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_providesAiCapability(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_providesAiCapability(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProvidesAiCapability, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_providesAiCapability(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_refstr(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_refstr(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Refstr, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_refstr(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_softwareCatagoryConnectionGuid(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_softwareCatagoryConnectionGuid(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SoftwareCatagoryConnectionGUID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_softwareCatagoryConnectionGuid(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_softwareVendorConnectionGuid(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_softwareVendorConnectionGuid(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SoftwareVendorConnectionGUID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_softwareVendorConnectionGuid(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_softwareCost(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_softwareCost(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SoftwareCost, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_softwareCost(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_softwareElaOrganization(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_softwareElaOrganization(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SoftwareElaOrganization, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_softwareElaOrganization(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_softwareName(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_softwareName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SoftwareName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_softwareName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_systemSoftwareConnectionGuid(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_systemSoftwareConnectionGuid(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemSoftwareConnectionGUID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_systemSoftwareConnectionGuid(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_technopediaCategory(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_technopediaCategory(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TechnopediaCategory, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_technopediaCategory(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_technopediaID(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_technopediaID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TechnopediaID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_technopediaID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProductItem_vendorName(ctx context.Context, field graphql.CollectedField, obj *model.CedarSoftwareProductItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProductItem_vendorName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VendorName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProductItem_vendorName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProductItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_aiSolnCatg(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_aiSolnCatg(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AiSolnCatg, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalNString2ᚕstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_aiSolnCatg(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_aiSolnCatgOther(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_aiSolnCatgOther(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSoftwareProducts().AiSolnCatgOther(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_aiSolnCatgOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_apiDataArea(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_apiDataArea(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ApiDataArea, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]string)
+	fc.Result = res
+	return ec.marshalNString2ᚕstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_apiDataArea(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_apiDescPubLocation(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_apiDescPubLocation(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSoftwareProducts().APIDescPubLocation(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_apiDescPubLocation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_apiDescPublished(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_apiDescPublished(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSoftwareProducts().APIDescPublished(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_apiDescPublished(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_apiFHIRUse(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_apiFHIRUse(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSoftwareProducts().APIFHIRUse(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_apiFHIRUse(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_apiFHIRUseOther(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_apiFHIRUseOther(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSoftwareProducts().APIFHIRUseOther(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_apiFHIRUseOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_apiHasPortal(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_apiHasPortal(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSoftwareProducts().APIHasPortal(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_apiHasPortal(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_apisAccessibility(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_apisAccessibility(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSoftwareProducts().ApisAccessibility(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_apisAccessibility(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_apisDeveloped(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_apisDeveloped(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSoftwareProducts().ApisDeveloped(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_apisDeveloped(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_developmentStage(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_developmentStage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSoftwareProducts().DevelopmentStage(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_developmentStage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_softwareProducts(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_softwareProducts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSoftwareProducts().SoftwareProducts(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.CedarSoftwareProductItem)
+	fc.Result = res
+	return ec.marshalNCedarSoftwareProductItem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarSoftwareProductItemᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_softwareProducts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "apiGatewayUse":
+				return ec.fieldContext_CedarSoftwareProductItem_apiGatewayUse(ctx, field)
+			case "elaPurchase":
+				return ec.fieldContext_CedarSoftwareProductItem_elaPurchase(ctx, field)
+			case "elaVendorId":
+				return ec.fieldContext_CedarSoftwareProductItem_elaVendorId(ctx, field)
+			case "providesAiCapability":
+				return ec.fieldContext_CedarSoftwareProductItem_providesAiCapability(ctx, field)
+			case "refstr":
+				return ec.fieldContext_CedarSoftwareProductItem_refstr(ctx, field)
+			case "softwareCatagoryConnectionGuid":
+				return ec.fieldContext_CedarSoftwareProductItem_softwareCatagoryConnectionGuid(ctx, field)
+			case "softwareVendorConnectionGuid":
+				return ec.fieldContext_CedarSoftwareProductItem_softwareVendorConnectionGuid(ctx, field)
+			case "softwareCost":
+				return ec.fieldContext_CedarSoftwareProductItem_softwareCost(ctx, field)
+			case "softwareElaOrganization":
+				return ec.fieldContext_CedarSoftwareProductItem_softwareElaOrganization(ctx, field)
+			case "softwareName":
+				return ec.fieldContext_CedarSoftwareProductItem_softwareName(ctx, field)
+			case "systemSoftwareConnectionGuid":
+				return ec.fieldContext_CedarSoftwareProductItem_systemSoftwareConnectionGuid(ctx, field)
+			case "technopediaCategory":
+				return ec.fieldContext_CedarSoftwareProductItem_technopediaCategory(ctx, field)
+			case "technopediaID":
+				return ec.fieldContext_CedarSoftwareProductItem_technopediaID(ctx, field)
+			case "vendorName":
+				return ec.fieldContext_CedarSoftwareProductItem_vendorName(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarSoftwareProductItem", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_systemHasAPIGateway(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_systemHasAPIGateway(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSoftwareProducts().SystemHasAPIGateway(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_systemHasAPIGateway(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSoftwareProducts_usesAiTech(ctx context.Context, field graphql.CollectedField, obj *models.CedarSoftwareProducts) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSoftwareProducts_usesAiTech(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSoftwareProducts().UsesAiTech(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSoftwareProducts_usesAiTech(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSoftwareProducts",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
@@ -34324,6 +35829,88 @@ func (ec *executionContext) fieldContext_Query_cedarPersonsByCommonName(ctx cont
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_cedarPersonsByCommonName_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_cedarSoftwareProducts(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_cedarSoftwareProducts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CedarSoftwareProducts(rctx, fc.Args["cedarSystemId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.CedarSoftwareProducts)
+	fc.Result = res
+	return ec.marshalOCedarSoftwareProducts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSoftwareProducts(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_cedarSoftwareProducts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "aiSolnCatg":
+				return ec.fieldContext_CedarSoftwareProducts_aiSolnCatg(ctx, field)
+			case "aiSolnCatgOther":
+				return ec.fieldContext_CedarSoftwareProducts_aiSolnCatgOther(ctx, field)
+			case "apiDataArea":
+				return ec.fieldContext_CedarSoftwareProducts_apiDataArea(ctx, field)
+			case "apiDescPubLocation":
+				return ec.fieldContext_CedarSoftwareProducts_apiDescPubLocation(ctx, field)
+			case "apiDescPublished":
+				return ec.fieldContext_CedarSoftwareProducts_apiDescPublished(ctx, field)
+			case "apiFHIRUse":
+				return ec.fieldContext_CedarSoftwareProducts_apiFHIRUse(ctx, field)
+			case "apiFHIRUseOther":
+				return ec.fieldContext_CedarSoftwareProducts_apiFHIRUseOther(ctx, field)
+			case "apiHasPortal":
+				return ec.fieldContext_CedarSoftwareProducts_apiHasPortal(ctx, field)
+			case "apisAccessibility":
+				return ec.fieldContext_CedarSoftwareProducts_apisAccessibility(ctx, field)
+			case "apisDeveloped":
+				return ec.fieldContext_CedarSoftwareProducts_apisDeveloped(ctx, field)
+			case "developmentStage":
+				return ec.fieldContext_CedarSoftwareProducts_developmentStage(ctx, field)
+			case "softwareProducts":
+				return ec.fieldContext_CedarSoftwareProducts_softwareProducts(ctx, field)
+			case "systemHasAPIGateway":
+				return ec.fieldContext_CedarSoftwareProducts_systemHasAPIGateway(ctx, field)
+			case "usesAiTech":
+				return ec.fieldContext_CedarSoftwareProducts_usesAiTech(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarSoftwareProducts", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_cedarSoftwareProducts_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -62312,6 +63899,511 @@ func (ec *executionContext) _CedarRoleType(ctx context.Context, sel ast.Selectio
 	return out
 }
 
+var cedarSoftwareProductItemImplementors = []string{"CedarSoftwareProductItem"}
+
+func (ec *executionContext) _CedarSoftwareProductItem(ctx context.Context, sel ast.SelectionSet, obj *model.CedarSoftwareProductItem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarSoftwareProductItemImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarSoftwareProductItem")
+		case "apiGatewayUse":
+			out.Values[i] = ec._CedarSoftwareProductItem_apiGatewayUse(ctx, field, obj)
+		case "elaPurchase":
+			out.Values[i] = ec._CedarSoftwareProductItem_elaPurchase(ctx, field, obj)
+		case "elaVendorId":
+			out.Values[i] = ec._CedarSoftwareProductItem_elaVendorId(ctx, field, obj)
+		case "providesAiCapability":
+			out.Values[i] = ec._CedarSoftwareProductItem_providesAiCapability(ctx, field, obj)
+		case "refstr":
+			out.Values[i] = ec._CedarSoftwareProductItem_refstr(ctx, field, obj)
+		case "softwareCatagoryConnectionGuid":
+			out.Values[i] = ec._CedarSoftwareProductItem_softwareCatagoryConnectionGuid(ctx, field, obj)
+		case "softwareVendorConnectionGuid":
+			out.Values[i] = ec._CedarSoftwareProductItem_softwareVendorConnectionGuid(ctx, field, obj)
+		case "softwareCost":
+			out.Values[i] = ec._CedarSoftwareProductItem_softwareCost(ctx, field, obj)
+		case "softwareElaOrganization":
+			out.Values[i] = ec._CedarSoftwareProductItem_softwareElaOrganization(ctx, field, obj)
+		case "softwareName":
+			out.Values[i] = ec._CedarSoftwareProductItem_softwareName(ctx, field, obj)
+		case "systemSoftwareConnectionGuid":
+			out.Values[i] = ec._CedarSoftwareProductItem_systemSoftwareConnectionGuid(ctx, field, obj)
+		case "technopediaCategory":
+			out.Values[i] = ec._CedarSoftwareProductItem_technopediaCategory(ctx, field, obj)
+		case "technopediaID":
+			out.Values[i] = ec._CedarSoftwareProductItem_technopediaID(ctx, field, obj)
+		case "vendorName":
+			out.Values[i] = ec._CedarSoftwareProductItem_vendorName(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var cedarSoftwareProductsImplementors = []string{"CedarSoftwareProducts"}
+
+func (ec *executionContext) _CedarSoftwareProducts(ctx context.Context, sel ast.SelectionSet, obj *models.CedarSoftwareProducts) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarSoftwareProductsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarSoftwareProducts")
+		case "aiSolnCatg":
+			out.Values[i] = ec._CedarSoftwareProducts_aiSolnCatg(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "aiSolnCatgOther":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSoftwareProducts_aiSolnCatgOther(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "apiDataArea":
+			out.Values[i] = ec._CedarSoftwareProducts_apiDataArea(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "apiDescPubLocation":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSoftwareProducts_apiDescPubLocation(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "apiDescPublished":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSoftwareProducts_apiDescPublished(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "apiFHIRUse":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSoftwareProducts_apiFHIRUse(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "apiFHIRUseOther":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSoftwareProducts_apiFHIRUseOther(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "apiHasPortal":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSoftwareProducts_apiHasPortal(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "apisAccessibility":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSoftwareProducts_apisAccessibility(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "apisDeveloped":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSoftwareProducts_apisDeveloped(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "developmentStage":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSoftwareProducts_developmentStage(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "softwareProducts":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSoftwareProducts_softwareProducts(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "systemHasAPIGateway":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSoftwareProducts_systemHasAPIGateway(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "usesAiTech":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSoftwareProducts_usesAiTech(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var cedarSystemImplementors = []string{"CedarSystem"}
 
 func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionSet, obj *models.CedarSystem) graphql.Marshaler {
@@ -64834,6 +66926,25 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "cedarSoftwareProducts":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_cedarSoftwareProducts(ctx, field)
 				return res
 			}
 
@@ -72088,6 +74199,60 @@ func (ec *executionContext) marshalNCedarRoleType2ᚖgithubᚗcomᚋcmsgovᚋeas
 	return ec._CedarRoleType(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCedarSoftwareProductItem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarSoftwareProductItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CedarSoftwareProductItem) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarSoftwareProductItem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarSoftwareProductItem(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCedarSoftwareProductItem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarSoftwareProductItem(ctx context.Context, sel ast.SelectionSet, v *model.CedarSoftwareProductItem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CedarSoftwareProductItem(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNCedarSystem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarSystem) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -72948,6 +75113,32 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNString2ᚕstring(ctx context.Context, v interface{}) ([]string, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalOString2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNString2ᚕstring(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalOString2string(ctx, sel, v[i])
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalNString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
@@ -75349,6 +77540,13 @@ func (ec *executionContext) marshalOCedarDataCenter2ᚖgithubᚗcomᚋcmsgovᚋe
 		return graphql.Null
 	}
 	return ec._CedarDataCenter(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOCedarSoftwareProducts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSoftwareProducts(ctx context.Context, sel ast.SelectionSet, v *models.CedarSoftwareProducts) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CedarSoftwareProducts(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCedarSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem(ctx context.Context, sel ast.SelectionSet, v *models.CedarSystem) graphql.Marshaler {
