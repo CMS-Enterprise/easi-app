@@ -92,3 +92,11 @@
 .usa-header--basic .usa-nav__primary-item > .usa-current::after, .usa-header--basic .usa-nav__link:hover::after {
     bottom: 0rem !important;
 }
+
+.usa-header--basic .usa-nav__primary-item > .usa-current::after, .usa-header--basic .system-dropdown .usa-nav__link:hover::after {
+    height: 0.15rem !important;
+}
+
+.system-dropdown:hover::after {
+    height: 0.15rem !important;
+}
