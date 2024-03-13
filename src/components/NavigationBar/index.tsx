@@ -98,35 +98,42 @@ const systemLinks = (
   }
 ];
 
+// Handler for updating state for any NavDropDownButton
+const onToggle = (
+  index: number,
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean[]>>
+): void => {
+  setIsOpen(prevIsOpen => {
+    const newIsOpen = [false];
+    newIsOpen[index] = !prevIsOpen[index];
+    return newIsOpen;
+  });
+};
+
 const NavigationBar = ({ signout, userName }: NavigationProps) => {
   const { t } = useTranslation();
+
   const flags = useFlags();
+
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
-  const mobileNavRef = useRef(null);
+  const mobileNavRef = useRef<HTMLDivElement | null>(null);
 
   const isMobile = useCheckResponsiveScreen('tablet');
 
   const location = useLocation();
 
-  const onToggle = (
-    index: number,
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean[]>>
-  ): void => {
-    setIsOpen(prevIsOpen => {
-      const newIsOpen = [false];
-      newIsOpen[index] = !prevIsOpen[index];
-      return newIsOpen;
-    });
-  };
-
+  // Controls mobile side nav
   const [expanded, setExpanded] = useState(false);
 
+  // Controls NavDropDownButton state for (currently one) any nav dropdown items
+  const [isOpen, setIsOpen] = useState([false]);
+
+  // onClick callback for toggling sidenav
   const onClick = (): void => setExpanded(prvExpanded => !prvExpanded);
 
+  // Closes mobile nav if clicked outside
   useOutsideClick(mobileNavRef, onClick);
-
-  const [isOpen, setIsOpen] = useState([false]);
 
   const systemNavLinks = systemLinks(flags, groups, isUserSet).map(route => (
     <div className="easi-nav" key={route.label}>
@@ -243,7 +250,10 @@ const NavigationBar = ({ signout, userName }: NavigationProps) => {
                 </Link>
               </div>
             )}
-            <NavMenuButton onClick={onClick} label={<IconMenu size={3} />} />
+            <NavMenuButton
+              onClick={() => setExpanded(prvExpanded => !prvExpanded)}
+              label={<IconMenu size={3} />}
+            />
           </div>
           <PrimaryNav
             items={navItems}
