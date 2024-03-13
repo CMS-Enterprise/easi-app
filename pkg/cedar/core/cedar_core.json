@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "The CMS Enterprise Data and Analytics Repository (CEDAR) Core API's. \n These interfaces contain CRUD (where applicable) operations for Budget, Component, Contract, Data Center, Deployment, Exchange, Person, Role Stake Holder, System Detail, System Summary and User.\n",
+    "description": "The CMS Enterprise Data and Analytics Repository (CEDAR) Core API's. These reusable API's are mainly used in support of higher level API's. See the API resources section for a list of available interfaces and operations.\n     \n",
     "version": "2.0.0",
     "title": "CEDAR Core API",
     "termsOfService": "https://www.cedardev.cms.gov/",
@@ -9,7 +9,7 @@
       "email": "EnterpriseArchitecture@cms.hhs.gov"
     }
   },
-  "host": "webmethods-apigw.cedar.cms.gov",
+  "host": "webmethods-apigw.cedardev.cms.gov",
   "basePath": "/gateway/CEDAR Core API/2.0.0",
   "tags": [
     {
@@ -18,79 +18,79 @@
     },
     {
       "name": "authority to operate",
-      "description": "CMS authority to operate (ATO) data from CFACTS"
-    },
-    {
-      "name": "budget",
-      "description": "CMS budget projects funding a particular system"
-    },
-    {
-      "name": "component",
-      "description": "CMS components"
-    },
-    {
-      "name": "contract",
-      "description": "CMS contracts funded by budget projects"
+      "description": ""
     },
     {
       "name": "cost type",
-      "description": "CMS cost types"
-    },
-    {
-      "name": "data center",
-      "description": "Data centers hosting CMS systems"
-    },
-    {
-      "name": "deployment",
-      "description": "CMS deployment of a system"
+      "description": ""
     },
     {
       "name": "domain model",
-      "description": "Domain heirarchy areas that categorize CMS and Federal agencies' assets"
-    },
-    {
-      "name": "enumeration",
-      "description": "CMS system enumerations"
-    },
-    {
-      "name": "exchange",
-      "description": "CMS data exchanges"
+      "description": ""
     },
     {
       "name": "organization",
-      "description": "The official CMS organizational chart"
-    },
-    {
-      "name": "person",
-      "description": "CMS people"
-    },
-    {
-      "name": "role",
-      "description": "CEDAR role assignments and types"
-    },
-    {
-      "name": "stakeholder",
-      "description": "CMS stakeholders"
+      "description": ""
     },
     {
       "name": "support contact",
-      "description": "CMS suport contacts"
-    },
-    {
-      "name": "system",
-      "description": "CMS system information"
+      "description": ""
     },
     {
       "name": "threat",
-      "description": "Threats to CMS assets"
-    },
-    {
-      "name": "user",
-      "description": "CEDAR system users"
+      "description": ""
     },
     {
       "name": "url",
-      "description": "CMS URLs"
+      "description": ""
+    },
+    {
+      "name": "budget",
+      "description": ""
+    },
+    {
+      "name": "component",
+      "description": ""
+    },
+    {
+      "name": "contract",
+      "description": ""
+    },
+    {
+      "name": "data center",
+      "description": ""
+    },
+    {
+      "name": "deployment",
+      "description": ""
+    },
+    {
+      "name": "enumeration",
+      "description": ""
+    },
+    {
+      "name": "exchange",
+      "description": ""
+    },
+    {
+      "name": "stakeholder",
+      "description": ""
+    },
+    {
+      "name": "role",
+      "description": ""
+    },
+    {
+      "name": "person",
+      "description": ""
+    },
+    {
+      "name": "system",
+      "description": ""
+    },
+    {
+      "name": "user",
+      "description": ""
     }
   ],
   "schemes": [
@@ -105,7 +105,8 @@
     "/enumeration": {
       "get": {
         "tags": [
-          "enumeration"
+          "enumeration",
+          "data center"
         ],
         "summary": "Retrieve a list of enumerations based on a list of enumeration names passed in.",
         "description": "Retrieve a list of enumerations based on a list of enumeration names passed in.",
@@ -168,7 +169,8 @@
     "/user/username/{username}": {
       "get": {
         "tags": [
-          "user"
+          "user",
+          "data center"
         ],
         "summary": "Retrieve an existing user in a CEDAR system based on the user name. This interface takes username.",
         "description": "Retrieve an existing user in a CEDAR system based on the user name. This interface takes username.",
@@ -214,7 +216,8 @@
       },
       "put": {
         "tags": [
-          "user"
+          "user",
+          "data center"
         ],
         "summary": "Update a list existing user in a CEDAR system. This interface takes an array of User documents.",
         "description": "Update a list existing user in a CEDAR system. This interface takes an array of User documents.",
@@ -274,7 +277,8 @@
     "/contract": {
       "get": {
         "tags": [
-          "contract"
+          "contract",
+          "data center"
         ],
         "summary": "Retrieve a list of contracts based on query criteria. If a SystemId is passed, the contract(s) for that system are returned. If no query data is passed in, all contracts for the current year are returned.",
         "description": "Retrieve a list of contracts based on query criteria. If a SystemId is passed, the contract(s) for that system are returned. If no query data is passed in, all contracts for the current year are returned.",
@@ -345,7 +349,8 @@
       },
       "post": {
         "tags": [
-          "contract"
+          "contract",
+          "data center"
         ],
         "summary": "Add a new contract(s) to the Alfabet system. This interface takes an arrary of Contract documents.",
         "description": "Add a new contract(s) to the Alfabet system. This interface takes an arrary of Contract documents.",
@@ -396,7 +401,8 @@
       },
       "put": {
         "tags": [
-          "contract"
+          "contract",
+          "data center"
         ],
         "summary": "Update an array of contract(s) in the Alfabet system. This interface takes an arrary of Contract documents. If the input budgetsOnly is set to false, this interface will also update any associated Contract Deliverable records.",
         "description": "Update an array of contract(s) in the Alfabet system. This interface takes an arrary of Contract documents. If the input budgetsOnly is set to false, this interface will also update any associated Contract Deliverable records.",
@@ -454,7 +460,8 @@
       },
       "delete": {
         "tags": [
-          "contract"
+          "contract",
+          "data center"
         ],
         "summary": "Delete a list of contracts based on an array of contarct ids.",
         "description": "Delete a list of contracts based on an array of contarct ids.",
@@ -512,7 +519,8 @@
     "/system/summary/{id}": {
       "get": {
         "tags": [
-          "system"
+          "system",
+          "data center"
         ],
         "summary": "Retrieve a system summary based on the provided id.",
         "description": "Retrieve a system summary based on the provided id.",
@@ -616,7 +624,8 @@
     "/system/version": {
       "get": {
         "tags": [
-          "system"
+          "system",
+          "data center"
         ],
         "summary": "Retrieve all versions of a system based on the ICT Object ID.",
         "description": "Retrieve all versions of a system based on the ICT Object ID.",
@@ -671,10 +680,60 @@
         }
       }
     },
+    "/budgetSystemCost": {
+      "get": {
+        "tags": [
+          "budgetSystemCost",
+          "data center"
+        ],
+        "summary": "",
+        "description": "",
+        "operationId": "budgetSystemCostFind",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "query",
+            "description": "ID of the system that the budget is associated with. Adding this parameter will instruct the interface to only return the system matching the systemId.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BudgetActualSystemCostResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "401": {
+            "description": "Access Denied",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
     "/person/{id}": {
       "get": {
         "tags": [
-          "person"
+          "person",
+          "data center"
         ],
         "summary": "Retrieve an existing person or a sigle person record based on the users EUA id.",
         "description": "Retrieve an existing person or a sigle person record based on the users EUA id.",
@@ -728,7 +787,8 @@
     "/domainModelName": {
       "get": {
         "tags": [
-          "domain model"
+          "domain model",
+          "data center"
         ],
         "summary": "Retrieves a list of available domain reference models",
         "description": "Retrieves a list of available domain reference models",
@@ -768,7 +828,8 @@
     "/domainModelLevel": {
       "get": {
         "tags": [
-          "domain model"
+          "domain model",
+          "data center"
         ],
         "summary": "Retrieves the model levels associated with a specific domain reference models",
         "description": "Retrieves the hierarchy levels associated with a specific domain reference models",
@@ -816,7 +877,8 @@
     "/costType": {
       "get": {
         "tags": [
-          "cost type"
+          "cost type",
+          "data center"
         ],
         "summary": "Retrieve a list of cost types",
         "description": "Retrieve a list of cost types",
@@ -881,7 +943,8 @@
     "/softwareProducts": {
       "get": {
         "tags": [
-          "softwareProducts"
+          "softwareProducts",
+          "data center"
         ],
         "summary": "Retrieve a list of softwareProducts. This interface takes in id and version.",
         "description": "Retrieve a list of softwareProducts. This interface takes in id and version.",
@@ -933,7 +996,8 @@
       },
       "post": {
         "tags": [
-          "softwareProducts"
+          "softwareProducts",
+          "data center"
         ],
         "summary": "Add a software product that is used by the system",
         "description": "Add the software product and version details that is used by the system. Software produt can be operating sytems, database, middleware etc. that are needed to perform business function",
@@ -986,7 +1050,8 @@
     "/system/detail/{id}": {
       "get": {
         "tags": [
-          "system"
+          "system",
+          "data center"
         ],
         "summary": "Retrieve an existing system based on the provided id.",
         "description": "Retrieve an existing system based on the provided id.",
@@ -1040,7 +1105,8 @@
     "/supportContact": {
       "get": {
         "tags": [
-          "support contact"
+          "support contact",
+          "data center"
         ],
         "summary": "Retrieve a list of supportContacts based on the inputs passed in.",
         "description": "Retrieve a list of supportContact records to Alfabet. This interface takes in id, application id, name, title, url, phone and email.",
@@ -1086,7 +1152,8 @@
       },
       "post": {
         "tags": [
-          "support contact"
+          "support contact",
+          "data center"
         ],
         "summary": "Add a supportContact record to Alfabet. ",
         "description": "Add a supportContact record to Alfabet. This interface takes in id, application id, name, title, url, phone and email.",
@@ -1137,7 +1204,8 @@
       },
       "delete": {
         "tags": [
-          "support contact"
+          "support contact",
+          "data center"
         ],
         "summary": "Delete a list of supportContacts by ID.",
         "description": "Delete a list of supportContacts record to Alfabet. This interface takes an array of supportContact id's.",
@@ -1195,7 +1263,8 @@
     "/authorityToOperate": {
       "get": {
         "tags": [
-          "authority to operate"
+          "authority to operate",
+          "data center"
         ],
         "summary": "Retrieve a list of ATO's based on query criteria",
         "description": "An Authority to Operate (ATO) is official documentation that an IT asset within a defined boundary has met FISMA security requirements for a limited period of time. ATO security boundaries can encompass business systems, data centers, cloud service provider enclaves, or other IT assets.",
@@ -1300,7 +1369,8 @@
     "/stakeholder": {
       "get": {
         "tags": [
-          "stakeholder"
+          "stakeholder",
+          "data center"
         ],
         "summary": "Retrieve a list of stakeholders. This interface takes in id, name, version, state, status and idsOnly.",
         "description": "Retrieve a list of stakeholders. This interface takes in id, name, version, state, status and idsOnly.",
@@ -1398,7 +1468,8 @@
     "/domainModel": {
       "get": {
         "tags": [
-          "domain model"
+          "domain model",
+          "data center"
         ],
         "summary": "Retrieves reference model information about Enterprise Architecture assets",
         "description": "The Federal Enterprise Architecture Framework (FEAF) v2 describes a suite of tools to help government planners implement the Common Approach. At its core is the Consolidated Reference Model (CRM), which equips OMB and Federal agencies with a common language and framework to describe and analyze investments. It consists of a set of interrelated “reference models” that describe the six subarchitecture domains in the framework: Strategy, Business, Data, Applications, Infrastructure, Security: https://obamawhitehouse.archives.gov/sites/default/files/omb/assets/egov_docs/fea_v2.pdf",
@@ -1460,7 +1531,8 @@
     "/deployment": {
       "get": {
         "tags": [
-          "deployment"
+          "deployment",
+          "data center"
         ],
         "summary": "Retrieve a list of deployments based on query criteria (systemId, state, status and deploymentType).",
         "description": "Retrieve a list of deployments based on query criteria (systemId, state, status and deploymentType).",
@@ -1547,7 +1619,8 @@
       },
       "post": {
         "tags": [
-          "deployment"
+          "deployment",
+          "data center"
         ],
         "summary": "Add a list of new deployment records to Alfabet. This interface takes in an array of deployments.",
         "description": "Add a list of new deployment records to Alfabet.  This interface takes in an array of deployments.",
@@ -1598,7 +1671,8 @@
       },
       "put": {
         "tags": [
-          "deployment"
+          "deployment",
+          "data center"
         ],
         "summary": "Update a list of new deployment records to Alfabet.  This interface takes in an array of deployment documents.",
         "description": "Update a list of new deployment records to Alfabet. This interface takes in an array of deployment documents.",
@@ -1649,7 +1723,8 @@
       },
       "delete": {
         "tags": [
-          "deployment"
+          "deployment",
+          "data center"
         ],
         "summary": "Delete a list of deployments based on the ids passed in. This interface takes an array of deploymentIds.",
         "description": "Delete a list of deployments based on the ids passed in. This interface takes an array of deploymentIds.",
@@ -1707,7 +1782,8 @@
     "/component": {
       "get": {
         "tags": [
-          "component"
+          "component",
+          "data center"
         ],
         "summary": "Retrieve a component",
         "description": "Retrieve a component record based on the id parameter that is passed in.",
@@ -1753,7 +1829,8 @@
       },
       "post": {
         "tags": [
-          "component"
+          "component",
+          "data center"
         ],
         "summary": "This interface takes in a Component record and adds that to Alfabet.",
         "description": "This interface takes in a Component record and adds that to Alfabet.",
@@ -1804,7 +1881,8 @@
       },
       "delete": {
         "tags": [
-          "component"
+          "component",
+          "data center"
         ],
         "summary": "Deletes a component within Alfabet based on the ID that is passed in.",
         "description": "Deletes a component within Alfabet based on the ID that is passed in.",
@@ -1858,7 +1936,8 @@
     "/budget": {
       "get": {
         "tags": [
-          "budget"
+          "budget",
+          "data center"
         ],
         "summary": "Retrieve a list of budgets based on query criteria listed in the parameters section. Passing a SystemId will cause the interface to return the budget(s) for just that system. Setting onlyIds to true will only return the id's, whereas if not set, the response will also include projectId, systemId, fundingId and funding. This interface has a limit of 5000 records.",
         "description": "Retrieve a list of budgets based on query criteria listed in the parameters section. Passing a SystemId will cause the interface to return the budget(s) for just that system. Setting onlyIds to true will only return the id's, whereas if not set, the response will also include projectId, systemId, fundingId and funding. This interface has a limit of 5000 records.",
@@ -1932,7 +2011,8 @@
       },
       "post": {
         "tags": [
-          "budget"
+          "budget",
+          "data center"
         ],
         "summary": "Add new budget(s) to the Alfabet system. This interface takes an array of one or more budget documents (id, projectId, systemId, fundingId and funding).",
         "description": "Add new budget(s) to the Alfabet system. This interface takes an array of one or more budgets (id, projectId, systemId, fundingId and funding).",
@@ -1983,7 +2063,8 @@
       },
       "put": {
         "tags": [
-          "budget"
+          "budget",
+          "data center"
         ],
         "summary": "Update a existing budget with Alfabet. The input requires an array of one or more budget documents (id, projectId, systemId, fundingId and funding).",
         "description": "Update a existing budget with Alfabet. The input requires an array of one or more budget documents (id, projectId, systemId, fundingId and funding).",
@@ -2034,7 +2115,8 @@
       },
       "delete": {
         "tags": [
-          "budget"
+          "budget",
+          "data center"
         ],
         "summary": "Deletes a list of budgets based on an array of budget ids.",
         "description": "Deletes a list of budgets based on an array of budget ids.",
@@ -2092,7 +2174,8 @@
     "/person": {
       "get": {
         "tags": [
-          "person"
+          "person",
+          "data center"
         ],
         "summary": "Retrieve a list of persons based on the inputs passed in.",
         "description": "Retrieve a list of persons based on the inputs passed in.",
@@ -2173,7 +2256,8 @@
       },
       "post": {
         "tags": [
-          "person"
+          "person",
+          "data center"
         ],
         "summary": "Add a person record to Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.",
         "description": "Add a person record to Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.",
@@ -2224,7 +2308,8 @@
       },
       "put": {
         "tags": [
-          "person"
+          "person",
+          "data center"
         ],
         "summary": "Update a person record to Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.",
         "description": "Update a person record to Alfabet. This interface takes in id, userName, firstName, lastName, phone and email.",
@@ -2277,7 +2362,8 @@
     "/threat": {
       "get": {
         "tags": [
-          "threat"
+          "threat",
+          "data center"
         ],
         "summary": "Retrieve a list of threats based on a comma delimited list of object IDs.",
         "description": "Retrieve a list of threats (like a Plan of Actions and Milestones POA&M), for a specific object (like an ATO) using the object's unique ID.",
@@ -2329,7 +2415,8 @@
     "/url/{id}": {
       "get": {
         "tags": [
-          "url"
+          "url",
+          "data center"
         ],
         "summary": "Retrieve a list of URLs associated with an object in CEDAR",
         "description": "Retrieve a list of URLs associated with an object in CEDAR. An object could include a System, ATO, etc",
@@ -2377,7 +2464,8 @@
     "/role": {
       "get": {
         "tags": [
-          "role"
+          "role",
+          "data center"
         ],
         "summary": "Finds a list of role assignments based on an object's ID and/or role type.",
         "description": "Finds a list of role assignments based on an object's ID. If objectId and roleTypeId are both provided, a list of role assignments for only those specific role type IDs are returned. If roleId is provided, then objectId and roleTypeId should not be provided and a specific role assignment is returned.",
@@ -2454,7 +2542,8 @@
       },
       "post": {
         "tags": [
-          "role"
+          "role",
+          "data center"
         ],
         "summary": "Add role assignments to a CEDAR application. This interface takes in objectId, roleTypeId AND either assigneeId, assigneeUserName or assigneeOrgId are required.",
         "description": "Add role assignments to a CEDAR application. This interface takes in objectId, roleTypeId AND either assigneeId, assigneeUserName or assigneeOrgId are required.",
@@ -2505,7 +2594,8 @@
       },
       "delete": {
         "tags": [
-          "role"
+          "role",
+          "data center"
         ],
         "summary": "Deletes a list of role assignments by ID. This interface takes an application name and an array of roleIds.",
         "description": "Deletes a list of role assignments by ID. This interface takes an application name and an array of roleIds.",
@@ -2573,7 +2663,8 @@
     "/role/type/{application}": {
       "get": {
         "tags": [
-          "role"
+          "role",
+          "data center"
         ],
         "summary": "Finds a list of role types available within an application. This interface takes in application.",
         "description": "Finds a list of role types available within an application. This interface takes in application.",
@@ -2631,7 +2722,8 @@
     "/user/id/{id}": {
       "get": {
         "tags": [
-          "user"
+          "user",
+          "data center"
         ],
         "summary": "Retrieve an existing user from a CEDAR application. This interface takes an id.",
         "description": "Retrieve an existing user from a CEDAR application. This interface takes an id.",
@@ -2677,7 +2769,8 @@
       },
       "put": {
         "tags": [
-          "user"
+          "user",
+          "data center"
         ],
         "summary": "Update a list existing user in a CEDAR application.This interface takes an arrary of User documents.",
         "description": "Update a list existing user in a CEDAR application.This interface takes an arrary of User documents.",
@@ -2737,7 +2830,8 @@
     "/organization": {
       "get": {
         "tags": [
-          "organization"
+          "organization",
+          "data center"
         ],
         "summary": "Retrieves information about the official CMS organizational hierarchy",
         "description": "Retrieves information about the official CMS organizational hierarchy as maintained and published by the Division of Performance and Organizational Programs (DPOP)",
@@ -2799,7 +2893,8 @@
     "/exchange/{id}": {
       "get": {
         "tags": [
-          "exchange"
+          "exchange",
+          "data center"
         ],
         "summary": "Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.",
         "description": "Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.",
@@ -2847,7 +2942,8 @@
     "/system/summary": {
       "get": {
         "tags": [
-          "system"
+          "system",
+          "data center"
         ],
         "summary": "Retrieve a system summary list. This interface takes in state, status, version, includeInSurvey, idsOnly and belongsTo.",
         "description": "Retrieve a system summary list. This interface takes in state, status, version, includeInSurvey, idsOnly and belongsTo.",
@@ -2974,7 +3070,8 @@
     "/user": {
       "get": {
         "tags": [
-          "user"
+          "user",
+          "data center"
         ],
         "summary": "Retrieve a list of users from a CEDAR application. This interface takes in application, id, userName, firstName, lastName, phone and email.",
         "description": "Retrieve a list of users from a CEDAR application. This interface takes in application, id, userName, firstName, lastName, phone and email.",
@@ -3066,7 +3163,8 @@
       },
       "post": {
         "tags": [
-          "user"
+          "user",
+          "data center"
         ],
         "summary": "Add users to a CEDAR application. This interface takes an array of User documents.",
         "description": "Add users to a CEDAR application. This interface takes an array of User documents.",
@@ -3217,7 +3315,8 @@
     "/exchange": {
       "get": {
         "tags": [
-          "exchange"
+          "exchange",
+          "data center"
         ],
         "summary": "Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.",
         "description": "Retrieve a data exchange record from Alfabet. This interface takes in a systemId, direction and version.",
@@ -3282,7 +3381,8 @@
       },
       "post": {
         "tags": [
-          "exchange"
+          "exchange",
+          "data center"
         ],
         "summary": "Add a list of data exchange records to Alfabet. This interface takes in an array of exchanges.",
         "description": "Add a list of data exchange records to Alfabet. This interface takes in an array of exchanges.",
@@ -3333,7 +3433,8 @@
       },
       "put": {
         "tags": [
-          "exchange"
+          "exchange",
+          "data center"
         ],
         "summary": "Update a list of data exchange records to Alfabet. This interface takes in an array of exchanges.",
         "description": "Update a list of data exchange records to Alfabet. This interface takes in an array of exchanges.",
@@ -3384,7 +3485,8 @@
       },
       "delete": {
         "tags": [
-          "exchange"
+          "exchange",
+          "data center"
         ],
         "summary": "Delete a list of data exchanges by ID. This interface takes an array of exchange ids.",
         "description": "Delete a list of data exchanges by ID. This interface takes an array of exchange ids.",
@@ -4011,6 +4113,20 @@
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "BudgetActualSystemCost": {
+      "type": "object",
+      "properties": {
+        "ActualSystemCost": {
+          "type": "string"
+        },
+        "systemId": {
+          "type": "string"
+        },
+        "FiscalYear": {
+          "type": "string"
         }
       }
     },
@@ -5570,6 +5686,24 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "BudgetActualSystemCostResponse": {
+      "type": "object",
+      "required": [
+        "count"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "BudgetActualCost": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BudgetActualSystemCost"
           }
         }
       }

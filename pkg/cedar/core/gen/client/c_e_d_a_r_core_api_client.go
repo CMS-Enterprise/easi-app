@@ -12,6 +12,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/authority_to_operate"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/budget"
+	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/budget_system_cost"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/component"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/contract"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/cost_type"
@@ -38,7 +39,7 @@ var Default = NewHTTPClient(nil)
 const (
 	// DefaultHost is the default Host
 	// found in Meta (info) section of spec file
-	DefaultHost string = "webmethods-apigw.cedar.cms.gov"
+	DefaultHost string = "webmethods-apigw.cedardev.cms.gov"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
 	DefaultBasePath string = "/gateway/CEDAR Core API/2.0.0"
@@ -76,6 +77,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *CEDARCoreA
 	cli.Transport = transport
 	cli.AuthorityToOperate = authority_to_operate.New(transport, formats)
 	cli.Budget = budget.New(transport, formats)
+	cli.BudgetSystemCost = budget_system_cost.New(transport, formats)
 	cli.Component = component.New(transport, formats)
 	cli.Contract = contract.New(transport, formats)
 	cli.CostType = cost_type.New(transport, formats)
@@ -142,6 +144,8 @@ type CEDARCoreAPI struct {
 
 	Budget budget.ClientService
 
+	BudgetSystemCost budget_system_cost.ClientService
+
 	Component component.ClientService
 
 	Contract contract.ClientService
@@ -186,6 +190,7 @@ func (c *CEDARCoreAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 	c.AuthorityToOperate.SetTransport(transport)
 	c.Budget.SetTransport(transport)
+	c.BudgetSystemCost.SetTransport(transport)
 	c.Component.SetTransport(transport)
 	c.Contract.SetTransport(transport)
 	c.CostType.SetTransport(transport)
