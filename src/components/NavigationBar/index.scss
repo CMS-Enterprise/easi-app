@@ -27,11 +27,6 @@
 }
 
 .usa-nav__primary-item {
-    .usa-accordion__button {
-        padding-bottom: 0.8rem;
-        padding-top: 0.9rem;
-    }
-
     .easi-nav {
         display: flex;
 
@@ -89,14 +84,20 @@
     }
 }
 
-.usa-header--basic .usa-nav__primary-item > .usa-current::after, .usa-header--basic .usa-nav__link:hover::after {
-    bottom: 0rem !important;
+.usa-current:not(.system-dropdown)::after {
+    bottom: -.25rem !important;
 }
 
-.usa-header--basic .usa-nav__primary-item > .usa-current::after, .usa-header--basic .system-dropdown .usa-nav__link:hover::after {
-    height: 0.15rem !important;
+.usa-nav__submenu {
+    padding-top: .5rem !important;
+    padding-bottom: .5rem !important;
+
+    .usa-nav__submenu-item a {
+        padding-bottom: 0.25rem !important;
+    }
 }
 
-.system-dropdown:hover::after {
-    height: 0.15rem !important;
+.system-dropdown {
+    padding-top: 0.9rem !important;
+    padding-bottom: 1.1rem !important;
 }
