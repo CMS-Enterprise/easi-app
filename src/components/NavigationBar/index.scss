@@ -89,13 +89,15 @@
 }
 
 .usa-nav__submenu {
-    padding-top: .5rem !important;
-    padding-bottom: .5rem !important;
+    @media (min-width: $desktop) {
+        padding-top: .5rem !important;
+        padding-bottom: .5rem !important;
 
-    .usa-nav__submenu-item a {
-        padding-bottom: 0.25rem !important;
+        .usa-nav__submenu-item a {
+            padding-bottom: 0.25rem !important;
+        }
     }
-}
+}   
 
 .system-dropdown {
     padding-top: 0.9rem !important;
