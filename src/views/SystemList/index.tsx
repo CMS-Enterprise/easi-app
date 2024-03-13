@@ -37,7 +37,6 @@ import './index.scss';
 export const SystemList = () => {
   const { t } = useTranslation('systemProfile');
 
-  // TODO: query parameters and caching
   const {
     loading: loadingSystems,
     error: error1,
@@ -72,7 +71,7 @@ export const SystemList = () => {
         </SummaryBox>
       </SectionWrapper>
 
-      {loadingSystems ? (
+      {(loadingSystems || loadingBookmarks) && systemsTableData.length === 0 ? (
         <PageLoading />
       ) : (
         <>
@@ -127,8 +126,6 @@ export const SystemList = () => {
               icon: <IconBookmark className="text-bookmark-icon" />
             }}
           />
-
-          {/* TODO: standardize/format error messages from CEDAR - either on FE or BE */}
 
           {error1 || error2 ? (
             <ErrorAlert heading="System error">

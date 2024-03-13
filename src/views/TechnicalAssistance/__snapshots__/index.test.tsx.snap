@@ -883,6 +883,11 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
               name="tablePageSize"
             >
               <option
+                value="5"
+              >
+                Show 5
+              </option>
+              <option
                 value="10"
               >
                 Show 10
