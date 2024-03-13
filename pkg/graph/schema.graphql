@@ -890,7 +890,6 @@ type SystemIntakeContract {
   hasContract: String
   startDate: ContractDate!
   vehicle: String
-  number: String
 }
 
 """
@@ -1271,7 +1270,7 @@ input SystemIntakeContractInput {
   endDate: Time
   hasContract: String
   startDate: Time
-  number: String
+  numbers: [String!]!
 }
 
 """
@@ -1311,14 +1310,6 @@ input SetSystemIntakeRelationExistingServiceInput {
   systemIntakeID: UUID!
   contractName: String!
   contractNumbers: [String!]!
-}
-
-"""
-Input data for updating a system intake's relationship to a contract
-"""
-input UpdateSystemIntakeLinkedContractInput {
-  id: UUID!
-  contractNumber: String
 }
 
 """
@@ -2661,7 +2652,6 @@ type Mutation {
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
-  updateSystemIntakeLinkedContract(input: UpdateSystemIntakeLinkedContractInput!): UpdateSystemIntakePayload
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
@@ -2764,7 +2754,6 @@ type Query {
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
-  relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]! @hasRole(role: EASI_TRB_ADMIN)
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
