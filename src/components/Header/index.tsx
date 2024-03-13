@@ -9,11 +9,7 @@ import useCheckResponsiveScreen from 'hooks/checkMobile';
 
 import './index.scss';
 
-type HeaderProps = {
-  children?: React.ReactNode | React.ReactNodeArray;
-};
-
-export const Header = ({ children }: HeaderProps) => {
+export const Header = () => {
   const { authState, oktaAuth } = useOktaAuth();
   const { t } = useTranslation();
   const [userName, setUserName] = useState('');
