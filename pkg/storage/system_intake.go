@@ -387,6 +387,8 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 
 	intake.FundingSources = sources
 
+	fmt.Printf("INTAKE STORE? %#+v\n", intake)
+
 	return &intake, nil
 }
 
