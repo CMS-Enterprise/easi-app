@@ -630,7 +630,6 @@ type SystemIntakeContract struct {
 	HasContract *string       `json:"hasContract,omitempty"`
 	StartDate   *ContractDate `json:"startDate"`
 	Vehicle     *string       `json:"vehicle,omitempty"`
-	Number      *string       `json:"number,omitempty"`
 }
 
 // Input data containing information about a contract related to a system request
@@ -639,7 +638,7 @@ type SystemIntakeContractInput struct {
 	EndDate     *time.Time `json:"endDate,omitempty"`
 	HasContract *string    `json:"hasContract,omitempty"`
 	StartDate   *time.Time `json:"startDate,omitempty"`
-	Number      *string    `json:"number,omitempty"`
+	Numbers     []string   `json:"numbers"`
 }
 
 // Represents expectations about a system's additional costs
@@ -966,12 +965,6 @@ type UpdateSystemIntakeContractDetailsInput struct {
 type UpdateSystemIntakeLinkedCedarSystemInput struct {
 	ID            uuid.UUID `json:"id"`
 	CedarSystemID *string   `json:"cedarSystemId,omitempty"`
-}
-
-// Input data for updating a system intake's relationship to a contract
-type UpdateSystemIntakeLinkedContractInput struct {
-	ID             uuid.UUID `json:"id"`
-	ContractNumber *string   `json:"contractNumber,omitempty"`
 }
 
 // Input data for updating an IT governance admin note

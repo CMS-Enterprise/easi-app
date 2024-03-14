@@ -1,7 +1,9 @@
 package translation
 
 import (
+	"context"
 	"encoding/json"
+	"strings"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
@@ -24,7 +26,7 @@ func (si *TranslatableSystemIntake) ObjectType() string {
 }
 
 // CreateIntakeModel translates a SystemIntake into an IntakeInput
-func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, error) {
+func (si *TranslatableSystemIntake) CreateIntakeModel(ctx context.Context) (*wire.IntakeInput, error) {
 	fundingSources := make([]*intakemodels.EASIFundingSource, 0, len(si.FundingSources))
 	for _, fundingSource := range si.FundingSources {
 		fundingSources = append(fundingSources, &intakemodels.EASIFundingSource{
@@ -37,6 +39,16 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 	clientStatus, err := resolvers.CalculateSystemIntakeAdminStatus(helpers.PointerTo(models.SystemIntake(*si)))
 	if err != nil {
 		return nil, err
+	}
+
+	contracts, err := resolvers.SystemIntakeContractNumbers(ctx, si.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	numbers := make([]string, len(contracts))
+	for i := range contracts {
+		numbers[i] = contracts[i].ContractNumber
 	}
 
 	obj := &intakemodels.EASIIntake{
@@ -67,7 +79,7 @@ func (si *TranslatableSystemIntake) CreateIntakeModel() (*wire.IntakeInput, erro
 		CostIncreaseAmount:          si.CostIncreaseAmount.Ptr(),
 		Contractor:                  si.Contractor.Ptr(),
 		ContractVehicle:             si.ContractVehicle.Ptr(),
-		ContractNumber:              si.ContractNumber.Ptr(),
+		ContractNumber:              helpers.PointerTo(strings.Join(numbers, ", ")),
 		RequesterEmailAddress:       si.RequesterEmailAddress.Ptr(),
 		LifecycleID:                 si.LifecycleID.Ptr(),
 		LifecycleScope:              si.LifecycleScope.StringPointer(),
