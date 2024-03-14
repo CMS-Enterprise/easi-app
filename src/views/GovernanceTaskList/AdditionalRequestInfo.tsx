@@ -10,6 +10,7 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
 import { RequestRelationType } from 'types/graphql-global-types';
+import { RequestType } from 'types/requestType';
 
 type SystemCardItemProps = {
   id: string;
@@ -87,7 +88,7 @@ function AdditionalRequestInfo({
   relationType: string | null;
   contractName: string | null;
   contractNumbers: any[];
-  requestType: 'itgov' | 'trb';
+  requestType: RequestType;
 }) {
   const { t } = useTranslation('itGov');
 

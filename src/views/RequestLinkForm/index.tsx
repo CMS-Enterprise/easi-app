@@ -84,19 +84,17 @@ import {
 } from 'queries/types/UnlinkTrbRequestRelation';
 import { AppState } from 'reducers/rootReducer';
 import { RequestRelationType } from 'types/graphql-global-types';
-
-// requestType: trb | itgov
+import { RequestType } from 'types/requestType';
 
 // getRelation
 // setNewSystem
 // setExistingSystem
 // setExistingService
 // unlink
-// requestType trb itgov
 // isNew
 // isAdmin
 // util user.isTrbAdmin .isGrtReviewer (GovernanceReviewTeam)
-const RequestLinkForm = ({ requestType }: { requestType: 'itgov' | 'trb' }) => {
+const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
   // console.log(groups, isUserSet);
 
