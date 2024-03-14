@@ -41,6 +41,7 @@ func (s *Store) GetSystemIntakeDocumentsByRequestID(ctx context.Context, systemI
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	arg := map[string]interface{}{
 		"system_intake_id": systemIntakeRequestID,
@@ -113,6 +114,7 @@ func (s *Store) CreateSystemIntakeDocument(ctx context.Context, document *models
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	retDoc := models.SystemIntakeDocument{}
 	err = stmt.Get(&retDoc, document)
@@ -161,6 +163,7 @@ func (s *Store) DeleteSystemIntakeDocument(ctx context.Context, id uuid.UUID) (*
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	arg := map[string]interface{}{
 		"id": id,

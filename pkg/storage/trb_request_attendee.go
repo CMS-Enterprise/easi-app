@@ -62,7 +62,6 @@ func (s *Store) CreateTRBRequestAttendee(ctx context.Context, np sqlutils.NamedP
 
 // UpdateTRBRequestAttendee updates a TRB request attendee record in the database
 func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.TRBRequestAttendee) (*models.TRBRequestAttendee, error) {
-	// return attendee, nil
 	stmt, err := s.db.PrepareNamed(`
 		UPDATE trb_request_attendees
 		SET role = :role,
@@ -78,6 +77,8 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	updated := models.TRBRequestAttendee{}
 
 	err = stmt.Get(&updated, attendee)
@@ -127,6 +128,8 @@ func (s *Store) DeleteTRBRequestAttendee(ctx context.Context, id uuid.UUID) (*mo
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	toDelete := models.TRBRequestAttendee{}
 	toDelete.ID = id
 	deleted := models.TRBRequestAttendee{}
@@ -154,9 +157,7 @@ func (s *Store) GetAttendeeComponentByEUA(ctx context.Context, euaID string, trb
 		SELECT *
 		FROM trb_request_attendees
 		WHERE eua_user_id = :eua_user_id
-		AND trb_request_id = :trb_request_id;
-	`)
-
+		AND trb_request_id = :trb_request_id;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB attendee",
@@ -165,6 +166,8 @@ func (s *Store) GetAttendeeComponentByEUA(ctx context.Context, euaID string, trb
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	arg := map[string]interface{}{
 		"eua_user_id":    euaID,
 		"trb_request_id": trbRequestID,

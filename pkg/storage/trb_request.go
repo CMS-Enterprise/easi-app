@@ -67,6 +67,8 @@ func (s *Store) GetTRBRequestByIDNP(ctx context.Context, np sqlutils.NamedPrepar
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	arg := map[string]interface{}{"id": id}
 	err = stmt.Get(&trb, arg)
 
@@ -102,6 +104,8 @@ func (s *Store) UpdateTRBRequestNP(ctx context.Context, np sqlutils.NamedPrepare
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	retTRB := models.TRBRequest{}
 
 	err = stmt.Get(&retTRB, trb)
@@ -132,6 +136,8 @@ func (s *Store) GetTRBRequests(ctx context.Context, archived bool) ([]*models.TR
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	arg := map[string]interface{}{
 		"archived": archived,
 	}
@@ -162,6 +168,8 @@ func (s *Store) GetMyTRBRequests(ctx context.Context, archived bool) ([]*models.
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	arg := map[string]interface{}{
 		"archived":   archived,
 		"created_by": appcontext.Principal(ctx).ID(),

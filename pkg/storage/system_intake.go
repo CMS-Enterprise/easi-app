@@ -368,6 +368,8 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 	if err != nil {
 		return nil, err
 	}
+	defer fundingSourcesStmt.Close()
+
 	sources := []*models.SystemIntakeFundingSource{}
 	err = fundingSourcesStmt.Select(&sources, map[string]interface{}{
 		"id": id.String(),

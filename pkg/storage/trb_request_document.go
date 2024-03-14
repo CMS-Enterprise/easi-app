@@ -44,6 +44,7 @@ func (s *Store) GetTRBRequestDocumentsByRequestID(ctx context.Context, trbReques
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	arg := map[string]interface{}{
 		"trb_request_id": trbRequestID,
@@ -119,6 +120,7 @@ func (s *Store) CreateTRBRequestDocument(ctx context.Context, document *models.T
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	retDoc := models.TRBRequestDocument{}
 	err = stmt.Get(&retDoc, document)
@@ -167,6 +169,7 @@ func (s *Store) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*mo
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	arg := map[string]interface{}{
 		"id": id,

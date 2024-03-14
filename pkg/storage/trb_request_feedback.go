@@ -7,24 +7,24 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
 // CreateTRBRequestFeedback creates a new TRB request feedback record in the database
 func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.TRBRequestFeedback, formToUpdate *models.TRBRequestForm) (*models.TRBRequestFeedback, error) {
-	tx := s.db.MustBegin()
-	defer tx.Rollback()
+	return sqlutils.WithTransaction[models.TRBRequestFeedback](s.db, func(tx *sqlx.Tx) (*models.TRBRequestFeedback, error) {
+		if feedback.ID == uuid.Nil {
+			feedback.ID = uuid.New()
+		}
 
-	if feedback.ID == uuid.Nil {
-		feedback.ID = uuid.New()
-	}
-
-	stmt, err := tx.PrepareNamed(`
+		stmt, err := tx.PrepareNamed(`
 		INSERT INTO trb_request_feedback (
 			id,
 			trb_request_id,
@@ -45,67 +45,60 @@ func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.T
 			:created_by,
 			:modified_by
 		)
-		RETURNING *;
-	`)
+		RETURNING *;`)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to create TRB feedback with error %s", err),
+				zap.String("user", feedback.CreatedBy),
+			)
+			return nil, err
+		}
+		defer stmt.Close()
 
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to create TRB feedback with error %s", err),
-			zap.String("user", feedback.CreatedBy),
-		)
-		return nil, err
-	}
+		createdFeedback := models.TRBRequestFeedback{}
+		err = stmt.Get(&createdFeedback, feedback)
 
-	createdFeedback := models.TRBRequestFeedback{}
-	err = stmt.Get(&createdFeedback, feedback)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				fmt.Sprintf("Failed to create TRB feedback with error %s", err),
+				zap.String("user", feedback.CreatedBy),
+			)
+			return nil, err
+		}
 
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to create TRB feedback with error %s", err),
-			zap.String("user", feedback.CreatedBy),
-		)
-		return nil, err
-	}
-
-	// If the feedback requests edits, update the form status to "in progress"
-	if formToUpdate != nil {
-		formStmt, formErr := tx.PrepareNamed(`
+		// If the feedback requests edits, update the form status to "in progress"
+		if formToUpdate != nil {
+			formStmt, formErr := tx.PrepareNamed(`
 			UPDATE trb_request_forms
 			SET
 				status = :status,
 				modified_by = :modified_by,
 				modified_at = CURRENT_TIMESTAMP
 			WHERE trb_request_id = :trb_request_id
-			RETURNING *;
-		`)
+			RETURNING *;`)
+			if formErr != nil {
+				appcontext.ZLogger(ctx).Error(
+					fmt.Sprintf("Failed to update TRB request form when creating TRB request feedback, with error %s", err),
+					zap.String("user", formToUpdate.CreatedBy),
+				)
+				return nil, formErr
+			}
+			defer formStmt.Close()
 
-		if formErr != nil {
-			appcontext.ZLogger(ctx).Error(
-				fmt.Sprintf("Failed to update TRB request form when creating TRB request feedback, with error %s", err),
-				zap.String("user", formToUpdate.CreatedBy),
-			)
-			return nil, formErr
+			updatedForm := models.TRBRequestForm{}
+			formErr = formStmt.Get(&updatedForm, formToUpdate)
+
+			if formErr != nil {
+				appcontext.ZLogger(ctx).Error(
+					fmt.Sprintf("Failed to update TRB request form when creating TRB request feedback, with error %s", err),
+					zap.String("user", formToUpdate.CreatedBy),
+				)
+				return nil, formErr
+			}
 		}
 
-		updatedForm := models.TRBRequestForm{}
-		formErr = formStmt.Get(&updatedForm, formToUpdate)
-
-		if formErr != nil {
-			appcontext.ZLogger(ctx).Error(
-				fmt.Sprintf("Failed to update TRB request form when creating TRB request feedback, with error %s", err),
-				zap.String("user", formToUpdate.CreatedBy),
-			)
-			return nil, formErr
-		}
-	}
-	err = tx.Commit()
-
-	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to create TRB request with error %s", zap.Error(err))
-		return nil, err
-	}
-
-	return &createdFeedback, nil
+		return &createdFeedback, nil
+	})
 }
 
 // GetTRBRequestFeedbackByTRBRequestID queries the DB for all the TRB request feedback records
@@ -134,9 +127,7 @@ func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestID(ctx context.Context, t
 		SELECT *
 		FROM trb_request_feedback
 		WHERE trb_request_id = :trb_request_id
-		ORDER BY created_at DESC LIMIT 1
-	`)
-
+		ORDER BY created_at DESC LIMIT 1`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch latest TRB request feedback",
@@ -145,6 +136,8 @@ func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestID(ctx context.Context, t
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	arg := map[string]interface{}{"trb_request_id": trbRequestID}
 	err = stmt.Get(&feedback, arg)
 
