@@ -160,6 +160,8 @@ func UnlinkTRBRequestRelation(
 		}
 
 		// Delete contract number relationships
+		// declare this as an explicit empty slice instead of `nil`
+		// TODO: (Sam) update `SetTRBRequestContractNumbers` to allow for `nil`
 		if err := store.SetTRBRequestContractNumbers(ctx, tx, trbRequestID, []string{}); err != nil {
 			return nil, err
 		}

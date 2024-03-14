@@ -47,7 +47,11 @@ export const UpdateSystemIntakeContractDetails = gql`
             month
             year
           }
-          number
+        }
+        contractNumbers {
+          id
+          systemIntakeID
+          contractNumber
         }
       }
     }

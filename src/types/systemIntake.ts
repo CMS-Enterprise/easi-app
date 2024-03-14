@@ -150,7 +150,6 @@ export type ContractDetailsForm = {
   contract: {
     hasContract: string;
     contractor: string;
-    number: string;
     startDate: {
       month: string;
       day: string;
@@ -161,6 +160,7 @@ export type ContractDetailsForm = {
       day: string;
       year: string;
     };
+    numbers: string;
   };
 };
 

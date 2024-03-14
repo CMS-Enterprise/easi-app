@@ -126,7 +126,7 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestQuery() {
 					authorName
 				}
 			}
-		}`, accessibilityRequest.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("TEST"))
+		}`, accessibilityRequest.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	s.Equal(accessibilityRequest.ID.String(), resp.AccessibilityRequest.ID)
 	s.Equal(intake.ID.String(), resp.AccessibilityRequest.System.ID)
@@ -209,7 +209,7 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
 					status
 				}
 			}
-		}`, accessibilityRequest.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("ABCD"))
+		}`, accessibilityRequest.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest("ABCD"))
 
 	responseDocument := resp.AccessibilityRequest.Documents[0]
 	s.Equal("AVAILABLE", responseDocument.Status)
@@ -224,7 +224,7 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
 					status
 				}
 			}
-		}`, accessibilityRequest.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, accessibilityRequest.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	responseDocument = resp.AccessibilityRequest.Documents[0]
 	s.Equal("UNAVAILABLE", responseDocument.Status)
@@ -324,7 +324,7 @@ func (s *GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 					path
 				}
 			}
-		}`, accessibilityRequest.ID.String()), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, accessibilityRequest.ID.String()), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	document := resp.CreateAccessibilityRequestDocument.AccessibilityRequestDocument
 
@@ -383,7 +383,7 @@ func (s *GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
 						path
 					}
 			}
-		}`, accessibilityRequest.ID.String()), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest("ABCD"))
+		}`, accessibilityRequest.ID.String()), &resp, addAuthWithAllJobCodesToGraphQLClientTest("ABCD"))
 
 	s.Equal(accessibilityRequest.ID.String(), resp.DeleteAccessibilityRequest.ID)
 	s.Nil(resp.DeleteAccessibilityRequest.UserErrors)
