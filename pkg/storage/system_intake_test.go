@@ -19,8 +19,6 @@ import (
 const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, request_type, requester, archived_at) VALUES (:id, :eua_user_id, :request_type, :requester, :archived_at)"
 const insertRelatedBizCaseSQL = `INSERT INTO business_cases (id, eua_user_id, requester, system_intake)
 	VALUES(:id, :eua_user_id, :requester, :system_intake)`
-const insertIntakeWithCedarSystemAndContractSQL = `INSERT INTO system_intakes (id, eua_user_id, request_type, requester, cedar_system_id, contract_number)
-	VALUES (:id, :eua_user_id, :request_type, :requester, :cedar_system_id, :contract_number)`
 
 func (s *StoreTestSuite) TestCreateSystemIntake() {
 	ctx := context.Background()
@@ -780,42 +778,6 @@ func (s *StoreTestSuite) TestUpdateReviewDates() {
 	})
 }
 
-func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedContract() {
-	ctx := context.Background()
-
-	s.Run("update linked contract number", func() {
-		intake := testhelpers.NewSystemIntake()
-
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		err = tx.Commit()
-		s.NoError(err)
-
-		contractNumber := null.StringFrom("555-55-5")
-		updatedIntake, err := s.store.UpdateSystemIntakeLinkedContract(ctx, intake.ID, contractNumber)
-
-		s.NoError(err)
-		s.Equal(updatedIntake.ContractNumber, contractNumber)
-	})
-
-	s.Run("update linked contract number to null", func() {
-		intake := testhelpers.NewSystemIntake()
-
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		err = tx.Commit()
-		s.NoError(err)
-
-		var contractNumber *string
-		updatedIntake, err := s.store.UpdateSystemIntakeLinkedContract(ctx, intake.ID, null.StringFromPtr(contractNumber))
-
-		s.NoError(err)
-		s.False(updatedIntake.ContractNumber.Valid)
-	})
-}
-
 func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
 	ctx := context.Background()
 
@@ -849,48 +811,5 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
 
 		s.NoError(err)
 		s.False(updatedIntake.CedarSystemID.Valid)
-	})
-}
-
-func (s *StoreTestSuite) TestFetchRelatedSystemIntakes() {
-	ctx := context.Background()
-
-	s.Run("fetch related system intakes", func() {
-		cedarSystemID := null.StringFrom("555-55-6")
-		contractNumber := null.StringFrom("444-55-5")
-
-		intake := testhelpers.NewSystemIntake()
-		relatedIntake1 := testhelpers.NewSystemIntake()
-		relatedIntake2 := testhelpers.NewSystemIntake()
-		relatedIntake3 := testhelpers.NewSystemIntake()
-
-		intake.CedarSystemID = cedarSystemID
-		intake.ContractNumber = contractNumber
-
-		relatedIntake1.CedarSystemID = cedarSystemID
-		relatedIntake2.CedarSystemID = cedarSystemID
-		relatedIntake3.ContractNumber = contractNumber
-
-		tx := s.db.MustBegin()
-		intakesToCreate := []models.SystemIntake{intake, relatedIntake1, relatedIntake2, relatedIntake3}
-		for i := range intakesToCreate {
-			_, err := tx.NamedExec(insertIntakeWithCedarSystemAndContractSQL, &intakesToCreate[i])
-			s.NoError(err)
-		}
-
-		err := tx.Commit()
-		s.NoError(err)
-
-		relatedIntakes, err := s.store.FetchRelatedSystemIntakes(ctx, intake.ID)
-		s.NoError(err)
-
-		ids := make(map[uuid.UUID]bool)
-		for _, ri := range relatedIntakes {
-			ids[ri.ID] = true
-		}
-		s.True(ids[relatedIntake1.ID])
-		s.True(ids[relatedIntake2.ID])
-		s.True(ids[relatedIntake3.ID])
-		s.Equal(len(relatedIntakes), 3)
 	})
 }

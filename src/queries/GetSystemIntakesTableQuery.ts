@@ -51,7 +51,6 @@ export default gql`
       contract {
         hasContract
         contractor
-        number
         vehicle
         startDate {
           day
@@ -67,7 +66,6 @@ export default gql`
       contractNumbers {
         contractNumber
       }
-
       businessNeed
       businessSolution
       currentStage

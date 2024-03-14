@@ -57,7 +57,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -141,7 +141,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuer
 					}
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -236,7 +236,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuer
 					}
 				}
 			}
-		}`, intake.ID), &resp, testhelpers.AddAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 

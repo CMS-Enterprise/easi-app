@@ -36,7 +36,12 @@ export interface GetSystemIntake_systemIntake_contract {
   hasContract: string | null;
   startDate: GetSystemIntake_systemIntake_contract_startDate;
   vehicle: string | null;
-  number: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_contractNumbers {
+  __typename: "SystemIntakeContractNumber";
+  id: UUID;
+  contractNumber: string;
 }
 
 export interface GetSystemIntake_systemIntake_costs {
@@ -124,12 +129,6 @@ export interface GetSystemIntake_systemIntake_documents {
   url: string;
 }
 
-export interface GetSystemIntake_systemIntake_contractNumbers {
-  __typename: "SystemIntakeContractNumber";
-  id: UUID;
-  contractNumber: string;
-}
-
 export interface GetSystemIntake_systemIntake_systems_businessOwnerRoles {
   __typename: "CedarRole";
   objectID: string;
@@ -155,6 +154,10 @@ export interface GetSystemIntake_systemIntake {
   businessSolution: string | null;
   businessOwner: GetSystemIntake_systemIntake_businessOwner;
   contract: GetSystemIntake_systemIntake_contract;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: GetSystemIntake_systemIntake_contractNumbers[];
   costs: GetSystemIntake_systemIntake_costs | null;
   annualSpending: GetSystemIntake_systemIntake_annualSpending | null;
   currentStage: string | null;
@@ -199,10 +202,6 @@ export interface GetSystemIntake_systemIntake {
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp | null;
   requestFormState: SystemIntakeFormState;
   contractName: string | null;
-  /**
-   * Linked contract numbers
-   */
-  contractNumbers: GetSystemIntake_systemIntake_contractNumbers[];
   /**
    * Linked systems
    */

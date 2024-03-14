@@ -1108,19 +1108,6 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 	}, nil
 }
 
-// UpdateSystemIntakeLinkedContract is the resolver for the updateSystemIntakeLinkedContract field.
-func (r *mutationResolver) UpdateSystemIntakeLinkedContract(ctx context.Context, input model.UpdateSystemIntakeLinkedContractInput) (*model.UpdateSystemIntakePayload, error) {
-	intake, err := r.store.UpdateSystemIntakeLinkedContract(ctx, input.ID, null.StringFromPtr(input.ContractNumber))
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.UpdateSystemIntakePayload{
-		SystemIntake: intake,
-	}, nil
-}
-
 // SendFeedbackEmail is the resolver for the sendFeedbackEmail field.
 func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.SendFeedbackEmailInput) (*string, error) {
 	var reporterName, reporterEmail string
@@ -1956,16 +1943,6 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 	}, nil
 }
 
-// RelatedSystemIntakes is the resolver for the relatedSystemIntakes field.
-func (r *queryResolver) RelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]*models.SystemIntake, error) {
-	intakes, err := r.store.FetchRelatedSystemIntakes(ctx, id)
-
-	if err != nil {
-		return nil, err
-	}
-	return intakes, nil
-}
-
 // TrbRequest is the resolver for the trbRequest field.
 func (r *queryResolver) TrbRequest(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
 	return resolvers.GetTRBRequestByID(ctx, id, r.store)
@@ -2106,7 +2083,6 @@ func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemI
 		HasContract: obj.ExistingContract.Ptr(),
 		StartDate:   &contractStart,
 		Vehicle:     obj.ContractVehicle.Ptr(),
-		Number:      obj.ContractNumber.Ptr(),
 	}, nil
 }
 
