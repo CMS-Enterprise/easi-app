@@ -803,6 +803,7 @@ func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, ob
 			SystemSoftwareConnectionGUID:   softwareProduct.SystemSoftwareConnectionGUID.Ptr(),
 			TechnopediaCategory:            softwareProduct.TechnopediaCategory.Ptr(),
 			TechnopediaID:                  softwareProduct.TechnopediaID.Ptr(),
+			VendorName:                     softwareProduct.VendorName.Ptr(),
 		}
 		softwareProductItems = append(softwareProductItems, softwareProductItem)
 	}
