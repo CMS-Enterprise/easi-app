@@ -194,7 +194,7 @@ export interface GetSystemIntake_systemIntake {
   updatedAt: Time | null;
   createdAt: Time | null;
   archivedAt: Time | null;
-  euaUserId: string;
+  euaUserId: string | null;
   hasUiChanges: boolean | null;
   documents: GetSystemIntake_systemIntake_documents[];
   state: SystemIntakeState;

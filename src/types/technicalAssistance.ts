@@ -15,14 +15,14 @@ export type { GetTrbRequestFeedback_trbRequest_feedback as TrbRequestFeedback } 
 
 /** TRB attendee fields allows null role in form */
 export type TRBAttendeeFields = {
-  euaUserId: string;
+  euaUserId: string | null;
   component: string | null;
   role: PersonRole | null;
 };
 
 /** Field labels */
 export type AttendeeFieldLabels = {
-  euaUserId: string;
+  euaUserId: string | null;
   component: string;
   role: string;
   submit?: string;
@@ -31,7 +31,7 @@ export type AttendeeFieldLabels = {
 /** TRB Attendee user info */
 export type TRBAttendeeUserInfo = {
   commonName: string;
-  euaUserId: string;
+  euaUserId: string | null;
   email?: string;
 } | null;
 

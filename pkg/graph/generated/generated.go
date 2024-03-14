@@ -8770,7 +8770,7 @@ type SystemIntake {
   decisionNextSteps: HTML
   eaCollaborator: String
   eaCollaboratorName: String
-  euaUserId: String!
+  euaUserId: String
   existingFunding: Boolean
   fundingSources: [SystemIntakeFundingSource!]!
   governanceRequestFeedbacks: [GovernanceRequestFeedback!]!
@@ -38752,14 +38752,11 @@ func (ec *executionContext) _SystemIntake_euaUserId(ctx context.Context, field g
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(null.String)
 	fc.Result = res
-	return ec.marshalNString2githubᚗcomᚋgureguᚋnullᚐString(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntake_euaUserId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -64447,9 +64444,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._SystemIntake_eaCollaboratorName(ctx, field, obj)
 		case "euaUserId":
 			out.Values[i] = ec._SystemIntake_euaUserId(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		case "existingFunding":
 			out.Values[i] = ec._SystemIntake_existingFunding(ctx, field, obj)
 		case "fundingSources":
@@ -71035,21 +71029,6 @@ func (ec *executionContext) unmarshalNSetTRBRequestRelationExistingSystemInput2g
 func (ec *executionContext) unmarshalNSetTRBRequestRelationNewSystemInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSetTRBRequestRelationNewSystemInput(ctx context.Context, v interface{}) (model.SetTRBRequestRelationNewSystemInput, error) {
 	res, err := ec.unmarshalInputSetTRBRequestRelationNewSystemInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNString2githubᚗcomᚋgureguᚋnullᚐString(ctx context.Context, v interface{}) (null.String, error) {
-	res, err := models.UnmarshalNullString(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNString2githubᚗcomᚋgureguᚋnullᚐString(ctx context.Context, sel ast.SelectionSet, v null.String) graphql.Marshaler {
-	res := models.MarshalNullString(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {

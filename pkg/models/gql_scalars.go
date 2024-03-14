@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -10,9 +9,7 @@ import (
 )
 
 func MarshalZeroString(zs zero.String) graphql.Marshaler {
-	fmt.Println("MarshalZeroString", zs)
 	if !zs.Valid {
-		fmt.Println("Not valid!")
 		return graphql.Null
 	}
 	return graphql.MarshalString(zs.String)

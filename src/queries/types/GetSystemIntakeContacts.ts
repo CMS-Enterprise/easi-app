@@ -10,7 +10,7 @@
 export interface GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts {
   __typename: "AugmentedSystemIntakeContact";
   id: UUID;
-  euaUserId: string;
+  euaUserId: string | null;
   systemIntakeId: UUID;
   component: string;
   role: string;

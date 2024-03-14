@@ -84,7 +84,7 @@ export interface GetSystemIntakesTable_systemIntakes_actions {
 export interface GetSystemIntakesTable_systemIntakes {
   __typename: "SystemIntake";
   id: UUID;
-  euaUserId: string;
+  euaUserId: string | null;
   requestName: string | null;
   statusAdmin: SystemIntakeStatusAdmin;
   state: SystemIntakeState;

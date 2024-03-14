@@ -170,7 +170,7 @@ function useSystemIntakeContacts(
       createSystemIntakeContact({
         variables: {
           input: {
-            euaUserId: euaUserId.toUpperCase(),
+            euaUserId: euaUserId?.toUpperCase() || '',
             component,
             role,
             systemIntakeId
@@ -214,7 +214,7 @@ function useSystemIntakeContacts(
         variables: {
           input: {
             id,
-            euaUserId: euaUserId.toUpperCase(),
+            euaUserId: euaUserId?.toUpperCase() || '',
             component,
             role,
             systemIntakeId
