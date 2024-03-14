@@ -52,7 +52,7 @@ function TechnicalAssistance() {
 
         {flags.trbLinkRequestsRequester && (
           <Route exact path={`${path}/link/:id?`}>
-            <RequestLinkForm />
+            <RequestLinkForm requestType="trb" />
           </Route>
         )}
 

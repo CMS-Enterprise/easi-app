@@ -406,7 +406,11 @@ function TaskList() {
               </div>
 
               {flags.trbLinkRequestsRequester && (
-                <AdditionalRequestInfo {...data.trbRequest} id={id} />
+                <AdditionalRequestInfo
+                  {...data.trbRequest}
+                  id={id}
+                  requestType="trb"
+                />
               )}
 
               <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">

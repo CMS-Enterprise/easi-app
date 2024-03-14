@@ -89,3 +89,40 @@ export const GetTrbRequestRelationQuery = gql`
     }
   }
 `;
+export const SetTrbRequestRelationNewSystemQuery = gql`
+  mutation SetTrbRequestRelationNewSystem(
+    $input: SetTRBRequestRelationNewSystemInput!
+  ) {
+    setTRBRequestRelationNewSystem(input: $input) {
+      id
+    }
+  }
+`;
+
+export const SetTrbRequestRelationExistingSystemQuery = gql`
+  mutation SetTrbRequestRelationExistingSystem(
+    $input: SetTRBRequestRelationExistingSystemInput!
+  ) {
+    setTRBRequestRelationExistingSystem(input: $input) {
+      id
+    }
+  }
+`;
+
+export const SetTrbRequestRelationExistingServiceQuery = gql`
+  mutation SetTrbRequestRelationExistingService(
+    $input: SetTRBRequestRelationExistingServiceInput!
+  ) {
+    setTRBRequestRelationExistingService(input: $input) {
+      id
+    }
+  }
+`;
+
+export const UnlinkTrbRequestRelationQuery = gql`
+  mutation UnlinkTrbRequestRelation($trbRequestID: UUID!) {
+    unlinkTRBRequestRelation(trbRequestID: $trbRequestID) {
+      id
+    }
+  }
+`;

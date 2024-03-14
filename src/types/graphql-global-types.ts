@@ -850,6 +850,23 @@ export interface SetSystemIntakeRelationNewSystemInput {
   contractNumbers: string[];
 }
 
+export interface SetTRBRequestRelationExistingServiceInput {
+  trbRequestID: UUID;
+  contractName: string;
+  contractNumbers: string[];
+}
+
+export interface SetTRBRequestRelationExistingSystemInput {
+  trbRequestID: UUID;
+  cedarSystemIDs: string[];
+  contractNumbers: string[];
+}
+
+export interface SetTRBRequestRelationNewSystemInput {
+  trbRequestID: UUID;
+  contractNumbers: string[];
+}
+
 /**
  * Input to submit an intake for review
  */

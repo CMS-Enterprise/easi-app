@@ -87,8 +87,14 @@ function AdditionalRequestInfo({
   relationType: string | null;
   contractName: string | null;
   contractNumbers: any[];
+  requestType: 'itgov' | 'trb';
 }) {
   const { t } = useTranslation('itGov');
+
+  const editLink =
+    system.requestType === 'trb'
+      ? `/trb/link/${system.id}`
+      : `/system/link/${system.id}`;
 
   return (
     <div>
@@ -102,7 +108,7 @@ function AdditionalRequestInfo({
           heading={t('additionalRequestInfo.actionRequiredAlert.header')}
         >
           {t('additionalRequestInfo.actionRequiredAlert.text')}
-          <UswdsReactLink to={`/system/link/${system.id}`}>
+          <UswdsReactLink to={editLink}>
             {t('additionalRequestInfo.actionRequiredAlert.answer')}
           </UswdsReactLink>
         </Alert>
@@ -117,7 +123,7 @@ function AdditionalRequestInfo({
           {system.relationType === RequestRelationType.NEW_SYSTEM &&
             t('additionalRequestInfo.newSystem')}
           <br />
-          <UswdsReactLink to={`/system/link/${system.id}`}>
+          <UswdsReactLink to={editLink}>
             {t('additionalRequestInfo.edit')}
           </UswdsReactLink>
         </p>

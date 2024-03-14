@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import {
@@ -35,7 +36,11 @@ import {
   SetSystemIntakeRelationExistingServiceQuery,
   SetSystemIntakeRelationExistingSystemQuery,
   SetSystemIntakeRelationNewSystemQuery,
-  UnlinkSystemIntakeRelationQuery
+  SetTrbRequestRelationExistingServiceQuery,
+  SetTrbRequestRelationExistingSystemQuery,
+  SetTrbRequestRelationNewSystemQuery,
+  UnlinkSystemIntakeRelationQuery,
+  UnlinkTrbRequestRelationQuery
 } from 'queries/SystemIntakeRelationQueries';
 import {
   GetSystemIntakeRelation,
@@ -58,18 +63,45 @@ import {
   SetSystemIntakeRelationNewSystemVariables
 } from 'queries/types/SetSystemIntakeRelationNewSystem';
 import {
+  SetTrbRequestRelationExistingService,
+  SetTrbRequestRelationExistingServiceVariables
+} from 'queries/types/SetTrbRequestRelationExistingService';
+import {
+  SetTrbRequestRelationExistingSystem,
+  SetTrbRequestRelationExistingSystemVariables
+} from 'queries/types/SetTrbRequestRelationExistingSystem';
+import {
+  SetTrbRequestRelationNewSystem,
+  SetTrbRequestRelationNewSystemVariables
+} from 'queries/types/SetTrbRequestRelationNewSystem';
+import {
   UnlinkSystemIntakeRelation,
   UnlinkSystemIntakeRelationVariables
 } from 'queries/types/UnlinkSystemIntakeRelation';
+import {
+  UnlinkTrbRequestRelation,
+  UnlinkTrbRequestRelationVariables
+} from 'queries/types/UnlinkTrbRequestRelation';
+import { AppState } from 'reducers/rootReducer';
 import { RequestRelationType } from 'types/graphql-global-types';
 
 // requestType: trb | itgov
 
-const RequestLinkForm = () => {
-  // const { systemId } = useParams<{
-  //   systemId: string;
-  // }>();
-  const { id: systemId } = useParams<{
+// getRelation
+// setNewSystem
+// setExistingSystem
+// setExistingService
+// unlink
+// requestType trb itgov
+// isNew
+// isAdmin
+// util user.isTrbAdmin .isGrtReviewer (GovernanceReviewTeam)
+const RequestLinkForm = ({ requestType }: { requestType: 'itgov' | 'trb' }) => {
+  const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
+  // console.log(groups, isUserSet);
+
+  // Id refers to trb request or system intake
+  const { id } = useParams<{
     id: string;
   }>();
   const history = useHistory();
@@ -86,15 +118,19 @@ const RequestLinkForm = () => {
   const params = new URLSearchParams(useLocation().search);
   const editType = params.get('edit-type');
 
-  const taskListUrl = `/governance-task-list/${systemId}`;
+  const taskListUrl =
+    requestType === 'trb'
+      ? `/trb/task-list/${id}`
+      : `/governance-task-list/${id}`;
+
   let breadCrumb = t('additionalRequestInfo.taskListBreadCrumb');
 
   let redirectUrl = taskListUrl;
   if (editType === 'it-gov-admin') {
-    redirectUrl = `/governance-review-team/${systemId}/additional-information`;
+    redirectUrl = `/governance-review-team/${id}/additional-information`;
     breadCrumb = t('additionalRequestInfo.itGovBreadcrumb');
   } else if (editType === 'trb-admin') {
-    redirectUrl = `/trb/${systemId}/additional-information`;
+    redirectUrl = `/trb/${id}/additional-information`;
     breadCrumb = t('additionalRequestInfo.trbBreadcrumb');
   }
 
@@ -103,18 +139,34 @@ const RequestLinkForm = () => {
   const [isSkipModalOpen, setSkipModalOpen] = useState<boolean>(false);
   const [isUnlinkModalOpen, setUnlinkModalOpen] = useState<boolean>(false);
 
+  // trb
+  // const { data: trbData, error: trbError, loading: trbLoading } = useQuery<
+  //   GetTrbRequestRelation,
+  //   GetTrbRequestRelationVariables
+  // >(GetTrbRequestRelationQuery, { variables: { id } });
+
+  // it gov set
+  // const { data: itgData, error: itgError, loading: itgLoading } = useQuery<
+  //   GetSystemIntakeRelation,
+  //   GetSystemIntakeRelationVariables
+  // >(GetSystemIntakeRelationQuery, { variables: { id } });
+
+  // const { data: itgData, error: itgError, loading: itgLoading } = useQuery<
+
   const { data, error, loading } = useQuery<
-    GetTrbRequestRelation,
-    GetTrbRequestRelationVariables
-  >(GetTrbRequestRelationQuery, { variables: { id: systemId } });
-  /*
-  const { data, error, loading } = useQuery<
-    GetSystemIntakeRelation,
-    GetSystemIntakeRelationVariables
-  >(GetSystemIntakeRelationQuery, { variables: { id: systemId } });
-  */
+    GetSystemIntakeRelation | GetTrbRequestRelation,
+    GetSystemIntakeRelationVariables | GetTrbRequestRelationVariables
+  >(
+    requestType === 'trb'
+      ? GetTrbRequestRelationQuery
+      : GetSystemIntakeRelationQuery,
+    {
+      variables: { id }
+    }
+  );
 
   const cedarSystemIdOptions = useMemo(() => {
+    // const cedarSystemsData = itgData?.cedarSystems;
     const cedarSystemsData = data?.cedarSystems;
     return !cedarSystemsData
       ? []
@@ -122,40 +174,111 @@ const RequestLinkForm = () => {
           label: system.name,
           value: system.id
         }));
+    // }, [itgData?.cedarSystems]);
   }, [data?.cedarSystems]);
 
-  const [
-    setSystemIntakeRelationNewSystem,
-    { error: newSystemError }
-  ] = useMutation<
-    SetSystemIntakeRelationNewSystem,
-    SetSystemIntakeRelationNewSystemVariables
-  >(SetSystemIntakeRelationNewSystemQuery);
-  // setTRBRequestRelationNewSystem
+  // const [
+  //   setSystemIntakeRelationNewSystem,
+  //   { error: systemIntakeNewSystemError }
+  // ] = useMutation<
+  //   SetSystemIntakeRelationNewSystem,
+  //   SetSystemIntakeRelationNewSystemVariables
+  // >(SetSystemIntakeRelationNewSystemQuery);
 
-  const [
-    setSystemIntakeRelationExistingSystem,
-    { error: existingSystemError }
-  ] = useMutation<
-    SetSystemIntakeRelationExistingSystem,
-    SetSystemIntakeRelationExistingSystemVariables
-  >(SetSystemIntakeRelationExistingSystemQuery);
-  // setTRBRequestRelationExistingSystem
+  // const [
+  //   setTrbRequestRelationNewSystem,
+  //   { error: trbRequestNewSystemError }
+  // ] = useMutation<
+  //   SetTrbRequestRelationNewSystem,
+  //   SetTrbRequestRelationNewSystemVariables
+  // >(SetTrbRequestRelationNewSystemQuery);
 
-  const [
-    setSystemIntakeRelationExistingService,
-    { error: existingServiceError }
-  ] = useMutation<
-    SetSystemIntakeRelationExistingService,
-    SetSystemIntakeRelationExistingServiceVariables
-  >(SetSystemIntakeRelationExistingServiceQuery);
-  // setTRBRequestRelationExistingService
+  const [setNewSystem, { error: newSystemError }] = useMutation<
+    SetSystemIntakeRelationNewSystem | SetTrbRequestRelationNewSystem,
+    | SetSystemIntakeRelationNewSystemVariables
+    | SetTrbRequestRelationNewSystemVariables
+  >(
+    requestType === 'trb'
+      ? SetTrbRequestRelationNewSystemQuery
+      : SetSystemIntakeRelationNewSystemQuery
+  );
 
-  const [unlinkSystemIntakeRelation, { error: unlinkError }] = useMutation<
-    UnlinkSystemIntakeRelation,
-    UnlinkSystemIntakeRelationVariables
-  >(UnlinkSystemIntakeRelationQuery);
-  // unlinkTRBRequestRelation
+  // const [
+  //   setSystemIntakeRelationExistingSystem,
+  //   { error: systemIntakeExistingSystemError }
+  // ] = useMutation<
+  //   SetSystemIntakeRelationExistingSystem,
+  //   SetSystemIntakeRelationExistingSystemVariables
+  // >(SetSystemIntakeRelationExistingSystemQuery);
+
+  // const [
+  //   setTrbRequestRelationExistingSystem,
+  //   { error: trbRequestExistingSystemError }
+  // ] = useMutation<
+  //   SetTrbRequestRelationExistingSystem,
+  //   SetTrbRequestRelationExistingSystemVariables
+  // >(SetTrbRequestRelationExistingSystemQuery);
+
+  const [setExistingSystem, { error: existingSystemError }] = useMutation<
+    SetSystemIntakeRelationExistingSystem | SetTrbRequestRelationExistingSystem,
+    | SetSystemIntakeRelationExistingSystemVariables
+    | SetTrbRequestRelationExistingSystemVariables
+  >(
+    requestType === 'trb'
+      ? SetTrbRequestRelationExistingSystemQuery
+      : SetSystemIntakeRelationExistingSystemQuery
+  );
+
+  // const [
+  //   setSystemIntakeRelationExistingService,
+  //   { error: systemIntakeExistingServiceError }
+  // ] = useMutation<
+  //   SetSystemIntakeRelationExistingService,
+  //   SetSystemIntakeRelationExistingServiceVariables
+  // >(SetSystemIntakeRelationExistingServiceQuery);
+
+  // const [
+  //   setTrbRequestRelationExistingService,
+  //   { error: trbRequestExistingServiceError }
+  // ] = useMutation<
+  //   SetTrbRequestRelationExistingService,
+  //   SetTrbRequestRelationExistingServiceVariables
+  // >(SetTrbRequestRelationExistingServiceQuery);
+
+  const [setExistingService, { error: existingServiceError }] = useMutation<
+    | SetSystemIntakeRelationExistingService
+    | SetTrbRequestRelationExistingService,
+    | SetSystemIntakeRelationExistingServiceVariables
+    | SetTrbRequestRelationExistingServiceVariables
+  >(
+    requestType === 'trb'
+      ? SetTrbRequestRelationExistingServiceQuery
+      : SetSystemIntakeRelationExistingServiceQuery
+  );
+
+  // const [
+  //   unlinkSystemIntakeRelation,
+  //   { error: systemIntakeUnlinkError }
+  // ] = useMutation<
+  //   UnlinkSystemIntakeRelation,
+  //   UnlinkSystemIntakeRelationVariables
+  // >(UnlinkSystemIntakeRelationQuery);
+
+  // const [
+  //   unlinkTrbRequestRelation,
+  //   { error: trbRequestUnlinkError }
+  // ] = useMutation<UnlinkTrbRequestRelation, UnlinkTrbRequestRelationVariables>(
+  //   UnlinkTrbRequestRelationQuery
+  // );
+
+  const [unlinkRelation, { error: unlinkRelationError }] = useMutation<
+    UnlinkSystemIntakeRelation | UnlinkTrbRequestRelation,
+    UnlinkSystemIntakeRelationVariables | UnlinkTrbRequestRelationVariables
+  >(
+    requestType === 'trb'
+      ? UnlinkTrbRequestRelationQuery
+      : UnlinkSystemIntakeRelationQuery
+  );
 
   const { control, watch, setValue, handleSubmit } = useForm<{
     relationType: RequestRelationType | null;
@@ -179,8 +302,12 @@ const RequestLinkForm = () => {
           .join(', '),
         contractName: values.contractName || ''
       };
-      // })(data?.systemIntake)
-    })(data?.trbRequest)
+      // })(itgData?.systemIntake)
+    })(
+      requestType === 'trb'
+        ? data && 'trbRequest' in data && data.trbRequest
+        : data && 'systemIntake' in data && data.systemIntake
+    )
   });
 
   // Ref fields for some form behavior
@@ -223,34 +350,75 @@ const RequestLinkForm = () => {
     let p;
 
     if (relation === RequestRelationType.NEW_SYSTEM) {
-      p = setSystemIntakeRelationNewSystem({
-        variables: {
-          input: {
-            systemIntakeID: systemId,
-            contractNumbers
-          }
-        }
-      });
+      // p = setSystemIntakeRelationNewSystem({
+      // if (setNewSystem.name === 'setSystemIntakeRelationNewSystem') {
+      //   setNewSystem.
+      // }
+      p = setNewSystem(
+        requestType === 'trb'
+          ? {
+              variables: {
+                input: {
+                  trbRequestID: id,
+                  contractNumbers
+                }
+              }
+            }
+          : {
+              variables: {
+                input: {
+                  systemIntakeID: id,
+                  contractNumbers
+                }
+              }
+            }
+      );
     } else if (relation === RequestRelationType.EXISTING_SYSTEM) {
-      p = setSystemIntakeRelationExistingSystem({
-        variables: {
-          input: {
-            systemIntakeID: systemId,
-            cedarSystemIDs: formData.cedarSystemIDs,
-            contractNumbers
-          }
-        }
-      });
+      // p = setSystemIntakeRelationExistingSystem({
+      p = setExistingSystem(
+        requestType === 'trb'
+          ? {
+              variables: {
+                input: {
+                  trbRequestID: id,
+                  cedarSystemIDs: formData.cedarSystemIDs,
+                  contractNumbers
+                }
+              }
+            }
+          : {
+              variables: {
+                input: {
+                  systemIntakeID: id,
+                  cedarSystemIDs: formData.cedarSystemIDs,
+                  contractNumbers
+                }
+              }
+            }
+      );
     } else if (relation === RequestRelationType.EXISTING_SERVICE) {
-      p = setSystemIntakeRelationExistingService({
-        variables: {
-          input: {
-            systemIntakeID: systemId,
-            contractName: formData.contractName,
-            contractNumbers
-          }
-        }
-      });
+      // p = setSystemIntakeRelationExistingService({
+      p = setExistingService(
+        requestType === 'trb'
+          ? {
+              variables: {
+                input: {
+                  trbRequestID: id,
+                  contractName: formData.contractName,
+                  contractNumbers
+                }
+              }
+            }
+          : {
+              variables: {
+                input: {
+                  systemIntakeID: id,
+                  contractName: formData.contractName,
+                  contractNumbers
+                }
+              }
+            }
+      );
     }
 
     p?.then(
@@ -264,7 +432,12 @@ const RequestLinkForm = () => {
   });
 
   const unlink = () => {
-    unlinkSystemIntakeRelation({ variables: { intakeID: systemId } })
+    // unlinkSystemIntakeRelation({ variables: { intakeID: id } })
+    unlinkRelation(
+      requestType === 'trb'
+        ? { variables: { trbRequestID: id } }
+        : { variables: { intakeID: id } }
+    )
       .then(
         res => {
           if (res?.data) history.push(redirectUrl);
@@ -278,12 +451,16 @@ const RequestLinkForm = () => {
 
   // Error feedback
   const hasErrors =
-    error ||
-    existingServiceError ||
-    existingSystemError ||
     newSystemError ||
-    unlinkError ||
+    existingSystemError ||
+    existingServiceError ||
+    // itgError ||
+    // systemIntakeExistingServiceError ||
+    // systemIntakeExistingSystemError ||
+    // systemIntakeNewSystemError ||
+    // systemIntakeUnlinkError ||
     hasUserError;
+  // check isUserSet
 
   useEffect(() => {
     if (hasErrors) {
@@ -300,6 +477,7 @@ const RequestLinkForm = () => {
         </Alert>
       )}
       {loading && <PageLoading />}
+      {/* {!itgLoading && itgData && ( */}
       {!loading && data && (
         <>
           <BreadcrumbBar variant="wrap">
@@ -540,8 +718,12 @@ const RequestLinkForm = () => {
               </Button>
 
               {(isNew ||
-                // (!isNew && data.systemIntake?.relationType !== null)) && (
-                (!isNew && data.trbRequest?.relationType !== null)) && (
+                // (!isNew && itgData.systemIntake?.relationType !== null)) && (
+                (!isNew &&
+                  (('trbRequest' in data &&
+                    data.trbRequest.relationType !== null) ||
+                    ('systemIntake' in data &&
+                      data.systemIntake?.relationType !== null)))) && (
                 <Button
                   type="submit"
                   unstyled
