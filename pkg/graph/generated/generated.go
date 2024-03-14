@@ -16354,9 +16354,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_containsPersonallyIdentifia
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(zero.Bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚋzeroᚐBool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarAuthorityToOperate_containsPersonallyIdentifiableInformation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -16773,9 +16773,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_isAccessedByNonOrganization
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(zero.Bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚋzeroᚐBool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarAuthorityToOperate_isAccessedByNonOrganizationalUsers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -16814,9 +16814,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_isPiiLimitedToUserNameAndPa
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(zero.Bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚋzeroᚐBool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarAuthorityToOperate_isPiiLimitedToUserNameAndPass(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -16855,9 +16855,9 @@ func (ec *executionContext) _CedarAuthorityToOperate_isProtectedHealthInformatio
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(zero.Bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚋzeroᚐBool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarAuthorityToOperate_isProtectedHealthInformation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19203,9 +19203,9 @@ func (ec *executionContext) _CedarExchange_containsBankingData(ctx context.Conte
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_containsBankingData(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19244,9 +19244,9 @@ func (ec *executionContext) _CedarExchange_containsBeneficiaryAddress(ctx contex
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_containsBeneficiaryAddress(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19285,9 +19285,9 @@ func (ec *executionContext) _CedarExchange_containsPhi(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_containsPhi(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19326,9 +19326,9 @@ func (ec *executionContext) _CedarExchange_containsPii(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_containsPii(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19367,9 +19367,9 @@ func (ec *executionContext) _CedarExchange_dataExchangeAgreement(ctx context.Con
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_dataExchangeAgreement(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19408,9 +19408,9 @@ func (ec *executionContext) _CedarExchange_dataFormat(ctx context.Context, field
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_dataFormat(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19449,9 +19449,9 @@ func (ec *executionContext) _CedarExchange_dataFormatOther(ctx context.Context, 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_dataFormatOther(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19490,9 +19490,9 @@ func (ec *executionContext) _CedarExchange_exchangeDescription(ctx context.Conte
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_exchangeDescription(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19572,9 +19572,9 @@ func (ec *executionContext) _CedarExchange_exchangeId(ctx context.Context, field
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_exchangeId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19613,9 +19613,9 @@ func (ec *executionContext) _CedarExchange_exchangeName(ctx context.Context, fie
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_exchangeName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19736,9 +19736,9 @@ func (ec *executionContext) _CedarExchange_exchangeState(ctx context.Context, fi
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_exchangeState(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19777,9 +19777,9 @@ func (ec *executionContext) _CedarExchange_exchangeVersion(ctx context.Context, 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_exchangeVersion(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19859,9 +19859,9 @@ func (ec *executionContext) _CedarExchange_fromOwnerId(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_fromOwnerId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19900,9 +19900,9 @@ func (ec *executionContext) _CedarExchange_fromOwnerName(ctx context.Context, fi
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_fromOwnerName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19941,9 +19941,9 @@ func (ec *executionContext) _CedarExchange_fromOwnerType(ctx context.Context, fi
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_fromOwnerType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -19982,9 +19982,9 @@ func (ec *executionContext) _CedarExchange_isBeneficiaryMailingFile(ctx context.
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_isBeneficiaryMailingFile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -20023,9 +20023,9 @@ func (ec *executionContext) _CedarExchange_numOfRecords(ctx context.Context, fie
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_numOfRecords(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -20064,9 +20064,9 @@ func (ec *executionContext) _CedarExchange_sharedViaApi(ctx context.Context, fie
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_sharedViaApi(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -20105,9 +20105,9 @@ func (ec *executionContext) _CedarExchange_toOwnerId(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_toOwnerId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -20146,9 +20146,9 @@ func (ec *executionContext) _CedarExchange_toOwnerName(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_toOwnerName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -20187,9 +20187,9 @@ func (ec *executionContext) _CedarExchange_toOwnerType(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_toOwnerType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -24879,9 +24879,9 @@ func (ec *executionContext) _CedarURL_address(ctx context.Context, field graphql
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarURL_address(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -24920,9 +24920,9 @@ func (ec *executionContext) _CedarURL_isBehindWebApplicationFirewall(ctx context
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarURL_isBehindWebApplicationFirewall(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -24961,9 +24961,9 @@ func (ec *executionContext) _CedarURL_isAPIEndpoint(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarURL_isAPIEndpoint(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -25002,9 +25002,9 @@ func (ec *executionContext) _CedarURL_isVersionCodeRepository(ctx context.Contex
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(null.Bool)
 	fc.Result = res
-	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalOBoolean2githubᚗcomᚋgureguᚋnullᚐBool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarURL_isVersionCodeRepository(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -25043,9 +25043,9 @@ func (ec *executionContext) _CedarURL_urlHostingEnv(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarURL_urlHostingEnv(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -73411,16 +73411,6 @@ func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interf
 
 func (ec *executionContext) marshalOBoolean2bool(ctx context.Context, sel ast.SelectionSet, v bool) graphql.Marshaler {
 	res := graphql.MarshalBoolean(v)
-	return res
-}
-
-func (ec *executionContext) unmarshalOBoolean2githubᚗcomᚋgureguᚋnullᚋzeroᚐBool(ctx context.Context, v interface{}) (zero.Bool, error) {
-	res, err := models.UnmarshalZeroBool(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOBoolean2githubᚗcomᚋgureguᚋnullᚋzeroᚐBool(ctx context.Context, sel ast.SelectionSet, v zero.Bool) graphql.Marshaler {
-	res := models.MarshalZeroBool(v)
 	return res
 }
 
