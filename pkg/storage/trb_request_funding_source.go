@@ -5,9 +5,11 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
 // UpdateTRBRequestFundingSources upserts a list of funding sources to a TRB Request Form by funding number
@@ -17,19 +19,22 @@ func (s *Store) UpdateTRBRequestFundingSources(
 	fundingNumber string,
 	fundingSources []*models.TRBFundingSource,
 ) ([]*models.TRBFundingSource, error) {
-	tx := s.db.MustBegin()
-	defer tx.Rollback()
-	deleteFundingSourcesSQL := `
+
+	insertedFundingSources := []*models.TRBFundingSource{}
+
+	_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+
+		deleteFundingSourcesSQL := `
 		DELETE FROM trb_request_funding_sources
 		WHERE trb_request_id = $1 AND funding_number = $2;
 	`
-	_, err := tx.Exec(deleteFundingSourcesSQL, trbRequestID, fundingNumber)
+		_, err := tx.Exec(deleteFundingSourcesSQL, trbRequestID, fundingNumber)
 
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
-		return nil, err
-	}
-	insertFundingSourcesSQL := `
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
+			return nil, err
+		}
+		insertFundingSourcesSQL := `
 		INSERT INTO trb_request_funding_sources (
 			id,
 			trb_request_id,
@@ -46,25 +51,23 @@ func (s *Store) UpdateTRBRequestFundingSources(
 			:created_by
 		)
 		`
-	_, err = tx.NamedExec(insertFundingSourcesSQL, fundingSources)
+		_, err = tx.NamedExec(insertFundingSourcesSQL, fundingSources)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
+			return nil, err
+		}
 
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
-		return nil, err
-	}
-	getSourcesSQL := `SELECT * FROM trb_request_funding_sources WHERE trb_request_id = $1 AND funding_number = $2`
-	insertedFundingSources := []*models.TRBFundingSource{}
-	err = tx.Select(&insertedFundingSources, getSourcesSQL, trbRequestID, fundingNumber)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
-		return nil, err
-	}
-	err = tx.Commit()
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
-		return nil, err
-	}
-	return insertedFundingSources, nil
+		getSourcesSQL := `SELECT * FROM trb_request_funding_sources WHERE trb_request_id = $1 AND funding_number = $2`
+		err = tx.Select(&insertedFundingSources, getSourcesSQL, trbRequestID, fundingNumber)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
+			return nil, err
+		}
+
+		return nil, nil
+	})
+
+	return insertedFundingSources, err
 }
 
 // DeleteTRBRequestFundingSources deletes all funding sources from a TRB Request Form by funding number
@@ -73,30 +76,32 @@ func (s *Store) DeleteTRBRequestFundingSources(
 	trbRequestID uuid.UUID,
 	fundingNumber string,
 ) ([]*models.TRBFundingSource, error) {
-	tx := s.db.MustBegin()
-	defer tx.Rollback()
-	deleteFundingSourcesSQL := `
+
+	fundingSources := []*models.TRBFundingSource{}
+
+	_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+
+		deleteFundingSourcesSQL := `
 		DELETE FROM trb_request_funding_sources
 		WHERE trb_request_id = $1 AND funding_number = $2;
 	`
-	_, err := tx.Exec(deleteFundingSourcesSQL, trbRequestID, fundingNumber)
+		_, err := tx.Exec(deleteFundingSourcesSQL, trbRequestID, fundingNumber)
 
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
-		return nil, err
-	}
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
+			return nil, err
+		}
 
-	getSourcesSQL := `SELECT * FROM trb_request_funding_sources WHERE trb_request_id = $1 AND funding_number = $2`
-	fundingSources := []*models.TRBFundingSource{}
-	err = tx.Select(&fundingSources, getSourcesSQL, trbRequestID, fundingNumber)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
-		return nil, err
-	}
-	err = tx.Commit()
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
-		return nil, err
-	}
-	return fundingSources, nil
+		getSourcesSQL := `SELECT * FROM trb_request_funding_sources WHERE trb_request_id = $1 AND funding_number = $2`
+
+		err = tx.Select(&fundingSources, getSourcesSQL, trbRequestID, fundingNumber)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
+			return nil, err
+		}
+
+		return nil, nil
+	})
+
+	return fundingSources, err
 }
