@@ -68,7 +68,7 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
                       {product.elaPurchase === 'Yes' && (
                         <div className="margin-left-05 margin-top-05">
                           <span>$ &nbsp;</span>
-                          <span className="ela-purchase">
+                          <span className="text-base-dark">
                             {t('singleSystem.toolsAndSoftware.elaPurchase')}
                           </span>
                         </div>
