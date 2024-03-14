@@ -2,7 +2,11 @@ import { DateTime } from 'luxon';
 
 import { SystemIntakeForTable } from 'components/RequestRepository/tableMap';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
-import { SystemIntake } from 'queries/types/SystemIntake';
+import {
+  SystemIntake,
+  // eslint-disable-next-line camelcase
+  SystemIntake_contractNumbers
+} from 'queries/types/SystemIntake';
 import { SystemIntakeStatusAdmin } from 'types/graphql-global-types';
 import {
   GovernanceCollaborationTeam,
@@ -52,7 +56,6 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   contract: {
     hasContract: '',
     contractor: '',
-    number: '',
     startDate: {
       month: '',
       day: '',
@@ -62,7 +65,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
       month: '',
       day: '',
       year: ''
-    }
+    },
+    numbers: ''
   },
   businessNeed: '',
   businessSolution: '',
@@ -124,7 +128,10 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     existingContract: systemIntake.contract.hasContract,
     grtReviewEmailBody: systemIntake.grtReviewEmailBody,
     contractor: systemIntake.contract.contractor,
-    contractNumber: systemIntake.contract.number,
+    contractNumber:
+      systemIntake.contract.numbers.length > 0
+        ? systemIntake.contract.numbers.split(',').map(c => c.trim())
+        : [], // TODO(Sam): change `contractNumber` -> `contractNumbers`?
     contractStartDate: DateTime.fromObject({
       day: Number(systemIntake.contract.startDate.day),
       month: Number(systemIntake.contract.startDate.month),
@@ -203,7 +210,6 @@ export const prepareSystemIntakeForApp = (
     contract: {
       hasContract: systemIntake.existingContract || '',
       contractor: systemIntake.contractor || '',
-      number: systemIntake.contractNumber || '',
       startDate: {
         month: contractStartDate.month
           ? contractStartDate.month.toString()
@@ -221,8 +227,14 @@ export const prepareSystemIntakeForApp = (
         year: contractEndDate.year
           ? contractEndDate.year.toString()
           : systemIntake.contractEndYear || ''
-      }
+      },
+      numbers:
+        systemIntake.contractNumbers
+          // eslint-disable-next-line camelcase
+          ?.map((c: SystemIntake_contractNumbers) => c.contractNumber)
+          .join(', ') || ''
     },
+
     businessNeed: systemIntake.businessNeed || '',
     businessSolution: systemIntake.solution || '',
     currentStage: systemIntake.processStatus || '',
@@ -324,7 +336,6 @@ export const isIntakeStarted = (intake: SystemIntake | SystemIntakeForm) => {
     intake.annualSpending?.plannedYearOneSpending ||
     intake.contract.hasContract ||
     intake.contract.contractor ||
-    intake.contract.number ||
     intake.contract.startDate.month ||
     intake.contract.startDate.year ||
     intake.contract.endDate.month ||

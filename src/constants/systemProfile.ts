@@ -9,6 +9,7 @@ export const teamSectionKeys = [
 ] as const;
 
 export const TEAM_SECTION_MEMBER_COUNT_CAP = 5;
+export const TOOLS_AND_SOFTWARE_PRODUCT_COUNT_CAP = 5;
 
 // ATO
 

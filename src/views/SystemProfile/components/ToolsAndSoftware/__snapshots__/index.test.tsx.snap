@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`System Tools and Software subpage > matches snapshot 1`] = `
+exports[`System Profile Tools and Software subpage > matches snapshot 1`] = `
 <DocumentFragment>
   <h2
     class="margin-top-0 margin-bottom-4"
@@ -13,161 +13,125 @@ exports[`System Tools and Software subpage > matches snapshot 1`] = `
   >
     <li
       class="usa-card grid-col-12 margin-bottom-2"
-      data-testid="Card"
+      data-testid="software-product-card"
     >
       <div
         class="usa-card__container"
       >
         <header
-          class="usa-card__header padding-2 padding-bottom-0"
+          class="usa-card__header padding-2 padding-bottom-1"
           data-testid="CardHeader"
         >
           <h3
-            class="margin-top-0 margin-bottom-05 line-height-sans-2"
+            class="margin-top-0 margin-bottom-1 line-height-sans-2"
           >
-            Drupal
+            SQL Server
           </h3>
-          <h5
-            class="margin-top-0 margin-bottom-2 font-sans-xs line-height-sans-1 text-normal"
-          >
-            Drupal Association
-          </h5>
-        </header>
-        <div
-          class="usa-card__body padding-2 padding-top-0"
-          data-testid="CardBody"
-        >
-          <dt
-            class="text-bold margin-bottom-05 margin-bottom-0"
-          >
-            Product Type
-          </dt>
-          <dd
-            class="description-definition margin-0 font-body-md line-height-body-4"
-          >
-            Enterprise Content Management (ECM)
-          </dd>
+          Microsoft
           <div
-            class="easi-divider margin-y-2"
-          />
-          <div
-            class="grid-container padding-x-0"
-            data-testid="gridContainer"
+            class="grid-col"
+            data-testid="grid"
           >
-            <div
-              class="grid-row grid-gap"
-              data-testid="grid"
+            <dt
+              class="text-bold margin-bottom-05 margin-top-1"
             >
-              <div
-                class="grid-col"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05 margin-bottom-0"
-                >
-                  Software version
-                </dt>
-                <dd
-                  class="description-definition margin-0 font-body-md line-height-body-4"
-                >
-                  9.3
-                </dd>
-              </div>
-              <div
-                class="grid-col"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05 margin-bottom-0"
-                >
-                  Software edition
-                </dt>
-                <dd
-                  class="description-definition margin-0 font-body-md line-height-body-4"
-                >
-                  Enterprise
-                </dd>
-              </div>
-            </div>
+              Product Category
+            </dt>
+            <dd
+              class="description-definition margin-0 font-body-md line-height-body-4 margin-bottom-2"
+            >
+              Tecnhopedia Category 1
+            </dd>
           </div>
-        </div>
+        </header>
       </div>
     </li>
     <li
       class="usa-card grid-col-12 margin-bottom-2"
-      data-testid="Card"
+      data-testid="software-product-card"
     >
       <div
         class="usa-card__container"
       >
         <header
-          class="usa-card__header padding-2 padding-bottom-0"
+          class="usa-card__header padding-2 padding-bottom-1"
           data-testid="CardHeader"
         >
           <h3
-            class="margin-top-0 margin-bottom-05 line-height-sans-2"
+            class="margin-top-0 margin-bottom-1 line-height-sans-2"
           >
-            Kong
+            Splunk
           </h3>
-          <h5
-            class="margin-top-0 margin-bottom-2 font-sans-xs line-height-sans-1 text-normal"
-          >
-            Kong Enterprise
-          </h5>
-        </header>
-        <div
-          class="usa-card__body padding-2 padding-top-0"
-          data-testid="CardBody"
-        >
-          <dt
-            class="text-bold margin-bottom-05 margin-bottom-0"
-          >
-            Product Type
-          </dt>
-          <dd
-            class="description-definition margin-0 font-body-md line-height-body-4"
-          >
-            Software Development
-          </dd>
+          Splunk
           <div
-            class="margin-top-2 margin-bottom-neg-1"
+            class="grid-col"
+            data-testid="grid"
           >
+            <dt
+              class="text-bold margin-bottom-05 margin-top-1"
+            >
+              Product Category
+            </dt>
+            <dd
+              class="description-definition margin-0 font-body-md line-height-body-4 margin-bottom-2"
+            >
+              Tecnhopedia Category 2
+            </dd>
             <span
-              class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+              class="easi-tag text-base-darker bg-base-lighter margin-bottom-1"
               data-testid="tag"
             >
               API Gateway
             </span>
           </div>
-          <div
-            class="easi-divider margin-y-2"
-          />
-          <div
-            class="grid-container padding-x-0"
-            data-testid="gridContainer"
+        </header>
+      </div>
+    </li>
+    <li
+      class="usa-card grid-col-12 margin-bottom-2"
+      data-testid="software-product-card"
+    >
+      <div
+        class="usa-card__container"
+      >
+        <header
+          class="usa-card__header padding-2 padding-bottom-1"
+          data-testid="CardHeader"
+        >
+          <h3
+            class="margin-top-0 margin-bottom-1 line-height-sans-2"
           >
-            <div
-              class="grid-row grid-gap"
-              data-testid="grid"
+            Terraform
+          </h3>
+          hashiCorp
+          <div
+            class="grid-col"
+            data-testid="grid"
+          >
+            <dt
+              class="text-bold margin-bottom-05 margin-top-1"
             >
-              <div
-                class="grid-col"
-                data-testid="grid"
-              >
-                <dt
-                  class="text-bold margin-bottom-05 margin-bottom-0"
-                >
-                  Software version
-                </dt>
-                <dd
-                  class="description-definition margin-0 font-body-md line-height-body-4"
-                >
-                  2.1
-                </dd>
-              </div>
-            </div>
+              Product Category
+            </dt>
+            <dd
+              class="description-definition margin-0 font-body-md line-height-body-4 margin-bottom-2"
+            >
+              Tecnhopedia Category 3
+            </dd>
+            <span
+              class="easi-tag text-base-darker bg-base-lighter margin-bottom-1"
+              data-testid="tag"
+            >
+              Used for Artificial Intelligence
+            </span>
+            <span
+              class="easi-tag text-base-darker bg-base-lighter margin-bottom-1"
+              data-testid="tag"
+            >
+              API Gateway
+            </span>
           </div>
-        </div>
+        </header>
       </div>
     </li>
   </ul>

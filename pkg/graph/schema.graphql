@@ -89,6 +89,48 @@ type CedarAuthorityToOperate {
 }
 
 """
+CedarSoftwareProductItem represents an individual software product; this information is returned from the CEDAR Core API
+as a part of the CedarSoftwareProducts object
+"""
+type CedarSoftwareProductItem {
+  apiGatewayUse: Boolean
+  elaPurchase: String
+  elaVendorId: String
+  providesAiCapability: Boolean
+  refstr: String
+  softwareCatagoryConnectionGuid: String
+  softwareVendorConnectionGuid: String
+  softwareCost: String
+  softwareElaOrganization: String
+  softwareName: String
+  systemSoftwareConnectionGuid: String
+  technopediaCategory: String
+  technopediaID: String
+  vendorName: String
+}
+
+"""
+CedarSoftwareProducts represents the response from the /softwareProducts endpoint from the CEDAR Core API.
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarSoftwareProducts {
+  aiSolnCatg: [String]!
+  aiSolnCatgOther: String
+  apiDataArea: [String]!
+  apiDescPubLocation: String
+  apiDescPublished: String
+  apiFHIRUse: String
+  apiFHIRUseOther: String
+  apiHasPortal: Boolean
+  apisAccessibility: String
+  apisDeveloped: String
+  developmentStage: String
+  softwareProducts: [CedarSoftwareProductItem!]!
+  systemHasAPIGateway: Boolean
+  usesAiTech: String
+}
+
+"""
 CedarSystem represents the response from the /system/detail endpoint from the CEDAR Core API.
 Right now, this does not tie in with any other types defined here, and is a root node until that changes.
 """
@@ -848,7 +890,6 @@ type SystemIntakeContract {
   hasContract: String
   startDate: ContractDate!
   vehicle: String
-  number: String
 }
 
 """
@@ -1229,7 +1270,7 @@ input SystemIntakeContractInput {
   endDate: Time
   hasContract: String
   startDate: Time
-  number: String
+  numbers: [String!]!
 }
 
 """
@@ -1269,14 +1310,6 @@ input SetSystemIntakeRelationExistingServiceInput {
   systemIntakeID: UUID!
   contractName: String!
   contractNumbers: [String!]!
-}
-
-"""
-Input data for updating a system intake's relationship to a contract
-"""
-input UpdateSystemIntakeLinkedContractInput {
-  id: UUID!
-  contractNumber: String
 }
 
 """
@@ -2619,7 +2652,6 @@ type Mutation {
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
-  updateSystemIntakeLinkedContract(input: UpdateSystemIntakeLinkedContractInput!): UpdateSystemIntakePayload
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
@@ -2709,6 +2741,7 @@ type Query {
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
+  cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem!]!
   myCedarSystems: [CedarSystem!]!
@@ -2721,7 +2754,6 @@ type Query {
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
-  relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]! @hasRole(role: EASI_TRB_ADMIN)
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!

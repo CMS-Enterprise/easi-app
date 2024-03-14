@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -53,7 +54,7 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 		retVal = append(retVal, &models.CedarAuthorityToOperate{
 			ActualDispositionDate: zero.TimeFrom(time.Time(ato.ActualDispositionDate)),
 			CedarID:               *ato.CedarID, // required
-			ContainsPersonallyIdentifiableInformation: zero.BoolFrom(ato.ContainsPersonallyIdentifiableInformation),
+			ContainsPersonallyIdentifiableInformation: null.BoolFrom(ato.ContainsPersonallyIdentifiableInformation),
 			CountOfTotalNonPrivilegedUserPopulation:   zero.IntFrom(int64(ato.CountOfTotalNonPrivilegedUserPopulation)),
 			CountOfOpenPoams:                          zero.IntFrom(int64(ato.CountOfOpenPoams)),
 			CountOfTotalPrivilegedUserPopulation:      zero.IntFrom(int64(ato.CountOfTotalPrivilegedUserPopulation)),
@@ -63,9 +64,9 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 			Fips199OverallImpactRating:                zero.IntFrom(int64(ato.Fips199OverallImpactRating)),
 			FismaSystemAcronym:                        zero.StringFrom(ato.FismaSystemAcronym),
 			FismaSystemName:                           zero.StringFrom(ato.FismaSystemName),
-			IsAccessedByNonOrganizationalUsers:        zero.BoolFrom(ato.IsAccessedByNonOrganizationalUsers),
-			IsPiiLimitedToUserNameAndPass:             zero.BoolFrom(ato.IsPiiLimitedToUserNameAndPass),
-			IsProtectedHealthInformation:              zero.BoolFrom(ato.IsProtectedHealthInformation),
+			IsAccessedByNonOrganizationalUsers:        null.BoolFrom(ato.IsAccessedByNonOrganizationalUsers),
+			IsPiiLimitedToUserNameAndPass:             null.BoolFrom(ato.IsPiiLimitedToUserNameAndPass),
+			IsProtectedHealthInformation:              null.BoolFrom(ato.IsProtectedHealthInformation),
 			LastActScaDate:                            zero.TimeFrom(time.Time(ato.LastActScaDate)),
 			LastAssessmentDate:                        zero.TimeFrom(time.Time(ato.LastAssessmentDate)),
 			LastContingencyPlanCompletionDate:         zero.TimeFrom(time.Time(ato.LastContingencyPlanCompletionDate)),

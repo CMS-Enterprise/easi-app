@@ -52,10 +52,8 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 
 	s.Run("LD defaults protects invocation of GetSystem", func() {
 		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, ldClient)
-		// fake, non-mocked systemID should not return system
 		resp, err := c.GetSystem(ctx, "fake")
 		s.NoError(err)
-		s.Empty(resp)
 
 		// should return mocked system when given corresponding mockKey
 		for _, v := range local.GetMockSystems() {

@@ -153,6 +153,8 @@ func UnlinkSystemIntakeRelation(
 		intake.ContractName = zero.StringFromPtr(nil)
 
 		// Clear contract number relationships by setting an empty array of contract #'s
+		// declare this as an explicit empty slice instead of `nil`
+		// TODO: (Sam) update `SetSystemIntakeContractNumbers` to allow for `nil`
 		if err = store.SetSystemIntakeContractNumbers(ctx, tx, intakeID, []string{}); err != nil {
 			return nil, err
 		}
