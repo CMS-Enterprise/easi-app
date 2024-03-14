@@ -22,7 +22,7 @@ export type TRBAttendeeFields = {
 
 /** Field labels */
 export type AttendeeFieldLabels = {
-  euaUserId: string | null;
+  euaUserId: string;
   component: string;
   role: string;
   submit?: string;

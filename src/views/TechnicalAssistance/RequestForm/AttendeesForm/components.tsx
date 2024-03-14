@@ -141,7 +141,7 @@ const AttendeeFields = ({
               return (
                 <FormGroup error={!!error}>
                   <Label htmlFor="euaUserId">
-                    {t(fieldLabels.euaUserId || '')}
+                    {t(fieldLabels.euaUserId)}
                     <RequiredAsterisk />
                   </Label>
                   {error && (
