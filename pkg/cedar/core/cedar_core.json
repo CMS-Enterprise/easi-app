@@ -671,6 +671,54 @@
         }
       }
     },
+    "/budgetSystemCost": {
+      "get": {
+        "tags": [
+          "budgetSystemCost"
+        ],
+        "summary": "",
+        "description": "",
+        "operationId": "budgetSystemCostFind",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "query",
+            "description": "ID of the system that the budget is associated with. Adding this parameter will instruct the interface to only return the system matching the systemId.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BudgetActualSystemCostResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "401": {
+            "description": "Access Denied",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
     "/person/{id}": {
       "get": {
         "tags": [
@@ -4014,6 +4062,20 @@
         }
       }
     },
+    "BudgetActualSystemCost": {
+      "type": "object",
+      "properties": {
+        "ActualSystemCost": {
+          "type": "string"
+        },
+        "systemId": {
+          "type": "string"
+        },
+        "FiscalYear": {
+          "type": "string"
+        }
+      }
+    },
     "BudgetIds": {
       "type": "object",
       "required": [
@@ -5570,6 +5632,24 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "BudgetActualSystemCostResponse": {
+      "type": "object",
+      "required": [
+        "count"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "BudgetActualCost": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BudgetActualSystemCost"
           }
         }
       }

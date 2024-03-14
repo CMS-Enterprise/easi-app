@@ -549,9 +549,59 @@ func (r *cedarDeploymentResolver) WanType(ctx context.Context, obj *models.Cedar
 	return obj.WanType.Ptr(), nil
 }
 
+// ContainsBankingData is the resolver for the containsBankingData field.
+func (r *cedarExchangeResolver) ContainsBankingData(ctx context.Context, obj *models.CedarExchange) (*bool, error) {
+	return obj.ContainsBankingData.Ptr(), nil
+}
+
+// ContainsBeneficiaryAddress is the resolver for the containsBeneficiaryAddress field.
+func (r *cedarExchangeResolver) ContainsBeneficiaryAddress(ctx context.Context, obj *models.CedarExchange) (*bool, error) {
+	return obj.ContainsBeneficiaryAddress.Ptr(), nil
+}
+
+// ContainsPhi is the resolver for the containsPhi field.
+func (r *cedarExchangeResolver) ContainsPhi(ctx context.Context, obj *models.CedarExchange) (*bool, error) {
+	return obj.ContainsPhi.Ptr(), nil
+}
+
+// ContainsPii is the resolver for the containsPii field.
+func (r *cedarExchangeResolver) ContainsPii(ctx context.Context, obj *models.CedarExchange) (*bool, error) {
+	return obj.ContainsPii.Ptr(), nil
+}
+
+// DataExchangeAgreement is the resolver for the dataExchangeAgreement field.
+func (r *cedarExchangeResolver) DataExchangeAgreement(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.DataExchangeAgreement.Ptr(), nil
+}
+
+// DataFormat is the resolver for the dataFormat field.
+func (r *cedarExchangeResolver) DataFormat(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.DataFormat.Ptr(), nil
+}
+
+// DataFormatOther is the resolver for the dataFormatOther field.
+func (r *cedarExchangeResolver) DataFormatOther(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.DataFormatOther.Ptr(), nil
+}
+
+// ExchangeDescription is the resolver for the exchangeDescription field.
+func (r *cedarExchangeResolver) ExchangeDescription(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.ExchangeDescription.Ptr(), nil
+}
+
 // ExchangeEndDate is the resolver for the exchangeEndDate field.
 func (r *cedarExchangeResolver) ExchangeEndDate(ctx context.Context, obj *models.CedarExchange) (*time.Time, error) {
 	return obj.ExchangeEndDate.Ptr(), nil
+}
+
+// ExchangeID is the resolver for the exchangeId field.
+func (r *cedarExchangeResolver) ExchangeID(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.ExchangeID.Ptr(), nil
+}
+
+// ExchangeName is the resolver for the exchangeName field.
+func (r *cedarExchangeResolver) ExchangeName(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.ExchangeName.Ptr(), nil
 }
 
 // ExchangeRetiredDate is the resolver for the exchangeRetiredDate field.
@@ -562,6 +612,61 @@ func (r *cedarExchangeResolver) ExchangeRetiredDate(ctx context.Context, obj *mo
 // ExchangeStartDate is the resolver for the exchangeStartDate field.
 func (r *cedarExchangeResolver) ExchangeStartDate(ctx context.Context, obj *models.CedarExchange) (*time.Time, error) {
 	return obj.ExchangeStartDate.Ptr(), nil
+}
+
+// ExchangeState is the resolver for the exchangeState field.
+func (r *cedarExchangeResolver) ExchangeState(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.ExchangeState.Ptr(), nil
+}
+
+// ExchangeVersion is the resolver for the exchangeVersion field.
+func (r *cedarExchangeResolver) ExchangeVersion(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.ExchangeVersion.Ptr(), nil
+}
+
+// FromOwnerID is the resolver for the fromOwnerId field.
+func (r *cedarExchangeResolver) FromOwnerID(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.FromOwnerID.Ptr(), nil
+}
+
+// FromOwnerName is the resolver for the fromOwnerName field.
+func (r *cedarExchangeResolver) FromOwnerName(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.FromOwnerName.Ptr(), nil
+}
+
+// FromOwnerType is the resolver for the fromOwnerType field.
+func (r *cedarExchangeResolver) FromOwnerType(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.FromOwnerType.Ptr(), nil
+}
+
+// IsBeneficiaryMailingFile is the resolver for the isBeneficiaryMailingFile field.
+func (r *cedarExchangeResolver) IsBeneficiaryMailingFile(ctx context.Context, obj *models.CedarExchange) (*bool, error) {
+	return obj.IsBeneficiaryMailingFile.Ptr(), nil
+}
+
+// NumOfRecords is the resolver for the numOfRecords field.
+func (r *cedarExchangeResolver) NumOfRecords(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.NumOfRecords.Ptr(), nil
+}
+
+// SharedViaAPI is the resolver for the sharedViaApi field.
+func (r *cedarExchangeResolver) SharedViaAPI(ctx context.Context, obj *models.CedarExchange) (*bool, error) {
+	return obj.SharedViaAPI.Ptr(), nil
+}
+
+// ToOwnerID is the resolver for the toOwnerId field.
+func (r *cedarExchangeResolver) ToOwnerID(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.ToOwnerID.Ptr(), nil
+}
+
+// ToOwnerName is the resolver for the toOwnerName field.
+func (r *cedarExchangeResolver) ToOwnerName(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.ToOwnerName.Ptr(), nil
+}
+
+// ToOwnerType is the resolver for the toOwnerType field.
+func (r *cedarExchangeResolver) ToOwnerType(ctx context.Context, obj *models.CedarExchange) (*string, error) {
+	return obj.ToOwnerType.Ptr(), nil
 }
 
 // AssigneeUsername is the resolver for the assigneeUsername field.
@@ -807,6 +912,31 @@ func (r *cedarThreatResolver) Type(ctx context.Context, obj *models.CedarThreat)
 // WeaknessRiskLevel is the resolver for the weaknessRiskLevel field.
 func (r *cedarThreatResolver) WeaknessRiskLevel(ctx context.Context, obj *models.CedarThreat) (*string, error) {
 	return obj.WeaknessRiskLevel.Ptr(), nil
+}
+
+// Address is the resolver for the address field.
+func (r *cedarURLResolver) Address(ctx context.Context, obj *models.CedarURL) (*string, error) {
+	return obj.Address.Ptr(), nil
+}
+
+// IsBehindWebApplicationFirewall is the resolver for the isBehindWebApplicationFirewall field.
+func (r *cedarURLResolver) IsBehindWebApplicationFirewall(ctx context.Context, obj *models.CedarURL) (*bool, error) {
+	return obj.IsBehindWebApplicationFirewall.Ptr(), nil
+}
+
+// IsAPIEndpoint is the resolver for the isAPIEndpoint field.
+func (r *cedarURLResolver) IsAPIEndpoint(ctx context.Context, obj *models.CedarURL) (*bool, error) {
+	return obj.IsAPIEndpoint.Ptr(), nil
+}
+
+// IsVersionCodeRepository is the resolver for the isVersionCodeRepository field.
+func (r *cedarURLResolver) IsVersionCodeRepository(ctx context.Context, obj *models.CedarURL) (*bool, error) {
+	return obj.IsVersionCodeRepository.Ptr(), nil
+}
+
+// URLHostingEnv is the resolver for the urlHostingEnv field.
+func (r *cedarURLResolver) URLHostingEnv(ctx context.Context, obj *models.CedarURL) (*string, error) {
+	return obj.URLHostingEnv.Ptr(), nil
 }
 
 // Author is the resolver for the author field.
@@ -3166,6 +3296,9 @@ func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
 // CedarThreat returns generated.CedarThreatResolver implementation.
 func (r *Resolver) CedarThreat() generated.CedarThreatResolver { return &cedarThreatResolver{r} }
 
+// CedarURL returns generated.CedarURLResolver implementation.
+func (r *Resolver) CedarURL() generated.CedarURLResolver { return &cedarURLResolver{r} }
+
 // GovernanceRequestFeedback returns generated.GovernanceRequestFeedbackResolver implementation.
 func (r *Resolver) GovernanceRequestFeedback() generated.GovernanceRequestFeedbackResolver {
 	return &governanceRequestFeedbackResolver{r}
@@ -3253,6 +3386,7 @@ type cedarSoftwareProductsResolver struct{ *Resolver }
 type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
 type cedarThreatResolver struct{ *Resolver }
+type cedarURLResolver struct{ *Resolver }
 type governanceRequestFeedbackResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 )
 
@@ -13,7 +14,7 @@ type CedarAuthorityToOperate struct {
 
 	// possibly-null fields
 	ActualDispositionDate                     zero.Time   `json:"actualDispositionDate"`
-	ContainsPersonallyIdentifiableInformation zero.Bool   `json:"containsPersonallyIdentifiableInformation"`
+	ContainsPersonallyIdentifiableInformation null.Bool   `json:"containsPersonallyIdentifiableInformation"`
 	CountOfTotalNonPrivilegedUserPopulation   zero.Int    `json:"countOfTotalNonPrivilegedUserPopulation"`
 	CountOfOpenPoams                          zero.Int    `json:"countOfOpenPoams"`
 	CountOfTotalPrivilegedUserPopulation      zero.Int    `json:"countOfTotalPrivilegedUserPopulation"`
@@ -23,9 +24,9 @@ type CedarAuthorityToOperate struct {
 	Fips199OverallImpactRating                zero.Int    `json:"fips199OverallImpactRating"`
 	FismaSystemAcronym                        zero.String `json:"fismaSystemAcronym"`
 	FismaSystemName                           zero.String `json:"fismaSystemName"`
-	IsAccessedByNonOrganizationalUsers        zero.Bool   `json:"isAccessedByNonOrganizationalUsers"`
-	IsPiiLimitedToUserNameAndPass             zero.Bool   `json:"isPiiLimitedToUserNameAndPass"`
-	IsProtectedHealthInformation              zero.Bool   `json:"isProtectedHealthInformation"`
+	IsAccessedByNonOrganizationalUsers        null.Bool   `json:"isAccessedByNonOrganizationalUsers"`
+	IsPiiLimitedToUserNameAndPass             null.Bool   `json:"isPiiLimitedToUserNameAndPass"`
+	IsProtectedHealthInformation              null.Bool   `json:"isProtectedHealthInformation"`
 	LastActScaDate                            zero.Time   `json:"lastActScaDate"`
 	LastAssessmentDate                        zero.Time   `json:"lastAssessmentDate"`
 	LastContingencyPlanCompletionDate         zero.Time   `json:"lastContingencyPlanCompletionDate"`
