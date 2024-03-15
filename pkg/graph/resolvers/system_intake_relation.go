@@ -21,7 +21,7 @@ func SetSystemIntakeRelationExistingService(
 	store *storage.Store,
 	input *model.SetSystemIntakeRelationExistingServiceInput,
 ) (*models.SystemIntake, error) {
-	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
@@ -58,7 +58,7 @@ func SetSystemIntakeRelationNewSystem(
 	store *storage.Store,
 	input *model.SetSystemIntakeRelationNewSystemInput,
 ) (*models.SystemIntake, error) {
-	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
@@ -96,7 +96,7 @@ func SetSystemIntakeRelationExistingSystem(
 	getCedarSystem func(ctx context.Context, systemID string) (*models.CedarSystem, error),
 	input *model.SetSystemIntakeRelationExistingSystemInput,
 ) (*models.SystemIntake, error) {
-	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
@@ -139,7 +139,7 @@ func UnlinkSystemIntakeRelation(
 	store *storage.Store,
 	intakeID uuid.UUID,
 ) (*models.SystemIntake, error) {
-	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {

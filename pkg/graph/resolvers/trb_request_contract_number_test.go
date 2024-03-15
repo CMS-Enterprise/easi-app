@@ -33,9 +33,8 @@ func (s *ResolverSuite) TestTRBRequestContractNumbers() {
 		}
 
 		// set contract numbers on these TRB Requests
-		_, err := sqlutils.WithTransaction[any](s.testConfigs.Store, func(tx *sqlx.Tx) (*any, error) {
-			s.NoError(s.testConfigs.Store.SetTRBRequestContractNumbers(ctx, tx, createdIDs[0], contractNumbers))
-			return nil, nil
+		err := sqlutils.WithTransaction(s.testConfigs.Store, func(tx *sqlx.Tx) error {
+			return s.testConfigs.Store.SetTRBRequestContractNumbers(ctx, tx, createdIDs[0], contractNumbers)
 		})
 		s.NoError(err)
 

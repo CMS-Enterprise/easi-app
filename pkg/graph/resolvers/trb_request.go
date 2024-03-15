@@ -24,7 +24,7 @@ func CreateTRBRequest(
 	store *storage.Store,
 ) (*models.TRBRequest, error) {
 
-	newTRB, err := sqlutils.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	newTRB, err := sqlutils.WithTransactionRet[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		princ := appcontext.Principal(ctx)
 
 		trb := models.NewTRBRequest(princ.ID())

@@ -21,8 +21,7 @@ func (s *Store) UpdateTRBRequestFundingSources(
 ) ([]*models.TRBFundingSource, error) {
 
 	insertedFundingSources := []*models.TRBFundingSource{}
-
-	_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+	return insertedFundingSources, sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
 
 		deleteFundingSourcesSQL := `
 		DELETE FROM trb_request_funding_sources
@@ -32,7 +31,7 @@ func (s *Store) UpdateTRBRequestFundingSources(
 
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
-			return nil, err
+			return err
 		}
 		insertFundingSourcesSQL := `
 		INSERT INTO trb_request_funding_sources (
@@ -54,20 +53,18 @@ func (s *Store) UpdateTRBRequestFundingSources(
 		_, err = tx.NamedExec(insertFundingSourcesSQL, fundingSources)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
-			return nil, err
+			return err
 		}
 
 		getSourcesSQL := `SELECT * FROM trb_request_funding_sources WHERE trb_request_id = $1 AND funding_number = $2`
 		err = tx.Select(&insertedFundingSources, getSourcesSQL, trbRequestID, fundingNumber)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
-			return nil, err
+			return err
 		}
 
-		return nil, nil
+		return nil
 	})
-
-	return insertedFundingSources, err
 }
 
 // DeleteTRBRequestFundingSources deletes all funding sources from a TRB Request Form by funding number
@@ -78,8 +75,7 @@ func (s *Store) DeleteTRBRequestFundingSources(
 ) ([]*models.TRBFundingSource, error) {
 
 	fundingSources := []*models.TRBFundingSource{}
-
-	_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+	return fundingSources, sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
 
 		deleteFundingSourcesSQL := `
 		DELETE FROM trb_request_funding_sources
@@ -89,7 +85,7 @@ func (s *Store) DeleteTRBRequestFundingSources(
 
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
-			return nil, err
+			return err
 		}
 
 		getSourcesSQL := `SELECT * FROM trb_request_funding_sources WHERE trb_request_id = $1 AND funding_number = $2`
@@ -97,11 +93,9 @@ func (s *Store) DeleteTRBRequestFundingSources(
 		err = tx.Select(&fundingSources, getSourcesSQL, trbRequestID, fundingNumber)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create funding sources transaction, error %s", err))
-			return nil, err
+			return err
 		}
 
-		return nil, nil
+		return nil
 	})
-
-	return fundingSources, err
 }

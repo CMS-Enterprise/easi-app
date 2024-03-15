@@ -7,12 +7,9 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// TransactionFunc defines the function signature needed to represent passing a transaction and returning a generic type
-type TransactionFunc[T any] func(*sqlx.Tx) (*T, error)
-
-// WithTransaction is a wrapper function which handles creating, committing or rolling back a transaction
+// WithTransactionRet is a wrapper function which handles creating, committing or rolling back a transaction
 // If there are any errors when executing the txFunc, the tx is rolled back. Otherwise, the tx is committed.
-func WithTransaction[T any](txPrep TransactionPreparer, txFunc TransactionFunc[T]) (*T, error) {
+func WithTransactionRet[T any](txPrep TransactionPreparer, txFunc func(*sqlx.Tx) (*T, error)) (*T, error) {
 	tx, err := txPrep.Beginx()
 	if err != nil {
 		return nil, fmt.Errorf("error creating transaction %w", err)
@@ -35,4 +32,12 @@ func WithTransaction[T any](txPrep TransactionPreparer, txFunc TransactionFunc[T
 	}
 
 	return result, nil
+}
+
+func WithTransaction(txPrep TransactionPreparer, txFunc func(*sqlx.Tx) error) error {
+	_, err := WithTransactionRet[any](txPrep, func(tx *sqlx.Tx) (*any, error) {
+		return nil, txFunc(tx)
+	})
+
+	return err
 }

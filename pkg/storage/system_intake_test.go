@@ -419,13 +419,13 @@ func (s *StoreTestSuite) TestFetchSystemIntakeByID() {
 		id := intake.ID
 		bizCase := testhelpers.NewBusinessCase(id)
 
-		_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+		err := sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
 			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
 			s.NoError(err)
 			_, err = tx.NamedExec(insertRelatedBizCaseSQL, &bizCase)
 			s.NoError(err)
 
-			return nil, nil
+			return nil
 		})
 		s.NoError(err)
 
@@ -445,13 +445,13 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
 
-		_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+		err := sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
 			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
 			s.NoError(err)
 			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
 			s.NoError(err)
 
-			return nil, nil
+			return nil
 		})
 		s.NoError(err)
 
@@ -470,13 +470,13 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		// set archived at for intake2
 		intake2.ArchivedAt = helpers.PointerTo(time.Now())
 
-		_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+		err := sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
 			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
 			s.NoError(err)
 			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
 			s.NoError(err)
 
-			return nil, nil
+			return nil
 		})
 		s.NoError(err)
 
@@ -503,7 +503,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 
 		bizCase := testhelpers.NewBusinessCase(id)
 
-		_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+		err := sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
 			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
 			s.NoError(err)
 			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
@@ -511,7 +511,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 			_, err = tx.NamedExec(insertRelatedBizCaseSQL, &bizCase)
 			s.NoError(err)
 
-			return nil, nil
+			return nil
 		})
 		s.NoError(err)
 

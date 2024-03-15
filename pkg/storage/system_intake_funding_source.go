@@ -14,12 +14,11 @@ import (
 
 func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemIntakeID uuid.UUID, fundingSources []*models.SystemIntakeFundingSource) ([]*models.SystemIntakeFundingSource, error) {
 	var fundingSourcesResult []*models.SystemIntakeFundingSource
-	_, err := sqlutils.WithTransaction[any](s, func(tx *sqlx.Tx) (*any, error) {
+	return fundingSourcesResult, sqlutils.WithTransaction(s, func(tx *sqlx.Tx) error {
 		var err error
 		fundingSourcesResult, err = s.UpdateSystemIntakeFundingSourcesNP(ctx, tx, systemIntakeID, fundingSources)
-		return nil, err
+		return err
 	})
-	return fundingSourcesResult, err
 }
 
 // UpdateSystemIntakeFundingSources clears and updates the funding sources of a system intake

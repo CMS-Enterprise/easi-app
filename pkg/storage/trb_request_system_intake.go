@@ -20,8 +20,7 @@ import (
 // CreateTRBRequestSystemIntakes deletes all TRB Intake relations for the given trbRequestID and recreates them
 func (s *Store) CreateTRBRequestSystemIntakes(ctx context.Context, trbRequestID uuid.UUID, systemIntakeIDs []uuid.UUID) ([]*models.TRBRequestSystemIntake, error) {
 	insertedTRBRequestSystemIntakes := []*models.TRBRequestSystemIntake{}
-
-	_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+	return insertedTRBRequestSystemIntakes, sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
 
 		deleteTRBRequestSystemIntakesSQL := `
 		DELETE FROM trb_request_system_intakes
@@ -30,7 +29,7 @@ func (s *Store) CreateTRBRequestSystemIntakes(ctx context.Context, trbRequestID 
 		_, err := tx.Exec(deleteTRBRequestSystemIntakesSQL, trbRequestID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create TRB request system intakes transaction, error %s", err))
-			return nil, err
+			return err
 		}
 
 		// Create a new TRBRequestSystemIntake for each SystemIntake ID
@@ -65,7 +64,7 @@ func (s *Store) CreateTRBRequestSystemIntakes(ctx context.Context, trbRequestID 
 			_, err = tx.NamedExec(insertTRBRequestSystemIntakesSQL, trbRequestSystemIntakes)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create TRB request system intakes transaction, error %s", err))
-				return nil, err
+				return err
 			}
 		}
 
@@ -73,13 +72,11 @@ func (s *Store) CreateTRBRequestSystemIntakes(ctx context.Context, trbRequestID 
 		err = tx.Select(&insertedTRBRequestSystemIntakes, getTRBRequestIntakesSQL, trbRequestID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create TRB request system intakes transaction, error %s", err))
-			return nil, err
+			return err
 		}
 
-		return nil, nil
+		return nil
 	})
-
-	return insertedTRBRequestSystemIntakes, err
 }
 
 // GetTRBRequestSystemIntakesByTRBRequestID retrieves all system intakes that have been related to a given TRB

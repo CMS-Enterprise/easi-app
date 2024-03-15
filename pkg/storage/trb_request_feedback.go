@@ -19,7 +19,7 @@ import (
 
 // CreateTRBRequestFeedback creates a new TRB request feedback record in the database
 func (s *Store) CreateTRBRequestFeedback(ctx context.Context, feedback *models.TRBRequestFeedback, formToUpdate *models.TRBRequestForm) (*models.TRBRequestFeedback, error) {
-	return sqlutils.WithTransaction[models.TRBRequestFeedback](s.db, func(tx *sqlx.Tx) (*models.TRBRequestFeedback, error) {
+	return sqlutils.WithTransactionRet[models.TRBRequestFeedback](s.db, func(tx *sqlx.Tx) (*models.TRBRequestFeedback, error) {
 		if feedback.ID == uuid.Nil {
 			feedback.ID = uuid.New()
 		}

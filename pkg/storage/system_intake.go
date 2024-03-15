@@ -182,7 +182,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 // was written before the introduction of transactions in the storage layer. This method should eventually be removed in favor of
 // using UpdateSystemIntakeNP directly (and that function renamed).
 func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-	return sqlutils.WithTransaction[models.SystemIntake](s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet[models.SystemIntake](s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		return s.UpdateSystemIntakeNP(ctx, tx, intake)
 	})
 }
@@ -306,7 +306,7 @@ const fetchSystemIntakeSQL = `
 // was written before the introduction of transactions in the storage layer. This method should eventually be removed in favor of
 // using FetchSystemIntakeByIDNP directly (and that function renamed).
 func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-	return sqlutils.WithTransaction[models.SystemIntake](s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet[models.SystemIntake](s, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		return s.FetchSystemIntakeByIDNP(ctx, tx, id)
 	})
 }
