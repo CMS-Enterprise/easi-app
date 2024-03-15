@@ -9,6 +9,10 @@ const header = {
   signIn: 'Sign In',
   signOut: 'Sign Out',
   systems: 'Systems',
+  allCMSSystems: 'All CMS systems',
+  mySystems: 'My systems',
+  bookmarkedSystems: 'Bookmarked systems',
+  addNewSystem: 'Add a new system',
   sandbox: 'Sandbox',
   technicalAssistance: 'Technical Assistance'
 };
