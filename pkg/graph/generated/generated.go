@@ -48,9 +48,11 @@ type ResolverRoot interface {
 	AccessibilityRequestDocument() AccessibilityRequestDocumentResolver
 	AccessibilityRequestNote() AccessibilityRequestNoteResolver
 	BusinessCase() BusinessCaseResolver
+	CedarAuthorityToOperate() CedarAuthorityToOperateResolver
 	CedarSoftwareProducts() CedarSoftwareProductsResolver
 	CedarSystem() CedarSystemResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
+	CedarThreat() CedarThreatResolver
 	GovernanceRequestFeedback() GovernanceRequestFeedbackResolver
 	ITGovTaskStatuses() ITGovTaskStatusesResolver
 	Mutation() MutationResolver
@@ -1210,6 +1212,16 @@ type BusinessCaseResolver interface {
 
 	SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error)
 }
+type CedarAuthorityToOperateResolver interface {
+	CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error)
+	CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error)
+	CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error)
+
+	Fips199OverallImpactRating(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error)
+
+	RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error)
+	RecoveryTimeObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error)
+}
 type CedarSoftwareProductsResolver interface {
 	SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error)
 }
@@ -1219,6 +1231,9 @@ type CedarSystemResolver interface {
 type CedarSystemDetailsResolver interface {
 	SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error)
 	BusinessOwnerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarBusinessOwnerInformation, error)
+}
+type CedarThreatResolver interface {
+	DaysOpen(ctx context.Context, obj *models.CedarThreat) (*int, error)
 }
 type GovernanceRequestFeedbackResolver interface {
 	Author(ctx context.Context, obj *models.GovernanceRequestFeedback) (*models.UserInfo, error)
@@ -16386,7 +16401,7 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalNonPrivilegedUs
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.CountOfTotalNonPrivilegedUserPopulation, nil
+		return ec.resolvers.CedarAuthorityToOperate().CountOfTotalNonPrivilegedUserPopulation(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -16398,17 +16413,17 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalNonPrivilegedUs
 		}
 		return graphql.Null
 	}
-	res := resTmp.(zero.Int)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNInt2githubᚗcomᚋgureguᚋnullᚋzeroᚐInt(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarAuthorityToOperate_countOfTotalNonPrivilegedUserPopulation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -16430,7 +16445,7 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfOpenPoams(ctx contex
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.CountOfOpenPoams, nil
+		return ec.resolvers.CedarAuthorityToOperate().CountOfOpenPoams(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -16442,17 +16457,17 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfOpenPoams(ctx contex
 		}
 		return graphql.Null
 	}
-	res := resTmp.(zero.Int)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNInt2githubᚗcomᚋgureguᚋnullᚋzeroᚐInt(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarAuthorityToOperate_countOfOpenPoams(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -16474,7 +16489,7 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalPrivilegedUserP
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.CountOfTotalPrivilegedUserPopulation, nil
+		return ec.resolvers.CedarAuthorityToOperate().CountOfTotalPrivilegedUserPopulation(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -16486,17 +16501,17 @@ func (ec *executionContext) _CedarAuthorityToOperate_countOfTotalPrivilegedUserP
 		}
 		return graphql.Null
 	}
-	res := resTmp.(zero.Int)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNInt2githubᚗcomᚋgureguᚋnullᚋzeroᚐInt(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarAuthorityToOperate_countOfTotalPrivilegedUserPopulation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -16641,7 +16656,7 @@ func (ec *executionContext) _CedarAuthorityToOperate_fips199OverallImpactRating(
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Fips199OverallImpactRating, nil
+		return ec.resolvers.CedarAuthorityToOperate().Fips199OverallImpactRating(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -16650,17 +16665,17 @@ func (ec *executionContext) _CedarAuthorityToOperate_fips199OverallImpactRating(
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(zero.Int)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalOInt2githubᚗcomᚋgureguᚋnullᚋzeroᚐInt(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarAuthorityToOperate_fips199OverallImpactRating(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -17174,7 +17189,7 @@ func (ec *executionContext) _CedarAuthorityToOperate_recoveryPointObjective(ctx 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.RecoveryPointObjective, nil
+		return ec.resolvers.CedarAuthorityToOperate().RecoveryPointObjective(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -17183,17 +17198,17 @@ func (ec *executionContext) _CedarAuthorityToOperate_recoveryPointObjective(ctx 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(zero.Float)
+	res := resTmp.(*float64)
 	fc.Result = res
-	return ec.marshalOFloat2githubᚗcomᚋgureguᚋnullᚋzeroᚐFloat(ctx, field.Selections, res)
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarAuthorityToOperate_recoveryPointObjective(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Float does not have child fields")
 		},
@@ -17215,7 +17230,7 @@ func (ec *executionContext) _CedarAuthorityToOperate_recoveryTimeObjective(ctx c
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.RecoveryTimeObjective, nil
+		return ec.resolvers.CedarAuthorityToOperate().RecoveryTimeObjective(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -17224,17 +17239,17 @@ func (ec *executionContext) _CedarAuthorityToOperate_recoveryTimeObjective(ctx c
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(zero.Float)
+	res := resTmp.(*float64)
 	fc.Result = res
-	return ec.marshalOFloat2githubᚗcomᚋgureguᚋnullᚋzeroᚐFloat(ctx, field.Selections, res)
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarAuthorityToOperate_recoveryTimeObjective(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Float does not have child fields")
 		},
@@ -24621,7 +24636,7 @@ func (ec *executionContext) _CedarThreat_daysOpen(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.DaysOpen, nil
+		return ec.resolvers.CedarThreat().DaysOpen(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -24630,17 +24645,17 @@ func (ec *executionContext) _CedarThreat_daysOpen(ctx context.Context, field gra
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(zero.Int)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalOInt2githubᚗcomᚋgureguᚋnullᚋzeroᚐInt(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarThreat_daysOpen(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarThreat",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -60406,32 +60421,125 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 		case "cedarId":
 			out.Values[i] = ec._CedarAuthorityToOperate_cedarId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "uuid":
 			out.Values[i] = ec._CedarAuthorityToOperate_uuid(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "actualDispositionDate":
 			out.Values[i] = ec._CedarAuthorityToOperate_actualDispositionDate(ctx, field, obj)
 		case "containsPersonallyIdentifiableInformation":
 			out.Values[i] = ec._CedarAuthorityToOperate_containsPersonallyIdentifiableInformation(ctx, field, obj)
 		case "countOfTotalNonPrivilegedUserPopulation":
-			out.Values[i] = ec._CedarAuthorityToOperate_countOfTotalNonPrivilegedUserPopulation(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_countOfTotalNonPrivilegedUserPopulation(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
 			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "countOfOpenPoams":
-			out.Values[i] = ec._CedarAuthorityToOperate_countOfOpenPoams(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_countOfOpenPoams(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
 			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "countOfTotalPrivilegedUserPopulation":
-			out.Values[i] = ec._CedarAuthorityToOperate_countOfTotalPrivilegedUserPopulation(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_countOfTotalPrivilegedUserPopulation(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
 			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "dateAuthorizationMemoExpires":
 			out.Values[i] = ec._CedarAuthorityToOperate_dateAuthorizationMemoExpires(ctx, field, obj)
 		case "dateAuthorizationMemoSigned":
@@ -60439,7 +60547,38 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 		case "eAuthenticationLevel":
 			out.Values[i] = ec._CedarAuthorityToOperate_eAuthenticationLevel(ctx, field, obj)
 		case "fips199OverallImpactRating":
-			out.Values[i] = ec._CedarAuthorityToOperate_fips199OverallImpactRating(ctx, field, obj)
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_fips199OverallImpactRating(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "fismaSystemAcronym":
 			out.Values[i] = ec._CedarAuthorityToOperate_fismaSystemAcronym(ctx, field, obj)
 		case "fismaSystemName":
@@ -60465,13 +60604,75 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 		case "privacySubjectMatterExpert":
 			out.Values[i] = ec._CedarAuthorityToOperate_privacySubjectMatterExpert(ctx, field, obj)
 		case "recoveryPointObjective":
-			out.Values[i] = ec._CedarAuthorityToOperate_recoveryPointObjective(ctx, field, obj)
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_recoveryPointObjective(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "recoveryTimeObjective":
-			out.Values[i] = ec._CedarAuthorityToOperate_recoveryTimeObjective(ctx, field, obj)
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarAuthorityToOperate_recoveryTimeObjective(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "systemOfRecordsNotice":
 			out.Values[i] = ec._CedarAuthorityToOperate_systemOfRecordsNotice(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "tlcPhase":
 			out.Values[i] = ec._CedarAuthorityToOperate_tlcPhase(ctx, field, obj)
@@ -61502,7 +61703,38 @@ func (ec *executionContext) _CedarThreat(ctx context.Context, sel ast.SelectionS
 		case "controlFamily":
 			out.Values[i] = ec._CedarThreat_controlFamily(ctx, field, obj)
 		case "daysOpen":
-			out.Values[i] = ec._CedarThreat_daysOpen(ctx, field, obj)
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarThreat_daysOpen(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "id":
 			out.Values[i] = ec._CedarThreat_id(ctx, field, obj)
 		case "parentId":
@@ -70846,21 +71078,6 @@ func (ec *executionContext) marshalNITGovTaskStatuses2ᚖgithubᚗcomᚋcmsgov�
 	return ec._ITGovTaskStatuses(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNInt2githubᚗcomᚋgureguᚋnullᚋzeroᚐInt(ctx context.Context, v interface{}) (zero.Int, error) {
-	res, err := models.UnmarshalZeroInt(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNInt2githubᚗcomᚋgureguᚋnullᚋzeroᚐInt(ctx context.Context, sel ast.SelectionSet, v zero.Int) graphql.Marshaler {
-	res := models.MarshalZeroInt(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
 func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
 	res, err := graphql.UnmarshalInt(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -73695,13 +73912,19 @@ func (ec *executionContext) marshalOExchangeDirection2githubᚗcomᚋcmsgovᚋea
 	return res
 }
 
-func (ec *executionContext) unmarshalOFloat2githubᚗcomᚋgureguᚋnullᚋzeroᚐFloat(ctx context.Context, v interface{}) (zero.Float, error) {
-	res, err := models.UnmarshalZeroFloat(v)
-	return res, graphql.ErrorOnPath(ctx, err)
+func (ec *executionContext) unmarshalOFloat2ᚖfloat64(ctx context.Context, v interface{}) (*float64, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalFloat(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOFloat2githubᚗcomᚋgureguᚋnullᚋzeroᚐFloat(ctx context.Context, sel ast.SelectionSet, v zero.Float) graphql.Marshaler {
-	res := models.MarshalZeroFloat(v)
+func (ec *executionContext) marshalOFloat2ᚖfloat64(ctx context.Context, sel ast.SelectionSet, v *float64) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalFloat(*v)
 	return res
 }
 
@@ -73726,16 +73949,6 @@ func (ec *executionContext) marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑapp�
 		return graphql.Null
 	}
 	return graphql.WrapContextMarshaler(ctx, v)
-}
-
-func (ec *executionContext) unmarshalOInt2githubᚗcomᚋgureguᚋnullᚋzeroᚐInt(ctx context.Context, v interface{}) (zero.Int, error) {
-	res, err := models.UnmarshalZeroInt(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOInt2githubᚗcomᚋgureguᚋnullᚋzeroᚐInt(ctx context.Context, sel ast.SelectionSet, v zero.Int) graphql.Marshaler {
-	res := models.MarshalZeroInt(v)
-	return res
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
