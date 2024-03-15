@@ -28,7 +28,7 @@ func (s *ClientTestSuite) TestClient() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
 	s.Run("Instantiation successful", func() {
-		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, false)
+		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, true)
 		s.NotNil(c)
 	})
 }
