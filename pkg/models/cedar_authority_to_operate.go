@@ -15,13 +15,13 @@ type CedarAuthorityToOperate struct {
 	// possibly-null fields
 	ActualDispositionDate                     zero.Time   `json:"actualDispositionDate"`
 	ContainsPersonallyIdentifiableInformation null.Bool   `json:"containsPersonallyIdentifiableInformation"`
-	CountOfTotalNonPrivilegedUserPopulation   zero.Int    `json:"countOfTotalNonPrivilegedUserPopulation"`
-	CountOfOpenPoams                          zero.Int    `json:"countOfOpenPoams"`
-	CountOfTotalPrivilegedUserPopulation      zero.Int    `json:"countOfTotalPrivilegedUserPopulation"`
+	CountOfTotalNonPrivilegedUserPopulation   null.Int    `json:"countOfTotalNonPrivilegedUserPopulation"`
+	CountOfOpenPoams                          null.Int    `json:"countOfOpenPoams"`
+	CountOfTotalPrivilegedUserPopulation      null.Int    `json:"countOfTotalPrivilegedUserPopulation"`
 	DateAuthorizationMemoExpires              zero.Time   `json:"dateAuthorizationMemoExpires"`
 	DateAuthorizationMemoSigned               zero.Time   `json:"dateAuthorizationMemoSigned"`
 	EAuthenticationLevel                      zero.String `json:"eAuthenticationLevel"`
-	Fips199OverallImpactRating                zero.Int    `json:"fips199OverallImpactRating"`
+	Fips199OverallImpactRating                null.Int    `json:"fips199OverallImpactRating"`
 	FismaSystemAcronym                        zero.String `json:"fismaSystemAcronym"`
 	FismaSystemName                           zero.String `json:"fismaSystemName"`
 	IsAccessedByNonOrganizationalUsers        null.Bool   `json:"isAccessedByNonOrganizationalUsers"`
@@ -34,8 +34,8 @@ type CedarAuthorityToOperate struct {
 	PiaCompletionDate                         zero.Time   `json:"piaCompletionDate"`
 	PrimaryCyberRiskAdvisor                   zero.String `json:"primaryCyberRiskAdvisor"`
 	PrivacySubjectMatterExpert                zero.String `json:"privacySubjectMatterExpert"`
-	RecoveryPointObjective                    zero.Float  `json:"recoveryPointObjective"`
-	RecoveryTimeObjective                     zero.Float  `json:"recoveryTimeObjective"`
+	RecoveryPointObjective                    null.Float  `json:"recoveryPointObjective"`
+	RecoveryTimeObjective                     null.Float  `json:"recoveryTimeObjective"`
 	TLCPhase                                  zero.String `json:"tlcPhase"`
 	XLCPhase                                  zero.String `json:"xlcPhase"`
 }
