@@ -12,7 +12,7 @@ import (
 
 // GetContractBySystem queries CEDAR for contract information associated with a particular system, taking the version-independent ID of a system
 func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarContract, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarContract{}, nil
 	}

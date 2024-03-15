@@ -128,7 +128,7 @@ func (s *Server) routes(
 		s.Config.GetString(appconfig.CEDARAPIKey),
 		s.Config.GetString(appconfig.CEDARCoreAPIVersion),
 		s.Config.GetDuration(appconfig.CEDARCacheIntervalKey),
-		ldClient,
+		s.Config.GetBool(appconfig.CEDARCoreMock),
 	)
 
 	// set up Email Client

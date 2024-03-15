@@ -17,6 +17,7 @@ services:
       - db
   easi:
     environment:
+      - CEDAR_CORE_MOCK
       - CEDAR_API_KEY
       - CEDAR_API_URL
       - CEDAR_CORE_API_VERSION

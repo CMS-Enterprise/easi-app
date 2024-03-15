@@ -58,12 +58,10 @@ The CEDAR Intake Swagger file requires a bit of preprocessing before code genera
 
 ### Connecting to CEDAR when running locally
 
-Make sure the `cedarCoreEnabled` LaunchDarkly flag is set to true. If you're not connected to LaunchDarkly during local development, in [`pkg/cedar/core/client.go`](../pkg/cedar/core/client.go), set `cedarCoreEnabledDefault = true`.
-
 `.envrc.local` will need to define environment variables for connecting to and authenticating with CEDAR. Add the following:
 
 ```
-export CEDAR_ENV=impl
+export CEDAR_CORE_MOCK=false
 export CEDAR_API_URL="webmethods-apigw.cedarimpl.cms.gov"
 export CEDAR_API_KEY=[insert IMPL API key from 1Password here]
 export CEDAR_CORE_API_VERSION=2.0.0

@@ -12,7 +12,7 @@ import (
 
 // GetBudgetBySystem queries CEDAR for budget information associated with a particular system, taking the version-independent ID of a system
 func (c *Client) GetBudgetBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarBudget{}, nil
 	}

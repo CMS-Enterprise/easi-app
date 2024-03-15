@@ -180,6 +180,11 @@ const CEDARCoreAPIVersion = "CEDAR_CORE_API_VERSION"
 // https://pkg.go.dev/time#ParseDuration
 const CEDARCacheIntervalKey = "CEDAR_CACHE_INTERVAL"
 
+// CEDARCoreMock is the key for the environment variable that determines if the CEDAR Core API should be mocked
+// If set to true, mock data will be used
+// If set to false, real calls to the CEDAR Core API will be made
+const CEDARCoreMock = "CEDAR_CORE_MOCK"
+
 // LDKey is the key for accessing LaunchDarkly
 const LDKey = "LD_SDK_KEY"
 
