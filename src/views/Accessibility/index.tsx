@@ -28,14 +28,7 @@ const NewRequest = (
     component={Create}
   />
 );
-const NewRequestCedarSystem = (
-  <Route
-    key="create-508-request"
-    path="/508/requests/new"
-    exact
-    component={RequestCedarSystem}
-  />
-);
+
 const AllRequests = (
   <Route
     key="list-508-requests"
@@ -158,7 +151,7 @@ const Accessibility = () => {
       return (
         <PageTemplate>
           {[
-            flags.cedar508Requests ? NewRequestCedarSystem : NewRequest,
+            NewRequest,
             AllRequests,
             AccessibilityTestingOverview,
             MakingANewRequest,
@@ -178,7 +171,7 @@ const Accessibility = () => {
     return (
       <PageTemplate>
         {[
-          flags.cedar508Requests ? NewRequestCedarSystem : NewRequest,
+          NewRequest,
           AccessibilityTestingOverview,
           MakingANewRequest,
           AccessibilityTestingTemplates,

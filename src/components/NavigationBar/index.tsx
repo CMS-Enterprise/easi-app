@@ -33,7 +33,7 @@ export const navLinks = (
   {
     link: '/systems',
     label: 'systems',
-    isEnabled: flags.systemProfile
+    isEnabled: true
   },
   {
     link: '/system/making-a-request',
@@ -41,19 +41,9 @@ export const navLinks = (
     isEnabled: true
   },
   {
-    link: '/508',
-    label: 'add508Request',
-    isEnabled: !flags.hide508Workflow
-  },
-  {
     link: '/trb',
     label: 'technicalAssistance',
-    isEnabled: flags.technicalAssistance
-  },
-  {
-    link: '/sandbox',
-    label: 'sandbox',
-    isEnabled: flags.sandbox
+    isEnabled: true
   },
   {
     link: '/help',

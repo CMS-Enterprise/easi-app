@@ -9,7 +9,6 @@ const header = {
   signIn: 'Sign In',
   signOut: 'Sign Out',
   systems: 'Systems',
-  sandbox: 'Sandbox',
   technicalAssistance: 'Technical Assistance'
 };
 

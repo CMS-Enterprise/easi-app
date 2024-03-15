@@ -5,7 +5,6 @@ import {
   Link as UswdsLink,
   SummaryBox
 } from '@trussworks/react-uswds';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -16,7 +15,6 @@ import Table from 'views/MyRequests/Table';
 
 const MakingARequest = () => {
   const { t } = useTranslation('accessibility');
-  const flags = useFlags();
 
   return (
     <div
@@ -56,13 +54,7 @@ const MakingARequest = () => {
             {t('makingARequest.useThisService')}
           </p>
           <ul className="padding-left-205 margin-0 line-height-body-5">
-            <li>
-              {t(
-                flags.cedar508Requests
-                  ? 'makingARequest.cedar.request508TestingBullet'
-                  : 'makingARequest.request508TestingBullet'
-              )}
-            </li>
+            <li>{t('makingARequest.request508TestingBullet')}</li>
             <li>{t('makingARequest.uploadDocumentsBullet')}</li>
           </ul>
         </SummaryBox>
@@ -76,14 +68,12 @@ const MakingARequest = () => {
             indexTwo
           </Trans>
         </p>
-        {!flags.cedar508Requests && (
-          <>
-            <h3 className="margin-top-5 margin-bottom-2">
-              {t('makingARequest.beforeYouStart')}
-            </h3>
-            <p>{t('makingARequest.needLcid')}</p>
-          </>
-        )}
+        <>
+          <h3 className="margin-top-5 margin-bottom-2">
+            {t('makingARequest.beforeYouStart')}
+          </h3>
+          <p>{t('makingARequest.needLcid')}</p>
+        </>
         <UswdsReactLink
           className="usa-button"
           to="/508/testing-overview?continue=true"
@@ -91,23 +81,21 @@ const MakingARequest = () => {
         >
           {t('makingARequest.continueButton')}
         </UswdsReactLink>
-        {!flags.cedar508Requests && (
-          <CollapsableLink
-            id="easi-508-no-lcid"
-            label={t('makingARequest.noLcidHeader')}
-            className="margin-top-3"
-          >
-            <p className="line-height-body-5">
-              <Trans i18nKey="accessibility:makingARequest.noLcidBody">
-                indexZero
-                <UswdsLink href="mailto:IT_Governance@cms.hhs.gov">
-                  email
-                </UswdsLink>
-                indexTwo
-              </Trans>
-            </p>
-          </CollapsableLink>
-        )}
+        <CollapsableLink
+          id="easi-508-no-lcid"
+          label={t('makingARequest.noLcidHeader')}
+          className="margin-top-3"
+        >
+          <p className="line-height-body-5">
+            <Trans i18nKey="accessibility:makingARequest.noLcidBody">
+              indexZero
+              <UswdsLink href="mailto:IT_Governance@cms.hhs.gov">
+                email
+              </UswdsLink>
+              indexTwo
+            </Trans>
+          </p>
+        </CollapsableLink>
         <h2 className="padding-top-2 margin-top-5 easi-section__border-top">
           {t('makingARequest.myRequests')}
         </h2>

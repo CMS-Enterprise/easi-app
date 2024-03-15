@@ -98,19 +98,16 @@ const Home = () => {
               </h2>
 
               <Grid row gap={2}>
-                {[
-                  { ITGov: requestTypes.ITGov },
-                  ...(flags.technicalAssistance
-                    ? [{ TRB: requestTypes.TRB }]
-                    : [])
-                ].map(requestType => (
-                  <Grid tablet={{ col: 6 }} key={Object.keys(requestType)[0]}>
-                    <LinkCard
-                      className="margin-top-1"
-                      type={Object.keys(requestType)[0] as LinkRequestType}
-                    />
-                  </Grid>
-                ))}
+                {[{ ITGov: requestTypes.ITGov }, { TRB: requestTypes.TRB }].map(
+                  requestType => (
+                    <Grid tablet={{ col: 6 }} key={Object.keys(requestType)[0]}>
+                      <LinkCard
+                        className="margin-top-1"
+                        type={Object.keys(requestType)[0] as LinkRequestType}
+                      />
+                    </Grid>
+                  )
+                )}
               </Grid>
             </Grid>
 

@@ -6,7 +6,10 @@ import userEvent from '@testing-library/user-event';
 
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
-import { mockBookmarkInfo, mockSystemInfo } from 'views/Sandbox/mockSystemData';
+import {
+  mockBookmarkInfo,
+  mockSystemInfo
+} from 'views/SystemProfile/mockSystemData';
 
 import SystemList from './index';
 
