@@ -63,9 +63,16 @@ export default gql`
           year
         }
       }
+
+      contractName
       contractNumbers {
         contractNumber
       }
+      systems {
+        id
+        name
+      }
+
       businessNeed
       businessSolution
       currentStage

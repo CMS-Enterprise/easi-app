@@ -293,12 +293,17 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
   const needsEaSupport = convertBoolToYesNo(intake?.needsEaSupport);
   const hasUiChanges = convertBoolToYesNo(intake?.hasUiChanges);
 
+  const contractNumber = intake.contractNumbers
+    .map(v => v.contractNumber)
+    .join(', ');
+  const cmsSystem = intake.systems.map(v => v.name).join(', ');
+
   // Override all applicable fields with CSV formatting
   return cleanCSVData({
     ...intake,
-    contractNumber: intake.contractNumbers
-      .map(v => v.contractNumber)
-      .join(', '),
+    contractName: intake.contractName || '',
+    contractNumber,
+    cmsSystem,
     lastAdminNote,
     // Formatted booleans
     existingFunding,
