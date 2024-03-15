@@ -55,6 +55,7 @@ jobs:
           AWS_SES_SOURCE_ARN: ${{ secrets.AWS_SES_SOURCE_ARN }}
           AWS_S3_FILE_UPLOAD_BUCKET: easi-app-file-uploads
           CEDAR_CORE_MOCK: true # Don't want real calls to CEDAR in our CI env
+          CEDAR_INTAKE_DISABLED: true # Don't want real calls to CEDAR in our CI env
           CLIENT_PROTOCOL: http
           CLIENT_PORT: 3000
           CLIENT_HOSTNAME: localhost:3000
@@ -152,6 +153,7 @@ jobs:
           OKTA_TEST_SECRET: ${{ secrets.OKTA_TEST_SECRET }}
           OKTA_TEST_USERNAME: ${{ secrets.OKTA_TEST_USERNAME }}
           CEDAR_CORE_MOCK: true # Don't want real calls to CEDAR in our CI env
+          CEDAR_INTAKE_DISABLED: true # Don't want real calls to CEDAR in our CI env
         run: |
           ./scripts/run-cypress-test-docker
       - name: Upload cypress videos
