@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
-import classnames from 'classnames';
 
 import { localAuthStorageKey } from 'constants/localAuth';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
@@ -39,11 +38,7 @@ export const Header = () => {
   };
 
   return (
-    <header
-      className={classnames('usa-header easi-header')}
-      role="banner"
-      ref={navbarRef}
-    >
+    <header className="usa-header easi-header" role="banner" ref={navbarRef}>
       <div className="grid-container easi-header__basic">
         {!isMobile && (
           <div className="usa-logo site-logo" id="logo">

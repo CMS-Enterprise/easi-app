@@ -28,7 +28,6 @@ import {
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
-// import SystemHealthIcon from 'components/SystemHealthIcon';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
 import TablePagination from 'components/TablePagination';
@@ -37,7 +36,6 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // 
 import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQuery';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
 import GetMyCedarSystemsQuery from 'queries/GetMyCedarSystemsQuery';
-// import { mapCedarStatusToIcon } from 'types/iconStatus';
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
 import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
 import { GetMyCedarSystems as GetMyCedarSystemsType } from 'queries/types/GetMyCedarSystems';
@@ -97,11 +95,7 @@ export const Table = ({
       });
     }
 
-    if (isMySystems) {
-      setSystemTableType('my-systems');
-    } else {
-      setSystemTableType(tableType);
-    }
+    setSystemTableType(isMySystems ? 'my-systems' : tableType);
   }, [tableType, isMySystems, history]);
 
   // On button group toggle, change query param
