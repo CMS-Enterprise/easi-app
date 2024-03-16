@@ -11,6 +11,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
 import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
+import formatContractNumbers from 'utils/formatContractNumbers';
 
 type SystemCardItemProps = {
   id: string;
@@ -87,7 +88,7 @@ function AdditionalRequestInfo({
   systems: SystemCardItemProps[];
   relationType: string | null;
   contractName: string | null;
-  contractNumbers: any[];
+  contractNumbers: { contractNumber: string }[];
   requestType: RequestType;
 }) {
   const { t } = useTranslation('itGov');
@@ -149,7 +150,7 @@ function AdditionalRequestInfo({
           </span>
           <br />
           {system.contractNumbers.length ? (
-            system.contractNumbers.map(v => v.contractNumber).join(', ')
+            formatContractNumbers(system.contractNumbers)
           ) : (
             <em className="text-base">
               {t('additionalRequestInfo.noContractNumber')}

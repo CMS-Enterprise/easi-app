@@ -6,6 +6,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import SystemCardTable from 'components/SystemCard/table';
 import { SystemIntake } from 'queries/types/SystemIntake';
+import formatContractNumbers from 'utils/formatContractNumbers';
 
 const AdditionalInformation = ({
   systemIntake
@@ -72,9 +73,7 @@ const AdditionalInformation = ({
             })}
           </strong>
           <p className="margin-top-1">
-            {systemIntake.contractNumbers
-              .map(contract => contract.contractNumber)
-              .join(', ')}
+            {formatContractNumbers(systemIntake.contractNumbers)}
           </p>
         </div>
       )}

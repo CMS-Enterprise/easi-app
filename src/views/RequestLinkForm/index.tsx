@@ -84,6 +84,7 @@ import {
 // import { AppState } from 'reducers/rootReducer';
 import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
+import formatContractNumbers from 'utils/formatContractNumbers';
 
 const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
   // isAdmin
@@ -207,9 +208,7 @@ const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
       return {
         relationType: values.relationType,
         cedarSystemIDs: values.systems.map(v => v.id),
-        contractNumbers: values.contractNumbers
-          .map(v => v.contractNumber)
-          .join(', '),
+        contractNumbers: formatContractNumbers(values.contractNumbers),
         contractName: values.contractName || ''
       };
     })(

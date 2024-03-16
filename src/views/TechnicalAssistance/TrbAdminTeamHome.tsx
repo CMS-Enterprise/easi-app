@@ -35,6 +35,7 @@ import {
 } from 'types/technicalAssistance';
 import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal } from 'utils/date';
+import formatContractNumbers from 'utils/formatContractNumbers';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -77,9 +78,7 @@ export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
       r.trbLeadInfo.commonName,
       'TRB'
     );
-    const contractNumber = r.contractNumbers
-      .map(v => v.contractNumber)
-      .join(', ');
+    const contractNumber = formatContractNumbers(r.contractNumbers);
     const cmsSystem = r.systems.map(v => v.name).join(', ');
 
     return [
