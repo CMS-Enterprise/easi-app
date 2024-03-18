@@ -40,6 +40,7 @@ linters:
      - gosimple #will be deprecated in golangci-lint v2.0 in favor of staticcheck https://github.com/golangci/golangci-lint/issues/357
      - unused #will be deprecated in golangci-lint v2.0 in favor of staticcheck https://github.com/golangci/golangci-lint/issues/357
      - exhaustive
+     - sqlclosecheck
   disable:
     - errcheck #requires patching code
 issues:

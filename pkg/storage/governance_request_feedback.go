@@ -47,7 +47,7 @@ func (s *Store) CreateGovernanceRequestFeedback(ctx context.Context, requestFeed
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	// defer stmt.Close()
 
 	retFeedback := models.GovernanceRequestFeedback{}
 
