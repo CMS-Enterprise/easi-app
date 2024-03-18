@@ -64,15 +64,18 @@ const AdditionalInformation = ({
         </div>
       )}
 
-      {systemIntake.contract?.number && (
+      {systemIntake.contractNumbers.length > 0 && (
         <div className="margin-top-3">
           <strong>
             {t('additionalInformation.contractNumber', {
-              plural:
-                systemIntake.contract?.number.split(',').length > 1 ? 's' : ''
+              plural: systemIntake.contractNumbers.length > 1 ? 's' : ''
             })}
           </strong>
-          <p className="margin-top-1">{systemIntake.contract?.number}</p>
+          <p className="margin-top-1">
+            {systemIntake.contractNumbers
+              .map(contract => contract.contractNumber)
+              .join(', ')}
+          </p>
         </div>
       )}
     </div>

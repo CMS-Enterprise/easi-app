@@ -122,7 +122,7 @@ const SystemIntakeValidationSchema: any = {
           .trim()
           .required('Tell us whether you have selected a contractor(s)')
       }),
-      number: Yup.string().when('hasContract', {
+      numbers: Yup.string().when('hasContract', {
         is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.string().trim().required('Tell us about the contract number')
       }),

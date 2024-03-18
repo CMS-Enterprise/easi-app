@@ -63,7 +63,10 @@ ExchangeAddParams contains all the parameters to send to the API endpoint
 */
 type ExchangeAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Data exchange array to be added to Alfabet.
+	*/
 	Body *models.ExchangeAddRequest
 
 	timeout    time.Duration

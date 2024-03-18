@@ -29,7 +29,10 @@ export const SystemIntake = gql`
         year
       }
       vehicle
-      number
+    }
+    contractNumbers {
+      id
+      contractNumber
     }
     costs {
       isExpectingIncrease
@@ -106,6 +109,10 @@ export const SystemIntake = gql`
     trbFollowUpRecommendation
     requestFormState
     contractName
+    contractNumbers {
+      id
+      contractNumber
+    }
     systems {
       id
       name

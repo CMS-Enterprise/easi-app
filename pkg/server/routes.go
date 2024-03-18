@@ -24,7 +24,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
-	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/oktaapi"
 	"github.com/cmsgov/easi-app/pkg/usersearch"
@@ -110,25 +109,16 @@ func (s *Server) routes(
 	//TODO: update this to have OKTA API live in it's own package?
 	var userSearchClient usersearch.Client
 	if s.environment.Local() || s.environment.Test() {
-		userSearchClient = local.NewCedarLdapClient(s.logger)
+		userSearchClient = local.NewOktaAPIClient()
 	} else {
-		useOKTAAPI := s.Config.GetBool(appconfig.USEOKTAAPI)
-		if useOKTAAPI {
-			// Create Okta API Client
-			var oktaClientErr error
-			// Ensure Okta API Variables are set
-			s.NewOktaAPIClientCheck()
-			userSearchClient, oktaClientErr = oktaapi.NewClient(s.Config.GetString(appconfig.OKTAAPIURL), s.Config.GetString(appconfig.OKTAAPIToken))
-			if oktaClientErr != nil {
-				s.logger.Fatal("failed to create okta api client", zap.Error(oktaClientErr))
-			}
-		} else {
-			userSearchClient = cedarldap.NewTranslatedClient(
-				s.Config.GetString(appconfig.CEDARAPIURL),
-				s.Config.GetString(appconfig.CEDARAPIKey),
-			)
+		// Create Okta API Client
+		var oktaClientErr error
+		// Ensure Okta API Variables are set
+		s.NewOktaAPIClientCheck()
+		userSearchClient, oktaClientErr = oktaapi.NewClient(s.Config.GetString(appconfig.OKTAAPIURL), s.Config.GetString(appconfig.OKTAAPIToken))
+		if oktaClientErr != nil {
+			s.logger.Fatal("failed to create okta api client", zap.Error(oktaClientErr))
 		}
-
 	}
 
 	// set up CEDAR core API client

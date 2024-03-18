@@ -33,7 +33,8 @@ const subNavItems = (systemId: string, flags?: Flags): SubNavItems => [
   {
     route: `/governance-review-team/${systemId}/decision`,
     text: 'decision.title',
-    aria: 'aria.openDecision'
+    aria: 'aria.openDecision',
+    groupEnd: flags?.itgovLinkRequestsAdmin
   },
   ...(flags?.itgovLinkRequestsAdmin
     ? [
@@ -41,7 +42,8 @@ const subNavItems = (systemId: string, flags?: Flags): SubNavItems => [
           // Not sure why this isn't appeasing TS
           route: `/governance-review-team/${systemId}/additional-information` as `/governance-review-team/${string}/${string}`,
           text: 'additionalInformation.title',
-          aria: 'aria.openAdditionalInformation'
+          aria: 'aria.openAdditionalInformation',
+          groupEnd: true
         }
       ]
     : []),

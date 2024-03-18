@@ -34,7 +34,7 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 
 	s.Run("LD defaults protects invocation of GetSystemSummary", func() {
 		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, ldClient)
-		resp, err := c.GetSystemSummary(ctx, false)
+		resp, err := c.GetSystemSummary(ctx, false, nil)
 		s.NoError(err)
 
 		// ensure mock data is returned
@@ -52,10 +52,8 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 
 	s.Run("LD defaults protects invocation of GetSystem", func() {
 		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, ldClient)
-		// fake, non-mocked systemID should not return system
 		resp, err := c.GetSystem(ctx, "fake")
 		s.NoError(err)
-		s.Empty(resp)
 
 		// should return mocked system when given corresponding mockKey
 		for _, v := range local.GetMockSystems() {

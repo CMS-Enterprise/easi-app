@@ -13,9 +13,8 @@ type SystemCardTableProps = {
 };
 
 /**
- * Creating a bare table to house favorite cards
- * Utilizing pagination if more than three favories
- * Possbility for sort functionality in future
+ * Creating a bare table for SystemCard
+ * Utilizing pagination for each/single card
  * */
 
 const SystemCardTable = ({ systems }: SystemCardTableProps) => {
@@ -69,7 +68,7 @@ const SystemCardTable = ({ systems }: SystemCardTableProps) => {
   );
 
   return (
-    <div id="favorite-table">
+    <div id="system-card-table">
       <UswdsTable {...getTableProps()} fullWidth>
         <tbody {...getTableBodyProps()}>
           {page.map(row => {

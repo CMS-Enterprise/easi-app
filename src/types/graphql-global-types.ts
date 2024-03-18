@@ -929,7 +929,7 @@ export interface SystemIntakeContractInput {
   endDate?: Time | null;
   hasContract?: string | null;
   startDate?: Time | null;
-  number?: string | null;
+  numbers: string[];
 }
 
 /**

@@ -43,7 +43,7 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 	case models.SystemIntakeStepDECISION:
 		retStatus, err = calcSystemIntakeDecisionStatusAdmin(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
-		return retStatus, fmt.Errorf("issue calculating the admin state status, no valid step")
+		return retStatus, fmt.Errorf("issue calculating the admin state status, no valid step: %s", intake.Step)
 
 	}
 	return retStatus, err
@@ -95,17 +95,19 @@ func calcSystemIntakeGRBMeetingStatusAdmin(grbDate *time.Time) models.SystemInta
 }
 
 func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisionState, lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusAdmin, error) {
-	if decisionState == models.SIDSLcidIssued {
+	switch decisionState {
+	case models.SIDSLcidIssued:
 		return calcLCIDIssuedDecisionStatus(lcidStatus)
-	}
-	if decisionState == models.SIDSNotGovernance {
+	case models.SIDSNotGovernance:
 		return models.SISANotGovernance, nil
-	}
-	if decisionState == models.SIDSNotApproved {
+	case models.SIDSNotApproved:
 		return models.SISANotApproved, nil
+	case models.SIDSNoDecision:
+		fallthrough
+	default:
+		return "", fmt.Errorf("invalid decision state: %s", decisionState) // This status should not be returned in normal use of the application
 	}
 
-	return "", fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
 }
 
 // calcLCIDIssuedDecisionStatus checks an LCID status and appropriately converts it to a SystemIntakeStatusAdmin
@@ -113,15 +115,15 @@ func calcLCIDIssuedDecisionStatus(lcidStatus *models.SystemIntakeLCIDStatus) (mo
 	if lcidStatus == nil {
 		return models.SISALcidIssued, nil
 	}
-	if *lcidStatus == models.SystemIntakeLCIDStatusIssued {
-		return models.SISALcidIssued, nil
-	}
-	if *lcidStatus == models.SystemIntakeLCIDStatusExpired {
-		return models.SISALcidExpired, nil
-	}
-	if *lcidStatus == models.SystemIntakeLCIDStatusRetired {
-		return models.SISALcidRetired, nil
-	}
-	return "", fmt.Errorf("invalid lcid status provided: %v", lcidStatus)
 
+	switch *lcidStatus {
+	case models.SystemIntakeLCIDStatusIssued:
+		return models.SISALcidIssued, nil
+	case models.SystemIntakeLCIDStatusExpired:
+		return models.SISALcidExpired, nil
+	case models.SystemIntakeLCIDStatusRetired:
+		return models.SISALcidRetired, nil
+	default:
+		return "", fmt.Errorf("invalid lcid status provided: %s", *lcidStatus)
+	}
 }

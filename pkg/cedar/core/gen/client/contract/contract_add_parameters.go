@@ -63,7 +63,10 @@ ContractAddParams contains all the parameters to send to the API endpoint
 */
 type ContractAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   An array of Contracts to be added to CEDAR Alfabet.
+	*/
 	Body *models.ContractAddRequest
 
 	timeout    time.Duration

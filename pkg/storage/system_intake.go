@@ -91,7 +91,6 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			planned_year_one_spending_it_portion,
 			contractor,
 			contract_vehicle,
-			contract_number,
 			contract_start_month,
 			contract_start_year,
 			contract_end_month,
@@ -148,7 +147,6 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:planned_year_one_spending_it_portion,
 			:contractor,
 			:contract_vehicle,
-			:contract_number,
 			:contract_start_month,
 			:contract_start_year,
 			:contract_end_month,
@@ -240,7 +238,6 @@ func (s *Store) UpdateSystemIntakeNP(ctx context.Context, np sqlutils.NamedPrepa
 			planned_year_one_spending_it_portion = :planned_year_one_spending_it_portion,
 			contractor = :contractor,
 			contract_vehicle = :contract_vehicle,
-			contract_number = :contract_number,
 			contract_start_date = :contract_start_date,
 			contract_end_date = :contract_end_date,
 			updated_at = :updated_at,
@@ -604,38 +601,6 @@ func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *ti
 	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
 
-// UpdateSystemIntakeLinkedContract updates the contract number that is linked to a system intake
-func (s *Store) UpdateSystemIntakeLinkedContract(ctx context.Context, id uuid.UUID, contractNumber null.String) (*models.SystemIntake, error) {
-	intake := struct {
-		ID             uuid.UUID
-		ContractNumber null.String `db:"contract_number"`
-		UpdatedAt      time.Time   `db:"updated_at"`
-	}{
-		ID:             id,
-		ContractNumber: contractNumber,
-		UpdatedAt:      time.Now(),
-	}
-
-	const updateSystemIntakeSQL = `
-		UPDATE system_intakes
-		SET
-			updated_at = :updated_at,
-			contract_number = :contract_number
-		WHERE system_intakes.id = :id
-	`
-
-	_, err := s.db.NamedExec(
-		updateSystemIntakeSQL,
-		intake,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return s.FetchSystemIntakeByID(ctx, id)
-}
-
 // UpdateSystemIntakeLinkedCedarSystem updates the CEDAR system ID that is linked to a system intake
 func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid.UUID, cedarSystemID null.String) (*models.SystemIntake, error) {
 	intake := struct {
@@ -666,29 +631,6 @@ func (s *Store) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, id uuid
 	}
 
 	return s.FetchSystemIntakeByID(ctx, id)
-}
-
-// FetchRelatedSystemIntakes retrieves System Intakes that share a CEDAR system ID and/or a contract
-// number with a given System Intake
-func (s *Store) FetchRelatedSystemIntakes(ctx context.Context, id uuid.UUID) ([]*models.SystemIntake, error) {
-	intakes := []*models.SystemIntake{}
-
-	query := `
-		SELECT intakes_b.*
-		FROM system_intakes as intakes_a
-		JOIN system_intakes as intakes_b
-		ON
-			(intakes_a.cedar_system_id = intakes_b.cedar_system_id
-			OR intakes_a.contract_number = intakes_b.contract_number)
-		WHERE
-			intakes_a.id = $1 AND intakes_b.id != $1;
-	`
-
-	err := s.db.Select(&intakes, query, id)
-	if err != nil {
-		return nil, err
-	}
-	return intakes, nil
 }
 
 // GetSystemIntakesWithLCIDs retrieves all LCIDs that are in use

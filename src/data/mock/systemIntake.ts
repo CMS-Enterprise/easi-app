@@ -203,7 +203,6 @@ export const emptySystemIntake: SystemIntake = {
     hasContract: null,
     contractor: null,
     vehicle: null,
-    number: null,
     startDate: {
       __typename: 'ContractDate',
       month: null,
@@ -247,6 +246,13 @@ export const emptySystemIntake: SystemIntake = {
   trbFollowUpRecommendation: null,
   requestFormState: SystemIntakeFormState.IN_PROGRESS,
   contractName: 'My contract',
+  contractNumbers: [
+    {
+      __typename: 'SystemIntakeContractNumber',
+      id: '34t53432',
+      contractNumber: '123456-7890'
+    }
+  ],
   systems: [
     {
       __typename: 'CedarSystem',
@@ -321,7 +327,6 @@ export const systemIntake: SystemIntake = {
     hasContract: 'IN_PROGRESS',
     contractor: 'TrussWorks, Inc.',
     vehicle: 'Sole Source',
-    number: '123456-7890',
     startDate: {
       __typename: 'ContractDate',
       month: '1',
@@ -365,6 +370,13 @@ export const systemIntake: SystemIntake = {
   trbFollowUpRecommendation: null,
   requestFormState: SystemIntakeFormState.SUBMITTED,
   contractName: 'My contract',
+  contractNumbers: [
+    {
+      __typename: 'SystemIntakeContractNumber',
+      id: '34t53432',
+      contractNumber: '123456-7890'
+    }
+  ],
   systems: [
     {
       __typename: 'CedarSystem',
@@ -412,7 +424,6 @@ export const initialSystemIntakeForm: SystemIntake = {
     __typename: 'SystemIntakeContract',
     hasContract: '',
     contractor: '',
-    number: '',
     vehicle: '',
     startDate: {
       __typename: 'ContractDate',

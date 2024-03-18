@@ -63,7 +63,10 @@ PersonAddParams contains all the parameters to send to the API endpoint
 */
 type PersonAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Person information to be added to Alfabet.
+	*/
 	Body *models.Person
 
 	timeout    time.Duration

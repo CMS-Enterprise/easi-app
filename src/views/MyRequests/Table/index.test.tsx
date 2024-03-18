@@ -22,7 +22,7 @@ describe('My Requests Table', () => {
 
       expect(
         await screen.findByText(
-          'Requests will display in a table once you add them'
+          'You do not have any open requests in EASi. To start a new IT Governance request or technical assistance request, use the buttons above.'
         )
       ).toBeInTheDocument();
     });
@@ -81,7 +81,7 @@ describe('My Requests Table', () => {
       render(
         <MemoryRouter>
           <MockedProvider mocks={[getRequestsQuery()]}>
-            <Table />
+            <Table defaultPageSize={4} />
           </MockedProvider>
         </MemoryRouter>
       );
