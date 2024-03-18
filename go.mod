@@ -3,9 +3,9 @@ module github.com/cmsgov/easi-app
 go 1.21
 
 require (
-	github.com/99designs/gqlgen v0.17.44
+	github.com/99designs/gqlgen v0.17.45
 	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
-	github.com/aws/aws-sdk-go v1.50.35
+	github.com/aws/aws-sdk-go v1.51.1
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-openapi/errors v0.22.0
 	github.com/go-openapi/runtime v0.28.0
@@ -63,7 +63,7 @@ require (
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.26
-	golang.org/x/net v0.21.0 // indirect
+	golang.org/x/net v0.22.0 // indirect
 )
 
 require (
@@ -120,10 +120,10 @@ require (
 	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
-	golang.org/x/mod v0.14.0 // indirect
+	golang.org/x/mod v0.16.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	golang.org/x/tools v0.17.0 // indirect
+	golang.org/x/tools v0.19.0 // indirect
 	gopkg.in/ghodss/yaml.v1 v1.0.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/launchdarkly/go-jsonstream.v1 v1.0.1 // indirect
