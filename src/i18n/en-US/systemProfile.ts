@@ -201,6 +201,7 @@ const systemProfile = {
     toolsAndSoftware: {
       header: 'Tools and Software',
       productCategory: 'Product Category',
+      elaPurchase: 'Purchased under an Enterprise License Agreement',
       noManufacturerListed: 'No manufacturer listed',
       apiGateway: 'API Gateway',
       usedForAI: 'Used for Artificial Intelligence',
