@@ -59,6 +59,7 @@ func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID 
 			SystemSoftwareConnectionGUID:   zero.StringFrom(softwareProduct.SystemSoftwareConnectionGUID),
 			TechnopediaCategory:            zero.StringFrom(softwareProduct.TechnopediaCategory),
 			TechnopediaID:                  zero.StringFrom(softwareProduct.TechnopediaID),
+			VendorName:                     zero.StringFrom(softwareProduct.VendorName),
 		})
 	}
 
