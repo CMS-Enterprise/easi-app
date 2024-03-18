@@ -9,8 +9,9 @@ import {
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
-import { GetGovernanceTaskList_systemIntake as SystemIntake } from 'queries/types/GetGovernanceTaskList';
 import { RequestRelationType } from 'types/graphql-global-types';
+import { RequestType } from 'types/requestType';
+import formatContractNumbers from 'utils/formatContractNumbers';
 
 type SystemCardItemProps = {
   id: string;
@@ -80,8 +81,22 @@ function SystemCardList({ items }: { items: SystemCardItemProps[] }) {
   );
 }
 
-function AdditionalRequestInfo({ ...system }: SystemIntake) {
+function AdditionalRequestInfo({
+  ...system
+}: {
+  id: string;
+  systems: SystemCardItemProps[];
+  relationType: string | null;
+  contractName: string | null;
+  contractNumbers: { contractNumber: string }[];
+  requestType: RequestType;
+}) {
   const { t } = useTranslation('itGov');
+
+  const editLink =
+    system.requestType === 'trb'
+      ? `/trb/link/${system.id}`
+      : `/system/link/${system.id}`;
 
   return (
     <div>
@@ -95,7 +110,7 @@ function AdditionalRequestInfo({ ...system }: SystemIntake) {
           heading={t('additionalRequestInfo.actionRequiredAlert.header')}
         >
           {t('additionalRequestInfo.actionRequiredAlert.text')}
-          <UswdsReactLink to={`/system/link/${system.id}`}>
+          <UswdsReactLink to={editLink}>
             {t('additionalRequestInfo.actionRequiredAlert.answer')}
           </UswdsReactLink>
         </Alert>
@@ -110,7 +125,7 @@ function AdditionalRequestInfo({ ...system }: SystemIntake) {
           {system.relationType === RequestRelationType.NEW_SYSTEM &&
             t('additionalRequestInfo.newSystem')}
           <br />
-          <UswdsReactLink to={`/system/link/${system.id}`}>
+          <UswdsReactLink to={editLink}>
             {t('additionalRequestInfo.edit')}
           </UswdsReactLink>
         </p>
@@ -135,7 +150,7 @@ function AdditionalRequestInfo({ ...system }: SystemIntake) {
           </span>
           <br />
           {system.contractNumbers.length ? (
-            system.contractNumbers.map(v => v.contractNumber).join(', ')
+            formatContractNumbers(system.contractNumbers)
           ) : (
             <em className="text-base">
               {t('additionalRequestInfo.noContractNumber')}

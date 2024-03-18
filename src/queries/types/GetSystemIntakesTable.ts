@@ -68,6 +68,12 @@ export interface GetSystemIntakesTable_systemIntakes_contractNumbers {
   contractNumber: string;
 }
 
+export interface GetSystemIntakesTable_systemIntakes_systems {
+  __typename: "CedarSystem";
+  id: string;
+  name: string;
+}
+
 export interface GetSystemIntakesTable_systemIntakes_notes {
   __typename: "SystemIntakeNote";
   id: UUID;
@@ -100,10 +106,15 @@ export interface GetSystemIntakesTable_systemIntakes {
   fundingSources: GetSystemIntakesTable_systemIntakes_fundingSources[];
   annualSpending: GetSystemIntakesTable_systemIntakes_annualSpending | null;
   contract: GetSystemIntakesTable_systemIntakes_contract;
+  contractName: string | null;
   /**
    * Linked contract numbers
    */
   contractNumbers: GetSystemIntakesTable_systemIntakes_contractNumbers[];
+  /**
+   * Linked systems
+   */
+  systems: GetSystemIntakesTable_systemIntakes_systems[];
   businessNeed: string | null;
   businessSolution: string | null;
   currentStage: string | null;

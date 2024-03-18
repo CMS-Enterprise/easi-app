@@ -39,6 +39,7 @@ import {
 import { SystemIntakeFormState } from 'types/graphql-global-types';
 import { ContractDetailsForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
+import formatContractNumbers from 'utils/formatContractNumbers';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 import FundingSources from './FundingSources';
@@ -86,7 +87,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         month: contract.startDate.month || '',
         year: contract.startDate.year || ''
       },
-      numbers: contractNumbers.map(c => c.contractNumber).join(', ') || ''
+      numbers: formatContractNumbers(contractNumbers)
     }
   };
 

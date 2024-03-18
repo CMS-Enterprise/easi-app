@@ -31,6 +31,15 @@ export default gql`
       form {
         submittedAt
       }
+
+      contractName
+      contractNumbers {
+        contractNumber
+      }
+      systems {
+        id
+        name
+      }
     }
   }
 `;

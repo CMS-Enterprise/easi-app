@@ -67,3 +67,62 @@ export const UnlinkSystemIntakeRelationQuery = gql`
     }
   }
 `;
+
+export const GetTrbRequestRelationQuery = gql`
+  query GetTrbRequestRelation($id: UUID!) {
+    trbRequest(id: $id) {
+      id
+      relationType
+      contractName
+      contractNumbers {
+        contractNumber
+      }
+      systems {
+        id
+        name
+        acronym
+      }
+    }
+    cedarSystems {
+      id
+      name
+    }
+  }
+`;
+export const SetTrbRequestRelationNewSystemQuery = gql`
+  mutation SetTrbRequestRelationNewSystem(
+    $input: SetTRBRequestRelationNewSystemInput!
+  ) {
+    setTRBRequestRelationNewSystem(input: $input) {
+      id
+    }
+  }
+`;
+
+export const SetTrbRequestRelationExistingSystemQuery = gql`
+  mutation SetTrbRequestRelationExistingSystem(
+    $input: SetTRBRequestRelationExistingSystemInput!
+  ) {
+    setTRBRequestRelationExistingSystem(input: $input) {
+      id
+    }
+  }
+`;
+
+export const SetTrbRequestRelationExistingServiceQuery = gql`
+  mutation SetTrbRequestRelationExistingService(
+    $input: SetTRBRequestRelationExistingServiceInput!
+  ) {
+    setTRBRequestRelationExistingService(input: $input) {
+      id
+    }
+  }
+`;
+
+export const UnlinkTrbRequestRelationQuery = gql`
+  mutation UnlinkTrbRequestRelation($trbRequestID: UUID!) {
+    unlinkTRBRequestRelation(trbRequestID: $trbRequestID) {
+      id
+    }
+  }
+`;
