@@ -156,11 +156,11 @@ func TestIntakeFormStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range intakeFormTests {
-		t.Run(test.testCase, func(t *testing.T) {
-			status, err := IntakeFormStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
-			if test.expectError {
+	for i := range intakeFormTests {
+		t.Run(intakeFormTests[i].testCase, func(t *testing.T) {
+			status, err := IntakeFormStatus(&intakeFormTests[i].intake)
+			assert.EqualValues(t, intakeFormTests[i].expectedStatus, status)
+			if intakeFormTests[i].expectError {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
@@ -271,11 +271,11 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range intakeFormFeedbackTests {
-		t.Run(test.testCase, func(t *testing.T) {
-			status, err := FeedbackFromInitialReviewStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
-			if test.expectError {
+	for i := range intakeFormFeedbackTests {
+		t.Run(intakeFormFeedbackTests[i].testCase, func(t *testing.T) {
+			status, err := FeedbackFromInitialReviewStatus(&intakeFormFeedbackTests[i].intake)
+			assert.EqualValues(t, intakeFormFeedbackTests[i].expectedStatus, status)
+			if intakeFormFeedbackTests[i].expectError {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
@@ -388,11 +388,11 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range decisionStateTests {
-		t.Run(test.testCase, func(t *testing.T) {
-			status, err := DecisionAndNextStepsStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
-			if test.expectError {
+	for i := range decisionStateTests {
+		t.Run(decisionStateTests[i].testCase, func(t *testing.T) {
+			status, err := DecisionAndNextStepsStatus(&decisionStateTests[i].intake)
+			assert.EqualValues(t, decisionStateTests[i].expectedStatus, status)
+			if decisionStateTests[i].expectError {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
@@ -652,11 +652,11 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range draftBusinessCaseTests {
-		t.Run(test.testCase, func(t *testing.T) {
-			status, err := BizCaseDraftStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
-			if test.expectError {
+	for i := range draftBusinessCaseTests {
+		t.Run(draftBusinessCaseTests[i].testCase, func(t *testing.T) {
+			status, err := BizCaseDraftStatus(&draftBusinessCaseTests[i].intake)
+			assert.EqualValues(t, draftBusinessCaseTests[i].expectedStatus, status)
+			if draftBusinessCaseTests[i].expectError {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
@@ -863,11 +863,11 @@ func TestGrtMeetingStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range decisionStateTests {
-		t.Run(test.testCase, func(t *testing.T) {
-			status, err := GrtMeetingStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
-			if test.expectError {
+	for i := range decisionStateTests {
+		t.Run(decisionStateTests[i].testCase, func(t *testing.T) {
+			status, err := GrtMeetingStatus(&decisionStateTests[i].intake)
+			assert.EqualValues(t, decisionStateTests[i].expectedStatus, status)
+			if decisionStateTests[i].expectError {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
@@ -1126,11 +1126,11 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range finalBusinessCaseTests {
-		t.Run(test.testCase, func(t *testing.T) {
-			status, err := BizCaseFinalStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
-			if test.expectError {
+	for i := range finalBusinessCaseTests {
+		t.Run(finalBusinessCaseTests[i].testCase, func(t *testing.T) {
+			status, err := BizCaseFinalStatus(&finalBusinessCaseTests[i].intake)
+			assert.EqualValues(t, finalBusinessCaseTests[i].expectedStatus, status)
+			if finalBusinessCaseTests[i].expectError {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
@@ -1338,11 +1338,11 @@ func TestGrbMeetingStatus(t *testing.T) {
 		},
 	}
 
-	for _, test := range grbTests {
-		t.Run(test.testCase, func(t *testing.T) {
-			status, err := GrbMeetingStatus(&test.intake)
-			assert.EqualValues(t, test.expectedStatus, status)
-			if test.expectError {
+	for i := range grbTests {
+		t.Run(grbTests[i].testCase, func(t *testing.T) {
+			status, err := GrbMeetingStatus(&grbTests[i].intake)
+			assert.EqualValues(t, grbTests[i].expectedStatus, status)
+			if grbTests[i].expectError {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)

@@ -222,4 +222,5 @@ const (
 const OKTAAPIURL = "OKTA_API_URL"
 
 // OKTAAPIToken is the key for the Okta API token
-const OKTAAPIToken = "OKTA_API_TOKEN" // #nosec G101 false positive - not the actual API key itself
+// #nosec G101 false positive - not the actual API key itself
+const OKTAAPIToken = "OKTA_API_TOKEN"
