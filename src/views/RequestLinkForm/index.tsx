@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-// import { useSelector } from 'react-redux';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import {
@@ -81,17 +80,18 @@ import {
   UnlinkTrbRequestRelation,
   UnlinkTrbRequestRelationVariables
 } from 'queries/types/UnlinkTrbRequestRelation';
-// import { AppState } from 'reducers/rootReducer';
 import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
 
+/**
+ * This request link relation form is used in the contexts of TRB Requests and System Intakes.
+ * There are 3 variables used to configure modes for this component:
+ * - `requestType`
+ * - `fromAdmin`
+ * - `isNew`
+ */
 const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
-  // isAdmin
-  // util user.isTrbAdmin .isGrtReviewer (GovernanceReviewTeam)
-  // const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
-  // console.log(groups, isUserSet);
-
   // Id refers to trb request or system intake
   const { id } = useParams<{
     id: string;
@@ -100,36 +100,42 @@ const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
 
   const { t } = useTranslation(['itGov', 'intake', 'action', 'error']);
 
-  // Form mode is either new or edit
-  const { state } = useLocation<{ isNew?: boolean }>();
+  const { state } = useLocation<{ isNew?: boolean; fromAdmin?: boolean }>();
+
+  // Form edit mode is either new or edit
   const isNew = !!state?.isNew;
 
-  const taskListUrl =
-    requestType === 'trb'
+  // Check for admin context
+  const fromAdmin = !!state?.fromAdmin;
+
+  // Url of next view after successful form submit
+  // Also for a breadcrumb navigation link
+  const redirectUrl = (() => {
+    if (fromAdmin) {
+      return requestType === 'trb'
+        ? `/trb/${id}/additional-information`
+        : `/governance-review-team/${id}/additional-information`;
+    }
+    return requestType === 'trb'
       ? `/trb/task-list/${id}`
       : `/governance-task-list/${id}`;
+  })();
 
-  // Fetch query param to check if coming from ITGov/TRB admin home for redirect and text changes
-  const params = new URLSearchParams(useLocation().search);
-  const editType = params.get('edit-type');
-
-  let breadCrumb = t('additionalRequestInfo.taskListBreadCrumb');
-
-  let redirectUrl = taskListUrl;
-  if (editType === 'it-gov-admin') {
-    redirectUrl = `/governance-review-team/${id}/additional-information`;
-    breadCrumb = t('additionalRequestInfo.itGovBreadcrumb');
-  } else if (editType === 'trb-admin') {
-    redirectUrl = `/trb/${id}/additional-information`;
-    breadCrumb = t('additionalRequestInfo.trbBreadcrumb');
-  }
+  const breadCrumb = (() => {
+    if (fromAdmin) {
+      return requestType === 'trb'
+        ? t('additionalRequestInfo.trbBreadcrumb')
+        : t('additionalRequestInfo.itGovBreadcrumb');
+    }
+    return t('additionalRequestInfo.taskListBreadCrumb');
+  })();
 
   const [hasUserError, setUserError] = useState<boolean>(false);
 
   const [isSkipModalOpen, setSkipModalOpen] = useState<boolean>(false);
   const [isUnlinkModalOpen, setUnlinkModalOpen] = useState<boolean>(false);
 
-  const { data, error, loading } = useQuery<
+  const { data, error: relationError, loading: relationLoading } = useQuery<
     GetSystemIntakeRelation | GetTrbRequestRelation,
     GetSystemIntakeRelationVariables | GetTrbRequestRelationVariables
   >(
@@ -352,13 +358,12 @@ const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
 
   // Error feedback
   const hasErrors =
-    error ||
+    relationError ||
     newSystemError ||
     existingSystemError ||
     existingServiceError ||
     unlinkRelationError ||
     hasUserError;
-  // check isUserSet
 
   useEffect(() => {
     if (hasErrors) {
@@ -374,8 +379,8 @@ const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
           {t('error:encounteredIssueTryAgain')}
         </Alert>
       )}
-      {loading && <PageLoading />}
-      {!loading && data && (
+      {relationLoading && <PageLoading />}
+      {!relationLoading && data && (
         <>
           <BreadcrumbBar variant="wrap">
             <Breadcrumb>
@@ -615,7 +620,6 @@ const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
               </Button>
 
               {(isNew ||
-                // (!isNew && itgData.systemIntake?.relationType !== null)) && (
                 (!isNew &&
                   (('trbRequest' in data &&
                     data.trbRequest.relationType !== null) ||
@@ -662,7 +666,7 @@ const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
                 <li>{t('link.skipConfirm.list.1')}</li>
               </ul>
               <ButtonGroup className="margin-top-3">
-                <Button type="button" onClick={() => history.push(taskListUrl)}>
+                <Button type="button" onClick={() => history.push(redirectUrl)}>
                   {t('link.skipConfirm.submit')}
                 </Button>
                 <Button

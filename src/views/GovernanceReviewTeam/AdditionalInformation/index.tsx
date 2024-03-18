@@ -32,7 +32,10 @@ const AdditionalInformation = ({
           </span>
 
           <UswdsReactLink
-            to={`/system/link/${systemIntake.id}?edit-type=it-gov-admin`}
+            to={{
+              pathname: `/system/link/${systemIntake.id}`,
+              state: { fromAdmin: true }
+            }}
           >
             {t('additionalInformation.editInformation')}
           </UswdsReactLink>
@@ -57,7 +60,10 @@ const AdditionalInformation = ({
             {t('additionalInformation.noLinkedSystemAlert')}
           </Alert>
           <UswdsReactLink
-            to={`/system/link/${systemIntake.id}?edit-type=it-gov-admin`}
+            to={{
+              pathname: `/system/link/${systemIntake.id}`,
+              state: { fromAdmin: true }
+            }}
             className="usa-button usa-button--outline"
           >
             {t('additionalInformation.linkSystem')}
