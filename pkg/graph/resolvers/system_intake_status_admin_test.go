@@ -416,12 +416,12 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 // systemIntakeAdminStatusRunTestCollection is a helper function to run all listed sub test cases
 func systemIntakeAdminStatusRunTestCollection(t *testing.T, tests []testSystemIntakeAdminStatusType, testType string) {
 	t.Run(testType, func(t *testing.T) {
-		for _, test := range tests {
-			t.Run(test.testCase, func(t *testing.T) {
-				status, err := CalculateSystemIntakeAdminStatus(&test.intake)
-				assert.EqualValues(t, test.expectedStatus, status)
+		for i := range tests {
+			t.Run(tests[i].testCase, func(t *testing.T) {
+				status, err := CalculateSystemIntakeAdminStatus(&tests[i].intake)
+				assert.EqualValues(t, tests[i].expectedStatus, status)
 
-				if test.expectError {
+				if tests[i].expectError {
 					assert.Error(t, err)
 				} else {
 					assert.NoError(t, err)

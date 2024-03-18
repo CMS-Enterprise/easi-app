@@ -49,8 +49,7 @@ repos:
     hooks:
       - id: golangci-lint
         name: Lint go files
-        entry: golangci-lint run ./... --concurrency -1 -v
-        # args: ['--concurrency', '-1', '-v'] # Run with all CPUs
+        entry: golangci-lint run --concurrency -1 -v
 
   - repo: local
     hooks:

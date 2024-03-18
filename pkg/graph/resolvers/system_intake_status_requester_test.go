@@ -29,7 +29,9 @@ func TestCalculateSystemIntakeRequesterStatus(t *testing.T) {
 
 	for _, singleStepTestCases := range allTestCases {
 		t.Run(fmt.Sprintf("Testing statuses for the %v step", singleStepTestCases.stepName), func(t *testing.T) {
-			for _, testCase := range singleStepTestCases.testCases {
+			for i := range singleStepTestCases.testCases {
+				testCase := singleStepTestCases.testCases[i]
+
 				t.Run(testCase.testName, func(t *testing.T) {
 					actualStatus, err := CalculateSystemIntakeRequesterStatus(&testCase.intake, mockCurrentTime)
 					assert.EqualValues(t, testCase.expectedStatus, actualStatus)

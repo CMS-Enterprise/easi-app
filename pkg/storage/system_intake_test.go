@@ -637,20 +637,20 @@ func (s *StoreTestSuite) TestFetchSystemIntakeMetrics() {
 			1,
 		},
 	}
-	for _, tt := range completedTests {
-		s.Run(fmt.Sprintf("%s for completed count", tt.name), func() {
+	for i := range completedTests {
+		s.Run(fmt.Sprintf("%s for completed count", completedTests[i].name), func() {
 			intake := testhelpers.NewSystemIntake()
-			settableClock.Set(tt.createdAt)
+			settableClock.Set(completedTests[i].createdAt)
 			_, err := s.store.CreateSystemIntake(ctx, &intake)
 			s.NoError(err)
-			intake.SubmittedAt = &tt.submittedAt
+			intake.SubmittedAt = &completedTests[i].submittedAt
 			_, err = s.store.UpdateSystemIntake(ctx, &intake)
 			s.NoError(err)
 
 			metrics, err := s.store.FetchSystemIntakeMetrics(ctx, startDate, endDate)
 
 			s.NoError(err)
-			s.Equal(tt.expectedCount, metrics.CompletedOfStarted)
+			s.Equal(completedTests[i].expectedCount, metrics.CompletedOfStarted)
 		})
 	}
 
@@ -687,22 +687,22 @@ func (s *StoreTestSuite) TestFetchSystemIntakeMetrics() {
 			1,
 		},
 	}
-	for _, tt := range fundedTests {
-		s.Run(tt.name, func() {
+	for i := range fundedTests {
+		s.Run(fundedTests[i].name, func() {
 			intake := testhelpers.NewSystemIntake()
-			settableClock.Set(tt.submittedAt)
-			intake.ExistingFunding = null.BoolFrom(tt.funded)
+			settableClock.Set(fundedTests[i].submittedAt)
+			intake.ExistingFunding = null.BoolFrom(fundedTests[i].funded)
 			_, err := s.store.CreateSystemIntake(ctx, &intake)
 			s.NoError(err)
-			intake.SubmittedAt = &tt.submittedAt
+			intake.SubmittedAt = &fundedTests[i].submittedAt
 			_, err = s.store.UpdateSystemIntake(ctx, &intake)
 			s.NoError(err)
 
 			metrics, err := s.store.FetchSystemIntakeMetrics(ctx, startDate, endDate)
 
 			s.NoError(err)
-			s.Equal(tt.completedCount, metrics.Completed)
-			s.Equal(tt.fundedCount, metrics.Funded)
+			s.Equal(fundedTests[i].completedCount, metrics.Completed)
+			s.Equal(fundedTests[i].fundedCount, metrics.Funded)
 		})
 	}
 }
