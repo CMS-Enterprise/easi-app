@@ -98,7 +98,13 @@ const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
   }>();
   const history = useHistory();
 
-  const { t } = useTranslation(['itGov', 'intake', 'action', 'error']);
+  const { t } = useTranslation([
+    'itGov',
+    'intake',
+    'technicalAssistance',
+    'action',
+    'error'
+  ]);
 
   const { state } = useLocation<{ isNew?: boolean; fromAdmin?: boolean }>();
 
@@ -409,7 +415,11 @@ const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
             {t('link.header')}
           </PageHeading>
           <p className="font-body-lg line-height-body-5 text-light margin-y-0">
-            {t('link.description')}
+            {t(
+              `${
+                requestType === 'trb' ? 'technicalAssistance' : 'itGov'
+              }:link.description`
+            )}
           </p>
           <p className="margin-top-2 margin-bottom-5 text-base">
             <Trans
@@ -427,7 +437,14 @@ const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
                 <Fieldset
                   legend={
                     <h4 className="margin-top-0 margin-bottom-1 line-height-heading-2">
-                      {t('link.form.field.systemOrService.label')}
+                      {t(
+                        `${
+                          requestType === 'trb'
+                            ? 'technicalAssistance'
+                            : 'itGov'
+                        }:link.form.field.systemOrService.label`
+                      )}
+                      {/* {t('link.form.field.systemOrService.label')} */}
                     </h4>
                   }
                 >
@@ -693,7 +710,13 @@ const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
                 {t('link.unlinkConfirm.text.1')}
               </p>
               <ul className="easi-list margin-top-0">
-                <li>{t('link.unlinkConfirm.list.0')}</li>
+                <li>
+                  {t(
+                    `${
+                      requestType === 'trb' ? 'technicalAssistance' : 'itGov'
+                    }:link.description`
+                  )}
+                </li>
                 <li>{t('link.unlinkConfirm.list.1')}</li>
               </ul>
               <ButtonGroup className="margin-top-3">
