@@ -511,6 +511,21 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
       submittedAt: '2023-03-01T01:23:45Z',
       __typename: 'TRBRequestForm'
     },
+    contractName: 'Word',
+    contractNumbers: [
+      {
+        contractNumber: '24',
+        __typename: 'TRBRequestContractNumber'
+      },
+      {
+        contractNumber: '13',
+        __typename: 'TRBRequestContractNumber'
+      }
+    ],
+    systems: [
+      { id: '{0}', name: 'Quality team', __typename: 'CedarSystem' },
+      { id: '{0}', name: 'Management service', __typename: 'CedarSystem' }
+    ],
     __typename: 'TRBRequest'
   },
   {
@@ -535,6 +550,9 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
       submittedAt: '2023-03-02T01:23:45Z',
       __typename: 'TRBRequestForm'
     },
+    contractName: '',
+    contractNumbers: [],
+    systems: [],
     __typename: 'TRBRequest'
   },
   {
@@ -559,6 +577,9 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
       submittedAt: '2023-03-03T01:23:45Z',
       __typename: 'TRBRequestForm'
     },
+    contractName: '',
+    contractNumbers: [],
+    systems: [],
     __typename: 'TRBRequest'
   },
   {
@@ -583,6 +604,9 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
       submittedAt: '2023-03-04T01:23:45Z',
       __typename: 'TRBRequestForm'
     },
+    contractName: '',
+    contractNumbers: [],
+    systems: [],
     __typename: 'TRBRequest'
   },
   {
@@ -607,6 +631,9 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
       submittedAt: '2023-03-05T01:23:45Z',
       __typename: 'TRBRequestForm'
     },
+    contractName: '',
+    contractNumbers: [],
+    systems: [],
     __typename: 'TRBRequest'
   },
   {
@@ -631,6 +658,9 @@ export const trbAdminTeamHomeRequests: GetTrbAdminTeamHome['trbRequests'] = [
       submittedAt: '2023-03-06T01:23:45Z',
       __typename: 'TRBRequestForm'
     },
+    contractName: '',
+    contractNumbers: [],
+    systems: [],
     __typename: 'TRBRequest'
   }
 ];

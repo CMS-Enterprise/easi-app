@@ -235,7 +235,10 @@ function GovernanceTaskList() {
                 )}
 
                 {flags.itgovLinkRequestsRequester && (
-                  <AdditionalRequestInfo {...systemIntake} />
+                  <AdditionalRequestInfo
+                    {...systemIntake}
+                    requestType="itgov"
+                  />
                 )}
 
                 <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">

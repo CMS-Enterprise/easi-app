@@ -66,6 +66,10 @@ const getTrbTasklistQuery: MockedQuery<
         },
         feedback: [],
         consultMeetingTime: null,
+        relationType: null,
+        contractName: null,
+        contractNumbers: [],
+        systems: [],
         __typename: 'TRBRequest'
       }
     }
