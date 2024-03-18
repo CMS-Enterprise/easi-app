@@ -16,6 +16,7 @@ import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal, parseAsUTC } from 'utils/date';
 import extractTextContent from 'utils/extractTextContent';
+import formatContractNumbers from 'utils/formatContractNumbers';
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
 export const initialSystemIntakeForm: SystemIntakeForm = {
@@ -293,12 +294,15 @@ export const convertIntakeToCSV = (intake: SystemIntakeForTable) => {
   const needsEaSupport = convertBoolToYesNo(intake?.needsEaSupport);
   const hasUiChanges = convertBoolToYesNo(intake?.hasUiChanges);
 
+  const contractNumber = formatContractNumbers(intake.contractNumbers);
+  const cmsSystem = intake.systems.map(v => v.name).join(', ');
+
   // Override all applicable fields with CSV formatting
   return cleanCSVData({
     ...intake,
-    contractNumber: intake.contractNumbers
-      .map(v => v.contractNumber)
-      .join(', '),
+    contractName: intake.contractName || '',
+    contractNumber,
+    cmsSystem,
     lastAdminNote,
     // Formatted booleans
     existingFunding,
