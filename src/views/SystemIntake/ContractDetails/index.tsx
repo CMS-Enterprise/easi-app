@@ -808,7 +808,11 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     label={t('contractDetails.hasContractRadio', {
                       context: 'NOT_STARTED'
                     })}
-                    labelDescription={t('contractDetails.hasContractRadioHint')}
+                    labelDescription={
+                      <p className="text-base margin-bottom-0 margin-top-neg-1 font-sans-xs">
+                        {t('contractDetails.hasContractRadioHint')}
+                      </p>
+                    }
                     value="NOT_STARTED"
                   />
                   <Field
@@ -819,7 +823,11 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                     label={t('contractDetails.hasContractRadio', {
                       context: 'NOT_NEEDED'
                     })}
-                    labelDescription={t('contractDetails.hasContractRadioHint')}
+                    labelDescription={
+                      <p className="text-base margin-top-neg-1 font-sans-xs">
+                        {t('contractDetails.hasContractRadioHint')}
+                      </p>
+                    }
                     value="NOT_NEEDED"
                   />
                 </fieldset>
