@@ -106,8 +106,16 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.contractEnd')
   },
   {
+    key: 'contractName',
+    label: t('intake:csvHeadings.contractName')
+  },
+  {
     key: 'contractNumber',
     label: t('intake:csvHeadings.contractNumber')
+  },
+  {
+    key: 'cmsSystem',
+    label: t('intake:csvHeadings.cmsSystem')
   },
   {
     key: 'status',

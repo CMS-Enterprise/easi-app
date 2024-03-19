@@ -39,6 +39,7 @@ import {
 import { SystemIntakeFormState } from 'types/graphql-global-types';
 import { ContractDetailsForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
+import formatContractNumbers from 'utils/formatContractNumbers';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 import FundingSources from './FundingSources';
@@ -86,7 +87,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
         month: contract.startDate.month || '',
         year: contract.startDate.year || ''
       },
-      numbers: contractNumbers.map(c => c.contractNumber).join(', ') || ''
+      numbers: formatContractNumbers(contractNumbers)
     }
   };
 
@@ -154,6 +155,29 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   };
 
   const onSubmit = (values?: ContractDetailsForm) => {
+    const intakePayload = { ...values };
+
+    if (
+      values?.contract.hasContract === 'NOT_STARTED' ||
+      values?.contract.hasContract === 'NOT_NEEDED'
+    ) {
+      intakePayload!.contract = {
+        contractor: '',
+        endDate: {
+          day: '',
+          month: '',
+          year: ''
+        },
+        hasContract: '',
+        startDate: {
+          day: '',
+          month: '',
+          year: ''
+        },
+        numbers: ''
+      };
+    }
+
     if (values) {
       mutate({
         variables: {
@@ -785,17 +809,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       context: 'NOT_STARTED'
                     })}
                     value="NOT_STARTED"
-                    onChange={() => {
-                      setFieldValue('contract.hasContract', 'NOT_STARTED');
-                      setFieldValue('contract.contractor', '');
-                      setFieldValue('contract.numbers', '');
-                      setFieldValue('contract.startDate.month', '');
-                      setFieldValue('contract.startDate.day', '');
-                      setFieldValue('contract.startDate.year', '');
-                      setFieldValue('contract.endDate.month', '');
-                      setFieldValue('contract.endDate.day', '');
-                      setFieldValue('contract.endDate.year', '');
-                    }}
                   />
                   <Field
                     as={Radio}
@@ -806,17 +819,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                       context: 'NOT_NEEDED'
                     })}
                     value="NOT_NEEDED"
-                    onChange={() => {
-                      setFieldValue('contract.hasContract', 'NOT_NEEDED');
-                      setFieldValue('contract.contractor', '');
-                      setFieldValue('contract.numbers', '');
-                      setFieldValue('contract.startDate.month', '');
-                      setFieldValue('contract.startDate.day', '');
-                      setFieldValue('contract.startDate.year', '');
-                      setFieldValue('contract.endDate.month', '');
-                      setFieldValue('contract.endDate.day', '');
-                      setFieldValue('contract.endDate.year', '');
-                    }}
                   />
                 </fieldset>
               </FieldGroup>

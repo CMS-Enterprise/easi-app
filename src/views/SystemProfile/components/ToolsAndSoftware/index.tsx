@@ -35,7 +35,7 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
   }
 
   return (
-    <>
+    <div id="system-tools-and-software">
       <h2 className="margin-top-0 margin-bottom-4">
         {t('singleSystem.toolsAndSoftware.header')}
       </h2>
@@ -65,7 +65,14 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
                           )}
                         </>
                       )}
-                      {/* TODO: handle ELA Purchase field */}
+                      {product.elaPurchase === 'Yes' && (
+                        <div className="margin-left-05 margin-top-05">
+                          <span>$ &nbsp;</span>
+                          <span className="text-base-dark">
+                            {t('singleSystem.toolsAndSoftware.elaPurchase')}
+                          </span>
+                        </div>
+                      )}
                       <Grid col>
                         <DescriptionTerm
                           className="margin-top-1"
@@ -74,7 +81,7 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
                           )}
                         />
                         <DescriptionDefinition
-                          className="font-body-md line-height-body-4 margin-bottom-2"
+                          className="font-body-md line-height-body-4 margin-bottom-1"
                           definition={product.technopediaCategory}
                         />
                         {/* Condtionally render software product tags
@@ -132,7 +139,7 @@ const SystemToolsAndSoftware = ({ system }: SystemProfileSubviewProps) => {
           {t('singleSystem.toolsAndSoftware.noToolsOrSoftware')}
         </Alert>
       )}
-    </>
+    </div>
   );
 };
 

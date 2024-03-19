@@ -140,7 +140,7 @@ function AttendeesForm({
     // If no ID is present, create new attendee
     return createAttendee({
       trbRequestId,
-      euaUserId,
+      euaUserId: euaUserId || '',
       component: component || '',
       role: role as PersonRole
     });

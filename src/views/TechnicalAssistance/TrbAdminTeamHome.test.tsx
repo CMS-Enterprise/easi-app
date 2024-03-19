@@ -37,7 +37,10 @@ describe('Trb Admin Team Home', () => {
         'System problem',
         '',
         i18next.t<string>('technicalAssistance:table.requestStatus.NEW'),
-        ''
+        '',
+        'Word',
+        '24, 13',
+        'Quality team, Management service'
       ],
       [
         '03/02/2023',
@@ -46,6 +49,9 @@ describe('Trb Admin Team Home', () => {
         'Idea feedback',
         '',
         i18next.t<string>('technicalAssistance:table.requestStatus.NEW'),
+        '',
+        '',
+        '',
         ''
       ],
       [
@@ -57,6 +63,9 @@ describe('Trb Admin Team Home', () => {
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.DRAFT_REQUEST_FORM'
         ),
+        '',
+        '',
+        '',
         ''
       ],
       [
@@ -68,7 +77,10 @@ describe('Trb Admin Team Home', () => {
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.REQUEST_FORM_COMPLETE'
         ),
-        '04/01/2023'
+        '04/01/2023',
+        '',
+        '',
+        ''
       ],
       [
         '03/05/2023',
@@ -79,7 +91,10 @@ describe('Trb Admin Team Home', () => {
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.READY_FOR_CONSULT'
         ),
-        '04/02/2023'
+        '04/02/2023',
+        '',
+        '',
+        ''
       ],
       [
         '03/06/2023',
@@ -90,7 +105,10 @@ describe('Trb Admin Team Home', () => {
         i18next.t<string>(
           'technicalAssistance:table.requestStatus.CONSULT_SCHEDULED'
         ),
-        '04/02/2023'
+        '04/02/2023',
+        '',
+        '',
+        ''
       ]
     ]);
   });

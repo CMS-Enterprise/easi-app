@@ -15,9 +15,9 @@ import {
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
 import {
-  GetSystemIntakeContacts,
-  GetSystemIntakeContactsVariables
-} from 'queries/types/GetSystemIntakeContacts';
+  GetSystemIntakeContactsQuery as GetSystemIntakeContactsType,
+  GetSystemIntakeContactsQueryVariables
+} from 'queries/types/GetSystemIntakeContactsQuery';
 import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'queries/types/GetSystemIntakesTable';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
@@ -468,7 +468,9 @@ export const systemIntakeForTable: TableSystemIntake = {
     plannedYearOneSpendingITPortion: 'Planned year one spending IT portion'
   },
   contract: systemIntake.contract,
+  contractName: '',
   contractNumbers: [],
+  systems: [],
   businessNeed: systemIntake.businessNeed,
   businessSolution: systemIntake.businessSolution,
   currentStage: systemIntake.currentStage,
@@ -548,8 +550,8 @@ export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCI
 };
 
 export const getSystemIntakeContactsQuery: MockedQuery<
-  GetSystemIntakeContacts,
-  GetSystemIntakeContactsVariables
+  GetSystemIntakeContactsType,
+  GetSystemIntakeContactsQueryVariables
 > = {
   request: {
     query: GetSystemIntakeContactsQuery,

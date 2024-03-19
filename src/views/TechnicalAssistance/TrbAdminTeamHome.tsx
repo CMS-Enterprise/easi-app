@@ -35,6 +35,7 @@ import {
 } from 'types/technicalAssistance';
 import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal } from 'utils/date';
+import formatContractNumbers from 'utils/formatContractNumbers';
 import { getPersonNameAndComponentVal } from 'utils/getPersonNameAndComponent';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -55,7 +56,10 @@ export const trbRequestsCsvHeader = [
   i18next.t<string>('technicalAssistance:adminHome.requestType'),
   i18next.t<string>('technicalAssistance:adminHome.trbLead'),
   i18next.t<string>('technicalAssistance:adminHome.status'),
-  i18next.t<string>('technicalAssistance:table.header.trbConsultDate')
+  i18next.t<string>('technicalAssistance:table.header.trbConsultDate'),
+  i18next.t<string>('intake:csvHeadings.contractName'),
+  i18next.t<string>('intake:csvHeadings.contractNumber'),
+  i18next.t<string>('intake:csvHeadings.cmsSystem')
 ] as const;
 
 export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
@@ -74,6 +78,8 @@ export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
       r.trbLeadInfo.commonName,
       'TRB'
     );
+    const contractNumber = formatContractNumbers(r.contractNumbers);
+    const cmsSystem = r.systems.map(v => v.name).join(', ');
 
     return [
       submissionDate,
@@ -82,7 +88,10 @@ export function getTrbRequestDataAsCsv(requests: TrbAdminTeamHomeRequest[]) {
       i18next.t<string>(`technicalAssistance:table.requestTypes.${r.type}`),
       trbLead,
       i18next.t<string>(`technicalAssistance:table.requestStatus.${r.status}`),
-      trbConsultDate
+      trbConsultDate,
+      r.contractName || '',
+      contractNumber,
+      cmsSystem
     ];
   });
 
