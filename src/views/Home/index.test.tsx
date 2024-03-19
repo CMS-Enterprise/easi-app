@@ -115,7 +115,7 @@ describe('The home page', () => {
 
       expect(screen.getByRole('heading', { name: 'IT Governance' }));
       expect(screen.getByRole('heading', { name: 'My open requests' }));
-      expect(screen.getByRole('heading', { name: 'All systems' }));
+      expect(screen.getByRole('heading', { name: 'My systems' }));
     });
   });
 
