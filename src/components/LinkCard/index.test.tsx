@@ -10,7 +10,7 @@ describe('LinkCard', () => {
   });
   it('renders heading with link', () => {
     expect(
-      wrapper.find('h3').children().contains('Technical Assistance')
+      wrapper.find('h3').children().contains('Technical assistance')
     ).toEqual(true);
     expect(wrapper.find('UswdsReactLink').prop('to')).toEqual('/trb');
   });
