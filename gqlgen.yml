@@ -57,6 +57,25 @@ models:
       - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
+      - github.com/cmsgov/easi-app/pkg/models.ZeroInt
+  String:
+    model:
+      - github.com/99designs/gqlgen/graphql.String
+      - github.com/cmsgov/easi-app/pkg/models.NullString
+      - github.com/cmsgov/easi-app/pkg/models.ZeroString
+  Time:
+    model:
+      - github.com/99designs/gqlgen/graphql.Time
+      - github.com/cmsgov/easi-app/pkg/models.ZeroTime
+  Boolean:
+    model:
+      - github.com/99designs/gqlgen/graphql.Boolean
+      - github.com/cmsgov/easi-app/pkg/models.ZeroBool
+      - github.com/cmsgov/easi-app/pkg/models.NullBool
+  Float:
+    model:
+      - github.com/99designs/gqlgen/graphql.Float
+      - github.com/cmsgov/easi-app/pkg/models.ZeroFloat
   UUID:
     model:
       - github.com/cmsgov/easi-app/pkg/models.UUID

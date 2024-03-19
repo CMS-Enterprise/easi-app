@@ -16,9 +16,9 @@ import {
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
 import {
-  GetSystemIntakeContacts,
-  GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact
-} from 'queries/types/GetSystemIntakeContacts';
+  GetSystemIntakeContactsQuery as GetSystemIntakeContactsQueryType,
+  GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact
+} from 'queries/types/GetSystemIntakeContactsQuery';
 import { UpdateSystemIntakeContact as UpdateSystemIntakeContactPayload } from 'queries/types/UpdateSystemIntakeContact';
 import {
   FormattedContacts,
@@ -41,7 +41,7 @@ function useSystemIntakeContacts(
   systemIntakeId: string
 ): UseSystemIntakeContactsType {
   // GQL query to get intake contacts
-  const { data, loading } = useQuery<GetSystemIntakeContacts>(
+  const { data, loading } = useQuery<GetSystemIntakeContactsQueryType>(
     GetSystemIntakeContactsQuery,
     {
       variables: { id: systemIntakeId }
@@ -170,7 +170,7 @@ function useSystemIntakeContacts(
       createSystemIntakeContact({
         variables: {
           input: {
-            euaUserId: euaUserId.toUpperCase(),
+            euaUserId: euaUserId?.toUpperCase() || '',
             component,
             role,
             systemIntakeId
@@ -183,9 +183,12 @@ function useSystemIntakeContacts(
             systemIntakeContact
           } = response.data?.createSystemIntakeContact || {};
 
+          const { euaUserId: euaUserIdUpdate, ...contactUpdate } = contact;
+
           /** Merged contact data with mutation response */
           const mergedContact: AugmentedSystemIntakeContact = {
-            ...contact,
+            euaUserId: euaUserIdUpdate || '',
+            ...contactUpdate,
             ...systemIntakeContact,
             id: systemIntakeContact?.id || '',
             __typename: 'AugmentedSystemIntakeContact'
@@ -214,7 +217,7 @@ function useSystemIntakeContacts(
         variables: {
           input: {
             id,
-            euaUserId: euaUserId.toUpperCase(),
+            euaUserId: euaUserId?.toUpperCase() || '',
             component,
             role,
             systemIntakeId
@@ -227,9 +230,12 @@ function useSystemIntakeContacts(
             systemIntakeContact
           } = response.data?.updateSystemIntakeContact || {};
 
+          const { euaUserId: euaUserIdUpdate, ...contactUpdate } = contact;
+
           /** Merged contact data with mutation response */
           const mergedContact: AugmentedSystemIntakeContact = {
-            ...contact,
+            euaUserId: euaUserIdUpdate || '',
+            ...contactUpdate,
             ...systemIntakeContact,
             id: contact?.id || '',
             __typename: 'AugmentedSystemIntakeContact'
