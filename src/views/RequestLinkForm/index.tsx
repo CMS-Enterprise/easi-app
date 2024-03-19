@@ -111,7 +111,7 @@ const RequestLinkForm = ({
     'error'
   ]);
 
-  const { state } = useLocation<{ isNew?: boolean; fromAdmin?: boolean }>();
+  const { state } = useLocation<{ isNew?: boolean }>();
 
   // Form edit mode is either new or edit
   const isNew = !!state?.isNew;

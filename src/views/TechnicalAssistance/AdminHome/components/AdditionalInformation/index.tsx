@@ -26,7 +26,9 @@ const AdditionalInformation = ({ trbRequest }: { trbRequest: TrbRequest }) => {
             {t('additionalInformation.somethingIncorrect')}
           </span>
 
-          <UswdsReactLink to={`/trb/link/${trbRequest.id}?edit-type=trb-admin`}>
+          <UswdsReactLink
+            to={`/trb/${trbRequest.id}/additional-information/link`}
+          >
             {t('additionalInformation.editInformation')}
           </UswdsReactLink>
         </div>
@@ -50,7 +52,7 @@ const AdditionalInformation = ({ trbRequest }: { trbRequest: TrbRequest }) => {
             {t('additionalInformation.noLinkedSystemAlert')}
           </Alert>
           <UswdsReactLink
-            to={`/trb/link/${trbRequest.id}?edit-type=trb-admin`}
+            to={`/trb/${trbRequest.id}/additional-information/link`}
             className="usa-button usa-button--outline"
           >
             {t('additionalInformation.linkSystem')}

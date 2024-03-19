@@ -33,10 +33,12 @@ const GovernanceReviewTeam = () => {
           />
 
           {/* Defining outside parent route to trigger parent rerender/refetch after mutation */}
-          <Route
-            path="/governance-review-team/:id/additional-information/link"
-            render={() => <RequestLinkForm requestType="itgov" fromAdmin />}
-          />
+          {flags.itgovLinkRequestsAdmin && (
+            <Route
+              path="/governance-review-team/:id/additional-information/link"
+              render={() => <RequestLinkForm requestType="itgov" fromAdmin />}
+            />
+          )}
 
           <Route
             path="/governance-review-team/:systemId/:activePage/:subPage?"
