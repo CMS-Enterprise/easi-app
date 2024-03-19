@@ -15,6 +15,7 @@ export type Flags = {
   itgovLinkRequestsAdmin: boolean;
   trbLinkRequestsRequester: boolean;
   trbLinkRequestsAdmin: boolean;
+  systemWorkspace: boolean;
 };
 
 export type FlagsState = {
