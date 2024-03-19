@@ -457,6 +457,14 @@ const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
                     </h4>
                   }
                 >
+                  <p className="text-base margin-top-1 margin-bottom-3">
+                    {t(
+                      `${
+                        requestType === 'trb' ? 'technicalAssistance' : 'itGov'
+                      }:link.form.field.systemOrService.hint`
+                    )}
+                  </p>
+
                   {/* New system or service */}
                   <Radio
                     id="relationType-newSystem"
