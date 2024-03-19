@@ -120,6 +120,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 			})
 		}
 
+		// we expect a panic, so we don't want the test to fail due to our panic
 		suite.Panics(panicFunc)
 
 		// attempt to get new TRB by the created ID - we should not get anything
