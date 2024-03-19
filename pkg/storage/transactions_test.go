@@ -15,7 +15,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 	ctx := context.Background()
 	anonEua := "ANON"
 	suite.Run("No errors will commit a transaction", func() {
-		newTRB, err := sqlutils.WithTransactionRet[models.TRBRequest](suite.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+		newTRB, err := sqlutils.WithTransactionRet[*models.TRBRequest](ctx, suite.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 
 			trb := models.NewTRBRequest(anonEua)
 			trb.Type = models.TRBTNeedHelp
@@ -37,7 +37,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 	})
 
 	suite.Run("Errors will rollback a transaction", func() {
-		newTRB, err := sqlutils.WithTransactionRet[models.TRBRequest](suite.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+		newTRB, err := sqlutils.WithTransactionRet[*models.TRBRequest](ctx, suite.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 
 			trb := models.NewTRBRequest(anonEua)
 			trb.Type = models.TRBTNeedHelp
@@ -57,7 +57,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 	suite.Run("With Transaction can also perform discrete db actions not directly part of the transaction", func() {
 		//NOTE: this is not behavior we should expect in production code.
 		var trbGlobal *models.TRBRequest
-		newTRB, err := sqlutils.WithTransactionRet[models.TRBRequest](suite.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+		newTRB, err := sqlutils.WithTransactionRet[*models.TRBRequest](ctx, suite.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 
 			trb := models.NewTRBRequest(anonEua)
 			trb.Type = models.TRBTNeedHelp

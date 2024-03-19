@@ -49,7 +49,7 @@ func (s *Store) CreateTRBRequest(ctx context.Context, np sqlutils.NamedPreparer,
 
 // GetTRBRequestByID takes in a NamedPreparer (db, tx) and returns an TRBRequest from the db  for a given id
 func (s *Store) GetTRBRequestByID(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
-	return sqlutils.WithTransactionRet[models.TRBRequest](s, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, s, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		return s.GetTRBRequestByIDNP(ctx, tx, id)
 	})
 }
@@ -89,7 +89,7 @@ func (s *Store) GetTRBRequestByIDNP(ctx context.Context, np sqlutils.NamedPrepar
 
 // UpdateTRBRequest returns an TRBRequest from the db for a given id
 func (s *Store) UpdateTRBRequest(ctx context.Context, trbRequest *models.TRBRequest) (*models.TRBRequest, error) {
-	return sqlutils.WithTransactionRet[models.TRBRequest](s, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, s, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		return s.UpdateTRBRequestNP(ctx, tx, trbRequest)
 	})
 }

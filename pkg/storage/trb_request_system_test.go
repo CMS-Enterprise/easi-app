@@ -27,7 +27,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 
 	s.Run("sets systems on a trb request", func() {
 		// create three trb requests
-		err := sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
+		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
 			for i := 0; i < 3; i++ {
 				trbRequest := models.NewTRBRequest(testhelpers.RandomEUAIDNull().String)
 				trbRequest.Type = models.TRBTBrainstorm
@@ -47,7 +47,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 			system3,
 		}
 		for _, trbRequestID := range createdIDs {
-			err = sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
 				return s.store.SetTRBRequestSystems(ctx, tx, trbRequestID, systemNumbers)
 			})
 			s.NoError(err)
@@ -87,7 +87,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 		}
 
 		// now, we can add system 4 to one of the trb requests and verify that the created_at dates for the first three remain unchanged
-		err = sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
 			return s.store.SetTRBRequestSystems(ctx, tx, createdIDs[0], append(systemNumbers, system4))
 		})
 		s.NoError(err)

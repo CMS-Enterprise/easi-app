@@ -13,11 +13,9 @@ import (
 )
 
 func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemIntakeID uuid.UUID, fundingSources []*models.SystemIntakeFundingSource) ([]*models.SystemIntakeFundingSource, error) {
-	var fundingSourcesResult []*models.SystemIntakeFundingSource
-	return fundingSourcesResult, sqlutils.WithTransaction(s, func(tx *sqlx.Tx) error {
-		var err error
-		fundingSourcesResult, err = s.UpdateSystemIntakeFundingSourcesNP(ctx, tx, systemIntakeID, fundingSources)
-		return err
+	return sqlutils.WithTransactionRet[[]*models.SystemIntakeFundingSource](ctx, s, func(tx *sqlx.Tx) ([]*models.SystemIntakeFundingSource, error) {
+		return s.UpdateSystemIntakeFundingSourcesNP(ctx, tx, systemIntakeID, fundingSources)
+
 	})
 }
 
