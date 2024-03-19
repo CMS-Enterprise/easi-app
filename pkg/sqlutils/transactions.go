@@ -38,7 +38,7 @@ func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, 
 				logger.Error("failed to rollback transaction after error", zap.Error(err))
 			}
 		} else {
-			// re-assign error here so it can be returned
+			// explicitly re-assign `err` here so it can be returned
 			if err = tx.Commit(); err != nil {
 				logger.Error("failed to commit transaction", zap.Error(err))
 			}
