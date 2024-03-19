@@ -59,7 +59,7 @@ const Home = () => {
             <Grid tablet={{ col: 12 }} className="margin-bottom-4">
               <PageHeading className="margin-bottom-0">
                 {t('home:title', {
-                  user: name
+                  user: name.split(' ')[0]
                 })}
               </PageHeading>
 
