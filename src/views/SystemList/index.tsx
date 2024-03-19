@@ -71,7 +71,7 @@ export const SystemList = () => {
         </SummaryBox>
       </SectionWrapper>
 
-      {(loadingSystems || loadingBookmarks) && systemsTableData.length === 0 ? (
+      {(loadingSystems || loadingBookmarks) && !systemsTableData ? (
         <PageLoading />
       ) : (
         <>
