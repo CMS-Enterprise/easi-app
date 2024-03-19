@@ -6,7 +6,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import {
   Column,
   Row,
@@ -22,6 +22,7 @@ import {
   ButtonGroup,
   IconArrowForward,
   IconBookmark,
+  Link,
   Table as UswdsTable
 } from '@trussworks/react-uswds';
 
@@ -277,7 +278,7 @@ export const Table = ({
   if (
     (isMySystems || tableType === 'my-systems') &&
     loading &&
-    filteredSystems.length === 0
+    !filteredSystems
   ) {
     return <PageLoading />;
   }
@@ -429,13 +430,9 @@ export const Table = ({
                 i18nKey="systemProfile:systemTable.noMySystem.description"
                 components={{
                   link1: (
-                    // @ts-ignore
-                    <Link href="EnterpriseArchitecture@cms.hhs.gov" />
+                    <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>
                   ),
-                  link2: (
-                    // @ts-ignore
-                    <UswdsReactLink to="/systems" />
-                  ),
+                  link2: <UswdsReactLink to="/systems"> </UswdsReactLink>,
                   iconForward: (
                     <IconArrowForward className="icon-top margin-left-05" />
                   )
@@ -446,8 +443,7 @@ export const Table = ({
                 i18nKey="systemProfile:systemTable.noMySystem.descriptionAlt"
                 components={{
                   link1: (
-                    // @ts-ignore
-                    <Link href="EnterpriseArchitecture@cms.hhs.gov" />
+                    <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>
                   )
                 }}
               />
@@ -464,10 +460,7 @@ export const Table = ({
           <Trans
             i18nKey="systemProfile:systemTable:dontSeeSystem.description"
             components={{
-              link1: (
-                // @ts-ignore
-                <UswdsReactLink to="/systems" />
-              ),
+              link1: <UswdsReactLink to="/systems"> </UswdsReactLink>,
               iconForward: (
                 <IconArrowForward className="icon-top margin-left-05" />
               )

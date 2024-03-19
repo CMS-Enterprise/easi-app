@@ -118,6 +118,7 @@ const NavigationBar = ({ signout, userName }: NavigationProps) => {
   const { groups, isUserSet } = useSelector((state: AppState) => state.auth);
 
   const mobileNavRef = useRef<HTMLDivElement | null>(null);
+  const systemNavRef = useRef<HTMLDivElement | null>(null);
 
   const isMobile = useCheckResponsiveScreen('tablet');
 
@@ -129,11 +130,15 @@ const NavigationBar = ({ signout, userName }: NavigationProps) => {
   // Controls NavDropDownButton state for (currently one) any nav dropdown items
   const [isOpen, setIsOpen] = useState([false]);
 
-  // onClick callback for toggling sidenav
+  // Click handler to toggle mobile sidenav
   const onClick = (): void => setExpanded(prvExpanded => !prvExpanded);
+  // Click handler to toggle systems nav closed
+  const onSystemOutsideClick = (): void => setIsOpen([false]);
 
-  // Closes mobile nav if clicked outside
+  // Detects click outside mobile navigation
   useOutsideClick(mobileNavRef, onClick);
+  // Detects clicks outside systems dropdown nav
+  useOutsideClick(systemNavRef, onSystemOutsideClick);
 
   const systemNavLinks = systemLinks(flags, groups, isUserSet).map(route => (
     <div className="easi-nav" key={route.label}>
@@ -161,7 +166,7 @@ const NavigationBar = ({ signout, userName }: NavigationProps) => {
       if (route.isEnabled) {
         if (route.label === 'systems') {
           return (
-            <>
+            <div ref={systemNavRef}>
               <NavDropDownButton
                 label={t(`header:${route.label}`)}
                 menuId={route.label}
@@ -171,7 +176,7 @@ const NavigationBar = ({ signout, userName }: NavigationProps) => {
                 className="system-dropdown text-bold"
               />
               {isOpen[0] && <Menu isOpen={isOpen[0]} items={systemNavLinks} />}
-            </>
+            </div>
           );
         }
         return (
