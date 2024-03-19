@@ -30,10 +30,6 @@ const Home = () => {
 
   const { Message } = useMessage();
 
-  const requestTypes: Record<LinkRequestType, any> = t('home:actions', {
-    returnObjects: true
-  });
-
   const renderView = () => {
     if (isUserSet) {
       if (user.isGrtReviewer(groups, flags) || user.isTrbAdmin(groups, flags)) {
@@ -93,16 +89,14 @@ const Home = () => {
               </h2>
 
               <Grid row gap={2}>
-                {[{ ITGov: requestTypes.ITGov }, { TRB: requestTypes.TRB }].map(
-                  requestType => (
-                    <Grid tablet={{ col: 6 }} key={Object.keys(requestType)[0]}>
-                      <LinkCard
-                        className="margin-top-1"
-                        type={Object.keys(requestType)[0] as LinkRequestType}
-                      />
-                    </Grid>
-                  )
-                )}
+                {['ITGov', 'TRB'].map(requestType => (
+                  <Grid tablet={{ col: 6 }} key={requestType}>
+                    <LinkCard
+                      className="margin-top-1"
+                      type={requestType as LinkRequestType}
+                    />
+                  </Grid>
+                ))}
               </Grid>
             </Grid>
 

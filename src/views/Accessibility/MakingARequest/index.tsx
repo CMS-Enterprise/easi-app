@@ -68,12 +68,10 @@ const MakingARequest = () => {
             indexTwo
           </Trans>
         </p>
-        <>
-          <h3 className="margin-top-5 margin-bottom-2">
-            {t('makingARequest.beforeYouStart')}
-          </h3>
-          <p>{t('makingARequest.needLcid')}</p>
-        </>
+        <h3 className="margin-top-5 margin-bottom-2">
+          {t('makingARequest.beforeYouStart')}
+        </h3>
+        <p>{t('makingARequest.needLcid')}</p>
         <UswdsReactLink
           className="usa-button"
           to="/508/testing-overview?continue=true"
