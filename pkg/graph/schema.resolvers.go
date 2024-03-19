@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -334,11 +333,6 @@ func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Contex
 		StoresBankingData:              &obj.BusinessOwnerInformation.StoresBankingData,
 		StoresBeneficiaryAddress:       &obj.BusinessOwnerInformation.StoresBeneficiaryAddress,
 	}, nil
-}
-
-// DaysOpen is the resolver for the daysOpen field.
-func (r *cedarThreatResolver) DaysOpen(ctx context.Context, obj *models.CedarThreat) (*int, error) {
-	panic(fmt.Errorf("not implemented: DaysOpen - daysOpen"))
 }
 
 // Author is the resolver for the author field.
@@ -2586,9 +2580,6 @@ func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
 	return &cedarSystemDetailsResolver{r}
 }
 
-// CedarThreat returns generated.CedarThreatResolver implementation.
-func (r *Resolver) CedarThreat() generated.CedarThreatResolver { return &cedarThreatResolver{r} }
-
 // GovernanceRequestFeedback returns generated.GovernanceRequestFeedbackResolver implementation.
 func (r *Resolver) GovernanceRequestFeedback() generated.GovernanceRequestFeedbackResolver {
 	return &governanceRequestFeedbackResolver{r}
@@ -2664,7 +2655,6 @@ type businessCaseResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
 type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
-type cedarThreatResolver struct{ *Resolver }
 type governanceRequestFeedbackResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }

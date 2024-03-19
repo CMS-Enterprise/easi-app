@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
 import {
   CardGroup,
@@ -37,7 +37,6 @@ import './index.scss';
 export const SystemList = () => {
   const { t } = useTranslation('systemProfile');
 
-  // TODO: query parameters and caching
   const {
     loading: loadingSystems,
     error: error1,
@@ -72,7 +71,7 @@ export const SystemList = () => {
         </SummaryBox>
       </SectionWrapper>
 
-      {loadingSystems ? (
+      {(loadingSystems || loadingBookmarks) && !systemsTableData ? (
         <PageLoading />
       ) : (
         <>
@@ -117,15 +116,16 @@ export const SystemList = () => {
             </SectionWrapper>
           )}
 
-          <h2 className="margin-bottom-0">
+          <h2 className="margin-bottom-2">
             {t('systemProfile:systemTable.title')}
           </h2>
 
-          <p className="margin-bottom-5">
-            {t('systemProfile:systemTable.subtitle')}
-          </p>
-
-          {/* TODO: standardize/format error messages from CEDAR - either on FE or BE */}
+          <Trans
+            i18nKey="systemProfile:systemTable.subtitle"
+            components={{
+              icon: <IconBookmark className="text-bookmark-icon" />
+            }}
+          />
 
           {error1 || error2 ? (
             <ErrorAlert heading="System error">

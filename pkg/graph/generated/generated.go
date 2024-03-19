@@ -51,7 +51,6 @@ type ResolverRoot interface {
 	CedarSoftwareProducts() CedarSoftwareProductsResolver
 	CedarSystem() CedarSystemResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
-	CedarThreat() CedarThreatResolver
 	GovernanceRequestFeedback() GovernanceRequestFeedbackResolver
 	ITGovTaskStatuses() ITGovTaskStatusesResolver
 	Mutation() MutationResolver
@@ -1233,9 +1232,6 @@ type CedarSystemResolver interface {
 type CedarSystemDetailsResolver interface {
 	SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error)
 	BusinessOwnerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarBusinessOwnerInformation, error)
-}
-type CedarThreatResolver interface {
-	DaysOpen(ctx context.Context, obj *models.CedarThreat) (*int, error)
 }
 type GovernanceRequestFeedbackResolver interface {
 	Author(ctx context.Context, obj *models.GovernanceRequestFeedback) (*models.UserInfo, error)
@@ -25111,7 +25107,7 @@ func (ec *executionContext) _CedarThreat_daysOpen(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CedarThreat().DaysOpen(rctx, obj)
+		return obj.DaysOpen, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -25120,17 +25116,17 @@ func (ec *executionContext) _CedarThreat_daysOpen(ctx context.Context, field gra
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*int)
+	res := resTmp.(null.Int)
 	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+	return ec.marshalOInt2githubᚗcomᚋgureguᚋnullᚐInt(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarThreat_daysOpen(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarThreat",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -62119,38 +62115,7 @@ func (ec *executionContext) _CedarThreat(ctx context.Context, sel ast.SelectionS
 		case "controlFamily":
 			out.Values[i] = ec._CedarThreat_controlFamily(ctx, field, obj)
 		case "daysOpen":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._CedarThreat_daysOpen(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._CedarThreat_daysOpen(ctx, field, obj)
 		case "id":
 			out.Values[i] = ec._CedarThreat_id(ctx, field, obj)
 		case "parentId":
@@ -74435,6 +74400,16 @@ func (ec *executionContext) marshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑapp�
 		return graphql.Null
 	}
 	return graphql.WrapContextMarshaler(ctx, v)
+}
+
+func (ec *executionContext) unmarshalOInt2githubᚗcomᚋgureguᚋnullᚐInt(ctx context.Context, v interface{}) (null.Int, error) {
+	res, err := models.UnmarshalNullInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOInt2githubᚗcomᚋgureguᚋnullᚐInt(ctx context.Context, sel ast.SelectionSet, v null.Int) graphql.Marshaler {
+	res := models.MarshalNullInt(v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOInt2int(ctx context.Context, v interface{}) (int, error) {
