@@ -201,6 +201,7 @@ const systemProfile = {
     toolsAndSoftware: {
       header: 'Tools and Software',
       productCategory: 'Product Category',
+      elaPurchase: 'Purchased under an Enterprise License Agreement',
       noManufacturerListed: 'No manufacturer listed',
       apiGateway: 'API Gateway',
       usedForAI: 'Used for Artificial Intelligence',
@@ -304,8 +305,12 @@ const systemProfile = {
     }
   },
   systemTable: {
-    title: 'All systems',
-    subtitle: 'Bookmark systems that you want to access more quickly.',
+    title: 'All CMS systems',
+    mySystemsTitle: 'My systems',
+    subtitle:
+      'Click the bookmark icon (<icon />) to bookmark systems that you want to access more quickly.',
+    mySystemsSubtitle:
+      'You are listed as a team member for the systems below. If you are listed in error, you may remove yourself from the team from within the system workspace.',
     id: 'system-list',
     search: 'Search Table',
     header: {
@@ -313,6 +318,24 @@ const systemProfile = {
       systemOwner: 'CMS Component',
       systemAcronym: 'Acronym',
       systemStatus: 'ATO Status'
+    },
+    view: 'View',
+    buttonGroup: {
+      allSystems: 'All systems',
+      mySystems: 'My systems',
+      bookmarkedSystems: 'Bookmarked systems'
+    },
+    noMySystem: {
+      header: 'You are not listed as a team member for any CMS systems',
+      description:
+        'If you believe this to be an error, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>. If you wish to browse other CMS systems, use the Systems section of EASi to view information about all CMS systems.  <link2>Go to all CMS systems <iconForward /></link2>',
+      descriptionAlt:
+        'If you believe this to be an error, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>.'
+    },
+    dontSeeSystem: {
+      header: 'Don’t see the system you’re looking for?',
+      description:
+        'Use the Systems section of EASi to view information about all CMS systems.  <link1>Go to all CMS systems<iconForward /></link1>'
     }
   },
   bookmark: {

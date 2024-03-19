@@ -12,6 +12,7 @@ import {
 } from 'views/SystemProfile/mockSystemData';
 
 import SystemList from './index';
+import Table from './Table';
 
 // TODO:  Mock Bookmark GQL query once connected to BE
 // Currently component is baked with mocked data from file
@@ -104,7 +105,12 @@ describe('System List View', () => {
       render(
         <MemoryRouter>
           <MockedProvider mocks={mocks} addTypename={false}>
-            <SystemList />
+            <Table
+              defaultPageSize={3}
+              systems={mockSystemInfo}
+              savedBookmarks={[]}
+              refetchBookmarks={() => null}
+            />
           </MockedProvider>
         </MemoryRouter>
       );
@@ -121,7 +127,7 @@ describe('System List View', () => {
       await waitFor(() => new Promise(res => setTimeout(res, 200)));
 
       // ZXC is a mocked table row text item that should not be included in filtered results
-      expect(await screen.queryByText('ZXC')).toBeNull();
+      expect(screen.queryByText('ASD')).toBeNull();
     });
 
     it('matches snapshot', async () => {

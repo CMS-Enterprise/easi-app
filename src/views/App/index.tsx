@@ -48,8 +48,6 @@ import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
 import UserInfoWrapper from 'views/UserInfoWrapper';
 
-import { NavContextProvider } from '../../components/Header/navContext';
-
 import shouldScroll from './scrollConfig';
 
 import './index.scss';
@@ -95,11 +93,9 @@ const AppRoutes = () => {
         component={RequestTypeForm}
       />
       {flags.itgovLinkRequestsRequester && (
-        <SecureRoute
-          exact
-          path="/system/link/:systemId?"
-          component={RequestLinkForm}
-        />
+        <SecureRoute exact path="/system/link/:id?">
+          <RequestLinkForm requestType="itgov" />
+        </SecureRoute>
       )}
       <SecureRoute
         path="/governance-overview/:systemId?"
@@ -211,18 +207,16 @@ const App = () => {
             <FlagsWrapper>
               <UserInfoWrapper>
                 <TimeOutWrapper>
-                  <NavContextProvider>
-                    <TableStateWrapper>
-                      <PageWrapper>
-                        <GovBanner />
-                        <Header />
-                        <Navigation>
-                          <AppRoutes />
-                        </Navigation>
-                        <Footer />
-                      </PageWrapper>
-                    </TableStateWrapper>
-                  </NavContextProvider>
+                  <TableStateWrapper>
+                    <PageWrapper>
+                      <GovBanner />
+                      <Header />
+                      <Navigation>
+                        <AppRoutes />
+                      </Navigation>
+                      <Footer />
+                    </PageWrapper>
+                  </TableStateWrapper>
                 </TimeOutWrapper>
               </UserInfoWrapper>
             </FlagsWrapper>

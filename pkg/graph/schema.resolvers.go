@@ -134,11 +134,6 @@ func (r *accessibilityRequestResolver) Notes(ctx context.Context, obj *models.Ac
 	return r.store.FetchAccessibilityRequestNotesByRequestID(ctx, obj.ID)
 }
 
-// CedarSystemID is the resolver for the cedarSystemId field.
-func (r *accessibilityRequestResolver) CedarSystemID(ctx context.Context, obj *models.AccessibilityRequest) (*string, error) {
-	return obj.CedarSystemID.Ptr(), nil
-}
-
 // DocumentType is the resolver for the documentType field.
 func (r *accessibilityRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error) {
 	return &model.AccessibilityRequestDocumentType{
@@ -202,26 +197,6 @@ func (r *businessCaseResolver) AlternativeBSolution(ctx context.Context, obj *mo
 	}, nil
 }
 
-// BusinessNeed is the resolver for the businessNeed field.
-func (r *businessCaseResolver) BusinessNeed(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	return obj.BusinessNeed.Ptr(), nil
-}
-
-// BusinessOwner is the resolver for the businessOwner field.
-func (r *businessCaseResolver) BusinessOwner(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	return obj.BusinessOwner.Ptr(), nil
-}
-
-// CmsBenefit is the resolver for the cmsBenefit field.
-func (r *businessCaseResolver) CmsBenefit(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	return obj.CMSBenefit.Ptr(), nil
-}
-
-// CurrentSolutionSummary is the resolver for the currentSolutionSummary field.
-func (r *businessCaseResolver) CurrentSolutionSummary(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	return obj.CurrentSolutionSummary.Ptr(), nil
-}
-
 // LifecycleCostLines is the resolver for the lifecycleCostLines field.
 func (r *businessCaseResolver) LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) ([]*models.EstimatedLifecycleCost, error) {
 	lifeCycleCostLines := obj.LifecycleCostLines
@@ -264,519 +239,9 @@ func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *model
 	}, nil
 }
 
-// PriorityAlignment is the resolver for the priorityAlignment field.
-func (r *businessCaseResolver) PriorityAlignment(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	return obj.PriorityAlignment.Ptr(), nil
-}
-
-// ProjectName is the resolver for the projectName field.
-func (r *businessCaseResolver) ProjectName(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	return obj.ProjectName.Ptr(), nil
-}
-
-// Requester is the resolver for the requester field.
-func (r *businessCaseResolver) Requester(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	return obj.Requester.Ptr(), nil
-}
-
-// RequesterPhoneNumber is the resolver for the requesterPhoneNumber field.
-func (r *businessCaseResolver) RequesterPhoneNumber(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	return obj.RequesterPhoneNumber.Ptr(), nil
-}
-
-// SuccessIndicators is the resolver for the successIndicators field.
-func (r *businessCaseResolver) SuccessIndicators(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	return obj.SuccessIndicators.Ptr(), nil
-}
-
 // SystemIntake is the resolver for the systemIntake field.
 func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error) {
 	return r.store.FetchSystemIntakeByID(ctx, obj.SystemIntakeID)
-}
-
-// ActualDispositionDate is the resolver for the actualDispositionDate field.
-func (r *cedarAuthorityToOperateResolver) ActualDispositionDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
-	return obj.ActualDispositionDate.Ptr(), nil
-}
-
-// ContainsPersonallyIdentifiableInformation is the resolver for the containsPersonallyIdentifiableInformation field.
-func (r *cedarAuthorityToOperateResolver) ContainsPersonallyIdentifiableInformation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error) {
-	return obj.ContainsPersonallyIdentifiableInformation.Ptr(), nil
-}
-
-// CountOfTotalNonPrivilegedUserPopulation is the resolver for the countOfTotalNonPrivilegedUserPopulation field.
-func (r *cedarAuthorityToOperateResolver) CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error) {
-	return int(obj.CountOfTotalNonPrivilegedUserPopulation.ValueOrZero()), nil
-}
-
-// CountOfOpenPoams is the resolver for the countOfOpenPoams field.
-func (r *cedarAuthorityToOperateResolver) CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error) {
-	return int(obj.CountOfOpenPoams.ValueOrZero()), nil
-}
-
-// CountOfTotalPrivilegedUserPopulation is the resolver for the countOfTotalPrivilegedUserPopulation field.
-func (r *cedarAuthorityToOperateResolver) CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error) {
-	return int(obj.CountOfTotalPrivilegedUserPopulation.ValueOrZero()), nil
-}
-
-// DateAuthorizationMemoExpires is the resolver for the dateAuthorizationMemoExpires field.
-func (r *cedarAuthorityToOperateResolver) DateAuthorizationMemoExpires(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
-	return obj.DateAuthorizationMemoExpires.Ptr(), nil
-}
-
-// DateAuthorizationMemoSigned is the resolver for the dateAuthorizationMemoSigned field.
-func (r *cedarAuthorityToOperateResolver) DateAuthorizationMemoSigned(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
-	return obj.DateAuthorizationMemoSigned.Ptr(), nil
-}
-
-// EAuthenticationLevel is the resolver for the eAuthenticationLevel field.
-func (r *cedarAuthorityToOperateResolver) EAuthenticationLevel(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
-	return obj.EAuthenticationLevel.Ptr(), nil
-}
-
-// Fips199OverallImpactRating is the resolver for the fips199OverallImpactRating field.
-func (r *cedarAuthorityToOperateResolver) Fips199OverallImpactRating(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
-	return zeroIntToIntPtr(obj.Fips199OverallImpactRating), nil
-}
-
-// FismaSystemAcronym is the resolver for the fismaSystemAcronym field.
-func (r *cedarAuthorityToOperateResolver) FismaSystemAcronym(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
-	return obj.FismaSystemAcronym.Ptr(), nil
-}
-
-// FismaSystemName is the resolver for the fismaSystemName field.
-func (r *cedarAuthorityToOperateResolver) FismaSystemName(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
-	return obj.FismaSystemName.Ptr(), nil
-}
-
-// IsAccessedByNonOrganizationalUsers is the resolver for the isAccessedByNonOrganizationalUsers field.
-func (r *cedarAuthorityToOperateResolver) IsAccessedByNonOrganizationalUsers(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error) {
-	return obj.IsAccessedByNonOrganizationalUsers.Ptr(), nil
-}
-
-// IsPiiLimitedToUserNameAndPass is the resolver for the isPiiLimitedToUserNameAndPass field.
-func (r *cedarAuthorityToOperateResolver) IsPiiLimitedToUserNameAndPass(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error) {
-	return obj.IsPiiLimitedToUserNameAndPass.Ptr(), nil
-}
-
-// IsProtectedHealthInformation is the resolver for the isProtectedHealthInformation field.
-func (r *cedarAuthorityToOperateResolver) IsProtectedHealthInformation(ctx context.Context, obj *models.CedarAuthorityToOperate) (*bool, error) {
-	return obj.IsProtectedHealthInformation.Ptr(), nil
-}
-
-// LastActScaDate is the resolver for the lastActScaDate field.
-func (r *cedarAuthorityToOperateResolver) LastActScaDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
-	return obj.LastActScaDate.Ptr(), nil
-}
-
-// LastAssessmentDate is the resolver for the lastAssessmentDate field.
-func (r *cedarAuthorityToOperateResolver) LastAssessmentDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
-	return obj.LastAssessmentDate.Ptr(), nil
-}
-
-// LastContingencyPlanCompletionDate is the resolver for the lastContingencyPlanCompletionDate field.
-func (r *cedarAuthorityToOperateResolver) LastContingencyPlanCompletionDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
-	return obj.LastContingencyPlanCompletionDate.Ptr(), nil
-}
-
-// LastPenTestDate is the resolver for the lastPenTestDate field.
-func (r *cedarAuthorityToOperateResolver) LastPenTestDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
-	return obj.LastPenTestDate.Ptr(), nil
-}
-
-// PiaCompletionDate is the resolver for the piaCompletionDate field.
-func (r *cedarAuthorityToOperateResolver) PiaCompletionDate(ctx context.Context, obj *models.CedarAuthorityToOperate) (*time.Time, error) {
-	return obj.PiaCompletionDate.Ptr(), nil
-}
-
-// PrimaryCyberRiskAdvisor is the resolver for the primaryCyberRiskAdvisor field.
-func (r *cedarAuthorityToOperateResolver) PrimaryCyberRiskAdvisor(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
-	return obj.PrimaryCyberRiskAdvisor.Ptr(), nil
-}
-
-// PrivacySubjectMatterExpert is the resolver for the privacySubjectMatterExpert field.
-func (r *cedarAuthorityToOperateResolver) PrivacySubjectMatterExpert(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
-	return obj.PrivacySubjectMatterExpert.Ptr(), nil
-}
-
-// RecoveryPointObjective is the resolver for the recoveryPointObjective field.
-func (r *cedarAuthorityToOperateResolver) RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
-	return obj.RecoveryPointObjective.Ptr(), nil
-}
-
-// RecoveryTimeObjective is the resolver for the recoveryTimeObjective field.
-func (r *cedarAuthorityToOperateResolver) RecoveryTimeObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
-	return obj.RecoveryTimeObjective.Ptr(), nil
-}
-
-// TlcPhase is the resolver for the tlcPhase field.
-func (r *cedarAuthorityToOperateResolver) TlcPhase(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
-	return obj.TLCPhase.Ptr(), nil
-}
-
-// XlcPhase is the resolver for the xlcPhase field.
-func (r *cedarAuthorityToOperateResolver) XlcPhase(ctx context.Context, obj *models.CedarAuthorityToOperate) (*string, error) {
-	return obj.XLCPhase.Ptr(), nil
-}
-
-// ID is the resolver for the id field.
-func (r *cedarDataCenterResolver) ID(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
-	return obj.ID.Ptr(), nil
-}
-
-// Name is the resolver for the name field.
-func (r *cedarDataCenterResolver) Name(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
-	return obj.Name.Ptr(), nil
-}
-
-// Version is the resolver for the version field.
-func (r *cedarDataCenterResolver) Version(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
-	return obj.Version.Ptr(), nil
-}
-
-// Description is the resolver for the description field.
-func (r *cedarDataCenterResolver) Description(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
-	return obj.Description.Ptr(), nil
-}
-
-// State is the resolver for the state field.
-func (r *cedarDataCenterResolver) State(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
-	return obj.State.Ptr(), nil
-}
-
-// Status is the resolver for the status field.
-func (r *cedarDataCenterResolver) Status(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
-	return obj.Status.Ptr(), nil
-}
-
-// StartDate is the resolver for the startDate field.
-func (r *cedarDataCenterResolver) StartDate(ctx context.Context, obj *models.CedarDataCenter) (*time.Time, error) {
-	return obj.StartDate.Ptr(), nil
-}
-
-// EndDate is the resolver for the endDate field.
-func (r *cedarDataCenterResolver) EndDate(ctx context.Context, obj *models.CedarDataCenter) (*time.Time, error) {
-	return obj.EndDate.Ptr(), nil
-}
-
-// Address1 is the resolver for the address1 field.
-func (r *cedarDataCenterResolver) Address1(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
-	return obj.Address1.Ptr(), nil
-}
-
-// Address2 is the resolver for the address2 field.
-func (r *cedarDataCenterResolver) Address2(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
-	return obj.Address2.Ptr(), nil
-}
-
-// City is the resolver for the city field.
-func (r *cedarDataCenterResolver) City(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
-	return obj.City.Ptr(), nil
-}
-
-// AddressState is the resolver for the addressState field.
-func (r *cedarDataCenterResolver) AddressState(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
-	return obj.AddressState.Ptr(), nil
-}
-
-// Zip is the resolver for the zip field.
-func (r *cedarDataCenterResolver) Zip(ctx context.Context, obj *models.CedarDataCenter) (*string, error) {
-	return obj.Zip.Ptr(), nil
-}
-
-// StartDate is the resolver for the startDate field.
-func (r *cedarDeploymentResolver) StartDate(ctx context.Context, obj *models.CedarDeployment) (*time.Time, error) {
-	return obj.StartDate.Ptr(), nil
-}
-
-// EndDate is the resolver for the endDate field.
-func (r *cedarDeploymentResolver) EndDate(ctx context.Context, obj *models.CedarDeployment) (*time.Time, error) {
-	return obj.EndDate.Ptr(), nil
-}
-
-// IsHotSite is the resolver for the isHotSite field.
-func (r *cedarDeploymentResolver) IsHotSite(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
-	return obj.IsHotSite.Ptr(), nil
-}
-
-// Description is the resolver for the description field.
-func (r *cedarDeploymentResolver) Description(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
-	return obj.Description.Ptr(), nil
-}
-
-// ContractorName is the resolver for the contractorName field.
-func (r *cedarDeploymentResolver) ContractorName(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
-	return obj.ContractorName.Ptr(), nil
-}
-
-// SystemVersion is the resolver for the systemVersion field.
-func (r *cedarDeploymentResolver) SystemVersion(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
-	return obj.SystemVersion.Ptr(), nil
-}
-
-// HasProductionData is the resolver for the hasProductionData field.
-func (r *cedarDeploymentResolver) HasProductionData(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
-	return obj.HasProductionData.Ptr(), nil
-}
-
-// DeploymentType is the resolver for the deploymentType field.
-func (r *cedarDeploymentResolver) DeploymentType(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
-	return obj.DeploymentType.Ptr(), nil
-}
-
-// SystemName is the resolver for the systemName field.
-func (r *cedarDeploymentResolver) SystemName(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
-	return obj.SystemName.Ptr(), nil
-}
-
-// DeploymentElementID is the resolver for the deploymentElementID field.
-func (r *cedarDeploymentResolver) DeploymentElementID(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
-	return obj.DeploymentElementID.Ptr(), nil
-}
-
-// State is the resolver for the state field.
-func (r *cedarDeploymentResolver) State(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
-	return obj.State.Ptr(), nil
-}
-
-// Status is the resolver for the status field.
-func (r *cedarDeploymentResolver) Status(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
-	return obj.Status.Ptr(), nil
-}
-
-// WanType is the resolver for the wanType field.
-func (r *cedarDeploymentResolver) WanType(ctx context.Context, obj *models.CedarDeployment) (*string, error) {
-	return obj.WanType.Ptr(), nil
-}
-
-// ContainsBankingData is the resolver for the containsBankingData field.
-func (r *cedarExchangeResolver) ContainsBankingData(ctx context.Context, obj *models.CedarExchange) (*bool, error) {
-	return obj.ContainsBankingData.Ptr(), nil
-}
-
-// ContainsBeneficiaryAddress is the resolver for the containsBeneficiaryAddress field.
-func (r *cedarExchangeResolver) ContainsBeneficiaryAddress(ctx context.Context, obj *models.CedarExchange) (*bool, error) {
-	return obj.ContainsBeneficiaryAddress.Ptr(), nil
-}
-
-// ContainsPhi is the resolver for the containsPhi field.
-func (r *cedarExchangeResolver) ContainsPhi(ctx context.Context, obj *models.CedarExchange) (*bool, error) {
-	return obj.ContainsPhi.Ptr(), nil
-}
-
-// ContainsPii is the resolver for the containsPii field.
-func (r *cedarExchangeResolver) ContainsPii(ctx context.Context, obj *models.CedarExchange) (*bool, error) {
-	return obj.ContainsPii.Ptr(), nil
-}
-
-// DataExchangeAgreement is the resolver for the dataExchangeAgreement field.
-func (r *cedarExchangeResolver) DataExchangeAgreement(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.DataExchangeAgreement.Ptr(), nil
-}
-
-// DataFormat is the resolver for the dataFormat field.
-func (r *cedarExchangeResolver) DataFormat(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.DataFormat.Ptr(), nil
-}
-
-// DataFormatOther is the resolver for the dataFormatOther field.
-func (r *cedarExchangeResolver) DataFormatOther(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.DataFormatOther.Ptr(), nil
-}
-
-// ExchangeDescription is the resolver for the exchangeDescription field.
-func (r *cedarExchangeResolver) ExchangeDescription(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.ExchangeDescription.Ptr(), nil
-}
-
-// ExchangeEndDate is the resolver for the exchangeEndDate field.
-func (r *cedarExchangeResolver) ExchangeEndDate(ctx context.Context, obj *models.CedarExchange) (*time.Time, error) {
-	return obj.ExchangeEndDate.Ptr(), nil
-}
-
-// ExchangeID is the resolver for the exchangeId field.
-func (r *cedarExchangeResolver) ExchangeID(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.ExchangeID.Ptr(), nil
-}
-
-// ExchangeName is the resolver for the exchangeName field.
-func (r *cedarExchangeResolver) ExchangeName(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.ExchangeName.Ptr(), nil
-}
-
-// ExchangeRetiredDate is the resolver for the exchangeRetiredDate field.
-func (r *cedarExchangeResolver) ExchangeRetiredDate(ctx context.Context, obj *models.CedarExchange) (*time.Time, error) {
-	return obj.ExchangeRetiredDate.Ptr(), nil
-}
-
-// ExchangeStartDate is the resolver for the exchangeStartDate field.
-func (r *cedarExchangeResolver) ExchangeStartDate(ctx context.Context, obj *models.CedarExchange) (*time.Time, error) {
-	return obj.ExchangeStartDate.Ptr(), nil
-}
-
-// ExchangeState is the resolver for the exchangeState field.
-func (r *cedarExchangeResolver) ExchangeState(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.ExchangeState.Ptr(), nil
-}
-
-// ExchangeVersion is the resolver for the exchangeVersion field.
-func (r *cedarExchangeResolver) ExchangeVersion(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.ExchangeVersion.Ptr(), nil
-}
-
-// FromOwnerID is the resolver for the fromOwnerId field.
-func (r *cedarExchangeResolver) FromOwnerID(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.FromOwnerID.Ptr(), nil
-}
-
-// FromOwnerName is the resolver for the fromOwnerName field.
-func (r *cedarExchangeResolver) FromOwnerName(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.FromOwnerName.Ptr(), nil
-}
-
-// FromOwnerType is the resolver for the fromOwnerType field.
-func (r *cedarExchangeResolver) FromOwnerType(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.FromOwnerType.Ptr(), nil
-}
-
-// IsBeneficiaryMailingFile is the resolver for the isBeneficiaryMailingFile field.
-func (r *cedarExchangeResolver) IsBeneficiaryMailingFile(ctx context.Context, obj *models.CedarExchange) (*bool, error) {
-	return obj.IsBeneficiaryMailingFile.Ptr(), nil
-}
-
-// NumOfRecords is the resolver for the numOfRecords field.
-func (r *cedarExchangeResolver) NumOfRecords(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.NumOfRecords.Ptr(), nil
-}
-
-// SharedViaAPI is the resolver for the sharedViaApi field.
-func (r *cedarExchangeResolver) SharedViaAPI(ctx context.Context, obj *models.CedarExchange) (*bool, error) {
-	return obj.SharedViaAPI.Ptr(), nil
-}
-
-// ToOwnerID is the resolver for the toOwnerId field.
-func (r *cedarExchangeResolver) ToOwnerID(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.ToOwnerID.Ptr(), nil
-}
-
-// ToOwnerName is the resolver for the toOwnerName field.
-func (r *cedarExchangeResolver) ToOwnerName(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.ToOwnerName.Ptr(), nil
-}
-
-// ToOwnerType is the resolver for the toOwnerType field.
-func (r *cedarExchangeResolver) ToOwnerType(ctx context.Context, obj *models.CedarExchange) (*string, error) {
-	return obj.ToOwnerType.Ptr(), nil
-}
-
-// AssigneeUsername is the resolver for the assigneeUsername field.
-func (r *cedarRoleResolver) AssigneeUsername(ctx context.Context, obj *models.CedarRole) (*string, error) {
-	return obj.AssigneeUsername.Ptr(), nil
-}
-
-// AssigneeEmail is the resolver for the assigneeEmail field.
-func (r *cedarRoleResolver) AssigneeEmail(ctx context.Context, obj *models.CedarRole) (*string, error) {
-	return obj.AssigneeEmail.Ptr(), nil
-}
-
-// AssigneeOrgID is the resolver for the assigneeOrgID field.
-func (r *cedarRoleResolver) AssigneeOrgID(ctx context.Context, obj *models.CedarRole) (*string, error) {
-	return obj.AssigneeOrgID.Ptr(), nil
-}
-
-// AssigneeOrgName is the resolver for the assigneeOrgName field.
-func (r *cedarRoleResolver) AssigneeOrgName(ctx context.Context, obj *models.CedarRole) (*string, error) {
-	return obj.AssigneeOrgName.Ptr(), nil
-}
-
-// AssigneeFirstName is the resolver for the assigneeFirstName field.
-func (r *cedarRoleResolver) AssigneeFirstName(ctx context.Context, obj *models.CedarRole) (*string, error) {
-	return obj.AssigneeFirstName.Ptr(), nil
-}
-
-// AssigneeLastName is the resolver for the assigneeLastName field.
-func (r *cedarRoleResolver) AssigneeLastName(ctx context.Context, obj *models.CedarRole) (*string, error) {
-	return obj.AssigneeLastName.Ptr(), nil
-}
-
-// AssigneePhone is the resolver for the assigneePhone field.
-func (r *cedarRoleResolver) AssigneePhone(ctx context.Context, obj *models.CedarRole) (*string, error) {
-	return obj.AssigneePhone.Ptr(), nil
-}
-
-// AssigneeDesc is the resolver for the assigneeDesc field.
-func (r *cedarRoleResolver) AssigneeDesc(ctx context.Context, obj *models.CedarRole) (*string, error) {
-	return obj.AssigneeDesc.Ptr(), nil
-}
-
-// RoleTypeName is the resolver for the roleTypeName field.
-func (r *cedarRoleResolver) RoleTypeName(ctx context.Context, obj *models.CedarRole) (*string, error) {
-	return obj.RoleTypeName.Ptr(), nil
-}
-
-// RoleTypeDesc is the resolver for the roleTypeDesc field.
-func (r *cedarRoleResolver) RoleTypeDesc(ctx context.Context, obj *models.CedarRole) (*string, error) {
-	return obj.RoleTypeDesc.Ptr(), nil
-}
-
-// RoleID is the resolver for the roleID field.
-func (r *cedarRoleResolver) RoleID(ctx context.Context, obj *models.CedarRole) (*string, error) {
-	return obj.RoleID.Ptr(), nil
-}
-
-// ObjectType is the resolver for the objectType field.
-func (r *cedarRoleResolver) ObjectType(ctx context.Context, obj *models.CedarRole) (*string, error) {
-	return obj.ObjectType.Ptr(), nil
-}
-
-// Description is the resolver for the description field.
-func (r *cedarRoleTypeResolver) Description(ctx context.Context, obj *models.CedarRoleType) (*string, error) {
-	return obj.Description.Ptr(), nil
-}
-
-// AiSolnCatgOther is the resolver for the aiSolnCatgOther field.
-func (r *cedarSoftwareProductsResolver) AiSolnCatgOther(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
-	return obj.AISolnCatgOther.Ptr(), nil
-}
-
-// APIDescPubLocation is the resolver for the apiDescPubLocation field.
-func (r *cedarSoftwareProductsResolver) APIDescPubLocation(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
-	return obj.APIDescPubLocation.Ptr(), nil
-}
-
-// APIDescPublished is the resolver for the apiDescPublished field.
-func (r *cedarSoftwareProductsResolver) APIDescPublished(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
-	return obj.APIDescPublished.Ptr(), nil
-}
-
-// APIFHIRUse is the resolver for the apiFHIRUse field.
-func (r *cedarSoftwareProductsResolver) APIFHIRUse(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
-	return obj.APIFHIRUse.Ptr(), nil
-}
-
-// APIFHIRUseOther is the resolver for the apiFHIRUseOther field.
-func (r *cedarSoftwareProductsResolver) APIFHIRUseOther(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
-	return obj.APIFHIRUseOther.Ptr(), nil
-}
-
-// APIHasPortal is the resolver for the apiHasPortal field.
-func (r *cedarSoftwareProductsResolver) APIHasPortal(ctx context.Context, obj *models.CedarSoftwareProducts) (*bool, error) {
-	return obj.APIHasPortal.Ptr(), nil
-}
-
-// ApisAccessibility is the resolver for the apisAccessibility field.
-func (r *cedarSoftwareProductsResolver) ApisAccessibility(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
-	return obj.ApisAccessibility.Ptr(), nil
-}
-
-// ApisDeveloped is the resolver for the apisDeveloped field.
-func (r *cedarSoftwareProductsResolver) ApisDeveloped(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
-	return obj.ApisDeveloped.Ptr(), nil
-}
-
-// DevelopmentStage is the resolver for the developmentStage field.
-func (r *cedarSoftwareProductsResolver) DevelopmentStage(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
-	return obj.DevelopmentStage.Ptr(), nil
 }
 
 // SoftwareProducts is the resolver for the softwareProducts field.
@@ -803,21 +268,12 @@ func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, ob
 			SystemSoftwareConnectionGUID:   softwareProduct.SystemSoftwareConnectionGUID.Ptr(),
 			TechnopediaCategory:            softwareProduct.TechnopediaCategory.Ptr(),
 			TechnopediaID:                  softwareProduct.TechnopediaID.Ptr(),
+			VendorName:                     softwareProduct.VendorName.Ptr(),
 		}
 		softwareProductItems = append(softwareProductItems, softwareProductItem)
 	}
 
 	return softwareProductItems, nil
-}
-
-// SystemHasAPIGateway is the resolver for the systemHasAPIGateway field.
-func (r *cedarSoftwareProductsResolver) SystemHasAPIGateway(ctx context.Context, obj *models.CedarSoftwareProducts) (*bool, error) {
-	return obj.SystemHasAPIGateway.Ptr(), nil
-}
-
-// UsesAiTech is the resolver for the usesAiTech field.
-func (r *cedarSoftwareProductsResolver) UsesAiTech(ctx context.Context, obj *models.CedarSoftwareProducts) (*string, error) {
-	return obj.UsesAiTech.Ptr(), nil
 }
 
 // BusinessOwnerRoles is the resolver for the businessOwnerRoles field.
@@ -877,66 +333,6 @@ func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Contex
 		StoresBankingData:              &obj.BusinessOwnerInformation.StoresBankingData,
 		StoresBeneficiaryAddress:       &obj.BusinessOwnerInformation.StoresBeneficiaryAddress,
 	}, nil
-}
-
-// AlternativeID is the resolver for the alternativeId field.
-func (r *cedarThreatResolver) AlternativeID(ctx context.Context, obj *models.CedarThreat) (*string, error) {
-	return obj.AlternativeID.Ptr(), nil
-}
-
-// ControlFamily is the resolver for the controlFamily field.
-func (r *cedarThreatResolver) ControlFamily(ctx context.Context, obj *models.CedarThreat) (*string, error) {
-	return obj.ControlFamily.Ptr(), nil
-}
-
-// DaysOpen is the resolver for the daysOpen field.
-func (r *cedarThreatResolver) DaysOpen(ctx context.Context, obj *models.CedarThreat) (*int, error) {
-	return zeroIntToIntPtr(obj.DaysOpen), nil
-}
-
-// ID is the resolver for the id field.
-func (r *cedarThreatResolver) ID(ctx context.Context, obj *models.CedarThreat) (*string, error) {
-	return obj.ID.Ptr(), nil
-}
-
-// ParentID is the resolver for the parentId field.
-func (r *cedarThreatResolver) ParentID(ctx context.Context, obj *models.CedarThreat) (*string, error) {
-	return obj.ParentID.Ptr(), nil
-}
-
-// Type is the resolver for the type field.
-func (r *cedarThreatResolver) Type(ctx context.Context, obj *models.CedarThreat) (*string, error) {
-	return obj.Type.Ptr(), nil
-}
-
-// WeaknessRiskLevel is the resolver for the weaknessRiskLevel field.
-func (r *cedarThreatResolver) WeaknessRiskLevel(ctx context.Context, obj *models.CedarThreat) (*string, error) {
-	return obj.WeaknessRiskLevel.Ptr(), nil
-}
-
-// Address is the resolver for the address field.
-func (r *cedarURLResolver) Address(ctx context.Context, obj *models.CedarURL) (*string, error) {
-	return obj.Address.Ptr(), nil
-}
-
-// IsBehindWebApplicationFirewall is the resolver for the isBehindWebApplicationFirewall field.
-func (r *cedarURLResolver) IsBehindWebApplicationFirewall(ctx context.Context, obj *models.CedarURL) (*bool, error) {
-	return obj.IsBehindWebApplicationFirewall.Ptr(), nil
-}
-
-// IsAPIEndpoint is the resolver for the isAPIEndpoint field.
-func (r *cedarURLResolver) IsAPIEndpoint(ctx context.Context, obj *models.CedarURL) (*bool, error) {
-	return obj.IsAPIEndpoint.Ptr(), nil
-}
-
-// IsVersionCodeRepository is the resolver for the isVersionCodeRepository field.
-func (r *cedarURLResolver) IsVersionCodeRepository(ctx context.Context, obj *models.CedarURL) (*bool, error) {
-	return obj.IsVersionCodeRepository.Ptr(), nil
-}
-
-// URLHostingEnv is the resolver for the urlHostingEnv field.
-func (r *cedarURLResolver) URLHostingEnv(ctx context.Context, obj *models.CedarURL) (*string, error) {
-	return obj.URLHostingEnv.Ptr(), nil
 }
 
 // Author is the resolver for the author field.
@@ -2618,19 +2014,9 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 	return results, nil
 }
 
-// AdminLead is the resolver for the adminLead field.
-func (r *systemIntakeResolver) AdminLead(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.AdminLead.Ptr(), nil
-}
-
 // BusinessCase is the resolver for the businessCase field.
 func (r *systemIntakeResolver) BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error) {
 	return r.store.FetchBusinessCaseBySystemIntakeID(ctx, obj.ID)
-}
-
-// BusinessNeed is the resolver for the businessNeed field.
-func (r *systemIntakeResolver) BusinessNeed(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.BusinessNeed.Ptr(), nil
 }
 
 // BusinessOwner is the resolver for the businessOwner field.
@@ -2722,26 +2108,6 @@ func (r *systemIntakeResolver) AnnualSpending(ctx context.Context, obj *models.S
 // CurrentStage is the resolver for the currentStage field.
 func (r *systemIntakeResolver) CurrentStage(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.ProcessStatus.Ptr(), nil
-}
-
-// EaCollaborator is the resolver for the eaCollaborator field.
-func (r *systemIntakeResolver) EaCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.EACollaborator.Ptr(), nil
-}
-
-// EaCollaboratorName is the resolver for the eaCollaboratorName field.
-func (r *systemIntakeResolver) EaCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.EACollaboratorName.Ptr(), nil
-}
-
-// EuaUserID is the resolver for the euaUserId field.
-func (r *systemIntakeResolver) EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error) {
-	return obj.EUAUserID.String, nil
-}
-
-// ExistingFunding is the resolver for the existingFunding field.
-func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
-	return obj.ExistingFunding.Ptr(), nil
 }
 
 // FundingSources is the resolver for the fundingSources field.
@@ -2845,27 +2211,12 @@ func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemInta
 	return resolvers.SystemIntakeNotes(ctx, r.store, obj)
 }
 
-// OitSecurityCollaborator is the resolver for the oitSecurityCollaborator field.
-func (r *systemIntakeResolver) OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.OITSecurityCollaborator.Ptr(), nil
-}
-
-// OitSecurityCollaboratorName is the resolver for the oitSecurityCollaboratorName field.
-func (r *systemIntakeResolver) OitSecurityCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.OITSecurityCollaboratorName.Ptr(), nil
-}
-
 // ProductManager is the resolver for the productManager field.
 func (r *systemIntakeResolver) ProductManager(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeProductManager, error) {
 	return &model.SystemIntakeProductManager{
 		Component: obj.ProductManagerComponent.Ptr(),
 		Name:      obj.ProductManager.Ptr(),
 	}, nil
-}
-
-// ProjectAcronym is the resolver for the projectAcronym field.
-func (r *systemIntakeResolver) ProjectAcronym(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ProjectAcronym.Ptr(), nil
 }
 
 // RequestName is the resolver for the requestName field.
@@ -2915,34 +2266,9 @@ func (r *systemIntakeResolver) RequesterComponent(ctx context.Context, obj *mode
 	return obj.Component.Ptr(), nil
 }
 
-// TrbCollaborator is the resolver for the trbCollaborator field.
-func (r *systemIntakeResolver) TrbCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.TRBCollaborator.Ptr(), nil
-}
-
-// TrbCollaboratorName is the resolver for the trbCollaboratorName field.
-func (r *systemIntakeResolver) TrbCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.TRBCollaboratorName.Ptr(), nil
-}
-
-// GrtReviewEmailBody is the resolver for the grtReviewEmailBody field.
-func (r *systemIntakeResolver) GrtReviewEmailBody(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.GrtReviewEmailBody.Ptr(), nil
-}
-
-// CedarSystemID is the resolver for the cedarSystemId field.
-func (r *systemIntakeResolver) CedarSystemID(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.CedarSystemID.Ptr(), nil
-}
-
 // Documents is the resolver for the documents field.
 func (r *systemIntakeResolver) Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error) {
 	return resolvers.GetSystemIntakeDocumentsByRequestID(ctx, r.store, r.s3Client, obj.ID)
-}
-
-// HasUIChanges is the resolver for the hasUiChanges field.
-func (r *systemIntakeResolver) HasUIChanges(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
-	return obj.HasUIChanges.Ptr(), nil
 }
 
 // ItGovTaskStatuses is the resolver for the itGovTaskStatuses field.
@@ -2965,11 +2291,6 @@ func (r *systemIntakeResolver) StatusAdmin(ctx context.Context, obj *models.Syst
 // LcidStatus is the resolver for the lcidStatus field.
 func (r *systemIntakeResolver) LcidStatus(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeLCIDStatus, error) {
 	return obj.LCIDStatus(time.Now()), nil
-}
-
-// ContractName is the resolver for the contractName field.
-func (r *systemIntakeResolver) ContractName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ContractName.Ptr(), nil
 }
 
 // RelationType is the resolver for the relationType field.
@@ -3008,16 +2329,6 @@ func (r *systemIntakeDocumentResolver) UploadedAt(ctx context.Context, obj *mode
 // URL is the resolver for the url field.
 func (r *systemIntakeDocumentResolver) URL(ctx context.Context, obj *models.SystemIntakeDocument) (string, error) {
 	return resolvers.GetURLForSystemIntakeDocument(r.s3Client, obj.S3Key)
-}
-
-// FundingNumber is the resolver for the fundingNumber field.
-func (r *systemIntakeFundingSourceResolver) FundingNumber(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error) {
-	return obj.FundingNumber.Ptr(), nil
-}
-
-// Source is the resolver for the source field.
-func (r *systemIntakeFundingSourceResolver) Source(ctx context.Context, obj *models.SystemIntakeFundingSource) (*string, error) {
-	return obj.Source.Ptr(), nil
 }
 
 // Author is the resolver for the author field.
@@ -3137,11 +2448,6 @@ func (r *tRBRequestResolver) IsRecent(ctx context.Context, obj *models.TRBReques
 	return resolvers.IsRecentTRBRequest(ctx, obj, time.Now()), nil
 }
 
-// ContractName is the resolver for the contractName field.
-func (r *tRBRequestResolver) ContractName(ctx context.Context, obj *models.TRBRequest) (*string, error) {
-	return obj.ContractName.Ptr(), nil
-}
-
 // RelationType is the resolver for the relationType field.
 func (r *tRBRequestResolver) RelationType(ctx context.Context, obj *models.TRBRequest) (*models.RequestRelationType, error) {
 	return obj.SystemRelationType, nil
@@ -3256,30 +2562,6 @@ func (r *Resolver) AccessibilityRequestNote() generated.AccessibilityRequestNote
 // BusinessCase returns generated.BusinessCaseResolver implementation.
 func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
 
-// CedarAuthorityToOperate returns generated.CedarAuthorityToOperateResolver implementation.
-func (r *Resolver) CedarAuthorityToOperate() generated.CedarAuthorityToOperateResolver {
-	return &cedarAuthorityToOperateResolver{r}
-}
-
-// CedarDataCenter returns generated.CedarDataCenterResolver implementation.
-func (r *Resolver) CedarDataCenter() generated.CedarDataCenterResolver {
-	return &cedarDataCenterResolver{r}
-}
-
-// CedarDeployment returns generated.CedarDeploymentResolver implementation.
-func (r *Resolver) CedarDeployment() generated.CedarDeploymentResolver {
-	return &cedarDeploymentResolver{r}
-}
-
-// CedarExchange returns generated.CedarExchangeResolver implementation.
-func (r *Resolver) CedarExchange() generated.CedarExchangeResolver { return &cedarExchangeResolver{r} }
-
-// CedarRole returns generated.CedarRoleResolver implementation.
-func (r *Resolver) CedarRole() generated.CedarRoleResolver { return &cedarRoleResolver{r} }
-
-// CedarRoleType returns generated.CedarRoleTypeResolver implementation.
-func (r *Resolver) CedarRoleType() generated.CedarRoleTypeResolver { return &cedarRoleTypeResolver{r} }
-
 // CedarSoftwareProducts returns generated.CedarSoftwareProductsResolver implementation.
 func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolver {
 	return &cedarSoftwareProductsResolver{r}
@@ -3292,12 +2574,6 @@ func (r *Resolver) CedarSystem() generated.CedarSystemResolver { return &cedarSy
 func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
 	return &cedarSystemDetailsResolver{r}
 }
-
-// CedarThreat returns generated.CedarThreatResolver implementation.
-func (r *Resolver) CedarThreat() generated.CedarThreatResolver { return &cedarThreatResolver{r} }
-
-// CedarURL returns generated.CedarURLResolver implementation.
-func (r *Resolver) CedarURL() generated.CedarURLResolver { return &cedarURLResolver{r} }
 
 // GovernanceRequestFeedback returns generated.GovernanceRequestFeedbackResolver implementation.
 func (r *Resolver) GovernanceRequestFeedback() generated.GovernanceRequestFeedbackResolver {
@@ -3321,11 +2597,6 @@ func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &syste
 // SystemIntakeDocument returns generated.SystemIntakeDocumentResolver implementation.
 func (r *Resolver) SystemIntakeDocument() generated.SystemIntakeDocumentResolver {
 	return &systemIntakeDocumentResolver{r}
-}
-
-// SystemIntakeFundingSource returns generated.SystemIntakeFundingSourceResolver implementation.
-func (r *Resolver) SystemIntakeFundingSource() generated.SystemIntakeFundingSourceResolver {
-	return &systemIntakeFundingSourceResolver{r}
 }
 
 // SystemIntakeNote returns generated.SystemIntakeNoteResolver implementation.
@@ -3376,24 +2647,15 @@ type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type accessibilityRequestNoteResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
-type cedarAuthorityToOperateResolver struct{ *Resolver }
-type cedarDataCenterResolver struct{ *Resolver }
-type cedarDeploymentResolver struct{ *Resolver }
-type cedarExchangeResolver struct{ *Resolver }
-type cedarRoleResolver struct{ *Resolver }
-type cedarRoleTypeResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
 type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
-type cedarThreatResolver struct{ *Resolver }
-type cedarURLResolver struct{ *Resolver }
 type governanceRequestFeedbackResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
-type systemIntakeFundingSourceResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
 type tRBAdviceLetterResolver struct{ *Resolver }

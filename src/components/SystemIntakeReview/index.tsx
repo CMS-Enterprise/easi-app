@@ -13,6 +13,7 @@ import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
+import formatContractNumbers from 'utils/formatContractNumbers';
 import { FundingSourcesListItem } from 'views/SystemIntake/ContractDetails/FundingSources';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
@@ -355,9 +356,7 @@ export const SystemIntakeReview = ({
                 <div>
                   <DescriptionTerm term={t('review.contractNumber')} />
                   <DescriptionDefinition
-                    definition={contractNumbers
-                      .map(c => c.contractNumber)
-                      .join(', ')}
+                    definition={formatContractNumbers(contractNumbers)}
                   />
                 </div>
               ) : (
