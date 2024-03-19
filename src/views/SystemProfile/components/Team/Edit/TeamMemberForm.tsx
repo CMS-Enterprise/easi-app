@@ -37,7 +37,7 @@ import { TeamContactCard } from '..';
 import { getTeamMemberName } from '.';
 
 export type TeamMemberFields = {
-  euaUserId: string;
+  euaUserId: string | null;
   desiredRoleTypeIDs: string[];
 };
 
@@ -98,7 +98,7 @@ const TeamMemberForm = ({
         variables: {
           input: {
             cedarSystemID: cedarSystemId,
-            euaUserId,
+            euaUserId: euaUserId || '',
             desiredRoleTypeIDs
           }
         }

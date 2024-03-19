@@ -18,7 +18,7 @@ import HelpText from 'components/shared/HelpText';
 import TruncatedContent from 'components/shared/TruncatedContent';
 import { IT_GOV_EMAIL, IT_INVESTMENT_EMAIL } from 'constants/externalUrls';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
+import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 import { EmailNotificationRecipients } from 'types/graphql-global-types';
 import {
   FormattedContacts,

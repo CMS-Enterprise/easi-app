@@ -12,7 +12,7 @@ import Spinner from 'components/Spinner';
 import contactRoles from 'constants/enums/contactRoles';
 import { initialContactDetails } from 'constants/systemIntake';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
-import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
+import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 import {
   DeleteContactType,
   SystemIntakeContactProps
