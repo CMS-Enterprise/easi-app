@@ -11,13 +11,9 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 )
 
-type transactionReturn interface {
-	*any | any | []*any | []any
-}
-
 // WithTransactionRet is a wrapper function which handles creating, committing or rolling back a transaction
 // If there are any errors when executing the txFunc, the tx is rolled back. Otherwise, the tx is committed.
-func WithTransactionRet[T transactionReturn](ctx context.Context, txPrep TransactionPreparer, txFunc func(*sqlx.Tx) (T, error)) (T, error) {
+func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, txFunc func(*sqlx.Tx) (T, error)) (T, error) {
 	var (
 		result T
 		logger = appcontext.ZLogger(ctx)
