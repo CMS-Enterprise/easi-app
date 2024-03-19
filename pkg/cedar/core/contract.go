@@ -2,7 +2,6 @@ package cedarcore
 
 import (
 	"context"
-	"regexp"
 	"strings"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/contract"
+	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -17,7 +17,7 @@ import (
 func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarContract, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarContract{}, nil
+		return local.GetMockContractsBySystem(cedarSystemID), nil
 	}
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
 	if err != nil {
@@ -52,9 +52,6 @@ func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) 
 			isDeliveryOrg = true
 		}
 
-		// Regex to remove contract number from name of contract
-		r := regexp.MustCompile(`\s{[\w-]+}$`)
-
 		endDate, err := time.Parse(time.RFC3339, contract.POPEndDate)
 		if err != nil {
 			endDate = time.Time{}
@@ -68,7 +65,7 @@ func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) 
 			EndDate:         zero.TimeFrom(endDate),
 			StartDate:       zero.TimeFrom(startDate),
 			ContractNumber:  contract.AwardID,
-			ContractName:    zero.StringFrom(r.ReplaceAllString(contract.ContractName, "")),
+			ContractName:    zero.StringFrom(contract.ProjectTitle),
 			Description:     zero.StringFrom(contract.Description),
 			OrderNumber:     zero.StringFrom(contract.OrderNumber),
 			ServiceProvided: zero.StringFrom(contract.ServiceProvided),
