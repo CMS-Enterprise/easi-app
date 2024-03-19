@@ -83,6 +83,21 @@ func UnmarshalZeroInt(v interface{}) (zero.Int, error) {
 	return zero.NewInt(i, err == nil), err
 }
 
+func MarshalNullInt(ni null.Int) graphql.Marshaler {
+	if !ni.Valid {
+		return graphql.Null
+	}
+	return graphql.MarshalInt64(ni.Int64)
+}
+
+func UnmarshalNullInt(v interface{}) (null.Int, error) {
+	if v == nil {
+		return null.NewInt(0, false), nil
+	}
+	i, err := graphql.UnmarshalInt64(v)
+	return null.NewInt(i, err == nil), err
+}
+
 func MarshalNullBool(nb null.Bool) graphql.Marshaler {
 	if !nb.Valid {
 		return graphql.Null
@@ -111,4 +126,19 @@ func UnmarshalZeroFloat(v interface{}) (zero.Float, error) {
 	}
 	f, err := graphql.UnmarshalFloat(v)
 	return zero.NewFloat(f, err == nil), err
+}
+
+func MarshalNullFloat(zf null.Float) graphql.Marshaler {
+	if !zf.Valid {
+		return graphql.Null
+	}
+	return graphql.MarshalFloat(zf.Float64)
+}
+
+func UnmarshalNullFloat(v interface{}) (null.Float, error) {
+	if v == nil {
+		return null.NewFloat(0, false), nil
+	}
+	f, err := graphql.UnmarshalFloat(v)
+	return null.NewFloat(f, err == nil), err
 }
