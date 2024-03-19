@@ -2,6 +2,9 @@ package cedarcore
 
 import (
 	"context"
+	"regexp"
+	"strings"
+	"time"
 
 	"github.com/guregu/null/zero"
 
@@ -17,6 +20,12 @@ func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) 
 		return []*models.CedarContract{}, nil
 	}
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+	if cedarSystem == nil {
+		return nil, nil
+	}
 
 	params := contract.NewContractFindParams()
 
@@ -38,17 +47,33 @@ func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) 
 	retVal := make([]*models.CedarContract, 0, len(resp.Payload.Contracts))
 
 	for _, contract := range resp.Payload.Contracts {
+		var isDeliveryOrg bool
+		if strings.ToLower(contract.IsDeliveryOrg) == "yes" {
+			isDeliveryOrg = true
+		}
+
+		// Regex to remove contract number from name of contract
+		r := regexp.MustCompile(`\s{[\w-]+}$`)
+
+		endDate, err := time.Parse(time.RFC3339, contract.POPEndDate)
+		if err != nil {
+			endDate = time.Time{}
+		}
+		startDate, err := time.Parse(time.RFC3339, contract.POPStartDate)
+		if err != nil {
+			startDate = time.Time{}
+		}
 
 		retVal = append(retVal, &models.CedarContract{
-			AwardID:       contract.AwardID,
-			ID:            contract.ID,
-			ParentAwardID: contract.ParentAwardID,
-
-			ContractAdo:           zero.StringFrom(contract.ContractADO),
-			ContractDeliverableID: zero.StringFrom(contract.ContractDeliverableID),
-			ContractName:          zero.StringFrom(contract.ContractName),
-			Description:           zero.StringFrom(contract.Description),
-			SystemID:              zero.StringFrom(contract.SystemID),
+			EndDate:         zero.TimeFrom(endDate),
+			StartDate:       zero.TimeFrom(startDate),
+			ContractNumber:  contract.AwardID,
+			ContractName:    zero.StringFrom(r.ReplaceAllString(contract.ContractName, "")),
+			Description:     zero.StringFrom(contract.Description),
+			OrderNumber:     zero.StringFrom(contract.OrderNumber),
+			ServiceProvided: zero.StringFrom(contract.ServiceProvided),
+			IsDeliveryOrg:   isDeliveryOrg,
+			SystemID:        zero.StringFrom(contract.SystemID),
 		})
 	}
 	return retVal, nil

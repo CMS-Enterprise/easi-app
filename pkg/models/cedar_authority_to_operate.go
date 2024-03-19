@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 )
 
@@ -14,19 +13,19 @@ type CedarAuthorityToOperate struct {
 
 	// possibly-null fields
 	ActualDispositionDate                     zero.Time   `json:"actualDispositionDate"`
-	ContainsPersonallyIdentifiableInformation null.Bool   `json:"containsPersonallyIdentifiableInformation"`
-	CountOfTotalNonPrivilegedUserPopulation   null.Int    `json:"countOfTotalNonPrivilegedUserPopulation"`
-	CountOfOpenPoams                          null.Int    `json:"countOfOpenPoams"`
-	CountOfTotalPrivilegedUserPopulation      null.Int    `json:"countOfTotalPrivilegedUserPopulation"`
+	ContainsPersonallyIdentifiableInformation bool        `json:"containsPersonallyIdentifiableInformation"`
+	CountOfTotalNonPrivilegedUserPopulation   int         `json:"countOfTotalNonPrivilegedUserPopulation"`
+	CountOfOpenPoams                          int         `json:"countOfOpenPoams"`
+	CountOfTotalPrivilegedUserPopulation      int         `json:"countOfTotalPrivilegedUserPopulation"`
 	DateAuthorizationMemoExpires              zero.Time   `json:"dateAuthorizationMemoExpires"`
 	DateAuthorizationMemoSigned               zero.Time   `json:"dateAuthorizationMemoSigned"`
 	EAuthenticationLevel                      zero.String `json:"eAuthenticationLevel"`
-	Fips199OverallImpactRating                null.Int    `json:"fips199OverallImpactRating"`
+	Fips199OverallImpactRating                int         `json:"fips199OverallImpactRating"`
 	FismaSystemAcronym                        zero.String `json:"fismaSystemAcronym"`
 	FismaSystemName                           zero.String `json:"fismaSystemName"`
-	IsAccessedByNonOrganizationalUsers        null.Bool   `json:"isAccessedByNonOrganizationalUsers"`
-	IsPiiLimitedToUserNameAndPass             null.Bool   `json:"isPiiLimitedToUserNameAndPass"`
-	IsProtectedHealthInformation              null.Bool   `json:"isProtectedHealthInformation"`
+	IsAccessedByNonOrganizationalUsers        bool        `json:"isAccessedByNonOrganizationalUsers"`
+	IsPiiLimitedToUserNameAndPass             bool        `json:"isPiiLimitedToUserNameAndPass"`
+	IsProtectedHealthInformation              bool        `json:"isProtectedHealthInformation"`
 	LastActScaDate                            zero.Time   `json:"lastActScaDate"`
 	LastAssessmentDate                        zero.Time   `json:"lastAssessmentDate"`
 	LastContingencyPlanCompletionDate         zero.Time   `json:"lastContingencyPlanCompletionDate"`
@@ -34,8 +33,8 @@ type CedarAuthorityToOperate struct {
 	PiaCompletionDate                         zero.Time   `json:"piaCompletionDate"`
 	PrimaryCyberRiskAdvisor                   zero.String `json:"primaryCyberRiskAdvisor"`
 	PrivacySubjectMatterExpert                zero.String `json:"privacySubjectMatterExpert"`
-	RecoveryPointObjective                    null.Float  `json:"recoveryPointObjective"`
-	RecoveryTimeObjective                     null.Float  `json:"recoveryTimeObjective"`
+	RecoveryPointObjective                    float64     `json:"recoveryPointObjective"`
+	RecoveryTimeObjective                     float64     `json:"recoveryTimeObjective"`
 	TLCPhase                                  zero.String `json:"tlcPhase"`
 	XLCPhase                                  zero.String `json:"xlcPhase"`
 }

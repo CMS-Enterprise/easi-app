@@ -38,7 +38,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 				zap.Bool("flagResult", result),
 			)
 		}
-		return result
+		return true
 	}
 
 	c := cache.New(cache.NoExpiration, cache.NoExpiration) // Don't expire data _or_ clean it up

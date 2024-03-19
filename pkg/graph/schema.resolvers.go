@@ -245,36 +245,6 @@ func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.Bus
 	return r.store.FetchSystemIntakeByID(ctx, obj.SystemIntakeID)
 }
 
-// CountOfTotalNonPrivilegedUserPopulation is the resolver for the countOfTotalNonPrivilegedUserPopulation field.
-func (r *cedarAuthorityToOperateResolver) CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error) {
-	panic(fmt.Errorf("not implemented: CountOfTotalNonPrivilegedUserPopulation - countOfTotalNonPrivilegedUserPopulation"))
-}
-
-// CountOfOpenPoams is the resolver for the countOfOpenPoams field.
-func (r *cedarAuthorityToOperateResolver) CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error) {
-	panic(fmt.Errorf("not implemented: CountOfOpenPoams - countOfOpenPoams"))
-}
-
-// CountOfTotalPrivilegedUserPopulation is the resolver for the countOfTotalPrivilegedUserPopulation field.
-func (r *cedarAuthorityToOperateResolver) CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error) {
-	panic(fmt.Errorf("not implemented: CountOfTotalPrivilegedUserPopulation - countOfTotalPrivilegedUserPopulation"))
-}
-
-// Fips199OverallImpactRating is the resolver for the fips199OverallImpactRating field.
-func (r *cedarAuthorityToOperateResolver) Fips199OverallImpactRating(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
-	panic(fmt.Errorf("not implemented: Fips199OverallImpactRating - fips199OverallImpactRating"))
-}
-
-// RecoveryPointObjective is the resolver for the recoveryPointObjective field.
-func (r *cedarAuthorityToOperateResolver) RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
-	panic(fmt.Errorf("not implemented: RecoveryPointObjective - recoveryPointObjective"))
-}
-
-// RecoveryTimeObjective is the resolver for the recoveryTimeObjective field.
-func (r *cedarAuthorityToOperateResolver) RecoveryTimeObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
-	panic(fmt.Errorf("not implemented: RecoveryTimeObjective - recoveryTimeObjective"))
-}
-
 // SoftwareProducts is the resolver for the softwareProducts field.
 func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error) {
 	softwareProducts := obj.SoftwareProducts
@@ -1785,6 +1755,11 @@ func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem
 	return r.cedarCoreClient.GetSystemSummary(ctx, true, nil)
 }
 
+// CedarContractsBySystem is the resolver for the cedarContractsBySystem field.
+func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarContract, error) {
+	return r.cedarCoreClient.GetContractBySystem(ctx, cedarSystemID)
+}
+
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
@@ -2598,11 +2573,6 @@ func (r *Resolver) AccessibilityRequestNote() generated.AccessibilityRequestNote
 // BusinessCase returns generated.BusinessCaseResolver implementation.
 func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
 
-// CedarAuthorityToOperate returns generated.CedarAuthorityToOperateResolver implementation.
-func (r *Resolver) CedarAuthorityToOperate() generated.CedarAuthorityToOperateResolver {
-	return &cedarAuthorityToOperateResolver{r}
-}
-
 // CedarSoftwareProducts returns generated.CedarSoftwareProductsResolver implementation.
 func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolver {
 	return &cedarSoftwareProductsResolver{r}
@@ -2691,7 +2661,6 @@ type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type accessibilityRequestNoteResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
-type cedarAuthorityToOperateResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
 type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
