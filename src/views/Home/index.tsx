@@ -115,7 +115,7 @@ const Home = () => {
             </p>
 
             <Grid tablet={{ col: 12 }}>
-              <Table defaultPageSize={10} />
+              <Table defaultPageSize={5} />
             </Grid>
           </div>
         );
