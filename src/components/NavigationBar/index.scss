@@ -84,7 +84,7 @@
     }
 }
 
-.usa-current:not(.system-dropdown)::after {
+.easi-nav .usa-current:not(.system-dropdown)::after {
     bottom: -.25rem !important;
 }
 
@@ -97,7 +97,11 @@
             padding-bottom: 0.25rem !important;
         }
     }
-}   
+}
+
+.system-dropdown:hover::after {
+    bottom: 0 !important;
+}
 
 .system-dropdown {
     padding-top: 0.9rem !important;
