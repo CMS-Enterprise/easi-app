@@ -9,6 +9,7 @@ import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import RequestOverview from 'views/GovernanceReviewTeam/RequestOverview';
 import NotFound from 'views/NotFound';
+import RequestLinkForm from 'views/RequestLinkForm';
 
 const GovernanceReviewTeam = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
@@ -30,10 +31,19 @@ const GovernanceReviewTeam = () => {
               </div>
             )}
           />
+
+          {/* Defining outside parent route to trigger parent rerender/refetch after mutation */}
+          <Route
+            path="/governance-review-team/:id/additional-information/link"
+            render={() => <RequestLinkForm requestType="itgov" fromAdmin />}
+          />
+
           <Route
             path="/governance-review-team/:systemId/:activePage/:subPage?"
+            exact
             component={RequestOverview}
           />
+
           <Route path="*" component={NotFound} />
         </Switch>
       );

@@ -83,7 +83,6 @@ import {
 import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
-
 /**
  * This request link relation form is used in the contexts of TRB Requests and System Intakes.
  * There are 3 variables used to configure modes for this component:
@@ -91,7 +90,13 @@ import formatContractNumbers from 'utils/formatContractNumbers';
  * - `fromAdmin`
  * - `isNew`
  */
-const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
+const RequestLinkForm = ({
+  requestType,
+  fromAdmin
+}: {
+  requestType: RequestType;
+  fromAdmin?: boolean;
+}) => {
   // Id refers to trb request or system intake
   const { id } = useParams<{
     id: string;
@@ -110,9 +115,6 @@ const RequestLinkForm = ({ requestType }: { requestType: RequestType }) => {
 
   // Form edit mode is either new or edit
   const isNew = !!state?.isNew;
-
-  // Check for admin context
-  const fromAdmin = !!state?.fromAdmin;
 
   // Url of next view after successful form submit
   // Also for a breadcrumb navigation link
