@@ -127,3 +127,18 @@ func UnmarshalZeroFloat(v interface{}) (zero.Float, error) {
 	f, err := graphql.UnmarshalFloat(v)
 	return zero.NewFloat(f, err == nil), err
 }
+
+func MarshalNullFloat(zf null.Float) graphql.Marshaler {
+	if !zf.Valid {
+		return graphql.Null
+	}
+	return graphql.MarshalFloat(zf.Float64)
+}
+
+func UnmarshalNullFloat(v interface{}) (null.Float, error) {
+	if v == nil {
+		return null.NewFloat(0, false), nil
+	}
+	f, err := graphql.UnmarshalFloat(v)
+	return null.NewFloat(f, err == nil), err
+}

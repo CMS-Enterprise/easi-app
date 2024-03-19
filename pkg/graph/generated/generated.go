@@ -48,7 +48,6 @@ type ResolverRoot interface {
 	AccessibilityRequestDocument() AccessibilityRequestDocumentResolver
 	AccessibilityRequestNote() AccessibilityRequestNoteResolver
 	BusinessCase() BusinessCaseResolver
-	CedarAuthorityToOperate() CedarAuthorityToOperateResolver
 	CedarSoftwareProducts() CedarSoftwareProductsResolver
 	CedarSystem() CedarSystemResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
@@ -1210,10 +1209,6 @@ type BusinessCaseResolver interface {
 	PreferredSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
 
 	SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error)
-}
-type CedarAuthorityToOperateResolver interface {
-	RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error)
-	RecoveryTimeObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error)
 }
 type CedarSoftwareProductsResolver interface {
 	SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error)
@@ -17179,7 +17174,7 @@ func (ec *executionContext) _CedarAuthorityToOperate_recoveryPointObjective(ctx 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CedarAuthorityToOperate().RecoveryPointObjective(rctx, obj)
+		return obj.RecoveryPointObjective, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -17188,17 +17183,17 @@ func (ec *executionContext) _CedarAuthorityToOperate_recoveryPointObjective(ctx 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*float64)
+	res := resTmp.(null.Float)
 	fc.Result = res
-	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+	return ec.marshalOFloat2githubᚗcomᚋgureguᚋnullᚐFloat(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarAuthorityToOperate_recoveryPointObjective(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Float does not have child fields")
 		},
@@ -17220,7 +17215,7 @@ func (ec *executionContext) _CedarAuthorityToOperate_recoveryTimeObjective(ctx c
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CedarAuthorityToOperate().RecoveryTimeObjective(rctx, obj)
+		return obj.RecoveryTimeObjective, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -17229,17 +17224,17 @@ func (ec *executionContext) _CedarAuthorityToOperate_recoveryTimeObjective(ctx c
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*float64)
+	res := resTmp.(null.Float)
 	fc.Result = res
-	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+	return ec.marshalOFloat2githubᚗcomᚋgureguᚋnullᚐFloat(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarAuthorityToOperate_recoveryTimeObjective(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarAuthorityToOperate",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Float does not have child fields")
 		},
@@ -60411,12 +60406,12 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 		case "cedarId":
 			out.Values[i] = ec._CedarAuthorityToOperate_cedarId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
 		case "uuid":
 			out.Values[i] = ec._CedarAuthorityToOperate_uuid(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
 		case "actualDispositionDate":
 			out.Values[i] = ec._CedarAuthorityToOperate_actualDispositionDate(ctx, field, obj)
@@ -60425,17 +60420,17 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 		case "countOfTotalNonPrivilegedUserPopulation":
 			out.Values[i] = ec._CedarAuthorityToOperate_countOfTotalNonPrivilegedUserPopulation(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
 		case "countOfOpenPoams":
 			out.Values[i] = ec._CedarAuthorityToOperate_countOfOpenPoams(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
 		case "countOfTotalPrivilegedUserPopulation":
 			out.Values[i] = ec._CedarAuthorityToOperate_countOfTotalPrivilegedUserPopulation(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
 		case "dateAuthorizationMemoExpires":
 			out.Values[i] = ec._CedarAuthorityToOperate_dateAuthorizationMemoExpires(ctx, field, obj)
@@ -60470,75 +60465,13 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 		case "privacySubjectMatterExpert":
 			out.Values[i] = ec._CedarAuthorityToOperate_privacySubjectMatterExpert(ctx, field, obj)
 		case "recoveryPointObjective":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._CedarAuthorityToOperate_recoveryPointObjective(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._CedarAuthorityToOperate_recoveryPointObjective(ctx, field, obj)
 		case "recoveryTimeObjective":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._CedarAuthorityToOperate_recoveryTimeObjective(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._CedarAuthorityToOperate_recoveryTimeObjective(ctx, field, obj)
 		case "systemOfRecordsNotice":
 			out.Values[i] = ec._CedarAuthorityToOperate_systemOfRecordsNotice(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+				out.Invalids++
 			}
 		case "tlcPhase":
 			out.Values[i] = ec._CedarAuthorityToOperate_tlcPhase(ctx, field, obj)
@@ -73762,19 +73695,13 @@ func (ec *executionContext) marshalOExchangeDirection2githubᚗcomᚋcmsgovᚋea
 	return res
 }
 
-func (ec *executionContext) unmarshalOFloat2ᚖfloat64(ctx context.Context, v interface{}) (*float64, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := graphql.UnmarshalFloat(v)
-	return &res, graphql.ErrorOnPath(ctx, err)
+func (ec *executionContext) unmarshalOFloat2githubᚗcomᚋgureguᚋnullᚐFloat(ctx context.Context, v interface{}) (null.Float, error) {
+	res, err := models.UnmarshalNullFloat(v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOFloat2ᚖfloat64(ctx context.Context, sel ast.SelectionSet, v *float64) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	res := graphql.MarshalFloat(*v)
+func (ec *executionContext) marshalOFloat2githubᚗcomᚋgureguᚋnullᚐFloat(ctx context.Context, sel ast.SelectionSet, v null.Float) graphql.Marshaler {
+	res := models.MarshalNullFloat(v)
 	return res
 }
 

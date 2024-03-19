@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -243,16 +242,6 @@ func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *model
 // SystemIntake is the resolver for the systemIntake field.
 func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error) {
 	return r.store.FetchSystemIntakeByID(ctx, obj.SystemIntakeID)
-}
-
-// RecoveryPointObjective is the resolver for the recoveryPointObjective field.
-func (r *cedarAuthorityToOperateResolver) RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
-	panic(fmt.Errorf("not implemented: RecoveryPointObjective - recoveryPointObjective"))
-}
-
-// RecoveryTimeObjective is the resolver for the recoveryTimeObjective field.
-func (r *cedarAuthorityToOperateResolver) RecoveryTimeObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
-	panic(fmt.Errorf("not implemented: RecoveryTimeObjective - recoveryTimeObjective"))
 }
 
 // SoftwareProducts is the resolver for the softwareProducts field.
@@ -2573,11 +2562,6 @@ func (r *Resolver) AccessibilityRequestNote() generated.AccessibilityRequestNote
 // BusinessCase returns generated.BusinessCaseResolver implementation.
 func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
 
-// CedarAuthorityToOperate returns generated.CedarAuthorityToOperateResolver implementation.
-func (r *Resolver) CedarAuthorityToOperate() generated.CedarAuthorityToOperateResolver {
-	return &cedarAuthorityToOperateResolver{r}
-}
-
 // CedarSoftwareProducts returns generated.CedarSoftwareProductsResolver implementation.
 func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolver {
 	return &cedarSoftwareProductsResolver{r}
@@ -2663,7 +2647,6 @@ type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type accessibilityRequestNoteResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
-type cedarAuthorityToOperateResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
 type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
