@@ -10,10 +10,10 @@ import { SystemIntake } from 'queries/types/SystemIntake';
 import formatContractNumbers from 'utils/formatContractNumbers';
 
 const AdditionalInformation = ({
-  system,
+  request,
   type
 }: {
-  system: TrbRequest | SystemIntake;
+  request: TrbRequest | SystemIntake;
   type: 'itgov' | 'trb';
 }) => {
   const { t } = useTranslation('admin');
@@ -28,39 +28,39 @@ const AdditionalInformation = ({
         {t('description')}
       </p>
 
-      {(system.systems.length > 0 || system.contractName) && (
+      {(request.systems.length > 0 || request.contractName) && (
         <div className="margin-bottom-3">
           <span className="font-body-md line-height-body-4 margin-right-1 text-base">
             {t('somethingIncorrect')}
           </span>
 
           <UswdsReactLink
-            to={`/${parentRoute}/${system.id}/additional-information/link`}
+            to={`/${parentRoute}/${request.id}/additional-information/link`}
           >
             {t('editInformation')}
           </UswdsReactLink>
         </div>
       )}
 
-      {system.systems.length > 0 && (
-        <SystemCardTable systems={system.systems} />
+      {request.systems.length > 0 && (
+        <SystemCardTable systems={request.systems} />
       )}
 
-      {system.contractName && (
+      {request.contractName && (
         <div className="margin-top-3">
           <strong>{t('serviceOrContract')}</strong>
 
-          <p className="margin-top-1">{system.contractName}</p>
+          <p className="margin-top-1">{request.contractName}</p>
         </div>
       )}
 
-      {system.systems.length === 0 && !system.contractName && (
+      {request.systems.length === 0 && !request.contractName && (
         <div className="margin-top-3">
           <Alert type="info" slim className="margin-top-0 margin-bottom-2">
             {t('noLinkedSystemAlert')}
           </Alert>
           <UswdsReactLink
-            to={`/${parentRoute}/${system.id}/additional-information/link`}
+            to={`/${parentRoute}/${request.id}/additional-information/link`}
             className="usa-button usa-button--outline"
           >
             {t('linkSystem')}
@@ -68,15 +68,15 @@ const AdditionalInformation = ({
         </div>
       )}
 
-      {system.contractNumbers?.length > 0 && (
+      {request.contractNumbers?.length > 0 && (
         <div className="margin-top-3">
           <strong>
             {t('contractNumber', {
-              plural: system.contractNumbers.length > 1 ? 's' : ''
+              plural: request.contractNumbers.length > 1 ? 's' : ''
             })}
           </strong>
           <p className="margin-top-1">
-            {formatContractNumbers(system.contractNumbers)}
+            {formatContractNumbers(request.contractNumbers)}
           </p>
         </div>
       )}

@@ -216,7 +216,10 @@ const RequestOverview = () => {
                   exact
                   path="/governance-review-team/:systemId/additional-information"
                   render={() => (
-                    <AdditionalInformation system={systemIntake} type="itgov" />
+                    <AdditionalInformation
+                      request={systemIntake}
+                      type="itgov"
+                    />
                   )}
                 />
               )}
