@@ -5,75 +5,78 @@ import { Alert } from '@trussworks/react-uswds';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import SystemCardTable from 'components/SystemCard/table';
+import { GetTrbRequestSummary_trbRequest as TrbRequest } from 'queries/types/GetTrbRequestSummary';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import formatContractNumbers from 'utils/formatContractNumbers';
 
 const AdditionalInformation = ({
-  systemIntake
+  system,
+  type
 }: {
-  systemIntake: SystemIntake;
+  system: TrbRequest | SystemIntake;
+  type: 'itgov' | 'trb';
 }) => {
-  const { t } = useTranslation('governanceReviewTeam');
+  const { t } = useTranslation('admin');
+
+  const parentRoute = type === 'itgov' ? 'governance-review-team' : 'trb';
 
   return (
     <div>
-      <PageHeading className="margin-y-0">
-        {t('additionalInformation.title')}
-      </PageHeading>
+      <PageHeading className="margin-y-0">{t('title')}</PageHeading>
 
       <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-1">
-        {t('additionalInformation.description')}
+        {t('description')}
       </p>
 
-      {(systemIntake.systems.length > 0 || systemIntake.contractName) && (
+      {(system.systems.length > 0 || system.contractName) && (
         <div className="margin-bottom-3">
           <span className="font-body-md line-height-body-4 margin-right-1 text-base">
-            {t('additionalInformation.somethingIncorrect')}
+            {t('somethingIncorrect')}
           </span>
 
           <UswdsReactLink
-            to={`/governance-review-team/${systemIntake.id}/additional-information/link`}
+            to={`/${parentRoute}/${system.id}/additional-information/link`}
           >
-            {t('additionalInformation.editInformation')}
+            {t('editInformation')}
           </UswdsReactLink>
         </div>
       )}
 
-      {systemIntake.systems.length > 0 && (
-        <SystemCardTable systems={systemIntake.systems} />
+      {system.systems.length > 0 && (
+        <SystemCardTable systems={system.systems} />
       )}
 
-      {systemIntake.contractName && (
+      {system.contractName && (
         <div className="margin-top-3">
-          <strong>{t('additionalInformation.serviceOrContract')}</strong>
+          <strong>{t('serviceOrContract')}</strong>
 
-          <p className="margin-top-1">{systemIntake.contractName}</p>
+          <p className="margin-top-1">{system.contractName}</p>
         </div>
       )}
 
-      {systemIntake.systems.length === 0 && !systemIntake.contractName && (
+      {system.systems.length === 0 && !system.contractName && (
         <div className="margin-top-3">
           <Alert type="info" slim className="margin-top-0 margin-bottom-2">
-            {t('additionalInformation.noLinkedSystemAlert')}
+            {t('noLinkedSystemAlert')}
           </Alert>
           <UswdsReactLink
-            to={`/governance-review-team/${systemIntake.id}/additional-information/link`}
+            to={`/${parentRoute}/${system.id}/additional-information/link`}
             className="usa-button usa-button--outline"
           >
-            {t('additionalInformation.linkSystem')}
+            {t('linkSystem')}
           </UswdsReactLink>
         </div>
       )}
 
-      {systemIntake.contractNumbers.length > 0 && (
+      {system.contractNumbers?.length > 0 && (
         <div className="margin-top-3">
           <strong>
-            {t('additionalInformation.contractNumber', {
-              plural: systemIntake.contractNumbers.length > 1 ? 's' : ''
+            {t('contractNumber', {
+              plural: system.contractNumbers.length > 1 ? 's' : ''
             })}
           </strong>
           <p className="margin-top-1">
-            {formatContractNumbers(systemIntake.contractNumbers)}
+            {formatContractNumbers(system.contractNumbers)}
           </p>
         </div>
       )}

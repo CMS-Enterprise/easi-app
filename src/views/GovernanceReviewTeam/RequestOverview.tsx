@@ -18,11 +18,11 @@ import {
 } from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
+import AdditionalInformation from 'views/AdditionalInformation';
 import NotFound from 'views/NotFound';
 
 import AccordionNavigation from './AccordionNavigation';
 import Actions from './Actions';
-import AdditionalInformation from './AdditionalInformation';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
@@ -216,7 +216,7 @@ const RequestOverview = () => {
                   exact
                   path="/governance-review-team/:systemId/additional-information"
                   render={() => (
-                    <AdditionalInformation systemIntake={systemIntake} />
+                    <AdditionalInformation system={systemIntake} type="itgov" />
                   )}
                 />
               )}

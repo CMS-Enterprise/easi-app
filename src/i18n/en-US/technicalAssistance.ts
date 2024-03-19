@@ -814,21 +814,6 @@ const technicalAssistance = {
       'A history of feedback sent to the requester. The requester will receive a notification any time you add additional feedback to their request.',
     noFeedbackAlert: 'No feedback has been added for this request.'
   },
-  additionalInformation: {
-    title: 'Additional information',
-    description:
-      'This request is a part of the system, service, or contract indicated below. Any related requests are displayed because they are linked to the same system or service, or because they include the same contract number as this request.',
-    somethingIncorrect: 'See something incorrect?',
-    editInformation: 'Edit information',
-    component: 'CMS component owner',
-    businessOwner: 'Business owner',
-    viewSystem: 'View system profile',
-    serviceOrContract: 'Service or contract names',
-    contractNumber: 'Contract number{{plural}}',
-    noLinkedSystemAlert:
-      'This request is for a completely new system, service, or contract and may not have other requests related to it. If this is an error, please use the button below to link the request to a system, service, or contract.',
-    linkSystem: 'Link this request to a system, service, or contract'
-  },
   adminHome: {
     home: 'Home',
     breadcrumb: 'Request details',

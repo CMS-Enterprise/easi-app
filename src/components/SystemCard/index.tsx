@@ -31,7 +31,7 @@ const SystemCard = ({
   businessOwnerOrg,
   businessOwners
 }: SystemCardProps) => {
-  const { t } = useTranslation('governanceReviewTeam');
+  const { t } = useTranslation('admin');
 
   return (
     <Card
@@ -54,14 +54,12 @@ const SystemCard = ({
         <dl>
           <Grid row className="margin-bottom-2">
             <Grid tablet={{ col: 6 }}>
-              <DescriptionTerm term={t('additionalInformation.component')} />
+              <DescriptionTerm term={t('component')} />
               <DescriptionDefinition definition={businessOwnerOrg} />
             </Grid>
 
             <Grid tablet={{ col: 6 }}>
-              <DescriptionTerm
-                term={t('additionalInformation.businessOwner')}
-              />
+              <DescriptionTerm term={t('businessOwner')} />
               <DescriptionDefinition definition={businessOwners} />
             </Grid>
           </Grid>
@@ -73,7 +71,7 @@ const SystemCard = ({
           to={`/systems/${id}/home/top`}
           className="display-flex flex-align-center"
         >
-          {t('additionalInformation.viewSystem')}
+          {t('viewSystem')}
           <IconArrowForward className="margin-left-1" />
         </UswdsReactLink>
       </Grid>
