@@ -58,6 +58,7 @@ models:
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
       - github.com/cmsgov/easi-app/pkg/models.ZeroInt
+      - github.com/cmsgov/easi-app/pkg/models.NullInt
   String:
     model:
       - github.com/99designs/gqlgen/graphql.String
@@ -76,6 +77,7 @@ models:
     model:
       - github.com/99designs/gqlgen/graphql.Float
       - github.com/cmsgov/easi-app/pkg/models.ZeroFloat
+      - github.com/cmsgov/easi-app/pkg/models.NullFloat
   UUID:
     model:
       - github.com/cmsgov/easi-app/pkg/models.UUID
