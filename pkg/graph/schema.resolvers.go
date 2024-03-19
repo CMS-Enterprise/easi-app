@@ -245,26 +245,6 @@ func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.Bus
 	return r.store.FetchSystemIntakeByID(ctx, obj.SystemIntakeID)
 }
 
-// CountOfTotalNonPrivilegedUserPopulation is the resolver for the countOfTotalNonPrivilegedUserPopulation field.
-func (r *cedarAuthorityToOperateResolver) CountOfTotalNonPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error) {
-	panic(fmt.Errorf("not implemented: CountOfTotalNonPrivilegedUserPopulation - countOfTotalNonPrivilegedUserPopulation"))
-}
-
-// CountOfOpenPoams is the resolver for the countOfOpenPoams field.
-func (r *cedarAuthorityToOperateResolver) CountOfOpenPoams(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error) {
-	panic(fmt.Errorf("not implemented: CountOfOpenPoams - countOfOpenPoams"))
-}
-
-// CountOfTotalPrivilegedUserPopulation is the resolver for the countOfTotalPrivilegedUserPopulation field.
-func (r *cedarAuthorityToOperateResolver) CountOfTotalPrivilegedUserPopulation(ctx context.Context, obj *models.CedarAuthorityToOperate) (int, error) {
-	panic(fmt.Errorf("not implemented: CountOfTotalPrivilegedUserPopulation - countOfTotalPrivilegedUserPopulation"))
-}
-
-// Fips199OverallImpactRating is the resolver for the fips199OverallImpactRating field.
-func (r *cedarAuthorityToOperateResolver) Fips199OverallImpactRating(ctx context.Context, obj *models.CedarAuthorityToOperate) (*int, error) {
-	panic(fmt.Errorf("not implemented: Fips199OverallImpactRating - fips199OverallImpactRating"))
-}
-
 // RecoveryPointObjective is the resolver for the recoveryPointObjective field.
 func (r *cedarAuthorityToOperateResolver) RecoveryPointObjective(ctx context.Context, obj *models.CedarAuthorityToOperate) (*float64, error) {
 	panic(fmt.Errorf("not implemented: RecoveryPointObjective - recoveryPointObjective"))
@@ -364,11 +344,6 @@ func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Contex
 		StoresBankingData:              &obj.BusinessOwnerInformation.StoresBankingData,
 		StoresBeneficiaryAddress:       &obj.BusinessOwnerInformation.StoresBeneficiaryAddress,
 	}, nil
-}
-
-// DaysOpen is the resolver for the daysOpen field.
-func (r *cedarThreatResolver) DaysOpen(ctx context.Context, obj *models.CedarThreat) (*int, error) {
-	panic(fmt.Errorf("not implemented: DaysOpen - daysOpen"))
 }
 
 // Author is the resolver for the author field.
@@ -2616,9 +2591,6 @@ func (r *Resolver) CedarSystemDetails() generated.CedarSystemDetailsResolver {
 	return &cedarSystemDetailsResolver{r}
 }
 
-// CedarThreat returns generated.CedarThreatResolver implementation.
-func (r *Resolver) CedarThreat() generated.CedarThreatResolver { return &cedarThreatResolver{r} }
-
 // GovernanceRequestFeedback returns generated.GovernanceRequestFeedbackResolver implementation.
 func (r *Resolver) GovernanceRequestFeedback() generated.GovernanceRequestFeedbackResolver {
 	return &governanceRequestFeedbackResolver{r}
@@ -2695,7 +2667,6 @@ type cedarAuthorityToOperateResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
 type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
-type cedarThreatResolver struct{ *Resolver }
 type governanceRequestFeedbackResolver struct{ *Resolver }
 type iTGovTaskStatusesResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }

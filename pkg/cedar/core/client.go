@@ -15,7 +15,6 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client"
-	"github.com/cmsgov/easi-app/pkg/flags"
 )
 
 const (
@@ -27,18 +26,7 @@ const (
 // NewClient builds the type that holds a connection to the CEDAR Core API
 func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, cacheRefreshTime time.Duration, ldClient *ld.LDClient) *Client {
 	fnEmit := func(ctx context.Context) bool {
-		lduser := flags.Principal(ctx)
-		result, err := ldClient.BoolVariation(cedarCoreEnabledKey, lduser, cedarCoreEnabledDefault)
-		if err != nil {
-			appcontext.ZLogger(ctx).Info(
-				"problem evaluating feature flag",
-				zap.Error(err),
-				zap.String("flagName", cedarCoreEnabledKey),
-				zap.Bool("flagDefault", cedarCoreEnabledDefault),
-				zap.Bool("flagResult", result),
-			)
-		}
-		return result
+		return true
 	}
 
 	c := cache.New(cache.NoExpiration, cache.NoExpiration) // Don't expire data _or_ clean it up

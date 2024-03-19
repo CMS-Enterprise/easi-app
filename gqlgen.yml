@@ -58,6 +58,7 @@ models:
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
       - github.com/cmsgov/easi-app/pkg/models.ZeroInt
+      - github.com/cmsgov/easi-app/pkg/models.NullInt
   String:
     model:
       - github.com/99designs/gqlgen/graphql.String
