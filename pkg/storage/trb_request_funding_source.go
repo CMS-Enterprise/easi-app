@@ -75,6 +75,7 @@ func (s *Store) DeleteTRBRequestFundingSources(
 ) ([]*models.TRBFundingSource, error) {
 
 	fundingSources := []*models.TRBFundingSource{}
+
 	return fundingSources, sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
 
 		deleteFundingSourcesSQL := `
