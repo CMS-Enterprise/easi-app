@@ -58,7 +58,7 @@ func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, 
 	result, txErr = txFunc(tx)
 
 	// do not `return txFunc(tx)`
-	// while `result` is assigned above, `txErr` can be re-assigned in the deferred func above
+	// while `result` is assigned from the `txFunc` above, `txErr` can be re-assigned in the deferred func above
 	return result, txErr
 }
 
