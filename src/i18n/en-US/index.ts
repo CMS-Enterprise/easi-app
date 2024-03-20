@@ -11,6 +11,7 @@ import templatesFor508Testing from './articles/templatesFor508Testing';
 import accessibility from './accessibility';
 import accessibilityStatement from './accessibilityStatement';
 import action from './action';
+import admin from './admin';
 import auth from './auth';
 import businessCase from './businessCase';
 import cookies from './cookies';
@@ -36,6 +37,7 @@ const enUS = {
   accessibility,
   accessibilityStatement,
   action,
+  admin,
   auth,
   businessCase,
   cookies,

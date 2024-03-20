@@ -907,6 +907,7 @@ const technicalAssistance = {
     supportingDocuments: 'Supporting documents',
     feedback: 'Feedback',
     adviceLetter: 'Advice letter',
+    additionalInformation: 'Additional information',
     notes: 'Notes',
     byNameOnDate: 'by {{name}} on {{date}}'
   },

@@ -67,6 +67,7 @@ export type TrbAdminPath =
   | 'documents'
   | 'feedback'
   | 'advice'
+  | 'additional-information'
   | 'notes';
 
 export type TrbAdminPage = {
