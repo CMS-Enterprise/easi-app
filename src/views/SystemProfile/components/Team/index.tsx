@@ -215,9 +215,7 @@ export const TeamSection = ({
                 setIsExpanded(!isExpanded);
               }}
             >
-              {t(`singleSystem.team.view${isExpanded ? 'Less' : 'More'}`, {
-                count: membersLeft
-              })}
+              {t(`singleSystem.team.show${isExpanded ? 'Less' : 'More'}`)}
               <IconExpandMore
                 className="margin-left-05 margin-bottom-2px text-tbottom"
                 style={{
@@ -241,18 +239,17 @@ const Team = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const flags = useFlags();
   const team = useMemo(() => getTeam(system.usernamesWithRoles), [system]);
+
   return (
     <>
       <SectionWrapper className="padding-bottom-4">
         <h2 className="margin-top-0 margin-bottom-4">
-          {t('singleSystem.team.header.team')}
+          {t('singleSystem.team.header.fte')}
         </h2>
         <GridContainer className="padding-x-0">
           <Grid row>
             <Grid tablet={{ col: true }}>
-              <DescriptionTerm
-                term={t('singleSystem.team.federalFullTimeEmployees')}
-              />
+              <DescriptionTerm term={t('singleSystem.team.federalFte')} />
               <DescriptionDefinition
                 className="font-body-md line-height-body-3"
                 definition={showVal(system.numberOfFederalFte, {
@@ -261,9 +258,7 @@ const Team = ({ system }: SystemProfileSubviewProps) => {
               />
             </Grid>
             <Grid tablet={{ col: true }}>
-              <DescriptionTerm
-                term={t('singleSystem.team.contractorFullTimeEmployees')}
-              />
+              <DescriptionTerm term={t('singleSystem.team.contractorFte')} />
               <DescriptionDefinition
                 className="font-body-md line-height-body-3"
                 definition={showVal(system.numberOfContractorFte, {

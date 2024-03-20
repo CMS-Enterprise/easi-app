@@ -102,22 +102,22 @@ const systemProfile = {
     },
     team: {
       header: {
-        team: 'Team',
+        fte: 'Full-time employees (FTE)',
         businessOwners: 'Business Owners',
         projectLeads: 'Project Leads',
-        additional: 'Additional Points of Contact'
+        additional: 'Additional team members'
       },
       noData: {
         businessOwners:
-          'This system does not have any Business Owners identified.',
-        projectLeads: 'This system does not have any Project Leads identified.',
-        additional: 'This system has no additional points of contact.'
+          'There are no Business Owners identified for this system.',
+        projectLeads: 'There are no Project Leads identified for this system.',
+        additional:
+          'There are no additional team members identified for this system.'
       },
-      viewMore: 'View {{count}} more contact',
-      viewMore_plural: 'View {{count}} more contacts',
-      viewLess: 'View fewer contacts',
-      federalFullTimeEmployees: 'Federal Full Time Employees',
-      contractorFullTimeEmployees: 'Contractor Full Time Employees',
+      showMore: 'Show more points of contact',
+      showLess: 'Show fewer points of contact',
+      federalFte: 'Federal FTE',
+      contractorFte: 'Contractor FTE',
       vendors: 'Vendors',
       contractAwardDate: 'Contract Award Date',
       periodOfPerformance: 'Period of performance',

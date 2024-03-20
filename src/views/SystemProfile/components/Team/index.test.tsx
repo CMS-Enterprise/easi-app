@@ -97,7 +97,7 @@ describe('System Profile Team subpage', () => {
 });
 
 describe(`System Profile Team section collapse/expand toggle at ${TEAM_SECTION_MEMBER_COUNT_CAP}`, () => {
-  const buttonExpandToggleMatchOpt = { name: /view \d+ more contact/i };
+  const buttonExpandToggleMatchOpt = { name: /show more/i };
 
   function fillRolesUniqueWithType(roleTypeName: string, count: number) {
     return Array(count)
@@ -149,9 +149,7 @@ describe(`System Profile Team section collapse/expand toggle at ${TEAM_SECTION_M
     // Toggle expand
     fireEvent.click(getByRole('button', buttonExpandToggleMatchOpt));
     await waitFor(() => {
-      expect(
-        getByRole('button', { name: /view fewer contacts/i })
-      ).toBeInTheDocument();
+      expect(getByRole('button', { name: /show fewer/i })).toBeInTheDocument();
     });
 
     // Expanded count
