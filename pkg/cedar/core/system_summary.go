@@ -41,8 +41,8 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID 
 		return local.GetMockSystems(), nil
 	}
 
-	// Check and use cache before making API call
-	if tryCache && euaUserID != nil {
+	// Check and use cache before making API call if `tryCache` is true and there is no `euaUserID` filter
+	if tryCache && euaUserID == nil {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
 			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
