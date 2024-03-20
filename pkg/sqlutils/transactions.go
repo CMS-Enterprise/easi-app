@@ -24,31 +24,42 @@ func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, 
 		return result, fmt.Errorf("error creating transaction %w", err)
 	}
 
+	// `txErr` will track any errors that take place in the transaction execution itself
+	var txErr error
+
 	defer func() {
 		if p := recover(); p != nil {
-			// we encountered a panic, attempt rollback
+			// if `p` is not nil, it means we panicked at some point in the `txFunc`
+			// attempt rollback
 			if err := tx.Rollback(); err != nil {
 				logger.Error("failed to rollback transaction after panic", zap.Error(err))
 			}
+
 			// continue panic sequence
 			panic(p)
-		} else if err != nil {
-			// we hit an error in the `txFunc`, attempt rollback
+
+		} else if txErr != nil {
+			// if `txErr` is not `nil`, then we know `txFunc` returned an error
+			// attempt rollback
 			if err := tx.Rollback(); err != nil {
 				logger.Error("failed to rollback transaction after error", zap.Error(err))
 			}
+
 		} else {
-			// explicitly re-assign `err` here so it can be returned
-			if err = tx.Commit(); err != nil {
-				logger.Error("failed to commit transaction", zap.Error(err))
-			}
+			// no panic, and `txFunc` did not error, so we can commit the `tx`
+
+			// explicitly re-assign `txErr` here so it can be returned
+			// we must re-use `txErr` here as this defer function will re-assign `txErr` just before the outside function returns
+			txErr = tx.Commit()
 		}
 	}()
 
-	result, err = txFunc(tx)
+	// use `txErr` here so the deferred func can use its updated value (such as a non-nil error)
+	result, txErr = txFunc(tx)
+
 	// do not `return txFunc(tx)`
-	// while `result` is assigned here, `err` is re-assigned in the deferred func above
-	return result, err
+	// while `result` is assigned above, `txErr` can be re-assigned in the deferred func above
+	return result, txErr
 }
 
 func WithTransaction(ctx context.Context, txPrep TransactionPreparer, txFunc func(*sqlx.Tx) error) error {
