@@ -62,7 +62,7 @@ import {
   budgetsInfo as mockBudgets,
   subSystems as mockSubSystems,
   systemData as mockSystemData
-} from 'views/Sandbox/mockSystemData';
+} from 'views/SystemProfile/mockSystemData';
 
 import EditPageCallout from './components/EditPageCallout';
 // components/index contains all the sideNavItems components, routes, labels and translations
