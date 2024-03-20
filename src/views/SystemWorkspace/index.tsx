@@ -17,6 +17,7 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import Alert, { AlertText } from 'components/shared/Alert';
 import { ErrorAlert } from 'components/shared/ErrorAlert';
+import TLCTag from 'components/TLCTag';
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetSystemWorkspaceQuery from 'queries/GetSystemWorkspaceQuery';
 import {
@@ -44,7 +45,8 @@ export const SystemWorkspace = () => {
     }
   });
 
-  const systemData = data?.cedarSystemDetails?.cedarSystem;
+  const cedarSystem = data?.cedarSystemDetails?.cedarSystem;
+  const ato = data?.cedarAuthorityToOperate[0];
 
   const {
     data: bookmark,
@@ -65,11 +67,18 @@ export const SystemWorkspace = () => {
         <div className="display-flex flex-align-center flex-justify">
           <div>
             <PageHeading className="margin-bottom-1">{t('header')}</PageHeading>
-            <p className="margin-top-1">
+
+            <p className="margin-y-1 text-body-lg">
               {t('subheader', {
-                systemName: systemData?.name
+                systemName: cedarSystem?.name
               })}
             </p>
+
+            <div className="display-flex margin-top-neg-1">
+              <p className="text-bold margin-right-2">{t('tlcPhase')}</p>
+
+              <TLCTag tlcPhase={ato?.tlcPhase} />
+            </div>
           </div>
 
           <BookmarkTag
