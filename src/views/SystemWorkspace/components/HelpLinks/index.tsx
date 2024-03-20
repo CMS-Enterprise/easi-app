@@ -1,16 +1,18 @@
-/**
- * TODO: This component is not complete. It was prototyped as part of
- * https://jiraent.cms.gov/browse/EASI-1367, but has not undergone any 508 testing,
- * UX review, etc.
- */
-
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconLightbulbOutline, SummaryBox } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import { HelpLinkType } from 'i18n/en-US/systemWorkspace';
+
+import HelpCardGroup from './SystemCardGroup';
+
 export const HelpLinks = ({ classname }: { classname?: string }) => {
   const { t } = useTranslation('systemWorkspace');
+
+  const helpCards = t<HelpLinkType[]>('helpLinks.links', {
+    returnObjects: true
+  });
 
   return (
     <SummaryBox
@@ -28,6 +30,8 @@ export const HelpLinks = ({ classname }: { classname?: string }) => {
 
         <p className="margin-top-1">{t('helpLinks.description')}</p>
       </div>
+
+      <HelpCardGroup cards={helpCards} />
     </SummaryBox>
   );
 };
