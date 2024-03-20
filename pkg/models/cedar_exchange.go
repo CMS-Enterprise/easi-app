@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 )
 
@@ -17,17 +16,17 @@ const (
 
 // CedarExchangeTypeOfDataItem is one item of the TypeofData slice in a CedarExchange
 type CedarExchangeTypeOfDataItem struct {
-	ID   string `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
+	ID   zero.String `json:"id,omitempty"`
+	Name zero.String `json:"name,omitempty"`
 }
 
 // CedarExchange contains information about how data is exchanged between a CEDAR system and another system
 type CedarExchange struct {
-	ConnectionFrequency        []string                       `json:"connectionFrequency"`
-	ContainsBankingData        null.Bool                      `json:"containsBankingData,omitempty"`
-	ContainsBeneficiaryAddress null.Bool                      `json:"containsBeneficiaryAddress,omitempty"`
-	ContainsPhi                null.Bool                      `json:"containsPhi,omitempty"`
-	ContainsPii                null.Bool                      `json:"containsPii,omitempty"`
+	ConnectionFrequency        []zero.String                  `json:"connectionFrequency"`
+	ContainsBankingData        bool                           `json:"containsBankingData,omitempty"`
+	ContainsBeneficiaryAddress bool                           `json:"containsBeneficiaryAddress,omitempty"`
+	ContainsPhi                bool                           `json:"containsPhi,omitempty"`
+	ContainsPii                bool                           `json:"containsPii,omitempty"`
 	DataExchangeAgreement      zero.String                    `json:"dataExchangeAgreement,omitempty"`
 	DataFormat                 zero.String                    `json:"dataFormat,omitempty"`
 	DataFormatOther            zero.String                    `json:"dataFormatOther,omitempty"`
@@ -43,9 +42,9 @@ type CedarExchange struct {
 	FromOwnerID                zero.String                    `json:"fromOwnerId,omitempty"`
 	FromOwnerName              zero.String                    `json:"fromOwnerName,omitempty"`
 	FromOwnerType              zero.String                    `json:"fromOwnerType,omitempty"`
-	IsBeneficiaryMailingFile   null.Bool                      `json:"isBeneficiaryMailingFile,omitempty"`
+	IsBeneficiaryMailingFile   bool                           `json:"isBeneficiaryMailingFile,omitempty"`
 	NumOfRecords               zero.String                    `json:"numOfRecords,omitempty"`
-	SharedViaAPI               null.Bool                      `json:"sharedViaApi,omitempty"`
+	SharedViaAPI               bool                           `json:"sharedViaApi,omitempty"`
 	ToOwnerID                  zero.String                    `json:"toOwnerId,omitempty"`
 	ToOwnerName                zero.String                    `json:"toOwnerName,omitempty"`
 	ToOwnerType                zero.String                    `json:"toOwnerType,omitempty"`

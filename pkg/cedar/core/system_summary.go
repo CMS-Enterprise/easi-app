@@ -4,11 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/guregu/null"
+	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -61,8 +62,8 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID 
 
 	// Construct the parameters
 	params := apisystems.NewSystemSummaryFindListParams()
-	params.SetState(null.StringFrom("active").Ptr())
-	params.SetIncludeInSurvey(null.BoolFrom(true).Ptr())
+	params.SetState(helpers.PointerTo("active"))
+	params.SetIncludeInSurvey(helpers.PointerTo(true))
 
 	params.SetUserName(euaUserID)
 	// as we add more filters, we can set them here
@@ -92,16 +93,16 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID 
 	for _, sys := range resp.Payload.SystemSummary {
 		if sys.IctObjectID != nil {
 			cedarSys := &models.CedarSystem{
-				VersionID:               *sys.ID,
-				Name:                    *sys.Name,
-				Description:             sys.Description,
-				Acronym:                 sys.Acronym,
-				Status:                  sys.Status,
-				BusinessOwnerOrg:        sys.BusinessOwnerOrg,
-				BusinessOwnerOrgComp:    sys.BusinessOwnerOrgComp,
-				SystemMaintainerOrg:     sys.SystemMaintainerOrg,
-				SystemMaintainerOrgComp: sys.SystemMaintainerOrgComp,
-				ID:                      *sys.IctObjectID,
+				VersionID:               zero.StringFromPtr(sys.ID),
+				Name:                    zero.StringFromPtr(sys.Name),
+				Description:             zero.StringFrom(sys.Description),
+				Acronym:                 zero.StringFrom(sys.Acronym),
+				Status:                  zero.StringFrom(sys.Status),
+				BusinessOwnerOrg:        zero.StringFrom(sys.BusinessOwnerOrg),
+				BusinessOwnerOrgComp:    zero.StringFrom(sys.BusinessOwnerOrgComp),
+				SystemMaintainerOrg:     zero.StringFrom(sys.SystemMaintainerOrg),
+				SystemMaintainerOrgComp: zero.StringFrom(sys.SystemMaintainerOrgComp),
+				ID:                      zero.StringFromPtr(sys.IctObjectID),
 			}
 			retVal = append(retVal, cedarSys)
 		}
@@ -131,7 +132,7 @@ func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
 	systemSummaryMap := make(map[string]*models.CedarSystem)
 	for _, sys := range systemSummary {
 		if sys != nil {
-			systemSummaryMap[sys.ID] = sys
+			systemSummaryMap[sys.ID.String] = sys
 		}
 	}
 

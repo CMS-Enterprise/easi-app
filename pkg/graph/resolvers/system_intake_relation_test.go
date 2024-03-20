@@ -250,7 +250,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			// Ensure the system IDs were modified properly
 			suite.Equal(len(caseValues.NewSystemIDs), len(updatedIntakeSystemIDs))
 			for _, v := range updatedIntakeSystemIDs {
-				suite.Contains(caseValues.NewSystemIDs, v.ID)
+				suite.Contains(caseValues.NewSystemIDs, v.ID.String)
 			}
 
 			// Ensure the contract numbers were modified properly
