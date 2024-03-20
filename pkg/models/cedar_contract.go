@@ -7,14 +7,13 @@ import (
 // CedarContract represents a single Contract object returned from the CEDAR API
 
 type CedarContract struct {
-	PopEndDate            zero.String `json:"popEndDate,omitempty"`
-	PopStartDate          zero.String `json:"popStartDate,omitempty"`
-	AwardID               *string     `json:"awardId"`
-	ContractAdo           zero.String `json:"contractADO,omitempty"`
-	ContractDeliverableID zero.String `json:"contractDeliverableId,omitempty"`
-	ContractName          zero.String `json:"contractName,omitempty"`
-	Description           zero.String `json:"description,omitempty"`
-	ID                    *string     `json:"id"`
-	ParentAwardID         *string     `json:"parentAwardId"`
-	SystemID              zero.String `json:"systemId,omitempty"`
+	EndDate         zero.Time   `json:"endDate,omitempty"`
+	StartDate       zero.Time   `json:"startDate,omitempty"`
+	ContractNumber  *string     `json:"contractNumber"`
+	ContractName    zero.String `json:"contractName,omitempty"`
+	Description     zero.String `json:"description,omitempty"`
+	OrderNumber     zero.String `json:"orderNumber,omitempty"`
+	ServiceProvided zero.String `json:"serviceProvided,omitempty"`
+	IsDeliveryOrg   bool        `json:"isDeliveryOrg"`
+	SystemID        zero.String `json:"systemId,omitempty"`
 }
