@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -33,7 +32,7 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 
 	// Construct the parameters
 	params := apiauthority.NewAuthorityToOperateFindListParams()
-	params.SetSystemID(&cedarSystem.VersionID)
+	params.SetSystemID(cedarSystem.VersionID.Ptr())
 	params.HTTPClient = c.hc
 
 	// Make the API call
@@ -52,21 +51,23 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 	// Populate the ATO fields by converting each item in resp.Payload.AuthorityToOperate
 	for _, ato := range resp.Payload.AuthorityToOperateList {
 		retVal = append(retVal, &models.CedarAuthorityToOperate{
-			ActualDispositionDate: zero.TimeFrom(time.Time(ato.ActualDispositionDate)),
-			CedarID:               *ato.CedarID, // required
-			ContainsPersonallyIdentifiableInformation: null.BoolFrom(ato.ContainsPersonallyIdentifiableInformation),
-			CountOfTotalNonPrivilegedUserPopulation:   null.IntFrom(int64(ato.CountOfTotalNonPrivilegedUserPopulation)),
-			CountOfOpenPoams:                          null.IntFrom(int64(ato.CountOfOpenPoams)),
-			CountOfTotalPrivilegedUserPopulation:      null.IntFrom(int64(ato.CountOfTotalPrivilegedUserPopulation)),
+			UUID:    zero.StringFromPtr(ato.UUID),    // required
+			CedarID: zero.StringFromPtr(ato.CedarID), // required
+
+			ActualDispositionDate:                     zero.TimeFrom(time.Time(ato.ActualDispositionDate)),
+			ContainsPersonallyIdentifiableInformation: ato.ContainsPersonallyIdentifiableInformation,
+			CountOfTotalNonPrivilegedUserPopulation:   int(ato.CountOfTotalNonPrivilegedUserPopulation),
+			CountOfOpenPoams:                          int(ato.CountOfOpenPoams),
+			CountOfTotalPrivilegedUserPopulation:      int(ato.CountOfTotalPrivilegedUserPopulation),
 			DateAuthorizationMemoExpires:              zero.TimeFrom(time.Time(ato.DateAuthorizationMemoExpires)),
 			DateAuthorizationMemoSigned:               zero.TimeFrom(time.Time(ato.DateAuthorizationMemoSigned)),
 			EAuthenticationLevel:                      zero.StringFrom(ato.EAuthenticationLevel),
-			Fips199OverallImpactRating:                null.IntFrom(int64(ato.Fips199OverallImpactRating)),
+			Fips199OverallImpactRating:                int(ato.Fips199OverallImpactRating),
 			FismaSystemAcronym:                        zero.StringFrom(ato.FismaSystemAcronym),
 			FismaSystemName:                           zero.StringFrom(ato.FismaSystemName),
-			IsAccessedByNonOrganizationalUsers:        null.BoolFrom(ato.IsAccessedByNonOrganizationalUsers),
-			IsPiiLimitedToUserNameAndPass:             null.BoolFrom(ato.IsPiiLimitedToUserNameAndPass),
-			IsProtectedHealthInformation:              null.BoolFrom(ato.IsProtectedHealthInformation),
+			IsAccessedByNonOrganizationalUsers:        ato.IsAccessedByNonOrganizationalUsers,
+			IsPiiLimitedToUserNameAndPass:             ato.IsPiiLimitedToUserNameAndPass,
+			IsProtectedHealthInformation:              ato.IsProtectedHealthInformation,
 			LastActScaDate:                            zero.TimeFrom(time.Time(ato.LastActScaDate)),
 			LastAssessmentDate:                        zero.TimeFrom(time.Time(ato.LastAssessmentDate)),
 			LastContingencyPlanCompletionDate:         zero.TimeFrom(time.Time(ato.LastContingencyPlanCompletionDate)),
@@ -74,12 +75,11 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 			PiaCompletionDate:                         zero.TimeFrom(time.Time(ato.PiaCompletionDate)),
 			PrimaryCyberRiskAdvisor:                   zero.StringFrom(ato.PrimaryCyberRiskAdvisor),
 			PrivacySubjectMatterExpert:                zero.StringFrom(ato.PrivacySubjectMatterExpert),
-			RecoveryPointObjective:                    null.FloatFrom(float64(ato.RecoveryPointObjective)),
-			RecoveryTimeObjective:                     null.FloatFrom(float64(ato.RecoveryTimeObjective)),
-			SystemOfRecordsNotice:                     ato.SystemOfRecordsNotice,
+			RecoveryPointObjective:                    float64(ato.RecoveryPointObjective),
+			RecoveryTimeObjective:                     float64(ato.RecoveryTimeObjective),
+			SystemOfRecordsNotice:                     models.ZeroStringsFrom(ato.SystemOfRecordsNotice),
 			TLCPhase:                                  zero.StringFrom(ato.TlcPhase),
 			XLCPhase:                                  zero.StringFrom(ato.XlcPhase),
-			UUID:                                      *ato.UUID, // required
 		})
 	}
 
