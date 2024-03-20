@@ -193,7 +193,7 @@ type CedarSystemMaintainerInformation {
 	ip6EnabledAssetPercent: String
 	ip6TransitionPlan: String
 	ipEnabledAssetCount: Int
-	majorRefreshDate: String
+	majorRefreshDate: Time
 	netAccessibility: String
 	omDocumentationOnDemand: Boolean
 	plansToRetireReplace: String
@@ -202,7 +202,7 @@ type CedarSystemMaintainerInformation {
 	sourceCodeOnDemand: Boolean
 	systemCustomization: String
 	systemDesignOnDemand: Boolean
-	systemProductionDate: String
+	systemProductionDate: Time
 	systemRequirementsOnDemand: Boolean
 	testPlanOnDemand: Boolean
 	testReportsOnDemand: Boolean

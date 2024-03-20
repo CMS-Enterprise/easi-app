@@ -64,15 +64,15 @@ func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 		)
 
 		for _, result := range data {
-			if result.ID == systemID1 {
+			if result.ID.String == systemID1 {
 				found1 = true
 			}
 
-			if result.ID == systemID2 {
+			if result.ID.String == systemID2 {
 				found2 = true
 			}
 
-			if result.ID == systemID3 {
+			if result.ID.String == systemID3 {
 				found3 = true
 			}
 		}

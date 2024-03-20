@@ -1121,7 +1121,9 @@ const technicalAssistance = {
       field: {
         systemOrService: {
           label:
-            'Is technical assistance request related to an existing system, service, or contract?'
+            'Is this technical assistance request part of an existing system, service, or contract?',
+          hint:
+            'With any of the selections below, you may add contract number(s) if there are any in place to support this effort.'
         }
       }
     },

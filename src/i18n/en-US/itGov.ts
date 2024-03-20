@@ -133,7 +133,9 @@ export default {
       field: {
         systemOrService: {
           label:
-            'Is this IT Governance request related to an existing system, service, or contract?',
+            'Is this IT Governance request part of an existing system, service, or contract?',
+          hint:
+            'With any of the selections below, you may add contract number(s) if there are any in place to support this effort.',
           options: [
             'No, this is a completely new system, service, or contract',
             'Yes, an existing system',

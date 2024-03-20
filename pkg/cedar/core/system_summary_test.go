@@ -57,7 +57,7 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 
 		// should return mocked system when given corresponding mockKey
 		for _, v := range local.GetMockSystems() {
-			resp, err := c.GetSystem(ctx, v.ID)
+			resp, err := c.GetSystem(ctx, v.ID.String)
 			s.NoError(err)
 			s.Equal(v, resp)
 		}
