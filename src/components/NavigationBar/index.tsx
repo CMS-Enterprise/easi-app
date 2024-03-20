@@ -172,7 +172,7 @@ const NavigationBar = ({ signout, userName }: NavigationProps) => {
                 menuId={route.label}
                 isOpen={isOpen[0]}
                 onToggle={() => onToggle(0, setIsOpen)}
-                isCurrent={location.pathname === route.link}
+                isCurrent={location.pathname.includes(route.link)}
                 className="system-dropdown text-bold"
               />
               {isOpen[0] && <Menu isOpen={isOpen[0]} items={systemNavLinks} />}
