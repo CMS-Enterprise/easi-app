@@ -102,7 +102,7 @@ export const SystemWorkspace = () => {
       </Grid>
 
       <Grid>
-        <HelpLinks classname="margin-top-4" />
+        <HelpLinks classname="margin-top-3" />
       </Grid>
     </MainContent>
   );

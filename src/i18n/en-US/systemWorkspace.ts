@@ -55,7 +55,9 @@ const systemWorkspace = {
     header: 'How can EASi help you today?',
     description:
       'EASi can help point you towards documentation, available services, compliance processes, and other information that may help during your system’s life cycle. The links below may help you navigate OIT and other areas of CMS. ',
-    links: helpLinks
+    links: helpLinks,
+    showLinks: 'Show helpful links',
+    hideLinks: 'Hide helpful links'
   }
 };
 

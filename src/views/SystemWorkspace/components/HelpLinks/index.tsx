@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { IconLightbulbOutline, SummaryBox } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import CollapsableLink from 'components/shared/CollapsableLink';
 import { HelpLinkType } from 'i18n/en-US/systemWorkspace';
 
 import HelpCardGroup from './SystemCardGroup';
@@ -31,7 +32,18 @@ export const HelpLinks = ({ classname }: { classname?: string }) => {
         <p className="margin-top-1">{t('helpLinks.description')}</p>
       </div>
 
-      <HelpCardGroup cards={helpCards} />
+      <CollapsableLink
+        id="system-help-link-toggle"
+        label={t('helpLinks.showLinks')}
+        closeLabel={t('helpLinks.hideLinks')}
+        styleLeftBar={false}
+        labelPosition="bottom"
+        eyeIcon
+        bold={false}
+        className="text-normal margin-bottom-2"
+      >
+        <HelpCardGroup cards={helpCards} />
+      </CollapsableLink>
     </SummaryBox>
   );
 };

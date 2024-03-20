@@ -16,7 +16,7 @@ const HelpCardGroup = ({ className, cards }: OperationalSolutionsHelpProps) => {
     <div
       className={classNames(
         className,
-        'padding-y-4 padding-bottom-6 text-white margin-bottom-neg-7'
+        'padding-bottom-6 text-white margin-bottom-neg-7'
       )}
     >
       <CardGroup className={className}>
