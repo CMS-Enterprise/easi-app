@@ -28,6 +28,9 @@ import {
   GetSystemWorkspace,
   GetSystemWorkspaceVariables
 } from 'queries/types/GetSystemWorkspace';
+import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
+
+import HelpLinks from './components/HelpLinks';
 
 export const SystemWorkspace = () => {
   const { t } = useTranslation('systemWorkspace');
@@ -63,10 +66,19 @@ export const SystemWorkspace = () => {
 
   return (
     <MainContent className="grid-container margin-bottom-5">
+      <Breadcrumbs
+        items={[
+          { text: t('breadcrumbs.home'), url: '/' },
+          { text: t('header') }
+        ]}
+      />
+
       <Grid>
         <div className="display-flex flex-align-center flex-justify">
           <div>
-            <PageHeading className="margin-bottom-1">{t('header')}</PageHeading>
+            <PageHeading className="margin-bottom-1 margin-top-5">
+              {t('header')}
+            </PageHeading>
 
             <p className="margin-y-1 text-body-lg">
               {t('subheader', {
@@ -87,6 +99,10 @@ export const SystemWorkspace = () => {
             refetchBookmarks={refetchBookmarks}
           />
         </div>
+      </Grid>
+
+      <Grid>
+        <HelpLinks classname="margin-top-4" />
       </Grid>
     </MainContent>
   );
