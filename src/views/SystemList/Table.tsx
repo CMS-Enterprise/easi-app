@@ -279,7 +279,7 @@ export const Table = ({
   if (
     (isMySystems || tableType === 'my-systems') &&
     loading &&
-    !filteredSystems
+    !mySystems?.myCedarSystems
   ) {
     return <PageLoading />;
   }

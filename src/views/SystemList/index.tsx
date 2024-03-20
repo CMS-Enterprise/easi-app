@@ -71,7 +71,7 @@ export const SystemList = () => {
         </SummaryBox>
       </SectionWrapper>
 
-      {(loadingSystems || loadingBookmarks) && !systemsTableData ? (
+      {(loadingSystems || loadingBookmarks) && !data1?.cedarSystems ? (
         <PageLoading />
       ) : (
         <>
