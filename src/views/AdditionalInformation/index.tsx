@@ -72,7 +72,7 @@ const AdditionalInformation = ({
         <div className="margin-top-3">
           <strong>
             {t('contractNumber', {
-              plural: request.contractNumbers.length > 1 ? 's' : ''
+              count: request.contractNumbers.length
             })}
           </strong>
           <p className="margin-top-1">
