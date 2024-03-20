@@ -62,6 +62,7 @@ func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, 
 	return result, txErr
 }
 
+// WithTransaction is used for transactions that are execution only (i.e., no return value) and only returns an error
 func WithTransaction(ctx context.Context, txPrep TransactionPreparer, txFunc func(*sqlx.Tx) error) error {
 	_, err := WithTransactionRet[any](ctx, txPrep, func(tx *sqlx.Tx) (any, error) {
 		return nil, txFunc(tx)
