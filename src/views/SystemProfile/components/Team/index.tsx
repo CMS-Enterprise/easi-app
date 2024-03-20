@@ -197,7 +197,13 @@ export const TeamSection = ({
 
   return (
     <SectionWrapper borderTop>
-      <h2 className="margin-y-4">{t(`singleSystem.team.header.${section}`)}</h2>
+      <h2
+        className="margin-y-4"
+        id={section}
+        style={{ scrollMarginTop: '4rem' }}
+      >
+        {t(`singleSystem.team.header.${section}`)}
+      </h2>
       {usernamesWithRoles.length ? (
         <div>
           <CardGroup className="margin-x-0">
@@ -243,7 +249,11 @@ const Team = ({ system }: SystemProfileSubviewProps) => {
   return (
     <>
       <SectionWrapper className="padding-bottom-4">
-        <h2 className="margin-top-0 margin-bottom-4">
+        <h2
+          className="margin-top-0 margin-bottom-4"
+          id="fte"
+          style={{ scrollMarginTop: '4rem' }}
+        >
           {t('singleSystem.team.header.fte')}
         </h2>
         <GridContainer className="padding-x-0">

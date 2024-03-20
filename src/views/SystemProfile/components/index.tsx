@@ -17,6 +17,7 @@ type sideNavItemProps = {
   component: React.ReactNode;
   route: string;
   componentId?: string;
+  hashLinks?: { name: string; hash: string }[];
 };
 
 interface sideNavProps {
@@ -47,7 +48,16 @@ const sideNavItems = (
           groupEnd: true,
           component: <Team system={system} />,
           route: `/systems/${system.id}/team`,
-          componentId: 'system-team'
+          componentId: 'system-team',
+          hashLinks: [
+            {
+              name: 'FTE',
+              hash: '#fte'
+            },
+            { name: 'Business Owner(s)', hash: '#businessOwners' },
+            { name: 'Project lead(s)', hash: '#projectLeads' },
+            { name: 'Additional team members', hash: '#additional' }
+          ]
         },
         ato: {
           component: <ATO system={system} />,
