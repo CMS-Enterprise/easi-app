@@ -9,8 +9,6 @@ type SectionWrapperProps = {
   border?: boolean;
   borderBottom?: boolean;
   borderTop?: boolean;
-  id?: string;
-  style?: React.CSSProperties;
 };
 
 const SectionWrapper = ({
@@ -18,9 +16,7 @@ const SectionWrapper = ({
   children,
   border,
   borderBottom,
-  borderTop,
-  id,
-  style
+  borderTop
 }: SectionWrapperProps) => {
   const classNames = classnames(
     'easi-section',
@@ -32,12 +28,7 @@ const SectionWrapper = ({
     className
   );
   return (
-    <div
-      id={id}
-      data-testid="section-wrapper"
-      className={classNames}
-      style={style}
-    >
+    <div data-testid="section-wrapper" className={classNames}>
       {children}
     </div>
   );
