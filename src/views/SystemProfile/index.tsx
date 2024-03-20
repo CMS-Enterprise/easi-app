@@ -18,6 +18,7 @@ import {
   SummaryBox
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import i18next from 'i18next';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { startCase } from 'lodash';
 
@@ -300,7 +301,7 @@ export function showAtoExpirationDate(
 export function showVal(
   val: string | number | null | undefined,
   {
-    defaultVal = 'No information to display',
+    defaultVal = i18next.t<string>('general:noInfoToDisplay'),
     format
   }: {
     defaultVal?: string;

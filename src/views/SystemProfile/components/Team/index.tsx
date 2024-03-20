@@ -264,7 +264,7 @@ const Team = ({ system }: SystemProfileSubviewProps) => {
                 className="font-body-md line-height-body-3"
                 definition={showVal(system.numberOfFederalFte, {
                   format: formatNumber,
-                  defaultVal: 'No data available'
+                  defaultVal: t('general:noDataAvailable')
                 })}
               />
             </Grid>
@@ -274,7 +274,7 @@ const Team = ({ system }: SystemProfileSubviewProps) => {
                 className="font-body-md line-height-body-3"
                 definition={showVal(system.numberOfContractorFte, {
                   format: formatNumber,
-                  defaultVal: 'No data available'
+                  defaultVal: t('general:noDataAvailable')
                 })}
               />
             </Grid>
