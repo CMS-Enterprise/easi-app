@@ -21,7 +21,7 @@ func (c *Client) GetBudgetBySystem(ctx context.Context, cedarSystemID string) ([
 	params := budget.NewBudgetFindParams()
 
 	// Construct the parameters
-	params.SetSystemID(&cedarSystem.VersionID)
+	params.SetSystemID(cedarSystem.VersionID.Ptr())
 	params.HTTPClient = c.hc
 
 	if err != nil {

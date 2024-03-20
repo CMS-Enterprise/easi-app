@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 
 import GetCedarSystemsAndBookmarksQuery from 'queries/GetCedarSystemsAndBookmarksQuery';
 import { mapCedarStatusToIcon } from 'types/iconStatus';
-import { mockSystemInfo } from 'views/Sandbox/mockSystemData';
+import { mockSystemInfo } from 'views/SystemProfile/mockSystemData';
 
 import BookmarkCard from './index';
 

@@ -7,9 +7,9 @@ import (
 // CedarAuthorityToOperate is the model for ATO information that comes back from the CEDAR Core API
 type CedarAuthorityToOperate struct {
 	// always-present fields
-	CedarID               string   `json:"cedarId"`
-	UUID                  string   `json:"uuid"`
-	SystemOfRecordsNotice []string `json:"systemOfRecordsNotice"`
+	CedarID               zero.String   `json:"cedarId"`
+	UUID                  zero.String   `json:"uuid"`
+	SystemOfRecordsNotice []zero.String `json:"systemOfRecordsNotice"`
 
 	// possibly-null fields
 	ActualDispositionDate                     zero.Time   `json:"actualDispositionDate"`

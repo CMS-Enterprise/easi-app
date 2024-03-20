@@ -1,16 +1,15 @@
 package models
 
 import (
-	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 )
 
 // SoftwareProductItem represents a single SoftwareProductSearchItem object which is an internal struct used in SoftwareProduct
 type SoftwareProductItem struct {
-	APIGatewayUse                  null.Bool   `json:"api_gateway_use,omitempty"`
+	APIGatewayUse                  bool        `json:"api_gateway_use,omitempty"`
 	ElaPurchase                    zero.String `json:"ela_purchase,omitempty"`
 	ElaVendorID                    zero.String `json:"ela_vendor_id,omitempty"`
-	ProvidesAiCapability           null.Bool   `json:"provides_ai_capability,omitempty"`
+	ProvidesAiCapability           bool        `json:"provides_ai_capability,omitempty"`
 	Refstr                         zero.String `json:"refstr,omitempty"`
 	SoftwareCatagoryConnectionGUID zero.String `json:"softwareCatagoryConnectionGuid,omitempty"`
 	SoftwareVendorConnectionGUID   zero.String `json:"softwareVendorConnectionGuid,omitempty"`
@@ -36,10 +35,10 @@ type CedarSoftwareProducts struct {
 	APIDescPublished    zero.String `json:"apiDescPublished,omitempty"`
 	APIFHIRUse          zero.String `json:"apiFHIRUse,omitempty"`
 	APIFHIRUseOther     zero.String `json:"apiFHIRUseOther,omitempty"`
-	APIHasPortal        null.Bool   `json:"apiHasPortal,omitempty"`
+	APIHasPortal        bool        `json:"apiHasPortal,omitempty"`
 	ApisAccessibility   zero.String `json:"apisAccessibility,omitempty"`
 	ApisDeveloped       zero.String `json:"apisDeveloped,omitempty"`
 	DevelopmentStage    zero.String `json:"developmentStage,omitempty"`
-	SystemHasAPIGateway null.Bool   `json:"systemHasApiGateway,omitempty"`
+	SystemHasAPIGateway bool        `json:"systemHasApiGateway,omitempty"`
 	UsesAiTech          zero.String `json:"usesAiTech,omitempty"`
 }

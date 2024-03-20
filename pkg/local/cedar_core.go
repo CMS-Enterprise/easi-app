@@ -5,7 +5,6 @@ import (
 	"sort"
 	"time"
 
-	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/helpers"
@@ -14,64 +13,64 @@ import (
 
 var mockSystems = map[string]*models.CedarSystem{
 	"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}": {
-		ID:                      "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
-		Name:                    "Centers for Management Services",
-		Acronym:                 "CMS",
-		Description:             "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
-		VersionID:               "{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}",
-		Status:                  "",
-		BusinessOwnerOrg:        "Information Systems Team",
-		BusinessOwnerOrgComp:    "IST",
-		SystemMaintainerOrg:     "Division of Quality Assurance",
-		SystemMaintainerOrgComp: "DQA",
+		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
+		Name:                    zero.StringFrom("Centers for Management Services"),
+		Acronym:                 zero.StringFrom("CMS"),
+		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
+		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		Status:                  zero.StringFrom(""),
+		BusinessOwnerOrg:        zero.StringFrom("Information Systems Team"),
+		BusinessOwnerOrgComp:    zero.StringFrom("IST"),
+		SystemMaintainerOrg:     zero.StringFrom("Division of Quality Assurance"),
+		SystemMaintainerOrgComp: zero.StringFrom("DQA"),
 	},
 	"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}": {
-		ID:                      "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
-		Name:                    "Office of Funny Walks",
-		Acronym:                 "OFW",
-		Description:             "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
-		VersionID:               "{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}",
-		Status:                  "",
-		BusinessOwnerOrg:        "Information Systems Team",
-		BusinessOwnerOrgComp:    "IST",
-		SystemMaintainerOrg:     "Division of Quality Assurance",
-		SystemMaintainerOrgComp: "DQA",
+		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
+		Name:                    zero.StringFrom("Office of Funny Walks"),
+		Acronym:                 zero.StringFrom("OFW"),
+		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
+		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		Status:                  zero.StringFrom(""),
+		BusinessOwnerOrg:        zero.StringFrom("Information Systems Team"),
+		BusinessOwnerOrgComp:    zero.StringFrom("IST"),
+		SystemMaintainerOrg:     zero.StringFrom("Division of Quality Assurance"),
+		SystemMaintainerOrgComp: zero.StringFrom("DQA"),
 	},
 	"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}": {
-		ID:                      "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}",
-		Name:                    "Quality Assurance Team",
-		Acronym:                 "QAT",
-		Description:             "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
-		VersionID:               "{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}",
-		Status:                  "",
-		BusinessOwnerOrg:        "Information Systems Team",
-		BusinessOwnerOrgComp:    "IST",
-		SystemMaintainerOrg:     "Division of Quality Assurance",
-		SystemMaintainerOrgComp: "DQA",
+		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"),
+		Name:                    zero.StringFrom("Quality Assurance Team"),
+		Acronym:                 zero.StringFrom("QAT"),
+		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
+		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		Status:                  zero.StringFrom(""),
+		BusinessOwnerOrg:        zero.StringFrom("Information Systems Team"),
+		BusinessOwnerOrgComp:    zero.StringFrom("IST"),
+		SystemMaintainerOrg:     zero.StringFrom("Division of Quality Assurance"),
+		SystemMaintainerOrgComp: zero.StringFrom("DQA"),
 	},
 	"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}": {
-		ID:                      "{11AB1A00-1234-5678-ABC1-1A001B00CC3D}",
-		Name:                    "Strategic Work Information Management System",
-		Acronym:                 "SWIMS",
-		Description:             "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
-		VersionID:               "{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}",
-		Status:                  "",
-		BusinessOwnerOrg:        "Managerial Mission Management",
-		BusinessOwnerOrgComp:    "MMM",
-		SystemMaintainerOrg:     "Division of Divisive Divergence",
-		SystemMaintainerOrgComp: "DODD",
+		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"),
+		Name:                    zero.StringFrom("Strategic Work Information Management System"),
+		Acronym:                 zero.StringFrom("SWIMS"),
+		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
+		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		Status:                  zero.StringFrom(""),
+		BusinessOwnerOrg:        zero.StringFrom("Managerial Mission Management"),
+		BusinessOwnerOrgComp:    zero.StringFrom("MMM"),
+		SystemMaintainerOrg:     zero.StringFrom("Division of Divisive Divergence"),
+		SystemMaintainerOrgComp: zero.StringFrom("DODD"),
 	},
 	"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}": {
-		ID:                      "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}",
-		Name:                    "Center for Central Centrifugal Certainty",
-		Acronym:                 "CCCC",
-		Description:             "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
-		VersionID:               "{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}",
-		Status:                  "",
-		BusinessOwnerOrg:        "Managerial Mission Management",
-		BusinessOwnerOrgComp:    "MMM",
-		SystemMaintainerOrg:     "Division of Divisive Divergence",
-		SystemMaintainerOrgComp: "DODD",
+		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"),
+		Name:                    zero.StringFrom("Center for Central Centrifugal Certainty"),
+		Acronym:                 zero.StringFrom("CCCC"),
+		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
+		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		Status:                  zero.StringFrom(""),
+		BusinessOwnerOrg:        zero.StringFrom("Managerial Mission Management"),
+		BusinessOwnerOrgComp:    zero.StringFrom("MMM"),
+		SystemMaintainerOrg:     zero.StringFrom("Division of Divisive Divergence"),
+		SystemMaintainerOrgComp: zero.StringFrom("DODD"),
 	},
 }
 
@@ -88,7 +87,7 @@ func GetMockSystems() []*models.CedarSystem {
 func GetFilteredMockSystems() []*models.CedarSystem {
 	systems := GetMockSystems()
 	sort.Slice(systems, func(i, j int) bool {
-		return systems[i].ID < systems[j].ID
+		return systems[i].ID.String < systems[j].ID.String
 	})
 
 	if len(systems) >= 2 {
@@ -109,93 +108,93 @@ func GetMockSystem(systemID string) *models.CedarSystem {
 
 var mockRoleTypes = []*models.CedarRoleType{
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID01}",
-		Application: "alfabet",
-		Name:        "API Contact",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID01}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("API Contact"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID02}",
-		Application: "alfabet",
-		Name:        "Business Question Contact",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID02}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("Business Question Contact"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID03}",
-		Application: "alfabet",
-		Name:        "Survey Point of Contact",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID03}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("Survey Point of Contact"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID04}",
-		Application: "alfabet",
-		Name:        "Government Task Lead (GTL)",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID04}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("Government Task Lead (GTL)"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID05}",
-		Application: "alfabet",
-		Name:        "Support Staff",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID05}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("Support Staff"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID06}",
-		Application: "alfabet",
-		Name:        "System Maintainer",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID06}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("System Maintainer"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID07}",
-		Application: "alfabet",
-		Name:        "ISSO",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID07}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("ISSO"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID08}",
-		Application: "alfabet",
-		Name:        "Contracting Officer's Representative (COR)",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID08}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("Contracting Officer's Representative (COR)"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID09}",
-		Application: "alfabet",
-		Name:        "Business Owner",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID09}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("Business Owner"),
 		Description: zero.StringFrom("The organization or person in the business who owns the application and thus is typically responsible for managing the functional requirements."),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID10}",
-		Application: "alfabet",
-		Name:        "Subject Matter Expert (SME)",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID10}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("Subject Matter Expert (SME)"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID11}",
-		Application: "alfabet",
-		Name:        "Technical System Issues Contact",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID11}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("Technical System Issues Contact"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID12}",
-		Application: "alfabet",
-		Name:        "Budget Analyst",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID12}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("Budget Analyst"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID13}",
-		Application: "alfabet",
-		Name:        "Data Center Contact",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID13}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("Data Center Contact"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID14}",
-		Application: "alfabet",
-		Name:        "Project Lead",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID14}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("Project Lead"),
 		Description: zero.StringFromPtr(nil),
 	},
 	{
-		ID:          "{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID15}",
-		Application: "alfabet",
-		Name:        "AI Contact",
+		ID:          zero.StringFrom("{FAKE12AB-12A3-12a1-1AB2-ROLETYPEID15}"),
+		Application: zero.StringFrom("alfabet"),
+		Name:        zero.StringFrom("AI Contact"),
 		Description: zero.StringFromPtr(nil),
 	},
 }
@@ -208,7 +207,7 @@ func GetMockRoleTypes() []*models.CedarRoleType {
 // GetMockRoleTypeByRoleTypeID returns a single role type by ID
 func GetMockRoleTypeByRoleTypeID(roleTypeID string) *models.CedarRoleType {
 	for _, rt := range mockRoleTypes {
-		if rt.ID == roleTypeID {
+		if rt.ID.String == roleTypeID {
 			return rt
 		}
 	}
@@ -216,8 +215,11 @@ func GetMockRoleTypeByRoleTypeID(roleTypeID string) *models.CedarRoleType {
 }
 
 // GetMockSystemRoles returns mocked roles for a single CEDAR system, filtered by role type ID
-func GetMockSystemRoles(cedarSystemID string, roleTypeID null.String) []*models.CedarRole {
-	roleTypeIDStr := roleTypeID.String
+func GetMockSystemRoles(cedarSystemID string, roleTypeID *string) []*models.CedarRole {
+	var roleTypeIDStr string
+	if roleTypeID != nil {
+		roleTypeIDStr = *roleTypeID
+	}
 	roleTypes := GetMockRoleTypes()
 	users := getMockUserData()
 	mockSystemRoles := []*models.CedarRole{}
@@ -228,15 +230,15 @@ func GetMockSystemRoles(cedarSystemID string, roleTypeID null.String) []*models.
 		rt *models.CedarRoleType,
 	) *models.CedarRole {
 		return &models.CedarRole{
-			Application:       "alfabet", // should always be "alfabet"
-			ObjectID:          cedarSystemID,
+			Application:       zero.StringFrom("alfabet"), // should always be "alfabet"
+			ObjectID:          zero.StringFrom(cedarSystemID),
 			AssigneeType:      helpers.PointerTo(models.PersonAssignee),
 			AssigneeUsername:  zero.StringFrom(user.Username),
 			AssigneeEmail:     zero.StringFrom(fmt.Sprintf(`%s.%s@fake.local`, user.FirstName, user.LastName)),
 			AssigneeFirstName: zero.StringFrom(user.FirstName),
 			AssigneeLastName:  zero.StringFrom(user.LastName),
 			AssigneePhone:     zero.StringFrom("123-456-7890"),
-			RoleTypeName:      zero.StringFrom(rt.Name),
+			RoleTypeName:      rt.Name,
 			RoleTypeDesc:      rt.Description,
 			RoleTypeID:        rt.ID,
 			RoleID:            zero.StringFrom(roleID),
@@ -244,7 +246,7 @@ func GetMockSystemRoles(cedarSystemID string, roleTypeID null.String) []*models.
 	}
 	for i, rt := range roleTypes {
 		// if role type ID was provided and does not match current role type ID, don't add it to results
-		if roleTypeIDStr != "" && roleTypeIDStr != rt.ID {
+		if roleTypeIDStr != "" && roleTypeIDStr != rt.ID.String {
 			continue
 		}
 		role := makeMockRoleFromUserAndRoleType(

@@ -255,10 +255,10 @@ func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, ob
 	var softwareProductItems []*model.CedarSoftwareProductItem
 	for _, softwareProduct := range softwareProducts {
 		softwareProductItem := &model.CedarSoftwareProductItem{
-			APIGatewayUse:                  softwareProduct.APIGatewayUse.Ptr(),
+			APIGatewayUse:                  &softwareProduct.APIGatewayUse,
 			ElaPurchase:                    softwareProduct.ElaPurchase.Ptr(),
 			ElaVendorID:                    softwareProduct.ElaVendorID.Ptr(),
-			ProvidesAiCapability:           softwareProduct.ProvidesAiCapability.Ptr(),
+			ProvidesAiCapability:           &softwareProduct.ProvidesAiCapability,
 			Refstr:                         softwareProduct.Refstr.Ptr(),
 			SoftwareCatagoryConnectionGUID: softwareProduct.SoftwareCatagoryConnectionGUID.Ptr(),
 			SoftwareVendorConnectionGUID:   softwareProduct.SoftwareVendorConnectionGUID.Ptr(),
@@ -278,7 +278,7 @@ func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, ob
 
 // BusinessOwnerRoles is the resolver for the businessOwnerRoles field.
 func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error) {
-	cedarRoles, err := r.cedarCoreClient.GetBusinessOwnerRolesBySystem(ctx, obj.ID)
+	cedarRoles, err := r.cedarCoreClient.GetBusinessOwnerRolesBySystem(ctx, obj.ID.String)
 	if err != nil {
 		return nil, err
 	}
@@ -291,45 +291,45 @@ func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Con
 	return &model.CedarSystemMaintainerInformation{
 		AgileUsed:                  &obj.SystemMaintainerInformation.AgileUsed,
 		BusinessArtifactsOnDemand:  &obj.SystemMaintainerInformation.BusinessArtifactsOnDemand,
-		DeploymentFrequency:        &obj.SystemMaintainerInformation.DeploymentFrequency,
-		DevCompletionPercent:       &obj.SystemMaintainerInformation.DevCompletionPercent,
-		DevWorkDescription:         &obj.SystemMaintainerInformation.DevWorkDescription,
+		DeploymentFrequency:        obj.SystemMaintainerInformation.DeploymentFrequency.Ptr(),
+		DevCompletionPercent:       obj.SystemMaintainerInformation.DevCompletionPercent.Ptr(),
+		DevWorkDescription:         obj.SystemMaintainerInformation.DevWorkDescription.Ptr(),
 		EcapParticipation:          &obj.SystemMaintainerInformation.EcapParticipation,
-		FrontendAccessType:         &obj.SystemMaintainerInformation.FrontendAccessType,
+		FrontendAccessType:         obj.SystemMaintainerInformation.FrontendAccessType.Ptr(),
 		HardCodedIPAddress:         &obj.SystemMaintainerInformation.HardCodedIPAddress,
-		IP6EnabledAssetPercent:     &obj.SystemMaintainerInformation.IP6EnabledAssetPercent,
-		IP6TransitionPlan:          &obj.SystemMaintainerInformation.IP6TransitionPlan,
+		IP6EnabledAssetPercent:     obj.SystemMaintainerInformation.IP6EnabledAssetPercent.Ptr(),
+		IP6TransitionPlan:          obj.SystemMaintainerInformation.IP6TransitionPlan.Ptr(),
 		IPEnabledAssetCount:        &ipEnabledCt,
-		MajorRefreshDate:           &obj.SystemMaintainerInformation.MajorRefreshDate,
-		NetAccessibility:           &obj.SystemMaintainerInformation.NetAccessibility,
+		MajorRefreshDate:           obj.SystemMaintainerInformation.MajorRefreshDate.Ptr(),
+		NetAccessibility:           obj.SystemMaintainerInformation.NetAccessibility.Ptr(),
 		OmDocumentationOnDemand:    &obj.SystemMaintainerInformation.OmDocumentationOnDemand,
-		PlansToRetireReplace:       &obj.SystemMaintainerInformation.PlansToRetireReplace,
-		QuarterToRetireReplace:     &obj.SystemMaintainerInformation.QuarterToRetireReplace,
-		RecordsManagementBucket:    obj.SystemMaintainerInformation.RecordsManagementBucket,
+		PlansToRetireReplace:       obj.SystemMaintainerInformation.PlansToRetireReplace.Ptr(),
+		QuarterToRetireReplace:     obj.SystemMaintainerInformation.QuarterToRetireReplace.Ptr(),
+		RecordsManagementBucket:    models.StringsFromZeroStrs(obj.SystemMaintainerInformation.RecordsManagementBucket),
 		SourceCodeOnDemand:         &obj.SystemMaintainerInformation.SourceCodeOnDemand,
-		SystemCustomization:        &obj.SystemMaintainerInformation.SystemCustomization,
+		SystemCustomization:        obj.SystemMaintainerInformation.SystemCustomization.Ptr(),
 		SystemDesignOnDemand:       &obj.SystemMaintainerInformation.SystemDesignOnDemand,
-		SystemProductionDate:       &obj.SystemMaintainerInformation.SystemProductionDate,
+		SystemProductionDate:       obj.SystemMaintainerInformation.SystemProductionDate.Ptr(),
 		SystemRequirementsOnDemand: &obj.SystemMaintainerInformation.SystemRequirementsOnDemand,
 		TestPlanOnDemand:           &obj.SystemMaintainerInformation.TestPlanOnDemand,
 		TestReportsOnDemand:        &obj.SystemMaintainerInformation.TestReportsOnDemand,
 		TestScriptsOnDemand:        &obj.SystemMaintainerInformation.TestScriptsOnDemand,
-		YearToRetireReplace:        &obj.SystemMaintainerInformation.YearToRetireReplace,
+		YearToRetireReplace:        obj.SystemMaintainerInformation.YearToRetireReplace.Ptr(),
 	}, nil
 }
 
 // BusinessOwnerInformation is the resolver for the businessOwnerInformation field.
 func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarBusinessOwnerInformation, error) {
 	return &model.CedarBusinessOwnerInformation{
-		BeneficiaryAddressPurpose:      obj.BusinessOwnerInformation.BeneficiaryAddressPurpose,
-		BeneficiaryAddressPurposeOther: &obj.BusinessOwnerInformation.BeneficiaryAddressPurposeOther,
-		BeneficiaryAddressSource:       obj.BusinessOwnerInformation.BeneficiaryAddressSource,
-		BeneficiaryAddressSourceOther:  &obj.BusinessOwnerInformation.BeneficiaryAddressSourceOther,
-		CostPerYear:                    &obj.BusinessOwnerInformation.CostPerYear,
+		BeneficiaryAddressPurpose:      models.StringsFromZeroStrs(obj.BusinessOwnerInformation.BeneficiaryAddressPurpose),
+		BeneficiaryAddressPurposeOther: obj.BusinessOwnerInformation.BeneficiaryAddressPurposeOther.Ptr(),
+		BeneficiaryAddressSource:       models.StringsFromZeroStrs(obj.BusinessOwnerInformation.BeneficiaryAddressSource),
+		BeneficiaryAddressSourceOther:  obj.BusinessOwnerInformation.BeneficiaryAddressSourceOther.Ptr(),
+		CostPerYear:                    obj.BusinessOwnerInformation.CostPerYear.Ptr(),
 		IsCmsOwned:                     &obj.BusinessOwnerInformation.IsCmsOwned,
-		NumberOfContractorFte:          &obj.BusinessOwnerInformation.NumberOfContractorFte,
-		NumberOfFederalFte:             &obj.BusinessOwnerInformation.NumberOfFederalFte,
-		NumberOfSupportedUsersPerMonth: &obj.BusinessOwnerInformation.NumberOfSupportedUsersPerMonth,
+		NumberOfContractorFte:          obj.BusinessOwnerInformation.NumberOfContractorFte.Ptr(),
+		NumberOfFederalFte:             obj.BusinessOwnerInformation.NumberOfFederalFte.Ptr(),
+		NumberOfSupportedUsersPerMonth: obj.BusinessOwnerInformation.NumberOfSupportedUsersPerMonth.Ptr(),
 		StoresBankingData:              &obj.BusinessOwnerInformation.StoresBankingData,
 		StoresBeneficiaryAddress:       &obj.BusinessOwnerInformation.StoresBeneficiaryAddress,
 	}, nil
@@ -409,7 +409,7 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 			return nil, cedarSystemErr
 		}
 		newRequest.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
-		systemName = cedarSystem.Name
+		systemName = cedarSystem.Name.String
 	}
 
 	newRequest.Name = systemName
@@ -1785,15 +1785,15 @@ func (r *queryResolver) Deployments(ctx context.Context, cedarSystemID string, d
 		optionalParams = &cedarcore.GetDeploymentsOptionalParams{}
 
 		if deploymentType != nil {
-			optionalParams.DeploymentType = null.StringFromPtr(deploymentType)
+			optionalParams.DeploymentType = deploymentType
 		}
 
 		if state != nil {
-			optionalParams.State = null.StringFromPtr(state)
+			optionalParams.State = state
 		}
 
 		if status != nil {
-			optionalParams.Status = null.StringFromPtr(status)
+			optionalParams.Status = status
 		}
 	}
 
@@ -1817,7 +1817,7 @@ func (r *queryResolver) RoleTypes(ctx context.Context) ([]*models.CedarRoleType,
 
 // Roles is the resolver for the roles field.
 func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error) {
-	cedarRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, null.StringFromPtr(roleTypeID))
+	cedarRoles, err := r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, roleTypeID)
 	if err != nil {
 		return nil, err
 	}
@@ -1859,7 +1859,7 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 	var cedarRoles []*models.CedarRole
 	var errR error
 	g.Go(func() error {
-		cedarRoles, errR = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, null.String{})
+		cedarRoles, errR = r.cedarCoreClient.GetRolesBySystem(ctx, cedarSystemID, nil)
 		return errR
 	})
 

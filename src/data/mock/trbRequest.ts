@@ -189,7 +189,33 @@ export const trbRequestSummary: Summary = {
   },
   createdAt: '2023-01-05T07:26:16.036618Z',
   taskStatuses,
-  adminNotes
+  adminNotes,
+  contractName: 'A great service',
+  contractNumbers: [
+    {
+      __typename: 'TRBRequestContractNumber',
+      id: '789',
+      contractNumber: '123124455432'
+    }
+  ],
+  systems: [
+    {
+      __typename: 'CedarSystem',
+      id: '123',
+      name: 'My system',
+      description: 'A fun system',
+      acronym: 'MS',
+      businessOwnerOrg: 'Oddball',
+      businessOwnerRoles: [
+        {
+          __typename: 'CedarRole',
+          objectID: '9787620',
+          assigneeFirstName: 'John',
+          assigneeLastName: 'Doe'
+        }
+      ]
+    }
+  ]
 };
 
 export const getTrbRequestSummary = (

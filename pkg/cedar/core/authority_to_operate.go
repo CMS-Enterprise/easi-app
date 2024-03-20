@@ -32,7 +32,7 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 
 	// Construct the parameters
 	params := apiauthority.NewAuthorityToOperateFindListParams()
-	params.SetSystemID(&cedarSystem.VersionID)
+	params.SetSystemID(cedarSystem.VersionID.Ptr())
 	params.HTTPClient = c.hc
 
 	// Make the API call
@@ -51,8 +51,10 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 	// Populate the ATO fields by converting each item in resp.Payload.AuthorityToOperate
 	for _, ato := range resp.Payload.AuthorityToOperateList {
 		retVal = append(retVal, &models.CedarAuthorityToOperate{
-			ActualDispositionDate: zero.TimeFrom(time.Time(ato.ActualDispositionDate)),
-			CedarID:               *ato.CedarID, // required
+			UUID:    zero.StringFromPtr(ato.UUID),    // required
+			CedarID: zero.StringFromPtr(ato.CedarID), // required
+
+			ActualDispositionDate:                     zero.TimeFrom(time.Time(ato.ActualDispositionDate)),
 			ContainsPersonallyIdentifiableInformation: ato.ContainsPersonallyIdentifiableInformation,
 			CountOfTotalNonPrivilegedUserPopulation:   int(ato.CountOfTotalNonPrivilegedUserPopulation),
 			CountOfOpenPoams:                          int(ato.CountOfOpenPoams),
@@ -75,10 +77,9 @@ func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string
 			PrivacySubjectMatterExpert:                zero.StringFrom(ato.PrivacySubjectMatterExpert),
 			RecoveryPointObjective:                    float64(ato.RecoveryPointObjective),
 			RecoveryTimeObjective:                     float64(ato.RecoveryTimeObjective),
-			SystemOfRecordsNotice:                     ato.SystemOfRecordsNotice,
+			SystemOfRecordsNotice:                     models.ZeroStringsFrom(ato.SystemOfRecordsNotice),
 			TLCPhase:                                  zero.StringFrom(ato.TlcPhase),
 			XLCPhase:                                  zero.StringFrom(ato.XlcPhase),
-			UUID:                                      *ato.UUID, // required
 		})
 	}
 
