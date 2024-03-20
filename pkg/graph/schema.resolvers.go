@@ -1749,6 +1749,11 @@ func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem
 	return r.cedarCoreClient.GetSystemSummary(ctx, true, nil)
 }
 
+// CedarContractsBySystem is the resolver for the cedarContractsBySystem field.
+func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarContract, error) {
+	return r.cedarCoreClient.GetContractBySystem(ctx, cedarSystemID)
+}
+
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
