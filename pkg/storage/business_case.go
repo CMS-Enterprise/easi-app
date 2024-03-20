@@ -174,7 +174,7 @@ func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCas
 
 // CreateBusinessCase creates a business case
 func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-	return sqlutils.WithTransactionRet[models.BusinessCase](s.db, func(tx *sqlx.Tx) (*models.BusinessCase, error) {
+	return sqlutils.WithTransactionRet[*models.BusinessCase](ctx, s.db, func(tx *sqlx.Tx) (*models.BusinessCase, error) {
 		id := uuid.New()
 		businessCase.ID = id
 		const createBusinessCaseSQL = `
@@ -327,7 +327,7 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 
 // UpdateBusinessCase creates a business case
 func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-	return sqlutils.WithTransactionRet[models.BusinessCase](s.db, func(tx *sqlx.Tx) (*models.BusinessCase, error) {
+	return sqlutils.WithTransactionRet[*models.BusinessCase](ctx, s.db, func(tx *sqlx.Tx) (*models.BusinessCase, error) {
 		// We are explicitly not updating ID, EUAUserID and SystemIntakeID
 		const updateBusinessCaseSQL = `
 		UPDATE business_cases

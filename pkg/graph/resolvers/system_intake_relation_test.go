@@ -80,7 +80,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			suite.NotNil(openIntake)
 
 			// Set existing contract numbers
-			err = sqlutils.WithTransaction(store, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				return store.SetSystemIntakeContractNumbers(ctx, tx, openIntake.ID, caseValues.InitialContractNumbers)
 			})
 			suite.NoError(err)
@@ -90,7 +90,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedIntakeContractNumbers))
 
 			// Set existing system IDs
-			err = sqlutils.WithTransaction(store, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs)
 
 			})
@@ -198,7 +198,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			suite.NotNil(openIntake)
 
 			// Set existing contract numbers
-			err = sqlutils.WithTransaction(store, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				return store.SetSystemIntakeContractNumbers(ctx, tx, openIntake.ID, caseValues.InitialContractNumbers)
 			})
 			suite.NoError(err)
@@ -208,7 +208,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedIntakeContractNumbers))
 
 			// Set existing system IDs
-			err = sqlutils.WithTransaction(store, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs)
 			})
 			suite.NoError(err)
@@ -323,7 +323,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			suite.NotNil(openIntake)
 
 			// Set existing contract numbers
-			err = sqlutils.WithTransaction(store, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				return store.SetSystemIntakeContractNumbers(ctx, tx, openIntake.ID, caseValues.InitialContractNumbers)
 
 			})
@@ -334,7 +334,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedIntakeContractNumbers))
 
 			// Set existing system IDs
-			err = sqlutils.WithTransaction(store, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs)
 
 			})

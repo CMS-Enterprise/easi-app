@@ -77,7 +77,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 			suite.Equal(trbRequest.ContractName, zero.StringFrom("Test Name"))
 
 			// Set existing contract numbers
-			err = sqlutils.WithTransaction(store, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				return store.SetTRBRequestContractNumbers(ctx, tx, trbRequest.ID, caseValues.InitialContractNumbers)
 			})
 			suite.NoError(err)
@@ -87,7 +87,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedTRBRequestContractNumbers))
 
 			// Set existing system IDs
-			err = sqlutils.WithTransaction(store, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				return store.SetTRBRequestSystems(ctx, tx, trbRequest.ID, caseValues.InitialSystemIDs)
 			})
 			suite.NoError(err)
@@ -191,7 +191,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 			suite.Equal(trbRequest.ContractName, zero.StringFrom("Test Name"))
 
 			// Set existing contract numbers
-			err = sqlutils.WithTransaction(store, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				return store.SetTRBRequestContractNumbers(ctx, tx, trbRequest.ID, caseValues.InitialContractNumbers)
 			})
 			suite.NoError(err)
@@ -201,7 +201,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedTRBRequestContractNumbers))
 
 			// Set existing system IDs
-			err = sqlutils.WithTransaction(store, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				return store.SetTRBRequestSystems(ctx, tx, trbRequest.ID, caseValues.InitialSystemIDs)
 			})
 			suite.NoError(err)
@@ -309,7 +309,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 			suite.NotNil(trbRequest)
 
 			// Set existing contract numbers
-			err = sqlutils.WithTransaction(store, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				return store.SetTRBRequestContractNumbers(ctx, tx, trbRequest.ID, caseValues.InitialContractNumbers)
 			})
 			suite.NoError(err)
@@ -319,7 +319,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedTRBRequestContractNumbers))
 
 			// Set existing system IDs
-			err = sqlutils.WithTransaction(store, func(tx *sqlx.Tx) error {
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 				return store.SetTRBRequestSystems(ctx, tx, trbRequest.ID, caseValues.InitialSystemIDs)
 			})
 			suite.NoError(err)

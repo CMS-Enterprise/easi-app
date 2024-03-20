@@ -19,17 +19,15 @@ import (
 
 // CreateTRBRequestSystemIntakes deletes all TRB Intake relations for the given trbRequestID and recreates them
 func (s *Store) CreateTRBRequestSystemIntakes(ctx context.Context, trbRequestID uuid.UUID, systemIntakeIDs []uuid.UUID) ([]*models.TRBRequestSystemIntake, error) {
-	insertedTRBRequestSystemIntakes := []*models.TRBRequestSystemIntake{}
-	return insertedTRBRequestSystemIntakes, sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
+	return sqlutils.WithTransactionRet[[]*models.TRBRequestSystemIntake](ctx, s.db, func(tx *sqlx.Tx) ([]*models.TRBRequestSystemIntake, error) {
 
 		deleteTRBRequestSystemIntakesSQL := `
 		DELETE FROM trb_request_system_intakes
 		WHERE trb_request_id = $1;
 	`
-		_, err := tx.Exec(deleteTRBRequestSystemIntakesSQL, trbRequestID)
-		if err != nil {
+		if _, err := tx.Exec(deleteTRBRequestSystemIntakesSQL, trbRequestID); err != nil {
 			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create TRB request system intakes transaction, error %s", err))
-			return err
+			return nil, err
 		}
 
 		// Create a new TRBRequestSystemIntake for each SystemIntake ID
@@ -61,21 +59,20 @@ func (s *Store) CreateTRBRequestSystemIntakes(ctx context.Context, trbRequestID 
 					:modified_by
 				)
 			`
-			_, err = tx.NamedExec(insertTRBRequestSystemIntakesSQL, trbRequestSystemIntakes)
-			if err != nil {
+			if _, err := tx.NamedExec(insertTRBRequestSystemIntakesSQL, trbRequestSystemIntakes); err != nil {
 				appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create TRB request system intakes transaction, error %s", err))
-				return err
+				return nil, err
 			}
 		}
 
+		insertedTRBRequestSystemIntakes := []*models.TRBRequestSystemIntake{}
 		getTRBRequestIntakesSQL := `SELECT * FROM trb_request_system_intakes WHERE trb_request_id = $1;`
-		err = tx.Select(&insertedTRBRequestSystemIntakes, getTRBRequestIntakesSQL, trbRequestID)
-		if err != nil {
+		if err := tx.Select(&insertedTRBRequestSystemIntakes, getTRBRequestIntakesSQL, trbRequestID); err != nil {
 			appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to create TRB request system intakes transaction, error %s", err))
-			return err
+			return nil, err
 		}
 
-		return nil
+		return insertedTRBRequestSystemIntakes, nil
 	})
 }
 

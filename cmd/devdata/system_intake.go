@@ -142,7 +142,7 @@ func createSystemIntake(
 	requesterName string,
 	requestType models.SystemIntakeRequestType,
 ) *models.SystemIntake {
-	var ctx context.Context
+	ctx := context.Background()
 	var requesterEUAIDPtr *string
 	if requesterEUAID != "" {
 		ctx = mock.CtxWithLoggerAndPrincipal(logger, store, requesterEUAID)

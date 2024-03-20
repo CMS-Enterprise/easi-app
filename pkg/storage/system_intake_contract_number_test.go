@@ -47,7 +47,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 			contract3,
 		}
 		for _, systemIntakeID := range createdIDs {
-			err := sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
+			err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
 				return s.store.SetSystemIntakeContractNumbers(ctx, tx, systemIntakeID, contractNumbers)
 			})
 			s.NoError(err)
@@ -87,7 +87,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		}
 
 		// now, we can add contract 4 to one of the system intakes and verify that the created_at dates for the first three remain unchanged
-		err = sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
 			return s.store.SetSystemIntakeContractNumbers(ctx, tx, createdIDs[0], append(contractNumbers, contract4))
 		})
 		s.NoError(err)

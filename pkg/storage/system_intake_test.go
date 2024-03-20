@@ -419,7 +419,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakeByID() {
 		id := intake.ID
 		bizCase := testhelpers.NewBusinessCase(id)
 
-		err := sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
+		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
 			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
 			s.NoError(err)
 			_, err = tx.NamedExec(insertRelatedBizCaseSQL, &bizCase)
@@ -445,7 +445,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
 
-		err := sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
+		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
 			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
 			s.NoError(err)
 			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
@@ -470,7 +470,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		// set archived at for intake2
 		intake2.ArchivedAt = helpers.PointerTo(time.Now())
 
-		err := sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
+		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
 			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
 			s.NoError(err)
 			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
@@ -503,7 +503,7 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 
 		bizCase := testhelpers.NewBusinessCase(id)
 
-		err := sqlutils.WithTransaction(s.db, func(tx *sqlx.Tx) error {
+		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
 			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
 			s.NoError(err)
 			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
