@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 	"github.com/samber/lo"
 	"go.uber.org/zap"
@@ -46,9 +45,9 @@ func getCedarBusinessOwnerRoleTypeID(ctx context.Context, c *Client) (string, er
 		return "", err
 	}
 	for _, role := range roleTypes {
-		if role.Name == cedarBusinessOwnerRoleName {
-			cedarBusinessOwnerRoleTypeID = role.ID
-			return role.ID, nil
+		if role.Name.String == cedarBusinessOwnerRoleName {
+			cedarBusinessOwnerRoleTypeID = role.ID.String
+			return role.ID.String, nil
 		}
 	}
 	return "", errors.New("no business owner role type found")
@@ -79,12 +78,12 @@ func (c *Client) GetBusinessOwnerRolesBySystem(ctx context.Context, cedarSystemI
 	if err != nil {
 		return nil, err
 	}
-	return c.GetRolesBySystem(ctx, cedarSystemID, null.StringFrom(businessOwnerRoleID))
+	return c.GetRolesBySystem(ctx, cedarSystemID, &businessOwnerRoleID)
 }
 
 // GetRolesBySystem makes a GET call to the /role endpoint using a system ID and an optional role type ID
 // we don't currently have a use case for querying /role by role ID, so that's not implemented
-func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, roleTypeID null.String) ([]*models.CedarRole, error) {
+func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error) {
 	if !c.cedarCoreEnabled(ctx) {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return local.GetMockSystemRoles(cedarSystemID, roleTypeID), nil
@@ -98,11 +97,11 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 	// Construct the parameters
 	params := apiroles.NewRoleFindByIDParams()
 	params.SetApplication(cedarRoleApplication)
-	params.SetObjectID(&cedarSystem.VersionID)
+	params.SetObjectID(cedarSystem.VersionID.Ptr())
 	params.HTTPClient = c.hc
 
-	if roleTypeID.Ptr() != nil {
-		params.SetRoleTypeID(roleTypeID.Ptr())
+	if roleTypeID != nil {
+		params.SetRoleTypeID(roleTypeID)
 	}
 
 	// Make the API call
@@ -142,9 +141,9 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 
 		// generated swagger client turns JSON nulls into Go zero values, so use null/zero package to convert them back to nullable values
 		retRole := &models.CedarRole{
-			Application: *role.Application,
-			ObjectID:    *role.ObjectID,
-			RoleTypeID:  *role.RoleTypeID,
+			Application: zero.StringFromPtr(role.Application),
+			ObjectID:    zero.StringFromPtr(role.ObjectID),
+			RoleTypeID:  zero.StringFromPtr(role.RoleTypeID),
 
 			AssigneeUsername:  zero.StringFrom(role.AssigneeUserName),
 			AssigneeEmail:     zero.StringFrom(role.AssigneeEmail),
@@ -213,9 +212,9 @@ func (c *Client) GetRoleTypes(ctx context.Context) ([]*models.CedarRoleType, err
 		}
 
 		retRoleType := &models.CedarRoleType{
-			ID:          *roleType.ID,
-			Application: *roleType.Application,
-			Name:        *roleType.Name,
+			ID:          zero.StringFromPtr(roleType.ID),
+			Application: zero.StringFromPtr(roleType.Application),
+			Name:        zero.StringFromPtr(roleType.Name),
 
 			Description: zero.StringFrom(roleType.Description),
 		}
@@ -255,10 +254,10 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		return nil, err
 	}
 	roleTypesByID := lo.SliceToMap(allRoleTypes, func(roleType *models.CedarRoleType) (string, *models.CedarRoleType) {
-		return roleType.ID, roleType
+		return roleType.ID.String, roleType
 	})
 
-	allRolesForSystem, err := c.GetRolesBySystem(ctx, cedarSystemID, null.String{})
+	allRolesForSystem, err := c.GetRolesBySystem(ctx, cedarSystemID, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -269,7 +268,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	})
 
 	for _, role := range currentRolesForUser {
-		roleType, ok := roleTypesByID[role.RoleTypeID]
+		roleType, ok := roleTypesByID[role.RoleTypeID.String]
 		if !ok || roleType == nil {
 			appcontext.ZLogger(ctx).Warn("error decoding role; role type ID not found in role types map")
 			continue
@@ -287,7 +286,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	}
 
 	currentRolesForUserByRoleTypes := lo.SliceToMap(currentRolesForUser, func(role *models.CedarRole) (string, *models.CedarRole) {
-		return role.RoleTypeID, role
+		return role.RoleTypeID.String, role
 	})
 
 	// first return value from lo.Difference is the role types to add;
@@ -346,10 +345,10 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	}
 
 	roleResponse.RoleTypeNamesBefore = lo.Map(roleTypesBefore, func(roleType models.CedarRoleType, _ int) string {
-		return roleType.Name
+		return roleType.Name.String
 	})
 	roleResponse.RoleTypeNamesAfter = lo.Map(roleTypesAfter, func(roleType models.CedarRoleType, _ int) string {
-		return roleType.Name
+		return roleType.Name.String
 	})
 
 	// fetch the system name (likely from cache) and add it to the response
@@ -357,7 +356,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 	if getSystemErr != nil {
 		return nil, getSystemErr
 	}
-	roleResponse.SystemName = system.Name
+	roleResponse.SystemName = system.Name.String
 
 	return roleResponse, nil
 }
@@ -383,7 +382,7 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 
 		roleToCreate := &apimodels.Role{
 			Application:      cedarRoleApplicationPtr(),
-			ObjectID:         &cedarSystem.VersionID,
+			ObjectID:         cedarSystem.VersionID.Ptr(),
 			AssigneeUserName: newRole.euaUserID,
 			RoleTypeID:       &roleTypeID,
 		}

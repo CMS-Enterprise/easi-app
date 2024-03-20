@@ -21,7 +21,7 @@ func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) 
 	params := contract.NewContractFindParams()
 
 	// Construct the parameters
-	params.SetSystemID(&cedarSystem.VersionID)
+	params.SetSystemID(cedarSystem.VersionID.Ptr())
 	params.HTTPClient = c.hc
 
 	if err != nil {

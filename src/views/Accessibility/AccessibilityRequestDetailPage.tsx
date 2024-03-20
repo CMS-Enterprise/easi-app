@@ -628,21 +628,6 @@ const AccessibilityRequestDetailPage = () => {
                   <dd className="margin-0 margin-bottom-3">{lcid}</dd>
                 </dl>
               </div>
-              {flags.cedar508Requests && (
-                <div>
-                  <h3>{t('requestDetails.systemInformation')}</h3>
-                  <Alert
-                    type="warning"
-                    heading={t('requestDetails.actionRequired')}
-                  >
-                    <UswdsReactLink
-                      to={`/508/requests/${accessibilityRequestId}/cedar-system`}
-                    >
-                      {t('requestDetails.linkRequestToSystem')}
-                    </UswdsReactLink>
-                  </Alert>
-                </div>
-              )}
               <SidebarTestingLinks />
               {userEuaId === requestOwnerEuaId && (
                 <button

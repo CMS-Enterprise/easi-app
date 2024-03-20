@@ -35,8 +35,8 @@ import {
   UsernameWithRoles
 } from 'types/systemProfile';
 import formatNumber from 'utils/formatNumber';
-import { mockVendors } from 'views/Sandbox/mockSystemData';
 import { getPersonFullName, showVal } from 'views/SystemProfile';
+import { mockVendors } from 'views/SystemProfile/mockSystemData';
 
 import './index.scss';
 
