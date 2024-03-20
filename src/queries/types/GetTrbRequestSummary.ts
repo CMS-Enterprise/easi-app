@@ -28,6 +28,29 @@ export interface GetTrbRequestSummary_trbRequest_adminNotes {
   id: UUID;
 }
 
+export interface GetTrbRequestSummary_trbRequest_contractNumbers {
+  __typename: "TRBRequestContractNumber";
+  id: UUID;
+  contractNumber: string;
+}
+
+export interface GetTrbRequestSummary_trbRequest_systems_businessOwnerRoles {
+  __typename: "CedarRole";
+  objectID: string;
+  assigneeFirstName: string | null;
+  assigneeLastName: string | null;
+}
+
+export interface GetTrbRequestSummary_trbRequest_systems {
+  __typename: "CedarSystem";
+  id: string;
+  name: string;
+  description: string | null;
+  acronym: string | null;
+  businessOwnerOrg: string | null;
+  businessOwnerRoles: GetTrbRequestSummary_trbRequest_systems_businessOwnerRoles[];
+}
+
 export interface GetTrbRequestSummary_trbRequest {
   __typename: "TRBRequest";
   id: UUID;
@@ -39,6 +62,15 @@ export interface GetTrbRequestSummary_trbRequest {
   createdAt: Time;
   taskStatuses: GetTrbRequestSummary_trbRequest_taskStatuses;
   adminNotes: GetTrbRequestSummary_trbRequest_adminNotes[];
+  contractName: string | null;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: GetTrbRequestSummary_trbRequest_contractNumbers[];
+  /**
+   * Linked systems
+   */
+  systems: GetTrbRequestSummary_trbRequest_systems[];
 }
 
 export interface GetTrbRequestSummary {
