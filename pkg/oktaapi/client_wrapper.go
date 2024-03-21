@@ -108,7 +108,7 @@ func (cw *ClientWrapper) FetchUserInfos(ctx context.Context, usernames []string)
 			logger.Error("Error searching Okta users", zap.Error(err), zap.String("usernames", strings.Join(usernames, ", ")))
 			return nil, err
 		}
-		// err is a context cancellation error, log as such and continue on
+		// err is a context cancellation error, log and return early
 		logger.Warn("Context cancelled while searching Okta users", zap.Error(err))
 		return nil, nil
 	}
