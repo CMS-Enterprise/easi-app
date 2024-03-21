@@ -59,10 +59,10 @@ const home = {
     ITGov: {
       heading: 'IT Governance',
       body:
-        'Includes processes for applying for a Life Cycle ID and decomissioning a system.',
-      learnMore: 'Learn more about IT Governance',
+        'Get approval for a new IT project, apply for a new Life Cycle ID (LCID), and amend an existing LCID.',
+      learnMore: 'Learn more about the IT Governance process',
       link: '/system/making-a-request',
-      button: 'Start an IT Governance request',
+      button: 'Start a new IT Governance request',
       buttonLink: '/system/request-type'
     },
     '508': {
@@ -75,12 +75,12 @@ const home = {
       buttonLink: '/508/testing-overview?continue=true'
     },
     TRB: {
-      heading: 'Technical Assistance',
+      heading: 'Technical assistance',
       body:
-        'Get help, feedback, and guidance from the Technical Review Board (TRB).',
-      learnMore: 'Learn more about the TRB',
+        'Get help, feedback, and guidance for your IT project, courtesy of the Technical Review Board (TRB).',
+      learnMore: 'Learn more about the technical assistance process',
       link: '/trb',
-      button: 'Start a TRB request',
+      button: 'Start a new TRB request',
       buttonLink: '/trb/start'
     }
   },
@@ -90,7 +90,7 @@ const home = {
     id: 'request-table',
     title: 'My open requests',
     subtitle:
-      'You have access to edit and manage all of the requests below. You may have created them, or they may have been created by another team member',
+      'You have access to edit and manage all of the requests below. You may have created them, or they may have been created by another team member.',
     breadcrumb: {
       home: 'Home',
       table: 'My requests'

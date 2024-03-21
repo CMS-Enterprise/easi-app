@@ -226,6 +226,7 @@ export const Table = ({
   // Remove bookmark column if showing My systems table
   if (isMySystems) {
     columns.splice(0, 1);
+    columns.pop(); // remove component if isMySystems
   }
 
   const {
@@ -278,7 +279,7 @@ export const Table = ({
   if (
     (isMySystems || tableType === 'my-systems') &&
     loading &&
-    !filteredSystems
+    !mySystems?.myCedarSystems
   ) {
     return <PageLoading />;
   }
