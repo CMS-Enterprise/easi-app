@@ -17,7 +17,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
         class="easi-h1 margin-bottom-1"
         tabindex="-1"
       >
-        CMS Systems and Applications
+        CMS systems and applications
       </h1>
       <p>
         Find information about existing CMS systems and applications.
@@ -253,7 +253,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                   title="Toggle SortBy"
                   type="button"
                 >
-                  System Name
+                  System name
                   <svg
                     class="usa-icon margin-left-05 position-absolute"
                     data-testid="caret--up"
@@ -288,7 +288,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                   title="Toggle SortBy"
                   type="button"
                 >
-                  CMS Component
+                  CMS component
                   <svg
                     class="usa-icon margin-left-05 position-absolute"
                     data-testid="caret--sort"

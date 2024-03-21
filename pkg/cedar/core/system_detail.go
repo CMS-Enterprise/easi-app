@@ -15,7 +15,7 @@ import (
 
 // GetSystemDetail makes a GET call to the /system/detail/{id} endpoint
 func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return &models.CedarSystemDetails{
 			CedarSystem:                 local.GetMockSystem(cedarSystemID),

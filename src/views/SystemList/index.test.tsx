@@ -97,7 +97,7 @@ describe('System List View', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getAllByText('CMS Component')[0]).toBeInTheDocument();
+        expect(screen.getAllByText('CMS component')[0]).toBeInTheDocument();
       });
     });
 
