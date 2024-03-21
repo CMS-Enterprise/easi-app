@@ -6,6 +6,7 @@ import (
 
 	"github.com/graph-gophers/dataloader"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -29,6 +30,14 @@ func (loaders *DataLoaders) BatchUserInfos(
 
 	for _, userInfo := range userInfos {
 		euaUserInfoMap[userInfo.Username] = userInfo
+	}
+
+	// In the case of a Context cancellation, we'll get back an entirely empty slice
+	// In this case, we don't want to return any errors at all
+	// Just return empty resultsd
+	if len(userInfos) == 0 {
+		appcontext.ZLogger(ctx).Warn("Empty EUA results from FetchUserInfos")
+		return results
 	}
 
 	for i, key := range keys {

@@ -102,9 +102,14 @@ func (cw *ClientWrapper) FetchUserInfos(ctx context.Context, usernames []string)
 	search := query.NewQueryParams(query.WithSearch(searchString))
 
 	searchedUsers, _, err := cw.oktaClient.User.ListUsers(ctx, search)
-	if err != nil && !errors.Is(err, context.Canceled) {
-		logger.Error("Error searching Okta users", zap.Error(err), zap.String("usernames", strings.Join(usernames, ", ")))
-		return nil, err
+	if err != nil {
+		// If it's also not a context cancellation, log and return the error
+		if !errors.Is(err, context.Canceled) {
+			logger.Error("Error searching Okta users", zap.Error(err), zap.String("usernames", strings.Join(usernames, ", ")))
+			return nil, err
+		}
+		// If it's a context cancellation, log as such and continue on
+		logger.Warn("Context cancelled while searching Okta users", zap.Error(err))
 	}
 
 	for _, user := range searchedUsers {
