@@ -17,7 +17,7 @@ import (
 // however, this method assumes that the parameter is a version-independent system ID.
 // If we need to look up URLs based on something other than systems, we will need to create another method.
 func (c *Client) GetURLsForSystem(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarURL{}, nil
 	}

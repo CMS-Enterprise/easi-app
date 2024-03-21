@@ -84,7 +84,7 @@ func (c *Client) GetBusinessOwnerRolesBySystem(ctx context.Context, cedarSystemI
 // GetRolesBySystem makes a GET call to the /role endpoint using a system ID and an optional role type ID
 // we don't currently have a use case for querying /role by role ID, so that's not implemented
 func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return local.GetMockSystemRoles(cedarSystemID, roleTypeID), nil
 	}
@@ -172,7 +172,7 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 
 // GetRoleTypes queries CEDAR for the list of supported role types
 func (c *Client) GetRoleTypes(ctx context.Context) ([]*models.CedarRoleType, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return local.GetMockRoleTypes(), nil
 	}
@@ -241,7 +241,7 @@ type SetRoleResponseMetadata struct {
 
 // SetRolesForUser sets the desired roles for a user on a given system to *exactly* the requested role types, adding and deleting role assignments in CEDAR as necessary
 func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaUserID string, desiredRoleTypeIDs []string) (*SetRoleResponseMetadata, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return nil, nil
 	}
@@ -363,7 +363,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 
 // private utility method for creating roles for a given system in CEDAR
 func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []newRole) error {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return nil
 	}
@@ -421,7 +421,7 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 
 // private utility method for deleting roles from CEDAR
 func (c *Client) deleteRoles(ctx context.Context, roleIDsToDelete []string) error {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return nil
 	}

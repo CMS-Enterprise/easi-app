@@ -20,7 +20,7 @@ import (
 
 // GetAuthorityToOperate makes a GET call to the /authority_to_operate endpoint
 func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarAuthorityToOperate{}, nil
 	}

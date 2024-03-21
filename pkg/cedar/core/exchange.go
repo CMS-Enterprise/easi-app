@@ -13,7 +13,7 @@ import (
 
 // GetExchangesBySystem fetches a list of CEDAR exchange records for a given system
 func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarExchange, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarExchange{}, nil
 	}
