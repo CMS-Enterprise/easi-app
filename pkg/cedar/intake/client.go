@@ -25,11 +25,11 @@ import (
 )
 
 // NewClient builds the type that holds a connection to the CEDAR Intake API
-func NewClient(cedarHost string, cedarAPIKey string, disabled bool) *Client {
+func NewClient(cedarHost string, cedarAPIKey string, enabled bool) *Client {
 	hc := http.DefaultClient
 
 	return &Client{
-		disabled: disabled,
+		enabled: enabled,
 		auth: httptransport.APIKeyAuth(
 			"x-Gateway-APIKey",
 			"header",
@@ -49,16 +49,17 @@ func NewClient(cedarHost string, cedarAPIKey string, disabled bool) *Client {
 
 // Client represents a connection to the CEDAR Intake API
 type Client struct {
-	disabled bool
-	auth     runtime.ClientAuthInfoWriter
-	sdk      *apiclient.CEDARIntake
-	hc       *http.Client
+	enabled bool
+	auth    runtime.ClientAuthInfoWriter
+	sdk     *apiclient.CEDARIntake
+	hc      *http.Client
 }
 
 // CheckConnection hits the CEDAR Intake API `/healthcheck` endpoint to verify
 // that our connection is functional
 func (c *Client) CheckConnection(ctx context.Context) error {
-	if c.disabled {
+	// If Intake API calls are not enabled, we don't need to check the connection, so just return nil
+	if !c.enabled {
 		return nil
 	}
 
@@ -120,8 +121,8 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 	id := model.ObjectID()
 	objectType := model.ObjectType()
 
-	if c.disabled {
-		appcontext.ZLogger(ctx).Info("snapshot publishing disabled", zap.String("object ID", id), zap.String("object type", objectType))
+	if !c.enabled {
+		appcontext.ZLogger(ctx).Info("snapshot publishing is not enabled", zap.String("object ID", id), zap.String("object type", objectType))
 		return nil
 	}
 

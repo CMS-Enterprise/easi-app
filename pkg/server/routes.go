@@ -97,7 +97,7 @@ func (s *Server) routes(
 	publisher := cedarintake.NewClient(
 		s.Config.GetString(appconfig.CEDARAPIURL),
 		s.Config.GetString(appconfig.CEDARAPIKey),
-		s.Config.GetBool(appconfig.CEDARIntakeDisabled),
+		s.Config.GetBool(appconfig.CEDARIntakeEnabled),
 	)
 	if s.environment.Deployed() {
 		s.NewCEDARClientCheck()

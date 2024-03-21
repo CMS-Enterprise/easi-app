@@ -62,7 +62,7 @@ The CEDAR Intake Swagger file requires a bit of preprocessing before code genera
 
 ```
 export CEDAR_CORE_MOCK=false
-export CEDAR_INTAKE_DISABLED=false
+export CEDAR_INTAKE_ENABLED=true
 export CEDAR_API_URL="webmethods-apigw.cedarimpl.cms.gov"
 export CEDAR_API_KEY=[insert IMPL API key from 1Password here]
 export CEDAR_CORE_API_VERSION=2.0.0

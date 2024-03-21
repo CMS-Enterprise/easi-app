@@ -185,10 +185,10 @@ const CEDARCacheIntervalKey = "CEDAR_CACHE_INTERVAL"
 // If set to false, real calls to the CEDAR Core API will be made
 const CEDARCoreMock = "CEDAR_CORE_MOCK"
 
-// CEDARIntakeDisabled is the key for the environment variable that determines if the CEDAR Intake API should disabled
-// If set to true, the Intake API Client methods will do nothing
-// If set to false, real calls to the CEDAR Intake API will be made
-const CEDARIntakeDisabled = "CEDAR_INTAKE_DISABLED"
+// CEDARIntakeEnabled is the key for the environment variable that determines if the CEDAR Intake API should enabled
+// If set to true, real calls to the CEDAR Intake API will be made
+// If set to false, the Intake API Client methods will do nothing
+const CEDARIntakeEnabled = "CEDAR_INTAKE_ENABLED"
 
 // LDKey is the key for accessing LaunchDarkly
 const LDKey = "LD_SDK_KEY"
