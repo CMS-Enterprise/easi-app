@@ -15,9 +15,7 @@ import (
 // If there are any errors when executing the txFunc, the tx is rolled back. Otherwise, the tx is committed.
 // We use named return parameters here so that the deferred function can access and reassign the variables
 func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, txFunc func(*sqlx.Tx) (T, error)) (result T, txErr error) {
-	var (
-		logger = appcontext.ZLogger(ctx)
-	)
+	logger := appcontext.ZLogger(ctx)
 
 	tx, err := txPrep.Beginx()
 	if err != nil {
