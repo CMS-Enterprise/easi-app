@@ -137,4 +137,3 @@ spec:
   completions: 1
   parallelism: 1
   ttlSecondsAfterFinished: 1000
-

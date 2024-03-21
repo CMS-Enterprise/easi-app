@@ -7,4 +7,3 @@ resources:
   - minio.yaml
   - easi-client.yaml
   - easi.yaml
-
