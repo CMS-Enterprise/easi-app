@@ -417,11 +417,12 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 func systemIntakeAdminStatusRunTestCollection(t *testing.T, tests []testSystemIntakeAdminStatusType, testType string) {
 	t.Run(testType, func(t *testing.T) {
 		for i := range tests {
-			t.Run(tests[i].testCase, func(t *testing.T) {
-				status, err := CalculateSystemIntakeAdminStatus(&tests[i].intake)
-				assert.EqualValues(t, tests[i].expectedStatus, status)
+			test := tests[i]
+			t.Run(test.testCase, func(t *testing.T) {
+				status, err := CalculateSystemIntakeAdminStatus(&test.intake)
+				assert.EqualValues(t, test.expectedStatus, status)
 
-				if tests[i].expectError {
+				if test.expectError {
 					assert.Error(t, err)
 				} else {
 					assert.NoError(t, err)
