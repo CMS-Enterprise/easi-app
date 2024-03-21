@@ -21,7 +21,7 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		return errors.New("unexpected nil system intake ID when linking system intake to system id")
 	}
 
-	if _, err := tx.NamedExecContext(ctx, sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
+	if _, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Delete, map[string]interface{}{
 		"system_ids":       pq.StringArray(systemIDs),
 		"system_intake_id": systemIntakeID,
 	}); err != nil {
@@ -48,7 +48,7 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 		setSystemIntakeSystemsLinks[i] = systemIDLink
 	}
 
-	if _, err := tx.NamedExecContext(ctx, sqlqueries.SystemIntakeSystemForm.Set, setSystemIntakeSystemsLinks); err != nil {
+	if _, err := tx.NamedExec(sqlqueries.SystemIntakeSystemForm.Set, setSystemIntakeSystemsLinks); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to insert linked system intake to system ids", zap.Error(err))
 		return err
 	}
@@ -58,14 +58,14 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 
 // SystemIntakeSystemsBySystemIntakeIDLOADER gets multiple groups of system ids by System Intake ID
 func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER(ctx context.Context, paramTableJSON string) (map[string][]*models.SystemIntakeSystem, error) {
-	stmt, err := s.db.PrepareNamedContext(ctx, sqlqueries.SystemIntakeSystemForm.SelectBySystemIntakeIDLOADER)
+	stmt, err := s.db.PrepareNamed(sqlqueries.SystemIntakeSystemForm.SelectBySystemIntakeIDLOADER)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
 
 	var systems []*models.SystemIntakeSystem
-	err = stmt.SelectContext(ctx, &systems, map[string]interface{}{
+	err = stmt.Select(&systems, map[string]interface{}{
 		"param_table_json": paramTableJSON,
 	})
 	if err != nil {

@@ -21,7 +21,7 @@ func (s *Store) SetTRBRequestContractNumbers(ctx context.Context, tx *sqlx.Tx, t
 		return errors.New("unexpected nil TRB Request ID when linking TRB Request to contract numbers")
 	}
 
-	if _, err := tx.NamedExecContext(ctx, sqlqueries.TRBRequestContractNumbersForm.Delete, map[string]interface{}{
+	if _, err := tx.NamedExec(sqlqueries.TRBRequestContractNumbersForm.Delete, map[string]interface{}{
 		"contract_numbers": pq.Array(contractNumbers),
 		"trb_request_id":   trbRequestID,
 	}); err != nil {
@@ -48,7 +48,7 @@ func (s *Store) SetTRBRequestContractNumbers(ctx context.Context, tx *sqlx.Tx, t
 		setTRBRequestContractNumbersLinks[i] = contractNumberLink
 	}
 
-	if _, err := tx.NamedExecContext(ctx, sqlqueries.TRBRequestContractNumbersForm.Set, setTRBRequestContractNumbersLinks); err != nil {
+	if _, err := tx.NamedExec(sqlqueries.TRBRequestContractNumbersForm.Set, setTRBRequestContractNumbersLinks); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to insert linked TRB Request to contract numbers", zap.Error(err))
 		return err
 	}
@@ -58,14 +58,14 @@ func (s *Store) SetTRBRequestContractNumbers(ctx context.Context, tx *sqlx.Tx, t
 
 // TRBRequestContractNumbersByTRBRequestIDLOADER gets multiple groups of Contract Numbers by TRB Request ID
 func (s *Store) TRBRequestContractNumbersByTRBRequestIDLOADER(ctx context.Context, paramTableJSON string) (map[string][]*models.TRBRequestContractNumber, error) {
-	stmt, err := s.db.PrepareNamedContext(ctx, sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDLOADER)
+	stmt, err := s.db.PrepareNamed(sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDLOADER)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
 
 	var contracts []*models.TRBRequestContractNumber
-	err = stmt.SelectContext(ctx, &contracts, map[string]interface{}{
+	err = stmt.Select(&contracts, map[string]interface{}{
 		"param_table_json": paramTableJSON,
 	})
 	if err != nil {

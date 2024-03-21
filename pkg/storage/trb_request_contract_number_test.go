@@ -110,7 +110,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 
 		s.True(fourthContractTime.After(firstThreeContractsTime))
 
-		_, err = s.db.ExecContext(ctx, "DELETE FROM trb_request WHERE id = ANY($1)", pq.Array(createdIDs))
+		_, err = s.db.Exec("DELETE FROM trb_request WHERE id = ANY($1)", pq.Array(createdIDs))
 		s.NoError(err)
 	})
 }

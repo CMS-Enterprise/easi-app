@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/dataloaders"
@@ -19,14 +20,14 @@ func SystemIntakeSystems(
 
 	siSystems, err := dataloaders.GetSystemIntakeSystemsBySystemIntakeID(ctx, systemIntakeID)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error("unable to retrieve cedar system ids from db")
+		appcontext.ZLogger(ctx).Error("unable to retrieve cedar system ids from db", zap.Error(err))
 		return nil, err
 	}
 	systems := []*models.CedarSystem{}
 	for _, v := range siSystems {
 		cedarSystemSummary, err := getCedarSystem(ctx, v.SystemID)
 		if err != nil {
-			appcontext.ZLogger(ctx).Error("unable to retrieve system from cedar")
+			appcontext.ZLogger(ctx).Error("unable to retrieve system from cedar", zap.Error(err))
 			continue
 		}
 		systems = append(systems, cedarSystemSummary)

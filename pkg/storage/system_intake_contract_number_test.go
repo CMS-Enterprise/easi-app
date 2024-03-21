@@ -120,7 +120,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 
 		s.True(fourthContractTime.After(firstThreeContractsTime))
 
-		_, err = s.db.ExecContext(ctx, "DELETE FROM system_intakes WHERE id = ANY($1)", pq.Array(createdIDs))
+		_, err = s.db.Exec("DELETE FROM system_intakes WHERE id = ANY($1)", pq.Array(createdIDs))
 		s.NoError(err)
 	})
 }
