@@ -30,7 +30,7 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 // If `tryCache` is true and `euaUserID` is nil, we will try to hit the cache. Otherwise, we will make an API call as we cannot filter on EUA on our end
 func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID *string) ([]*models.CedarSystem, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 
 		// Simulate a filter by only returning a subset of the mock systems
@@ -116,7 +116,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID 
 //
 // It does not return anything from the cache, nor does it return anything at all (unless an error occurs)
 func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return nil
 	}
@@ -156,7 +156,7 @@ func (c *Client) getSystemFromCache(ctx context.Context, systemID string) *model
 // GetSystem retrieves a CEDAR system by ID (IctObjectID), by first checking the cache, then
 // if it is not found, repopulating the cache and checking one more time.
 func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarSystem, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return local.GetMockSystem(systemID), nil
 	}

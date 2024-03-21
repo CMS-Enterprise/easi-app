@@ -14,7 +14,7 @@ import (
 
 // GetThreat makes a GET call to the /threat endpoint
 func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models.CedarThreat, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarThreat{}, nil
 	}

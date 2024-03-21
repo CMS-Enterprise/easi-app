@@ -22,7 +22,7 @@ type GetDeploymentsOptionalParams struct {
 
 // GetDeployments makes a GET call to the /deployment endpoint
 func (c *Client) GetDeployments(ctx context.Context, cedarSystemID string, optionalParams *GetDeploymentsOptionalParams) ([]*models.CedarDeployment, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarDeployment{}, nil
 	}
