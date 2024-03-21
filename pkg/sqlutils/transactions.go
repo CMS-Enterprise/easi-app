@@ -13,9 +13,9 @@ import (
 
 // WithTransactionRet is a wrapper function which handles creating, committing or rolling back a transaction
 // If there are any errors when executing the txFunc, the tx is rolled back. Otherwise, the tx is committed.
-func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, txFunc func(*sqlx.Tx) (T, error)) (T, error) {
+// We use named return parameters here so that the deferred function can access and reassign the variables
+func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, txFunc func(*sqlx.Tx) (T, error)) (result T, txErr error) {
 	var (
-		result T
 		logger = appcontext.ZLogger(ctx)
 	)
 
@@ -23,9 +23,6 @@ func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, 
 	if err != nil {
 		return result, fmt.Errorf("error creating transaction %w", err)
 	}
-
-	// `txErr` will track any errors that take place in the transaction execution itself
-	var txErr error
 
 	defer func() {
 		if p := recover(); p != nil {
