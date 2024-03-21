@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { CardGroup, Grid } from '@trussworks/react-uswds';
+import { Button, CardGroup, Grid } from '@trussworks/react-uswds';
 
 import BookmarkTag from 'components/BookmarkTag';
-import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import SystemProfileModal from 'components/SystemProfileModal';
 import TLCTag from 'components/TLCTag';
 import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetSystemWorkspaceQuery from 'queries/GetSystemWorkspaceQuery';
@@ -25,6 +25,8 @@ import SpacesCard from './components/SpacesCard';
 
 export const SystemWorkspace = () => {
   const { t } = useTranslation('systemWorkspace');
+
+  const [isSystemProfileOpen, toggleSystemProfile] = useState<boolean>(false);
 
   const { systemId } = useParams<{
     systemId: string;
@@ -68,6 +70,12 @@ export const SystemWorkspace = () => {
         ]}
       />
 
+      <SystemProfileModal
+        id={systemId}
+        isOpen={isSystemProfileOpen}
+        closeModal={() => toggleSystemProfile(false)}
+      />
+
       <div className="display-flex flex-align-center flex-justify margin-top-5">
         <div>
           <PageHeading className="margin-bottom-1 margin-top-0">
@@ -105,12 +113,13 @@ export const SystemWorkspace = () => {
             header={t('spaces.systemProfile.header')}
             description={t('spaces.systemProfile.description')}
             footer={
-              <UswdsReactLink
-                to={`/systems/${systemId}`}
-                className="usa-button usa-button--outline"
+              <Button
+                type="button"
+                outline
+                onClick={() => toggleSystemProfile(true)}
               >
                 {t('spaces.systemProfile.linktext')}
-              </UswdsReactLink>
+              </Button>
             }
           />
         </CardGroup>
