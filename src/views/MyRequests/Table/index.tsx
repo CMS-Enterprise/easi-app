@@ -232,7 +232,7 @@ const Table = ({
             globalFilter={state.globalFilter}
             pageIndex={state.pageIndex}
             pageSize={state.pageSize}
-            filteredRowLength={page.length}
+            filteredRowLength={rows.length}
             rowLength={data.length}
             className="margin-bottom-4"
           />

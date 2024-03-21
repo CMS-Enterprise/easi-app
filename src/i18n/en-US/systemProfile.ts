@@ -1,5 +1,5 @@
 const systemProfile = {
-  header: 'CMS Systems and Applications',
+  header: 'CMS systems and applications',
   subHeader: 'Find information about existing CMS systems and applications.',
   newRequest: {
     info: 'Have a new system or application?',
@@ -312,12 +312,12 @@ const systemProfile = {
     mySystemsSubtitle:
       'You are listed as a team member for the systems below. If you are listed in error, you may remove yourself from the team from within the system workspace.',
     id: 'system-list',
-    search: 'Search Table',
+    search: 'Search table',
     header: {
-      systemName: 'System Name',
-      systemOwner: 'CMS Component',
+      systemName: 'System name',
+      systemOwner: 'CMS component',
       systemAcronym: 'Acronym',
-      systemStatus: 'ATO Status'
+      systemStatus: 'ATO status'
     },
     view: 'View',
     buttonGroup: {
