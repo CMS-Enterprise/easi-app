@@ -310,7 +310,7 @@ const systemProfile = {
     subtitle:
       'Click the bookmark icon (<icon />) to bookmark systems that you want to access more quickly.',
     mySystemsSubtitle:
-      'You are listed as a team member for the systems below. If you are listed in error, you may remove yourself from the team from within the system workspace.',
+      'You are listed as a team member for the systems below. If you are listed in error, you may remove yourself from the team using the Team page of a System Profile. You may navigate to a System Profile using the links in the table below.',
     id: 'system-list',
     search: 'Search table',
     header: {
