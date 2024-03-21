@@ -113,45 +113,6 @@ export const SystemWorkspace = () => {
               </UswdsReactLink>
             }
           />
-
-          <SpacesCard
-            header={t('spaces.systemProfile.header')}
-            description={t('spaces.systemProfile.description')}
-            footer={
-              <UswdsReactLink
-                to={`/systems/${systemId}`}
-                className="usa-button usa-button--outline"
-              >
-                {t('spaces.systemProfile.linktext')}
-              </UswdsReactLink>
-            }
-          />
-
-          <SpacesCard
-            header={t('spaces.systemProfile.header')}
-            description={t('spaces.systemProfile.description')}
-            footer={
-              <UswdsReactLink
-                to={`/systems/${systemId}`}
-                className="usa-button usa-button--outline"
-              >
-                {t('spaces.systemProfile.linktext')}
-              </UswdsReactLink>
-            }
-          />
-
-          <SpacesCard
-            header={t('spaces.systemProfile.header')}
-            description={t('spaces.systemProfile.description')}
-            footer={
-              <UswdsReactLink
-                to={`/systems/${systemId}`}
-                className="usa-button usa-button--outline"
-              >
-                {t('spaces.systemProfile.linktext')}
-              </UswdsReactLink>
-            }
-          />
         </CardGroup>
       </Grid>
     </MainContent>

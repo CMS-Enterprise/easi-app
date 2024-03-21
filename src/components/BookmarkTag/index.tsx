@@ -58,9 +58,15 @@ export const BookmarkTag = ({
         }
       >
         {isBookmarked ? (
-          <IconBookmark className="margin-right-05" />
+          <IconBookmark
+            className="margin-right-05"
+            data-testid="is-bookmarked"
+          />
         ) : (
-          <IconBookmark className="margin-right-05 bookmark-tag__outline" />
+          <IconBookmark
+            className="margin-right-05 bookmark-tag__outline"
+            data-testid="is-not-bookmarked"
+          />
         )}
 
         {isBookmarked ? t('bookmarked') : t('bookmark')}
