@@ -30,15 +30,24 @@ import MultiSelect from 'components/shared/MultiSelect';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import {
   GetSystemIntakeRelationQuery,
+  GetTrbRequestRelationQuery,
   SetSystemIntakeRelationExistingServiceQuery,
   SetSystemIntakeRelationExistingSystemQuery,
   SetSystemIntakeRelationNewSystemQuery,
-  UnlinkSystemIntakeRelationQuery
+  SetTrbRequestRelationExistingServiceQuery,
+  SetTrbRequestRelationExistingSystemQuery,
+  SetTrbRequestRelationNewSystemQuery,
+  UnlinkSystemIntakeRelationQuery,
+  UnlinkTrbRequestRelationQuery
 } from 'queries/SystemIntakeRelationQueries';
 import {
   GetSystemIntakeRelation,
   GetSystemIntakeRelationVariables
 } from 'queries/types/GetSystemIntakeRelation';
+import {
+  GetTrbRequestRelation,
+  GetTrbRequestRelationVariables
+} from 'queries/types/GetTrbRequestRelation';
 import {
   SetSystemIntakeRelationExistingService,
   SetSystemIntakeRelationExistingServiceVariables
@@ -52,48 +61,99 @@ import {
   SetSystemIntakeRelationNewSystemVariables
 } from 'queries/types/SetSystemIntakeRelationNewSystem';
 import {
+  SetTrbRequestRelationExistingService,
+  SetTrbRequestRelationExistingServiceVariables
+} from 'queries/types/SetTrbRequestRelationExistingService';
+import {
+  SetTrbRequestRelationExistingSystem,
+  SetTrbRequestRelationExistingSystemVariables
+} from 'queries/types/SetTrbRequestRelationExistingSystem';
+import {
+  SetTrbRequestRelationNewSystem,
+  SetTrbRequestRelationNewSystemVariables
+} from 'queries/types/SetTrbRequestRelationNewSystem';
+import {
   UnlinkSystemIntakeRelation,
   UnlinkSystemIntakeRelationVariables
 } from 'queries/types/UnlinkSystemIntakeRelation';
+import {
+  UnlinkTrbRequestRelation,
+  UnlinkTrbRequestRelationVariables
+} from 'queries/types/UnlinkTrbRequestRelation';
 import { RequestRelationType } from 'types/graphql-global-types';
-
-const RequestLinkForm = () => {
-  const { systemId } = useParams<{
-    systemId: string;
+import { RequestType } from 'types/requestType';
+import formatContractNumbers from 'utils/formatContractNumbers';
+/**
+ * This request link relation form is used in the contexts of TRB Requests and System Intakes.
+ * There are 3 variables used to configure modes for this component:
+ * - `requestType`
+ * - `fromAdmin`
+ * - `isNew`
+ */
+const RequestLinkForm = ({
+  requestType,
+  fromAdmin
+}: {
+  requestType: RequestType;
+  fromAdmin?: boolean;
+}) => {
+  // Id refers to trb request or system intake
+  const { id } = useParams<{
+    id: string;
   }>();
   const history = useHistory();
 
-  const { t } = useTranslation(['itGov', 'intake', 'action', 'error']);
+  const { t } = useTranslation([
+    'itGov',
+    'intake',
+    'technicalAssistance',
+    'action',
+    'error'
+  ]);
 
-  // Form mode is either new or edit
   const { state } = useLocation<{ isNew?: boolean }>();
+
+  // Form edit mode is either new or edit
   const isNew = !!state?.isNew;
 
-  // Fetch query param to check if coming from ITGov/TRB admin home for redirect and text changes
-  const params = new URLSearchParams(useLocation().search);
-  const editType = params.get('edit-type');
+  // Url of next view after successful form submit
+  // Also for a breadcrumb navigation link
+  const redirectUrl = (() => {
+    if (fromAdmin) {
+      return requestType === 'trb'
+        ? `/trb/${id}/additional-information`
+        : `/governance-review-team/${id}/additional-information`;
+    }
+    return requestType === 'trb'
+      ? `/trb/task-list/${id}`
+      : `/governance-task-list/${id}`;
+  })();
 
-  const taskListUrl = `/governance-task-list/${systemId}`;
-  let breadCrumb = t('additionalRequestInfo.taskListBreadCrumb');
-
-  let redirectUrl = taskListUrl;
-  if (editType === 'it-gov-admin') {
-    redirectUrl = `/governance-review-team/${systemId}/additional-information`;
-    breadCrumb = t('additionalRequestInfo.itGovBreadcrumb');
-  } else if (editType === 'trb-admin') {
-    redirectUrl = `/trb/${systemId}/additional-information`;
-    breadCrumb = t('additionalRequestInfo.trbBreadcrumb');
-  }
+  const breadCrumb = (() => {
+    if (fromAdmin) {
+      return requestType === 'trb'
+        ? t('additionalRequestInfo.trbBreadcrumb')
+        : t('additionalRequestInfo.itGovBreadcrumb');
+    }
+    return t('additionalRequestInfo.taskListBreadCrumb');
+  })();
 
   const [hasUserError, setUserError] = useState<boolean>(false);
 
   const [isSkipModalOpen, setSkipModalOpen] = useState<boolean>(false);
   const [isUnlinkModalOpen, setUnlinkModalOpen] = useState<boolean>(false);
 
-  const { data, error, loading } = useQuery<
-    GetSystemIntakeRelation,
-    GetSystemIntakeRelationVariables
-  >(GetSystemIntakeRelationQuery, { variables: { id: systemId } });
+  const { data, error: relationError, loading: relationLoading } = useQuery<
+    GetSystemIntakeRelation | GetTrbRequestRelation,
+    GetSystemIntakeRelationVariables | GetTrbRequestRelationVariables
+  >(
+    requestType === 'trb'
+      ? GetTrbRequestRelationQuery
+      : GetSystemIntakeRelationQuery,
+    {
+      variables: { id }
+    }
+  );
 
   const cedarSystemIdOptions = useMemo(() => {
     const cedarSystemsData = data?.cedarSystems;
@@ -105,34 +165,45 @@ const RequestLinkForm = () => {
         }));
   }, [data?.cedarSystems]);
 
-  const [
-    setSystemIntakeRelationNewSystem,
-    { error: newSystemError }
-  ] = useMutation<
-    SetSystemIntakeRelationNewSystem,
-    SetSystemIntakeRelationNewSystemVariables
-  >(SetSystemIntakeRelationNewSystemQuery);
+  const [setNewSystem, { error: newSystemError }] = useMutation<
+    SetSystemIntakeRelationNewSystem | SetTrbRequestRelationNewSystem,
+    | SetSystemIntakeRelationNewSystemVariables
+    | SetTrbRequestRelationNewSystemVariables
+  >(
+    requestType === 'trb'
+      ? SetTrbRequestRelationNewSystemQuery
+      : SetSystemIntakeRelationNewSystemQuery
+  );
 
-  const [
-    setSystemIntakeRelationExistingSystem,
-    { error: existingSystemError }
-  ] = useMutation<
-    SetSystemIntakeRelationExistingSystem,
-    SetSystemIntakeRelationExistingSystemVariables
-  >(SetSystemIntakeRelationExistingSystemQuery);
+  const [setExistingSystem, { error: existingSystemError }] = useMutation<
+    SetSystemIntakeRelationExistingSystem | SetTrbRequestRelationExistingSystem,
+    | SetSystemIntakeRelationExistingSystemVariables
+    | SetTrbRequestRelationExistingSystemVariables
+  >(
+    requestType === 'trb'
+      ? SetTrbRequestRelationExistingSystemQuery
+      : SetSystemIntakeRelationExistingSystemQuery
+  );
 
-  const [
-    setSystemIntakeRelationExistingService,
-    { error: existingServiceError }
-  ] = useMutation<
-    SetSystemIntakeRelationExistingService,
-    SetSystemIntakeRelationExistingServiceVariables
-  >(SetSystemIntakeRelationExistingServiceQuery);
+  const [setExistingService, { error: existingServiceError }] = useMutation<
+    | SetSystemIntakeRelationExistingService
+    | SetTrbRequestRelationExistingService,
+    | SetSystemIntakeRelationExistingServiceVariables
+    | SetTrbRequestRelationExistingServiceVariables
+  >(
+    requestType === 'trb'
+      ? SetTrbRequestRelationExistingServiceQuery
+      : SetSystemIntakeRelationExistingServiceQuery
+  );
 
-  const [unlinkSystemIntakeRelation, { error: unlinkError }] = useMutation<
-    UnlinkSystemIntakeRelation,
-    UnlinkSystemIntakeRelationVariables
-  >(UnlinkSystemIntakeRelationQuery);
+  const [unlinkRelation, { error: unlinkRelationError }] = useMutation<
+    UnlinkSystemIntakeRelation | UnlinkTrbRequestRelation,
+    UnlinkSystemIntakeRelationVariables | UnlinkTrbRequestRelationVariables
+  >(
+    requestType === 'trb'
+      ? UnlinkTrbRequestRelationQuery
+      : UnlinkSystemIntakeRelationQuery
+  );
 
   const { control, watch, setValue, handleSubmit } = useForm<{
     relationType: RequestRelationType | null;
@@ -151,12 +222,14 @@ const RequestLinkForm = () => {
       return {
         relationType: values.relationType,
         cedarSystemIDs: values.systems.map(v => v.id),
-        contractNumbers: values.contractNumbers
-          .map(v => v.contractNumber)
-          .join(', '),
+        contractNumbers: formatContractNumbers(values.contractNumbers),
         contractName: values.contractName || ''
       };
-    })(data?.systemIntake)
+    })(
+      requestType === 'trb'
+        ? data && 'trbRequest' in data && data.trbRequest
+        : data && 'systemIntake' in data && data.systemIntake
+    )
   });
 
   // Ref fields for some form behavior
@@ -199,34 +272,69 @@ const RequestLinkForm = () => {
     let p;
 
     if (relation === RequestRelationType.NEW_SYSTEM) {
-      p = setSystemIntakeRelationNewSystem({
-        variables: {
-          input: {
-            systemIntakeID: systemId,
-            contractNumbers
-          }
-        }
-      });
+      p = setNewSystem(
+        requestType === 'trb'
+          ? {
+              variables: {
+                input: {
+                  trbRequestID: id,
+                  contractNumbers
+                }
+              }
+            }
+          : {
+              variables: {
+                input: {
+                  systemIntakeID: id,
+                  contractNumbers
+                }
+              }
+            }
+      );
     } else if (relation === RequestRelationType.EXISTING_SYSTEM) {
-      p = setSystemIntakeRelationExistingSystem({
-        variables: {
-          input: {
-            systemIntakeID: systemId,
-            cedarSystemIDs: formData.cedarSystemIDs,
-            contractNumbers
-          }
-        }
-      });
+      p = setExistingSystem(
+        requestType === 'trb'
+          ? {
+              variables: {
+                input: {
+                  trbRequestID: id,
+                  cedarSystemIDs: formData.cedarSystemIDs,
+                  contractNumbers
+                }
+              }
+            }
+          : {
+              variables: {
+                input: {
+                  systemIntakeID: id,
+                  cedarSystemIDs: formData.cedarSystemIDs,
+                  contractNumbers
+                }
+              }
+            }
+      );
     } else if (relation === RequestRelationType.EXISTING_SERVICE) {
-      p = setSystemIntakeRelationExistingService({
-        variables: {
-          input: {
-            systemIntakeID: systemId,
-            contractName: formData.contractName,
-            contractNumbers
-          }
-        }
-      });
+      p = setExistingService(
+        requestType === 'trb'
+          ? {
+              variables: {
+                input: {
+                  trbRequestID: id,
+                  contractName: formData.contractName,
+                  contractNumbers
+                }
+              }
+            }
+          : {
+              variables: {
+                input: {
+                  systemIntakeID: id,
+                  contractName: formData.contractName,
+                  contractNumbers
+                }
+              }
+            }
+      );
     }
 
     p?.then(
@@ -240,7 +348,11 @@ const RequestLinkForm = () => {
   });
 
   const unlink = () => {
-    unlinkSystemIntakeRelation({ variables: { intakeID: systemId } })
+    unlinkRelation(
+      requestType === 'trb'
+        ? { variables: { trbRequestID: id } }
+        : { variables: { intakeID: id } }
+    )
       .then(
         res => {
           if (res?.data) history.push(redirectUrl);
@@ -254,11 +366,11 @@ const RequestLinkForm = () => {
 
   // Error feedback
   const hasErrors =
-    error ||
-    existingServiceError ||
-    existingSystemError ||
+    relationError ||
     newSystemError ||
-    unlinkError ||
+    existingSystemError ||
+    existingServiceError ||
+    unlinkRelationError ||
     hasUserError;
 
   useEffect(() => {
@@ -275,18 +387,28 @@ const RequestLinkForm = () => {
           {t('error:encounteredIssueTryAgain')}
         </Alert>
       )}
-      {loading && <PageLoading />}
-      {!loading && data && (
+      {relationLoading && <PageLoading />}
+      {!relationLoading && data && (
         <>
           <BreadcrumbBar variant="wrap">
             <Breadcrumb>
               <BreadcrumbLink asCustom={Link} to="/">
-                <span>{t('intake:navigation.itGovernance')}</span>
+                <span>
+                  {t(
+                    requestType === 'trb'
+                      ? 'technicalAssistance:breadcrumbs.technicalAssistance'
+                      : 'intake:navigation.itGovernance'
+                  )}
+                </span>
               </BreadcrumbLink>
             </Breadcrumb>
             {isNew ? (
               <Breadcrumb current>
-                {t('intake:navigation.startRequest')}
+                {t(
+                  requestType === 'trb'
+                    ? 'technicalAssistance:breadcrumbs.startTrbRequest'
+                    : 'intake:navigation.startRequest'
+                )}
               </Breadcrumb>
             ) : (
               <>
@@ -305,7 +427,11 @@ const RequestLinkForm = () => {
             {t('link.header')}
           </PageHeading>
           <p className="font-body-lg line-height-body-5 text-light margin-y-0">
-            {t('link.description')}
+            {t(
+              `${
+                requestType === 'trb' ? 'technicalAssistance' : 'itGov'
+              }:link.description`
+            )}
           </p>
           <p className="margin-top-2 margin-bottom-5 text-base">
             <Trans
@@ -323,10 +449,24 @@ const RequestLinkForm = () => {
                 <Fieldset
                   legend={
                     <h4 className="margin-top-0 margin-bottom-1 line-height-heading-2">
-                      {t('link.form.field.systemOrService.label')}
+                      {t(
+                        `${
+                          requestType === 'trb'
+                            ? 'technicalAssistance'
+                            : 'itGov'
+                        }:link.form.field.systemOrService.label`
+                      )}
                     </h4>
                   }
                 >
+                  <p className="text-base margin-top-1 margin-bottom-3">
+                    {t(
+                      `${
+                        requestType === 'trb' ? 'technicalAssistance' : 'itGov'
+                      }:link.form.field.systemOrService.hint`
+                    )}
+                  </p>
+
                   {/* New system or service */}
                   <Radio
                     id="relationType-newSystem"
@@ -516,7 +656,11 @@ const RequestLinkForm = () => {
               </Button>
 
               {(isNew ||
-                (!isNew && data.systemIntake?.relationType !== null)) && (
+                (!isNew &&
+                  (('trbRequest' in data &&
+                    data.trbRequest.relationType !== null) ||
+                    ('systemIntake' in data &&
+                      data.systemIntake?.relationType !== null)))) && (
                 <Button
                   type="submit"
                   unstyled
@@ -558,7 +702,7 @@ const RequestLinkForm = () => {
                 <li>{t('link.skipConfirm.list.1')}</li>
               </ul>
               <ButtonGroup className="margin-top-3">
-                <Button type="button" onClick={() => history.push(taskListUrl)}>
+                <Button type="button" onClick={() => history.push(redirectUrl)}>
                   {t('link.skipConfirm.submit')}
                 </Button>
                 <Button
@@ -585,7 +729,13 @@ const RequestLinkForm = () => {
                 {t('link.unlinkConfirm.text.1')}
               </p>
               <ul className="easi-list margin-top-0">
-                <li>{t('link.unlinkConfirm.list.0')}</li>
+                <li>
+                  {t(
+                    `${
+                      requestType === 'trb' ? 'technicalAssistance' : 'itGov'
+                    }:link.description`
+                  )}
+                </li>
                 <li>{t('link.unlinkConfirm.list.1')}</li>
               </ul>
               <ButtonGroup className="margin-top-3">

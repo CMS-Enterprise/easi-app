@@ -193,7 +193,7 @@ type CedarSystemMaintainerInformation {
 	ip6EnabledAssetPercent: String
 	ip6TransitionPlan: String
 	ipEnabledAssetCount: Int
-	majorRefreshDate: String
+	majorRefreshDate: Time
 	netAccessibility: String
 	omDocumentationOnDemand: Boolean
 	plansToRetireReplace: String
@@ -202,7 +202,7 @@ type CedarSystemMaintainerInformation {
 	sourceCodeOnDemand: Boolean
 	systemCustomization: String
 	systemDesignOnDemand: Boolean
-	systemProductionDate: String
+	systemProductionDate: Time
 	systemRequirementsOnDemand: Boolean
 	testPlanOnDemand: Boolean
 	testReportsOnDemand: Boolean
@@ -229,6 +229,18 @@ Represents a user's bookmark of a cedar system
 type CedarSystemBookmark {
   euaUserId: String!
   cedarSystemId: String!
+}
+
+type CedarContract {
+  startDate: Time
+  endDate: Time
+  contractNumber: String
+  contractName: String
+  description: String
+  orderNumber: String
+  serviceProvided: String
+  isDeliveryOrg: Boolean
+  systemID: String
 }
 
 """
@@ -997,7 +1009,7 @@ type SystemIntake {
   decisionNextSteps: HTML
   eaCollaborator: String
   eaCollaboratorName: String
-  euaUserId: String!
+  euaUserId: String
   existingFunding: Boolean
   fundingSources: [SystemIntakeFundingSource!]!
   governanceRequestFeedbacks: [GovernanceRequestFeedback!]!
@@ -2744,6 +2756,7 @@ type Query {
   cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem!]!
+  cedarContractsBySystem(cedarSystemId: String!): [CedarContract!]!
   myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!

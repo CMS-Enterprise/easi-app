@@ -2,11 +2,14 @@ package cedarcore
 
 import (
 	"context"
+	"strings"
+	"time"
 
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/contract"
+	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -14,14 +17,20 @@ import (
 func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarContract, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarContract{}, nil
+		return local.GetMockContractsBySystem(cedarSystemID), nil
 	}
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+	if cedarSystem == nil {
+		return nil, nil
+	}
 
 	params := contract.NewContractFindParams()
 
 	// Construct the parameters
-	params.SetSystemID(&cedarSystem.VersionID)
+	params.SetSystemID(cedarSystem.VersionID.Ptr())
 	params.HTTPClient = c.hc
 
 	if err != nil {
@@ -38,17 +47,30 @@ func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) 
 	retVal := make([]*models.CedarContract, 0, len(resp.Payload.Contracts))
 
 	for _, contract := range resp.Payload.Contracts {
+		var isDeliveryOrg bool
+		if strings.ToLower(contract.IsDeliveryOrg) == "yes" {
+			isDeliveryOrg = true
+		}
+
+		endDate, err := time.Parse(time.RFC3339, contract.POPEndDate)
+		if err != nil {
+			endDate = time.Time{}
+		}
+		startDate, err := time.Parse(time.RFC3339, contract.POPStartDate)
+		if err != nil {
+			startDate = time.Time{}
+		}
 
 		retVal = append(retVal, &models.CedarContract{
-			AwardID:       contract.AwardID,
-			ID:            contract.ID,
-			ParentAwardID: contract.ParentAwardID,
-
-			ContractAdo:           zero.StringFrom(contract.ContractADO),
-			ContractDeliverableID: zero.StringFrom(contract.ContractDeliverableID),
-			ContractName:          zero.StringFrom(contract.ContractName),
-			Description:           zero.StringFrom(contract.Description),
-			SystemID:              zero.StringFrom(contract.SystemID),
+			EndDate:         zero.TimeFrom(endDate),
+			StartDate:       zero.TimeFrom(startDate),
+			ContractNumber:  contract.AwardID,
+			ContractName:    zero.StringFrom(contract.ProjectTitle),
+			Description:     zero.StringFrom(contract.Description),
+			OrderNumber:     zero.StringFrom(contract.OrderNumber),
+			ServiceProvided: zero.StringFrom(contract.ServiceProvided),
+			IsDeliveryOrg:   isDeliveryOrg,
+			SystemID:        zero.StringFrom(contract.SystemID),
 		})
 	}
 	return retVal, nil

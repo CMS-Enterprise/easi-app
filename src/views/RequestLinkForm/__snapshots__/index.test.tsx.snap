@@ -92,9 +92,14 @@ exports[`IT Gov Request relation link form > renders 1`] = `
               <h4
                 class="margin-top-0 margin-bottom-1 line-height-heading-2"
               >
-                Is this IT Governance request related to an existing system, service, or contract?
+                Is this IT Governance request part of an existing system, service, or contract?
               </h4>
             </legend>
+            <p
+              class="text-base margin-top-1 margin-bottom-3"
+            >
+              With any of the selections below, you may add contract number(s) if there are any in place to support this effort.
+            </p>
             <div
               class="usa-radio"
               data-testid="radio"

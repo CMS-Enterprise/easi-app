@@ -13,17 +13,17 @@ import {
 } from 'data/mock/systemIntake';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
 import {
-  GetSystemIntakeContacts,
-  GetSystemIntakeContactsVariables
-} from 'queries/types/GetSystemIntakeContacts';
+  GetSystemIntakeContactsQuery as GetSystemIntakeContactsQueryType,
+  GetSystemIntakeContactsQueryVariables
+} from 'queries/types/GetSystemIntakeContactsQuery';
 import { MockedQuery } from 'types/util';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
 
 import ContactDetails from '.';
 
 const getSystemIntakeContactsQuery: MockedQuery<
-  GetSystemIntakeContacts,
-  GetSystemIntakeContactsVariables
+  GetSystemIntakeContactsQueryType,
+  GetSystemIntakeContactsQueryVariables
 > = {
   request: {
     query: GetSystemIntakeContactsQuery,

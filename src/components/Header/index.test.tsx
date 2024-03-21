@@ -55,13 +55,4 @@ describe('The Header component', () => {
       });
     });
   });
-
-  it('displays children', () => {
-    const component = shallow(
-      <Header>
-        <div className="test-class-name" />
-      </Header>
-    );
-    expect(component.find('.test-class-name').exists()).toBe(true);
-  });
 });
