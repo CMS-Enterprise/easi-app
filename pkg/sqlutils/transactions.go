@@ -46,7 +46,7 @@ func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, 
 			// no panic, and `txFunc` did not error, so we can commit the `tx`
 
 			// explicitly re-assign `txErr` here so it can be returned
-			// we must re-use `txErr` here as this defer function will re-assign `txErr` just before the outside function returns
+			// we must re-use `txErr` here as this defer function will re-assign `txErr` to return to the caller
 			txErr = tx.Commit()
 		}
 	}()
