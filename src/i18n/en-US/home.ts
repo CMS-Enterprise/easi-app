@@ -56,7 +56,7 @@ const home = {
   },
   actionTitle: 'Available services',
   actions: {
-    ITGov: {
+    itgov: {
       heading: 'IT Governance',
       body:
         'Get approval for a new IT project, apply for a new Life Cycle ID (LCID), and amend an existing LCID.',
@@ -74,7 +74,7 @@ const home = {
       button: 'Start a 508 testing request',
       buttonLink: '/508/testing-overview?continue=true'
     },
-    TRB: {
+    trb: {
       heading: 'Technical assistance',
       body:
         'Get help, feedback, and guidance for your IT project, courtesy of the Technical Review Board (TRB).',

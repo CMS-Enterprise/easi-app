@@ -5,11 +5,12 @@ import { withRouter } from 'react-router-dom';
 import { Grid } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import LinkCard, { LinkRequestType } from 'components/LinkCard';
+import LinkCard from 'components/LinkCard';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
+import { RequestType } from 'types/requestType';
 import user from 'utils/user';
 import List from 'views/Accessibility/AccessibilityRequest/List';
 import Table from 'views/MyRequests/Table';
@@ -29,6 +30,8 @@ const Home = () => {
   const flags = useFlags();
 
   const { Message } = useMessage();
+
+  const requestTypes: RequestType[] = ['itgov', 'trb'];
 
   const renderView = () => {
     if (isUserSet) {
@@ -89,12 +92,9 @@ const Home = () => {
               </h2>
 
               <Grid row gap={2}>
-                {['ITGov', 'TRB'].map(requestType => (
+                {requestTypes.map(requestType => (
                   <Grid tablet={{ col: 6 }} key={requestType}>
-                    <LinkCard
-                      className="margin-top-1"
-                      type={requestType as LinkRequestType}
-                    />
+                    <LinkCard className="margin-top-1" type={requestType} />
                   </Grid>
                 ))}
               </Grid>
