@@ -108,11 +108,14 @@ func (cw *ClientWrapper) FetchUserInfos(ctx context.Context, usernames []string)
 			logger.Error("Error searching Okta users", zap.Error(err), zap.String("usernames", strings.Join(usernames, ", ")))
 			return nil, err
 		}
-		// If it's a context cancellation, log as such and continue on
+		// err is a context cancellation error, log as such and continue on
 		logger.Warn("Context cancelled while searching Okta users", zap.Error(err))
 		return nil, nil
 	}
 
+	// API call was a success, but no users were found.
+	// We consider this an error, since we're expecting to find users
+	// since this isn't a "search", but a lookup by EUA ID
 	if len(searchedUsers) == 0 {
 		appcontext.ZLogger(ctx).Error("no users found when calling FetchUserInfos", zap.String("usernames", strings.Join(usernames, ",")))
 		return users, fmt.Errorf("no users found")

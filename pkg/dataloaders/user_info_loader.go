@@ -24,13 +24,15 @@ func (loaders *DataLoaders) BatchUserInfos(
 
 	userInfos, err := loaders.FetchUserInfos(ctx, euas)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error("Error fetching user infos", zap.Error(err))
+		appcontext.ZLogger(ctx).Error("Error fetching user infos from Okta", zap.Error(err))
 		return results
 	}
 
-	// In the case of a Context cancellation, we'll get back an entirely empty slice
-	// In this case, we don't want to return any errors at all
-	// Just return empty results
+	// If we didn't get an error back, yet there's still an empty slice, we can assume
+	// that the Context was cancelled
+	//
+	// In this case, we don't want to return any errors at all, but
+	// instead just return empty results
 	if len(userInfos) == 0 {
 		appcontext.ZLogger(ctx).Warn("Empty EUA results from FetchUserInfos")
 		return results
