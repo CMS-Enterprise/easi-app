@@ -58,6 +58,15 @@ const systemWorkspace = {
     links: helpLinks,
     showLinks: 'Show helpful links',
     hideLinks: 'Hide helpful links'
+  },
+  spaces: {
+    header: 'Spaces',
+    systemProfile: {
+      header: 'System Profile',
+      description:
+        'Your System Profile compiles the information that CMS knows about your system and its status in the Target Life Cycle (TLC). Compiling more system information in EASi allows OIT and CMS to stay up-to-date about your system and proactively prompt you if there are any governance activities or TLC related tasks to complete.',
+      linktext: 'View system profile'
+    }
   }
 };
 

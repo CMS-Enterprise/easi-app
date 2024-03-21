@@ -26,6 +26,7 @@ export const HelpLinks = ({ classname }: { classname?: string }) => {
       <div className="margin-top-neg-1">
         <div className="display-flex flex-align-center flex-justify">
           <h3 className="margin-y-0">{t('helpLinks.header')}</h3>
+
           <IconLightbulbOutline size={4} className="text-primary" />
         </div>
 
@@ -40,7 +41,7 @@ export const HelpLinks = ({ classname }: { classname?: string }) => {
         labelPosition="bottom"
         eyeIcon
         bold={false}
-        className="text-normal margin-bottom-2"
+        className="text-normal margin-bottom-1"
       >
         <HelpCardGroup cards={helpCards} />
       </CollapsableLink>
