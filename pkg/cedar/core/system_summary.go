@@ -10,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
 	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/local"
+	cedarcoremock "github.com/cmsgov/easi-app/pkg/local/cedarcore"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -35,11 +35,11 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID 
 
 		// Simulate a filter by only returning a subset of the mock systems
 		if euaUserID != nil {
-			return local.GetFilteredMockSystems(), nil
+			return cedarcoremock.GetFilteredSystems(), nil
 		}
 
 		// Else return entire set
-		return local.GetMockSystems(), nil
+		return cedarcoremock.GetSystems(), nil
 	}
 
 	// Check and use cache before making API call if `tryCache` is true and there is no `euaUserID` filter
@@ -158,7 +158,7 @@ func (c *Client) getSystemFromCache(ctx context.Context, systemID string) *model
 func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarSystem, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return local.GetMockSystem(systemID), nil
+		return cedarcoremock.GetSystem(systemID), nil
 	}
 
 	// Try the cache first

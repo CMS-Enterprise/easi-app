@@ -9,7 +9,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/contract"
-	"github.com/cmsgov/easi-app/pkg/local"
+	cedarcoremock "github.com/cmsgov/easi-app/pkg/local/cedarcore"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -17,7 +17,7 @@ import (
 func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarContract, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return local.GetMockContractsBySystem(cedarSystemID), nil
+		return cedarcoremock.GetContractsBySystem(cedarSystemID), nil
 	}
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
 	if err != nil {
