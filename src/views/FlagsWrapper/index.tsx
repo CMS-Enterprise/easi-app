@@ -40,7 +40,8 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             itgovLinkRequestsRequester: false,
             itgovLinkRequestsAdmin: false,
             trbLinkRequestsRequester: false,
-            trbLinkRequestsAdmin: false
+            trbLinkRequestsAdmin: false,
+            systemWorkspace: false
           }
         });
 

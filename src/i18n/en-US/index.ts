@@ -29,6 +29,7 @@ import itGov from './itGov';
 import makingARequest from './makingARequest';
 import privacyPolicy from './privacyPolicy';
 import systemProfile from './systemProfile';
+import systemWorkspace from './systemWorkspace';
 import tableAndPagination from './tableAndPagination';
 import technicalAssistance from './technicalAssistance';
 import termsAndConditions from './termsAndConditions';
@@ -63,6 +64,7 @@ const enUS = {
   privacyPolicy,
   stepsInTRBProcess,
   systemProfile,
+  systemWorkspace,
   tableAndPagination,
   taskList,
   technicalAssistance,
