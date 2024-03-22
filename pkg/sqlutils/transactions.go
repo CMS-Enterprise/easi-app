@@ -32,7 +32,7 @@ func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, 
 			}
 
 			// empty result
-			// result = defaultT
+			result = defaultT
 			// continue panic sequence
 			panic(p)
 
