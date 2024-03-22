@@ -7739,7 +7739,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeRejectIntakeInput,
 		ec.unmarshalInputSystemIntakeReopenRequestInput,
 		ec.unmarshalInputSystemIntakeRequestEditsInput,
-		ec.unmarshalInputSystemIntakeRequesterInput,
 		ec.unmarshalInputSystemIntakeRequesterWithComponentInput,
 		ec.unmarshalInputSystemIntakeRetireLCIDInput,
 		ec.unmarshalInputSystemIntakeUpdateLCIDInput,
@@ -8998,19 +8997,12 @@ type ITGovTaskStatuses {
   decisionAndNextStepsStatus: ITGovDecisionStatus!
 }
 
-"""
-The input data used to set the requester of a system request
-"""
-input SystemIntakeRequesterInput {
-  name: String!
-}
 
 """
 The input data used to initialize an IT governance request for a system
 """
 input CreateSystemIntakeInput {
   requestType: SystemIntakeRequestType!
-  requester: SystemIntakeRequesterInput!
 }
 
 """
@@ -56158,7 +56150,7 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeInput(ctx context.Co
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"requestType", "requester"}
+	fieldsInOrder := [...]string{"requestType"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -56172,13 +56164,6 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeInput(ctx context.Co
 				return it, err
 			}
 			it.RequestType = data
-		case "requester":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requester"))
-			data, err := ec.unmarshalNSystemIntakeRequesterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequesterInput(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Requester = data
 		}
 	}
 
@@ -58529,33 +58514,6 @@ func (ec *executionContext) unmarshalInputSystemIntakeRequestEditsInput(ctx cont
 				return it, err
 			}
 			it.AdminNote = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputSystemIntakeRequesterInput(ctx context.Context, obj interface{}) (model.SystemIntakeRequesterInput, error) {
-	var it model.SystemIntakeRequesterInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"name"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "name":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Name = data
 		}
 	}
 
@@ -72599,11 +72557,6 @@ func (ec *executionContext) marshalNSystemIntakeRequester2ᚖgithubᚗcomᚋcmsg
 		return graphql.Null
 	}
 	return ec._SystemIntakeRequester(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNSystemIntakeRequesterInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequesterInput(ctx context.Context, v interface{}) (*model.SystemIntakeRequesterInput, error) {
-	res, err := ec.unmarshalInputSystemIntakeRequesterInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeRequesterWithComponentInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequesterWithComponentInput(ctx context.Context, v interface{}) (*model.SystemIntakeRequesterWithComponentInput, error) {

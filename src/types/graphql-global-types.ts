@@ -624,7 +624,6 @@ export interface CreateSystemIntakeDocumentInput {
  */
 export interface CreateSystemIntakeInput {
   requestType: SystemIntakeRequestType;
-  requester: SystemIntakeRequesterInput;
 }
 
 /**
@@ -1086,13 +1085,6 @@ export interface SystemIntakeRequestEditsInput {
   emailFeedback: HTML;
   additionalInfo?: HTML | null;
   adminNote?: HTML | null;
-}
-
-/**
- * The input data used to set the requester of a system request
- */
-export interface SystemIntakeRequesterInput {
-  name: string;
 }
 
 /**

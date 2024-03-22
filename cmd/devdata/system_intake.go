@@ -153,9 +153,6 @@ func createSystemIntake(
 	if intakeID == nil && requesterEUAIDPtr != nil {
 		input := model.CreateSystemIntakeInput{
 			RequestType: requestType,
-			Requester: &model.SystemIntakeRequesterInput{
-				Name: requesterName,
-			},
 		}
 		intake, err := resolvers.CreateSystemIntake(ctx, store, input)
 		if err != nil {

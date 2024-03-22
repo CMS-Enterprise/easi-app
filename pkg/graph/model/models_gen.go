@@ -210,7 +210,6 @@ type CreateSystemIntakeDocumentPayload struct {
 // The input data used to initialize an IT governance request for a system
 type CreateSystemIntakeInput struct {
 	RequestType models.SystemIntakeRequestType `json:"requestType"`
-	Requester   *SystemIntakeRequesterInput    `json:"requester"`
 }
 
 // Input data for adding a note to a system request
@@ -809,11 +808,6 @@ type SystemIntakeRequester struct {
 	Component *string `json:"component,omitempty"`
 	Email     *string `json:"email,omitempty"`
 	Name      string  `json:"name"`
-}
-
-// The input data used to set the requester of a system request
-type SystemIntakeRequesterInput struct {
-	Name string `json:"name"`
 }
 
 // The input data used to set the requester for a system request along with the
