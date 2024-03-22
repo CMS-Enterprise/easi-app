@@ -41,7 +41,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 
 	suite.Run("Errors will rollback a transaction", func() {
 		var createId uuid.UUID
-		err := sqlutils.WithTransaction(ctx, suite.store, func(tx *sqlx.Tx) error {
+		retVal, err := sqlutils.WithTransactionRet[*models.TRBRequest](ctx, suite.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 
 			trb := models.NewTRBRequest(anonEua)
 			trb.Type = models.TRBTNeedHelp
@@ -49,7 +49,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 
 			created, err := suite.store.CreateTRBRequest(ctx, tx, trb)
 			if err != nil {
-				return err
+				return nil, err
 			}
 
 			// prove the TRB request was created in the tx
@@ -58,10 +58,13 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 			// assign id to external var for later
 			createId = created.ID
 
-			return errArtifical
+			return created, errArtifical
 
 		})
 		suite.ErrorIs(err, errArtifical)
+
+		// a transaction should never return useful data on error
+		suite.Nil(retVal)
 
 		// attempt to get new TRB by the created ID - we should not get anything
 		trb, err := suite.store.GetTRBRequestByID(ctx, createId)
@@ -74,7 +77,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 	suite.Run("With Transaction can also perform discrete db actions not directly part of the transaction", func() {
 		//NOTE: this is not behavior we should expect in production code.
 		var trbGlobal *models.TRBRequest
-		err := sqlutils.WithTransaction(ctx, suite.store, func(tx *sqlx.Tx) error {
+		retVal, err := sqlutils.WithTransactionRet[*models.TRBRequest](ctx, suite.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 
 			trb := models.NewTRBRequest(anonEua)
 			trb.Type = models.TRBTNeedHelp
@@ -82,12 +85,15 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 
 			createdTRB, err := suite.store.CreateTRBRequest(ctx, suite.store, trb) //Call the method on the store itself, so it is automatically created
 			if err != nil {
-				return err
+				return nil, err
 			}
 			trbGlobal = createdTRB
-			return errArtifical
+			return createdTRB, errArtifical
 		})
 		suite.ErrorIs(err, errArtifical)
+
+		// the return value from the transaction will be `nil`, but, to reiterate the above comment, this is a bad pattern and should not be seen in prod
+		suite.Nil(retVal)
 
 		trbRet, err := suite.store.GetTRBRequestByID(ctx, trbGlobal.ID) // we should get the plan no matter what as it was executed outside of `tx` context
 		suite.NoError(err)
@@ -95,9 +101,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 	})
 
 	suite.Run("With Transaction will rollback on panic", func() {
-		var (
-			createId uuid.UUID
-		)
+		var createId uuid.UUID
 
 		panicFunc := func() {
 			_ = sqlutils.WithTransaction(ctx, suite.store, func(tx *sqlx.Tx) error {

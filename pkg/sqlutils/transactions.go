@@ -23,6 +23,7 @@ func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, 
 	}
 
 	defer func() {
+		var defaultT T
 		if p := recover(); p != nil {
 			// if `p` is not nil, it means we panicked at some point in the `txFunc`
 			// attempt rollback
@@ -30,22 +31,31 @@ func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, 
 				logger.Error("failed to rollback transaction after panic", zap.Error(err))
 			}
 
+			// empty result
+			// result = defaultT
 			// continue panic sequence
 			panic(p)
 
 		} else if txErr != nil {
+			logger.Error("error encountered in `txFunc`", zap.Error(txErr))
 			// if `txErr` is not `nil`, then we know `txFunc` returned an error
 			// attempt rollback
 			if err := tx.Rollback(); err != nil {
 				logger.Error("failed to rollback transaction after error", zap.Error(err))
 			}
-
+			// empty result
+			result = defaultT
 		} else {
 			// no panic, and `txFunc` did not error, so we can commit the `tx`
 
 			// explicitly re-assign `txErr` here so it can be returned
 			// we must re-use `txErr` here as this defer function will re-assign `txErr` to return to the caller
 			txErr = tx.Commit()
+			if txErr != nil {
+				// empty result
+				result = defaultT
+				logger.Error("failed to commit transaction", zap.Error(txErr))
+			}
 		}
 	}()
 
