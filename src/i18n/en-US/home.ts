@@ -1,7 +1,7 @@
 const home = {
   title: 'Welcome, {{user}}',
   subtitle:
-    'Use EASi to manage your systems, governance processes, security processes, and much more.',
+    'Use EASi to manage your systems, go through governance processes, ask for help, and much more.',
   startNow: 'Start now',
   welcome: {
     title:
