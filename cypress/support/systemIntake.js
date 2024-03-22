@@ -7,7 +7,7 @@ cy.systemIntake = {
 
       cy.get('#react-select-IntakeForm-BusinessOwnerName-input')
         .type('Audrey')
-        .wait(1000)
+        .wait(3000)
         .type('{downarrow}{enter}')
         .should('have.value', 'Audrey Abrams, ADMI (audrey.abrams@local.fake)');
 
@@ -22,7 +22,7 @@ cy.systemIntake = {
 
       cy.get('#react-select-IntakeForm-ProductManagerName-input')
         .type('Delphia')
-        .wait(1000)
+        .wait(3000)
         .type('{downArrow}{enter}')
         .should('have.value', 'Delphia Green, GBRG (delphia.green@local.fake)');
 
