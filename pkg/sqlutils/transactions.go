@@ -33,6 +33,7 @@ func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, 
 
 			// empty result
 			result = defaultT
+
 			// continue panic sequence
 			panic(p)
 
@@ -43,8 +44,10 @@ func WithTransactionRet[T any](ctx context.Context, txPrep TransactionPreparer, 
 			if err := tx.Rollback(); err != nil {
 				logger.Error("failed to rollback transaction after error", zap.Error(err))
 			}
+
 			// empty result
 			result = defaultT
+
 		} else {
 			// no panic, and `txFunc` did not error, so we can commit the `tx`
 
