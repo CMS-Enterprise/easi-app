@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"path"
@@ -65,7 +65,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		defer resp.Body.Close()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
-		actualBody, err := ioutil.ReadAll(resp.Body)
+		actualBody, err := io.ReadAll(resp.Body)
 		s.NoError(err)
 		var actualIntake models.SystemIntake
 		err = json.Unmarshal(actualBody, &actualIntake)
@@ -167,7 +167,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		defer resp.Body.Close()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
-		actualBody, err := ioutil.ReadAll(resp.Body)
+		actualBody, err := io.ReadAll(resp.Body)
 		s.NoError(err)
 		var actualIntake models.SystemIntake
 		err = json.Unmarshal(actualBody, &actualIntake)

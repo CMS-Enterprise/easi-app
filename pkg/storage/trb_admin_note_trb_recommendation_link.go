@@ -63,6 +63,7 @@ func (s *Store) CreateTRBAdminNoteTRBRecommendationLinks(
 		)
 		return nil, err
 	}
+	defer createdLinkRows.Close()
 
 	// loop through the sqlx.Rows value returned from NamedQuery(), scan the results back into structs
 	createdLinks := []*models.TRBAdminNoteTRBAdviceLetterRecommendationLink{}
@@ -106,6 +107,7 @@ func (s *Store) GetTRBRecommendationsByAdminNoteID(ctx context.Context, adminNot
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	arg := map[string]interface{}{
 		"admin_note_id": adminNoteID,
