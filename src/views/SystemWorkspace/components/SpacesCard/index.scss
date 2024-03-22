@@ -1,0 +1,16 @@
+.workspaces {
+    &__card {
+        .usa-card__container {
+            border-radius: 4px !important;
+            padding: 1.25rem !important;
+            display: flex !important;
+            justify-content: space-between !important;
+        }
+    }
+
+    &__fill-card-space {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+}

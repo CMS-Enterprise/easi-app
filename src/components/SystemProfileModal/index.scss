@@ -2,9 +2,10 @@
 
 .easi-modal_system-profile .ReactModal__Content {
   height: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
   font-size: inherit;
   line-height: inherit;
+  max-height: 100vh !important;
 
   .easi-modal__body {
     padding: 0;
