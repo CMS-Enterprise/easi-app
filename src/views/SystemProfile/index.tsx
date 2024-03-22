@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink, NavLink, useParams } from 'react-router-dom';
+import { NavHashLink } from 'react-router-hash-link';
 import { useQuery } from '@apollo/client';
 import {
   Alert,
@@ -17,6 +18,7 @@ import {
   SummaryBox
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import i18next from 'i18next';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { startCase } from 'lodash';
 
@@ -299,7 +301,7 @@ export function showAtoExpirationDate(
 export function showVal(
   val: string | number | null | undefined,
   {
-    defaultVal = 'No information to display',
+    defaultVal = i18next.t<string>('general:noInfoToDisplay'),
     format
   }: {
     defaultVal?: string;
@@ -420,9 +422,12 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
     flags.systemProfileHiddenFields
   );
 
+  const subpageKey: SubpageKey = subinfo || modalSubpage || 'home';
+
   // Mapping of all sub navigation links
   const subNavigationLinks: React.ReactNode[] = Object.keys(subComponents).map(
     (key: string) => {
+      const comp = subComponents[key];
       if (modal)
         return (
           <Button
@@ -439,21 +444,35 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
           </Button>
         );
       return (
-        <NavLink
-          to={subComponents[key].route}
-          key={key}
-          activeClassName="usa-current"
-          className={classnames({
-            'nav-group-border': subComponents[key].groupEnd
-          })}
-        >
-          {t(`navigation.${key}`)}
-        </NavLink>
+        <>
+          <NavLink
+            to={subComponents[key].route}
+            key={key}
+            activeClassName="usa-current"
+            className={classnames({
+              'nav-group-border': subComponents[key].groupEnd
+            })}
+          >
+            {t(`navigation.${key}`)}
+          </NavLink>
+          {comp.hashLinks &&
+            key === subpageKey &&
+            comp.hashLinks.map((sub, subidx) => {
+              return (
+                <NavHashLink
+                  to={sub.hash}
+                  key={key + sub.name}
+                  className="margin-left-4"
+                  activeClassName="text-bold text-primary"
+                >
+                  {sub.name}
+                </NavHashLink>
+              );
+            })}
+        </>
       );
     }
   );
-
-  const subpageKey: SubpageKey = subinfo || modalSubpage || 'home';
 
   const subComponent = subComponents[subpageKey];
 
