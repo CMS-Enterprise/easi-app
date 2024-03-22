@@ -4,7 +4,7 @@ import { shallow } from 'enzyme';
 import LinkCard from './index';
 
 describe('LinkCard', () => {
-  const wrapper = shallow(<LinkCard type="TRB" />);
+  const wrapper = shallow(<LinkCard type="trb" />);
   it('renders without crashing', () => {
     expect(wrapper.length).toEqual(1);
   });
