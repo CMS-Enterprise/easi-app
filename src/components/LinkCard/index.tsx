@@ -5,12 +5,11 @@ import { Button, IconArrowForward } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
-
-export type LinkRequestType = 'ITGov' | 'TRB' | '508';
+import { RequestType } from 'types/requestType';
 
 type LinkCardProps = {
   className?: string;
-  type: LinkRequestType;
+  type: RequestType;
 } & JSX.IntrinsicElements['div'];
 
 const LinkCard = ({ className, type }: LinkCardProps) => {
