@@ -56,9 +56,8 @@ import {
   UrlLocationTag,
   UsernameWithRoles
 } from 'types/systemProfile';
-import { formatDateUtc, parseAsUTC } from 'utils/date';
+import { parseAsUTC } from 'utils/date';
 import { formatHttpsUrl } from 'utils/formatUrl';
-import showVal from 'utils/showVal';
 import NotFound from 'views/NotFound';
 import {
   activities as mockActivies,
@@ -272,19 +271,6 @@ export function getSystemProfileData(
     subSystems: mockSubSystems,
     systemData: mockSystemData
   };
-}
-
-export function showAtoExpirationDate(
-  // eslint-disable-next-line camelcase
-  systemProfileAto?: GetSystemProfile_cedarAuthorityToOperate
-): React.ReactNode {
-  return showVal(
-    systemProfileAto?.dateAuthorizationMemoExpires &&
-      formatDateUtc(
-        systemProfileAto.dateAuthorizationMemoExpires,
-        'MMMM d, yyyy'
-      )
-  );
 }
 
 /**

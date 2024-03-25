@@ -26,7 +26,7 @@ import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
 import showVal from 'utils/showVal';
-import { showAtoExpirationDate } from 'views/SystemProfile';
+import { showAtoExpirationDate } from 'views/SystemProfile/helpers';
 import RequestCardTestScore from 'views/SystemProfile/RequestCardTestScore';
 import RequestStatusTag from 'views/SystemProfile/RequestStatusTag';
 

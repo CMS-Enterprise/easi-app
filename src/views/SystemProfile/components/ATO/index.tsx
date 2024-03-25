@@ -36,7 +36,7 @@ import {
 } from 'types/systemProfile';
 import { formatDateUtc } from 'utils/date';
 import showVal from 'utils/showVal';
-import { showAtoExpirationDate } from 'views/SystemProfile';
+import { showAtoExpirationDate } from 'views/SystemProfile/helpers';
 
 import './index.scss';
 
