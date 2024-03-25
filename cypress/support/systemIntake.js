@@ -1,3 +1,8 @@
+// Note [Specific Cypress wait duration on Okta search]
+// 2000ms seems to work well for this. Sadly, 1000ms sometimes isn't enough for the dropdown to appear,
+// and 3000 causes issue with autosave. This is definitely a bit hacky...
+// TODO: fix this in the future if it causes more headache
+
 cy.systemIntake = {
   contactDetails: {
     fillNonBranchingFields: () => {
@@ -7,7 +12,7 @@ cy.systemIntake = {
 
       cy.get('#react-select-IntakeForm-BusinessOwnerName-input')
         .type('Audrey')
-        .wait(2000)
+        .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
         .type('{downarrow}{enter}')
         .should('have.value', 'Audrey Abrams, ADMI (audrey.abrams@local.fake)');
 
@@ -22,7 +27,7 @@ cy.systemIntake = {
 
       cy.get('#react-select-IntakeForm-ProductManagerName-input')
         .type('Delphia')
-        .wait(2000)
+        .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
         .type('{downArrow}{enter}')
         .should('have.value', 'Delphia Green, GBRG (delphia.green@local.fake)');
 
