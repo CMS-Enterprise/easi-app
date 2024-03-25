@@ -8,7 +8,7 @@ import (
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	cedarcoremock "github.com/cmsgov/easi-app/pkg/local/cedarcore"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 	"github.com/cmsgov/easi-app/pkg/models"
 
 	apiauthority "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/authority_to_operate"

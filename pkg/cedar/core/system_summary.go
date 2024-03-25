@@ -10,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
 	"github.com/cmsgov/easi-app/pkg/helpers"
-	cedarcoremock "github.com/cmsgov/easi-app/pkg/local/cedarcore"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 

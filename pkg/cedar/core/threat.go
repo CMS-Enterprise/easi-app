@@ -7,16 +7,16 @@ import (
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-
 	apithreat "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/threat"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // GetThreat makes a GET call to the /threat endpoint
 func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models.CedarThreat, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarThreat{}, nil
+		return cedarcoremock.GetMockThreats(), nil
 	}
 
 	// NOTE: We do not need to use the GetSystem call or check the cache here b/c
