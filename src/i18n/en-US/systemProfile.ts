@@ -9,6 +9,10 @@ const systemProfile = {
     home: 'System Home',
     details: 'System Details',
     team: 'Team',
+    teamFte: 'FTE',
+    teamBusinessOwners: 'Business Owner(s)',
+    teamProjectLeads: 'Project lead(s)',
+    teamAdditional: 'Additional team members',
     'funding-and-budget': 'Funding and Budget',
     'tools-and-software': 'Tools and Software',
     ato: 'ATO',
@@ -102,22 +106,22 @@ const systemProfile = {
     },
     team: {
       header: {
-        team: 'Team',
+        fte: 'Full-time employees (FTE)',
         businessOwners: 'Business Owners',
         projectLeads: 'Project Leads',
-        additional: 'Additional Points of Contact'
+        additional: 'Additional team members'
       },
       noData: {
         businessOwners:
-          'This system does not have any Business Owners identified.',
-        projectLeads: 'This system does not have any Project Leads identified.',
-        additional: 'This system has no additional points of contact.'
+          'There are no Business Owners identified for this system.',
+        projectLeads: 'There are no Project Leads identified for this system.',
+        additional:
+          'There are no additional team members identified for this system.'
       },
-      viewMore: 'View {{count}} more contact',
-      viewMore_plural: 'View {{count}} more contacts',
-      viewLess: 'View fewer contacts',
-      federalFullTimeEmployees: 'Federal Full Time Employees',
-      contractorFullTimeEmployees: 'Contractor Full Time Employees',
+      showMore: 'Show more points of contact',
+      showLess: 'Show fewer points of contact',
+      federalFte: 'Federal FTE',
+      contractorFte: 'Contractor FTE',
       vendors: 'Vendors',
       contractAwardDate: 'Contract Award Date',
       periodOfPerformance: 'Period of performance',
@@ -309,6 +313,7 @@ const systemProfile = {
     mySystemsTitle: 'My systems',
     subtitle:
       'Click the bookmark icon (<icon />) to bookmark systems that you want to access more quickly.',
+    jumpToSystems: 'Jump to all CMS systems',
     mySystemsSubtitle:
       'You are listed as a team member for the systems below. If you are listed in error, you may remove yourself from the team using the Team page of a System Profile. You may navigate to a System Profile using the links in the table below.',
     id: 'system-list',
@@ -328,14 +333,14 @@ const systemProfile = {
     noMySystem: {
       header: 'You are not listed as a team member for any CMS systems',
       description:
-        'If you believe this to be an error, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>. If you wish to browse other CMS systems, use the Systems section of EASi to view information about all CMS systems.  <link2>Go to all CMS systems <iconForward /></link2>',
+        'If you believe this to be an error, please refresh the page. If the error persists, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>. If you wish to browse other CMS systems, use the Systems section of EASi to view information about all CMS systems.  <link2>Go to all CMS systems <iconForward /></link2>',
       descriptionAlt:
-        'If you believe this to be an error, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>.'
+        'If you believe this to be an error, please refresh the page. If the error persists, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>.'
     },
     dontSeeSystem: {
       header: 'Don’t see the system you’re looking for?',
       description:
-        'Use the Systems section of EASi to view information about all CMS systems.  <link1>Go to all CMS systems<iconForward /></link1>'
+        'If you believe there’s an error in the table above, please refresh the page. You may also use the Systems section of EASi to view information about all CMS systems.  <link1>Go to all CMS systems<iconForward /></link1>'
     }
   },
   bookmark: {

@@ -46,6 +46,7 @@ func (s *Store) CreateTRBAdviceLetter(ctx context.Context, createdBy string, trb
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	retLetter := models.TRBAdviceLetter{}
 
@@ -86,6 +87,7 @@ func (s *Store) UpdateTRBAdviceLetterStatus(ctx context.Context, id uuid.UUID, s
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	updated := models.TRBAdviceLetter{}
 	arg := map[string]interface{}{
@@ -145,6 +147,7 @@ func (s *Store) UpdateTRBAdviceLetter(ctx context.Context, letter *models.TRBAdv
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	updated := models.TRBAdviceLetter{}
 
@@ -177,6 +180,7 @@ func (s *Store) GetTRBAdviceLetterByTRBRequestID(ctx context.Context, trbRequest
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	arg := map[string]interface{}{"trb_request_id": trbRequestID}
 

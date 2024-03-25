@@ -7,6 +7,7 @@ import PageHeading from 'components/PageHeading';
 import SystemCardTable from 'components/SystemCard/table';
 import { GetTrbRequestSummary_trbRequest as TrbRequest } from 'queries/types/GetTrbRequestSummary';
 import { SystemIntake } from 'queries/types/SystemIntake';
+import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
 
 const AdditionalInformation = ({
@@ -14,7 +15,7 @@ const AdditionalInformation = ({
   type
 }: {
   request: TrbRequest | SystemIntake;
-  type: 'itgov' | 'trb';
+  type: RequestType;
 }) => {
   const { t } = useTranslation('admin');
 

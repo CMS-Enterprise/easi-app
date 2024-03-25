@@ -170,7 +170,7 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 // SystemIntakeUpdateContractDetails updates specific contract information about a system intake
 // It also updates the request form state to show in progress, unless the state was EDITS_REQUESTED
 func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store, input model.UpdateSystemIntakeContractDetailsInput) (*model.UpdateSystemIntakePayload, error) {
-	return sqlutils.WithTransaction(store, func(tx *sqlx.Tx) (*model.UpdateSystemIntakePayload, error) {
+	return sqlutils.WithTransactionRet[*model.UpdateSystemIntakePayload](ctx, store, func(tx *sqlx.Tx) (*model.UpdateSystemIntakePayload, error) {
 
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.ID)
 		if err != nil {

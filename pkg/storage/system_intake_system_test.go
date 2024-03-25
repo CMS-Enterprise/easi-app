@@ -47,9 +47,8 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 			system3,
 		}
 		for _, systemIntakeID := range createdIDs {
-			_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
-				s.NoError(s.store.SetSystemIntakeSystems(ctx, tx, systemIntakeID, systemNumbers))
-				return nil, nil
+			err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+				return s.store.SetSystemIntakeSystems(ctx, tx, systemIntakeID, systemNumbers)
 			})
 			s.NoError(err)
 		}
@@ -88,9 +87,8 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		}
 
 		// now, we can add system 4 to one of the system intakes and verify that the created_at dates for the first three remain unchanged
-		_, err = sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
-			s.NoError(s.store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], append(systemNumbers, system4)))
-			return nil, nil
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			return s.store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], append(systemNumbers, system4))
 		})
 		s.NoError(err)
 

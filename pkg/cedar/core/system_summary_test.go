@@ -45,12 +45,12 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 
 	s.Run("LD defaults protects invocation of GetSystem", func() {
 		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, true)
-		resp, err := c.GetSystem(ctx, "fake")
+		_, err := c.GetSystem(ctx, "fake")
 		s.NoError(err)
 
 		// should return mocked system when given corresponding mockKey
 		for _, v := range coremock.GetSystems() {
-			resp, err = c.GetSystem(ctx, v.ID.String)
+			resp, err := c.GetSystem(ctx, v.ID.String)
 			s.NoError(err)
 			s.Equal(v, resp)
 		}

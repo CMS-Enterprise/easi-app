@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"regexp"
@@ -49,8 +48,9 @@ func main() {
 func execute(cfg *config) error {
 	url := fmt.Sprintf(healthcheck, cfg.host)
 
-	/* #nosec G107 - we need to have the URL for the API be provided at runtime */
-	if _, err := http.Get(url); err != nil {
+	// #nosec G107 - we need to have the URL for the API be provided at runtime
+	_, err := http.Get(url)
+	if err != nil {
 		return fmt.Errorf("failed healthcheck for [%s]: %w", url, err)
 	}
 
@@ -131,7 +131,7 @@ func upload(host string, auth string, item *entry) (didCreate bool, err error) {
 		return false, fmt.Errorf("request failed: %v", err)
 	}
 	defer resp.Body.Close()
-	content, err := ioutil.ReadAll(resp.Body)
+	content, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return false, fmt.Errorf("could not read reasponse: %v", err)
 	}

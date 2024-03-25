@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"path"
@@ -66,7 +66,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		defer resp.Body.Close()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
-		actualBody, err := ioutil.ReadAll(resp.Body)
+		actualBody, err := io.ReadAll(resp.Body)
 		s.NoError(err)
 		var actualBusinessCase models.BusinessCase
 		err = json.Unmarshal(actualBody, &actualBusinessCase)
@@ -113,7 +113,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		defer resp.Body.Close()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
-		actualBody, err := ioutil.ReadAll(resp.Body)
+		actualBody, err := io.ReadAll(resp.Body)
 		s.NoError(err)
 		var actualBusinessCase models.BusinessCase
 		err = json.Unmarshal(actualBody, &actualBusinessCase)

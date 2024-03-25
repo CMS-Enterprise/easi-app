@@ -33,10 +33,6 @@ func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) 
 	params.SetSystemID(cedarSystem.VersionID.Ptr())
 	params.HTTPClient = c.hc
 
-	if err != nil {
-		return nil, err
-	}
-
 	// Make the API call
 	resp, err := c.sdk.Contract.ContractFind(params, c.auth)
 	if err != nil {

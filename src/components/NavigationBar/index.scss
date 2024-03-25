@@ -99,8 +99,11 @@
     }
 }
 
-.system-dropdown:hover::after {
-    bottom: 0 !important;
+.system-dropdown:hover {
+    color: color('base-dark') !important;
+    &::after {
+        bottom: 0 !important;
+    }
 }
 
 .system-dropdown {

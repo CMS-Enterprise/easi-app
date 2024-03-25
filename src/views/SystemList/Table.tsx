@@ -49,7 +49,10 @@ import {
 
 import './index.scss';
 
-type SystemTableType = 'all-systems' | 'my-systems' | 'bookmarked-systems';
+export type SystemTableType =
+  | 'all-systems'
+  | 'my-systems'
+  | 'bookmarked-systems';
 
 type TableProps = {
   systems?: CedarSystem[];
@@ -292,7 +295,10 @@ export const Table = ({
             {t('systemTable.view')}
           </p>
 
-          <ButtonGroup type="segmented" className="margin-y-2">
+          <ButtonGroup
+            type="segmented"
+            className="margin-bottom-2 margin-top-1"
+          >
             <Button
               type="button"
               outline={systemTableType !== 'all-systems'}
