@@ -687,11 +687,6 @@ func main() {
 	// Don't add new requests here as the Cypress tests are reliant on their intakes showing up on the first page of results
 }
 
-func date(year, month, day int) *time.Time {
-	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
-	return &date
-}
-
 func must(_ interface{}, err error) {
 	if err != nil {
 		panic(err)

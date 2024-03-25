@@ -6,7 +6,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"sync"
@@ -79,7 +79,7 @@ func fetchOktaAccessToken(
 	}
 
 	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 
 	var authn AuthnResponse
 	err = json.Unmarshal(body, &authn)
@@ -116,7 +116,7 @@ func fetchOktaAccessToken(
 	}
 
 	defer factorResp.Body.Close()
-	body, _ = ioutil.ReadAll(factorResp.Body)
+	body, _ = io.ReadAll(factorResp.Body)
 	err = json.Unmarshal(body, &authn)
 	if err != nil {
 		fmt.Println("could not marshall mfa response")

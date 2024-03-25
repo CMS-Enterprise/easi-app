@@ -68,9 +68,7 @@ func (s *Store) UpdateSystemIntakeNote(ctx context.Context, note *models.SystemI
 		modified_by = :modified_by,
 		modified_at = CURRENT_TIMESTAMP
 	WHERE id = :id
-	RETURNING *;
-`)
-
+	RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update IT Governance admin note with error %s", err),
@@ -79,6 +77,8 @@ func (s *Store) UpdateSystemIntakeNote(ctx context.Context, note *models.SystemI
 		)
 		return nil, err
 	}
+
+	defer stmt.Close()
 
 	updated := models.SystemIntakeNote{}
 

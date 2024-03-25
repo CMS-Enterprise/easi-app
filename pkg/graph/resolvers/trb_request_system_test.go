@@ -48,9 +48,8 @@ func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 			systemID3,
 		}
 
-		_, err := sqlutils.WithTransaction[any](s.testConfigs.Store, func(tx *sqlx.Tx) (*any, error) {
-			s.NoError(s.testConfigs.Store.SetTRBRequestSystems(ctx, tx, createdIDs[0], systemIDs))
-			return nil, nil
+		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
+			return s.testConfigs.Store.SetTRBRequestSystems(ctx, tx, createdIDs[0], systemIDs)
 		})
 		s.NoError(err)
 

@@ -83,6 +83,8 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	updated := models.TRBRequestForm{}
 
 	err = stmt.Get(&updated, form)
@@ -114,6 +116,8 @@ func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestI
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	arg := map[string]interface{}{"trb_request_id": trbRequestID}
 	err = stmt.Get(&form, arg)
 
@@ -145,6 +149,8 @@ func (s *Store) GetFundingSourcesByRequestID(ctx context.Context, trbRequestID u
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	arg := map[string]interface{}{"trb_request_id": trbRequestID}
 	err = stmt.Select(&fundingSources, arg)
 
@@ -176,6 +182,8 @@ func (s *Store) DeleteTRBRequestForm(ctx context.Context, trbRequestID uuid.UUID
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	toDelete := models.TRBRequestForm{}
 	toDelete.ID = trbRequestID
 	deleted := models.TRBRequestForm{}
