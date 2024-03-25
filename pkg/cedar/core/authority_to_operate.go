@@ -8,6 +8,7 @@ import (
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	cedarcoremock "github.com/cmsgov/easi-app/pkg/local/cedarcore"
 	"github.com/cmsgov/easi-app/pkg/models"
 
 	apiauthority "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/authority_to_operate"
@@ -22,7 +23,7 @@ import (
 func (c *Client) GetAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarAuthorityToOperate{}, nil
+		return cedarcoremock.GetATOs(), nil
 	}
 
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
