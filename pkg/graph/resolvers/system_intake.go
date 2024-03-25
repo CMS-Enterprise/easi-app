@@ -23,7 +23,7 @@ func CreateSystemIntake(
 	systemIntake := models.SystemIntake{
 		EUAUserID:   null.StringFrom(appcontext.Principal(ctx).ID()),
 		RequestType: models.SystemIntakeRequestType(input.RequestType),
-		Requester:   appcontext.Principal(ctx).Account().CommonName,
+		Requester:   input.Requester.Name,
 		State:       models.SystemIntakeStateOPEN,
 		Step:        models.SystemIntakeStepINITIALFORM,
 	}

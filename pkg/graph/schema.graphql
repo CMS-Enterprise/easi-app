@@ -1136,12 +1136,19 @@ type ITGovTaskStatuses {
   decisionAndNextStepsStatus: ITGovDecisionStatus!
 }
 
+"""
+The input data used to set the requester of a system request
+"""
+input SystemIntakeRequesterInput {
+  name: String!
+}
 
 """
 The input data used to initialize an IT governance request for a system
 """
 input CreateSystemIntakeInput {
   requestType: SystemIntakeRequestType!
+  requester: SystemIntakeRequesterInput!
 }
 
 """

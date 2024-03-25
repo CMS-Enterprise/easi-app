@@ -19,11 +19,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import { RadioField } from 'components/shared/RadioField';
 import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
-import {
-  CreateSystemIntake as CreateSystemIntakeType,
-  CreateSystemIntakeVariables
-} from 'queries/types/CreateSystemIntake';
-import { SystemIntakeRequestType } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
@@ -32,10 +27,7 @@ const RequestTypeForm = () => {
   const { t } = useTranslation('intake');
   const { oktaAuth } = useOktaAuth();
   const history = useHistory();
-  const [mutate] = useMutation<
-    CreateSystemIntakeType,
-    CreateSystemIntakeVariables
-  >(CreateSystemIntake);
+  const [mutate] = useMutation(CreateSystemIntake);
 
   const majorChangesExamples: string[] = t(
     'requestTypeForm.helpAndGuidance.majorChanges.list',
@@ -47,15 +39,16 @@ const RequestTypeForm = () => {
   const handleCreateIntake = (formikValues: { requestType: string }) => {
     oktaAuth.getUser().then((user: any) => {
       const { requestType } = formikValues;
-      const variables = {
-        input: {
-          requestType: requestType as SystemIntakeRequestType
+      const input = {
+        requestType,
+        requester: {
+          name: user.name
         }
       };
 
-      mutate({ variables }).then(response => {
+      mutate({ variables: { input } }).then(response => {
         if (!response.errors) {
-          const { id } = response?.data?.createSystemIntake || {};
+          const { id } = response.data.createSystemIntake;
           const navigationLink = flags.itgovLinkRequestsRequester
             ? `/system/link/${id}`
             : `/governance-task-list/${id}`;
