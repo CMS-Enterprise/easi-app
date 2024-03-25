@@ -597,7 +597,7 @@ exports[`Technical Assistance (TRB) homepage > renders the homepage with a list 
             data-testid="label"
             for="systemTable.id-search"
           >
-            Search Table
+            Search table
           </label>
           <input
             class="usa-input"

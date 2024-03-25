@@ -180,6 +180,16 @@ const CEDARCoreAPIVersion = "CEDAR_CORE_API_VERSION"
 // https://pkg.go.dev/time#ParseDuration
 const CEDARCacheIntervalKey = "CEDAR_CACHE_INTERVAL"
 
+// CEDARCoreMock is the key for the environment variable that determines if the CEDAR Core API should be mocked
+// If set to true, mock data will be used
+// If set to false, real calls to the CEDAR Core API will be made
+const CEDARCoreMock = "CEDAR_CORE_MOCK"
+
+// CEDARIntakeEnabled is the key for the environment variable that determines if the CEDAR Intake API should enabled
+// If set to true, real calls to the CEDAR Intake API will be made
+// If set to false, the Intake API Client methods will do nothing
+const CEDARIntakeEnabled = "CEDAR_INTAKE_ENABLED"
+
 // LDKey is the key for accessing LaunchDarkly
 const LDKey = "LD_SDK_KEY"
 
@@ -222,4 +232,5 @@ const (
 const OKTAAPIURL = "OKTA_API_URL"
 
 // OKTAAPIToken is the key for the Okta API token
-const OKTAAPIToken = "OKTA_API_TOKEN" // #nosec G101 false positive - not the actual API key itself
+// #nosec G101 false positive - not the actual API key itself
+const OKTAAPIToken = "OKTA_API_TOKEN"

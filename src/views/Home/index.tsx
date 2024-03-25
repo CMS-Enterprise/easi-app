@@ -5,11 +5,12 @@ import { withRouter } from 'react-router-dom';
 import { Grid } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import LinkCard, { LinkRequestType } from 'components/LinkCard';
+import LinkCard from 'components/LinkCard';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
+import { RequestType } from 'types/requestType';
 import user from 'utils/user';
 import List from 'views/Accessibility/AccessibilityRequest/List';
 import Table from 'views/MyRequests/Table';
@@ -30,9 +31,7 @@ const Home = () => {
 
   const { Message } = useMessage();
 
-  const requestTypes: Record<LinkRequestType, any> = t('home:actions', {
-    returnObjects: true
-  });
+  const requestTypes: RequestType[] = ['itgov', 'trb'];
 
   const renderView = () => {
     if (isUserSet) {
@@ -59,7 +58,7 @@ const Home = () => {
             <Grid tablet={{ col: 12 }} className="margin-bottom-4">
               <PageHeading className="margin-bottom-0">
                 {t('home:title', {
-                  user: name
+                  user: name.split(' ')[0]
                 })}
               </PageHeading>
 
@@ -93,17 +92,9 @@ const Home = () => {
               </h2>
 
               <Grid row gap={2}>
-                {[
-                  { ITGov: requestTypes.ITGov },
-                  ...(flags.technicalAssistance
-                    ? [{ TRB: requestTypes.TRB }]
-                    : [])
-                ].map(requestType => (
-                  <Grid tablet={{ col: 6 }} key={Object.keys(requestType)[0]}>
-                    <LinkCard
-                      className="margin-top-1"
-                      type={Object.keys(requestType)[0] as LinkRequestType}
-                    />
+                {requestTypes.map(requestType => (
+                  <Grid tablet={{ col: 6 }} key={requestType}>
+                    <LinkCard className="margin-top-1" type={requestType} />
                   </Grid>
                 ))}
               </Grid>

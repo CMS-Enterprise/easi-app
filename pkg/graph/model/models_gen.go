@@ -84,32 +84,32 @@ type CedarSoftwareProductItem struct {
 
 // SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
 type CedarSystemMaintainerInformation struct {
-	AgileUsed                  *bool    `json:"agileUsed,omitempty"`
-	BusinessArtifactsOnDemand  *bool    `json:"businessArtifactsOnDemand,omitempty"`
-	DeploymentFrequency        *string  `json:"deploymentFrequency,omitempty"`
-	DevCompletionPercent       *string  `json:"devCompletionPercent,omitempty"`
-	DevWorkDescription         *string  `json:"devWorkDescription,omitempty"`
-	EcapParticipation          *bool    `json:"ecapParticipation,omitempty"`
-	FrontendAccessType         *string  `json:"frontendAccessType,omitempty"`
-	HardCodedIPAddress         *bool    `json:"hardCodedIPAddress,omitempty"`
-	IP6EnabledAssetPercent     *string  `json:"ip6EnabledAssetPercent,omitempty"`
-	IP6TransitionPlan          *string  `json:"ip6TransitionPlan,omitempty"`
-	IPEnabledAssetCount        *int     `json:"ipEnabledAssetCount,omitempty"`
-	MajorRefreshDate           *string  `json:"majorRefreshDate,omitempty"`
-	NetAccessibility           *string  `json:"netAccessibility,omitempty"`
-	OmDocumentationOnDemand    *bool    `json:"omDocumentationOnDemand,omitempty"`
-	PlansToRetireReplace       *string  `json:"plansToRetireReplace,omitempty"`
-	QuarterToRetireReplace     *string  `json:"quarterToRetireReplace,omitempty"`
-	RecordsManagementBucket    []string `json:"recordsManagementBucket"`
-	SourceCodeOnDemand         *bool    `json:"sourceCodeOnDemand,omitempty"`
-	SystemCustomization        *string  `json:"systemCustomization,omitempty"`
-	SystemDesignOnDemand       *bool    `json:"systemDesignOnDemand,omitempty"`
-	SystemProductionDate       *string  `json:"systemProductionDate,omitempty"`
-	SystemRequirementsOnDemand *bool    `json:"systemRequirementsOnDemand,omitempty"`
-	TestPlanOnDemand           *bool    `json:"testPlanOnDemand,omitempty"`
-	TestReportsOnDemand        *bool    `json:"testReportsOnDemand,omitempty"`
-	TestScriptsOnDemand        *bool    `json:"testScriptsOnDemand,omitempty"`
-	YearToRetireReplace        *string  `json:"yearToRetireReplace,omitempty"`
+	AgileUsed                  *bool      `json:"agileUsed,omitempty"`
+	BusinessArtifactsOnDemand  *bool      `json:"businessArtifactsOnDemand,omitempty"`
+	DeploymentFrequency        *string    `json:"deploymentFrequency,omitempty"`
+	DevCompletionPercent       *string    `json:"devCompletionPercent,omitempty"`
+	DevWorkDescription         *string    `json:"devWorkDescription,omitempty"`
+	EcapParticipation          *bool      `json:"ecapParticipation,omitempty"`
+	FrontendAccessType         *string    `json:"frontendAccessType,omitempty"`
+	HardCodedIPAddress         *bool      `json:"hardCodedIPAddress,omitempty"`
+	IP6EnabledAssetPercent     *string    `json:"ip6EnabledAssetPercent,omitempty"`
+	IP6TransitionPlan          *string    `json:"ip6TransitionPlan,omitempty"`
+	IPEnabledAssetCount        *int       `json:"ipEnabledAssetCount,omitempty"`
+	MajorRefreshDate           *time.Time `json:"majorRefreshDate,omitempty"`
+	NetAccessibility           *string    `json:"netAccessibility,omitempty"`
+	OmDocumentationOnDemand    *bool      `json:"omDocumentationOnDemand,omitempty"`
+	PlansToRetireReplace       *string    `json:"plansToRetireReplace,omitempty"`
+	QuarterToRetireReplace     *string    `json:"quarterToRetireReplace,omitempty"`
+	RecordsManagementBucket    []string   `json:"recordsManagementBucket"`
+	SourceCodeOnDemand         *bool      `json:"sourceCodeOnDemand,omitempty"`
+	SystemCustomization        *string    `json:"systemCustomization,omitempty"`
+	SystemDesignOnDemand       *bool      `json:"systemDesignOnDemand,omitempty"`
+	SystemProductionDate       *time.Time `json:"systemProductionDate,omitempty"`
+	SystemRequirementsOnDemand *bool      `json:"systemRequirementsOnDemand,omitempty"`
+	TestPlanOnDemand           *bool      `json:"testPlanOnDemand,omitempty"`
+	TestReportsOnDemand        *bool      `json:"testReportsOnDemand,omitempty"`
+	TestScriptsOnDemand        *bool      `json:"testScriptsOnDemand,omitempty"`
+	YearToRetireReplace        *string    `json:"yearToRetireReplace,omitempty"`
 }
 
 // The input needed to close a TRB request

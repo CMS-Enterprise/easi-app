@@ -1,5 +1,5 @@
 const systemProfile = {
-  header: 'CMS Systems and Applications',
+  header: 'CMS systems and applications',
   subHeader: 'Find information about existing CMS systems and applications.',
   newRequest: {
     info: 'Have a new system or application?',
@@ -10,6 +10,10 @@ const systemProfile = {
     details: 'System Details',
     team: 'Team',
     contracts: 'Contracts',
+    teamFte: 'FTE',
+    teamBusinessOwners: 'Business Owner(s)',
+    teamProjectLeads: 'Project lead(s)',
+    teamAdditional: 'Additional team members',
     'funding-and-budget': 'Funding and Budget',
     'tools-and-software': 'Tools and Software',
     ato: 'ATO',
@@ -116,22 +120,22 @@ const systemProfile = {
     },
     team: {
       header: {
-        team: 'Team',
+        fte: 'Full-time employees (FTE)',
         businessOwners: 'Business Owners',
         projectLeads: 'Project Leads',
-        additional: 'Additional Points of Contact'
+        additional: 'Additional team members'
       },
       noData: {
         businessOwners:
-          'This system does not have any Business Owners identified.',
-        projectLeads: 'This system does not have any Project Leads identified.',
-        additional: 'This system has no additional points of contact.'
+          'There are no Business Owners identified for this system.',
+        projectLeads: 'There are no Project Leads identified for this system.',
+        additional:
+          'There are no additional team members identified for this system.'
       },
-      viewMore: 'View {{count}} more contact',
-      viewMore_plural: 'View {{count}} more contacts',
-      viewLess: 'View fewer contacts',
-      federalFullTimeEmployees: 'Federal Full Time Employees',
-      contractorFullTimeEmployees: 'Contractor Full Time Employees',
+      showMore: 'Show more points of contact',
+      showLess: 'Show fewer points of contact',
+      federalFte: 'Federal FTE',
+      contractorFte: 'Contractor FTE',
       vendors: 'Vendors',
       contractAwardDate: 'Contract Award Date',
       periodOfPerformance: 'Period of performance',
@@ -324,14 +328,14 @@ const systemProfile = {
     subtitle:
       'Click the bookmark icon (<icon />) to bookmark systems that you want to access more quickly.',
     mySystemsSubtitle:
-      'You are listed as a team member for the systems below. If you are listed in error, you may remove yourself from the team from within the system workspace.',
+      'You are listed as a team member for the systems below. If you are listed in error, you may remove yourself from the team using the Team page of a System Profile. You may navigate to a System Profile using the links in the table below.',
     id: 'system-list',
-    search: 'Search Table',
+    search: 'Search table',
     header: {
-      systemName: 'System Name',
-      systemOwner: 'CMS Component',
+      systemName: 'System name',
+      systemOwner: 'CMS component',
       systemAcronym: 'Acronym',
-      systemStatus: 'ATO Status'
+      systemStatus: 'ATO status'
     },
     view: 'View',
     buttonGroup: {

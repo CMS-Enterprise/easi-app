@@ -42,7 +42,7 @@ export const navLinks = (
   {
     link: '/systems',
     label: 'systems',
-    isEnabled: flags.systemProfile
+    isEnabled: true
   },
   {
     link: '/system/making-a-request',
@@ -50,19 +50,9 @@ export const navLinks = (
     isEnabled: true
   },
   {
-    link: '/508',
-    label: 'add508Request',
-    isEnabled: !flags.hide508Workflow
-  },
-  {
     link: '/trb',
     label: 'technicalAssistance',
-    isEnabled: flags.technicalAssistance
-  },
-  {
-    link: '/sandbox',
-    label: 'sandbox',
-    isEnabled: flags.sandbox
+    isEnabled: true
   },
   {
     link: '/help',
@@ -172,7 +162,7 @@ const NavigationBar = ({ signout, userName }: NavigationProps) => {
                 menuId={route.label}
                 isOpen={isOpen[0]}
                 onToggle={() => onToggle(0, setIsOpen)}
-                isCurrent={location.pathname === route.link}
+                isCurrent={location.pathname.includes(route.link)}
                 className="system-dropdown text-bold"
               />
               {isOpen[0] && <Menu isOpen={isOpen[0]} items={systemNavLinks} />}

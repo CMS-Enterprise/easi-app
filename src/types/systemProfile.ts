@@ -20,7 +20,7 @@ import {
   tempBudgetProp,
   tempSubSystemProp,
   tempSystemDataProp
-} from 'views/Sandbox/mockSystemData';
+} from 'views/SystemProfile/mockSystemData';
 
 import { CedarAssigneeType } from './graphql-global-types';
 

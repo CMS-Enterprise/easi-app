@@ -27,7 +27,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 
 	s.Run("sets systems on a trb request", func() {
 		// create three trb requests
-		_, err := sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
+		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
 			for i := 0; i < 3; i++ {
 				trbRequest := models.NewTRBRequest(testhelpers.RandomEUAIDNull().String)
 				trbRequest.Type = models.TRBTBrainstorm
@@ -36,7 +36,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 				s.NoError(err)
 				createdIDs = append(createdIDs, created.ID)
 			}
-			return nil, nil
+			return nil
 		})
 		s.NoError(err)
 
@@ -46,13 +46,12 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 			system2,
 			system3,
 		}
-		_, err = sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
-			for _, trbRequestID := range createdIDs {
-				s.NoError(s.store.SetTRBRequestSystems(ctx, tx, trbRequestID, systemNumbers))
-			}
-			return nil, nil
-		})
-		s.NoError(err)
+		for _, trbRequestID := range createdIDs {
+			err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+				return s.store.SetTRBRequestSystems(ctx, tx, trbRequestID, systemNumbers)
+			})
+			s.NoError(err)
+		}
 
 		data, err := s.store.TRBRequestSystemsByTRBRequestIDLOADER(ctx, formatParamTableJSON("trb_request_id", createdIDs))
 		s.NoError(err)
@@ -88,9 +87,8 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 		}
 
 		// now, we can add system 4 to one of the trb requests and verify that the created_at dates for the first three remain unchanged
-		_, err = sqlutils.WithTransaction[any](s.db, func(tx *sqlx.Tx) (*any, error) {
-			s.NoError(s.store.SetTRBRequestSystems(ctx, tx, createdIDs[0], append(systemNumbers, system4)))
-			return nil, nil
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			return s.store.SetTRBRequestSystems(ctx, tx, createdIDs[0], append(systemNumbers, system4))
 		})
 		s.NoError(err)
 
@@ -122,7 +120,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 
 		s.True(fourthsystemTime.After(firstThreesystemsTime))
 
-		_, err = s.db.ExecContext(ctx, "DELETE FROM trb_request WHERE id = ANY($1)", pq.Array(createdIDs))
+		_, err = s.db.Exec("DELETE FROM trb_request WHERE id = ANY($1)", pq.Array(createdIDs))
 		s.NoError(err)
 	})
 }

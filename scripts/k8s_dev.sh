@@ -126,10 +126,12 @@ delete_temp_dir() {
     sed -i'' -E "s/easi-backend.localdev.me/${NAMESPACE}-backend.localdev.me/" manifest.yaml
     sed -i'' -E "s/easi.localdev.me/${NAMESPACE}.localdev.me/" manifest.yaml
     sed -i'' -E "s/email.localdev.me/${NAMESPACE}-email.localdev.me/" manifest.yaml
+    sed -i'' -E "s/minio.localdev.me/${NAMESPACE}-minio.localdev.me/" manifest.yaml
     kubectl apply -f manifest.yaml
     trap delete_temp_dir EXIT
 )
 
 echo "❄️  EASi: http://${NAMESPACE}.localdev.me ❄️"
 echo "❄️  Mailcatcher: http://${NAMESPACE}-email.localdev.me ❄️"
+echo "❄️  Minio: http://${NAMESPACE}-minio.localdev.me ❄️"
 

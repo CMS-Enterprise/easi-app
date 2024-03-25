@@ -1,4 +1,5 @@
 import React from 'react';
+import i18next from 'i18next';
 
 import { SystemProfileData } from 'types/systemProfile';
 
@@ -18,6 +19,7 @@ type sideNavItemProps = {
   component: React.ReactNode;
   route: string;
   componentId?: string;
+  hashLinks?: { name: string; hash: string }[];
 };
 
 interface sideNavProps {
@@ -48,7 +50,31 @@ const sideNavItems = (
           groupEnd: true,
           component: <Team system={system} />,
           route: `/systems/${system.id}/team`,
-          componentId: 'system-team'
+          componentId: 'system-team',
+          hashLinks: [
+            {
+              name: i18next.t<string>('systemProfile:navigation.teamFte'),
+              hash: '#fte'
+            },
+            {
+              name: i18next.t<string>(
+                'systemProfile:navigation.teamBusinessOwners'
+              ),
+              hash: '#businessOwners'
+            },
+            {
+              name: i18next.t<string>(
+                'systemProfile:navigation.teamProjectLeads'
+              ),
+              hash: '#projectLeads'
+            },
+            {
+              name: i18next.t<string>(
+                'systemProfile:navigation.teamAdditional'
+              ),
+              hash: '#additional'
+            }
+          ]
         },
         ato: {
           component: <ATO system={system} />,

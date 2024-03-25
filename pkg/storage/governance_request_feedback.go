@@ -47,6 +47,7 @@ func (s *Store) CreateGovernanceRequestFeedback(ctx context.Context, requestFeed
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	retFeedback := models.GovernanceRequestFeedback{}
 
@@ -76,6 +77,7 @@ func (s *Store) GetGovernanceRequestFeedbacksByIntakeID(ctx context.Context, int
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	arg := map[string]interface{}{"intake_id": intakeID}
 

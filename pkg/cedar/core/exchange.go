@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -14,7 +13,7 @@ import (
 
 // GetExchangesBySystem fetches a list of CEDAR exchange records for a given system
 func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarExchange, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return []*models.CedarExchange{}, nil
 	}
@@ -26,7 +25,7 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 
 	// Construct the parameters
 	params := exchange.NewExchangeFindListParams()
-	params.SetSystemID(cedarSystem.VersionID)
+	params.SetSystemID(cedarSystem.VersionID.String)
 	params.SetDirection("both")
 	params.HTTPClient = c.hc
 
@@ -43,24 +42,29 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 		typeOfData := make([]*models.CedarExchangeTypeOfDataItem, 0, len(exch.TypeOfData))
 		for _, item := range exch.TypeOfData {
 			typeOfData = append(typeOfData, &models.CedarExchangeTypeOfDataItem{
-				ID:   item.ID,
-				Name: item.Name,
+				ID:   zero.StringFrom(item.ID),
+				Name: zero.StringFrom(item.Name),
 			})
 		}
 
 		var direction models.ExchangeDirection
-		if exch.FromOwnerID == cedarSystem.VersionID {
+		if exch.FromOwnerID == cedarSystem.VersionID.String {
 			direction = models.ExchangeDirection(models.ExchangeDirectionSender)
-		} else if exch.ToOwnerID == cedarSystem.VersionID {
+		} else if exch.ToOwnerID == cedarSystem.VersionID.String {
 			direction = models.ExchangeDirection(models.ExchangeDirectionReceiver)
 		}
 
+		connectionFrequency := []zero.String{}
+		for _, v := range exch.ConnectionFrequency {
+			connectionFrequency = append(connectionFrequency, zero.StringFrom(v))
+		}
+
 		retVal = append(retVal, &models.CedarExchange{
-			ConnectionFrequency:        exch.ConnectionFrequency,
-			ContainsBankingData:        null.BoolFrom(exch.ContainsBankingData),
-			ContainsBeneficiaryAddress: null.BoolFrom(exch.ContainsBeneficiaryAddress),
-			ContainsPhi:                null.BoolFrom(exch.ContainsPhi),
-			ContainsPii:                null.BoolFrom(exch.ContainsPii),
+			ConnectionFrequency:        connectionFrequency,
+			ContainsBankingData:        exch.ContainsBankingData,
+			ContainsBeneficiaryAddress: exch.ContainsBeneficiaryAddress,
+			ContainsPhi:                exch.ContainsPhi,
+			ContainsPii:                exch.ContainsPii,
 			DataExchangeAgreement:      zero.StringFrom(exch.DataExchangeAgreement),
 			DataFormat:                 zero.StringFrom(exch.DataFormat),
 			DataFormatOther:            zero.StringFrom(exch.DataFormatOther),
@@ -76,9 +80,9 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 			FromOwnerID:                zero.StringFrom(exch.FromOwnerID),
 			FromOwnerName:              zero.StringFrom(exch.FromOwnerName),
 			FromOwnerType:              zero.StringFrom(exch.FromOwnerType),
-			IsBeneficiaryMailingFile:   null.BoolFrom(exch.IsBeneficiaryMailingFile),
+			IsBeneficiaryMailingFile:   exch.IsBeneficiaryMailingFile,
 			NumOfRecords:               zero.StringFrom(exch.NumOfRecords),
-			SharedViaAPI:               null.BoolFrom(exch.SharedViaAPI),
+			SharedViaAPI:               exch.SharedViaAPI,
 			ToOwnerID:                  zero.StringFrom(exch.ToOwnerID),
 			ToOwnerName:                zero.StringFrom(exch.ToOwnerName),
 			ToOwnerType:                zero.StringFrom(exch.ToOwnerType),

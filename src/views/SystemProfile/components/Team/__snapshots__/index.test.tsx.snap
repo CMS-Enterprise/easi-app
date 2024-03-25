@@ -8,8 +8,10 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
   >
     <h2
       class="margin-top-0 margin-bottom-4"
+      id="fte"
+      style="scroll-margin-top: 4rem;"
     >
-      Team
+      Full-time employees (FTE)
     </h2>
     <div
       class="grid-container padding-x-0"
@@ -26,7 +28,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
           <dt
             class="text-bold margin-bottom-05"
           >
-            Federal Full Time Employees
+            Federal FTE
           </dt>
           <dd
             class="description-definition margin-0 font-body-md line-height-body-3"
@@ -41,7 +43,7 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
           <dt
             class="text-bold margin-bottom-05"
           >
-            Contractor Full Time Employees
+            Contractor FTE
           </dt>
           <dd
             class="description-definition margin-0 font-body-md line-height-body-3"
@@ -58,6 +60,8 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
   >
     <h2
       class="margin-y-4"
+      id="businessOwners"
+      style="scroll-margin-top: 4rem;"
     >
       Business Owners
     </h2>
@@ -143,6 +147,8 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
   >
     <h2
       class="margin-y-4"
+      id="projectLeads"
+      style="scroll-margin-top: 4rem;"
     >
       Project Leads
     </h2>
@@ -199,8 +205,10 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
   >
     <h2
       class="margin-y-4"
+      id="additional"
+      style="scroll-margin-top: 4rem;"
     >
-      Additional Points of Contact
+      Additional team members
     </h2>
     <div>
       <ul

@@ -44,9 +44,8 @@ func (s *ResolverSuite) TestSystemIntakeContractNumbers() {
 			contract3,
 		}
 
-		_, err := sqlutils.WithTransaction[any](s.testConfigs.Store, func(tx *sqlx.Tx) (*any, error) {
-			s.NoError(s.testConfigs.Store.SetSystemIntakeContractNumbers(ctx, tx, createdIDs[0], contractNumbers))
-			return nil, nil
+		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
+			return s.testConfigs.Store.SetSystemIntakeContractNumbers(ctx, tx, createdIDs[0], contractNumbers)
 		})
 		s.NoError(err)
 
