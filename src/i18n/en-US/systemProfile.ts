@@ -313,6 +313,7 @@ const systemProfile = {
     mySystemsTitle: 'My systems',
     subtitle:
       'Click the bookmark icon (<icon />) to bookmark systems that you want to access more quickly.',
+    jumpToSystems: 'Jump to all CMS systems',
     mySystemsSubtitle:
       'You are listed as a team member for the systems below. If you are listed in error, you may remove yourself from the team using the Team page of a System Profile. You may navigate to a System Profile using the links in the table below.',
     id: 'system-list',
@@ -332,14 +333,14 @@ const systemProfile = {
     noMySystem: {
       header: 'You are not listed as a team member for any CMS systems',
       description:
-        'If you believe this to be an error, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>. If you wish to browse other CMS systems, use the Systems section of EASi to view information about all CMS systems.  <link2>Go to all CMS systems <iconForward /></link2>',
+        'If you believe this to be an error, please refresh the page. If the error persists, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>. If you wish to browse other CMS systems, use the Systems section of EASi to view information about all CMS systems.  <link2>Go to all CMS systems <iconForward /></link2>',
       descriptionAlt:
-        'If you believe this to be an error, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>.'
+        'If you believe this to be an error, please refresh the page. If the error persists, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>.'
     },
     dontSeeSystem: {
       header: 'Don’t see the system you’re looking for?',
       description:
-        'Use the Systems section of EASi to view information about all CMS systems.  <link1>Go to all CMS systems<iconForward /></link1>'
+        'If you believe there’s an error in the table above, please refresh the page. You may also use the Systems section of EASi to view information about all CMS systems.  <link1>Go to all CMS systems<iconForward /></link1>'
     }
   },
   bookmark: {
