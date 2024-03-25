@@ -561,7 +561,7 @@ describe('Governance Review Team', () => {
 
     cy.get('#react-select-IntakeForm-ContactCommonName-input')
       .type('Aaron A')
-      .wait(2000)
+      .wait(1500)
       .type('{downArrow}{enter}')
       .should('have.value', 'Aaron Adams, ADMN (aaron.adams@local.fake)');
 
