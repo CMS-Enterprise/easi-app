@@ -35,7 +35,8 @@ import {
   ThreatLevel
 } from 'types/systemProfile';
 import { formatDateUtc } from 'utils/date';
-import { showAtoExpirationDate, showVal } from 'views/SystemProfile';
+import showVal from 'utils/showVal';
+import { showAtoExpirationDate } from 'views/SystemProfile';
 
 import './index.scss';
 

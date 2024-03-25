@@ -18,7 +18,6 @@ import {
   SummaryBox
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import i18next from 'i18next';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { startCase } from 'lodash';
 
@@ -59,6 +58,7 @@ import {
 } from 'types/systemProfile';
 import { formatDateUtc, parseAsUTC } from 'utils/date';
 import { formatHttpsUrl } from 'utils/formatUrl';
+import showVal from 'utils/showVal';
 import NotFound from 'views/NotFound';
 import {
   activities as mockActivies,
@@ -285,30 +285,6 @@ export function showAtoExpirationDate(
         'MMMM d, yyyy'
       )
   );
-}
-
-/**
- * Show the value if it's not `null`, `undefined`, or `''`,
- * otherwise render `defaultVal`.
- * Use a `format` function on the value if provided.
- */
-export function showVal(
-  val: string | number | null | undefined,
-  {
-    defaultVal = i18next.t<string>('general:noInfoToDisplay'),
-    format
-  }: {
-    defaultVal?: string;
-    format?: (v: any) => string;
-  } = {}
-): React.ReactNode {
-  if (val === null || val === undefined || val === '') {
-    return <span className="text-italic">{defaultVal}</span>;
-  }
-
-  if (format) return format(val);
-
-  return val;
 }
 
 /**

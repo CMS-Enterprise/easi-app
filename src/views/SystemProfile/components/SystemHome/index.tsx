@@ -25,7 +25,8 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
-import { showAtoExpirationDate, showVal } from 'views/SystemProfile';
+import showVal from 'utils/showVal';
+import { showAtoExpirationDate } from 'views/SystemProfile';
 import RequestCardTestScore from 'views/SystemProfile/RequestCardTestScore';
 import RequestStatusTag from 'views/SystemProfile/RequestStatusTag';
 
