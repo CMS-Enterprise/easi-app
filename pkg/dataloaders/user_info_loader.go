@@ -5,7 +5,9 @@ import (
 	"fmt"
 
 	"github.com/graph-gophers/dataloader"
+	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -20,13 +22,24 @@ func (loaders *DataLoaders) BatchUserInfos(
 		euas[i] = key.String()
 	}
 
-	// Maps EUAs to UserInfo structs
-	euaUserInfoMap := map[string]*models.UserInfo{}
 	userInfos, err := loaders.FetchUserInfos(ctx, euas)
 	if err != nil {
+		appcontext.ZLogger(ctx).Error("Error fetching user infos from Okta", zap.Error(err))
 		return results
 	}
 
+	// If we didn't get an error back, yet there's still an empty slice, we can assume
+	// that the Context was cancelled
+	//
+	// In this case, we don't want to return any errors at all, but
+	// instead just return empty results
+	if len(userInfos) == 0 {
+		appcontext.ZLogger(ctx).Warn("Empty EUA results from FetchUserInfos")
+		return results
+	}
+
+	// Maps EUAs to UserInfo structs
+	euaUserInfoMap := map[string]*models.UserInfo{}
 	for _, userInfo := range userInfos {
 		euaUserInfoMap[userInfo.Username] = userInfo
 	}

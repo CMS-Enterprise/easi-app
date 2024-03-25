@@ -1,0 +1,17 @@
+.system-help-links {
+    &__link {
+        .usa-card__container {
+            border-radius: 4px !important;
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+            display: flex !important;
+            justify-content: space-between !important;
+        }
+    }
+
+    &__fill-card-space {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+}

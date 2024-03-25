@@ -80,9 +80,8 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			suite.NotNil(openIntake)
 
 			// Set existing contract numbers
-			_, err = sqlutils.WithTransaction[any](store, func(tx *sqlx.Tx) (*any, error) {
-				suite.NoError(store.SetSystemIntakeContractNumbers(ctx, tx, openIntake.ID, caseValues.InitialContractNumbers))
-				return nil, nil
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+				return store.SetSystemIntakeContractNumbers(ctx, tx, openIntake.ID, caseValues.InitialContractNumbers)
 			})
 			suite.NoError(err)
 
@@ -91,9 +90,9 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedIntakeContractNumbers))
 
 			// Set existing system IDs
-			_, err = sqlutils.WithTransaction[any](store, func(tx *sqlx.Tx) (*any, error) {
-				suite.NoError(store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs))
-				return nil, nil
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs)
+
 			})
 			suite.NoError(err)
 
@@ -199,9 +198,8 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			suite.NotNil(openIntake)
 
 			// Set existing contract numbers
-			_, err = sqlutils.WithTransaction[any](store, func(tx *sqlx.Tx) (*any, error) {
-				suite.NoError(store.SetSystemIntakeContractNumbers(ctx, tx, openIntake.ID, caseValues.InitialContractNumbers))
-				return nil, nil
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+				return store.SetSystemIntakeContractNumbers(ctx, tx, openIntake.ID, caseValues.InitialContractNumbers)
 			})
 			suite.NoError(err)
 
@@ -210,9 +208,8 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedIntakeContractNumbers))
 
 			// Set existing system IDs
-			_, err = sqlutils.WithTransaction[any](store, func(tx *sqlx.Tx) (*any, error) {
-				suite.NoError(store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs))
-				return nil, nil
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs)
 			})
 			suite.NoError(err)
 
@@ -250,7 +247,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			// Ensure the system IDs were modified properly
 			suite.Equal(len(caseValues.NewSystemIDs), len(updatedIntakeSystemIDs))
 			for _, v := range updatedIntakeSystemIDs {
-				suite.Contains(caseValues.NewSystemIDs, v.ID)
+				suite.Contains(caseValues.NewSystemIDs, v.ID.String)
 			}
 
 			// Ensure the contract numbers were modified properly
@@ -326,9 +323,9 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			suite.NotNil(openIntake)
 
 			// Set existing contract numbers
-			_, err = sqlutils.WithTransaction[any](store, func(tx *sqlx.Tx) (*any, error) {
-				suite.NoError(store.SetSystemIntakeContractNumbers(ctx, tx, openIntake.ID, caseValues.InitialContractNumbers))
-				return nil, nil
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+				return store.SetSystemIntakeContractNumbers(ctx, tx, openIntake.ID, caseValues.InitialContractNumbers)
+
 			})
 			suite.NoError(err)
 
@@ -337,9 +334,9 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedIntakeContractNumbers))
 
 			// Set existing system IDs
-			_, err = sqlutils.WithTransaction[any](store, func(tx *sqlx.Tx) (*any, error) {
-				suite.NoError(store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs))
-				return nil, nil
+			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+				return store.SetSystemIntakeSystems(ctx, tx, openIntake.ID, caseValues.InitialSystemIDs)
+
 			})
 			suite.NoError(err)
 

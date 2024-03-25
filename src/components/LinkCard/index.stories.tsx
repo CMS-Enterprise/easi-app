@@ -8,5 +8,5 @@ export default {
 };
 
 export const Default = () => {
-  return <LinkCard type="TRB" />;
+  return <LinkCard type="trb" />;
 };

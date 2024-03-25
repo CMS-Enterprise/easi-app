@@ -4,10 +4,12 @@
  * UX review, etc.
  */
 
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
+  Button,
   CardGroup,
   Grid,
   IconBookmark,
@@ -29,7 +31,7 @@ import {
 } from 'queries/types/GetCedarSystemBookmarks';
 import { GetCedarSystems } from 'queries/types/GetCedarSystems';
 
-import Table from './Table';
+import Table, { SystemTableType } from './Table';
 import filterBookmarks from './util';
 
 import './index.scss';
@@ -37,7 +39,14 @@ import './index.scss';
 export const SystemList = () => {
   const { t } = useTranslation('systemProfile');
 
-  // TODO: query parameters and caching
+  const location = useLocation();
+  const params = useMemo(() => {
+    return new URLSearchParams(location.search);
+  }, [location.search]);
+  const tableType = params.get('table-type') as SystemTableType;
+
+  const systemsRef = useRef<null | HTMLDivElement>(null);
+
   const {
     loading: loadingSystems,
     error: error1,
@@ -54,15 +63,49 @@ export const SystemList = () => {
   const systemsTableData = data1?.cedarSystems ?? [];
   const bookmarks: CedarSystemBookmark[] = data2?.cedarSystemBookmarks ?? [];
 
+  useEffect(() => {
+    if (
+      (tableType === 'my-systems' || tableType === 'bookmarked-systems') &&
+      (!loadingBookmarks || data1?.cedarSystems) &&
+      (!loadingSystems || data2?.cedarSystemBookmarks)
+    ) {
+      systemsRef?.current?.scrollIntoView({
+        block: 'start'
+      });
+    }
+  }, [
+    tableType,
+    loadingBookmarks,
+    loadingSystems,
+    data1?.cedarSystems,
+    data2?.cedarSystemBookmarks
+  ]);
+
   return (
     <MainContent className="grid-container margin-bottom-5">
       <SectionWrapper borderBottom>
         <PageHeading className="margin-bottom-1">
           {t('systemProfile:header')}
         </PageHeading>
+
         <p>{t('systemProfile:subHeader')}</p>
+
+        <Button
+          type="button"
+          className="margin-bottom-2"
+          unstyled
+          onClick={() =>
+            systemsRef?.current?.scrollIntoView({
+              block: 'start'
+            })
+          }
+        >
+          {t('systemProfile:systemTable.jumpToSystems')}
+        </Button>
+
         <SummaryBox heading="" className="easi-request__container">
           <p>{t('systemProfile:newRequest.info')}</p>
+
           <UswdsReactLink
             to="/system/request-type"
             className="easi-request__button-link"
@@ -72,7 +115,7 @@ export const SystemList = () => {
         </SummaryBox>
       </SectionWrapper>
 
-      {loadingSystems ? (
+      {(loadingSystems || loadingBookmarks) && !data1?.cedarSystems ? (
         <PageLoading />
       ) : (
         <>
@@ -117,15 +160,16 @@ export const SystemList = () => {
             </SectionWrapper>
           )}
 
-          <h2 className="margin-bottom-0">
+          <h2 className="margin-bottom-2">
             {t('systemProfile:systemTable.title')}
           </h2>
 
-          <p className="margin-bottom-5">
-            {t('systemProfile:systemTable.subtitle')}
-          </p>
-
-          {/* TODO: standardize/format error messages from CEDAR - either on FE or BE */}
+          <Trans
+            i18nKey="systemProfile:systemTable.subtitle"
+            components={{
+              icon: <IconBookmark className="text-bookmark-icon" />
+            }}
+          />
 
           {error1 || error2 ? (
             <ErrorAlert heading="System error">
@@ -134,11 +178,13 @@ export const SystemList = () => {
               </AlertText>
             </ErrorAlert>
           ) : (
-            <Table
-              systems={systemsTableData}
-              savedBookmarks={bookmarks}
-              refetchBookmarks={refetchBookmarks}
-            />
+            <div ref={systemsRef}>
+              <Table
+                systems={systemsTableData}
+                savedBookmarks={bookmarks}
+                refetchBookmarks={refetchBookmarks}
+              />
+            </div>
           )}
         </>
       )}

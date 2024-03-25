@@ -15,7 +15,6 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import PageWrapper from 'components/PageWrapper';
 import { MessageProvider } from 'hooks/useMessage';
-import Accessibility from 'views/Accessibility';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
@@ -39,18 +38,16 @@ import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
 import RequestLinkForm from 'views/RequestLinkForm';
 import RequestTypeForm from 'views/RequestTypeForm';
-import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import SystemList from 'views/SystemList';
 import SystemProfile from 'views/SystemProfile';
+import SystemWorkspace from 'views/SystemWorkspace';
 import TableStateWrapper from 'views/TableStateWrapper';
 import TechnicalAssistance from 'views/TechnicalAssistance';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfo from 'views/User';
 import UserInfoWrapper from 'views/UserInfoWrapper';
-
-import { NavContextProvider } from '../../components/Header/navContext';
 
 import shouldScroll from './scrollConfig';
 
@@ -83,14 +80,6 @@ const AppRoutes = () => {
       <SecureRoute path="/user-diagnostics" component={UserInfo} />
       <SecureRoute path="/my-requests" component={MyRequests} />
 
-      {/* 508 / Accessibility Team Routes */}
-      {!flags.hide508Workflow && (
-        <Redirect exact from="/508" to="/508/making-a-request" />
-      )}
-      {!flags.hide508Workflow && (
-        <SecureRoute path="/508" component={Accessibility} />
-      )}
-
       {/* GRT/GRB Routes */}
       <SecureRoute
         path="/governance-review-team"
@@ -105,11 +94,9 @@ const AppRoutes = () => {
         component={RequestTypeForm}
       />
       {flags.itgovLinkRequestsRequester && (
-        <SecureRoute
-          exact
-          path="/system/link/:systemId?"
-          component={RequestLinkForm}
-        />
+        <SecureRoute exact path="/system/link/:id?">
+          <RequestLinkForm requestType="itgov" />
+        </SecureRoute>
       )}
       <SecureRoute
         path="/governance-overview/:systemId?"
@@ -145,6 +132,7 @@ const AppRoutes = () => {
         path="/governance-task-list/:systemId/lcid-info"
         component={LcidInfo}
       />
+
       <Redirect
         exact
         from="/system/:systemId"
@@ -154,23 +142,24 @@ const AppRoutes = () => {
         path="/system/:systemId/:formPage/:subPage?"
         component={SystemIntake}
       />
-      {flags.systemProfile && (
-        <SecureRoute exact path="/systems" component={SystemList} />
-      )}
-      {flags.systemProfile && (
+
+      <SecureRoute exact path="/systems" component={SystemList} />
+
+      {flags.systemWorkspace && (
         <SecureRoute
-          path="/systems/:systemId"
-          exact
-          component={SystemProfile}
+          path="/systems/:systemId/workspace"
+          component={SystemWorkspace}
         />
       )}
-      {flags.systemProfile && (
-        <SecureRoute
-          path="/systems/:systemId/:subinfo/:edit(edit)?/:action(team-member)?/:top(top)?"
-          exact
-          component={SystemProfile}
-        />
-      )}
+
+      <SecureRoute path="/systems/:systemId" exact component={SystemProfile} />
+
+      <SecureRoute
+        path="/systems/:systemId/:subinfo/:edit(edit)?/:action(team-member)?/:top(top)?"
+        exact
+        component={SystemProfile}
+      />
+
       <Redirect
         exact
         from="/business/:businessCaseId"
@@ -181,9 +170,7 @@ const AppRoutes = () => {
         component={BusinessCase}
       />
 
-      {flags.technicalAssistance && (
-        <SecureRoute path="/trb" component={TechnicalAssistance} />
-      )}
+      <SecureRoute path="/trb" component={TechnicalAssistance} />
 
       <SecureRoute path="/help" component={Help} />
 
@@ -200,18 +187,6 @@ const AppRoutes = () => {
         path="/terms-and-conditions"
         component={TermsAndConditions}
       />
-
-      {/* Misc Routes */}
-      {flags.sandbox && (
-        <SecureRoute path="/sandbox" exact component={Sandbox} />
-      )}
-      {flags.sandbox && (
-        <SecureRoute
-          path="/sandbox/:systemId"
-          exact
-          component={SystemProfile}
-        />
-      )}
 
       <Route path="/implicit/callback" component={LoginCallback} />
 
@@ -241,18 +216,16 @@ const App = () => {
             <FlagsWrapper>
               <UserInfoWrapper>
                 <TimeOutWrapper>
-                  <NavContextProvider>
-                    <TableStateWrapper>
-                      <PageWrapper>
-                        <GovBanner />
-                        <Header />
-                        <Navigation>
-                          <AppRoutes />
-                        </Navigation>
-                        <Footer />
-                      </PageWrapper>
-                    </TableStateWrapper>
-                  </NavContextProvider>
+                  <TableStateWrapper>
+                    <PageWrapper>
+                      <GovBanner />
+                      <Header />
+                      <Navigation>
+                        <AppRoutes />
+                      </Navigation>
+                      <Footer />
+                    </PageWrapper>
+                  </TableStateWrapper>
                 </TimeOutWrapper>
               </UserInfoWrapper>
             </FlagsWrapper>

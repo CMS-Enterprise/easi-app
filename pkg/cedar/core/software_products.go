@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -15,7 +14,7 @@ import (
 
 // GetSoftwareProductsBySystem queries CEDAR for software product/tooling information associated with a particular system, taking the version-independent ID of a system
 func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID string) (*models.CedarSoftwareProducts, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		return nil, nil
 	}
@@ -26,7 +25,7 @@ func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID 
 
 	// Construct the parameters
 	params := software_products.NewSoftwareProductsFindListParams()
-	params.SetID(cedarSystem.VersionID)
+	params.SetID(cedarSystem.VersionID.String)
 	params.HTTPClient = c.hc
 
 	// Make the API call
@@ -46,10 +45,10 @@ func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID 
 
 	for _, softwareProduct := range resp.Payload.SoftwareProducts {
 		softwareProductItems = append(softwareProductItems, &models.SoftwareProductItem{
-			APIGatewayUse:                  null.BoolFrom(softwareProduct.APIGatewayUse),
+			APIGatewayUse:                  softwareProduct.APIGatewayUse,
 			ElaPurchase:                    zero.StringFrom(softwareProduct.ElaPurchase),
 			ElaVendorID:                    zero.StringFrom(softwareProduct.ElaVendorID),
-			ProvidesAiCapability:           null.BoolFrom(softwareProduct.ProvidesAiCapability),
+			ProvidesAiCapability:           softwareProduct.ProvidesAiCapability,
 			Refstr:                         zero.StringFrom(softwareProduct.Refstr),
 			SoftwareCatagoryConnectionGUID: zero.StringFrom(softwareProduct.SoftwareCatagoryConnectionGUID),
 			SoftwareVendorConnectionGUID:   zero.StringFrom(softwareProduct.SoftwareVendorConnectionGUID),
@@ -59,6 +58,7 @@ func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID 
 			SystemSoftwareConnectionGUID:   zero.StringFrom(softwareProduct.SystemSoftwareConnectionGUID),
 			TechnopediaCategory:            zero.StringFrom(softwareProduct.TechnopediaCategory),
 			TechnopediaID:                  zero.StringFrom(softwareProduct.TechnopediaID),
+			VendorName:                     zero.StringFrom(softwareProduct.VendorName),
 		})
 	}
 
@@ -73,11 +73,11 @@ func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID 
 		APIDescPublished:    zero.StringFrom(resp.Payload.APIDescPublished),
 		APIFHIRUse:          zero.StringFrom(resp.Payload.APIFHIRUse),
 		APIFHIRUseOther:     zero.StringFrom(resp.Payload.APIFHIRUseOther),
-		APIHasPortal:        null.BoolFrom(resp.Payload.APIHasPortal),
+		APIHasPortal:        resp.Payload.APIHasPortal,
 		ApisAccessibility:   zero.StringFrom(resp.Payload.ApisAccessibility),
 		ApisDeveloped:       zero.StringFrom(resp.Payload.ApisDeveloped),
 		DevelopmentStage:    zero.StringFrom(resp.Payload.DevelopmentStage),
-		SystemHasAPIGateway: null.BoolFrom(resp.Payload.SystemHasAPIGateway),
+		SystemHasAPIGateway: resp.Payload.SystemHasAPIGateway,
 		UsesAiTech:          zero.StringFrom(resp.Payload.UsesAiTech),
 	}
 

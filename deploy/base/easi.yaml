@@ -4,7 +4,8 @@ metadata:
   name: easi-backend-configmap
   namespace: easi
 data:
-  CEDAR_ENV: dev
+  CEDAR_CORE_MOCK: 'true'
+  CEDAR_INTAKE_ENABLED: 'false'
   CEDAR_API_KEY: ''
   CEDAR_API_URL: "webmethods-apigw.cedardev.cms.gov"
   CEDAR_CORE_API_VERSION: "2.0.0"
@@ -28,7 +29,7 @@ data:
   AWS_REGION: us-west-2
   AWS_SES_SOURCE: '\"EASi Local\" <no-reply-local@info.easi.cms.gov>'
   AWS_SES_SOURCE_ARN: ses-arn
-  AWS_S3_FILE_UPLOAD_BUCKET: easiappfileuploads
+  AWS_S3_FILE_UPLOAD_BUCKET: easi-app-file-uploads
   AWS_ACCESS_KEY_ID: '1'
   AWS_SECRET_ACCESS_KEY: '1'
   PGHOST: db

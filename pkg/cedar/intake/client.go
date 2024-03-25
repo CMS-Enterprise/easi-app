@@ -15,44 +15,21 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"go.uber.org/zap"
-	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client"
 	"github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/health_check"
 	"github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/intake"
 	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
-	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-const (
-	emitFlagKey = "emit-to-cedar"
-	emitDefault = false
-)
-
 // NewClient builds the type that holds a connection to the CEDAR Intake API
-func NewClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Client {
-	fnEmit := func(ctx context.Context) bool {
-		// this is the conditional way of stopping us from submitting to CEDAR; see EASI-1025
-		lduser := flags.Principal(ctx)
-		result, err := ldClient.BoolVariation(emitFlagKey, lduser, emitDefault)
-		if err != nil {
-			appcontext.ZLogger(ctx).Info(
-				"problem evaluating feature flag",
-				zap.Error(err),
-				zap.String("flagName", emitFlagKey),
-				zap.Bool("flagDefault", emitDefault),
-				zap.Bool("flagResult", result),
-			)
-		}
-		return result
-	}
-
+func NewClient(cedarHost string, cedarAPIKey string, enabled bool) *Client {
 	hc := http.DefaultClient
 
 	return &Client{
-		emitToCedar: fnEmit,
+		enabled: enabled,
 		auth: httptransport.APIKeyAuth(
 			"x-Gateway-APIKey",
 			"header",
@@ -72,16 +49,17 @@ func NewClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Cli
 
 // Client represents a connection to the CEDAR Intake API
 type Client struct {
-	emitToCedar func(context.Context) bool
-	auth        runtime.ClientAuthInfoWriter
-	sdk         *apiclient.CEDARIntake
-	hc          *http.Client
+	enabled bool
+	auth    runtime.ClientAuthInfoWriter
+	sdk     *apiclient.CEDARIntake
+	hc      *http.Client
 }
 
 // CheckConnection hits the CEDAR Intake API `/healthcheck` endpoint to verify
 // that our connection is functional
 func (c *Client) CheckConnection(ctx context.Context) error {
-	if !c.emitToCedar(ctx) {
+	// If Intake API calls are not enabled, we don't need to check the connection, so just return nil
+	if !c.enabled {
 		return nil
 	}
 
@@ -143,8 +121,8 @@ func (c *Client) publishIntakeObject(ctx context.Context, model translation.Inta
 	id := model.ObjectID()
 	objectType := model.ObjectType()
 
-	if !c.emitToCedar(ctx) {
-		appcontext.ZLogger(ctx).Info("snapshot publishing disabled", zap.String("object ID", id), zap.String("object type", objectType))
+	if !c.enabled {
+		appcontext.ZLogger(ctx).Info("snapshot publishing is not enabled", zap.String("object ID", id), zap.String("object type", objectType))
 		return nil
 	}
 
