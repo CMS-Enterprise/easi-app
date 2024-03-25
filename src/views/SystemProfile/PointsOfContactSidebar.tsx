@@ -49,6 +49,7 @@ const PointsOfContactSidebar = ({
   systemId
 }: PointsOfContactSidebarProps) => {
   const { t } = useTranslation('systemProfile');
+
   const contactsWithRoles = getPointsOfContact(
     subpageKey,
     system.usernamesWithRoles

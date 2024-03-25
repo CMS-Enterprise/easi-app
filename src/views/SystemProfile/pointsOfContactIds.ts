@@ -17,6 +17,7 @@ const pointsOfContactIds: Record<SubpageKey, RoleTypeName[]> = {
     RoleTypeName.COR,
     RoleTypeName.SYSTEM_BUSINESS_QUESTION_CONTACT
   ],
+  contracts: [],
   'funding-and-budget': [
     RoleTypeName.COR,
     RoleTypeName.SYSTEM_BUSINESS_QUESTION_CONTACT,

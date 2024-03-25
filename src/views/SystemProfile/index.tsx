@@ -219,8 +219,7 @@ export function getSystemProfileData(
   const { cedarSystemDetails, cedarSoftwareProducts } = data;
   const cedarSystem = cedarSystemDetails?.cedarSystem;
 
-  if (!cedarSystemDetails || !cedarSystem || !cedarSoftwareProducts)
-    return undefined;
+  if (!cedarSystemDetails || !cedarSystem) return undefined;
 
   // Save CedarAssigneeType.PERSON roles for convenience
   const personRoles = cedarSystemDetails.roles.filter(

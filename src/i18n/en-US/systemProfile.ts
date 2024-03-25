@@ -9,6 +9,7 @@ const systemProfile = {
     home: 'System Home',
     details: 'System Details',
     team: 'Team',
+    contracts: 'Contracts',
     'funding-and-budget': 'Funding and Budget',
     'tools-and-software': 'Tools and Software',
     ato: 'ATO',
@@ -88,6 +89,19 @@ const systemProfile = {
       noATODates:
         'There is no information about previous tests or assessments available for this system',
       viewATOInfo: 'View ATO information'
+    },
+    contracts: {
+      header: 'Contracts',
+      contractTitle: 'Contract title',
+      vendors: 'Vendors',
+      contractNumber: 'Contract number',
+      taskOrderNumber: 'Task order number',
+      periodOfPerformance: 'Period of performance',
+      startDate: 'Start date',
+      endDate: 'End date',
+      contractServices: 'Contract services or functions',
+      showMore: 'Show more contracts',
+      showLess: 'Show less contracts'
     },
     fundingAndBudget: {
       header: 'Funding and Budget',
