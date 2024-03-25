@@ -19,7 +19,6 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
-import { startCase } from 'lodash';
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -33,14 +32,11 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
-/* eslint-disable camelcase */
-import { GetSystemIntake_systemIntake_systems_businessOwnerRoles } from 'queries/types/GetSystemIntake';
 import {
   GetSystemProfile,
   /* eslint-disable camelcase */
   GetSystemProfile_cedarAuthorityToOperate,
   GetSystemProfile_cedarSystemDetails,
-  GetSystemProfile_cedarSystemDetails_roles,
   /* eslint-enable camelcase */
   GetSystemProfileVariables
 } from 'queries/types/GetSystemProfile';
@@ -72,6 +68,7 @@ import EditPageCallout from './components/EditPageCallout';
 import sideNavItems from './components/index';
 import SystemSubNav from './components/SystemSubNav/index';
 import EditTeam from './components/Team/Edit';
+import { getPersonFullName } from './helpers';
 import PointsOfContactSidebar from './PointsOfContactSidebar';
 
 import './index.scss';
@@ -154,22 +151,6 @@ function getLocations(
       tags
     };
   });
-}
-
-/**
- * Get a person's full name from a Cedar Role.
- * Format the name in title case if the full name is in all caps.
- */
-export function getPersonFullName(
-  role: // eslint-disable-next-line camelcase
-  | GetSystemProfile_cedarSystemDetails_roles
-    // eslint-disable-next-line camelcase
-    | GetSystemIntake_systemIntake_systems_businessOwnerRoles
-): string {
-  const fullname = `${role.assigneeFirstName} ${role.assigneeLastName}`;
-  return fullname === fullname.toUpperCase()
-    ? startCase(fullname.toLowerCase())
-    : fullname;
 }
 
 /**
