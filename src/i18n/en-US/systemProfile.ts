@@ -97,6 +97,7 @@ const systemProfile = {
     contracts: {
       header: 'Contracts',
       contractTitle: 'Contract title',
+      isDeliveryOrg: 'Contract for Application Delivery Organization',
       vendors: 'Vendors',
       contractNumber: 'Contract number',
       taskOrderNumber: 'Task order number',
@@ -105,7 +106,10 @@ const systemProfile = {
       endDate: 'End date',
       contractServices: 'Contract services or functions',
       showMore: 'Show more contracts',
-      showLess: 'Show less contracts'
+      showLess: 'Show less contracts',
+      noContract: 'No contract title listed',
+      noVendors: 'No vendors listed',
+      noData: 'No data available'
     },
     fundingAndBudget: {
       header: 'Funding and Budget',

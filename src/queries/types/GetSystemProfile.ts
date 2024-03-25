@@ -59,6 +59,19 @@ export interface GetSystemProfile_cedarSoftwareProducts {
   usesAiTech: string | null;
 }
 
+export interface GetSystemProfile_cedarContractsBySystem {
+  __typename: "CedarContract";
+  id: string | null;
+  startDate: Time | null;
+  endDate: Time | null;
+  contractNumber: string | null;
+  contractName: string | null;
+  description: string | null;
+  orderNumber: string | null;
+  serviceProvided: string | null;
+  isDeliveryOrg: boolean | null;
+}
+
 export interface GetSystemProfile_cedarSystemDetails_businessOwnerInformation {
   __typename: "CedarBusinessOwnerInformation";
   isCmsOwned: boolean | null;
@@ -142,6 +155,7 @@ export interface GetSystemProfile {
   cedarAuthorityToOperate: GetSystemProfile_cedarAuthorityToOperate[];
   cedarThreat: GetSystemProfile_cedarThreat[];
   cedarSoftwareProducts: GetSystemProfile_cedarSoftwareProducts | null;
+  cedarContractsBySystem: GetSystemProfile_cedarContractsBySystem[];
   cedarSystemDetails: GetSystemProfile_cedarSystemDetails | null;
 }
 
