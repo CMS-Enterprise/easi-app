@@ -58,6 +58,7 @@ import {
   UsernameWithRoles
 } from 'types/systemProfile';
 import { formatDateUtc, parseAsUTC } from 'utils/date';
+import { formatHttpsUrl } from 'utils/formatUrl';
 import NotFound from 'views/NotFound';
 import {
   activities as mockActivies,
@@ -75,13 +76,6 @@ import EditTeam from './components/Team/Edit';
 import PointsOfContactSidebar from './PointsOfContactSidebar';
 
 import './index.scss';
-
-function httpsUrl(url: string): string {
-  if (/^https?/.test(url)) {
-    return url;
-  }
-  return `https://${url}`;
-}
 
 /**
  * Get the ATO Status from certain date properties and flags.
@@ -152,7 +146,7 @@ function getLocations(
 
     // Fix address urls without a protocol
     // and reassign it to the original address property
-    const address = url.address && httpsUrl(url.address);
+    const address = url.address && formatHttpsUrl(url.address);
 
     return {
       ...url,
