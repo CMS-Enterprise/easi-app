@@ -14,7 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiroles "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
 	apimodels "github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
-	"github.com/cmsgov/easi-app/pkg/local"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -86,7 +86,7 @@ func (c *Client) GetBusinessOwnerRolesBySystem(ctx context.Context, cedarSystemI
 func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return local.GetMockSystemRoles(cedarSystemID, roleTypeID), nil
+		return cedarcoremock.GetSystemRoles(cedarSystemID, roleTypeID), nil
 	}
 
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
@@ -174,7 +174,7 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 func (c *Client) GetRoleTypes(ctx context.Context) ([]*models.CedarRoleType, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return local.GetMockRoleTypes(), nil
+		return cedarcoremock.GetRoleTypes(), nil
 	}
 
 	// Construct the parameters

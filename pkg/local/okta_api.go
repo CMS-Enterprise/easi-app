@@ -20,9 +20,9 @@ func NewOktaAPIClient() *client {
 	return &client{}
 }
 
-// getMockUserData returns a slice of *models.UserInfo that represents a response from the Okta server.
+// GetMockUserData returns a slice of *models.UserInfo that represents a response from the Okta server.
 // Most of the data here is generated randomly, though some of it was curated specifically for the purpose of making tests pass.
-func getMockUserData() []*models.UserInfo {
+func GetMockUserData() []*models.UserInfo {
 	return []*models.UserInfo{
 		{
 			DisplayName: "Adeline Aarons",
@@ -486,7 +486,7 @@ func (c *client) FetchUserInfo(ctx context.Context, euaID string) (*models.UserI
 		}
 	}
 	logger.Info("Mock FetchUserInfo from Okta", zap.String("euaID", euaID))
-	for _, mockUser := range getMockUserData() {
+	for _, mockUser := range GetMockUserData() {
 		if mockUser.Username == euaID {
 			return mockUser, nil
 		}
@@ -501,7 +501,7 @@ func (c *client) FetchUserInfos(ctx context.Context, euaIDs []string) ([]*models
 
 	userInfos := make([]*models.UserInfo, len(euaIDs))
 	for i, euaID := range euaIDs {
-		for _, mockUser := range getMockUserData() {
+		for _, mockUser := range GetMockUserData() {
 			if mockUser.Username == euaID {
 				userInfos[i] = mockUser
 			}
@@ -516,7 +516,7 @@ func (c *client) SearchCommonNameContains(ctx context.Context, commonName string
 	logger := appcontext.ZLogger(ctx)
 	logger.Info("Mock SearchCommonNameContains from Okta")
 
-	mockUserData := getMockUserData()
+	mockUserData := GetMockUserData()
 	searchResults := []*models.UserInfo{}
 
 	for _, element := range mockUserData {

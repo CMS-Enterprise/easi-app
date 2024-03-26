@@ -25,8 +25,8 @@ type SoftwareProductItem struct {
 // CedarSoftwareProduct represents a single SoftwareProduct object returned from the CEDAR API
 type CedarSoftwareProducts struct {
 	// Always present fields
-	AiSolnCatg       []string               `json:"aiSolnCatg"`
-	ApiDataArea      []string               `json:"apiDataArea"`
+	AiSolnCatg       []zero.String          `json:"aiSolnCatg"`
+	ApiDataArea      []zero.String          `json:"apiDataArea"`
 	SoftwareProducts []*SoftwareProductItem `json:"softwareProducts"`
 
 	// Possibly null fields
