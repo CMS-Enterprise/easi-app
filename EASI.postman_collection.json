@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a17311aa-72e4-4ea7-b19d-54ba1748aee4",
+		"_postman_id": "5ed0d92e-7627-409c-b9f3-e5fa4cb918a6",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "11253221"
+		"_exporter_id": "32724285"
 	},
 	"item": [
 		{
@@ -2746,6 +2746,32 @@
 											""
 										]
 									}
+								}
+							]
+						},
+						{
+							"name": "Threat",
+							"item": [
+								{
+									"name": "New Request",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($cedarSystemId: String!) {\n cedarThreat(cedarSystemId: $cedarSystemId){\n   alternativeId\n   controlFamily\n   daysOpen\n   id\n   parentId\n   type\n   weaknessRiskLevel\n }\n}",
+												"variables": "{\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
 								}
 							]
 						}
