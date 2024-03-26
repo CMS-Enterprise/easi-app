@@ -14,7 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiroles "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
 	apimodels "github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
-	cedarcoremock "github.com/cmsgov/easi-app/pkg/local/cedarcore"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
