@@ -54,6 +54,6 @@ var mockThreats = []*models.CedarThreat{
 	},
 }
 
-func GetMockThreats() []*models.CedarThreat {
+func GetThreats() []*models.CedarThreat {
 	return mockThreats
 }
