@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "66c3ffa8-c043-4eae-a0c1-9f92c35720c2",
-		"name": "EASI Copy",
+		"_postman_id": "e419bb52-6eb6-4e55-b8e1-13739f505412",
+		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "11253221"
+		"_exporter_id": "32724285"
 	},
 	"item": [
 		{
@@ -2760,8 +2760,34 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query($cedarSystemId: String!) {\n cedarThreat(cedarSystemId: $cedarSystemId){\n   alternativeId\n   controlFamily\n   daysOpen\n   id\n   parentId\n   type\n   weaknessRiskLevel\n }\n}",
+												"query": "query GetThreatsBySystem($cedarSystemId: String!) {\n cedarThreat(cedarSystemId: $cedarSystemId){\n   alternativeId\n   controlFamily\n   daysOpen\n   id\n   parentId\n   type\n   weaknessRiskLevel\n }\n}",
 												"variables": "{\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Deployment",
+							"item": [
+								{
+									"name": "Get Deployments By System",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query GetDeploymentsBySystem($cedarSystemId: String!, $deploymentType: String, $state: String, $status: String){\n    deployments(cedarSystemId: $cedarSystemId, deploymentType: $deploymentType, state: $state, status: $status) {\n        id\n        name\n        systemID\n        startDate\n        endDate\n        isHotSite\n        description\n        contractorName\n        systemVersion\n        hasProductionData\n        replicatedSystemElements\n        deploymentType\n        systemName\n        deploymentElementID\n        state\n        status\n        wanType\n        dataCenter {\n            id\n            name\n            version\n            description\n            state\n            status\n            startDate\n            endDate\n            address1\n            address2\n            city\n            addressState\n            zip\n        }\n    }\n}",
+												"variables": "{\n    \"cedarSystemId\": \"{{CedarSystemId}}\",\n    \"deploymentType\": \"\",\n    \"state\": \"\",\n    \"status\": \"\"\n}"
 											}
 										},
 										"url": {
