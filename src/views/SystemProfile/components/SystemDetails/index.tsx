@@ -24,7 +24,7 @@ import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
 import formatNumber from 'utils/formatNumber';
-import { showVal } from 'views/SystemProfile';
+import showVal from 'utils/showVal';
 
 import 'index.scss';
 

@@ -18,7 +18,7 @@ import Divider from 'components/shared/Divider';
 import { GetSystemProfile_cedarContractsBySystem as ContractType } from 'queries/types/GetSystemProfile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
 import { formatDateUtc } from 'utils/date';
-import { showVal } from 'views/SystemProfile';
+import showVal from 'utils/showVal';
 
 const ContractCard = ({ contract }: { contract: ContractType }) => {
   const { t } = useTranslation('systemProfile');
