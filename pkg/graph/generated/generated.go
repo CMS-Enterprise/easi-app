@@ -18047,9 +18047,9 @@ func (ec *executionContext) _CedarContract_contractNumber(ctx context.Context, f
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(zero.String)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarContract_contractNumber(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
