@@ -308,7 +308,7 @@ export function showVal(
   } = {}
 ): React.ReactNode {
   if (val === null || val === undefined || val === '') {
-    return <span className="text-italic">{defaultVal}</span>;
+    return <span className="text-italic text-base">{defaultVal}</span>;
   }
 
   if (format) return format(val);

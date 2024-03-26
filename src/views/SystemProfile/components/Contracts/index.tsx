@@ -3,13 +3,11 @@ import { useTranslation } from 'react-i18next';
 import {
   Card,
   CardBody,
-  CardFooter,
   CardGroup,
   CardHeader,
   Grid,
   IconVerified
 } from '@trussworks/react-uswds';
-import classNames from 'classnames';
 
 import Alert from 'components/shared/Alert';
 import {
@@ -19,6 +17,8 @@ import {
 import Divider from 'components/shared/Divider';
 import { GetSystemProfile_cedarContractsBySystem as ContractType } from 'queries/types/GetSystemProfile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
+import { formatDateUtc } from 'utils/date';
+import { showVal } from 'views/SystemProfile';
 
 const ContractCard = ({ contract }: { contract: ContractType }) => {
   const { t } = useTranslation('systemProfile');
@@ -48,33 +48,29 @@ const ContractCard = ({ contract }: { contract: ContractType }) => {
         )}
 
         <Grid row className="margin-y-2">
-          <Grid desktop={{ col: 6 }}>
+          <Grid tablet={{ col: 6 }}>
             <DescriptionTerm
               className="margin-bottom-0"
               term={t('singleSystem.contracts.contractNumber')}
             />
             <DescriptionDefinition
-              className={classNames('text-pre-wrap', {
-                'text-italic text-base': !contract.contractNumber
+              className="text-pre-wrap"
+              definition={showVal(contract.contractNumber, {
+                defaultVal: t('singleSystem.contracts.noData')
               })}
-              definition={
-                contract.contractNumber || t('singleSystem.contracts.noData')
-              }
             />
           </Grid>
 
-          <Grid desktop={{ col: 6 }}>
+          <Grid tablet={{ col: 6 }}>
             <DescriptionTerm
               className="margin-bottom-0"
               term={t('singleSystem.contracts.taskOrderNumber')}
             />
             <DescriptionDefinition
-              className={classNames('text-pre-wrap', {
-                'text-italic text-base': !contract.orderNumber
+              className="text-pre-wrap"
+              definition={showVal(contract.orderNumber, {
+                defaultVal: t('singleSystem.contracts.noData')
               })}
-              definition={
-                contract.orderNumber || t('singleSystem.contracts.noData')
-              }
             />
           </Grid>
         </Grid>
@@ -82,49 +78,53 @@ const ContractCard = ({ contract }: { contract: ContractType }) => {
         <Divider />
 
         <Grid row className="margin-y-2">
-          <Grid desktop={{ col: 12 }}>
+          <Grid tablet={{ col: 12 }}>
             <p className="margin-top-0 margin-bottom-1">
               {t('singleSystem.contracts.periodOfPerformance')}
             </p>
           </Grid>
 
-          <Grid desktop={{ col: 6 }}>
+          <Grid tablet={{ col: 6 }}>
             <DescriptionTerm
               className="margin-bottom-0"
               term={t('singleSystem.contracts.startDate')}
             />
             <DescriptionDefinition
-              className={classNames('text-pre-wrap', {
-                'text-italic text-base': !contract.startDate
-              })}
-              definition={
-                contract.startDate || t('singleSystem.contracts.noData')
-              }
+              className="text-pre-wrap"
+              definition={showVal(
+                formatDateUtc(contract.startDate, 'MM/dd/yyyy'),
+                {
+                  defaultVal: t('singleSystem.contracts.noData')
+                }
+              )}
             />
           </Grid>
 
-          <Grid desktop={{ col: 6 }}>
+          <Grid tablet={{ col: 6 }}>
             <DescriptionTerm
               className="margin-bottom-0"
               term={t('singleSystem.contracts.endDate')}
             />
             <DescriptionDefinition
-              className={classNames('text-pre-wrap', {
-                'text-italic text-base': !contract.endDate
-              })}
-              definition={
-                contract.endDate || t('singleSystem.contracts.noData')
-              }
+              className="text-pre-wrap"
+              definition={showVal(
+                formatDateUtc(contract.endDate, 'MM/dd/yyyy'),
+                {
+                  defaultVal: t('singleSystem.contracts.noData')
+                }
+              )}
             />
           </Grid>
         </Grid>
 
-        <Divider />
+        {/* TODO: Implement 'Contract services or functions' once connected to CEDAR */}
+
+        {/* <Divider /> */}
       </CardBody>
 
-      <CardFooter className="padding-2">
+      {/* <CardFooter className="padding-2">
         <Grid row>
-          <Grid desktop={{ col: 12 }}>
+          <Grid tablet={{ col: 12 }}>
             <DescriptionTerm
               className="margin-bottom-0"
               term={t('singleSystem.contracts.contractServices')}
@@ -137,7 +137,7 @@ const ContractCard = ({ contract }: { contract: ContractType }) => {
             )}
           </Grid>
         </Grid>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 };
@@ -155,7 +155,7 @@ const Contracts = ({ system }: SystemProfileSubviewProps) => {
         <CardGroup className="margin-0">
           {system.cedarContractsBySystem?.map(
             (contract): React.ReactNode => (
-              <ContractCard contract={contract} />
+              <ContractCard contract={contract} key={contract.id} />
             )
           )}
         </CardGroup>

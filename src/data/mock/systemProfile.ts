@@ -707,7 +707,22 @@ export const result: { data: GetSystemProfile } = {
         __typename: 'CedarSystemMaintainerInformation'
       },
       __typename: 'CedarSystemDetails'
-    }
+    },
+    cedarContractsBySystem: [
+      {
+        id: '{BC2C09FA-63CD-46e5-99EB-D27DB538FD6A}',
+        startDate: null,
+        endDate: null,
+        contractNumber: 'GS35F372DA',
+        contractName:
+          'Centers for Medicare and Medicaid Services Analysis, Reporting and Tracking System (CMS ARTS)',
+        description: null,
+        orderNumber: '75FCMC21F0028',
+        serviceProvided: null,
+        isDeliveryOrg: true,
+        __typename: 'CedarContract'
+      }
+    ]
   }
 };
 
