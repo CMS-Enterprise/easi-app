@@ -14,7 +14,7 @@ var mockThreats = []*models.CedarThreat{
 		ID:                zero.StringFrom("threat1"),
 		ParentID:          zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
 		Type:              zero.StringFrom("called in"),
-		WeaknessRiskLevel: zero.StringFrom("quite weak"),
+		WeaknessRiskLevel: zero.StringFrom("Critical"),
 	},
 	{
 		AlternativeID:     zero.StringFrom("altID2"),
@@ -23,7 +23,7 @@ var mockThreats = []*models.CedarThreat{
 		ID:                zero.StringFrom("threat2"),
 		ParentID:          zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
 		Type:              zero.StringFrom("fake"),
-		WeaknessRiskLevel: zero.StringFrom("featherweight"),
+		WeaknessRiskLevel: zero.StringFrom("High"),
 	},
 	{
 		AlternativeID:     zero.StringFrom("altID3"),
@@ -32,7 +32,7 @@ var mockThreats = []*models.CedarThreat{
 		ID:                zero.StringFrom("threat3"),
 		ParentID:          zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"),
 		Type:              zero.StringFrom("scary"),
-		WeaknessRiskLevel: zero.StringFrom("critical"),
+		WeaknessRiskLevel: zero.StringFrom("Moderate"),
 	},
 	{
 		AlternativeID:     zero.StringFrom("altID4"),
@@ -41,7 +41,7 @@ var mockThreats = []*models.CedarThreat{
 		ID:                zero.StringFrom("threat4"),
 		ParentID:          zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"),
 		Type:              zero.StringFrom("huge"),
-		WeaknessRiskLevel: zero.StringFrom("immediate"),
+		WeaknessRiskLevel: zero.StringFrom("Low"),
 	},
 	{
 		AlternativeID:     zero.StringFrom("altID5"),
@@ -50,7 +50,7 @@ var mockThreats = []*models.CedarThreat{
 		ID:                zero.StringFrom("threat5"),
 		ParentID:          zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"),
 		Type:              zero.StringFrom("silly"),
-		WeaknessRiskLevel: zero.StringFrom("neutralized"),
+		WeaknessRiskLevel: zero.StringFrom("Not Rated"),
 	},
 }
 
