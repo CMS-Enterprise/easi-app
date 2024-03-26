@@ -96,6 +96,7 @@ const systemProfile = {
     },
     contracts: {
       header: 'Contracts',
+      contractInfo: 'Contract information',
       contractTitle: 'Contract title',
       isDeliveryOrg: 'Contract for Application Delivery Organization',
       vendors: 'Vendors',
@@ -109,7 +110,8 @@ const systemProfile = {
       showLess: 'Show less contracts',
       noContract: 'No contract title listed',
       noVendors: 'No vendors listed',
-      noData: 'No data available'
+      noData: 'No data available',
+      noContracts: 'This system does not have any contracts listed.'
     },
     fundingAndBudget: {
       header: 'Funding and Budget',

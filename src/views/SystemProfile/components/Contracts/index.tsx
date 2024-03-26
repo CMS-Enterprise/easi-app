@@ -9,7 +9,9 @@ import {
   Grid,
   IconVerified
 } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
+import Alert from 'components/shared/Alert';
 import {
   DescriptionDefinition,
   DescriptionTerm
@@ -30,14 +32,14 @@ const ContractCard = ({ contract }: { contract: ContractType }) => {
       <CardHeader className="padding-2 padding-bottom-0 text-top">
         <dt>{t('singleSystem.contracts.contractTitle')}</dt>
 
-        <h3 className="margin-y-0 margin-bottom-1">
+        <h3 className="margin-y-0 margin-bottom-1 line-height-body-2">
           {contract.contractName || t('singleSystem.contracts.noContract')}
         </h3>
       </CardHeader>
 
       <CardBody className="padding-x-2 padding-y-0">
         {contract.isDeliveryOrg && (
-          <div className="display-flex flex-align-center margin-bottom-1">
+          <div className="display-flex flex-align-center margin-y-1">
             <IconVerified className="margin-right-1 text-info-dark" />
             <span style={{ marginTop: '1px' }}>
               {t('singleSystem.contracts.isDeliveryOrg')}
@@ -52,7 +54,9 @@ const ContractCard = ({ contract }: { contract: ContractType }) => {
               term={t('singleSystem.contracts.contractNumber')}
             />
             <DescriptionDefinition
-              className="text-pre-wrap text-italic text-base"
+              className={classNames('text-pre-wrap', {
+                'text-italic text-base': !contract.contractNumber
+              })}
               definition={
                 contract.contractNumber || t('singleSystem.contracts.noData')
               }
@@ -65,7 +69,9 @@ const ContractCard = ({ contract }: { contract: ContractType }) => {
               term={t('singleSystem.contracts.taskOrderNumber')}
             />
             <DescriptionDefinition
-              className="text-pre-wrap text-italic text-base"
+              className={classNames('text-pre-wrap', {
+                'text-italic text-base': !contract.orderNumber
+              })}
               definition={
                 contract.orderNumber || t('singleSystem.contracts.noData')
               }
@@ -88,7 +94,9 @@ const ContractCard = ({ contract }: { contract: ContractType }) => {
               term={t('singleSystem.contracts.startDate')}
             />
             <DescriptionDefinition
-              className="text-pre-wrap text-italic text-base"
+              className={classNames('text-pre-wrap', {
+                'text-italic text-base': !contract.startDate
+              })}
               definition={
                 contract.startDate || t('singleSystem.contracts.noData')
               }
@@ -101,7 +109,9 @@ const ContractCard = ({ contract }: { contract: ContractType }) => {
               term={t('singleSystem.contracts.endDate')}
             />
             <DescriptionDefinition
-              className="text-pre-wrap text-italic text-base"
+              className={classNames('text-pre-wrap', {
+                'text-italic text-base': !contract.endDate
+              })}
               definition={
                 contract.endDate || t('singleSystem.contracts.noData')
               }
@@ -133,14 +143,28 @@ const ContractCard = ({ contract }: { contract: ContractType }) => {
 };
 
 const Contracts = ({ system }: SystemProfileSubviewProps) => {
+  const { t } = useTranslation('systemProfile');
+
   return (
-    <CardGroup className="margin-0">
-      {system.cedarContractsBySystem?.map(
-        (contract): React.ReactNode => (
-          <ContractCard contract={contract} />
-        )
+    <>
+      <h2 className="margin-top-0">
+        {t('singleSystem.contracts.contractInfo')}
+      </h2>
+
+      {system.cedarContractsBySystem.length > 0 ? (
+        <CardGroup className="margin-0">
+          {system.cedarContractsBySystem?.map(
+            (contract): React.ReactNode => (
+              <ContractCard contract={contract} />
+            )
+          )}
+        </CardGroup>
+      ) : (
+        <Alert type="info" slim>
+          {t('singleSystem.contracts.noContracts')}
+        </Alert>
       )}
-    </CardGroup>
+    </>
   );
 };
 
