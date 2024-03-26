@@ -10,6 +10,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apideployments "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/deployment"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -24,7 +25,7 @@ type GetDeploymentsOptionalParams struct {
 func (c *Client) GetDeployments(ctx context.Context, cedarSystemID string, optionalParams *GetDeploymentsOptionalParams) ([]*models.CedarDeployment, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarDeployment{}, nil
+		return cedarcoremock.GetDeployments(), nil
 	}
 
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
