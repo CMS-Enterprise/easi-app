@@ -4,7 +4,7 @@ import { Table as UswdsTable } from '@trussworks/react-uswds';
 
 import TablePagination from 'components/TablePagination';
 import { SystemIntake_systems as SystemsType } from 'queries/types/SystemIntake';
-import { getPersonFullName } from 'views/SystemProfile';
+import { getPersonFullName } from 'views/SystemProfile/helpers';
 
 import SystemCard from '.';
 
