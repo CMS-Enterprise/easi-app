@@ -11,12 +11,18 @@ describe('System Contracts subpage', () => {
 
   it('matches snapshot', async () => {
     const { asFragment, getByText } = render(
-      <MemoryRouter initialEntries={['/systems/000-100-0/sub-systems']}>
+      <MemoryRouter initialEntries={['/systems/000-100-0/contracts']}>
         <Contracts system={systemProfileData} />
       </MemoryRouter>
     );
+
+    expect(
+      getByText(
+        'Centers for Medicare and Medicaid Services Analysis, Reporting and Tracking System (CMS ARTS)'
+      )
+    ).toBeInTheDocument();
+    expect(getByText('75FCMC21F0028')).toBeInTheDocument();
+
     expect(asFragment()).toMatchSnapshot();
-    expect(getByText('Test Ocular Fiction Utensil')).toBeInTheDocument();
-    expect(getByText('Planned retirement: Q4 2022')).toBeInTheDocument();
   });
 });

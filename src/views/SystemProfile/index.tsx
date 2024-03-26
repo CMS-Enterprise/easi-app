@@ -273,7 +273,7 @@ export function getSystemProfileData(
     // Remaining mock data stubs
     activities: mockActivies,
     budgets: mockBudgets,
-    toolsAndSoftware: cedarSoftwareProducts,
+    toolsAndSoftware: cedarSoftwareProducts || undefined,
     subSystems: mockSubSystems,
     systemData: mockSystemData
   };
