@@ -7,16 +7,16 @@ import (
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-
 	software_products "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/software_products"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // GetSoftwareProductsBySystem queries CEDAR for software product/tooling information associated with a particular system, taking the version-independent ID of a system
 func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID string) (*models.CedarSoftwareProducts, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return nil, nil
+		return cedarcoremock.GetSoftwareProducts(), nil
 	}
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
 	if err != nil {
@@ -64,8 +64,8 @@ func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID 
 
 	// Convert the rest of the parent SoftwareProducts object
 	retVal := &models.CedarSoftwareProducts{
-		AiSolnCatg:       resp.Payload.AiSolnCatg,
-		ApiDataArea:      resp.Payload.APIDataArea,
+		AiSolnCatg:       models.ZeroStringsFrom(resp.Payload.AiSolnCatg),
+		ApiDataArea:      models.ZeroStringsFrom(resp.Payload.APIDataArea),
 		SoftwareProducts: softwareProductItems,
 
 		AISolnCatgOther:     zero.StringFrom(resp.Payload.AiSolnCatgOther),

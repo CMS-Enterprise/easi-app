@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/local"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 )
 
 type SystemSummaryTestSuite struct {
@@ -34,8 +34,8 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 		s.NoError(err)
 
 		// ensure mock data is returned
-		s.Equal(len(local.GetMockSystems()), len(resp))
-		for _, v := range local.GetMockSystems() {
+		s.Equal(len(cedarcoremock.GetSystems()), len(resp))
+		for _, v := range cedarcoremock.GetSystems() {
 			s.Contains(resp, v)
 		}
 	})
@@ -49,7 +49,7 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 		s.NoError(err)
 
 		// should return mocked system when given corresponding mockKey
-		for _, v := range local.GetMockSystems() {
+		for _, v := range cedarcoremock.GetSystems() {
 			resp, err := c.GetSystem(ctx, v.ID.String)
 			s.NoError(err)
 			s.Equal(v, resp)

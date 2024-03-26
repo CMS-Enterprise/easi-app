@@ -1987,6 +1987,450 @@
 					"name": "Core",
 					"item": [
 						{
+							"name": "Direct Requests",
+							"item": [
+								{
+									"name": "Get Systems",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/system/summary?includeInSurvey=true&state=active",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"system",
+												"summary"
+											],
+											"query": [
+												{
+													"key": "includeInSurvey",
+													"value": "true"
+												},
+												{
+													"key": "state",
+													"value": "active"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get My Systems",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/system/summary?includeInSurvey=true&state=active&userName={{EUAID}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"system",
+												"summary"
+											],
+											"query": [
+												{
+													"key": "includeInSurvey",
+													"value": "true"
+												},
+												{
+													"key": "state",
+													"value": "active"
+												},
+												{
+													"key": "userName",
+													"value": "{{EUAID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get ATO By System ID (Authority To Operate)",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/authorityToOperate?systemId={{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"authorityToOperate"
+											],
+											"query": [
+												{
+													"key": "systemId",
+													"value": "{{CedarSystemId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Budget By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/budget?systemId={{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"budget"
+											],
+											"query": [
+												{
+													"key": "systemId",
+													"value": "{{CedarSystemId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Budget System Cost By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/budgetSystemCost?systemId={{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"budgetSystemCost"
+											],
+											"query": [
+												{
+													"key": "systemId",
+													"value": "{{CedarSystemId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Contract By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/contract?systemId={{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"contract"
+											],
+											"query": [
+												{
+													"key": "systemId",
+													"value": "{{CedarSystemId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Deployment By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/deployment?systemId={{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"deployment"
+											],
+											"query": [
+												{
+													"key": "systemId",
+													"value": "{{CedarSystemId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Exchange By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/exchange?systemId={{CedarSystemId}}&direction=both",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"exchange"
+											],
+											"query": [
+												{
+													"key": "systemId",
+													"value": "{{CedarSystemId}}"
+												},
+												{
+													"key": "direction",
+													"value": "both"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Roles By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/role?objectId={{CedarSystemId}}&application=alfabet",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"role"
+											],
+											"query": [
+												{
+													"key": "objectId",
+													"value": "{{CedarSystemId}}"
+												},
+												{
+													"key": "application",
+													"value": "alfabet"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Software Products By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/softwareProducts?id={{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"softwareProducts"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "{{CedarSystemId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Threats By ATO IDs",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/threat?ids={66F07935-7A48-4a83-AAC9-3D05DAE3F318}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"threat"
+											],
+											"query": [
+												{
+													"key": "ids",
+													"value": "{66F07935-7A48-4a83-AAC9-3D05DAE3F318}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get URL By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/url/{{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"url",
+												"{{CedarSystemId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"description": "These requests bypass the EASi GraphQL API and make calls directly to CEDAR.",
+							"auth": {
+								"type": "apikey",
+								"apikey": [
+									{
+										"key": "key",
+										"value": "x-Gateway-APIKey",
+										"type": "string"
+									},
+									{
+										"key": "value",
+										"value": "{{CedarApiKey}}",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"packages": {},
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"packages": {},
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						},
+						{
 							"name": "Roles",
 							"item": [
 								{
@@ -2030,7 +2474,8 @@
 												"exec": [
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -2040,8 +2485,8 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query {\n  cedarSystemDetails(cedarSystemId:\"408-4104-0\") {\n    cedarSystem {\n      name\n    }\n    roles {\n      roleID\n      assigneeUsername\n      roleTypeID\n      roleTypeName\n    }\n  }\n}",
-												"variables": ""
+												"query": "query($cedarSystemId: String!) {\n  cedarSystemDetails(cedarSystemId: $cedarSystemId) {\n    cedarSystem {\n      name\n    }\n    roles {\n      roleID\n      assigneeUsername\n      roleTypeID\n      roleTypeName\n    }\n  }\n}",
+												"variables": "{\r\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\r\n}"
 											}
 										},
 										"url": {
@@ -2164,7 +2609,8 @@
 												"exec": [
 													""
 												],
-												"type": "text/javascript"
+												"type": "text/javascript",
+												"packages": {}
 											}
 										}
 									],
@@ -2175,7 +2621,7 @@
 											"mode": "graphql",
 											"graphql": {
 												"query": "query($systemID: String!) {\n  cedarSystem(cedarSystemId: $systemID){\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n  }\n}",
-												"variables": "{\r\n    \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}\"\r\n}"
+												"variables": "{\r\n    \"systemID\": \"{{CedarSystemId}}\"\r\n}"
 											}
 										},
 										"url": {
@@ -2228,155 +2674,104 @@
 							]
 						},
 						{
-							"name": "Direct Requests",
+							"name": "Software Products",
 							"item": [
 								{
-									"name": "Get Systems",
-									"request": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+									"name": "Get Software Products By System",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
 											}
-										],
-										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/system/summary?includeInSurvey=true&state=active",
-											"host": [
-												"{{CedarApiUrl}}"
-											],
-											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
-												"system",
-												"summary"
-											],
-											"query": [
-												{
-													"key": "includeInSurvey",
-													"value": "true"
-												},
-												{
-													"key": "state",
-													"value": "active"
-												}
-											]
 										}
-									},
-									"response": []
-								},
-								{
-									"name": "Get My Systems",
+									],
 									"request": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($systemID: String!) {\n  cedarSoftwareProducts(cedarSystemId: $systemID){\n    apiDataArea\n    apiDescPublished\n    apiDescPubLocation\n    apiFHIRUse\n    softwareProducts {\n        apiGatewayUse\n    }\n  }\n}",
+												"variables": "{\r\n    \"systemID\": \"{{CedarSystemId}}\"\r\n}"
 											}
-										],
+										},
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/system/summary?includeInSurvey=true&state=active&userName={{EUAID}}",
+											"raw": "{{url}}",
 											"host": [
-												"{{CedarApiUrl}}"
-											],
-											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
-												"system",
-												"summary"
-											],
-											"query": [
-												{
-													"key": "includeInSurvey",
-													"value": "true"
-												},
-												{
-													"key": "state",
-													"value": "active"
-												},
-												{
-													"key": "userName",
-													"value": "{{EUAID}}"
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Get Contract By System ID",
-									"request": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
-											}
-										],
-										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/contract?systemId={{CedarSystemId}}",
-											"host": [
-												"{{CedarApiUrl}}"
-											],
-											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
-												"contract"
-											],
-											"query": [
-												{
-													"key": "systemId",
-													"value": "{{CedarSystemId}}"
-												}
+												"{{url}}"
 											]
 										}
 									},
 									"response": []
 								}
-							],
-							"description": "These requests bypass the EASi GraphQL API and make calls directly to CEDAR.",
-							"auth": {
-								"type": "apikey",
-								"apikey": [
-									{
-										"key": "key",
-										"value": "x-Gateway-APIKey",
-										"type": "string"
+							]
+						},
+						{
+							"name": "Authority To Operate",
+							"item": [
+								{
+									"name": "Get ATOs By System",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($systemID: String!) {\n  cedarAuthorityToOperate(cedarSystemID: $systemID) {\n    cedarId\n    uuid\n    actualDispositionDate\n    containsPersonallyIdentifiableInformation\n    countOfTotalNonPrivilegedUserPopulation\n    countOfOpenPoams\n    countOfTotalPrivilegedUserPopulation\n    dateAuthorizationMemoExpires\n    dateAuthorizationMemoSigned\n    eAuthenticationLevel\n    fips199OverallImpactRating\n    fismaSystemAcronym\n    fismaSystemName\n    isAccessedByNonOrganizationalUsers\n    isPiiLimitedToUserNameAndPass\n    isProtectedHealthInformation\n    lastActScaDate\n    lastAssessmentDate\n    lastContingencyPlanCompletionDate\n    lastPenTestDate\n    piaCompletionDate\n    primaryCyberRiskAdvisor\n    privacySubjectMatterExpert\n    recoveryPointObjective\n    recoveryTimeObjective\n    systemOfRecordsNotice\n    tlcPhase\n    xlcPhase\n  }\n}",
+												"variables": "{\r\n    \"systemID\": \"{{CedarSystemId}}\"\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
 									},
-									{
-										"key": "value",
-										"value": "{{CedarApiKey}}",
-										"type": "string"
-									}
-								]
-							},
-							"event": [
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Threat",
+							"item": [
 								{
-									"listen": "prerequest",
-									"script": {
-										"type": "text/javascript",
-										"packages": {},
-										"exec": [
-											""
-										]
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"type": "text/javascript",
-										"packages": {},
-										"exec": [
-											""
-										]
-									}
+									"name": "Get Threats By System",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($cedarSystemId: String!) {\n cedarThreat(cedarSystemId: $cedarSystemId){\n   alternativeId\n   controlFamily\n   daysOpen\n   id\n   parentId\n   type\n   weaknessRiskLevel\n }\n}",
+												"variables": "{\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
 								}
 							]
 						}

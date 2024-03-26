@@ -22261,9 +22261,9 @@ func (ec *executionContext) _CedarSoftwareProducts_aiSolnCatg(ctx context.Contex
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]string)
+	res := resTmp.([]zero.String)
 	fc.Result = res
-	return ec.marshalNString2ᚕstring(ctx, field.Selections, res)
+	return ec.marshalNString2ᚕgithubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarSoftwareProducts_aiSolnCatg(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -22346,9 +22346,9 @@ func (ec *executionContext) _CedarSoftwareProducts_apiDataArea(ctx context.Conte
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]string)
+	res := resTmp.([]zero.String)
 	fc.Result = res
-	return ec.marshalNString2ᚕstring(ctx, field.Selections, res)
+	return ec.marshalNString2ᚕgithubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarSoftwareProducts_apiDataArea(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -71735,6 +71735,32 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
+func (ec *executionContext) unmarshalNString2ᚕgithubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx context.Context, v interface{}) ([]zero.String, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]zero.String, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNString2ᚕgithubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx context.Context, sel ast.SelectionSet, v []zero.String) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, sel, v[i])
+	}
+
+	return ret
+}
+
 func (ec *executionContext) unmarshalNString2ᚕgithubᚗcomᚋgureguᚋnullᚋzeroᚐStringᚄ(ctx context.Context, v interface{}) ([]zero.String, error) {
 	var vSlice []interface{}
 	if v != nil {
@@ -71762,32 +71788,6 @@ func (ec *executionContext) marshalNString2ᚕgithubᚗcomᚋgureguᚋnullᚋzer
 		if e == graphql.Null {
 			return graphql.Null
 		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) unmarshalNString2ᚕstring(ctx context.Context, v interface{}) ([]string, error) {
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]string, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOString2string(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalNString2ᚕstring(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalOString2string(ctx, sel, v[i])
 	}
 
 	return ret
