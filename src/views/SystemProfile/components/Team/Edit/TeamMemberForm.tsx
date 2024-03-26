@@ -14,6 +14,7 @@ import {
   Label
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import * as yup from 'yup';
 
 import CedarContactSelect from 'components/CedarContactSelect';
 import PageLoading from 'components/PageLoading';
@@ -30,7 +31,6 @@ import {
   SetRolesForUserOnSystemVariables
 } from 'queries/types/SetRolesForUserOnSystem';
 import { UsernameWithRoles } from 'types/systemProfile';
-import teamMemberSchema from 'validations/systemProfileSchema';
 
 import { TeamContactCard } from '..';
 
@@ -51,6 +51,11 @@ type TeamMemberFormProps = {
   ) => Promise<FetchResult<SetRolesForUserOnSystem>>;
   loading: boolean;
 };
+
+const teamMemberSchema: yup.SchemaOf<TeamMemberFields> = yup.object({
+  euaUserId: yup.string().required(),
+  desiredRoleTypeIDs: yup.array(yup.string().required()).min(1)
+});
 
 /**
  * Form to add or edit a system profile team member

@@ -18,9 +18,7 @@ import {
   SummaryBox
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import i18next from 'i18next';
 import { useFlags } from 'launchdarkly-react-client-sdk';
-import { startCase } from 'lodash';
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -34,14 +32,11 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import { ATO_STATUS_DUE_SOON_DAYS } from 'constants/systemProfile';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
-/* eslint-disable camelcase */
-import { GetSystemIntake_systemIntake_systems_businessOwnerRoles } from 'queries/types/GetSystemIntake';
 import {
   GetSystemProfile,
   /* eslint-disable camelcase */
   GetSystemProfile_cedarAuthorityToOperate,
   GetSystemProfile_cedarSystemDetails,
-  GetSystemProfile_cedarSystemDetails_roles,
   /* eslint-enable camelcase */
   GetSystemProfileVariables
 } from 'queries/types/GetSystemProfile';
@@ -57,7 +52,8 @@ import {
   UrlLocationTag,
   UsernameWithRoles
 } from 'types/systemProfile';
-import { formatDateUtc, parseAsUTC } from 'utils/date';
+import { parseAsUTC } from 'utils/date';
+import { formatHttpsUrl } from 'utils/formatUrl';
 import NotFound from 'views/NotFound';
 import {
   activities as mockActivies,
@@ -72,16 +68,10 @@ import EditPageCallout from './components/EditPageCallout';
 import sideNavItems from './components/index';
 import SystemSubNav from './components/SystemSubNav/index';
 import EditTeam from './components/Team/Edit';
+import { getPersonFullName } from './helpers';
 import PointsOfContactSidebar from './PointsOfContactSidebar';
 
 import './index.scss';
-
-function httpsUrl(url: string): string {
-  if (/^https?/.test(url)) {
-    return url;
-  }
-  return `https://${url}`;
-}
 
 /**
  * Get the ATO Status from certain date properties and flags.
@@ -152,7 +142,7 @@ function getLocations(
 
     // Fix address urls without a protocol
     // and reassign it to the original address property
-    const address = url.address && httpsUrl(url.address);
+    const address = url.address && formatHttpsUrl(url.address);
 
     return {
       ...url,
@@ -161,22 +151,6 @@ function getLocations(
       tags
     };
   });
-}
-
-/**
- * Get a person's full name from a Cedar Role.
- * Format the name in title case if the full name is in all caps.
- */
-export function getPersonFullName(
-  role: // eslint-disable-next-line camelcase
-  | GetSystemProfile_cedarSystemDetails_roles
-    // eslint-disable-next-line camelcase
-    | GetSystemIntake_systemIntake_systems_businessOwnerRoles
-): string {
-  const fullname = `${role.assigneeFirstName} ${role.assigneeLastName}`;
-  return fullname === fullname.toUpperCase()
-    ? startCase(fullname.toLowerCase())
-    : fullname;
 }
 
 /**
@@ -278,43 +252,6 @@ export function getSystemProfileData(
     subSystems: mockSubSystems,
     systemData: mockSystemData
   };
-}
-
-export function showAtoExpirationDate(
-  // eslint-disable-next-line camelcase
-  systemProfileAto?: GetSystemProfile_cedarAuthorityToOperate
-): React.ReactNode {
-  return showVal(
-    systemProfileAto?.dateAuthorizationMemoExpires &&
-      formatDateUtc(
-        systemProfileAto.dateAuthorizationMemoExpires,
-        'MMMM d, yyyy'
-      )
-  );
-}
-
-/**
- * Show the value if it's not `null`, `undefined`, or `''`,
- * otherwise render `defaultVal`.
- * Use a `format` function on the value if provided.
- */
-export function showVal(
-  val: string | number | null | undefined,
-  {
-    defaultVal = i18next.t<string>('general:noInfoToDisplay'),
-    format
-  }: {
-    defaultVal?: string;
-    format?: (v: any) => string;
-  } = {}
-): React.ReactNode {
-  if (val === null || val === undefined || val === '') {
-    return <span className="text-italic">{defaultVal}</span>;
-  }
-
-  if (format) return format(val);
-
-  return val;
 }
 
 /**

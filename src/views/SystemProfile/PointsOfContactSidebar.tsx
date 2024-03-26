@@ -10,8 +10,8 @@ import {
   UsernameWithRoles
 } from 'types/systemProfile';
 
+import { getPersonFullName } from './helpers';
 import pointsOfContactIds from './pointsOfContactIds';
-import { getPersonFullName } from '.';
 
 /**
  * Get a list of subpage contacts defined by `pointsOfContactIds`.
