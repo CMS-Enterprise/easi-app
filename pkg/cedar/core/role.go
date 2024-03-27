@@ -86,7 +86,10 @@ func (c *Client) GetBusinessOwnerRolesBySystem(ctx context.Context, cedarSystemI
 func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return cedarcoremock.GetSystemRoles(cedarSystemID, roleTypeID), nil
+		if cedarcoremock.IsMockSystem(cedarSystemID) {
+			return cedarcoremock.GetSystemRoles(cedarSystemID, roleTypeID), nil
+		}
+		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
