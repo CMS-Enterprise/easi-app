@@ -9,19 +9,6 @@ import { AccessibilityRequestDocumentStatus, AccessibilityRequestDocumentCommonT
 // GraphQL query operation: GetAccessibilityRequest
 // ====================================================
 
-export interface GetAccessibilityRequest_accessibilityRequest_system_businessOwner {
-  __typename: "BusinessOwner";
-  name: string;
-  component: string;
-}
-
-export interface GetAccessibilityRequest_accessibilityRequest_system {
-  __typename: "System";
-  name: string;
-  lcid: string;
-  businessOwner: GetAccessibilityRequest_accessibilityRequest_system_businessOwner;
-}
-
 export interface GetAccessibilityRequest_accessibilityRequest_documents_documentType {
   __typename: "AccessibilityRequestDocumentType";
   commonType: AccessibilityRequestDocumentCommonType;
@@ -56,7 +43,6 @@ export interface GetAccessibilityRequest_accessibilityRequest {
   euaUserId: string;
   submittedAt: Time;
   name: string;
-  system: GetAccessibilityRequest_accessibilityRequest_system | null;
   documents: GetAccessibilityRequest_accessibilityRequest_documents[];
   testDates: GetAccessibilityRequest_accessibilityRequest_testDates[];
   statusRecord: GetAccessibilityRequest_accessibilityRequest_statusRecord;

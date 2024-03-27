@@ -14,18 +14,6 @@ export interface GetAccessibilityRequests_accessibilityRequests_edges_node_relev
   date: Time;
 }
 
-export interface GetAccessibilityRequests_accessibilityRequests_edges_node_system_businessOwner {
-  __typename: "BusinessOwner";
-  name: string;
-  component: string;
-}
-
-export interface GetAccessibilityRequests_accessibilityRequests_edges_node_system {
-  __typename: "System";
-  lcid: string;
-  businessOwner: GetAccessibilityRequests_accessibilityRequests_edges_node_system_businessOwner;
-}
-
 export interface GetAccessibilityRequests_accessibilityRequests_edges_node_statusRecord {
   __typename: "AccessibilityRequestStatusRecord";
   status: AccessibilityRequestStatus;
@@ -38,7 +26,6 @@ export interface GetAccessibilityRequests_accessibilityRequests_edges_node {
   name: string;
   relevantTestDate: GetAccessibilityRequests_accessibilityRequests_edges_node_relevantTestDate | null;
   submittedAt: Time;
-  system: GetAccessibilityRequests_accessibilityRequests_edges_node_system | null;
   statusRecord: GetAccessibilityRequests_accessibilityRequests_edges_node_statusRecord;
 }
 

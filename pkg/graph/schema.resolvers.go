@@ -102,23 +102,6 @@ func (r *accessibilityRequestResolver) RelevantTestDate(ctx context.Context, obj
 	return recentPast, nil
 }
 
-// System is the resolver for the system field.
-func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
-	if obj.IntakeID == nil {
-		return nil, nil
-	}
-	system, systemErr := r.store.FetchSystemByIntakeID(ctx, *obj.IntakeID)
-	if systemErr != nil {
-		return nil, systemErr
-	}
-	system.BusinessOwner = &models.BusinessOwner{
-		Name:      system.BusinessOwnerName.String,
-		Component: system.BusinessOwnerComponent.String,
-	}
-
-	return system, nil
-}
-
 // TestDates is the resolver for the testDates field.
 func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.TestDate, error) {
 	return r.store.FetchTestDatesByRequestID(ctx, obj.ID)
@@ -1664,26 +1647,6 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error) {
 	return resolvers.SystemIntakes(ctx, r.store, openRequests)
-}
-
-// Systems is the resolver for the systems field.
-func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
-	systems, err := r.store.ListSystems(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	conn := &model.SystemConnection{}
-	for _, system := range systems {
-		system.BusinessOwner = &models.BusinessOwner{
-			Name:      system.BusinessOwnerName.String,
-			Component: system.BusinessOwnerComponent.String,
-		}
-		conn.Edges = append(conn.Edges, &model.SystemEdge{
-			Node: system,
-		})
-	}
-	return conn, nil
 }
 
 // SystemIntakesWithLcids is the resolver for the systemIntakesWithLcids field.

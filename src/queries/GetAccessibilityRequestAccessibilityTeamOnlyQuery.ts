@@ -7,14 +7,6 @@ export default gql`
       euaUserId
       submittedAt
       name
-      system {
-        name
-        lcid
-        businessOwner {
-          name
-          component
-        }
-      }
       documents {
         id
         url

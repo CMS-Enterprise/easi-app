@@ -513,14 +513,6 @@ type SubmitIntakeInput struct {
 	ID uuid.UUID `json:"id"`
 }
 
-type SystemConnection struct {
-	Edges []*SystemEdge `json:"edges"`
-}
-
-type SystemEdge struct {
-	Node *models.System `json:"node"`
-}
-
 // An action taken on a system intake, often resulting in a change in status.
 type SystemIntakeAction struct {
 	ID                     uuid.UUID                         `json:"id"`

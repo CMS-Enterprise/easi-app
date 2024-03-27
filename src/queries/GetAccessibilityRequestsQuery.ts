@@ -11,13 +11,6 @@ export default gql`
             date
           }
           submittedAt
-          system {
-            lcid
-            businessOwner {
-              name
-              component
-            }
-          }
           statusRecord {
             status
             createdAt

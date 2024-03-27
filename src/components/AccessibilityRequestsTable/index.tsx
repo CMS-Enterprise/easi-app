@@ -111,9 +111,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
   // Modifed data can then be configured with JSX components in column cell configuration
   const data = useMemo(() => {
     const tableData = requests.map(request => {
-      const businessOwner = request?.system?.businessOwner
-        ? `${request.system.businessOwner.name}, ${request.system.businessOwner.component}`
-        : '';
+      const businessOwner = '';
       const testDate = request.relevantTestDate?.date
         ? request.relevantTestDate?.date
         : null;

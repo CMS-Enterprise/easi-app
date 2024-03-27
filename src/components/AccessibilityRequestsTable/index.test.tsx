@@ -21,15 +21,6 @@ const requests: AccessibilityRequests[] = [
       date: '2021-06-30T19:22:40Z'
     },
     submittedAt: '2021-06-10T19:22:40Z',
-    system: {
-      __typename: 'System',
-      lcid: '0000',
-      businessOwner: {
-        __typename: 'BusinessOwner',
-        name: 'Shade',
-        component: 'OIT'
-      }
-    },
     statusRecord: {
       __typename: 'AccessibilityRequestStatusRecord',
       status: AccessibilityRequestStatus.IN_REMEDIATION,
@@ -42,15 +33,6 @@ const requests: AccessibilityRequests[] = [
     name: 'Burrito v1',
     submittedAt: '2021-06-11T19:22:40Z',
     relevantTestDate: null,
-    system: {
-      __typename: 'System',
-      lcid: '0000',
-      businessOwner: {
-        __typename: 'BusinessOwner',
-        name: 'Shade',
-        component: 'OIT'
-      }
-    },
     statusRecord: {
       __typename: 'AccessibilityRequestStatusRecord',
       status: AccessibilityRequestStatus.OPEN,

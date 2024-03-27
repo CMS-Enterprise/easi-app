@@ -252,13 +252,11 @@ const AccessibilityRequestDetailPage = () => {
 
   const requestName = data?.accessibilityRequest?.name || '';
   const requestOwnerEuaId = data?.accessibilityRequest?.euaUserId || '';
-  const systemName = data?.accessibilityRequest?.system?.name || '';
+  const systemName = '';
   const submittedAt = data?.accessibilityRequest?.submittedAt || '';
-  const lcid = data?.accessibilityRequest?.system?.lcid;
-  const businessOwnerName =
-    data?.accessibilityRequest?.system?.businessOwner?.name;
-  const businessOwnerComponent =
-    data?.accessibilityRequest?.system?.businessOwner?.component;
+  const lcid = '';
+  const businessOwnerName = '';
+  const businessOwnerComponent = '';
   const documents = data?.accessibilityRequest?.documents || [];
   const testDates = data?.accessibilityRequest?.testDates || [];
 

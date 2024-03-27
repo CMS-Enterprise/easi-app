@@ -433,7 +433,6 @@ type AccessibilityRequest {
   name: String!
   relevantTestDate: TestDate
   submittedAt: Time!
-  system: System
   testDates: [TestDate!]!
   euaUserId: String!
   statusRecord: AccessibilityRequestStatusRecord!
@@ -526,25 +525,6 @@ type CreateAccessibilityRequestNotePayload {
 }
 
 """
-A business owner is the person at CMS responsible for a system
-"""
-type BusinessOwner {
-  component: String!
-  name: String!
-}
-
-"""
-A System is derived from a system intake and represents a computer system
-managed by CMS
-"""
-type System {
-  businessOwner: BusinessOwner!
-  id: UUID!
-  lcid: String!
-  name: String!
-}
-
-"""
 Indicates the status of a document that has been attached to 508/accessibility
 request, which will be scanned for viruses before it is made available
 """
@@ -589,14 +569,6 @@ type AccessibilityRequestDocument {
   status: AccessibilityRequestDocumentStatus!
   uploadedAt: Time!
   url: String!
-}
-
-type SystemConnection {
-  edges: [SystemEdge!]!
-}
-
-type SystemEdge {
-  node: System!
 }
 
 """
@@ -2748,7 +2720,6 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
   @hasRole(role: EASI_GOVTEAM)
-  systems(after: String, first: Int!): SystemConnection
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!

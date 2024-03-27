@@ -20,7 +20,7 @@ import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQ
 import GetSystemsQuery from 'queries/GetSystems';
 import {
   GetSystems,
-  GetSystems_systems_edges_node as SystemNode
+  GetSystems_systemIntakes as SystemNode
 } from 'queries/types/GetSystems';
 import { AccessibilityRequestForm } from 'types/accessibility';
 import flattenErrors from 'utils/flattenErrors';
@@ -62,21 +62,19 @@ const Create = () => {
   const systems = useMemo(() => {
     const systemsObj: { [id: string]: SystemNode } = {};
 
-    data?.systems?.edges.forEach(system => {
-      systemsObj[system.node.id] = system.node;
+    data?.systemIntakes?.forEach(systemIntake => {
+      systemsObj[systemIntake.id] = systemIntake;
     });
 
     return systemsObj;
   }, [data]);
 
   const projectComboBoxOptions = useMemo(() => {
-    const queriedSystems = data?.systems?.edges || [];
-    return queriedSystems.map(system => {
-      const {
-        node: { id, lcid, name }
-      } = system;
+    const queriedSystems = data?.systemIntakes || [];
+    return queriedSystems.map(systemIntake => {
+      const { id, lcid } = systemIntake;
       return {
-        label: `${name} - ${lcid}`,
+        label: `${lcid}`,
         value: id
       };
     });
@@ -173,7 +171,6 @@ const Create = () => {
                               'businessOwner.component',
                               selectedSystem.businessOwner.component || ''
                             );
-                            setFieldValue('requestName', selectedSystem.name);
                           }
                         }}
                       />
