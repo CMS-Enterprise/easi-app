@@ -31,9 +31,14 @@ describe('formatDateLocal/UTC', () => {
       );
     });
 
-    it('returns invalid datetime when a string is not ISO string', () => {
+    it('returns empty string when a string is not ISO string', () => {
       const date = 'not an ISO string';
-      expect(formatDateLocal(date, 'MMMM d, yyyy')).toEqual('Invalid DateTime');
+      expect(formatDateLocal(date, 'MMMM d, yyyy')).toEqual('');
+    });
+
+    it('returns empty string when input is null', () => {
+      const date = null;
+      expect(formatDateUtc(date, 'MMMM d, yyyy')).toEqual('');
     });
 
     it('converts an ISO string UTC timezone', () => {

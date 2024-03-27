@@ -61,6 +61,7 @@ export type SubpageKey =
   | 'home'
   | 'details'
   | 'team'
+  | 'contracts'
   | 'funding-and-budget'
   | 'tools-and-software'
   | 'ato'

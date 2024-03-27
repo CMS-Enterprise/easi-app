@@ -61,6 +61,17 @@ export default gql`
       systemHasAPIGateway
       usesAiTech
     }
+    cedarContractsBySystem(cedarSystemId: $cedarSystemId) {
+      id: systemID
+      startDate
+      endDate
+      contractNumber
+      contractName
+      description
+      orderNumber
+      serviceProvided
+      isDeliveryOrg
+    }
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
       businessOwnerInformation {
         isCmsOwned

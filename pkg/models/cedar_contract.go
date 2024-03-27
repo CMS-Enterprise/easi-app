@@ -9,7 +9,7 @@ import (
 type CedarContract struct {
 	EndDate         zero.Time   `json:"endDate,omitempty"`
 	StartDate       zero.Time   `json:"startDate,omitempty"`
-	ContractNumber  *string     `json:"contractNumber"`
+	ContractNumber  zero.String `json:"contractNumber"`
 	ContractName    zero.String `json:"contractName,omitempty"`
 	Description     zero.String `json:"description,omitempty"`
 	OrderNumber     zero.String `json:"orderNumber,omitempty"`
