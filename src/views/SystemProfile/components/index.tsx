@@ -4,6 +4,7 @@ import i18next from 'i18next';
 import { SystemProfileData } from 'types/systemProfile';
 
 import ATO from './ATO';
+import Contracts from './Contracts';
 import FundingAndBudget from './FundingAndBudget';
 import Section508 from './Section508';
 import SubSystems from './SubSystems';
@@ -104,6 +105,11 @@ const sideNavItems = (
           component: <Team system={system} />,
           route: `/systems/${system.id}/team`,
           componentId: 'system-team'
+        },
+        contracts: {
+          component: <Contracts system={system} />,
+          route: `/systems/${system.id}/contracts`,
+          componentId: 'contracts'
         },
         'funding-and-budget': {
           component: <FundingAndBudget system={system} />,

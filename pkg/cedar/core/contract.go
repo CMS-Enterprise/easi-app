@@ -60,7 +60,7 @@ func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) 
 		retVal = append(retVal, &models.CedarContract{
 			EndDate:         zero.TimeFrom(endDate),
 			StartDate:       zero.TimeFrom(startDate),
-			ContractNumber:  contract.AwardID,
+			ContractNumber:  zero.StringFrom(contract.ContractNumber),
 			ContractName:    zero.StringFrom(contract.ProjectTitle),
 			Description:     zero.StringFrom(contract.Description),
 			OrderNumber:     zero.StringFrom(contract.OrderNumber),
