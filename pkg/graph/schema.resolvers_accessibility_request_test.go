@@ -131,7 +131,7 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestQuery() {
 }
 
 func (s *GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
-	ctx := s.context
+	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		ProjectName:            null.StringFrom("Big Project"),

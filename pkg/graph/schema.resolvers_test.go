@@ -181,7 +181,6 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	ctx := context.Background()
 	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
-	ctx = appcontext.WithLogger(ctx, logger)
 
 	storeTestSuite := &GraphQLTestSuite{
 		Suite:    suite.Suite{},
