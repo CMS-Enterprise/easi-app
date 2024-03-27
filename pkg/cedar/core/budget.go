@@ -7,6 +7,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/budget"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -14,7 +15,10 @@ import (
 func (c *Client) GetBudgetBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarBudget{}, nil
+		if cedarcoremock.IsMockSystem(cedarSystemID) {
+			return []*models.CedarBudget{}, nil
+		}
+		return nil, cedarcoremock.NoSystemFoundError()
 	}
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
 

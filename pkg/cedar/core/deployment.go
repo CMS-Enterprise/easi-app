@@ -25,7 +25,10 @@ type GetDeploymentsOptionalParams struct {
 func (c *Client) GetDeployments(ctx context.Context, cedarSystemID string, optionalParams *GetDeploymentsOptionalParams) ([]*models.CedarDeployment, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return cedarcoremock.GetDeployments(), nil
+		if cedarcoremock.IsMockSystem(cedarSystemID) {
+			return cedarcoremock.GetDeployments(), nil
+		}
+		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)

@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "e419bb52-6eb6-4e55-b8e1-13739f505412",
+		"_postman_id": "da4eea7a-dcd7-4ea6-b529-ee566a185a3d",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "32724285"
+		"_exporter_id": "11253221"
 	},
 	"item": [
 		{
@@ -2431,108 +2431,6 @@
 							]
 						},
 						{
-							"name": "Roles",
-							"item": [
-								{
-									"name": "RolesGet",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "graphql",
-											"graphql": {
-												"query": "query Roles{\n  roleTypes {\n    id\n    application\n    name\n    description\n  }\n}",
-												"variables": ""
-											}
-										},
-										"url": {
-											"raw": "{{url}}",
-											"host": [
-												"{{url}}"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "EASiCedarSystemRolesGet",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													""
-												],
-												"type": "text/javascript",
-												"packages": {}
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "graphql",
-											"graphql": {
-												"query": "query($cedarSystemId: String!) {\n  cedarSystemDetails(cedarSystemId: $cedarSystemId) {\n    cedarSystem {\n      name\n    }\n    roles {\n      roleID\n      assigneeUsername\n      roleTypeID\n      roleTypeName\n    }\n  }\n}",
-												"variables": "{\r\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\r\n}"
-											}
-										},
-										"url": {
-											"raw": "{{url}}",
-											"host": [
-												"{{url}}"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "EASiCedarSystemSetRoles",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "graphql",
-											"graphql": {
-												"query": "mutation {\n  setRolesForUserOnSystem(input:{\n    cedarSystemID:\"408-4104-0\"\n    euaUserId:\"ADMN\"\n    desiredRoleTypeIDs:[\n       \"238-2-0\",\"238-29-0\"\n    ]\n  })\n}",
-												"variables": ""
-											}
-										},
-										"url": {
-											"raw": "{{url}}",
-											"host": [
-												"{{url}}"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
 							"name": "System Summary",
 							"item": [
 								{
@@ -2622,6 +2520,179 @@
 											"graphql": {
 												"query": "query($systemID: String!) {\n  cedarSystem(cedarSystemId: $systemID){\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n  }\n}",
 												"variables": "{\r\n    \"systemID\": \"{{CedarSystemId}}\"\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "System Details",
+							"item": [
+								{
+									"name": "Get System Roles",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($cedarSystemId: String!) {\n  cedarSystemDetails(cedarSystemId: $cedarSystemId) {\n    cedarSystem {\n      name\n    }\n    roles {\n      roleID\n      assigneeUsername\n      roleTypeID\n      roleTypeName\n    }\n  }\n}",
+												"variables": "{\r\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get System Threats",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($cedarSystemId: String!) {\n  cedarSystemDetails(cedarSystemId: $cedarSystemId) {\n    cedarSystem {\n      name\n    }\n    threats {\n      alternativeId\n      controlFamily\n      daysOpen\n      id\n      parentId\n      type\n      weaknessRiskLevel\n    }\n  }\n}",
+												"variables": "{\r\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get System URLs",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($cedarSystemId: String!) {\n  cedarSystemDetails(cedarSystemId: $cedarSystemId) {\n    cedarSystem {\n      name\n    }\n    urls {\n        isAPIEndpoint\n        isBehindWebApplicationFirewall\n        isVersionCodeRepository\n        id\n        address\n    }\n  }\n}",
+												"variables": "{\r\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Roles",
+							"item": [
+								{
+									"name": "Roles Types",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query Roles{\n  roleTypes {\n    id\n    application\n    name\n    description\n  }\n}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Set System Roles",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation {\n  setRolesForUserOnSystem(input:{\n    cedarSystemID:\"408-4104-0\"\n    euaUserId:\"ADMN\"\n    desiredRoleTypeIDs:[\n       \"238-2-0\",\"238-29-0\"\n    ]\n  })\n}",
+												"variables": ""
 											}
 										},
 										"url": {
@@ -2760,34 +2831,8 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query GetThreatsBySystem($cedarSystemId: String!) {\n cedarThreat(cedarSystemId: $cedarSystemId){\n   alternativeId\n   controlFamily\n   daysOpen\n   id\n   parentId\n   type\n   weaknessRiskLevel\n }\n}",
+												"query": "query($cedarSystemId: String!) {\n cedarThreat(cedarSystemId: $cedarSystemId){\n   alternativeId\n   controlFamily\n   daysOpen\n   id\n   parentId\n   type\n   weaknessRiskLevel\n }\n}",
 												"variables": "{\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\n}"
-											}
-										},
-										"url": {
-											"raw": "{{url}}",
-											"host": [
-												"{{url}}"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "Deployment",
-							"item": [
-								{
-									"name": "Get Deployments By System",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "graphql",
-											"graphql": {
-												"query": "query GetDeploymentsBySystem($cedarSystemId: String!, $deploymentType: String, $state: String, $status: String){\n    deployments(cedarSystemId: $cedarSystemId, deploymentType: $deploymentType, state: $state, status: $status) {\n        id\n        name\n        systemID\n        startDate\n        endDate\n        isHotSite\n        description\n        contractorName\n        systemVersion\n        hasProductionData\n        replicatedSystemElements\n        deploymentType\n        systemName\n        deploymentElementID\n        state\n        status\n        wanType\n        dataCenter {\n            id\n            name\n            version\n            description\n            state\n            status\n            startDate\n            endDate\n            address1\n            address2\n            city\n            addressState\n            zip\n        }\n    }\n}",
-												"variables": "{\n    \"cedarSystemId\": \"{{CedarSystemId}}\",\n    \"deploymentType\": \"\",\n    \"state\": \"\",\n    \"status\": \"\"\n}"
 											}
 										},
 										"url": {

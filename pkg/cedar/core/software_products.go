@@ -16,7 +16,10 @@ import (
 func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID string) (*models.CedarSoftwareProducts, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return cedarcoremock.GetSoftwareProducts(), nil
+		if cedarcoremock.IsMockSystem(cedarSystemID) {
+			return cedarcoremock.GetSoftwareProducts(), nil
+		}
+		return nil, cedarcoremock.NoSystemFoundError()
 	}
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
 	if err != nil {
