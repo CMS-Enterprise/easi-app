@@ -102,3 +102,8 @@ func GetSystem(systemID string) *models.CedarSystem {
 	}
 	return system
 }
+
+func isMockSystem(systemID string) bool {
+	_, ok := mockSystems[systemID]
+	return ok
+}

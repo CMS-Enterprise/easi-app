@@ -17,8 +17,12 @@ import (
 func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+		mocksys := cedarcoremock.GetSystem(cedarSystemID)
+		if mocksys == nil {
+			return nil, fmt.Errorf("no body received")
+		}
 		return &models.CedarSystemDetails{
-			CedarSystem:                 cedarcoremock.GetSystem(cedarSystemID),
+			CedarSystem:                 mocksys,
 			BusinessOwnerInformation:    &models.BusinessOwnerInformation{},
 			SystemMaintainerInformation: &models.SystemMaintainerInformation{},
 		}, nil
