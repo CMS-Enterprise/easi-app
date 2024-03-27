@@ -21,7 +21,7 @@ func (c *Client) GetURLsForSystem(ctx context.Context, cedarSystemID string) ([]
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {
-			return []*models.CedarURL{}, nil
+			return cedarcoremock.GetURLs(), nil
 		}
 		return nil, cedarcoremock.NoSystemFoundError()
 	}
