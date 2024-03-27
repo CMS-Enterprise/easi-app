@@ -54,9 +54,6 @@ var mockThreats = []*models.CedarThreat{
 	},
 }
 
-func GetThreats(systemID string) []*models.CedarThreat {
-	if !isMockSystem(systemID) {
-		return []*models.CedarThreat{}
-	}
+func GetThreats() []*models.CedarThreat {
 	return mockThreats
 }

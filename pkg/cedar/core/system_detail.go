@@ -19,7 +19,7 @@ func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*mo
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		mocksys := cedarcoremock.GetSystem(cedarSystemID)
 		if mocksys == nil {
-			return nil, fmt.Errorf("no body received")
+			return nil, cedarcoremock.NoSystemFoundError()
 		}
 		return &models.CedarSystemDetails{
 			CedarSystem:                 mocksys,

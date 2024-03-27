@@ -17,14 +17,14 @@ import (
 func (c *Client) GetContractBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarContract, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return cedarcoremock.GetContractsBySystem(cedarSystemID), nil
+		if cedarcoremock.IsMockSystem(cedarSystemID) {
+			return cedarcoremock.GetContractsBySystem(cedarSystemID), nil
+		}
+		return nil, cedarcoremock.NoSystemFoundError()
 	}
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
-	}
-	if cedarSystem == nil {
-		return nil, nil
 	}
 
 	params := contract.NewContractFindParams()

@@ -1,10 +1,12 @@
 package cedarcoremock
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/guregu/null/zero"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -103,7 +105,12 @@ func GetSystem(systemID string) *models.CedarSystem {
 	return system
 }
 
-func isMockSystem(systemID string) bool {
+func IsMockSystem(systemID string) bool {
 	_, ok := mockSystems[systemID]
 	return ok
+}
+
+// NoSystemFoundError returns the error generated from the CEDAR core client's GetSystem method
+func NoSystemFoundError() *apperrors.ResourceNotFoundError {
+	return &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
 }

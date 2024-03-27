@@ -8,6 +8,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apiurl "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/url"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -19,7 +20,10 @@ import (
 func (c *Client) GetURLsForSystem(ctx context.Context, cedarSystemID string) ([]*models.CedarURL, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return []*models.CedarURL{}, nil
+		if cedarcoremock.IsMockSystem(cedarSystemID) {
+			return []*models.CedarURL{}, nil
+		}
+		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)

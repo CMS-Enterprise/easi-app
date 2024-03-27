@@ -16,7 +16,10 @@ import (
 func (c *Client) GetThreat(ctx context.Context, cedarSystemID string) ([]*models.CedarThreat, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return cedarcoremock.GetThreats(cedarSystemID), nil
+		if cedarcoremock.IsMockSystem(cedarSystemID) {
+			return cedarcoremock.GetThreats(), nil
+		}
+		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
 	// NOTE: We do not need to use the GetSystem call or check the cache here b/c
