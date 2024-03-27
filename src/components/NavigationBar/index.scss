@@ -84,8 +84,8 @@
     }
 }
 
-.easi-nav .usa-current:not(.system-dropdown)::after {
-    bottom: -.25rem !important;
+.usa-header--basic .usa-nav__link:not(.system-dropdown):hover::after {
+    bottom: 0rem !important;
 }
 
 .usa-nav__submenu {
