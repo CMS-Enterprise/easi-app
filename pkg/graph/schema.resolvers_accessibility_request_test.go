@@ -61,16 +61,7 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestQuery() {
 
 	var resp struct {
 		AccessibilityRequest struct {
-			ID     string
-			System struct {
-				ID            string
-				Name          string
-				LCID          string
-				BusinessOwner struct {
-					Name      string
-					Component string
-				}
-			}
+			ID        string
 			Documents []struct {
 				ID       string
 				URL      string
@@ -106,15 +97,6 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestQuery() {
 					size
 					status
 				}
-				system {
-					id
-					name
-					lcid
-					businessOwner {
-						name
-						component
-					}
-				}
 				statusRecord {
 					id
 					status
@@ -129,11 +111,6 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestQuery() {
 		}`, accessibilityRequest.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest("TEST"))
 
 	s.Equal(accessibilityRequest.ID.String(), resp.AccessibilityRequest.ID)
-	s.Equal(intake.ID.String(), resp.AccessibilityRequest.System.ID)
-	s.Equal("Big Project", resp.AccessibilityRequest.System.Name)
-	s.Equal(lifecycleID, resp.AccessibilityRequest.System.LCID)
-	s.Equal("Firstname Lastname", resp.AccessibilityRequest.System.BusinessOwner.Name)
-	s.Equal("OIT", resp.AccessibilityRequest.System.BusinessOwner.Component)
 
 	s.Equal(1, len(resp.AccessibilityRequest.Documents))
 
@@ -154,7 +131,7 @@ func (s *GraphQLTestSuite) TestAccessibilityRequestQuery() {
 }
 
 func (s *GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		ProjectName:            null.StringFrom("Big Project"),

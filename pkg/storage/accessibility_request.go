@@ -41,7 +41,7 @@ func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *models.
 			:id,
 			:name,
 			:intake_id,
-		  :created_at,
+			:created_at,
 			:updated_at,
 			:eua_user_id,
 			:cedar_system_id
