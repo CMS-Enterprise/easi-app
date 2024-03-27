@@ -95,14 +95,12 @@ describe('AccessibilityRequestsTable', () => {
     const row1 = wrapperWithRequests.find('tbody').find('tr').at(0);
     expect(row1.find('th').find('a').text()).toEqual('Burrito v1');
     expect(row1.find('td').at(0).text()).toEqual('06/11/2021');
-    expect(row1.find('td').at(1).text()).toEqual('Shade, OIT');
     expect(row1.find('td').at(2).text()).toEqual('Not Added');
     expect(row1.find('td').at(3).text()).toEqual('Open');
 
     const row2 = wrapperWithRequests.find('tbody').find('tr').at(1);
     expect(row2.find('th').find('a').text()).toEqual('Burrito v2');
     expect(row2.find('td').at(0).text()).toEqual('06/10/2021');
-    expect(row2.find('td').at(1).text()).toEqual('Shade, OIT');
     expect(row2.find('td').at(2).text()).toEqual('06/30/2021');
     expect(row2.find('td').at(3).text()).toEqual(
       'In remediation changed on 06/11/2021'

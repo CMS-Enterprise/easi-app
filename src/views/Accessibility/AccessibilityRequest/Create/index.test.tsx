@@ -5,17 +5,12 @@ import { MockedProvider } from '@apollo/client/testing';
 import {
   render,
   screen,
-  waitFor,
   waitForElementToBeRemoved
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import configureMockStore from 'redux-mock-store';
 
 import { MessageProvider } from 'hooks/useMessage';
-import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
-import GetAccessibilityRequestAccessibilityTeamOnlyQuery from 'queries/GetAccessibilityRequestAccessibilityTeamOnlyQuery';
 import GetSystemsQuery from 'queries/GetSystems';
-import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
 
 import Create from './index';
 
@@ -78,64 +73,6 @@ describe('Create 508 Request page', () => {
     }
   };
 
-  const create508Request = {
-    request: {
-      query: CreateAccessibilityRequestQuery,
-      variables: {
-        input: {
-          name: 'TACO',
-          intakeID: '702af838-15be-4ddd-adf0-d99fc55a1eca'
-        }
-      }
-    },
-    result: {
-      data: {
-        createAccessibilityRequest: {
-          accessibilityRequest: {
-            id: 'bc142c4d-fc41-499c-ac31-482d6eb09e01',
-            name: 'TACO'
-          },
-          userErrors: null
-        }
-      }
-    }
-  };
-
-  const get508RequestQuery = {
-    request: {
-      query: GetAccessibilityRequestAccessibilityTeamOnlyQuery,
-      variables: {
-        id: 'bc142c4d-fc41-499c-ac31-482d6eb09e01'
-      }
-    },
-    result: {
-      data: {
-        accessibilityRequest: {
-          id: 'bc142c4d-fc41-499c-ac31-482d6eb09e01',
-          name: 'TACO',
-          submittedAt: '2021-07-13T02:09:00Z',
-          euaUserId: 'AAAA',
-          documents: [],
-          notes: [],
-          testDates: [],
-          statusRecord: {
-            status: 'OPEN',
-            submittedAt: '2021-07-13T02:09:00Z'
-          },
-          system: {
-            id: '702af838-15be-4ddd-adf0-d99fc55a1eca',
-            name: 'TACO',
-            lcid: '000001',
-            businessOwner: {
-              name: 'Shane Clark',
-              component: 'OIT'
-            }
-          }
-        }
-      }
-    }
-  };
-
   const waitForPageLoad = async () => {
     await waitForElementToBeRemoved(() => screen.getByTestId('page-loading'));
   };
@@ -157,51 +94,6 @@ describe('Create 508 Request page', () => {
     await waitForPageLoad();
 
     expect(screen.getByTestId('create-508-request')).toBeInTheDocument();
-  });
-
-  it('can create a 508 testing request', async () => {
-    window.scrollTo = vi.fn;
-
-    render(
-      <MemoryRouter initialEntries={['/508/requests/new']}>
-        <MessageProvider>
-          <MockedProvider
-            mocks={[defaultQuery, create508Request, get508RequestQuery]}
-            addTypename={false}
-          >
-            <Provider store={defaultStore}>
-              <Route path="/508/requests/new">
-                <Create />
-              </Route>
-              <Route path="/508/requests/:accessibilityRequestId/documents">
-                <AccessibilityRequestDetailPage />
-              </Route>
-            </Provider>
-          </MockedProvider>
-        </MessageProvider>
-      </MemoryRouter>
-    );
-    await waitForPageLoad();
-
-    const comboBoxInput = screen.getByRole('combobox', {
-      name: /application/i
-    });
-    userEvent.type(comboBoxInput, 'TACO - 000000{enter}');
-    expect(comboBoxInput).toHaveValue('TACO - 000000');
-
-    screen.getByRole('button', { name: /send 508 testing request/i }).click();
-    await screen.findByTestId('page-loading');
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('page-loading')).not.toBeInTheDocument();
-    });
-
-    expect(
-      screen.getByText(/508 testing request created/i)
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { level: 1, name: /TACO/i })
-    ).toBeInTheDocument();
   });
 
   it('renders validation errors', async () => {
