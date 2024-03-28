@@ -1,5 +1,3 @@
-import { ACCESSIBILITY_ADMIN_DEV } from '../../src/constants/jobCodes';
-
 const maxAttempts = 3;
 describe('Logging in', () => {
   it(
@@ -23,10 +21,4 @@ describe('Logging in', () => {
       cy.location('pathname', { timeout: 20000 }).should('equal', '/');
     }
   );
-
-  it('logs in with local auth', () => {
-    cy.localLogin({ name: 'E2E1', role: ACCESSIBILITY_ADMIN_DEV });
-
-    cy.get('h1', { timeout: 20000 }).should('have.text', '508 Requests');
-  });
 });

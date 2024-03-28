@@ -115,14 +115,13 @@ func (tc *TestConfigs) GetDefaults() {
 func NewEmailClient() *email.Client {
 	config := testhelpers.NewConfig()
 	emailConfig := email.Config{
-		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
-		ITInvestmentEmail:      models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
-		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
-		TRBEmail:               models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
-		EASIHelpEmail:          models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
-		URLHost:                config.GetString(appconfig.ClientHostKey),
-		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		ITInvestmentEmail: models.NewEmailAddress(config.GetString(appconfig.ITInvestmentEmailKey)),
+		TRBEmail:          models.NewEmailAddress(config.GetString(appconfig.TRBEmailKey)),
+		EASIHelpEmail:     models.NewEmailAddress(config.GetString(appconfig.EASIHelpEmailKey)),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 	localSender := local.NewSender()
 

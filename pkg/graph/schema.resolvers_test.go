@@ -136,11 +136,10 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	// set up Email Client
 	emailConfig := email.Config{
-		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
-		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
-		URLHost:                config.GetString(appconfig.ClientHostKey),
-		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 	localSender := local.NewSender()
 	emailClient, err := email.NewClient(emailConfig, localSender)

@@ -31,15 +31,14 @@ func noErr(err error) {
 
 func createEmailClient() email.Client {
 	emailConfig := email.Config{
-		GRTEmail:               models.NewEmailAddress("grt_email@cms.gov"),
-		ITInvestmentEmail:      models.NewEmailAddress("it_investment_email@cms.gov"),
-		AccessibilityTeamEmail: models.NewEmailAddress("508_team@cms.gov"),
-		TRBEmail:               models.NewEmailAddress("trb@cms.gov"),
-		EASIHelpEmail:          models.NewEmailAddress(os.Getenv("EASI_HELP_EMAIL")),
-		CEDARTeamEmail:         models.NewEmailAddress("cedar@cedar.gov"),
-		URLHost:                os.Getenv("CLIENT_HOSTNAME"),
-		URLScheme:              os.Getenv("CLIENT_PROTOCOL"),
-		TemplateDirectory:      os.Getenv("EMAIL_TEMPLATE_DIR"),
+		GRTEmail:          models.NewEmailAddress("grt_email@cms.gov"),
+		ITInvestmentEmail: models.NewEmailAddress("it_investment_email@cms.gov"),
+		TRBEmail:          models.NewEmailAddress("trb@cms.gov"),
+		EASIHelpEmail:     models.NewEmailAddress(os.Getenv("EASI_HELP_EMAIL")),
+		CEDARTeamEmail:    models.NewEmailAddress("cedar@cedar.gov"),
+		URLHost:           os.Getenv("CLIENT_HOSTNAME"),
+		URLScheme:         os.Getenv("CLIENT_PROTOCOL"),
+		TemplateDirectory: os.Getenv("EMAIL_TEMPLATE_DIR"),
 	}
 
 	sender := local.NewSMTPSender("localhost:1025")

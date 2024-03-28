@@ -38,26 +38,6 @@ func (s *StoreTestSuite) EqualTime(expected, actual time.Time) {
 	}
 }
 
-func (s *StoreTestSuite) emptyDatabaseTables() error {
-	statement := `
-	DELETE FROM accessibility_request_status_records;
-	DELETE FROM accessibility_request_notes;
-	DELETE FROM accessibility_request_documents;
-	DELETE FROM test_dates;
-	DELETE FROM accessibility_requests;
-	DELETE FROM notes;
-	DELETE FROM actions;
-	DELETE FROM estimated_lifecycle_costs;
-	DELETE FROM business_cases;
-	DELETE FROM governance_request_feedback;
-	DELETE FROM system_intake_contacts;
-	DELETE FROM system_intake_funding_sources;
-	DELETE FROM system_intakes;
-`
-	_, err := s.db.Exec(statement)
-	return err
-}
-
 func TestStoreTestSuite(t *testing.T) {
 	config := testhelpers.NewConfig()
 

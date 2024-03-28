@@ -131,9 +131,6 @@ const GRTEmailKey = "GRT_EMAIL"
 // ITInvestmentEmailKey is the key for the receiving email for IT investment
 const ITInvestmentEmailKey = "IT_INVESTMENT_EMAIL"
 
-// AccessibilityTeamEmailKey is the key for the receiving email for the 508 team
-const AccessibilityTeamEmailKey = "ACCESSIBILITY_TEAM_EMAIL"
-
 // EASIHelpEmailKey is the key for the receiving email for EASI help requests
 const EASIHelpEmailKey = "EASI_HELP_EMAIL"
 

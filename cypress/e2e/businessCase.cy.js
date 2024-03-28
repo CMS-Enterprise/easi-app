@@ -5,7 +5,7 @@ describe('The Business Case Form', () => {
 
   it('fills out all business case fields', () => {
     cy.visit('/');
-    cy.get('.accessibility-requests-table')
+    cy.get('.requests-table')
       .contains('a', 'Easy Access to System Information')
       .click();
     cy.contains('h1', 'Governance task list');

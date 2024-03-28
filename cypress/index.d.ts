@@ -3,8 +3,4 @@
 
 
 
-declare namespace Cypress {
-    interface Chainable<Subject> {
-      seedAccessibilityRequest(options) : Cypress.Chainable<import('./support/seed').AccessibilityRequestSchema>;
-    }
-  }
+declare namespace Cypress {}
