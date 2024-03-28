@@ -12,7 +12,6 @@ import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import { RequestType } from 'types/requestType';
 import user from 'utils/user';
-import List from 'views/Accessibility/AccessibilityRequest/List';
 import Table from 'views/MyRequests/Table';
 import SystemsListTable from 'views/SystemList/Table';
 
@@ -42,10 +41,6 @@ const Home = () => {
             isTrbAdmin={user.isTrbAdmin(groups, flags)}
           />
         );
-      }
-
-      if (user.isAccessibilityTeam(groups, flags)) {
-        return <List />;
       }
 
       if (user.isBasicUser(groups, flags)) {
