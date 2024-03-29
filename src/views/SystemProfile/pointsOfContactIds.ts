@@ -38,11 +38,6 @@ const pointsOfContactIds: Record<SubpageKey, RoleTypeName[]> = {
     RoleTypeName.COR,
     RoleTypeName.SYSTEM_BUSINESS_QUESTION_CONTACT
   ],
-  'section-508': [
-    RoleTypeName.PROJECT_LEAD,
-    RoleTypeName.SYSTEM_MAINTAINER,
-    RoleTypeName.SYSTEM_ISSUES_CONTACT
-  ],
   'sub-systems': [
     RoleTypeName.PROJECT_LEAD,
     RoleTypeName.SYSTEM_MAINTAINER,

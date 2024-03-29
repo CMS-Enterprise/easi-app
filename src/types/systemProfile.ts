@@ -66,7 +66,6 @@ export type SubpageKey =
   | 'tools-and-software'
   | 'ato'
   | 'lifecycle-id'
-  | 'section-508'
   | 'sub-systems'
   | 'system-data'
   | 'documents';

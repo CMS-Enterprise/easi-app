@@ -18,7 +18,6 @@ const systemProfile = {
     'tools-and-software': 'Tools and Software',
     ato: 'ATO',
     'lifecycle-id': 'Lifecyle ID',
-    'section-508': 'Section 508',
     'sub-systems': 'Sub-systems',
     'system-data': 'System Data',
     documents: 'Documents'
