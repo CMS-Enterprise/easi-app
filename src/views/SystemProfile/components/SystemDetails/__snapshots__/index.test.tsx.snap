@@ -8,8 +8,9 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
   >
     <h2
       class="margin-top-0 margin-bottom-4"
+      id="basic"
     >
-      System Details
+      Basic details
     </h2>
     <div
       class="grid-row margin-top-3"
@@ -68,6 +69,7 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
   >
     <h2
       class="margin-top-3"
+      id="urls"
     >
       URLs and Locations
     </h2>
@@ -175,8 +177,9 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
   >
     <h2
       class="margin-top-4 margin-bottom-1"
+      id="development"
     >
-      Development
+      Development and AI
     </h2>
     <span
       class="easi-tag system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"

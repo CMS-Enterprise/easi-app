@@ -7,7 +7,11 @@ const systemProfile = {
   },
   navigation: {
     home: 'System Home',
-    details: 'System Details',
+    details: 'Implementation details',
+    detailsBasic: 'Basic details',
+    detailsUrls: 'URLs and locations',
+    detailsDev: 'Development and AI',
+    detailsIp: 'IP information',
     team: 'Team',
     contracts: 'Contracts',
     teamFte: 'FTE',
@@ -256,7 +260,7 @@ const systemProfile = {
       more: 'more'
     },
     systemDetails: {
-      header: 'System Details',
+      header: 'Basic details',
       ownership: 'System ownership',
       ownershipValues: {
         cmsOwned: 'CMS owned',
@@ -274,7 +278,7 @@ const systemProfile = {
       environment: 'environment',
       provider: 'Data Center/Cloud Service Provider name',
       location: 'Location',
-      development: 'Development',
+      development: 'Development and AI',
       customDevelopment: 'Custom Development',
       workCompleted: 'Development work completed',
       releaseFrequency: 'Planned release frequency',

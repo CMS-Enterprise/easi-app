@@ -259,7 +259,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                     class=""
                     href="/systems/000-100-0/details"
                   >
-                    System Details
+                    Implementation details
                   </a>
                 </li>
                 <li

@@ -36,7 +36,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
   return (
     <>
       <SectionWrapper borderBottom className="padding-bottom-4">
-        <h2 className="margin-top-0 margin-bottom-4">
+        <h2 id="basic" className="margin-top-0 margin-bottom-4">
           {t('singleSystem.systemDetails.header')}
         </h2>
 
@@ -115,7 +115,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
       </SectionWrapper>
 
       <SectionWrapper borderBottom className="padding-bottom-3 margin-bottom-3">
-        <h2 className="margin-top-3">
+        <h2 id="urls" className="margin-top-3">
           {t('singleSystem.systemDetails.urlsAndLocations')}
         </h2>
 
@@ -229,7 +229,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             : 'margin-bottom-5'
         }
       >
-        <h2 className="margin-top-4 margin-bottom-1">
+        <h2 id="development" className="margin-top-4 margin-bottom-1">
           {t('singleSystem.systemDetails.development')}
         </h2>
 
