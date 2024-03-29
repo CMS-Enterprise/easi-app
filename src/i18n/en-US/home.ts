@@ -1,5 +1,5 @@
 const home = {
-  title: 'Welcome, {{user}}',
+  title: 'Welcome, {{user}}.',
   subtitle:
     'Use EASi to manage your systems, go through governance processes, ask for help, and much more.',
   startNow: 'Start now',
