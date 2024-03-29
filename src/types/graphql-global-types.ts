@@ -393,7 +393,7 @@ export enum TRBConsultPrepStatus {
 
 /**
  * Represents the common options for document type that is attached to a
- * 508/accessibility request
+ * TRB Request
  */
 export enum TRBDocumentCommonType {
   ARCHITECTURE_DIAGRAM = "ARCHITECTURE_DIAGRAM",

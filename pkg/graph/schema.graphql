@@ -1540,7 +1540,7 @@ enum SystemIntakeDocumentStatus {
 
 """
 Represents the common options for document type that is attached to a
-508/accessibility request
+TRB Request
 """
 enum TRBDocumentCommonType {
   ARCHITECTURE_DIAGRAM
