@@ -38,7 +38,6 @@ func GetStatusForTRBRequestDocument(s3Client *upload.S3Client, s3Key string) (mo
 	}
 
 	// possible tag values come from virus scanning lambda
-	// this is the same logic as in schema.resolvers.go's Documents() method for 508 documents
 	if avStatus == "CLEAN" {
 		return models.TRBRequestDocumentStatusAvailable, nil
 	} else if avStatus == "INFECTED" {
