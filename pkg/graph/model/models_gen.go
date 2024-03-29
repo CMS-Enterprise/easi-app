@@ -929,12 +929,6 @@ func (e RequestType) MarshalGQL(w io.Writer) {
 type Role string
 
 const (
-	// A 508 Tester
-	RoleEasi508Tester Role = "EASI_508_TESTER"
-	// A 508 request program team member
-	RoleEasi508User Role = "EASI_508_USER"
-	// A 508 request program team member or tester
-	RoleEasi508TesterOrUser Role = "EASI_508_TESTER_OR_USER"
 	// A member of the GRT
 	RoleEasiGovteam Role = "EASI_GOVTEAM"
 	// An admin on the TRB
@@ -944,9 +938,6 @@ const (
 )
 
 var AllRole = []Role{
-	RoleEasi508Tester,
-	RoleEasi508User,
-	RoleEasi508TesterOrUser,
 	RoleEasiGovteam,
 	RoleEasiTrbAdmin,
 	RoleEasiUser,
@@ -954,7 +945,7 @@ var AllRole = []Role{
 
 func (e Role) IsValid() bool {
 	switch e {
-	case RoleEasi508Tester, RoleEasi508User, RoleEasi508TesterOrUser, RoleEasiGovteam, RoleEasiTrbAdmin, RoleEasiUser:
+	case RoleEasiGovteam, RoleEasiTrbAdmin, RoleEasiUser:
 		return true
 	}
 	return false

@@ -6,7 +6,6 @@ import { SystemProfileData } from 'types/systemProfile';
 import ATO from './ATO';
 import Contracts from './Contracts';
 import FundingAndBudget from './FundingAndBudget';
-import Section508 from './Section508';
 import SubSystems from './SubSystems';
 import SystemData from './SystemData';
 import SystemDetails from './SystemDetails';
@@ -124,12 +123,6 @@ const sideNavItems = (
         'lifecycle-id': {
           component: <SystemHome system={system} />,
           route: `/systems/${system.id}/lifecycle-id`
-        },
-        'section-508': {
-          groupEnd: true,
-          component: <Section508 system={system} />,
-          route: `/systems/${system.id}/section-508`,
-          componentId: 'system-section-508'
         },
         'sub-systems': {
           component: <SubSystems system={system} />,

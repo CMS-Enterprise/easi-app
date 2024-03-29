@@ -135,12 +135,10 @@ func getTestPrincipal(store *storage.Store, userName string) *authentication.EUA
 	userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
 
 	princ := &authentication.EUAPrincipal{
-		EUAID:            userName,
-		JobCodeEASi:      true,
-		JobCodeGRT:       true,
-		JobCode508User:   true,
-		JobCode508Tester: true,
-		UserAccount:      userAccount,
+		EUAID:       userName,
+		JobCodeEASi: true,
+		JobCodeGRT:  true,
+		UserAccount: userAccount,
 	}
 	return princ
 

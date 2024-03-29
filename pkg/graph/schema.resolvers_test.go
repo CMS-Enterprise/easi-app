@@ -214,10 +214,8 @@ func addAuthPrincipalToGraphQLClientTest(principal authentication.EUAPrincipal) 
 // addAuthWithAllJobCodesToGraphQLClientTest adds authentication for all job codes
 func addAuthWithAllJobCodesToGraphQLClientTest(euaID string) func(*client.Request) {
 	return addAuthPrincipalToGraphQLClientTest(authentication.EUAPrincipal{
-		EUAID:            euaID,
-		JobCodeEASi:      true,
-		JobCodeGRT:       true,
-		JobCode508User:   true,
-		JobCode508Tester: true,
+		EUAID:       euaID,
+		JobCodeEASi: true,
+		JobCodeGRT:  true,
 	})
 }

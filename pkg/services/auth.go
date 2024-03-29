@@ -29,27 +29,6 @@ func HasRole(ctx context.Context, role model.Role) (bool, error) {
 		}
 		logger.Info("user authorized as Govteam member", zap.Bool("Authorized", true))
 		return true, nil
-	case model.RoleEasi508Tester:
-		if !principal.Allow508Tester() {
-			logger.Info("does not have 508 tester job code")
-			return false, nil
-		}
-		logger.Info("user authorized as 508 Tester", zap.Bool("Authorized", true))
-		return true, nil
-	case model.RoleEasi508User:
-		if !principal.Allow508User() {
-			logger.Info("does not have 508 User job code")
-			return false, nil
-		}
-		logger.Info("user authorized as 508 User", zap.Bool("Authorized", true))
-		return true, nil
-	case model.RoleEasi508TesterOrUser:
-		is508UserOrTester := principal.Allow508Tester() || principal.Allow508User()
-		if !is508UserOrTester {
-			logger.Info("does not have 508 User nor Tester job code")
-			return false, nil
-		}
-		return true, nil
 	case model.RoleEasiTrbAdmin:
 		if !principal.AllowTRBAdmin() {
 			logger.Info("does not have TRB Admin job code")
