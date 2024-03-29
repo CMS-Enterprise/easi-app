@@ -88,7 +88,7 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Clien
 
 // DeleteTRBRequestDocument deletes an existing TRBRequestDocument, given its ID.
 //
-// Does *not* delete the uploaded file from S3, following the example of 508/accessibility request documents.
+// Does *not* delete the uploaded file from S3.
 func DeleteTRBRequestDocument(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequestDocument, error) {
 	return store.DeleteTRBRequestDocument(ctx, id)
 }
