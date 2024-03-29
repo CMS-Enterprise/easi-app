@@ -71,7 +71,7 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
       class="margin-top-3"
       id="urls"
     >
-      URLs and Locations
+      URLs and locations
     </h2>
     <ul
       class="usa-card-group margin-0"

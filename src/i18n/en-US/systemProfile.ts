@@ -271,7 +271,11 @@ const systemProfile = {
       fismaID: 'FISMA Sytem ID',
       tagHeader1: 'CMS Programs and Mission Essential Functions',
       tagHeader2: 'CMS Innovation Center (CMMI) Models',
-      urlsAndLocations: 'URLs and Locations',
+      urlsAndLocations: 'URLs and locations',
+      showUrls: {
+        less: 'Show fewer URLs',
+        more: 'Show more URLs'
+      },
       webApplicationFirewall: 'Web Application Firewall',
       migrationDate: 'Cloud migration date',
       noMigrationDate: 'No clould migration planned yet',

@@ -9,7 +9,6 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
     <h2
       class="margin-top-0 margin-bottom-4"
       id="fte"
-      style="scroll-margin-top: 4rem;"
     >
       Full-time employees (FTE)
     </h2>
@@ -61,7 +60,6 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
     <h2
       class="margin-y-4"
       id="businessOwners"
-      style="scroll-margin-top: 4rem;"
     >
       Business Owners
     </h2>
@@ -148,7 +146,6 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
     <h2
       class="margin-y-4"
       id="projectLeads"
-      style="scroll-margin-top: 4rem;"
     >
       Project Leads
     </h2>
@@ -206,7 +203,6 @@ exports[`System Profile Team subpage > matches snapshot 1`] = `
     <h2
       class="margin-y-4"
       id="additional"
-      style="scroll-margin-top: 4rem;"
     >
       Additional team members
     </h2>

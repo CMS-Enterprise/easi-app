@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Button,
   Card,
   CardBody,
   CardFooter,
@@ -8,6 +9,7 @@ import {
   CardHeader,
   Grid,
   IconCheckCircle,
+  IconExpandMore,
   IconVerifiedUser,
   Link
 } from '@trussworks/react-uswds';
@@ -33,6 +35,13 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
   const isMobile = useCheckResponsiveScreen('tablet');
   const flags = useFlags();
   const { locations, developmentTags, cedarSystemDetails } = system;
+
+  const locationsCountCap = 5;
+  const [isLocationsExpanded, setLocationsExpanded] = useState<boolean>(false);
+  const showMoreLocationsToggle = locations
+    ? locations.length - locationsCountCap > 0
+    : false;
+
   return (
     <>
       <SectionWrapper borderBottom className="padding-bottom-4">
@@ -135,85 +144,111 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
         )}
 
         {locations?.length ? (
-          <CardGroup className="margin-0">
-            {locations.map(location => (
-              <Card
-                key={location.id}
-                data-testid="system-card"
-                className="grid-col-12"
-              >
-                <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
-                  <dt>
-                    {location.urlHostingEnv &&
-                      `${location.urlHostingEnv} ${t(
-                        'singleSystem.systemDetails.environment'
-                      )}`}
-                  </dt>
-                  {location.isBehindWebApplicationFirewall && (
-                    <div>
-                      <dd className="text-right text-base-dark system-profile__icon-container">
-                        <IconVerifiedUser
-                          width="1rem"
-                          color="#00a91c"
-                          height="1rem"
-                          className="margin-right-1"
-                          aria-label="verified"
-                        />
-                        <span className="text-tbottom line-height-body-3">
-                          {t(
-                            'singleSystem.systemDetails.webApplicationFirewall'
-                          )}
-                        </span>
-                      </dd>
-                    </div>
-                  )}
-                </CardHeader>
-                <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
-                  <h3 className="link-header margin-top-0 margin-bottom-2">
-                    {location.address ? (
-                      <Link
-                        className="link-header url-card-link"
-                        variant="external"
-                        target="_blank"
-                        href={location.address}
-                      >
-                        {location.address}
-                      </Link>
-                    ) : (
-                      <dd className="margin-left-0">
-                        {t('singleSystem.systemDetails.noEnvironmentURL')}
-                      </dd>
+          <>
+            <CardGroup className="margin-0">
+              {locations
+                .slice(0, isLocationsExpanded ? undefined : locationsCountCap)
+                .map(location => (
+                  <Card
+                    key={location.id}
+                    data-testid="system-card"
+                    className="grid-col-12"
+                  >
+                    <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
+                      <dt>
+                        {location.urlHostingEnv &&
+                          `${location.urlHostingEnv} ${t(
+                            'singleSystem.systemDetails.environment'
+                          )}`}
+                      </dt>
+                      {location.isBehindWebApplicationFirewall && (
+                        <div>
+                          <dd className="text-right text-base-dark system-profile__icon-container">
+                            <IconVerifiedUser
+                              width="1rem"
+                              color="#00a91c"
+                              height="1rem"
+                              className="margin-right-1"
+                              aria-label="verified"
+                            />
+                            <span className="text-tbottom line-height-body-3">
+                              {t(
+                                'singleSystem.systemDetails.webApplicationFirewall'
+                              )}
+                            </span>
+                          </dd>
+                        </div>
+                      )}
+                    </CardHeader>
+                    <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
+                      <h3 className="link-header margin-top-0 margin-bottom-2">
+                        {location.address ? (
+                          <Link
+                            className="link-header url-card-link"
+                            variant="external"
+                            target="_blank"
+                            href={location.address}
+                          >
+                            {location.address}
+                          </Link>
+                        ) : (
+                          <dd className="margin-left-0">
+                            {t('singleSystem.systemDetails.noEnvironmentURL')}
+                          </dd>
+                        )}
+                      </h3>
+                      {location.tags.map((tag: string) => (
+                        <Tag
+                          key={tag}
+                          className="system-profile__tag margin-bottom-2 text-base-darker bg-base-lighter"
+                        >
+                          {tag}
+                        </Tag>
+                      ))}
+                      <div />
+                    </CardBody>
+                    {location.deploymentDataCenterName && (
+                      <CardFooter className="padding-0">
+                        <Grid row>
+                          <Divider className="margin-x-2" />
+                          <Grid desktop={{ col: 12 }} className="padding-2">
+                            <DescriptionTerm
+                              term={t('singleSystem.systemDetails.provider')}
+                            />
+                            <DescriptionDefinition
+                              className="line-height-body-3"
+                              definition={location.deploymentDataCenterName}
+                            />
+                          </Grid>
+                        </Grid>
+                      </CardFooter>
                     )}
-                  </h3>
-                  {location.tags.map((tag: string) => (
-                    <Tag
-                      key={tag}
-                      className="system-profile__tag margin-bottom-2 text-base-darker bg-base-lighter"
-                    >
-                      {tag}
-                    </Tag>
-                  ))}
-                  <div />
-                </CardBody>
-                {location.deploymentDataCenterName && (
-                  <CardFooter className="padding-0">
-                    <Grid row>
-                      <Divider className="margin-x-2" />
-                      <Grid desktop={{ col: 12 }} className="padding-2">
-                        <DescriptionTerm
-                          term={t('singleSystem.systemDetails.provider')}
-                        />
-                        <DescriptionDefinition
-                          className="line-height-body-3"
-                          definition={location.deploymentDataCenterName}
-                        />
-                      </Grid>
-                    </Grid>
-                  </CardFooter>
+                  </Card>
+                ))}
+            </CardGroup>
+            {showMoreLocationsToggle && (
+              <Button
+                unstyled
+                type="button"
+                className="line-height-body-5"
+                onClick={() => {
+                  setLocationsExpanded(!isLocationsExpanded);
+                }}
+              >
+                {t(
+                  `singleSystem.systemDetails.showUrls.${
+                    isLocationsExpanded ? 'less' : 'more'
+                  }`
                 )}
-              </Card>
-            ))}
-          </CardGroup>
+                <IconExpandMore
+                  className="margin-left-05 margin-bottom-2px text-tbottom"
+                  style={{
+                    transform: isLocationsExpanded ? 'rotate(180deg)' : ''
+                  }}
+                />
+              </Button>
+            )}
+          </>
         ) : (
           <Alert type="info" className="margin-bottom-2">
             {t('singleSystem.systemDetails.noURL')}
