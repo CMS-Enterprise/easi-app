@@ -479,28 +479,29 @@ const RequestLinkForm = ({
                     checked={relation === RequestRelationType.NEW_SYSTEM}
                   />
 
-                  {relation === RequestRelationType.NEW_SYSTEM && (
-                    <Controller
-                      name="contractNumbers"
-                      control={control}
-                      render={({ field }) => (
-                        <FormGroup className="margin-left-4">
-                          <Label
-                            htmlFor="contractNumber"
-                            hint={t('link.form.field.contractNumberNew.help')}
-                          >
-                            {t('link.form.field.contractNumberNew.label')}
-                          </Label>
-                          <TextInput
-                            {...field}
-                            ref={null}
-                            id="contractNumbers"
-                            type="text"
-                          />
-                        </FormGroup>
-                      )}
-                    />
-                  )}
+                  {relation === RequestRelationType.NEW_SYSTEM &&
+                    requestType === 'trb' && ( // Hide the contract number field from itgov
+                      <Controller
+                        name="contractNumbers"
+                        control={control}
+                        render={({ field }) => (
+                          <FormGroup className="margin-left-4">
+                            <Label
+                              htmlFor="contractNumber"
+                              hint={t('link.form.field.contractNumberNew.help')}
+                            >
+                              {t('link.form.field.contractNumberNew.label')}
+                            </Label>
+                            <TextInput
+                              {...field}
+                              ref={null}
+                              id="contractNumbers"
+                              type="text"
+                            />
+                          </FormGroup>
+                        )}
+                      />
+                    )}
 
                   {/* Existing system */}
                   <Radio
@@ -544,30 +545,32 @@ const RequestLinkForm = ({
                         )}
                       />
 
-                      <Controller
-                        name="contractNumbers"
-                        control={control}
-                        render={({ field }) => (
-                          <FormGroup>
-                            <Label
-                              htmlFor="contractNumber"
-                              hint={t(
-                                'link.form.field.contractNumberExisting.help'
-                              )}
-                            >
-                              {t(
-                                'link.form.field.contractNumberExisting.label'
-                              )}
-                            </Label>
-                            <TextInput
-                              {...field}
-                              ref={null}
-                              id="contractNumbers"
-                              type="text"
-                            />
-                          </FormGroup>
-                        )}
-                      />
+                      {requestType === 'trb' && ( // Hide the contract number field from itgov
+                        <Controller
+                          name="contractNumbers"
+                          control={control}
+                          render={({ field }) => (
+                            <FormGroup>
+                              <Label
+                                htmlFor="contractNumber"
+                                hint={t(
+                                  'link.form.field.contractNumberExisting.help'
+                                )}
+                              >
+                                {t(
+                                  'link.form.field.contractNumberExisting.label'
+                                )}
+                              </Label>
+                              <TextInput
+                                {...field}
+                                ref={null}
+                                id="contractNumbers"
+                                type="text"
+                              />
+                            </FormGroup>
+                          )}
+                        />
+                      )}
                     </div>
                   )}
 
@@ -607,30 +610,32 @@ const RequestLinkForm = ({
                         )}
                       />
 
-                      <Controller
-                        name="contractNumbers"
-                        control={control}
-                        render={({ field }) => (
-                          <FormGroup>
-                            <Label
-                              htmlFor="contractNumber"
-                              hint={t(
-                                'link.form.field.contractNumberExisting.help'
-                              )}
-                            >
-                              {t(
-                                'link.form.field.contractNumberExisting.label'
-                              )}
-                            </Label>
-                            <TextInput
-                              {...field}
-                              ref={null}
-                              id="contractNumbers"
-                              type="text"
-                            />
-                          </FormGroup>
-                        )}
-                      />
+                      {requestType === 'trb' && ( // Hide the contract number field from itgov
+                        <Controller
+                          name="contractNumbers"
+                          control={control}
+                          render={({ field }) => (
+                            <FormGroup>
+                              <Label
+                                htmlFor="contractNumber"
+                                hint={t(
+                                  'link.form.field.contractNumberExisting.help'
+                                )}
+                              >
+                                {t(
+                                  'link.form.field.contractNumberExisting.label'
+                                )}
+                              </Label>
+                              <TextInput
+                                {...field}
+                                ref={null}
+                                id="contractNumbers"
+                                type="text"
+                              />
+                            </FormGroup>
+                          )}
+                        />
+                      )}
                     </div>
                   )}
                 </Fieldset>
