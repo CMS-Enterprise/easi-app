@@ -128,10 +128,13 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			}
 
 			// Ensure the contract numbers were modified properly
-			suite.Equal(len(caseValues.NewContractNumbers), len(updatedIntakeContractNumbers))
-			for _, v := range updatedIntakeContractNumbers {
-				suite.Contains(caseValues.NewContractNumbers, v.ContractNumber)
-			}
+			// skip the following test, see Note [EASI-4160 Disable Contract Number Linking]
+			// suite.Equal(len(caseValues.NewContractNumbers), len(updatedIntakeContractNumbers))
+			// for _, v := range updatedIntakeContractNumbers {
+			// 	suite.Contains(caseValues.NewContractNumbers, v.ContractNumber)
+			// }
+			// temp, remove after the above is uncommented
+			_ = updatedIntakeContractNumbers
 
 			// Check relation type
 			suite.NotNil(updatedIntake.SystemRelationType)
@@ -251,10 +254,13 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			}
 
 			// Ensure the contract numbers were modified properly
-			suite.Equal(len(caseValues.NewContractNumbers), len(updatedIntakeContractNumbers))
-			for _, v := range updatedIntakeContractNumbers {
-				suite.Contains(caseValues.NewContractNumbers, v.ContractNumber)
-			}
+			// skip the following test, see Note [EASI-4160 Disable Contract Number Linking]
+			// suite.Equal(len(caseValues.NewContractNumbers), len(updatedIntakeContractNumbers))
+			// for _, v := range updatedIntakeContractNumbers {
+			// 	suite.Contains(caseValues.NewContractNumbers, v.ContractNumber)
+			// }
+			// temp, remove when above is uncommented
+			_ = updatedIntakeContractNumbers
 
 			// Check relation type
 			suite.NotNil(updatedIntake.SystemRelationType)
@@ -372,10 +378,13 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 
 			// Ensure the contract numbers were modified properly
 			// Existing Service relation should always remove existing system IDs
-			suite.Equal(len(caseValues.NewContractNumbers), len(updatedIntakeContractNumbers))
-			for _, v := range updatedIntakeContractNumbers {
-				suite.Contains(caseValues.NewContractNumbers, v.ContractNumber)
-			}
+			// skip the following test, see Note [EASI-4160 Disable Contract Number Linking]
+			// suite.Equal(len(caseValues.NewContractNumbers), len(updatedIntakeContractNumbers))
+			// for _, v := range updatedIntakeContractNumbers {
+			// 	suite.Contains(caseValues.NewContractNumbers, v.ContractNumber)
+			// }
+			// temp, remove after the above is uncommented
+			_ = updatedIntakeContractNumbers
 
 			// Check relation type
 			suite.NotNil(updatedIntake.SystemRelationType)
@@ -425,9 +434,10 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.Nil(unlinkedIntake.SystemRelationType)
 
 		// Check contract numbers are cleared
-		nums, err := SystemIntakeContractNumbers(ctx, unlinkedIntake.ID)
-		suite.NoError(err)
-		suite.Empty(nums)
+		// skip the following test, see Note [EASI-4160 Disable Contract Number Linking]
+		// nums, err := SystemIntakeContractNumbers(ctx, unlinkedIntake.ID)
+		// suite.NoError(err)
+		// suite.Empty(nums)
 
 		// Check system IDs are cleared
 		systemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, unlinkedIntake.ID)
@@ -471,9 +481,10 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.Nil(unlinkedIntake.SystemRelationType)
 
 		// Check contract numbers are cleared
-		nums, err := SystemIntakeContractNumbers(ctx, unlinkedIntake.ID)
-		suite.NoError(err)
-		suite.Empty(nums)
+		// skip the following test, see Note [EASI-4160 Disable Contract Number Linking]
+		// nums, err := SystemIntakeContractNumbers(ctx, unlinkedIntake.ID)
+		// suite.NoError(err)
+		// suite.Empty(nums)
 
 		// Check system IDs are cleared
 		systemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, unlinkedIntake.ID)
