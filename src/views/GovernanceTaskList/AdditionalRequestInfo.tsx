@@ -143,21 +143,22 @@ function AdditionalRequestInfo({
         </p>
       )}
 
-      {system.relationType !== null && (
-        <p>
-          <span className="text-base">
-            {t('additionalRequestInfo.contractNumber')}
-          </span>
-          <br />
-          {system.contractNumbers.length ? (
-            formatContractNumbers(system.contractNumbers)
-          ) : (
-            <em className="text-base">
-              {t('additionalRequestInfo.noContractNumber')}
-            </em>
-          )}
-        </p>
-      )}
+      {system.requestType !== 'itgov' && // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
+        system.relationType !== null && (
+          <p>
+            <span className="text-base">
+              {t('additionalRequestInfo.contractNumber')}
+            </span>
+            <br />
+            {system.contractNumbers.length ? (
+              formatContractNumbers(system.contractNumbers)
+            ) : (
+              <em className="text-base">
+                {t('additionalRequestInfo.noContractNumber')}
+              </em>
+            )}
+          </p>
+        )}
     </div>
   );
 }
