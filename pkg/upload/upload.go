@@ -2,7 +2,6 @@ package upload
 
 import (
 	"io"
-	"mime"
 	"net/url"
 	"os"
 	"strings"
@@ -13,8 +12,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
-
-	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 )
@@ -78,35 +75,6 @@ func (c S3Client) GetBucket() string {
 type PreSignedURL struct {
 	URL      string `json:"URL"`
 	Filename string `json:"filename"`
-}
-
-// NewPutPresignedURL returns a pre-signed URL used for PUT-ing objects
-func (c S3Client) NewPutPresignedURL(fileType string) (*PreSignedURL, error) {
-	// generate a uuid for file name storage on s3
-	key := uuid.New().String()
-
-	// get the file extension from the mime type
-	extensions, err := mime.ExtensionsByType(fileType)
-	if err != nil {
-		return &PreSignedURL{}, err
-	}
-	if len(extensions) > 0 {
-		key = key + extensions[0]
-	}
-	req, _ := c.client.PutObjectRequest(&s3.PutObjectInput{
-		Bucket:      aws.String(c.config.Bucket),
-		Key:         aws.String(key),
-		ContentType: aws.String(fileType),
-	})
-
-	url, err := req.Presign(15 * time.Minute)
-	if err != nil {
-		return &PreSignedURL{}, err
-	}
-
-	result := PreSignedURL{URL: url, Filename: key}
-
-	return &result, nil
 }
 
 // NewGetPresignedURL returns a pre-signed URL used for GET-ing objects
