@@ -1,6 +1,5 @@
 const header = {
   addSystem: 'IT Governance',
-  add508Request: 'Section 508',
   help: 'Help',
   home: 'Home',
   adminHome: 'Admin home',

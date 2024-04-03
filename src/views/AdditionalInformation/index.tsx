@@ -80,18 +80,19 @@ const AdditionalInformation = ({
         </UswdsReactLink>
       )}
 
-      {request.contractNumbers?.length > 0 && (
-        <div className="margin-top-3">
-          <strong>
-            {t('contractNumber', {
-              count: request.contractNumbers.length
-            })}
-          </strong>
-          <p className="margin-top-1">
-            {formatContractNumbers(request.contractNumbers)}
-          </p>
-        </div>
-      )}
+      {type !== 'itgov' && // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
+        request.contractNumbers?.length > 0 && (
+          <div className="margin-top-3">
+            <strong>
+              {t('contractNumber', {
+                count: request.contractNumbers.length
+              })}
+            </strong>
+            <p className="margin-top-1">
+              {formatContractNumbers(request.contractNumbers)}
+            </p>
+          </div>
+        )}
     </div>
   );
 };

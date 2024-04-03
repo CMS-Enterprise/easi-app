@@ -38,7 +38,6 @@ func GetStatusForSystemIntakeDocument(s3Client *upload.S3Client, s3Key string) (
 	}
 
 	// possible tag values come from virus scanning lambda
-	// this is the same logic as in schema.resolvers.go's Documents() method for 508 documents
 	if avStatus == "CLEAN" {
 		return models.SystemIntakeDocumentStatusAvailable, nil
 	} else if avStatus == "INFECTED" {

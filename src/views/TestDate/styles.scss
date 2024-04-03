@@ -1,7 +1,0 @@
-@use 'uswds-core' as *;
-
-.easi-508-test-date {
-  &__date-label.usa-label {
-    @include u-margin-top(1);
-  }
-}

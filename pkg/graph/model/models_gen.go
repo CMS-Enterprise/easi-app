@@ -17,21 +17,6 @@ type TRBAdminNoteCategorySpecificData interface {
 	IsTRBAdminNoteCategorySpecificData()
 }
 
-// Denotes type of a document that is attached to a 508/accessibility request,
-// which can be one of a number of common types, or another user-specified type
-type AccessibilityRequestDocumentType struct {
-	CommonType           models.AccessibilityRequestDocumentCommonType `json:"commonType"`
-	OtherTypeDescription *string                                       `json:"otherTypeDescription,omitempty"`
-}
-
-type AccessibilityRequestEdge struct {
-	Node *models.AccessibilityRequest `json:"node"`
-}
-
-type AccessibilityRequestsConnection struct {
-	Edges []*AccessibilityRequestEdge `json:"edges"`
-}
-
 // A solution proposal within a business case
 type BusinessCaseSolution struct {
 	AcquisitionApproach     *string `json:"acquisitionApproach,omitempty"`
@@ -125,50 +110,6 @@ type ContractDate struct {
 	Day   *string `json:"day,omitempty"`
 	Month *string `json:"month,omitempty"`
 	Year  *string `json:"year,omitempty"`
-}
-
-// The input data used for adding a document to a 508/accessibility request
-type CreateAccessibilityRequestDocumentInput struct {
-	CommonDocumentType           models.AccessibilityRequestDocumentCommonType `json:"commonDocumentType"`
-	MimeType                     string                                        `json:"mimeType"`
-	Name                         string                                        `json:"name"`
-	OtherDocumentTypeDescription *string                                       `json:"otherDocumentTypeDescription,omitempty"`
-	RequestID                    uuid.UUID                                     `json:"requestID"`
-	Size                         int                                           `json:"size"`
-	URL                          string                                        `json:"url"`
-}
-
-// The payload containing the input data used for adding a document to a
-// 508/accessibility request
-type CreateAccessibilityRequestDocumentPayload struct {
-	AccessibilityRequestDocument *models.AccessibilityRequestDocument `json:"accessibilityRequestDocument,omitempty"`
-	UserErrors                   []*UserError                         `json:"userErrors,omitempty"`
-}
-
-// The data needed to initialize a 508/accessibility request
-type CreateAccessibilityRequestInput struct {
-	IntakeID      *uuid.UUID `json:"intakeID,omitempty"`
-	Name          string     `json:"name"`
-	CedarSystemID *string    `json:"cedarSystemId,omitempty"`
-}
-
-// The data used when adding a note to a 508/accessibility request
-type CreateAccessibilityRequestNoteInput struct {
-	RequestID       uuid.UUID `json:"requestID"`
-	Note            string    `json:"note"`
-	ShouldSendEmail bool      `json:"shouldSendEmail"`
-}
-
-// The payload for adding a note to a 508/accessibility request
-type CreateAccessibilityRequestNotePayload struct {
-	AccessibilityRequestNote *models.AccessibilityRequestNote `json:"accessibilityRequestNote"`
-	UserErrors               []*UserError                     `json:"userErrors,omitempty"`
-}
-
-// The payload containing the data needed to initialize an AccessibilityRequest
-type CreateAccessibilityRequestPayload struct {
-	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest,omitempty"`
-	UserErrors           []*UserError                 `json:"userErrors,omitempty"`
 }
 
 // The data needed to bookmark a cedar system
@@ -295,46 +236,9 @@ type CreateTRBRequestFeedbackInput struct {
 	Action          models.TRBFeedbackAction `json:"action"`
 }
 
-// The input required to add a test date/score to a 508/accessibility request
-type CreateTestDateInput struct {
-	Date      time.Time               `json:"date"`
-	RequestID uuid.UUID               `json:"requestID"`
-	Score     *int                    `json:"score,omitempty"`
-	TestType  models.TestDateTestType `json:"testType"`
-}
-
-// The payload for the input required to add a test date/score to a
-// 508/accessibility request
-type CreateTestDatePayload struct {
-	TestDate   *models.TestDate `json:"testDate,omitempty"`
-	UserErrors []*UserError     `json:"userErrors,omitempty"`
-}
-
 // The current user of the application
 type CurrentUser struct {
 	LaunchDarkly *LaunchDarklySettings `json:"launchDarkly"`
-}
-
-// The input used to delete a document from a 508/accessibility request
-type DeleteAccessibilityRequestDocumentInput struct {
-	ID uuid.UUID `json:"id"`
-}
-
-// The payload used to delete a document from a 508/accessibility request
-type DeleteAccessibilityRequestDocumentPayload struct {
-	ID *uuid.UUID `json:"id,omitempty"`
-}
-
-// The input data needed to delete a 508/accessibility request
-type DeleteAccessibilityRequestInput struct {
-	ID     uuid.UUID                                 `json:"id"`
-	Reason models.AccessibilityRequestDeletionReason `json:"reason"`
-}
-
-// The payload data sent when deleting a 508/accessibility request
-type DeleteAccessibilityRequestPayload struct {
-	ID         *uuid.UUID   `json:"id,omitempty"`
-	UserErrors []*UserError `json:"userErrors,omitempty"`
 }
 
 // The payload when deleting a bookmark for a cedar system
@@ -365,30 +269,6 @@ type DeleteTRBRequestDocumentPayload struct {
 type DeleteTRBRequestFundingSourcesInput struct {
 	TrbRequestID  uuid.UUID `json:"trbRequestId"`
 	FundingNumber string    `json:"fundingNumber"`
-}
-
-// The input required to delete a test date/score
-type DeleteTestDateInput struct {
-	ID uuid.UUID `json:"id"`
-}
-
-// The payload for the input required to delete a test date/score
-type DeleteTestDatePayload struct {
-	TestDate   *models.TestDate `json:"testDate,omitempty"`
-	UserErrors []*UserError     `json:"userErrors,omitempty"`
-}
-
-// Input associated with a document to be uploaded to a 508/accessibility request
-type GeneratePresignedUploadURLInput struct {
-	FileName string `json:"fileName"`
-	MimeType string `json:"mimeType"`
-	Size     int    `json:"size"`
-}
-
-// URL generated for a document to be uploaded to a 508/accessibility request
-type GeneratePresignedUploadURLPayload struct {
-	URL        *string      `json:"url,omitempty"`
-	UserErrors []*UserError `json:"userErrors,omitempty"`
 }
 
 // The current user's Launch Darkly key
@@ -511,14 +391,6 @@ type SetTRBRequestRelationNewSystemInput struct {
 // Input to submit an intake for review
 type SubmitIntakeInput struct {
 	ID uuid.UUID `json:"id"`
-}
-
-type SystemConnection struct {
-	Edges []*SystemEdge `json:"edges"`
-}
-
-type SystemEdge struct {
-	Node *models.System `json:"node"`
 }
 
 // An action taken on a system intake, often resulting in a change in status.
@@ -898,33 +770,6 @@ type TRBRequestDocumentType struct {
 	OtherTypeDescription *string                      `json:"otherTypeDescription,omitempty"`
 }
 
-// Parameters for updating a 508/accessibility request's associated CEDAR system
-type UpdateAccessibilityRequestCedarSystemInput struct {
-	ID            uuid.UUID `json:"id"`
-	CedarSystemID string    `json:"cedarSystemId"`
-}
-
-// Result of updating a 508/accessibility request's associated CEDAR system
-type UpdateAccessibilityRequestCedarSystemPayload struct {
-	ID                   uuid.UUID                    `json:"id"`
-	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest,omitempty"`
-}
-
-// Parameters for updating a 508/accessibility request's status
-type UpdateAccessibilityRequestStatus struct {
-	RequestID uuid.UUID                         `json:"requestID"`
-	Status    models.AccessibilityRequestStatus `json:"status"`
-}
-
-// Result of updating a 508/accessibility request's status
-type UpdateAccessibilityRequestStatusPayload struct {
-	ID         uuid.UUID                         `json:"id"`
-	RequestID  uuid.UUID                         `json:"requestID"`
-	Status     models.AccessibilityRequestStatus `json:"status"`
-	EuaUserID  string                            `json:"euaUserId"`
-	UserErrors []*UserError                      `json:"userErrors,omitempty"`
-}
-
 // Input data used to update the admin lead assigned to a system IT governance
 // request
 type UpdateSystemIntakeAdminLeadInput struct {
@@ -1033,20 +878,6 @@ type UpdateTRBRequestTRBLeadInput struct {
 	TrbLead      string    `json:"trbLead"`
 }
 
-// The input required to update a test date/score
-type UpdateTestDateInput struct {
-	Date     time.Time               `json:"date"`
-	ID       uuid.UUID               `json:"id"`
-	Score    *int                    `json:"score,omitempty"`
-	TestType models.TestDateTestType `json:"testType"`
-}
-
-// The payload for the input required to update a test date/score
-type UpdateTestDatePayload struct {
-	TestDate   *models.TestDate `json:"testDate,omitempty"`
-	UserErrors []*UserError     `json:"userErrors,omitempty"`
-}
-
 // UserError represents application-level errors that are the result of
 // either user or application developer error.
 type UserError struct {
@@ -1058,18 +889,16 @@ type UserError struct {
 type RequestType string
 
 const (
-	RequestTypeAccessibilityRequest RequestType = "ACCESSIBILITY_REQUEST"
-	RequestTypeGovernanceRequest    RequestType = "GOVERNANCE_REQUEST"
+	RequestTypeGovernanceRequest RequestType = "GOVERNANCE_REQUEST"
 )
 
 var AllRequestType = []RequestType{
-	RequestTypeAccessibilityRequest,
 	RequestTypeGovernanceRequest,
 }
 
 func (e RequestType) IsValid() bool {
 	switch e {
-	case RequestTypeAccessibilityRequest, RequestTypeGovernanceRequest:
+	case RequestTypeGovernanceRequest:
 		return true
 	}
 	return false
@@ -1100,12 +929,6 @@ func (e RequestType) MarshalGQL(w io.Writer) {
 type Role string
 
 const (
-	// A 508 Tester
-	RoleEasi508Tester Role = "EASI_508_TESTER"
-	// A 508 request program team member
-	RoleEasi508User Role = "EASI_508_USER"
-	// A 508 request program team member or tester
-	RoleEasi508TesterOrUser Role = "EASI_508_TESTER_OR_USER"
 	// A member of the GRT
 	RoleEasiGovteam Role = "EASI_GOVTEAM"
 	// An admin on the TRB
@@ -1115,9 +938,6 @@ const (
 )
 
 var AllRole = []Role{
-	RoleEasi508Tester,
-	RoleEasi508User,
-	RoleEasi508TesterOrUser,
 	RoleEasiGovteam,
 	RoleEasiTrbAdmin,
 	RoleEasiUser,
@@ -1125,7 +945,7 @@ var AllRole = []Role{
 
 func (e Role) IsValid() bool {
 	switch e {
-	case RoleEasi508Tester, RoleEasi508User, RoleEasi508TesterOrUser, RoleEasiGovteam, RoleEasiTrbAdmin, RoleEasiUser:
+	case RoleEasiGovteam, RoleEasiTrbAdmin, RoleEasiUser:
 		return true
 	}
 	return false
