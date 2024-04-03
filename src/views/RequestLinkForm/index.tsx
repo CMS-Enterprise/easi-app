@@ -480,7 +480,7 @@ const RequestLinkForm = ({
                   />
 
                   {relation === RequestRelationType.NEW_SYSTEM &&
-                    requestType === 'trb' && ( // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
+                    requestType !== 'itgov' && ( // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
                       <Controller
                         name="contractNumbers"
                         control={control}
@@ -545,7 +545,7 @@ const RequestLinkForm = ({
                         )}
                       />
 
-                      {requestType === 'trb' && ( // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
+                      {requestType !== 'itgov' && ( // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
                         <Controller
                           name="contractNumbers"
                           control={control}
@@ -610,7 +610,7 @@ const RequestLinkForm = ({
                         )}
                       />
 
-                      {requestType === 'trb' && ( // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
+                      {requestType !== 'itgov' && ( // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
                         <Controller
                           name="contractNumbers"
                           control={control}
