@@ -347,7 +347,7 @@ func setSystemIntakeRelationExistingService(
 func unlinkSystemIntakeRelation(logger *zap.Logger, store *storage.Store, intakeID uuid.UUID) {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
 
-	// temp, manually unlink contractn umbers
+	// temp, manually unlink contract numbers
 	// see Note [EASI-4160 Disable Contract Number Linking]
 	if err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
 		return store.SetSystemIntakeContractNumbers(ctx, tx, intakeID, []string{})
