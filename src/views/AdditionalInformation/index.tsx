@@ -31,7 +31,8 @@ const AdditionalInformation = ({
         {t('description')}
       </p>
 
-      {(request.systems.length > 0 || request.contractName) && (
+      {(request.relationType === RequestRelationType.EXISTING_SYSTEM ||
+        request.relationType === RequestRelationType.EXISTING_SERVICE) && (
         <div className="margin-bottom-3">
           <span className="font-body-md line-height-body-4 margin-right-1 text-base">
             {t('somethingIncorrect')}
@@ -45,11 +46,11 @@ const AdditionalInformation = ({
         </div>
       )}
 
-      {request.systems.length > 0 && (
+      {request.relationType === RequestRelationType.EXISTING_SYSTEM && (
         <SystemCardTable systems={request.systems} />
       )}
 
-      {request.contractName && (
+      {request.relationType === RequestRelationType.EXISTING_SERVICE && (
         <div className="margin-top-3">
           <strong>{t('serviceOrContract')}</strong>
 
@@ -69,7 +70,8 @@ const AdditionalInformation = ({
         </Alert>
       )}
 
-      {request.systems.length === 0 && !request.contractName && (
+      {(request.relationType === null ||
+        request.relationType === RequestRelationType.NEW_SYSTEM) && (
         <UswdsReactLink
           to={`/${parentRoute}/${request.id}/additional-information/link`}
           className={classNames('usa-button', {
@@ -81,6 +83,7 @@ const AdditionalInformation = ({
       )}
 
       {type !== 'itgov' && // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
+        request.relationType !== null &&
         request.contractNumbers?.length > 0 && (
           <div className="margin-top-3">
             <strong>
