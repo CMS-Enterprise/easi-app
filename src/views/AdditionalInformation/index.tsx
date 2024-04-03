@@ -46,9 +46,10 @@ const AdditionalInformation = ({
         </div>
       )}
 
-      {request.relationType === RequestRelationType.EXISTING_SYSTEM && (
-        <SystemCardTable systems={request.systems} />
-      )}
+      {request.relationType === RequestRelationType.EXISTING_SYSTEM &&
+        request.systems.length > 0 && (
+          <SystemCardTable systems={request.systems} />
+        )}
 
       {request.relationType === RequestRelationType.EXISTING_SERVICE && (
         <div className="margin-top-3">
