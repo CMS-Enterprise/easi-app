@@ -1,12 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import SystemCardTable from 'components/SystemCard/table';
 import { GetTrbRequestSummary_trbRequest as TrbRequest } from 'queries/types/GetTrbRequestSummary';
 import { SystemIntake } from 'queries/types/SystemIntake';
+import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
 
@@ -55,18 +57,27 @@ const AdditionalInformation = ({
         </div>
       )}
 
+      {request.relationType === null && (
+        <Alert type="warning" slim className="margin-top-3 margin-bottom-2">
+          {t('unlinkedAlert')}
+        </Alert>
+      )}
+
+      {request.relationType === RequestRelationType.NEW_SYSTEM && (
+        <Alert type="info" slim className="margin-top-3 margin-bottom-2">
+          {t('newSystemAlert')}
+        </Alert>
+      )}
+
       {request.systems.length === 0 && !request.contractName && (
-        <div className="margin-top-3">
-          <Alert type="info" slim className="margin-top-0 margin-bottom-2">
-            {t('noLinkedSystemAlert')}
-          </Alert>
-          <UswdsReactLink
-            to={`/${parentRoute}/${request.id}/additional-information/link`}
-            className="usa-button usa-button--outline"
-          >
-            {t('linkSystem')}
-          </UswdsReactLink>
-        </div>
+        <UswdsReactLink
+          to={`/${parentRoute}/${request.id}/additional-information/link`}
+          className={classNames('usa-button', {
+            'usa-button--outline': request.relationType !== null
+          })}
+        >
+          {t('linkSystem')}
+        </UswdsReactLink>
       )}
 
       {request.contractNumbers?.length > 0 && (
