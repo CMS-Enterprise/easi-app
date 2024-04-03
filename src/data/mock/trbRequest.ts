@@ -10,7 +10,6 @@ import { GetTRBRequestAttendeesQuery } from 'queries/TrbAttendeeQueries';
 import {
   GetRequests,
   GetRequests_myTrbRequests as MyTrbRequests,
-  GetRequests_requests as Requests,
   GetRequestsVariables
 } from 'queries/types/GetRequests';
 import {
@@ -48,8 +47,6 @@ import {
 import UpdateTrbRequestConsultMeetingQuery from 'queries/UpdateTrbRequestConsultMeetingQuery';
 import {
   PersonRole,
-  RequestType,
-  SystemIntakeStatusRequester,
   TRBAdminNoteCategory,
   TRBAdviceLetterStatus,
   TRBAttendConsultStatus,
@@ -252,72 +249,8 @@ export const getTrbRequestSummaryQuery: MockedQuery<
 };
 
 const getRequestsData: {
-  edges: Requests['edges'];
   myTrbRequests: MyTrbRequests[];
 } = {
-  edges: [
-    {
-      __typename: 'RequestEdge',
-      node: {
-        __typename: 'Request',
-        id: '123',
-        name: '508 Test 1',
-        submittedAt: '2021-05-25T19:22:40Z',
-        type: RequestType.ACCESSIBILITY_REQUEST,
-        status: 'OPEN',
-        statusRequester: null,
-        statusCreatedAt: '2021-05-25T19:22:40Z',
-        lcid: null,
-        nextMeetingDate: null
-      }
-    },
-    {
-      __typename: 'RequestEdge',
-      node: {
-        __typename: 'Request',
-        id: '909',
-        name: '508 Test 2',
-        submittedAt: '2021-05-25T19:22:40Z',
-        type: RequestType.ACCESSIBILITY_REQUEST,
-        status: 'IN_REMEDIATION',
-        statusRequester: null,
-        statusCreatedAt: '2021-05-26T19:22:40Z',
-        lcid: null,
-        nextMeetingDate: null
-      }
-    },
-    {
-      __typename: 'RequestEdge',
-      node: {
-        __typename: 'Request',
-        id: '456',
-        name: 'Intake 1',
-        submittedAt: '2021-05-22T19:22:40Z',
-        type: RequestType.GOVERNANCE_REQUEST,
-        status: 'INTAKE_DRAFT',
-        statusRequester:
-          SystemIntakeStatusRequester.INITIAL_REQUEST_FORM_IN_PROGRESS,
-        statusCreatedAt: null,
-        lcid: null,
-        nextMeetingDate: null
-      }
-    },
-    {
-      __typename: 'RequestEdge',
-      node: {
-        __typename: 'Request',
-        id: '789',
-        name: 'Intake 2',
-        submittedAt: '2021-05-20T19:22:40Z',
-        type: RequestType.GOVERNANCE_REQUEST,
-        status: 'LCID_ISSUED',
-        statusRequester: SystemIntakeStatusRequester.LCID_ISSUED,
-        statusCreatedAt: null,
-        lcid: 'A123456',
-        nextMeetingDate: null
-      }
-    }
-  ],
   myTrbRequests: [
     {
       id: '1afc9242-f244-47a3-9f91-4d6fedd8eb91',
@@ -331,7 +264,6 @@ const getRequestsData: {
 };
 
 export const getRequestsQuery = (
-  edges: Requests['edges'] = getRequestsData.edges,
   myTrbRequests: MyTrbRequests[] = getRequestsData.myTrbRequests
 ): MockedQuery<GetRequests, GetRequestsVariables> => ({
   request: {
@@ -342,7 +274,7 @@ export const getRequestsQuery = (
     data: {
       requests: {
         __typename: 'RequestsConnection',
-        edges
+        edges: []
       },
       myTrbRequests
     }

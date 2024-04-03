@@ -51,12 +51,10 @@ func CtxWithLoggerAndPrincipal(logger *zap.Logger, store *storage.Store, euaID s
 	}
 
 	princ := &authentication.EUAPrincipal{
-		EUAID:            euaID,
-		JobCodeEASi:      true,
-		JobCodeGRT:       true,
-		JobCode508User:   true,
-		JobCode508Tester: true,
-		UserAccount:      userAccount,
+		EUAID:       euaID,
+		JobCodeEASi: true,
+		JobCodeGRT:  true,
+		UserAccount: userAccount,
 	}
 	ctx := appcontext.WithLogger(context.Background(), logger)
 	ctx = appcontext.WithPrincipal(ctx, princ)

@@ -184,11 +184,6 @@ func (s *Server) routes(
 	resolver := graph.NewResolver(
 		store,
 		graph.ResolverService{
-			CreateTestDate: services.NewCreateTestDate(
-				serviceConfig,
-				services.AuthorizeHasEASiRole,
-				store.CreateTestDate,
-			),
 			SubmitIntake: services.NewSubmitSystemIntake(
 				serviceConfig,
 				services.AuthorizeUserIsIntakeRequester,
@@ -290,7 +285,7 @@ func (s *Server) routes(
 		services.NewFetchMetrics(
 			serviceConfig,
 			store.FetchSystemIntakeMetrics,
-			store.FetchAccessibilityRequestMetrics),
+		),
 	)
 	api.Handle("/metrics", metricsHandler.Handle())
 
@@ -344,14 +339,6 @@ func (s *Server) routes(
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
 	).Handle())
-
-	api.Handle(
-		"/metrics/508",
-		handlers.NewAccessibilityMetricsHandler(
-			services.NewFetchAccessibilityMetrics(store.FetchAccessibilityMetrics),
-			base,
-		).Handle(),
-	)
 
 	if ok, _ := strconv.ParseBool(os.Getenv("DEBUG_ROUTES")); ok {
 		// useful for debugging route issues

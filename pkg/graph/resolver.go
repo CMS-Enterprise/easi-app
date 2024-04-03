@@ -30,7 +30,6 @@ type Resolver struct {
 
 // ResolverService holds service methods for use in resolvers
 type ResolverService struct {
-	CreateTestDate           func(context.Context, *models.TestDate) (*models.TestDate, error)
 	FetchUserInfo            func(context.Context, string) (*models.UserInfo, error)
 	FetchUserInfos           func(context.Context, []string) ([]*models.UserInfo, error)
 	SearchCommonNameContains func(context.Context, string) ([]*models.UserInfo, error)

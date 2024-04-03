@@ -50,10 +50,6 @@ const home = {
       'Consult with SMEs and request help or feedback for your system, or ask the TRB for other technical assistance. '
   },
   signIn: 'Sign in to get started',
-  accessibility: {
-    heading: '508 Requests',
-    newRequest: 'Add a new request'
-  },
   actionTitle: 'Available services',
   actions: {
     itgov: {
@@ -64,15 +60,6 @@ const home = {
       link: '/system/making-a-request',
       button: 'Start a new IT Governance request',
       buttonLink: '/system/request-type'
-    },
-    '508': {
-      heading: 'Section 508',
-      body:
-        'Request 508 testing for your application or system and learn about the process.',
-      learnMore: 'Learn more about 508 testing',
-      link: '/508/making-a-request',
-      button: 'Start a 508 testing request',
-      buttonLink: '/508/testing-overview?continue=true'
     },
     trb: {
       heading: 'Technical assistance',
@@ -103,11 +90,7 @@ const home = {
       status: 'Status',
       nextMeetingDate: 'Upcoming meeting date'
     },
-    types: {
-      ACCESSIBILITY_REQUEST: 'Section 508',
-      GOVERNANCE_REQUEST: 'IT Governance',
-      TRB: 'TRB'
-    },
+    types: { GOVERNANCE_REQUEST: 'IT Governance', TRB: 'TRB' },
     defaultName: 'Draft',
     defaultSubmittedAt: 'Not submitted',
     caption:

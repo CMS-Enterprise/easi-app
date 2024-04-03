@@ -20,7 +20,7 @@ import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 import { RequestType } from 'types/graphql-global-types';
-import { formatDateLocal, formatDateUtc } from 'utils/date';
+import { formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
@@ -47,7 +47,6 @@ const Table = ({
   const { t } = useTranslation([
     'home',
     'intake',
-    'accessibility',
     'technicalAssistance',
     'governanceReviewTeam'
   ]);
@@ -82,9 +81,6 @@ const Table = ({
             link = `/trb/task-list/${row.original.id}`;
           } else {
             switch (row.original.type) {
-              case t('requestsTable.types.ACCESSIBILITY_REQUEST'):
-                link = `/508/requests/${row.original.id}`;
-                break;
               case t('requestsTable.types.GOVERNANCE_REQUEST'):
                 link = `/governance-task-list/${row.original.id}`;
                 break;
@@ -109,21 +105,6 @@ const Table = ({
         accessor: 'status',
         Cell: ({ row, value }: any) => {
           switch (row.original.type) {
-            case t(`requestsTable.types.ACCESSIBILITY_REQUEST`):
-              // Status hasn't changed if the status record created at is the same
-              // as the 508 request's submitted at
-              if (row.original.submittedAt === row.original.createdAt) {
-                return <span>{value}</span>;
-              }
-              return (
-                <span>
-                  {value}
-                  <span className="text-base-dark font-body-3xs">{` - Changed on ${formatDateLocal(
-                    row.original.statusCreatedAt,
-                    'MM/dd/yyyy'
-                  )}`}</span>
-                </span>
-              );
             case t(`requestsTable.types.GOVERNANCE_REQUEST`):
               return t(
                 `governanceReviewTeam:systemIntakeStatusRequester.${row.original.statusRequester}`,
@@ -218,7 +199,7 @@ const Table = ({
   }
 
   return (
-    <div className="accessibility-requests-table margin-bottom-6">
+    <div className="requests-table margin-bottom-6">
       {data.length > state.pageSize && (
         <>
           <GlobalClientFilter

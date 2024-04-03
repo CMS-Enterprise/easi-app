@@ -73,7 +73,7 @@ const getClosedSystemIntakesTable: MockedQuery<
 };
 
 const mocks = [
-  getRequestsQuery([], []),
+  getRequestsQuery([]),
   getOpenSystemIntakesTable,
   getClosedSystemIntakesTable,
   {

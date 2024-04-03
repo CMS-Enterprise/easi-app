@@ -569,25 +569,6 @@ func main() {
 
 	must(nil, seederConfig.seedTRBRequests(ctx))
 
-	// Legacy Intake Requests used in E2E
-	makeAccessibilityRequest("TACO", store)
-	makeAccessibilityRequest("Big Project", store)
-
-	now := time.Now()
-	yyyy, mm, dd := now.Date()
-
-	makeAccessibilityRequest("Seeded 508 Request", store, func(i *models.AccessibilityRequest) {
-		i.ID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
-	})
-
-	// Test date is one day after the 508 request is created
-	makeTestDate(logger, store, func(i *models.TestDate) {
-		i.ID = uuid.MustParse("18624c5b-4c00-49a7-960f-ac6d8b2c58df")
-		i.RequestID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
-		i.TestType = models.TestDateTestTypeInitial
-		i.Date = time.Date(yyyy, mm, dd+1, 0, 0, 0, 0, time.UTC)
-	})
-
 	// For Governance Review Cypress Tests
 	intakeID = uuid.MustParse("af7a3924-3ff7-48ec-8a54-b8b4bc95610b")
 	intake = makeSystemIntakeAndSubmit("A Completed Intake Form", &intakeID, requesterEUA, logger, store)

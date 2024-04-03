@@ -14,15 +14,14 @@ import (
 
 // Config holds EASi application specific configs for SES
 type Config struct {
-	GRTEmail               models.EmailAddress
-	ITInvestmentEmail      models.EmailAddress
-	AccessibilityTeamEmail models.EmailAddress
-	EASIHelpEmail          models.EmailAddress
-	TRBEmail               models.EmailAddress
-	CEDARTeamEmail         models.EmailAddress
-	URLHost                string
-	URLScheme              string
-	TemplateDirectory      string
+	GRTEmail          models.EmailAddress
+	ITInvestmentEmail models.EmailAddress
+	EASIHelpEmail     models.EmailAddress
+	TRBEmail          models.EmailAddress
+	CEDARTeamEmail    models.EmailAddress
+	URLHost           string
+	URLScheme         string
+	TemplateDirectory string
 }
 
 // templateCaller is an interface to helping with testing template dependencies
@@ -38,12 +37,7 @@ type templates struct {
 	unnamedRequestWithdrawTemplate                  templateCaller
 	lcidExpirationAlertTemplate                     templateCaller
 	rejectRequestTemplate                           templateCaller
-	newAccessibilityRequestTemplate                 templateCaller
-	newAccessibilityRequestToRequesterTemplate      templateCaller
-	removedAccessibilityRequestTemplate             templateCaller
 	newDocumentTemplate                             templateCaller
-	changeAccessibilityRequestStatus                templateCaller
-	newAccessibilityRequestNote                     templateCaller
 	helpSendFeedback                                templateCaller
 	helpCantFindSomething                           templateCaller
 	helpReportAProblem                              templateCaller
@@ -139,47 +133,12 @@ func NewClient(config Config, sender sender) (Client, error) {
 	}
 	appTemplates.rejectRequestTemplate = rejectRequestTemplate
 
-	newAccessibilityRequestTemplateName := "new_508_request.gohtml"
-	newAccessibilityRequestTemplate := rawTemplates.Lookup(newAccessibilityRequestTemplateName)
-	if newAccessibilityRequestTemplate == nil {
-		return Client{}, templateError(newAccessibilityRequestTemplateName)
-	}
-	appTemplates.newAccessibilityRequestTemplate = newAccessibilityRequestTemplate
-
-	newAccessibilityRequestToRequesterTemplateName := "new_508_request_to_requester.gohtml"
-	newAccessibilityRequestToRequesterTemplate := rawTemplates.Lookup(newAccessibilityRequestToRequesterTemplateName)
-	if newAccessibilityRequestToRequesterTemplate == nil {
-		return Client{}, templateError(newAccessibilityRequestToRequesterTemplateName)
-	}
-	appTemplates.newAccessibilityRequestToRequesterTemplate = newAccessibilityRequestToRequesterTemplate
-
-	removedAccessibilityRequestTemplateName := "removed_508_request.gohtml"
-	removedAccessibilityRequestTemplate := rawTemplates.Lookup(removedAccessibilityRequestTemplateName)
-	if removedAccessibilityRequestTemplate == nil {
-		return Client{}, templateError(removedAccessibilityRequestTemplateName)
-	}
-	appTemplates.removedAccessibilityRequestTemplate = removedAccessibilityRequestTemplate
-
 	newDocumentTemplateName := "new_document.gohtml"
 	newDocumentTemplate := rawTemplates.Lookup(newDocumentTemplateName)
 	if newDocumentTemplate == nil {
 		return Client{}, templateError(newDocumentTemplateName)
 	}
 	appTemplates.newDocumentTemplate = newDocumentTemplate
-
-	changeAccessibilityRequestStatusTemplateName := "change_508_status.gohtml"
-	changeAccessibilityRequestStatusTemplate := rawTemplates.Lookup(changeAccessibilityRequestStatusTemplateName)
-	if changeAccessibilityRequestStatusTemplate == nil {
-		return Client{}, templateError(changeAccessibilityRequestStatusTemplateName)
-	}
-	appTemplates.changeAccessibilityRequestStatus = changeAccessibilityRequestStatusTemplate
-
-	newAccessibilityRequestNoteTemplateName := "new_508_note.gohtml"
-	newAccessibilityRequestNoteTemplate := rawTemplates.Lookup(newAccessibilityRequestNoteTemplateName)
-	if newAccessibilityRequestNoteTemplate == nil {
-		return Client{}, templateError(newAccessibilityRequestNoteTemplateName)
-	}
-	appTemplates.newAccessibilityRequestNote = newAccessibilityRequestNoteTemplate
 
 	helpSendFeedbackTemplateName := "help_send_feedback.gohtml"
 	helpSendFeedbackTemplate := rawTemplates.Lookup(helpSendFeedbackTemplateName)
