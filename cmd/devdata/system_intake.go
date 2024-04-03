@@ -6,12 +6,14 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
@@ -265,6 +267,15 @@ func setSystemIntakeRelationNewSystem(
 		SystemIntakeID:  intakeID,
 		ContractNumbers: contractNumbers,
 	}
+
+	// temp, manually set these contract numbers
+	// see Note [EASI-4160 Disable Contract Number Linking]
+	if err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+		return store.SetSystemIntakeContractNumbers(ctx, tx, intakeID, contractNumbers)
+	}); err != nil {
+		panic(err)
+	}
+
 	if _, err := resolvers.SetSystemIntakeRelationNewSystem(ctx, store, input); err != nil {
 		panic(err)
 	}
@@ -283,6 +294,15 @@ func setSystemIntakeRelationExistingSystem(
 		ContractNumbers: contractNumbers,
 		CedarSystemIDs:  cedarSystemIDs,
 	}
+
+	// temp, manually set these contract numbers
+	// see Note [EASI-4160 Disable Contract Number Linking]
+	if err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+		return store.SetSystemIntakeContractNumbers(ctx, tx, intakeID, contractNumbers)
+	}); err != nil {
+		panic(err)
+	}
+
 	_, err := resolvers.SetSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
@@ -309,6 +329,15 @@ func setSystemIntakeRelationExistingService(
 		ContractName:    contractName,
 		ContractNumbers: contractNumbers,
 	}
+
+	// temp, manually set these contract numbers
+	// see Note [EASI-4160 Disable Contract Number Linking]
+	if err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+		return store.SetSystemIntakeContractNumbers(ctx, tx, intakeID, contractNumbers)
+	}); err != nil {
+		panic(err)
+	}
+
 	_, err := resolvers.SetSystemIntakeRelationExistingService(ctx, store, input)
 	if err != nil {
 		panic(err)
@@ -317,6 +346,15 @@ func setSystemIntakeRelationExistingService(
 
 func unlinkSystemIntakeRelation(logger *zap.Logger, store *storage.Store, intakeID uuid.UUID) {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
+
+	// temp, manually unlink contractn umbers
+	// see Note [EASI-4160 Disable Contract Number Linking]
+	if err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+		return store.SetSystemIntakeContractNumbers(ctx, tx, intakeID, []string{})
+	}); err != nil {
+		panic(err)
+	}
+
 	if _, err := resolvers.UnlinkSystemIntakeRelation(ctx, store, intakeID); err != nil {
 		panic(err)
 	}
