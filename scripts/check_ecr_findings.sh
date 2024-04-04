@@ -27,7 +27,7 @@ while true; do
     if [[ "$scanExitCode" -eq 254 ]]; then
         echo "Scan not available yet, retrying..."
         sleep 10
-        continue # Use continue to retry only for code 254
+        continue # Using continue to retry only for code 254
     elif [[ "$scanExitCode" -ne 0 ]]; then
         echo "An error occurred with exit code $scanExitCode."
         echo "Error details: $scanFindings"
@@ -42,20 +42,22 @@ while true; do
         sleep 10  # Wait before retrying, indicating the scan is still pending
     elif [[ "$scanStatus" == "ACTIVE" ]]; then
         echo "Scan complete"
-        break  # Exit the loop, indicating the scan has completed successfully
+
+        # Parse the total findings from the already captured $scanFindings
+        # Use the '//' operator to provide a default value of 0 if the path is null or does not exist
+        totalFindings=$(echo "$scanFindings" | jq '.imageScanFindings.findingSeverityCounts | add // 0')
+
+        # Check if totalFindings is greater than 0
+        if [[ "$totalFindings" -gt 0 ]]; then
+          echo "Scan found $totalFindings findings!"
+          exit 1
+        else
+          echo "Scan found no findings"
+        fi
+
+        break  # Exit the loop after handling findings
     else
         echo "Unexpected scan status: $scanStatus"
         exit 1  # Exit the script due to an unexpected scan status
     fi
 done
-
-# Retrieve the scan findings and parse the total findings
-totalFindings=$(aws ecr describe-image-scan-findings --repository-name "$repository_name" --image-id imageTag="$image_tag" | jq '.imageScanFindings.findingSeverityCounts | add')
-
-# Check if totalFindings is not null and greater than 0
-if [[ "$totalFindings" != "null" && "$totalFindings" -gt 0 ]]; then
-  echo "Scan found $totalFindings findings!"
-  exit 1
-else
-  echo "Scan found no findings"
-fi
