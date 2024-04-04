@@ -32,6 +32,7 @@ const systemProfile = {
     pointsOfContact_plural: 'Points of contact',
     noPointsOfContact:
       'This system does not have any points of contact identified.',
+    noDataAvailable: 'No data available',
     sendEmail: 'Send an email',
     moreContact: 'More points of contact',
     description: {
@@ -114,12 +115,18 @@ const systemProfile = {
     },
     fundingAndBudget: {
       header: 'Funding and Budget',
-      actualFYCost: 'Actual FY system cost',
-      budgetedFYCost: 'Budgeted FY system cost',
-      investmentNumber: 'Investment number',
-      requisitionNumber: 'Requisition number',
-      tagHeader1: 'Funding Sources',
+      budgetProjects: 'Budget Projects',
+      noBudgetProjects: 'There are no budget projects listef for this system',
+      fiscalYear: 'Fiscal Year',
+      noFiscalYear: 'No fiscal year listed',
+      actualSystemCost: 'Actual system cost',
+      budgetedSystemCost: 'Budgeted system cost',
+      percentageOfFunding: 'Percentage of funding dedicated to this system',
+      noSystemCostInfo:
+        'There is no system cost information available for this system',
+      fundingSource: 'Funding Source',
       budgetID: 'Budget ID: ',
+      noBudgetID: 'No Budget ID listed',
       systemFiscalYear: 'System fiscal year (FY) cost',
       viewMoreFunding: 'View more funding and budget information'
     },

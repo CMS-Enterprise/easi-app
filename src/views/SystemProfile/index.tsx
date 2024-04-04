@@ -57,7 +57,6 @@ import { formatHttpsUrl } from 'utils/formatUrl';
 import NotFound from 'views/NotFound';
 import {
   activities as mockActivies,
-  budgetsInfo as mockBudgets,
   subSystems as mockSubSystems,
   systemData as mockSystemData
 } from 'views/SystemProfile/mockSystemData';
@@ -192,10 +191,22 @@ export function getSystemProfileData(
   // System profile data is generally unavailable if `data.cedarSystemDetails` is empty
   if (!data) return undefined;
 
-  const { cedarSystemDetails, cedarSoftwareProducts } = data;
+  const {
+    cedarSystemDetails,
+    cedarSoftwareProducts,
+    cedarBudget,
+    cedarBudgetSystemCost
+  } = data;
   const cedarSystem = cedarSystemDetails?.cedarSystem;
 
-  if (!cedarSystemDetails || !cedarSystem) return undefined;
+  if (
+    !cedarSystemDetails ||
+    !cedarSystem ||
+    !cedarSoftwareProducts ||
+    !cedarBudget ||
+    !cedarBudgetSystemCost
+  )
+    return undefined;
 
   // Save CedarAssigneeType.PERSON roles for convenience
   const personRoles = cedarSystemDetails.roles.filter(
@@ -246,8 +257,9 @@ export function getSystemProfileData(
 
     // Remaining mock data stubs
     activities: mockActivies,
-    budgets: mockBudgets,
     toolsAndSoftware: cedarSoftwareProducts || undefined,
+    budgets: cedarBudget,
+    budgetSystemCosts: cedarBudgetSystemCost,
     subSystems: mockSubSystems,
     systemData: mockSystemData
   };

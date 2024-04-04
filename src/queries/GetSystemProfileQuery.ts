@@ -27,6 +27,25 @@ export default gql`
       countOfOpenPoams
       lastAssessmentDate
     }
+    cedarBudget(cedarSystemID: $cedarSystemId) {
+      fiscalYear
+      funding
+      fundingId
+      fundingSource
+      id
+      name
+      projectId
+      projectTitle
+      systemId
+    }
+    cedarBudgetSystemCost(cedarSystemID: $cedarSystemId) {
+      budgetActualCost {
+        actualSystemCost
+        fiscalYear
+        systemId
+      }
+      count
+    }
     cedarThreat(cedarSystemId: $cedarSystemId) {
       weaknessRiskLevel
     }
