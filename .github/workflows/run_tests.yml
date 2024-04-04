@@ -251,4 +251,3 @@ jobs:
           cat test.log >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
           exit $result_code
-        continue-on-error: true
