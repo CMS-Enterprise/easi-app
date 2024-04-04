@@ -7,23 +7,37 @@ set -eu -o pipefail
 repository_name="$1"
 image_tag="$2"
 
-# Start the image scan
-aws ecr start-image-scan --repository-name "$repository_name" --image-id imageTag="$image_tag"
-
 # Wait for the scan to complete
 echo "Waiting for scan to complete..."
 while true; do
-    scanStatus=$(aws ecr describe-image-scan-findings --repository-name "$repository_name" --image-id imageTag="$image_tag" | jq -r '.imageScanStatus.status')
-    
+    set +e
+    scanFindings=$(aws ecr describe-image-scan-findings --repository-name "$repository_name" --image-id imageTag="$image_tag")
+    scanExitCode=$?
+    set -e
+
+    if [[ "$scanExitCode" -eq 254 ]]; then
+        echo "Scan not available yet, retrying..."
+        sleep 10
+        continue # Using here continue to keep retrying
+    elif [[ "$scanExitCode" -ne 0 ]]; then
+        echo "An error occurred with exit code $scanExitCode."
+        exit $scanExitCode
+    fi
+
+    scanStatus=$(echo "$scanFindings" | jq -r '.imageScanStatus.status')
+
     if [[ "$scanStatus" == "COMPLETE" ]]; then
         echo "Scan complete"
         break
+    elif [[ "$scanStatus" == "IN_PROGRESS" ]]; then
+        echo "Scan in progress..."
+        sleep 10
     elif [[ "$scanStatus" == "FAILED" ]]; then
         echo "Scan failed"
         exit 1
     else
-        echo "Scan in progress..."
-        sleep 10
+        echo "Unexpected scan status: $scanStatus"
+        exit 1
     fi
 done
 
