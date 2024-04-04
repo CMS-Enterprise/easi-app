@@ -10,12 +10,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/guregu/null"
-	"github.com/vektah/gqlparser/v2/gqlerror"
-	"go.uber.org/zap"
-	"golang.org/x/sync/errgroup"
-
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/authentication"
@@ -27,6 +21,11 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
+	"github.com/google/uuid"
+	"github.com/guregu/null"
+	"github.com/vektah/gqlparser/v2/gqlerror"
+	"go.uber.org/zap"
+	"golang.org/x/sync/errgroup"
 )
 
 // AlternativeASolution is the resolver for the alternativeASolution field.
@@ -110,6 +109,27 @@ func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *model
 // SystemIntake is the resolver for the systemIntake field.
 func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error) {
 	return r.store.FetchSystemIntakeByID(ctx, obj.SystemIntakeID)
+}
+
+// BudgetActualCost is the resolver for the budgetActualCost field.
+func (r *cedarBudgetSystemCostResolver) BudgetActualCost(ctx context.Context, obj *models.CedarBudgetSystemCost) ([]*model.CedarBudgetActualCost, error) {
+	budgetActualCosts := obj.BudgetActualCosts
+
+	if len(budgetActualCosts) == 0 {
+		return nil, nil
+	}
+
+	var actualCosts []*model.CedarBudgetActualCost
+	for _, cost := range budgetActualCosts {
+		fyCost := &model.CedarBudgetActualCost{
+			ActualSystemCost: cost.ActualSystemCost.Ptr(),
+			FiscalYear:       cost.FiscalYear.Ptr(),
+			SystemID:         cost.SystemID.Ptr(),
+		}
+		actualCosts = append(actualCosts, fyCost)
+	}
+
+	return actualCosts, nil
 }
 
 // SoftwareProducts is the resolver for the softwareProducts field.
@@ -1165,6 +1185,26 @@ func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystem
 	return cedarATO, nil
 }
 
+// CedarBudget is the resolver for the cedarBudget field.
+func (r *queryResolver) CedarBudget(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error) {
+	cedarBudget, err := r.cedarCoreClient.GetBudgetBySystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
+	return cedarBudget, nil
+}
+
+// CedarBudgetSystemCost is the resolver for the cedarBudgetSystemCost field.
+func (r *queryResolver) CedarBudgetSystemCost(ctx context.Context, cedarSystemID string) (*models.CedarBudgetSystemCost, error) {
+	cedarBudgetSystemCost, err := r.cedarCoreClient.GetBudgetSystemCostBySystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
+	return cedarBudgetSystemCost, nil
+}
+
 // CedarPersonsByCommonName is the resolver for the cedarPersonsByCommonName field.
 func (r *queryResolver) CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
 	response, err := r.service.SearchCommonNameContains(ctx, commonName)
@@ -2001,6 +2041,11 @@ func (r *userInfoResolver) EuaUserID(ctx context.Context, obj *models.UserInfo) 
 // BusinessCase returns generated.BusinessCaseResolver implementation.
 func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
 
+// CedarBudgetSystemCost returns generated.CedarBudgetSystemCostResolver implementation.
+func (r *Resolver) CedarBudgetSystemCost() generated.CedarBudgetSystemCostResolver {
+	return &cedarBudgetSystemCostResolver{r}
+}
+
 // CedarSoftwareProducts returns generated.CedarSoftwareProductsResolver implementation.
 func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolver {
 	return &cedarSoftwareProductsResolver{r}
@@ -2083,6 +2128,7 @@ func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
 type businessCaseResolver struct{ *Resolver }
+type cedarBudgetSystemCostResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
 type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }

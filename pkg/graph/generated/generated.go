@@ -45,6 +45,7 @@ type Config struct {
 
 type ResolverRoot interface {
 	BusinessCase() BusinessCaseResolver
+	CedarBudgetSystemCost() CedarBudgetSystemCostResolver
 	CedarSoftwareProducts() CedarSoftwareProductsResolver
 	CedarSystem() CedarSystemResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
@@ -147,6 +148,29 @@ type ComplexityRoot struct {
 		TLCPhase                                  func(childComplexity int) int
 		UUID                                      func(childComplexity int) int
 		XLCPhase                                  func(childComplexity int) int
+	}
+
+	CedarBudget struct {
+		FiscalYear    func(childComplexity int) int
+		Funding       func(childComplexity int) int
+		FundingID     func(childComplexity int) int
+		FundingSource func(childComplexity int) int
+		ID            func(childComplexity int) int
+		Name          func(childComplexity int) int
+		ProjectID     func(childComplexity int) int
+		ProjectTitle  func(childComplexity int) int
+		SystemID      func(childComplexity int) int
+	}
+
+	CedarBudgetActualCost struct {
+		ActualSystemCost func(childComplexity int) int
+		FiscalYear       func(childComplexity int) int
+		SystemID         func(childComplexity int) int
+	}
+
+	CedarBudgetSystemCost struct {
+		BudgetActualCost func(childComplexity int) int
+		Count            func(childComplexity int) int
 	}
 
 	CedarBusinessOwnerInformation struct {
@@ -541,6 +565,8 @@ type ComplexityRoot struct {
 
 	Query struct {
 		CedarAuthorityToOperate  func(childComplexity int, cedarSystemID string) int
+		CedarBudget              func(childComplexity int, cedarSystemID string) int
+		CedarBudgetSystemCost    func(childComplexity int, cedarSystemID string) int
 		CedarContractsBySystem   func(childComplexity int, cedarSystemID string) int
 		CedarPersonsByCommonName func(childComplexity int, commonName string) int
 		CedarSoftwareProducts    func(childComplexity int, cedarSystemID string) int
@@ -1046,6 +1072,9 @@ type BusinessCaseResolver interface {
 
 	SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error)
 }
+type CedarBudgetSystemCostResolver interface {
+	BudgetActualCost(ctx context.Context, obj *models.CedarBudgetSystemCost) ([]*model.CedarBudgetActualCost, error)
+}
 type CedarSoftwareProductsResolver interface {
 	SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error)
 }
@@ -1149,6 +1178,8 @@ type QueryResolver interface {
 	SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error)
 	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
 	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error)
+	CedarBudget(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error)
+	CedarBudgetSystemCost(ctx context.Context, cedarSystemID string) (*models.CedarBudgetSystemCost, error)
 	CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error)
 	CedarSoftwareProducts(ctx context.Context, cedarSystemID string) (*models.CedarSoftwareProducts, error)
 	CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error)
@@ -1770,6 +1801,104 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarAuthorityToOperate.XLCPhase(childComplexity), true
+
+	case "CedarBudget.fiscalYear":
+		if e.complexity.CedarBudget.FiscalYear == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.FiscalYear(childComplexity), true
+
+	case "CedarBudget.funding":
+		if e.complexity.CedarBudget.Funding == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.Funding(childComplexity), true
+
+	case "CedarBudget.fundingId":
+		if e.complexity.CedarBudget.FundingID == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.FundingID(childComplexity), true
+
+	case "CedarBudget.fundingSource":
+		if e.complexity.CedarBudget.FundingSource == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.FundingSource(childComplexity), true
+
+	case "CedarBudget.id":
+		if e.complexity.CedarBudget.ID == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.ID(childComplexity), true
+
+	case "CedarBudget.name":
+		if e.complexity.CedarBudget.Name == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.Name(childComplexity), true
+
+	case "CedarBudget.projectId":
+		if e.complexity.CedarBudget.ProjectID == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.ProjectID(childComplexity), true
+
+	case "CedarBudget.projectTitle":
+		if e.complexity.CedarBudget.ProjectTitle == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.ProjectTitle(childComplexity), true
+
+	case "CedarBudget.systemId":
+		if e.complexity.CedarBudget.SystemID == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.SystemID(childComplexity), true
+
+	case "CedarBudgetActualCost.actualSystemCost":
+		if e.complexity.CedarBudgetActualCost.ActualSystemCost == nil {
+			break
+		}
+
+		return e.complexity.CedarBudgetActualCost.ActualSystemCost(childComplexity), true
+
+	case "CedarBudgetActualCost.fiscalYear":
+		if e.complexity.CedarBudgetActualCost.FiscalYear == nil {
+			break
+		}
+
+		return e.complexity.CedarBudgetActualCost.FiscalYear(childComplexity), true
+
+	case "CedarBudgetActualCost.systemId":
+		if e.complexity.CedarBudgetActualCost.SystemID == nil {
+			break
+		}
+
+		return e.complexity.CedarBudgetActualCost.SystemID(childComplexity), true
+
+	case "CedarBudgetSystemCost.budgetActualCost":
+		if e.complexity.CedarBudgetSystemCost.BudgetActualCost == nil {
+			break
+		}
+
+		return e.complexity.CedarBudgetSystemCost.BudgetActualCost(childComplexity), true
+
+	case "CedarBudgetSystemCost.count":
+		if e.complexity.CedarBudgetSystemCost.Count == nil {
+			break
+		}
+
+		return e.complexity.CedarBudgetSystemCost.Count(childComplexity), true
 
 	case "CedarBusinessOwnerInformation.beneficiaryAddressPurpose":
 		if e.complexity.CedarBusinessOwnerInformation.BeneficiaryAddressPurpose == nil {
@@ -4221,6 +4350,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.CedarAuthorityToOperate(childComplexity, args["cedarSystemID"].(string)), true
+
+	case "Query.cedarBudget":
+		if e.complexity.Query.CedarBudget == nil {
+			break
+		}
+
+		args, err := ec.field_Query_cedarBudget_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CedarBudget(childComplexity, args["cedarSystemID"].(string)), true
+
+	case "Query.cedarBudgetSystemCost":
+		if e.complexity.Query.CedarBudgetSystemCost == nil {
+			break
+		}
+
+		args, err := ec.field_Query_cedarBudgetSystemCost_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CedarBudgetSystemCost(childComplexity, args["cedarSystemID"].(string)), true
 
 	case "Query.cedarContractsBySystem":
 		if e.complexity.Query.CedarContractsBySystem == nil {
@@ -7090,6 +7243,41 @@ type CedarAuthorityToOperate {
 }
 
 """
+CedarBudget represents info about the budget associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarBudget {
+  fiscalYear: String
+  funding: String
+  fundingId: String
+  fundingSource: String
+  id: String
+  name: String
+  projectId: String!
+  projectTitle: String
+  systemId: String
+}
+
+"""
+CedarBudgetActualCost represents an individual budget actual cost item; this information is returned from the CEDAR Core API
+as a part of the CedarBudgetSystemCost object
+"""
+type CedarBudgetActualCost {
+  actualSystemCost: String
+  fiscalYear: String
+  systemId: String
+}
+
+"""
+CedarBudgetSystemCost represents info about the actual cost associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarBudgetSystemCost {
+  budgetActualCost: [CedarBudgetActualCost!]!
+  count: Int!
+}
+
+"""
 CedarSoftwareProductItem represents an individual software product; this information is returned from the CEDAR Core API
 as a part of the CedarSoftwareProducts object
 """
@@ -9365,6 +9553,8 @@ type Query {
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
+  cedarBudget(cedarSystemID: String!): [CedarBudget!]
+  cedarBudgetSystemCost(cedarSystemID: String!): CedarBudgetSystemCost
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
@@ -10927,6 +11117,36 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 }
 
 func (ec *executionContext) field_Query_cedarAuthorityToOperate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["cedarSystemID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemID"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["cedarSystemID"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cedarBudgetSystemCost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["cedarSystemID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemID"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["cedarSystemID"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cedarBudget_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -14284,6 +14504,597 @@ func (ec *executionContext) fieldContext_CedarAuthorityToOperate_xlcPhase(ctx co
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_fiscalYear(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_fiscalYear(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FiscalYear, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_fiscalYear(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_funding(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_funding(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Funding, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_funding(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_fundingId(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_fundingId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FundingID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_fundingId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_fundingSource(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_fundingSource(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FundingSource, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_fundingSource(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_id(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_name(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_projectId(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_projectId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProjectID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalNString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_projectId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_projectTitle(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_projectTitle(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProjectTitle, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_projectTitle(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_systemId(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_systemId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_systemId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudgetActualCost_actualSystemCost(ctx context.Context, field graphql.CollectedField, obj *model.CedarBudgetActualCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudgetActualCost_actualSystemCost(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ActualSystemCost, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudgetActualCost_actualSystemCost(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudgetActualCost",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudgetActualCost_fiscalYear(ctx context.Context, field graphql.CollectedField, obj *model.CedarBudgetActualCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudgetActualCost_fiscalYear(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FiscalYear, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudgetActualCost_fiscalYear(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudgetActualCost",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudgetActualCost_systemId(ctx context.Context, field graphql.CollectedField, obj *model.CedarBudgetActualCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudgetActualCost_systemId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudgetActualCost_systemId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudgetActualCost",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudgetSystemCost_budgetActualCost(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudgetSystemCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudgetSystemCost_budgetActualCost(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarBudgetSystemCost().BudgetActualCost(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.CedarBudgetActualCost)
+	fc.Result = res
+	return ec.marshalNCedarBudgetActualCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarBudgetActualCostᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudgetSystemCost_budgetActualCost(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudgetSystemCost",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "actualSystemCost":
+				return ec.fieldContext_CedarBudgetActualCost_actualSystemCost(ctx, field)
+			case "fiscalYear":
+				return ec.fieldContext_CedarBudgetActualCost_fiscalYear(ctx, field)
+			case "systemId":
+				return ec.fieldContext_CedarBudgetActualCost_systemId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarBudgetActualCost", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudgetSystemCost_count(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudgetSystemCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudgetSystemCost_count(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Count, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int32)
+	fc.Result = res
+	return ec.marshalNInt2int32(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudgetSystemCost_count(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudgetSystemCost",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -31091,6 +31902,136 @@ func (ec *executionContext) fieldContext_Query_cedarAuthorityToOperate(ctx conte
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_cedarAuthorityToOperate_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_cedarBudget(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_cedarBudget(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CedarBudget(rctx, fc.Args["cedarSystemID"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarBudget)
+	fc.Result = res
+	return ec.marshalOCedarBudget2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_cedarBudget(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "fiscalYear":
+				return ec.fieldContext_CedarBudget_fiscalYear(ctx, field)
+			case "funding":
+				return ec.fieldContext_CedarBudget_funding(ctx, field)
+			case "fundingId":
+				return ec.fieldContext_CedarBudget_fundingId(ctx, field)
+			case "fundingSource":
+				return ec.fieldContext_CedarBudget_fundingSource(ctx, field)
+			case "id":
+				return ec.fieldContext_CedarBudget_id(ctx, field)
+			case "name":
+				return ec.fieldContext_CedarBudget_name(ctx, field)
+			case "projectId":
+				return ec.fieldContext_CedarBudget_projectId(ctx, field)
+			case "projectTitle":
+				return ec.fieldContext_CedarBudget_projectTitle(ctx, field)
+			case "systemId":
+				return ec.fieldContext_CedarBudget_systemId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarBudget", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_cedarBudget_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_cedarBudgetSystemCost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_cedarBudgetSystemCost(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CedarBudgetSystemCost(rctx, fc.Args["cedarSystemID"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.CedarBudgetSystemCost)
+	fc.Result = res
+	return ec.marshalOCedarBudgetSystemCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetSystemCost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_cedarBudgetSystemCost(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "budgetActualCost":
+				return ec.fieldContext_CedarBudgetSystemCost_budgetActualCost(ctx, field)
+			case "count":
+				return ec.fieldContext_CedarBudgetSystemCost_count(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarBudgetSystemCost", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_cedarBudgetSystemCost_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -54098,6 +55039,176 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 	return out
 }
 
+var cedarBudgetImplementors = []string{"CedarBudget"}
+
+func (ec *executionContext) _CedarBudget(ctx context.Context, sel ast.SelectionSet, obj *models.CedarBudget) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarBudgetImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarBudget")
+		case "fiscalYear":
+			out.Values[i] = ec._CedarBudget_fiscalYear(ctx, field, obj)
+		case "funding":
+			out.Values[i] = ec._CedarBudget_funding(ctx, field, obj)
+		case "fundingId":
+			out.Values[i] = ec._CedarBudget_fundingId(ctx, field, obj)
+		case "fundingSource":
+			out.Values[i] = ec._CedarBudget_fundingSource(ctx, field, obj)
+		case "id":
+			out.Values[i] = ec._CedarBudget_id(ctx, field, obj)
+		case "name":
+			out.Values[i] = ec._CedarBudget_name(ctx, field, obj)
+		case "projectId":
+			out.Values[i] = ec._CedarBudget_projectId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "projectTitle":
+			out.Values[i] = ec._CedarBudget_projectTitle(ctx, field, obj)
+		case "systemId":
+			out.Values[i] = ec._CedarBudget_systemId(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var cedarBudgetActualCostImplementors = []string{"CedarBudgetActualCost"}
+
+func (ec *executionContext) _CedarBudgetActualCost(ctx context.Context, sel ast.SelectionSet, obj *model.CedarBudgetActualCost) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarBudgetActualCostImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarBudgetActualCost")
+		case "actualSystemCost":
+			out.Values[i] = ec._CedarBudgetActualCost_actualSystemCost(ctx, field, obj)
+		case "fiscalYear":
+			out.Values[i] = ec._CedarBudgetActualCost_fiscalYear(ctx, field, obj)
+		case "systemId":
+			out.Values[i] = ec._CedarBudgetActualCost_systemId(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var cedarBudgetSystemCostImplementors = []string{"CedarBudgetSystemCost"}
+
+func (ec *executionContext) _CedarBudgetSystemCost(ctx context.Context, sel ast.SelectionSet, obj *models.CedarBudgetSystemCost) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarBudgetSystemCostImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarBudgetSystemCost")
+		case "budgetActualCost":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarBudgetSystemCost_budgetActualCost(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "count":
+			out.Values[i] = ec._CedarBudgetSystemCost_count(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var cedarBusinessOwnerInformationImplementors = []string{"CedarBusinessOwnerInformation"}
 
 func (ec *executionContext) _CedarBusinessOwnerInformation(ctx context.Context, sel ast.SelectionSet, obj *model.CedarBusinessOwnerInformation) graphql.Marshaler {
@@ -56649,6 +57760,44 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "cedarBudget":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_cedarBudget(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "cedarBudgetSystemCost":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_cedarBudgetSystemCost(ctx, field)
 				return res
 			}
 
@@ -62517,6 +63666,70 @@ func (ec *executionContext) marshalNCedarAuthorityToOperate2ᚖgithubᚗcomᚋcm
 	return ec._CedarAuthorityToOperate(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCedarBudget2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudget(ctx context.Context, sel ast.SelectionSet, v *models.CedarBudget) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CedarBudget(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCedarBudgetActualCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarBudgetActualCostᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CedarBudgetActualCost) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarBudgetActualCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarBudgetActualCost(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCedarBudgetActualCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarBudgetActualCost(ctx context.Context, sel ast.SelectionSet, v *model.CedarBudgetActualCost) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CedarBudgetActualCost(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNCedarBusinessOwnerInformation2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarBusinessOwnerInformation(ctx context.Context, sel ast.SelectionSet, v model.CedarBusinessOwnerInformation) graphql.Marshaler {
 	return ec._CedarBusinessOwnerInformation(ctx, sel, &v)
 }
@@ -63553,6 +64766,21 @@ func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}
 
 func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
 	res := graphql.MarshalInt(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNInt2int32(ctx context.Context, v interface{}) (int32, error) {
+	res, err := graphql.UnmarshalInt32(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int32(ctx context.Context, sel ast.SelectionSet, v int32) graphql.Marshaler {
+	res := graphql.MarshalInt32(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -66041,6 +67269,60 @@ func (ec *executionContext) marshalOCedarAssigneeType2ᚖgithubᚗcomᚋcmsgov�
 	}
 	res := graphql.MarshalString(string(*v))
 	return res
+}
+
+func (ec *executionContext) marshalOCedarBudget2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarBudget) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarBudget2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudget(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalOCedarBudgetSystemCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetSystemCost(ctx context.Context, sel ast.SelectionSet, v *models.CedarBudgetSystemCost) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CedarBudgetSystemCost(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCedarDataCenter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDataCenter(ctx context.Context, sel ast.SelectionSet, v *models.CedarDataCenter) graphql.Marshaler {

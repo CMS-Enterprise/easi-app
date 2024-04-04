@@ -88,6 +88,41 @@ type CedarAuthorityToOperate {
 }
 
 """
+CedarBudget represents info about the budget associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarBudget {
+  fiscalYear: String
+  funding: String
+  fundingId: String
+  fundingSource: String
+  id: String
+  name: String
+  projectId: String!
+  projectTitle: String
+  systemId: String
+}
+
+"""
+CedarBudgetActualCost represents an individual budget actual cost item; this information is returned from the CEDAR Core API
+as a part of the CedarBudgetSystemCost object
+"""
+type CedarBudgetActualCost {
+  actualSystemCost: String
+  fiscalYear: String
+  systemId: String
+}
+
+"""
+CedarBudgetSystemCost represents info about the actual cost associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarBudgetSystemCost {
+  budgetActualCost: [CedarBudgetActualCost!]!
+  count: Int!
+}
+
+"""
 CedarSoftwareProductItem represents an individual software product; this information is returned from the CEDAR Core API
 as a part of the CedarSoftwareProducts object
 """
@@ -2363,6 +2398,8 @@ type Query {
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
+  cedarBudget(cedarSystemID: String!): [CedarBudget!]
+  cedarBudgetSystemCost(cedarSystemID: String!): CedarBudgetSystemCost
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
