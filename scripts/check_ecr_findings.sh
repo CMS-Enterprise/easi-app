@@ -12,21 +12,29 @@ echo "Waiting for scan to complete..."
 while true; do
     # Temporarily disable exit on error
     set +e
-    scanFindings=$(aws ecr describe-image-scan-findings --repository-name "$repository_name" --image-id imageTag="$image_tag")
+    # Capture both stdout and stderr, redirecting stderr to stdout
+    scanFindings=$(aws ecr describe-image-scan-findings --repository-name "$repository_name" --image-id imageTag="$image_tag" 2>&1)
     scanExitCode=$?
     # Re-enable exit on error
     set -e
 
+    # Check for RepositoryNotFoundException
+    if echo "$scanFindings" | grep -q "RepositoryNotFoundException"; then
+        echo "Error: Repository not found."
+        exit 1
+    fi
+
     if [[ "$scanExitCode" -eq 254 ]]; then
         echo "Scan not available yet, retrying..."
         sleep 10
-        continue # Using continue to retry
+        continue # Use continue to retry only for code 254
     elif [[ "$scanExitCode" -ne 0 ]]; then
         echo "An error occurred with exit code $scanExitCode."
+        echo "Error details: $scanFindings"
         exit $scanExitCode
     fi
 
-    # At this point, scanExitCode is 0, so we can proceed to analyze the scan findings
+    # If we get here, it means exit code was 0, and we can check the scan status
     scanStatus=$(echo "$scanFindings" | jq -r '.imageScanStatus.status')
 
     if [[ "$scanStatus" == "COMPLETE" ]]; then
