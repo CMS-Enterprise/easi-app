@@ -47,7 +47,6 @@ while true; do
         echo "Unexpected scan status: $scanStatus"
         exit 1  # Exit the script due to an unexpected scan status
     fi
-    
 done
 
 # Retrieve the scan findings and parse the total findings
