@@ -187,6 +187,7 @@ export const trbRequestSummary: Summary = {
   createdAt: '2023-01-05T07:26:16.036618Z',
   taskStatuses,
   adminNotes,
+  relationType: null,
   contractName: 'A great service',
   contractNumbers: [
     {
