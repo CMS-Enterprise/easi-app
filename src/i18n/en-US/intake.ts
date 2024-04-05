@@ -1,7 +1,8 @@
 const intake = {
   navigation: {
     itGovernance: 'IT Governance',
-    startRequest: 'Start a request',
+    startRequest: 'Start an IT Governance request',
+    editLinkRelation: 'Edit linked system, service, or contract',
     changeRequestType: 'Change request type'
   },
   feedback:
@@ -120,6 +121,9 @@ const intake = {
     contractVehicle: 'Contract Vehicle',
     contractStart: 'Period of Performance Start',
     contractEnd: 'Period of Performance End',
+    contractName: 'Contract Name',
+    contractNumber: 'Contract number',
+    cmsSystem: 'CMS System',
     status: 'Status',
     lcidScope: 'LCID Scope',
     lastAdminNote: 'Last Admin Team Note',
@@ -294,7 +298,10 @@ const intake = {
     hasContractRadio_IN_PROGRESS:
       'I am currently working on my OAGM Acquisition Plan/IAA documents',
     hasContractRadio_NOT_STARTED: "I haven't started acquisition planning yet",
-    hasContractRadio_NOT_NEEDED: "I don't anticipate needing contractor support"
+    hasContractRadio_NOT_NEEDED:
+      "I don't anticipate needing contractor support",
+    hasContractRadioHint:
+      'Choosing this option will remove previously-entered contract number(s).'
   },
   review: {
     heading: 'Check your answers before sending',

@@ -7,9 +7,9 @@ import (
 
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
-	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 )
 
 type SystemSummaryTestSuite struct {
@@ -28,17 +28,14 @@ func TestSystemSummaryTestSuite(t *testing.T) {
 func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
-	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
-	s.NoError(err)
-
 	s.Run("LD defaults protects invocation of GetSystemSummary", func() {
-		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, ldClient)
-		resp, err := c.GetSystemSummary(ctx, false)
+		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, true)
+		resp, err := c.GetSystemSummary(ctx, false, nil)
 		s.NoError(err)
 
 		// ensure mock data is returned
-		s.Equal(len(mockSystems), len(resp))
-		for _, v := range mockSystems {
+		s.Equal(len(cedarcoremock.GetSystems()), len(resp))
+		for _, v := range cedarcoremock.GetSystems() {
 			s.Contains(resp, v)
 		}
 	})
@@ -46,19 +43,14 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 func (s *SystemSummaryTestSuite) TestGetSystem() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
-	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
-	s.NoError(err)
-
 	s.Run("LD defaults protects invocation of GetSystem", func() {
-		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, ldClient)
-		// fake, non-mocked systemID should not return system
-		resp, err := c.GetSystem(ctx, "fake")
+		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, true)
+		_, err := c.GetSystem(ctx, "fake")
 		s.NoError(err)
-		s.Empty(resp)
 
 		// should return mocked system when given corresponding mockKey
-		for k, v := range mockSystems {
-			resp, err = c.GetSystem(ctx, k)
+		for _, v := range cedarcoremock.GetSystems() {
+			resp, err := c.GetSystem(ctx, v.ID.String)
 			s.NoError(err)
 			s.Equal(v, resp)
 		}

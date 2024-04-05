@@ -4,11 +4,13 @@ import (
 	"context"
 
 	"github.com/guregu/null"
+	"github.com/jmoiron/sqlx"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
@@ -168,92 +170,102 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 // SystemIntakeUpdateContractDetails updates specific contract information about a system intake
 // It also updates the request form state to show in progress, unless the state was EDITS_REQUESTED
 func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store, input model.UpdateSystemIntakeContractDetailsInput) (*model.UpdateSystemIntakePayload, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-	intake.RequestFormState = formstate.GetNewStateForUpdatedForm(intake.RequestFormState)
+	return sqlutils.WithTransactionRet[*model.UpdateSystemIntakePayload](ctx, store, func(tx *sqlx.Tx) (*model.UpdateSystemIntakePayload, error) {
 
-	if input.FundingSources != nil && input.FundingSources.FundingSources != nil {
-		intake.ExistingFunding = null.BoolFromPtr(input.FundingSources.ExistingFunding)
-		if intake.ExistingFunding.ValueOrZero() {
-			fundingSources := make([]*models.SystemIntakeFundingSource, 0, len(input.FundingSources.FundingSources))
-			for _, fundingSourceInput := range input.FundingSources.FundingSources {
-				fundingSources = append(fundingSources, &models.SystemIntakeFundingSource{
-					SystemIntakeID: intake.ID,
-					Source:         null.StringFromPtr(fundingSourceInput.Source),
-					FundingNumber:  null.StringFromPtr(fundingSourceInput.FundingNumber),
-				})
+		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.ID)
+		if err != nil {
+			return nil, err
+		}
+		intake.RequestFormState = formstate.GetNewStateForUpdatedForm(intake.RequestFormState)
+
+		if input.FundingSources != nil && input.FundingSources.FundingSources != nil {
+			intake.ExistingFunding = null.BoolFromPtr(input.FundingSources.ExistingFunding)
+			if intake.ExistingFunding.ValueOrZero() {
+				fundingSources := make([]*models.SystemIntakeFundingSource, 0, len(input.FundingSources.FundingSources))
+				for _, fundingSourceInput := range input.FundingSources.FundingSources {
+					fundingSources = append(fundingSources, &models.SystemIntakeFundingSource{
+						SystemIntakeID: intake.ID,
+						Source:         null.StringFromPtr(fundingSourceInput.Source),
+						FundingNumber:  null.StringFromPtr(fundingSourceInput.FundingNumber),
+					})
+				}
+
+				_, err = store.UpdateSystemIntakeFundingSourcesNP(ctx, tx, input.ID, fundingSources)
+				if err != nil {
+					return nil, err
+				}
+			} else {
+				// Delete existing funding source records
+				_, err = store.UpdateSystemIntakeFundingSourcesNP(ctx, tx, input.ID, nil)
+				if err != nil {
+					return nil, err
+				}
+			}
+		}
+
+		if input.Costs != nil {
+			intake.CostIncreaseAmount = null.StringFromPtr(input.Costs.ExpectedIncreaseAmount)
+			intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
+
+			if input.Costs.IsExpectingIncrease != nil {
+				if *input.Costs.IsExpectingIncrease == "YES" {
+					intake.CostIncreaseAmount = null.StringFromPtr(input.Costs.ExpectedIncreaseAmount)
+					intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
+				}
+				if *input.Costs.IsExpectingIncrease != "YES" {
+					intake.CostIncreaseAmount = null.StringFromPtr(nil)
+					intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
+				}
+			}
+		}
+
+		if input.AnnualSpending != nil {
+			intake.CurrentAnnualSpending = null.StringFromPtr(input.AnnualSpending.CurrentAnnualSpending)
+			intake.CurrentAnnualSpendingITPortion = null.StringFromPtr(input.AnnualSpending.CurrentAnnualSpendingITPortion)
+			intake.PlannedYearOneSpending = null.StringFromPtr(input.AnnualSpending.PlannedYearOneSpending)
+			intake.PlannedYearOneSpendingITPortion = null.StringFromPtr(input.AnnualSpending.PlannedYearOneSpendingITPortion)
+		}
+
+		if input.Contract != nil {
+			contractNumbers := input.Contract.Numbers
+
+			// set the fields to the values we receive
+			intake.ExistingContract = null.StringFromPtr(input.Contract.HasContract)
+			intake.Contractor = null.StringFromPtr(input.Contract.Contractor)
+			intake.ContractVehicle = null.StringFromPtr(nil) // blank this out in favor of the newer ContractNumber field (see EASI-1977)
+
+			if input.Contract.StartDate != nil {
+				intake.ContractStartDate = input.Contract.StartDate
+			}
+			if input.Contract.EndDate != nil {
+				intake.ContractEndDate = input.Contract.EndDate
 			}
 
-			_, err = store.UpdateSystemIntakeFundingSources(ctx, input.ID, fundingSources)
+			// in case hasContract has changed, clear the other fields
+			if input.Contract.HasContract != nil {
+				if *input.Contract.HasContract == "NOT_STARTED" || *input.Contract.HasContract == "NOT_NEEDED" {
+					intake.Contractor = null.StringFromPtr(nil)
+					intake.ContractVehicle = null.StringFromPtr(nil)
+					// declare explicitly as an empty slice instead of `nil`
+					// TODO: (Sam) update contract number storage methods to accept `nil`
+					contractNumbers = []string{}
+					intake.ContractStartDate = nil
+					intake.ContractEndDate = nil
+				}
+			}
 
-			if err != nil {
+			// set contract numbers here
+			if err = store.SetSystemIntakeContractNumbers(ctx, tx, intake.ID, contractNumbers); err != nil {
 				return nil, err
 			}
-		} else {
-			// Delete existing funding source records
-			_, err = store.UpdateSystemIntakeFundingSources(ctx, input.ID, nil)
-
-			if err != nil {
-				return nil, err
-			}
-		}
-	}
-
-	if input.Costs != nil {
-		intake.CostIncreaseAmount = null.StringFromPtr(input.Costs.ExpectedIncreaseAmount)
-		intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
-
-		if input.Costs.IsExpectingIncrease != nil {
-			if *input.Costs.IsExpectingIncrease == "YES" {
-				intake.CostIncreaseAmount = null.StringFromPtr(input.Costs.ExpectedIncreaseAmount)
-				intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
-			}
-			if *input.Costs.IsExpectingIncrease != "YES" {
-				intake.CostIncreaseAmount = null.StringFromPtr(nil)
-				intake.CostIncrease = null.StringFromPtr(input.Costs.IsExpectingIncrease)
-			}
-		}
-	}
-
-	if input.AnnualSpending != nil {
-		intake.CurrentAnnualSpending = null.StringFromPtr(input.AnnualSpending.CurrentAnnualSpending)
-		intake.CurrentAnnualSpendingITPortion = null.StringFromPtr(input.AnnualSpending.CurrentAnnualSpendingITPortion)
-		intake.PlannedYearOneSpending = null.StringFromPtr(input.AnnualSpending.PlannedYearOneSpending)
-		intake.PlannedYearOneSpendingITPortion = null.StringFromPtr(input.AnnualSpending.PlannedYearOneSpendingITPortion)
-	}
-
-	if input.Contract != nil {
-		// set the fields to the values we receive
-		intake.ExistingContract = null.StringFromPtr(input.Contract.HasContract)
-		intake.Contractor = null.StringFromPtr(input.Contract.Contractor)
-		intake.ContractNumber = null.StringFromPtr(input.Contract.Number)
-		intake.ContractVehicle = null.StringFromPtr(nil) // blank this out in favor of the newer ContractNumber field (see EASI-1977)
-
-		if input.Contract.StartDate != nil {
-			intake.ContractStartDate = input.Contract.StartDate
-		}
-		if input.Contract.EndDate != nil {
-			intake.ContractEndDate = input.Contract.EndDate
 		}
 
-		// in case hasContract has changed, clear the other fields
-		if input.Contract.HasContract != nil {
-			if *input.Contract.HasContract == "NOT_STARTED" || *input.Contract.HasContract == "NOT_NEEDED" {
-				intake.Contractor = null.StringFromPtr(nil)
-				intake.ContractVehicle = null.StringFromPtr(nil)
-				intake.ContractNumber = null.StringFromPtr(nil)
-				intake.ContractStartDate = nil
-				intake.ContractEndDate = nil
-			}
-		}
-	}
+		savedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
+		return &model.UpdateSystemIntakePayload{
+			SystemIntake: savedIntake,
+		}, err
 
-	savedIntake, err := store.UpdateSystemIntake(ctx, intake)
-	return &model.UpdateSystemIntakePayload{
-		SystemIntake: savedIntake,
-	}, err
+	})
 }
 
 // SubmitIntake is the resolver to submit the initial request form of a system intake

@@ -21,7 +21,7 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 		return errors.New("unexpected nil system intake ID when linking system intake to contract numbers")
 	}
 
-	if _, err := tx.NamedExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.Delete, map[string]interface{}{
+	if _, err := tx.NamedExec(sqlqueries.SystemIntakeContractNumberForm.Delete, map[string]interface{}{
 		"contract_numbers": pq.StringArray(contractNumbers),
 		"system_intake_id": systemIntakeID,
 	}); err != nil {
@@ -48,7 +48,7 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 		setSystemIntakeContractNumbersLinks[i] = contractNumberLink
 	}
 
-	if _, err := tx.NamedExecContext(ctx, sqlqueries.SystemIntakeContractNumberForm.Set, setSystemIntakeContractNumbersLinks); err != nil {
+	if _, err := tx.NamedExec(sqlqueries.SystemIntakeContractNumberForm.Set, setSystemIntakeContractNumbersLinks); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to insert linked system intake to contract numbers", zap.Error(err))
 		return err
 	}
@@ -58,14 +58,14 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 
 // SystemIntakeContractNumbersBySystemIntakeIDLOADER gets multiple groups of Contract Numbers by System Intake ID
 func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx context.Context, paramTableJSON string) (map[string][]*models.SystemIntakeContractNumber, error) {
-	stmt, err := s.db.PrepareNamedContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER)
+	stmt, err := s.db.PrepareNamed(sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
 
 	var contracts []*models.SystemIntakeContractNumber
-	err = stmt.SelectContext(ctx, &contracts, map[string]interface{}{
+	err = stmt.Select(&contracts, map[string]interface{}{
 		"param_table_json": paramTableJSON,
 	})
 	if err != nil {

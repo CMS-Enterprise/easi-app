@@ -19,8 +19,8 @@ import (
 const maxEUAIDLength = 4
 
 // ClientWrapper is a wrapper around github.com/okta/okta-sdk-golang/v2/okta Client type.
-// The purpose of this package is to act as a drop-in replacement for the CEDAR LDAP API, so this package should implement the same
-// methods that the Client interface defined in package usersearch
+// The purpose of this package is to act as a simplified client for the Okta API. The methods expected to be used for that client are
+// defined in the Client interface in pkg/usersearch.
 type ClientWrapper struct {
 	oktaClient *okta.Client
 }
@@ -102,9 +102,23 @@ func (cw *ClientWrapper) FetchUserInfos(ctx context.Context, usernames []string)
 	search := query.NewQueryParams(query.WithSearch(searchString))
 
 	searchedUsers, _, err := cw.oktaClient.User.ListUsers(ctx, search)
-	if err != nil && !errors.Is(err, context.Canceled) {
-		logger.Error("Error searching Okta users", zap.Error(err), zap.String("usernames", strings.Join(usernames, ", ")))
-		return nil, err
+	if err != nil {
+		// If it's also not a context cancellation, log and return the error
+		if !errors.Is(err, context.Canceled) {
+			logger.Error("Error searching Okta users", zap.Error(err), zap.String("usernames", strings.Join(usernames, ", ")))
+			return nil, err
+		}
+		// err is a context cancellation error, log and return early
+		logger.Warn("Context cancelled while searching Okta users", zap.Error(err))
+		return nil, nil
+	}
+
+	// API call was a success, but no users were found.
+	// We consider this an error, since we're expecting to find users
+	// since this isn't a "search", but a lookup by EUA ID
+	if len(searchedUsers) == 0 {
+		appcontext.ZLogger(ctx).Error("no users found when calling FetchUserInfos", zap.String("usernames", strings.Join(usernames, ",")))
+		return users, fmt.Errorf("no users found")
 	}
 
 	for _, user := range searchedUsers {

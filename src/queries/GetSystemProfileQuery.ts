@@ -30,6 +30,48 @@ export default gql`
     cedarThreat(cedarSystemId: $cedarSystemId) {
       weaknessRiskLevel
     }
+    cedarSoftwareProducts(cedarSystemId: $cedarSystemId) {
+      aiSolnCatg
+      aiSolnCatgOther
+      apiDataArea
+      apiDescPubLocation
+      apiDescPublished
+      apiFHIRUse
+      apiFHIRUseOther
+      apiHasPortal
+      apisAccessibility
+      apisDeveloped
+      developmentStage
+      softwareProducts {
+        apiGatewayUse
+        elaPurchase
+        elaVendorId
+        providesAiCapability
+        refstr
+        softwareCatagoryConnectionGuid
+        softwareVendorConnectionGuid
+        softwareCost
+        softwareElaOrganization
+        softwareName
+        systemSoftwareConnectionGuid
+        technopediaCategory
+        technopediaID
+        vendorName
+      }
+      systemHasAPIGateway
+      usesAiTech
+    }
+    cedarContractsBySystem(cedarSystemId: $cedarSystemId) {
+      id: systemID
+      startDate
+      endDate
+      contractNumber
+      contractName
+      description
+      orderNumber
+      serviceProvided
+      isDeliveryOrg
+    }
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
       businessOwnerInformation {
         isCmsOwned

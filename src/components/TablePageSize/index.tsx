@@ -34,6 +34,7 @@ const TablePageSize = ({
         onChange={(e: any) => setPageSize(Number(e.target.value))}
         value={pageSize}
       >
+        <Option value={5} />
         <Option value={10} />
         <Option value={25} />
         <Option value={50} />

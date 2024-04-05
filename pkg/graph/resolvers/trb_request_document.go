@@ -38,7 +38,6 @@ func GetStatusForTRBRequestDocument(s3Client *upload.S3Client, s3Key string) (mo
 	}
 
 	// possible tag values come from virus scanning lambda
-	// this is the same logic as in schema.resolvers.go's Documents() method for 508 documents
 	if avStatus == "CLEAN" {
 		return models.TRBRequestDocumentStatusAvailable, nil
 	} else if avStatus == "INFECTED" {
@@ -88,7 +87,7 @@ func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Clien
 
 // DeleteTRBRequestDocument deletes an existing TRBRequestDocument, given its ID.
 //
-// Does *not* delete the uploaded file from S3, following the example of 508/accessibility request documents.
+// Does *not* delete the uploaded file from S3.
 func DeleteTRBRequestDocument(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequestDocument, error) {
 	return store.DeleteTRBRequestDocument(ctx, id)
 }

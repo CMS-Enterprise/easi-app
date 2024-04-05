@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { GovernanceRequestFeedbackTargetForm, GovernanceRequestFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatusAdmin, SystemIntakeStatusRequester, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState } from "./../../types/graphql-global-types";
+import { GovernanceRequestFeedbackTargetForm, GovernanceRequestFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatusAdmin, SystemIntakeStatusRequester, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState, RequestRelationType } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL fragment: SystemIntake
@@ -36,7 +36,12 @@ export interface SystemIntake_contract {
   hasContract: string | null;
   startDate: SystemIntake_contract_startDate;
   vehicle: string | null;
-  number: string | null;
+}
+
+export interface SystemIntake_contractNumbers {
+  __typename: "SystemIntakeContractNumber";
+  id: UUID;
+  contractNumber: string;
 }
 
 export interface SystemIntake_costs {
@@ -124,6 +129,23 @@ export interface SystemIntake_documents {
   url: string;
 }
 
+export interface SystemIntake_systems_businessOwnerRoles {
+  __typename: "CedarRole";
+  objectID: string;
+  assigneeFirstName: string | null;
+  assigneeLastName: string | null;
+}
+
+export interface SystemIntake_systems {
+  __typename: "CedarSystem";
+  id: string;
+  name: string;
+  description: string | null;
+  acronym: string | null;
+  businessOwnerOrg: string | null;
+  businessOwnerRoles: SystemIntake_systems_businessOwnerRoles[];
+}
+
 export interface SystemIntake {
   __typename: "SystemIntake";
   id: UUID;
@@ -132,6 +154,10 @@ export interface SystemIntake {
   businessSolution: string | null;
   businessOwner: SystemIntake_businessOwner;
   contract: SystemIntake_contract;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: SystemIntake_contractNumbers[];
   costs: SystemIntake_costs | null;
   annualSpending: SystemIntake_annualSpending | null;
   currentStage: string | null;
@@ -168,11 +194,17 @@ export interface SystemIntake {
   updatedAt: Time | null;
   createdAt: Time | null;
   archivedAt: Time | null;
-  euaUserId: string;
+  euaUserId: string | null;
   hasUiChanges: boolean | null;
   documents: SystemIntake_documents[];
   state: SystemIntakeState;
   decisionState: SystemIntakeDecisionState;
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp | null;
   requestFormState: SystemIntakeFormState;
+  relationType: RequestRelationType | null;
+  contractName: string | null;
+  /**
+   * Linked systems
+   */
+  systems: SystemIntake_systems[];
 }

@@ -4,7 +4,8 @@ metadata:
   name: easi-backend-configmap
   namespace: easi
 data:
-  CEDAR_ENV: dev
+  CEDAR_CORE_MOCK: 'true'
+  CEDAR_INTAKE_ENABLED: 'false'
   CEDAR_API_KEY: ''
   CEDAR_API_URL: "webmethods-apigw.cedardev.cms.gov"
   CEDAR_CORE_API_VERSION: "2.0.0"
@@ -21,14 +22,13 @@ data:
   OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
   GRT_EMAIL: success@simulator.amazonses.com
   IT_INVESTMENT_EMAIL: success@simulator.amazonses.com
-  ACCESSIBILITY_TEAM_EMAIL: success@simulator.amazonses.com
   EASI_HELP_EMAIL: success@simulator.amazonses.com
   TRB_EMAIL: success@simulator.amazonses.com
   EMAIL_TEMPLATE_DIR: /easi/pkg/email/templates
   AWS_REGION: us-west-2
   AWS_SES_SOURCE: '\"EASi Local\" <no-reply-local@info.easi.cms.gov>'
   AWS_SES_SOURCE_ARN: ses-arn
-  AWS_S3_FILE_UPLOAD_BUCKET: easiappfileuploads
+  AWS_S3_FILE_UPLOAD_BUCKET: easi-app-file-uploads
   AWS_ACCESS_KEY_ID: '1'
   AWS_SECRET_ACCESS_KEY: '1'
   PGHOST: db
@@ -52,7 +52,6 @@ data:
   ALT_JOB_CODES: 'true'
   OKTA_API_URL: https://test.idp.idm.cms.gov
   OKTA_API_TOKEN: ''
-  USE_OKTA_API: 'true'
   LOCAL_AUTH_ENABLED: 'true'
 
 

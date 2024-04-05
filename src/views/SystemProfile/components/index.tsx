@@ -1,10 +1,11 @@
 import React from 'react';
+import i18next from 'i18next';
 
 import { SystemProfileData } from 'types/systemProfile';
 
 import ATO from './ATO';
+import Contracts from './Contracts';
 import FundingAndBudget from './FundingAndBudget';
-import Section508 from './Section508';
 import SubSystems from './SubSystems';
 import SystemData from './SystemData';
 import SystemDetails from './SystemDetails';
@@ -17,6 +18,7 @@ type sideNavItemProps = {
   component: React.ReactNode;
   route: string;
   componentId?: string;
+  hashLinks?: { name: string; hash: string }[];
 };
 
 interface sideNavProps {
@@ -47,12 +49,42 @@ const sideNavItems = (
           groupEnd: true,
           component: <Team system={system} />,
           route: `/systems/${system.id}/team`,
-          componentId: 'system-team'
+          componentId: 'system-team',
+          hashLinks: [
+            {
+              name: i18next.t<string>('systemProfile:navigation.teamFte'),
+              hash: '#fte'
+            },
+            {
+              name: i18next.t<string>(
+                'systemProfile:navigation.teamBusinessOwners'
+              ),
+              hash: '#businessOwners'
+            },
+            {
+              name: i18next.t<string>(
+                'systemProfile:navigation.teamProjectLeads'
+              ),
+              hash: '#projectLeads'
+            },
+            {
+              name: i18next.t<string>(
+                'systemProfile:navigation.teamAdditional'
+              ),
+              hash: '#additional'
+            }
+          ]
         },
         ato: {
           component: <ATO system={system} />,
           route: `/systems/${system.id}/ato`,
           componentId: 'ato'
+        },
+        'tools-and-software': {
+          groupEnd: true,
+          component: <ToolsAndSoftware system={system} />,
+          route: `/systems/${system.id}/tools-and-software`,
+          componentId: 'system-section-508'
         }
       }
     : {
@@ -73,16 +105,15 @@ const sideNavItems = (
           route: `/systems/${system.id}/team`,
           componentId: 'system-team'
         },
+        contracts: {
+          component: <Contracts system={system} />,
+          route: `/systems/${system.id}/contracts`,
+          componentId: 'contracts'
+        },
         'funding-and-budget': {
           component: <FundingAndBudget system={system} />,
           route: `/systems/${system.id}/funding-and-budget`,
           componentId: 'funding-and-budget'
-        },
-        'tools-and-software': {
-          groupEnd: true,
-          component: <ToolsAndSoftware system={system} />,
-          route: `/systems/${system.id}/tools-and-software`,
-          componentId: 'system-section-508'
         },
         ato: {
           component: <ATO system={system} />,
@@ -92,12 +123,6 @@ const sideNavItems = (
         'lifecycle-id': {
           component: <SystemHome system={system} />,
           route: `/systems/${system.id}/lifecycle-id`
-        },
-        'section-508': {
-          groupEnd: true,
-          component: <Section508 system={system} />,
-          route: `/systems/${system.id}/section-508`,
-          componentId: 'system-section-508'
         },
         'sub-systems': {
           component: <SubSystems system={system} />,

@@ -1,5 +1,5 @@
 const systemProfile = {
-  header: 'CMS Systems and Applications',
+  header: 'CMS systems and applications',
   subHeader: 'Find information about existing CMS systems and applications.',
   newRequest: {
     info: 'Have a new system or application?',
@@ -9,11 +9,15 @@ const systemProfile = {
     home: 'System Home',
     details: 'System Details',
     team: 'Team',
+    contracts: 'Contracts',
+    teamFte: 'FTE',
+    teamBusinessOwners: 'Business Owner(s)',
+    teamProjectLeads: 'Project lead(s)',
+    teamAdditional: 'Additional team members',
     'funding-and-budget': 'Funding and Budget',
     'tools-and-software': 'Tools and Software',
     ato: 'ATO',
     'lifecycle-id': 'Lifecyle ID',
-    'section-508': 'Section 508',
     'sub-systems': 'Sub-systems',
     'system-data': 'System Data',
     documents: 'Documents'
@@ -89,6 +93,25 @@ const systemProfile = {
         'There is no information about previous tests or assessments available for this system',
       viewATOInfo: 'View ATO information'
     },
+    contracts: {
+      header: 'Contracts',
+      contractInfo: 'Contract information',
+      contractTitle: 'Contract title',
+      isDeliveryOrg: 'Contract for Application Delivery Organization',
+      vendors: 'Vendors',
+      contractNumber: 'Contract number',
+      taskOrderNumber: 'Task order number',
+      periodOfPerformance: 'Period of performance',
+      startDate: 'Start date',
+      endDate: 'End date',
+      contractServices: 'Contract services or functions',
+      showMore: 'Show more contracts',
+      showLess: 'Show less contracts',
+      noContract: 'No contract title listed',
+      noVendors: 'No vendors listed',
+      noData: 'No data available',
+      noContracts: 'This system does not have any contracts listed.'
+    },
     fundingAndBudget: {
       header: 'Funding and Budget',
       actualFYCost: 'Actual FY system cost',
@@ -102,22 +125,22 @@ const systemProfile = {
     },
     team: {
       header: {
-        team: 'Team',
+        fte: 'Full-time employees (FTE)',
         businessOwners: 'Business Owners',
         projectLeads: 'Project Leads',
-        additional: 'Additional Points of Contact'
+        additional: 'Additional team members'
       },
       noData: {
         businessOwners:
-          'This system does not have any Business Owners identified.',
-        projectLeads: 'This system does not have any Project Leads identified.',
-        additional: 'This system has no additional points of contact.'
+          'There are no Business Owners identified for this system.',
+        projectLeads: 'There are no Project Leads identified for this system.',
+        additional:
+          'There are no additional team members identified for this system.'
       },
-      viewMore: 'View {{count}} more contact',
-      viewMore_plural: 'View {{count}} more contacts',
-      viewLess: 'View fewer contacts',
-      federalFullTimeEmployees: 'Federal Full Time Employees',
-      contractorFullTimeEmployees: 'Contractor Full Time Employees',
+      showMore: 'Show more points of contact',
+      showLess: 'Show fewer points of contact',
+      federalFte: 'Federal FTE',
+      contractorFte: 'Contractor FTE',
       vendors: 'Vendors',
       contractAwardDate: 'Contract Award Date',
       periodOfPerformance: 'Period of performance',
@@ -200,9 +223,16 @@ const systemProfile = {
     },
     toolsAndSoftware: {
       header: 'Tools and Software',
-      productType: 'Product Type',
-      softwareVersion: 'Software version',
-      softwareEdition: 'Software edition'
+      productCategory: 'Product Category',
+      elaPurchase: 'Purchased under an Enterprise License Agreement',
+      noManufacturerListed: 'No manufacturer listed',
+      apiGateway: 'API Gateway',
+      usedForAI: 'Used for Artificial Intelligence',
+      noToolsOrSoftware:
+        'This system does not have any tools or software listed.',
+      viewMore: 'View {{count}} more software product',
+      viewMore_plural: 'View {{count}} more software products',
+      viewLess: 'View fewer software products'
     },
     systemData: {
       header: 'System Data',
@@ -267,46 +297,41 @@ const systemProfile = {
       header: 'Sub-systems',
       retirementDate: 'Retirement date',
       viewInfo: 'View sub-system information'
-    },
-    section508: {
-      section508RequestName: '508 project title',
-      viewMoreRequestInformation: 'View more 508 request information',
-      openRequests: 'Open 508 testing requests',
-      closedRequests: 'Closed testing requests',
-      testingDocuments: '508 testing documents',
-      requestName: 'Project title',
-      currentStatus: 'Current status',
-      statusChanged: 'Request status changed',
-      test: 'test',
-      latestTest: 'Latest test',
-      initialTest: 'Initial Test:',
-      score: 'Score:',
-      businessOwner: 'Business owner',
-      submissionDate: 'Submission date',
-      uploadedDocuments: 'uploaded documents',
-      viewUploadedDocuments: 'View uploaded documents',
-      startNewRequest: 'Start a new 508 testing request',
-      viewMostRecent: 'View most recent',
-      uploaded: 'Uploaded',
-      additional: 'Additional',
-      table: {
-        document: 'Document',
-        uploadDate: 'Upload Date',
-        actions: 'Actions',
-        view: 'View'
-      }
     }
   },
   systemTable: {
-    title: 'All systems',
-    subtitle: 'Bookmark systems that you want to access more quickly.',
+    title: 'All CMS systems',
+    mySystemsTitle: 'My systems',
+    subtitle:
+      'Click the bookmark icon (<icon />) to bookmark systems that you want to access more quickly.',
+    jumpToSystems: 'Jump to all CMS systems',
+    mySystemsSubtitle:
+      'You are listed as a team member for the systems below. If you are listed in error, you may remove yourself from the team using the Team page of a System Profile. You may navigate to a System Profile using the links in the table below.',
     id: 'system-list',
-    search: 'Search Table',
+    search: 'Search table',
     header: {
-      systemName: 'System Name',
-      systemOwner: 'CMS Component',
+      systemName: 'System name',
+      systemOwner: 'CMS component',
       systemAcronym: 'Acronym',
-      systemStatus: 'ATO Status'
+      systemStatus: 'ATO status'
+    },
+    view: 'View',
+    buttonGroup: {
+      allSystems: 'All systems',
+      mySystems: 'My systems',
+      bookmarkedSystems: 'Bookmarked systems'
+    },
+    noMySystem: {
+      header: 'You are not listed as a team member for any CMS systems',
+      description:
+        'If you believe this to be an error, please refresh the page. If the error persists, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>. If you wish to browse other CMS systems, use the Systems section of EASi to view information about all CMS systems.  <link2>Go to all CMS systems <iconForward /></link2>',
+      descriptionAlt:
+        'If you believe this to be an error, please refresh the page. If the error persists, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>.'
+    },
+    dontSeeSystem: {
+      header: 'Don’t see the system you’re looking for?',
+      description:
+        'If you believe there’s an error in the table above, please refresh the page. You may also use the Systems section of EASi to view information about all CMS systems.  <link1>Go to all CMS systems<iconForward /></link1>'
     }
   },
   bookmark: {

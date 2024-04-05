@@ -22,7 +22,7 @@ func SetTRBRequestRelationNewSystem(
 	store *storage.Store,
 	input model.SetTRBRequestRelationNewSystemInput,
 ) (*models.TRBRequest, error) {
-	return sqlutils.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
 		trbRequest, err := store.GetTRBRequestByIDNP(ctx, tx, input.TrbRequestID)
 		if err != nil {
@@ -60,7 +60,7 @@ func SetTRBRequestRelationExistingSystem(
 	getCedarSystem func(ctx context.Context, systemID string) (*models.CedarSystem, error),
 	input model.SetTRBRequestRelationExistingSystemInput,
 ) (*models.TRBRequest, error) {
-	return sqlutils.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
 		trbRequest, err := store.GetTRBRequestByIDNP(ctx, tx, input.TrbRequestID)
 		if err != nil {
@@ -101,7 +101,7 @@ func SetTRBRequestRelationExistingService(
 	store *storage.Store,
 	input model.SetTRBRequestRelationExistingServiceInput,
 ) (*models.TRBRequest, error) {
-	return sqlutils.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
 		trbRequest, err := store.GetTRBRequestByIDNP(ctx, tx, input.TrbRequestID)
 		if err != nil {
@@ -135,7 +135,7 @@ func UnlinkTRBRequestRelation(
 	store *storage.Store,
 	trbRequestID uuid.UUID,
 ) (*models.TRBRequest, error) {
-	return sqlutils.WithTransaction[models.TRBRequest](store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
 		trbRequest, err := store.GetTRBRequestByIDNP(ctx, tx, trbRequestID)
 		if err != nil {
@@ -160,6 +160,8 @@ func UnlinkTRBRequestRelation(
 		}
 
 		// Delete contract number relationships
+		// declare this as an explicit empty slice instead of `nil`
+		// TODO: (Sam) update `SetTRBRequestContractNumbers` to allow for `nil`
 		if err := store.SetTRBRequestContractNumbers(ctx, tx, trbRequestID, []string{}); err != nil {
 			return nil, err
 		}

@@ -15,9 +15,9 @@ import {
   GetSystemIntakeVariables
 } from 'queries/types/GetSystemIntake';
 import {
-  GetSystemIntakeContacts,
-  GetSystemIntakeContactsVariables
-} from 'queries/types/GetSystemIntakeContacts';
+  GetSystemIntakeContactsQuery as GetSystemIntakeContactsType,
+  GetSystemIntakeContactsQueryVariables
+} from 'queries/types/GetSystemIntakeContactsQuery';
 import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'queries/types/GetSystemIntakesTable';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
@@ -203,7 +203,6 @@ export const emptySystemIntake: SystemIntake = {
     hasContract: null,
     contractor: null,
     vehicle: null,
-    number: null,
     startDate: {
       __typename: 'ContractDate',
       month: null,
@@ -245,7 +244,34 @@ export const emptySystemIntake: SystemIntake = {
   state: SystemIntakeState.OPEN,
   decisionState: SystemIntakeDecisionState.NO_DECISION,
   trbFollowUpRecommendation: null,
-  requestFormState: SystemIntakeFormState.IN_PROGRESS
+  requestFormState: SystemIntakeFormState.IN_PROGRESS,
+  relationType: null,
+  contractName: 'My contract',
+  contractNumbers: [
+    {
+      __typename: 'SystemIntakeContractNumber',
+      id: '34t53432',
+      contractNumber: '123456-7890'
+    }
+  ],
+  systems: [
+    {
+      __typename: 'CedarSystem',
+      id: '123',
+      name: 'My system',
+      description: 'A fun system',
+      acronym: 'MS',
+      businessOwnerOrg: 'Oddball',
+      businessOwnerRoles: [
+        {
+          __typename: 'CedarRole',
+          objectID: '9787620',
+          assigneeFirstName: 'John',
+          assigneeLastName: 'Doe'
+        }
+      ]
+    }
+  ]
 };
 
 export const systemIntake: SystemIntake = {
@@ -302,7 +328,6 @@ export const systemIntake: SystemIntake = {
     hasContract: 'IN_PROGRESS',
     contractor: 'TrussWorks, Inc.',
     vehicle: 'Sole Source',
-    number: '123456-7890',
     startDate: {
       __typename: 'ContractDate',
       month: '1',
@@ -344,7 +369,34 @@ export const systemIntake: SystemIntake = {
   state: SystemIntakeState.OPEN,
   decisionState: SystemIntakeDecisionState.NO_DECISION,
   trbFollowUpRecommendation: null,
-  requestFormState: SystemIntakeFormState.SUBMITTED
+  requestFormState: SystemIntakeFormState.SUBMITTED,
+  relationType: null,
+  contractName: 'My contract',
+  contractNumbers: [
+    {
+      __typename: 'SystemIntakeContractNumber',
+      id: '34t53432',
+      contractNumber: '123456-7890'
+    }
+  ],
+  systems: [
+    {
+      __typename: 'CedarSystem',
+      id: '123',
+      name: 'My system',
+      description: 'A fun system',
+      acronym: 'MS',
+      businessOwnerOrg: 'Oddball',
+      businessOwnerRoles: [
+        {
+          __typename: 'CedarRole',
+          objectID: '9787620',
+          assigneeFirstName: 'John',
+          assigneeLastName: 'Doe'
+        }
+      ]
+    }
+  ]
 };
 
 /** System intake form that has NOT been started */
@@ -374,7 +426,6 @@ export const initialSystemIntakeForm: SystemIntake = {
     __typename: 'SystemIntakeContract',
     hasContract: '',
     contractor: '',
-    number: '',
     vehicle: '',
     startDate: {
       __typename: 'ContractDate',
@@ -419,6 +470,9 @@ export const systemIntakeForTable: TableSystemIntake = {
     plannedYearOneSpendingITPortion: 'Planned year one spending IT portion'
   },
   contract: systemIntake.contract,
+  contractName: '',
+  contractNumbers: [],
+  systems: [],
   businessNeed: systemIntake.businessNeed,
   businessSolution: systemIntake.businessSolution,
   currentStage: systemIntake.currentStage,
@@ -498,8 +552,8 @@ export const getSystemIntakesWithLcidsQuery: MockedQuery<GetSystemIntakesWithLCI
 };
 
 export const getSystemIntakeContactsQuery: MockedQuery<
-  GetSystemIntakeContacts,
-  GetSystemIntakeContactsVariables
+  GetSystemIntakeContactsType,
+  GetSystemIntakeContactsQueryVariables
 > = {
   request: {
     query: GetSystemIntakeContactsQuery,
@@ -539,7 +593,11 @@ export const taskListSystemIntake: TaskListSystemIntake = {
   updatedAt: null,
   grtDate: null,
   grbDate: null,
-  businessCase: null
+  businessCase: null,
+  relationType: null,
+  contractName: null,
+  contractNumbers: [],
+  systems: []
 };
 
 export const getGovernanceTaskListQuery = (

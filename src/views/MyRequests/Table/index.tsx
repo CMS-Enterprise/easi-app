@@ -11,6 +11,7 @@ import { useQuery } from '@apollo/client';
 import { Table as UswdsTable } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import Alert from 'components/shared/Alert';
 import Spinner from 'components/Spinner';
 import GlobalClientFilter from 'components/TableFilter';
 import TablePageSize from 'components/TablePageSize';
@@ -19,7 +20,7 @@ import TableResults from 'components/TableResults';
 import GetRequestsQuery from 'queries/GetRequestsQuery';
 import { GetRequests, GetRequestsVariables } from 'queries/types/GetRequests';
 import { RequestType } from 'types/graphql-global-types';
-import { formatDateLocal, formatDateUtc } from 'utils/date';
+import { formatDateUtc } from 'utils/date';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
   currentTableSortDescription,
@@ -46,7 +47,6 @@ const Table = ({
   const { t } = useTranslation([
     'home',
     'intake',
-    'accessibility',
     'technicalAssistance',
     'governanceReviewTeam'
   ]);
@@ -62,6 +62,16 @@ const Table = ({
   const columns: any = useMemo(() => {
     return [
       {
+        Header: t('requestsTable.headers.submittedAt'),
+        accessor: 'submittedAt',
+        Cell: ({ value }: any) => {
+          if (value) {
+            return formatDateUtc(value, 'MM/dd/yyyy');
+          }
+          return 'Not submitted';
+        }
+      },
+      {
         Header: t('requestsTable.headers.name'),
         accessor: 'name',
         Cell: ({ row, value }: any) => {
@@ -71,9 +81,6 @@ const Table = ({
             link = `/trb/task-list/${row.original.id}`;
           } else {
             switch (row.original.type) {
-              case t('requestsTable.types.ACCESSIBILITY_REQUEST'):
-                link = `/508/requests/${row.original.id}`;
-                break;
               case t('requestsTable.types.GOVERNANCE_REQUEST'):
                 link = `/governance-task-list/${row.original.id}`;
                 break;
@@ -92,37 +99,12 @@ const Table = ({
         accessor: 'type'
       },
       {
-        Header: t('requestsTable.headers.submittedAt'),
-        accessor: 'submittedAt',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return formatDateUtc(value, 'MM/dd/yyyy');
-          }
-          return 'Not submitted';
-        }
-      },
-      {
         Header: t('requestsTable.headers.status'),
         // The status property is just a generic property available on all request types
         // See cases below for details on how statuses are determined by type
         accessor: 'status',
         Cell: ({ row, value }: any) => {
           switch (row.original.type) {
-            case t(`requestsTable.types.ACCESSIBILITY_REQUEST`):
-              // Status hasn't changed if the status record created at is the same
-              // as the 508 request's submitted at
-              if (row.original.submittedAt === row.original.createdAt) {
-                return <span>{value}</span>;
-              }
-              return (
-                <span>
-                  {value}
-                  <span className="text-base-dark font-body-3xs">{` - Changed on ${formatDateLocal(
-                    row.original.statusCreatedAt,
-                    'MM/dd/yyyy'
-                  )}`}</span>
-                </span>
-              );
             case t(`requestsTable.types.GOVERNANCE_REQUEST`):
               return t(
                 `governanceReviewTeam:systemIntakeStatusRequester.${row.original.statusRequester}`,
@@ -216,27 +198,27 @@ const Table = ({
     return <div>{JSON.stringify(error)}</div>;
   }
 
-  if (data.length === 0) {
-    return <p>{t('requestsTable.empty')}</p>;
-  }
-
   return (
-    <div className="accessibility-requests-table">
-      <GlobalClientFilter
-        setGlobalFilter={setGlobalFilter}
-        tableID={t('requestsTable.id')}
-        tableName={t('requestsTable.title')}
-        className="margin-bottom-4"
-      />
+    <div className="requests-table margin-bottom-6">
+      {data.length > state.pageSize && (
+        <>
+          <GlobalClientFilter
+            setGlobalFilter={setGlobalFilter}
+            tableID={t('requestsTable.id')}
+            tableName={t('requestsTable.title')}
+            className="margin-bottom-4"
+          />
 
-      <TableResults
-        globalFilter={state.globalFilter}
-        pageIndex={state.pageIndex}
-        pageSize={state.pageSize}
-        filteredRowLength={page.length}
-        rowLength={data.length}
-        className="margin-bottom-4"
-      />
+          <TableResults
+            globalFilter={state.globalFilter}
+            pageIndex={state.pageIndex}
+            pageSize={state.pageSize}
+            filteredRowLength={rows.length}
+            rowLength={data.length}
+            className="margin-bottom-4"
+          />
+        </>
+      )}
       <UswdsTable bordered={false} {...getTableProps()} fullWidth scrollable>
         <caption className="usa-sr-only">{t('requestsTable.caption')}</caption>
         <thead>
@@ -308,7 +290,7 @@ const Table = ({
       </UswdsTable>
 
       <div className="grid-row grid-gap grid-gap-lg">
-        {data.length > 10 && (
+        {data.length > state.pageSize && (
           <TablePagination
             gotoPage={gotoPage}
             previousPage={previousPage}
@@ -333,6 +315,12 @@ const Table = ({
           />
         )}
       </div>
+
+      {data.length === 0 && (
+        <Alert type="info" slim>
+          {t('requestsTable.empty')}
+        </Alert>
+      )}
 
       <div
         className="usa-sr-only usa-table__announcement-region"

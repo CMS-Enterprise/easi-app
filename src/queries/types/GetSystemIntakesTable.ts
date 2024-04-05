@@ -58,10 +58,20 @@ export interface GetSystemIntakesTable_systemIntakes_contract {
   __typename: "SystemIntakeContract";
   hasContract: string | null;
   contractor: string | null;
-  number: string | null;
   vehicle: string | null;
   startDate: GetSystemIntakesTable_systemIntakes_contract_startDate;
   endDate: GetSystemIntakesTable_systemIntakes_contract_endDate;
+}
+
+export interface GetSystemIntakesTable_systemIntakes_contractNumbers {
+  __typename: "SystemIntakeContractNumber";
+  contractNumber: string;
+}
+
+export interface GetSystemIntakesTable_systemIntakes_systems {
+  __typename: "CedarSystem";
+  id: string;
+  name: string;
 }
 
 export interface GetSystemIntakesTable_systemIntakes_notes {
@@ -80,7 +90,7 @@ export interface GetSystemIntakesTable_systemIntakes_actions {
 export interface GetSystemIntakesTable_systemIntakes {
   __typename: "SystemIntake";
   id: UUID;
-  euaUserId: string;
+  euaUserId: string | null;
   requestName: string | null;
   statusAdmin: SystemIntakeStatusAdmin;
   state: SystemIntakeState;
@@ -96,6 +106,15 @@ export interface GetSystemIntakesTable_systemIntakes {
   fundingSources: GetSystemIntakesTable_systemIntakes_fundingSources[];
   annualSpending: GetSystemIntakesTable_systemIntakes_annualSpending | null;
   contract: GetSystemIntakesTable_systemIntakes_contract;
+  contractName: string | null;
+  /**
+   * Linked contract numbers
+   */
+  contractNumbers: GetSystemIntakesTable_systemIntakes_contractNumbers[];
+  /**
+   * Linked systems
+   */
+  systems: GetSystemIntakesTable_systemIntakes_systems[];
   businessNeed: string | null;
   businessSolution: string | null;
   currentStage: string | null;

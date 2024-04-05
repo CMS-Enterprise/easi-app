@@ -21,7 +21,7 @@ func SetSystemIntakeRelationExistingService(
 	store *storage.Store,
 	input *model.SetSystemIntakeRelationExistingServiceInput,
 ) (*models.SystemIntake, error) {
-	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
@@ -41,10 +41,12 @@ func SetSystemIntakeRelationExistingService(
 		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}); err != nil {
 			return nil, err
 		}
+
 		// Delete & recreate contract number relationships
-		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
-			return nil, err
-		}
+		// DISABLED: See Note [EASI-4160 Disable Contract Number Linking]
+		// if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+		// 	return nil, err
+		// }
 
 		return updatedIntake, nil
 	})
@@ -58,7 +60,7 @@ func SetSystemIntakeRelationNewSystem(
 	store *storage.Store,
 	input *model.SetSystemIntakeRelationNewSystemInput,
 ) (*models.SystemIntake, error) {
-	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
@@ -78,10 +80,12 @@ func SetSystemIntakeRelationNewSystem(
 		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}); err != nil {
 			return nil, err
 		}
+
 		// Delete & recreate contract number relationships
-		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
-			return nil, err
-		}
+		// DISABLED: See Note [EASI-4160 Disable Contract Number Linking]
+		// if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+		// 	return nil, err
+		// }
 
 		return updatedIntake, nil
 	})
@@ -96,7 +100,7 @@ func SetSystemIntakeRelationExistingSystem(
 	getCedarSystem func(ctx context.Context, systemID string) (*models.CedarSystem, error),
 	input *model.SetSystemIntakeRelationExistingSystemInput,
 ) (*models.SystemIntake, error) {
-	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
 		if err != nil {
@@ -123,10 +127,12 @@ func SetSystemIntakeRelationExistingSystem(
 		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, input.CedarSystemIDs); err != nil {
 			return nil, err
 		}
+
 		// Delete & recreate contract number relationships
-		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
-			return nil, err
-		}
+		// DISABLED: See Note [EASI-4160 Disable Contract Number Linking]
+		// if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+		// 	return nil, err
+		// }
 
 		return updatedIntake, nil
 	})
@@ -139,7 +145,7 @@ func UnlinkSystemIntakeRelation(
 	store *storage.Store,
 	intakeID uuid.UUID,
 ) (*models.SystemIntake, error) {
-	return sqlutils.WithTransaction[models.SystemIntake](store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
+	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, intakeID)
 		if err != nil {
@@ -153,12 +159,15 @@ func UnlinkSystemIntakeRelation(
 		intake.ContractName = zero.StringFromPtr(nil)
 
 		// Clear contract number relationships by setting an empty array of contract #'s
-		if err = store.SetSystemIntakeContractNumbers(ctx, tx, intakeID, []string{}); err != nil {
-			return nil, err
-		}
+		// declare this as an explicit empty slice instead of `nil`
+		// TODO: (Sam) update `SetSystemIntakeContractNumbers` to allow for `nil`
+		// DISABLED: See Note [EASI-4160 Disable Contract Number Linking]
+		// if err := store.SetSystemIntakeContractNumbers(ctx, tx, intakeID, []string{}); err != nil {
+		// 	return nil, err
+		// }
 
 		// Clear CEDAR system relationships
-		if err = store.SetSystemIntakeSystems(ctx, tx, intakeID, []string{}); err != nil {
+		if err := store.SetSystemIntakeSystems(ctx, tx, intakeID, []string{}); err != nil {
 			return nil, err
 		}
 
@@ -171,3 +180,9 @@ func UnlinkSystemIntakeRelation(
 		return updatedIntake, nil
 	})
 }
+
+/*
+	Note [EASI-4160 Disable Contract Number Linking]
+	We have temporarily disabled contract number linking from the UI Linking page as it allows for submitted System Intakes to be edited. These
+	submitted System Intakes should be immutable, and the new linking functionality does not adhere to that.
+*/

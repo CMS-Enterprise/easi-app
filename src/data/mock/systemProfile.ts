@@ -536,6 +536,81 @@ export const result: { data: GetSystemProfile } = {
         __typename: 'CedarThreat'
       }
     ],
+    cedarSoftwareProducts: {
+      aiSolnCatg: ['AI Solution Categories'],
+      apiDataArea: [
+        'Beneficiary and Consumer',
+        'Healthcare Payment',
+        'Organization',
+        'Supporting Resoruce'
+      ],
+      softwareProducts: [
+        {
+          apiGatewayUse: false,
+          elaPurchase: 'ELA Purchase',
+          elaVendorId: 'ELA Vendor ID 1',
+          providesAiCapability: false,
+          refstr: 'Ref String',
+          softwareCatagoryConnectionGuid: 'Software Catagory Connection GUID 1',
+          softwareVendorConnectionGuid: 'Software Vendor Connection GUID 1',
+          softwareCost: 'about $3.50',
+          softwareElaOrganization: 'ELA Organization',
+          softwareName: 'SQL Server',
+          systemSoftwareConnectionGuid: 'System Software Connection GUID 1',
+          technopediaCategory: 'Tecnhopedia Category 1',
+          technopediaID: 'Technopedia ID 1',
+          vendorName: 'Microsoft',
+          __typename: 'CedarSoftwareProductItem'
+        },
+        {
+          apiGatewayUse: true,
+          elaPurchase: 'ELA Purchase',
+          elaVendorId: 'ELA Vendor ID 2',
+          providesAiCapability: false,
+          refstr: 'Ref String',
+          softwareCatagoryConnectionGuid: 'Software Catagory Connection GUID 2',
+          softwareVendorConnectionGuid: 'Software Vendor Connection GUID 2',
+          softwareCost: 'about $3.50',
+          softwareElaOrganization: 'ELA Organization',
+          softwareName: 'Splunk',
+          systemSoftwareConnectionGuid: 'System Software Connection GUID 2',
+          technopediaCategory: 'Tecnhopedia Category 2',
+          technopediaID: 'Technopedia ID 2',
+          vendorName: 'Splunk',
+          __typename: 'CedarSoftwareProductItem'
+        },
+        {
+          apiGatewayUse: true,
+          elaPurchase: 'ELA Purchase',
+          elaVendorId: 'ELA Vendor ID 3',
+          providesAiCapability: true,
+          refstr: 'Ref String',
+          softwareCatagoryConnectionGuid: 'Software Catagory Connection GUID 3',
+          softwareVendorConnectionGuid: 'Software Vendor Connection GUID 3',
+          softwareCost: 'about $3.50',
+          softwareElaOrganization: 'ELA Organization',
+          softwareName: 'Terraform',
+          systemSoftwareConnectionGuid: 'System Software Connection GUID 3',
+          technopediaCategory: 'Tecnhopedia Category 3',
+          technopediaID: 'Technopedia ID 3',
+          vendorName: 'hashiCorp',
+          __typename: 'CedarSoftwareProductItem'
+        }
+      ],
+      aiSolnCatgOther: null,
+      apiDescPubLocation: 'API Publishing Location',
+      apiDescPublished: 'No, published elsewhere',
+      apiFHIRUse: 'Hl7',
+      apiFHIRUseOther: null,
+      apiHasPortal: true,
+      apisAccessibility: 'Internal Access',
+      apisDeveloped: 'API in development but not yet launched',
+      developmentStage: 'O&M',
+      systemHasAPIGateway: true,
+      usesAiTech:
+        'Plans (No - But there currently are plans to use AI capabilities in the next two years)',
+      __typename: 'CedarSoftwareProducts'
+    },
     cedarSystemDetails: {
       businessOwnerInformation: {
         isCmsOwned: true,
@@ -632,7 +707,22 @@ export const result: { data: GetSystemProfile } = {
         __typename: 'CedarSystemMaintainerInformation'
       },
       __typename: 'CedarSystemDetails'
-    }
+    },
+    cedarContractsBySystem: [
+      {
+        id: '{BC2C09FA-63CD-46e5-99EB-D27DB538FD6A}',
+        startDate: null,
+        endDate: null,
+        contractNumber: 'GS35F372DA',
+        contractName:
+          'Centers for Medicare and Medicaid Services Analysis, Reporting and Tracking System (CMS ARTS)',
+        description: null,
+        orderNumber: '75FCMC21F0028',
+        serviceProvided: null,
+        isDeliveryOrg: true,
+        __typename: 'CedarContract'
+      }
+    ]
   }
 };
 

@@ -49,7 +49,7 @@ func (s *Store) CreateTRBRequest(ctx context.Context, np sqlutils.NamedPreparer,
 
 // GetTRBRequestByID takes in a NamedPreparer (db, tx) and returns an TRBRequest from the db  for a given id
 func (s *Store) GetTRBRequestByID(ctx context.Context, id uuid.UUID) (*models.TRBRequest, error) {
-	return sqlutils.WithTransaction[models.TRBRequest](s, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, s, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		return s.GetTRBRequestByIDNP(ctx, tx, id)
 	})
 }
@@ -67,6 +67,8 @@ func (s *Store) GetTRBRequestByIDNP(ctx context.Context, np sqlutils.NamedPrepar
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	arg := map[string]interface{}{"id": id}
 	err = stmt.Get(&trb, arg)
 
@@ -87,7 +89,7 @@ func (s *Store) GetTRBRequestByIDNP(ctx context.Context, np sqlutils.NamedPrepar
 
 // UpdateTRBRequest returns an TRBRequest from the db for a given id
 func (s *Store) UpdateTRBRequest(ctx context.Context, trbRequest *models.TRBRequest) (*models.TRBRequest, error) {
-	return sqlutils.WithTransaction[models.TRBRequest](s, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
+	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, s, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		return s.UpdateTRBRequestNP(ctx, tx, trbRequest)
 	})
 }
@@ -102,6 +104,8 @@ func (s *Store) UpdateTRBRequestNP(ctx context.Context, np sqlutils.NamedPrepare
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	retTRB := models.TRBRequest{}
 
 	err = stmt.Get(&retTRB, trb)
@@ -132,6 +136,8 @@ func (s *Store) GetTRBRequests(ctx context.Context, archived bool) ([]*models.TR
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	arg := map[string]interface{}{
 		"archived": archived,
 	}
@@ -162,6 +168,8 @@ func (s *Store) GetMyTRBRequests(ctx context.Context, archived bool) ([]*models.
 		)
 		return nil, err
 	}
+	defer stmt.Close()
+
 	arg := map[string]interface{}{
 		"archived":   archived,
 		"created_by": appcontext.Principal(ctx).ID(),

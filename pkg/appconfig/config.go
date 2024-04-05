@@ -131,9 +131,6 @@ const GRTEmailKey = "GRT_EMAIL"
 // ITInvestmentEmailKey is the key for the receiving email for IT investment
 const ITInvestmentEmailKey = "IT_INVESTMENT_EMAIL"
 
-// AccessibilityTeamEmailKey is the key for the receiving email for the 508 team
-const AccessibilityTeamEmailKey = "ACCESSIBILITY_TEAM_EMAIL"
-
 // EASIHelpEmailKey is the key for the receiving email for EASI help requests
 const EASIHelpEmailKey = "EASI_HELP_EMAIL"
 
@@ -180,6 +177,16 @@ const CEDARCoreAPIVersion = "CEDAR_CORE_API_VERSION"
 // https://pkg.go.dev/time#ParseDuration
 const CEDARCacheIntervalKey = "CEDAR_CACHE_INTERVAL"
 
+// CEDARCoreMock is the key for the environment variable that determines if the CEDAR Core API should be mocked
+// If set to true, mock data will be used
+// If set to false, real calls to the CEDAR Core API will be made
+const CEDARCoreMock = "CEDAR_CORE_MOCK"
+
+// CEDARIntakeEnabled is the key for the environment variable that determines if the CEDAR Intake API should enabled
+// If set to true, real calls to the CEDAR Intake API will be made
+// If set to false, the Intake API Client methods will do nothing
+const CEDARIntakeEnabled = "CEDAR_INTAKE_ENABLED"
+
 // LDKey is the key for accessing LaunchDarkly
 const LDKey = "LD_SDK_KEY"
 
@@ -222,7 +229,5 @@ const (
 const OKTAAPIURL = "OKTA_API_URL"
 
 // OKTAAPIToken is the key for the Okta API token
-const OKTAAPIToken = "OKTA_API_TOKEN" // #nosec G101 false positive - not the actual API key itself
-
-// USEOKTAAPI is a flag to determine if we should use the okta API or the CEDAR core api for user search
-const USEOKTAAPI = "USE_OKTA_API"
+// #nosec G101 false positive - not the actual API key itself
+const OKTAAPIToken = "OKTA_API_TOKEN"

@@ -32,6 +32,9 @@ describe('The System Intake Form', () => {
     cy.contains('a', 'Get started').click();
     cy.wait(1000);
 
+    cy.get('#relationType-newSystem').check({ force: true });
+    cy.contains('button', 'Continue to task list').click();
+
     cy.get('li[data-testid="fill-out-the-intake-request-form"]')
       .contains('button', 'Start')
       .click();
@@ -142,7 +145,7 @@ describe('The System Intake Form', () => {
 
     cy.get('#react-select-IntakeForm-IssoName-input')
       .type('Rudolph')
-      .wait(1000)
+      .wait(2000)
       .type('{downArrow}{enter}')
       .should('have.value', 'Rudolph Pagac, POJG (rudolph.pagac@local.fake)');
 
@@ -155,7 +158,7 @@ describe('The System Intake Form', () => {
 
     cy.get('#react-select-IntakeForm-ContactCommonName-input')
       .type('Annetta Lockman')
-      .wait(1000)
+      .wait(2000)
       .type('{downArrow}{enter}')
       .should(
         'have.value',

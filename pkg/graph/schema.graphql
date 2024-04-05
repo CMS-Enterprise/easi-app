@@ -11,7 +11,6 @@ type UserError {
 Indicates the type of a request being made with the EASi system
 """
 enum RequestType {
-  ACCESSIBILITY_REQUEST
   GOVERNANCE_REQUEST
 }
 
@@ -19,11 +18,13 @@ enum RequestType {
 PersonRole is an enumeration of values for a person's role
 """
 enum PersonRole {
+  BUSINESS_OWNER
   PRODUCT_OWNER
   SYSTEM_OWNER
   SYSTEM_MAINTAINER
   CONTRACT_OFFICE_RSREPRESENTATIVE
   CLOUD_NAVIGATOR
+  INFORMATION_SYSTEM_SECURITY_ADVISOR
   PRIVACY_ADVISOR
   CRA
   OTHER
@@ -87,6 +88,48 @@ type CedarAuthorityToOperate {
 }
 
 """
+CedarSoftwareProductItem represents an individual software product; this information is returned from the CEDAR Core API
+as a part of the CedarSoftwareProducts object
+"""
+type CedarSoftwareProductItem {
+  apiGatewayUse: Boolean
+  elaPurchase: String
+  elaVendorId: String
+  providesAiCapability: Boolean
+  refstr: String
+  softwareCatagoryConnectionGuid: String
+  softwareVendorConnectionGuid: String
+  softwareCost: String
+  softwareElaOrganization: String
+  softwareName: String
+  systemSoftwareConnectionGuid: String
+  technopediaCategory: String
+  technopediaID: String
+  vendorName: String
+}
+
+"""
+CedarSoftwareProducts represents the response from the /softwareProducts endpoint from the CEDAR Core API.
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarSoftwareProducts {
+  aiSolnCatg: [String]!
+  aiSolnCatgOther: String
+  apiDataArea: [String]!
+  apiDescPubLocation: String
+  apiDescPublished: String
+  apiFHIRUse: String
+  apiFHIRUseOther: String
+  apiHasPortal: Boolean
+  apisAccessibility: String
+  apisDeveloped: String
+  developmentStage: String
+  softwareProducts: [CedarSoftwareProductItem!]!
+  systemHasAPIGateway: Boolean
+  usesAiTech: String
+}
+
+"""
 CedarSystem represents the response from the /system/detail endpoint from the CEDAR Core API.
 Right now, this does not tie in with any other types defined here, and is a root node until that changes.
 """
@@ -98,6 +141,7 @@ type CedarSystem {
 	status: String
 	businessOwnerOrg: String
 	businessOwnerOrgComp: String
+  businessOwnerRoles: [CedarRole!]!
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
   versionId: String
@@ -148,7 +192,7 @@ type CedarSystemMaintainerInformation {
 	ip6EnabledAssetPercent: String
 	ip6TransitionPlan: String
 	ipEnabledAssetCount: Int
-	majorRefreshDate: String
+	majorRefreshDate: Time
 	netAccessibility: String
 	omDocumentationOnDemand: Boolean
 	plansToRetireReplace: String
@@ -157,7 +201,7 @@ type CedarSystemMaintainerInformation {
 	sourceCodeOnDemand: Boolean
 	systemCustomization: String
 	systemDesignOnDemand: Boolean
-	systemProductionDate: String
+	systemProductionDate: Time
 	systemRequirementsOnDemand: Boolean
 	testPlanOnDemand: Boolean
 	testReportsOnDemand: Boolean
@@ -186,8 +230,20 @@ type CedarSystemBookmark {
   cedarSystemId: String!
 }
 
+type CedarContract {
+  startDate: Time
+  endDate: Time
+  contractNumber: String
+  contractName: String
+  description: String
+  orderNumber: String
+  serviceProvided: String
+  isDeliveryOrg: Boolean
+  systemID: String
+}
+
 """
-Represents a person response from CEDAR LDAP
+Represents a person response from Okta
 """
 type UserInfo {
   firstName: String!
@@ -367,355 +423,6 @@ type CedarExchange {
 }
 
 """
-An accessibility request represents a system that needs to go through
-the 508 process
-"""
-type AccessibilityRequest {
-  documents: [AccessibilityRequestDocument!]!
-  id: UUID!
-  name: String!
-  relevantTestDate: TestDate
-  submittedAt: Time!
-  system: System
-  testDates: [TestDate!]!
-  euaUserId: String!
-  statusRecord: AccessibilityRequestStatusRecord!
-  notes: [AccessibilityRequestNote!]! @hasRole(role: EASI_508_TESTER_OR_USER)
-  cedarSystemId: String
-}
-
-"""
-Indicates the status of a 508/accessibility request
-"""
-enum AccessibilityRequestStatus {
-  OPEN
-  IN_REMEDIATION
-  CLOSED
-  DELETED
-}
-
-"""
-An accessibility request status record is the data related to a status action
-"""
-type AccessibilityRequestStatusRecord {
-  id: UUID!
-  requestID: UUID!
-  status: AccessibilityRequestStatus!
-  euaUserId: String!
-  createdAt: Time!
-}
-
-"""
-Parameters for updating a 508/accessibility request's status
-"""
-input UpdateAccessibilityRequestStatus {
-  requestID: UUID!
-  status: AccessibilityRequestStatus!
-}
-
-"""
-Result of updating a 508/accessibility request's status
-"""
-type UpdateAccessibilityRequestStatusPayload {
-  id: UUID!
-  requestID: UUID!
-  status: AccessibilityRequestStatus!
-  euaUserId: String!
-  userErrors: [UserError!]
-}
-
-"""
-Parameters for updating a 508/accessibility request's associated CEDAR system
-"""
-input UpdateAccessibilityRequestCedarSystemInput {
-  id: UUID!
-  cedarSystemId: String!
-}
-
-"""
-Result of updating a 508/accessibility request's associated CEDAR system
-"""
-type UpdateAccessibilityRequestCedarSystemPayload {
-  id: UUID!
-  accessibilityRequest: AccessibilityRequest
-}
-
-"""
-The data used when adding a note to a 508/accessibility request
-"""
-input CreateAccessibilityRequestNoteInput {
-  requestID: UUID!
-  note: String!
-  shouldSendEmail: Boolean!
-}
-
-"""
-Represents a note added to a 508/accessibility request by a user
-"""
-type AccessibilityRequestNote {
-  id: UUID!
-  requestID: UUID!
-  createdAt: Time!
-  note: String!
-  authorName: String!
-}
-
-"""
-The payload for adding a note to a 508/accessibility request
-"""
-type CreateAccessibilityRequestNotePayload {
-  accessibilityRequestNote: AccessibilityRequestNote!
-  userErrors: [UserError!]
-}
-
-"""
-A business owner is the person at CMS responsible for a system
-"""
-type BusinessOwner {
-  component: String!
-  name: String!
-}
-
-"""
-A System is derived from a system intake and represents a computer system
-managed by CMS
-"""
-type System {
-  businessOwner: BusinessOwner!
-  id: UUID!
-  lcid: String!
-  name: String!
-}
-
-"""
-Indicates the status of a document that has been attached to 508/accessibility
-request, which will be scanned for viruses before it is made available
-"""
-enum AccessibilityRequestDocumentStatus {
-  AVAILABLE
-  PENDING
-  UNAVAILABLE
-}
-
-"""
-Represents the common options for document type that is attached to a
-508/accessibility request
-"""
-enum AccessibilityRequestDocumentCommonType {
-  AWARDED_VPAT
-  OTHER
-  REMEDIATION_PLAN
-  TESTING_VPAT
-  TEST_PLAN
-  TEST_RESULTS
-}
-
-"""
-Denotes type of a document that is attached to a 508/accessibility request,
-which can be one of a number of common types, or another user-specified type
-"""
-type AccessibilityRequestDocumentType {
-  commonType: AccessibilityRequestDocumentCommonType!
-  otherTypeDescription: String
-}
-
-"""
-Represents a document attached to a 508/accessibility request
-"""
-type AccessibilityRequestDocument {
-  documentType: AccessibilityRequestDocumentType!
-  id: UUID!
-  mimeType: String!
-  name: String!
-  requestID: UUID!
-  size: Int!
-  status: AccessibilityRequestDocumentStatus!
-  uploadedAt: Time!
-  url: String!
-}
-
-type SystemConnection {
-  edges: [SystemEdge!]!
-}
-
-type SystemEdge {
-  node: System!
-}
-
-"""
-The data needed to initialize a 508/accessibility request
-"""
-input CreateAccessibilityRequestInput {
-  intakeID: UUID
-  name: String!
-  cedarSystemId: String
-}
-
-"""
-The payload containing the data needed to initialize an AccessibilityRequest
-"""
-type CreateAccessibilityRequestPayload {
-  accessibilityRequest: AccessibilityRequest
-  userErrors: [UserError!]
-}
-
-"""
-Denotes the reason a 508/accessibility request was deleted
-"""
-enum AccessibilityRequestDeletionReason {
-  INCORRECT_APPLICATION_AND_LIFECYCLE_ID
-  NO_TESTING_NEEDED
-  OTHER
-}
-
-"""
-The input data needed to delete a 508/accessibility request
-"""
-input DeleteAccessibilityRequestInput {
-  id: UUID!
-  reason: AccessibilityRequestDeletionReason!
-}
-
-"""
-The payload data sent when deleting a 508/accessibility request
-"""
-type DeleteAccessibilityRequestPayload {
-  id: UUID
-  userErrors: [UserError!]
-}
-
-"""
-Input associated with a document to be uploaded to a 508/accessibility request
-"""
-input GeneratePresignedUploadURLInput {
-  fileName: String!
-  mimeType: String!
-  size: Int!
-}
-
-"""
-URL generated for a document to be uploaded to a 508/accessibility request
-"""
-type GeneratePresignedUploadURLPayload {
-  url: String
-  userErrors: [UserError!]
-}
-
-type AccessibilityRequestsConnection {
-  edges: [AccessibilityRequestEdge!]!
-}
-
-type AccessibilityRequestEdge {
-  node: AccessibilityRequest!
-}
-
-"""
-A 508 test instance
-"""
-type TestDate {
-  date: Time!
-  id: UUID!
-  score: Int
-  testType: TestDateTestType!
-}
-
-"""
-The type of test added to a 508/accessibility request
-"""
-enum TestDateTestType {
-  INITIAL
-  REMEDIATION
-}
-
-"""
-The input required to add a test date/score to a 508/accessibility request
-"""
-input CreateTestDateInput {
-  date: Time!
-  requestID: UUID!
-  score: Int
-  testType: TestDateTestType!
-}
-
-"""
-The payload for the input required to add a test date/score to a
-508/accessibility request
-"""
-type CreateTestDatePayload {
-  testDate: TestDate
-  userErrors: [UserError!]
-}
-
-"""
-The input required to update a test date/score
-"""
-input UpdateTestDateInput {
-  date: Time!
-  id: UUID!
-  score: Int
-  testType: TestDateTestType!
-}
-
-"""
-The payload for the input required to update a test date/score
-"""
-type UpdateTestDatePayload {
-  testDate: TestDate
-  userErrors: [UserError!]
-}
-
-"""
-The input required to delete a test date/score
-"""
-input DeleteTestDateInput {
-  id: UUID!
-}
-
-"""
-The payload for the input required to delete a test date/score
-"""
-type DeleteTestDatePayload {
-  testDate: TestDate
-  userErrors: [UserError!]
-}
-
-"""
-The input data used for adding a document to a 508/accessibility request
-"""
-input CreateAccessibilityRequestDocumentInput {
-  commonDocumentType: AccessibilityRequestDocumentCommonType!
-  mimeType: String!
-  name: String!
-  otherDocumentTypeDescription: String
-  requestID: UUID!
-  size: Int!
-  url: String!
-}
-
-"""
-The payload containing the input data used for adding a document to a
-508/accessibility request
-"""
-type CreateAccessibilityRequestDocumentPayload {
-  accessibilityRequestDocument: AccessibilityRequestDocument
-  userErrors: [UserError!]
-}
-
-"""
-The input used to delete a document from a 508/accessibility request
-"""
-input DeleteAccessibilityRequestDocumentInput {
-  id: UUID!
-}
-
-"""
-The payload used to delete a document from a 508/accessibility request
-"""
-type DeleteAccessibilityRequestDocumentPayload {
-  id: UUID
-}
-
-"""
 A solution proposal within a business case
 """
 type BusinessCaseSolution {
@@ -845,7 +552,6 @@ type SystemIntakeContract {
   hasContract: String
   startDate: ContractDate!
   vehicle: String
-  number: String
 }
 
 """
@@ -953,7 +659,7 @@ type SystemIntake {
   decisionNextSteps: HTML
   eaCollaborator: String
   eaCollaboratorName: String
-  euaUserId: String!
+  euaUserId: String
   existingFunding: Boolean
   fundingSources: [SystemIntakeFundingSource!]!
   governanceRequestFeedbacks: [GovernanceRequestFeedback!]!
@@ -1226,7 +932,7 @@ input SystemIntakeContractInput {
   endDate: Time
   hasContract: String
   startDate: Time
-  number: String
+  numbers: [String!]!
 }
 
 """
@@ -1266,14 +972,6 @@ input SetSystemIntakeRelationExistingServiceInput {
   systemIntakeID: UUID!
   contractName: String!
   contractNumbers: [String!]!
-}
-
-"""
-Input data for updating a system intake's relationship to a contract
-"""
-input UpdateSystemIntakeLinkedContractInput {
-  id: UUID!
-  contractNumber: String
 }
 
 """
@@ -1842,7 +1540,7 @@ enum SystemIntakeDocumentStatus {
 
 """
 Represents the common options for document type that is attached to a
-508/accessibility request
+TRB Request
 """
 enum TRBDocumentCommonType {
   ARCHITECTURE_DIAGRAM
@@ -2512,30 +2210,6 @@ input ReopenTRBRequestInput {
 Defines the mutations for the schema
 """
 type Mutation {
-  createAccessibilityRequest(
-    input: CreateAccessibilityRequestInput!
-  ): CreateAccessibilityRequestPayload
-  deleteAccessibilityRequest(
-    input: DeleteAccessibilityRequestInput!
-  ): DeleteAccessibilityRequestPayload
-  createAccessibilityRequestDocument(
-    input: CreateAccessibilityRequestDocumentInput!
-  ): CreateAccessibilityRequestDocumentPayload
-  createAccessibilityRequestNote(
-    input: CreateAccessibilityRequestNoteInput!
-  ): CreateAccessibilityRequestNotePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  deleteAccessibilityRequestDocument(
-    input: DeleteAccessibilityRequestDocumentInput!
-  ): DeleteAccessibilityRequestDocumentPayload
-  updateAccessibilityRequestStatus(
-    input: UpdateAccessibilityRequestStatus
-  ): UpdateAccessibilityRequestStatusPayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  updateAccessibilityRequestCedarSystem(
-    input: UpdateAccessibilityRequestCedarSystemInput
-  ): UpdateAccessibilityRequestCedarSystemPayload
-
   # Mutations for IT Gov v2 workflow
   createSystemIntakeActionProgressToNewStep(
     input: SystemIntakeProgressToNewStepsInput!
@@ -2580,15 +2254,6 @@ type Mutation {
     @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
     @hasRole(role: EASI_USER)
-  createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  generatePresignedUploadURL(
-    input: GeneratePresignedUploadURLInput!
-  ): GeneratePresignedUploadURLPayload
 
   submitIntake(
     input: SubmitIntakeInput!
@@ -2616,7 +2281,6 @@ type Mutation {
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
-  updateSystemIntakeLinkedContract(input: UpdateSystemIntakeLinkedContractInput!): UpdateSystemIntakePayload
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
@@ -2688,11 +2352,6 @@ type Mutation {
 Query definition for the schema
 """
 type Query {
-  accessibilityRequest(id: UUID!): AccessibilityRequest
-  accessibilityRequests(
-    after: String
-    first: Int!
-  ): AccessibilityRequestsConnection
   """
   Requests fetches a requester's own intake requests
   first is currently non-functional and can be removed later
@@ -2701,13 +2360,15 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
   @hasRole(role: EASI_GOVTEAM)
-  systems(after: String, first: Int!): SystemConnection
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
+  cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem!]!
+  cedarContractsBySystem(cedarSystemId: String!): [CedarContract!]!
+  myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
   cedarThreat(cedarSystemId: String!): [CedarThreat!]!
   deployments(cedarSystemId: String!, deploymentType: String, state: String, status: String): [CedarDeployment!]!
@@ -2717,7 +2378,6 @@ type Query {
   urls(cedarSystemId: String!): [CedarURL!]!
   cedarSystemDetails(cedarSystemId: String!): CedarSystemDetails
   systemIntakeContacts(id: UUID!): SystemIntakeContactsPayload!
-  relatedSystemIntakes(id: UUID!): [SystemIntake!]!
   trbRequest(id: UUID!): TRBRequest!
   trbRequests(archived: Boolean! = false): [TRBRequest!]! @hasRole(role: EASI_TRB_ADMIN)
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
@@ -2793,21 +2453,6 @@ directive @goModel(
 A user role associated with a job code
 """
 enum Role {
-  """
-  A 508 Tester
-  """
-  EASI_508_TESTER
-
-  """
-  A 508 request program team member
-  """
-  EASI_508_USER
-
-  """
-  A 508 request program team member or tester
-  """
-  EASI_508_TESTER_OR_USER
-
   """
   A member of the GRT
   """

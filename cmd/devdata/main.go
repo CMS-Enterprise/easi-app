@@ -525,7 +525,10 @@ func main() {
 		store,
 		intakeID,
 		[]string{"12345", "67890"},
-		[]string{"54321", "09876"},
+		[]string{
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+		},
 	)
 
 	// 3. Intake related to an existing contract/service
@@ -547,7 +550,10 @@ func main() {
 		store,
 		intakeID,
 		[]string{"12345", "67890"},
-		[]string{"54321", "09876"},
+		[]string{
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+		},
 	)
 	unlinkSystemIntakeRelation(logger, store, intakeID)
 
@@ -562,25 +568,6 @@ func main() {
 	makeSystemIntake("initial form filled but not yet submitted", nil, requesterEUA, logger, store)
 
 	must(nil, seederConfig.seedTRBRequests(ctx))
-
-	// Legacy Intake Requests used in E2E
-	makeAccessibilityRequest("TACO", store)
-	makeAccessibilityRequest("Big Project", store)
-
-	now := time.Now()
-	yyyy, mm, dd := now.Date()
-
-	makeAccessibilityRequest("Seeded 508 Request", store, func(i *models.AccessibilityRequest) {
-		i.ID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
-	})
-
-	// Test date is one day after the 508 request is created
-	makeTestDate(logger, store, func(i *models.TestDate) {
-		i.ID = uuid.MustParse("18624c5b-4c00-49a7-960f-ac6d8b2c58df")
-		i.RequestID = uuid.MustParse("6e224030-09d5-46f7-ad04-4bb851b36eab")
-		i.TestType = models.TestDateTestTypeInitial
-		i.Date = time.Date(yyyy, mm, dd+1, 0, 0, 0, 0, time.UTC)
-	})
 
 	// For Governance Review Cypress Tests
 	intakeID = uuid.MustParse("af7a3924-3ff7-48ec-8a54-b8b4bc95610b")
@@ -601,7 +588,7 @@ func main() {
 	)
 	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
 		i.RequestType = models.SystemIntakeRequestTypeNEW
-		i.Requester = "EndToEnd One" // matches pkg/local/cedar_ldap.go, but doesn't really have to :shrug:
+		i.Requester = "EndToEnd One" // matches pkg/local/okta_api.go, but doesn't really have to :shrug:
 		i.Component = null.StringFrom("Center for Consumer Information and Insurance Oversight")
 		i.BusinessOwner = null.StringFrom("John BusinessOwner")
 		i.BusinessOwnerComponent = null.StringFrom("Center for Consumer Information and Insurance Oversight")
@@ -627,17 +614,15 @@ func main() {
 	makeSystemIntakeAndSubmit("Closable Request", &intakeID, requesterEUA, logger, store)
 
 	intakeID = uuid.MustParse("38e46d77-e474-4d15-a7c0-f6411221e2a4")
-	intake = makeSystemIntakeAndSubmit("Intake with no contract vehicle or number", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndSubmit("Intake with no contract vehicle", &intakeID, requesterEUA, logger, store)
 	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
 		i.ContractVehicle = null.StringFromPtr(nil)
-		i.ContractNumber = null.StringFromPtr(nil)
 	})
 
 	intakeID = uuid.MustParse("2ed89f9f-7fd9-4e92-89d2-cee170a44d0d")
 	intake = makeSystemIntakeAndSubmit("Intake with legacy Contract Vehicle", &intakeID, requesterEUA, logger, store)
 	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
 		i.ContractVehicle = null.StringFrom("Honda")
-		i.ContractNumber = null.StringFromPtr(nil)
 	})
 
 	intakeID = uuid.MustParse("69357721-1e0c-4a37-a90f-64bb29814e7a")
@@ -681,11 +666,6 @@ func main() {
 		},
 	)
 	// Don't add new requests here as the Cypress tests are reliant on their intakes showing up on the first page of results
-}
-
-func date(year, month, day int) *time.Time {
-	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
-	return &date
 }
 
 func must(_ interface{}, err error) {

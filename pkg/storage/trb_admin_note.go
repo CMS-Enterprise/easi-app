@@ -54,6 +54,7 @@ func (s *Store) CreateTRBAdminNote(ctx context.Context, note *models.TRBAdminNot
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	retNote := models.TRBAdminNote{}
 
@@ -83,6 +84,7 @@ func (s *Store) GetTRBAdminNotesByTRBRequestID(ctx context.Context, trbRequestID
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	arg := map[string]interface{}{"trb_request_id": trbRequestID}
 
@@ -116,6 +118,7 @@ func (s *Store) GetTRBAdminNoteByID(ctx context.Context, id uuid.UUID) (*models.
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	arg := map[string]interface{}{"id": id}
 
@@ -150,9 +153,7 @@ func (s *Store) SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArc
 			modified_by = :modified_by,
 			modified_at = CURRENT_TIMESTAMP
 		WHERE id = :id
-		RETURNING *;
-	`)
-
+		RETURNING *;`)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to archive TRB admin note with error %s", err),
@@ -161,6 +162,7 @@ func (s *Store) SetTRBAdminNoteArchived(ctx context.Context, id uuid.UUID, isArc
 		)
 		return nil, err
 	}
+	defer stmt.Close()
 
 	updated := models.TRBAdminNote{}
 	arg := map[string]interface{}{

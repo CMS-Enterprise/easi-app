@@ -13,6 +13,7 @@ import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { SystemIntake } from 'queries/types/SystemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
+import formatContractNumbers from 'utils/formatContractNumbers';
 import { FundingSourcesListItem } from 'views/SystemIntake/ContractDetails/FundingSources';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
@@ -32,7 +33,13 @@ type FundingSourcesObject = {
 export const SystemIntakeReview = ({
   systemIntake
 }: SystemIntakeReviewProps) => {
-  const { annualSpending, costs, contract, submittedAt } = systemIntake;
+  const {
+    annualSpending,
+    costs,
+    contract,
+    submittedAt,
+    contractNumbers
+  } = systemIntake;
   const {
     contacts: {
       data: { requester, businessOwner, productManager, isso }
@@ -345,10 +352,12 @@ export const SystemIntakeReview = ({
                 If the intake has a "contract vehicle", render it and "Not Entered" for "contract number"
                   (since this intake was before we introduced contract numbers)
               */}
-              {contract.number !== null ? (
+              {contractNumbers && contractNumbers.length > 0 ? (
                 <div>
                   <DescriptionTerm term={t('review.contractNumber')} />
-                  <DescriptionDefinition definition={contract.number} />
+                  <DescriptionDefinition
+                    definition={formatContractNumbers(contractNumbers)}
+                  />
                 </div>
               ) : (
                 contract.vehicle !== null && (

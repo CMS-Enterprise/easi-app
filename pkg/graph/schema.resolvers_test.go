@@ -23,7 +23,9 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
@@ -41,6 +43,7 @@ type GraphQLTestSuite struct {
 	client   *client.Client
 	s3Client *mockS3Client
 	resolver *Resolver
+	context  context.Context
 }
 
 func (s *GraphQLTestSuite) BeforeTest() {
@@ -133,11 +136,10 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	// set up Email Client
 	emailConfig := email.Config{
-		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
-		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
-		URLHost:                config.GetString(appconfig.ClientHostKey),
-		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
-		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 	localSender := local.NewSender()
 	emailClient, err := email.NewClient(emailConfig, localSender)
@@ -145,9 +147,8 @@ func TestGraphQLTestSuite(t *testing.T) {
 		t.FailNow()
 	}
 
-	cedarLdapClient := local.NewCedarLdapClient(logger)
-
-	cedarCoreClient := cedarcore.NewClient(appcontext.WithLogger(context.Background(), logger), "fake", "fake", "1.0.0", time.Minute, ldClient)
+	oktaAPIClient := local.NewOktaAPIClient()
+	cedarCoreClient := cedarcore.NewClient(appcontext.WithLogger(context.Background(), logger), "fake", "fake", "1.0.0", time.Minute, true)
 
 	directives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
 		return next(ctx)
@@ -168,12 +169,17 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	var resolverService ResolverService
 	resolverService.SubmitIntake = submitIntake
-	resolverService.FetchUserInfo = cedarLdapClient.FetchUserInfo
-	resolverService.SearchCommonNameContains = cedarLdapClient.SearchCommonNameContains
+	resolverService.FetchUserInfo = oktaAPIClient.FetchUserInfo
+	resolverService.SearchCommonNameContains = oktaAPIClient.SearchCommonNameContains
 
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})
-	graphQLClient := client.New(handler.NewDefaultServer(schema))
+	graphQLClient := client.New(
+		handler.NewDefaultServer(schema),
+	)
+
+	ctx := context.Background()
+	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
 
 	storeTestSuite := &GraphQLTestSuite{
 		Suite:    suite.Suite{},
@@ -182,7 +188,34 @@ func TestGraphQLTestSuite(t *testing.T) {
 		client:   graphQLClient,
 		s3Client: &mockClient,
 		resolver: resolver,
+		context:  ctx,
 	}
 
 	suite.Run(t, storeTestSuite)
+}
+
+// addDataLoadersToGraphQLClientTest adds all dataloaders into the test context for use in tests
+func addDataLoadersToGraphQLClientTest(loaders *dataloaders.DataLoaders) func(*client.Request) {
+	return func(request *client.Request) {
+		ctx := request.HTTP.Context()
+		ctx = dataloaders.CTXWithLoaders(ctx, loaders)
+		request.HTTP = request.HTTP.WithContext(ctx)
+	}
+}
+
+// addAuthPrincipalToGraphQLClientTest returns a function to add an auth principal to a graphql client test
+func addAuthPrincipalToGraphQLClientTest(principal authentication.EUAPrincipal) func(*client.Request) {
+	return func(request *client.Request) {
+		ctx := appcontext.WithPrincipal(context.Background(), &principal)
+		request.HTTP = request.HTTP.WithContext(ctx)
+	}
+}
+
+// addAuthWithAllJobCodesToGraphQLClientTest adds authentication for all job codes
+func addAuthWithAllJobCodesToGraphQLClientTest(euaID string) func(*client.Request) {
+	return addAuthPrincipalToGraphQLClientTest(authentication.EUAPrincipal{
+		EUAID:       euaID,
+		JobCodeEASi: true,
+		JobCodeGRT:  true,
+	})
 }

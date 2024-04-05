@@ -256,6 +256,7 @@ const governanceReviewTeam = {
     openBusiness: 'Open business case',
     openNotes: 'Open admin team notes',
     openDecision: 'Open decision',
+    openAdditionalInformation: 'Open additional information',
     openLcid: 'Open LCID',
     openFeedback: 'Open feedback'
   },
@@ -283,6 +284,9 @@ const governanceReviewTeam = {
     rejectionReason: 'Rejection Reason',
     noRejectionReasons: 'No reasons specified',
     decisionSectionTitle: 'Decision Details'
+  },
+  additionalInformation: {
+    title: 'Additional information'
   },
   feedback: {
     title: 'Feedback',

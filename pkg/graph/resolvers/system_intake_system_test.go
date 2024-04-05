@@ -56,9 +56,8 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 			systemID3,
 		}
 
-		_, err := sqlutils.WithTransaction[any](s.testConfigs.Store, func(tx *sqlx.Tx) (*any, error) {
-			s.NoError(s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], systemIDs))
-			return nil, nil
+		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
+			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], systemIDs)
 		})
 		s.NoError(err)
 
@@ -73,15 +72,15 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		)
 
 		for _, result := range data {
-			if result.ID == systemID1 {
+			if result.ID.String == systemID1 {
 				found1 = true
 			}
 
-			if result.ID == systemID2 {
+			if result.ID.String == systemID2 {
 				found2 = true
 			}
 
-			if result.ID == systemID3 {
+			if result.ID.String == systemID3 {
 				found3 = true
 			}
 		}

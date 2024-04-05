@@ -63,7 +63,10 @@ DeploymentAddParams contains all the parameters to send to the API endpoint
 */
 type DeploymentAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Deployment list to be added to CEDAR
+	*/
 	Body *models.DeploymentAddRequest
 
 	timeout    time.Duration

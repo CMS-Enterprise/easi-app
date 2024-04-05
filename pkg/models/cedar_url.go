@@ -1,15 +1,19 @@
 package models
 
+import (
+	"github.com/guregu/null/zero"
+)
+
 // CedarURL represents a single URL object returned from the CEDAR API
 type CedarURL struct {
 	// always-present field
-	ID string
+	ID zero.String
 
 	// possibly-null fields
 
-	Address                        string // The actual URL.
+	Address                        zero.String // The actual URL.
 	IsBehindWebApplicationFirewall bool
 	IsAPIEndpoint                  bool
-	IsVersionCodeRepository        bool   // Represents whether this URL provides access to a versioned code repository.
-	URLHostingEnv                  string // This should correspond with .DeploymentType on a CedarDeployment object.
+	IsVersionCodeRepository        bool        // Represents whether this URL provides access to a versioned code repository.
+	URLHostingEnv                  zero.String // This should correspond with .DeploymentType on a CedarDeployment object.
 }

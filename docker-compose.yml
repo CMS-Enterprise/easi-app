@@ -17,6 +17,8 @@ services:
       - db
   easi:
     environment:
+      - CEDAR_CORE_MOCK
+      - CEDAR_INTAKE_ENABLED
       - CEDAR_API_KEY
       - CEDAR_API_URL
       - CEDAR_CORE_API_VERSION
@@ -38,7 +40,6 @@ services:
       - OKTA_ISSUER=https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
       - GRT_EMAIL=success@simulator.amazonses.com
       - IT_INVESTMENT_EMAIL=success@simulator.amazonses.com
-      - ACCESSIBILITY_TEAM_EMAIL=success@simulator.amazonses.com
       - EASI_HELP_EMAIL=success@simulator.amazonses.com
       - TRB_EMAIL=success@simulator.amazonses.com
       - EMAIL_TEMPLATE_DIR=./pkg/email/templates
@@ -69,7 +70,6 @@ services:
       - ALT_JOB_CODES
       - OKTA_API_URL
       - OKTA_API_TOKEN
-      - USE_OKTA_API
     depends_on:
       db_migrate:
         condition: service_completed_successfully # Only start if migrations completed successfully

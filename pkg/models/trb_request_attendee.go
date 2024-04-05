@@ -9,6 +9,8 @@ import (
 type PersonRole string
 
 const (
+	// PersonRoleBusinessOwner is a person with the "Business Owner" role
+	PersonRoleBusinessOwner PersonRole = "BUSINESS_OWNER"
 	// PersonRoleProductOwner is a person with the "Product Owner" role
 	PersonRoleProductOwner PersonRole = "PRODUCT_OWNER"
 	// PersonRoleSystemOwner is a person with the "System Owner" role
@@ -19,9 +21,11 @@ const (
 	PersonRoleContractOfficersRepresentative PersonRole = "CONTRACT_OFFICE_RSREPRESENTATIVE"
 	// PersonRoleCloudNavigator is a person with the "Cloud Navigator" role
 	PersonRoleCloudNavigator PersonRole = "CLOUD_NAVIGATOR"
+	// PersonRoleInformationSystemSecurityAdvisor is a person with the "Information System Security Advisor" role
+	PersonRoleInformationSystemSecurityAdvisor PersonRole = "INFORMATION_SYSTEM_SECURITY_ADVISOR"
 	// PersonRolePrivacyAdvisor is a person with the "Privacy Advisor" role
 	PersonRolePrivacyAdvisor PersonRole = "PRIVACY_ADVISOR"
-	// PersonRoleCRA is a person with the "CRA" role
+	// PersonRoleCRA is a person with the "Cyber Risk Advisor (CRA)" role
 	PersonRoleCRA PersonRole = "CRA"
 	// PersonRoleOther is a person with the "Other" role
 	PersonRoleOther PersonRole = "OTHER"

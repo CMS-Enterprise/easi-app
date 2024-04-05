@@ -21,7 +21,7 @@ func (s *Store) SetTRBRequestSystems(ctx context.Context, tx *sqlx.Tx, trbReques
 		return errors.New("unexpected nil trb request ID when linking trb request to system id")
 	}
 
-	if _, err := tx.NamedExecContext(ctx, sqlqueries.TRBRequestSystemForm.Delete, map[string]interface{}{
+	if _, err := tx.NamedExec(sqlqueries.TRBRequestSystemForm.Delete, map[string]interface{}{
 		"system_ids":     pq.StringArray(systemIDs),
 		"trb_request_id": trbRequestID,
 	}); err != nil {
@@ -48,7 +48,7 @@ func (s *Store) SetTRBRequestSystems(ctx context.Context, tx *sqlx.Tx, trbReques
 		setTRBRequestSystemsLinks[i] = systemIDLink
 	}
 
-	if _, err := tx.NamedExecContext(ctx, sqlqueries.TRBRequestSystemForm.Set, setTRBRequestSystemsLinks); err != nil {
+	if _, err := tx.NamedExec(sqlqueries.TRBRequestSystemForm.Set, setTRBRequestSystemsLinks); err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to insert linked trb request to system ids", zap.Error(err))
 		return err
 	}
@@ -58,14 +58,14 @@ func (s *Store) SetTRBRequestSystems(ctx context.Context, tx *sqlx.Tx, trbReques
 
 // TRBRequestSystemsByTRBRequestIDLOADER gets multiple groups of system ids by TRB Request ID
 func (s *Store) TRBRequestSystemsByTRBRequestIDLOADER(ctx context.Context, paramTableJSON string) (map[string][]*models.TRBRequestSystem, error) {
-	stmt, err := s.db.PrepareNamedContext(ctx, sqlqueries.TRBRequestSystemForm.SelectByTRBRequestIDLOADER)
+	stmt, err := s.db.PrepareNamed(sqlqueries.TRBRequestSystemForm.SelectByTRBRequestIDLOADER)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
 
 	var systems []*models.TRBRequestSystem
-	err = stmt.SelectContext(ctx, &systems, map[string]interface{}{
+	err = stmt.Select(&systems, map[string]interface{}{
 		"param_table_json": paramTableJSON,
 	})
 	if err != nil {

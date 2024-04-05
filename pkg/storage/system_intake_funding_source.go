@@ -5,17 +5,24 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
-// UpdateSystemIntakeFundingSources clears and updates the funding sources of a system intake
 func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemIntakeID uuid.UUID, fundingSources []*models.SystemIntakeFundingSource) ([]*models.SystemIntakeFundingSource, error) {
+	return sqlutils.WithTransactionRet[[]*models.SystemIntakeFundingSource](ctx, s, func(tx *sqlx.Tx) ([]*models.SystemIntakeFundingSource, error) {
+		return s.UpdateSystemIntakeFundingSourcesNP(ctx, tx, systemIntakeID, fundingSources)
+
+	})
+}
+
+// UpdateSystemIntakeFundingSources clears and updates the funding sources of a system intake
+func (s *Store) UpdateSystemIntakeFundingSourcesNP(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, fundingSources []*models.SystemIntakeFundingSource) ([]*models.SystemIntakeFundingSource, error) {
 	now := s.clock.Now()
 
-	tx := s.db.MustBegin()
-	defer tx.Rollback()
 	deleteFundingSourcesSQL := `
 		DELETE FROM system_intake_funding_sources
 		WHERE system_intake_id = $1;
@@ -63,12 +70,6 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 				return nil, err
 			}
 		}
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to commit funding sources transaction, error %s", err))
-		return nil, err
 	}
 
 	return fundingSources, nil

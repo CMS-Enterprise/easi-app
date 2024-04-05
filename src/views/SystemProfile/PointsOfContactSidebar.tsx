@@ -10,8 +10,8 @@ import {
   UsernameWithRoles
 } from 'types/systemProfile';
 
+import { getPersonFullName } from './helpers';
 import pointsOfContactIds from './pointsOfContactIds';
-import { getPersonFullName } from '.';
 
 /**
  * Get a list of subpage contacts defined by `pointsOfContactIds`.
@@ -49,6 +49,7 @@ const PointsOfContactSidebar = ({
   systemId
 }: PointsOfContactSidebarProps) => {
   const { t } = useTranslation('systemProfile');
+
   const contactsWithRoles = getPointsOfContact(
     subpageKey,
     system.usernamesWithRoles

@@ -1,8 +1,4 @@
 import {
-  ACCESSIBILITY_ADMIN_DEV,
-  ACCESSIBILITY_ADMIN_PROD,
-  ACCESSIBILITY_TESTER_DEV,
-  ACCESSIBILITY_TESTER_PROD,
   BASIC_USER_PROD,
   GOVTEAM_DEV,
   GOVTEAM_PROD,
@@ -35,51 +31,6 @@ export const isGrtReviewer = (groups: Array<String> = [], flags: Flags) => {
   return false;
 };
 
-export const isAccessibilityTester = (
-  groups: Array<String> = [],
-  flags: Flags
-) => {
-  if (flags.downgrade508Tester) {
-    return false;
-  }
-
-  if (
-    groups.includes(ACCESSIBILITY_TESTER_DEV) ||
-    groups.includes(ACCESSIBILITY_TESTER_PROD)
-  ) {
-    return true;
-  }
-
-  return false;
-};
-
-export const isAccessibilityAdmin = (
-  groups: Array<String> = [],
-  flags: Flags
-) => {
-  if (flags.downgrade508User) {
-    return false;
-  }
-
-  if (
-    groups.includes(ACCESSIBILITY_ADMIN_DEV) ||
-    groups.includes(ACCESSIBILITY_ADMIN_PROD)
-  ) {
-    return true;
-  }
-
-  return false;
-};
-
-export const isAccessibilityTeam = (
-  groups: Array<String> = [],
-  flags: Flags
-) => {
-  return (
-    isAccessibilityAdmin(groups, flags) || isAccessibilityTester(groups, flags)
-  );
-};
-
 export const isBasicUser = (groups: Array<String> = [], flags: Flags) => {
   if (groups.includes(BASIC_USER_PROD)) {
     return true;
@@ -87,11 +38,7 @@ export const isBasicUser = (groups: Array<String> = [], flags: Flags) => {
   if (groups.length === 0) {
     return true;
   }
-  if (
-    !isAccessibilityTeam(groups, flags) &&
-    !isGrtReviewer(groups, flags) &&
-    !isTrbAdmin(groups, flags)
-  ) {
+  if (!isGrtReviewer(groups, flags) && !isTrbAdmin(groups, flags)) {
     return true;
   }
   return false;
@@ -100,9 +47,6 @@ export const isBasicUser = (groups: Array<String> = [], flags: Flags) => {
 const user = {
   isTrbAdmin,
   isGrtReviewer,
-  isAccessibilityTester,
-  isAccessibilityAdmin,
-  isAccessibilityTeam,
   isBasicUser
 };
 

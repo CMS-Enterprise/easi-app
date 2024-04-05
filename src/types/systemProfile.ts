@@ -8,6 +8,7 @@ import {
   GetSystemProfile,
   /* eslint-disable camelcase */
   GetSystemProfile_cedarAuthorityToOperate,
+  GetSystemProfile_cedarSoftwareProducts,
   GetSystemProfile_cedarSystemDetails_cedarSystem,
   GetSystemProfile_cedarSystemDetails_deployments_dataCenter,
   GetSystemProfile_cedarSystemDetails_roles,
@@ -17,10 +18,9 @@ import {
 import {
   tempATOProp,
   tempBudgetProp,
-  tempProductsProp,
   tempSubSystemProp,
   tempSystemDataProp
-} from 'views/Sandbox/mockSystemData';
+} from 'views/SystemProfile/mockSystemData';
 
 import { CedarAssigneeType } from './graphql-global-types';
 
@@ -61,11 +61,11 @@ export type SubpageKey =
   | 'home'
   | 'details'
   | 'team'
+  | 'contracts'
   | 'funding-and-budget'
   | 'tools-and-software'
   | 'ato'
   | 'lifecycle-id'
-  | 'section-508'
   | 'sub-systems'
   | 'system-data'
   | 'documents';
@@ -146,7 +146,8 @@ export interface SystemProfileData extends GetSystemProfile {
   // Remaining mock data stubs
   activities?: tempATOProp[];
   budgets?: tempBudgetProp[];
-  products?: tempProductsProp[];
+  // eslint-disable-next-line camelcase
+  toolsAndSoftware?: GetSystemProfile_cedarSoftwareProducts;
   subSystems?: tempSubSystemProp[];
   systemData?: tempSystemDataProp[];
 }

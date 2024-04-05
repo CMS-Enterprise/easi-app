@@ -63,7 +63,10 @@ BudgetAddParams contains all the parameters to send to the API endpoint
 */
 type BudgetAddParams struct {
 
-	// Body.
+	/* Body.
+
+	   Budget(s) to be added to CEDAR.  This required input in a list of Budget documents.
+	*/
 	Body *models.BudgetAddRequest
 
 	timeout    time.Duration

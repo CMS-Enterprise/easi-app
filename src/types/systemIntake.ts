@@ -1,4 +1,4 @@
-import { GetSystemIntakeContacts_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContacts';
+import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 
 import { SystemIntakeStatusAdmin } from './graphql-global-types';
 
@@ -150,7 +150,6 @@ export type ContractDetailsForm = {
   contract: {
     hasContract: string;
     contractor: string;
-    number: string;
     startDate: {
       month: string;
       day: string;
@@ -161,6 +160,7 @@ export type ContractDetailsForm = {
       day: string;
       year: string;
     };
+    numbers: string;
   };
 };
 
@@ -204,7 +204,7 @@ export type SubmitDatesForm = {
 
 /** Cedar contact properties */
 export type CedarContactProps = {
-  euaUserId: string;
+  euaUserId: string | null;
   commonName: string;
   email?: string;
 };
@@ -212,7 +212,7 @@ export type CedarContactProps = {
 /** System intake contact properties */
 export type SystemIntakeContactProps = {
   id?: string | null;
-  euaUserId: string;
+  euaUserId: string | null;
   systemIntakeId: string;
   component: string;
   role: string;

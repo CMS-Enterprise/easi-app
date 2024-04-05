@@ -681,14 +681,17 @@ const technicalAssistance = {
       }
     },
     contactRoles: {
+      BUSINESS_OWNER: 'Business owner',
       PRODUCT_OWNER: 'Product Owner',
       SYSTEM_OWNER: 'System Owner',
       SYSTEM_MAINTAINER: 'System Maintainer',
       CONTRACT_OFFICE_RSREPRESENTATIVE:
         'Contracting Officer’s Representative (COR)',
       CLOUD_NAVIGATOR: 'Cloud Navigator',
+      INFORMATION_SYSTEM_SECURITY_ADVISOR:
+        'Information System Security Advisor (ISSO)',
       PRIVACY_ADVISOR: 'Privacy Advisor',
-      CRA: 'CRA',
+      CRA: 'Cyber Risk Advisor (CRA)',
       OTHER: 'Other'
     }
   },
@@ -715,7 +718,8 @@ const technicalAssistance = {
       subtitle:
         'Choose a document to upload, such as a presentation slide deck, concept paper, or other system information document.',
       documentUpload: 'Document upload',
-      docType: 'Select a PDF, DOC, DOCX, XLS, or XLSX',
+      docType:
+        'Supported file types: DOC, DOCX, JPG, JPEG, PDF, PNG, PPT, PPTX, XLS, and XLSX',
       dragFile: 'Drag file here or choose from folder',
       selectedFile: 'Selected file',
       changeFile: 'Change file',
@@ -903,6 +907,7 @@ const technicalAssistance = {
     supportingDocuments: 'Supporting documents',
     feedback: 'Feedback',
     adviceLetter: 'Advice letter',
+    additionalInformation: 'Additional information',
     notes: 'Notes',
     byNameOnDate: 'by {{name}} on {{date}}'
   },
@@ -1107,7 +1112,27 @@ const technicalAssistance = {
     error:
       'There was an issue assigning a TRB lead for this request. Please try again, and if the problem persists, try again later.'
   },
-  closeTab: 'Close tab'
+  closeTab: 'Close tab',
+  // technicalAssistance.link here provides overrides to itGov.link
+  link: {
+    description:
+      'If you are requesting technical assistance for a project that is a part of an existing system, service or other contract, please include additional details below.',
+    form: {
+      field: {
+        systemOrService: {
+          label:
+            'Is this technical assistance request part of an existing system, service, or contract?',
+          hint:
+            'With any of the selections below, you may add contract number(s) if there are any in place to support this effort.'
+        }
+      }
+    },
+    skipConfirm: {
+      list: [
+        'The Technical Review Board (TRB) can assist you in a more streamlined and comprehensive manner if they have information about your system, service, or contract.'
+      ]
+    }
+  }
 };
 
 export default technicalAssistance;

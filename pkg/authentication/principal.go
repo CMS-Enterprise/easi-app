@@ -26,16 +26,6 @@ type Principal interface {
 	// the Review Team within EASi
 	AllowGRT() bool
 
-	// Allow508User says whether this principal
-	// is authorized to operate as a user of the
-	// 508 process within EASi
-	Allow508User() bool
-
-	// Allow508Tester says whether this principal
-	// is authorized to operate as part of the
-	// 508 testing team within EASi
-	Allow508Tester() bool
-
 	// AllowTRBAdmin says whether this principal
 	// is authorized to operate as an admin of the TRB process within EASi
 	AllowTRBAdmin() bool
@@ -69,18 +59,6 @@ func (*anonymous) AllowGRT() bool {
 	return false
 }
 
-// Allow508User says Anonymous users are
-// not explicitly ruled in as 508 users
-func (*anonymous) Allow508User() bool {
-	return false
-}
-
-// Allow508User says Anonymous users are
-// not explicitly ruled in as 508 testing team members
-func (*anonymous) Allow508Tester() bool {
-	return false
-}
-
 // AllowTRBAdmin says Anonymous users are not explicitly ruled in as TRB admins
 func (*anonymous) AllowTRBAdmin() bool {
 	return false
@@ -94,13 +72,11 @@ func (*anonymous) Account() *UserAccount {
 // EUAPrincipal represents information
 // gleaned from the Okta JWT
 type EUAPrincipal struct {
-	EUAID            string
-	JobCodeEASi      bool
-	JobCodeGRT       bool
-	JobCode508User   bool
-	JobCode508Tester bool
-	JobCodeTRBAdmin  bool
-	UserAccount      *UserAccount
+	EUAID           string
+	JobCodeEASi     bool
+	JobCodeGRT      bool
+	JobCodeTRBAdmin bool
+	UserAccount     *UserAccount
 }
 
 // String satisfies the fmt.Stringer interface
@@ -125,20 +101,6 @@ func (p *EUAPrincipal) AllowEASi() bool {
 // the Review Team within EASi
 func (p *EUAPrincipal) AllowGRT() bool {
 	return p.JobCodeGRT
-}
-
-// Allow508User says whether this principal
-// is authorized to operate as a user of the
-// 508 process within EASi
-func (p *EUAPrincipal) Allow508User() bool {
-	return p.JobCode508User
-}
-
-// Allow508Tester says whether this principal
-// is authorized to operate as part of the
-// 508 testing team within EASi
-func (p *EUAPrincipal) Allow508Tester() bool {
-	return p.JobCode508Tester
 }
 
 // AllowTRBAdmin says whether this principal

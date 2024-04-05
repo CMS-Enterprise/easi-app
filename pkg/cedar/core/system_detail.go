@@ -3,17 +3,29 @@ package cedarcore
 import (
 	"context"
 	"fmt"
+	"time"
+
+	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // GetSystemDetail makes a GET call to the /system/detail/{id} endpoint
 func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*models.CedarSystemDetails, error) {
-	if !c.cedarCoreEnabled(ctx) {
+	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-		return nil, nil
+		mocksys := cedarcoremock.GetSystem(cedarSystemID)
+		if mocksys == nil {
+			return nil, cedarcoremock.NoSystemFoundError()
+		}
+		return &models.CedarSystemDetails{
+			CedarSystem:                 mocksys,
+			BusinessOwnerInformation:    &models.BusinessOwnerInformation{},
+			SystemMaintainerInformation: &models.SystemMaintainerInformation{},
+		}, nil
 	}
 
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
@@ -23,7 +35,7 @@ func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*mo
 
 	// Construct the parameters
 	params := apisystems.NewSystemDetailFindByIDParams()
-	params.SetID(cedarSystem.VersionID)
+	params.SetID(cedarSystem.VersionID.String)
 	params.HTTPClient = c.hc
 
 	// Make the API call
@@ -43,15 +55,15 @@ func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*mo
 
 	if busOwnerInfo := sys.BusinessOwnerInformation; busOwnerInfo != nil {
 		retVal.BusinessOwnerInformation = &models.BusinessOwnerInformation{
-			BeneficiaryAddressPurpose:      busOwnerInfo.BeneficiaryAddressPurpose,
-			BeneficiaryAddressPurposeOther: busOwnerInfo.BeneficiaryAddressPurposeOther,
-			BeneficiaryAddressSource:       busOwnerInfo.BeneficiaryAddressSource,
-			BeneficiaryAddressSourceOther:  busOwnerInfo.BeneficiaryAddressSourceOther,
-			CostPerYear:                    busOwnerInfo.CostPerYear,
+			BeneficiaryAddressPurpose:      models.ZeroStringsFrom(busOwnerInfo.BeneficiaryAddressPurpose),
+			BeneficiaryAddressPurposeOther: zero.StringFrom(busOwnerInfo.BeneficiaryAddressPurposeOther),
+			BeneficiaryAddressSource:       models.ZeroStringsFrom(busOwnerInfo.BeneficiaryAddressSource),
+			BeneficiaryAddressSourceOther:  zero.StringFrom(busOwnerInfo.BeneficiaryAddressSourceOther),
+			CostPerYear:                    zero.StringFrom(busOwnerInfo.CostPerYear),
 			IsCmsOwned:                     busOwnerInfo.IsCmsOwned,
-			NumberOfContractorFte:          busOwnerInfo.NumberOfContractorFte,
-			NumberOfFederalFte:             busOwnerInfo.NumberOfFederalFte,
-			NumberOfSupportedUsersPerMonth: busOwnerInfo.NumberOfSupportedUsersPerMonth,
+			NumberOfContractorFte:          zero.StringFrom(busOwnerInfo.NumberOfContractorFte),
+			NumberOfFederalFte:             zero.StringFrom(busOwnerInfo.NumberOfFederalFte),
+			NumberOfSupportedUsersPerMonth: zero.StringFrom(busOwnerInfo.NumberOfSupportedUsersPerMonth),
 			StoresBankingData:              busOwnerInfo.StoresBankingData,
 			StoresBeneficiaryAddress:       busOwnerInfo.StoresBeneficiaryAddress,
 		}
@@ -61,30 +73,30 @@ func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*mo
 		retVal.SystemMaintainerInformation = &models.SystemMaintainerInformation{
 			AgileUsed:                  sysMaintInfo.AgileUsed,
 			BusinessArtifactsOnDemand:  sysMaintInfo.BusinessArtifactsOnDemand,
-			DeploymentFrequency:        sysMaintInfo.DeploymentFrequency,
-			DevCompletionPercent:       sysMaintInfo.DevCompletionPercent,
-			DevWorkDescription:         sysMaintInfo.DevWorkDescription,
+			DeploymentFrequency:        zero.StringFrom(sysMaintInfo.DeploymentFrequency),
+			DevCompletionPercent:       zero.StringFrom(sysMaintInfo.DevCompletionPercent),
+			DevWorkDescription:         zero.StringFrom(sysMaintInfo.DevWorkDescription),
 			EcapParticipation:          sysMaintInfo.EcapParticipation,
-			FrontendAccessType:         sysMaintInfo.FrontendAccessType,
+			FrontendAccessType:         zero.StringFrom(sysMaintInfo.FrontendAccessType),
 			HardCodedIPAddress:         sysMaintInfo.HardCodedIPAddress,
-			IP6EnabledAssetPercent:     sysMaintInfo.Ip6EnabledAssetPercent,
-			IP6TransitionPlan:          sysMaintInfo.Ip6TransitionPlan,
-			IPEnabledAssetCount:        sysMaintInfo.IPEnabledAssetCount,
-			MajorRefreshDate:           sysMaintInfo.MajorRefreshDate.String(),
-			NetAccessibility:           sysMaintInfo.NetAccessibility,
+			IP6EnabledAssetPercent:     zero.StringFrom(sysMaintInfo.Ip6EnabledAssetPercent),
+			IP6TransitionPlan:          zero.StringFrom(sysMaintInfo.Ip6TransitionPlan),
+			IPEnabledAssetCount:        int(sysMaintInfo.IPEnabledAssetCount),
+			MajorRefreshDate:           zero.TimeFrom(time.Time(sysMaintInfo.MajorRefreshDate)),
+			NetAccessibility:           zero.StringFrom(sysMaintInfo.NetAccessibility),
 			OmDocumentationOnDemand:    sysMaintInfo.OmDocumentationOnDemand,
-			PlansToRetireReplace:       sysMaintInfo.PlansToRetireReplace,
-			QuarterToRetireReplace:     sysMaintInfo.QuarterToRetireReplace,
-			RecordsManagementBucket:    sysMaintInfo.RecordsManagementBucket,
+			PlansToRetireReplace:       zero.StringFrom(sysMaintInfo.PlansToRetireReplace),
+			QuarterToRetireReplace:     zero.StringFrom(sysMaintInfo.QuarterToRetireReplace),
+			RecordsManagementBucket:    models.ZeroStringsFrom(sysMaintInfo.RecordsManagementBucket),
 			SourceCodeOnDemand:         sysMaintInfo.SourceCodeOnDemand,
-			SystemCustomization:        sysMaintInfo.SystemCustomization,
+			SystemCustomization:        zero.StringFrom(sysMaintInfo.SystemCustomization),
 			SystemDesignOnDemand:       sysMaintInfo.SystemDesignOnDemand,
-			SystemProductionDate:       sysMaintInfo.SystemProductionDate.String(),
+			SystemProductionDate:       zero.TimeFrom(time.Time(sysMaintInfo.SystemProductionDate)),
 			SystemRequirementsOnDemand: sysMaintInfo.SystemRequirementsOnDemand,
 			TestPlanOnDemand:           sysMaintInfo.TestPlanOnDemand,
 			TestReportsOnDemand:        sysMaintInfo.TestReportsOnDemand,
 			TestScriptsOnDemand:        sysMaintInfo.TestScriptsOnDemand,
-			YearToRetireReplace:        sysMaintInfo.YearToRetireReplace,
+			YearToRetireReplace:        zero.StringFrom(sysMaintInfo.YearToRetireReplace),
 		}
 	}
 	return retVal, nil

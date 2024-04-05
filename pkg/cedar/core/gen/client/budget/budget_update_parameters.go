@@ -63,7 +63,10 @@ BudgetUpdateParams contains all the parameters to send to the API endpoint
 */
 type BudgetUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   Budgets to be updated in CEDAR. This required input in a list of Budget documents (id, projectId, systemId, fundingId and funding).
+	*/
 	Body *models.BudgetUpdateRequest
 
 	timeout    time.Duration

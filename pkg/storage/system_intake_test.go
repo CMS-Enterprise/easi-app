@@ -6,21 +6,21 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
-
 	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+	"github.com/jmoiron/sqlx"
+
+	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/helpers"
+	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, request_type, requester, archived_at) VALUES (:id, :eua_user_id, :request_type, :requester, :archived_at)"
 const insertRelatedBizCaseSQL = `INSERT INTO business_cases (id, eua_user_id, requester, system_intake)
 	VALUES(:id, :eua_user_id, :requester, :system_intake)`
-const insertIntakeWithCedarSystemAndContractSQL = `INSERT INTO system_intakes (id, eua_user_id, request_type, requester, cedar_system_id, contract_number)
-	VALUES (:id, :eua_user_id, :request_type, :requester, :cedar_system_id, :contract_number)`
 
 func (s *StoreTestSuite) TestCreateSystemIntake() {
 	ctx := context.Background()
@@ -394,10 +394,8 @@ func (s *StoreTestSuite) TestFetchSystemIntakeByID() {
 	s.Run("golden path to fetch a system intake", func() {
 		intake := testhelpers.NewSystemIntake()
 		id := intake.ID
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		err = tx.Commit()
+
+		_, err := s.db.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
 
 		fetched, err := s.store.FetchSystemIntakeByID(ctx, id)
@@ -421,12 +419,14 @@ func (s *StoreTestSuite) TestFetchSystemIntakeByID() {
 		id := intake.ID
 		bizCase := testhelpers.NewBusinessCase(id)
 
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		_, err = tx.NamedExec(insertRelatedBizCaseSQL, &bizCase)
-		s.NoError(err)
-		err = tx.Commit()
+		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+			s.NoError(err)
+			_, err = tx.NamedExec(insertRelatedBizCaseSQL, &bizCase)
+			s.NoError(err)
+
+			return nil
+		})
 		s.NoError(err)
 
 		fetched, err := s.store.FetchSystemIntakeByID(ctx, id)
@@ -444,12 +444,15 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		intake := testhelpers.NewSystemIntake()
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
-		s.NoError(err)
-		err = tx.Commit()
+
+		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+			s.NoError(err)
+			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
+			s.NoError(err)
+
+			return nil
+		})
 		s.NoError(err)
 
 		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
@@ -467,12 +470,14 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		// set archived at for intake2
 		intake2.ArchivedAt = helpers.PointerTo(time.Now())
 
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
-		s.NoError(err)
-		err = tx.Commit()
+		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+			s.NoError(err)
+			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
+			s.NoError(err)
+
+			return nil
+		})
 		s.NoError(err)
 
 		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
@@ -498,14 +503,16 @@ func (s *StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 
 		bizCase := testhelpers.NewBusinessCase(id)
 
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
-		s.NoError(err)
-		_, err = tx.NamedExec(insertRelatedBizCaseSQL, &bizCase)
-		s.NoError(err)
-		err = tx.Commit()
+		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+			s.NoError(err)
+			_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
+			s.NoError(err)
+			_, err = tx.NamedExec(insertRelatedBizCaseSQL, &bizCase)
+			s.NoError(err)
+
+			return nil
+		})
 		s.NoError(err)
 
 		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
@@ -630,7 +637,8 @@ func (s *StoreTestSuite) TestFetchSystemIntakeMetrics() {
 			1,
 		},
 	}
-	for _, tt := range completedTests {
+	for i := range completedTests {
+		tt := completedTests[i]
 		s.Run(fmt.Sprintf("%s for completed count", tt.name), func() {
 			intake := testhelpers.NewSystemIntake()
 			settableClock.Set(tt.createdAt)
@@ -680,7 +688,8 @@ func (s *StoreTestSuite) TestFetchSystemIntakeMetrics() {
 			1,
 		},
 	}
-	for _, tt := range fundedTests {
+	for i := range fundedTests {
+		tt := fundedTests[i]
 		s.Run(tt.name, func() {
 			intake := testhelpers.NewSystemIntake()
 			settableClock.Set(tt.submittedAt)
@@ -706,10 +715,7 @@ func (s *StoreTestSuite) TestUpdateAdminLead() {
 	s.Run("golden path to update admin lead", func() {
 		intake := testhelpers.NewSystemIntake()
 
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		err = tx.Commit()
+		_, err := s.db.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
 
 		adminLead := "Test Lead"
@@ -728,10 +734,7 @@ func (s *StoreTestSuite) TestUpdateReviewDates() {
 	s.Run("update both dates", func() {
 		intake := testhelpers.NewSystemIntake()
 
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		err = tx.Commit()
+		_, err := s.db.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
 
 		grbDate, _ := time.Parse(time.RFC3339, "2021-12-22T00:00:00Z")
@@ -748,10 +751,7 @@ func (s *StoreTestSuite) TestUpdateReviewDates() {
 	s.Run("update just GRB", func() {
 		intake := testhelpers.NewSystemIntake()
 
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		err = tx.Commit()
+		_, err := s.db.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
 
 		grbDate, _ := time.Parse(time.RFC3339, "2021-12-22T00:00:00Z")
@@ -765,10 +765,7 @@ func (s *StoreTestSuite) TestUpdateReviewDates() {
 	s.Run("update just GRT", func() {
 		intake := testhelpers.NewSystemIntake()
 
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		err = tx.Commit()
+		_, err := s.db.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
 
 		grtDate, _ := time.Parse(time.RFC3339, "2022-01-02T00:00:00Z")
@@ -780,52 +777,13 @@ func (s *StoreTestSuite) TestUpdateReviewDates() {
 	})
 }
 
-func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedContract() {
-	ctx := context.Background()
-
-	s.Run("update linked contract number", func() {
-		intake := testhelpers.NewSystemIntake()
-
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		err = tx.Commit()
-		s.NoError(err)
-
-		contractNumber := null.StringFrom("555-55-5")
-		updatedIntake, err := s.store.UpdateSystemIntakeLinkedContract(ctx, intake.ID, contractNumber)
-
-		s.NoError(err)
-		s.Equal(updatedIntake.ContractNumber, contractNumber)
-	})
-
-	s.Run("update linked contract number to null", func() {
-		intake := testhelpers.NewSystemIntake()
-
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		err = tx.Commit()
-		s.NoError(err)
-
-		var contractNumber *string
-		updatedIntake, err := s.store.UpdateSystemIntakeLinkedContract(ctx, intake.ID, null.StringFromPtr(contractNumber))
-
-		s.NoError(err)
-		s.False(updatedIntake.ContractNumber.Valid)
-	})
-}
-
 func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
 	ctx := context.Background()
 
 	s.Run("update linked CEDAR system ID", func() {
 		intake := testhelpers.NewSystemIntake()
 
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		err = tx.Commit()
+		_, err := s.db.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
 
 		cedarSystemID := null.StringFrom("555-55-5")
@@ -838,10 +796,7 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
 	s.Run("update linked CEDAR system ID to null", func() {
 		intake := testhelpers.NewSystemIntake()
 
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		err = tx.Commit()
+		_, err := s.db.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
 
 		var cedarSystemID *string
@@ -849,48 +804,5 @@ func (s *StoreTestSuite) TestUpdateSystemIntakeLinkedCedarSystem() {
 
 		s.NoError(err)
 		s.False(updatedIntake.CedarSystemID.Valid)
-	})
-}
-
-func (s *StoreTestSuite) TestFetchRelatedSystemIntakes() {
-	ctx := context.Background()
-
-	s.Run("fetch related system intakes", func() {
-		cedarSystemID := null.StringFrom("555-55-6")
-		contractNumber := null.StringFrom("444-55-5")
-
-		intake := testhelpers.NewSystemIntake()
-		relatedIntake1 := testhelpers.NewSystemIntake()
-		relatedIntake2 := testhelpers.NewSystemIntake()
-		relatedIntake3 := testhelpers.NewSystemIntake()
-
-		intake.CedarSystemID = cedarSystemID
-		intake.ContractNumber = contractNumber
-
-		relatedIntake1.CedarSystemID = cedarSystemID
-		relatedIntake2.CedarSystemID = cedarSystemID
-		relatedIntake3.ContractNumber = contractNumber
-
-		tx := s.db.MustBegin()
-		intakesToCreate := []models.SystemIntake{intake, relatedIntake1, relatedIntake2, relatedIntake3}
-		for i := range intakesToCreate {
-			_, err := tx.NamedExec(insertIntakeWithCedarSystemAndContractSQL, &intakesToCreate[i])
-			s.NoError(err)
-		}
-
-		err := tx.Commit()
-		s.NoError(err)
-
-		relatedIntakes, err := s.store.FetchRelatedSystemIntakes(ctx, intake.ID)
-		s.NoError(err)
-
-		ids := make(map[uuid.UUID]bool)
-		for _, ri := range relatedIntakes {
-			ids[ri.ID] = true
-		}
-		s.True(ids[relatedIntake1.ID])
-		s.True(ids[relatedIntake2.ID])
-		s.True(ids[relatedIntake3.ID])
-		s.Equal(len(relatedIntakes), 3)
 	})
 }

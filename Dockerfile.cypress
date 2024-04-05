@@ -12,8 +12,6 @@ FROM modules AS build
 COPY cmd ./cmd
 COPY pkg ./pkg
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/seed ./cmd/seed
-
 FROM cypress/base:16.18.1
 
 # mc - minio client, used for tagging uploaded files
@@ -29,8 +27,6 @@ COPY cypress.config.ts /
 COPY tsconfig.json /
 COPY src /src
 COPY scripts/tag_minio_file /scripts/tag_minio_file
-COPY scripts/seed_database /scripts/seed_database
-COPY --from=build /easi/bin/seed /build/seed
 
 ENTRYPOINT ["/node_modules/.bin/cypress"]
 CMD ["run"]

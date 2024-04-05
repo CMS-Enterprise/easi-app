@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "94388143-8d11-43b1-ad27-ce846949b74b",
+		"_postman_id": "da4eea7a-dcd7-4ea6-b529-ee566a185a3d",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "11253221"
@@ -201,7 +201,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+												"query": "mutation CreateSystemIntakeActionRequestEdits($input: SystemIntakeRequestEditsInput!) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n      }\r\n      contractNumbers {\r\n        id\r\n        systemIntakeID\r\n        contractNumber\r\n        createdBy\r\n        createdAt\r\n        modifiedBy\r\n        modifiedAt\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
 												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"intakeFormStep\": \"INITIAL_REQUEST_FORM\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"emailFeedback\": \"email feedback goes here\",\r\n        \"additionalInfo\": \"additional info\",\r\n        \"adminNote\": \"my admin note\"\r\n    }\r\n}"
 											}
 										},
@@ -222,7 +222,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+												"query": "mutation CreateSystemIntakeActionRequestEdits($input: SystemIntakeRequestEditsInput!) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        __typename\r\n      }\r\n      contractNumbers {\r\n        id\r\n        systemIntakeID\r\n        contractNumber\r\n        createdBy\r\n        createdAt\r\n        modifiedBy\r\n        modifiedAt\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
 												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"intakeFormStep\": \"DRAFT_BUSINESS_CASE\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"emailFeedback\": \"email feedback goes here\",\r\n        \"additionalInfo\": \"additional info\",\r\n        \"adminNote\": \"my admin note\"\r\n    }\r\n}"
 											}
 										},
@@ -243,7 +243,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+												"query": "mutation CreateSystemIntakeActionRequestEdits($input: SystemIntakeRequestEditsInput!) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        __typename\r\n      }\r\n      contractNumbers {\r\n        id\r\n        systemIntakeID\r\n        contractNumber\r\n        createdBy\r\n        createdAt\r\n        modifiedBy\r\n        modifiedAt\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
 												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"intakeFormStep\": \"FINAL_BUSINESS_CASE\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"emailFeedback\": \"email feedback goes here\",\r\n        \"additionalInfo\": \"additional info\",\r\n        \"adminNote\": \"my admin note\"\r\n    }\r\n}"
 											}
 										},
@@ -264,7 +264,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "mutation CreateSystemIntakeActionRequestEdits(\r\n  $input: SystemIntakeRequestEditsInput!\r\n) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        number\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
+												"query": "mutation CreateSystemIntakeActionRequestEdits($input: SystemIntakeRequestEditsInput!) {\r\n  createSystemIntakeActionRequestEdits(input: $input) {\r\n    systemIntake {\r\n      id\r\n      currentStage\r\n      step\r\n      state\r\n      requestFormState\r\n      grtMeetingState\r\n      grbMeetingState\r\n      draftBusinessCaseState\r\n      finalBusinessCaseState\r\n      fundingSources {\r\n        source\r\n        fundingNumber\r\n        __typename\r\n      }\r\n      costs {\r\n        expectedIncreaseAmount\r\n        __typename\r\n      }\r\n      annualSpending {\r\n        currentAnnualSpending\r\n        plannedYearOneSpending\r\n        __typename\r\n      }\r\n      contract {\r\n        contractor\r\n        endDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        hasContract\r\n        startDate {\r\n          day\r\n          month\r\n          year\r\n          __typename\r\n        }\r\n        __typename\r\n      }\r\n      contractNumbers {\r\n        id\r\n        systemIntakeID\r\n        contractNumber\r\n        createdBy\r\n        createdAt\r\n        modifiedBy\r\n        modifiedAt\r\n        __typename\r\n      }\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}",
 												"variables": "{\r\n    \"input\": {\r\n        \"systemIntakeID\": \"{{systemIntakeID}}\",\r\n        \"intakeFormStep\": \"GRT_MEETING\",\r\n        \"notificationRecipients\": {\r\n            \"regularRecipientEmails\": [\r\n                \"{{testEmailAddress}}\"\r\n            ],\r\n            \"shouldNotifyITGovernance\": false,\r\n            \"shouldNotifyITInvestment\": false\r\n        },\r\n        \"emailFeedback\": \"email feedback goes here\",\r\n        \"additionalInfo\": \"additional info\",\r\n        \"adminNote\": \"my admin note\"\r\n    }\r\n}"
 											}
 										},
@@ -711,8 +711,8 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation UpdateSystemIntakeContractDetails($input: UpdateSystemIntakeContractDetailsInput!) {\n  updateSystemIntakeContractDetails(input: $input) {\n    systemIntake {\n      id\n      status\n      requestFormState\n      currentStage\n      statusRequester\n      statusAdmin\n      fundingSources {\n        source\n        fundingNumber\n        __typename\n      }\n      costs {\n        expectedIncreaseAmount\n        isExpectingIncrease\n        __typename\n      }\n      contract {\n        contractor\n        endDate {\n          day\n          month\n          year\n          __typename\n        }\n        hasContract\n        startDate {\n          day\n          month\n          year\n          __typename\n        }\n        number\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}",
-										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"fundingSources\": {\n      \"existingFunding\": true,\n      \"fundingSources\": [\n        {\n          \"fundingNumber\": \"656909\",\n          \"source\": \"Other\"\n        },\n        {\n          \"fundingNumber\": \"867530\",\n          \"source\": \"Recovery Audit Contractors\"\n        }\n      ]\n    },\n    \"costs\": {\n      \"expectedIncreaseAmount\": \"$10 every 3 hours\",\n      \"isExpectingIncrease\": \"YES\"\n    },\n    \"contract\": {\n      \"contractor\": \"\",\n      \"endDate\": null,\n      \"hasContract\": \"NOT_STARTED\",\n      \"startDate\": null,\n      \"number\": \"\"\n    }\n  }\n}"
+										"query": "mutation UpdateSystemIntakeContractDetails($input: UpdateSystemIntakeContractDetailsInput!) {\n  updateSystemIntakeContractDetails(input: $input) {\n    systemIntake {\n      id\n      requestFormState\n      currentStage\n      statusRequester\n      statusAdmin\n      fundingSources {\n        source\n        fundingNumber\n        __typename\n      }\n      costs {\n        expectedIncreaseAmount\n        isExpectingIncrease\n        __typename\n      }\n      contract {\n        contractor\n        endDate {\n          day\n          month\n          year\n          __typename\n        }\n        hasContract\n        startDate {\n          day\n          month\n          year\n          __typename\n        }\n        __typename\n      }\n      contractNumbers {\n        id\n        systemIntakeID\n        contractNumber\n        createdBy\n        createdAt\n        modifiedBy\n        modifiedAt\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}",
+										"variables": "{\n  \"input\": {\n    \"id\": \"{{systemIntakeID}}\",\n    \"fundingSources\": {\n      \"existingFunding\": true,\n      \"fundingSources\": [\n        {\n          \"fundingNumber\": \"656909\",\n          \"source\": \"Other\"\n        },\n        {\n          \"fundingNumber\": \"867530\",\n          \"source\": \"Recovery Audit Contractors\"\n        }\n      ]\n    },\n    \"costs\": {\n      \"expectedIncreaseAmount\": \"$10 every 3 hours\",\n      \"isExpectingIncrease\": \"YES\"\n    },\n    \"contract\": {\n      \"contractor\": \"\",\n      \"endDate\": null,\n      \"hasContract\": \"NOT_STARTED\",\n      \"startDate\": null,\n      \"numbers\": []\n    }\n  }\n}"
 									}
 								},
 								"url": {
@@ -1293,38 +1293,6 @@
 							"graphql": {
 								"query": "query {\n  systemIntake(id:\"{{systemIntakeID}}\") {\n    state\n    decisionState\n    decisionNextSteps\n    trbFollowUpRecommendation\n    lcid\n    lcidExpiresAt\n    lcidScope\n    lcidCostBaseline\n    lcidStatus\n    rejectionReason\n    lcidRetiresAt\n  }\n}",
 								"variables": "{\r\n    \"id\": \"{{systemIntakeID}}\"\r\n}"
-							}
-						},
-						"url": {
-							"raw": "{{url}}",
-							"host": [
-								"{{url}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "SystemIntake Get (RELATED)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "query relatedSystemIntakes{\n  \n  relatedSystemIntakes(id:\"{{systemIntakeID}}\")\n  \n  {\n    id\n#   actions\n  adminLead\n  archivedAt\n#   businessCase\n  businessNeed\n#   businessOwner\n  businessSolution\n#   contract\n#   costs\n  createdAt\n  currentStage\n  decisionNextSteps\n  eaCollaborator\n  eaCollaboratorName\n  euaUserId\n  existingFunding\n#   fundingSources\n#   governanceTeams\n  grbDate\n  grtDate\n#   grtFeedbacks\n  id\n#   isso\n  lcid\n  lcidExpiresAt\n  lcidScope\n  lcidCostBaseline\n  needsEaSupport\n#   notes\n  oitSecurityCollaborator\n  oitSecurityCollaboratorName\n#   productManager\n  projectAcronym\n  rejectionReason\n  requestName\n  requestType\n#   requester\n  submittedAt\n  trbCollaborator\n  trbCollaboratorName\n  updatedAt\n  grtReviewEmailBody\n  decidedAt\n  businessCaseId\n#   lastAdminNote\n  cedarSystemId\n#   documents\n  hasUiChanges\n    \n    \n  }\n  \n  \n}",
-								"variables": ""
 							}
 						},
 						"url": {
@@ -2016,172 +1984,867 @@
 			"name": "CEDAR",
 			"item": [
 				{
-					"name": "Roles",
+					"name": "Core",
 					"item": [
 						{
-							"name": "RolesGet",
+							"name": "Direct Requests",
+							"item": [
+								{
+									"name": "Get Systems",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/system/summary?includeInSurvey=true&state=active",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"system",
+												"summary"
+											],
+											"query": [
+												{
+													"key": "includeInSurvey",
+													"value": "true"
+												},
+												{
+													"key": "state",
+													"value": "active"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get My Systems",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/system/summary?includeInSurvey=true&state=active&userName={{EUAID}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"system",
+												"summary"
+											],
+											"query": [
+												{
+													"key": "includeInSurvey",
+													"value": "true"
+												},
+												{
+													"key": "state",
+													"value": "active"
+												},
+												{
+													"key": "userName",
+													"value": "{{EUAID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get ATO By System ID (Authority To Operate)",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/authorityToOperate?systemId={{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"authorityToOperate"
+											],
+											"query": [
+												{
+													"key": "systemId",
+													"value": "{{CedarSystemId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Budget By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/budget?systemId={{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"budget"
+											],
+											"query": [
+												{
+													"key": "systemId",
+													"value": "{{CedarSystemId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Budget System Cost By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/budgetSystemCost?systemId={{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"budgetSystemCost"
+											],
+											"query": [
+												{
+													"key": "systemId",
+													"value": "{{CedarSystemId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Contract By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/contract?systemId={{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"contract"
+											],
+											"query": [
+												{
+													"key": "systemId",
+													"value": "{{CedarSystemId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Deployment By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/deployment?systemId={{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"deployment"
+											],
+											"query": [
+												{
+													"key": "systemId",
+													"value": "{{CedarSystemId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Exchange By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/exchange?systemId={{CedarSystemId}}&direction=both",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"exchange"
+											],
+											"query": [
+												{
+													"key": "systemId",
+													"value": "{{CedarSystemId}}"
+												},
+												{
+													"key": "direction",
+													"value": "both"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Roles By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/role?objectId={{CedarSystemId}}&application=alfabet",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"role"
+											],
+											"query": [
+												{
+													"key": "objectId",
+													"value": "{{CedarSystemId}}"
+												},
+												{
+													"key": "application",
+													"value": "alfabet"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Software Products By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/softwareProducts?id={{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"softwareProducts"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "{{CedarSystemId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Threats By ATO IDs",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/threat?ids={66F07935-7A48-4a83-AAC9-3D05DAE3F318}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"threat"
+											],
+											"query": [
+												{
+													"key": "ids",
+													"value": "{66F07935-7A48-4a83-AAC9-3D05DAE3F318}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get URL By System ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/url/{{CedarSystemId}}",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"gateway",
+												"CEDAR%20Core%20API",
+												"2.0.0",
+												"url",
+												"{{CedarSystemId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"description": "These requests bypass the EASi GraphQL API and make calls directly to CEDAR.",
+							"auth": {
+								"type": "apikey",
+								"apikey": [
+									{
+										"key": "key",
+										"value": "x-Gateway-APIKey",
+										"type": "string"
+									},
+									{
+										"key": "value",
+										"value": "{{CedarApiKey}}",
+										"type": "string"
+									}
+								]
+							},
 							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"packages": {},
+										"exec": [
+											""
+										]
+									}
+								},
 								{
 									"listen": "test",
 									"script": {
+										"type": "text/javascript",
+										"packages": {},
 										"exec": [
 											""
-										],
-										"type": "text/javascript"
+										]
 									}
 								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "query Roles{\n  roleTypes {\n    id\n    application\n    name\n    description\n  }\n}",
-										"variables": ""
-									}
-								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
-								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "EASiCedarSystemRolesGet",
-							"event": [
+							"name": "System Summary",
+							"item": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "query {\n  cedarSystemDetails(cedarSystemId:\"408-4104-0\") {\n    cedarSystem {\n      name\n    }\n    roles {\n      roleID\n      assigneeUsername\n      roleTypeID\n      roleTypeName\n    }\n  }\n}",
-										"variables": ""
-									}
+									"name": "Get Systems",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query {\n  cedarSystems{\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n  }\n}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
 								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
+								{
+									"name": "Get My Systems",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query {\n  myCedarSystems{\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n  }\n}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get System",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($systemID: String!) {\n  cedarSystem(cedarSystemId: $systemID){\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n  }\n}",
+												"variables": "{\r\n    \"systemID\": \"{{CedarSystemId}}\"\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "EASiCedarSystemSetRoles",
-							"event": [
+							"name": "System Details",
+							"item": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "mutation {\n  setRolesForUserOnSystem(input:{\n    cedarSystemID:\"408-4104-0\"\n    euaUserId:\"ADMN\"\n    desiredRoleTypeIDs:[\n       \"238-2-0\",\"238-29-0\"\n    ]\n  })\n}",
-										"variables": ""
-									}
+									"name": "Get System Roles",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($cedarSystemId: String!) {\n  cedarSystemDetails(cedarSystemId: $cedarSystemId) {\n    cedarSystem {\n      name\n    }\n    roles {\n      roleID\n      assigneeUsername\n      roleTypeID\n      roleTypeName\n    }\n  }\n}",
+												"variables": "{\r\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
 								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "System Summary",
-					"item": [
-						{
-							"name": "Get Systems",
-							"event": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "query {\n  cedarSystems{\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n  }\n}",
-										"variables": ""
-									}
+									"name": "Get System Threats",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($cedarSystemId: String!) {\n  cedarSystemDetails(cedarSystemId: $cedarSystemId) {\n    cedarSystem {\n      name\n    }\n    threats {\n      alternativeId\n      controlFamily\n      daysOpen\n      id\n      parentId\n      type\n      weaknessRiskLevel\n    }\n  }\n}",
+												"variables": "{\r\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
 								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
+								{
+									"name": "Get System URLs",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($cedarSystemId: String!) {\n  cedarSystemDetails(cedarSystemId: $cedarSystemId) {\n    cedarSystem {\n      name\n    }\n    urls {\n        isAPIEndpoint\n        isBehindWebApplicationFirewall\n        isVersionCodeRepository\n        id\n        address\n    }\n  }\n}",
+												"variables": "{\r\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "Get System",
-							"event": [
+							"name": "Roles",
+							"item": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "graphql",
-									"graphql": {
-										"query": "query($systemID: String!) {\n  cedarSystem(cedarSystemId: $systemID){\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n  }\n}",
-										"variables": "{\r\n    \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}\"\r\n}"
-									}
+									"name": "Roles Types",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query Roles{\n  roleTypes {\n    id\n    application\n    name\n    description\n  }\n}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
 								},
-								"url": {
-									"raw": "{{url}}",
-									"host": [
-										"{{url}}"
-									]
+								{
+									"name": "Set System Roles",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "mutation {\n  setRolesForUserOnSystem(input:{\n    cedarSystemID:\"408-4104-0\"\n    euaUserId:\"ADMN\"\n    desiredRoleTypeIDs:[\n       \"238-2-0\",\"238-29-0\"\n    ]\n  })\n}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
 								}
-							},
-							"response": []
+							]
+						},
+						{
+							"name": "Contracts",
+							"item": [
+								{
+									"name": "Get Contracts By System",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($systemID: String!) {\n  cedarContractsBySystem(cedarSystemId: $systemID){\n    endDate\n    startDate\n    contractName\n    contractNumber\n    description\n    isDeliveryOrg\n    systemID\n    serviceProvided\n  }\n}",
+												"variables": "{\r\n    \"systemID\": \"{{CedarSystemId}}\"\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Software Products",
+							"item": [
+								{
+									"name": "Get Software Products By System",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($systemID: String!) {\n  cedarSoftwareProducts(cedarSystemId: $systemID){\n    apiDataArea\n    apiDescPublished\n    apiDescPubLocation\n    apiFHIRUse\n    softwareProducts {\n        apiGatewayUse\n    }\n  }\n}",
+												"variables": "{\r\n    \"systemID\": \"{{CedarSystemId}}\"\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Authority To Operate",
+							"item": [
+								{
+									"name": "Get ATOs By System",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($systemID: String!) {\n  cedarAuthorityToOperate(cedarSystemID: $systemID) {\n    cedarId\n    uuid\n    actualDispositionDate\n    containsPersonallyIdentifiableInformation\n    countOfTotalNonPrivilegedUserPopulation\n    countOfOpenPoams\n    countOfTotalPrivilegedUserPopulation\n    dateAuthorizationMemoExpires\n    dateAuthorizationMemoSigned\n    eAuthenticationLevel\n    fips199OverallImpactRating\n    fismaSystemAcronym\n    fismaSystemName\n    isAccessedByNonOrganizationalUsers\n    isPiiLimitedToUserNameAndPass\n    isProtectedHealthInformation\n    lastActScaDate\n    lastAssessmentDate\n    lastContingencyPlanCompletionDate\n    lastPenTestDate\n    piaCompletionDate\n    primaryCyberRiskAdvisor\n    privacySubjectMatterExpert\n    recoveryPointObjective\n    recoveryTimeObjective\n    systemOfRecordsNotice\n    tlcPhase\n    xlcPhase\n  }\n}",
+												"variables": "{\r\n    \"systemID\": \"{{CedarSystemId}}\"\r\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Threat",
+							"item": [
+								{
+									"name": "Get Threats By System",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query($cedarSystemId: String!) {\n cedarThreat(cedarSystemId: $cedarSystemId){\n   alternativeId\n   controlFamily\n   daysOpen\n   id\n   parentId\n   type\n   weaknessRiskLevel\n }\n}",
+												"variables": "{\n    \"cedarSystemId\": \"{{CedarSystemId}}\"\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						}
 					]
 				},
@@ -2351,6 +3014,21 @@
 		{
 			"key": "businessCaseID",
 			"value": ""
+		},
+		{
+			"key": "CedarApiKey",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "CedarApiUrl",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "CedarSystemId",
+			"value": "",
+			"type": "string"
 		}
 	]
 }

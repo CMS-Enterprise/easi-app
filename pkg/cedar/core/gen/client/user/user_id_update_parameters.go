@@ -63,7 +63,10 @@ UserIDUpdateParams contains all the parameters to send to the API endpoint
 */
 type UserIDUpdateParams struct {
 
-	// Body.
+	/* Body.
+
+	   User information to be updated in CEDAR.
+	*/
 	Body *models.UserUpdateRequest
 
 	/* ID.

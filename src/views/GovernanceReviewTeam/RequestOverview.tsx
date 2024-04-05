@@ -6,6 +6,7 @@ import { Link, Route, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Grid, IconArrowBack } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import PageLoading from 'components/PageLoading';
@@ -17,6 +18,7 @@ import {
 } from 'queries/types/GetSystemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
+import AdditionalInformation from 'views/AdditionalInformation';
 import NotFound from 'views/NotFound';
 
 import AccordionNavigation from './AccordionNavigation';
@@ -36,6 +38,7 @@ import './index.scss';
 
 const RequestOverview = () => {
   const { t } = useTranslation('governanceReviewTeam');
+  const flags = useFlags();
 
   const { Message } = useMessage();
 
@@ -94,14 +97,16 @@ const RequestOverview = () => {
           adminLead={systemIntake.adminLead}
           submittedAt={systemIntake.submittedAt}
           lcid={systemIntake.lcid}
-          contractNumber={systemIntake?.contract?.number}
+          contractNumbers={
+            systemIntake?.contractNumbers?.map(c => c.contractNumber) || []
+          }
           state={systemIntake?.state}
         />
       )}
       {!fullPageLayout && (
         <AccordionNavigation
           activePage={activePage}
-          subNavItems={subNavItems(systemId)}
+          subNavItems={subNavItems(systemId, flags)}
         />
       )}
       <section
@@ -123,7 +128,7 @@ const RequestOverview = () => {
                     {t('back.allRequests')}
                   </Link>
                 </li>
-                {subNavItems(systemId).map(
+                {subNavItems(systemId, flags).map(
                   ({ aria, groupEnd, route, text }) => (
                     <li
                       key={`desktop-sidenav-${text}`}
@@ -205,6 +210,16 @@ const RequestOverview = () => {
                 path="/governance-review-team/:systemId/decision"
                 render={() => <Decision {...systemIntake} />}
               />
+
+              {flags.itgovLinkRequestsAdmin && (
+                <Route
+                  exact
+                  path="/governance-review-team/:systemId/additional-information"
+                >
+                  <AdditionalInformation request={systemIntake} type="itgov" />
+                </Route>
+              )}
+
               <Route
                 path="/governance-review-team/:systemId/lcid"
                 render={() => <LifecycleID systemIntake={systemIntake} />}

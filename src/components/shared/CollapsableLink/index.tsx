@@ -20,6 +20,7 @@ type CollapsableLinkProps = {
   eyeIcon?: boolean;
   startOpen?: boolean;
   labelPosition?: 'top' | 'bottom';
+  bold?: boolean;
 };
 
 const CollapsableLink = ({
@@ -31,7 +32,8 @@ const CollapsableLink = ({
   styleLeftBar = true,
   eyeIcon,
   startOpen = false,
-  labelPosition = 'top'
+  labelPosition = 'top',
+  bold = true
 }: CollapsableLinkProps) => {
   // TODO: should this state instead be held in the parent and passed in as prop?
   // Followup: if the state should remain here, how do we test the component when it's open?
@@ -62,7 +64,7 @@ const CollapsableLink = ({
       aria-controls={id}
       className={classnames(
         'display-flex flex-align-center',
-        { 'text-bold': isOpen },
+        { 'text-bold': isOpen && bold },
         className
       )}
       unstyled
