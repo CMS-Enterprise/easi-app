@@ -703,7 +703,13 @@ const RequestLinkForm = ({
               </h2>
               <p className="margin-y-0">{t('link.skipConfirm.text')}</p>
               <ul className="easi-list margin-top-0">
-                <li>{t('link.skipConfirm.list.0')}</li>
+                <li>
+                  {t(
+                    `${
+                      requestType === 'trb' ? 'technicalAssistance' : 'itGov'
+                    }:link.skipConfirm.list.0`
+                  )}
+                </li>
                 <li>{t('link.skipConfirm.list.1')}</li>
               </ul>
               <ButtonGroup className="margin-top-3">
@@ -738,10 +744,10 @@ const RequestLinkForm = ({
                   {t(
                     `${
                       requestType === 'trb' ? 'technicalAssistance' : 'itGov'
-                    }:link.description`
+                    }:link.skipConfirm.list.0`
                   )}
                 </li>
-                <li>{t('link.unlinkConfirm.list.1')}</li>
+                <li>{t('link.skipConfirm.list.1')}</li>
               </ul>
               <ButtonGroup className="margin-top-3">
                 <Button secondary type="button" onClick={() => unlink()}>

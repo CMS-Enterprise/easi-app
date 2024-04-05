@@ -1127,7 +1127,7 @@ const technicalAssistance = {
         }
       }
     },
-    unlinkConfim: {
+    skipConfirm: {
       list: [
         'The Technical Review Board (TRB) can assist you in a more streamlined and comprehensive manner if they have information about your system, service, or contract.'
       ]
