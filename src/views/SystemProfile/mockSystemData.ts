@@ -53,7 +53,6 @@ export type tempSystemDataProp = {
 
 export const systemData: tempSystemDataProp[] = [
   {
-    id: '1',
     title: 'Beneficiary Information in the Cloud',
     status: 'Active',
     qualityStatus: 'Passed',
