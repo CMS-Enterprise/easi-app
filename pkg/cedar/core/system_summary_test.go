@@ -39,7 +39,32 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 			s.Contains(resp, v)
 		}
 	})
+
+	s.Run("Retrieves filtered list when EUA filter is present", func() {
+		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, true)
+		resp, err := c.GetSystemSummary(ctx, false, WithEuaIDFilter("USR1"))
+		s.NoError(err)
+
+		// ensure filtered mock data is returned
+		s.Equal(len(cedarcoremock.GetFilteredSystems()), len(resp))
+		for _, v := range cedarcoremock.GetFilteredSystems() {
+			s.Contains(resp, v)
+		}
+	})
+
+	s.Run("Retrieves filtered list when Sub-System filter is present", func() {
+		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, true)
+		resp, err := c.GetSystemSummary(ctx, false, WithSubSystems("1"))
+		s.NoError(err)
+
+		// ensure filtered mock data is returned
+		s.Equal(len(cedarcoremock.GetFilteredSystems()), len(resp))
+		for _, v := range cedarcoremock.GetFilteredSystems() {
+			s.Contains(resp, v)
+		}
+	})
 }
+
 func (s *SystemSummaryTestSuite) TestGetSystem() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
