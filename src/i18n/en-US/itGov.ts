@@ -190,8 +190,7 @@ export default {
         'Benefits of linking a request to a system, service, or other contract:'
       ],
       list: [
-        'The Governance Admin Team can assist you in a more streamlined and comprehensive manner if they have information about your system, service, or contract.',
-        'EASi can offer increased capabilities and features such as reminders, updates, and other notifications.'
+        'The Governance Admin Team can assist you in a more streamlined and comprehensive manner if they have information about your system, service, or contract.'
       ],
       submit: 'Unlink',
       cancel: 'Go back and don’t unlink'

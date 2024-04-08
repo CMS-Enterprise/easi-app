@@ -245,6 +245,7 @@ export const emptySystemIntake: SystemIntake = {
   decisionState: SystemIntakeDecisionState.NO_DECISION,
   trbFollowUpRecommendation: null,
   requestFormState: SystemIntakeFormState.IN_PROGRESS,
+  relationType: null,
   contractName: 'My contract',
   contractNumbers: [
     {
@@ -369,6 +370,7 @@ export const systemIntake: SystemIntake = {
   decisionState: SystemIntakeDecisionState.NO_DECISION,
   trbFollowUpRecommendation: null,
   requestFormState: SystemIntakeFormState.SUBMITTED,
+  relationType: null,
   contractName: 'My contract',
   contractNumbers: [
     {
