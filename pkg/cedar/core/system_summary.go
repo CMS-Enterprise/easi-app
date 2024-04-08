@@ -67,7 +67,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, opts ...sy
 	params.SetState(helpers.PointerTo("active"))
 	params.SetIncludeInSurvey(helpers.PointerTo(true))
 
-	// as we add more filters, we can set them here
+	// set additinoal param filters
 	for _, opt := range opts {
 		opt(params)
 	}

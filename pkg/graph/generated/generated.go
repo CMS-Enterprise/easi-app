@@ -310,6 +310,7 @@ type ComplexityRoot struct {
 	CedarSubSystem struct {
 		Acronym     func(childComplexity int) int
 		Description func(childComplexity int) int
+		ID          func(childComplexity int) int
 		Name        func(childComplexity int) int
 	}
 
@@ -2688,6 +2689,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarSubSystem.Description(childComplexity), true
+
+	case "CedarSubSystem.id":
+		if e.complexity.CedarSubSystem.ID == nil {
+			break
+		}
+
+		return e.complexity.CedarSubSystem.ID(childComplexity), true
 
 	case "CedarSubSystem.name":
 		if e.complexity.CedarSubSystem.Name == nil {
@@ -7194,6 +7202,7 @@ type CedarSystem {
 CedarSubSystem represents the response from the /system/detail 
 """
 type CedarSubSystem {
+  id: String!
   name: String!
   acronym: String
   description: String
@@ -19718,6 +19727,50 @@ func (ec *executionContext) fieldContext_CedarSoftwareProducts_usesAiTech(ctx co
 	return fc, nil
 }
 
+func (ec *executionContext) _CedarSubSystem_id(ctx context.Context, field graphql.CollectedField, obj *models.CedarSubSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSubSystem_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalNString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSubSystem_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSubSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CedarSubSystem_name(ctx context.Context, field graphql.CollectedField, obj *models.CedarSubSystem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarSubSystem_name(ctx, field)
 	if err != nil {
@@ -31621,6 +31674,8 @@ func (ec *executionContext) fieldContext_Query_cedarSubSystems(ctx context.Conte
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "id":
+				return ec.fieldContext_CedarSubSystem_id(ctx, field)
 			case "name":
 				return ec.fieldContext_CedarSubSystem_name(ctx, field)
 			case "acronym":
@@ -55042,6 +55097,11 @@ func (ec *executionContext) _CedarSubSystem(ctx context.Context, sel ast.Selecti
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("CedarSubSystem")
+		case "id":
+			out.Values[i] = ec._CedarSubSystem_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "name":
 			out.Values[i] = ec._CedarSubSystem_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
