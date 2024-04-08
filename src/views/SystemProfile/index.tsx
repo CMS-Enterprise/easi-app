@@ -244,6 +244,8 @@ export function getSystemProfileData(
     id: cedarSystem.id,
     ato: cedarAuthorityToOperate,
     atoStatus: getAtoStatus(cedarAuthorityToOperate),
+    budgetSystemCosts: cedarBudgetSystemCost,
+    budgets: cedarBudget,
     businessOwners,
     developmentTags: getDevelopmentTags(cedarSystemDetails),
     locations,
@@ -253,13 +255,11 @@ export function getSystemProfileData(
     personRoles,
     productionLocation,
     status: cedarSystem.status,
+    toolsAndSoftware: cedarSoftwareProducts || undefined,
     usernamesWithRoles,
 
     // Remaining mock data stubs
     activities: mockActivies,
-    toolsAndSoftware: cedarSoftwareProducts || undefined,
-    budgets: cedarBudget,
-    budgetSystemCosts: cedarBudgetSystemCost,
     subSystems: mockSubSystems,
     systemData: mockSystemData
   };
