@@ -189,15 +189,20 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 
 type systemSummaryOpt func(*apisystems.SystemSummaryFindListParams)
 
+// WithEuaIDFilter sets given EUA onto the params
 func WithEuaIDFilter(euaUserId string) systemSummaryOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
 		params.SetUserName(&euaUserId)
 	}
 }
 
+// WithSubSystems sets given cedar system ID as the parent system for which we are looking for sub-systems
 func WithSubSystems(cedarSystemId string) systemSummaryOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
 		params.SetBelongsTo(&cedarSystemId)
-		params.SetIncludeInSurvey(helpers.PointerTo(false))
+
+		// we want all sub systems, not just ones included in the survey
+		// TODO: neither `true` nor `false` function the same as `nil` here - why?
+		params.SetIncludeInSurvey(nil)
 	}
 }
