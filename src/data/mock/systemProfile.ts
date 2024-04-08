@@ -270,6 +270,64 @@ export const result: { data: GetSystemProfile } = {
         __typename: 'CedarAuthorityToOperate'
       }
     ],
+    cedarBudget: [
+      {
+        fiscalYear: '2023',
+        funding:
+          'Most of this funding is directly and only for this system (over 80%)',
+        fundingId: '12345',
+        fundingSource: 'Prog Ops',
+        id: '12345',
+        name: 'Budget Project 1',
+        projectId: '12345',
+        projectTitle: 'Budget X',
+        systemId: '12345',
+        __typename: 'CedarBudget'
+      },
+      {
+        fiscalYear: '2023',
+        funding:
+          'Only part of this funding is directly for this system (less than 40%)',
+        fundingId: '12345',
+        fundingSource: 'Fed Admin',
+        id: '12345',
+        name: 'Budget Project 1',
+        projectId: '12345',
+        projectTitle: 'Budget X',
+        systemId: '12345',
+        __typename: 'CedarBudget'
+      }
+    ],
+    cedarBudgetSystemCost: {
+      budgetActualCost: [
+        {
+          actualSystemCost: '3.50',
+          fiscalYear: '2021',
+          systemId: '1234',
+          __typename: 'CedarBudgetActualCost'
+        },
+        {
+          actualSystemCost: '7',
+          fiscalYear: '2022',
+          systemId: '1235',
+          __typename: 'CedarBudgetActualCost'
+        },
+        {
+          actualSystemCost: '10.50',
+          fiscalYear: '2023',
+          systemId: '1236',
+          __typename: 'CedarBudgetActualCost'
+        },
+        {
+          actualSystemCost: '14',
+          fiscalYear: '2024',
+          systemId: '1237',
+          __typename: 'CedarBudgetActualCost'
+        }
+      ],
+      count: 4,
+      __typename: 'CedarBudgetSystemCost'
+    },
     cedarThreat: [
       {
         weaknessRiskLevel: 'Moderate',
