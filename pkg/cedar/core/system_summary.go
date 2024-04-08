@@ -29,7 +29,7 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 // If `tryCache` is true and `euaUserID` is nil, we will try to hit the cache. Otherwise, we will make an API call as we cannot filter on EUA on our end
-func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, opts ...systemSummaryOpt) ([]*models.CedarSystem, error) {
+func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, opts ...systemSummaryParamFilterOpt) ([]*models.CedarSystem, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 
@@ -42,7 +42,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, opts ...sy
 		return cedarcoremock.GetSystems(), nil
 	}
 
-	// Check and use cache before making API call if `tryCache` is true and there is no `euaUserID` filter
+	// Check and use cache before making API call if `tryCache` is true and there are no filters
 	if tryCache && len(opts) < 1 {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
@@ -85,7 +85,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, opts ...sy
 	}
 
 	// This may look like an odd block of code, but should never expect an empty response from CEDAR with the
-	// hard-coded parameters we have set when we are not filtering by EUA or looking for sub systems.
+	// hard-coded parameters we have set when we are not filtering.
 	// This is defensive programming against this case.
 	if len(resp.Payload.SystemSummary) == 0 && len(opts) < 1 {
 		return []*models.CedarSystem{}, fmt.Errorf("empty response array received")
@@ -187,17 +187,17 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 	return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
 }
 
-type systemSummaryOpt func(*apisystems.SystemSummaryFindListParams)
+type systemSummaryParamFilterOpt func(*apisystems.SystemSummaryFindListParams)
 
 // WithEuaIDFilter sets given EUA onto the params
-func WithEuaIDFilter(euaUserId string) systemSummaryOpt {
+func WithEuaIDFilter(euaUserId string) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
 		params.SetUserName(&euaUserId)
 	}
 }
 
 // WithSubSystems sets given cedar system ID as the parent system for which we are looking for sub-systems
-func WithSubSystems(cedarSystemId string) systemSummaryOpt {
+func WithSubSystems(cedarSystemId string) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
 		params.SetBelongsTo(&cedarSystemId)
 
