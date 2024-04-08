@@ -18,6 +18,7 @@ type CedarSystem struct {
 	VersionID               zero.String `json:"versionId"`
 }
 
+// CedarSubSystem is the model for a sub system that comes back from the CEDAR Core API
 type CedarSubSystem struct {
 	ID          zero.String `json:"id"`
 	Name        zero.String `json:"name"`
