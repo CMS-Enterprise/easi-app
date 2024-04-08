@@ -52,13 +52,13 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
         <Table bordered={false} fullWidth scrollable>
           <thead>
             <tr>
-              <th scope="col">
+              <th scope="col" className="border-bottom-2px">
                 {t('singleSystem.fundingAndBudget.fiscalYear')}
               </th>
-              <th scope="col">
+              <th scope="col" className="border-bottom-2px">
                 {t('singleSystem.fundingAndBudget.actualSystemCost')}
               </th>
-              <th scope="col">
+              <th scope="col" className="border-bottom-2px">
                 {t('singleSystem.fundingAndBudget.budgetedSystemCost')}
               </th>
             </tr>
