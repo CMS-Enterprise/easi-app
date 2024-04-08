@@ -50,11 +50,9 @@ function TechnicalAssistance() {
           <ProcessFlow />
         </Route>
 
-        {flags.trbLinkRequestsRequester && (
-          <Route exact path={`${path}/link/:id?`}>
-            <RequestLinkForm requestType="trb" />
-          </Route>
-        )}
+        <Route exact path={`${path}/link/:id?`}>
+          <RequestLinkForm requestType="trb" />
+        </Route>
 
         {/* Task list after request steps are completed */}
         <Route exact path={`${path}/task-list/:id`}>

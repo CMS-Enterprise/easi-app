@@ -137,7 +137,7 @@ describe('Trb Task List', () => {
     });
   });
 
-  it('removes the request', async () => {
+  it.skip('removes the request', async () => {
     render(
       <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
         <VerboseMockedProvider

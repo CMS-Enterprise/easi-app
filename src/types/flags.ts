@@ -4,7 +4,6 @@ export type Flags = {
   systemProfileHiddenFields: boolean;
   itgovLinkRequestsRequester: boolean;
   itgovLinkRequestsAdmin: boolean;
-  trbLinkRequestsRequester: boolean;
   trbLinkRequestsAdmin: boolean;
   systemWorkspace: boolean;
 };
