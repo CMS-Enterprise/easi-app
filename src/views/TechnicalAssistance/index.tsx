@@ -92,11 +92,9 @@ function TechnicalAssistance() {
         {/* Admin view */}
         <TRBRequestInfoWrapper>
           {/* Defining outside parent route to trigger parent rerender/refetch after mutation */}
-          {flags.trbLinkRequestsAdmin && (
-            <Route path="/trb/:id/additional-information/link">
-              <RequestLinkForm requestType="trb" fromAdmin />
-            </Route>
-          )}
+          <Route path="/trb/:id/additional-information/link">
+            <RequestLinkForm requestType="trb" fromAdmin />
+          </Route>
 
           <Route exact path={`${path}/:id/:activePage`}>
             <AdminHome />

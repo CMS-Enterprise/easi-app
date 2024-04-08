@@ -1,5 +1,6 @@
 import { TrbAdminPage } from 'types/technicalAssistance';
 
+import AdditionalInformation from './components/AdditionalInformation';
 import AdviceLetter from './AdviceLetter';
 import Feedback from './Feedback';
 import InitialRequestForm from './InitialRequestForm';
@@ -33,6 +34,12 @@ const trbAdminPages: TrbAdminPage[] = [
     path: 'advice',
     text: 'technicalAssistance:adminHome.adviceLetter',
     component: AdviceLetter,
+    groupEnd: true
+  },
+  {
+    path: 'additional-information',
+    text: 'technicalAssistance:adminHome.additionalInformation',
+    component: AdditionalInformation,
     groupEnd: true
   },
   {
