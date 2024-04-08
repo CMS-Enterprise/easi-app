@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/guregu/null/zero"
@@ -171,6 +173,24 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 	}
 
 	return retVal, nil
+}
+
+func PurgeRoleCache(cedarSystemID string) error {
+	req, err := http.NewRequest("PURGE", "http://cedarproxy:8001/gateway/CEDAR%20Core%20API/2.0.0/role?application=alfabet&objectId="+url.QueryEscape(cedarSystemID), nil)
+	if err != nil {
+		panic(err)
+	}
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	if res.StatusCode == 404 {
+		fmt.Println("Cache NOT cleared for Roles")
+	}
+	if res.StatusCode == 200 {
+		fmt.Println("Cache SUCCESSFULLY cleared for Roles")
+	}
+	return nil
 }
 
 // GetRoleTypes queries CEDAR for the list of supported role types
@@ -354,6 +374,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		return roleType.Name.String
 	})
 
+	PurgeRoleCache(cedarSystemID)
 	// fetch the system name (likely from cache) and add it to the response
 	system, getSystemErr := c.GetSystem(ctx, cedarSystemID)
 	if getSystemErr != nil {
@@ -418,6 +439,7 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 		}
 		return fmt.Errorf("unknown error")
 	}
+	PurgeRoleCache(cedarSystemID)
 
 	return nil
 }

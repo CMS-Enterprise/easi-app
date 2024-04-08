@@ -43,7 +43,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID 
 	}
 
 	// Check and use cache before making API call if `tryCache` is true and there is no `euaUserID` filter
-	if tryCache && euaUserID == nil {
+	if false && euaUserID == nil {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
 			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
@@ -72,7 +72,11 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID 
 
 	// Make the API call
 	resp, err := c.sdk.System.SystemSummaryFindList(params, c.auth)
+	// req, err := http.NewRequest("PURGE", "http://cedarproxy:8001/gateway/CEDAR%20Core%20API/2.0.0/system/summary?includeInSurvey=true&state=active", nil)
+	// res, err := http.DefaultClient.Do(req)
+	// fmt.Println(res)
 	if err != nil {
+		fmt.Println(err)
 		return []*models.CedarSystem{}, err
 	}
 
@@ -161,22 +165,38 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 		return cedarcoremock.GetSystem(systemID), nil
 	}
 
-	// Try the cache first
-	cachedSystem := c.getSystemFromCache(ctx, systemID)
-	if cachedSystem != nil {
-		return cachedSystem, nil
-	}
+	// // Try the cache first
+	// cachedSystem := c.getSystemFromCache(ctx, systemID)
+	// if cachedSystem != nil {
+	// 	return cachedSystem, nil
+	// }
+	//
+	// // If it's not cached, populate the cache, and try the cache again
+	// err := c.populateSystemSummaryCache(ctx)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	//
+	// // Try the cache again now that we know it is fresh
+	// cachedSystem = c.getSystemFromCache(ctx, systemID)
+	// if cachedSystem != nil {
+	// 	return cachedSystem, nil
+	// }
 
-	// If it's not cached, populate the cache, and try the cache again
-	err := c.populateSystemSummaryCache(ctx)
+	// Get data from API - don't use cache to populate cache!
+	systemSummary, err := c.GetSystemSummary(ctx, false, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	// Try the cache again now that we know it is fresh
-	cachedSystem = c.getSystemFromCache(ctx, systemID)
-	if cachedSystem != nil {
-		return cachedSystem, nil
+	systemSummaryMap := make(map[string]*models.CedarSystem)
+	for _, sys := range systemSummary {
+		if sys != nil {
+			systemSummaryMap[sys.ID.String] = sys
+		}
+	}
+	if sys, found := systemSummaryMap[systemID]; found && sys != nil {
+		return sys, nil
 	}
 
 	// If we still haven't found it after repopulating the cache, then it doesn't exist in CEDAR

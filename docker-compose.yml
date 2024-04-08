@@ -20,7 +20,7 @@ services:
       - CEDAR_CORE_MOCK
       - CEDAR_INTAKE_ENABLED
       - CEDAR_API_KEY
-      - CEDAR_API_URL
+      - CEDAR_API_URL=cedarproxy:8001
       - CEDAR_CORE_API_VERSION
       - CEDAR_CACHE_INTERVAL
       - CEDAR_EMAIL_ADDRESS
@@ -73,6 +73,19 @@ services:
     depends_on:
       db_migrate:
         condition: service_completed_successfully # Only start if migrations completed successfully
+  cedarproxy:
+    # image: nginx:1.22
+    image: nginx-with-cachepurge:v1
+    environment:
+      - CEDAR_API_URL
+      # - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
+      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template
+    build:
+      context: ./nginx/
+      args:
+        ENABLED_MODULES: cachepurge
   easi_client:
     image: easi_client:latest
   minio:

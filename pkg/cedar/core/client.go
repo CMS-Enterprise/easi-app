@@ -37,7 +37,8 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 			httptransport.New(
 				cedarHost,
 				basePath,
-				apiclient.DefaultSchemes,
+				[]string{"http"},
+				// apiclient.DefaultSchemes,
 			),
 			strfmt.Default,
 		),
@@ -53,7 +54,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 		)
 		cacheRefreshTime = cedarCoreCacheDurationDefault
 	}
-	client.startCacheRefresh(ctx, cacheRefreshTime, client.populateSystemSummaryCache)
+	// client.startCacheRefresh(ctx, cacheRefreshTime, client.populateSystemSummaryCache)
 
 	return client
 }
