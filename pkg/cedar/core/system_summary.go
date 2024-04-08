@@ -29,12 +29,12 @@ func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.Ceda
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 // If `tryCache` is true and `euaUserID` is nil, we will try to hit the cache. Otherwise, we will make an API call as we cannot filter on EUA on our end
-func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID *string) ([]*models.CedarSystem, error) {
+func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, opts ...systemSummaryOpt) ([]*models.CedarSystem, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 
 		// Simulate a filter by only returning a subset of the mock systems
-		if euaUserID != nil {
+		if len(opts) > 0 {
 			return cedarcoremock.GetFilteredSystems(), nil
 		}
 
@@ -43,7 +43,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID 
 	}
 
 	// Check and use cache before making API call if `tryCache` is true and there is no `euaUserID` filter
-	if tryCache && euaUserID == nil {
+	if tryCache && len(opts) < 1 {
 		cachedSystemMap := c.getCachedSystemMap(ctx)
 		if cachedSystemMap != nil {
 			cachedSystems := make([]*models.CedarSystem, len(cachedSystemMap))
@@ -62,11 +62,15 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID 
 
 	// Construct the parameters
 	params := apisystems.NewSystemSummaryFindListParams()
+
+	// default filters
 	params.SetState(helpers.PointerTo("active"))
 	params.SetIncludeInSurvey(helpers.PointerTo(true))
 
-	params.SetUserName(euaUserID)
 	// as we add more filters, we can set them here
+	for _, opt := range opts {
+		opt(params)
+	}
 
 	params.HTTPClient = c.hc
 
@@ -81,9 +85,9 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, euaUserID 
 	}
 
 	// This may look like an odd block of code, but should never expect an empty response from CEDAR with the
-	// hard-coded parameters we have set when we are not filtering by EUA.
+	// hard-coded parameters we have set when we are not filtering by EUA or looking for sub systems.
 	// This is defensive programming against this case.
-	if len(resp.Payload.SystemSummary) == 0 && euaUserID == nil {
+	if len(resp.Payload.SystemSummary) == 0 && len(opts) < 1 {
 		return []*models.CedarSystem{}, fmt.Errorf("empty response array received")
 	}
 
@@ -124,7 +128,7 @@ func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
 	appcontext.ZLogger(ctx).Info("Refreshing System Summary cache")
 
 	// Get data from API - don't use cache to populate cache!
-	systemSummary, err := c.GetSystemSummary(ctx, false, nil)
+	systemSummary, err := c.GetSystemSummary(ctx, false)
 	if err != nil {
 		return err
 	}
@@ -181,4 +185,19 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 
 	// If we still haven't found it after repopulating the cache, then it doesn't exist in CEDAR
 	return nil, &apperrors.ResourceNotFoundError{Err: fmt.Errorf("no system found"), Resource: models.CedarSystem{}}
+}
+
+type systemSummaryOpt func(*apisystems.SystemSummaryFindListParams)
+
+func WithEuaIDFilter(euaUserId string) systemSummaryOpt {
+	return func(params *apisystems.SystemSummaryFindListParams) {
+		params.SetUserName(&euaUserId)
+	}
+}
+
+func WithSubSystems(cedarSystemId string) systemSummaryOpt {
+	return func(params *apisystems.SystemSummaryFindListParams) {
+		params.SetBelongsTo(&cedarSystemId)
+		params.SetIncludeInSurvey(helpers.PointerTo(false))
+	}
 }

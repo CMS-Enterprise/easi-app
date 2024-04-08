@@ -148,6 +148,15 @@ type CedarSystem {
 }
 
 """
+CedarSubSystem represents the response from the /system/detail 
+"""
+type CedarSubSystem {
+  name: String!
+  acronym: String
+  description: String
+}
+
+"""
 CedarThreat represents the response from the /threat endpoint from the CEDAR Core API.
 """
 type CedarThreat {
@@ -2367,6 +2376,7 @@ type Query {
   cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem!]!
+  cedarSubSystems(cedarSystemId: String!): [CedarSubSystem]!
   cedarContractsBySystem(cedarSystemId: String!): [CedarContract!]!
   myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
