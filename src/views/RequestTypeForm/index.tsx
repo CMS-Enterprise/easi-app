@@ -10,7 +10,6 @@ import {
   Button
 } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -23,7 +22,6 @@ import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 const RequestTypeForm = () => {
-  const flags = useFlags();
   const { t } = useTranslation('intake');
   const { oktaAuth } = useOktaAuth();
   const history = useHistory();
@@ -49,9 +47,7 @@ const RequestTypeForm = () => {
       mutate({ variables: { input } }).then(response => {
         if (!response.errors) {
           const { id } = response.data.createSystemIntake;
-          const navigationLink = flags.itgovLinkRequestsRequester
-            ? `/system/link/${id}`
-            : `/governance-task-list/${id}`;
+          const navigationLink = `/system/link/${id}`;
 
           switch (requestType) {
             case 'NEW':
