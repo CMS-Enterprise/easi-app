@@ -12,5 +12,10 @@ func DatesEqual(d1, d2 *time.Time) bool {
 	yearsSame := d1.Year() == d2.Year()
 	monthsSame := d1.Month() == d2.Month()
 	daysSame := d1.Day() == d2.Day()
+	t()
 	return yearsSame && monthsSame && daysSame
+}
+
+func t() {
+	_ = 1
 }
