@@ -403,13 +403,18 @@ namespace :gql do
     task :yarn do
       ENV["FORCE_COLOR"] = "true"
 
-      sh "rm -r ./src/queries/types"
       sh "yarn generate"
     end
 
     task :go do
       sh "go generate ./..." do |ok|
-        sh "goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go" if ok
+
+        # check if `goimports` command exists
+        `which goimports`
+        if !$?.success?
+          `go install golang.org/x/tools/cmd/goimports@latest || exit`
+          sh "goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go" if ok
+        end
       end
     end
   end
