@@ -90,7 +90,7 @@ repos:
     hooks:
       - id: check-code-generation
         name: Run GraphQL code generation
-        entry: scripts/dev gql &> /dev/null
+        entry: "scripts/dev gql &> /dev/null"
         language: script
         files: "pkg/graph/schema\\.graphql|pkg/graph/schema\\.resolvers\\.go|src/queries/.*\\.ts"
         pass_filenames: false
