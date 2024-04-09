@@ -20,11 +20,12 @@ COPY cmd/ ./cmd/
 COPY pkg/ ./pkg/
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/easi ./cmd/easi
 
-FROM gcr.io/distroless/base:latest
+FROM scratch
 
 WORKDIR /easi/
 
 COPY --from=base /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=base /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=build /easi/pkg/email/templates ./templates
 COPY --from=build /easi/bin/easi ./
 
