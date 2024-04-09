@@ -137,7 +137,7 @@ describe('Trb Task List', () => {
     });
   });
 
-  it.skip('removes the request', async () => {
+  it('removes the request', async () => {
     render(
       <MemoryRouter initialEntries={[`/trb/task-list/${trbRequestId}`]}>
         <VerboseMockedProvider
@@ -172,10 +172,7 @@ describe('Trb Task List', () => {
 
     userEvent.click(confirm);
 
-    const alert = await screen.findByTestId('alert');
-    expect(alert).toHaveClass('usa-alert--success');
-
-    screen.getByText(
+    await screen.findByText(
       i18next.t<string>('taskList:withdraw_modal:confirmationText', {
         context: 'name',
         requestName: getTrbTasklistQuery.result.data?.trbRequest.name
