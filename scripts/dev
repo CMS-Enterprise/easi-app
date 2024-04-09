@@ -416,7 +416,6 @@ namespace :gql do
 
          sh "goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go" if $?.success?
 
-
         end
       end
     end
