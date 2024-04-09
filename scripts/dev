@@ -412,8 +412,10 @@ namespace :gql do
         # check if `goimports` command exists
         `which goimports`
         if !$?.success?
-          `go install golang.org/x/tools/cmd/goimports@latest || exit`
-          sh "goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go" if ok
+          `go install golang.org/x/tools/cmd/goimports@latest`
+          if $?.success?
+            sh "goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go" if ok
+          end
         end
       end
     end
