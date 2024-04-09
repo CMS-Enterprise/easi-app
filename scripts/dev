@@ -408,14 +408,15 @@ namespace :gql do
 
     task :go do
       sh "go generate ./..." do |ok|
-
-        # check if `goimports` command exists
-        `which goimports`
-        if !$?.success?
-          `go install golang.org/x/tools/cmd/goimports@latest`
-          if $?.success?
-            sh "goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go" if ok
-          end
+        if ok
+         # check if `goimports` command exists
+         `which goimports`
+         if !$?.success?
+           `go install golang.org/x/tools/cmd/goimports@latest`
+           if $?.success?
+             sh "goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go"
+           end
+         end
         end
       end
     end
