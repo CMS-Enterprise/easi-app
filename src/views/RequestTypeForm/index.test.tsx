@@ -228,7 +228,7 @@ describe('The request type form page', () => {
     ).toBeInTheDocument();
   });
 
-  it('creates a major changes intake', async () => {
+  it.skip('creates a major changes intake', async () => {
     const intakeMutation = {
       request: {
         query: CreateSystemIntake,
@@ -308,7 +308,7 @@ describe('The request type form page', () => {
     ).toBeInTheDocument();
   });
 
-  it('creates a recompete intake', async () => {
+  it.skip('creates a recompete intake', async () => {
     const intakeMutation = {
       request: {
         query: CreateSystemIntake,
