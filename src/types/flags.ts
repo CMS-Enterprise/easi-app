@@ -2,7 +2,6 @@ export type Flags = {
   downgradeGovTeam: boolean;
   downgradeTrbAdmin: boolean;
   systemProfileHiddenFields: boolean;
-  itgovLinkRequestsAdmin: boolean;
   trbLinkRequestsAdmin: boolean;
   systemWorkspace: boolean;
 };

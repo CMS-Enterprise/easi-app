@@ -35,7 +35,6 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             downgradeGovTeam: false,
             downgradeTrbAdmin: false,
             systemProfileHiddenFields: false,
-            itgovLinkRequestsAdmin: false,
             trbLinkRequestsAdmin: false,
             systemWorkspace: false
           }
