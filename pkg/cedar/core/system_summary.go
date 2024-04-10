@@ -202,7 +202,7 @@ func WithSubSystems(cedarSystemId string) systemSummaryParamFilterOpt {
 		params.SetBelongsTo(&cedarSystemId)
 
 		// we want all sub systems, not just ones included in the survey
-		// TODO: neither `true` nor `false` function the same as `nil` here - why?
+		// TODO: some systems come back only when `nil` is set and do not come back when `true` or `false` is set - why?
 		params.SetIncludeInSurvey(nil)
 	}
 }
