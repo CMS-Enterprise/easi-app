@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button, GridContainer } from '@trussworks/react-uswds';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -24,7 +23,6 @@ function ProcessFlow() {
   const { t } = useTranslation('technicalAssistance');
   const { state } = useLocation<{ requestType: TRBRequestType }>();
   const history = useHistory();
-  const flags = useFlags();
 
   const requestType = state?.requestType;
 
@@ -36,16 +34,11 @@ function ProcessFlow() {
   // Redirect to task list on sucessful trb request creation
   useEffect(() => {
     if (createResult.data) {
-      history.push(
-        flags.trbLinkRequestsRequester
-          ? `/trb/link/${createResult.data.createTRBRequest.id}`
-          : `/trb/task-list/${createResult.data.createTRBRequest.id}`,
-        {
-          isNew: true
-        }
-      );
+      history.push(`/trb/link/${createResult.data.createTRBRequest.id}`, {
+        isNew: true
+      });
     }
-  }, [createResult, history, flags.trbLinkRequestsRequester]);
+  }, [createResult, history]);
 
   // Redirect to start if `requestType` isn't set
   if (!requestType) return <Redirect to="/trb/start" />;

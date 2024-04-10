@@ -306,7 +306,7 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
   </div>
   <a
     className="usa-button margin-bottom-5"
-    href="/governance-task-list/test-intake-guid"
+    href="/system/link/test-intake-guid"
     onClick={[Function]}
   >
     Get started
