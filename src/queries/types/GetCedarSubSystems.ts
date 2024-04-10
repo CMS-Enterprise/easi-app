@@ -16,7 +16,7 @@ export interface GetCedarSubSystems_cedarSubSystems {
 }
 
 export interface GetCedarSubSystems {
-  cedarSubSystems: (GetCedarSubSystems_cedarSubSystems | null)[];
+  cedarSubSystems: GetCedarSubSystems_cedarSubSystems[];
 }
 
 export interface GetCedarSubSystemsVariables {

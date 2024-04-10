@@ -2377,7 +2377,7 @@ type Query {
   cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem!]!
-  cedarSubSystems(cedarSystemId: String!): [CedarSubSystem]!
+  cedarSubSystems(cedarSystemId: String!): [CedarSubSystem!]!
   cedarContractsBySystem(cedarSystemId: String!): [CedarContract!]!
   myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!

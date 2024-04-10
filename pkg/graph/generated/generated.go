@@ -9428,7 +9428,7 @@ type Query {
   cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem!]!
-  cedarSubSystems(cedarSystemId: String!): [CedarSubSystem]!
+  cedarSubSystems(cedarSystemId: String!): [CedarSubSystem!]!
   cedarContractsBySystem(cedarSystemId: String!): [CedarContract!]!
   myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
@@ -31663,7 +31663,7 @@ func (ec *executionContext) _Query_cedarSubSystems(ctx context.Context, field gr
 	}
 	res := resTmp.([]*models.CedarSubSystem)
 	fc.Result = res
-	return ec.marshalNCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystem(ctx, field.Selections, res)
+	return ec.marshalNCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystemᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_cedarSubSystems(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -63289,7 +63289,7 @@ func (ec *executionContext) marshalNCedarSoftwareProductItem2ᚖgithubᚗcomᚋc
 	return ec._CedarSoftwareProductItem(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystem(ctx context.Context, sel ast.SelectionSet, v []*models.CedarSubSystem) graphql.Marshaler {
+func (ec *executionContext) marshalNCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystemᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarSubSystem) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -63313,7 +63313,7 @@ func (ec *executionContext) marshalNCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsgov�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOCedarSubSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystem(ctx, sel, v[i])
+			ret[i] = ec.marshalNCedarSubSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystem(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -63324,7 +63324,23 @@ func (ec *executionContext) marshalNCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsgov�
 	}
 	wg.Wait()
 
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
 	return ret
+}
+
+func (ec *executionContext) marshalNCedarSubSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystem(ctx context.Context, sel ast.SelectionSet, v *models.CedarSubSystem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CedarSubSystem(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNCedarSystem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarSystem) graphql.Marshaler {
@@ -66473,13 +66489,6 @@ func (ec *executionContext) marshalOCedarSoftwareProducts2ᚖgithubᚗcomᚋcmsg
 		return graphql.Null
 	}
 	return ec._CedarSoftwareProducts(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOCedarSubSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystem(ctx context.Context, sel ast.SelectionSet, v *models.CedarSubSystem) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._CedarSubSystem(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOCedarSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystem(ctx context.Context, sel ast.SelectionSet, v *models.CedarSystem) graphql.Marshaler {
