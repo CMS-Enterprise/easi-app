@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { GridContainer } from '@trussworks/react-uswds';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
@@ -28,7 +27,6 @@ import './index.scss';
 
 function TechnicalAssistance() {
   const { path } = useRouteMatch();
-  const flags = useFlags();
 
   return (
     <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
