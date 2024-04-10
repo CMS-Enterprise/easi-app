@@ -139,7 +139,7 @@ describe('The request type form page', () => {
     screen.getByRole('radio', { name: /major changes/i }).click();
     screen.getByRole('button', { name: /continue/i }).click();
 
-    screen.findByTestId('link-form');
+    await screen.findByTestId('link-form');
   });
 
   it('creates a recompete intake', async () => {
@@ -174,7 +174,7 @@ describe('The request type form page', () => {
     screen.getByRole('radio', { name: /re-compete/i }).click();
     screen.getByRole('button', { name: /continue/i }).click();
 
-    screen.findByTestId('link-form');
+    await screen.findByTestId('link-form');
   });
 
   it('executes request type validations', async () => {
