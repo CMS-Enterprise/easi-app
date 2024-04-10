@@ -22,7 +22,6 @@ import user from 'utils/user';
 import AccordionNavigation from 'views/GovernanceReviewTeam/AccordionNavigation';
 import NotFound from 'views/NotFound';
 
-import AdditionalInformation from './components/AdditionalInformation';
 import Summary from './components/Summary';
 import { TRBRequestContext } from './RequestContext';
 import trbAdminPages from './trbAdminPages';
@@ -44,22 +43,6 @@ const SideNavigation = ({
 }: SideNavProps) => {
   const { t } = useTranslation('technicalAssistance');
 
-  const flags = useFlags();
-
-  // Can remove useMemo and hardcode once flag is not needed
-  const adminPages = useMemo(() => {
-    const pagesWithAdditionalInformation = [...trbAdminPages];
-    if (flags.trbLinkRequestsAdmin) {
-      pagesWithAdditionalInformation.splice(5, 0, {
-        path: 'additional-information',
-        text: 'technicalAssistance:adminHome.additionalInformation',
-        component: AdditionalInformation,
-        groupEnd: true
-      });
-    }
-    return pagesWithAdditionalInformation;
-  }, [flags.trbLinkRequestsAdmin]);
-
   return (
     <nav>
       <ul className="trb-admin__nav-list usa-list usa-list--unstyled">
@@ -69,7 +52,7 @@ const SideNavigation = ({
             {t('adminHome.backToRequests')}
           </Link>
         </li>
-        {adminPages.map(({ path, text, groupEnd }) => {
+        {trbAdminPages.map(({ path, text, groupEnd }) => {
           return (
             <li
               key={text}
@@ -97,20 +80,6 @@ export default function AdminHome() {
   const { t } = useTranslation('technicalAssistance');
 
   const flags = useFlags();
-
-  // Can remove useMemo and hardcode once flag is not needed
-  const adminPages = useMemo(() => {
-    const pagesWithAdditionalInformation = [...trbAdminPages];
-    if (flags.trbLinkRequestsAdmin) {
-      pagesWithAdditionalInformation.splice(5, 0, {
-        path: 'additional-information',
-        text: 'technicalAssistance:adminHome.additionalInformation',
-        component: AdditionalInformation,
-        groupEnd: true
-      });
-    }
-    return pagesWithAdditionalInformation;
-  }, [flags.trbLinkRequestsAdmin]);
 
   // Get url params
   const { id, activePage } = useParams<{
@@ -191,7 +160,7 @@ export default function AdminHome() {
       {/* Accordion navigation for tablet and mobile */}
       <AccordionNavigation
         activePage={activePage}
-        subNavItems={adminPages.map(({ path, text, groupEnd }) => ({
+        subNavItems={trbAdminPages.map(({ path, text, groupEnd }) => ({
           text,
           route: `/trb/${id}/${path}`,
           groupEnd
@@ -213,7 +182,7 @@ export default function AdminHome() {
 
           {/* Page component */}
           <Grid col desktop={{ col: 9 }}>
-            {adminPages.map(subpage => (
+            {trbAdminPages.map(subpage => (
               <Route
                 exact
                 path={`/trb/${id}/${subpage.path as string}`}

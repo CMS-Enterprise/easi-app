@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { GridContainer } from '@trussworks/react-uswds';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MainContent from 'components/MainContent';
 import { NotFoundPartial } from 'views/NotFound';
@@ -28,7 +27,6 @@ import './index.scss';
 
 function TechnicalAssistance() {
   const { path } = useRouteMatch();
-  const flags = useFlags();
 
   return (
     <MainContent className="technical-assistance margin-bottom-5 desktop:margin-bottom-10">
@@ -90,11 +88,9 @@ function TechnicalAssistance() {
         {/* Admin view */}
         <TRBRequestInfoWrapper>
           {/* Defining outside parent route to trigger parent rerender/refetch after mutation */}
-          {flags.trbLinkRequestsAdmin && (
-            <Route path="/trb/:id/additional-information/link">
-              <RequestLinkForm requestType="trb" fromAdmin />
-            </Route>
-          )}
+          <Route path="/trb/:id/additional-information/link">
+            <RequestLinkForm requestType="trb" fromAdmin />
+          </Route>
 
           <Route exact path={`${path}/:id/:activePage`}>
             <AdminHome />

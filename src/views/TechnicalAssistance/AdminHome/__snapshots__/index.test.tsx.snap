@@ -303,6 +303,17 @@ exports[`TRB admin home > matches the snapshot 1`] = `
                 </a>
               </li>
               <li
+                class="trb-admin__nav-link trb-admin__nav-link--border"
+              >
+                <a
+                  href="/trb/d8ebedca-0031-4ccd-9690-37390726c50e/additional-information"
+                >
+                  <span>
+                    Additional information
+                  </span>
+                </a>
+              </li>
+              <li
                 class="trb-admin__nav-link"
               >
                 <a
