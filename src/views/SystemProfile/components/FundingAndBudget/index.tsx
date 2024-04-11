@@ -111,7 +111,7 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
             {system.budgets?.slice(0, capEnd).map(budget => (
               <Card
                 key={budget.id}
-                data-testid="system-card"
+                data-testid="budget-project-card"
                 className="grid-col-12"
               >
                 <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
@@ -191,7 +191,7 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
                   ) : (
                     <DescriptionDefinition
                       className="font-body-md line-height-body-4 margin-bottom-2"
-                      definition={budget.funding}
+                      definition={t('singleSystem.noDataAvailable')}
                     />
                   )}
                 </CardFooter>
@@ -207,14 +207,9 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
                 setIsExpanded(!isExpanded);
               }}
             >
-              {t(
-                `singleSystem.toolsAndSoftware.view${
-                  isExpanded ? 'Less' : 'More'
-                }`,
-                {
-                  count: budgetItemsLeft
-                }
-              )}
+              {isExpanded
+                ? t('singleSystem.fundingAndBudget.viewLessFunding')
+                : t('singleSystem.fundingAndBudget.viewMoreFunding')}
               <IconExpandMore
                 className="margin-left-05 margin-bottom-2px text-tbottom"
                 style={{
