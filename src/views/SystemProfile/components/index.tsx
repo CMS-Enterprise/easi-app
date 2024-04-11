@@ -80,6 +80,11 @@ const sideNavItems = (
           route: `/systems/${system.id}/ato`,
           componentId: 'ato'
         },
+        'funding-and-budget': {
+          component: <FundingAndBudget system={system} />,
+          route: `/systems/${system.id}/funding-and-budget`,
+          componentId: 'funding-and-budget'
+        },
         'tools-and-software': {
           groupEnd: true,
           component: <ToolsAndSoftware system={system} />,
@@ -109,11 +114,6 @@ const sideNavItems = (
           component: <Contracts system={system} />,
           route: `/systems/${system.id}/contracts`,
           componentId: 'contracts'
-        },
-        'funding-and-budget': {
-          component: <FundingAndBudget system={system} />,
-          route: `/systems/${system.id}/funding-and-budget`,
-          componentId: 'funding-and-budget'
         },
         ato: {
           component: <ATO system={system} />,
