@@ -231,3 +231,6 @@ const OKTAAPIURL = "OKTA_API_URL"
 // OKTAAPIToken is the key for the Okta API token
 // #nosec G101 false positive - not the actual API key itself
 const OKTAAPIToken = "OKTA_API_TOKEN"
+
+// RedisConnectionURI is the key to connect to a redis instance
+const RedisConnectionURI = "REDIS_CONNECTION_URI"

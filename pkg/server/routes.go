@@ -24,6 +24,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
+	"github.com/cmsgov/easi-app/pkg/cache"
 	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/oktaapi"
 	"github.com/cmsgov/easi-app/pkg/usersearch"
@@ -92,6 +93,12 @@ func (s *Server) routes(
 	// endpoints that dont require authorization go directly on the main router
 	s.router.HandleFunc("/api/v1/healthcheck", handlers.NewHealthCheckHandler(base, s.Config).Handle())
 	s.router.HandleFunc("/api/graph/playground", playground.Handler("GraphQL playground", "/api/graph/query"))
+
+	// start the connection to the redis instance
+	cache.CreateCacheConnection(
+		appcontext.WithLogger(context.Background(), s.logger),
+		s.Config.GetString(appconfig.RedisConnectionURI),
+	)
 
 	// set up CEDAR intake client
 	publisher := cedarintake.NewClient(

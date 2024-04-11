@@ -173,6 +173,16 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 	return retVal, nil
 }
 
+const roleCacheKeyPrefix = "CEDARRoleForSystemID-"
+
+func getCachedCedarRolesBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarRole, error) {
+	return nil, nil
+}
+
+func setCachedCedarRolesBySystem(ctx context.Context, cedarSystemID string, roles []*models.CedarRole) error {
+	return nil
+}
+
 // GetRoleTypes queries CEDAR for the list of supported role types
 func (c *Client) GetRoleTypes(ctx context.Context) ([]*models.CedarRoleType, error) {
 	if c.mockEnabled {

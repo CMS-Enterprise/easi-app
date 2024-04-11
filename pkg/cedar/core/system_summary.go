@@ -8,6 +8,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/cache"
 	apisystems "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system"
 	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
@@ -19,12 +20,11 @@ const (
 )
 
 func (c *Client) getCachedSystemMap(ctx context.Context) map[string]*models.CedarSystem {
-	cachedStruct, found := c.cache.Get(systemSummaryCacheKey)
-	if found {
-		cachedSystemMap := cachedStruct.(map[string]*models.CedarSystem)
-		return cachedSystemMap
+	cachedSystemMap, err := cache.Get[map[string]*models.CedarSystem](ctx, systemSummaryCacheKey)
+	if err != nil {
+		return nil
 	}
-	return nil
+	return cachedSystemMap
 }
 
 // GetSystemSummary makes a GET call to the /system/summary endpoint
@@ -137,7 +137,11 @@ func (c *Client) populateSystemSummaryCache(ctx context.Context) error {
 	}
 
 	// Set in cache
-	c.cache.SetDefault(systemSummaryCacheKey, systemSummaryMap)
+	// c.cache.SetDefault(systemSummaryCacheKey, systemSummaryMap)
+	err = cache.Set(ctx, systemSummaryCacheKey, systemSummaryMap, nil)
+	if err != nil {
+		return err
+	}
 
 	appcontext.ZLogger(ctx).Info("Refreshed System Summary cache")
 
