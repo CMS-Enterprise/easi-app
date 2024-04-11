@@ -22,6 +22,7 @@ export default gql`
       adminNotes {
         id
       }
+      relationType
       contractName
       contractNumbers {
         id
