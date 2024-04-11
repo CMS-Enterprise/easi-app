@@ -69,12 +69,20 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
               .map(budgetRow => {
                 return (
                   <tr>
-                    <td>{budgetRow.fiscalYear}</td>
                     <td>
-                      {formatDollars(
-                        Math.trunc(Number(budgetRow.actualSystemCost))
-                      )}
+                      {budgetRow.fiscalYear
+                        ? budgetRow.fiscalYear
+                        : t('singleSystem.noDataAvailable')}
                     </td>
+                    <td>
+                      {budgetRow.actualSystemCost
+                        ? formatDollars(
+                            Math.trunc(Number(budgetRow.actualSystemCost))
+                          )
+                        : t('singleSystem.noDataAvailable')}
+                    </td>
+                    {/* NOTE: There is no way of getting this info given the current status of the CEDAR endpoint but this data could potentially be made avaialble
+                              through the API or a future connection with CALM. Talked with UX and made the decision to leave in the column as permanently unavailable */}
                     <td>{t('singleSystem.noDataAvailable')}</td>
                   </tr>
                 );
@@ -139,9 +147,16 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
                   )}
                 </CardHeader>
                 <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
-                  <h3 className="margin-top-0 margin-bottom-1">
-                    {budget.projectTitle}
-                  </h3>
+                  {budget.projectTitle ? (
+                    <h3 className="margin-top-0 margin-bottom-1">
+                      {budget.projectTitle}
+                    </h3>
+                  ) : (
+                    <h3 className="margin-top-0 margin-bottom-1">
+                      {t('singleSystem.fundingAndBudget.noBudgetTitle')}
+                    </h3>
+                  )}
+
                   <Grid col className="margin-bottom-2">
                     <DescriptionTerm
                       className="margin-top-1"
@@ -168,10 +183,17 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
                       'singleSystem.fundingAndBudget.percentageOfFunding'
                     )}
                   />
-                  <DescriptionDefinition
-                    className="font-body-md line-height-body-4 margin-bottom-2"
-                    definition={budget.funding}
-                  />
+                  {budget.funding ? (
+                    <DescriptionDefinition
+                      className="font-body-md line-height-body-4 margin-bottom-2"
+                      definition={budget.funding}
+                    />
+                  ) : (
+                    <DescriptionDefinition
+                      className="font-body-md line-height-body-4 margin-bottom-2"
+                      definition={budget.funding}
+                    />
+                  )}
                 </CardFooter>
               </Card>
             ))}

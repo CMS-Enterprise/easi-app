@@ -126,7 +126,7 @@ const systemProfile = {
         'There is no system cost information available for this system',
       fundingSource: 'Funding Source',
       budgetID: 'Budget ID: ',
-      noBudgetID: 'No Budget ID listed',
+      noBudgetTitle: 'No budget title listed',
       systemFiscalYear: 'System fiscal year (FY) cost',
       viewMoreFunding: 'View more funding and budget information'
     },

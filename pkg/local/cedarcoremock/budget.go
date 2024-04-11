@@ -29,6 +29,17 @@ var mockBudgets = []*models.CedarBudget{
 		ProjectTitle:  zero.StringFrom("Budget X"),
 		SystemID:      zero.StringFrom("12345"),
 	},
+	{
+		FiscalYear:    zero.StringFrom(""),
+		Funding:       zero.StringFrom(""),
+		FundingID:     zero.StringFrom(""),
+		FundingSource: zero.StringFrom(""),
+		ID:            zero.StringFrom(""),
+		Name:          zero.StringFrom(""),
+		ProjectID:     zero.StringFrom("12345"),
+		ProjectTitle:  zero.StringFrom(""),
+		SystemID:      zero.StringFrom(""),
+	},
 }
 
 // GetBudgets returns a mock Budget
