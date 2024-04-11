@@ -44,7 +44,6 @@ export default gql`
         fiscalYear
         systemId
       }
-      count
     }
     cedarThreat(cedarSystemId: $cedarSystemId) {
       weaknessRiskLevel

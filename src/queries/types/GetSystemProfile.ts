@@ -41,7 +41,6 @@ export interface GetSystemProfile_cedarBudgetSystemCost_budgetActualCost {
 export interface GetSystemProfile_cedarBudgetSystemCost {
   __typename: "CedarBudgetSystemCost";
   budgetActualCost: GetSystemProfile_cedarBudgetSystemCost_budgetActualCost[];
-  count: number;
 }
 
 export interface GetSystemProfile_cedarThreat {

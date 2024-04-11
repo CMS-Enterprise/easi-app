@@ -66,7 +66,6 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
           <tbody>
             {system.budgetSystemCosts?.budgetActualCost
               .concat()
-              .reverse() // Reversed to show years in descending order
               .map(budgetRow => {
                 return (
                   <tr>

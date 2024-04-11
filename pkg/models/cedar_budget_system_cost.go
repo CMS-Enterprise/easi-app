@@ -14,6 +14,5 @@ type BudgetActualCost struct {
 
 type CedarBudgetSystemCost struct {
 	// Always present fields
-	Count             int32               `json:"count"`
 	BudgetActualCosts []*BudgetActualCost `json:"budgetActualCosts"`
 }

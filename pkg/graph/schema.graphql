@@ -119,7 +119,6 @@ Right now, this does not tie in with any other types defined here, and is a root
 """
 type CedarBudgetSystemCost {
   budgetActualCost: [CedarBudgetActualCost!]!
-  count: Int!
 }
 
 """

@@ -325,7 +325,6 @@ export const result: { data: GetSystemProfile } = {
           __typename: 'CedarBudgetActualCost'
         }
       ],
-      count: 4,
       __typename: 'CedarBudgetSystemCost'
     },
     cedarThreat: [

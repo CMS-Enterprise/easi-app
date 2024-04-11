@@ -3,6 +3,7 @@ package cedarcore
 import (
 	"context"
 	"fmt"
+	"sort"
 
 	"github.com/guregu/null/zero"
 
@@ -12,7 +13,12 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// GetBudgetSystemCostBySystem queries CEDAR for budget system cost information associated with a particular system, taking the version-independent ID of a system
+/*
+GetBudgetSystemCostBySystem queries CEDAR for budget system cost information associated with a particular system,
+taking the version-independent ID of a system.
+
+NOTE: This function sorts the data returned by CEDAR to ensure ordering by descending FiscalYear
+*/
 func (c *Client) GetBudgetSystemCostBySystem(ctx context.Context, cedarSystemID string) (*models.CedarBudgetSystemCost, error) {
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
@@ -31,10 +37,6 @@ func (c *Client) GetBudgetSystemCostBySystem(ctx context.Context, cedarSystemID 
 	// Construct the parameters
 	params.SetSystemID(cedarSystem.VersionID.Ptr())
 	params.HTTPClient = c.hc
-
-	if err != nil {
-		return nil, err
-	}
 
 	// Make the API call
 	// resp, err := c.sdk.Budget.BudgetFind(params, c.auth)
@@ -62,9 +64,14 @@ func (c *Client) GetBudgetSystemCostBySystem(ctx context.Context, cedarSystemID 
 		})
 	}
 
+	// Sort the slice to ensure ordering by descending FiscalYear.
+	// This may produce weird ordering/grouping if some of the strings returned by CEDAR are not actually numbers
+	sort.Slice(budgetActualCosts[:], func(i, j int) bool {
+		return budgetActualCosts[i].FiscalYear.String > budgetActualCosts[j].FiscalYear.String
+	})
+
 	// Convert the rest of the parent CedarBudgetSystemCost object
 	retVal := &models.CedarBudgetSystemCost{
-		Count:             *resp.Payload.Count,
 		BudgetActualCosts: budgetActualCosts,
 	}
 

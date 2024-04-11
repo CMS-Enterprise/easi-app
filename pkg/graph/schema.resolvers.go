@@ -10,6 +10,12 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/guregu/null"
+	"github.com/vektah/gqlparser/v2/gqlerror"
+	"go.uber.org/zap"
+	"golang.org/x/sync/errgroup"
+
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/authentication"
@@ -21,11 +27,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
-	"github.com/google/uuid"
-	"github.com/guregu/null"
-	"github.com/vektah/gqlparser/v2/gqlerror"
-	"go.uber.org/zap"
-	"golang.org/x/sync/errgroup"
 )
 
 // AlternativeASolution is the resolver for the alternativeASolution field.

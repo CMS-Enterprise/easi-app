@@ -31,7 +31,7 @@ var mockBudgets = []*models.CedarBudget{
 	},
 }
 
-// GetATOs returns a mock ATO
+// GetBudgets returns a mock Budget
 func GetBudgets() []*models.CedarBudget {
 	return mockBudgets
 }
