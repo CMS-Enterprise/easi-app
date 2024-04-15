@@ -374,7 +374,10 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		return roleType.Name.String
 	})
 
-	PurgeRoleCache(cedarSystemID)
+	err = PurgeRoleCache(cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
 	// fetch the system name (likely from cache) and add it to the response
 	system, getSystemErr := c.GetSystem(ctx, cedarSystemID)
 	if getSystemErr != nil {
@@ -439,7 +442,10 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 		}
 		return fmt.Errorf("unknown error")
 	}
-	PurgeRoleCache(cedarSystemID)
+	err = PurgeRoleCache(cedarSystemID)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

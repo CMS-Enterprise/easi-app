@@ -10,7 +10,6 @@ import {
   Link,
   ModalHeading
 } from '@trussworks/react-uswds';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 import { kebabCase } from 'lodash';
 import { DateTime } from 'luxon';
 
@@ -48,7 +47,6 @@ import NotFoundPartial from 'views/NotFound/NotFoundPartial';
 import Breadcrumbs from './Breadcrumbs';
 
 function TaskList() {
-  const flags = useFlags();
   const { t } = useTranslation('technicalAssistance');
   const requestTypeText = t<Record<string, { heading: string }>>(
     'requestType.type',
@@ -405,13 +403,11 @@ function TaskList() {
                 </Button>
               </div>
 
-              {flags.trbLinkRequestsRequester && (
-                <AdditionalRequestInfo
-                  {...data.trbRequest}
-                  id={id}
-                  requestType="trb"
-                />
-              )}
+              <AdditionalRequestInfo
+                {...data.trbRequest}
+                id={id}
+                requestType="trb"
+              />
 
               <h4 className="line-height-body-2 margin-top-3 margin-bottom-1">
                 {t('taskList.additionalHelp')}
