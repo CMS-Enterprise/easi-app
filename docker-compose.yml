@@ -74,18 +74,13 @@ services:
       db_migrate:
         condition: service_completed_successfully # Only start if migrations completed successfully
   cedarproxy:
-    # image: nginx:1.22
-    image: nginx-with-cachepurge:v1
+    image: varnish:latest
     environment:
-      - CEDAR_API_URL
-      # - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
-      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template
-    build:
-      context: ./nginx/
-      args:
-        ENABLED_MODULES: cachepurge
+      - VARNISH_BACKEND_PORT=443
+      - VARNISH_BACKEND_ADDRESS=webmethods-apigw.cedarimpl.cms.gov
+      - VARNISH_HTTP_PORT=8001
+    # volumes:
+    #   - ./varnish/default.vcl:/etc/varnish/default.vcl
   easi_client:
     image: easi_client:latest
   minio:
