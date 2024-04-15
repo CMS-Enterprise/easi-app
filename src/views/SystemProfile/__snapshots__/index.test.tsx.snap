@@ -286,6 +286,16 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                   class="usa-sidenav__item"
                 >
                   <a
+                    class=""
+                    href="/systems/000-100-0/funding-and-budget"
+                  >
+                    Funding and Budget
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
                     class="nav-group-border"
                     href="/systems/000-100-0/tools-and-software"
                   >

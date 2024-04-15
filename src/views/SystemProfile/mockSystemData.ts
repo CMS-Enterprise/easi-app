@@ -1,11 +1,6 @@
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 
 // Temporary extension of CEDAR types under BE integration complete
-export type tempBudgetProp = {
-  id: string;
-  title: string;
-  comment: string;
-};
 
 export type tempProductsProp = {
   id: string;
@@ -116,14 +111,6 @@ export const activities: tempATOProp[] = [
     status: 'Not started',
     activityOwner: 'Jane Doe',
     dueDate: '2/22/2022'
-  }
-];
-
-export const budgetsInfo: tempBudgetProp[] = [
-  {
-    id: '1234567',
-    title: 'HAM Project funding',
-    comment: 'Most of this funding is directly and only for this system (80%)'
   }
 ];
 

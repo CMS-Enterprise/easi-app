@@ -18,6 +18,14 @@ type CedarSystem struct {
 	VersionID               zero.String `json:"versionId"`
 }
 
+// CedarSubSystem is the model for a sub system that comes back from the CEDAR Core API
+type CedarSubSystem struct {
+	ID          zero.String `json:"id"`
+	Name        zero.String `json:"name"`
+	Description zero.String `json:"description"`
+	Acronym     zero.String `json:"acronym"`
+}
+
 // BusinessOwnerInformation contains information about the business owner for a CEDAR system
 type BusinessOwnerInformation struct {
 	BeneficiaryAddressPurpose      []zero.String `json:"beneficiaryAddressPurpose"`
