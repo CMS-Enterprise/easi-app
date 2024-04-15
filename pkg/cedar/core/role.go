@@ -12,6 +12,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/cache"
 	apiroles "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
 	apimodels "github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
 	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
@@ -92,6 +93,14 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 		return nil, cedarcoremock.NoSystemFoundError()
 	}
 
+	cachedRoles, err := getCachedCedarRolesBySystem(ctx, cedarSystemID, roleTypeID)
+	if err != nil {
+		return nil, err
+	}
+	if cachedRoles != nil {
+		return cachedRoles, nil
+	}
+
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
 	if err != nil {
 		return nil, err
@@ -170,17 +179,43 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 		retVal = append(retVal, retRole)
 	}
 
+	err = setCachedCedarRolesBySystem(ctx, cedarSystemID, roleTypeID, retVal)
+	if err != nil {
+		return retVal, err
+	}
+
 	return retVal, nil
 }
 
-const roleCacheKeyPrefix = "CEDARRoleForSystemID-"
+func makeRolesCacheKey(cedarSystemID string, roleTypeID *string) string {
+	const roleCacheKeyPrefix = "CEDARRolesForSystemID-"
 
-func getCachedCedarRolesBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarRole, error) {
-	return nil, nil
+	cacheKey := roleCacheKeyPrefix + cedarSystemID
+
+	if roleTypeID != nil {
+		cacheKey += "-" + *roleTypeID
+	}
+
+	return cacheKey
 }
 
-func setCachedCedarRolesBySystem(ctx context.Context, cedarSystemID string, roles []*models.CedarRole) error {
-	return nil
+func getCachedCedarRolesBySystem(ctx context.Context, cedarSystemID string, roleTypeID *string) ([]*models.CedarRole, error) {
+	cacheKey := makeRolesCacheKey(cedarSystemID, roleTypeID)
+	roles, err := cache.Get[[]*models.CedarRole](ctx, cacheKey)
+	if err != nil {
+		return nil, err
+	}
+	return roles, nil
+}
+
+func setCachedCedarRolesBySystem(ctx context.Context, cedarSystemID string, roleTypeID *string, roles []*models.CedarRole) error {
+	cacheKey := makeRolesCacheKey(cedarSystemID, roleTypeID)
+	return cache.Set(ctx, cacheKey, roles, nil)
+}
+
+func deleteCachedCedarRolesBySystem(ctx context.Context, cedarSystemID string) error {
+	cacheKey := makeRolesCacheKey(cedarSystemID, nil)
+	return cache.DeleteAll(ctx, cacheKey)
 }
 
 // GetRoleTypes queries CEDAR for the list of supported role types
@@ -364,6 +399,10 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		return roleType.Name.String
 	})
 
+	err = deleteCachedCedarRolesBySystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
 	// fetch the system name (likely from cache) and add it to the response
 	system, getSystemErr := c.GetSystem(ctx, cedarSystemID)
 	if getSystemErr != nil {
@@ -429,6 +468,10 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 		return fmt.Errorf("unknown error")
 	}
 
+	err = deleteCachedCedarRolesBySystem(ctx, cedarSystemID)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -66,3 +66,33 @@ func Set(ctx context.Context, key string, val any, opts *CacheSetOptions) error 
 	}
 	return nil
 }
+
+func Delete(ctx context.Context, key string) error {
+	_, err := client.Del(ctx, key).Result()
+	if err == redis.Nil {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func DeleteAll(ctx context.Context, keyPrefix string) error {
+	var keys []string
+	iter := client.Scan(ctx, 0, keyPrefix, 0).Iterator()
+	for iter.Next(ctx) {
+		keys = append(keys, iter.Val())
+	}
+	if err := iter.Err(); err != nil {
+		return err
+	}
+	_, err := client.Del(ctx, keys...).Result()
+	if err == redis.Nil {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	return nil
+}
