@@ -24,7 +24,7 @@ func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*mo
 		return &models.CedarSystemDetails{
 			CedarSystem:                 mocksys,
 			BusinessOwnerInformation:    &models.BusinessOwnerInformation{},
-			SystemMaintainerInformation: &models.SystemMaintainerInformation{},
+			SystemMaintainerInformation: cedarcoremock.GetSystemMaintainerInformation(cedarSystemID),
 		}, nil
 	}
 
