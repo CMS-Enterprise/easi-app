@@ -179,7 +179,7 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
       class="margin-top-4 margin-bottom-1"
       id="development"
     >
-      Development and AI
+      Development
     </h2>
     <span
       class="easi-tag system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
