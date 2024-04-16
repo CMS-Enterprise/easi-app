@@ -761,6 +761,12 @@ export const result: { data: GetSystemProfile } = {
           'Continued enhancements and improvements and alignment with legislative changes.  Also, working on an upcoming redesign effort for the website.',
         netAccessibility:
           'Accessible to both public internet and to CMS-internal network',
+        ecapParticipation: true,
+        frontendAccessType: 'IPv4 only',
+        ipEnabledAssetCount: 21,
+        ip6TransitionPlan: 'This system will be transitioned to IPv6',
+        ip6EnabledAssetPercent: '25%',
+        hardCodedIPAddress: true,
         __typename: 'CedarSystemMaintainerInformation'
       },
       __typename: 'CedarSystemDetails'

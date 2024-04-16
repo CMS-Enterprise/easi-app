@@ -299,12 +299,14 @@ const systemProfile = {
       technologyTypes: 'AI Technology types',
       noURL: 'This system does not have URLS',
       noEnvironmentURL: 'This environment does not have a url',
+
       ipInfo: 'IP Information',
-      currentIP: 'Current IP access',
+      currentIP: 'Current front end access type',
       ipAssets: 'Number of IP-enabled assets',
       ipv6Transition: 'IPv6 transition',
       percentTransitioned: 'Percent transitioned to IPv6',
       hardCodedIP: 'Hard-coded IP addresses',
+
       moreURLs_nocount: 'View URLs',
       moreURLs: 'View {{count}} more URL',
       moreURLs_plural: 'View {{count}} more URLs'

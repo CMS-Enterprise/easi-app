@@ -257,7 +257,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
       </SectionWrapper>
 
       <SectionWrapper
-        borderBottom={flags.systemProfileHiddenFields || isMobile}
+        borderBottom
         className={
           flags.systemProfileHiddenFields
             ? 'padding-bottom-5 margin-bottom-4'
@@ -365,64 +365,58 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
         </Grid>
       </SectionWrapper>
 
-      {flags.systemProfileHiddenFields && (
-        <SectionWrapper borderBottom={isMobile} className="margin-bottom-5">
-          <h2 className="margin-top-3 margin-bottom-1">
-            {t('singleSystem.systemDetails.ipInfo')}
-          </h2>
+      <SectionWrapper borderBottom={isMobile} className="margin-bottom-5">
+        <h2 id="ip" className="margin-top-3 margin-bottom-1">
+          {t('singleSystem.systemDetails.ipInfo')}
+        </h2>
 
-          {/* TODO: Map defined CEDAR variable once availabe */}
-          <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
-            <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
-            E-CAP Initiative
-          </Tag>
+        {/* TODO: Map defined CEDAR variable once availabe */}
+        <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
+          <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
+          E-CAP Initiative
+        </Tag>
 
-          {/* TODO: Map and populate tags with CEDAR */}
-          <Grid row className="margin-top-2">
-            <Grid desktop={{ col: 6 }} className="padding-right-2">
-              <DescriptionTerm
-                term={t('singleSystem.systemDetails.currentIP')}
-              />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="IPv4 only"
-              />
-              <DescriptionTerm
-                term={t('singleSystem.systemDetails.ipAssets')}
-              />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="This system will be transitioned to IPv6"
-              />
-            </Grid>
-            <Grid desktop={{ col: 6 }} className="padding-right-2">
-              <DescriptionTerm
-                term={t('singleSystem.systemDetails.ipv6Transition')}
-              />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="21"
-              />
-              <DescriptionTerm
-                term={t('singleSystem.systemDetails.percentTransitioned')}
-              />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="25%"
-              />
-            </Grid>
-            <Grid desktop={{ col: 6 }} className="padding-right-2">
-              <DescriptionTerm
-                term={t('singleSystem.systemDetails.hardCodedIP')}
-              />
-              <DescriptionDefinition
-                className="line-height-body-3 margin-bottom-4"
-                definition="This system has hard-coded IP addresses"
-              />
-            </Grid>
+        {/* TODO: Map and populate tags with CEDAR */}
+        <Grid row className="margin-top-2">
+          <Grid desktop={{ col: 6 }} className="padding-right-2">
+            <DescriptionTerm term={t('singleSystem.systemDetails.currentIP')} />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition="IPv4 only"
+            />
+            <DescriptionTerm
+              term={t('singleSystem.systemDetails.ipv6Transition')}
+            />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition="This system will be transitioned to IPv6"
+            />
           </Grid>
-        </SectionWrapper>
-      )}
+          <Grid desktop={{ col: 6 }} className="padding-right-2">
+            <DescriptionTerm term={t('singleSystem.systemDetails.ipAssets')} />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition="21"
+            />
+            <DescriptionTerm
+              term={t('singleSystem.systemDetails.percentTransitioned')}
+            />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition="25%"
+            />
+          </Grid>
+          <Grid desktop={{ col: 6 }} className="padding-right-2">
+            <DescriptionTerm
+              term={t('singleSystem.systemDetails.hardCodedIP')}
+            />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition="This system has hard-coded IP addresses"
+            />
+          </Grid>
+        </Grid>
+      </SectionWrapper>
     </>
   );
 };

@@ -56,13 +56,11 @@ const sideNavItems = (
             {
               name: i18next.t<string>('systemProfile:navigation.detailsDev'),
               hash: '#development'
-            }
-            /*
+            },
             {
               name: i18next.t<string>('systemProfile:navigation.detailsIp'),
               hash: '#ip'
             }
-            */
           ]
         },
         team: {
