@@ -92,7 +92,7 @@
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "generate": "apollo client:codegen --passthroughCustomScalars --localSchemaFile=pkg/graph/schema.graphql --target typescript  --tagName=gql --addTypename --globalTypesFile=src/types/graphql-global-types.ts types",
+    "generate": "rm -rf src/queries/types && apollo client:codegen --passthroughCustomScalars --localSchemaFile=pkg/graph/schema.graphql --target typescript  --tagName=gql --addTypename --globalTypesFile=src/types/graphql-global-types.ts types",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },
@@ -166,7 +166,7 @@
     "start-server-and-test": "^1.11.0",
     "text-encoding": "^0.7.0",
     "ts-loader": "^7.0.5",
-    "vite": "^4.5.2",
+    "vite": "^4.5.3",
     "vite-plugin-svgr": "^3.2.0",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^0.34.1",

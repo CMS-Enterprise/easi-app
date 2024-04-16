@@ -64,7 +64,6 @@ jobs:
           ECR_REPOSITORY: easi-db-migrate
           GRT_EMAIL: success@simulator.amazonses.com
           IT_INVESTMENT_EMAIL: success@simulator.amazonses.com
-          ACCESSIBILITY_TEAM_EMAIL: success@simulator.amazonses.com
           EASI_HELP_EMAIL: success@simulator.amazonses.com
           TRB_EMAIL: success@simulator.amazonses.com
           OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
@@ -252,4 +251,3 @@ jobs:
           cat test.log >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
           exit $result_code
-        continue-on-error: true

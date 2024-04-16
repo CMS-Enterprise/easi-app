@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { GovernanceRequestFeedbackTargetForm, GovernanceRequestFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatusAdmin, SystemIntakeStatusRequester, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState } from "./../../types/graphql-global-types";
+import { GovernanceRequestFeedbackTargetForm, GovernanceRequestFeedbackType, SystemIntakeLCIDStatus, SystemIntakeRequestType, SystemIntakeStatusAdmin, SystemIntakeStatusRequester, SystemIntakeDocumentCommonType, SystemIntakeDocumentStatus, SystemIntakeState, SystemIntakeDecisionState, SystemIntakeTRBFollowUp, SystemIntakeFormState, RequestRelationType } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL fragment: SystemIntake
@@ -201,6 +201,7 @@ export interface SystemIntake {
   decisionState: SystemIntakeDecisionState;
   trbFollowUpRecommendation: SystemIntakeTRBFollowUp | null;
   requestFormState: SystemIntakeFormState;
+  relationType: RequestRelationType | null;
   contractName: string | null;
   /**
    * Linked systems

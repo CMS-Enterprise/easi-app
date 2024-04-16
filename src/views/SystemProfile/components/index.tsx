@@ -6,7 +6,6 @@ import { SystemProfileData } from 'types/systemProfile';
 import ATO from './ATO';
 import Contracts from './Contracts';
 import FundingAndBudget from './FundingAndBudget';
-import Section508 from './Section508';
 import SubSystems from './SubSystems';
 import SystemData from './SystemData';
 import SystemDetails from './SystemDetails';
@@ -101,6 +100,11 @@ const sideNavItems = (
           route: `/systems/${system.id}/ato`,
           componentId: 'ato'
         },
+        'funding-and-budget': {
+          component: <FundingAndBudget system={system} />,
+          route: `/systems/${system.id}/funding-and-budget`,
+          componentId: 'funding-and-budget'
+        },
         'tools-and-software': {
           groupEnd: true,
           component: <ToolsAndSoftware system={system} />,
@@ -131,11 +135,6 @@ const sideNavItems = (
           route: `/systems/${system.id}/contracts`,
           componentId: 'contracts'
         },
-        'funding-and-budget': {
-          component: <FundingAndBudget system={system} />,
-          route: `/systems/${system.id}/funding-and-budget`,
-          componentId: 'funding-and-budget'
-        },
         ato: {
           component: <ATO system={system} />,
           route: `/systems/${system.id}/ato`,
@@ -144,12 +143,6 @@ const sideNavItems = (
         'lifecycle-id': {
           component: <SystemHome system={system} />,
           route: `/systems/${system.id}/lifecycle-id`
-        },
-        'section-508': {
-          groupEnd: true,
-          component: <Section508 system={system} />,
-          route: `/systems/${system.id}/section-508`,
-          componentId: 'system-section-508'
         },
         'sub-systems': {
           component: <SubSystems system={system} />,

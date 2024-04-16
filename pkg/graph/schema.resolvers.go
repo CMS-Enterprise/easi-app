@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"net/url"
 	"strconv"
 	"time"
 
@@ -28,138 +27,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
-	"github.com/cmsgov/easi-app/pkg/upload"
 )
-
-// Documents is the resolver for the documents field.
-func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error) {
-	documents, documentsErr := r.store.FetchDocumentsByAccessibilityRequestID(ctx, obj.ID)
-
-	if documentsErr != nil {
-		return nil, documentsErr
-	}
-
-	for _, document := range documents {
-		if url, urlErr := r.s3Client.NewGetPresignedURL(document.Key); urlErr == nil {
-			document.URL = url.URL
-		}
-
-		// This is not ideal- we're making a request to S3 for each document sequentially.
-		// The more documents we have on an accessibility request, the slower this resolver will get.
-		//
-		// We will either update the records in the database with the results OR implement
-		// another mechanism for doing that as a background job so that we don't need to do it here.
-		// Furthermore, locally this will always return "", since we are not interfacing with the
-		// real S3.
-		value, valueErr := r.s3Client.TagValueForKey(document.Key, upload.AVStatusTagName)
-		if valueErr != nil {
-			return nil, valueErr
-		}
-
-		if value == "CLEAN" {
-			document.Status = models.AccessibilityRequestDocumentStatusAvailable
-		} else if value == "INFECTED" {
-			document.Status = models.AccessibilityRequestDocumentStatusUnavailable
-		} else {
-			document.Status = models.AccessibilityRequestDocumentStatusPending
-		}
-	}
-
-	return documents, nil
-}
-
-// RelevantTestDate is the resolver for the relevantTestDate field.
-func (r *accessibilityRequestResolver) RelevantTestDate(ctx context.Context, obj *models.AccessibilityRequest) (*models.TestDate, error) {
-	allDates, err := r.store.FetchTestDatesByRequestID(ctx, obj.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	var nearFuture *models.TestDate
-	var recentPast *models.TestDate
-	now := time.Now()
-
-	for _, td := range allDates {
-		if td.Date.After(now) {
-			if nearFuture == nil || td.Date.Before(nearFuture.Date) {
-				nearFuture = td
-				continue
-			}
-		}
-		if td.Date.Before(now) {
-			if recentPast == nil || td.Date.After((recentPast.Date)) {
-				recentPast = td
-				continue
-			}
-		}
-	}
-
-	// future date takes precedence
-	if nearFuture != nil {
-		return nearFuture, nil
-	}
-	// either recentPast is defined or it is nil
-	return recentPast, nil
-}
-
-// System is the resolver for the system field.
-func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
-	if obj.IntakeID == nil {
-		return nil, nil
-	}
-	system, systemErr := r.store.FetchSystemByIntakeID(ctx, *obj.IntakeID)
-	if systemErr != nil {
-		return nil, systemErr
-	}
-	system.BusinessOwner = &models.BusinessOwner{
-		Name:      system.BusinessOwnerName.String,
-		Component: system.BusinessOwnerComponent.String,
-	}
-
-	return system, nil
-}
-
-// TestDates is the resolver for the testDates field.
-func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.TestDate, error) {
-	return r.store.FetchTestDatesByRequestID(ctx, obj.ID)
-}
-
-// StatusRecord is the resolver for the statusRecord field.
-func (r *accessibilityRequestResolver) StatusRecord(ctx context.Context, obj *models.AccessibilityRequest) (*models.AccessibilityRequestStatusRecord, error) {
-	return r.store.FetchLatestAccessibilityRequestStatusRecordByRequestID(ctx, obj.ID)
-}
-
-// Notes is the resolver for the notes field.
-func (r *accessibilityRequestResolver) Notes(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestNote, error) {
-	return r.store.FetchAccessibilityRequestNotesByRequestID(ctx, obj.ID)
-}
-
-// DocumentType is the resolver for the documentType field.
-func (r *accessibilityRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error) {
-	return &model.AccessibilityRequestDocumentType{
-		CommonType:           obj.CommonDocumentType,
-		OtherTypeDescription: &obj.OtherType,
-	}, nil
-}
-
-// MimeType is the resolver for the mimeType field.
-func (r *accessibilityRequestDocumentResolver) MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error) {
-	return obj.FileType, nil
-}
-
-// UploadedAt is the resolver for the uploadedAt field.
-func (r *accessibilityRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models.AccessibilityRequestDocument) (*time.Time, error) {
-	return obj.CreatedAt, nil
-}
-
-// AuthorName is the resolver for the authorName field.
-func (r *accessibilityRequestNoteResolver) AuthorName(ctx context.Context, obj *models.AccessibilityRequestNote) (string, error) {
-	user, err := r.service.FetchUserInfo(ctx, obj.EUAUserID)
-	if err != nil {
-		return "", err
-	}
-	return user.DisplayName, nil
-}
 
 // AlternativeASolution is the resolver for the alternativeASolution field.
 func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
@@ -242,6 +110,27 @@ func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *model
 // SystemIntake is the resolver for the systemIntake field.
 func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error) {
 	return r.store.FetchSystemIntakeByID(ctx, obj.SystemIntakeID)
+}
+
+// BudgetActualCost is the resolver for the budgetActualCost field.
+func (r *cedarBudgetSystemCostResolver) BudgetActualCost(ctx context.Context, obj *models.CedarBudgetSystemCost) ([]*model.CedarBudgetActualCost, error) {
+	budgetActualCosts := obj.BudgetActualCosts
+
+	if len(budgetActualCosts) == 0 {
+		return nil, nil
+	}
+
+	var actualCosts []*model.CedarBudgetActualCost
+	for _, cost := range budgetActualCosts {
+		fyCost := &model.CedarBudgetActualCost{
+			ActualSystemCost: cost.ActualSystemCost.Ptr(),
+			FiscalYear:       cost.FiscalYear.Ptr(),
+			SystemID:         cost.SystemID.Ptr(),
+		}
+		actualCosts = append(actualCosts, fyCost)
+	}
+
+	return actualCosts, nil
 }
 
 // SoftwareProducts is the resolver for the softwareProducts field.
@@ -373,319 +262,6 @@ func (r *iTGovTaskStatusesResolver) GrbMeetingStatus(ctx context.Context, obj *m
 // DecisionAndNextStepsStatus is the resolver for the decisionAndNextStepsStatus field.
 func (r *iTGovTaskStatusesResolver) DecisionAndNextStepsStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDecisionStatus, error) {
 	return resolvers.DecisionAndNextStepsStatus(obj.ParentSystemIntake)
-}
-
-// CreateAccessibilityRequest is the resolver for the createAccessibilityRequest field.
-func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
-	requesterEUAID := appcontext.Principal(ctx).ID()
-	requesterInfo, err := r.service.FetchUserInfo(ctx, requesterEUAID)
-	if err != nil {
-		return nil, err
-	}
-
-	if input.IntakeID == nil && (input.CedarSystemID == nil || len(*input.CedarSystemID) == 0) {
-		return nil, errors.New("either a system intake ID or a CEDAR system ID is required to create a 508 request")
-	}
-
-	newRequest := &models.AccessibilityRequest{
-		EUAUserID: requesterEUAID,
-	}
-
-	var systemName string
-	if input.IntakeID != nil {
-		intake, intakeErr := r.store.FetchSystemIntakeByID(ctx, *input.IntakeID)
-		if intakeErr != nil {
-			return nil, intakeErr
-		}
-		newRequest.IntakeID = &intake.ID
-		systemName = intake.ProjectName.String
-	}
-
-	cedarSystemID := null.StringFromPtr(input.CedarSystemID)
-	cedarSystemIDStr := cedarSystemID.ValueOrZero()
-	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
-		cedarSystem, cedarSystemErr := r.cedarCoreClient.GetSystem(ctx, cedarSystemIDStr)
-		if cedarSystemErr != nil {
-			return nil, cedarSystemErr
-		}
-		newRequest.CedarSystemID = null.StringFromPtr(input.CedarSystemID)
-		systemName = cedarSystem.Name.String
-	}
-
-	newRequest.Name = systemName
-
-	request, err := r.store.CreateAccessibilityRequestAndInitialStatusRecord(ctx, newRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	err = r.emailClient.SendNewAccessibilityRequestEmail(
-		ctx,
-		requesterInfo.DisplayName,
-		request.Name,
-		systemName,
-		request.ID,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	err = r.emailClient.SendNewAccessibilityRequestEmailToRequester(
-		ctx,
-		request.Name,
-		request.ID,
-		requesterInfo.Email,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.CreateAccessibilityRequestPayload{
-		AccessibilityRequest: request,
-		UserErrors:           nil,
-	}, nil
-}
-
-// DeleteAccessibilityRequest is the resolver for the deleteAccessibilityRequest field.
-func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input model.DeleteAccessibilityRequestInput) (*model.DeleteAccessibilityRequestPayload, error) {
-	request, err := r.store.FetchAccessibilityRequestByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	removerEUAID := appcontext.Principal(ctx).ID()
-	removerInfo, err := r.service.FetchUserInfo(ctx, removerEUAID)
-	if err != nil {
-		return nil, err
-	}
-
-	ok, err := services.AuthorizeUserIs508RequestOwner(ctx, request)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
-	}
-
-	err = r.store.DeleteAccessibilityRequest(ctx, input.ID, input.Reason)
-	if err != nil {
-		return nil, err
-	}
-
-	err = r.emailClient.SendRemovedAccessibilityRequestEmail(ctx, request.Name, removerInfo.DisplayName, input.Reason, removerInfo.Email)
-	if err != nil {
-		return nil, err
-	}
-
-	_, statusRecordErr := r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
-		RequestID: input.ID,
-		Status:    models.AccessibilityRequestStatusDeleted,
-		EUAUserID: removerEUAID,
-	})
-	if statusRecordErr != nil {
-		return nil, statusRecordErr
-	}
-
-	return &model.DeleteAccessibilityRequestPayload{ID: &input.ID}, nil
-}
-
-// CreateAccessibilityRequestDocument is the resolver for the createAccessibilityRequestDocument field.
-func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error) {
-	parsedURL, urlErr := url.Parse(input.URL)
-	if urlErr != nil {
-		return nil, urlErr
-	}
-
-	key, keyErr := r.s3Client.KeyFromURL(parsedURL)
-	if keyErr != nil {
-		return nil, keyErr
-	}
-
-	accessibilityRequest, requestErr := r.store.FetchAccessibilityRequestByID(ctx, input.RequestID)
-	if requestErr != nil {
-		return nil, requestErr
-	}
-	ok, authErr := services.AuthorizeUserIsRequestOwnerOr508Team(ctx, accessibilityRequest)
-	if authErr != nil {
-		return nil, authErr
-	}
-	if !ok {
-		return nil, &apperrors.ResourceNotFoundError{Err: errors.New("request with the given id not found"), Resource: models.AccessibilityRequest{}}
-	}
-
-	requesterInfo, err := r.service.FetchUserInfo(ctx, accessibilityRequest.EUAUserID)
-	if err != nil {
-		return nil, err
-	}
-
-	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
-		Name:               input.Name,
-		FileType:           input.MimeType,
-		Key:                key,
-		Size:               input.Size,
-		RequestID:          input.RequestID,
-		CommonDocumentType: input.CommonDocumentType,
-		OtherType:          *input.OtherDocumentTypeDescription,
-	})
-
-	if docErr != nil {
-		return nil, docErr
-	}
-	if presignedURL, urlErr := r.s3Client.NewGetPresignedURL(key); urlErr == nil {
-		doc.URL = presignedURL.URL
-	}
-
-	err = r.emailClient.SendNewDocumentEmailsToReviewTeamAndRequester(
-		ctx,
-		doc.CommonDocumentType,
-		doc.OtherType,
-		accessibilityRequest.Name,
-		accessibilityRequest.ID,
-		requesterInfo.Email,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.CreateAccessibilityRequestDocumentPayload{
-		AccessibilityRequestDocument: doc,
-	}, nil
-}
-
-// CreateAccessibilityRequestNote is the resolver for the createAccessibilityRequestNote field.
-func (r *mutationResolver) CreateAccessibilityRequestNote(ctx context.Context, input model.CreateAccessibilityRequestNoteInput) (*model.CreateAccessibilityRequestNotePayload, error) {
-	if input.Note == "" {
-		return &model.CreateAccessibilityRequestNotePayload{
-			AccessibilityRequestNote: nil,
-			UserErrors:               []*model.UserError{{Message: "Must include a non-empty note", Path: []string{"note"}}},
-		}, nil
-	}
-
-	created, err := r.store.CreateAccessibilityRequestNote(ctx, &models.AccessibilityRequestNote{
-		Note:      input.Note,
-		RequestID: input.RequestID,
-		EUAUserID: appcontext.Principal(ctx).ID(),
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	if input.ShouldSendEmail {
-		request, err := r.store.FetchAccessibilityRequestByID(ctx, input.RequestID)
-		if err != nil {
-			return nil, err
-		}
-
-		userInfo, err := r.service.FetchUserInfo(ctx, appcontext.Principal(ctx).ID())
-		if err != nil {
-			return nil, err
-		}
-
-		err = r.emailClient.SendNewAccessibilityRequestNoteEmail(ctx, input.RequestID, request.Name, userInfo.DisplayName)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return &model.CreateAccessibilityRequestNotePayload{AccessibilityRequestNote: created}, nil
-}
-
-// DeleteAccessibilityRequestDocument is the resolver for the deleteAccessibilityRequestDocument field.
-func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error) {
-	accessibilityRequestDocument, err := r.store.FetchAccessibilityRequestDocumentByID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
-	accessibilityRequest, err := r.store.FetchAccessibilityRequestByID(ctx, accessibilityRequestDocument.RequestID)
-	if err != nil {
-		return nil, err
-	}
-	ok, err := services.AuthorizeUserIsRequestOwnerOr508Team(ctx, accessibilityRequest)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
-	}
-	err = r.store.DeleteAccessibilityRequestDocument(ctx, input.ID)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.DeleteAccessibilityRequestDocumentPayload{ID: &input.ID}, nil
-}
-
-// UpdateAccessibilityRequestStatus is the resolver for the updateAccessibilityRequestStatus field.
-func (r *mutationResolver) UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error) {
-	requesterEUAID := appcontext.Principal(ctx).ID()
-
-	if input.Status == models.AccessibilityRequestStatusOpen || input.Status == models.AccessibilityRequestStatusClosed || input.Status == models.AccessibilityRequestStatusInRemediation {
-
-		request, err := r.store.FetchAccessibilityRequestByID(ctx, input.RequestID)
-		if err != nil {
-			return nil, err
-		}
-
-		userInfo, err := r.service.FetchUserInfo(ctx, requesterEUAID)
-		if err != nil {
-			return nil, err
-		}
-
-		latestStatusRecord, err := r.store.FetchLatestAccessibilityRequestStatusRecordByRequestID(ctx, input.RequestID)
-		if err != nil {
-			return nil, err
-		}
-
-		statusRecord, err := r.store.CreateAccessibilityRequestStatusRecord(ctx, &models.AccessibilityRequestStatusRecord{
-			RequestID: input.RequestID,
-			Status:    input.Status,
-			EUAUserID: requesterEUAID,
-		})
-		if err != nil {
-			return nil, err
-		}
-
-		if latestStatusRecord.Status != input.Status {
-			err = r.emailClient.SendChangeAccessibilityRequestStatusEmail(
-				ctx,
-				input.RequestID,
-				request.Name,
-				userInfo.DisplayName,
-				latestStatusRecord.Status,
-				input.Status,
-			)
-			if err != nil {
-				return nil, err
-			}
-		}
-
-		return &model.UpdateAccessibilityRequestStatusPayload{
-			ID:         statusRecord.ID,
-			RequestID:  statusRecord.RequestID,
-			Status:     statusRecord.Status,
-			EuaUserID:  statusRecord.EUAUserID,
-			UserErrors: nil,
-		}, nil
-	}
-
-	return &model.UpdateAccessibilityRequestStatusPayload{
-		UserErrors: []*model.UserError{{Message: "Invalid status", Path: []string{"status"}}},
-	}, nil
-}
-
-// UpdateAccessibilityRequestCedarSystem is the resolver for the updateAccessibilityRequestCedarSystem field.
-func (r *mutationResolver) UpdateAccessibilityRequestCedarSystem(ctx context.Context, input *model.UpdateAccessibilityRequestCedarSystemInput) (*model.UpdateAccessibilityRequestCedarSystemPayload, error) {
-	_, err := r.cedarCoreClient.GetSystem(ctx, input.CedarSystemID)
-	if err != nil {
-		return nil, err
-	}
-
-	updatedRequest, err := r.store.UpdateAccessibilityRequestCedarSystem(ctx, input.ID, null.StringFrom(input.CedarSystemID))
-	return &model.UpdateAccessibilityRequestCedarSystemPayload{
-		ID:                   updatedRequest.ID,
-		AccessibilityRequest: updatedRequest,
-	}, err
 }
 
 // CreateSystemIntakeActionProgressToNewStep is the resolver for the createSystemIntakeActionProgressToNewStep field.
@@ -877,56 +453,6 @@ func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input mod
 // CreateSystemIntake is the resolver for the createSystemIntake field.
 func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input model.CreateSystemIntakeInput) (*models.SystemIntake, error) {
 	return resolvers.CreateSystemIntake(ctx, r.store, input)
-}
-
-// CreateTestDate is the resolver for the createTestDate field.
-func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
-	testDate, err := r.service.CreateTestDate(ctx, &models.TestDate{
-		TestType:  input.TestType,
-		Date:      input.Date,
-		Score:     input.Score,
-		RequestID: input.RequestID,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &model.CreateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
-}
-
-// UpdateTestDate is the resolver for the updateTestDate field.
-func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {
-	testDate, err := r.store.UpdateTestDate(ctx, &models.TestDate{
-		TestType: input.TestType,
-		Date:     input.Date,
-		Score:    input.Score,
-		ID:       input.ID,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &model.UpdateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
-}
-
-// DeleteTestDate is the resolver for the deleteTestDate field.
-func (r *mutationResolver) DeleteTestDate(ctx context.Context, input model.DeleteTestDateInput) (*model.DeleteTestDatePayload, error) {
-	testDate, err := r.store.DeleteTestDate(ctx, &models.TestDate{
-		ID: input.ID,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &model.DeleteTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
-}
-
-// GeneratePresignedUploadURL is the resolver for the generatePresignedUploadURL field.
-func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error) {
-	url, err := r.s3Client.NewPutPresignedURL(input.MimeType)
-	if err != nil {
-		return nil, err
-	}
-	return &model.GeneratePresignedUploadURLPayload{
-		URL: &url.URL,
-	}, nil
 }
 
 // SubmitIntake is the resolver for the submitIntake field.
@@ -1560,42 +1086,6 @@ func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) 
 	return resolvers.DeleteTRBLeadOption(ctx, r.store, eua)
 }
 
-// AccessibilityRequest is the resolver for the accessibilityRequest field.
-func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
-	// deleted requests need to be returned to be able to show a deleted request view
-	accessibilityRequest, err := r.store.FetchAccessibilityRequestByIDIncludingDeleted(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	ok, err := services.AuthorizeUserIsRequestOwnerOr508Team(ctx, accessibilityRequest)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, &apperrors.ResourceNotFoundError{Err: errors.New("unauthorized to fetch accessibility request")}
-	}
-	return accessibilityRequest, nil
-}
-
-// AccessibilityRequests is the resolver for the accessibilityRequests field.
-func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string, first int) (*model.AccessibilityRequestsConnection, error) {
-	requests, queryErr := r.store.FetchAccessibilityRequests(ctx)
-	if queryErr != nil {
-		return nil, gqlerror.Errorf("query error: %s", queryErr)
-	}
-
-	edges := []*model.AccessibilityRequestEdge{}
-
-	for _, request := range requests {
-		node := request
-		edges = append(edges, &model.AccessibilityRequestEdge{
-			Node: &node,
-		})
-	}
-
-	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
-}
-
 // Requests is the resolver for the requests field. (First is not in use)
 func (r *queryResolver) Requests(ctx context.Context, first int) (*model.RequestsConnection, error) {
 	intakes, queryErr := r.store.FetchSystemIntakesByEuaID(ctx, appcontext.Principal(ctx).ID())
@@ -1666,26 +1156,6 @@ func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([
 	return resolvers.SystemIntakes(ctx, r.store, openRequests)
 }
 
-// Systems is the resolver for the systems field.
-func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
-	systems, err := r.store.ListSystems(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	conn := &model.SystemConnection{}
-	for _, system := range systems {
-		system.BusinessOwner = &models.BusinessOwner{
-			Name:      system.BusinessOwnerName.String,
-			Component: system.BusinessOwnerComponent.String,
-		}
-		conn.Edges = append(conn.Edges, &model.SystemEdge{
-			Node: system,
-		})
-	}
-	return conn, nil
-}
-
 // SystemIntakesWithLcids is the resolver for the systemIntakesWithLcids field.
 func (r *queryResolver) SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error) {
 	return r.store.GetSystemIntakesWithLCIDs(ctx)
@@ -1714,6 +1184,26 @@ func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystem
 	}
 
 	return cedarATO, nil
+}
+
+// CedarBudget is the resolver for the cedarBudget field.
+func (r *queryResolver) CedarBudget(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error) {
+	cedarBudget, err := r.cedarCoreClient.GetBudgetBySystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
+	return cedarBudget, nil
+}
+
+// CedarBudgetSystemCost is the resolver for the cedarBudgetSystemCost field.
+func (r *queryResolver) CedarBudgetSystemCost(ctx context.Context, cedarSystemID string) (*models.CedarBudgetSystemCost, error) {
+	cedarBudgetSystemCost, err := r.cedarCoreClient.GetBudgetSystemCostBySystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
+	return cedarBudgetSystemCost, nil
 }
 
 // CedarPersonsByCommonName is the resolver for the cedarPersonsByCommonName field.
@@ -1746,7 +1236,27 @@ func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (
 
 // CedarSystems is the resolver for the cedarSystems field.
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	return r.cedarCoreClient.GetSystemSummary(ctx, true, nil)
+	return r.cedarCoreClient.GetSystemSummary(ctx, true)
+}
+
+// CedarSubSystems is the resolver for the cedarSubSystems field.
+func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID string) ([]*models.CedarSubSystem, error) {
+	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, false, cedarcore.WithSubSystems(cedarSystemID))
+	if err != nil {
+		return nil, err
+	}
+
+	var subSystems []*models.CedarSubSystem
+	for _, system := range systems {
+		subSystems = append(subSystems, &models.CedarSubSystem{
+			ID:          system.ID,
+			Name:        system.Name,
+			Acronym:     system.Acronym,
+			Description: system.Description,
+		})
+	}
+
+	return subSystems, nil
 }
 
 // CedarContractsBySystem is the resolver for the cedarContractsBySystem field.
@@ -1757,7 +1267,7 @@ func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemI
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
-	return r.cedarCoreClient.GetSystemSummary(ctx, false, &requesterEUAID)
+	return r.cedarCoreClient.GetSystemSummary(ctx, false, cedarcore.WithEuaIDFilter(requesterEUAID))
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.
@@ -2549,23 +2059,13 @@ func (r *userInfoResolver) EuaUserID(ctx context.Context, obj *models.UserInfo) 
 	//TODO: this user info struct should eventually be refactored so that the schema matches the backend.
 }
 
-// AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
-func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
-	return &accessibilityRequestResolver{r}
-}
-
-// AccessibilityRequestDocument returns generated.AccessibilityRequestDocumentResolver implementation.
-func (r *Resolver) AccessibilityRequestDocument() generated.AccessibilityRequestDocumentResolver {
-	return &accessibilityRequestDocumentResolver{r}
-}
-
-// AccessibilityRequestNote returns generated.AccessibilityRequestNoteResolver implementation.
-func (r *Resolver) AccessibilityRequestNote() generated.AccessibilityRequestNoteResolver {
-	return &accessibilityRequestNoteResolver{r}
-}
-
 // BusinessCase returns generated.BusinessCaseResolver implementation.
 func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
+
+// CedarBudgetSystemCost returns generated.CedarBudgetSystemCostResolver implementation.
+func (r *Resolver) CedarBudgetSystemCost() generated.CedarBudgetSystemCostResolver {
+	return &cedarBudgetSystemCostResolver{r}
+}
 
 // CedarSoftwareProducts returns generated.CedarSoftwareProductsResolver implementation.
 func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolver {
@@ -2648,10 +2148,8 @@ func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
 // UserInfo returns generated.UserInfoResolver implementation.
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
-type accessibilityRequestResolver struct{ *Resolver }
-type accessibilityRequestDocumentResolver struct{ *Resolver }
-type accessibilityRequestNoteResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
+type cedarBudgetSystemCostResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
 type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }

@@ -44,10 +44,8 @@ type Config struct {
 }
 
 type ResolverRoot interface {
-	AccessibilityRequest() AccessibilityRequestResolver
-	AccessibilityRequestDocument() AccessibilityRequestDocumentResolver
-	AccessibilityRequestNote() AccessibilityRequestNoteResolver
 	BusinessCase() BusinessCaseResolver
+	CedarBudgetSystemCost() CedarBudgetSystemCostResolver
 	CedarSoftwareProducts() CedarSoftwareProductsResolver
 	CedarSystem() CedarSystemResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
@@ -74,61 +72,6 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
-	AccessibilityRequest struct {
-		CedarSystemID    func(childComplexity int) int
-		CreatedAt        func(childComplexity int) int
-		Documents        func(childComplexity int) int
-		EUAUserID        func(childComplexity int) int
-		ID               func(childComplexity int) int
-		Name             func(childComplexity int) int
-		Notes            func(childComplexity int) int
-		RelevantTestDate func(childComplexity int) int
-		StatusRecord     func(childComplexity int) int
-		System           func(childComplexity int) int
-		TestDates        func(childComplexity int) int
-	}
-
-	AccessibilityRequestDocument struct {
-		DocumentType func(childComplexity int) int
-		ID           func(childComplexity int) int
-		MimeType     func(childComplexity int) int
-		Name         func(childComplexity int) int
-		RequestID    func(childComplexity int) int
-		Size         func(childComplexity int) int
-		Status       func(childComplexity int) int
-		URL          func(childComplexity int) int
-		UploadedAt   func(childComplexity int) int
-	}
-
-	AccessibilityRequestDocumentType struct {
-		CommonType           func(childComplexity int) int
-		OtherTypeDescription func(childComplexity int) int
-	}
-
-	AccessibilityRequestEdge struct {
-		Node func(childComplexity int) int
-	}
-
-	AccessibilityRequestNote struct {
-		AuthorName func(childComplexity int) int
-		CreatedAt  func(childComplexity int) int
-		ID         func(childComplexity int) int
-		Note       func(childComplexity int) int
-		RequestID  func(childComplexity int) int
-	}
-
-	AccessibilityRequestStatusRecord struct {
-		CreatedAt func(childComplexity int) int
-		EUAUserID func(childComplexity int) int
-		ID        func(childComplexity int) int
-		RequestID func(childComplexity int) int
-		Status    func(childComplexity int) int
-	}
-
-	AccessibilityRequestsConnection struct {
-		Edges func(childComplexity int) int
-	}
-
 	AugmentedSystemIntakeContact struct {
 		CommonName     func(childComplexity int) int
 		Component      func(childComplexity int) int
@@ -176,11 +119,6 @@ type ComplexityRoot struct {
 		Title                   func(childComplexity int) int
 	}
 
-	BusinessOwner struct {
-		Component func(childComplexity int) int
-		Name      func(childComplexity int) int
-	}
-
 	CedarAuthorityToOperate struct {
 		ActualDispositionDate                     func(childComplexity int) int
 		CedarID                                   func(childComplexity int) int
@@ -210,6 +148,28 @@ type ComplexityRoot struct {
 		TLCPhase                                  func(childComplexity int) int
 		UUID                                      func(childComplexity int) int
 		XLCPhase                                  func(childComplexity int) int
+	}
+
+	CedarBudget struct {
+		FiscalYear    func(childComplexity int) int
+		Funding       func(childComplexity int) int
+		FundingID     func(childComplexity int) int
+		FundingSource func(childComplexity int) int
+		ID            func(childComplexity int) int
+		Name          func(childComplexity int) int
+		ProjectID     func(childComplexity int) int
+		ProjectTitle  func(childComplexity int) int
+		SystemID      func(childComplexity int) int
+	}
+
+	CedarBudgetActualCost struct {
+		ActualSystemCost func(childComplexity int) int
+		FiscalYear       func(childComplexity int) int
+		SystemID         func(childComplexity int) int
+	}
+
+	CedarBudgetSystemCost struct {
+		BudgetActualCost func(childComplexity int) int
 	}
 
 	CedarBusinessOwnerInformation struct {
@@ -370,6 +330,13 @@ type ComplexityRoot struct {
 		UsesAiTech          func(childComplexity int) int
 	}
 
+	CedarSubSystem struct {
+		Acronym     func(childComplexity int) int
+		Description func(childComplexity int) int
+		ID          func(childComplexity int) int
+		Name        func(childComplexity int) int
+	}
+
 	CedarSystem struct {
 		Acronym                 func(childComplexity int) int
 		BusinessOwnerOrg        func(childComplexity int) int
@@ -453,21 +420,6 @@ type ComplexityRoot struct {
 		Year  func(childComplexity int) int
 	}
 
-	CreateAccessibilityRequestDocumentPayload struct {
-		AccessibilityRequestDocument func(childComplexity int) int
-		UserErrors                   func(childComplexity int) int
-	}
-
-	CreateAccessibilityRequestNotePayload struct {
-		AccessibilityRequestNote func(childComplexity int) int
-		UserErrors               func(childComplexity int) int
-	}
-
-	CreateAccessibilityRequestPayload struct {
-		AccessibilityRequest func(childComplexity int) int
-		UserErrors           func(childComplexity int) int
-	}
-
 	CreateCedarSystemBookmarkPayload struct {
 		CedarSystemBookmark func(childComplexity int) int
 	}
@@ -484,22 +436,8 @@ type ComplexityRoot struct {
 		Document func(childComplexity int) int
 	}
 
-	CreateTestDatePayload struct {
-		TestDate   func(childComplexity int) int
-		UserErrors func(childComplexity int) int
-	}
-
 	CurrentUser struct {
 		LaunchDarkly func(childComplexity int) int
-	}
-
-	DeleteAccessibilityRequestDocumentPayload struct {
-		ID func(childComplexity int) int
-	}
-
-	DeleteAccessibilityRequestPayload struct {
-		ID         func(childComplexity int) int
-		UserErrors func(childComplexity int) int
 	}
 
 	DeleteCedarSystemBookmarkPayload struct {
@@ -518,11 +456,6 @@ type ComplexityRoot struct {
 		Document func(childComplexity int) int
 	}
 
-	DeleteTestDatePayload struct {
-		TestDate   func(childComplexity int) int
-		UserErrors func(childComplexity int) int
-	}
-
 	EstimatedLifecycleCost struct {
 		BusinessCaseID func(childComplexity int) int
 		Cost           func(childComplexity int) int
@@ -530,11 +463,6 @@ type ComplexityRoot struct {
 		Phase          func(childComplexity int) int
 		Solution       func(childComplexity int) int
 		Year           func(childComplexity int) int
-	}
-
-	GeneratePresignedUploadURLPayload struct {
-		URL        func(childComplexity int) int
-		UserErrors func(childComplexity int) int
 	}
 
 	GovernanceRequestFeedback struct {
@@ -568,9 +496,6 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		CloseTRBRequest                                  func(childComplexity int, input model.CloseTRBRequestInput) int
-		CreateAccessibilityRequest                       func(childComplexity int, input model.CreateAccessibilityRequestInput) int
-		CreateAccessibilityRequestDocument               func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
-		CreateAccessibilityRequestNote                   func(childComplexity int, input model.CreateAccessibilityRequestNoteInput) int
 		CreateCedarSystemBookmark                        func(childComplexity int, input model.CreateCedarSystemBookmarkInput) int
 		CreateSystemIntake                               func(childComplexity int, input model.CreateSystemIntakeInput) int
 		CreateSystemIntakeActionChangeLCIDRetirementDate func(childComplexity int, input model.SystemIntakeChangeLCIDRetirementDateInput) int
@@ -599,10 +524,7 @@ type ComplexityRoot struct {
 		CreateTRBRequestAttendee                         func(childComplexity int, input model.CreateTRBRequestAttendeeInput) int
 		CreateTRBRequestDocument                         func(childComplexity int, input model.CreateTRBRequestDocumentInput) int
 		CreateTRBRequestFeedback                         func(childComplexity int, input model.CreateTRBRequestFeedbackInput) int
-		CreateTestDate                                   func(childComplexity int, input model.CreateTestDateInput) int
 		CreateTrbLeadOption                              func(childComplexity int, eua string) int
-		DeleteAccessibilityRequest                       func(childComplexity int, input model.DeleteAccessibilityRequestInput) int
-		DeleteAccessibilityRequestDocument               func(childComplexity int, input model.DeleteAccessibilityRequestDocumentInput) int
 		DeleteCedarSystemBookmark                        func(childComplexity int, input model.CreateCedarSystemBookmarkInput) int
 		DeleteSystemIntakeContact                        func(childComplexity int, input model.DeleteSystemIntakeContactInput) int
 		DeleteSystemIntakeDocument                       func(childComplexity int, id uuid.UUID) int
@@ -610,9 +532,7 @@ type ComplexityRoot struct {
 		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestDocument                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestFundingSources                   func(childComplexity int, input model.DeleteTRBRequestFundingSourcesInput) int
-		DeleteTestDate                                   func(childComplexity int, input model.DeleteTestDateInput) int
 		DeleteTrbLeadOption                              func(childComplexity int, eua string) int
-		GeneratePresignedUploadURL                       func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
 		ReopenTrbRequest                                 func(childComplexity int, input model.ReopenTRBRequestInput) int
 		RequestReviewForTRBAdviceLetter                  func(childComplexity int, id uuid.UUID) int
 		SendCantFindSomethingEmail                       func(childComplexity int, input model.SendCantFindSomethingEmailInput) int
@@ -630,8 +550,6 @@ type ComplexityRoot struct {
 		SubmitIntake                                     func(childComplexity int, input model.SubmitIntakeInput) int
 		UnlinkSystemIntakeRelation                       func(childComplexity int, intakeID uuid.UUID) int
 		UnlinkTRBRequestRelation                         func(childComplexity int, trbRequestID uuid.UUID) int
-		UpdateAccessibilityRequestCedarSystem            func(childComplexity int, input *model.UpdateAccessibilityRequestCedarSystemInput) int
-		UpdateAccessibilityRequestStatus                 func(childComplexity int, input *model.UpdateAccessibilityRequestStatus) int
 		UpdateSystemIntakeAdminLead                      func(childComplexity int, input model.UpdateSystemIntakeAdminLeadInput) int
 		UpdateSystemIntakeContact                        func(childComplexity int, input model.UpdateSystemIntakeContactInput) int
 		UpdateSystemIntakeContactDetails                 func(childComplexity int, input model.UpdateSystemIntakeContactDetailsInput) int
@@ -649,16 +567,16 @@ type ComplexityRoot struct {
 		UpdateTRBRequestForm                             func(childComplexity int, input map[string]interface{}) int
 		UpdateTRBRequestFundingSources                   func(childComplexity int, input model.UpdateTRBRequestFundingSourcesInput) int
 		UpdateTRBRequestTRBLead                          func(childComplexity int, input model.UpdateTRBRequestTRBLeadInput) int
-		UpdateTestDate                                   func(childComplexity int, input model.UpdateTestDateInput) int
 	}
 
 	Query struct {
-		AccessibilityRequest     func(childComplexity int, id uuid.UUID) int
-		AccessibilityRequests    func(childComplexity int, after *string, first int) int
 		CedarAuthorityToOperate  func(childComplexity int, cedarSystemID string) int
+		CedarBudget              func(childComplexity int, cedarSystemID string) int
+		CedarBudgetSystemCost    func(childComplexity int, cedarSystemID string) int
 		CedarContractsBySystem   func(childComplexity int, cedarSystemID string) int
 		CedarPersonsByCommonName func(childComplexity int, commonName string) int
 		CedarSoftwareProducts    func(childComplexity int, cedarSystemID string) int
+		CedarSubSystems          func(childComplexity int, cedarSystemID string) int
 		CedarSystem              func(childComplexity int, cedarSystemID string) int
 		CedarSystemBookmarks     func(childComplexity int) int
 		CedarSystemDetails       func(childComplexity int, cedarSystemID string) int
@@ -676,7 +594,6 @@ type ComplexityRoot struct {
 		SystemIntakeContacts     func(childComplexity int, id uuid.UUID) int
 		SystemIntakes            func(childComplexity int, openRequests bool) int
 		SystemIntakesWithLcids   func(childComplexity int) int
-		Systems                  func(childComplexity int, after *string, first int) int
 		TrbAdminNote             func(childComplexity int, id uuid.UUID) int
 		TrbLeadOptions           func(childComplexity int) int
 		TrbRequest               func(childComplexity int, id uuid.UUID) int
@@ -703,21 +620,6 @@ type ComplexityRoot struct {
 
 	RequestsConnection struct {
 		Edges func(childComplexity int) int
-	}
-
-	System struct {
-		BusinessOwner func(childComplexity int) int
-		ID            func(childComplexity int) int
-		LCID          func(childComplexity int) int
-		Name          func(childComplexity int) int
-	}
-
-	SystemConnection struct {
-		Edges func(childComplexity int) int
-	}
-
-	SystemEdge struct {
-		Node func(childComplexity int) int
 	}
 
 	SystemIntake struct {
@@ -1137,34 +1039,9 @@ type ComplexityRoot struct {
 		FormStatus                 func(childComplexity int) int
 	}
 
-	TestDate struct {
-		Date     func(childComplexity int) int
-		ID       func(childComplexity int) int
-		Score    func(childComplexity int) int
-		TestType func(childComplexity int) int
-	}
-
-	UpdateAccessibilityRequestCedarSystemPayload struct {
-		AccessibilityRequest func(childComplexity int) int
-		ID                   func(childComplexity int) int
-	}
-
-	UpdateAccessibilityRequestStatusPayload struct {
-		EuaUserID  func(childComplexity int) int
-		ID         func(childComplexity int) int
-		RequestID  func(childComplexity int) int
-		Status     func(childComplexity int) int
-		UserErrors func(childComplexity int) int
-	}
-
 	UpdateSystemIntakePayload struct {
 		SystemIntake func(childComplexity int) int
 		UserErrors   func(childComplexity int) int
-	}
-
-	UpdateTestDatePayload struct {
-		TestDate   func(childComplexity int) int
-		UserErrors func(childComplexity int) int
 	}
 
 	UserAccount struct {
@@ -1193,27 +1070,6 @@ type ComplexityRoot struct {
 	}
 }
 
-type AccessibilityRequestResolver interface {
-	Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error)
-
-	RelevantTestDate(ctx context.Context, obj *models.AccessibilityRequest) (*models.TestDate, error)
-
-	System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error)
-	TestDates(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.TestDate, error)
-
-	StatusRecord(ctx context.Context, obj *models.AccessibilityRequest) (*models.AccessibilityRequestStatusRecord, error)
-	Notes(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestNote, error)
-}
-type AccessibilityRequestDocumentResolver interface {
-	DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error)
-
-	MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error)
-
-	UploadedAt(ctx context.Context, obj *models.AccessibilityRequestDocument) (*time.Time, error)
-}
-type AccessibilityRequestNoteResolver interface {
-	AuthorName(ctx context.Context, obj *models.AccessibilityRequestNote) (string, error)
-}
 type BusinessCaseResolver interface {
 	AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
 	AlternativeBSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
@@ -1222,6 +1078,9 @@ type BusinessCaseResolver interface {
 	PreferredSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
 
 	SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error)
+}
+type CedarBudgetSystemCostResolver interface {
+	BudgetActualCost(ctx context.Context, obj *models.CedarBudgetSystemCost) ([]*model.CedarBudgetActualCost, error)
 }
 type CedarSoftwareProductsResolver interface {
 	SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error)
@@ -1246,13 +1105,6 @@ type ITGovTaskStatusesResolver interface {
 	DecisionAndNextStepsStatus(ctx context.Context, obj *models.ITGovTaskStatuses) (models.ITGovDecisionStatus, error)
 }
 type MutationResolver interface {
-	CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error)
-	DeleteAccessibilityRequest(ctx context.Context, input model.DeleteAccessibilityRequestInput) (*model.DeleteAccessibilityRequestPayload, error)
-	CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error)
-	CreateAccessibilityRequestNote(ctx context.Context, input model.CreateAccessibilityRequestNoteInput) (*model.CreateAccessibilityRequestNotePayload, error)
-	DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error)
-	UpdateAccessibilityRequestStatus(ctx context.Context, input *model.UpdateAccessibilityRequestStatus) (*model.UpdateAccessibilityRequestStatusPayload, error)
-	UpdateAccessibilityRequestCedarSystem(ctx context.Context, input *model.UpdateAccessibilityRequestCedarSystemInput) (*model.UpdateAccessibilityRequestCedarSystemPayload, error)
 	CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionRequestEdits(ctx context.Context, input model.SystemIntakeRequestEditsInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionExpireLcid(ctx context.Context, input model.SystemIntakeExpireLCIDInput) (*model.UpdateSystemIntakePayload, error)
@@ -1268,10 +1120,6 @@ type MutationResolver interface {
 	CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*models.SystemIntakeNote, error)
 	UpdateSystemIntakeNote(ctx context.Context, input model.UpdateSystemIntakeNoteInput) (*models.SystemIntakeNote, error)
 	CreateSystemIntake(ctx context.Context, input model.CreateSystemIntakeInput) (*models.SystemIntake, error)
-	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
-	UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error)
-	DeleteTestDate(ctx context.Context, input model.DeleteTestDateInput) (*model.DeleteTestDatePayload, error)
-	GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error)
 	SubmitIntake(ctx context.Context, input model.SubmitIntakeInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakePayload, error)
@@ -1331,19 +1179,19 @@ type MutationResolver interface {
 	DeleteTrbLeadOption(ctx context.Context, eua string) (bool, error)
 }
 type QueryResolver interface {
-	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
-	AccessibilityRequests(ctx context.Context, after *string, first int) (*model.AccessibilityRequestsConnection, error)
 	Requests(ctx context.Context, first int) (*model.RequestsConnection, error)
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error)
-	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 	SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error)
 	CurrentUser(ctx context.Context) (*model.CurrentUser, error)
 	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error)
+	CedarBudget(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error)
+	CedarBudgetSystemCost(ctx context.Context, cedarSystemID string) (*models.CedarBudgetSystemCost, error)
 	CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error)
 	CedarSoftwareProducts(ctx context.Context, cedarSystemID string) (*models.CedarSoftwareProducts, error)
 	CedarSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error)
 	CedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
+	CedarSubSystems(ctx context.Context, cedarSystemID string) ([]*models.CedarSubSystem, error)
 	CedarContractsBySystem(ctx context.Context, cedarSystemID string) ([]*models.CedarContract, error)
 	MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error)
 	CedarSystemBookmarks(ctx context.Context) ([]*models.CedarSystemBookmark, error)
@@ -1499,244 +1347,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e, 0, 0, nil}
 	_ = ec
 	switch typeName + "." + field {
-
-	case "AccessibilityRequest.cedarSystemId":
-		if e.complexity.AccessibilityRequest.CedarSystemID == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequest.CedarSystemID(childComplexity), true
-
-	case "AccessibilityRequest.submittedAt":
-		if e.complexity.AccessibilityRequest.CreatedAt == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequest.CreatedAt(childComplexity), true
-
-	case "AccessibilityRequest.documents":
-		if e.complexity.AccessibilityRequest.Documents == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequest.Documents(childComplexity), true
-
-	case "AccessibilityRequest.euaUserId":
-		if e.complexity.AccessibilityRequest.EUAUserID == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequest.EUAUserID(childComplexity), true
-
-	case "AccessibilityRequest.id":
-		if e.complexity.AccessibilityRequest.ID == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequest.ID(childComplexity), true
-
-	case "AccessibilityRequest.name":
-		if e.complexity.AccessibilityRequest.Name == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequest.Name(childComplexity), true
-
-	case "AccessibilityRequest.notes":
-		if e.complexity.AccessibilityRequest.Notes == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequest.Notes(childComplexity), true
-
-	case "AccessibilityRequest.relevantTestDate":
-		if e.complexity.AccessibilityRequest.RelevantTestDate == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequest.RelevantTestDate(childComplexity), true
-
-	case "AccessibilityRequest.statusRecord":
-		if e.complexity.AccessibilityRequest.StatusRecord == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequest.StatusRecord(childComplexity), true
-
-	case "AccessibilityRequest.system":
-		if e.complexity.AccessibilityRequest.System == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequest.System(childComplexity), true
-
-	case "AccessibilityRequest.testDates":
-		if e.complexity.AccessibilityRequest.TestDates == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequest.TestDates(childComplexity), true
-
-	case "AccessibilityRequestDocument.documentType":
-		if e.complexity.AccessibilityRequestDocument.DocumentType == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocument.DocumentType(childComplexity), true
-
-	case "AccessibilityRequestDocument.id":
-		if e.complexity.AccessibilityRequestDocument.ID == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocument.ID(childComplexity), true
-
-	case "AccessibilityRequestDocument.mimeType":
-		if e.complexity.AccessibilityRequestDocument.MimeType == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocument.MimeType(childComplexity), true
-
-	case "AccessibilityRequestDocument.name":
-		if e.complexity.AccessibilityRequestDocument.Name == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocument.Name(childComplexity), true
-
-	case "AccessibilityRequestDocument.requestID":
-		if e.complexity.AccessibilityRequestDocument.RequestID == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocument.RequestID(childComplexity), true
-
-	case "AccessibilityRequestDocument.size":
-		if e.complexity.AccessibilityRequestDocument.Size == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocument.Size(childComplexity), true
-
-	case "AccessibilityRequestDocument.status":
-		if e.complexity.AccessibilityRequestDocument.Status == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocument.Status(childComplexity), true
-
-	case "AccessibilityRequestDocument.url":
-		if e.complexity.AccessibilityRequestDocument.URL == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocument.URL(childComplexity), true
-
-	case "AccessibilityRequestDocument.uploadedAt":
-		if e.complexity.AccessibilityRequestDocument.UploadedAt == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocument.UploadedAt(childComplexity), true
-
-	case "AccessibilityRequestDocumentType.commonType":
-		if e.complexity.AccessibilityRequestDocumentType.CommonType == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocumentType.CommonType(childComplexity), true
-
-	case "AccessibilityRequestDocumentType.otherTypeDescription":
-		if e.complexity.AccessibilityRequestDocumentType.OtherTypeDescription == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocumentType.OtherTypeDescription(childComplexity), true
-
-	case "AccessibilityRequestEdge.node":
-		if e.complexity.AccessibilityRequestEdge.Node == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestEdge.Node(childComplexity), true
-
-	case "AccessibilityRequestNote.authorName":
-		if e.complexity.AccessibilityRequestNote.AuthorName == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestNote.AuthorName(childComplexity), true
-
-	case "AccessibilityRequestNote.createdAt":
-		if e.complexity.AccessibilityRequestNote.CreatedAt == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestNote.CreatedAt(childComplexity), true
-
-	case "AccessibilityRequestNote.id":
-		if e.complexity.AccessibilityRequestNote.ID == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestNote.ID(childComplexity), true
-
-	case "AccessibilityRequestNote.note":
-		if e.complexity.AccessibilityRequestNote.Note == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestNote.Note(childComplexity), true
-
-	case "AccessibilityRequestNote.requestID":
-		if e.complexity.AccessibilityRequestNote.RequestID == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestNote.RequestID(childComplexity), true
-
-	case "AccessibilityRequestStatusRecord.createdAt":
-		if e.complexity.AccessibilityRequestStatusRecord.CreatedAt == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestStatusRecord.CreatedAt(childComplexity), true
-
-	case "AccessibilityRequestStatusRecord.euaUserId":
-		if e.complexity.AccessibilityRequestStatusRecord.EUAUserID == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestStatusRecord.EUAUserID(childComplexity), true
-
-	case "AccessibilityRequestStatusRecord.id":
-		if e.complexity.AccessibilityRequestStatusRecord.ID == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestStatusRecord.ID(childComplexity), true
-
-	case "AccessibilityRequestStatusRecord.requestID":
-		if e.complexity.AccessibilityRequestStatusRecord.RequestID == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestStatusRecord.RequestID(childComplexity), true
-
-	case "AccessibilityRequestStatusRecord.status":
-		if e.complexity.AccessibilityRequestStatusRecord.Status == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestStatusRecord.Status(childComplexity), true
-
-	case "AccessibilityRequestsConnection.edges":
-		if e.complexity.AccessibilityRequestsConnection.Edges == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestsConnection.Edges(childComplexity), true
 
 	case "AugmentedSystemIntakeContact.commonName":
 		if e.complexity.AugmentedSystemIntakeContact.CommonName == nil {
@@ -2004,20 +1614,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.BusinessCaseSolution.Title(childComplexity), true
 
-	case "BusinessOwner.component":
-		if e.complexity.BusinessOwner.Component == nil {
-			break
-		}
-
-		return e.complexity.BusinessOwner.Component(childComplexity), true
-
-	case "BusinessOwner.name":
-		if e.complexity.BusinessOwner.Name == nil {
-			break
-		}
-
-		return e.complexity.BusinessOwner.Name(childComplexity), true
-
 	case "CedarAuthorityToOperate.actualDispositionDate":
 		if e.complexity.CedarAuthorityToOperate.ActualDispositionDate == nil {
 			break
@@ -2213,6 +1809,97 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarAuthorityToOperate.XLCPhase(childComplexity), true
+
+	case "CedarBudget.fiscalYear":
+		if e.complexity.CedarBudget.FiscalYear == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.FiscalYear(childComplexity), true
+
+	case "CedarBudget.funding":
+		if e.complexity.CedarBudget.Funding == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.Funding(childComplexity), true
+
+	case "CedarBudget.fundingId":
+		if e.complexity.CedarBudget.FundingID == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.FundingID(childComplexity), true
+
+	case "CedarBudget.fundingSource":
+		if e.complexity.CedarBudget.FundingSource == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.FundingSource(childComplexity), true
+
+	case "CedarBudget.id":
+		if e.complexity.CedarBudget.ID == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.ID(childComplexity), true
+
+	case "CedarBudget.name":
+		if e.complexity.CedarBudget.Name == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.Name(childComplexity), true
+
+	case "CedarBudget.projectId":
+		if e.complexity.CedarBudget.ProjectID == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.ProjectID(childComplexity), true
+
+	case "CedarBudget.projectTitle":
+		if e.complexity.CedarBudget.ProjectTitle == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.ProjectTitle(childComplexity), true
+
+	case "CedarBudget.systemId":
+		if e.complexity.CedarBudget.SystemID == nil {
+			break
+		}
+
+		return e.complexity.CedarBudget.SystemID(childComplexity), true
+
+	case "CedarBudgetActualCost.actualSystemCost":
+		if e.complexity.CedarBudgetActualCost.ActualSystemCost == nil {
+			break
+		}
+
+		return e.complexity.CedarBudgetActualCost.ActualSystemCost(childComplexity), true
+
+	case "CedarBudgetActualCost.fiscalYear":
+		if e.complexity.CedarBudgetActualCost.FiscalYear == nil {
+			break
+		}
+
+		return e.complexity.CedarBudgetActualCost.FiscalYear(childComplexity), true
+
+	case "CedarBudgetActualCost.systemId":
+		if e.complexity.CedarBudgetActualCost.SystemID == nil {
+			break
+		}
+
+		return e.complexity.CedarBudgetActualCost.SystemID(childComplexity), true
+
+	case "CedarBudgetSystemCost.budgetActualCost":
+		if e.complexity.CedarBudgetSystemCost.BudgetActualCost == nil {
+			break
+		}
+
+		return e.complexity.CedarBudgetSystemCost.BudgetActualCost(childComplexity), true
 
 	case "CedarBusinessOwnerInformation.beneficiaryAddressPurpose":
 		if e.complexity.CedarBusinessOwnerInformation.BeneficiaryAddressPurpose == nil {
@@ -3110,6 +2797,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CedarSoftwareProducts.UsesAiTech(childComplexity), true
 
+	case "CedarSubSystem.acronym":
+		if e.complexity.CedarSubSystem.Acronym == nil {
+			break
+		}
+
+		return e.complexity.CedarSubSystem.Acronym(childComplexity), true
+
+	case "CedarSubSystem.description":
+		if e.complexity.CedarSubSystem.Description == nil {
+			break
+		}
+
+		return e.complexity.CedarSubSystem.Description(childComplexity), true
+
+	case "CedarSubSystem.id":
+		if e.complexity.CedarSubSystem.ID == nil {
+			break
+		}
+
+		return e.complexity.CedarSubSystem.ID(childComplexity), true
+
+	case "CedarSubSystem.name":
+		if e.complexity.CedarSubSystem.Name == nil {
+			break
+		}
+
+		return e.complexity.CedarSubSystem.Name(childComplexity), true
+
 	case "CedarSystem.acronym":
 		if e.complexity.CedarSystem.Acronym == nil {
 			break
@@ -3544,48 +3259,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ContractDate.Year(childComplexity), true
 
-	case "CreateAccessibilityRequestDocumentPayload.accessibilityRequestDocument":
-		if e.complexity.CreateAccessibilityRequestDocumentPayload.AccessibilityRequestDocument == nil {
-			break
-		}
-
-		return e.complexity.CreateAccessibilityRequestDocumentPayload.AccessibilityRequestDocument(childComplexity), true
-
-	case "CreateAccessibilityRequestDocumentPayload.userErrors":
-		if e.complexity.CreateAccessibilityRequestDocumentPayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.CreateAccessibilityRequestDocumentPayload.UserErrors(childComplexity), true
-
-	case "CreateAccessibilityRequestNotePayload.accessibilityRequestNote":
-		if e.complexity.CreateAccessibilityRequestNotePayload.AccessibilityRequestNote == nil {
-			break
-		}
-
-		return e.complexity.CreateAccessibilityRequestNotePayload.AccessibilityRequestNote(childComplexity), true
-
-	case "CreateAccessibilityRequestNotePayload.userErrors":
-		if e.complexity.CreateAccessibilityRequestNotePayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.CreateAccessibilityRequestNotePayload.UserErrors(childComplexity), true
-
-	case "CreateAccessibilityRequestPayload.accessibilityRequest":
-		if e.complexity.CreateAccessibilityRequestPayload.AccessibilityRequest == nil {
-			break
-		}
-
-		return e.complexity.CreateAccessibilityRequestPayload.AccessibilityRequest(childComplexity), true
-
-	case "CreateAccessibilityRequestPayload.userErrors":
-		if e.complexity.CreateAccessibilityRequestPayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.CreateAccessibilityRequestPayload.UserErrors(childComplexity), true
-
 	case "CreateCedarSystemBookmarkPayload.cedarSystemBookmark":
 		if e.complexity.CreateCedarSystemBookmarkPayload.CedarSystemBookmark == nil {
 			break
@@ -3614,47 +3287,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateTRBRequestDocumentPayload.Document(childComplexity), true
 
-	case "CreateTestDatePayload.testDate":
-		if e.complexity.CreateTestDatePayload.TestDate == nil {
-			break
-		}
-
-		return e.complexity.CreateTestDatePayload.TestDate(childComplexity), true
-
-	case "CreateTestDatePayload.userErrors":
-		if e.complexity.CreateTestDatePayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.CreateTestDatePayload.UserErrors(childComplexity), true
-
 	case "CurrentUser.launchDarkly":
 		if e.complexity.CurrentUser.LaunchDarkly == nil {
 			break
 		}
 
 		return e.complexity.CurrentUser.LaunchDarkly(childComplexity), true
-
-	case "DeleteAccessibilityRequestDocumentPayload.id":
-		if e.complexity.DeleteAccessibilityRequestDocumentPayload.ID == nil {
-			break
-		}
-
-		return e.complexity.DeleteAccessibilityRequestDocumentPayload.ID(childComplexity), true
-
-	case "DeleteAccessibilityRequestPayload.id":
-		if e.complexity.DeleteAccessibilityRequestPayload.ID == nil {
-			break
-		}
-
-		return e.complexity.DeleteAccessibilityRequestPayload.ID(childComplexity), true
-
-	case "DeleteAccessibilityRequestPayload.userErrors":
-		if e.complexity.DeleteAccessibilityRequestPayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.DeleteAccessibilityRequestPayload.UserErrors(childComplexity), true
 
 	case "DeleteCedarSystemBookmarkPayload.cedarSystemId":
 		if e.complexity.DeleteCedarSystemBookmarkPayload.CedarSystemID == nil {
@@ -3683,20 +3321,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.DeleteTRBRequestDocumentPayload.Document(childComplexity), true
-
-	case "DeleteTestDatePayload.testDate":
-		if e.complexity.DeleteTestDatePayload.TestDate == nil {
-			break
-		}
-
-		return e.complexity.DeleteTestDatePayload.TestDate(childComplexity), true
-
-	case "DeleteTestDatePayload.userErrors":
-		if e.complexity.DeleteTestDatePayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.DeleteTestDatePayload.UserErrors(childComplexity), true
 
 	case "EstimatedLifecycleCost.businessCaseId":
 		if e.complexity.EstimatedLifecycleCost.BusinessCaseID == nil {
@@ -3739,20 +3363,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.EstimatedLifecycleCost.Year(childComplexity), true
-
-	case "GeneratePresignedUploadURLPayload.url":
-		if e.complexity.GeneratePresignedUploadURLPayload.URL == nil {
-			break
-		}
-
-		return e.complexity.GeneratePresignedUploadURLPayload.URL(childComplexity), true
-
-	case "GeneratePresignedUploadURLPayload.userErrors":
-		if e.complexity.GeneratePresignedUploadURLPayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.GeneratePresignedUploadURLPayload.UserErrors(childComplexity), true
 
 	case "GovernanceRequestFeedback.author":
 		if e.complexity.GovernanceRequestFeedback.Author == nil {
@@ -3905,42 +3515,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CloseTRBRequest(childComplexity, args["input"].(model.CloseTRBRequestInput)), true
-
-	case "Mutation.createAccessibilityRequest":
-		if e.complexity.Mutation.CreateAccessibilityRequest == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createAccessibilityRequest_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateAccessibilityRequest(childComplexity, args["input"].(model.CreateAccessibilityRequestInput)), true
-
-	case "Mutation.createAccessibilityRequestDocument":
-		if e.complexity.Mutation.CreateAccessibilityRequestDocument == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createAccessibilityRequestDocument_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateAccessibilityRequestDocument(childComplexity, args["input"].(model.CreateAccessibilityRequestDocumentInput)), true
-
-	case "Mutation.createAccessibilityRequestNote":
-		if e.complexity.Mutation.CreateAccessibilityRequestNote == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createAccessibilityRequestNote_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateAccessibilityRequestNote(childComplexity, args["input"].(model.CreateAccessibilityRequestNoteInput)), true
 
 	case "Mutation.createCedarSystemBookmark":
 		if e.complexity.Mutation.CreateCedarSystemBookmark == nil {
@@ -4278,18 +3852,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateTRBRequestFeedback(childComplexity, args["input"].(model.CreateTRBRequestFeedbackInput)), true
 
-	case "Mutation.createTestDate":
-		if e.complexity.Mutation.CreateTestDate == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createTestDate_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateTestDate(childComplexity, args["input"].(model.CreateTestDateInput)), true
-
 	case "Mutation.createTrbLeadOption":
 		if e.complexity.Mutation.CreateTrbLeadOption == nil {
 			break
@@ -4301,30 +3863,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateTrbLeadOption(childComplexity, args["eua"].(string)), true
-
-	case "Mutation.deleteAccessibilityRequest":
-		if e.complexity.Mutation.DeleteAccessibilityRequest == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_deleteAccessibilityRequest_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.DeleteAccessibilityRequest(childComplexity, args["input"].(model.DeleteAccessibilityRequestInput)), true
-
-	case "Mutation.deleteAccessibilityRequestDocument":
-		if e.complexity.Mutation.DeleteAccessibilityRequestDocument == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_deleteAccessibilityRequestDocument_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.DeleteAccessibilityRequestDocument(childComplexity, args["input"].(model.DeleteAccessibilityRequestDocumentInput)), true
 
 	case "Mutation.deleteCedarSystemBookmark":
 		if e.complexity.Mutation.DeleteCedarSystemBookmark == nil {
@@ -4410,18 +3948,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleteTRBRequestFundingSources(childComplexity, args["input"].(model.DeleteTRBRequestFundingSourcesInput)), true
 
-	case "Mutation.deleteTestDate":
-		if e.complexity.Mutation.DeleteTestDate == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_deleteTestDate_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.DeleteTestDate(childComplexity, args["input"].(model.DeleteTestDateInput)), true
-
 	case "Mutation.deleteTrbLeadOption":
 		if e.complexity.Mutation.DeleteTrbLeadOption == nil {
 			break
@@ -4433,18 +3959,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteTrbLeadOption(childComplexity, args["eua"].(string)), true
-
-	case "Mutation.generatePresignedUploadURL":
-		if e.complexity.Mutation.GeneratePresignedUploadURL == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_generatePresignedUploadURL_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.GeneratePresignedUploadURL(childComplexity, args["input"].(model.GeneratePresignedUploadURLInput)), true
 
 	case "Mutation.reopenTrbRequest":
 		if e.complexity.Mutation.ReopenTrbRequest == nil {
@@ -4650,30 +4164,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UnlinkTRBRequestRelation(childComplexity, args["trbRequestID"].(uuid.UUID)), true
 
-	case "Mutation.updateAccessibilityRequestCedarSystem":
-		if e.complexity.Mutation.UpdateAccessibilityRequestCedarSystem == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updateAccessibilityRequestCedarSystem_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdateAccessibilityRequestCedarSystem(childComplexity, args["input"].(*model.UpdateAccessibilityRequestCedarSystemInput)), true
-
-	case "Mutation.updateAccessibilityRequestStatus":
-		if e.complexity.Mutation.UpdateAccessibilityRequestStatus == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updateAccessibilityRequestStatus_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdateAccessibilityRequestStatus(childComplexity, args["input"].(*model.UpdateAccessibilityRequestStatus)), true
-
 	case "Mutation.updateSystemIntakeAdminLead":
 		if e.complexity.Mutation.UpdateSystemIntakeAdminLead == nil {
 			break
@@ -4878,42 +4368,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateTRBRequestTRBLead(childComplexity, args["input"].(model.UpdateTRBRequestTRBLeadInput)), true
 
-	case "Mutation.updateTestDate":
-		if e.complexity.Mutation.UpdateTestDate == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updateTestDate_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdateTestDate(childComplexity, args["input"].(model.UpdateTestDateInput)), true
-
-	case "Query.accessibilityRequest":
-		if e.complexity.Query.AccessibilityRequest == nil {
-			break
-		}
-
-		args, err := ec.field_Query_accessibilityRequest_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.AccessibilityRequest(childComplexity, args["id"].(uuid.UUID)), true
-
-	case "Query.accessibilityRequests":
-		if e.complexity.Query.AccessibilityRequests == nil {
-			break
-		}
-
-		args, err := ec.field_Query_accessibilityRequests_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.AccessibilityRequests(childComplexity, args["after"].(*string), args["first"].(int)), true
-
 	case "Query.cedarAuthorityToOperate":
 		if e.complexity.Query.CedarAuthorityToOperate == nil {
 			break
@@ -4925,6 +4379,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.CedarAuthorityToOperate(childComplexity, args["cedarSystemID"].(string)), true
+
+	case "Query.cedarBudget":
+		if e.complexity.Query.CedarBudget == nil {
+			break
+		}
+
+		args, err := ec.field_Query_cedarBudget_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CedarBudget(childComplexity, args["cedarSystemID"].(string)), true
+
+	case "Query.cedarBudgetSystemCost":
+		if e.complexity.Query.CedarBudgetSystemCost == nil {
+			break
+		}
+
+		args, err := ec.field_Query_cedarBudgetSystemCost_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CedarBudgetSystemCost(childComplexity, args["cedarSystemID"].(string)), true
 
 	case "Query.cedarContractsBySystem":
 		if e.complexity.Query.CedarContractsBySystem == nil {
@@ -4961,6 +4439,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.CedarSoftwareProducts(childComplexity, args["cedarSystemId"].(string)), true
+
+	case "Query.cedarSubSystems":
+		if e.complexity.Query.CedarSubSystems == nil {
+			break
+		}
+
+		args, err := ec.field_Query_cedarSubSystems_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.CedarSubSystems(childComplexity, args["cedarSystemId"].(string)), true
 
 	case "Query.cedarSystem":
 		if e.complexity.Query.CedarSystem == nil {
@@ -5136,18 +4626,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.SystemIntakesWithLcids(childComplexity), true
 
-	case "Query.systems":
-		if e.complexity.Query.Systems == nil {
-			break
-		}
-
-		args, err := ec.field_Query_systems_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Systems(childComplexity, args["after"].(*string), args["first"].(int)), true
-
 	case "Query.trbAdminNote":
 		if e.complexity.Query.TrbAdminNote == nil {
 			break
@@ -5291,48 +4769,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.RequestsConnection.Edges(childComplexity), true
-
-	case "System.businessOwner":
-		if e.complexity.System.BusinessOwner == nil {
-			break
-		}
-
-		return e.complexity.System.BusinessOwner(childComplexity), true
-
-	case "System.id":
-		if e.complexity.System.ID == nil {
-			break
-		}
-
-		return e.complexity.System.ID(childComplexity), true
-
-	case "System.lcid":
-		if e.complexity.System.LCID == nil {
-			break
-		}
-
-		return e.complexity.System.LCID(childComplexity), true
-
-	case "System.name":
-		if e.complexity.System.Name == nil {
-			break
-		}
-
-		return e.complexity.System.Name(childComplexity), true
-
-	case "SystemConnection.edges":
-		if e.complexity.SystemConnection.Edges == nil {
-			break
-		}
-
-		return e.complexity.SystemConnection.Edges(childComplexity), true
-
-	case "SystemEdge.node":
-		if e.complexity.SystemEdge.Node == nil {
-			break
-		}
-
-		return e.complexity.SystemEdge.Node(childComplexity), true
 
 	case "SystemIntake.actions":
 		if e.complexity.SystemIntake.Actions == nil {
@@ -7455,83 +6891,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TRBTaskStatuses.FormStatus(childComplexity), true
 
-	case "TestDate.date":
-		if e.complexity.TestDate.Date == nil {
-			break
-		}
-
-		return e.complexity.TestDate.Date(childComplexity), true
-
-	case "TestDate.id":
-		if e.complexity.TestDate.ID == nil {
-			break
-		}
-
-		return e.complexity.TestDate.ID(childComplexity), true
-
-	case "TestDate.score":
-		if e.complexity.TestDate.Score == nil {
-			break
-		}
-
-		return e.complexity.TestDate.Score(childComplexity), true
-
-	case "TestDate.testType":
-		if e.complexity.TestDate.TestType == nil {
-			break
-		}
-
-		return e.complexity.TestDate.TestType(childComplexity), true
-
-	case "UpdateAccessibilityRequestCedarSystemPayload.accessibilityRequest":
-		if e.complexity.UpdateAccessibilityRequestCedarSystemPayload.AccessibilityRequest == nil {
-			break
-		}
-
-		return e.complexity.UpdateAccessibilityRequestCedarSystemPayload.AccessibilityRequest(childComplexity), true
-
-	case "UpdateAccessibilityRequestCedarSystemPayload.id":
-		if e.complexity.UpdateAccessibilityRequestCedarSystemPayload.ID == nil {
-			break
-		}
-
-		return e.complexity.UpdateAccessibilityRequestCedarSystemPayload.ID(childComplexity), true
-
-	case "UpdateAccessibilityRequestStatusPayload.euaUserId":
-		if e.complexity.UpdateAccessibilityRequestStatusPayload.EuaUserID == nil {
-			break
-		}
-
-		return e.complexity.UpdateAccessibilityRequestStatusPayload.EuaUserID(childComplexity), true
-
-	case "UpdateAccessibilityRequestStatusPayload.id":
-		if e.complexity.UpdateAccessibilityRequestStatusPayload.ID == nil {
-			break
-		}
-
-		return e.complexity.UpdateAccessibilityRequestStatusPayload.ID(childComplexity), true
-
-	case "UpdateAccessibilityRequestStatusPayload.requestID":
-		if e.complexity.UpdateAccessibilityRequestStatusPayload.RequestID == nil {
-			break
-		}
-
-		return e.complexity.UpdateAccessibilityRequestStatusPayload.RequestID(childComplexity), true
-
-	case "UpdateAccessibilityRequestStatusPayload.status":
-		if e.complexity.UpdateAccessibilityRequestStatusPayload.Status == nil {
-			break
-		}
-
-		return e.complexity.UpdateAccessibilityRequestStatusPayload.Status(childComplexity), true
-
-	case "UpdateAccessibilityRequestStatusPayload.userErrors":
-		if e.complexity.UpdateAccessibilityRequestStatusPayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.UpdateAccessibilityRequestStatusPayload.UserErrors(childComplexity), true
-
 	case "UpdateSystemIntakePayload.systemIntake":
 		if e.complexity.UpdateSystemIntakePayload.SystemIntake == nil {
 			break
@@ -7545,20 +6904,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdateSystemIntakePayload.UserErrors(childComplexity), true
-
-	case "UpdateTestDatePayload.testDate":
-		if e.complexity.UpdateTestDatePayload.TestDate == nil {
-			break
-		}
-
-		return e.complexity.UpdateTestDatePayload.TestDate(childComplexity), true
-
-	case "UpdateTestDatePayload.userErrors":
-		if e.complexity.UpdateTestDatePayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.UpdateTestDatePayload.UserErrors(childComplexity), true
 
 	case "UserAccount.commonName":
 		if e.complexity.UserAccount.CommonName == nil {
@@ -7681,9 +7026,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	ec := executionContext{rc, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputCloseTRBRequestInput,
-		ec.unmarshalInputCreateAccessibilityRequestDocumentInput,
-		ec.unmarshalInputCreateAccessibilityRequestInput,
-		ec.unmarshalInputCreateAccessibilityRequestNoteInput,
 		ec.unmarshalInputCreateCedarSystemBookmarkInput,
 		ec.unmarshalInputCreateSystemIntakeContactInput,
 		ec.unmarshalInputCreateSystemIntakeDocumentInput,
@@ -7698,14 +7040,9 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateTRBRequestAttendeeInput,
 		ec.unmarshalInputCreateTRBRequestDocumentInput,
 		ec.unmarshalInputCreateTRBRequestFeedbackInput,
-		ec.unmarshalInputCreateTestDateInput,
-		ec.unmarshalInputDeleteAccessibilityRequestDocumentInput,
-		ec.unmarshalInputDeleteAccessibilityRequestInput,
 		ec.unmarshalInputDeleteSystemIntakeContactInput,
 		ec.unmarshalInputDeleteTRBRequestFundingSourcesInput,
-		ec.unmarshalInputDeleteTestDateInput,
 		ec.unmarshalInputEmailNotificationRecipients,
-		ec.unmarshalInputGeneratePresignedUploadURLInput,
 		ec.unmarshalInputReopenTRBRequestInput,
 		ec.unmarshalInputSendCantFindSomethingEmailInput,
 		ec.unmarshalInputSendFeedbackEmailInput,
@@ -7744,8 +7081,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSystemIntakeRetireLCIDInput,
 		ec.unmarshalInputSystemIntakeUpdateLCIDInput,
 		ec.unmarshalInputTRBRequestChanges,
-		ec.unmarshalInputUpdateAccessibilityRequestCedarSystemInput,
-		ec.unmarshalInputUpdateAccessibilityRequestStatus,
 		ec.unmarshalInputUpdateSystemIntakeAdminLeadInput,
 		ec.unmarshalInputUpdateSystemIntakeContactDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeContactInput,
@@ -7762,7 +7097,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateTRBRequestFormInput,
 		ec.unmarshalInputUpdateTRBRequestFundingSourcesInput,
 		ec.unmarshalInputUpdateTRBRequestTRBLeadInput,
-		ec.unmarshalInputUpdateTestDateInput,
 	)
 	first := true
 
@@ -7873,7 +7207,6 @@ type UserError {
 Indicates the type of a request being made with the EASi system
 """
 enum RequestType {
-  ACCESSIBILITY_REQUEST
   GOVERNANCE_REQUEST
 }
 
@@ -7951,6 +7284,40 @@ type CedarAuthorityToOperate {
 }
 
 """
+CedarBudget represents info about the budget associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarBudget {
+  fiscalYear: String
+  funding: String
+  fundingId: String
+  fundingSource: String
+  id: String
+  name: String
+  projectId: String!
+  projectTitle: String
+  systemId: String
+}
+
+"""
+CedarBudgetActualCost represents an individual budget actual cost item; this information is returned from the CEDAR Core API
+as a part of the CedarBudgetSystemCost object
+"""
+type CedarBudgetActualCost {
+  actualSystemCost: String
+  fiscalYear: String
+  systemId: String
+}
+
+"""
+CedarBudgetSystemCost represents info about the actual cost associated with a CEDAR object (usually a system); this information is returned from the CEDAR Core API
+Right now, this does not tie in with any other types defined here, and is a root node until that changes.
+"""
+type CedarBudgetSystemCost {
+  budgetActualCost: [CedarBudgetActualCost!]!
+}
+
+"""
 CedarSoftwareProductItem represents an individual software product; this information is returned from the CEDAR Core API
 as a part of the CedarSoftwareProducts object
 """
@@ -8008,6 +7375,16 @@ type CedarSystem {
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
   versionId: String
+}
+
+"""
+CedarSubSystem represents the response from the /system/detail 
+"""
+type CedarSubSystem {
+  id: String!
+  name: String!
+  acronym: String
+  description: String
 }
 
 """
@@ -8283,355 +7660,6 @@ type CedarExchange {
 	toOwnerName: String
 	toOwnerType: String
 	typeOfData: [CedarExchangeTypeOfDataItem!]!
-}
-
-"""
-An accessibility request represents a system that needs to go through
-the 508 process
-"""
-type AccessibilityRequest {
-  documents: [AccessibilityRequestDocument!]!
-  id: UUID!
-  name: String!
-  relevantTestDate: TestDate
-  submittedAt: Time!
-  system: System
-  testDates: [TestDate!]!
-  euaUserId: String!
-  statusRecord: AccessibilityRequestStatusRecord!
-  notes: [AccessibilityRequestNote!]! @hasRole(role: EASI_508_TESTER_OR_USER)
-  cedarSystemId: String
-}
-
-"""
-Indicates the status of a 508/accessibility request
-"""
-enum AccessibilityRequestStatus {
-  OPEN
-  IN_REMEDIATION
-  CLOSED
-  DELETED
-}
-
-"""
-An accessibility request status record is the data related to a status action
-"""
-type AccessibilityRequestStatusRecord {
-  id: UUID!
-  requestID: UUID!
-  status: AccessibilityRequestStatus!
-  euaUserId: String!
-  createdAt: Time!
-}
-
-"""
-Parameters for updating a 508/accessibility request's status
-"""
-input UpdateAccessibilityRequestStatus {
-  requestID: UUID!
-  status: AccessibilityRequestStatus!
-}
-
-"""
-Result of updating a 508/accessibility request's status
-"""
-type UpdateAccessibilityRequestStatusPayload {
-  id: UUID!
-  requestID: UUID!
-  status: AccessibilityRequestStatus!
-  euaUserId: String!
-  userErrors: [UserError!]
-}
-
-"""
-Parameters for updating a 508/accessibility request's associated CEDAR system
-"""
-input UpdateAccessibilityRequestCedarSystemInput {
-  id: UUID!
-  cedarSystemId: String!
-}
-
-"""
-Result of updating a 508/accessibility request's associated CEDAR system
-"""
-type UpdateAccessibilityRequestCedarSystemPayload {
-  id: UUID!
-  accessibilityRequest: AccessibilityRequest
-}
-
-"""
-The data used when adding a note to a 508/accessibility request
-"""
-input CreateAccessibilityRequestNoteInput {
-  requestID: UUID!
-  note: String!
-  shouldSendEmail: Boolean!
-}
-
-"""
-Represents a note added to a 508/accessibility request by a user
-"""
-type AccessibilityRequestNote {
-  id: UUID!
-  requestID: UUID!
-  createdAt: Time!
-  note: String!
-  authorName: String!
-}
-
-"""
-The payload for adding a note to a 508/accessibility request
-"""
-type CreateAccessibilityRequestNotePayload {
-  accessibilityRequestNote: AccessibilityRequestNote!
-  userErrors: [UserError!]
-}
-
-"""
-A business owner is the person at CMS responsible for a system
-"""
-type BusinessOwner {
-  component: String!
-  name: String!
-}
-
-"""
-A System is derived from a system intake and represents a computer system
-managed by CMS
-"""
-type System {
-  businessOwner: BusinessOwner!
-  id: UUID!
-  lcid: String!
-  name: String!
-}
-
-"""
-Indicates the status of a document that has been attached to 508/accessibility
-request, which will be scanned for viruses before it is made available
-"""
-enum AccessibilityRequestDocumentStatus {
-  AVAILABLE
-  PENDING
-  UNAVAILABLE
-}
-
-"""
-Represents the common options for document type that is attached to a
-508/accessibility request
-"""
-enum AccessibilityRequestDocumentCommonType {
-  AWARDED_VPAT
-  OTHER
-  REMEDIATION_PLAN
-  TESTING_VPAT
-  TEST_PLAN
-  TEST_RESULTS
-}
-
-"""
-Denotes type of a document that is attached to a 508/accessibility request,
-which can be one of a number of common types, or another user-specified type
-"""
-type AccessibilityRequestDocumentType {
-  commonType: AccessibilityRequestDocumentCommonType!
-  otherTypeDescription: String
-}
-
-"""
-Represents a document attached to a 508/accessibility request
-"""
-type AccessibilityRequestDocument {
-  documentType: AccessibilityRequestDocumentType!
-  id: UUID!
-  mimeType: String!
-  name: String!
-  requestID: UUID!
-  size: Int!
-  status: AccessibilityRequestDocumentStatus!
-  uploadedAt: Time!
-  url: String!
-}
-
-type SystemConnection {
-  edges: [SystemEdge!]!
-}
-
-type SystemEdge {
-  node: System!
-}
-
-"""
-The data needed to initialize a 508/accessibility request
-"""
-input CreateAccessibilityRequestInput {
-  intakeID: UUID
-  name: String!
-  cedarSystemId: String
-}
-
-"""
-The payload containing the data needed to initialize an AccessibilityRequest
-"""
-type CreateAccessibilityRequestPayload {
-  accessibilityRequest: AccessibilityRequest
-  userErrors: [UserError!]
-}
-
-"""
-Denotes the reason a 508/accessibility request was deleted
-"""
-enum AccessibilityRequestDeletionReason {
-  INCORRECT_APPLICATION_AND_LIFECYCLE_ID
-  NO_TESTING_NEEDED
-  OTHER
-}
-
-"""
-The input data needed to delete a 508/accessibility request
-"""
-input DeleteAccessibilityRequestInput {
-  id: UUID!
-  reason: AccessibilityRequestDeletionReason!
-}
-
-"""
-The payload data sent when deleting a 508/accessibility request
-"""
-type DeleteAccessibilityRequestPayload {
-  id: UUID
-  userErrors: [UserError!]
-}
-
-"""
-Input associated with a document to be uploaded to a 508/accessibility request
-"""
-input GeneratePresignedUploadURLInput {
-  fileName: String!
-  mimeType: String!
-  size: Int!
-}
-
-"""
-URL generated for a document to be uploaded to a 508/accessibility request
-"""
-type GeneratePresignedUploadURLPayload {
-  url: String
-  userErrors: [UserError!]
-}
-
-type AccessibilityRequestsConnection {
-  edges: [AccessibilityRequestEdge!]!
-}
-
-type AccessibilityRequestEdge {
-  node: AccessibilityRequest!
-}
-
-"""
-A 508 test instance
-"""
-type TestDate {
-  date: Time!
-  id: UUID!
-  score: Int
-  testType: TestDateTestType!
-}
-
-"""
-The type of test added to a 508/accessibility request
-"""
-enum TestDateTestType {
-  INITIAL
-  REMEDIATION
-}
-
-"""
-The input required to add a test date/score to a 508/accessibility request
-"""
-input CreateTestDateInput {
-  date: Time!
-  requestID: UUID!
-  score: Int
-  testType: TestDateTestType!
-}
-
-"""
-The payload for the input required to add a test date/score to a
-508/accessibility request
-"""
-type CreateTestDatePayload {
-  testDate: TestDate
-  userErrors: [UserError!]
-}
-
-"""
-The input required to update a test date/score
-"""
-input UpdateTestDateInput {
-  date: Time!
-  id: UUID!
-  score: Int
-  testType: TestDateTestType!
-}
-
-"""
-The payload for the input required to update a test date/score
-"""
-type UpdateTestDatePayload {
-  testDate: TestDate
-  userErrors: [UserError!]
-}
-
-"""
-The input required to delete a test date/score
-"""
-input DeleteTestDateInput {
-  id: UUID!
-}
-
-"""
-The payload for the input required to delete a test date/score
-"""
-type DeleteTestDatePayload {
-  testDate: TestDate
-  userErrors: [UserError!]
-}
-
-"""
-The input data used for adding a document to a 508/accessibility request
-"""
-input CreateAccessibilityRequestDocumentInput {
-  commonDocumentType: AccessibilityRequestDocumentCommonType!
-  mimeType: String!
-  name: String!
-  otherDocumentTypeDescription: String
-  requestID: UUID!
-  size: Int!
-  url: String!
-}
-
-"""
-The payload containing the input data used for adding a document to a
-508/accessibility request
-"""
-type CreateAccessibilityRequestDocumentPayload {
-  accessibilityRequestDocument: AccessibilityRequestDocument
-  userErrors: [UserError!]
-}
-
-"""
-The input used to delete a document from a 508/accessibility request
-"""
-input DeleteAccessibilityRequestDocumentInput {
-  id: UUID!
-}
-
-"""
-The payload used to delete a document from a 508/accessibility request
-"""
-type DeleteAccessibilityRequestDocumentPayload {
-  id: UUID
 }
 
 """
@@ -9752,7 +8780,7 @@ enum SystemIntakeDocumentStatus {
 
 """
 Represents the common options for document type that is attached to a
-508/accessibility request
+TRB Request
 """
 enum TRBDocumentCommonType {
   ARCHITECTURE_DIAGRAM
@@ -10422,30 +9450,6 @@ input ReopenTRBRequestInput {
 Defines the mutations for the schema
 """
 type Mutation {
-  createAccessibilityRequest(
-    input: CreateAccessibilityRequestInput!
-  ): CreateAccessibilityRequestPayload
-  deleteAccessibilityRequest(
-    input: DeleteAccessibilityRequestInput!
-  ): DeleteAccessibilityRequestPayload
-  createAccessibilityRequestDocument(
-    input: CreateAccessibilityRequestDocumentInput!
-  ): CreateAccessibilityRequestDocumentPayload
-  createAccessibilityRequestNote(
-    input: CreateAccessibilityRequestNoteInput!
-  ): CreateAccessibilityRequestNotePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  deleteAccessibilityRequestDocument(
-    input: DeleteAccessibilityRequestDocumentInput!
-  ): DeleteAccessibilityRequestDocumentPayload
-  updateAccessibilityRequestStatus(
-    input: UpdateAccessibilityRequestStatus
-  ): UpdateAccessibilityRequestStatusPayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  updateAccessibilityRequestCedarSystem(
-    input: UpdateAccessibilityRequestCedarSystemInput
-  ): UpdateAccessibilityRequestCedarSystemPayload
-
   # Mutations for IT Gov v2 workflow
   createSystemIntakeActionProgressToNewStep(
     input: SystemIntakeProgressToNewStepsInput!
@@ -10490,15 +9494,6 @@ type Mutation {
     @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
     @hasRole(role: EASI_USER)
-  createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
-    @hasRole(role: EASI_508_TESTER_OR_USER)
-  generatePresignedUploadURL(
-    input: GeneratePresignedUploadURLInput!
-  ): GeneratePresignedUploadURLPayload
 
   submitIntake(
     input: SubmitIntakeInput!
@@ -10597,11 +9592,6 @@ type Mutation {
 Query definition for the schema
 """
 type Query {
-  accessibilityRequest(id: UUID!): AccessibilityRequest
-  accessibilityRequests(
-    after: String
-    first: Int!
-  ): AccessibilityRequestsConnection
   """
   Requests fetches a requester's own intake requests
   first is currently non-functional and can be removed later
@@ -10610,14 +9600,16 @@ type Query {
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
   @hasRole(role: EASI_GOVTEAM)
-  systems(after: String, first: Int!): SystemConnection
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
   cedarAuthorityToOperate(cedarSystemID: String!): [CedarAuthorityToOperate!]!
+  cedarBudget(cedarSystemID: String!): [CedarBudget!]
+  cedarBudgetSystemCost(cedarSystemID: String!): CedarBudgetSystemCost
   cedarPersonsByCommonName(commonName: String!): [UserInfo!]!
   cedarSoftwareProducts(cedarSystemId: String!): CedarSoftwareProducts
   cedarSystem(cedarSystemId: String!): CedarSystem
   cedarSystems: [CedarSystem!]!
+  cedarSubSystems(cedarSystemId: String!): [CedarSubSystem!]!
   cedarContractsBySystem(cedarSystemId: String!): [CedarContract!]!
   myCedarSystems: [CedarSystem!]!
   cedarSystemBookmarks: [CedarSystemBookmark!]!
@@ -10704,21 +9696,6 @@ directive @goModel(
 A user role associated with a job code
 """
 enum Role {
-  """
-  A 508 Tester
-  """
-  EASI_508_TESTER
-
-  """
-  A 508 request program team member
-  """
-  EASI_508_USER
-
-  """
-  A 508 request program team member or tester
-  """
-  EASI_508_TESTER_OR_USER
-
   """
   A member of the GRT
   """
@@ -11084,51 +10061,6 @@ func (ec *executionContext) field_Mutation_closeTRBRequest_args(ctx context.Cont
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNCloseTRBRequestInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCloseTRBRequestInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_createAccessibilityRequestDocument_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.CreateAccessibilityRequestDocumentInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateAccessibilityRequestDocumentInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_createAccessibilityRequestNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.CreateAccessibilityRequestNoteInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateAccessibilityRequestNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestNoteInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_createAccessibilityRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.CreateAccessibilityRequestInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateAccessibilityRequestInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -11557,21 +10489,6 @@ func (ec *executionContext) field_Mutation_createTRBRequest_args(ctx context.Con
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_createTestDate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.CreateTestDateInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDateInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Mutation_createTrbLeadOption_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -11584,36 +10501,6 @@ func (ec *executionContext) field_Mutation_createTrbLeadOption_args(ctx context.
 		}
 	}
 	args["eua"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_deleteAccessibilityRequestDocument_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.DeleteAccessibilityRequestDocumentInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNDeleteAccessibilityRequestDocumentInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestDocumentInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_deleteAccessibilityRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.DeleteAccessibilityRequestInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNDeleteAccessibilityRequestInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
 	return args, nil
 }
 
@@ -11722,21 +10609,6 @@ func (ec *executionContext) field_Mutation_deleteTRBRequestFundingSources_args(c
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_deleteTestDate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.DeleteTestDateInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNDeleteTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDateInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Mutation_deleteTrbLeadOption_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -11749,21 +10621,6 @@ func (ec *executionContext) field_Mutation_deleteTrbLeadOption_args(ctx context.
 		}
 	}
 	args["eua"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_generatePresignedUploadURL_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.GeneratePresignedUploadURLInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNGeneratePresignedUploadURLInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
 	return args, nil
 }
 
@@ -12031,36 +10888,6 @@ func (ec *executionContext) field_Mutation_unlinkTRBRequestRelation_args(ctx con
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_updateAccessibilityRequestCedarSystem_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *model.UpdateAccessibilityRequestCedarSystemInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOUpdateAccessibilityRequestCedarSystemInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestCedarSystemInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_updateAccessibilityRequestStatus_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *model.UpdateAccessibilityRequestStatus
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOUpdateAccessibilityRequestStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestStatus(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Mutation_updateSystemIntakeAdminLead_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -12325,21 +11152,6 @@ func (ec *executionContext) field_Mutation_updateTRBRequest_args(ctx context.Con
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_updateTestDate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.UpdateTestDateInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDateInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -12355,46 +11167,37 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_accessibilityRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 uuid.UUID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_accessibilityRequests_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg1
-	return args, nil
-}
-
 func (ec *executionContext) field_Query_cedarAuthorityToOperate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["cedarSystemID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemID"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["cedarSystemID"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cedarBudgetSystemCost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["cedarSystemID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemID"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["cedarSystemID"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cedarBudget_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -12440,6 +11243,21 @@ func (ec *executionContext) field_Query_cedarPersonsByCommonName_args(ctx contex
 }
 
 func (ec *executionContext) field_Query_cedarSoftwareProducts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["cedarSystemId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["cedarSystemId"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_cedarSubSystems_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -12655,30 +11473,6 @@ func (ec *executionContext) field_Query_systemIntakes_args(ctx context.Context, 
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_systems_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg1
-	return args, nil
-}
-
 func (ec *executionContext) field_Query_trbAdminNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -12791,1622 +11585,6 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
-
-func (ec *executionContext) _AccessibilityRequest_documents(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequest_documents(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccessibilityRequest().Documents(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*models.AccessibilityRequestDocument)
-	fc.Result = res
-	return ec.marshalNAccessibilityRequestDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequest_documents(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequest",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "documentType":
-				return ec.fieldContext_AccessibilityRequestDocument_documentType(ctx, field)
-			case "id":
-				return ec.fieldContext_AccessibilityRequestDocument_id(ctx, field)
-			case "mimeType":
-				return ec.fieldContext_AccessibilityRequestDocument_mimeType(ctx, field)
-			case "name":
-				return ec.fieldContext_AccessibilityRequestDocument_name(ctx, field)
-			case "requestID":
-				return ec.fieldContext_AccessibilityRequestDocument_requestID(ctx, field)
-			case "size":
-				return ec.fieldContext_AccessibilityRequestDocument_size(ctx, field)
-			case "status":
-				return ec.fieldContext_AccessibilityRequestDocument_status(ctx, field)
-			case "uploadedAt":
-				return ec.fieldContext_AccessibilityRequestDocument_uploadedAt(ctx, field)
-			case "url":
-				return ec.fieldContext_AccessibilityRequestDocument_url(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type AccessibilityRequestDocument", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequest_id(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequest_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequest_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequest",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequest_name(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequest_name(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequest_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequest",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequest_relevantTestDate(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequest_relevantTestDate(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccessibilityRequest().RelevantTestDate(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.TestDate)
-	fc.Result = res
-	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequest_relevantTestDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequest",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "date":
-				return ec.fieldContext_TestDate_date(ctx, field)
-			case "id":
-				return ec.fieldContext_TestDate_id(ctx, field)
-			case "score":
-				return ec.fieldContext_TestDate_score(ctx, field)
-			case "testType":
-				return ec.fieldContext_TestDate_testType(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TestDate", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequest_submittedAt(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequest_submittedAt(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequest_submittedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequest",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequest_system(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequest_system(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccessibilityRequest().System(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.System)
-	fc.Result = res
-	return ec.marshalOSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequest_system(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequest",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "businessOwner":
-				return ec.fieldContext_System_businessOwner(ctx, field)
-			case "id":
-				return ec.fieldContext_System_id(ctx, field)
-			case "lcid":
-				return ec.fieldContext_System_lcid(ctx, field)
-			case "name":
-				return ec.fieldContext_System_name(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type System", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequest_testDates(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequest_testDates(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccessibilityRequest().TestDates(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*models.TestDate)
-	fc.Result = res
-	return ec.marshalNTestDate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequest_testDates(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequest",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "date":
-				return ec.fieldContext_TestDate_date(ctx, field)
-			case "id":
-				return ec.fieldContext_TestDate_id(ctx, field)
-			case "score":
-				return ec.fieldContext_TestDate_score(ctx, field)
-			case "testType":
-				return ec.fieldContext_TestDate_testType(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TestDate", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequest_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequest_euaUserId(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.EUAUserID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequest_euaUserId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequest",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequest_statusRecord(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequest_statusRecord(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccessibilityRequest().StatusRecord(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.AccessibilityRequestStatusRecord)
-	fc.Result = res
-	return ec.marshalNAccessibilityRequestStatusRecord2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatusRecord(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequest_statusRecord(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequest",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_AccessibilityRequestStatusRecord_id(ctx, field)
-			case "requestID":
-				return ec.fieldContext_AccessibilityRequestStatusRecord_requestID(ctx, field)
-			case "status":
-				return ec.fieldContext_AccessibilityRequestStatusRecord_status(ctx, field)
-			case "euaUserId":
-				return ec.fieldContext_AccessibilityRequestStatusRecord_euaUserId(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_AccessibilityRequestStatusRecord_createdAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type AccessibilityRequestStatusRecord", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequest_notes(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequest_notes(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.AccessibilityRequest().Notes(rctx, obj)
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, obj, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.([]*models.AccessibilityRequestNote); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cmsgov/easi-app/pkg/models.AccessibilityRequestNote`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*models.AccessibilityRequestNote)
-	fc.Result = res
-	return ec.marshalNAccessibilityRequestNote2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestNoteᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequest_notes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequest",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_AccessibilityRequestNote_id(ctx, field)
-			case "requestID":
-				return ec.fieldContext_AccessibilityRequestNote_requestID(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_AccessibilityRequestNote_createdAt(ctx, field)
-			case "note":
-				return ec.fieldContext_AccessibilityRequestNote_note(ctx, field)
-			case "authorName":
-				return ec.fieldContext_AccessibilityRequestNote_authorName(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type AccessibilityRequestNote", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequest_cedarSystemId(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequest_cedarSystemId(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CedarSystemID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(null.String)
-	fc.Result = res
-	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚐString(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequest_cedarSystemId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequest",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestDocument_documentType(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestDocument_documentType(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccessibilityRequestDocument().DocumentType(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.AccessibilityRequestDocumentType)
-	fc.Result = res
-	return ec.marshalNAccessibilityRequestDocumentType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentType(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestDocument_documentType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocument",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "commonType":
-				return ec.fieldContext_AccessibilityRequestDocumentType_commonType(ctx, field)
-			case "otherTypeDescription":
-				return ec.fieldContext_AccessibilityRequestDocumentType_otherTypeDescription(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type AccessibilityRequestDocumentType", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestDocument_id(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestDocument_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestDocument_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocument",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestDocument_mimeType(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestDocument_mimeType(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccessibilityRequestDocument().MimeType(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestDocument_mimeType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocument",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestDocument_name(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestDocument_name(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestDocument_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocument",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestDocument_requestID(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestDocument_requestID(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.RequestID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestDocument_requestID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocument",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestDocument_size(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestDocument_size(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Size, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestDocument_size(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocument",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestDocument_status(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestDocument_status(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Status, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(models.AccessibilityRequestDocumentStatus)
-	fc.Result = res
-	return ec.marshalNAccessibilityRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentStatus(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestDocument_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocument",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type AccessibilityRequestDocumentStatus does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestDocument_uploadedAt(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestDocument_uploadedAt(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccessibilityRequestDocument().UploadedAt(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestDocument_uploadedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocument",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestDocument_url(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestDocument_url(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.URL, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestDocument_url(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocument",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestDocumentType_commonType(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestDocumentType) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestDocumentType_commonType(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CommonType, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(models.AccessibilityRequestDocumentCommonType)
-	fc.Result = res
-	return ec.marshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentCommonType(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestDocumentType_commonType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocumentType",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type AccessibilityRequestDocumentCommonType does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestDocumentType_otherTypeDescription(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestDocumentType) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestDocumentType_otherTypeDescription(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.OtherTypeDescription, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestDocumentType_otherTypeDescription(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocumentType",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestEdge_node(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestEdge) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestEdge_node(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Node, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.AccessibilityRequest)
-	fc.Result = res
-	return ec.marshalNAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequest(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestEdge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestEdge",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "documents":
-				return ec.fieldContext_AccessibilityRequest_documents(ctx, field)
-			case "id":
-				return ec.fieldContext_AccessibilityRequest_id(ctx, field)
-			case "name":
-				return ec.fieldContext_AccessibilityRequest_name(ctx, field)
-			case "relevantTestDate":
-				return ec.fieldContext_AccessibilityRequest_relevantTestDate(ctx, field)
-			case "submittedAt":
-				return ec.fieldContext_AccessibilityRequest_submittedAt(ctx, field)
-			case "system":
-				return ec.fieldContext_AccessibilityRequest_system(ctx, field)
-			case "testDates":
-				return ec.fieldContext_AccessibilityRequest_testDates(ctx, field)
-			case "euaUserId":
-				return ec.fieldContext_AccessibilityRequest_euaUserId(ctx, field)
-			case "statusRecord":
-				return ec.fieldContext_AccessibilityRequest_statusRecord(ctx, field)
-			case "notes":
-				return ec.fieldContext_AccessibilityRequest_notes(ctx, field)
-			case "cedarSystemId":
-				return ec.fieldContext_AccessibilityRequest_cedarSystemId(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type AccessibilityRequest", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestNote_id(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestNote) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestNote_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestNote_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestNote",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestNote_requestID(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestNote) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestNote_requestID(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.RequestID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestNote_requestID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestNote",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestNote_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestNote) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestNote_createdAt(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestNote_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestNote",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestNote_note(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestNote) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestNote_note(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Note, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestNote_note(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestNote",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestNote_authorName(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestNote) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestNote_authorName(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccessibilityRequestNote().AuthorName(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestNote_authorName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestNote",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestStatusRecord_id(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestStatusRecord) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestStatusRecord_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestStatusRecord_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestStatusRecord",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestStatusRecord_requestID(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestStatusRecord) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestStatusRecord_requestID(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.RequestID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestStatusRecord_requestID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestStatusRecord",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestStatusRecord_status(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestStatusRecord) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestStatusRecord_status(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Status, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(models.AccessibilityRequestStatus)
-	fc.Result = res
-	return ec.marshalNAccessibilityRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatus(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestStatusRecord_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestStatusRecord",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type AccessibilityRequestStatus does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestStatusRecord_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestStatusRecord) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestStatusRecord_euaUserId(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.EUAUserID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestStatusRecord_euaUserId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestStatusRecord",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestStatusRecord_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestStatusRecord) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestStatusRecord_createdAt(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedAt, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestStatusRecord_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestStatusRecord",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _AccessibilityRequestsConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestsConnection) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_AccessibilityRequestsConnection_edges(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Edges, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*model.AccessibilityRequestEdge)
-	fc.Result = res
-	return ec.marshalNAccessibilityRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestEdgeᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_AccessibilityRequestsConnection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "AccessibilityRequestsConnection",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "node":
-				return ec.fieldContext_AccessibilityRequestEdge_node(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type AccessibilityRequestEdge", field.Name)
-		},
-	}
-	return fc, nil
-}
 
 func (ec *executionContext) _AugmentedSystemIntakeContact_id(ctx context.Context, field graphql.CollectedField, obj *models.AugmentedSystemIntakeContact) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_AugmentedSystemIntakeContact_id(ctx, field)
@@ -16231,94 +13409,6 @@ func (ec *executionContext) fieldContext_BusinessCaseSolution_title(ctx context.
 	return fc, nil
 }
 
-func (ec *executionContext) _BusinessOwner_component(ctx context.Context, field graphql.CollectedField, obj *models.BusinessOwner) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_BusinessOwner_component(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Component, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_BusinessOwner_component(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "BusinessOwner",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _BusinessOwner_name(ctx context.Context, field graphql.CollectedField, obj *models.BusinessOwner) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_BusinessOwner_name(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_BusinessOwner_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "BusinessOwner",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _CedarAuthorityToOperate_cedarId(ctx context.Context, field graphql.CollectedField, obj *models.CedarAuthorityToOperate) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarAuthorityToOperate_cedarId(ctx, field)
 	if err != nil {
@@ -17480,6 +14570,553 @@ func (ec *executionContext) fieldContext_CedarAuthorityToOperate_xlcPhase(ctx co
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_fiscalYear(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_fiscalYear(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FiscalYear, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_fiscalYear(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_funding(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_funding(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Funding, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_funding(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_fundingId(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_fundingId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FundingID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_fundingId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_fundingSource(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_fundingSource(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FundingSource, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_fundingSource(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_id(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_name(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_projectId(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_projectId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProjectID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalNString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_projectId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_projectTitle(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_projectTitle(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ProjectTitle, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_projectTitle(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudget_systemId(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudget) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudget_systemId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudget_systemId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudget",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudgetActualCost_actualSystemCost(ctx context.Context, field graphql.CollectedField, obj *model.CedarBudgetActualCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudgetActualCost_actualSystemCost(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ActualSystemCost, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudgetActualCost_actualSystemCost(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudgetActualCost",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudgetActualCost_fiscalYear(ctx context.Context, field graphql.CollectedField, obj *model.CedarBudgetActualCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudgetActualCost_fiscalYear(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FiscalYear, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudgetActualCost_fiscalYear(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudgetActualCost",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudgetActualCost_systemId(ctx context.Context, field graphql.CollectedField, obj *model.CedarBudgetActualCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudgetActualCost_systemId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudgetActualCost_systemId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudgetActualCost",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarBudgetSystemCost_budgetActualCost(ctx context.Context, field graphql.CollectedField, obj *models.CedarBudgetSystemCost) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarBudgetSystemCost_budgetActualCost(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarBudgetSystemCost().BudgetActualCost(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.CedarBudgetActualCost)
+	fc.Result = res
+	return ec.marshalNCedarBudgetActualCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarBudgetActualCostᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarBudgetSystemCost_budgetActualCost(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarBudgetSystemCost",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "actualSystemCost":
+				return ec.fieldContext_CedarBudgetActualCost_actualSystemCost(ctx, field)
+			case "fiscalYear":
+				return ec.fieldContext_CedarBudgetActualCost_fiscalYear(ctx, field)
+			case "systemId":
+				return ec.fieldContext_CedarBudgetActualCost_systemId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarBudgetActualCost", field.Name)
 		},
 	}
 	return fc, nil
@@ -22848,6 +20485,176 @@ func (ec *executionContext) fieldContext_CedarSoftwareProducts_usesAiTech(ctx co
 	return fc, nil
 }
 
+func (ec *executionContext) _CedarSubSystem_id(ctx context.Context, field graphql.CollectedField, obj *models.CedarSubSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSubSystem_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalNString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSubSystem_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSubSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSubSystem_name(ctx context.Context, field graphql.CollectedField, obj *models.CedarSubSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSubSystem_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalNString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSubSystem_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSubSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSubSystem_acronym(ctx context.Context, field graphql.CollectedField, obj *models.CedarSubSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSubSystem_acronym(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Acronym, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSubSystem_acronym(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSubSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSubSystem_description(ctx context.Context, field graphql.CollectedField, obj *models.CedarSubSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSubSystem_description(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Description, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSubSystem_description(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSubSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CedarSystem_id(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarSystem_id(ctx, field)
 	if err != nil {
@@ -25670,329 +23477,6 @@ func (ec *executionContext) fieldContext_ContractDate_year(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _CreateAccessibilityRequestDocumentPayload_accessibilityRequestDocument(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityRequestDocumentPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_CreateAccessibilityRequestDocumentPayload_accessibilityRequestDocument(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AccessibilityRequestDocument, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.AccessibilityRequestDocument)
-	fc.Result = res
-	return ec.marshalOAccessibilityRequestDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocument(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_CreateAccessibilityRequestDocumentPayload_accessibilityRequestDocument(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "CreateAccessibilityRequestDocumentPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "documentType":
-				return ec.fieldContext_AccessibilityRequestDocument_documentType(ctx, field)
-			case "id":
-				return ec.fieldContext_AccessibilityRequestDocument_id(ctx, field)
-			case "mimeType":
-				return ec.fieldContext_AccessibilityRequestDocument_mimeType(ctx, field)
-			case "name":
-				return ec.fieldContext_AccessibilityRequestDocument_name(ctx, field)
-			case "requestID":
-				return ec.fieldContext_AccessibilityRequestDocument_requestID(ctx, field)
-			case "size":
-				return ec.fieldContext_AccessibilityRequestDocument_size(ctx, field)
-			case "status":
-				return ec.fieldContext_AccessibilityRequestDocument_status(ctx, field)
-			case "uploadedAt":
-				return ec.fieldContext_AccessibilityRequestDocument_uploadedAt(ctx, field)
-			case "url":
-				return ec.fieldContext_AccessibilityRequestDocument_url(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type AccessibilityRequestDocument", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _CreateAccessibilityRequestDocumentPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityRequestDocumentPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_CreateAccessibilityRequestDocumentPayload_userErrors(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_CreateAccessibilityRequestDocumentPayload_userErrors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "CreateAccessibilityRequestDocumentPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "message":
-				return ec.fieldContext_UserError_message(ctx, field)
-			case "path":
-				return ec.fieldContext_UserError_path(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UserError", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _CreateAccessibilityRequestNotePayload_accessibilityRequestNote(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityRequestNotePayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_CreateAccessibilityRequestNotePayload_accessibilityRequestNote(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AccessibilityRequestNote, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.AccessibilityRequestNote)
-	fc.Result = res
-	return ec.marshalNAccessibilityRequestNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestNote(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_CreateAccessibilityRequestNotePayload_accessibilityRequestNote(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "CreateAccessibilityRequestNotePayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_AccessibilityRequestNote_id(ctx, field)
-			case "requestID":
-				return ec.fieldContext_AccessibilityRequestNote_requestID(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_AccessibilityRequestNote_createdAt(ctx, field)
-			case "note":
-				return ec.fieldContext_AccessibilityRequestNote_note(ctx, field)
-			case "authorName":
-				return ec.fieldContext_AccessibilityRequestNote_authorName(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type AccessibilityRequestNote", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _CreateAccessibilityRequestNotePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityRequestNotePayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_CreateAccessibilityRequestNotePayload_userErrors(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_CreateAccessibilityRequestNotePayload_userErrors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "CreateAccessibilityRequestNotePayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "message":
-				return ec.fieldContext_UserError_message(ctx, field)
-			case "path":
-				return ec.fieldContext_UserError_path(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UserError", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _CreateAccessibilityRequestPayload_accessibilityRequest(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityRequestPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_CreateAccessibilityRequestPayload_accessibilityRequest(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AccessibilityRequest, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.AccessibilityRequest)
-	fc.Result = res
-	return ec.marshalOAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequest(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_CreateAccessibilityRequestPayload_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "CreateAccessibilityRequestPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "documents":
-				return ec.fieldContext_AccessibilityRequest_documents(ctx, field)
-			case "id":
-				return ec.fieldContext_AccessibilityRequest_id(ctx, field)
-			case "name":
-				return ec.fieldContext_AccessibilityRequest_name(ctx, field)
-			case "relevantTestDate":
-				return ec.fieldContext_AccessibilityRequest_relevantTestDate(ctx, field)
-			case "submittedAt":
-				return ec.fieldContext_AccessibilityRequest_submittedAt(ctx, field)
-			case "system":
-				return ec.fieldContext_AccessibilityRequest_system(ctx, field)
-			case "testDates":
-				return ec.fieldContext_AccessibilityRequest_testDates(ctx, field)
-			case "euaUserId":
-				return ec.fieldContext_AccessibilityRequest_euaUserId(ctx, field)
-			case "statusRecord":
-				return ec.fieldContext_AccessibilityRequest_statusRecord(ctx, field)
-			case "notes":
-				return ec.fieldContext_AccessibilityRequest_notes(ctx, field)
-			case "cedarSystemId":
-				return ec.fieldContext_AccessibilityRequest_cedarSystemId(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type AccessibilityRequest", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _CreateAccessibilityRequestPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityRequestPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_CreateAccessibilityRequestPayload_userErrors(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_CreateAccessibilityRequestPayload_userErrors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "CreateAccessibilityRequestPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "message":
-				return ec.fieldContext_UserError_message(ctx, field)
-			case "path":
-				return ec.fieldContext_UserError_path(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UserError", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _CreateCedarSystemBookmarkPayload_cedarSystemBookmark(ctx context.Context, field graphql.CollectedField, obj *model.CreateCedarSystemBookmarkPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CreateCedarSystemBookmarkPayload_cedarSystemBookmark(ctx, field)
 	if err != nil {
@@ -26205,104 +23689,6 @@ func (ec *executionContext) fieldContext_CreateTRBRequestDocumentPayload_documen
 	return fc, nil
 }
 
-func (ec *executionContext) _CreateTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField, obj *model.CreateTestDatePayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_CreateTestDatePayload_testDate(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TestDate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.TestDate)
-	fc.Result = res
-	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_CreateTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "CreateTestDatePayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "date":
-				return ec.fieldContext_TestDate_date(ctx, field)
-			case "id":
-				return ec.fieldContext_TestDate_id(ctx, field)
-			case "score":
-				return ec.fieldContext_TestDate_score(ctx, field)
-			case "testType":
-				return ec.fieldContext_TestDate_testType(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TestDate", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _CreateTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.CreateTestDatePayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_CreateTestDatePayload_userErrors(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_CreateTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "CreateTestDatePayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "message":
-				return ec.fieldContext_UserError_message(ctx, field)
-			case "path":
-				return ec.fieldContext_UserError_path(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UserError", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _CurrentUser_launchDarkly(ctx context.Context, field graphql.CollectedField, obj *model.CurrentUser) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CurrentUser_launchDarkly(ctx, field)
 	if err != nil {
@@ -26348,135 +23734,6 @@ func (ec *executionContext) fieldContext_CurrentUser_launchDarkly(ctx context.Co
 				return ec.fieldContext_LaunchDarklySettings_signedHash(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type LaunchDarklySettings", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _DeleteAccessibilityRequestDocumentPayload_id(ctx context.Context, field graphql.CollectedField, obj *model.DeleteAccessibilityRequestDocumentPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_DeleteAccessibilityRequestDocumentPayload_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*uuid.UUID)
-	fc.Result = res
-	return ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_DeleteAccessibilityRequestDocumentPayload_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "DeleteAccessibilityRequestDocumentPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _DeleteAccessibilityRequestPayload_id(ctx context.Context, field graphql.CollectedField, obj *model.DeleteAccessibilityRequestPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_DeleteAccessibilityRequestPayload_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*uuid.UUID)
-	fc.Result = res
-	return ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_DeleteAccessibilityRequestPayload_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "DeleteAccessibilityRequestPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _DeleteAccessibilityRequestPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.DeleteAccessibilityRequestPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_DeleteAccessibilityRequestPayload_userErrors(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_DeleteAccessibilityRequestPayload_userErrors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "DeleteAccessibilityRequestPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "message":
-				return ec.fieldContext_UserError_message(ctx, field)
-			case "path":
-				return ec.fieldContext_UserError_path(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UserError", field.Name)
 		},
 	}
 	return fc, nil
@@ -26686,104 +23943,6 @@ func (ec *executionContext) fieldContext_DeleteTRBRequestDocumentPayload_documen
 				return ec.fieldContext_TRBRequestDocument_deletedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequestDocument", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _DeleteTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField, obj *model.DeleteTestDatePayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_DeleteTestDatePayload_testDate(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TestDate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.TestDate)
-	fc.Result = res
-	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_DeleteTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "DeleteTestDatePayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "date":
-				return ec.fieldContext_TestDate_date(ctx, field)
-			case "id":
-				return ec.fieldContext_TestDate_id(ctx, field)
-			case "score":
-				return ec.fieldContext_TestDate_score(ctx, field)
-			case "testType":
-				return ec.fieldContext_TestDate_testType(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TestDate", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _DeleteTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.DeleteTestDatePayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_DeleteTestDatePayload_userErrors(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_DeleteTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "DeleteTestDatePayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "message":
-				return ec.fieldContext_UserError_message(ctx, field)
-			case "path":
-				return ec.fieldContext_UserError_path(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UserError", field.Name)
 		},
 	}
 	return fc, nil
@@ -27036,94 +24195,6 @@ func (ec *executionContext) fieldContext_EstimatedLifecycleCost_year(ctx context
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type LifecycleCostYear does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GeneratePresignedUploadURLPayload_url(ctx context.Context, field graphql.CollectedField, obj *model.GeneratePresignedUploadURLPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GeneratePresignedUploadURLPayload_url(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.URL, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GeneratePresignedUploadURLPayload_url(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GeneratePresignedUploadURLPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GeneratePresignedUploadURLPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.GeneratePresignedUploadURLPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GeneratePresignedUploadURLPayload_userErrors(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GeneratePresignedUploadURLPayload_userErrors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GeneratePresignedUploadURLPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "message":
-				return ec.fieldContext_UserError_message(ctx, field)
-			case "path":
-				return ec.fieldContext_UserError_path(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UserError", field.Name)
 		},
 	}
 	return fc, nil
@@ -28008,464 +25079,6 @@ func (ec *executionContext) fieldContext_LaunchDarklySettings_signedHash(ctx con
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_createAccessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createAccessibilityRequest(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateAccessibilityRequest(rctx, fc.Args["input"].(model.CreateAccessibilityRequestInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.CreateAccessibilityRequestPayload)
-	fc.Result = res
-	return ec.marshalOCreateAccessibilityRequestPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_createAccessibilityRequest(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "accessibilityRequest":
-				return ec.fieldContext_CreateAccessibilityRequestPayload_accessibilityRequest(ctx, field)
-			case "userErrors":
-				return ec.fieldContext_CreateAccessibilityRequestPayload_userErrors(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type CreateAccessibilityRequestPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createAccessibilityRequest_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_deleteAccessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_deleteAccessibilityRequest(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteAccessibilityRequest(rctx, fc.Args["input"].(model.DeleteAccessibilityRequestInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.DeleteAccessibilityRequestPayload)
-	fc.Result = res
-	return ec.marshalODeleteAccessibilityRequestPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_deleteAccessibilityRequest(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_DeleteAccessibilityRequestPayload_id(ctx, field)
-			case "userErrors":
-				return ec.fieldContext_DeleteAccessibilityRequestPayload_userErrors(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type DeleteAccessibilityRequestPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_deleteAccessibilityRequest_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_createAccessibilityRequestDocument(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createAccessibilityRequestDocument(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateAccessibilityRequestDocument(rctx, fc.Args["input"].(model.CreateAccessibilityRequestDocumentInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.CreateAccessibilityRequestDocumentPayload)
-	fc.Result = res
-	return ec.marshalOCreateAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_createAccessibilityRequestDocument(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "accessibilityRequestDocument":
-				return ec.fieldContext_CreateAccessibilityRequestDocumentPayload_accessibilityRequestDocument(ctx, field)
-			case "userErrors":
-				return ec.fieldContext_CreateAccessibilityRequestDocumentPayload_userErrors(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type CreateAccessibilityRequestDocumentPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createAccessibilityRequestDocument_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_createAccessibilityRequestNote(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createAccessibilityRequestNote(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateAccessibilityRequestNote(rctx, fc.Args["input"].(model.CreateAccessibilityRequestNoteInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*model.CreateAccessibilityRequestNotePayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.CreateAccessibilityRequestNotePayload`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.CreateAccessibilityRequestNotePayload)
-	fc.Result = res
-	return ec.marshalOCreateAccessibilityRequestNotePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestNotePayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_createAccessibilityRequestNote(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "accessibilityRequestNote":
-				return ec.fieldContext_CreateAccessibilityRequestNotePayload_accessibilityRequestNote(ctx, field)
-			case "userErrors":
-				return ec.fieldContext_CreateAccessibilityRequestNotePayload_userErrors(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type CreateAccessibilityRequestNotePayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createAccessibilityRequestNote_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_deleteAccessibilityRequestDocument(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_deleteAccessibilityRequestDocument(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteAccessibilityRequestDocument(rctx, fc.Args["input"].(model.DeleteAccessibilityRequestDocumentInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.DeleteAccessibilityRequestDocumentPayload)
-	fc.Result = res
-	return ec.marshalODeleteAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestDocumentPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_deleteAccessibilityRequestDocument(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_DeleteAccessibilityRequestDocumentPayload_id(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type DeleteAccessibilityRequestDocumentPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_deleteAccessibilityRequestDocument_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_updateAccessibilityRequestStatus(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateAccessibilityRequestStatus(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateAccessibilityRequestStatus(rctx, fc.Args["input"].(*model.UpdateAccessibilityRequestStatus))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*model.UpdateAccessibilityRequestStatusPayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateAccessibilityRequestStatusPayload`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.UpdateAccessibilityRequestStatusPayload)
-	fc.Result = res
-	return ec.marshalOUpdateAccessibilityRequestStatusPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestStatusPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_updateAccessibilityRequestStatus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_UpdateAccessibilityRequestStatusPayload_id(ctx, field)
-			case "requestID":
-				return ec.fieldContext_UpdateAccessibilityRequestStatusPayload_requestID(ctx, field)
-			case "status":
-				return ec.fieldContext_UpdateAccessibilityRequestStatusPayload_status(ctx, field)
-			case "euaUserId":
-				return ec.fieldContext_UpdateAccessibilityRequestStatusPayload_euaUserId(ctx, field)
-			case "userErrors":
-				return ec.fieldContext_UpdateAccessibilityRequestStatusPayload_userErrors(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UpdateAccessibilityRequestStatusPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateAccessibilityRequestStatus_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_updateAccessibilityRequestCedarSystem(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateAccessibilityRequestCedarSystem(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateAccessibilityRequestCedarSystem(rctx, fc.Args["input"].(*model.UpdateAccessibilityRequestCedarSystemInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.UpdateAccessibilityRequestCedarSystemPayload)
-	fc.Result = res
-	return ec.marshalOUpdateAccessibilityRequestCedarSystemPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestCedarSystemPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_updateAccessibilityRequestCedarSystem(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_UpdateAccessibilityRequestCedarSystemPayload_id(ctx, field)
-			case "accessibilityRequest":
-				return ec.fieldContext_UpdateAccessibilityRequestCedarSystemPayload_accessibilityRequest(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UpdateAccessibilityRequestCedarSystemPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateAccessibilityRequestCedarSystem_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
 	}
 	return fc, nil
 }
@@ -29855,310 +26468,6 @@ func (ec *executionContext) fieldContext_Mutation_createSystemIntake(ctx context
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createSystemIntake_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_createTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createTestDate(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateTestDate(rctx, fc.Args["input"].(model.CreateTestDateInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*model.CreateTestDatePayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.CreateTestDatePayload`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.CreateTestDatePayload)
-	fc.Result = res
-	return ec.marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDatePayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_createTestDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "testDate":
-				return ec.fieldContext_CreateTestDatePayload_testDate(ctx, field)
-			case "userErrors":
-				return ec.fieldContext_CreateTestDatePayload_userErrors(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type CreateTestDatePayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createTestDate_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateTestDate(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateTestDate(rctx, fc.Args["input"].(model.UpdateTestDateInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*model.UpdateTestDatePayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateTestDatePayload`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.UpdateTestDatePayload)
-	fc.Result = res
-	return ec.marshalOUpdateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDatePayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_updateTestDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "testDate":
-				return ec.fieldContext_UpdateTestDatePayload_testDate(ctx, field)
-			case "userErrors":
-				return ec.fieldContext_UpdateTestDatePayload_userErrors(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UpdateTestDatePayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateTestDate_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_deleteTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_deleteTestDate(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().DeleteTestDate(rctx, fc.Args["input"].(model.DeleteTestDateInput))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*model.DeleteTestDatePayload); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.DeleteTestDatePayload`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.DeleteTestDatePayload)
-	fc.Result = res
-	return ec.marshalODeleteTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDatePayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_deleteTestDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "testDate":
-				return ec.fieldContext_DeleteTestDatePayload_testDate(ctx, field)
-			case "userErrors":
-				return ec.fieldContext_DeleteTestDatePayload_userErrors(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type DeleteTestDatePayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_deleteTestDate_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_generatePresignedUploadURL(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_generatePresignedUploadURL(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().GeneratePresignedUploadURL(rctx, fc.Args["input"].(model.GeneratePresignedUploadURLInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.GeneratePresignedUploadURLPayload)
-	fc.Result = res
-	return ec.marshalOGeneratePresignedUploadURLPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_generatePresignedUploadURL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "url":
-				return ec.fieldContext_GeneratePresignedUploadURLPayload_url(ctx, field)
-			case "userErrors":
-				return ec.fieldContext_GeneratePresignedUploadURLPayload_userErrors(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type GeneratePresignedUploadURLPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_generatePresignedUploadURL_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -34982,138 +31291,6 @@ func (ec *executionContext) fieldContext_Mutation_deleteTrbLeadOption(ctx contex
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_accessibilityRequest(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().AccessibilityRequest(rctx, fc.Args["id"].(uuid.UUID))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.AccessibilityRequest)
-	fc.Result = res
-	return ec.marshalOAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequest(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "documents":
-				return ec.fieldContext_AccessibilityRequest_documents(ctx, field)
-			case "id":
-				return ec.fieldContext_AccessibilityRequest_id(ctx, field)
-			case "name":
-				return ec.fieldContext_AccessibilityRequest_name(ctx, field)
-			case "relevantTestDate":
-				return ec.fieldContext_AccessibilityRequest_relevantTestDate(ctx, field)
-			case "submittedAt":
-				return ec.fieldContext_AccessibilityRequest_submittedAt(ctx, field)
-			case "system":
-				return ec.fieldContext_AccessibilityRequest_system(ctx, field)
-			case "testDates":
-				return ec.fieldContext_AccessibilityRequest_testDates(ctx, field)
-			case "euaUserId":
-				return ec.fieldContext_AccessibilityRequest_euaUserId(ctx, field)
-			case "statusRecord":
-				return ec.fieldContext_AccessibilityRequest_statusRecord(ctx, field)
-			case "notes":
-				return ec.fieldContext_AccessibilityRequest_notes(ctx, field)
-			case "cedarSystemId":
-				return ec.fieldContext_AccessibilityRequest_cedarSystemId(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type AccessibilityRequest", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_accessibilityRequest_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Query_accessibilityRequests(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_accessibilityRequests(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().AccessibilityRequests(rctx, fc.Args["after"].(*string), fc.Args["first"].(int))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.AccessibilityRequestsConnection)
-	fc.Result = res
-	return ec.marshalOAccessibilityRequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestsConnection(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_accessibilityRequests(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "edges":
-				return ec.fieldContext_AccessibilityRequestsConnection_edges(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type AccessibilityRequestsConnection", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_accessibilityRequests_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Query_requests(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_requests(ctx, field)
 	if err != nil {
@@ -35581,62 +31758,6 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_systems(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_systems(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Systems(rctx, fc.Args["after"].(*string), fc.Args["first"].(int))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.SystemConnection)
-	fc.Result = res
-	return ec.marshalOSystemConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemConnection(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_systems(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "edges":
-				return ec.fieldContext_SystemConnection_edges(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type SystemConnection", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_systems_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Query_systemIntakesWithLcids(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_systemIntakesWithLcids(ctx, field)
 	if err != nil {
@@ -35979,6 +32100,134 @@ func (ec *executionContext) fieldContext_Query_cedarAuthorityToOperate(ctx conte
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_cedarBudget(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_cedarBudget(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CedarBudget(rctx, fc.Args["cedarSystemID"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarBudget)
+	fc.Result = res
+	return ec.marshalOCedarBudget2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_cedarBudget(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "fiscalYear":
+				return ec.fieldContext_CedarBudget_fiscalYear(ctx, field)
+			case "funding":
+				return ec.fieldContext_CedarBudget_funding(ctx, field)
+			case "fundingId":
+				return ec.fieldContext_CedarBudget_fundingId(ctx, field)
+			case "fundingSource":
+				return ec.fieldContext_CedarBudget_fundingSource(ctx, field)
+			case "id":
+				return ec.fieldContext_CedarBudget_id(ctx, field)
+			case "name":
+				return ec.fieldContext_CedarBudget_name(ctx, field)
+			case "projectId":
+				return ec.fieldContext_CedarBudget_projectId(ctx, field)
+			case "projectTitle":
+				return ec.fieldContext_CedarBudget_projectTitle(ctx, field)
+			case "systemId":
+				return ec.fieldContext_CedarBudget_systemId(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarBudget", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_cedarBudget_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_cedarBudgetSystemCost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_cedarBudgetSystemCost(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CedarBudgetSystemCost(rctx, fc.Args["cedarSystemID"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.CedarBudgetSystemCost)
+	fc.Result = res
+	return ec.marshalOCedarBudgetSystemCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetSystemCost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_cedarBudgetSystemCost(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "budgetActualCost":
+				return ec.fieldContext_CedarBudgetSystemCost_budgetActualCost(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarBudgetSystemCost", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_cedarBudgetSystemCost_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_cedarPersonsByCommonName(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_cedarPersonsByCommonName(ctx, field)
 	if err != nil {
@@ -36268,6 +32517,71 @@ func (ec *executionContext) fieldContext_Query_cedarSystems(ctx context.Context,
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_cedarSubSystems(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_cedarSubSystems(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CedarSubSystems(rctx, fc.Args["cedarSystemId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.CedarSubSystem)
+	fc.Result = res
+	return ec.marshalNCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystemᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_cedarSubSystems(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_CedarSubSystem_id(ctx, field)
+			case "name":
+				return ec.fieldContext_CedarSubSystem_name(ctx, field)
+			case "acronym":
+				return ec.fieldContext_CedarSubSystem_acronym(ctx, field)
+			case "description":
+				return ec.fieldContext_CedarSubSystem_description(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarSubSystem", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_cedarSubSystems_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }
@@ -38283,290 +34597,6 @@ func (ec *executionContext) fieldContext_RequestsConnection_edges(ctx context.Co
 				return ec.fieldContext_RequestEdge_node(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type RequestEdge", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _System_businessOwner(ctx context.Context, field graphql.CollectedField, obj *models.System) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_System_businessOwner(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.BusinessOwner, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.BusinessOwner)
-	fc.Result = res
-	return ec.marshalNBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessOwner(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_System_businessOwner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "System",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "component":
-				return ec.fieldContext_BusinessOwner_component(ctx, field)
-			case "name":
-				return ec.fieldContext_BusinessOwner_name(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type BusinessOwner", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _System_id(ctx context.Context, field graphql.CollectedField, obj *models.System) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_System_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_System_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "System",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _System_lcid(ctx context.Context, field graphql.CollectedField, obj *models.System) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_System_lcid(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.LCID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_System_lcid(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "System",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _System_name(ctx context.Context, field graphql.CollectedField, obj *models.System) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_System_name(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_System_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "System",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.SystemConnection) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemConnection_edges(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Edges, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*model.SystemEdge)
-	fc.Result = res
-	return ec.marshalNSystemEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemEdgeᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemConnection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemConnection",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "node":
-				return ec.fieldContext_SystemEdge_node(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type SystemEdge", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemEdge_node(ctx context.Context, field graphql.CollectedField, obj *model.SystemEdge) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemEdge_node(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Node, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.System)
-	fc.Result = res
-	return ec.marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemEdge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemEdge",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "businessOwner":
-				return ec.fieldContext_System_businessOwner(ctx, field)
-			case "id":
-				return ec.fieldContext_System_id(ctx, field)
-			case "lcid":
-				return ec.fieldContext_System_lcid(ctx, field)
-			case "name":
-				return ec.fieldContext_System_name(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type System", field.Name)
 		},
 	}
 	return fc, nil
@@ -52524,511 +48554,6 @@ func (ec *executionContext) fieldContext_TRBTaskStatuses_adviceLetterStatusTaskL
 	return fc, nil
 }
 
-func (ec *executionContext) _TestDate_date(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TestDate_date(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Date, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(time.Time)
-	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TestDate_date(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TestDate",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TestDate_id(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TestDate_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TestDate_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TestDate",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TestDate_score(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TestDate_score(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Score, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*int)
-	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TestDate_score(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TestDate",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _TestDate_testType(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_TestDate_testType(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TestType, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(models.TestDateTestType)
-	fc.Result = res
-	return ec.marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_TestDate_testType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "TestDate",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type TestDateTestType does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UpdateAccessibilityRequestCedarSystemPayload_id(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestCedarSystemPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateAccessibilityRequestCedarSystemPayload_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateAccessibilityRequestCedarSystemPayload_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateAccessibilityRequestCedarSystemPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UpdateAccessibilityRequestCedarSystemPayload_accessibilityRequest(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestCedarSystemPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateAccessibilityRequestCedarSystemPayload_accessibilityRequest(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AccessibilityRequest, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.AccessibilityRequest)
-	fc.Result = res
-	return ec.marshalOAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequest(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateAccessibilityRequestCedarSystemPayload_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateAccessibilityRequestCedarSystemPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "documents":
-				return ec.fieldContext_AccessibilityRequest_documents(ctx, field)
-			case "id":
-				return ec.fieldContext_AccessibilityRequest_id(ctx, field)
-			case "name":
-				return ec.fieldContext_AccessibilityRequest_name(ctx, field)
-			case "relevantTestDate":
-				return ec.fieldContext_AccessibilityRequest_relevantTestDate(ctx, field)
-			case "submittedAt":
-				return ec.fieldContext_AccessibilityRequest_submittedAt(ctx, field)
-			case "system":
-				return ec.fieldContext_AccessibilityRequest_system(ctx, field)
-			case "testDates":
-				return ec.fieldContext_AccessibilityRequest_testDates(ctx, field)
-			case "euaUserId":
-				return ec.fieldContext_AccessibilityRequest_euaUserId(ctx, field)
-			case "statusRecord":
-				return ec.fieldContext_AccessibilityRequest_statusRecord(ctx, field)
-			case "notes":
-				return ec.fieldContext_AccessibilityRequest_notes(ctx, field)
-			case "cedarSystemId":
-				return ec.fieldContext_AccessibilityRequest_cedarSystemId(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type AccessibilityRequest", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_id(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateAccessibilityRequestStatusPayload_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateAccessibilityRequestStatusPayload_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateAccessibilityRequestStatusPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_requestID(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateAccessibilityRequestStatusPayload_requestID(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.RequestID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateAccessibilityRequestStatusPayload_requestID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateAccessibilityRequestStatusPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_status(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateAccessibilityRequestStatusPayload_status(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Status, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(models.AccessibilityRequestStatus)
-	fc.Result = res
-	return ec.marshalNAccessibilityRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatus(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateAccessibilityRequestStatusPayload_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateAccessibilityRequestStatusPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type AccessibilityRequestStatus does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_euaUserId(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateAccessibilityRequestStatusPayload_euaUserId(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.EuaUserID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateAccessibilityRequestStatusPayload_euaUserId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateAccessibilityRequestStatusPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.UpdateAccessibilityRequestStatusPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateAccessibilityRequestStatusPayload_userErrors(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateAccessibilityRequestStatusPayload_userErrors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateAccessibilityRequestStatusPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "message":
-				return ec.fieldContext_UserError_message(ctx, field)
-			case "path":
-				return ec.fieldContext_UserError_path(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UserError", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _UpdateSystemIntakePayload_systemIntake(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakePayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_UpdateSystemIntakePayload_systemIntake(ctx, field)
 	if err != nil {
@@ -53241,104 +48766,6 @@ func (ec *executionContext) _UpdateSystemIntakePayload_userErrors(ctx context.Co
 func (ec *executionContext) fieldContext_UpdateSystemIntakePayload_userErrors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "UpdateSystemIntakePayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "message":
-				return ec.fieldContext_UserError_message(ctx, field)
-			case "path":
-				return ec.fieldContext_UserError_path(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UserError", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UpdateTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField, obj *model.UpdateTestDatePayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateTestDatePayload_testDate(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TestDate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.TestDate)
-	fc.Result = res
-	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateTestDatePayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "date":
-				return ec.fieldContext_TestDate_date(ctx, field)
-			case "id":
-				return ec.fieldContext_TestDate_id(ctx, field)
-			case "score":
-				return ec.fieldContext_TestDate_score(ctx, field)
-			case "testType":
-				return ec.fieldContext_TestDate_testType(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type TestDate", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UpdateTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.UpdateTestDatePayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateTestDatePayload_userErrors(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateTestDatePayload",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -55877,157 +51304,6 @@ func (ec *executionContext) unmarshalInputCloseTRBRequestInput(ctx context.Conte
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInput(ctx context.Context, obj interface{}) (model.CreateAccessibilityRequestDocumentInput, error) {
-	var it model.CreateAccessibilityRequestDocumentInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"commonDocumentType", "mimeType", "name", "otherDocumentTypeDescription", "requestID", "size", "url"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "commonDocumentType":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("commonDocumentType"))
-			data, err := ec.unmarshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentCommonType(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.CommonDocumentType = data
-		case "mimeType":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mimeType"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.MimeType = data
-		case "name":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Name = data
-		case "otherDocumentTypeDescription":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("otherDocumentTypeDescription"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.OtherDocumentTypeDescription = data
-		case "requestID":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestID"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RequestID = data
-		case "size":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-			data, err := ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Size = data
-		case "url":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("url"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.URL = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputCreateAccessibilityRequestInput(ctx context.Context, obj interface{}) (model.CreateAccessibilityRequestInput, error) {
-	var it model.CreateAccessibilityRequestInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"intakeID", "name", "cedarSystemId"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "intakeID":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeID"))
-			data, err := ec.unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.IntakeID = data
-		case "name":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Name = data
-		case "cedarSystemId":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.CedarSystemID = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputCreateAccessibilityRequestNoteInput(ctx context.Context, obj interface{}) (model.CreateAccessibilityRequestNoteInput, error) {
-	var it model.CreateAccessibilityRequestNoteInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"requestID", "note", "shouldSendEmail"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "requestID":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestID"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RequestID = data
-		case "note":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("note"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Note = data
-		case "shouldSendEmail":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shouldSendEmail"))
-			data, err := ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ShouldSendEmail = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputCreateCedarSystemBookmarkInput(ctx context.Context, obj interface{}) (model.CreateCedarSystemBookmarkInput, error) {
 	var it model.CreateCedarSystemBookmarkInput
 	asMap := map[string]interface{}{}
@@ -56644,115 +51920,6 @@ func (ec *executionContext) unmarshalInputCreateTRBRequestFeedbackInput(ctx cont
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateTestDateInput(ctx context.Context, obj interface{}) (model.CreateTestDateInput, error) {
-	var it model.CreateTestDateInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"date", "requestID", "score", "testType"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "date":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("date"))
-			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Date = data
-		case "requestID":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestID"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RequestID = data
-		case "score":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("score"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Score = data
-		case "testType":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("testType"))
-			data, err := ec.unmarshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TestType = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputDeleteAccessibilityRequestDocumentInput(ctx context.Context, obj interface{}) (model.DeleteAccessibilityRequestDocumentInput, error) {
-	var it model.DeleteAccessibilityRequestDocumentInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ID = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputDeleteAccessibilityRequestInput(ctx context.Context, obj interface{}) (model.DeleteAccessibilityRequestInput, error) {
-	var it model.DeleteAccessibilityRequestInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id", "reason"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ID = data
-		case "reason":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
-			data, err := ec.unmarshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDeletionReason(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Reason = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputDeleteSystemIntakeContactInput(ctx context.Context, obj interface{}) (model.DeleteSystemIntakeContactInput, error) {
 	var it model.DeleteSystemIntakeContactInput
 	asMap := map[string]interface{}{}
@@ -56814,33 +51981,6 @@ func (ec *executionContext) unmarshalInputDeleteTRBRequestFundingSourcesInput(ct
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputDeleteTestDateInput(ctx context.Context, obj interface{}) (model.DeleteTestDateInput, error) {
-	var it model.DeleteTestDateInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ID = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputEmailNotificationRecipients(ctx context.Context, obj interface{}) (models.EmailNotificationRecipients, error) {
 	var it models.EmailNotificationRecipients
 	asMap := map[string]interface{}{}
@@ -56876,47 +52016,6 @@ func (ec *executionContext) unmarshalInputEmailNotificationRecipients(ctx contex
 				return it, err
 			}
 			it.ShouldNotifyITInvestment = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx context.Context, obj interface{}) (model.GeneratePresignedUploadURLInput, error) {
-	var it model.GeneratePresignedUploadURLInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"fileName", "mimeType", "size"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "fileName":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fileName"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.FileName = data
-		case "mimeType":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mimeType"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.MimeType = data
-		case "size":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-			data, err := ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Size = data
 		}
 	}
 
@@ -58782,74 +53881,6 @@ func (ec *executionContext) unmarshalInputTRBRequestChanges(ctx context.Context,
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateAccessibilityRequestCedarSystemInput(ctx context.Context, obj interface{}) (model.UpdateAccessibilityRequestCedarSystemInput, error) {
-	var it model.UpdateAccessibilityRequestCedarSystemInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"id", "cedarSystemId"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ID = data
-		case "cedarSystemId":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.CedarSystemID = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputUpdateAccessibilityRequestStatus(ctx context.Context, obj interface{}) (model.UpdateAccessibilityRequestStatus, error) {
-	var it model.UpdateAccessibilityRequestStatus
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"requestID", "status"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "requestID":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestID"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RequestID = data
-		case "status":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
-			data, err := ec.unmarshalNAccessibilityRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatus(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Status = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputUpdateSystemIntakeAdminLeadInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeAdminLeadInput, error) {
 	var it model.UpdateSystemIntakeAdminLeadInput
 	asMap := map[string]interface{}{}
@@ -59737,54 +54768,6 @@ func (ec *executionContext) unmarshalInputUpdateTRBRequestTRBLeadInput(ctx conte
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateTestDateInput(ctx context.Context, obj interface{}) (model.UpdateTestDateInput, error) {
-	var it model.UpdateTestDateInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"date", "id", "score", "testType"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "date":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("date"))
-			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Date = data
-		case "id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ID = data
-		case "score":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("score"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Score = data
-		case "testType":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("testType"))
-			data, err := ec.unmarshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.TestType = data
-		}
-	}
-
-	return it, nil
-}
-
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -59836,712 +54819,6 @@ func (ec *executionContext) _TRBAdminNoteCategorySpecificData(ctx context.Contex
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
-
-var accessibilityRequestImplementors = []string{"AccessibilityRequest"}
-
-func (ec *executionContext) _AccessibilityRequest(ctx context.Context, sel ast.SelectionSet, obj *models.AccessibilityRequest) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accessibilityRequestImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccessibilityRequest")
-		case "documents":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequest_documents(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "id":
-			out.Values[i] = ec._AccessibilityRequest_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "name":
-			out.Values[i] = ec._AccessibilityRequest_name(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "relevantTestDate":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequest_relevantTestDate(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "submittedAt":
-			out.Values[i] = ec._AccessibilityRequest_submittedAt(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "system":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequest_system(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "testDates":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequest_testDates(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "euaUserId":
-			out.Values[i] = ec._AccessibilityRequest_euaUserId(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "statusRecord":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequest_statusRecord(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "notes":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequest_notes(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "cedarSystemId":
-			out.Values[i] = ec._AccessibilityRequest_cedarSystemId(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var accessibilityRequestDocumentImplementors = []string{"AccessibilityRequestDocument"}
-
-func (ec *executionContext) _AccessibilityRequestDocument(ctx context.Context, sel ast.SelectionSet, obj *models.AccessibilityRequestDocument) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accessibilityRequestDocumentImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccessibilityRequestDocument")
-		case "documentType":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequestDocument_documentType(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "id":
-			out.Values[i] = ec._AccessibilityRequestDocument_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "mimeType":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequestDocument_mimeType(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "name":
-			out.Values[i] = ec._AccessibilityRequestDocument_name(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "requestID":
-			out.Values[i] = ec._AccessibilityRequestDocument_requestID(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "size":
-			out.Values[i] = ec._AccessibilityRequestDocument_size(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "status":
-			out.Values[i] = ec._AccessibilityRequestDocument_status(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "uploadedAt":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequestDocument_uploadedAt(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "url":
-			out.Values[i] = ec._AccessibilityRequestDocument_url(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var accessibilityRequestDocumentTypeImplementors = []string{"AccessibilityRequestDocumentType"}
-
-func (ec *executionContext) _AccessibilityRequestDocumentType(ctx context.Context, sel ast.SelectionSet, obj *model.AccessibilityRequestDocumentType) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accessibilityRequestDocumentTypeImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccessibilityRequestDocumentType")
-		case "commonType":
-			out.Values[i] = ec._AccessibilityRequestDocumentType_commonType(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "otherTypeDescription":
-			out.Values[i] = ec._AccessibilityRequestDocumentType_otherTypeDescription(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var accessibilityRequestEdgeImplementors = []string{"AccessibilityRequestEdge"}
-
-func (ec *executionContext) _AccessibilityRequestEdge(ctx context.Context, sel ast.SelectionSet, obj *model.AccessibilityRequestEdge) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accessibilityRequestEdgeImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccessibilityRequestEdge")
-		case "node":
-			out.Values[i] = ec._AccessibilityRequestEdge_node(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var accessibilityRequestNoteImplementors = []string{"AccessibilityRequestNote"}
-
-func (ec *executionContext) _AccessibilityRequestNote(ctx context.Context, sel ast.SelectionSet, obj *models.AccessibilityRequestNote) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accessibilityRequestNoteImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccessibilityRequestNote")
-		case "id":
-			out.Values[i] = ec._AccessibilityRequestNote_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "requestID":
-			out.Values[i] = ec._AccessibilityRequestNote_requestID(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "createdAt":
-			out.Values[i] = ec._AccessibilityRequestNote_createdAt(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "note":
-			out.Values[i] = ec._AccessibilityRequestNote_note(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "authorName":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequestNote_authorName(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var accessibilityRequestStatusRecordImplementors = []string{"AccessibilityRequestStatusRecord"}
-
-func (ec *executionContext) _AccessibilityRequestStatusRecord(ctx context.Context, sel ast.SelectionSet, obj *models.AccessibilityRequestStatusRecord) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accessibilityRequestStatusRecordImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccessibilityRequestStatusRecord")
-		case "id":
-			out.Values[i] = ec._AccessibilityRequestStatusRecord_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "requestID":
-			out.Values[i] = ec._AccessibilityRequestStatusRecord_requestID(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "status":
-			out.Values[i] = ec._AccessibilityRequestStatusRecord_status(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "euaUserId":
-			out.Values[i] = ec._AccessibilityRequestStatusRecord_euaUserId(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "createdAt":
-			out.Values[i] = ec._AccessibilityRequestStatusRecord_createdAt(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var accessibilityRequestsConnectionImplementors = []string{"AccessibilityRequestsConnection"}
-
-func (ec *executionContext) _AccessibilityRequestsConnection(ctx context.Context, sel ast.SelectionSet, obj *model.AccessibilityRequestsConnection) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accessibilityRequestsConnectionImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("AccessibilityRequestsConnection")
-		case "edges":
-			out.Values[i] = ec._AccessibilityRequestsConnection_edges(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
 
 var augmentedSystemIntakeContactImplementors = []string{"AugmentedSystemIntakeContact"}
 
@@ -60909,50 +55186,6 @@ func (ec *executionContext) _BusinessCaseSolution(ctx context.Context, sel ast.S
 	return out
 }
 
-var businessOwnerImplementors = []string{"BusinessOwner"}
-
-func (ec *executionContext) _BusinessOwner(ctx context.Context, sel ast.SelectionSet, obj *models.BusinessOwner) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, businessOwnerImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("BusinessOwner")
-		case "component":
-			out.Values[i] = ec._BusinessOwner_component(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "name":
-			out.Values[i] = ec._BusinessOwner_name(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
 var cedarAuthorityToOperateImplementors = []string{"CedarAuthorityToOperate"}
 
 func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel ast.SelectionSet, obj *models.CedarAuthorityToOperate) graphql.Marshaler {
@@ -61038,6 +55271,171 @@ func (ec *executionContext) _CedarAuthorityToOperate(ctx context.Context, sel as
 			out.Values[i] = ec._CedarAuthorityToOperate_tlcPhase(ctx, field, obj)
 		case "xlcPhase":
 			out.Values[i] = ec._CedarAuthorityToOperate_xlcPhase(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var cedarBudgetImplementors = []string{"CedarBudget"}
+
+func (ec *executionContext) _CedarBudget(ctx context.Context, sel ast.SelectionSet, obj *models.CedarBudget) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarBudgetImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarBudget")
+		case "fiscalYear":
+			out.Values[i] = ec._CedarBudget_fiscalYear(ctx, field, obj)
+		case "funding":
+			out.Values[i] = ec._CedarBudget_funding(ctx, field, obj)
+		case "fundingId":
+			out.Values[i] = ec._CedarBudget_fundingId(ctx, field, obj)
+		case "fundingSource":
+			out.Values[i] = ec._CedarBudget_fundingSource(ctx, field, obj)
+		case "id":
+			out.Values[i] = ec._CedarBudget_id(ctx, field, obj)
+		case "name":
+			out.Values[i] = ec._CedarBudget_name(ctx, field, obj)
+		case "projectId":
+			out.Values[i] = ec._CedarBudget_projectId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "projectTitle":
+			out.Values[i] = ec._CedarBudget_projectTitle(ctx, field, obj)
+		case "systemId":
+			out.Values[i] = ec._CedarBudget_systemId(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var cedarBudgetActualCostImplementors = []string{"CedarBudgetActualCost"}
+
+func (ec *executionContext) _CedarBudgetActualCost(ctx context.Context, sel ast.SelectionSet, obj *model.CedarBudgetActualCost) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarBudgetActualCostImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarBudgetActualCost")
+		case "actualSystemCost":
+			out.Values[i] = ec._CedarBudgetActualCost_actualSystemCost(ctx, field, obj)
+		case "fiscalYear":
+			out.Values[i] = ec._CedarBudgetActualCost_fiscalYear(ctx, field, obj)
+		case "systemId":
+			out.Values[i] = ec._CedarBudgetActualCost_systemId(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var cedarBudgetSystemCostImplementors = []string{"CedarBudgetSystemCost"}
+
+func (ec *executionContext) _CedarBudgetSystemCost(ctx context.Context, sel ast.SelectionSet, obj *models.CedarBudgetSystemCost) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarBudgetSystemCostImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarBudgetSystemCost")
+		case "budgetActualCost":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarBudgetSystemCost_budgetActualCost(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -61739,6 +56137,54 @@ func (ec *executionContext) _CedarSoftwareProducts(ctx context.Context, sel ast.
 	return out
 }
 
+var cedarSubSystemImplementors = []string{"CedarSubSystem"}
+
+func (ec *executionContext) _CedarSubSystem(ctx context.Context, sel ast.SelectionSet, obj *models.CedarSubSystem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, cedarSubSystemImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CedarSubSystem")
+		case "id":
+			out.Values[i] = ec._CedarSubSystem_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "name":
+			out.Values[i] = ec._CedarSubSystem_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "acronym":
+			out.Values[i] = ec._CedarSubSystem_acronym(ctx, field, obj)
+		case "description":
+			out.Values[i] = ec._CedarSubSystem_description(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var cedarSystemImplementors = []string{"CedarSystem"}
 
 func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionSet, obj *models.CedarSystem) graphql.Marshaler {
@@ -62236,123 +56682,6 @@ func (ec *executionContext) _ContractDate(ctx context.Context, sel ast.Selection
 	return out
 }
 
-var createAccessibilityRequestDocumentPayloadImplementors = []string{"CreateAccessibilityRequestDocumentPayload"}
-
-func (ec *executionContext) _CreateAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateAccessibilityRequestDocumentPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, createAccessibilityRequestDocumentPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("CreateAccessibilityRequestDocumentPayload")
-		case "accessibilityRequestDocument":
-			out.Values[i] = ec._CreateAccessibilityRequestDocumentPayload_accessibilityRequestDocument(ctx, field, obj)
-		case "userErrors":
-			out.Values[i] = ec._CreateAccessibilityRequestDocumentPayload_userErrors(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var createAccessibilityRequestNotePayloadImplementors = []string{"CreateAccessibilityRequestNotePayload"}
-
-func (ec *executionContext) _CreateAccessibilityRequestNotePayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateAccessibilityRequestNotePayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, createAccessibilityRequestNotePayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("CreateAccessibilityRequestNotePayload")
-		case "accessibilityRequestNote":
-			out.Values[i] = ec._CreateAccessibilityRequestNotePayload_accessibilityRequestNote(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "userErrors":
-			out.Values[i] = ec._CreateAccessibilityRequestNotePayload_userErrors(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var createAccessibilityRequestPayloadImplementors = []string{"CreateAccessibilityRequestPayload"}
-
-func (ec *executionContext) _CreateAccessibilityRequestPayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateAccessibilityRequestPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, createAccessibilityRequestPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("CreateAccessibilityRequestPayload")
-		case "accessibilityRequest":
-			out.Values[i] = ec._CreateAccessibilityRequestPayload_accessibilityRequest(ctx, field, obj)
-		case "userErrors":
-			out.Values[i] = ec._CreateAccessibilityRequestPayload_userErrors(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
 var createCedarSystemBookmarkPayloadImplementors = []string{"CreateCedarSystemBookmarkPayload"}
 
 func (ec *executionContext) _CreateCedarSystemBookmarkPayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateCedarSystemBookmarkPayload) graphql.Marshaler {
@@ -62497,44 +56826,6 @@ func (ec *executionContext) _CreateTRBRequestDocumentPayload(ctx context.Context
 	return out
 }
 
-var createTestDatePayloadImplementors = []string{"CreateTestDatePayload"}
-
-func (ec *executionContext) _CreateTestDatePayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateTestDatePayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, createTestDatePayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("CreateTestDatePayload")
-		case "testDate":
-			out.Values[i] = ec._CreateTestDatePayload_testDate(ctx, field, obj)
-		case "userErrors":
-			out.Values[i] = ec._CreateTestDatePayload_userErrors(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
 var currentUserImplementors = []string{"CurrentUser"}
 
 func (ec *executionContext) _CurrentUser(ctx context.Context, sel ast.SelectionSet, obj *model.CurrentUser) graphql.Marshaler {
@@ -62551,80 +56842,6 @@ func (ec *executionContext) _CurrentUser(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var deleteAccessibilityRequestDocumentPayloadImplementors = []string{"DeleteAccessibilityRequestDocumentPayload"}
-
-func (ec *executionContext) _DeleteAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteAccessibilityRequestDocumentPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, deleteAccessibilityRequestDocumentPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("DeleteAccessibilityRequestDocumentPayload")
-		case "id":
-			out.Values[i] = ec._DeleteAccessibilityRequestDocumentPayload_id(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var deleteAccessibilityRequestPayloadImplementors = []string{"DeleteAccessibilityRequestPayload"}
-
-func (ec *executionContext) _DeleteAccessibilityRequestPayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteAccessibilityRequestPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, deleteAccessibilityRequestPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("DeleteAccessibilityRequestPayload")
-		case "id":
-			out.Values[i] = ec._DeleteAccessibilityRequestPayload_id(ctx, field, obj)
-		case "userErrors":
-			out.Values[i] = ec._DeleteAccessibilityRequestPayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -62795,44 +57012,6 @@ func (ec *executionContext) _DeleteTRBRequestDocumentPayload(ctx context.Context
 	return out
 }
 
-var deleteTestDatePayloadImplementors = []string{"DeleteTestDatePayload"}
-
-func (ec *executionContext) _DeleteTestDatePayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteTestDatePayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, deleteTestDatePayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("DeleteTestDatePayload")
-		case "testDate":
-			out.Values[i] = ec._DeleteTestDatePayload_testDate(ctx, field, obj)
-		case "userErrors":
-			out.Values[i] = ec._DeleteTestDatePayload_userErrors(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
 var estimatedLifecycleCostImplementors = []string{"EstimatedLifecycleCost"}
 
 func (ec *executionContext) _EstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, obj *models.EstimatedLifecycleCost) graphql.Marshaler {
@@ -62862,44 +57041,6 @@ func (ec *executionContext) _EstimatedLifecycleCost(ctx context.Context, sel ast
 			out.Values[i] = ec._EstimatedLifecycleCost_solution(ctx, field, obj)
 		case "year":
 			out.Values[i] = ec._EstimatedLifecycleCost_year(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var generatePresignedUploadURLPayloadImplementors = []string{"GeneratePresignedUploadURLPayload"}
-
-func (ec *executionContext) _GeneratePresignedUploadURLPayload(ctx context.Context, sel ast.SelectionSet, obj *model.GeneratePresignedUploadURLPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, generatePresignedUploadURLPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("GeneratePresignedUploadURLPayload")
-		case "url":
-			out.Values[i] = ec._GeneratePresignedUploadURLPayload_url(ctx, field, obj)
-		case "userErrors":
-			out.Values[i] = ec._GeneratePresignedUploadURLPayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -63383,34 +57524,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
-		case "createAccessibilityRequest":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createAccessibilityRequest(ctx, field)
-			})
-		case "deleteAccessibilityRequest":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_deleteAccessibilityRequest(ctx, field)
-			})
-		case "createAccessibilityRequestDocument":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createAccessibilityRequestDocument(ctx, field)
-			})
-		case "createAccessibilityRequestNote":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createAccessibilityRequestNote(ctx, field)
-			})
-		case "deleteAccessibilityRequestDocument":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_deleteAccessibilityRequestDocument(ctx, field)
-			})
-		case "updateAccessibilityRequestStatus":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateAccessibilityRequestStatus(ctx, field)
-			})
-		case "updateAccessibilityRequestCedarSystem":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateAccessibilityRequestCedarSystem(ctx, field)
-			})
 		case "createSystemIntakeActionProgressToNewStep":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createSystemIntakeActionProgressToNewStep(ctx, field)
@@ -63473,22 +57586,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createSystemIntake":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createSystemIntake(ctx, field)
-			})
-		case "createTestDate":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createTestDate(ctx, field)
-			})
-		case "updateTestDate":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateTestDate(ctx, field)
-			})
-		case "deleteTestDate":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_deleteTestDate(ctx, field)
-			})
-		case "generatePresignedUploadURL":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_generatePresignedUploadURL(ctx, field)
 			})
 		case "submitIntake":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -63847,44 +57944,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "accessibilityRequest":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_accessibilityRequest(ctx, field)
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx,
-					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "accessibilityRequests":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_accessibilityRequests(ctx, field)
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx,
-					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "requests":
 			field := field
 
@@ -63936,25 +57995,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx,
-					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "systems":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_systems(ctx, field)
 				return res
 			}
 
@@ -64018,6 +58058,44 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "cedarBudget":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_cedarBudget(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "cedarBudgetSystemCost":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_cedarBudgetSystemCost(ctx, field)
 				return res
 			}
 
@@ -64097,6 +58175,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_cedarSystems(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "cedarSubSystems":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_cedarSubSystems(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -64621,138 +58721,6 @@ func (ec *executionContext) _RequestsConnection(ctx context.Context, sel ast.Sel
 			out.Values[i] = graphql.MarshalString("RequestsConnection")
 		case "edges":
 			out.Values[i] = ec._RequestsConnection_edges(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var systemImplementors = []string{"System"}
-
-func (ec *executionContext) _System(ctx context.Context, sel ast.SelectionSet, obj *models.System) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, systemImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("System")
-		case "businessOwner":
-			out.Values[i] = ec._System_businessOwner(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "id":
-			out.Values[i] = ec._System_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "lcid":
-			out.Values[i] = ec._System_lcid(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "name":
-			out.Values[i] = ec._System_name(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var systemConnectionImplementors = []string{"SystemConnection"}
-
-func (ec *executionContext) _SystemConnection(ctx context.Context, sel ast.SelectionSet, obj *model.SystemConnection) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, systemConnectionImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("SystemConnection")
-		case "edges":
-			out.Values[i] = ec._SystemConnection_edges(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var systemEdgeImplementors = []string{"SystemEdge"}
-
-func (ec *executionContext) _SystemEdge(ctx context.Context, sel ast.SelectionSet, obj *model.SystemEdge) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, systemEdgeImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("SystemEdge")
-		case "node":
-			out.Values[i] = ec._SystemEdge_node(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -69274,154 +63242,6 @@ func (ec *executionContext) _TRBTaskStatuses(ctx context.Context, sel ast.Select
 	return out
 }
 
-var testDateImplementors = []string{"TestDate"}
-
-func (ec *executionContext) _TestDate(ctx context.Context, sel ast.SelectionSet, obj *models.TestDate) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, testDateImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("TestDate")
-		case "date":
-			out.Values[i] = ec._TestDate_date(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "id":
-			out.Values[i] = ec._TestDate_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "score":
-			out.Values[i] = ec._TestDate_score(ctx, field, obj)
-		case "testType":
-			out.Values[i] = ec._TestDate_testType(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var updateAccessibilityRequestCedarSystemPayloadImplementors = []string{"UpdateAccessibilityRequestCedarSystemPayload"}
-
-func (ec *executionContext) _UpdateAccessibilityRequestCedarSystemPayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateAccessibilityRequestCedarSystemPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, updateAccessibilityRequestCedarSystemPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("UpdateAccessibilityRequestCedarSystemPayload")
-		case "id":
-			out.Values[i] = ec._UpdateAccessibilityRequestCedarSystemPayload_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "accessibilityRequest":
-			out.Values[i] = ec._UpdateAccessibilityRequestCedarSystemPayload_accessibilityRequest(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var updateAccessibilityRequestStatusPayloadImplementors = []string{"UpdateAccessibilityRequestStatusPayload"}
-
-func (ec *executionContext) _UpdateAccessibilityRequestStatusPayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateAccessibilityRequestStatusPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, updateAccessibilityRequestStatusPayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("UpdateAccessibilityRequestStatusPayload")
-		case "id":
-			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "requestID":
-			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_requestID(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "status":
-			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_status(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "euaUserId":
-			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_euaUserId(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "userErrors":
-			out.Values[i] = ec._UpdateAccessibilityRequestStatusPayload_userErrors(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
 var updateSystemIntakePayloadImplementors = []string{"UpdateSystemIntakePayload"}
 
 func (ec *executionContext) _UpdateSystemIntakePayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateSystemIntakePayload) graphql.Marshaler {
@@ -69437,44 +63257,6 @@ func (ec *executionContext) _UpdateSystemIntakePayload(ctx context.Context, sel 
 			out.Values[i] = ec._UpdateSystemIntakePayload_systemIntake(ctx, field, obj)
 		case "userErrors":
 			out.Values[i] = ec._UpdateSystemIntakePayload_userErrors(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var updateTestDatePayloadImplementors = []string{"UpdateTestDatePayload"}
-
-func (ec *executionContext) _UpdateTestDatePayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateTestDatePayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, updateTestDatePayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("UpdateTestDatePayload")
-		case "testDate":
-			out.Values[i] = ec._UpdateTestDatePayload_testDate(ctx, field, obj)
-		case "userErrors":
-			out.Values[i] = ec._UpdateTestDatePayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -70065,258 +63847,6 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequest(ctx context.Context, sel ast.SelectionSet, v *models.AccessibilityRequest) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._AccessibilityRequest(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDeletionReason(ctx context.Context, v interface{}) (models.AccessibilityRequestDeletionReason, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.AccessibilityRequestDeletionReason(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDeletionReason(ctx context.Context, sel ast.SelectionSet, v models.AccessibilityRequestDeletionReason) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.AccessibilityRequestDocument) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNAccessibilityRequestDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocument(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocument(ctx context.Context, sel ast.SelectionSet, v *models.AccessibilityRequestDocument) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._AccessibilityRequestDocument(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentCommonType(ctx context.Context, v interface{}) (models.AccessibilityRequestDocumentCommonType, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.AccessibilityRequestDocumentCommonType(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentCommonType(ctx context.Context, sel ast.SelectionSet, v models.AccessibilityRequestDocumentCommonType) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) unmarshalNAccessibilityRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentStatus(ctx context.Context, v interface{}) (models.AccessibilityRequestDocumentStatus, error) {
-	var res models.AccessibilityRequestDocumentStatus
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentStatus(ctx context.Context, sel ast.SelectionSet, v models.AccessibilityRequestDocumentStatus) graphql.Marshaler {
-	return v
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestDocumentType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentType(ctx context.Context, sel ast.SelectionSet, v model.AccessibilityRequestDocumentType) graphql.Marshaler {
-	return ec._AccessibilityRequestDocumentType(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestDocumentType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentType(ctx context.Context, sel ast.SelectionSet, v *model.AccessibilityRequestDocumentType) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._AccessibilityRequestDocumentType(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.AccessibilityRequestEdge) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNAccessibilityRequestEdge2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestEdge(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestEdge(ctx context.Context, sel ast.SelectionSet, v *model.AccessibilityRequestEdge) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._AccessibilityRequestEdge(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestNote2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestNoteᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.AccessibilityRequestNote) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNAccessibilityRequestNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestNote(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestNote(ctx context.Context, sel ast.SelectionSet, v *models.AccessibilityRequestNote) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._AccessibilityRequestNote(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNAccessibilityRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatus(ctx context.Context, v interface{}) (models.AccessibilityRequestStatus, error) {
-	var res models.AccessibilityRequestStatus
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatus(ctx context.Context, sel ast.SelectionSet, v models.AccessibilityRequestStatus) graphql.Marshaler {
-	return v
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestStatusRecord2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatusRecord(ctx context.Context, sel ast.SelectionSet, v models.AccessibilityRequestStatusRecord) graphql.Marshaler {
-	return ec._AccessibilityRequestStatusRecord(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNAccessibilityRequestStatusRecord2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestStatusRecord(ctx context.Context, sel ast.SelectionSet, v *models.AccessibilityRequestStatusRecord) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._AccessibilityRequestStatusRecord(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalNAugmentedSystemIntakeContact2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAugmentedSystemIntakeContactᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.AugmentedSystemIntakeContact) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -70402,16 +63932,6 @@ func (ec *executionContext) marshalNBusinessCaseStatus2githubᚗcomᚋcmsgovᚋe
 	return res
 }
 
-func (ec *executionContext) marshalNBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessOwner(ctx context.Context, sel ast.SelectionSet, v *models.BusinessOwner) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._BusinessOwner(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalNCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarAuthorityToOperate) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -70464,6 +63984,70 @@ func (ec *executionContext) marshalNCedarAuthorityToOperate2ᚖgithubᚗcomᚋcm
 		return graphql.Null
 	}
 	return ec._CedarAuthorityToOperate(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCedarBudget2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudget(ctx context.Context, sel ast.SelectionSet, v *models.CedarBudget) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CedarBudget(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCedarBudgetActualCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarBudgetActualCostᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CedarBudgetActualCost) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarBudgetActualCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarBudgetActualCost(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCedarBudgetActualCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarBudgetActualCost(ctx context.Context, sel ast.SelectionSet, v *model.CedarBudgetActualCost) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CedarBudgetActualCost(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNCedarBusinessOwnerInformation2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarBusinessOwnerInformation(ctx context.Context, sel ast.SelectionSet, v model.CedarBusinessOwnerInformation) graphql.Marshaler {
@@ -70858,6 +64442,60 @@ func (ec *executionContext) marshalNCedarSoftwareProductItem2ᚖgithubᚗcomᚋc
 	return ec._CedarSoftwareProductItem(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCedarSubSystem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystemᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarSubSystem) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarSubSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystem(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCedarSubSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSubSystem(ctx context.Context, sel ast.SelectionSet, v *models.CedarSubSystem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CedarSubSystem(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNCedarSystem2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarSystemᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarSystem) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -71103,21 +64741,6 @@ func (ec *executionContext) marshalNContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasi
 	return ec._ContractDate(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNCreateAccessibilityRequestDocumentInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentInput(ctx context.Context, v interface{}) (model.CreateAccessibilityRequestDocumentInput, error) {
-	res, err := ec.unmarshalInputCreateAccessibilityRequestDocumentInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNCreateAccessibilityRequestInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestInput(ctx context.Context, v interface{}) (model.CreateAccessibilityRequestInput, error) {
-	res, err := ec.unmarshalInputCreateAccessibilityRequestInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNCreateAccessibilityRequestNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestNoteInput(ctx context.Context, v interface{}) (model.CreateAccessibilityRequestNoteInput, error) {
-	res, err := ec.unmarshalInputCreateAccessibilityRequestNoteInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNCreateCedarSystemBookmarkInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateCedarSystemBookmarkInput(ctx context.Context, v interface{}) (model.CreateCedarSystemBookmarkInput, error) {
 	res, err := ec.unmarshalInputCreateCedarSystemBookmarkInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -71188,21 +64811,6 @@ func (ec *executionContext) unmarshalNCreateTRBRequestFeedbackInput2githubᚗcom
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDateInput(ctx context.Context, v interface{}) (model.CreateTestDateInput, error) {
-	res, err := ec.unmarshalInputCreateTestDateInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNDeleteAccessibilityRequestDocumentInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestDocumentInput(ctx context.Context, v interface{}) (model.DeleteAccessibilityRequestDocumentInput, error) {
-	res, err := ec.unmarshalInputDeleteAccessibilityRequestDocumentInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNDeleteAccessibilityRequestInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestInput(ctx context.Context, v interface{}) (model.DeleteAccessibilityRequestInput, error) {
-	res, err := ec.unmarshalInputDeleteAccessibilityRequestInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNDeleteSystemIntakeContactInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteSystemIntakeContactInput(ctx context.Context, v interface{}) (model.DeleteSystemIntakeContactInput, error) {
 	res, err := ec.unmarshalInputDeleteSystemIntakeContactInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -71210,11 +64818,6 @@ func (ec *executionContext) unmarshalNDeleteSystemIntakeContactInput2githubᚗco
 
 func (ec *executionContext) unmarshalNDeleteTRBRequestFundingSourcesInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTRBRequestFundingSourcesInput(ctx context.Context, v interface{}) (model.DeleteTRBRequestFundingSourcesInput, error) {
 	res, err := ec.unmarshalInputDeleteTRBRequestFundingSourcesInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNDeleteTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDateInput(ctx context.Context, v interface{}) (model.DeleteTestDateInput, error) {
-	res, err := ec.unmarshalInputDeleteTestDateInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -71274,11 +64877,6 @@ func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcms
 		return graphql.Null
 	}
 	return ec._EstimatedLifecycleCost(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNGeneratePresignedUploadURLInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLInput(ctx context.Context, v interface{}) (model.GeneratePresignedUploadURLInput, error) {
-	res, err := ec.unmarshalInputGeneratePresignedUploadURLInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNGovernanceRequestFeedback2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GovernanceRequestFeedback) graphql.Marshaler {
@@ -71849,70 +65447,6 @@ func (ec *executionContext) marshalNString2ᚖstring(ctx context.Context, sel as
 func (ec *executionContext) unmarshalNSubmitIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSubmitIntakeInput(ctx context.Context, v interface{}) (model.SubmitIntakeInput, error) {
 	res, err := ec.unmarshalInputSubmitIntakeInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx context.Context, sel ast.SelectionSet, v *models.System) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._System(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNSystemEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SystemEdge) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNSystemEdge2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemEdge(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNSystemEdge2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemEdge(ctx context.Context, sel ast.SelectionSet, v *model.SystemEdge) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._SystemEdge(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNSystemIntake2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx context.Context, sel ast.SelectionSet, v models.SystemIntake) graphql.Marshaler {
@@ -73530,76 +67064,6 @@ func (ec *executionContext) marshalNTRBTaskStatuses2ᚖgithubᚗcomᚋcmsgovᚋe
 	return ec._TRBTaskStatuses(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNTestDate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.TestDate) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx context.Context, sel ast.SelectionSet, v *models.TestDate) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._TestDate(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx context.Context, v interface{}) (models.TestDateTestType, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TestDateTestType(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx context.Context, sel ast.SelectionSet, v models.TestDateTestType) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
 func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
 	res, err := graphql.UnmarshalTime(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -73760,11 +67224,6 @@ func (ec *executionContext) unmarshalNUpdateTRBRequestFundingSourcesInput2github
 
 func (ec *executionContext) unmarshalNUpdateTRBRequestTRBLeadInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTRBRequestTRBLeadInput(ctx context.Context, v interface{}) (model.UpdateTRBRequestTRBLeadInput, error) {
 	res, err := ec.unmarshalInputUpdateTRBRequestTRBLeadInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNUpdateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDateInput(ctx context.Context, v interface{}) (model.UpdateTestDateInput, error) {
-	res, err := ec.unmarshalInputUpdateTestDateInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -74104,27 +67563,6 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequest(ctx context.Context, sel ast.SelectionSet, v *models.AccessibilityRequest) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._AccessibilityRequest(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOAccessibilityRequestDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocument(ctx context.Context, sel ast.SelectionSet, v *models.AccessibilityRequestDocument) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._AccessibilityRequestDocument(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOAccessibilityRequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestsConnection(ctx context.Context, sel ast.SelectionSet, v *model.AccessibilityRequestsConnection) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._AccessibilityRequestsConnection(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -74192,6 +67630,60 @@ func (ec *executionContext) marshalOCedarAssigneeType2ᚖgithubᚗcomᚋcmsgov�
 	return res
 }
 
+func (ec *executionContext) marshalOCedarBudget2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarBudget) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCedarBudget2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudget(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalOCedarBudgetSystemCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetSystemCost(ctx context.Context, sel ast.SelectionSet, v *models.CedarBudgetSystemCost) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CedarBudgetSystemCost(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOCedarDataCenter2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarDataCenter(ctx context.Context, sel ast.SelectionSet, v *models.CedarDataCenter) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -74227,27 +67719,6 @@ func (ec *executionContext) marshalOCedarSystemDetails2ᚖgithubᚗcomᚋcmsgov�
 	return ec._CedarSystemDetails(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOCreateAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateAccessibilityRequestDocumentPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._CreateAccessibilityRequestDocumentPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOCreateAccessibilityRequestNotePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestNotePayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateAccessibilityRequestNotePayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._CreateAccessibilityRequestNotePayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOCreateAccessibilityRequestPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateAccessibilityRequestPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._CreateAccessibilityRequestPayload(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOCreateCedarSystemBookmarkPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateCedarSystemBookmarkPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateCedarSystemBookmarkPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -74276,32 +67747,11 @@ func (ec *executionContext) marshalOCreateTRBRequestDocumentPayload2ᚖgithubᚗ
 	return ec._CreateTRBRequestDocumentPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateTestDatePayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._CreateTestDatePayload(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOCurrentUser2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCurrentUser(ctx context.Context, sel ast.SelectionSet, v *model.CurrentUser) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._CurrentUser(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalODeleteAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteAccessibilityRequestDocumentPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._DeleteAccessibilityRequestDocumentPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalODeleteAccessibilityRequestPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestPayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteAccessibilityRequestPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._DeleteAccessibilityRequestPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalODeleteCedarSystemBookmarkPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteCedarSystemBookmarkPayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteCedarSystemBookmarkPayload) graphql.Marshaler {
@@ -74330,13 +67780,6 @@ func (ec *executionContext) marshalODeleteTRBRequestDocumentPayload2ᚖgithubᚗ
 		return graphql.Null
 	}
 	return ec._DeleteTRBRequestDocumentPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalODeleteTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteTestDatePayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._DeleteTestDatePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOEmailAddress2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEmailAddress(ctx context.Context, v interface{}) (models.EmailAddress, error) {
@@ -74424,13 +67867,6 @@ func (ec *executionContext) unmarshalOFloat2float64(ctx context.Context, v inter
 func (ec *executionContext) marshalOFloat2float64(ctx context.Context, sel ast.SelectionSet, v float64) graphql.Marshaler {
 	res := graphql.MarshalFloat(v)
 	return res
-}
-
-func (ec *executionContext) marshalOGeneratePresignedUploadURLPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLPayload(ctx context.Context, sel ast.SelectionSet, v *model.GeneratePresignedUploadURLPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._GeneratePresignedUploadURLPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOHTML2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐHTML(ctx context.Context, v interface{}) (*models.HTML, error) {
@@ -74661,20 +68097,6 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	}
 	res := graphql.MarshalString(*v)
 	return res
-}
-
-func (ec *executionContext) marshalOSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx context.Context, sel ast.SelectionSet, v *models.System) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._System(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOSystemConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemConnection(ctx context.Context, sel ast.SelectionSet, v *model.SystemConnection) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._SystemConnection(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntake) graphql.Marshaler {
@@ -75145,13 +68567,6 @@ func (ec *executionContext) marshalOTRBWhereInProcessOption2ᚖgithubᚗcomᚋcm
 	return res
 }
 
-func (ec *executionContext) marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx context.Context, sel ast.SelectionSet, v *models.TestDate) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._TestDate(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalOTime2githubᚗcomᚋgureguᚋnullᚋzeroᚐTime(ctx context.Context, v interface{}) (zero.Time, error) {
 	res, err := models.UnmarshalZeroTime(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -75232,48 +68647,11 @@ func (ec *executionContext) marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(
 	return res
 }
 
-func (ec *executionContext) unmarshalOUpdateAccessibilityRequestCedarSystemInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestCedarSystemInput(ctx context.Context, v interface{}) (*model.UpdateAccessibilityRequestCedarSystemInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputUpdateAccessibilityRequestCedarSystemInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOUpdateAccessibilityRequestCedarSystemPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestCedarSystemPayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateAccessibilityRequestCedarSystemPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._UpdateAccessibilityRequestCedarSystemPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOUpdateAccessibilityRequestStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestStatus(ctx context.Context, v interface{}) (*model.UpdateAccessibilityRequestStatus, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputUpdateAccessibilityRequestStatus(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOUpdateAccessibilityRequestStatusPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateAccessibilityRequestStatusPayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateAccessibilityRequestStatusPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._UpdateAccessibilityRequestStatusPayload(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateSystemIntakePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._UpdateSystemIntakePayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOUpdateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateTestDatePayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._UpdateTestDatePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUserAccount2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋauthenticationᚐUserAccount(ctx context.Context, sel ast.SelectionSet, v *authentication.UserAccount) graphql.Marshaler {

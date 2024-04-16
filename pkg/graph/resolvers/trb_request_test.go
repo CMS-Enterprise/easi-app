@@ -67,12 +67,10 @@ func (s *ResolverSuite) TestGetTRBRequestByID() {
 func (s *ResolverSuite) TestGetTRBRequests() {
 	// Create a context to use for requests from another user
 	principalABCD := &authentication.EUAPrincipal{
-		EUAID:            "ABCD",
-		JobCodeEASi:      true,
-		JobCodeGRT:       true,
-		JobCode508User:   true,
-		JobCode508Tester: true,
-		JobCodeTRBAdmin:  true,
+		EUAID:           "ABCD",
+		JobCodeEASi:     true,
+		JobCodeGRT:      true,
+		JobCodeTRBAdmin: true,
 	}
 	ctxABCD := appcontext.WithLogger(context.Background(), s.testConfigs.Logger)
 	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
@@ -117,12 +115,10 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 func (s *ResolverSuite) TestGetMyTRBRequests() {
 	// Create a context to use for requests from another user
 	principalABCD := &authentication.EUAPrincipal{
-		EUAID:            "ABCD",
-		JobCodeEASi:      true,
-		JobCodeGRT:       true,
-		JobCode508User:   true,
-		JobCode508Tester: true,
-		JobCodeTRBAdmin:  true,
+		EUAID:           "ABCD",
+		JobCodeEASi:     true,
+		JobCodeGRT:      true,
+		JobCodeTRBAdmin: true,
 	}
 	ctxABCD := appcontext.WithLogger(context.Background(), s.testConfigs.Logger)
 	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)

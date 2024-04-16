@@ -73,12 +73,10 @@ func devUserContext(ctx context.Context, authHeader string, store *storage.Store
 	}
 
 	princ := &authentication.EUAPrincipal{
-		EUAID:            strings.ToUpper(config.EUA),
-		JobCodeEASi:      true,
-		JobCodeGRT:       swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM"),
-		JobCode508User:   swag.ContainsStrings(config.JobCodes, "EASI_D_508_USER"),
-		JobCode508Tester: swag.ContainsStrings(config.JobCodes, "EASI_D_508_TESTER"),
-		JobCodeTRBAdmin:  swag.ContainsStrings(config.JobCodes, "EASI_TRB_ADMIN_D"),
+		EUAID:           strings.ToUpper(config.EUA),
+		JobCodeEASi:     true,
+		JobCodeGRT:      swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM"),
+		JobCodeTRBAdmin: swag.ContainsStrings(config.JobCodes, "EASI_TRB_ADMIN_D"),
 	}
 	userAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, princ.ID(), true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
 	if err != nil {

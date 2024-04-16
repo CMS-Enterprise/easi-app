@@ -6,9 +6,6 @@ import newSystem from './articles/newSystem';
 import prepareTrbConsultMeeting from './articles/prepareTrbConsultMeeting';
 import sampleBusinessCase from './articles/sampleBusinessCase';
 import stepsInTRBProcess from './articles/stepsInTRBProcess';
-import stepsInvolved508 from './articles/stepsInvolved508';
-import templatesFor508Testing from './articles/templatesFor508Testing';
-import accessibility from './accessibility';
 import accessibilityStatement from './accessibilityStatement';
 import action from './action';
 import admin from './admin';
@@ -35,7 +32,6 @@ import technicalAssistance from './technicalAssistance';
 import termsAndConditions from './termsAndConditions';
 
 const enUS = {
-  accessibility,
   accessibilityStatement,
   action,
   admin,
@@ -50,8 +46,6 @@ const enUS = {
   governanceReviewBoard,
   governanceReviewTeam,
   sampleBusinessCase,
-  stepsInvolved508,
-  templatesFor508Testing,
   governanceOverview,
   header,
   help,

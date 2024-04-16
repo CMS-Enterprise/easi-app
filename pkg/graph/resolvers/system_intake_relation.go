@@ -41,10 +41,12 @@ func SetSystemIntakeRelationExistingService(
 		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}); err != nil {
 			return nil, err
 		}
+
 		// Delete & recreate contract number relationships
-		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
-			return nil, err
-		}
+		// DISABLED: See Note [EASI-4160 Disable Contract Number Linking]
+		// if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+		// 	return nil, err
+		// }
 
 		return updatedIntake, nil
 	})
@@ -78,10 +80,12 @@ func SetSystemIntakeRelationNewSystem(
 		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}); err != nil {
 			return nil, err
 		}
+
 		// Delete & recreate contract number relationships
-		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
-			return nil, err
-		}
+		// DISABLED: See Note [EASI-4160 Disable Contract Number Linking]
+		// if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+		// 	return nil, err
+		// }
 
 		return updatedIntake, nil
 	})
@@ -123,10 +127,12 @@ func SetSystemIntakeRelationExistingSystem(
 		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, input.CedarSystemIDs); err != nil {
 			return nil, err
 		}
+
 		// Delete & recreate contract number relationships
-		if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
-			return nil, err
-		}
+		// DISABLED: See Note [EASI-4160 Disable Contract Number Linking]
+		// if err := store.SetSystemIntakeContractNumbers(ctx, tx, input.SystemIntakeID, input.ContractNumbers); err != nil {
+		// 	return nil, err
+		// }
 
 		return updatedIntake, nil
 	})
@@ -155,12 +161,13 @@ func UnlinkSystemIntakeRelation(
 		// Clear contract number relationships by setting an empty array of contract #'s
 		// declare this as an explicit empty slice instead of `nil`
 		// TODO: (Sam) update `SetSystemIntakeContractNumbers` to allow for `nil`
-		if err = store.SetSystemIntakeContractNumbers(ctx, tx, intakeID, []string{}); err != nil {
-			return nil, err
-		}
+		// DISABLED: See Note [EASI-4160 Disable Contract Number Linking]
+		// if err := store.SetSystemIntakeContractNumbers(ctx, tx, intakeID, []string{}); err != nil {
+		// 	return nil, err
+		// }
 
 		// Clear CEDAR system relationships
-		if err = store.SetSystemIntakeSystems(ctx, tx, intakeID, []string{}); err != nil {
+		if err := store.SetSystemIntakeSystems(ctx, tx, intakeID, []string{}); err != nil {
 			return nil, err
 		}
 
@@ -173,3 +180,9 @@ func UnlinkSystemIntakeRelation(
 		return updatedIntake, nil
 	})
 }
+
+/*
+	Note [EASI-4160 Disable Contract Number Linking]
+	We have temporarily disabled contract number linking from the UI Linking page as it allows for submitted System Intakes to be edited. These
+	submitted System Intakes should be immutable, and the new linking functionality does not adhere to that.
+*/

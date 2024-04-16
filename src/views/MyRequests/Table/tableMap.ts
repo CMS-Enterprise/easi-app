@@ -6,7 +6,6 @@ import {
   GetRequests_requests_edges_node as GetRequestsType
 } from 'queries/types/GetRequests';
 import { RequestType } from 'types/graphql-global-types';
-import { accessibilityRequestStatusMap } from 'utils/accessibilityRequest';
 
 // React table sorts on the data passed table.  The column configuration uses the accessor to access the field of the original dataset.
 // Column cell configuration is meant to wrap data in JSX components, not modify data for sorting
@@ -55,21 +54,7 @@ const tableMap = (
           : t(`requestsTable.types.TRB`);
 
       let status = '';
-      if (!isTRBRequestType(request)) {
-        switch (request.type) {
-          case RequestType.ACCESSIBILITY_REQUEST:
-            // Status hasn't changed if the status record created at is the same
-            // as the 508 request's submitted at
-            if (request.submittedAt === request.statusCreatedAt) {
-              status = accessibilityRequestStatusMap[request.status];
-            }
-            status = accessibilityRequestStatusMap[request.status];
-            break;
-          default:
-            status = '';
-            break;
-        }
-      } else {
+      if (isTRBRequestType(request)) {
         // TRB status
         status = t(`table.requestStatus.${request.status}`, {
           ns: 'technicalAssistance'

@@ -211,14 +211,12 @@ const RequestOverview = () => {
                 render={() => <Decision {...systemIntake} />}
               />
 
-              {flags.itgovLinkRequestsAdmin && (
-                <Route
-                  exact
-                  path="/governance-review-team/:systemId/additional-information"
-                >
-                  <AdditionalInformation request={systemIntake} type="itgov" />
-                </Route>
-              )}
+              <Route
+                exact
+                path="/governance-review-team/:systemId/additional-information"
+              >
+                <AdditionalInformation request={systemIntake} type="itgov" />
+              </Route>
 
               <Route
                 path="/governance-review-team/:systemId/lcid"

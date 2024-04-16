@@ -22,7 +22,6 @@ const systemProfile = {
     'tools-and-software': 'Tools and Software',
     ato: 'ATO',
     'lifecycle-id': 'Lifecyle ID',
-    'section-508': 'Section 508',
     'sub-systems': 'Sub-systems',
     'system-data': 'System Data',
     documents: 'Documents'
@@ -37,6 +36,7 @@ const systemProfile = {
     pointsOfContact_plural: 'Points of contact',
     noPointsOfContact:
       'This system does not have any points of contact identified.',
+    noDataAvailable: 'No data available',
     sendEmail: 'Send an email',
     moreContact: 'More points of contact',
     description: {
@@ -119,14 +119,21 @@ const systemProfile = {
     },
     fundingAndBudget: {
       header: 'Funding and Budget',
-      actualFYCost: 'Actual FY system cost',
-      budgetedFYCost: 'Budgeted FY system cost',
-      investmentNumber: 'Investment number',
-      requisitionNumber: 'Requisition number',
-      tagHeader1: 'Funding Sources',
+      budgetProjects: 'Budget Projects',
+      noBudgetProjects: 'There are no budget projects listef for this system',
+      fiscalYear: 'Fiscal Year',
+      noFiscalYear: 'No fiscal year listed',
+      actualSystemCost: 'Actual system cost',
+      budgetedSystemCost: 'Budgeted system cost',
+      percentageOfFunding: 'Percentage of funding dedicated to this system',
+      noSystemCostInfo:
+        'There is no system cost information available for this system',
+      fundingSource: 'Funding Source',
       budgetID: 'Budget ID: ',
+      noBudgetTitle: 'No budget title listed',
       systemFiscalYear: 'System fiscal year (FY) cost',
-      viewMoreFunding: 'View more funding and budget information'
+      viewMoreFunding: 'Show more budget projects',
+      viewLessFunding: 'Show fewer budget projects'
     },
     team: {
       header: {
@@ -306,34 +313,6 @@ const systemProfile = {
       header: 'Sub-systems',
       retirementDate: 'Retirement date',
       viewInfo: 'View sub-system information'
-    },
-    section508: {
-      section508RequestName: '508 project title',
-      viewMoreRequestInformation: 'View more 508 request information',
-      openRequests: 'Open 508 testing requests',
-      closedRequests: 'Closed testing requests',
-      testingDocuments: '508 testing documents',
-      requestName: 'Project title',
-      currentStatus: 'Current status',
-      statusChanged: 'Request status changed',
-      test: 'test',
-      latestTest: 'Latest test',
-      initialTest: 'Initial Test:',
-      score: 'Score:',
-      businessOwner: 'Business owner',
-      submissionDate: 'Submission date',
-      uploadedDocuments: 'uploaded documents',
-      viewUploadedDocuments: 'View uploaded documents',
-      startNewRequest: 'Start a new 508 testing request',
-      viewMostRecent: 'View most recent',
-      uploaded: 'Uploaded',
-      additional: 'Additional',
-      table: {
-        document: 'Document',
-        uploadDate: 'Upload Date',
-        actions: 'Actions',
-        view: 'View'
-      }
     }
   },
   systemTable: {
