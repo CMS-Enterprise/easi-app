@@ -297,7 +297,7 @@ const systemProfile = {
       developmentDescription: 'Description of development work to be completed',
       aiTechStatus: 'AI technology status',
       technologyTypes: 'AI Technology types',
-      noURL: 'This system does not have URLS',
+      noURL: 'This system does not have any URLs or locations listed.',
       noEnvironmentURL: 'This environment does not have a url',
 
       ipInfo: 'IP Information',

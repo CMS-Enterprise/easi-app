@@ -155,33 +155,13 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                     className="grid-col-12"
                   >
                     <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
-                      <dt>
-                        {location.urlHostingEnv &&
-                          `${location.urlHostingEnv} ${t(
-                            'singleSystem.systemDetails.environment'
-                          )}`}
-                      </dt>
-                      {location.isBehindWebApplicationFirewall && (
-                        <div>
-                          <dd className="text-right text-base-dark system-profile__icon-container">
-                            <IconVerifiedUser
-                              width="1rem"
-                              color="#00a91c"
-                              height="1rem"
-                              className="margin-right-1"
-                              aria-label="verified"
-                            />
-                            <span className="text-tbottom line-height-body-3">
-                              {t(
-                                'singleSystem.systemDetails.webApplicationFirewall'
-                              )}
-                            </span>
-                          </dd>
-                        </div>
-                      )}
+                      {location.urlHostingEnv &&
+                        `${location.urlHostingEnv} ${t(
+                          'singleSystem.systemDetails.environment'
+                        )}`}
                     </CardHeader>
                     <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
-                      <h3 className="link-header margin-top-0 margin-bottom-2">
+                      <h3 className="link-header margin-y-0">
                         {location.address ? (
                           <Link
                             className="link-header url-card-link"
@@ -197,14 +177,32 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                           </dd>
                         )}
                       </h3>
-                      {location.tags.map((tag: string) => (
-                        <Tag
-                          key={tag}
-                          className="system-profile__tag margin-bottom-2 text-base-darker bg-base-lighter"
-                        >
-                          {tag}
-                        </Tag>
-                      ))}
+                      {location.isBehindWebApplicationFirewall && (
+                        <div className="margin-top-1">
+                          <IconVerifiedUser
+                            width="1rem"
+                            color="#00a91c"
+                            height="1rem"
+                            className="margin-right-1"
+                            aria-label="verified"
+                          />
+                          <span className="text-tbottom text-base-dark line-height-body-3">
+                            {t(
+                              'singleSystem.systemDetails.webApplicationFirewall'
+                            )}
+                          </span>
+                        </div>
+                      )}
+                      <div className="margin-top-2">
+                        {location.tags.map((tag: string) => (
+                          <Tag
+                            key={tag}
+                            className="system-profile__tag margin-bottom-2 text-base-darker bg-base-lighter"
+                          >
+                            {tag}
+                          </Tag>
+                        ))}
+                      </div>
                       <div />
                     </CardBody>
                     {location.deploymentDataCenterName && (
@@ -280,29 +278,16 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
 
         <Grid row className="margin-top-3">
           <Grid desktop={{ col: 6 }}>
-            {flags.systemProfileHiddenFields && (
-              <>
-                <DescriptionTerm
-                  term={t('singleSystem.systemDetails.customDevelopment')}
-                />
-                <DescriptionDefinition
-                  className="line-height-body-3 margin-bottom-4"
-                  definition="85%"
-                />
-              </>
-            )}
             <DescriptionTerm
-              term={t('singleSystem.systemDetails.workCompleted')}
+              term={t('singleSystem.systemDetails.customDevelopment')}
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={showVal(
-                cedarSystemDetails?.systemMaintainerInformation
-                  .devCompletionPercent
-              )}
+              // definition={showVal(
+              //   cedarSystemDetails?.systemMaintainerInformation
+              //     .systemCustomization
+              // )}
             />
-          </Grid>
-          <Grid desktop={{ col: 6 }}>
             <DescriptionTerm
               term={t('singleSystem.systemDetails.releaseFrequency')}
             />
@@ -313,17 +298,22 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                   .deploymentFrequency
               )}
             />
-            {flags.systemProfileHiddenFields && (
-              <>
-                <DescriptionTerm
-                  term={t('singleSystem.systemDetails.retirement')}
-                />
-                <DescriptionDefinition
-                  className="line-height-body-3 margin-bottom-4"
-                  definition="No planned retirement or replacement"
-                />
-              </>
-            )}
+          </Grid>
+          <Grid desktop={{ col: 6 }}>
+            <DescriptionTerm
+              term={t('singleSystem.systemDetails.workCompleted')}
+            />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition={showVal(
+                cedarSystemDetails?.systemMaintainerInformation
+                  .devCompletionPercent
+              )}
+            />
+            <DescriptionTerm
+              term={t('singleSystem.systemDetails.retirement')}
+            />
+            <DescriptionDefinition className="line-height-body-3 margin-bottom-4" />
           </Grid>
           <Grid desktop={{ col: 12 }}>
             <DescriptionTerm
