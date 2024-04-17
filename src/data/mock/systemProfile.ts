@@ -270,6 +270,63 @@ export const result: { data: GetSystemProfile } = {
         __typename: 'CedarAuthorityToOperate'
       }
     ],
+    cedarBudget: [
+      {
+        fiscalYear: '2023',
+        funding:
+          'Most of this funding is directly and only for this system (over 80%)',
+        fundingId: '12345',
+        fundingSource: 'Prog Ops',
+        id: '12345',
+        name: 'Budget Project 1',
+        projectId: '12345',
+        projectTitle: 'Budget X',
+        systemId: '12345',
+        __typename: 'CedarBudget'
+      },
+      {
+        fiscalYear: '2023',
+        funding:
+          'Only part of this funding is directly for this system (less than 40%)',
+        fundingId: '12345',
+        fundingSource: 'Fed Admin',
+        id: '12345',
+        name: 'Budget Project 1',
+        projectId: '12345',
+        projectTitle: 'Budget X',
+        systemId: '12345',
+        __typename: 'CedarBudget'
+      }
+    ],
+    cedarBudgetSystemCost: {
+      budgetActualCost: [
+        {
+          actualSystemCost: '3.50',
+          fiscalYear: '2021',
+          systemId: '1234',
+          __typename: 'CedarBudgetActualCost'
+        },
+        {
+          actualSystemCost: '7',
+          fiscalYear: '2022',
+          systemId: '1235',
+          __typename: 'CedarBudgetActualCost'
+        },
+        {
+          actualSystemCost: '10.50',
+          fiscalYear: '2023',
+          systemId: '1236',
+          __typename: 'CedarBudgetActualCost'
+        },
+        {
+          actualSystemCost: '14',
+          fiscalYear: '2024',
+          systemId: '1237',
+          __typename: 'CedarBudgetActualCost'
+        }
+      ],
+      __typename: 'CedarBudgetSystemCost'
+    },
     cedarThreat: [
       {
         weaknessRiskLevel: 'Moderate',
@@ -704,7 +761,13 @@ export const result: { data: GetSystemProfile } = {
           'Continued enhancements and improvements and alignment with legislative changes.  Also, working on an upcoming redesign effort for the website.',
         netAccessibility:
           'Accessible to both public internet and to CMS-internal network',
-        __typename: 'CedarSystemMaintainerInformation'
+        __typename: 'CedarSystemMaintainerInformation',
+        ecapParticipation: true,
+        frontendAccessType: 'IPv4 Only',
+        hardCodedIPAddress: true,
+        ipEnabledAssetCount: 50,
+        ip6EnabledAssetPercent: '50%',
+        ip6TransitionPlan: 'This system will be transitioned to IPv6'
       },
       __typename: 'CedarSystemDetails'
     },

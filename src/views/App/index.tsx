@@ -93,11 +93,9 @@ const AppRoutes = () => {
         path="/system/request-type"
         component={RequestTypeForm}
       />
-      {flags.itgovLinkRequestsRequester && (
-        <SecureRoute exact path="/system/link/:id?">
-          <RequestLinkForm requestType="itgov" />
-        </SecureRoute>
-      )}
+      <SecureRoute exact path="/system/link/:id?">
+        <RequestLinkForm requestType="itgov" />
+      </SecureRoute>
       <SecureRoute
         path="/governance-overview/:systemId?"
         component={GovernanceOverview}

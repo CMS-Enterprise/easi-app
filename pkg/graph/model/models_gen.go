@@ -33,6 +33,14 @@ type BusinessCaseSolution struct {
 	Title                   *string `json:"title,omitempty"`
 }
 
+// CedarBudgetActualCost represents an individual budget actual cost item; this information is returned from the CEDAR Core API
+// as a part of the CedarBudgetSystemCost object
+type CedarBudgetActualCost struct {
+	ActualSystemCost *string `json:"actualSystemCost,omitempty"`
+	FiscalYear       *string `json:"fiscalYear,omitempty"`
+	SystemID         *string `json:"systemId,omitempty"`
+}
+
 // BusinessOwnerInformation contains information about the business owner for a CEDAR system
 type CedarBusinessOwnerInformation struct {
 	BeneficiaryAddressPurpose      []string `json:"beneficiaryAddressPurpose"`

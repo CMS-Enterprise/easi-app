@@ -16,7 +16,7 @@ func (c *Client) GetBudgetBySystem(ctx context.Context, cedarSystemID string) ([
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {
-			return []*models.CedarBudget{}, nil
+			return cedarcoremock.GetBudgets(), nil
 		}
 		return nil, cedarcoremock.NoSystemFoundError()
 	}
@@ -44,12 +44,15 @@ func (c *Client) GetBudgetBySystem(ctx context.Context, cedarSystemID string) ([
 	for _, budget := range resp.Payload.Budgets {
 
 		retVal = append(retVal, &models.CedarBudget{
-			Funding:      zero.StringFrom(budget.Funding),
-			FundingID:    zero.StringFrom(budget.FundingID),
-			ID:           zero.StringFrom(budget.ID),
-			ProjectID:    budget.ProjectID,
-			ProjectTitle: zero.StringFrom(budget.ProjectTitle),
-			SystemID:     zero.StringFrom(budget.SystemID),
+			FiscalYear:    zero.StringFrom(budget.FiscalYear),
+			Funding:       zero.StringFrom(budget.Funding),
+			FundingID:     zero.StringFrom(budget.FundingID),
+			FundingSource: zero.StringFrom(budget.FundingSource),
+			ID:            zero.StringFrom(budget.ID),
+			Name:          zero.StringFrom(budget.Name),
+			ProjectID:     zero.StringFromPtr(budget.ProjectID),
+			ProjectTitle:  zero.StringFrom(budget.ProjectTitle),
+			SystemID:      zero.StringFrom(budget.SystemID),
 		})
 	}
 	return retVal, nil

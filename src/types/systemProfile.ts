@@ -8,6 +8,8 @@ import {
   GetSystemProfile,
   /* eslint-disable camelcase */
   GetSystemProfile_cedarAuthorityToOperate,
+  GetSystemProfile_cedarBudget,
+  GetSystemProfile_cedarBudgetSystemCost,
   GetSystemProfile_cedarSoftwareProducts,
   GetSystemProfile_cedarSystemDetails_cedarSystem,
   GetSystemProfile_cedarSystemDetails_deployments_dataCenter,
@@ -17,7 +19,6 @@ import {
 } from 'queries/types/GetSystemProfile';
 import {
   tempATOProp,
-  tempBudgetProp,
   tempSubSystemProp,
   tempSystemDataProp
 } from 'views/SystemProfile/mockSystemData';
@@ -127,29 +128,28 @@ export interface UrlLocation extends GetSystemProfile_cedarSystemDetails_urls {
 export interface SystemProfileData extends GetSystemProfile {
   // The original id type can be null, in which case this object is not created
   id: string;
-  // eslint-disable-next-line camelcase
+  /* eslint-disable camelcase */
   ato?: GetSystemProfile_cedarAuthorityToOperate;
   atoStatus?: AtoStatus;
-  locations?: UrlLocation[];
-  // eslint-disable-next-line camelcase
+  budgets?: GetSystemProfile_cedarBudget[];
+  budgetSystemCosts?: GetSystemProfile_cedarBudgetSystemCost;
   businessOwners: GetSystemProfile_cedarSystemDetails_roles[];
   developmentTags?: DevelopmentTag[];
+  locations?: UrlLocation[];
   numberOfContractorFte?: number;
   numberOfFederalFte?: number;
   numberOfFte?: number;
   personRoles: CedarRoleAssigneePerson[];
   productionLocation?: UrlLocation;
-  // eslint-disable-next-line camelcase
   status: GetSystemProfile_cedarSystemDetails_cedarSystem['status'];
   usernamesWithRoles: UsernameWithRoles[];
 
   // Remaining mock data stubs
   activities?: tempATOProp[];
-  budgets?: tempBudgetProp[];
-  // eslint-disable-next-line camelcase
   toolsAndSoftware?: GetSystemProfile_cedarSoftwareProducts;
   subSystems?: tempSubSystemProp[];
   systemData?: tempSystemDataProp[];
+  /* eslint-enable camelcase */
 }
 
 export interface SystemProfileSubviewProps {

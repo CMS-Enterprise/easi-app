@@ -112,6 +112,27 @@ func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.Bus
 	return r.store.FetchSystemIntakeByID(ctx, obj.SystemIntakeID)
 }
 
+// BudgetActualCost is the resolver for the budgetActualCost field.
+func (r *cedarBudgetSystemCostResolver) BudgetActualCost(ctx context.Context, obj *models.CedarBudgetSystemCost) ([]*model.CedarBudgetActualCost, error) {
+	budgetActualCosts := obj.BudgetActualCosts
+
+	if len(budgetActualCosts) == 0 {
+		return nil, nil
+	}
+
+	var actualCosts []*model.CedarBudgetActualCost
+	for _, cost := range budgetActualCosts {
+		fyCost := &model.CedarBudgetActualCost{
+			ActualSystemCost: cost.ActualSystemCost.Ptr(),
+			FiscalYear:       cost.FiscalYear.Ptr(),
+			SystemID:         cost.SystemID.Ptr(),
+		}
+		actualCosts = append(actualCosts, fyCost)
+	}
+
+	return actualCosts, nil
+}
+
 // SoftwareProducts is the resolver for the softwareProducts field.
 func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error) {
 	softwareProducts := obj.SoftwareProducts
@@ -1165,6 +1186,26 @@ func (r *queryResolver) CedarAuthorityToOperate(ctx context.Context, cedarSystem
 	return cedarATO, nil
 }
 
+// CedarBudget is the resolver for the cedarBudget field.
+func (r *queryResolver) CedarBudget(ctx context.Context, cedarSystemID string) ([]*models.CedarBudget, error) {
+	cedarBudget, err := r.cedarCoreClient.GetBudgetBySystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
+	return cedarBudget, nil
+}
+
+// CedarBudgetSystemCost is the resolver for the cedarBudgetSystemCost field.
+func (r *queryResolver) CedarBudgetSystemCost(ctx context.Context, cedarSystemID string) (*models.CedarBudgetSystemCost, error) {
+	cedarBudgetSystemCost, err := r.cedarCoreClient.GetBudgetSystemCostBySystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+
+	return cedarBudgetSystemCost, nil
+}
+
 // CedarPersonsByCommonName is the resolver for the cedarPersonsByCommonName field.
 func (r *queryResolver) CedarPersonsByCommonName(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
 	response, err := r.service.SearchCommonNameContains(ctx, commonName)
@@ -1195,7 +1236,27 @@ func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (
 
 // CedarSystems is the resolver for the cedarSystems field.
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	return r.cedarCoreClient.GetSystemSummary(ctx, true, nil)
+	return r.cedarCoreClient.GetSystemSummary(ctx, true)
+}
+
+// CedarSubSystems is the resolver for the cedarSubSystems field.
+func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID string) ([]*models.CedarSubSystem, error) {
+	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, false, cedarcore.WithSubSystems(cedarSystemID))
+	if err != nil {
+		return nil, err
+	}
+
+	var subSystems []*models.CedarSubSystem
+	for _, system := range systems {
+		subSystems = append(subSystems, &models.CedarSubSystem{
+			ID:          system.ID,
+			Name:        system.Name,
+			Acronym:     system.Acronym,
+			Description: system.Description,
+		})
+	}
+
+	return subSystems, nil
 }
 
 // CedarContractsBySystem is the resolver for the cedarContractsBySystem field.
@@ -1206,7 +1267,7 @@ func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemI
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
-	return r.cedarCoreClient.GetSystemSummary(ctx, false, &requesterEUAID)
+	return r.cedarCoreClient.GetSystemSummary(ctx, false, cedarcore.WithEuaIDFilter(requesterEUAID))
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.
@@ -2001,6 +2062,11 @@ func (r *userInfoResolver) EuaUserID(ctx context.Context, obj *models.UserInfo) 
 // BusinessCase returns generated.BusinessCaseResolver implementation.
 func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
 
+// CedarBudgetSystemCost returns generated.CedarBudgetSystemCostResolver implementation.
+func (r *Resolver) CedarBudgetSystemCost() generated.CedarBudgetSystemCostResolver {
+	return &cedarBudgetSystemCostResolver{r}
+}
+
 // CedarSoftwareProducts returns generated.CedarSoftwareProductsResolver implementation.
 func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolver {
 	return &cedarSoftwareProductsResolver{r}
@@ -2083,6 +2149,7 @@ func (r *Resolver) TRBRequestForm() generated.TRBRequestFormResolver {
 func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResolver{r} }
 
 type businessCaseResolver struct{ *Resolver }
+type cedarBudgetSystemCostResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
 type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }

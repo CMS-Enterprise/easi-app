@@ -18,6 +18,31 @@ export interface GetSystemProfile_cedarAuthorityToOperate {
   lastAssessmentDate: Time | null;
 }
 
+export interface GetSystemProfile_cedarBudget {
+  __typename: "CedarBudget";
+  fiscalYear: string | null;
+  funding: string | null;
+  fundingId: string | null;
+  fundingSource: string | null;
+  id: string | null;
+  name: string | null;
+  projectId: string;
+  projectTitle: string | null;
+  systemId: string | null;
+}
+
+export interface GetSystemProfile_cedarBudgetSystemCost_budgetActualCost {
+  __typename: "CedarBudgetActualCost";
+  actualSystemCost: string | null;
+  fiscalYear: string | null;
+  systemId: string | null;
+}
+
+export interface GetSystemProfile_cedarBudgetSystemCost {
+  __typename: "CedarBudgetSystemCost";
+  budgetActualCost: GetSystemProfile_cedarBudgetSystemCost_budgetActualCost[];
+}
+
 export interface GetSystemProfile_cedarThreat {
   __typename: "CedarThreat";
   weaknessRiskLevel: string | null;
@@ -138,6 +163,12 @@ export interface GetSystemProfile_cedarSystemDetails_systemMaintainerInformation
   deploymentFrequency: string | null;
   devCompletionPercent: string | null;
   devWorkDescription: string | null;
+  ecapParticipation: boolean | null;
+  frontendAccessType: string | null;
+  hardCodedIPAddress: boolean | null;
+  ipEnabledAssetCount: number | null;
+  ip6EnabledAssetPercent: string | null;
+  ip6TransitionPlan: string | null;
   netAccessibility: string | null;
 }
 
@@ -153,6 +184,8 @@ export interface GetSystemProfile_cedarSystemDetails {
 
 export interface GetSystemProfile {
   cedarAuthorityToOperate: GetSystemProfile_cedarAuthorityToOperate[];
+  cedarBudget: GetSystemProfile_cedarBudget[] | null;
+  cedarBudgetSystemCost: GetSystemProfile_cedarBudgetSystemCost | null;
   cedarThreat: GetSystemProfile_cedarThreat[];
   cedarSoftwareProducts: GetSystemProfile_cedarSoftwareProducts | null;
   cedarContractsBySystem: GetSystemProfile_cedarContractsBySystem[];
