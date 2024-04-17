@@ -2822,6 +2822,32 @@
 									"response": []
 								}
 							]
+						},
+						{
+							"name": "System Details",
+							"item": [
+								{
+									"name": "Get System Details",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query cedarSystemDetails($cedarSystemId: String!) {\n    cedarSystemDetails(cedarSystemId: $cedarSystemId){\n        cedarSystem {\n            id\n            name\n            description\n            acronym\n            status\n            businessOwnerOrg\n            businessOwnerOrgComp\n            businessOwnerRoles {\n                application\n                objectID\n                roleTypeID\n                assigneeType\n                assigneeUsername\n                assigneeEmail\n                assigneeOrgID\n                assigneeOrgName\n                assigneeFirstName\n                assigneeLastName\n                assigneePhone\n                assigneeDesc\n                roleTypeName\n                roleTypeDesc\n                roleID\n                objectType\n            }\n            systemMaintainerOrg\n            systemMaintainerOrgComp\n            versionId\n        }\n        systemMaintainerInformation {\n            agileUsed\n            businessArtifactsOnDemand\n            deploymentFrequency\n            devCompletionPercent\n            devWorkDescription\n            ecapParticipation\n            frontendAccessType\n            hardCodedIPAddress\n            ip6EnabledAssetPercent\n            ip6TransitionPlan\n            ipEnabledAssetCount\n            majorRefreshDate\n            netAccessibility\n            omDocumentationOnDemand\n            plansToRetireReplace\n            quarterToRetireReplace\n            recordsManagementBucket\n            sourceCodeOnDemand\n            systemCustomization\n            systemDesignOnDemand\n            systemProductionDate\n            systemRequirementsOnDemand\n            testPlanOnDemand\n            testReportsOnDemand\n            testScriptsOnDemand\n            yearToRetireReplace\n        }\n        businessOwnerInformation {\n            beneficiaryAddressPurpose\n            beneficiaryAddressPurposeOther\n            beneficiaryAddressSource\n            beneficiaryAddressSourceOther\n            costPerYear\n            isCmsOwned\n            numberOfContractorFte\n            numberOfFederalFte\n            numberOfSupportedUsersPerMonth\n            storesBankingData\n            storesBeneficiaryAddress\n        }\n        roles {\n            application\n            objectID\n            roleTypeID\n            assigneeType\n            assigneeUsername\n            assigneeEmail\n            assigneeOrgID\n            assigneeOrgName\n            assigneeFirstName\n            assigneeLastName\n            assigneePhone\n            assigneeDesc\n            roleTypeName\n            roleTypeDesc\n            roleID\n            objectType\n        }\n        deployments {\n            id\n            name\n            systemID\n            startDate\n            endDate\n            isHotSite\n            description\n            contractorName\n            systemVersion\n            hasProductionData\n            replicatedSystemElements\n            deploymentType\n            systemName\n            deploymentElementID\n            state\n            status\n            wanType\n            dataCenter {\n                id\n                name\n                version\n                description\n                state\n                status\n                startDate\n                endDate\n                address1\n                address2\n                city\n                addressState\n                zip\n            }\n        }\n        threats {\n            alternativeId\n            controlFamily\n            daysOpen\n            id\n            parentId\n            type\n            weaknessRiskLevel\n        }\n        urls {\n            id\n            address\n            isBehindWebApplicationFirewall\n            isAPIEndpoint\n            isVersionCodeRepository\n            urlHostingEnv\n        }\n    }\n}",
+												"variables": "{\n    \"cedarSystemId\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}\"\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						}
 					]
 				},
