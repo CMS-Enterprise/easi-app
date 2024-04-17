@@ -46,7 +46,7 @@ while true; do
 
         # Parse the total findings from the already captured $scanFindings
         # Use the '//' operator to provide a default value of 0 if the path is null or does not exist
-        totalFindings=$(echo "$scanFindings" | jq '.imageScanFindings.findingSeverityCounts | add // 0')
+        totalFindings=$(echo "$scanFindings" | jq '.imageScanFindings.findingSeverityCounts // [] | add // 0')
 
         # Check if totalFindings is greater than 0
         if [[ "$totalFindings" -gt 0 ]]; then
