@@ -132,6 +132,12 @@ export default gql`
         deploymentFrequency
         devCompletionPercent
         devWorkDescription
+        ecapParticipation
+        frontendAccessType
+        hardCodedIPAddress
+        ipEnabledAssetCount
+        ip6EnabledAssetPercent
+        ip6TransitionPlan
         netAccessibility
       }
     }
