@@ -23,3 +23,7 @@ jobs:
     uses: ./.github/workflows/run_tests.yml
     needs: [Build_Application_Images,Build_Test_Frontend_Assets]
     secrets: inherit
+
+  Sonar_Scan:
+    uses: ./.github/workflows/sonar_scan.yml
+    secrets: inherit

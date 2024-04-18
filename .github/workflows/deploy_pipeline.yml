@@ -35,6 +35,10 @@ jobs:
     needs: [Build_Application_Images,Build_Test_Frontend_Assets]
     secrets: inherit
 
+  Sonar_Scan:
+    uses: ./.github/workflows/sonar_scan.yml
+    secrets: inherit
+
   deploy_dev:
     needs: [Run_Tests, Build_Frontend_Assets]
     uses: ./.github/workflows/deploy_to_environment.yml
