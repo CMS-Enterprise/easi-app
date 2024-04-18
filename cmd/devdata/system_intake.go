@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -254,6 +255,34 @@ func updateSystemIntakeContact(
 	if err != nil {
 		panic(err)
 	}
+}
+
+func DupeCodeA() {
+	fmt.Println("Wow!")
+}
+
+func DupeCodeB() {
+	fmt.Println("Wow!")
+}
+
+func DupeCodeC() {
+	fmt.Println("Wow!")
+}
+
+func DupeCodeD() {
+	fmt.Println("Wow!")
+}
+
+func DupeCodeE() {
+	fmt.Println("Wow!")
+}
+
+func DupeCodeF() {
+	fmt.Println("Wow!")
+}
+
+func DupeCodeG() {
+	fmt.Println("Wow!")
 }
 
 func setSystemIntakeRelationNewSystem(
