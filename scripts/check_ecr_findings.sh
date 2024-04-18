@@ -26,7 +26,7 @@ while true; do
 
     if [[ "$scanExitCode" -eq 254 ]]; then
         echo "Scan not available yet, retrying..."
-        # echo "Error details: $scanFindings"
+        echo "Error details: $scanFindings"
         sleep 10
         continue # Using continue to retry only for code 254
     elif [[ "$scanExitCode" -ne 0 ]]; then
