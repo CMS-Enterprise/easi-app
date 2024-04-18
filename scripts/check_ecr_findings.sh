@@ -44,6 +44,9 @@ while true; do
     elif [[ "$scanStatus" == "ACTIVE" ]]; then
         echo "Scan complete"
 
+        # Print the full scanFindings JSON
+        echo "$scanFindings"
+
         # Parse the total findings from the already captured $scanFindings
         # Use the '//' operator to provide a default value of 0 if the path is null or does not exist
         totalFindings=$(echo "$scanFindings" | jq '.imageScanFindings.findingSeverityCounts // [] | add // 0')
