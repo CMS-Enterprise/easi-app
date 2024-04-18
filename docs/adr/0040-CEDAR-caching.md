@@ -45,7 +45,7 @@ POC can be found on the `EASI-4129/nginx-caching` branch ([link to PR](https://g
 * `+` This solution is purpose-built for caching CEDAR, providing a clear philosophy of use.
 * `+` The caching application is separate from EASi, making debugging and management easier.
 * `+` Requests can be invalidate in a number of ways: sending a PURGE method to the same URL path, adding a query parameter, adding a path parameter, etc. The POC sends a PURGE method to accomplish cache invalidation.
-* `-` The open-source version of nginx does not support caching natively, and a community module must be used. This requires a special dockerfile to extend the main nginx image.
+* `-` The open-source version of nginx does not support caching natively, and a community module must be used. This requires a special Dockerfile to extend the main nginx image.
 
 ### Use an optimized external key-value store to store data in lieu of making requests (Redis/Elasticache).
 
