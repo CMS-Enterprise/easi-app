@@ -163,6 +163,12 @@ export interface GetSystemProfile_cedarSystemDetails_systemMaintainerInformation
   deploymentFrequency: string | null;
   devCompletionPercent: string | null;
   devWorkDescription: string | null;
+  ecapParticipation: boolean | null;
+  frontendAccessType: string | null;
+  hardCodedIPAddress: boolean | null;
+  ipEnabledAssetCount: number | null;
+  ip6EnabledAssetPercent: string | null;
+  ip6TransitionPlan: string | null;
   netAccessibility: string | null;
 }
 
