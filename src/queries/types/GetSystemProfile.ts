@@ -170,6 +170,8 @@ export interface GetSystemProfile_cedarSystemDetails_systemMaintainerInformation
   ip6TransitionPlan: string | null;
   ipEnabledAssetCount: number | null;
   netAccessibility: string | null;
+  quarterToRetireReplace: string | null;
+  systemCustomization: string | null;
 }
 
 export interface GetSystemProfile_cedarSystemDetails {

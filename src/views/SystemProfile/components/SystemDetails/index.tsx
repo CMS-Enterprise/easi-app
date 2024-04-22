@@ -283,10 +283,10 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              // definition={showVal(
-              //   cedarSystemDetails?.systemMaintainerInformation
-              //     .systemCustomization
-              // )}
+              definition={showVal(
+                cedarSystemDetails?.systemMaintainerInformation
+                  .systemCustomization
+              )}
             />
             <DescriptionTerm
               term={t('singleSystem.systemDetails.releaseFrequency')}
@@ -313,7 +313,13 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             <DescriptionTerm
               term={t('singleSystem.systemDetails.retirement')}
             />
-            <DescriptionDefinition className="line-height-body-3 margin-bottom-4" />
+            <DescriptionDefinition
+              className="line-height-body-3 margin-bottom-4"
+              definition={showVal(
+                cedarSystemDetails?.systemMaintainerInformation
+                  .quarterToRetireReplace
+              )}
+            />
           </Grid>
           <Grid desktop={{ col: 12 }}>
             <DescriptionTerm

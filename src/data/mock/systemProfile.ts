@@ -767,6 +767,8 @@ export const result: { data: GetSystemProfile } = {
         ip6TransitionPlan: 'This system will be transitioned to IPv6',
         ip6EnabledAssetPercent: '25%',
         hardCodedIPAddress: true,
+        quarterToRetireReplace: '1',
+        systemCustomization: '50% customization',
         __typename: 'CedarSystemMaintainerInformation'
       },
       __typename: 'CedarSystemDetails'
