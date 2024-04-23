@@ -19,11 +19,44 @@ const (
 	cedarCoreCacheDurationDefault = time.Hour * 6
 )
 
+type loggingTransport struct {
+	logger *zap.Logger
+}
+
+func (t *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
+	start := time.Now().UnixMilli()
+	resp, err := http.DefaultTransport.RoundTrip(r)
+	end := time.Now().UnixMilli()
+
+	// Start a status code of 0, in case the request fails (and we get a nil resp)
+	status := 0
+	if resp != nil {
+		status = resp.StatusCode
+	}
+
+	t.logger.Info(
+		"Call to CEDAR core",
+		zap.String("service", "cedarcore"),
+		zap.Bool("cacheEnabled", false),
+		zap.String("method", r.Method),
+		zap.Int("status", status),
+		zap.String("path", r.URL.Path),
+		zap.String("queryParams", r.URL.RawQuery),
+		zap.Int64("timeMS", end-start),
+	)
+
+	return resp, err
+}
+
 // NewClient builds the type that holds a connection to the CEDAR Core API
 func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, cacheRefreshTime time.Duration, mockEnabled bool) *Client {
 	c := cache.New(cache.NoExpiration, cache.NoExpiration) // Don't expire data _or_ clean it up
 
-	hc := http.DefaultClient
+	hc := http.Client{
+		Transport: &loggingTransport{
+			logger: appcontext.ZLogger(ctx),
+		},
+	}
 
 	basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
 	client := &Client{
@@ -41,7 +74,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 			),
 			strfmt.Default,
 		),
-		hc:    hc,
+		hc:    &hc,
 		cache: c,
 	}
 
