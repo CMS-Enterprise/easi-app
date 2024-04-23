@@ -28,12 +28,18 @@ func (t *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	resp, err := http.DefaultTransport.RoundTrip(r)
 	end := time.Now().UnixMilli()
 
+	// Start a status code of 0, in case the request fails (and we get a nil resp)
+	status := 0
+	if resp != nil {
+		status = resp.StatusCode
+	}
+
 	t.logger.Info(
 		"Call to CEDAR core",
 		zap.String("service", "cedarcore"),
 		zap.Bool("cacheEnabled", false),
 		zap.String("method", r.Method),
-		zap.Int("status", resp.StatusCode),
+		zap.Int("status", status),
 		zap.String("path", r.URL.Path),
 		zap.String("queryParams", r.URL.RawQuery),
 		zap.Int64("timeMS", end-start),
