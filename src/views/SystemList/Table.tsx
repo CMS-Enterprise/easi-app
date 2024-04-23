@@ -25,6 +25,7 @@ import {
   Link,
   Table as UswdsTable
 } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
@@ -126,8 +127,14 @@ export const Table = ({
   }, [systemTableType, systems, savedBookmarks, mySystems]);
 
   const columns = useMemo<Column<CedarSystem>[]>(() => {
-    const handleCreateBookmark = (cedarSystemId: string) => {
-      createMutate({
+    const isBookmarked = (cedarSystemId: string): boolean =>
+      !!savedBookmarks.find(system => system.cedarSystemId === cedarSystemId);
+
+    /** Create or delete bookmark */
+    const toggleBookmark = (cedarSystemId: string) => {
+      const mutate = isBookmarked(cedarSystemId) ? deleteMutate : createMutate;
+
+      mutate({
         variables: {
           input: {
             cedarSystemId
@@ -135,20 +142,6 @@ export const Table = ({
         }
       }).then(refetchBookmarks);
     };
-
-    const handleDeleteBookmark = (cedarSystemId: string) => {
-      deleteMutate({
-        variables: {
-          input: {
-            cedarSystemId
-          }
-        }
-      }).then(refetchBookmarks);
-    };
-
-    const bookmarkIdSet: Set<string> = new Set(
-      savedBookmarks.map(bm => bm.cedarSystemId)
-    );
 
     return [
       {
@@ -158,26 +151,21 @@ export const Table = ({
         disableGlobalFilter: true,
         sortType: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName];
-          return bookmarkIdSet.has(rowOneElem) ? 1 : -1;
+          return isBookmarked(rowOneElem) ? 1 : -1;
         },
-        Cell: ({ row }: { row: Row<CedarSystem> }) =>
-          bookmarkIdSet.has(row.original.id) ? (
-            <Button
-              onClick={() => handleDeleteBookmark(row.original.id)}
-              type="button"
-              unstyled
-            >
-              <IconBookmark />
-            </Button>
-          ) : (
-            <Button
-              onClick={() => handleCreateBookmark(row.original.id)}
-              type="button"
-              unstyled
-            >
-              <IconBookmark className="bookmarkIcon--lightgrey" />
-            </Button>
-          )
+        Cell: ({ row }: { row: Row<CedarSystem> }) => (
+          <Button
+            onClick={() => toggleBookmark(row.original.id)}
+            type="button"
+            unstyled
+          >
+            <IconBookmark
+              className={classNames({
+                'bookmarkIcon--lightgrey': !isBookmarked(row.original.id)
+              })}
+            />
+          </Button>
+        )
       },
       {
         Header: t<string>('systemTable.header.systemAcronym'),
