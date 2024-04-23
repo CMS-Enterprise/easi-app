@@ -64,8 +64,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_INFRA_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2
       - name: Login to Amazon ECR
         id: login-ecr
@@ -101,8 +100,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_INFRA_OIDC_ROLE_TO_ASSUME }}
           aws-region: us-west-2
       - name: Login to Amazon ECR
         id: login-ecr
@@ -136,7 +134,7 @@ jobs:
           provenance: false
       - name: Check for vulnerability scan findings
         run: |
-          ./scripts/check_ecr_findings "easi-backend" "$GIT_HASH" "7"
+          ./scripts/check_ecr_findings.sh "easi-backend" "${{ env.GIT_HASH }}"
         # We've had too many issues with undefined or low-level vulnerabilities blocking our pipeline
         # We're going to ignore them for now, but continue to scan and log them.
         continue-on-error: true
