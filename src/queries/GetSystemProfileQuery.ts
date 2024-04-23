@@ -139,8 +139,10 @@ export default gql`
         ip6TransitionPlan
         ipEnabledAssetCount
         netAccessibility
+        plansToRetireReplace
         quarterToRetireReplace
         systemCustomization
+        yearToRetireReplace
       }
     }
   }

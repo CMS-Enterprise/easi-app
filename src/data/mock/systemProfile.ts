@@ -769,6 +769,8 @@ export const result: { data: GetSystemProfile } = {
         hardCodedIPAddress: true,
         quarterToRetireReplace: '1',
         systemCustomization: '50% customization',
+        yearToRetireReplace: '2030',
+        plansToRetireReplace: 'Yes - Retire and Replace',
         __typename: 'CedarSystemMaintainerInformation'
       },
       __typename: 'CedarSystemDetails'

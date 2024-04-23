@@ -315,10 +315,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={showVal(
-                cedarSystemDetails?.systemMaintainerInformation
-                  .quarterToRetireReplace
-              )}
+              definition={showVal(system.plannedRetirement)}
             />
           </Grid>
           <Grid desktop={{ col: 12 }}>
