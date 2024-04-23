@@ -161,7 +161,7 @@ export const Table = ({
           >
             <IconBookmark
               className={classNames({
-                'bookmarkIcon--lightgrey': !isBookmarked(row.original.id)
+                'text-base-lighter': !isBookmarked(row.original.id)
               })}
             />
           </Button>
