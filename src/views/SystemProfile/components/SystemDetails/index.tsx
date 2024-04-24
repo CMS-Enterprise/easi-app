@@ -315,7 +315,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={showVal(system.plannedRetirement)}
+              definition={system.plannedRetirement}
             />
           </Grid>
           <Grid desktop={{ col: 12 }}>

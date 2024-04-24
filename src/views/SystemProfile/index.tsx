@@ -183,38 +183,20 @@ export function getUsernamesWithRoles(
 function getPlannedRetirement(
   // eslint-disable-next-line camelcase
   cedarSystemDetails: GetSystemProfile_cedarSystemDetails
-): string | null {
-  /*
-  ux description
-  If no planned retirement or replacement: "No planned retirement or replacement"
-  If planned retirement, show "System planned for retirement (mm/dd/yyyy)"
-  If planned replacement, show "System replacement planned (mm/dd/yyyy)"
-  If retired, show "System retired (mm/dd/yyyy)"
-
-  options
-  Yes - Retire and Replace
-  Yes - Retire only
-  No current plans
-  */
-
+): React.ReactNode {
   const {
     plansToRetireReplace,
     quarterToRetireReplace,
     yearToRetireReplace
   } = cedarSystemDetails.systemMaintainerInformation;
 
-  if (plansToRetireReplace === 'No current plans')
-    return 'No planned retirement or replacement';
-
-  const qy = `Q${quarterToRetireReplace} ${yearToRetireReplace}`;
-
-  if (plansToRetireReplace === 'Yes - Retire only')
-    return `System planned for retirement (${qy})`;
-
-  if (plansToRetireReplace === 'Yes - Retire and Replace')
-    return `System replacement planned (${qy})`;
-
-  return null;
+  return (
+    <>
+      {!!plansToRetireReplace && <div>{plansToRetireReplace}</div>}
+      {!!quarterToRetireReplace && <div>Quarter: {quarterToRetireReplace}</div>}
+      {!!yearToRetireReplace && <div>Year: {yearToRetireReplace}</div>}
+    </>
+  );
 }
 
 /**
