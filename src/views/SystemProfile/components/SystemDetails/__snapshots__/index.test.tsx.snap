@@ -254,15 +254,7 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
         <dd
           class="description-definition margin-0 line-height-body-3 margin-bottom-4"
         >
-          <div>
-            Yes - Retire and Replace
-          </div>
-          <div>
-            Quarter: 1
-          </div>
-          <div>
-            Year: 2030
-          </div>
+          Yes - Retire and Replace (Q1 2030)
         </dd>
       </div>
       <div

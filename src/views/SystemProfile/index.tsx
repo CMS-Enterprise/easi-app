@@ -183,20 +183,28 @@ export function getUsernamesWithRoles(
 function getPlannedRetirement(
   // eslint-disable-next-line camelcase
   cedarSystemDetails: GetSystemProfile_cedarSystemDetails
-): React.ReactNode {
+): string | null {
   const {
     plansToRetireReplace,
     quarterToRetireReplace,
     yearToRetireReplace
   } = cedarSystemDetails.systemMaintainerInformation;
 
-  return (
-    <>
-      {!!plansToRetireReplace && <div>{plansToRetireReplace}</div>}
-      {!!quarterToRetireReplace && <div>Quarter: {quarterToRetireReplace}</div>}
-      {!!yearToRetireReplace && <div>Year: {yearToRetireReplace}</div>}
-    </>
-  );
+  // Return null if none of the properties are defined
+  if (
+    !(plansToRetireReplace || quarterToRetireReplace || yearToRetireReplace)
+  ) {
+    return null;
+  }
+
+  // Return a string where all falsy values are empty
+  return `${plansToRetireReplace || ''} ${
+    quarterToRetireReplace || yearToRetireReplace
+      ? `(${`Q${quarterToRetireReplace || ''} ${
+          yearToRetireReplace || ''
+        }`.trim()})`
+      : ''
+  }`;
 }
 
 /**
