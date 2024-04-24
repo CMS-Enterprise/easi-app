@@ -70,7 +70,9 @@ func (c *Client) GetSystemSummary(ctx context.Context, tryCache bool, opts ...sy
 
 	// set additinoal param filters
 	for _, opt := range opts {
-		opt(params)
+		if opt != nil {
+			opt(params)
+		}
 	}
 
 	params.HTTPClient = c.hc
