@@ -74,18 +74,12 @@ services:
       db_migrate:
         condition: service_completed_successfully # Only start if migrations completed successfully
   cedarproxy:
-    # image: nginx:1.22
-    image: nginx-with-cachepurge:v1
+    image: cedarproxy:latest
     environment:
       - CEDAR_API_URL
-      # - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
-      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template
     build:
-      context: ./nginx/
-      args:
-        ENABLED_MODULES: cachepurge
+      dockerfile: Dockerfile.cedarproxy
+      context: ./cedarproxy/
   easi_client:
     image: easi_client:latest
   minio:
