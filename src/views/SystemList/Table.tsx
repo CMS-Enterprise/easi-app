@@ -250,7 +250,8 @@ export const Table = ({
       },
       columns,
       data: filteredSystems as CedarSystem[],
-      globalFilter: useMemo(() => globalFilterCellText, []),
+      globalFilter: (filterRows, ids, filterValue) =>
+        globalFilterCellText(filterRows, ids, filterValue),
       autoResetSortBy: false,
       autoResetPage: true,
       initialState: {
