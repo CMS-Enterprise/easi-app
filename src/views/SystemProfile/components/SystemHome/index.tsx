@@ -69,8 +69,9 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
               <Grid row>
                 <Grid desktop={{ col: 12 }} className="padding-0">
                   <dt>
-                    {urlLocationCard.urlHostingEnv}{' '}
-                    {t('singleSystem.systemDetails.environment')}
+                    {t('singleSystem.systemDetails.environment', {
+                      environment: urlLocationCard.urlHostingEnv
+                    })}
                   </dt>
                 </Grid>
               </Grid>

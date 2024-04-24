@@ -156,7 +156,7 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
                 <dt
                   class="text-bold margin-bottom-05"
                 >
-                  Data Center/Cloud Service Provider name
+                  Location or cloud service provider name
                 </dt>
                 <dd
                   class="description-definition margin-0 line-height-body-3"
@@ -305,7 +305,7 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
           d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
         />
       </svg>
-      E-CAP Initiative
+      E-Cap Initiative
     </span>
     <div
       class="grid-row margin-top-2"
@@ -372,9 +372,7 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
         </dt>
         <dd
           class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-        >
-          This system has hard-coded IP addresses
-        </dd>
+        />
       </div>
     </div>
   </div>

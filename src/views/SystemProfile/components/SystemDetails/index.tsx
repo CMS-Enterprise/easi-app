@@ -155,10 +155,19 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                     className="grid-col-12"
                   >
                     <CardHeader className="easi-header__basic padding-2 padding-bottom-0 text-top">
-                      {location.urlHostingEnv &&
-                        `${location.urlHostingEnv} ${t(
-                          'singleSystem.systemDetails.environment'
-                        )}`}
+                      {showVal(
+                        location.urlHostingEnv
+                          ? t<string>(
+                              'singleSystem.systemDetails.environment',
+                              { environment: location.urlHostingEnv }
+                            )
+                          : undefined,
+                        {
+                          defaultVal: t<string>(
+                            'singleSystem.systemDetails.noEnvironmentListed'
+                          )
+                        }
+                      )}
                     </CardHeader>
                     <CardBody className="padding-left-2 padding-right-2 padding-top-0 padding-bottom-0">
                       <h3 className="link-header margin-y-0">
@@ -172,9 +181,9 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                             {location.address}
                           </Link>
                         ) : (
-                          <dd className="margin-left-0">
-                            {t('singleSystem.systemDetails.noEnvironmentURL')}
-                          </dd>
+                          <span className="text-italic text-normal text-base margin-left-0">
+                            {t('singleSystem.systemDetails.noUrlListed')}
+                          </span>
                         )}
                       </h3>
                       {location.isBehindWebApplicationFirewall && (
@@ -363,40 +372,52 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
           {t('singleSystem.systemDetails.ipInfo')}
         </h2>
 
-        {/* TODO: Map defined CEDAR variable once availabe */}
-        <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
-          <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
-          E-CAP Initiative
-        </Tag>
+        {cedarSystemDetails?.systemMaintainerInformation.ecapParticipation && (
+          <Tag className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter">
+            <IconCheckCircle className="system-profile__icon text-primary-dark margin-right-1" />
+            {t('singleSystem.systemDetails.eCapInitiative')}
+          </Tag>
+        )}
 
-        {/* TODO: Map and populate tags with CEDAR */}
         <Grid row className="margin-top-2">
           <Grid desktop={{ col: 6 }} className="padding-right-2">
             <DescriptionTerm term={t('singleSystem.systemDetails.currentIP')} />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition="IPv4 only"
+              definition={
+                cedarSystemDetails?.systemMaintainerInformation
+                  .frontendAccessType
+              }
             />
             <DescriptionTerm
               term={t('singleSystem.systemDetails.ipv6Transition')}
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition="This system will be transitioned to IPv6"
+              definition={
+                cedarSystemDetails?.systemMaintainerInformation
+                  .ip6TransitionPlan
+              }
             />
           </Grid>
           <Grid desktop={{ col: 6 }} className="padding-right-2">
             <DescriptionTerm term={t('singleSystem.systemDetails.ipAssets')} />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition="21"
+              definition={
+                cedarSystemDetails?.systemMaintainerInformation
+                  .ipEnabledAssetCount
+              }
             />
             <DescriptionTerm
               term={t('singleSystem.systemDetails.percentTransitioned')}
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition="25%"
+              definition={
+                cedarSystemDetails?.systemMaintainerInformation
+                  .ip6EnabledAssetPercent
+              }
             />
           </Grid>
           <Grid desktop={{ col: 6 }} className="padding-right-2">
@@ -405,7 +426,10 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition="This system has hard-coded IP addresses"
+              definition={
+                cedarSystemDetails?.systemMaintainerInformation
+                  .hardCodedIPAddress
+              }
             />
           </Grid>
         </Grid>

@@ -420,7 +420,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     <dt
                                       class="text-bold margin-bottom-05"
                                     >
-                                      Data Center/Cloud Service Provider name
+                                      Location or cloud service provider name
                                     </dt>
                                     <dd
                                       class="description-definition margin-0 line-height-body-3"
