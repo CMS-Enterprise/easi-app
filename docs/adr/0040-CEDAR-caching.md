@@ -19,7 +19,7 @@ A number of solutions listed below were considered. The main decision factors re
 
 ## Decision Outcome
 
-TBD
+We decided to move forward with implementing an nginx proxy server between our application and CEDAR. Since caching in nginx happens automatically, this choice requires the last amount of integration code while achieving the desired result. In addition, since it is almost entirely external to the EASi app, we can either shift to another approach or integrate other solutions easily in the future.
 
 ## Pros and Cons of the Alternatives
 
@@ -46,6 +46,8 @@ POC can be found on the `EASI-4129/nginx-caching` branch ([link to PR](https://g
 * `+` The caching application is separate from EASi, making debugging and management easier.
 * `+` Requests can be invalidate in a number of ways: sending a PURGE method to the same URL path, adding a query parameter, adding a path parameter, etc. The POC sends a PURGE method to accomplish cache invalidation.
 * `-` The open-source version of nginx does not support caching natively, and a community module must be used. This requires a special Dockerfile to extend the main nginx image.
+
+**NOTE:** We did also explore [Varnish](https://varnish-cache.org/) as an alternative to nginx as it supports cache purging natively, but unfortunately it does not support TLS meaning that [you would need a separate layer to handle HTTPS traffic](https://www.varnish-software.com/developers/tutorials/terminate-tls-varnish-hitch/). In light of this, we opted to just use nginx.
 
 ### Use an optimized external key-value store to store data in lieu of making requests (Redis/Elasticache).
 
