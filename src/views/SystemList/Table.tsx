@@ -254,6 +254,7 @@ export const Table = ({
         globalFilterCellText(filterRows, ids, filterValue),
       autoResetSortBy: false,
       autoResetPage: true,
+      autoResetGlobalFilter: false,
       initialState: {
         sortBy: useMemo(() => [{ id: 'systemName', desc: false }], []),
         pageIndex: 0,
