@@ -108,7 +108,7 @@ func (s *Server) routes(
 
 	//TODO: update this to have OKTA API live in it's own package?
 	var userSearchClient usersearch.Client
-	if s.environment.Local() || s.environment.Test() {
+	if (!s.Config.GetBool(appconfig.OktaLocalEnabled) && s.environment.Local()) || s.environment.Test() {
 		userSearchClient = local.NewOktaAPIClient()
 	} else {
 		// Create Okta API Client

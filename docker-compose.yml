@@ -70,6 +70,7 @@ services:
       - ALT_JOB_CODES
       - OKTA_API_URL
       - OKTA_API_TOKEN
+      - USE_OKTA_LOCAL
     depends_on:
       db_migrate:
         condition: service_completed_successfully # Only start if migrations completed successfully
