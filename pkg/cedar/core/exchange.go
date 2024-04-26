@@ -17,7 +17,7 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {
-			return []*models.CedarExchange{}, nil
+			return cedarcoremock.GetExchange(cedarSystemID), nil
 		}
 		return nil, cedarcoremock.NoSystemFoundError()
 	}
