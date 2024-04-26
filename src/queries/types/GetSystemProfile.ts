@@ -201,6 +201,14 @@ export interface GetSystemProfile_cedarSystemDetails {
   systemMaintainerInformation: GetSystemProfile_cedarSystemDetails_systemMaintainerInformation;
 }
 
+export interface GetSystemProfile_cedarSubSystems {
+  __typename: "CedarSubSystem";
+  id: string;
+  name: string;
+  acronym: string | null;
+  description: string | null;
+}
+
 export interface GetSystemProfile {
   cedarAuthorityToOperate: GetSystemProfile_cedarAuthorityToOperate[];
   exchanges: GetSystemProfile_exchanges[];
@@ -210,6 +218,7 @@ export interface GetSystemProfile {
   cedarSoftwareProducts: GetSystemProfile_cedarSoftwareProducts | null;
   cedarContractsBySystem: GetSystemProfile_cedarContractsBySystem[];
   cedarSystemDetails: GetSystemProfile_cedarSystemDetails | null;
+  cedarSubSystems: GetSystemProfile_cedarSubSystems[];
 }
 
 export interface GetSystemProfileVariables {

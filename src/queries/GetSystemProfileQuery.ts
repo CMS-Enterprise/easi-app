@@ -158,5 +158,11 @@ export default gql`
         yearToRetireReplace
       }
     }
+    cedarSubSystems(cedarSystemId: $cedarSystemId) {
+      id
+      name
+      acronym
+      description
+    }
   }
 `;

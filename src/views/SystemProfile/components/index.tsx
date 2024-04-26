@@ -104,10 +104,15 @@ const sideNavItems = (
           componentId: 'funding-and-budget'
         },
         'tools-and-software': {
-          groupEnd: true,
           component: <ToolsAndSoftware system={system} />,
           route: `/systems/${system.id}/tools-and-software`,
           componentId: 'system-section-508'
+        },
+        'sub-systems': {
+          groupEnd: true,
+          component: <SubSystems system={system} />,
+          route: `/systems/${system.id}/sub-systems`,
+          componentId: 'system-sub-systems'
         }
       }
     : {

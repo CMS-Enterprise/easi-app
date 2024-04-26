@@ -818,6 +818,24 @@ export const result: { data: GetSystemProfile } = {
         numOfRecords: '10000',
         dataExchangeAgreement: 'No agreement on file'
       }
+    ],
+    cedarSubSystems: [
+      {
+        id: '{11AB1A00-1234-5678-ABC1-1A001B00CC0A}',
+        name: 'Centers for Management Services',
+        acronym: 'CMS',
+        description:
+          'Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.',
+        __typename: 'CedarSubSystem'
+      },
+      {
+        id: '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}',
+        name: 'Office of Funny Walks',
+        acronym: 'OFW',
+        description:
+          'Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.',
+        __typename: 'CedarSubSystem'
+      }
     ]
   }
 };
