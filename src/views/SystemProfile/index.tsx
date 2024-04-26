@@ -180,6 +180,33 @@ export function getUsernamesWithRoles(
   return people;
 }
 
+function getPlannedRetirement(
+  // eslint-disable-next-line camelcase
+  cedarSystemDetails: GetSystemProfile_cedarSystemDetails
+): string | null {
+  const {
+    plansToRetireReplace,
+    quarterToRetireReplace,
+    yearToRetireReplace
+  } = cedarSystemDetails.systemMaintainerInformation;
+
+  // Return null if none of the original properties are truthy
+  if (
+    !(plansToRetireReplace || quarterToRetireReplace || yearToRetireReplace)
+  ) {
+    return null;
+  }
+
+  // Return a string where all falsy values are empty
+  return `${plansToRetireReplace || ''} ${
+    quarterToRetireReplace || yearToRetireReplace
+      ? `(${`Q${quarterToRetireReplace || ''} ${
+          yearToRetireReplace || ''
+        }`.trim()})`
+      : ''
+  }`;
+}
+
 /**
  * `SystemProfileData` is a merge of request data and parsed data
  * required by SystemHome and at least one other subpage.
@@ -253,6 +280,7 @@ export function getSystemProfileData(
     numberOfFederalFte,
     numberOfFte,
     personRoles,
+    plannedRetirement: getPlannedRetirement(cedarSystemDetails),
     productionLocation,
     status: cedarSystem.status,
     toolsAndSoftware: cedarSoftwareProducts || undefined,

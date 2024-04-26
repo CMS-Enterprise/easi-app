@@ -166,10 +166,14 @@ export interface GetSystemProfile_cedarSystemDetails_systemMaintainerInformation
   ecapParticipation: boolean | null;
   frontendAccessType: string | null;
   hardCodedIPAddress: boolean | null;
-  ipEnabledAssetCount: number | null;
   ip6EnabledAssetPercent: string | null;
   ip6TransitionPlan: string | null;
+  ipEnabledAssetCount: number | null;
   netAccessibility: string | null;
+  plansToRetireReplace: string | null;
+  quarterToRetireReplace: string | null;
+  systemCustomization: string | null;
+  yearToRetireReplace: string | null;
 }
 
 export interface GetSystemProfile_cedarSystemDetails {
