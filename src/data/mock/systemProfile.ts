@@ -692,6 +692,7 @@ export const result: { data: GetSystemProfile } = {
       deployments: [
         {
           id: '000-0000-1',
+          startDate: '2020-11-11T00:00:00Z',
           dataCenter: {
             name: 'AWS US East/West',
             __typename: 'CedarDataCenter'
@@ -702,6 +703,7 @@ export const result: { data: GetSystemProfile } = {
         },
         {
           id: '000-0000-2',
+          startDate: '2023-10-01T00:00:00Z',
           dataCenter: {
             name: 'AWS US East/West',
             __typename: 'CedarDataCenter'
@@ -712,6 +714,7 @@ export const result: { data: GetSystemProfile } = {
         },
         {
           id: '000-0000-3',
+          startDate: '2023-01-01T00:00:00Z',
           dataCenter: {
             name: 'AWS US East/West',
             __typename: 'CedarDataCenter'
@@ -722,6 +725,7 @@ export const result: { data: GetSystemProfile } = {
         },
         {
           id: '000-0000-4',
+          startDate: '2022-07-30T00:00:00Z',
           dataCenter: {
             name: 'AWS US East/West',
             __typename: 'CedarDataCenter'
@@ -732,6 +736,7 @@ export const result: { data: GetSystemProfile } = {
         },
         {
           id: '000-0000-5',
+          startDate: null,
           dataCenter: {
             name: 'AWS US East/West',
             __typename: 'CedarDataCenter'
