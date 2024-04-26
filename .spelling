@@ -211,6 +211,17 @@ create-local-development-k8s-manifests
 subtask
 subtasks
 bugfix
+nginx
+Elasticache
+analyze
+POC
+DB
+TBD
+bandaid
+uncached
+programmatically
+performant
+natively
 
 # Jira ticket numbers
 # The underlying spellchecking package doesn't currently support patterns; see https://github.com/lukeapage/node-markdown-spellcheck/issues/49
@@ -226,3 +237,4 @@ EASI-3019
 EASI-3082
 EASI-3341
 EASI-3483
+EASI-4129
