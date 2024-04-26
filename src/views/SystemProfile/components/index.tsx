@@ -43,7 +43,25 @@ const sideNavItems = (
         details: {
           component: <SystemDetails system={system} />,
           route: `/systems/${system.id}/details`,
-          componentId: 'system-detail'
+          componentId: 'system-detail',
+          hashLinks: [
+            {
+              name: i18next.t<string>('systemProfile:navigation.detailsBasic'),
+              hash: '#basic'
+            },
+            {
+              name: i18next.t<string>('systemProfile:navigation.detailsUrls'),
+              hash: '#urls'
+            },
+            {
+              name: i18next.t<string>('systemProfile:navigation.detailsDev'),
+              hash: '#development'
+            },
+            {
+              name: i18next.t<string>('systemProfile:navigation.detailsIp'),
+              hash: '#ip'
+            }
+          ]
         },
         team: {
           groupEnd: true,

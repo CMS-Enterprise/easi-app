@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"time"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/guregu/null/zero"
 
@@ -86,7 +88,7 @@ func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*mo
 			NetAccessibility:           zero.StringFrom(sysMaintInfo.NetAccessibility),
 			OmDocumentationOnDemand:    sysMaintInfo.OmDocumentationOnDemand,
 			PlansToRetireReplace:       zero.StringFrom(sysMaintInfo.PlansToRetireReplace),
-			QuarterToRetireReplace:     zero.StringFrom(sysMaintInfo.QuarterToRetireReplace),
+			QuarterToRetireReplace:     zero.StringFrom(parseQuarterToRetireReplace(sysMaintInfo.QuarterToRetireReplace)),
 			RecordsManagementBucket:    models.ZeroStringsFrom(sysMaintInfo.RecordsManagementBucket),
 			SourceCodeOnDemand:         sysMaintInfo.SourceCodeOnDemand,
 			SystemCustomization:        zero.StringFrom(sysMaintInfo.SystemCustomization),
@@ -100,4 +102,23 @@ func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*mo
 		}
 	}
 	return retVal, nil
+}
+
+// Parses the `QuarterToRetireReplace` field from the CEDAR API, which comes back as a string
+// that looks like:
+// 3 (Hint : July 1 - September 30)
+// or
+// 4 (Hint : October 1 - December 31)
+//
+// This function just strips out the first character (the quarter #), and defaults to "" if it can't,
+// or the string doesn't start with a number.
+func parseQuarterToRetireReplace(s string) string {
+	if len(s) == 0 {
+		return ""
+	}
+	r, _ := utf8.DecodeRuneInString(s)
+	if !unicode.IsDigit(r) {
+		return ""
+	}
+	return string(r)
 }

@@ -136,10 +136,14 @@ export default gql`
         ecapParticipation
         frontendAccessType
         hardCodedIPAddress
-        ipEnabledAssetCount
         ip6EnabledAssetPercent
         ip6TransitionPlan
+        ipEnabledAssetCount
         netAccessibility
+        plansToRetireReplace
+        quarterToRetireReplace
+        systemCustomization
+        yearToRetireReplace
       }
     }
   }
