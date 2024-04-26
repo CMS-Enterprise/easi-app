@@ -267,7 +267,8 @@ export const result: { data: GetSystemProfile } = {
         dateAuthorizationMemoExpires: '2022-07-30T00:00:00Z',
         countOfOpenPoams: 7,
         lastAssessmentDate: '2021-11-15T00:00:00Z',
-        __typename: 'CedarAuthorityToOperate'
+        __typename: 'CedarAuthorityToOperate',
+        isPiiLimitedToUserNameAndPass: true
       }
     ],
     cedarBudget: [
@@ -674,7 +675,9 @@ export const result: { data: GetSystemProfile } = {
         numberOfContractorFte: '20',
         numberOfFederalFte: '4',
         numberOfSupportedUsersPerMonth: '2750000',
-        __typename: 'CedarBusinessOwnerInformation'
+        __typename: 'CedarBusinessOwnerInformation',
+        storesBeneficiaryAddress: true,
+        storesBankingData: true
       },
       cedarSystem: {
         id: '000-100-0',
@@ -784,6 +787,32 @@ export const result: { data: GetSystemProfile } = {
         serviceProvided: null,
         isDeliveryOrg: true,
         __typename: 'CedarContract'
+      }
+    ],
+    exchanges: [
+      {
+        __typename: 'CedarExchange',
+        containsPhi: true,
+        containsHealthDisparityData: true,
+        exchangeName: 'CMS Exchange',
+        exchangeDescription:
+          'CMS Exchange description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        sharedViaApi: true,
+        connectionFrequency: ['Daily', 'Hourly'],
+        numOfRecords: '100',
+        dataExchangeAgreement: 'Yes, has agreement'
+      },
+      {
+        __typename: 'CedarExchange',
+        containsPhi: false,
+        containsHealthDisparityData: false,
+        exchangeName: 'EASI Exchange',
+        exchangeDescription:
+          'EASI Exchange description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        sharedViaApi: false,
+        connectionFrequency: ['Monthly', 'Annually'],
+        numOfRecords: '10000',
+        dataExchangeAgreement: 'No agreement on file'
       }
     ]
   }
