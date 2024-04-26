@@ -1,5 +1,3 @@
-import { ReactNode } from 'react';
-
 import {
   securityFindingKeys,
   teamSectionKeys,
@@ -142,7 +140,7 @@ export interface SystemProfileData extends GetSystemProfile {
   numberOfFederalFte?: number;
   numberOfFte?: number;
   personRoles: CedarRoleAssigneePerson[];
-  plannedRetirement: ReactNode;
+  plannedRetirement: string | null;
   productionLocation?: UrlLocation;
   status: GetSystemProfile_cedarSystemDetails_cedarSystem['status'];
   usernamesWithRoles: UsernameWithRoles[];

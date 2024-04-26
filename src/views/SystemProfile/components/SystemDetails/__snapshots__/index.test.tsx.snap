@@ -372,7 +372,9 @@ exports[`SystemDetails subpage for System Profile > matches snapshot 1`] = `
         </dt>
         <dd
           class="description-definition margin-0 line-height-body-3 margin-bottom-4"
-        />
+        >
+          This system has hard-coded IP addresses
+        </dd>
       </div>
     </div>
   </div>

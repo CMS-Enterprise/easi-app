@@ -26,7 +26,7 @@ import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
 import formatNumber from 'utils/formatNumber';
-import showVal from 'utils/showVal';
+import showVal, { showSystemVal } from 'utils/showVal';
 
 import 'index.scss';
 
@@ -54,12 +54,16 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             <DescriptionTerm term={t('singleSystem.systemDetails.ownership')} />
             <DescriptionDefinition
               className="font-body-md line-height-body-3"
-              definition={t(
-                `singleSystem.systemDetails.ownershipValues.${
-                  cedarSystemDetails?.businessOwnerInformation.isCmsOwned
-                    ? 'cmsOwned'
-                    : 'contractorOwned'
-                }`
+              definition={showSystemVal(
+                cedarSystemDetails?.businessOwnerInformation.isCmsOwned,
+                {
+                  format: v =>
+                    t(
+                      `singleSystem.systemDetails.ownershipValues.${
+                        v ? 'cmsOwned' : 'contractorOwned'
+                      }`
+                    )
+                }
               )}
             />
           </Grid>
@@ -69,7 +73,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 font-body-md"
-              definition={showVal(
+              definition={showSystemVal(
                 cedarSystemDetails?.businessOwnerInformation
                   .numberOfSupportedUsersPerMonth,
                 { format: formatNumber }
@@ -80,7 +84,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             <DescriptionTerm term={t('singleSystem.systemDetails.access')} />
             <DescriptionDefinition
               className="line-height-body-3"
-              definition={showVal(
+              definition={showSystemVal(
                 cedarSystemDetails?.systemMaintainerInformation.netAccessibility
               )}
             />
@@ -224,7 +228,9 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
                             />
                             <DescriptionDefinition
                               className="line-height-body-3"
-                              definition={location.deploymentDataCenterName}
+                              definition={showSystemVal(
+                                location.deploymentDataCenterName
+                              )}
                             />
                           </Grid>
                         </Grid>
@@ -292,7 +298,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={showVal(
+              definition={showSystemVal(
                 cedarSystemDetails?.systemMaintainerInformation
                   .systemCustomization
               )}
@@ -302,7 +308,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={showVal(
+              definition={showSystemVal(
                 cedarSystemDetails?.systemMaintainerInformation
                   .deploymentFrequency
               )}
@@ -314,7 +320,7 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={showVal(
+              definition={showSystemVal(
                 cedarSystemDetails?.systemMaintainerInformation
                   .devCompletionPercent
               )}
@@ -384,40 +390,40 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             <DescriptionTerm term={t('singleSystem.systemDetails.currentIP')} />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={
+              definition={showSystemVal(
                 cedarSystemDetails?.systemMaintainerInformation
                   .frontendAccessType
-              }
+              )}
             />
             <DescriptionTerm
               term={t('singleSystem.systemDetails.ipv6Transition')}
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={
+              definition={showSystemVal(
                 cedarSystemDetails?.systemMaintainerInformation
                   .ip6TransitionPlan
-              }
+              )}
             />
           </Grid>
           <Grid desktop={{ col: 6 }} className="padding-right-2">
             <DescriptionTerm term={t('singleSystem.systemDetails.ipAssets')} />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={
+              definition={showSystemVal(
                 cedarSystemDetails?.systemMaintainerInformation
                   .ipEnabledAssetCount
-              }
+              )}
             />
             <DescriptionTerm
               term={t('singleSystem.systemDetails.percentTransitioned')}
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={
+              definition={showSystemVal(
                 cedarSystemDetails?.systemMaintainerInformation
                   .ip6EnabledAssetPercent
-              }
+              )}
             />
           </Grid>
           <Grid desktop={{ col: 6 }} className="padding-right-2">
@@ -426,10 +432,14 @@ const SystemDetails = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-4"
-              definition={
+              definition={showSystemVal(
                 cedarSystemDetails?.systemMaintainerInformation
-                  .hardCodedIPAddress
-              }
+                  .hardCodedIPAddress,
+                {
+                  format: v =>
+                    v ? 'This system has hard-coded IP addresses' : 'None'
+                }
+              )}
             />
           </Grid>
         </Grid>
