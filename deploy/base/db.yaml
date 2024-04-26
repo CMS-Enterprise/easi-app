@@ -34,7 +34,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: db-configmap        
-          image: postgres:14.7
+          image: postgres:14.11
           name: db
           ports:
             - containerPort: 5432
