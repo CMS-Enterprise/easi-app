@@ -15,10 +15,6 @@ import (
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client"
 )
 
-// const (
-// 	cedarCoreCacheDurationDefault = time.Hour * 6
-// )
-
 type loggingTransport struct {
 	logger *zap.Logger
 }
@@ -48,6 +44,33 @@ func (t *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	return resp, err
 }
 
+var cedarPath string
+
+func PurgeCacheByPath(ctx context.Context, path string) error {
+	req, err := http.NewRequest("PURGE", cedarPath+path, nil)
+	logger := appcontext.ZLogger(ctx)
+	if err != nil {
+		return err
+	}
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	var cacheIsPurged bool
+	if res.StatusCode == 200 {
+		cacheIsPurged = true
+	}
+	logger.Info(
+		"Cache Purge",
+		zap.String("pathArg", path),
+		zap.String("path", req.URL.Path),
+		zap.String("queryParams", req.URL.RawQuery),
+		zap.Int("status", res.StatusCode),
+		zap.Bool("success", cacheIsPurged),
+	)
+	return nil
+}
+
 // NewClient builds the type that holds a connection to the CEDAR Core API
 func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, cacheRefreshTime time.Duration, mockEnabled bool) *Client {
 	c := cache.New(cache.NoExpiration, cache.NoExpiration) // Don't expire data _or_ clean it up
@@ -59,6 +82,7 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 	}
 
 	basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
+	cedarPath = "http://" + cedarHost + basePath
 	client := &Client{
 		mockEnabled: mockEnabled,
 		auth: httptransport.APIKeyAuth(
@@ -78,16 +102,6 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 		hc:    &hc,
 		cache: c,
 	}
-
-	// if cacheRefreshTime <= 0 {
-	// 	appcontext.ZLogger(ctx).Error(
-	// 		"CEDAR cacheRefreshTime is not a valid value, falling back to default",
-	// 		zap.Duration("cacheRefreshTime", cacheRefreshTime),
-	// 		zap.Duration("defaultDuration", cedarCoreCacheDurationDefault),
-	// 	)
-	// cacheRefreshTime = cedarCoreCacheDurationDefault
-	// }
-	// client.startCacheRefresh(ctx, cacheRefreshTime, client.populateSystemSummaryCache)
 
 	return client
 }
