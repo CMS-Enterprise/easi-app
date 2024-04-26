@@ -296,10 +296,20 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                   class="usa-sidenav__item"
                 >
                   <a
-                    class="nav-group-border"
+                    class=""
                     href="/systems/000-100-0/tools-and-software"
                   >
                     Tools and Software
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class="nav-group-border"
+                    href="/systems/000-100-0/sub-systems"
+                  >
+                    Sub-systems
                   </a>
                 </li>
               </ul>
