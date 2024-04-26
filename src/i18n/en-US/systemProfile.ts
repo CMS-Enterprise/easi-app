@@ -317,7 +317,14 @@ const systemProfile = {
     subSystems: {
       header: 'Sub-systems',
       retirementDate: 'Retirement date',
-      viewInfo: 'View sub-system information'
+      viewInfo: 'View sub-system information',
+      noSystemDescription: 'No system description available',
+      showSystems: {
+        more: 'Show more sub-systems',
+        less: 'Show fewer sub-systems'
+      },
+      noSubsystems:
+        'This system does not have any sub-systems or child systems listed.'
     }
   },
   systemTable: {
