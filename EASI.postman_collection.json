@@ -2848,6 +2848,32 @@
 									"response": []
 								}
 							]
+						},
+						{
+							"name": "Exchange",
+							"item": [
+								{
+									"name": "Get Exchanges",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query GetExchanges($cedarSystemId: String!) {\n    exchanges(cedarSystemId: $cedarSystemId) {\n    connectionFrequency\n    containsBankingData\n    containsBeneficiaryAddress\n    containsPhi\n    containsPii\n    containsHealthDisparityData\n    dataExchangeAgreement\n    dataFormat\n    dataFormatOther\n    exchangeDescription\n    exchangeEndDate\n    exchangeId\n    exchangeName\n    exchangeRetiredDate\n    exchangeStartDate\n    exchangeState\n    exchangeVersion\n    exchangeDirection\n    fromOwnerId\n    fromOwnerName\n    fromOwnerType\n    isBeneficiaryMailingFile\n    numOfRecords\n    sharedViaApi\n    toOwnerId\n    toOwnerName\n    toOwnerType\n    typeOfData\n    }\n}",
+												"variables": ""
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						}
 					]
 				},
