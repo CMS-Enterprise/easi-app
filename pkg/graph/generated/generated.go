@@ -7386,7 +7386,7 @@ type CedarSystem {
 }
 
 """
-CedarSubSystem represents the response from the /system/detail 
+CedarSubSystem represents the response from the /system/detail
 """
 type CedarSubSystem {
   id: String!
