@@ -133,11 +133,12 @@ export const SystemList = () => {
             <SectionWrapper borderBottom className="margin-bottom-3">
               {bookmarks.length === 0 ? (
                 <Grid tablet={{ col: 12 }} className="margin-bottom-5">
-                  <Alert type="info" className="padding-1">
-                    <h3 className="margin-0">
-                      {t('systemProfile:noBookmark.header')}
-                    </h3>
-                    <div className="display-flex flex-align-center">
+                  <Alert
+                    type="info"
+                    className="padding-1"
+                    heading={t('systemProfile:noBookmark.header')}
+                  >
+                    <span className="display-flex flex-align-center">
                       <span className="margin-0">
                         {t('systemProfile:noBookmark.text1')}
                       </span>
@@ -145,7 +146,7 @@ export const SystemList = () => {
                       <span className="margin-0">
                         {t('systemProfile:noBookmark.text2')}
                       </span>
-                    </div>
+                    </span>
                   </Alert>
                 </Grid>
               ) : (
