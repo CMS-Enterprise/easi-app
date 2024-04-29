@@ -479,6 +479,16 @@ const RequestLinkForm = ({
                     checked={relation === RequestRelationType.NEW_SYSTEM}
                   />
 
+                  {relation === RequestRelationType.NEW_SYSTEM && (
+                    <Alert
+                      type="warning"
+                      className="margin-left-4 margin-top-1 margin-bottom-205"
+                      slim
+                    >
+                      {t('link.form.field.systemOrService.warning')}
+                    </Alert>
+                  )}
+
                   {relation === RequestRelationType.NEW_SYSTEM &&
                     requestType !== 'itgov' && ( // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
                       <Controller
