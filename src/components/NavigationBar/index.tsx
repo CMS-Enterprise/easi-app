@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { NavHashLink } from 'react-router-hash-link';
 import {
   Header,
   IconMenu,
@@ -67,17 +68,17 @@ const systemLinks = (
   isUserSet: boolean
 ) => [
   {
-    link: '/systems?table-type=all-systems',
+    link: '/systems?table-type=all-systems#systemsTable',
     label: 'allCMSSystems',
     isEnabled: true
   },
   {
-    link: '/systems?table-type=my-systems',
+    link: '/systems?table-type=my-systems#systemsTable',
     label: 'mySystems',
     isEnabled: true
   },
   {
-    link: '/systems?table-type=bookmarked-systems',
+    link: '/systems?table-type=bookmarked-systems#systemsTable',
     label: 'bookmarkedSystems',
     isEnabled: true
   },
@@ -132,7 +133,7 @@ const NavigationBar = ({ signout, userName }: NavigationProps) => {
 
   const systemNavLinks = systemLinks(flags, groups, isUserSet).map(route => (
     <div className="easi-nav" key={route.label}>
-      <NavLink
+      <NavHashLink
         to={route.link}
         className="usa-nav__link easi-nav__sublink"
         onClick={() => {
@@ -147,7 +148,7 @@ const NavigationBar = ({ signout, userName }: NavigationProps) => {
         >
           {t(`header:${route.label}`)}
         </em>
-      </NavLink>
+      </NavHashLink>
     </div>
   ));
 
