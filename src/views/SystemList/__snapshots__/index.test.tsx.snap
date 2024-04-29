@@ -335,7 +335,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                     type="button"
                   >
                     <svg
-                      class="usa-icon bookmarkIcon--lightgrey"
+                      class="usa-icon text-base-lighter"
                       focusable="false"
                       height="1em"
                       role="img"
@@ -389,7 +389,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                     type="button"
                   >
                     <svg
-                      class="usa-icon bookmarkIcon--lightgrey"
+                      class="usa-icon text-base-lighter"
                       focusable="false"
                       height="1em"
                       role="img"
@@ -443,7 +443,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                     type="button"
                   >
                     <svg
-                      class="usa-icon bookmarkIcon--lightgrey"
+                      class="usa-icon text-base-lighter"
                       focusable="false"
                       height="1em"
                       role="img"
@@ -497,7 +497,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
                     type="button"
                   >
                     <svg
-                      class="usa-icon bookmarkIcon--lightgrey"
+                      class="usa-icon text-base-lighter"
                       focusable="false"
                       height="1em"
                       role="img"
