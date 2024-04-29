@@ -123,6 +123,7 @@ export default gql`
       }
       deployments {
         id
+        startDate
         dataCenter {
           name
         }

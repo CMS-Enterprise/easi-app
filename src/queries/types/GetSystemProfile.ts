@@ -141,6 +141,7 @@ export interface GetSystemProfile_cedarSystemDetails_deployments_dataCenter {
 export interface GetSystemProfile_cedarSystemDetails_deployments {
   __typename: "CedarDeployment";
   id: string;
+  startDate: Time | null;
   dataCenter: GetSystemProfile_cedarSystemDetails_deployments_dataCenter | null;
   deploymentType: string | null;
   name: string;
