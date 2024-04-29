@@ -28,8 +28,6 @@
 
 .usa-nav__primary-item {
     .easi-nav {
-        display: flex;
-
         &__item {
             display: flex;
         }
@@ -78,9 +76,16 @@
                 color: $easi-blue;
             }
         }
+    }
 
-        
+    @media (min-width: $desktop) {
+        .easi-nav {
+            display: flex;
+        }
+    }
 
+    .usa-accordion__button.usa-current[aria-expanded="false"] {
+        color: $easi-blue;
     }
 }
 
@@ -100,7 +105,10 @@
 }
 
 .system-dropdown:hover {
-    color: color('base-dark') !important;
+    @media (min-width: $desktop) {
+        color: color('base-dark') !important;
+    }
+
     &::after {
         bottom: 0 !important;
     }

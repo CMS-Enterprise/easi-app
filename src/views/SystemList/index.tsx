@@ -161,32 +161,34 @@ export const SystemList = () => {
             </SectionWrapper>
           )}
 
-          <h2 className="margin-bottom-2">
-            {t('systemProfile:systemTable.title')}
-          </h2>
+          <SectionWrapper id="systemsTable">
+            <h2 className="margin-bottom-2">
+              {t('systemProfile:systemTable.title')}
+            </h2>
 
-          <Trans
-            i18nKey="systemProfile:systemTable.subtitle"
-            components={{
-              icon: <IconBookmark className="text-bookmark-icon" />
-            }}
-          />
+            <Trans
+              i18nKey="systemProfile:systemTable.subtitle"
+              components={{
+                icon: <IconBookmark className="text-bookmark-icon" />
+              }}
+            />
 
-          {error1 || error2 ? (
-            <ErrorAlert heading="System error">
-              <AlertText>
-                <span>{t('systemProfile:gql.fail')}</span>
-              </AlertText>
-            </ErrorAlert>
-          ) : (
-            <div ref={systemsRef}>
-              <Table
-                systems={systemsTableData}
-                savedBookmarks={bookmarks}
-                refetchBookmarks={refetchBookmarks}
-              />
-            </div>
-          )}
+            {error1 || error2 ? (
+              <ErrorAlert heading="System error">
+                <AlertText>
+                  <span>{t('systemProfile:gql.fail')}</span>
+                </AlertText>
+              </ErrorAlert>
+            ) : (
+              <div ref={systemsRef}>
+                <Table
+                  systems={systemsTableData}
+                  savedBookmarks={bookmarks}
+                  refetchBookmarks={refetchBookmarks}
+                />
+              </div>
+            )}
+          </SectionWrapper>
         </>
       )}
     </MainContent>
