@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "The CMS Enterprise Data and Analytics Repository (CEDAR) Core API's. \n These interfaces contain CRUD (where applicable) operations for Budget, Component, Contract, Data Center, Deployment, Exchange, Person, Role Stake Holder, System Detail, System Summary and User.\n",
+    "description": "The CMS Enterprise Data and Analytics Repository (CEDAR) Core API provides the CRUD (where applicable) operations for Budget, Component, Contract, Data Center, Deployment, Exchange, Person, Role Stake Holder, System Detail, System Summary and User objects.\n\n# Specification\n\nThis API is published in Swagger JSON 2.0 format and can be exported for consumption. For each of the resource, API provides **GET**, **POST**, **DELETE** operations. And to invoke, any of these methods, you can request for an `access-token`. In addition, POST & DELETE methods are not permitted in Production.\n",
     "version": "2.0.0",
     "title": "CEDAR Core API",
     "termsOfService": "https://www.cedardev.cms.gov/",
@@ -9,11 +9,15 @@
       "email": "EnterpriseArchitecture@cms.hhs.gov"
     }
   },
-  "host": "webmethods-apigw.cedar.cms.gov",
+  "host": "webmethods-apigw.cedarimpl.cms.gov",
   "basePath": "/gateway/CEDAR Core API/2.0.0",
   "tags": [
     {
       "name": "softwareProducts",
+      "description": ""
+    },
+    {
+      "name": "url",
       "description": ""
     },
     {
@@ -87,10 +91,6 @@
     {
       "name": "user",
       "description": "CEDAR system users"
-    },
-    {
-      "name": "url",
-      "description": "CMS URLs"
     }
   ],
   "schemes": [
@@ -664,54 +664,6 @@
           },
           "404": {
             "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          }
-        }
-      }
-    },
-    "/budgetSystemCost": {
-      "get": {
-        "tags": [
-          "budgetSystemCost"
-        ],
-        "summary": "",
-        "description": "",
-        "operationId": "budgetSystemCostFind",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "systemId",
-            "in": "query",
-            "description": "ID of the system that the budget is associated with. Adding this parameter will instruct the interface to only return the system matching the systemId.",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/BudgetActualSystemCostResponse"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          },
-          "401": {
-            "description": "Access Denied",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
             "schema": {
               "$ref": "#/definitions/Response"
             }
@@ -4062,20 +4014,6 @@
         }
       }
     },
-    "BudgetActualSystemCost": {
-      "type": "object",
-      "properties": {
-        "ActualSystemCost": {
-          "type": "string"
-        },
-        "systemId": {
-          "type": "string"
-        },
-        "FiscalYear": {
-          "type": "string"
-        }
-      }
-    },
     "BudgetIds": {
       "type": "object",
       "required": [
@@ -4708,9 +4646,6 @@
           "example": "HHSM500201600052I",
           "description": "Contract number"
         },
-        "ContractNumber": {
-          "type": "string"
-        },
         "systemId": {
           "type": "string",
           "example": "123-45-678",
@@ -4720,29 +4655,6 @@
           "type": "string",
           "example": "11-22-333"
         },
-        "ServiceProvided": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string",
-          "example": "Strategic partners acquisition readiness",
-          "description": "Contract description"
-        },
-        "OrderNumber": {
-          "type": "string"
-        },
-        "POPEndDate": {
-          "type": "string"
-        },
-        "ProductServiceDescription": {
-          "type": "string"
-        },
-        "IsDeliveryOrg": {
-          "type": "string"
-        },
-        "ProjectTitle": {
-          "type": "string"
-        },
         "contractADO": {
           "type": "string",
           "example": "yes",
@@ -4750,6 +4662,11 @@
         },
         "POPStartDate": {
           "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "example": "Strategic partners acquisition readiness",
+          "description": "Contract description"
         },
         "contractName": {
           "type": "string"
@@ -4762,6 +4679,9 @@
           "type": "string",
           "example": "HHSM500201600052I",
           "description": "Parent contract number"
+        },
+        "POPEndDate": {
+          "type": "string"
         }
       }
     },
@@ -5216,16 +5136,10 @@
           "example": "Most of this funding is directly and only for this system (over 80%)",
           "description": "Description of the allocation of this budget to the system in question"
         },
-        "FiscalYear": {
-          "type": "string"
-        },
         "fundingId": {
           "type": "string",
           "example": "123-45-678",
           "description": "Cross-reference ID for relationship between budget project and application in system of record"
-        },
-        "FundingSource": {
-          "type": "string"
         },
         "id": {
           "type": "string",
@@ -5236,9 +5150,6 @@
           "type": "string",
           "example": "000010",
           "description": "OFM budget project ID in system of record"
-        },
-        "Name": {
-          "type": "string"
         },
         "projectTitle": {
           "type": "string",
@@ -5632,24 +5543,6 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
-        }
-      }
-    },
-    "BudgetActualSystemCostResponse": {
-      "type": "object",
-      "required": [
-        "count"
-      ],
-      "properties": {
-        "count": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "BudgetActualCost": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BudgetActualSystemCost"
           }
         }
       }

@@ -19,29 +19,11 @@ import (
 // swagger:model Contract
 type Contract struct {
 
-	// contract number
-	ContractNumber string `json:"ContractNumber,omitempty"`
-
-	// is delivery org
-	IsDeliveryOrg string `json:"IsDeliveryOrg,omitempty"`
-
-	// order number
-	OrderNumber string `json:"OrderNumber,omitempty"`
-
 	// p o p end date
 	POPEndDate string `json:"POPEndDate,omitempty"`
 
 	// p o p start date
 	POPStartDate string `json:"POPStartDate,omitempty"`
-
-	// product service description
-	ProductServiceDescription string `json:"ProductServiceDescription,omitempty"`
-
-	// project title
-	ProjectTitle string `json:"ProjectTitle,omitempty"`
-
-	// service provided
-	ServiceProvided string `json:"ServiceProvided,omitempty"`
 
 	// Contract number
 	// Example: HHSM500201600052I
