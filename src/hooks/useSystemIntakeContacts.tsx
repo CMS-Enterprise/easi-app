@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { FetchResult, useMutation, useQuery } from '@apollo/client';
 
 import { initialContactsObject } from 'constants/systemIntake';
@@ -17,7 +17,8 @@ import {
 } from 'queries/types/GetSystemIntake';
 import {
   GetSystemIntakeContactsQuery as GetSystemIntakeContactsQueryType,
-  GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact
+  GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact,
+  GetSystemIntakeContactsQueryVariables
 } from 'queries/types/GetSystemIntakeContactsQuery';
 import { UpdateSystemIntakeContact as UpdateSystemIntakeContactPayload } from 'queries/types/UpdateSystemIntakeContact';
 import {
@@ -41,12 +42,12 @@ function useSystemIntakeContacts(
   systemIntakeId: string
 ): UseSystemIntakeContactsType {
   // GQL query to get intake contacts
-  const { data, loading } = useQuery<GetSystemIntakeContactsQueryType>(
-    GetSystemIntakeContactsQuery,
-    {
-      variables: { id: systemIntakeId }
-    }
-  );
+  const { data, loading } = useQuery<
+    GetSystemIntakeContactsQueryType,
+    GetSystemIntakeContactsQueryVariables
+  >(GetSystemIntakeContactsQuery, {
+    variables: { id: systemIntakeId }
+  });
 
   /** Array of system intake contacts */
   const systemIntakeContacts: AugmentedSystemIntakeContact[] | undefined =
@@ -63,80 +64,82 @@ function useSystemIntakeContacts(
   );
   const { systemIntake } = intakeQuery?.data || {};
 
-  /**
-   * Formatted system intake contacts object
-   * */
-  const contacts = useMemo<FormattedContacts>(() => {
-    // Return empty values if no systemIntakeContacts
-    if (!systemIntakeContacts || !systemIntake) return initialContactsObject;
+  /** Initial contacts object merged with possible legacy data from system intake */
+  const legacyContacts = useMemo<FormattedContacts>(() => {
+    if (!systemIntake) return initialContactsObject;
 
-    const {
-      requester,
-      euaUserId,
-      businessOwner,
-      productManager,
-      isso
-    } = systemIntake;
-
-    /**
-     * Merge initial contacts object with possible legacy data from system intake
-     */
-    const mergedContactsObject: FormattedContacts = {
+    return {
       ...initialContactsObject,
       requester: {
         ...initialContactsObject.requester,
-        euaUserId,
-        commonName: requester.name,
-        component: requester?.component || '',
-        email: requester?.email || '',
+        euaUserId: systemIntake.euaUserId,
+        commonName: systemIntake.requester.name,
+        component: systemIntake.requester?.component || '',
+        email: systemIntake.requester?.email || '',
         systemIntakeId
       },
       businessOwner: {
         ...initialContactsObject.businessOwner,
-        commonName: businessOwner?.name || '',
-        component: businessOwner?.component || '',
+        commonName: systemIntake.businessOwner?.name || '',
+        component: systemIntake.businessOwner?.component || '',
         systemIntakeId
       },
       productManager: {
         ...initialContactsObject.productManager,
-        commonName: productManager?.name || '',
-        component: productManager?.component || '',
+        commonName: systemIntake.productManager?.name || '',
+        component: systemIntake.productManager?.component || '',
         systemIntakeId
       },
       isso: {
         ...initialContactsObject.isso,
-        commonName: isso?.name || '',
+        commonName: systemIntake.isso?.name || '',
         systemIntakeId
       }
     };
+  }, [systemIntake, systemIntakeId]);
 
-    // Return formatted contacts
-    return systemIntakeContacts.reduce<FormattedContacts>(
-      (contactsObject, contact) => {
-        // If contact is primary role, add to object
-        if (rolesMap[contact.role as Role]) {
+  /** Format system intake contacts array */
+  const formatContacts = useCallback(
+    (
+      contactsArray: AugmentedSystemIntakeContact[] | undefined
+    ): FormattedContacts => {
+      // Return empty values if no systemIntakeContacts
+      if (!contactsArray) return legacyContacts;
+
+      return contactsArray.reduce<FormattedContacts>(
+        (contactsObject, contact) => {
+          // If contact is primary role, add to object
+          if (rolesMap[contact.role as Role]) {
+            return {
+              ...contactsObject,
+              [rolesMap[contact.role as Role]]: contact
+            };
+          }
+          // If contact is additional contacts, add to additional contacts array
           return {
             ...contactsObject,
-            [rolesMap[contact.role as Role]]: contact
+            additionalContacts: [
+              ...contactsObject.additionalContacts,
+              {
+                ...contact,
+                commonName: contact.commonName || '',
+                email: contact.email || '',
+                systemIntakeId
+              }
+            ]
           };
-        }
-        // If contact is additional contacts, add to additional contacts array
-        return {
-          ...contactsObject,
-          additionalContacts: [
-            ...contactsObject.additionalContacts,
-            {
-              ...contact,
-              commonName: contact.commonName || '',
-              email: contact.email || '',
-              systemIntakeId
-            }
-          ]
-        };
-      },
-      mergedContactsObject
-    );
-  }, [systemIntakeContacts, systemIntake, systemIntakeId]);
+        },
+        legacyContacts
+      );
+    },
+    [legacyContacts, systemIntakeId]
+  );
+
+  /** Formatted system intake contacts object */
+  const contacts = useMemo<FormattedContacts>(
+    () => formatContacts(systemIntakeContacts),
+    [systemIntakeContacts, formatContacts]
+  );
 
   const [
     createSystemIntakeContact
