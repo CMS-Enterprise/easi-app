@@ -692,6 +692,7 @@ export const result: { data: GetSystemProfile } = {
       deployments: [
         {
           id: '000-0000-1',
+          startDate: '2020-11-11T00:00:00Z',
           dataCenter: {
             name: 'AWS US East/West',
             __typename: 'CedarDataCenter'
@@ -702,6 +703,7 @@ export const result: { data: GetSystemProfile } = {
         },
         {
           id: '000-0000-2',
+          startDate: '2023-10-01T00:00:00Z',
           dataCenter: {
             name: 'AWS US East/West',
             __typename: 'CedarDataCenter'
@@ -712,6 +714,7 @@ export const result: { data: GetSystemProfile } = {
         },
         {
           id: '000-0000-3',
+          startDate: '2023-01-01T00:00:00Z',
           dataCenter: {
             name: 'AWS US East/West',
             __typename: 'CedarDataCenter'
@@ -722,6 +725,7 @@ export const result: { data: GetSystemProfile } = {
         },
         {
           id: '000-0000-4',
+          startDate: '2022-07-30T00:00:00Z',
           dataCenter: {
             name: 'AWS US East/West',
             __typename: 'CedarDataCenter'
@@ -732,6 +736,7 @@ export const result: { data: GetSystemProfile } = {
         },
         {
           id: '000-0000-5',
+          startDate: null,
           dataCenter: {
             name: 'AWS US East/West',
             __typename: 'CedarDataCenter'
@@ -761,13 +766,17 @@ export const result: { data: GetSystemProfile } = {
           'Continued enhancements and improvements and alignment with legislative changes.  Also, working on an upcoming redesign effort for the website.',
         netAccessibility:
           'Accessible to both public internet and to CMS-internal network',
-        __typename: 'CedarSystemMaintainerInformation',
         ecapParticipation: true,
-        frontendAccessType: 'IPv4 Only',
+        frontendAccessType: 'IPv4 only',
+        ipEnabledAssetCount: 21,
+        ip6TransitionPlan: 'This system will be transitioned to IPv6',
+        ip6EnabledAssetPercent: '25%',
         hardCodedIPAddress: true,
-        ipEnabledAssetCount: 50,
-        ip6EnabledAssetPercent: '50%',
-        ip6TransitionPlan: 'This system will be transitioned to IPv6'
+        quarterToRetireReplace: '1',
+        systemCustomization: '50% customization',
+        yearToRetireReplace: '2030',
+        plansToRetireReplace: 'Yes - Retire and Replace',
+        __typename: 'CedarSystemMaintainerInformation'
       },
       __typename: 'CedarSystemDetails'
     },
@@ -784,6 +793,24 @@ export const result: { data: GetSystemProfile } = {
         serviceProvided: null,
         isDeliveryOrg: true,
         __typename: 'CedarContract'
+      }
+    ],
+    cedarSubSystems: [
+      {
+        id: '{11AB1A00-1234-5678-ABC1-1A001B00CC0A}',
+        name: 'Centers for Management Services',
+        acronym: 'CMS',
+        description:
+          'Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.',
+        __typename: 'CedarSubSystem'
+      },
+      {
+        id: '{11AB1A00-1234-5678-ABC1-1A001B00CC1B}',
+        name: 'Office of Funny Walks',
+        acronym: 'OFW',
+        description:
+          'Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.',
+        __typename: 'CedarSubSystem'
       }
     ]
   }

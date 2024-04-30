@@ -7,7 +7,11 @@ const systemProfile = {
   },
   navigation: {
     home: 'System Home',
-    details: 'System Details',
+    details: 'Implementation details',
+    detailsBasic: 'Basic details',
+    detailsUrls: 'URLs and locations',
+    detailsDev: 'Development',
+    detailsIp: 'IP information',
     team: 'Team',
     contracts: 'Contracts',
     teamFte: 'FTE',
@@ -263,7 +267,7 @@ const systemProfile = {
       more: 'more'
     },
     systemDetails: {
-      header: 'System Details',
+      header: 'Basic details',
       ownership: 'System ownership',
       ownershipValues: {
         cmsOwned: 'CMS owned',
@@ -274,12 +278,18 @@ const systemProfile = {
       fismaID: 'FISMA Sytem ID',
       tagHeader1: 'CMS Programs and Mission Essential Functions',
       tagHeader2: 'CMS Innovation Center (CMMI) Models',
-      urlsAndLocations: 'URLs and Locations',
+      urlsAndLocations: 'URLs and locations',
+      showUrls: {
+        less: 'Show fewer URLs',
+        more: 'Show more URLs'
+      },
       webApplicationFirewall: 'Web Application Firewall',
       migrationDate: 'Cloud migration date',
       noMigrationDate: 'No clould migration planned yet',
-      environment: 'environment',
-      provider: 'Data Center/Cloud Service Provider name',
+      environment: '{{environment}} environment',
+      noEnvironmentListed: 'No environment listed',
+      noUrlListed: 'No URL listed',
+      provider: 'Location or cloud service provider name',
       location: 'Location',
       development: 'Development',
       customDevelopment: 'Custom Development',
@@ -289,14 +299,17 @@ const systemProfile = {
       developmentDescription: 'Description of development work to be completed',
       aiTechStatus: 'AI technology status',
       technologyTypes: 'AI Technology types',
-      noURL: 'This system does not have URLS',
-      noEnvironmentURL: 'This environment does not have a url',
+      noURL: 'This system does not have any URLs or locations listed.',
+      noEnvironmentURL: 'This environment does not have a URL.',
+
       ipInfo: 'IP Information',
-      currentIP: 'Current IP access',
+      eCapInitiative: 'E-Cap Initiative',
+      currentIP: 'Current front end access type',
       ipAssets: 'Number of IP-enabled assets',
       ipv6Transition: 'IPv6 transition',
       percentTransitioned: 'Percent transitioned to IPv6',
       hardCodedIP: 'Hard-coded IP addresses',
+
       moreURLs_nocount: 'View URLs',
       moreURLs: 'View {{count}} more URL',
       moreURLs_plural: 'View {{count}} more URLs'
@@ -304,7 +317,14 @@ const systemProfile = {
     subSystems: {
       header: 'Sub-systems',
       retirementDate: 'Retirement date',
-      viewInfo: 'View sub-system information'
+      viewInfo: 'View sub-system information',
+      noSystemDescription: 'No system description available',
+      showSystems: {
+        more: 'Show more sub-systems',
+        less: 'Show fewer sub-systems'
+      },
+      noSubsystems:
+        'This system does not have any sub-systems or child systems listed.'
     }
   },
   systemTable: {

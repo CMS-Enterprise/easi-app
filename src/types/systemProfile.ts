@@ -140,6 +140,7 @@ export interface SystemProfileData extends GetSystemProfile {
   numberOfFederalFte?: number;
   numberOfFte?: number;
   personRoles: CedarRoleAssigneePerson[];
+  plannedRetirement: string | null;
   productionLocation?: UrlLocation;
   status: GetSystemProfile_cedarSystemDetails_cedarSystem['status'];
   usernamesWithRoles: UsernameWithRoles[];

@@ -259,7 +259,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                     class=""
                     href="/systems/000-100-0/details"
                   >
-                    System Details
+                    Implementation details
                   </a>
                 </li>
                 <li
@@ -296,10 +296,20 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                   class="usa-sidenav__item"
                 >
                   <a
-                    class="nav-group-border"
+                    class=""
                     href="/systems/000-100-0/tools-and-software"
                   >
                     Tools and Software
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class="nav-group-border"
+                    href="/systems/000-100-0/sub-systems"
+                  >
+                    Sub-systems
                   </a>
                 </li>
               </ul>
@@ -420,7 +430,7 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                                     <dt
                                       class="text-bold margin-bottom-05"
                                     >
-                                      Data Center/Cloud Service Provider name
+                                      Location or cloud service provider name
                                     </dt>
                                     <dd
                                       class="description-definition margin-0 line-height-body-3"

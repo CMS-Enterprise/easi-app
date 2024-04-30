@@ -126,6 +126,7 @@ export interface GetSystemProfile_cedarSystemDetails_deployments_dataCenter {
 export interface GetSystemProfile_cedarSystemDetails_deployments {
   __typename: "CedarDeployment";
   id: string;
+  startDate: Time | null;
   dataCenter: GetSystemProfile_cedarSystemDetails_deployments_dataCenter | null;
   deploymentType: string | null;
   name: string;
@@ -166,10 +167,14 @@ export interface GetSystemProfile_cedarSystemDetails_systemMaintainerInformation
   ecapParticipation: boolean | null;
   frontendAccessType: string | null;
   hardCodedIPAddress: boolean | null;
-  ipEnabledAssetCount: number | null;
   ip6EnabledAssetPercent: string | null;
   ip6TransitionPlan: string | null;
+  ipEnabledAssetCount: number | null;
   netAccessibility: string | null;
+  plansToRetireReplace: string | null;
+  quarterToRetireReplace: string | null;
+  systemCustomization: string | null;
+  yearToRetireReplace: string | null;
 }
 
 export interface GetSystemProfile_cedarSystemDetails {
@@ -182,6 +187,14 @@ export interface GetSystemProfile_cedarSystemDetails {
   systemMaintainerInformation: GetSystemProfile_cedarSystemDetails_systemMaintainerInformation;
 }
 
+export interface GetSystemProfile_cedarSubSystems {
+  __typename: "CedarSubSystem";
+  id: string;
+  name: string;
+  acronym: string | null;
+  description: string | null;
+}
+
 export interface GetSystemProfile {
   cedarAuthorityToOperate: GetSystemProfile_cedarAuthorityToOperate[];
   cedarBudget: GetSystemProfile_cedarBudget[] | null;
@@ -190,6 +203,7 @@ export interface GetSystemProfile {
   cedarSoftwareProducts: GetSystemProfile_cedarSoftwareProducts | null;
   cedarContractsBySystem: GetSystemProfile_cedarContractsBySystem[];
   cedarSystemDetails: GetSystemProfile_cedarSystemDetails | null;
+  cedarSubSystems: GetSystemProfile_cedarSubSystems[];
 }
 
 export interface GetSystemProfileVariables {
