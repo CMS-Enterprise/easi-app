@@ -17,9 +17,10 @@ import {
 } from 'queries/types/GetSystemIntake';
 import NotFound, { NotFoundPartial } from 'views/NotFound';
 
+// import ContactDetails from './ContactDetails';
+import ContactDetails from './ContactDetails/ContactDetails';
 import UploadForm from './Documents/UploadForm';
 import Confirmation from './Confirmation';
-import ContactDetails from './ContactDetails';
 import ContractDetails from './ContractDetails';
 import Documents from './Documents';
 import RequestDetails from './RequestDetails';

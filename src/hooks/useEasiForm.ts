@@ -39,7 +39,7 @@ function useEasiForm<
   TFieldValues extends FieldValues = FieldValues,
   TContext = any
 >(
-  props: UseFormProps<TFieldValues, TContext>
+  props?: UseFormProps<TFieldValues, TContext>
 ): UseFormReturn<TFieldValues, TContext> & {
   /** Ignore errors and submit valid dirty field values */
   partialSubmit: PartialSubmit<TFieldValues>;
