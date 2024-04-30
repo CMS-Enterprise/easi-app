@@ -5,6 +5,7 @@ import './index.scss';
 
 type SectionWrapperProps = {
   className?: string;
+  id?: string;
   children?: ReactNode;
   border?: boolean;
   borderBottom?: boolean;
@@ -13,6 +14,7 @@ type SectionWrapperProps = {
 
 const SectionWrapper = ({
   className,
+  id,
   children,
   border,
   borderBottom,
@@ -28,7 +30,7 @@ const SectionWrapper = ({
     className
   );
   return (
-    <div data-testid="section-wrapper" className={classNames}>
+    <div data-testid="section-wrapper" className={classNames} id={id}>
       {children}
     </div>
   );
