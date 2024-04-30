@@ -178,8 +178,8 @@ jobs:
         if: steps.changes.outputs.cedarproxy == 'true'
         uses: docker/build-push-action@v5
         with:
-          context: ./cedarproxy
-          file: Dockerfile.cedarproxy
+          context: ./cedarproxy/
+          file: ./cedarproxy/Dockerfile.cedarproxy
           push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/easi-cedarproxy:${{ env.GIT_HASH }}
       - name: Announce failure
