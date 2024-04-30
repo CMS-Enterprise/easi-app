@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import {
   GridContainer,
   IconLaunch,
-  IconLightbulbOutline
+  IconLightbulbOutline,
+  Link
 } from '@trussworks/react-uswds';
 
 import IconLink from 'components/shared/IconLink';
-
-// import { SLACK_OIT_DEV_FEEDBACK } from 'constants/externalUrls';
+import { SLACK_OIT_DEV_FEEDBACK } from 'constants/externalUrls';
 
 export default () => {
   const { t } = useTranslation('help');
@@ -42,16 +42,14 @@ export default () => {
               {t('footer.sendFeedback')}
             </IconLink>
 
-            {/* Temp hide slack chat link */}
-            {/* <IconLink
-              className="font-body-3xs text-white text-no-underline"
-              icon={<IconLaunch />}
-              iconPosition="after"
-              to={SLACK_OIT_DEV_FEEDBACK}
+            <Link
+              className="font-body-3xs text-white text-no-underline display-flex flex-align-center"
+              href={SLACK_OIT_DEV_FEEDBACK}
               target="_blank"
             >
               {t('footer.chatOnSlack')}
-            </IconLink> */}
+              <IconLaunch className="margin-left-1" />
+            </Link>
           </div>
         </div>
         <IconLightbulbOutline className="text-primary-light" size={3} />
