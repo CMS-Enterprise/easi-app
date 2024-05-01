@@ -2,14 +2,25 @@ import React, { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
-import { Form, FormGroup, TextInput } from '@trussworks/react-uswds';
+import {
+  Checkbox,
+  Dropdown,
+  Form,
+  FormGroup,
+  Radio,
+  TextInput
+} from '@trussworks/react-uswds';
 
+import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
+import CedarContactSelect from 'components/CedarContactSelect';
 import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import useEasiForm from 'hooks/useEasiForm';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
@@ -156,24 +167,363 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         <FeedbackBanner id={systemIntake.id} type="Intake Request" />
       )}
 
-      <Form onSubmit={submit}>
-        {/* Requester Name */}
+      <Form
+        onSubmit={submit}
+        className="maxw-none tablet:grid-col-6 margin-bottom-7"
+      >
+        {/* Requester */}
         <Controller
           control={control}
           name="requester.commonName"
-          render={({ field, fieldState: { error } }) => (
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
             <FormGroup error={!!error}>
               <Label htmlFor={field.name}>
                 {t('contactDetails.requester')}
               </Label>
               {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <TextInput
-                {...field}
-                ref={null}
-                id={field.name}
-                type="text"
-                disabled
-              />
+              <TextInput {...field} id={field.name} type="text" disabled />
+            </FormGroup>
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="requester.component"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name}>
+                {t('contactDetails.requesterComponent')}
+              </Label>
+              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+
+              <Dropdown {...field} id="IntakeForm-RequesterComponent">
+                <option value="" disabled>
+                  {t('Select an option')}
+                </option>
+                {cmsDivisionsAndOfficesOptions('RequesterComponent')}
+              </Dropdown>
+            </FormGroup>
+          )}
+        />
+
+        {/* Business Owner */}
+
+        <h4 className="margin-bottom-1">
+          {t('contactDetails.businessOwner.name')}
+        </h4>
+
+        <HelpText id="IntakeForm-BusinessOwnerHelp">
+          {t('contactDetails.businessOwner.helpText')}
+        </HelpText>
+
+        <Checkbox
+          id="IntakeForm-IsBusinessOwnerSameAsRequester"
+          label="CMS Business Owner is same as requester"
+          name="isBusinessOwnerSameAsRequester"
+          onChange={() => null}
+        />
+
+        <Controller
+          control={control}
+          name="businessOwner"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name}>
+                {t('contactDetails.businessOwner.nameField')}
+              </Label>
+              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              <CedarContactSelect {...field} id={field.name} />
+            </FormGroup>
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="businessOwner.component"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name}>
+                {t('contactDetails.businessOwner.component')}
+              </Label>
+              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+
+              <Dropdown {...field} id="IntakeForm-BusinessOwnerComponent">
+                <option value="" disabled>
+                  {t('Select an option')}
+                </option>
+                {cmsDivisionsAndOfficesOptions('BusinessOwnerComponent')}
+              </Dropdown>
+            </FormGroup>
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="businessOwner.email"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name}>
+                {t('contactDetails.businessOwner.email')}
+              </Label>
+              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              <TextInput {...field} id={field.name} type="text" disabled />
+            </FormGroup>
+          )}
+        />
+
+        {/* Product Manager */}
+
+        <h4 className="margin-bottom-1">
+          {t('contactDetails.productManager.name')}
+        </h4>
+
+        <HelpText id="IntakeForm-ProductManagerHelp">
+          {t('contactDetails.productManager.helpText')}
+        </HelpText>
+
+        <Checkbox
+          id="IntakeForm-IsProductManagerSameAsRequester"
+          label="CMS Product Manager is same as requester"
+          name="isProductManagerSameAsRequester"
+          onChange={() => null}
+        />
+
+        <Controller
+          control={control}
+          name="productManager"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name}>
+                {t('contactDetails.productManager.nameField')}
+              </Label>
+              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              <CedarContactSelect {...field} id={field.name} />
+            </FormGroup>
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="productManager.component"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name}>
+                {t('contactDetails.productManager.component')}
+              </Label>
+              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+
+              <Dropdown {...field} id="IntakeForm-ProductManagerComponent">
+                <option value="" disabled>
+                  {t('Select an option')}
+                </option>
+                {cmsDivisionsAndOfficesOptions('ProductManagerComponent')}
+              </Dropdown>
+            </FormGroup>
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="productManager.email"
+          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+            <FormGroup error={!!error}>
+              <Label htmlFor={field.name}>
+                {t('contactDetails.productManager.email')}
+              </Label>
+              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              <TextInput {...field} id={field.name} type="text" disabled />
+            </FormGroup>
+          )}
+        />
+
+        {/* ISSO */}
+
+        <Controller
+          control={control}
+          name="isso.isPresent"
+          render={({ field: issoField }) => (
+            <FormGroup>
+              <fieldset className="usa-fieldset">
+                <legend className="usa-label margin-bottom-1">
+                  {t('contactDetails.isso.label')}
+                </legend>
+                <HelpText id="IntakeForm-ISSOHelp">
+                  {t('contactDetails.isso.helpText')}
+                </HelpText>
+                <Radio
+                  {...issoField}
+                  ref={null}
+                  id={`${issoField.name}True`}
+                  label={t('Yes')}
+                  value="true"
+                  checked={issoField.value === true}
+                  onChange={() => issoField.onChange(true)}
+                />
+
+                {issoField.value === true && (
+                  <div
+                    data-testid="isso-name-container"
+                    className="margin-left-4 margin-bottom-3"
+                  >
+                    <Controller
+                      control={control}
+                      name="isso"
+                      render={({
+                        field: { ref, ...field },
+                        fieldState: { error }
+                      }) => (
+                        <FormGroup error={!!error}>
+                          <Label htmlFor={field.name}>
+                            {t('contactDetails.isso.name')}
+                          </Label>
+                          {!!error && (
+                            <FieldErrorMsg>{t('Error')}</FieldErrorMsg>
+                          )}
+                          <CedarContactSelect {...field} id={field.name} />
+                        </FormGroup>
+                      )}
+                    />
+
+                    <Controller
+                      control={control}
+                      name="isso.component"
+                      render={({
+                        field: { ref, ...field },
+                        fieldState: { error }
+                      }) => (
+                        <FormGroup error={!!error}>
+                          <Label htmlFor={field.name}>
+                            {t('contactDetails.isso.component')}
+                          </Label>
+                          {!!error && (
+                            <FieldErrorMsg>{t('Error')}</FieldErrorMsg>
+                          )}
+
+                          <Dropdown {...field} id="IntakeForm-IssoComponent">
+                            <option value="" disabled>
+                              {t('Select an option')}
+                            </option>
+                            {cmsDivisionsAndOfficesOptions('IssoComponent')}
+                          </Dropdown>
+                        </FormGroup>
+                      )}
+                    />
+
+                    <Controller
+                      control={control}
+                      name="isso.email"
+                      render={({
+                        field: { ref, ...field },
+                        fieldState: { error }
+                      }) => (
+                        <FormGroup error={!!error}>
+                          <Label htmlFor={field.name}>
+                            {t('contactDetails.isso.email')}
+                          </Label>
+                          {!!error && (
+                            <FieldErrorMsg>{t('Error')}</FieldErrorMsg>
+                          )}
+                          <TextInput
+                            {...field}
+                            id={field.name}
+                            type="text"
+                            disabled
+                          />
+                        </FormGroup>
+                      )}
+                    />
+                  </div>
+                )}
+
+                <Radio
+                  {...issoField}
+                  ref={null}
+                  id={`${issoField.name}False`}
+                  label={t('No')}
+                  value="false"
+                  checked={issoField.value === false}
+                  onChange={() => issoField.onChange(false)}
+                />
+              </fieldset>
+            </FormGroup>
+          )}
+        />
+
+        {/* TODO: Additional contacts */}
+
+        {/* Governance Teams */}
+
+        <Controller
+          control={control}
+          name="governanceTeams.isPresent"
+          render={({ field: govTeamsField }) => (
+            <FormGroup>
+              <fieldset className="usa-fieldset">
+                <legend className="usa-label margin-bottom-1">
+                  {t('contactDetails.collaboration.label')}
+                </legend>
+                <HelpText id="IntakeForm-Collaborators">
+                  {t('contactDetails.collaboration.helpText')}
+                </HelpText>
+
+                <Radio
+                  {...govTeamsField}
+                  ref={null}
+                  id={`${govTeamsField.name}True`}
+                  label={t('contactDetails.collaboration.oneOrMore')}
+                  value="true"
+                  checked={govTeamsField.value === true}
+                  onChange={() => govTeamsField.onChange(true)}
+                />
+
+                {govTeamsField.value === true && (
+                  <Controller
+                    control={control}
+                    name="governanceTeams.teams"
+                    render={({
+                      field: { ref, ...field },
+                      fieldState: { error }
+                    }) => (
+                      <FormGroup
+                        error={!!error}
+                        className="margin-left-4 margin-bottom-3"
+                      >
+                        {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                        {cmsGovernanceTeams.map((team, index) => {
+                          const isChecked: boolean = (field.value || [])
+                            .map(govTeam => govTeam.name)
+                            .includes(team.value);
+
+                          return (
+                            <>
+                              <Checkbox
+                                id={`governanceTeam-${team.key}`}
+                                label={team.label}
+                                name={`governanceTeams.teams.${index}`}
+                                value={team.value}
+                                checked={isChecked}
+                                // TODO: Fix onChange
+                                onChange={field.onChange}
+                              />
+                              {/* TODO: Name text input field */}
+                            </>
+                          );
+                        })}
+                      </FormGroup>
+                    )}
+                  />
+                )}
+
+                <Radio
+                  {...govTeamsField}
+                  ref={null}
+                  id={`${govTeamsField.name}False`}
+                  label={t('contactDetails.collaboration.none')}
+                  value="false"
+                  checked={govTeamsField.value === false}
+                  onChange={() => govTeamsField.onChange(false)}
+                />
+              </fieldset>
             </FormGroup>
           )}
         />
