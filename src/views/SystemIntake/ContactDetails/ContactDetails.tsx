@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import {
@@ -20,7 +20,6 @@ import PageLoading from 'components/PageLoading';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import useEasiForm from 'hooks/useEasiForm';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
@@ -32,6 +31,8 @@ import {
 } from 'queries/types/UpdateSystemIntakeContactDetails';
 import { SystemIntakeFormState } from 'types/graphql-global-types';
 import { ContactDetailsForm, SystemIntakeRoleKeys } from 'types/systemIntake';
+
+import GovernanceTeams from './GovernanceTeams';
 
 type ContactDetailsProps = {
   systemIntake: SystemIntake;
@@ -76,9 +77,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     ]
   );
 
-  const { control, handleSubmit, setValue } = useEasiForm<ContactDetailsForm>({
+  const form = useEasiForm<ContactDetailsForm>({
     defaultValues
   });
+
+  const { control, handleSubmit, setValue } = form;
 
   const [mutate] = useMutation<
     UpdateSystemIntakeContactDetails,
@@ -453,80 +456,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
         {/* Governance Teams */}
 
-        <Controller
-          control={control}
-          name="governanceTeams.isPresent"
-          render={({ field: govTeamsField }) => (
-            <FormGroup>
-              <fieldset className="usa-fieldset">
-                <legend className="usa-label margin-bottom-1">
-                  {t('contactDetails.collaboration.label')}
-                </legend>
-                <HelpText id="IntakeForm-Collaborators">
-                  {t('contactDetails.collaboration.helpText')}
-                </HelpText>
-
-                <Radio
-                  {...govTeamsField}
-                  ref={null}
-                  id={`${govTeamsField.name}True`}
-                  label={t('contactDetails.collaboration.oneOrMore')}
-                  value="true"
-                  checked={govTeamsField.value === true}
-                  onChange={() => govTeamsField.onChange(true)}
-                />
-
-                {govTeamsField.value === true && (
-                  <Controller
-                    control={control}
-                    name="governanceTeams.teams"
-                    render={({
-                      field: { ref, ...field },
-                      fieldState: { error }
-                    }) => (
-                      <FormGroup
-                        error={!!error}
-                        className="margin-left-4 margin-bottom-3"
-                      >
-                        {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-                        {cmsGovernanceTeams.map((team, index) => {
-                          const isChecked: boolean = (field.value || [])
-                            .map(govTeam => govTeam.name)
-                            .includes(team.value);
-
-                          return (
-                            <>
-                              <Checkbox
-                                id={`governanceTeam-${team.key}`}
-                                label={team.label}
-                                name={`governanceTeams.teams.${index}`}
-                                value={team.value}
-                                checked={isChecked}
-                                // TODO: Fix onChange
-                                onChange={field.onChange}
-                              />
-                              {/* TODO: Name text input field */}
-                            </>
-                          );
-                        })}
-                      </FormGroup>
-                    )}
-                  />
-                )}
-
-                <Radio
-                  {...govTeamsField}
-                  ref={null}
-                  id={`${govTeamsField.name}False`}
-                  label={t('contactDetails.collaboration.none')}
-                  value="false"
-                  checked={govTeamsField.value === false}
-                  onChange={() => govTeamsField.onChange(false)}
-                />
-              </fieldset>
-            </FormGroup>
-          )}
-        />
+        <FormProvider<ContactDetailsForm> {...form}>
+          <GovernanceTeams />
+        </FormProvider>
       </Form>
     </>
   );
