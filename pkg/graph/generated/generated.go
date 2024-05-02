@@ -344,6 +344,7 @@ type ComplexityRoot struct {
 		BusinessOwnerRoles      func(childComplexity int) int
 		Description             func(childComplexity int) int
 		ID                      func(childComplexity int) int
+		IsBookmarked            func(childComplexity int) int
 		Name                    func(childComplexity int) int
 		Status                  func(childComplexity int) int
 		SystemMaintainerOrg     func(childComplexity int) int
@@ -2866,6 +2867,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarSystem.ID(childComplexity), true
+
+	case "CedarSystem.isBookmarked":
+		if e.complexity.CedarSystem.IsBookmarked == nil {
+			break
+		}
+
+		return e.complexity.CedarSystem.IsBookmarked(childComplexity), true
 
 	case "CedarSystem.name":
 		if e.complexity.CedarSystem.Name == nil {
@@ -7375,6 +7383,7 @@ type CedarSystem {
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
   versionId: String
+  isBookmarked: Boolean!
 }
 
 """
@@ -21149,6 +21158,50 @@ func (ec *executionContext) fieldContext_CedarSystem_versionId(ctx context.Conte
 	return fc, nil
 }
 
+func (ec *executionContext) _CedarSystem_isBookmarked(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsBookmarked, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSystem_isBookmarked(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CedarSystemBookmark_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemBookmark) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarSystemBookmark_euaUserId(ctx, field)
 	if err != nil {
@@ -21298,6 +21351,8 @@ func (ec *executionContext) fieldContext_CedarSystemDetails_cedarSystem(ctx cont
 				return ec.fieldContext_CedarSystem_systemMaintainerOrgComp(ctx, field)
 			case "versionId":
 				return ec.fieldContext_CedarSystem_versionId(ctx, field)
+			case "isBookmarked":
+				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -32435,6 +32490,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystem(ctx context.Context, 
 				return ec.fieldContext_CedarSystem_systemMaintainerOrgComp(ctx, field)
 			case "versionId":
 				return ec.fieldContext_CedarSystem_versionId(ctx, field)
+			case "isBookmarked":
+				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -32514,6 +32571,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystems(ctx context.Context,
 				return ec.fieldContext_CedarSystem_systemMaintainerOrgComp(ctx, field)
 			case "versionId":
 				return ec.fieldContext_CedarSystem_versionId(ctx, field)
+			case "isBookmarked":
+				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -32722,6 +32781,8 @@ func (ec *executionContext) fieldContext_Query_myCedarSystems(ctx context.Contex
 				return ec.fieldContext_CedarSystem_systemMaintainerOrgComp(ctx, field)
 			case "versionId":
 				return ec.fieldContext_CedarSystem_versionId(ctx, field)
+			case "isBookmarked":
+				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -37684,6 +37745,8 @@ func (ec *executionContext) fieldContext_SystemIntake_systems(ctx context.Contex
 				return ec.fieldContext_CedarSystem_systemMaintainerOrgComp(ctx, field)
 			case "versionId":
 				return ec.fieldContext_CedarSystem_versionId(ctx, field)
+			case "isBookmarked":
+				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -45249,6 +45312,8 @@ func (ec *executionContext) fieldContext_TRBRequest_systems(ctx context.Context,
 				return ec.fieldContext_CedarSystem_systemMaintainerOrgComp(ctx, field)
 			case "versionId":
 				return ec.fieldContext_CedarSystem_versionId(ctx, field)
+			case "isBookmarked":
+				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -56258,6 +56323,11 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 			out.Values[i] = ec._CedarSystem_systemMaintainerOrgComp(ctx, field, obj)
 		case "versionId":
 			out.Values[i] = ec._CedarSystem_versionId(ctx, field, obj)
+		case "isBookmarked":
+			out.Values[i] = ec._CedarSystem_isBookmarked(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

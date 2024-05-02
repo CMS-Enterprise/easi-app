@@ -16,6 +16,7 @@ type CedarSystem struct {
 	SystemMaintainerOrg     zero.String `json:"systemMaintainerOrg"`
 	SystemMaintainerOrgComp zero.String `json:"systemMaintainerOrgComp"`
 	VersionID               zero.String `json:"versionId"`
+	IsBookmarked            bool        `json:"isBookMarked"`
 }
 
 // CedarSubSystem is the model for a sub system that comes back from the CEDAR Core API

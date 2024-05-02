@@ -179,6 +179,7 @@ type CedarSystem {
 	systemMaintainerOrg: String
 	systemMaintainerOrgComp: String
   versionId: String
+  isBookmarked: Boolean!
 }
 
 """
