@@ -49,7 +49,7 @@ jobs:
             cedarproxy:
               - 'pkg/cedar/core/gen/**'
               - 'cedarproxy/**'
-      - name: Clean the database
+      - name: Update ECS task definition
         if: ${{ contains(inputs.env, 'dev') && steps.changes.outputs.cedarproxy == 'true' }}
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
