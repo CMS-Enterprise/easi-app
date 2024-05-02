@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -11,6 +11,7 @@ import {
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
+import { camelCase } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import CedarContactSelect from 'components/CedarContactSelect';
@@ -19,6 +20,7 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import PageNumber from 'components/PageNumber';
+import Alert from 'components/shared/Alert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
@@ -35,7 +37,11 @@ import {
   SystemIntakeFormState,
   SystemIntakeRequestType
 } from 'types/graphql-global-types';
-import { ContactDetailsForm, SystemIntakeRoleKeys } from 'types/systemIntake';
+import {
+  ContactDetailsForm,
+  SystemIntakeContactProps,
+  SystemIntakeRoleKeys
+} from 'types/systemIntake';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import GovernanceTeams from './GovernanceTeams';
@@ -83,10 +89,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     control,
     handleSubmit,
     setValue,
-    formState: { defaultValues }
+    setError,
+    formState: { defaultValues, dirtyFields, isDirty, errors }
   } = form;
 
-  const [mutate] = useMutation<
+  const [updateSystemIntake] = useMutation<
     UpdateSystemIntakeContactDetails,
     UpdateSystemIntakeContactDetailsVariables
   >(UpdateSystemIntakeContactDetailsQuery, {
@@ -100,57 +107,84 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     ]
   });
 
-  const submit = handleSubmit(async values => {
-    /**
-     * Create or update contact in database
-     * */
-    const updateSystemIntakeContact = async (type: SystemIntakeRoleKeys) => {
-      // Only run mutations when contact has been verified via CEDAR and component is set
-      if (values[type].euaUserId && values[type].component) {
-        // If contact has ID, update values
-        if (values?.[type].id) {
-          return updateContact({ ...values[type] });
-        }
-        // If contact does not have id, create new contact
-        return createContact(values[type]).then(newContact => {
-          // Set ID field value from new contact data
-          setValue(`${type}.id`, newContact?.id);
-        });
-      }
-      return null;
-    };
+  /** Creates or updates contact in database and sets ID field for new contacts */
+  const setContact = async (contact: SystemIntakeContactProps) => {
+    const fieldName = camelCase(contact.role) as SystemIntakeRoleKeys;
 
-    await Promise.all([
-      updateSystemIntakeContact('requester'),
-      updateSystemIntakeContact('businessOwner'),
-      updateSystemIntakeContact('productManager'),
-      updateSystemIntakeContact('isso')
-    ]);
-    return mutate({
-      variables: {
-        input: {
-          id: systemIntake.id,
-          requester: {
-            name: values.requester.commonName,
-            component: values.requester.component
-          },
-          businessOwner: {
-            name: values.businessOwner.commonName,
-            component: values.businessOwner.component
-          },
-          productManager: {
-            name: values.productManager.commonName,
-            component: values.productManager.component
-          },
-          isso: {
-            isPresent: values.isso.isPresent,
-            name: values.isso.commonName
-          },
-          governanceTeams: values.governanceTeams
+    /** Checks if contact fields are set */
+    const shouldUpdate =
+      !!dirtyFields[fieldName] && !!contact.euaUserId && !!contact.component;
+
+    if (!shouldUpdate) return null;
+
+    /** If ID field is empty, creates new contact */
+    const mutation = contact?.id ? updateContact : createContact;
+
+    return mutation({ ...contact }).then(contactData =>
+      // Set ID field for new contacts
+      setValue(`${fieldName}.id`, contactData?.id)
+    );
+  };
+
+  /** Update contacts and system intake form */
+  const submit = handleSubmit(
+    async ({
+      requester,
+      businessOwner,
+      productManager,
+      isso,
+      governanceTeams
+    }) => {
+      if (!isDirty) return null;
+
+      // Update contacts
+      await Promise.all([
+        setContact(requester),
+        setContact(businessOwner),
+        setContact(productManager),
+        setContact(isso)
+      ]);
+
+      // Update system intake
+      return updateSystemIntake({
+        variables: {
+          input: {
+            id: systemIntake.id,
+            requester: {
+              name: requester.commonName,
+              component: requester.component
+            },
+            businessOwner: {
+              name: businessOwner.commonName,
+              component: businessOwner.component
+            },
+            productManager: {
+              name: productManager.commonName,
+              component: productManager.component
+            },
+            isso: {
+              isPresent: isso.isPresent,
+              name: isso.commonName
+            },
+            governanceTeams
+          }
         }
-      }
-    }).then(() => history.push('request-details'));
-  });
+      })
+        .then(() => history.push('request-details'))
+        .catch(e => {
+          setError('root', { message: t('error:encounteredIssueTryAgain') });
+        });
+    }
+  );
+
+  // Scroll errors into view on submit
+  const hasErrors = Object.keys(errors).length > 0;
+  useEffect(() => {
+    if (hasErrors) {
+      const err = document.querySelector('.usa-alert--error');
+      err?.scrollIntoView();
+    }
+  }, [errors, hasErrors]);
 
   // Wait until contacts are done loading and default values have been updated
   if (contacts.loading || !defaultValues) return <PageLoading />;
@@ -158,6 +192,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   return (
     <>
       {/* TODO: errors summary */}
+
+      {errors?.root?.message && (
+        <Alert type="error">{errors.root.message}</Alert>
+      )}
 
       <p className="line-height-body-5">
         {t('contactDetails.intakeProcessDescription')}
