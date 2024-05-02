@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Checkbox,
@@ -17,6 +18,7 @@ import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
+import PageNumber from 'components/PageNumber';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
@@ -29,8 +31,12 @@ import {
   UpdateSystemIntakeContactDetails,
   UpdateSystemIntakeContactDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContactDetails';
-import { SystemIntakeFormState } from 'types/graphql-global-types';
+import {
+  SystemIntakeFormState,
+  SystemIntakeRequestType
+} from 'types/graphql-global-types';
 import { ContactDetailsForm, SystemIntakeRoleKeys } from 'types/systemIntake';
+import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import GovernanceTeams from './GovernanceTeams';
 
@@ -40,6 +46,7 @@ type ContactDetailsProps = {
 
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const { t } = useTranslation('intake');
+  const history = useHistory();
 
   const {
     contacts,
@@ -146,7 +153,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           governanceTeams: values.governanceTeams
         }
       }
-    });
+    }).then(() => history.push('request-details'));
   });
 
   if (contacts.loading) return <PageLoading />;
@@ -459,7 +466,27 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         <FormProvider<ContactDetailsForm> {...form}>
           <GovernanceTeams />
         </FormProvider>
+
+        <Pager
+          next={{
+            type: 'submit'
+          }}
+          border={false}
+          taskListUrl={
+            systemIntake.requestType === SystemIntakeRequestType.SHUTDOWN
+              ? '/'
+              : `/governance-task-list/${systemIntake.id}`
+          }
+          className="margin-top-4"
+        />
       </Form>
+
+      {/*
+        TODO: Fix autosave
+        <AutoSave values={values} onSave={() => null} debounceDelay={3000} /> 
+      */}
+
+      <PageNumber currentPage={1} totalPages={5} />
     </>
   );
 };
