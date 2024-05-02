@@ -90,6 +90,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     handleSubmit,
     setValue,
     setError,
+    watch,
     formState: { defaultValues, dirtyFields, isDirty, errors }
   } = form;
 
@@ -277,7 +278,18 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 {t('contactDetails.businessOwner.nameField')}
               </Label>
               {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <CedarContactSelect {...field} id={field.name} />
+              <CedarContactSelect
+                {...field}
+                id={field.name}
+                onChange={contact => {
+                  field.onChange({
+                    ...field.value,
+                    commonName: contact?.commonName || '',
+                    euaUserId: contact?.euaUserId || '',
+                    email: contact?.email || ''
+                  });
+                }}
+              />
             </FormGroup>
           )}
         />
@@ -311,7 +323,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 {t('contactDetails.businessOwner.email')}
               </Label>
               {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <TextInput {...field} id={field.name} type="text" disabled />
+              <TextInput
+                {...field}
+                id={field.name}
+                type="text"
+                value={watch('businessOwner.email')}
+                disabled
+              />
             </FormGroup>
           )}
         />
@@ -342,7 +360,18 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 {t('contactDetails.productManager.nameField')}
               </Label>
               {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <CedarContactSelect {...field} id={field.name} />
+              <CedarContactSelect
+                {...field}
+                id={field.name}
+                onChange={contact => {
+                  field.onChange({
+                    ...field.value,
+                    commonName: contact?.commonName || '',
+                    euaUserId: contact?.euaUserId || '',
+                    email: contact?.email || ''
+                  });
+                }}
+              />
             </FormGroup>
           )}
         />
@@ -376,7 +405,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 {t('contactDetails.productManager.email')}
               </Label>
               {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <TextInput {...field} id={field.name} type="text" disabled />
+              <TextInput
+                {...field}
+                id={field.name}
+                type="text"
+                value={watch('productManager.email')}
+                disabled
+              />
             </FormGroup>
           )}
         />
@@ -424,7 +459,18 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                           {!!error && (
                             <FieldErrorMsg>{t('Error')}</FieldErrorMsg>
                           )}
-                          <CedarContactSelect {...field} id={field.name} />
+                          <CedarContactSelect
+                            {...field}
+                            id={field.name}
+                            onChange={contact => {
+                              field.onChange({
+                                ...field.value,
+                                commonName: contact?.commonName || '',
+                                euaUserId: contact?.euaUserId || '',
+                                email: contact?.email || ''
+                              });
+                            }}
+                          />
                         </FormGroup>
                       )}
                     />
@@ -471,6 +517,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                           <TextInput
                             {...field}
                             id={field.name}
+                            value={watch('isso.email')}
                             type="text"
                             disabled
                           />
