@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -53,6 +53,11 @@ type ContactDetailsProps = {
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const { t } = useTranslation('intake');
   const history = useHistory();
+
+  const [
+    busOwnerSameAsRequester,
+    setBusOwnerSameAsRequester
+  ] = useState<boolean>(false);
 
   const {
     contacts,
@@ -178,6 +183,21 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     }
   );
 
+  /**
+   * Used to set contact details to match requester
+   *
+   * Resets contact fields when `values` is undefined
+   * */
+  const setContactDetails = (
+    role: SystemIntakeRoleKeys,
+    values?: SystemIntakeContactProps
+  ) => {
+    setValue(`${role}.euaUserId`, values ? values.euaUserId : '');
+    setValue(`${role}.commonName`, values ? values.commonName : '');
+    setValue(`${role}.email`, values ? values.email : '');
+    setValue(`${role}.component`, values ? values.component : '');
+  };
+
   // Scroll errors into view on submit
   const hasErrors = Object.keys(errors).length > 0;
   useEffect(() => {
@@ -242,7 +262,17 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               </Label>
               {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
 
-              <Dropdown {...field} id="IntakeForm-RequesterComponent">
+              <Dropdown
+                {...field}
+                id="IntakeForm-RequesterComponent"
+                onChange={e => {
+                  field.onChange(e);
+
+                  if (busOwnerSameAsRequester) {
+                    setValue('businessOwner.component', e.target.value);
+                  }
+                }}
+              >
                 <option value="" disabled>
                   {t('Select an option')}
                 </option>
@@ -266,7 +296,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           id="IntakeForm-IsBusinessOwnerSameAsRequester"
           label="CMS Business Owner is same as requester"
           name="isBusinessOwnerSameAsRequester"
-          onChange={() => null}
+          checked={!!busOwnerSameAsRequester}
+          onChange={e => {
+            setContactDetails(
+              'businessOwner',
+              e.target.checked ? watch('requester') : undefined
+            );
+
+            setBusOwnerSameAsRequester(!busOwnerSameAsRequester);
+          }}
         />
 
         <Controller
@@ -281,14 +319,22 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <CedarContactSelect
                 {...field}
                 id={field.name}
-                onChange={contact => {
-                  field.onChange({
-                    ...field.value,
-                    commonName: contact?.commonName || '',
-                    euaUserId: contact?.euaUserId || '',
-                    email: contact?.email || ''
-                  });
+                // Manually set value so that field rerenders when values are updated
+                value={{
+                  euaUserId: watch('businessOwner.euaUserId'),
+                  commonName: watch('businessOwner.commonName'),
+                  email: watch('businessOwner.email')
                 }}
+                // Manually update fields so that email field rerenders
+                onChange={contact => {
+                  setValue(
+                    'businessOwner.commonName',
+                    contact?.commonName || ''
+                  );
+                  setValue('businessOwner.euaUserId', contact?.euaUserId || '');
+                  setValue('businessOwner.email', contact?.email || '');
+                }}
+                disabled={busOwnerSameAsRequester}
               />
             </FormGroup>
           )}
@@ -304,7 +350,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               </Label>
               {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
 
-              <Dropdown {...field} id="IntakeForm-BusinessOwnerComponent">
+              <Dropdown
+                {...field}
+                id="IntakeForm-BusinessOwnerComponent"
+                value={watch('businessOwner.component')}
+              >
                 <option value="" disabled>
                   {t('Select an option')}
                 </option>
@@ -323,13 +373,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 {t('contactDetails.businessOwner.email')}
               </Label>
               {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <TextInput
-                {...field}
-                id={field.name}
-                type="text"
-                value={watch('businessOwner.email')}
-                disabled
-              />
+              <TextInput {...field} id={field.name} type="text" disabled />
             </FormGroup>
           )}
         />
