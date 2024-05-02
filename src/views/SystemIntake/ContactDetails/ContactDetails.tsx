@@ -13,6 +13,7 @@ import {
 } from '@trussworks/react-uswds';
 import { camelCase } from 'lodash';
 
+import AdditionalContacts from 'components/AdditionalContacts';
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import CedarContactSelect from 'components/CedarContactSelect';
 import FeedbackBanner from 'components/FeedbackBanner';
@@ -46,6 +47,8 @@ import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import GovernanceTeams from './GovernanceTeams';
 
+import './index.scss';
+
 type ContactDetailsProps = {
   systemIntake: SystemIntake;
 };
@@ -63,6 +66,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     prodManagerSameAsRequester,
     setProdManagerSameAsRequester
   ] = useState<boolean>(false);
+
+  const [
+    activeContact,
+    setActiveContact
+  ] = useState<SystemIntakeContactProps | null>(null);
 
   const {
     contacts,
@@ -613,7 +621,14 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           )}
         />
 
-        {/* TODO: Additional contacts */}
+        {/* Add new contacts */}
+        <AdditionalContacts
+          contacts={contacts.data.additionalContacts}
+          systemIntakeId={systemIntake.id}
+          activeContact={activeContact}
+          setActiveContact={setActiveContact}
+          className="margin-top-4"
+        />
 
         {/* Governance Teams */}
 
