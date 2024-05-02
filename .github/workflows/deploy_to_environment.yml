@@ -49,7 +49,7 @@ jobs:
             cedarproxy:
               - 'pkg/cedar/core/gen/**'
               - 'cedarproxy/**'
-      - name: Update ECS task definition
+      - name: Update ECS task definition and deploy Cedarproxy
         if: ${{ contains(inputs.env, 'dev') && steps.changes.outputs.cedarproxy == 'true' }}
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
@@ -61,7 +61,7 @@ jobs:
           SECURITY_GROUP_NAME: "ecs-easi-cedarproxy-${{ inputs.env }}"
         run: |
           export TASK_REVISION=$(./scripts/update_ecs_task_definition.sh)
-          ./scripts/run_ecs_task.sh
+          ./scripts/deploy_ecs_service.sh
       - name: Announce failure
         if: ${{ failure() }}
         run: |
