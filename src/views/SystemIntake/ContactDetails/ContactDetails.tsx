@@ -59,6 +59,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     setBusOwnerSameAsRequester
   ] = useState<boolean>(false);
 
+  const [
+    prodManagerSameAsRequester,
+    setProdManagerSameAsRequester
+  ] = useState<boolean>(false);
+
   const {
     contacts,
     createContact,
@@ -271,6 +276,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   if (busOwnerSameAsRequester) {
                     setValue('businessOwner.component', e.target.value);
                   }
+
+                  if (prodManagerSameAsRequester) {
+                    setValue('productManager.component', e.target.value);
+                  }
                 }}
               >
                 <option value="" disabled>
@@ -293,9 +302,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         </HelpText>
 
         <Checkbox
-          id="IntakeForm-IsBusinessOwnerSameAsRequester"
+          id="IntakeForm-busOwnerSameAsRequester"
           label="CMS Business Owner is same as requester"
-          name="isBusinessOwnerSameAsRequester"
+          name="busOwnerSameAsRequester"
           checked={!!busOwnerSameAsRequester}
           onChange={e => {
             setContactDetails(
@@ -389,10 +398,18 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         </HelpText>
 
         <Checkbox
-          id="IntakeForm-IsProductManagerSameAsRequester"
+          id="IntakeForm-prodManagerSameAsRequester"
           label="CMS Product Manager is same as requester"
-          name="isProductManagerSameAsRequester"
-          onChange={() => null}
+          name="prodManagerSameAsRequester"
+          checked={!!prodManagerSameAsRequester}
+          onChange={e => {
+            setContactDetails(
+              'productManager',
+              e.target.checked ? watch('requester') : undefined
+            );
+
+            setProdManagerSameAsRequester(!prodManagerSameAsRequester);
+          }}
         />
 
         <Controller
@@ -407,14 +424,25 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <CedarContactSelect
                 {...field}
                 id={field.name}
-                onChange={contact => {
-                  field.onChange({
-                    ...field.value,
-                    commonName: contact?.commonName || '',
-                    euaUserId: contact?.euaUserId || '',
-                    email: contact?.email || ''
-                  });
+                // Manually set value so that field rerenders when values are updated
+                value={{
+                  euaUserId: watch('productManager.euaUserId'),
+                  commonName: watch('productManager.commonName'),
+                  email: watch('productManager.email')
                 }}
+                // Manually update fields so that email field rerenders
+                onChange={contact => {
+                  setValue(
+                    'productManager.commonName',
+                    contact?.commonName || ''
+                  );
+                  setValue(
+                    'productManager.euaUserId',
+                    contact?.euaUserId || ''
+                  );
+                  setValue('productManager.email', contact?.email || '');
+                }}
+                disabled={prodManagerSameAsRequester}
               />
             </FormGroup>
           )}
