@@ -140,7 +140,9 @@ export default {
             'No, this is a completely new system, service, or contract',
             'Yes, an existing system',
             'Yes, an existing service or other contract'
-          ]
+          ],
+          warning:
+            'Please only select this option if this is completely new work and is not at all related to an existing effort. If this is new work for an existing system, such as a sub-system or other new IT effort, please choose one of the other options below.'
         },
         contractNumberNew: {
           label: 'Contract number',
