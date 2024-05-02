@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -54,41 +54,37 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     updateContact
     // deleteContact
   } = useSystemIntakeContacts(systemIntake.id);
-  const { requester, businessOwner, productManager, isso } = contacts.data;
-
-  const defaultValues: ContactDetailsForm = useMemo(
-    () => ({
-      requester,
-      businessOwner,
-      productManager,
-      isso: {
-        isPresent: !!isso?.euaUserId,
-        ...isso
-      },
-      governanceTeams: {
-        isPresent: systemIntake.governanceTeams.isPresent,
-        teams:
-          systemIntake.governanceTeams.teams?.map(team => ({
-            collaborator: team.collaborator,
-            name: team.name,
-            key: team.key
-          })) || []
-      }
-    }),
-    [
-      requester,
-      businessOwner,
-      productManager,
-      isso,
-      systemIntake.governanceTeams
-    ]
-  );
 
   const form = useEasiForm<ContactDetailsForm>({
-    defaultValues
+    defaultValues: async () =>
+      contacts
+        .refetch()
+        .then(({ requester, businessOwner, productManager, isso }) => ({
+          requester,
+          businessOwner,
+          productManager,
+          isso: {
+            isPresent: !!isso?.euaUserId,
+            ...isso
+          },
+          governanceTeams: {
+            isPresent: systemIntake.governanceTeams.isPresent,
+            teams:
+              systemIntake.governanceTeams.teams?.map(team => ({
+                collaborator: team.collaborator,
+                name: team.name,
+                key: team.key
+              })) || []
+          }
+        }))
   });
 
-  const { control, handleSubmit, setValue } = form;
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { defaultValues }
+  } = form;
 
   const [mutate] = useMutation<
     UpdateSystemIntakeContactDetails,
@@ -156,7 +152,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     }).then(() => history.push('request-details'));
   });
 
-  if (contacts.loading) return <PageLoading />;
+  // Wait until contacts are done loading and default values have been updated
+  if (contacts.loading || !defaultValues) return <PageLoading />;
 
   return (
     <>
