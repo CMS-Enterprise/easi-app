@@ -29,6 +29,44 @@ jobs:
         run: |
           echo "Deploy confirmed! 🚀"
 
+  deploy_cedar_proxy:
+    runs-on: ubuntu-latest
+    needs: confirm_deploy
+    environment: ${{ inputs.env }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
+          aws-region: us-west-2
+      - name: Check for changes to cedarproxy folder
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            cedarproxy:
+              - 'pkg/cedar/core/gen/**'
+              - 'cedarproxy/**'
+      - name: Clean the database
+        if: ${{ contains(inputs.env, 'dev') && steps.changes.outputs.cedarproxy == 'true' }}
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: easi-cedarproxy
+          NEW_IMAGE_TAG: ${{ env.GIT_HASH }}
+          TASK_FAMILY: "easi-cedarproxy-${{ inputs.env }}"
+          ECS_CLUSTER: "${{ inputs.env }}-easi-app"
+          SERVICE_NAME: easi-cedarproxy
+          SECURITY_GROUP_NAME: "ecs-easi-cedarproxy-${{ inputs.env }}"
+        run: |
+          export TASK_REVISION=$(./scripts/update_ecs_task_definition.sh)
+          ./scripts/run_ecs_task.sh
+      - name: Announce failure
+        if: ${{ failure() }}
+        run: |
+          ./scripts/github-action-announce-broken-branch
+
   database_actions:
     runs-on: ubuntu-latest
     needs: confirm_deploy
@@ -42,7 +80,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE_TO_ASSUME }}
-          aws-region: us-west-2   
+          aws-region: us-west-2
       - name: Clean the database
         if: ${{ contains(inputs.env, 'dev') && vars.ENABLE_DEV_DB_CLEAN == '1' }}
         env:
@@ -110,7 +148,7 @@ jobs:
         if: ${{ failure() }}
         run: |
           ./scripts/github-action-announce-broken-branch
-  
+
   deploy_frontend:
     needs: [database_actions]
     runs-on: ubuntu-latest
