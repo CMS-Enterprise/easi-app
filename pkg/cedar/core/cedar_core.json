@@ -671,6 +671,54 @@
         }
       }
     },
+    "/budgetSystemCost": {
+      "get": {
+        "tags": [
+          "budgetSystemCost"
+        ],
+        "summary": "",
+        "description": "",
+        "operationId": "budgetSystemCostFind",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "query",
+            "description": "ID of the system that the budget is associated with. Adding this parameter will instruct the interface to only return the system matching the systemId.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BudgetActualSystemCostResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "401": {
+            "description": "Access Denied",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
     "/person/{id}": {
       "get": {
         "tags": [
@@ -4014,6 +4062,20 @@
         }
       }
     },
+    "BudgetActualSystemCost": {
+      "type": "object",
+      "properties": {
+        "ActualSystemCost": {
+          "type": "string"
+        },
+        "systemId": {
+          "type": "string"
+        },
+        "FiscalYear": {
+          "type": "string"
+        }
+      }
+    },
     "BudgetIds": {
       "type": "object",
       "required": [
@@ -4186,16 +4248,38 @@
     "BusinessOwnerInformation": {
       "type": "object",
       "properties": {
-        "storesBeneficiaryAddress": {
-          "type": "boolean",
-          "example": true
-        },
         "beneficiaryAddressPurpose": {
           "type": "array",
           "items": {
             "type": "string",
             "example": "Customer Service"
           }
+        },
+        "costPerYear": {
+          "type": "string",
+          "example": "13759255.66"
+        },
+        "isCmsOwned": {
+          "type": "boolean",
+          "example": true
+        },
+        "editBeneficiaryInformation": {
+          "type": "boolean"
+        },
+        "beneficiaryAddressPurposeOther": {
+          "type": "string",
+          "example": "Customer Service"
+        },
+        "508UserInterface": {
+          "type": "string"
+        },
+        "numberOfSupportedUsersPerMonth": {
+          "type": "string",
+          "example": "314"
+        },
+        "storesBeneficiaryAddress": {
+          "type": "boolean",
+          "example": true
         },
         "beneficiaryAddressSource": {
           "type": "array",
@@ -4216,25 +4300,15 @@
           "type": "string",
           "example": "100"
         },
-        "costPerYear": {
-          "type": "string",
-          "example": "13759255.66"
-        },
-        "isCmsOwned": {
-          "type": "boolean",
-          "example": true
-        },
         "numberOfFederalFte": {
           "type": "string",
           "example": "25"
         },
-        "beneficiaryAddressPurposeOther": {
-          "type": "string",
-          "example": "Customer Service"
-        },
-        "numberOfSupportedUsersPerMonth": {
-          "type": "string",
-          "example": "314"
+        "beneficiaryInformation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -4646,6 +4720,9 @@
           "example": "HHSM500201600052I",
           "description": "Contract number"
         },
+        "ContractNumber": {
+          "type": "string"
+        },
         "systemId": {
           "type": "string",
           "example": "123-45-678",
@@ -4655,6 +4732,29 @@
           "type": "string",
           "example": "11-22-333"
         },
+        "ServiceProvided": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "example": "Strategic partners acquisition readiness",
+          "description": "Contract description"
+        },
+        "OrderNumber": {
+          "type": "string"
+        },
+        "POPEndDate": {
+          "type": "string"
+        },
+        "ProductServiceDescription": {
+          "type": "string"
+        },
+        "IsDeliveryOrg": {
+          "type": "string"
+        },
+        "ProjectTitle": {
+          "type": "string"
+        },
         "contractADO": {
           "type": "string",
           "example": "yes",
@@ -4662,11 +4762,6 @@
         },
         "POPStartDate": {
           "type": "string"
-        },
-        "description": {
-          "type": "string",
-          "example": "Strategic partners acquisition readiness",
-          "description": "Contract description"
         },
         "contractName": {
           "type": "string"
@@ -4679,9 +4774,6 @@
           "type": "string",
           "example": "HHSM500201600052I",
           "description": "Parent contract number"
-        },
-        "POPEndDate": {
-          "type": "string"
         }
       }
     },
@@ -5136,10 +5228,16 @@
           "example": "Most of this funding is directly and only for this system (over 80%)",
           "description": "Description of the allocation of this budget to the system in question"
         },
+        "FiscalYear": {
+          "type": "string"
+        },
         "fundingId": {
           "type": "string",
           "example": "123-45-678",
           "description": "Cross-reference ID for relationship between budget project and application in system of record"
+        },
+        "FundingSource": {
+          "type": "string"
         },
         "id": {
           "type": "string",
@@ -5150,6 +5248,9 @@
           "type": "string",
           "example": "000010",
           "description": "OFM budget project ID in system of record"
+        },
+        "Name": {
+          "type": "string"
         },
         "projectTitle": {
           "type": "string",
@@ -5304,9 +5405,27 @@
           "type": "boolean",
           "example": true
         },
+        "networkTrafficEncryptionKeyManagement": {
+          "type": "string"
+        },
+        "noPlannedMajorRefresh": {
+          "type": "boolean"
+        },
+        "systemDataLocation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recordsManagementDisposalPlan": {
+          "type": "string"
+        },
         "hardCodedIpAddress": {
           "type": "boolean",
           "example": true
+        },
+        "noPersistentRecordsFlag": {
+          "type": "boolean"
         },
         "ecapParticipation": {
           "type": "boolean",
@@ -5316,6 +5435,9 @@
           "type": "boolean",
           "example": true
         },
+        "recordsManagementDisposalLocation": {
+          "type": "string"
+        },
         "businessArtifactsOnDemand": {
           "type": "boolean",
           "example": true
@@ -5323,6 +5445,9 @@
         "testScriptsOnDemand": {
           "type": "boolean",
           "example": true
+        },
+        "legalHoldCaseName": {
+          "type": "string"
         },
         "frontendAccessType": {
           "type": "string",
@@ -5336,6 +5461,12 @@
           "type": "string",
           "example": "Accessible to a CMS-internal network only"
         },
+        "systemDataLocationNotes": {
+          "type": "string"
+        },
+        "dataAtRestEncryptionKeyManagement": {
+          "type": "string"
+        },
         "testPlanOnDemand": {
           "type": "boolean",
           "example": true
@@ -5348,9 +5479,15 @@
           "type": "boolean",
           "example": true
         },
+        "authoritativeDatasource": {
+          "type": "string"
+        },
         "systemDesignOnDemand": {
           "type": "boolean",
           "example": true
+        },
+        "locallyStoredUserInformation": {
+          "type": "boolean"
         },
         "plansToRetireReplace": {
           "type": "string",
@@ -5373,13 +5510,26 @@
           "type": "string",
           "example": "Yes, transition to IPv6"
         },
+        "multifactorAuthenticationMethodOther": {
+          "type": "string"
+        },
         "ip6EnabledAssetPercent": {
           "type": "string",
           "example": "Between 20% and 49%"
         },
+        "recordsUnderLegalHold": {
+          "type": "boolean"
+        },
         "deploymentFrequency": {
           "type": "string",
           "example": "Monthly"
+        },
+        "multifactorAuthenticationMethod": {
+          "type": "array",
+          "example": "\"\"",
+          "items": {
+            "type": "string"
+          }
         },
         "recordsManagementBucket": {
           "type": "array",
@@ -5388,6 +5538,9 @@
             "example": "Administrative Management"
           }
         },
+        "noMajorRefresh": {
+          "type": "boolean"
+        },
         "omDocumentationOnDemand": {
           "type": "boolean",
           "example": true
@@ -5395,6 +5548,9 @@
         "systemCustomization": {
           "type": "string",
           "example": "Less Than 20% Customization"
+        },
+        "adHocAgileDeploymentFrequency": {
+          "type": "string"
         }
       }
     },
@@ -5543,6 +5699,24 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "BudgetActualSystemCostResponse": {
+      "type": "object",
+      "required": [
+        "count"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "BudgetActualCost": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BudgetActualSystemCost"
           }
         }
       }
