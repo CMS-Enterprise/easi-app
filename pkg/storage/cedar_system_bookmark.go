@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 
 	"go.uber.org/zap"
@@ -10,6 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlqueries"
 )
 
 // CreateCedarSystemBookmark creates a new cedar system bookmark object in the database
@@ -59,30 +61,51 @@ func (s *Store) FetchCedarSystemBookmarks(ctx context.Context) ([]*models.CedarS
 	return results, nil
 }
 
-// func (s *Store) FetchCedarSystemBookmarksBySystemIDsLOADER(ctx context.Context, cedarSystemIDs []string) ([]*models.CedarSystemBookmark, error) {
-// 	stmt, err := s.db.PrepareNamed(sqlqueries.CedarBookmarkSystemsForm.SelectLOADER)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer stmt.Close()
+type extractCedarSystemID struct {
+	CedarSystemID string `json:"cedar_system_id"`
+}
 
-// 	var bookmarkedSystems []*models.CedarSystemBookmark
+func extractCedarSystemIDs(paramsAsJSON string) ([]string, error) {
+	var extracted []extractCedarSystemID
+	if err := json.Unmarshal([]byte(paramsAsJSON), &extracted); err != nil {
+		return nil, err
+	}
 
-// 	euaUserID := appcontext.Principal(ctx).ID()
-// 	if err := s.db.Select(&results, `SELECT * FROM cedar_system_bookmarks WHERE eua_user_id=$1 AND cedar_system_id = ANY($2::TEXT[])`, euaUserID, cedarSystemIDs); err != nil {
-// 		if errors.Is(err, sql.ErrNoRows) {
-// 			return results, nil
-// 		}
+	out := make([]string, len(extracted))
+	for i := range extracted {
+		out[i] = extracted[i].CedarSystemID
+	}
 
-// 		return nil, &apperrors.QueryError{
-// 			Err:       err,
-// 			Model:     models.CedarSystemBookmark{},
-// 			Operation: apperrors.QueryFetch,
-// 		}
-// 	}
+	return out, nil
+}
 
-// 	return results, nil
-// }
+func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, paramTableJSON string) (map[string]struct{}, error) {
+	stmt, err := s.db.PrepareNamed(sqlqueries.CedarBookmarkSystemsForm.SelectLOADER)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	var count int
+	if err := stmt.Select(&count, map[string]interface{}{
+		"param_table_json": paramTableJSON,
+	}); err != nil {
+		return nil, err
+	}
+
+	ids, err := extractCedarSystemIDs(paramTableJSON)
+	if err != nil {
+		return nil, err
+	}
+
+	store := map[string]struct{}{}
+
+	for _, id := range ids {
+		store[id] = struct{}{}
+	}
+
+	return store, nil
+}
 
 // DeleteCedarSystemBookmark deletes an existing cedar system bookmark object in the database
 func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookmark *models.CedarSystemBookmark) (*models.CedarSystemBookmark, error) {
