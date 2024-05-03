@@ -59,24 +59,30 @@ func (s *Store) FetchCedarSystemBookmarks(ctx context.Context) ([]*models.CedarS
 	return results, nil
 }
 
-func (s *Store) FetchCedarSystemBookmarksBySystemIDs(ctx context.Context, cedarSystemIDs []string) ([]*models.CedarSystemBookmark, error) {
-	results := []*models.CedarSystemBookmark{}
+// func (s *Store) FetchCedarSystemBookmarksBySystemIDsLOADER(ctx context.Context, cedarSystemIDs []string) ([]*models.CedarSystemBookmark, error) {
+// 	stmt, err := s.db.PrepareNamed(sqlqueries.CedarBookmarkSystemsForm.SelectLOADER)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	defer stmt.Close()
 
-	euaUserID := appcontext.Principal(ctx).ID()
-	if err := s.db.Select(&results, `SELECT * FROM cedar_system_bookmarks WHERE eua_user_id=$1 AND cedar_system_id = ANY($2::TEXT[])`, euaUserID, cedarSystemIDs); err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return results, nil
-		}
+// 	var bookmarkedSystems []*models.CedarSystemBookmark
 
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     models.CedarSystemBookmark{},
-			Operation: apperrors.QueryFetch,
-		}
-	}
+// 	euaUserID := appcontext.Principal(ctx).ID()
+// 	if err := s.db.Select(&results, `SELECT * FROM cedar_system_bookmarks WHERE eua_user_id=$1 AND cedar_system_id = ANY($2::TEXT[])`, euaUserID, cedarSystemIDs); err != nil {
+// 		if errors.Is(err, sql.ErrNoRows) {
+// 			return results, nil
+// 		}
 
-	return results, nil
-}
+// 		return nil, &apperrors.QueryError{
+// 			Err:       err,
+// 			Model:     models.CedarSystemBookmark{},
+// 			Operation: apperrors.QueryFetch,
+// 		}
+// 	}
+
+// 	return results, nil
+// }
 
 // DeleteCedarSystemBookmark deletes an existing cedar system bookmark object in the database
 func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookmark *models.CedarSystemBookmark) (*models.CedarSystemBookmark, error) {

@@ -174,6 +174,11 @@ func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *model
 	return cedarRoles, nil
 }
 
+// IsBookmarked is the resolver for the isBookmarked field.
+func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
+	return resolvers.CedarSystemBookmarks(ctx, obj.ID.String)
+}
+
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
 func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error) {
 	ipEnabledCt := int(obj.SystemMaintainerInformation.IPEnabledAssetCount)
@@ -1267,54 +1272,7 @@ func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemI
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
-	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, false, cedarcore.WithEuaIDFilter(requesterEUAID))
-	if err != nil {
-		return nil, err
-	}
-
-	// map for ease of iterating
-	// systemMap := map[string]*models.CedarSystem{}
-	systemMap := map[string]struct {
-		pos    int
-		system *models.CedarSystem
-	}{}
-
-	for i, system := range systems {
-		systemMap[system.ID.String] = struct {
-			pos    int
-			system *models.CedarSystem
-		}{
-			pos:    i,
-			system: system,
-		}
-	}
-
-	systemIDs := make([]string, len(systems))
-	for i := range systemIDs {
-		systemIDs[i] = systems[i].ID.String
-	}
-
-	bookmarkList, err := r.store.FetchCedarSystemBookmarksBySystemIDs(ctx, systemIDs)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, bookmark := range bookmarkList {
-		if _, ok := systemMap[bookmark.CedarSystemID]; !ok {
-			// should not happen, just continue
-			continue
-		}
-
-		systemMap[bookmark.CedarSystemID].system.IsBookmarked = true
-	}
-
-	retVal := make([]*models.CedarSystem, len(systemMap))
-	// put it back together in order
-	for _, sys := range systemMap {
-		retVal[sys.pos] = sys.system
-	}
-
-	return retVal, nil
+	return r.cedarCoreClient.GetSystemSummary(ctx, false, cedarcore.WithEuaIDFilter(requesterEUAID))
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.

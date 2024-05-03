@@ -1,21 +1,22 @@
 package dataloaders
 
-import (
-	"context"
+// func (loaders *DataLoaders) getBookmarkedCEDARSystems(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
+// 	logger := appcontext.ZLogger(ctx)
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/graph-gophers/dataloader"
-)
+// 	arrayCK := ConvertToKeyArgsArray(keys)
+// 	marshaledParams, err := arrayCK.ToJSONArray()
+// 	if err != nil {
+// 		logger.Error("issue converting keys to JSON for data loader in Bookmarked CEDAR Systems")
+// 		return nil
+// 	}
 
-func (loaders *DataLoaders) getBookmarkedCEDARSystemsBySystemIDs(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
-	logger := appcontext.ZLogger(ctx)
+// 	output := make([]*dataloader.Result, len(keys))
+// 	bookmarkMap, err := loaders.DataReader.Store.FetchCedarSystemBookmarksBySystemIDs()
+// }
 
-	arrayCK := ConvertToKeyArgsArray(keys)
-	marshaledParams, err := arrayCK.ToJSONArray()
-	if err != nil {
-		logger.Error("issue converting keys to JSON for data loader in Bookmarked CEDAR Systems")
-		return nil
-	}
+// func GetBookmarkedCEDARSystems(ctx context.Context) ([]*models.CedarSystemBookmark,error){
+// 	allLoaders := Loaders(ctx)
+// 	loader := allLoaders.cedarSystemBookmarksLoader
 
-	output := make([]*dataloader.Result, len(keys))
-}
+// 	key := NewKeyArgs()
+// }
