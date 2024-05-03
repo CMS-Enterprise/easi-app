@@ -33,6 +33,10 @@ func (loaders *DataLoaders) getBookmarkedCEDARSystems(ctx context.Context, keys 
 		return output
 	}
 
+	if bookmarkMap == nil {
+		bookmarkMap = map[string]struct{}{}
+	}
+
 	for index, key := range keys {
 		ck, ok := key.Raw().(KeyArgs)
 		if !ok {
@@ -61,6 +65,7 @@ func GetCedarSystemIsBookmarked(ctx context.Context, cedarSystemId string) (bool
 
 	key := NewKeyArgs()
 	key.Args["cedar_system_id"] = cedarSystemId
+	key.Args["eua_user_id"] = appcontext.Principal(ctx).ID()
 
 	thunk := loader.Loader.Load(ctx, key)
 	result, err := thunk()

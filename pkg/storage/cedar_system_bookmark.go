@@ -3,7 +3,6 @@ package storage
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"errors"
 
 	"go.uber.org/zap"
@@ -61,24 +60,6 @@ func (s *Store) FetchCedarSystemBookmarks(ctx context.Context) ([]*models.CedarS
 	return results, nil
 }
 
-type extractCedarSystemID struct {
-	CedarSystemID string `json:"cedar_system_id"`
-}
-
-func extractCedarSystemIDs(paramsAsJSON string) ([]string, error) {
-	var extracted []extractCedarSystemID
-	if err := json.Unmarshal([]byte(paramsAsJSON), &extracted); err != nil {
-		return nil, err
-	}
-
-	out := make([]string, len(extracted))
-	for i := range extracted {
-		out[i] = extracted[i].CedarSystemID
-	}
-
-	return out, nil
-}
-
 func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, paramTableJSON string) (map[string]struct{}, error) {
 	stmt, err := s.db.PrepareNamed(sqlqueries.CedarBookmarkSystemsForm.SelectLOADER)
 	if err != nil {
@@ -86,22 +67,17 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, paramTab
 	}
 	defer stmt.Close()
 
-	var count int
-	if err := stmt.Select(&count, map[string]interface{}{
+	var bookmarks []*models.CedarSystemBookmark
+	if err := stmt.Select(&bookmarks, map[string]interface{}{
 		"param_table_json": paramTableJSON,
 	}); err != nil {
-		return nil, err
-	}
-
-	ids, err := extractCedarSystemIDs(paramTableJSON)
-	if err != nil {
-		return nil, err
+		return map[string]struct{}{}, err
 	}
 
 	store := map[string]struct{}{}
 
-	for _, id := range ids {
-		store[id] = struct{}{}
+	for _, bookmark := range bookmarks {
+		store[bookmark.CedarSystemID] = struct{}{}
 	}
 
 	return store, nil
