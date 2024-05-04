@@ -71,7 +71,7 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, paramTab
 	if err := stmt.Select(&bookmarks, map[string]interface{}{
 		"param_table_json": paramTableJSON,
 	}); err != nil {
-		return map[string]struct{}{}, err
+		return nil, err
 	}
 
 	store := map[string]struct{}{}

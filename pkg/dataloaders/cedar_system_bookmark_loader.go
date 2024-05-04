@@ -22,19 +22,15 @@ func (loaders *DataLoaders) getBookmarkedCEDARSystems(ctx context.Context, keys 
 
 	output := make([]*dataloader.Result, len(keys))
 	bookmarkMap, err := loaders.DataReader.Store.FetchCedarSystemIsBookmarkedLOADER(ctx, marshaledParams)
-	if err != nil {
+	if err != nil || bookmarkMap == nil {
 		for i := range output {
 			output[i] = &dataloader.Result{
 				Error: err,
-				Data:  nil,
+				Data:  false,
 			}
 		}
 
 		return output
-	}
-
-	if bookmarkMap == nil {
-		bookmarkMap = map[string]struct{}{}
 	}
 
 	for index, key := range keys {
