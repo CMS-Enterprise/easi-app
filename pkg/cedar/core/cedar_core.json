@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "The CMS Enterprise Data and Analytics Repository (CEDAR) Core API provides the CRUD (where applicable) operations for Budget, Component, Contract, Data Center, Deployment, Exchange, Person, Role Stake Holder, System Detail, System Summary and User objects.\n\n# Specification\n\nThis API is published in Swagger JSON 2.0 format and can be exported for consumption. For each of the resource, API provides **GET**, **POST**, **DELETE** operations. And to invoke, any of these methods, you can request for an `access-token`. In addition, POST & DELETE methods are not permitted in Production.\n",
+    "description": "The CMS Enterprise Data and Analytics Repository (CEDAR) Core API's. \n These interfaces contain CRUD (where applicable) operations for Budget, Component, Contract, Data Center, Deployment, Exchange, Person, Role Stake Holder, System Detail, System Summary and User.\n",
     "version": "2.0.0",
     "title": "CEDAR Core API",
     "termsOfService": "https://www.cedardev.cms.gov/",
@@ -9,15 +9,11 @@
       "email": "EnterpriseArchitecture@cms.hhs.gov"
     }
   },
-  "host": "webmethods-apigw.cedarimpl.cms.gov",
+  "host": "webmethods-apigw.cedar.cms.gov",
   "basePath": "/gateway/CEDAR Core API/2.0.0",
   "tags": [
     {
       "name": "softwareProducts",
-      "description": ""
-    },
-    {
-      "name": "url",
       "description": ""
     },
     {
@@ -91,6 +87,10 @@
     {
       "name": "user",
       "description": "CEDAR system users"
+    },
+    {
+      "name": "url",
+      "description": "CMS URLs"
     }
   ],
   "schemes": [
