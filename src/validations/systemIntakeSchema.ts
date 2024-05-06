@@ -5,7 +5,8 @@ import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntakeDocumentCommonType } from 'types/graphql-global-types';
 
 const governanceTeamNames = cmsGovernanceTeams.map(team => team.value);
-const SystemIntakeValidationSchema: any = {
+
+const SystemIntakeValidationSchema = {
   contactDetails: Yup.object().shape({
     requester: Yup.object().shape({
       commonName: Yup.string().trim().required('Enter a name for this request'),
@@ -22,7 +23,7 @@ const SystemIntakeValidationSchema: any = {
         .trim()
         .required('Enter the CMS Project/Product Manager or Lead name'),
       component: Yup.string().required(
-        'Select a project/ product manager, or Lead Component'
+        'Select a project/product manager, or Lead Component'
       )
     }),
     isso: Yup.object().shape({

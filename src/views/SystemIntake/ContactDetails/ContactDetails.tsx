@@ -3,6 +3,7 @@ import { Controller, FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Checkbox,
   Dropdown,
@@ -43,6 +44,7 @@ import {
   SystemIntakeContactProps,
   SystemIntakeRoleKeys
 } from 'types/systemIntake';
+import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import GovernanceTeams from './GovernanceTeams';
@@ -100,7 +102,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 key: team.key
               })) || []
           }
-        }))
+        })),
+    resolver: yupResolver(SystemIntakeValidationSchema.contactDetails)
   });
 
   const {
@@ -259,7 +262,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Label htmlFor={field.name}>
                 {t('contactDetails.requester')}
               </Label>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              {!!error && <FieldErrorMsg>t(error.message)</FieldErrorMsg>}
               <TextInput {...field} id={field.name} type="text" disabled />
             </FormGroup>
           )}
@@ -273,7 +276,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Label htmlFor={field.name}>
                 {t('contactDetails.requesterComponent')}
               </Label>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
 
               <Dropdown
                 {...field}
@@ -327,34 +332,43 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         <Controller
           control={control}
           name="businessOwner"
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
-            <FormGroup error={!!error}>
-              <Label htmlFor={field.name}>
-                {t('contactDetails.businessOwner.nameField')}
-              </Label>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <CedarContactSelect
-                {...field}
-                id={field.name}
-                // Manually set value so that field rerenders when values are updated
-                value={{
-                  euaUserId: watch('businessOwner.euaUserId'),
-                  commonName: watch('businessOwner.commonName'),
-                  email: watch('businessOwner.email')
-                }}
-                // Manually update fields so that email field rerenders
-                onChange={contact => {
-                  setValue(
-                    'businessOwner.commonName',
-                    contact?.commonName || ''
-                  );
-                  setValue('businessOwner.euaUserId', contact?.euaUserId || '');
-                  setValue('businessOwner.email', contact?.email || '');
-                }}
-                disabled={busOwnerSameAsRequester}
-              />
-            </FormGroup>
-          )}
+          render={({ field: { ref, ...field } }) => {
+            const error = errors?.businessOwner?.commonName;
+
+            return (
+              <FormGroup error={!!error}>
+                <Label htmlFor={field.name}>
+                  {t('contactDetails.businessOwner.nameField')}
+                </Label>
+                {!!error?.message && (
+                  <FieldErrorMsg>{t(error?.message)}</FieldErrorMsg>
+                )}
+                <CedarContactSelect
+                  {...field}
+                  id={field.name}
+                  // Manually set value so that field rerenders when values are updated
+                  value={{
+                    euaUserId: watch('businessOwner.euaUserId'),
+                    commonName: watch('businessOwner.commonName'),
+                    email: watch('businessOwner.email')
+                  }}
+                  // Manually update fields so that email field rerenders
+                  onChange={contact => {
+                    setValue(
+                      'businessOwner.commonName',
+                      contact?.commonName || ''
+                    );
+                    setValue(
+                      'businessOwner.euaUserId',
+                      contact?.euaUserId || ''
+                    );
+                    setValue('businessOwner.email', contact?.email || '');
+                  }}
+                  disabled={busOwnerSameAsRequester}
+                />
+              </FormGroup>
+            );
+          }}
         />
 
         <Controller
@@ -365,7 +379,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Label htmlFor={field.name}>
                 {t('contactDetails.businessOwner.component')}
               </Label>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
 
               <Dropdown
                 {...field}
@@ -384,12 +400,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         <Controller
           control={control}
           name="businessOwner.email"
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
-            <FormGroup error={!!error}>
+          render={({ field: { ref, ...field } }) => (
+            <FormGroup>
               <Label htmlFor={field.name}>
                 {t('contactDetails.businessOwner.email')}
               </Label>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
               <TextInput {...field} id={field.name} type="text" disabled />
             </FormGroup>
           )}
@@ -423,37 +438,43 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         <Controller
           control={control}
           name="productManager"
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
-            <FormGroup error={!!error}>
-              <Label htmlFor={field.name}>
-                {t('contactDetails.productManager.nameField')}
-              </Label>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
-              <CedarContactSelect
-                {...field}
-                id={field.name}
-                // Manually set value so that field rerenders when values are updated
-                value={{
-                  euaUserId: watch('productManager.euaUserId'),
-                  commonName: watch('productManager.commonName'),
-                  email: watch('productManager.email')
-                }}
-                // Manually update fields so that email field rerenders
-                onChange={contact => {
-                  setValue(
-                    'productManager.commonName',
-                    contact?.commonName || ''
-                  );
-                  setValue(
-                    'productManager.euaUserId',
-                    contact?.euaUserId || ''
-                  );
-                  setValue('productManager.email', contact?.email || '');
-                }}
-                disabled={prodManagerSameAsRequester}
-              />
-            </FormGroup>
-          )}
+          render={({ field: { ref, ...field } }) => {
+            const error = errors?.productManager?.commonName;
+
+            return (
+              <FormGroup error={!!error}>
+                <Label htmlFor={field.name}>
+                  {t('contactDetails.productManager.nameField')}
+                </Label>
+                {!!error?.message && (
+                  <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+                )}
+                <CedarContactSelect
+                  {...field}
+                  id={field.name}
+                  // Manually set value so that field rerenders when values are updated
+                  value={{
+                    euaUserId: watch('productManager.euaUserId'),
+                    commonName: watch('productManager.commonName'),
+                    email: watch('productManager.email')
+                  }}
+                  // Manually update fields so that email field rerenders
+                  onChange={contact => {
+                    setValue(
+                      'productManager.commonName',
+                      contact?.commonName || ''
+                    );
+                    setValue(
+                      'productManager.euaUserId',
+                      contact?.euaUserId || ''
+                    );
+                    setValue('productManager.email', contact?.email || '');
+                  }}
+                  disabled={prodManagerSameAsRequester}
+                />
+              </FormGroup>
+            );
+          }}
         />
 
         <Controller
@@ -464,7 +485,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Label htmlFor={field.name}>
                 {t('contactDetails.productManager.component')}
               </Label>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+              {!!error?.message && (
+                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+              )}
 
               <Dropdown {...field} id="IntakeForm-ProductManagerComponent">
                 <option value="" disabled>
@@ -479,12 +502,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         <Controller
           control={control}
           name="productManager.email"
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
-            <FormGroup error={!!error}>
+          render={({ field: { ref, ...field } }) => (
+            <FormGroup>
               <Label htmlFor={field.name}>
                 {t('contactDetails.productManager.email')}
               </Label>
-              {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
               <TextInput
                 {...field}
                 id={field.name}
@@ -528,31 +550,32 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     <Controller
                       control={control}
                       name="isso"
-                      render={({
-                        field: { ref, ...field },
-                        fieldState: { error }
-                      }) => (
-                        <FormGroup error={!!error}>
-                          <Label htmlFor={field.name}>
-                            {t('contactDetails.isso.name')}
-                          </Label>
-                          {!!error && (
-                            <FieldErrorMsg>{t('Error')}</FieldErrorMsg>
-                          )}
-                          <CedarContactSelect
-                            {...field}
-                            id={field.name}
-                            onChange={contact => {
-                              field.onChange({
-                                ...field.value,
-                                commonName: contact?.commonName || '',
-                                euaUserId: contact?.euaUserId || '',
-                                email: contact?.email || ''
-                              });
-                            }}
-                          />
-                        </FormGroup>
-                      )}
+                      render={({ field: { ref, ...field } }) => {
+                        const error = errors?.isso?.commonName;
+
+                        return (
+                          <FormGroup error={!!error}>
+                            <Label htmlFor={field.name}>
+                              {t('contactDetails.isso.name')}
+                            </Label>
+                            {!!error?.message && (
+                              <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
+                            )}
+                            <CedarContactSelect
+                              {...field}
+                              id={field.name}
+                              onChange={contact => {
+                                field.onChange({
+                                  ...field.value,
+                                  commonName: contact?.commonName || '',
+                                  euaUserId: contact?.euaUserId || '',
+                                  email: contact?.email || ''
+                                });
+                              }}
+                            />
+                          </FormGroup>
+                        );
+                      }}
                     />
 
                     <Controller
@@ -566,8 +589,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                           <Label htmlFor={field.name}>
                             {t('contactDetails.isso.component')}
                           </Label>
-                          {!!error && (
-                            <FieldErrorMsg>{t('Error')}</FieldErrorMsg>
+                          {!!error?.message && (
+                            <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
                           )}
 
                           <Dropdown {...field} id="IntakeForm-IssoComponent">
@@ -583,17 +606,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     <Controller
                       control={control}
                       name="isso.email"
-                      render={({
-                        field: { ref, ...field },
-                        fieldState: { error }
-                      }) => (
-                        <FormGroup error={!!error}>
+                      render={({ field: { ref, ...field } }) => (
+                        <FormGroup>
                           <Label htmlFor={field.name}>
                             {t('contactDetails.isso.email')}
                           </Label>
-                          {!!error && (
-                            <FieldErrorMsg>{t('Error')}</FieldErrorMsg>
-                          )}
                           <TextInput
                             {...field}
                             id={field.name}
