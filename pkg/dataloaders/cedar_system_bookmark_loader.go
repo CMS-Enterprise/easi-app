@@ -48,7 +48,6 @@ func (loaders *DataLoaders) getBookmarkedCEDARSystems(ctx context.Context, keys 
 
 		resKey := fmt.Sprint(rawKey)
 		_, ok = bookmarkMap[resKey]
-
 		output[index] = &dataloader.Result{Data: ok, Error: nil}
 	}
 
