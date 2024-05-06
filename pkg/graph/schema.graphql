@@ -225,8 +225,11 @@ type CedarBusinessOwnerInformation {
 SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
 """
 type CedarSystemMaintainerInformation {
+  adHocAgileDeploymentFrequency: String
 	agileUsed: Boolean
+  authoritativeDatasource: String
 	businessArtifactsOnDemand: Boolean
+  dataAtRestEncryptionKeyManagement: String
 	deploymentFrequency: String
 	devCompletionPercent: String
 	devWorkDescription: String
@@ -236,14 +239,27 @@ type CedarSystemMaintainerInformation {
 	ip6EnabledAssetPercent: String
 	ip6TransitionPlan: String
 	ipEnabledAssetCount: Int
+  legalHoldCaseName: String
+  locallyStoredUserInformation: Boolean
 	majorRefreshDate: Time
+  multifactorAuthenticationMethod: [String!]!
+  multifactorAuthenticationMethodOther: String
 	netAccessibility: String
+  networkTrafficEncryptionKeyManagement: String
+  noMajorRefresh: Boolean
+  noPersistentRecordsFlag: Boolean
+  noPlannedMajorRefresh: Boolean
 	omDocumentationOnDemand: Boolean
 	plansToRetireReplace: String
 	quarterToRetireReplace: String
 	recordsManagementBucket: [String!]!
+  recordsManagementDisposalLocation: String
+  recordsManagementDisposalPlan: String
+  recordsUnderLegalHold: Boolean
 	sourceCodeOnDemand: Boolean
 	systemCustomization: String
+  systemDataLocation: [String!]!
+  systemDataLocationNotes: String
 	systemDesignOnDemand: Boolean
 	systemProductionDate: Time
 	systemRequirementsOnDemand: Boolean
