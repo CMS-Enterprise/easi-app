@@ -47,8 +47,11 @@ type CedarBusinessOwnerInformation struct {
 	BeneficiaryAddressPurposeOther *string  `json:"beneficiaryAddressPurposeOther,omitempty"`
 	BeneficiaryAddressSource       []string `json:"beneficiaryAddressSource"`
 	BeneficiaryAddressSourceOther  *string  `json:"beneficiaryAddressSourceOther,omitempty"`
+	BeneficiaryInformation         []string `json:"beneficiaryInformation"`
 	CostPerYear                    *string  `json:"costPerYear,omitempty"`
+	EditBeneficiaryInformation     *bool    `json:"editBeneficiaryInformation,omitempty"`
 	IsCmsOwned                     *bool    `json:"isCmsOwned,omitempty"`
+	Nr508UserInterface             *string  `json:"nr508UserInterface,omitempty"`
 	NumberOfContractorFte          *string  `json:"numberOfContractorFte,omitempty"`
 	NumberOfFederalFte             *string  `json:"numberOfFederalFte,omitempty"`
 	NumberOfSupportedUsersPerMonth *string  `json:"numberOfSupportedUsersPerMonth,omitempty"`
@@ -77,8 +80,8 @@ type CedarSoftwareProductItem struct {
 
 // SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
 type CedarSystemMaintainerInformation struct {
-	AdHocAgileDeploymentFrequency         *string    `json:"adHocAgileDeploymentFrequency,omitempty"`
 	AgileUsed                             *bool      `json:"agileUsed,omitempty"`
+	AdHocAgileDeploymentFrequency         *string    `json:"adHocAgileDeploymentFrequency,omitempty"`
 	AuthoritativeDatasource               *string    `json:"authoritativeDatasource,omitempty"`
 	BusinessArtifactsOnDemand             *bool      `json:"businessArtifactsOnDemand,omitempty"`
 	DataAtRestEncryptionKeyManagement     *string    `json:"dataAtRestEncryptionKeyManagement,omitempty"`

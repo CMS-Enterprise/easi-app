@@ -32,8 +32,11 @@ type BusinessOwnerInformation struct {
 	BeneficiaryAddressPurposeOther zero.String   `json:"beneficiaryAddressPurposeOther"`
 	BeneficiaryAddressSource       []zero.String `json:"beneficiaryAddressSource"`
 	BeneficiaryAddressSourceOther  zero.String   `json:"beneficiaryAddressSourceOther"`
+	BeneficiaryInformation         []zero.String `json:"beneficiaryInformation"`
 	CostPerYear                    zero.String   `json:"costPerYear"`
+	EditBeneficiaryInformation     bool          `json:"editBeneficiaryInformation,omitempty"`
 	IsCmsOwned                     bool          `json:"isCmsOwned"`
+	Nr508UserInterface             zero.String   `json:"nr508UserInterface,omitempty"`
 	NumberOfContractorFte          zero.String   `json:"numberOfContractorFte"`
 	NumberOfFederalFte             zero.String   `json:"numberOfFederalFte"`
 	NumberOfSupportedUsersPerMonth zero.String   `json:"numberOfSupportedUsersPerMonth"`
