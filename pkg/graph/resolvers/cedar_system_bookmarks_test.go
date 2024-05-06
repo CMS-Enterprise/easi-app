@@ -6,13 +6,10 @@ import (
 	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s *ResolverSuite) TestCedarSystemBookmarks() {
 	ctx := s.testConfigs.Context
-
-	euaID := testhelpers.RandomEUAIDNull()
 
 	mockSystems := cedarcoremock.GetSystems()
 	s.Len(mockSystems, 5)
@@ -25,7 +22,6 @@ func (s *ResolverSuite) TestCedarSystemBookmarks() {
 
 	s.Run("saves and retrieves a bookmark", func() {
 		_, err := s.testConfigs.Store.CreateCedarSystemBookmark(ctx, &models.CedarSystemBookmark{
-			EUAUserID:     euaID.String,
 			CedarSystemID: cedarSystemID,
 			CreatedAt:     helpers.PointerTo(time.Now()),
 		})
@@ -39,5 +35,4 @@ func (s *ResolverSuite) TestCedarSystemBookmarks() {
 		s.NoError(err)
 		s.False(isOtherBookmarked)
 	})
-
 }
