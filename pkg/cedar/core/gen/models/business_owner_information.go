@@ -17,6 +17,9 @@ import (
 // swagger:model BusinessOwnerInformation
 type BusinessOwnerInformation struct {
 
+	// 508 user interface
+	Nr508UserInterface string `json:"508UserInterface,omitempty"`
+
 	// beneficiary address purpose
 	BeneficiaryAddressPurpose []string `json:"beneficiaryAddressPurpose"`
 
@@ -31,9 +34,15 @@ type BusinessOwnerInformation struct {
 	// Example: Medicaid Address (State)
 	BeneficiaryAddressSourceOther string `json:"beneficiaryAddressSourceOther,omitempty"`
 
+	// beneficiary information
+	BeneficiaryInformation []string `json:"beneficiaryInformation"`
+
 	// cost per year
 	// Example: 13759255.66
 	CostPerYear string `json:"costPerYear,omitempty"`
+
+	// edit beneficiary information
+	EditBeneficiaryInformation bool `json:"editBeneficiaryInformation,omitempty"`
 
 	// is cms owned
 	// Example: true

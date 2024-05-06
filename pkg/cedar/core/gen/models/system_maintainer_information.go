@@ -19,13 +19,22 @@ import (
 // swagger:model SystemMaintainerInformation
 type SystemMaintainerInformation struct {
 
+	// ad hoc agile deployment frequency
+	AdHocAgileDeploymentFrequency string `json:"adHocAgileDeploymentFrequency,omitempty"`
+
 	// agile used
 	// Example: true
 	AgileUsed bool `json:"agileUsed,omitempty"`
 
+	// authoritative datasource
+	AuthoritativeDatasource string `json:"authoritativeDatasource,omitempty"`
+
 	// business artifacts on demand
 	// Example: true
 	BusinessArtifactsOnDemand bool `json:"businessArtifactsOnDemand,omitempty"`
+
+	// data at rest encryption key management
+	DataAtRestEncryptionKeyManagement string `json:"dataAtRestEncryptionKeyManagement,omitempty"`
 
 	// deployment frequency
 	// Example: Monthly
@@ -63,13 +72,38 @@ type SystemMaintainerInformation struct {
 	// Example: 1
 	IPEnabledAssetCount int32 `json:"ipEnabledAssetCount,omitempty"`
 
+	// legal hold case name
+	LegalHoldCaseName string `json:"legalHoldCaseName,omitempty"`
+
+	// locally stored user information
+	LocallyStoredUserInformation bool `json:"locallyStoredUserInformation,omitempty"`
+
 	// major refresh date
 	// Format: date
 	MajorRefreshDate strfmt.Date `json:"majorRefreshDate,omitempty"`
 
+	// multifactor authentication method
+	// Example: \"\
+	MultifactorAuthenticationMethod []string `json:"multifactorAuthenticationMethod"`
+
+	// multifactor authentication method other
+	MultifactorAuthenticationMethodOther string `json:"multifactorAuthenticationMethodOther,omitempty"`
+
 	// net accessibility
 	// Example: Accessible to a CMS-internal network only
 	NetAccessibility string `json:"netAccessibility,omitempty"`
+
+	// network traffic encryption key management
+	NetworkTrafficEncryptionKeyManagement string `json:"networkTrafficEncryptionKeyManagement,omitempty"`
+
+	// no major refresh
+	NoMajorRefresh bool `json:"noMajorRefresh,omitempty"`
+
+	// no persistent records flag
+	NoPersistentRecordsFlag bool `json:"noPersistentRecordsFlag,omitempty"`
+
+	// no planned major refresh
+	NoPlannedMajorRefresh bool `json:"noPlannedMajorRefresh,omitempty"`
 
 	// om documentation on demand
 	// Example: true
@@ -86,6 +120,15 @@ type SystemMaintainerInformation struct {
 	// records management bucket
 	RecordsManagementBucket []string `json:"recordsManagementBucket"`
 
+	// records management disposal location
+	RecordsManagementDisposalLocation string `json:"recordsManagementDisposalLocation,omitempty"`
+
+	// records management disposal plan
+	RecordsManagementDisposalPlan string `json:"recordsManagementDisposalPlan,omitempty"`
+
+	// records under legal hold
+	RecordsUnderLegalHold bool `json:"recordsUnderLegalHold,omitempty"`
+
 	// source code on demand
 	// Example: true
 	SourceCodeOnDemand bool `json:"sourceCodeOnDemand,omitempty"`
@@ -93,6 +136,12 @@ type SystemMaintainerInformation struct {
 	// system customization
 	// Example: Less Than 20% Customization
 	SystemCustomization string `json:"systemCustomization,omitempty"`
+
+	// system data location
+	SystemDataLocation []string `json:"systemDataLocation"`
+
+	// system data location notes
+	SystemDataLocationNotes string `json:"systemDataLocationNotes,omitempty"`
 
 	// system design on demand
 	// Example: true
