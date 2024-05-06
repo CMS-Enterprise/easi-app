@@ -24,7 +24,6 @@ func (s *StoreTestSuite) TestCreateCedarSystemBookmark() {
 	s.Run("create a new cedar system bookmark", func() {
 		cedarSystemID := "326-1556-0"
 		bookmark := models.CedarSystemBookmark{
-			EUAUserID:     "ANON",
 			CedarSystemID: cedarSystemID,
 		}
 		_, err := s.store.CreateCedarSystemBookmark(ctx, &bookmark)
@@ -48,7 +47,6 @@ func (s *StoreTestSuite) TestDuplicateCedarSystemBookmark() {
 	s.Run("create a duplicate cedar system bookmark and verify created_at updates", func() {
 		cedarSystemID := "326-1556-2"
 		bookmark := models.CedarSystemBookmark{
-			EUAUserID:     "ANON",
 			CedarSystemID: cedarSystemID,
 		}
 		created, err := s.store.CreateCedarSystemBookmark(ctx, &bookmark)
@@ -90,6 +88,5 @@ func (s *StoreTestSuite) TestFetchCedarSystemIsBookmarkedLOADER() {
 		bookmarkMap, err := s.store.FetchCedarSystemIsBookmarkedLOADER(ctx, fmt.Sprintf("[%s]", string(b)))
 		s.NoError(err)
 		s.NotEmpty(bookmarkMap)
-
 	})
 }
