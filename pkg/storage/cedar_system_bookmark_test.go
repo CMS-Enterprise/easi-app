@@ -9,7 +9,6 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 
@@ -73,7 +72,6 @@ func (s *StoreTestSuite) TestFetchCedarSystemIsBookmarkedLOADER() {
 	s.Run("saves and retrieves a bookmark", func() {
 		_, err := s.store.CreateCedarSystemBookmark(ctx, &models.CedarSystemBookmark{
 			CedarSystemID: cedarSystemID,
-			CreatedAt:     helpers.PointerTo(time.Now()),
 		})
 		s.NoError(err)
 

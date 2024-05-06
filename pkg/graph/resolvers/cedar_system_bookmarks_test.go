@@ -1,9 +1,6 @@
 package resolvers
 
 import (
-	"time"
-
-	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -23,7 +20,6 @@ func (s *ResolverSuite) TestCedarSystemBookmarks() {
 	s.Run("saves and retrieves a bookmark", func() {
 		_, err := s.testConfigs.Store.CreateCedarSystemBookmark(ctx, &models.CedarSystemBookmark{
 			CedarSystemID: cedarSystemID,
-			CreatedAt:     helpers.PointerTo(time.Now()),
 		})
 		s.NoError(err)
 
