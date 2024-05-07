@@ -4248,16 +4248,38 @@
     "BusinessOwnerInformation": {
       "type": "object",
       "properties": {
-        "storesBeneficiaryAddress": {
-          "type": "boolean",
-          "example": true
-        },
         "beneficiaryAddressPurpose": {
           "type": "array",
           "items": {
             "type": "string",
             "example": "Customer Service"
           }
+        },
+        "costPerYear": {
+          "type": "string",
+          "example": "13759255.66"
+        },
+        "isCmsOwned": {
+          "type": "boolean",
+          "example": true
+        },
+        "editBeneficiaryInformation": {
+          "type": "boolean"
+        },
+        "beneficiaryAddressPurposeOther": {
+          "type": "string",
+          "example": "Customer Service"
+        },
+        "508UserInterface": {
+          "type": "string"
+        },
+        "numberOfSupportedUsersPerMonth": {
+          "type": "string",
+          "example": "314"
+        },
+        "storesBeneficiaryAddress": {
+          "type": "boolean",
+          "example": true
         },
         "beneficiaryAddressSource": {
           "type": "array",
@@ -4278,25 +4300,15 @@
           "type": "string",
           "example": "100"
         },
-        "costPerYear": {
-          "type": "string",
-          "example": "13759255.66"
-        },
-        "isCmsOwned": {
-          "type": "boolean",
-          "example": true
-        },
         "numberOfFederalFte": {
           "type": "string",
           "example": "25"
         },
-        "beneficiaryAddressPurposeOther": {
-          "type": "string",
-          "example": "Customer Service"
-        },
-        "numberOfSupportedUsersPerMonth": {
-          "type": "string",
-          "example": "314"
+        "beneficiaryInformation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -5393,9 +5405,27 @@
           "type": "boolean",
           "example": true
         },
+        "networkTrafficEncryptionKeyManagement": {
+          "type": "string"
+        },
+        "noPlannedMajorRefresh": {
+          "type": "boolean"
+        },
+        "systemDataLocation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recordsManagementDisposalPlan": {
+          "type": "string"
+        },
         "hardCodedIpAddress": {
           "type": "boolean",
           "example": true
+        },
+        "noPersistentRecordsFlag": {
+          "type": "boolean"
         },
         "ecapParticipation": {
           "type": "boolean",
@@ -5405,6 +5435,9 @@
           "type": "boolean",
           "example": true
         },
+        "recordsManagementDisposalLocation": {
+          "type": "string"
+        },
         "businessArtifactsOnDemand": {
           "type": "boolean",
           "example": true
@@ -5412,6 +5445,9 @@
         "testScriptsOnDemand": {
           "type": "boolean",
           "example": true
+        },
+        "legalHoldCaseName": {
+          "type": "string"
         },
         "frontendAccessType": {
           "type": "string",
@@ -5425,6 +5461,12 @@
           "type": "string",
           "example": "Accessible to a CMS-internal network only"
         },
+        "systemDataLocationNotes": {
+          "type": "string"
+        },
+        "dataAtRestEncryptionKeyManagement": {
+          "type": "string"
+        },
         "testPlanOnDemand": {
           "type": "boolean",
           "example": true
@@ -5437,9 +5479,15 @@
           "type": "boolean",
           "example": true
         },
+        "authoritativeDatasource": {
+          "type": "string"
+        },
         "systemDesignOnDemand": {
           "type": "boolean",
           "example": true
+        },
+        "locallyStoredUserInformation": {
+          "type": "boolean"
         },
         "plansToRetireReplace": {
           "type": "string",
@@ -5462,13 +5510,26 @@
           "type": "string",
           "example": "Yes, transition to IPv6"
         },
+        "multifactorAuthenticationMethodOther": {
+          "type": "string"
+        },
         "ip6EnabledAssetPercent": {
           "type": "string",
           "example": "Between 20% and 49%"
         },
+        "recordsUnderLegalHold": {
+          "type": "boolean"
+        },
         "deploymentFrequency": {
           "type": "string",
           "example": "Monthly"
+        },
+        "multifactorAuthenticationMethod": {
+          "type": "array",
+          "example": "\"\"",
+          "items": {
+            "type": "string"
+          }
         },
         "recordsManagementBucket": {
           "type": "array",
@@ -5477,6 +5538,9 @@
             "example": "Administrative Management"
           }
         },
+        "noMajorRefresh": {
+          "type": "boolean"
+        },
         "omDocumentationOnDemand": {
           "type": "boolean",
           "example": true
@@ -5484,6 +5548,9 @@
         "systemCustomization": {
           "type": "string",
           "example": "Less Than 20% Customization"
+        },
+        "adHocAgileDeploymentFrequency": {
+          "type": "string"
         }
       }
     },
