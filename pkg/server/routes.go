@@ -124,10 +124,9 @@ func (s *Server) routes(
 	// set up CEDAR core API client
 	coreClient := cedarcore.NewClient(
 		appcontext.WithLogger(context.Background(), s.logger),
-		s.Config.GetString(appconfig.CEDARAPIURL),
+		s.Config.GetString(appconfig.CEDARPROXYURL),
 		s.Config.GetString(appconfig.CEDARAPIKey),
 		s.Config.GetString(appconfig.CEDARCoreAPIVersion),
-		s.Config.GetDuration(appconfig.CEDARCacheIntervalKey),
 		s.Config.GetBool(appconfig.CEDARCoreMock),
 	)
 

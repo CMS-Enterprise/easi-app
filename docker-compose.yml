@@ -20,7 +20,8 @@ services:
       - CEDAR_CORE_MOCK
       - CEDAR_INTAKE_ENABLED
       - CEDAR_API_KEY
-      - CEDAR_API_URL=cedarproxy:8001
+      - CEDAR_API_URL
+      - CEDAR_PROXY_URL=cedarproxy:8001
       - CEDAR_CORE_API_VERSION
       - CEDAR_CACHE_INTERVAL
       - CEDAR_EMAIL_ADDRESS

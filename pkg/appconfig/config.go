@@ -161,6 +161,9 @@ const LocalMinioS3SecretKey = "MINIO_SECRET_KEY"
 // AWSRegion is the key for the region we establish a session to for AWS services
 const AWSRegion = "AWS_REGION"
 
+// CEDARPROXYURL is the key for the CEDAR proxy url
+const CEDARPROXYURL = "CEDAR_PROXY_URL"
+
 // CEDARAPIURL is the key for the CEDAR base url
 const CEDARAPIURL = "CEDAR_API_URL"
 

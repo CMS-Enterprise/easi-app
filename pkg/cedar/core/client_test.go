@@ -3,7 +3,6 @@ package cedarcore
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
@@ -28,7 +27,7 @@ func (s *ClientTestSuite) TestClient() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
 	s.Run("Instantiation successful", func() {
-		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, true)
+		c := NewClient(ctx, "fake", "fake", "1.0.0", true)
 		s.NotNil(c)
 	})
 }
