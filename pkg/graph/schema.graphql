@@ -442,6 +442,7 @@ type CedarExchange {
 	containsBeneficiaryAddress: Boolean
 	containsPhi: Boolean
 	containsPii: Boolean
+  containsHealthDisparityData: Boolean
 	dataExchangeAgreement: String
 	dataFormat: String
 	dataFormatOther: String

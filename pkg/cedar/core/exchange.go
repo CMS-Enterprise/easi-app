@@ -17,7 +17,7 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 	if c.mockEnabled {
 		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
 		if cedarcoremock.IsMockSystem(cedarSystemID) {
-			return []*models.CedarExchange{}, nil
+			return cedarcoremock.GetExchange(cedarSystemID), nil
 		}
 		return nil, cedarcoremock.NoSystemFoundError()
 	}
@@ -64,33 +64,34 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 		}
 
 		retVal = append(retVal, &models.CedarExchange{
-			ConnectionFrequency:        connectionFrequency,
-			ContainsBankingData:        exch.ContainsBankingData,
-			ContainsBeneficiaryAddress: exch.ContainsBeneficiaryAddress,
-			ContainsPhi:                exch.ContainsPhi,
-			ContainsPii:                exch.ContainsPii,
-			DataExchangeAgreement:      zero.StringFrom(exch.DataExchangeAgreement),
-			DataFormat:                 zero.StringFrom(exch.DataFormat),
-			DataFormatOther:            zero.StringFrom(exch.DataFormatOther),
-			ExchangeDescription:        zero.StringFrom(exch.ExchangeDescription),
-			ExchangeEndDate:            zero.TimeFrom(time.Time(exch.ExchangeEndDate)),
-			ExchangeID:                 zero.StringFrom(exch.ExchangeID),
-			ExchangeName:               zero.StringFrom(exch.ExchangeName),
-			ExchangeRetiredDate:        zero.TimeFrom(time.Time(exch.ExchangeRetiredDate)),
-			ExchangeStartDate:          zero.TimeFrom(time.Time(exch.ExchangeStartDate)),
-			ExchangeState:              zero.StringFrom(exch.ExchangeState),
-			ExchangeVersion:            zero.StringFrom(exch.ExchangeVersion),
-			ExchangeDirection:          direction,
-			FromOwnerID:                zero.StringFrom(exch.FromOwnerID),
-			FromOwnerName:              zero.StringFrom(exch.FromOwnerName),
-			FromOwnerType:              zero.StringFrom(exch.FromOwnerType),
-			IsBeneficiaryMailingFile:   exch.IsBeneficiaryMailingFile,
-			NumOfRecords:               zero.StringFrom(exch.NumOfRecords),
-			SharedViaAPI:               exch.SharedViaAPI,
-			ToOwnerID:                  zero.StringFrom(exch.ToOwnerID),
-			ToOwnerName:                zero.StringFrom(exch.ToOwnerName),
-			ToOwnerType:                zero.StringFrom(exch.ToOwnerType),
-			TypeOfData:                 typeOfData,
+			ConnectionFrequency:         connectionFrequency,
+			ContainsBankingData:         exch.ContainsBankingData,
+			ContainsBeneficiaryAddress:  exch.ContainsBeneficiaryAddress,
+			ContainsPhi:                 exch.ContainsPhi,
+			ContainsPii:                 exch.ContainsPii,
+			ContainsHealthDisparityData: exch.ContainsHealthDisparityData,
+			DataExchangeAgreement:       zero.StringFrom(exch.DataExchangeAgreement),
+			DataFormat:                  zero.StringFrom(exch.DataFormat),
+			DataFormatOther:             zero.StringFrom(exch.DataFormatOther),
+			ExchangeDescription:         zero.StringFrom(exch.ExchangeDescription),
+			ExchangeEndDate:             zero.TimeFrom(time.Time(exch.ExchangeEndDate)),
+			ExchangeID:                  zero.StringFrom(exch.ExchangeID),
+			ExchangeName:                zero.StringFrom(exch.ExchangeName),
+			ExchangeRetiredDate:         zero.TimeFrom(time.Time(exch.ExchangeRetiredDate)),
+			ExchangeStartDate:           zero.TimeFrom(time.Time(exch.ExchangeStartDate)),
+			ExchangeState:               zero.StringFrom(exch.ExchangeState),
+			ExchangeVersion:             zero.StringFrom(exch.ExchangeVersion),
+			ExchangeDirection:           direction,
+			FromOwnerID:                 zero.StringFrom(exch.FromOwnerID),
+			FromOwnerName:               zero.StringFrom(exch.FromOwnerName),
+			FromOwnerType:               zero.StringFrom(exch.FromOwnerType),
+			IsBeneficiaryMailingFile:    exch.IsBeneficiaryMailingFile,
+			NumOfRecords:                zero.StringFrom(exch.NumOfRecords),
+			SharedViaAPI:                exch.SharedViaAPI,
+			ToOwnerID:                   zero.StringFrom(exch.ToOwnerID),
+			ToOwnerName:                 zero.StringFrom(exch.ToOwnerName),
+			ToOwnerType:                 zero.StringFrom(exch.ToOwnerType),
+			TypeOfData:                  typeOfData,
 		})
 	}
 	return retVal, nil
