@@ -239,33 +239,34 @@ type ComplexityRoot struct {
 	}
 
 	CedarExchange struct {
-		ConnectionFrequency        func(childComplexity int) int
-		ContainsBankingData        func(childComplexity int) int
-		ContainsBeneficiaryAddress func(childComplexity int) int
-		ContainsPhi                func(childComplexity int) int
-		ContainsPii                func(childComplexity int) int
-		DataExchangeAgreement      func(childComplexity int) int
-		DataFormat                 func(childComplexity int) int
-		DataFormatOther            func(childComplexity int) int
-		ExchangeDescription        func(childComplexity int) int
-		ExchangeDirection          func(childComplexity int) int
-		ExchangeEndDate            func(childComplexity int) int
-		ExchangeID                 func(childComplexity int) int
-		ExchangeName               func(childComplexity int) int
-		ExchangeRetiredDate        func(childComplexity int) int
-		ExchangeStartDate          func(childComplexity int) int
-		ExchangeState              func(childComplexity int) int
-		ExchangeVersion            func(childComplexity int) int
-		FromOwnerID                func(childComplexity int) int
-		FromOwnerName              func(childComplexity int) int
-		FromOwnerType              func(childComplexity int) int
-		IsBeneficiaryMailingFile   func(childComplexity int) int
-		NumOfRecords               func(childComplexity int) int
-		SharedViaAPI               func(childComplexity int) int
-		ToOwnerID                  func(childComplexity int) int
-		ToOwnerName                func(childComplexity int) int
-		ToOwnerType                func(childComplexity int) int
-		TypeOfData                 func(childComplexity int) int
+		ConnectionFrequency         func(childComplexity int) int
+		ContainsBankingData         func(childComplexity int) int
+		ContainsBeneficiaryAddress  func(childComplexity int) int
+		ContainsHealthDisparityData func(childComplexity int) int
+		ContainsPhi                 func(childComplexity int) int
+		ContainsPii                 func(childComplexity int) int
+		DataExchangeAgreement       func(childComplexity int) int
+		DataFormat                  func(childComplexity int) int
+		DataFormatOther             func(childComplexity int) int
+		ExchangeDescription         func(childComplexity int) int
+		ExchangeDirection           func(childComplexity int) int
+		ExchangeEndDate             func(childComplexity int) int
+		ExchangeID                  func(childComplexity int) int
+		ExchangeName                func(childComplexity int) int
+		ExchangeRetiredDate         func(childComplexity int) int
+		ExchangeStartDate           func(childComplexity int) int
+		ExchangeState               func(childComplexity int) int
+		ExchangeVersion             func(childComplexity int) int
+		FromOwnerID                 func(childComplexity int) int
+		FromOwnerName               func(childComplexity int) int
+		FromOwnerType               func(childComplexity int) int
+		IsBeneficiaryMailingFile    func(childComplexity int) int
+		NumOfRecords                func(childComplexity int) int
+		SharedViaAPI                func(childComplexity int) int
+		ToOwnerID                   func(childComplexity int) int
+		ToOwnerName                 func(childComplexity int) int
+		ToOwnerType                 func(childComplexity int) int
+		TypeOfData                  func(childComplexity int) int
 	}
 
 	CedarExchangeTypeOfDataItem struct {
@@ -2318,6 +2319,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarExchange.ContainsBeneficiaryAddress(childComplexity), true
+
+	case "CedarExchange.containsHealthDisparityData":
+		if e.complexity.CedarExchange.ContainsHealthDisparityData == nil {
+			break
+		}
+
+		return e.complexity.CedarExchange.ContainsHealthDisparityData(childComplexity), true
 
 	case "CedarExchange.containsPhi":
 		if e.complexity.CedarExchange.ContainsPhi == nil {
@@ -7809,6 +7817,7 @@ type CedarExchange {
 	containsBeneficiaryAddress: Boolean
 	containsPhi: Boolean
 	containsPii: Boolean
+  containsHealthDisparityData: Boolean
 	dataExchangeAgreement: String
 	dataFormat: String
 	dataFormatOther: String
@@ -17752,6 +17761,47 @@ func (ec *executionContext) _CedarExchange_containsPii(ctx context.Context, fiel
 }
 
 func (ec *executionContext) fieldContext_CedarExchange_containsPii(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarExchange",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarExchange_containsHealthDisparityData(ctx context.Context, field graphql.CollectedField, obj *models.CedarExchange) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarExchange_containsHealthDisparityData(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ContainsHealthDisparityData, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarExchange_containsHealthDisparityData(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarExchange",
 		Field:      field,
@@ -34132,6 +34182,8 @@ func (ec *executionContext) fieldContext_Query_exchanges(ctx context.Context, fi
 				return ec.fieldContext_CedarExchange_containsPhi(ctx, field)
 			case "containsPii":
 				return ec.fieldContext_CedarExchange_containsPii(ctx, field)
+			case "containsHealthDisparityData":
+				return ec.fieldContext_CedarExchange_containsHealthDisparityData(ctx, field)
 			case "dataExchangeAgreement":
 				return ec.fieldContext_CedarExchange_dataExchangeAgreement(ctx, field)
 			case "dataFormat":
@@ -56745,6 +56797,8 @@ func (ec *executionContext) _CedarExchange(ctx context.Context, sel ast.Selectio
 			out.Values[i] = ec._CedarExchange_containsPhi(ctx, field, obj)
 		case "containsPii":
 			out.Values[i] = ec._CedarExchange_containsPii(ctx, field, obj)
+		case "containsHealthDisparityData":
+			out.Values[i] = ec._CedarExchange_containsHealthDisparityData(ctx, field, obj)
 		case "dataExchangeAgreement":
 			out.Values[i] = ec._CedarExchange_dataExchangeAgreement(ctx, field, obj)
 		case "dataFormat":

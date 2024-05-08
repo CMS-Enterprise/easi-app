@@ -16,6 +16,19 @@ export interface GetSystemProfile_cedarAuthorityToOperate {
   dateAuthorizationMemoExpires: Time | null;
   countOfOpenPoams: number;
   lastAssessmentDate: Time | null;
+  isPiiLimitedToUserNameAndPass: boolean | null;
+}
+
+export interface GetSystemProfile_exchanges {
+  __typename: "CedarExchange";
+  containsPhi: boolean | null;
+  containsHealthDisparityData: boolean | null;
+  exchangeName: string | null;
+  exchangeDescription: string | null;
+  sharedViaApi: boolean | null;
+  connectionFrequency: string[];
+  numOfRecords: string | null;
+  dataExchangeAgreement: string | null;
 }
 
 export interface GetSystemProfile_cedarBudget {
@@ -103,6 +116,8 @@ export interface GetSystemProfile_cedarSystemDetails_businessOwnerInformation {
   numberOfContractorFte: string | null;
   numberOfFederalFte: string | null;
   numberOfSupportedUsersPerMonth: string | null;
+  storesBeneficiaryAddress: boolean | null;
+  storesBankingData: boolean | null;
 }
 
 export interface GetSystemProfile_cedarSystemDetails_cedarSystem {
@@ -197,6 +212,7 @@ export interface GetSystemProfile_cedarSubSystems {
 
 export interface GetSystemProfile {
   cedarAuthorityToOperate: GetSystemProfile_cedarAuthorityToOperate[];
+  exchanges: GetSystemProfile_exchanges[];
   cedarBudget: GetSystemProfile_cedarBudget[] | null;
   cedarBudgetSystemCost: GetSystemProfile_cedarBudgetSystemCost | null;
   cedarThreat: GetSystemProfile_cedarThreat[];

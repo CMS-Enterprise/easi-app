@@ -26,6 +26,17 @@ export default gql`
       dateAuthorizationMemoExpires
       countOfOpenPoams
       lastAssessmentDate
+      isPiiLimitedToUserNameAndPass
+    }
+    exchanges(cedarSystemId: $cedarSystemId) {
+      containsPhi
+      containsHealthDisparityData
+      exchangeName
+      exchangeDescription
+      sharedViaApi
+      connectionFrequency
+      numOfRecords
+      dataExchangeAgreement
     }
     cedarBudget(cedarSystemID: $cedarSystemId) {
       fiscalYear
@@ -96,6 +107,8 @@ export default gql`
         numberOfContractorFte
         numberOfFederalFte
         numberOfSupportedUsersPerMonth
+        storesBeneficiaryAddress
+        storesBankingData
       }
       cedarSystem {
         id

@@ -1356,7 +1356,6 @@ func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTyp
 // Exchanges is the resolver for the exchanges field.
 func (r *queryResolver) Exchanges(ctx context.Context, cedarSystemID string) ([]*models.CedarExchange, error) {
 	exchanges, err := r.cedarCoreClient.GetExchangesBySystem(ctx, cedarSystemID)
-
 	if err != nil {
 		return nil, err
 	}
