@@ -6,6 +6,7 @@
     "@apollo/client": "^3.6.9",
     "@babel/plugin-syntax-class-properties": "^7.12.13",
     "@cypress/code-coverage": "^3.10.0",
+    "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^2.9.8",
     "@okta/okta-auth-js": "^6.1.0",
     "@okta/okta-react": "^6.4.2",

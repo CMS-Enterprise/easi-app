@@ -3,6 +3,7 @@ import { Controller, FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Checkbox,
@@ -245,16 +246,14 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <ErrorAlertMessage
                 key={`Error.${key}`}
                 errorKey={key}
-                message={message}
+                message={t(message)}
               />
             );
           })}
         </ErrorAlert>
       )}
 
-      {errors?.root?.message && (
-        <Alert type="error">{errors.root.message}</Alert>
-      )}
+      <ErrorMessage errors={errors} name="root" as={<Alert type="error" />} />
 
       <p className="line-height-body-5">
         {t('contactDetails.intakeProcessDescription')}
@@ -284,7 +283,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Label htmlFor={field.name}>
                 {t('contactDetails.requester')}
               </Label>
-              {!!error && <FieldErrorMsg>t(error.message)</FieldErrorMsg>}
+              <ErrorMessage
+                errors={errors}
+                name={field.name}
+                as={FieldErrorMsg}
+              />
+              <ErrorMessage errors={errors} name={field.name} />
               <TextInput {...field} id={field.name} type="text" disabled />
             </FormGroup>
           )}
@@ -298,9 +302,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Label htmlFor={field.name}>
                 {t('contactDetails.requesterComponent')}
               </Label>
-              {!!error?.message && (
-                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
-              )}
+              <ErrorMessage
+                errors={errors}
+                name={field.name}
+                as={FieldErrorMsg}
+              />
 
               <Dropdown
                 {...field}
@@ -362,9 +368,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 <Label htmlFor={field.name}>
                   {t('contactDetails.businessOwner.nameField')}
                 </Label>
-                {!!error?.message && (
-                  <FieldErrorMsg>{t(error?.message)}</FieldErrorMsg>
-                )}
+                <ErrorMessage
+                  errors={errors}
+                  name="businessOwner.commonName"
+                  as={FieldErrorMsg}
+                />
                 <CedarContactSelect
                   {...field}
                   id={field.name}
@@ -401,9 +409,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Label htmlFor={field.name}>
                 {t('contactDetails.businessOwner.component')}
               </Label>
-              {!!error?.message && (
-                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
-              )}
+              <ErrorMessage
+                errors={errors}
+                name={field.name}
+                as={FieldErrorMsg}
+              />
 
               <Dropdown
                 {...field}
@@ -468,9 +478,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 <Label htmlFor={field.name}>
                   {t('contactDetails.productManager.nameField')}
                 </Label>
-                {!!error?.message && (
-                  <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
-                )}
+                <ErrorMessage
+                  errors={errors}
+                  name="productManager.commonName"
+                  as={FieldErrorMsg}
+                />
                 <CedarContactSelect
                   {...field}
                   id={field.name}
@@ -507,9 +519,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Label htmlFor={field.name}>
                 {t('contactDetails.productManager.component')}
               </Label>
-              {!!error?.message && (
-                <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
-              )}
+              <ErrorMessage
+                errors={errors}
+                name={field.name}
+                as={FieldErrorMsg}
+              />
 
               <Dropdown {...field} id="IntakeForm-ProductManagerComponent">
                 <option value="" disabled>
@@ -580,9 +594,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                             <Label htmlFor={field.name}>
                               {t('contactDetails.isso.name')}
                             </Label>
-                            {!!error?.message && (
-                              <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
-                            )}
+                            <ErrorMessage
+                              errors={errors}
+                              name="isso.commonName"
+                              as={FieldErrorMsg}
+                            />
                             <CedarContactSelect
                               {...field}
                               id={field.name}
@@ -611,9 +627,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                           <Label htmlFor={field.name}>
                             {t('contactDetails.isso.component')}
                           </Label>
-                          {!!error?.message && (
-                            <FieldErrorMsg>{t(error.message)}</FieldErrorMsg>
-                          )}
+                          <ErrorMessage
+                            errors={errors}
+                            name={field.name}
+                            as={FieldErrorMsg}
+                          />
 
                           <Dropdown {...field} id="IntakeForm-IssoComponent">
                             <option value="" disabled>
