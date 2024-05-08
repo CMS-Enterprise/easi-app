@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -23,6 +23,7 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import PageNumber from 'components/PageNumber';
 import Alert from 'components/shared/Alert';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
@@ -44,6 +45,7 @@ import {
   SystemIntakeContactProps,
   SystemIntakeRoleKeys
 } from 'types/systemIntake';
+import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
@@ -214,8 +216,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     setValue(`${role}.component`, values ? values.component : '');
   };
 
-  // Scroll errors into view on submit
   const hasErrors = Object.keys(errors).length > 0;
+
+  /** Flattened field errors, excluding any root errors */
+  const fieldErrors = useMemo(() => flattenFormErrors(errors), [errors]);
+
+  // Scroll errors into view on submit
   useEffect(() => {
     if (hasErrors) {
       const err = document.querySelector('.usa-alert--error');
@@ -228,7 +234,23 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
   return (
     <>
-      {/* TODO: errors summary */}
+      {Object.keys(fieldErrors).length > 0 && (
+        <ErrorAlert
+          test-id="contact-details-errors"
+          classNames="margin-top-3"
+          heading={t('form:inputError.checkFix')}
+        >
+          {Object.entries(fieldErrors).map(([key, message]) => {
+            return (
+              <ErrorAlertMessage
+                key={`Error.${key}`}
+                errorKey={key}
+                message={message}
+              />
+            );
+          })}
+        </ErrorAlert>
+      )}
 
       {errors?.root?.message && (
         <Alert type="error">{errors.root.message}</Alert>
