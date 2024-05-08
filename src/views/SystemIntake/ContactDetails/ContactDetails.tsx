@@ -1,5 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Controller, FormProvider } from 'react-hook-form';
+import {
+  Controller,
+  FieldPath,
+  FormProvider,
+  UseFormSetValue
+} from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -112,11 +117,21 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const {
     control,
     handleSubmit,
-    setValue,
     setError,
     watch,
     formState: { defaultValues, dirtyFields, isDirty, errors }
   } = form;
+
+  /** RHF's `setValue` function with `shouldDirty` option set to true */
+  const setValue: UseFormSetValue<ContactDetailsForm> = (
+    name,
+    value,
+    options
+  ) =>
+    form.setValue<FieldPath<ContactDetailsForm>>(name, value, {
+      ...options,
+      shouldDirty: options?.shouldDirty || true
+    });
 
   const [updateSystemIntake] = useMutation<
     UpdateSystemIntakeContactDetails,
