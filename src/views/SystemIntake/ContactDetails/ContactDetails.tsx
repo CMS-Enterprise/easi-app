@@ -175,7 +175,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       isso,
       governanceTeams
     }) => {
-      if (!isDirty) return null;
+      // If fields unchanged, go to next page
+      if (!isDirty) return history.push('request-details');
 
       // Update contacts
       await Promise.all([
