@@ -503,6 +503,7 @@ func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context
 // CreateCedarSystemBookmark is the resolver for the createCedarSystemBookmark field.
 func (r *mutationResolver) CreateCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.CreateCedarSystemBookmarkPayload, error) {
 	bookmark := models.CedarSystemBookmark{
+		EUAUserID:     appcontext.Principal(ctx).ID(),
 		CedarSystemID: input.CedarSystemID,
 	}
 	createdBookmark, err := r.store.CreateCedarSystemBookmark(ctx, &bookmark)
