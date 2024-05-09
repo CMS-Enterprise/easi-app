@@ -48,7 +48,6 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	// Make the API call
 	resp, err := c.sdk.System.SystemSummaryFindList(params, c.auth)
 	if err != nil {
-		fmt.Println(err)
 		return []*models.CedarSystem{}, err
 	}
 

@@ -3,6 +3,7 @@ package cedarcore
 import (
 	"context"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/go-openapi/runtime"
@@ -43,7 +44,11 @@ func (t *loggingTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	return resp, err
 }
 
-var cedarPath string
+var (
+	cedarPath  string
+	client     *Client
+	clientOnce sync.Once
+)
 
 func PurgeCacheByPath(ctx context.Context, path string) error {
 	req, err := http.NewRequest("PURGE", cedarPath+path, nil)
@@ -70,35 +75,36 @@ func PurgeCacheByPath(ctx context.Context, path string) error {
 	return nil
 }
 
-// NewClient builds the type that holds a connection to the CEDAR Core API
+// NewClient builds the type that holds a connection to the CEDAR Core
 func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, mockEnabled bool) *Client {
-	hc := http.Client{
-		Transport: &loggingTransport{
-			logger: appcontext.ZLogger(ctx),
-		},
-	}
+	clientOnce.Do(func() {
+		hc := http.Client{
+			Transport: &loggingTransport{
+				logger: appcontext.ZLogger(ctx),
+			},
+		}
 
-	basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
-	cedarPath = "http://" + cedarHost + basePath
-	client := &Client{
-		mockEnabled: mockEnabled,
-		auth: httptransport.APIKeyAuth(
-			"x-Gateway-APIKey",
-			"header",
-			cedarAPIKey,
-		),
-		sdk: apiclient.New(
-			httptransport.New(
-				cedarHost,
-				basePath,
-				[]string{"http"},
-				// apiclient.DefaultSchemes,
+		basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
+		cedarPath = "http://" + cedarHost + basePath
+		client = &Client{
+			mockEnabled: mockEnabled,
+			auth: httptransport.APIKeyAuth(
+				"x-Gateway-APIKey",
+				"header",
+				cedarAPIKey,
 			),
-			strfmt.Default,
-		),
-		hc: &hc,
-	}
-
+			sdk: apiclient.New(
+				httptransport.New(
+					cedarHost,
+					basePath,
+					[]string{"http"},
+					// apiclient.DefaultSchemes,
+				),
+				strfmt.Default,
+			),
+			hc: &hc,
+		}
+	})
 	return client
 }
 
