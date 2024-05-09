@@ -267,8 +267,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     }
   }, [defaultValues]);
 
-  // Wait until contacts are done loading and default values have been updated
-  if (contacts.loading || !defaultValues) return <PageLoading />;
+  // Wait until default values have been updated
+  if (!defaultValues) return <PageLoading />;
 
   return (
     <>
