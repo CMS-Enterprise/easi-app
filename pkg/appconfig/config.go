@@ -161,6 +161,9 @@ const LocalMinioS3SecretKey = "MINIO_SECRET_KEY"
 // AWSRegion is the key for the region we establish a session to for AWS services
 const AWSRegion = "AWS_REGION"
 
+// CEDARPROXYURL is the key for the CEDAR proxy url
+const CEDARPROXYURL = "CEDAR_PROXY_URL"
+
 // CEDARAPIURL is the key for the CEDAR base url
 const CEDARAPIURL = "CEDAR_API_URL"
 
@@ -172,10 +175,6 @@ const CEDAREmailAddress = "CEDAR_EMAIL_ADDRESS"
 
 // CEDARCoreAPIVersion is the version of the CEDAR core API to use
 const CEDARCoreAPIVersion = "CEDAR_CORE_API_VERSION"
-
-// CEDARCacheIntervalKey is the key for the environment variable tracking how often to refresh the CEDAR System cache (i.e. "5m", "6h")
-// https://pkg.go.dev/time#ParseDuration
-const CEDARCacheIntervalKey = "CEDAR_CACHE_INTERVAL"
 
 // CEDARCoreMock is the key for the environment variable that determines if the CEDAR Core API should be mocked
 // If set to true, mock data will be used
@@ -231,3 +230,6 @@ const OKTAAPIURL = "OKTA_API_URL"
 // OKTAAPIToken is the key for the Okta API token
 // #nosec G101 false positive - not the actual API key itself
 const OKTAAPIToken = "OKTA_API_TOKEN"
+
+// OktaLocalEnabled is the key for enabling OKTA on local dev
+const OktaLocalEnabled = "USE_OKTA_LOCAL"

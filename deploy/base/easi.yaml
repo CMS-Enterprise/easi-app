@@ -7,7 +7,8 @@ data:
   CEDAR_CORE_MOCK: 'true'
   CEDAR_INTAKE_ENABLED: 'false'
   CEDAR_API_KEY: ''
-  CEDAR_API_URL: "webmethods-apigw.cedardev.cms.gov"
+  CEDAR_PROXY_URL: ""
+  CEDAR_API_URL: "webmethods-apigw.cedarimpl.cms.gov"
   CEDAR_CORE_API_VERSION: "2.0.0"
   CEDAR_CACHE_INTERVAL: "30m"
   CEDAR_EMAIL_ADDRESS: "EnterpriseArchitecture@notCMS.gov"

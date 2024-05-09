@@ -3,7 +3,6 @@ package cedarcore
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
@@ -29,8 +28,8 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
 	s.Run("LD defaults protects invocation of GetSystemSummary", func() {
-		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, true)
-		resp, err := c.GetSystemSummary(ctx, false)
+		c := NewClient(ctx, "fake", "fake", "1.0.0", true)
+		resp, err := c.GetSystemSummary(ctx)
 		s.NoError(err)
 
 		// ensure mock data is returned
@@ -41,8 +40,8 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 	})
 
 	s.Run("Retrieves filtered list when EUA filter is present", func() {
-		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, true)
-		resp, err := c.GetSystemSummary(ctx, false, WithEuaIDFilter("USR1"))
+		c := NewClient(ctx, "fake", "fake", "1.0.0", true)
+		resp, err := c.GetSystemSummary(ctx, WithEuaIDFilter("USR1"))
 		s.NoError(err)
 
 		// ensure filtered mock data is returned
@@ -53,8 +52,8 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 	})
 
 	s.Run("Retrieves filtered list when Sub-System filter is present", func() {
-		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, true)
-		resp, err := c.GetSystemSummary(ctx, false, WithSubSystems("1"))
+		c := NewClient(ctx, "fake", "fake", "1.0.0", true)
+		resp, err := c.GetSystemSummary(ctx, WithSubSystems("1"))
 		s.NoError(err)
 
 		// ensure filtered mock data is returned
@@ -69,7 +68,7 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 	ctx := appcontext.WithLogger(context.Background(), s.logger)
 
 	s.Run("LD defaults protects invocation of GetSystem", func() {
-		c := NewClient(ctx, "fake", "fake", "1.0.0", time.Minute, true)
+		c := NewClient(ctx, "fake", "fake", "1.0.0", true)
 		_, err := c.GetSystem(ctx, "fake")
 		s.NoError(err)
 
