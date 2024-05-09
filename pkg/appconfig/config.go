@@ -161,6 +161,9 @@ const LocalMinioS3SecretKey = "MINIO_SECRET_KEY"
 // AWSRegion is the key for the region we establish a session to for AWS services
 const AWSRegion = "AWS_REGION"
 
+// CEDARPROXYURL is the key for the CEDAR proxy url
+const CEDARPROXYURL = "CEDAR_PROXY_URL"
+
 // CEDARAPIURL is the key for the CEDAR base url
 const CEDARAPIURL = "CEDAR_API_URL"
 
@@ -231,3 +234,6 @@ const OKTAAPIURL = "OKTA_API_URL"
 // OKTAAPIToken is the key for the Okta API token
 // #nosec G101 false positive - not the actual API key itself
 const OKTAAPIToken = "OKTA_API_TOKEN"
+
+// OktaLocalEnabled is the key for enabling OKTA on local dev
+const OktaLocalEnabled = "USE_OKTA_LOCAL"
