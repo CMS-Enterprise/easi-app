@@ -176,10 +176,6 @@ const CEDAREmailAddress = "CEDAR_EMAIL_ADDRESS"
 // CEDARCoreAPIVersion is the version of the CEDAR core API to use
 const CEDARCoreAPIVersion = "CEDAR_CORE_API_VERSION"
 
-// CEDARCacheIntervalKey is the key for the environment variable tracking how often to refresh the CEDAR System cache (i.e. "5m", "6h")
-// https://pkg.go.dev/time#ParseDuration
-const CEDARCacheIntervalKey = "CEDAR_CACHE_INTERVAL"
-
 // CEDARCoreMock is the key for the environment variable that determines if the CEDAR Core API should be mocked
 // If set to true, mock data will be used
 // If set to false, real calls to the CEDAR Core API will be made
