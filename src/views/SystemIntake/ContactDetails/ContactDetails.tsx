@@ -246,6 +246,27 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     }
   }, [errors, hasErrors]);
 
+  // Set same as requester checkbox default values
+  useEffect(() => {
+    if (defaultValues) {
+      const { requester, businessOwner, productManager } = defaultValues;
+
+      if (
+        requester?.euaUserId === businessOwner?.euaUserId &&
+        requester?.component === businessOwner?.component
+      ) {
+        setBusOwnerSameAsRequester(true);
+      }
+
+      if (
+        requester?.euaUserId === productManager?.euaUserId &&
+        requester?.component === productManager?.component
+      ) {
+        setProdManagerSameAsRequester(true);
+      }
+    }
+  }, [defaultValues]);
+
   // Wait until contacts are done loading and default values have been updated
   if (contacts.loading || !defaultValues) return <PageLoading />;
 
@@ -360,7 +381,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
         <Checkbox
           id="IntakeForm-busOwnerSameAsRequester"
-          label="CMS Business Owner is same as requester"
+          label={t('contactDetails.businessOwner.sameAsRequester')}
           name="busOwnerSameAsRequester"
           checked={!!busOwnerSameAsRequester}
           onChange={e => {
@@ -435,6 +456,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 {...field}
                 id="IntakeForm-BusinessOwnerComponent"
                 value={watch('businessOwner.component')}
+                disabled={busOwnerSameAsRequester}
               >
                 <option value="" disabled>
                   {t('Select an option')}
@@ -470,7 +492,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
         <Checkbox
           id="IntakeForm-prodManagerSameAsRequester"
-          label="CMS Product Manager is same as requester"
+          label={t('contactDetails.productManager.sameAsRequester')}
           name="prodManagerSameAsRequester"
           checked={!!prodManagerSameAsRequester}
           onChange={e => {
@@ -541,7 +563,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 as={FieldErrorMsg}
               />
 
-              <Dropdown {...field} id="IntakeForm-ProductManagerComponent">
+              <Dropdown
+                {...field}
+                id="IntakeForm-ProductManagerComponent"
+                disabled={prodManagerSameAsRequester}
+              >
                 <option value="" disabled>
                   {t('Select an option')}
                 </option>

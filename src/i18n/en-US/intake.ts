@@ -164,6 +164,7 @@ const intake = {
     requester: 'Requester',
     requesterComponent: 'Requester Component',
     businessOwner: {
+      sameAsRequester: 'CMS Business Owner is same as requester',
       name: 'CMS Business Owner',
       helpText:
         'This person owns a line of business related to this request and will champion the request moving forward',
@@ -172,6 +173,7 @@ const intake = {
       email: 'CMS Business Owner email'
     },
     productManager: {
+      sameAsRequester: 'CMS Product Manager is same as requester',
       name: 'CMS Project/Product Manager, or lead',
       helpText:
         'This person may be contacted for follow ups and to understand the state of the contract',
