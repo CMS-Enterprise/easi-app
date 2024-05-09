@@ -50,7 +50,7 @@ jobs:
               - 'pkg/cedar/core/gen/**'
               - 'cedarproxy/**'
       - name: Update ECS task definition and deploy Cedarproxy
-        if: ${{ contains(inputs.env, 'dev') && steps.changes.outputs.cedarproxy == 'true' }}
+        if: ${{ steps.changes.outputs.cedarproxy == 'true' }}
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: easi-cedarproxy
