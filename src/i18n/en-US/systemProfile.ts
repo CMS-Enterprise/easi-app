@@ -23,7 +23,7 @@ const systemProfile = {
     ato: 'ATO',
     'lifecycle-id': 'Lifecyle ID',
     'sub-systems': 'Sub-systems',
-    'system-data': 'System Data',
+    'system-data': 'Data',
     documents: 'Documents'
   },
   tabs: {
@@ -254,7 +254,7 @@ const systemProfile = {
       pHI: 'Protected Health Information (PHI)',
       apiInfo: 'API Information',
       apiStatus: 'API status',
-      fHIRUsage: 'FHIR Useage',
+      fHIRUsage: 'FHIR Usage',
       apiGateway: 'API Gateway',
       access: 'Access',
       dataCategories: 'Data content categories',

@@ -21,6 +21,7 @@ export interface GetSystemProfile_cedarAuthorityToOperate {
 
 export interface GetSystemProfile_exchanges {
   __typename: "CedarExchange";
+  exchangeId: string | null;
   containsPhi: boolean | null;
   containsHealthDisparityData: boolean | null;
   exchangeName: string | null;

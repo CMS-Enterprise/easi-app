@@ -29,6 +29,7 @@ export default gql`
       isPiiLimitedToUserNameAndPass
     }
     exchanges(cedarSystemId: $cedarSystemId) {
+      exchangeId
       containsPhi
       containsHealthDisparityData
       exchangeName

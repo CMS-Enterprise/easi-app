@@ -801,6 +801,7 @@ export const result: { data: GetSystemProfile } = {
     exchanges: [
       {
         __typename: 'CedarExchange',
+        exchangeId: '{1}',
         containsPhi: true,
         containsHealthDisparityData: true,
         exchangeName: 'CMS Exchange',
@@ -813,6 +814,7 @@ export const result: { data: GetSystemProfile } = {
       },
       {
         __typename: 'CedarExchange',
+        exchangeId: '{2}',
         containsPhi: false,
         containsHealthDisparityData: false,
         exchangeName: 'EASI Exchange',
