@@ -50,6 +50,7 @@ var (
 	clientOnce sync.Once
 )
 
+// Purges Proxy Cache by URL using a given path
 func PurgeCacheByPath(ctx context.Context, path string) error {
 	req, err := http.NewRequest("PURGE", cedarPath+path, nil)
 	logger := appcontext.ZLogger(ctx)
@@ -75,7 +76,7 @@ func PurgeCacheByPath(ctx context.Context, path string) error {
 	return nil
 }
 
-// NewClient builds the type that holds a connection to the CEDAR Core
+// NewClient builds the type that holds a connection to the CEDAR Core API
 func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, mockEnabled bool) *Client {
 	clientOnce.Do(func() {
 		hc := http.Client{
