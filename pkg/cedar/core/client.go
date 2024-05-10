@@ -48,10 +48,14 @@ var (
 	cedarPath  string
 	client     *Client
 	clientOnce sync.Once
+	skipPurge  bool
 )
 
 // Purges Proxy Cache by URL using a given path
 func PurgeCacheByPath(ctx context.Context, path string) error {
+	if skipPurge {
+		return nil
+	}
 	req, err := http.NewRequest("PURGE", cedarPath+path, nil)
 	logger := appcontext.ZLogger(ctx)
 	if err != nil {
@@ -77,7 +81,7 @@ func PurgeCacheByPath(ctx context.Context, path string) error {
 }
 
 // NewClient builds the type that holds a connection to the CEDAR Core API
-func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, mockEnabled bool) *Client {
+func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarAPIVersion string, skipProxy bool, mockEnabled bool) *Client {
 	clientOnce.Do(func() {
 		hc := http.Client{
 			Transport: &loggingTransport{
@@ -87,6 +91,9 @@ func NewClient(ctx context.Context, cedarHost string, cedarAPIKey string, cedarA
 
 		basePath := "/gateway/CEDAR Core API/" + cedarAPIVersion
 		cedarPath = "http://" + cedarHost + basePath
+		if skipProxy {
+			skipPurge = true
+		}
 		client = &Client{
 			mockEnabled: mockEnabled,
 			auth: httptransport.APIKeyAuth(

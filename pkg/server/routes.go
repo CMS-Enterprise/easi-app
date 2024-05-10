@@ -134,6 +134,7 @@ func (s *Server) routes(
 		cedarCoreURL,
 		s.Config.GetString(appconfig.CEDARAPIKey),
 		s.Config.GetString(appconfig.CEDARCoreAPIVersion),
+		s.Config.GetBool(appconfig.CEDARCoreSkipProxy),
 		s.Config.GetBool(appconfig.CEDARCoreMock),
 	)
 
