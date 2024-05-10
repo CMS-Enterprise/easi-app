@@ -17,16 +17,22 @@ type DataLoaders struct {
 	systemIntakeSystemsLoader         *WrappedDataLoader
 	trbRequestContractNumbersLoader   *WrappedDataLoader
 	trbRequestSystemsLoader           *WrappedDataLoader
+	cedarSystemByIDLoader             *WrappedDataLoader
 	FetchUserInfos                    func(context.Context, []string) ([]*models.UserInfo, error)
+	GetCedarSystems                   func(ctx context.Context) ([]*models.CedarSystem, error)
+	// CedarClient                       *cedarcore.Client
+
+	// GetSystemSummary func(ctx context.Context, opts ...interface{}) ([]*models.CedarSystem, error)
 }
 
 // NewDataLoaders instantiates data loaders for the middleware
-func NewDataLoaders(store *storage.Store, fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error)) *DataLoaders {
+func NewDataLoaders(store *storage.Store, fetchUserInfos func(context.Context, []string) ([]*models.UserInfo, error), getCedarSystems func(ctx context.Context) ([]*models.CedarSystem, error)) *DataLoaders {
 	loaders := &DataLoaders{
 		DataReader: &DataReader{
 			Store: store,
 		},
-		FetchUserInfos: fetchUserInfos,
+		FetchUserInfos:  fetchUserInfos,
+		GetCedarSystems: getCedarSystems,
 	}
 
 	loaders.UserAccountLoader = newWrappedDataLoader(loaders.GetUserAccountsByIDLoader)
@@ -38,6 +44,7 @@ func NewDataLoaders(store *storage.Store, fetchUserInfos func(context.Context, [
 
 	loaders.trbRequestContractNumbersLoader = newWrappedDataLoader(loaders.getTRBRequestContractNumbersByTRBRequestID)
 	loaders.trbRequestSystemsLoader = newWrappedDataLoader(loaders.getTRBRequestSystemsByTRBRequestID)
+	loaders.cedarSystemByIDLoader = newWrappedDataLoader(loaders.getCedarSystemBatchFunction)
 	return loaders
 }
 

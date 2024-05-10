@@ -25,7 +25,8 @@ func TRBRequestSystems(
 	}
 	systems := []*models.CedarSystem{}
 	for _, v := range trbRequests {
-		cedarSystemSummary, err := getCedarSystem(ctx, v.SystemID)
+		cedarSystemSummary, err := dataloaders.GetCedarSystemByID(ctx, v.SystemID)
+		// cedarSystemSummary, err := getCedarSystem(ctx, v.SystemID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("unable to retrieve system from cedar", zap.Error(err))
 			continue
