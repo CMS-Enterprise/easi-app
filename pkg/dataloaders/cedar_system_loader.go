@@ -4,17 +4,20 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/graph-gophers/dataloader"
+	"go.uber.org/zap"
+
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 const cedar_system_loader_key = "id"
 
 func (loaders *DataLoaders) getCedarSystemBatchFunction(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
-
+	logger := appcontext.ZLogger(ctx)
 	cedarSystems, err := loaders.GetCedarSystems(ctx)
 	if err != nil {
-		// Return error per key
+		logger.Error("error getting cedar systems in data loader", zap.Error(err))
 	}
 
 	systemSummaryMap := make(map[string]*models.CedarSystem)
@@ -31,7 +34,7 @@ func (loaders *DataLoaders) getCedarSystemBatchFunction(ctx context.Context, key
 	for index, key := range keys {
 		ck, ok := key.Raw().(KeyArgs)
 		if ok {
-			resKey := fmt.Sprint(ck.Args["id"])
+			resKey := fmt.Sprint(ck.Args[cedar_system_loader_key])
 			cedarSystem, ok := systemSummaryMap[resKey]
 			if ok {
 				output[index] = &dataloader.Result{Data: cedarSystem, Error: nil}

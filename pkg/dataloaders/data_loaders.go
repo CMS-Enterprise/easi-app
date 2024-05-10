@@ -20,9 +20,6 @@ type DataLoaders struct {
 	cedarSystemByIDLoader             *WrappedDataLoader
 	FetchUserInfos                    func(context.Context, []string) ([]*models.UserInfo, error)
 	GetCedarSystems                   func(ctx context.Context) ([]*models.CedarSystem, error)
-	// CedarClient                       *cedarcore.Client
-
-	// GetSystemSummary func(ctx context.Context, opts ...interface{}) ([]*models.CedarSystem, error)
 }
 
 // NewDataLoaders instantiates data loaders for the middleware
