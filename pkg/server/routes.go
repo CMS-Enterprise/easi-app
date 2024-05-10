@@ -108,7 +108,7 @@ func (s *Server) routes(
 
 	//TODO: update this to have OKTA API live in it's own package?
 	var userSearchClient usersearch.Client
-	if s.environment.Local() || s.environment.Test() {
+	if (!s.Config.GetBool(appconfig.OktaLocalEnabled) && s.environment.Local()) || s.environment.Test() {
 		userSearchClient = local.NewOktaAPIClient()
 	} else {
 		// Create Okta API Client
@@ -124,10 +124,9 @@ func (s *Server) routes(
 	// set up CEDAR core API client
 	coreClient := cedarcore.NewClient(
 		appcontext.WithLogger(context.Background(), s.logger),
-		s.Config.GetString(appconfig.CEDARAPIURL),
+		s.Config.GetString(appconfig.CEDARPROXYURL),
 		s.Config.GetString(appconfig.CEDARAPIKey),
 		s.Config.GetString(appconfig.CEDARCoreAPIVersion),
-		s.Config.GetDuration(appconfig.CEDARCacheIntervalKey),
 		s.Config.GetBool(appconfig.CEDARCoreMock),
 	)
 

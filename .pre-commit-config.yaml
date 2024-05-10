@@ -59,6 +59,7 @@ repos:
       language: node
       additional_dependencies: [dockerfilelint]
       files: Dockerfile.*
+      exclude: Dockerfile.cedarproxy
 
   - repo: local
     hooks:

@@ -1254,12 +1254,12 @@ func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (
 
 // CedarSystems is the resolver for the cedarSystems field.
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	return r.cedarCoreClient.GetSystemSummary(ctx, true)
+	return r.cedarCoreClient.GetSystemSummary(ctx)
 }
 
 // CedarSubSystems is the resolver for the cedarSubSystems field.
 func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID string) ([]*models.CedarSubSystem, error) {
-	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, false, cedarcore.WithSubSystems(cedarSystemID))
+	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.WithSubSystems(cedarSystemID))
 	if err != nil {
 		return nil, err
 	}
@@ -1285,7 +1285,7 @@ func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemI
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
-	return r.cedarCoreClient.GetSystemSummary(ctx, false, cedarcore.WithEuaIDFilter(requesterEUAID))
+	return r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.WithEuaIDFilter(requesterEUAID))
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.

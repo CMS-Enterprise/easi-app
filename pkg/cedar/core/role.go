@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/guregu/null/zero"
@@ -171,6 +172,10 @@ func (c *Client) GetRolesBySystem(ctx context.Context, cedarSystemID string, rol
 	}
 
 	return retVal, nil
+}
+
+func PurgeRoleCache(ctx context.Context, cedarSystemID string) error {
+	return PurgeCacheByPath(ctx, "/role?application="+cedarRoleApplication+"&objectId="+url.QueryEscape(cedarSystemID))
 }
 
 // GetRoleTypes queries CEDAR for the list of supported role types
@@ -354,6 +359,19 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		return roleType.Name.String
 	})
 
+	err = PurgeRoleCache(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
+	err = PurgeSystemCacheByEUA(ctx, euaUserID)
+	if err != nil {
+		return nil, err
+	}
+	// re-populate the cache for "My Systems"
+	_, err = c.GetSystemSummary(ctx, WithEuaIDFilter(euaUserID))
+	if err != nil {
+		appcontext.ZLogger(ctx).Warn("error refreshing my systems for user")
+	}
 	// fetch the system name (likely from cache) and add it to the response
 	system, getSystemErr := c.GetSystem(ctx, cedarSystemID)
 	if getSystemErr != nil {
@@ -417,6 +435,10 @@ func (c *Client) addRoles(ctx context.Context, cedarSystemID string, newRoles []
 			return fmt.Errorf(resp.Payload.Message[0]) // message from CEDAR should be "Role assignment(s) could not be found"
 		}
 		return fmt.Errorf("unknown error")
+	}
+	err = PurgeRoleCache(ctx, cedarSystemID)
+	if err != nil {
+		return err
 	}
 
 	return nil
