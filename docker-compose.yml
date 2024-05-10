@@ -22,8 +22,8 @@ services:
       - CEDAR_API_KEY
       - CEDAR_API_URL
       - CEDAR_PROXY_URL=cedarproxy:8001
+      - CEDAR_CORE_SKIP_PROXY
       - CEDAR_CORE_API_VERSION
-      - CEDAR_CACHE_INTERVAL
       - CEDAR_EMAIL_ADDRESS
       - HTTP_PROXY
       - HTTPS_PROXY
@@ -79,6 +79,7 @@ services:
     image: cedarproxy:latest
     environment:
       - CEDAR_API_URL
+      - CEDAR_CACHE_EXPIRE_TIME
     build:
       dockerfile: Dockerfile.cedarproxy
       context: ./cedarproxy/

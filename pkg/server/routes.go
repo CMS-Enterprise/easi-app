@@ -121,10 +121,17 @@ func (s *Server) routes(
 		}
 	}
 
+	var cedarCoreURL string
+	if s.Config.GetBool(appconfig.CEDARCoreSkipProxy) {
+		cedarCoreURL = s.Config.GetString(appconfig.CEDARAPIURL)
+	} else {
+		cedarCoreURL = s.Config.GetString(appconfig.CEDARPROXYURL)
+	}
+
 	// set up CEDAR core API client
 	coreClient := cedarcore.NewClient(
 		appcontext.WithLogger(context.Background(), s.logger),
-		s.Config.GetString(appconfig.CEDARPROXYURL),
+		cedarCoreURL,
 		s.Config.GetString(appconfig.CEDARAPIKey),
 		s.Config.GetString(appconfig.CEDARCoreAPIVersion),
 		s.Config.GetBool(appconfig.CEDARCoreMock),
