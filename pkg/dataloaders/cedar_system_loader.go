@@ -18,6 +18,11 @@ func (loaders *DataLoaders) getCedarSystemBatchFunction(ctx context.Context, key
 	cedarSystems, err := loaders.GetCedarSystems(ctx)
 	if err != nil {
 		logger.Error("error getting cedar systems in data loader", zap.Error(err))
+		loaderErrors := make([]*dataloader.Result, len(keys))
+		for index := range keys {
+			loaderErrors[index] = &dataloader.Result{Data: nil, Error: err}
+		}
+		return loaderErrors
 	}
 
 	systemSummaryMap := make(map[string]*models.CedarSystem)
@@ -53,12 +58,12 @@ func (loaders *DataLoaders) getCedarSystemBatchFunction(ctx context.Context, key
 
 func GetCedarSystemByID(ctx context.Context, id string) (*models.CedarSystem, error) {
 	allLoaders := Loaders(ctx)
-	userAccountLoader := allLoaders.UserAccountLoader
+	cedarSystemLoader := allLoaders.cedarSystemByIDLoader
 
 	key := NewKeyArgs()
-	key.Args["id"] = id
+	key.Args[cedar_system_loader_key] = id
 
-	thunk := userAccountLoader.Loader.Load(ctx, key)
+	thunk := cedarSystemLoader.Loader.Load(ctx, key)
 	result, err := thunk()
 	if err != nil {
 		return nil, err
