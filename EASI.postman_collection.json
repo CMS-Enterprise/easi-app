@@ -1997,7 +1997,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "66abedd0-227a-45c3-911c-8f90a7425de2"
 											}
 										],
 										"url": {
@@ -2031,7 +2032,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "30fd611b-4957-452b-a5f2-1dd4d18a3a36"
 											}
 										],
 										"url": {
@@ -2069,7 +2071,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "237105d8-1aed-4a95-8ea1-c8f3d4a8ceea"
 											}
 										],
 										"url": {
@@ -2098,7 +2101,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "f8b7702f-1072-4872-9245-21ff6535fe0b"
 											}
 										],
 										"url": {
@@ -2127,7 +2131,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "a1d96bc4-8cd0-451a-9ae6-619f4f1afe77"
 											}
 										],
 										"url": {
@@ -2156,7 +2161,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "5bd6f72f-051a-489e-b012-9ac4b5f21313"
 											}
 										],
 										"url": {
@@ -2185,7 +2191,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "6f001ce6-df80-4126-81dc-861480dfbbee"
 											}
 										],
 										"url": {
@@ -2214,7 +2221,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "de4a010d-5873-471c-957e-a12c016049da"
 											}
 										],
 										"url": {
@@ -2247,7 +2255,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "f450eca2-6611-41be-bc03-dcb116864f22"
 											}
 										],
 										"url": {
@@ -2280,7 +2289,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "48eba07e-38d7-41e0-a2c3-0fba94efd170"
 											}
 										],
 										"url": {
@@ -2309,7 +2319,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "db3cfb0f-ae81-4c15-8289-dbfa5a4871ab"
 											}
 										],
 										"url": {
@@ -2338,7 +2349,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "6059d646-2f4f-45a9-a4e7-ff4529296bbf"
 											}
 										],
 										"url": {
@@ -2362,7 +2374,8 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "f0d7e6cb-d5e7-4bf3-854c-b92b763efbc0"
 											}
 										],
 										"url": {
@@ -2542,7 +2555,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query {\n  cedarSystems{\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n  }\n}",
+												"query": "query {\n  cedarSystems{\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n    isBookmarked\n  }\n}",
 												"variables": ""
 											}
 										},
@@ -2608,8 +2621,8 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query($systemID: String!) {\n  cedarSystem(cedarSystemId: $systemID){\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n  }\n}",
-												"variables": "{\r\n    \"systemID\": \"{9F23BC7D-4A61-4b89-97B2-BFB5597DF5D1}\"\r\n}"
+												"query": "query($systemID: String!) {\n  cedarSystem(cedarSystemId: $systemID){\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n    isBookmarked\n  }\n}",
+												"variables": "{\r\n    \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}\"\r\n}"
 											}
 										},
 										"url": {

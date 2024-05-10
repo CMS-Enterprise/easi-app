@@ -174,6 +174,11 @@ func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *model
 	return cedarRoles, nil
 }
 
+// IsBookmarked is the resolver for the isBookmarked field.
+func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
+	return resolvers.CedarSystemIsBookmarked(ctx, obj.ID.String)
+}
+
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
 func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error) {
 	return &model.CedarSystemMaintainerInformation{
