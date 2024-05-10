@@ -170,6 +170,9 @@ const CEDARAPIURL = "CEDAR_API_URL"
 // CEDARAPIKey is the key for accessing CEDAR
 const CEDARAPIKey = "CEDAR_API_KEY" // #nosec
 
+// CEDARCoreSkipProxy is the key for whether to make calls directly to CEDAR Core
+const CEDARCoreSkipProxy = "CEDAR_CORE_SKIP_PROXY"
+
 // CEDAREmailAddress is the key for the env var that holds the email address that we use when notifying CEDAR of changes
 const CEDAREmailAddress = "CEDAR_EMAIL_ADDRESS"
 
