@@ -1974,7 +1974,7 @@ func (r *tRBRequestResolver) ContractNumbers(ctx context.Context, obj *models.TR
 
 // Systems is the resolver for the systems field.
 func (r *tRBRequestResolver) Systems(ctx context.Context, obj *models.TRBRequest) ([]*models.CedarSystem, error) {
-	return resolvers.TRBRequestSystems(ctx, r.cedarCoreClient.GetSystem, obj.ID)
+	return resolvers.TRBRequestSystems(ctx, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.

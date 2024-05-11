@@ -1,34 +1,31 @@
 package resolvers
 
 import (
-	"context"
-
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
 func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
-	ctx := context.Background()
-	ctx = appcontext.WithLogger(ctx, s.testConfigs.Logger)
-
-	ctx = dataloaders.CTXWithLoaders(
-		ctx,
-		dataloaders.NewDataLoaders(
-			s.testConfigs.Store,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-			func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
-		),
-	)
+	ctx := s.testConfigs.Context
+	// ctx := context.Background()
+	// ctx = appcontext.WithLogger(ctx, s.testConfigs.Logger)
+	//
+	// ctx = dataloaders.CTXWithLoaders(
+	// 	ctx,
+	// 	dataloaders.NewDataLoaders(
+	// 		s.testConfigs.Store,
+	// 		func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
+	// 		func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
+	// 	),
+	// )
 
 	const (
-		systemID1 = "1"
-		systemID2 = "2"
-		systemID3 = "3"
+		systemID1 = "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+		systemID2 = "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+		systemID3 = "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
 	)
 
 	var createdIDs []uuid.UUID
@@ -54,7 +51,7 @@ func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 		})
 		s.NoError(err)
 
-		data, err := TRBRequestSystems(ctx, mockGetCedarSystem, createdIDs[0])
+		data, err := TRBRequestSystems(ctx, createdIDs[0])
 		s.NoError(err)
 		s.Len(data, 3)
 
@@ -83,7 +80,7 @@ func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 		s.True(found3)
 
 		// attempt to get systems for a trb request without linked systems
-		data, err = TRBRequestSystems(ctx, mockGetCedarSystem, createdIDs[1])
+		data, err = TRBRequestSystems(ctx, createdIDs[1])
 		s.NoError(err)
 		s.Empty(data)
 	})

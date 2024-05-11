@@ -32,9 +32,6 @@ func (loaders *DataLoaders) getCedarSystemBatchFunction(ctx context.Context, key
 		}
 	}
 	output := make([]*dataloader.Result, len(keys))
-	// if sys, found := systemSummaryMap[systemID]; found && sys != nil {
-	// 	return sys, nil
-	// }
 
 	for index, key := range keys {
 		ck, ok := key.Raw().(KeyArgs)
@@ -75,5 +72,4 @@ func GetCedarSystemByID(ctx context.Context, id string) (*models.CedarSystem, er
 	}
 
 	return system, nil
-
 }
