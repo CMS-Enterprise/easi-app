@@ -7,7 +7,6 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
@@ -23,13 +22,6 @@ type systemIntakeRelationTestCase struct {
 func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 	ctx := suite.testConfigs.Context
 	store := suite.testConfigs.Store
-	ctx = dataloaders.CTXWithLoaders(
-		ctx,
-		dataloaders.NewDataLoaders(
-			store,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		),
-	)
 
 	submittedAt := time.Now()
 
@@ -57,7 +49,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 		"should remove existing system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"a", "b"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewSystemIDs:           []string{},
 		},
 		"should not add system IDs": {
@@ -96,7 +88,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			})
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, openIntake.ID)
+			updatedIntakeSystemIDs, err := SystemIntakeSystems(ctx, openIntake.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
@@ -117,7 +109,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(ctx, updatedIntake.ID)
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, mockGetCedarSystem, openIntake.ID)
+			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, openIntake.ID)
 			suite.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -146,13 +138,6 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 	ctx := suite.testConfigs.Context
 	store := suite.testConfigs.Store
-	ctx = dataloaders.CTXWithLoaders(
-		ctx,
-		dataloaders.NewDataLoaders(
-			store,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		),
-	)
 
 	submittedAt := time.Now()
 
@@ -161,31 +146,31 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			InitialContractNumbers: []string{},
 			InitialSystemIDs:       []string{},
 			NewContractNumbers:     []string{"1", "2"},
-			NewSystemIDs:           []string{"a", "b"},
+			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 		},
 		"removes existing contract numbers and system IDs when none are given": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"a", "b"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewContractNumbers:     []string{},
 			NewSystemIDs:           []string{},
 		},
 		"changes existing contract numbers and system IDs to different ones": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"a", "b"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewContractNumbers:     []string{"3", "4"},
-			NewSystemIDs:           []string{"c", "d"},
+			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"},
 		},
 		"changes existing contract numbers and system IDs to add new ones": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"a", "b"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewContractNumbers:     []string{"1", "2", "3"},
-			NewSystemIDs:           []string{"a", "b", "c"},
+			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}", "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"},
 		},
 		"changes existing contract numbers and system IDs to remove old ones": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"a", "b"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewContractNumbers:     []string{"1"},
-			NewSystemIDs:           []string{"a"},
+			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"},
 		},
 	}
 
@@ -216,7 +201,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			})
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, openIntake.ID)
+			updatedIntakeSystemIDs, err := SystemIntakeSystems(ctx, openIntake.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
@@ -244,7 +229,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(ctx, updatedIntake.ID)
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, mockGetCedarSystem, openIntake.ID)
+			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, openIntake.ID)
 			suite.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -272,13 +257,6 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 	ctx := suite.testConfigs.Context
 	store := suite.testConfigs.Store
-	ctx = dataloaders.CTXWithLoaders(
-		ctx,
-		dataloaders.NewDataLoaders(
-			store,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		),
-	)
 
 	submittedAt := time.Now()
 
@@ -306,7 +284,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 		"should remove existing system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"a", "b"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewSystemIDs:           []string{},
 		},
 		"should not add system IDs": {
@@ -346,7 +324,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			})
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, openIntake.ID)
+			updatedIntakeSystemIDs, err := SystemIntakeSystems(ctx, openIntake.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
@@ -367,7 +345,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(ctx, updatedIntake.ID)
 			suite.NoError(err)
 
-			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, mockGetCedarSystem, openIntake.ID)
+			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, openIntake.ID)
 			suite.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -396,13 +374,6 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 	ctx := suite.testConfigs.Context
 	store := suite.testConfigs.Store
-	ctx = dataloaders.CTXWithLoaders(
-		ctx,
-		dataloaders.NewDataLoaders(
-			store,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		),
-	)
 
 	submittedAt := time.Now()
 
@@ -440,7 +411,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		// suite.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, unlinkedIntake.ID)
+		systemIDs, err := SystemIntakeSystems(ctx, unlinkedIntake.ID)
 		suite.NoError(err)
 		suite.Empty(systemIDs)
 	})
@@ -487,7 +458,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		// suite.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, unlinkedIntake.ID)
+		systemIDs, err := SystemIntakeSystems(ctx, unlinkedIntake.ID)
 		suite.NoError(err)
 		suite.Empty(systemIDs)
 	})
@@ -526,7 +497,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := SystemIntakeSystems(ctx, mockGetCedarSystem, unlinkedIntake.ID)
+		systemIDs, err := SystemIntakeSystems(ctx, unlinkedIntake.ID)
 		suite.NoError(err)
 		suite.Empty(systemIDs)
 	})
