@@ -18,6 +18,7 @@ type DataLoaders struct {
 	trbRequestContractNumbersLoader   *WrappedDataLoader
 	trbRequestSystemsLoader           *WrappedDataLoader
 	cedarSystemByIDLoader             *WrappedDataLoader
+	cedarSystemIsBookmarked           *WrappedDataLoader
 	FetchUserInfos                    func(context.Context, []string) ([]*models.UserInfo, error)
 	GetCedarSystems                   func(ctx context.Context) ([]*models.CedarSystem, error)
 }
@@ -42,6 +43,7 @@ func NewDataLoaders(store *storage.Store, fetchUserInfos func(context.Context, [
 	loaders.trbRequestContractNumbersLoader = newWrappedDataLoader(loaders.getTRBRequestContractNumbersByTRBRequestID)
 	loaders.trbRequestSystemsLoader = newWrappedDataLoader(loaders.getTRBRequestSystemsByTRBRequestID)
 	loaders.cedarSystemByIDLoader = newWrappedDataLoader(loaders.getCedarSystemBatchFunction)
+	loaders.cedarSystemIsBookmarked = newWrappedDataLoader(loaders.getBookmarkedCEDARSystems)
 	return loaders
 }
 

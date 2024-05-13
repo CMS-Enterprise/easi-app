@@ -171,14 +171,15 @@ type CedarSystem {
   id: String!
   name: String!
   description: String
-	acronym: String
-	status: String
-	businessOwnerOrg: String
-	businessOwnerOrgComp: String
+  acronym: String
+  status: String
+  businessOwnerOrg: String
+  businessOwnerOrgComp: String
   businessOwnerRoles: [CedarRole!]!
-	systemMaintainerOrg: String
-	systemMaintainerOrgComp: String
+  systemMaintainerOrg: String
+  systemMaintainerOrgComp: String
   versionId: String
+  isBookmarked: Boolean!
 }
 
 """

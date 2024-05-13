@@ -9,16 +9,18 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlqueries"
 )
 
 // CreateCedarSystemBookmark creates a new cedar system bookmark object in the database
 func (s *Store) CreateCedarSystemBookmark(ctx context.Context, cedarSystemBookmark *models.CedarSystemBookmark) (*models.CedarSystemBookmark, error) {
-	euaUserID := appcontext.Principal(ctx).ID()
-	createAt := s.clock.Now().UTC()
+	if len(cedarSystemBookmark.EUAUserID) < 1 {
+		cedarSystemBookmark.EUAUserID = appcontext.Principal(ctx).ID()
+	}
 
-	cedarSystemBookmark.CreatedAt = &createAt
-	cedarSystemBookmark.EUAUserID = euaUserID
+	cedarSystemBookmark.CreatedAt = helpers.PointerTo(s.clock.Now().UTC())
 	const createCedarSystemBookmarkSQL = `
 		INSERT INTO cedar_system_bookmarks (
 			eua_user_id,
@@ -57,6 +59,29 @@ func (s *Store) FetchCedarSystemBookmarks(ctx context.Context) ([]*models.CedarS
 		}
 	}
 	return results, nil
+}
+
+func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, paramTableJSON string) (map[string]struct{}, error) {
+	stmt, err := s.db.PrepareNamed(sqlqueries.CedarBookmarkSystemsForm.SelectLOADER)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	var bookmarks []*models.CedarSystemBookmark
+	if err := stmt.Select(&bookmarks, map[string]interface{}{
+		"param_table_json": paramTableJSON,
+	}); err != nil {
+		return nil, err
+	}
+
+	store := map[string]struct{}{}
+
+	for _, bookmark := range bookmarks {
+		store[bookmark.CedarSystemID] = struct{}{}
+	}
+
+	return store, nil
 }
 
 // DeleteCedarSystemBookmark deletes an existing cedar system bookmark object in the database
