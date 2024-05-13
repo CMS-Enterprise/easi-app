@@ -4,7 +4,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/guregu/null/zero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -186,10 +185,4 @@ func (suite *ResolverSuite) createNewIntake() *models.SystemIntake {
 	suite.NoError(err)
 
 	return newIntake
-}
-
-func mockGetCedarSystem(_ context.Context, systemID string) (*models.CedarSystem, error) {
-	return &models.CedarSystem{
-		ID: zero.StringFrom(systemID),
-	}, nil
 }

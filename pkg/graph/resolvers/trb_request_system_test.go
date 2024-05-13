@@ -10,17 +10,6 @@ import (
 
 func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 	ctx := s.testConfigs.Context
-	// ctx := context.Background()
-	// ctx = appcontext.WithLogger(ctx, s.testConfigs.Logger)
-	//
-	// ctx = dataloaders.CTXWithLoaders(
-	// 	ctx,
-	// 	dataloaders.NewDataLoaders(
-	// 		s.testConfigs.Store,
-	// 		func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-	// 		func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
-	// 	),
-	// )
 
 	const (
 		systemID1 = "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
