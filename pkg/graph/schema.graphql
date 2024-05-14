@@ -284,6 +284,15 @@ type CedarSystemDetails {
  deployments: [CedarDeployment!]!
  threats: [CedarThreat!]!
  urls: [CedarURL!]!
+ linkedRequests: CedarLinkedRequests!
+}
+
+"""
+This is a representation a count of System Intakes/TRB Requests linked to a given CEDAR system
+"""
+type CedarLinkedRequests {
+  trbRequests: Int!
+  systemIntakes: Int!
 }
 
 """

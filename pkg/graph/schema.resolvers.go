@@ -247,6 +247,11 @@ func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Contex
 	}, nil
 }
 
+// LinkedRequests is the resolver for the linkedRequests field.
+func (r *cedarSystemDetailsResolver) LinkedRequests(ctx context.Context, obj *models.CedarSystemDetails) (*models.CedarLinkedRequests, error) {
+	return r.store.LinkedRequests(ctx, obj.CedarSystem.ID.String)
+}
+
 // Author is the resolver for the author field.
 func (r *governanceRequestFeedbackResolver) Author(ctx context.Context, obj *models.GovernanceRequestFeedback) (*models.UserInfo, error) {
 	return resolvers.GetGovernanceRequestFeedbackAuthor(ctx, r.service.FetchUserInfo, obj.CreatedBy)
