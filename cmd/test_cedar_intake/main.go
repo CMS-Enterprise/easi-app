@@ -463,7 +463,11 @@ func execute() {
 		panic(fmt.Errorf("problem intializing store in test_cedar_intake: %w", err))
 	}
 
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(store, func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil }))
+	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(
+		store,
+		func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
+		func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
+	))
 
 	rootCmd.AddCommand(
 		submitCmd(ctx),

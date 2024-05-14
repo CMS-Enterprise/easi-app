@@ -11,10 +11,9 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// TRBRequestSystems utilizies a dataloader to retrieve systems linked to a given trb request ID
+// TRBRequestSystems utilizies dataloaders to retrieve systems linked to a given trb request ID
 func TRBRequestSystems(
 	ctx context.Context,
-	getCedarSystem func(context.Context, string) (*models.CedarSystem, error),
 	trbRequestID uuid.UUID,
 ) ([]*models.CedarSystem, error) {
 
@@ -25,7 +24,7 @@ func TRBRequestSystems(
 	}
 	systems := []*models.CedarSystem{}
 	for _, v := range trbRequests {
-		cedarSystemSummary, err := getCedarSystem(ctx, v.SystemID)
+		cedarSystemSummary, err := dataloaders.GetCedarSystemByID(ctx, v.SystemID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("unable to retrieve system from cedar", zap.Error(err))
 			continue

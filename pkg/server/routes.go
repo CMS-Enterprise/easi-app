@@ -232,7 +232,11 @@ func (s *Server) routes(
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
 
-	dataLoaders := dataloaders.NewDataLoaders(store, userSearchClient.FetchUserInfos)
+	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
+		return coreClient.GetSystemSummary(ctx)
+	}
+
+	dataLoaders := dataloaders.NewDataLoaders(store, userSearchClient.FetchUserInfos, getCedarSystems)
 	dataLoaderMiddleware := dataloaders.NewDataLoaderMiddleware(dataLoaders)
 	s.router.Use(dataLoaderMiddleware)
 
