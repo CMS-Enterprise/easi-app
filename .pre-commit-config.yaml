@@ -45,7 +45,7 @@ repos:
           )$
 
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.56.2
+    rev: v1.58.1
     hooks:
       - id: golangci-lint
         name: Lint go files
@@ -59,6 +59,7 @@ repos:
       language: node
       additional_dependencies: [dockerfilelint]
       files: Dockerfile.*
+      exclude: Dockerfile.cedarproxy
 
   - repo: local
     hooks:

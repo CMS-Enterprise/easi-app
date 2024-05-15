@@ -106,6 +106,9 @@ fi
 
     echo "🐋 Building db-migrate:${NAMESPACE} image 🐋"
     docker build -f ../Dockerfile.db_migrations --build-arg TAG=9.10-alpine -t db-migrate:"$NAMESPACE" ../.
+
+    echo "🐋 Building cedarproxy:${NAMESPACE} image 🐋"
+    docker build -f ../cedarproxy/Dockerfile.cedarproxy -t cedarproxy:"$NAMESPACE" ../cedarproxy/.
 )
 
 echo "❄️  Deploying EASi via Kustomize  ❄️"
@@ -122,6 +125,7 @@ delete_temp_dir() {
     kustomize build > manifest.yaml
     sed -i'' -E "s/easi-client:latest/easi-client:${NAMESPACE}/" manifest.yaml
     sed -i'' -E "s/easi-backend:latest/easi-backend:${NAMESPACE}/" manifest.yaml
+    sed -i'' -E "s/cedarproxy:latest/cedarproxy:${NAMESPACE}/" manifest.yaml
     sed -i'' -E "s/db-migrate:latest/db-migrate:${NAMESPACE}/" manifest.yaml
     sed -i'' -E "s/easi-backend.localdev.me/${NAMESPACE}-backend.localdev.me/" manifest.yaml
     sed -i'' -E "s/easi.localdev.me/${NAMESPACE}.localdev.me/" manifest.yaml

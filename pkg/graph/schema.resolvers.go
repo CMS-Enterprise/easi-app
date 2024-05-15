@@ -174,6 +174,11 @@ func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *model
 	return cedarRoles, nil
 }
 
+// IsBookmarked is the resolver for the isBookmarked field.
+func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
+	return resolvers.CedarSystemIsBookmarked(ctx, obj.ID.String)
+}
+
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
 func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error) {
 	ipEnabledCt := int(obj.SystemMaintainerInformation.IPEnabledAssetCount)
@@ -1236,12 +1241,12 @@ func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (
 
 // CedarSystems is the resolver for the cedarSystems field.
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	return r.cedarCoreClient.GetSystemSummary(ctx, true)
+	return r.cedarCoreClient.GetSystemSummary(ctx)
 }
 
 // CedarSubSystems is the resolver for the cedarSubSystems field.
 func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID string) ([]*models.CedarSubSystem, error) {
-	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, false, cedarcore.WithSubSystems(cedarSystemID))
+	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.WithSubSystems(cedarSystemID))
 	if err != nil {
 		return nil, err
 	}
@@ -1267,7 +1272,7 @@ func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemI
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
-	return r.cedarCoreClient.GetSystemSummary(ctx, false, cedarcore.WithEuaIDFilter(requesterEUAID))
+	return r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.WithEuaIDFilter(requesterEUAID))
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.
@@ -1814,7 +1819,7 @@ func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.Sys
 
 // Systems is the resolver for the systems field on system intakes.
 func (r *systemIntakeResolver) Systems(ctx context.Context, obj *models.SystemIntake) ([]*models.CedarSystem, error) {
-	return resolvers.SystemIntakeSystems(ctx, r.cedarCoreClient.GetSystem, obj.ID)
+	return resolvers.SystemIntakeSystems(ctx, obj.ID)
 }
 
 // ContractNumbers is the resolver for the contractNumbers field on system intakes.
@@ -1974,7 +1979,7 @@ func (r *tRBRequestResolver) ContractNumbers(ctx context.Context, obj *models.TR
 
 // Systems is the resolver for the systems field.
 func (r *tRBRequestResolver) Systems(ctx context.Context, obj *models.TRBRequest) ([]*models.CedarSystem, error) {
-	return resolvers.TRBRequestSystems(ctx, r.cedarCoreClient.GetSystem, obj.ID)
+	return resolvers.TRBRequestSystems(ctx, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.
