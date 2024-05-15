@@ -6,7 +6,6 @@ package authority_to_operate
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,13 +97,11 @@ func (o *AuthorityToOperateFindListOK) Code() int {
 }
 
 func (o *AuthorityToOperateFindListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *AuthorityToOperateFindListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *AuthorityToOperateFindListOK) GetPayload() *models.AuthorityToOperateFindResponse {
@@ -168,13 +165,11 @@ func (o *AuthorityToOperateFindListBadRequest) Code() int {
 }
 
 func (o *AuthorityToOperateFindListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *AuthorityToOperateFindListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *AuthorityToOperateFindListBadRequest) GetPayload() *models.Response {
@@ -238,13 +233,11 @@ func (o *AuthorityToOperateFindListUnauthorized) Code() int {
 }
 
 func (o *AuthorityToOperateFindListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *AuthorityToOperateFindListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *AuthorityToOperateFindListUnauthorized) GetPayload() *models.Response {
@@ -308,13 +301,11 @@ func (o *AuthorityToOperateFindListInternalServerError) Code() int {
 }
 
 func (o *AuthorityToOperateFindListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *AuthorityToOperateFindListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /authorityToOperate][%d] authorityToOperateFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *AuthorityToOperateFindListInternalServerError) GetPayload() *models.Response {

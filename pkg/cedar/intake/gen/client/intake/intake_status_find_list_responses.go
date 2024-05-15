@@ -6,7 +6,6 @@ package intake
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,13 +97,11 @@ func (o *IntakeStatusFindListOK) Code() int {
 }
 
 func (o *IntakeStatusFindListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *IntakeStatusFindListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *IntakeStatusFindListOK) GetPayload() *models.IntakeStatusResponse {
@@ -168,13 +165,11 @@ func (o *IntakeStatusFindListBadRequest) Code() int {
 }
 
 func (o *IntakeStatusFindListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *IntakeStatusFindListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *IntakeStatusFindListBadRequest) GetPayload() *models.Response {
@@ -238,13 +233,11 @@ func (o *IntakeStatusFindListUnauthorized) Code() int {
 }
 
 func (o *IntakeStatusFindListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *IntakeStatusFindListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *IntakeStatusFindListUnauthorized) GetPayload() *models.Response {
@@ -308,13 +301,11 @@ func (o *IntakeStatusFindListInternalServerError) Code() int {
 }
 
 func (o *IntakeStatusFindListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *IntakeStatusFindListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /intake/status][%d] intakeStatusFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *IntakeStatusFindListInternalServerError) GetPayload() *models.Response {

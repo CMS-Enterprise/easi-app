@@ -6,7 +6,6 @@ package component
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,13 +97,11 @@ func (o *ComponentFindOK) Code() int {
 }
 
 func (o *ComponentFindOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /component][%d] componentFindOK %s", 200, payload)
+	return fmt.Sprintf("[GET /component][%d] componentFindOK  %+v", 200, o.Payload)
 }
 
 func (o *ComponentFindOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /component][%d] componentFindOK %s", 200, payload)
+	return fmt.Sprintf("[GET /component][%d] componentFindOK  %+v", 200, o.Payload)
 }
 
 func (o *ComponentFindOK) GetPayload() *models.ComponentFindResponse {
@@ -168,13 +165,11 @@ func (o *ComponentFindBadRequest) Code() int {
 }
 
 func (o *ComponentFindBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /component][%d] componentFindBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /component][%d] componentFindBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *ComponentFindBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /component][%d] componentFindBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /component][%d] componentFindBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *ComponentFindBadRequest) GetPayload() *models.Response {
@@ -238,13 +233,11 @@ func (o *ComponentFindUnauthorized) Code() int {
 }
 
 func (o *ComponentFindUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /component][%d] componentFindUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /component][%d] componentFindUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *ComponentFindUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /component][%d] componentFindUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /component][%d] componentFindUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *ComponentFindUnauthorized) GetPayload() *models.Response {
@@ -308,13 +301,11 @@ func (o *ComponentFindInternalServerError) Code() int {
 }
 
 func (o *ComponentFindInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /component][%d] componentFindInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /component][%d] componentFindInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ComponentFindInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /component][%d] componentFindInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /component][%d] componentFindInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ComponentFindInternalServerError) GetPayload() *models.Response {

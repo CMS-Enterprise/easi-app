@@ -6,7 +6,6 @@ package enumeration
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,13 +97,11 @@ func (o *EnumerationFindListOK) Code() int {
 }
 
 func (o *EnumerationFindListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *EnumerationFindListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *EnumerationFindListOK) GetPayload() *models.EnumerationFindResponse {
@@ -168,13 +165,11 @@ func (o *EnumerationFindListBadRequest) Code() int {
 }
 
 func (o *EnumerationFindListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *EnumerationFindListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *EnumerationFindListBadRequest) GetPayload() *models.Response {
@@ -238,13 +233,11 @@ func (o *EnumerationFindListUnauthorized) Code() int {
 }
 
 func (o *EnumerationFindListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *EnumerationFindListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *EnumerationFindListUnauthorized) GetPayload() *models.Response {
@@ -308,13 +301,11 @@ func (o *EnumerationFindListInternalServerError) Code() int {
 }
 
 func (o *EnumerationFindListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *EnumerationFindListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /enumeration][%d] enumerationFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *EnumerationFindListInternalServerError) GetPayload() *models.Response {

@@ -6,7 +6,6 @@ package budget
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -104,13 +103,11 @@ func (o *BudgetDeleteListOK) Code() int {
 }
 
 func (o *BudgetDeleteListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListOK %s", 200, payload)
+	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListOK  %+v", 200, o.Payload)
 }
 
 func (o *BudgetDeleteListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListOK %s", 200, payload)
+	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListOK  %+v", 200, o.Payload)
 }
 
 func (o *BudgetDeleteListOK) GetPayload() *models.Response {
@@ -174,13 +171,11 @@ func (o *BudgetDeleteListBadRequest) Code() int {
 }
 
 func (o *BudgetDeleteListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *BudgetDeleteListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *BudgetDeleteListBadRequest) GetPayload() *models.Response {
@@ -244,13 +239,11 @@ func (o *BudgetDeleteListUnauthorized) Code() int {
 }
 
 func (o *BudgetDeleteListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *BudgetDeleteListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *BudgetDeleteListUnauthorized) GetPayload() *models.Response {
@@ -314,13 +307,11 @@ func (o *BudgetDeleteListNotFound) Code() int {
 }
 
 func (o *BudgetDeleteListNotFound) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListNotFound %s", 404, payload)
+	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *BudgetDeleteListNotFound) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListNotFound %s", 404, payload)
+	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *BudgetDeleteListNotFound) GetPayload() *models.Response {
@@ -384,13 +375,11 @@ func (o *BudgetDeleteListInternalServerError) Code() int {
 }
 
 func (o *BudgetDeleteListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *BudgetDeleteListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[DELETE /budget][%d] budgetDeleteListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *BudgetDeleteListInternalServerError) GetPayload() *models.Response {

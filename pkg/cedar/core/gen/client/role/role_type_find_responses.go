@@ -6,7 +6,6 @@ package role
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -104,13 +103,11 @@ func (o *RoleTypeFindOK) Code() int {
 }
 
 func (o *RoleTypeFindOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindOK %s", 200, payload)
+	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindOK  %+v", 200, o.Payload)
 }
 
 func (o *RoleTypeFindOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindOK %s", 200, payload)
+	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindOK  %+v", 200, o.Payload)
 }
 
 func (o *RoleTypeFindOK) GetPayload() *models.RoleTypeFindResponse {
@@ -174,13 +171,11 @@ func (o *RoleTypeFindBadRequest) Code() int {
 }
 
 func (o *RoleTypeFindBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *RoleTypeFindBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *RoleTypeFindBadRequest) GetPayload() *models.Response {
@@ -244,13 +239,11 @@ func (o *RoleTypeFindUnauthorized) Code() int {
 }
 
 func (o *RoleTypeFindUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *RoleTypeFindUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *RoleTypeFindUnauthorized) GetPayload() *models.Response {
@@ -314,13 +307,11 @@ func (o *RoleTypeFindNotFound) Code() int {
 }
 
 func (o *RoleTypeFindNotFound) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindNotFound %s", 404, payload)
+	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindNotFound  %+v", 404, o.Payload)
 }
 
 func (o *RoleTypeFindNotFound) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindNotFound %s", 404, payload)
+	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindNotFound  %+v", 404, o.Payload)
 }
 
 func (o *RoleTypeFindNotFound) GetPayload() *models.Response {
@@ -384,13 +375,11 @@ func (o *RoleTypeFindInternalServerError) Code() int {
 }
 
 func (o *RoleTypeFindInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *RoleTypeFindInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /role/type/{application}][%d] roleTypeFindInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *RoleTypeFindInternalServerError) GetPayload() *models.Response {

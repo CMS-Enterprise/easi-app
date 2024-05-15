@@ -22,7 +22,7 @@ type RoleType struct {
 
 	// application
 	// Required: true
-	// Enum: ["all","alfabet"]
+	// Enum: [all alfabet]
 	Application *string `json:"application"`
 
 	// description

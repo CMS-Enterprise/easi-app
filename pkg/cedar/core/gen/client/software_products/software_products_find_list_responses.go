@@ -6,7 +6,6 @@ package software_products
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -104,13 +103,11 @@ func (o *SoftwareProductsFindListOK) Code() int {
 }
 
 func (o *SoftwareProductsFindListOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *SoftwareProductsFindListOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListOK %s", 200, payload)
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListOK  %+v", 200, o.Payload)
 }
 
 func (o *SoftwareProductsFindListOK) GetPayload() *models.SoftwareProductsFindResponse {
@@ -174,13 +171,11 @@ func (o *SoftwareProductsFindListBadRequest) Code() int {
 }
 
 func (o *SoftwareProductsFindListBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *SoftwareProductsFindListBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListBadRequest %s", 400, payload)
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *SoftwareProductsFindListBadRequest) GetPayload() *models.Response {
@@ -244,13 +239,11 @@ func (o *SoftwareProductsFindListUnauthorized) Code() int {
 }
 
 func (o *SoftwareProductsFindListUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *SoftwareProductsFindListUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *SoftwareProductsFindListUnauthorized) GetPayload() *models.Response {
@@ -314,13 +307,11 @@ func (o *SoftwareProductsFindListNotFound) Code() int {
 }
 
 func (o *SoftwareProductsFindListNotFound) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListNotFound %s", 404, payload)
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *SoftwareProductsFindListNotFound) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListNotFound %s", 404, payload)
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListNotFound  %+v", 404, o.Payload)
 }
 
 func (o *SoftwareProductsFindListNotFound) GetPayload() *models.Response {
@@ -384,13 +375,11 @@ func (o *SoftwareProductsFindListInternalServerError) Code() int {
 }
 
 func (o *SoftwareProductsFindListInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *SoftwareProductsFindListInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[GET /softwareProducts][%d] softwareProductsFindListInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *SoftwareProductsFindListInternalServerError) GetPayload() *models.Response {

@@ -6,7 +6,6 @@ package contract
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,13 +97,11 @@ func (o *ContractAddOK) Code() int {
 }
 
 func (o *ContractAddOK) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /contract][%d] contractAddOK %s", 200, payload)
+	return fmt.Sprintf("[POST /contract][%d] contractAddOK  %+v", 200, o.Payload)
 }
 
 func (o *ContractAddOK) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /contract][%d] contractAddOK %s", 200, payload)
+	return fmt.Sprintf("[POST /contract][%d] contractAddOK  %+v", 200, o.Payload)
 }
 
 func (o *ContractAddOK) GetPayload() *models.Response {
@@ -168,13 +165,11 @@ func (o *ContractAddBadRequest) Code() int {
 }
 
 func (o *ContractAddBadRequest) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /contract][%d] contractAddBadRequest %s", 400, payload)
+	return fmt.Sprintf("[POST /contract][%d] contractAddBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *ContractAddBadRequest) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /contract][%d] contractAddBadRequest %s", 400, payload)
+	return fmt.Sprintf("[POST /contract][%d] contractAddBadRequest  %+v", 400, o.Payload)
 }
 
 func (o *ContractAddBadRequest) GetPayload() *models.Response {
@@ -238,13 +233,11 @@ func (o *ContractAddUnauthorized) Code() int {
 }
 
 func (o *ContractAddUnauthorized) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /contract][%d] contractAddUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[POST /contract][%d] contractAddUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *ContractAddUnauthorized) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /contract][%d] contractAddUnauthorized %s", 401, payload)
+	return fmt.Sprintf("[POST /contract][%d] contractAddUnauthorized  %+v", 401, o.Payload)
 }
 
 func (o *ContractAddUnauthorized) GetPayload() *models.Response {
@@ -308,13 +301,11 @@ func (o *ContractAddInternalServerError) Code() int {
 }
 
 func (o *ContractAddInternalServerError) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /contract][%d] contractAddInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[POST /contract][%d] contractAddInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ContractAddInternalServerError) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /contract][%d] contractAddInternalServerError %s", 500, payload)
+	return fmt.Sprintf("[POST /contract][%d] contractAddInternalServerError  %+v", 500, o.Payload)
 }
 
 func (o *ContractAddInternalServerError) GetPayload() *models.Response {
