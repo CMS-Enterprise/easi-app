@@ -71,14 +71,6 @@ jobs:
     with:
       env: dev
       lambda_version: 10
-    secrets: inherit
-
-  deploy_dev_cedarproxy:
-    needs: [deploy_dev, Build_Cedarproxy_Image]
-    if: ${{ inputs.env == 'dev' && inputs.force_cedarproxy == true }}
-    uses: ./.github/workflows/deploy_cedarproxy.yml
-    with:
-      env: dev
       force_cedarproxy: ${{ inputs.force_cedarproxy }}
     secrets: inherit
 
@@ -89,14 +81,6 @@ jobs:
     with:
       env: impl
       lambda_version: 9
-    secrets: inherit
-
-  deploy_impl_cedarproxy:
-    needs: [deploy_impl, Build_Cedarproxy_Image]
-    if: ${{ inputs.env == 'impl' && inputs.force_cedarproxy == true }}
-    uses: ./.github/workflows/deploy_cedarproxy.yml
-    with:
-      env: impl
       force_cedarproxy: ${{ inputs.force_cedarproxy }}
     secrets: inherit
 
@@ -107,13 +91,5 @@ jobs:
     with:
       env: prod
       lambda_version: 8
-    secrets: inherit
-
-  deploy_prod_cedarproxy:
-    needs: [deploy_prod, Build_Cedarproxy_Image]
-    if: ${{ inputs.env == 'prod' && inputs.force_cedarproxy == true }}
-    uses: ./.github/workflows/deploy_cedarproxy.yml
-    with:
-      env: prod
       force_cedarproxy: ${{ inputs.force_cedarproxy }}
     secrets: inherit
