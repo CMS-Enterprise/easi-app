@@ -9,6 +9,10 @@ on:
       lambda_version:
         required: true
         type: string
+      force_cedarproxy:
+        required: true
+        type: boolean
+        default: false
 
 env:
   EASI_APP_NODE_VERSION: "16.14.0"
@@ -28,6 +32,13 @@ jobs:
       - name: Confirm deploy
         run: |
           echo "Deploy confirmed! 🚀"
+  
+  deploy_cedarproxy:
+    needs: [confirm_deploy]
+    uses: ./.github/workflows/deploy_cedarproxy.yml
+    with:
+      env: ${{ inputs.env }}
+      force_cedarproxy: false
   
   database_actions:
     runs-on: ubuntu-latest

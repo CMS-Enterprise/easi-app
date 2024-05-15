@@ -47,40 +47,23 @@ jobs:
     with:
       env: dev
       lambda_version: 10
-    secrets: inherit
-  deploy_cedarproxy_dev:
-    needs: [deploy_dev]
-    uses: ./.github/workflows/deploy_cedarproxy.yml
-    with:
-      env: dev
       force_cedarproxy: false
+    secrets: inherit
 
   deploy_impl:
     needs: [deploy_dev, Build_Frontend_Assets]
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: impl
+      force_cedarproxy: false
       lambda_version: 9
     secrets: inherit
-
-  deploy_cedarproxy_impl:
-    needs: [deploy_impl]
-    uses: ./.github/workflows/deploy_cedarproxy.yml
-    with:
-      env: impl
-      force_cedarproxy: false
   
   deploy_prod:
     needs: [deploy_impl, Build_Frontend_Assets]
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: prod
+      force_cedarproxy: false
       lambda_version: 8
     secrets: inherit
-  
-  deploy_cedarproxy_prod:
-    needs: [deploy_prod]
-    uses: ./.github/workflows/deploy_cedarproxy.yml
-    with:
-      env: prod
-      force_cedarproxy: false
