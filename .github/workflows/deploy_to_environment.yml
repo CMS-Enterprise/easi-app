@@ -28,7 +28,7 @@ jobs:
       - name: Confirm deploy
         run: |
           echo "Deploy confirmed! 🚀"
-
+  
   database_actions:
     runs-on: ubuntu-latest
     needs: confirm_deploy
