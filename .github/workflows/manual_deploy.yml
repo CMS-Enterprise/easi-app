@@ -42,7 +42,7 @@ jobs:
     uses: ./.github/workflows/build_cedarproxy_image.yml
     secrets: inherit
     with:
-      force_cedarproxy: true
+      force_cedarproxy: ${{ inputs.force_cedarproxy }}
 
   Build_Frontend_Assets:
     uses: ./.github/workflows/build_frontend_assets.yml
