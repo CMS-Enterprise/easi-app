@@ -1,4 +1,11 @@
-import React, { CSSProperties, useEffect, useRef, useState } from 'react';
+import React, {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import Select, {
   ClearIndicatorProps,
@@ -130,10 +137,12 @@ export default function CedarContactSelect({
   autoSearch
 }: CedarContactSelectProps) {
   const { t } = useTranslation();
+
   // If autoSearch, set name as initial search term
   const [searchTerm, setSearchTerm] = useState<string | undefined>(
-    value ? formatContactLabel(value) : undefined
+    value?.commonName ? formatContactLabel(value) : undefined
   );
+
   // If autoSearch, run initial query from name
   const { contacts, queryCedarContacts, loading } = useCedarContactLookup(
     searchTerm
@@ -142,23 +151,36 @@ export default function CedarContactSelect({
   // Selected contact
   const selectedContact = useRef(value?.euaUserId);
 
+  /** Field should only autoSearch if initial commonName was provided */
+  const shouldAutoSearch = useMemo(() => autoSearch && value?.commonName, [
+    autoSearch,
+    value?.commonName
+  ]);
+
   // Show warning if autosearch returns multiple or no results
-  const showWarning = autoSearch && !value?.euaUserId && contacts.length !== 1;
+  const showWarning =
+    shouldAutoSearch && !value?.euaUserId && contacts.length !== 1;
 
   /** Query CEDAR by common name and update contacts */
-  const queryContacts = (query: string) => {
-    setSearchTerm(query);
-    if (query.length > 1) {
-      queryCedarContacts(query.split(',')[0]);
-    }
-  };
+  const queryContacts = useCallback(
+    (query: string) => {
+      setSearchTerm(query);
+      if (query.length > 1) {
+        queryCedarContacts(query.split(',')[0]);
+      }
+    },
+    [queryCedarContacts]
+  );
 
   /** Update contact and reset search term */
-  const updateContact = (contact?: CedarContactProps | null) => {
-    onChange(contact || null);
-    selectedContact.current = contact?.euaUserId;
-    queryContacts(contact ? formatContactLabel(contact) : '');
-  };
+  const updateContact = useCallback(
+    (contact?: CedarContactProps | null) => {
+      onChange(contact || null);
+      selectedContact.current = contact?.euaUserId;
+      queryContacts(contact ? formatContactLabel(contact) : '');
+    },
+    [onChange, queryContacts]
+  );
 
   // React Select styles object
   const customStyles: {
@@ -241,10 +263,17 @@ export default function CedarContactSelect({
   // Update contact when value changes
   // Fix for 'same as requester' checkboxes in system intake form
   useEffect(() => {
-    if (!autoSearch && value?.euaUserId !== selectedContact.current) {
+    if (value?.euaUserId !== selectedContact.current) {
       updateContact(value);
     }
-  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [value, contacts, updateContact]);
+
+  // Update contact with first result after autoSearch on initial render
+  useEffect(() => {
+    if (shouldAutoSearch && contacts.length === 1 && !selectedContact.current) {
+      updateContact(contacts[0]);
+    }
+  }, [shouldAutoSearch, contacts, updateContact]);
 
   return (
     <Select
@@ -289,7 +318,7 @@ export default function CedarContactSelect({
       onChange={item => updateContact(item?.value || null)}
       onBlur={e => {
         // Automatically select on blur if search returns single result
-        if (autoSearch && contacts.length === 1) {
+        if (shouldAutoSearch && contacts.length === 1) {
           updateContact(contacts[0]);
         }
       }}
