@@ -291,7 +291,7 @@ type SystemWorkspace {
 }
 
 """
-This is a representation a count of System Intakes/TRB Requests linked to a given CEDAR system
+This is a representation  of System Intakes/TRB Requests linked to a given CEDAR system
 """
 type CedarLinkedRequests {
   trbRequests: [TRBRequest!]!

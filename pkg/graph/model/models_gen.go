@@ -59,7 +59,7 @@ type CedarBusinessOwnerInformation struct {
 	StoresBeneficiaryAddress       *bool    `json:"storesBeneficiaryAddress,omitempty"`
 }
 
-// This is a representation a count of System Intakes/TRB Requests linked to a given CEDAR system
+// This is a representation  of System Intakes/TRB Requests linked to a given CEDAR system
 type CedarLinkedRequests struct {
 	TrbRequests   []*models.TRBRequest   `json:"trbRequests"`
 	SystemIntakes []*models.SystemIntake `json:"systemIntakes"`
