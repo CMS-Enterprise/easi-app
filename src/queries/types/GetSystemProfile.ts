@@ -110,12 +110,6 @@ export interface GetSystemProfile_cedarContractsBySystem {
   isDeliveryOrg: boolean | null;
 }
 
-export interface GetSystemProfile_cedarSystemDetails_linkedRequests {
-  __typename: "CedarLinkedRequests";
-  trbRequests: number;
-  systemIntakes: number;
-}
-
 export interface GetSystemProfile_cedarSystemDetails_businessOwnerInformation {
   __typename: "CedarBusinessOwnerInformation";
   isCmsOwned: boolean | null;
@@ -200,7 +194,6 @@ export interface GetSystemProfile_cedarSystemDetails_systemMaintainerInformation
 
 export interface GetSystemProfile_cedarSystemDetails {
   __typename: "CedarSystemDetails";
-  linkedRequests: GetSystemProfile_cedarSystemDetails_linkedRequests;
   businessOwnerInformation: GetSystemProfile_cedarSystemDetails_businessOwnerInformation;
   cedarSystem: GetSystemProfile_cedarSystemDetails_cedarSystem;
   deployments: GetSystemProfile_cedarSystemDetails_deployments[];

@@ -670,11 +670,6 @@ export const result: { data: GetSystemProfile } = {
       __typename: 'CedarSoftwareProducts'
     },
     cedarSystemDetails: {
-      linkedRequests: {
-        trbRequests: 3,
-        systemIntakes: 1,
-        __typename: 'CedarLinkedRequests'
-      },
       businessOwnerInformation: {
         isCmsOwned: true,
         numberOfContractorFte: '20',

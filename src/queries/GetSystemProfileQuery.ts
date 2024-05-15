@@ -102,10 +102,6 @@ export default gql`
       isDeliveryOrg
     }
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
-      linkedRequests {
-        trbRequests
-        systemIntakes
-      }
       businessOwnerInformation {
         isCmsOwned
         numberOfContractorFte

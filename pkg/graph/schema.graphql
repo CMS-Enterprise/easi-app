@@ -284,7 +284,10 @@ type CedarSystemDetails {
  deployments: [CedarDeployment!]!
  threats: [CedarThreat!]!
  urls: [CedarURL!]!
- linkedRequests: CedarLinkedRequests!
+}
+
+type SystemWorkspace {
+  linkedRequests: CedarLinkedRequests!
 }
 
 """
@@ -2462,6 +2465,8 @@ type Query {
   trbAdminNote(id: UUID!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
   userAccount(username: String!): UserAccount
+
+  systemWorkspace(cedarSystemId: String!): SystemWorkspace!
 }
 
 enum TRBRequestType {
