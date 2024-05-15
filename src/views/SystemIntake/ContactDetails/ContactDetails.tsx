@@ -67,6 +67,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const { t } = useTranslation('intake');
   const history = useHistory();
 
+  const taskListUrl =
+    systemIntake.requestType === SystemIntakeRequestType.SHUTDOWN
+      ? '/'
+      : `/governance-task-list/${systemIntake.id}`;
+
   const [
     busOwnerSameAsRequester,
     setBusOwnerSameAsRequester
@@ -117,8 +122,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const {
     control,
     handleSubmit,
+    partialSubmit,
     setError,
     watch,
+    getValues,
     formState: { defaultValues, dirtyFields, isDirty, errors }
   } = form;
 
@@ -148,7 +155,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   });
 
   /** Creates or updates contact in database and sets ID field for new contacts */
-  const setContact = async (contact: SystemIntakeContactProps) => {
+  const setContact = async (contact?: SystemIntakeContactProps) => {
+    if (!contact) return null;
+
     const fieldName = camelCase(contact.role) as SystemIntakeRoleKeys;
 
     /** Checks if contact fields are set */
@@ -167,56 +176,52 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   };
 
   /** Update contacts and system intake form */
-  const submit = handleSubmit(
-    async ({
+  const submit = async (values: Partial<ContactDetailsForm>) => {
+    // Update contacts
+    await Promise.all([
+      setContact(values?.requester),
+      setContact(values?.businessOwner),
+      setContact(values?.productManager),
+      setContact(values?.isso)
+    ]);
+
+    /** Combines existing form values with (possibly partial) submitted values object */
+    const formValuesObject: ContactDetailsForm = { ...getValues(), ...values };
+
+    const {
       requester,
       businessOwner,
       productManager,
       isso,
       governanceTeams
-    }) => {
-      // If fields unchanged, go to next page
-      if (!isDirty) return history.push('request-details');
+    } = formValuesObject;
 
-      // Update contacts
-      await Promise.all([
-        setContact(requester),
-        setContact(businessOwner),
-        setContact(productManager),
-        setContact(isso)
-      ]);
-
-      // Update system intake
-      return updateSystemIntake({
-        variables: {
-          input: {
-            id: systemIntake.id,
-            requester: {
-              name: requester.commonName,
-              component: requester.component
-            },
-            businessOwner: {
-              name: businessOwner.commonName,
-              component: businessOwner.component
-            },
-            productManager: {
-              name: productManager.commonName,
-              component: productManager.component
-            },
-            isso: {
-              isPresent: isso.isPresent,
-              name: isso.commonName
-            },
-            governanceTeams
-          }
+    // Update system intake
+    return updateSystemIntake({
+      variables: {
+        input: {
+          id: systemIntake.id,
+          requester: {
+            name: requester.commonName,
+            component: requester.component
+          },
+          businessOwner: {
+            name: businessOwner.commonName,
+            component: businessOwner.component
+          },
+          productManager: {
+            name: productManager.commonName,
+            component: productManager.component
+          },
+          isso: {
+            isPresent: isso.isPresent,
+            name: isso.commonName
+          },
+          governanceTeams
         }
-      })
-        .then(() => history.push('request-details'))
-        .catch(e => {
-          setError('root', { message: t('error:encounteredIssueTryAgain') });
-        });
-    }
-  );
+      }
+    });
+  };
 
   /**
    * Used to set contact details to match requester
@@ -308,7 +313,17 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       )}
 
       <Form
-        onSubmit={submit}
+        onSubmit={handleSubmit(values => {
+          if (!isDirty) return history.push('request-details');
+
+          return submit(values)
+            .then(() => history.push('request-details'))
+            .catch(() => {
+              setError('root', {
+                message: t('error:encounteredIssueTryAgain')
+              });
+            });
+        })}
         className="maxw-none tablet:grid-col-6 margin-bottom-7"
       >
         {/* Requester */}
@@ -432,6 +447,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     setValue('businessOwner.email', contact?.email || '');
                   }}
                   disabled={busOwnerSameAsRequester}
+                  autoSearch
                 />
               </FormGroup>
             );
@@ -543,6 +559,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     setValue('productManager.email', contact?.email || '');
                   }}
                   disabled={prodManagerSameAsRequester}
+                  autoSearch
                 />
               </FormGroup>
             );
@@ -652,6 +669,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                                   email: contact?.email || ''
                                 });
                               }}
+                              autoSearch
                             />
                           </FormGroup>
                         );
@@ -740,10 +758,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             type: 'submit'
           }}
           border={false}
-          taskListUrl={
-            systemIntake.requestType === SystemIntakeRequestType.SHUTDOWN
-              ? '/'
-              : `/governance-task-list/${systemIntake.id}`
+          taskListUrl={taskListUrl}
+          submit={() =>
+            partialSubmit({
+              update: submit,
+              callback: () => history.push(taskListUrl)
+            })
           }
           className="margin-top-4"
         />
