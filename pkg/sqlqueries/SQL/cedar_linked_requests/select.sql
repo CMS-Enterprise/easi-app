@@ -1,33 +1,19 @@
 SELECT
 	(
 		SELECT
-			COALESCE(
-				SUM(
-					CASE
-						WHEN trs.system_id = $1
-						AND tr.state = 'OPEN' THEN 1
-						ELSE 0
-					END
-				),
-				0
-			)
+			tr. *
 		FROM
-			trb_request_systems trs
-			LEFT JOIN trb_request tr ON trs.system_id = tr.id :: TEXT
+			trb_request tr
+			LEFT JOIN trb_request_systems trs ON trs.trb_request_id = tr.id
+		WHERE
+			trs.system_id = $1
 	) AS trb_count,
 	(
 		SELECT
-			COALESCE(
-				SUM(
-					CASE
-						WHEN sis.system_id = $1
-						AND si.state = 'OPEN' THEN 1
-						ELSE 0
-					END
-				),
-				0
-			)
+			si. *
 		FROM
-			system_intake_systems sis
-			LEFT JOIN system_intakes si ON sis.system_id = si.id :: TEXT
+			system_intakes si
+			LEFT JOIN system_intake_systems sis ON sis.system_intake_id = si.id
+		WHERE
+			sis.system_id = $1
 	) AS intake_count;
