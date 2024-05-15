@@ -90,3 +90,8 @@ func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER(ctx context.Context, p
 
 	return store, nil
 }
+
+func (s *Store) SystemIntakesByCedarSystemID(ctx context.Context, cedarSystemID string) ([]*models.SystemIntake, error) {
+	var systemIntakes []*models.SystemIntake
+	return systemIntakes, s.db.Select(&systemIntakes, sqlqueries.SystemIntake.SelectByCedarSystemID, cedarSystemID)
+}

@@ -15,7 +15,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlqueries"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
@@ -647,9 +646,4 @@ func (s *Store) GetSystemIntakesWithLCIDs(ctx context.Context) ([]*models.System
 		return nil, err
 	}
 	return intakes, nil
-}
-
-func (s *Store) SystemIntakesByCedarSystemID(ctx context.Context, cedarSystemID string) ([]*models.SystemIntake, error) {
-	var systemIntakes []*models.SystemIntake
-	return systemIntakes, s.db.Select(&systemIntakes, sqlqueries.SystemIntake.SelectByCedarSystemID, cedarSystemID)
 }
