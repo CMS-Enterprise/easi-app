@@ -6,6 +6,7 @@ package user
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *UserAddOK) Code() int {
 }
 
 func (o *UserAddOK) Error() string {
-	return fmt.Sprintf("[POST /user][%d] userAddOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /user][%d] userAddOK %s", 200, payload)
 }
 
 func (o *UserAddOK) String() string {
-	return fmt.Sprintf("[POST /user][%d] userAddOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /user][%d] userAddOK %s", 200, payload)
 }
 
 func (o *UserAddOK) GetPayload() *models.Response {
@@ -165,11 +168,13 @@ func (o *UserAddBadRequest) Code() int {
 }
 
 func (o *UserAddBadRequest) Error() string {
-	return fmt.Sprintf("[POST /user][%d] userAddBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /user][%d] userAddBadRequest %s", 400, payload)
 }
 
 func (o *UserAddBadRequest) String() string {
-	return fmt.Sprintf("[POST /user][%d] userAddBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /user][%d] userAddBadRequest %s", 400, payload)
 }
 
 func (o *UserAddBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *UserAddUnauthorized) Code() int {
 }
 
 func (o *UserAddUnauthorized) Error() string {
-	return fmt.Sprintf("[POST /user][%d] userAddUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /user][%d] userAddUnauthorized %s", 401, payload)
 }
 
 func (o *UserAddUnauthorized) String() string {
-	return fmt.Sprintf("[POST /user][%d] userAddUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /user][%d] userAddUnauthorized %s", 401, payload)
 }
 
 func (o *UserAddUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *UserAddInternalServerError) Code() int {
 }
 
 func (o *UserAddInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /user][%d] userAddInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /user][%d] userAddInternalServerError %s", 500, payload)
 }
 
 func (o *UserAddInternalServerError) String() string {
-	return fmt.Sprintf("[POST /user][%d] userAddInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /user][%d] userAddInternalServerError %s", 500, payload)
 }
 
 func (o *UserAddInternalServerError) GetPayload() *models.Response {

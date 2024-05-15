@@ -6,6 +6,7 @@ package contract
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *ContractUpdateOK) Code() int {
 }
 
 func (o *ContractUpdateOK) Error() string {
-	return fmt.Sprintf("[PUT /contract][%d] contractUpdateOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /contract][%d] contractUpdateOK %s", 200, payload)
 }
 
 func (o *ContractUpdateOK) String() string {
-	return fmt.Sprintf("[PUT /contract][%d] contractUpdateOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /contract][%d] contractUpdateOK %s", 200, payload)
 }
 
 func (o *ContractUpdateOK) GetPayload() *models.Response {
@@ -165,11 +168,13 @@ func (o *ContractUpdateBadRequest) Code() int {
 }
 
 func (o *ContractUpdateBadRequest) Error() string {
-	return fmt.Sprintf("[PUT /contract][%d] contractUpdateBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /contract][%d] contractUpdateBadRequest %s", 400, payload)
 }
 
 func (o *ContractUpdateBadRequest) String() string {
-	return fmt.Sprintf("[PUT /contract][%d] contractUpdateBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /contract][%d] contractUpdateBadRequest %s", 400, payload)
 }
 
 func (o *ContractUpdateBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *ContractUpdateUnauthorized) Code() int {
 }
 
 func (o *ContractUpdateUnauthorized) Error() string {
-	return fmt.Sprintf("[PUT /contract][%d] contractUpdateUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /contract][%d] contractUpdateUnauthorized %s", 401, payload)
 }
 
 func (o *ContractUpdateUnauthorized) String() string {
-	return fmt.Sprintf("[PUT /contract][%d] contractUpdateUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /contract][%d] contractUpdateUnauthorized %s", 401, payload)
 }
 
 func (o *ContractUpdateUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *ContractUpdateInternalServerError) Code() int {
 }
 
 func (o *ContractUpdateInternalServerError) Error() string {
-	return fmt.Sprintf("[PUT /contract][%d] contractUpdateInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /contract][%d] contractUpdateInternalServerError %s", 500, payload)
 }
 
 func (o *ContractUpdateInternalServerError) String() string {
-	return fmt.Sprintf("[PUT /contract][%d] contractUpdateInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /contract][%d] contractUpdateInternalServerError %s", 500, payload)
 }
 
 func (o *ContractUpdateInternalServerError) GetPayload() *models.Response {

@@ -6,6 +6,7 @@ package exchange
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *ExchangeUpdateOK) Code() int {
 }
 
 func (o *ExchangeUpdateOK) Error() string {
-	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateOK %s", 200, payload)
 }
 
 func (o *ExchangeUpdateOK) String() string {
-	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateOK %s", 200, payload)
 }
 
 func (o *ExchangeUpdateOK) GetPayload() *models.Response {
@@ -165,11 +168,13 @@ func (o *ExchangeUpdateBadRequest) Code() int {
 }
 
 func (o *ExchangeUpdateBadRequest) Error() string {
-	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateBadRequest %s", 400, payload)
 }
 
 func (o *ExchangeUpdateBadRequest) String() string {
-	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateBadRequest %s", 400, payload)
 }
 
 func (o *ExchangeUpdateBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *ExchangeUpdateUnauthorized) Code() int {
 }
 
 func (o *ExchangeUpdateUnauthorized) Error() string {
-	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateUnauthorized %s", 401, payload)
 }
 
 func (o *ExchangeUpdateUnauthorized) String() string {
-	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateUnauthorized %s", 401, payload)
 }
 
 func (o *ExchangeUpdateUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *ExchangeUpdateInternalServerError) Code() int {
 }
 
 func (o *ExchangeUpdateInternalServerError) Error() string {
-	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateInternalServerError %s", 500, payload)
 }
 
 func (o *ExchangeUpdateInternalServerError) String() string {
-	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /exchange][%d] exchangeUpdateInternalServerError %s", 500, payload)
 }
 
 func (o *ExchangeUpdateInternalServerError) GetPayload() *models.Response {

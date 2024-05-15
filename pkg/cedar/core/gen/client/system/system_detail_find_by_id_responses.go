@@ -6,6 +6,7 @@ package system
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -103,11 +104,13 @@ func (o *SystemDetailFindByIDOK) Code() int {
 }
 
 func (o *SystemDetailFindByIDOK) Error() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdOK %s", 200, payload)
 }
 
 func (o *SystemDetailFindByIDOK) String() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdOK %s", 200, payload)
 }
 
 func (o *SystemDetailFindByIDOK) GetPayload() *models.SystemDetail {
@@ -171,11 +174,13 @@ func (o *SystemDetailFindByIDBadRequest) Code() int {
 }
 
 func (o *SystemDetailFindByIDBadRequest) Error() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdBadRequest %s", 400, payload)
 }
 
 func (o *SystemDetailFindByIDBadRequest) String() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdBadRequest %s", 400, payload)
 }
 
 func (o *SystemDetailFindByIDBadRequest) GetPayload() *models.Response {
@@ -239,11 +244,13 @@ func (o *SystemDetailFindByIDUnauthorized) Code() int {
 }
 
 func (o *SystemDetailFindByIDUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdUnauthorized %s", 401, payload)
 }
 
 func (o *SystemDetailFindByIDUnauthorized) String() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdUnauthorized %s", 401, payload)
 }
 
 func (o *SystemDetailFindByIDUnauthorized) GetPayload() *models.Response {
@@ -307,11 +314,13 @@ func (o *SystemDetailFindByIDNotFound) Code() int {
 }
 
 func (o *SystemDetailFindByIDNotFound) Error() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdNotFound %s", 404, payload)
 }
 
 func (o *SystemDetailFindByIDNotFound) String() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdNotFound %s", 404, payload)
 }
 
 func (o *SystemDetailFindByIDNotFound) GetPayload() *models.Response {
@@ -375,11 +384,13 @@ func (o *SystemDetailFindByIDInternalServerError) Code() int {
 }
 
 func (o *SystemDetailFindByIDInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdInternalServerError %s", 500, payload)
 }
 
 func (o *SystemDetailFindByIDInternalServerError) String() string {
-	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /system/detail/{id}][%d] systemDetailFindByIdInternalServerError %s", 500, payload)
 }
 
 func (o *SystemDetailFindByIDInternalServerError) GetPayload() *models.Response {

@@ -6,6 +6,7 @@ package person
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -103,11 +104,13 @@ func (o *PersonFindByIDOK) Code() int {
 }
 
 func (o *PersonFindByIDOK) Error() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdOK %s", 200, payload)
 }
 
 func (o *PersonFindByIDOK) String() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdOK %s", 200, payload)
 }
 
 func (o *PersonFindByIDOK) GetPayload() *models.Person {
@@ -171,11 +174,13 @@ func (o *PersonFindByIDBadRequest) Code() int {
 }
 
 func (o *PersonFindByIDBadRequest) Error() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdBadRequest %s", 400, payload)
 }
 
 func (o *PersonFindByIDBadRequest) String() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdBadRequest %s", 400, payload)
 }
 
 func (o *PersonFindByIDBadRequest) GetPayload() *models.Response {
@@ -239,11 +244,13 @@ func (o *PersonFindByIDUnauthorized) Code() int {
 }
 
 func (o *PersonFindByIDUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdUnauthorized %s", 401, payload)
 }
 
 func (o *PersonFindByIDUnauthorized) String() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdUnauthorized %s", 401, payload)
 }
 
 func (o *PersonFindByIDUnauthorized) GetPayload() *models.Response {
@@ -307,11 +314,13 @@ func (o *PersonFindByIDNotFound) Code() int {
 }
 
 func (o *PersonFindByIDNotFound) Error() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdNotFound %s", 404, payload)
 }
 
 func (o *PersonFindByIDNotFound) String() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdNotFound %s", 404, payload)
 }
 
 func (o *PersonFindByIDNotFound) GetPayload() *models.Response {
@@ -375,11 +384,13 @@ func (o *PersonFindByIDInternalServerError) Code() int {
 }
 
 func (o *PersonFindByIDInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdInternalServerError %s", 500, payload)
 }
 
 func (o *PersonFindByIDInternalServerError) String() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /person/{id}][%d] personFindByIdInternalServerError %s", 500, payload)
 }
 
 func (o *PersonFindByIDInternalServerError) GetPayload() *models.Response {

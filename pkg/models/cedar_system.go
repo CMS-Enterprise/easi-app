@@ -95,15 +95,8 @@ type CedarSystemDetails struct {
 	CedarSystem                 *CedarSystem
 	BusinessOwnerInformation    *BusinessOwnerInformation
 	SystemMaintainerInformation *SystemMaintainerInformation
-	Roles                       []*CedarRole         `json:"roles"`
-	Deployments                 []*CedarDeployment   `json:"deployments"`
-	Threats                     []*CedarThreat       `json:"threats"`
-	URLs                        []*CedarURL          `json:"urls"`
-	LinkedReqeusts              *CedarLinkedRequests `json:"cedarLinkedRequests"`
-}
-
-// CedarLinkedRequests contains counts of System Intakes/TRB Requests linked to a CEDAR system
-type CedarLinkedRequests struct {
-	TRBRequests   int `json:"trbRequests" db:"trb_count"`
-	SystemIntakes int `json:"systemIntakes" db:"intake_count"`
+	Roles                       []*CedarRole       `json:"roles"`
+	Deployments                 []*CedarDeployment `json:"deployments"`
+	Threats                     []*CedarThreat     `json:"threats"`
+	URLs                        []*CedarURL        `json:"urls"`
 }

@@ -6,6 +6,7 @@ package deployment
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *DeploymentFindListOK) Code() int {
 }
 
 func (o *DeploymentFindListOK) Error() string {
-	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListOK %s", 200, payload)
 }
 
 func (o *DeploymentFindListOK) String() string {
-	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListOK %s", 200, payload)
 }
 
 func (o *DeploymentFindListOK) GetPayload() *models.DeploymentFindResponse {
@@ -165,11 +168,13 @@ func (o *DeploymentFindListBadRequest) Code() int {
 }
 
 func (o *DeploymentFindListBadRequest) Error() string {
-	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListBadRequest %s", 400, payload)
 }
 
 func (o *DeploymentFindListBadRequest) String() string {
-	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListBadRequest %s", 400, payload)
 }
 
 func (o *DeploymentFindListBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *DeploymentFindListUnauthorized) Code() int {
 }
 
 func (o *DeploymentFindListUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListUnauthorized %s", 401, payload)
 }
 
 func (o *DeploymentFindListUnauthorized) String() string {
-	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListUnauthorized %s", 401, payload)
 }
 
 func (o *DeploymentFindListUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *DeploymentFindListInternalServerError) Code() int {
 }
 
 func (o *DeploymentFindListInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListInternalServerError %s", 500, payload)
 }
 
 func (o *DeploymentFindListInternalServerError) String() string {
-	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /deployment][%d] deploymentFindListInternalServerError %s", 500, payload)
 }
 
 func (o *DeploymentFindListInternalServerError) GetPayload() *models.Response {

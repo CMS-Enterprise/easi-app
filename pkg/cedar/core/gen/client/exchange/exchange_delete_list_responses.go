@@ -6,6 +6,7 @@ package exchange
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -103,11 +104,13 @@ func (o *ExchangeDeleteListOK) Code() int {
 }
 
 func (o *ExchangeDeleteListOK) Error() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListOK %s", 200, payload)
 }
 
 func (o *ExchangeDeleteListOK) String() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListOK %s", 200, payload)
 }
 
 func (o *ExchangeDeleteListOK) GetPayload() *models.Response {
@@ -171,11 +174,13 @@ func (o *ExchangeDeleteListBadRequest) Code() int {
 }
 
 func (o *ExchangeDeleteListBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListBadRequest %s", 400, payload)
 }
 
 func (o *ExchangeDeleteListBadRequest) String() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListBadRequest %s", 400, payload)
 }
 
 func (o *ExchangeDeleteListBadRequest) GetPayload() *models.Response {
@@ -239,11 +244,13 @@ func (o *ExchangeDeleteListUnauthorized) Code() int {
 }
 
 func (o *ExchangeDeleteListUnauthorized) Error() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListUnauthorized %s", 401, payload)
 }
 
 func (o *ExchangeDeleteListUnauthorized) String() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListUnauthorized %s", 401, payload)
 }
 
 func (o *ExchangeDeleteListUnauthorized) GetPayload() *models.Response {
@@ -307,11 +314,13 @@ func (o *ExchangeDeleteListNotFound) Code() int {
 }
 
 func (o *ExchangeDeleteListNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListNotFound %s", 404, payload)
 }
 
 func (o *ExchangeDeleteListNotFound) String() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListNotFound %s", 404, payload)
 }
 
 func (o *ExchangeDeleteListNotFound) GetPayload() *models.Response {
@@ -375,11 +384,13 @@ func (o *ExchangeDeleteListInternalServerError) Code() int {
 }
 
 func (o *ExchangeDeleteListInternalServerError) Error() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListInternalServerError %s", 500, payload)
 }
 
 func (o *ExchangeDeleteListInternalServerError) String() string {
-	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /exchange][%d] exchangeDeleteListInternalServerError %s", 500, payload)
 }
 
 func (o *ExchangeDeleteListInternalServerError) GetPayload() *models.Response {

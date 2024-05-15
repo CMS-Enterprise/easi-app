@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strconv"
 	"time"
 
@@ -1514,7 +1513,36 @@ func (r *queryResolver) UserAccount(ctx context.Context, username string) (*auth
 
 // SystemWorkspace is the resolver for the systemWorkspace field.
 func (r *queryResolver) SystemWorkspace(ctx context.Context, cedarSystemID string) (*model.SystemWorkspace, error) {
-	panic(fmt.Errorf("not implemented: SystemWorkspace - systemWorkspace"))
+	g := new(errgroup.Group)
+
+	var (
+		systemIntakes []*models.SystemIntake
+		siErr         error
+	)
+	g.Go(func() error {
+		systemIntakes, siErr = r.store.SystemIntakesByCedarSystemID(ctx, cedarSystemID)
+		return siErr
+	})
+
+	var (
+		trbRequests []*models.TRBRequest
+		trbErr      error
+	)
+	g.Go(func() error {
+		trbRequests, trbErr = r.store.TRBRequestsByCedarSystemID(ctx, cedarSystemID)
+		return trbErr
+	})
+
+	if err := g.Wait(); err != nil {
+		return nil, err
+	}
+
+	return &model.SystemWorkspace{
+		LinkedRequests: &model.CedarLinkedRequests{
+			TrbRequests:   trbRequests,
+			SystemIntakes: systemIntakes,
+		},
+	}, nil
 }
 
 // Actions is the resolver for the actions field.
@@ -2197,13 +2225,3 @@ type tRBRequestDocumentResolver struct{ *Resolver }
 type tRBRequestFeedbackResolver struct{ *Resolver }
 type tRBRequestFormResolver struct{ *Resolver }
 type userInfoResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//     it when you're done.
-//   - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *cedarSystemDetailsResolver) LinkedRequests(ctx context.Context, obj *models.CedarSystemDetails) (*models.CedarLinkedRequests, error) {
-	return r.store.LinkedRequests(ctx, obj.CedarSystem.ID.String)
-}

@@ -6,6 +6,7 @@ package exchange
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *ExchangeFindByIDOK) Code() int {
 }
 
 func (o *ExchangeFindByIDOK) Error() string {
-	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdOK %s", 200, payload)
 }
 
 func (o *ExchangeFindByIDOK) String() string {
-	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdOK %s", 200, payload)
 }
 
 func (o *ExchangeFindByIDOK) GetPayload() *models.Exchange {
@@ -165,11 +168,13 @@ func (o *ExchangeFindByIDBadRequest) Code() int {
 }
 
 func (o *ExchangeFindByIDBadRequest) Error() string {
-	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdBadRequest %s", 400, payload)
 }
 
 func (o *ExchangeFindByIDBadRequest) String() string {
-	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdBadRequest %s", 400, payload)
 }
 
 func (o *ExchangeFindByIDBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *ExchangeFindByIDUnauthorized) Code() int {
 }
 
 func (o *ExchangeFindByIDUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdUnauthorized %s", 401, payload)
 }
 
 func (o *ExchangeFindByIDUnauthorized) String() string {
-	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdUnauthorized %s", 401, payload)
 }
 
 func (o *ExchangeFindByIDUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *ExchangeFindByIDInternalServerError) Code() int {
 }
 
 func (o *ExchangeFindByIDInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdInternalServerError %s", 500, payload)
 }
 
 func (o *ExchangeFindByIDInternalServerError) String() string {
-	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /exchange/{id}][%d] exchangeFindByIdInternalServerError %s", 500, payload)
 }
 
 func (o *ExchangeFindByIDInternalServerError) GetPayload() *models.Response {

@@ -6,6 +6,7 @@ package threat
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *ThreatFindListOK) Code() int {
 }
 
 func (o *ThreatFindListOK) Error() string {
-	return fmt.Sprintf("[GET /threat][%d] threatFindListOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /threat][%d] threatFindListOK %s", 200, payload)
 }
 
 func (o *ThreatFindListOK) String() string {
-	return fmt.Sprintf("[GET /threat][%d] threatFindListOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /threat][%d] threatFindListOK %s", 200, payload)
 }
 
 func (o *ThreatFindListOK) GetPayload() *models.ThreatFindResponse {
@@ -165,11 +168,13 @@ func (o *ThreatFindListBadRequest) Code() int {
 }
 
 func (o *ThreatFindListBadRequest) Error() string {
-	return fmt.Sprintf("[GET /threat][%d] threatFindListBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /threat][%d] threatFindListBadRequest %s", 400, payload)
 }
 
 func (o *ThreatFindListBadRequest) String() string {
-	return fmt.Sprintf("[GET /threat][%d] threatFindListBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /threat][%d] threatFindListBadRequest %s", 400, payload)
 }
 
 func (o *ThreatFindListBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *ThreatFindListUnauthorized) Code() int {
 }
 
 func (o *ThreatFindListUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /threat][%d] threatFindListUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /threat][%d] threatFindListUnauthorized %s", 401, payload)
 }
 
 func (o *ThreatFindListUnauthorized) String() string {
-	return fmt.Sprintf("[GET /threat][%d] threatFindListUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /threat][%d] threatFindListUnauthorized %s", 401, payload)
 }
 
 func (o *ThreatFindListUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *ThreatFindListInternalServerError) Code() int {
 }
 
 func (o *ThreatFindListInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /threat][%d] threatFindListInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /threat][%d] threatFindListInternalServerError %s", 500, payload)
 }
 
 func (o *ThreatFindListInternalServerError) String() string {
-	return fmt.Sprintf("[GET /threat][%d] threatFindListInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /threat][%d] threatFindListInternalServerError %s", 500, payload)
 }
 
 func (o *ThreatFindListInternalServerError) GetPayload() *models.Response {

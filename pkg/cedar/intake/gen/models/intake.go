@@ -26,7 +26,7 @@ type Intake struct {
 
 	// body format
 	// Required: true
-	// Enum: [JSON XML]
+	// Enum: ["JSON","XML"]
 	BodyFormat *string `json:"bodyFormat"`
 
 	// cedar created date

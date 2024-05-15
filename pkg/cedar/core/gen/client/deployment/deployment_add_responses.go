@@ -6,6 +6,7 @@ package deployment
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *DeploymentAddOK) Code() int {
 }
 
 func (o *DeploymentAddOK) Error() string {
-	return fmt.Sprintf("[POST /deployment][%d] deploymentAddOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /deployment][%d] deploymentAddOK %s", 200, payload)
 }
 
 func (o *DeploymentAddOK) String() string {
-	return fmt.Sprintf("[POST /deployment][%d] deploymentAddOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /deployment][%d] deploymentAddOK %s", 200, payload)
 }
 
 func (o *DeploymentAddOK) GetPayload() *models.Response {
@@ -165,11 +168,13 @@ func (o *DeploymentAddBadRequest) Code() int {
 }
 
 func (o *DeploymentAddBadRequest) Error() string {
-	return fmt.Sprintf("[POST /deployment][%d] deploymentAddBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /deployment][%d] deploymentAddBadRequest %s", 400, payload)
 }
 
 func (o *DeploymentAddBadRequest) String() string {
-	return fmt.Sprintf("[POST /deployment][%d] deploymentAddBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /deployment][%d] deploymentAddBadRequest %s", 400, payload)
 }
 
 func (o *DeploymentAddBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *DeploymentAddUnauthorized) Code() int {
 }
 
 func (o *DeploymentAddUnauthorized) Error() string {
-	return fmt.Sprintf("[POST /deployment][%d] deploymentAddUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /deployment][%d] deploymentAddUnauthorized %s", 401, payload)
 }
 
 func (o *DeploymentAddUnauthorized) String() string {
-	return fmt.Sprintf("[POST /deployment][%d] deploymentAddUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /deployment][%d] deploymentAddUnauthorized %s", 401, payload)
 }
 
 func (o *DeploymentAddUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *DeploymentAddInternalServerError) Code() int {
 }
 
 func (o *DeploymentAddInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /deployment][%d] deploymentAddInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /deployment][%d] deploymentAddInternalServerError %s", 500, payload)
 }
 
 func (o *DeploymentAddInternalServerError) String() string {
-	return fmt.Sprintf("[POST /deployment][%d] deploymentAddInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /deployment][%d] deploymentAddInternalServerError %s", 500, payload)
 }
 
 func (o *DeploymentAddInternalServerError) GetPayload() *models.Response {

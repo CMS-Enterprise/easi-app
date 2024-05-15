@@ -6,6 +6,7 @@ package contract
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -103,11 +104,13 @@ func (o *ContractDeleteListOK) Code() int {
 }
 
 func (o *ContractDeleteListOK) Error() string {
-	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListOK %s", 200, payload)
 }
 
 func (o *ContractDeleteListOK) String() string {
-	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListOK %s", 200, payload)
 }
 
 func (o *ContractDeleteListOK) GetPayload() *models.Response {
@@ -171,11 +174,13 @@ func (o *ContractDeleteListBadRequest) Code() int {
 }
 
 func (o *ContractDeleteListBadRequest) Error() string {
-	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListBadRequest %s", 400, payload)
 }
 
 func (o *ContractDeleteListBadRequest) String() string {
-	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListBadRequest %s", 400, payload)
 }
 
 func (o *ContractDeleteListBadRequest) GetPayload() *models.Response {
@@ -239,11 +244,13 @@ func (o *ContractDeleteListUnauthorized) Code() int {
 }
 
 func (o *ContractDeleteListUnauthorized) Error() string {
-	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListUnauthorized %s", 401, payload)
 }
 
 func (o *ContractDeleteListUnauthorized) String() string {
-	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListUnauthorized %s", 401, payload)
 }
 
 func (o *ContractDeleteListUnauthorized) GetPayload() *models.Response {
@@ -307,11 +314,13 @@ func (o *ContractDeleteListNotFound) Code() int {
 }
 
 func (o *ContractDeleteListNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListNotFound %s", 404, payload)
 }
 
 func (o *ContractDeleteListNotFound) String() string {
-	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListNotFound %s", 404, payload)
 }
 
 func (o *ContractDeleteListNotFound) GetPayload() *models.Response {
@@ -375,11 +384,13 @@ func (o *ContractDeleteListInternalServerError) Code() int {
 }
 
 func (o *ContractDeleteListInternalServerError) Error() string {
-	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListInternalServerError %s", 500, payload)
 }
 
 func (o *ContractDeleteListInternalServerError) String() string {
-	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /contract][%d] contractDeleteListInternalServerError %s", 500, payload)
 }
 
 func (o *ContractDeleteListInternalServerError) GetPayload() *models.Response {

@@ -59,6 +59,12 @@ type CedarBusinessOwnerInformation struct {
 	StoresBeneficiaryAddress       *bool    `json:"storesBeneficiaryAddress,omitempty"`
 }
 
+// This is a representation a count of System Intakes/TRB Requests linked to a given CEDAR system
+type CedarLinkedRequests struct {
+	TrbRequests   []*models.TRBRequest   `json:"trbRequests"`
+	SystemIntakes []*models.SystemIntake `json:"systemIntakes"`
+}
+
 // CedarSoftwareProductItem represents an individual software product; this information is returned from the CEDAR Core API
 // as a part of the CedarSoftwareProducts object
 type CedarSoftwareProductItem struct {
@@ -746,7 +752,7 @@ type SystemIntakeUpdateLCIDInput struct {
 }
 
 type SystemWorkspace struct {
-	LinkedRequests *models.CedarLinkedRequests `json:"linkedRequests"`
+	LinkedRequests *CedarLinkedRequests `json:"linkedRequests"`
 }
 
 // Data specific to admin notes in the Advice Letter category

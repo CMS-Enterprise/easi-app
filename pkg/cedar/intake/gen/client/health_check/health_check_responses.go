@@ -6,6 +6,7 @@ package health_check
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -85,11 +86,13 @@ func (o *HealthCheckOK) Code() int {
 }
 
 func (o *HealthCheckOK) Error() string {
-	return fmt.Sprintf("[GET /healthCheck][%d] healthCheckOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /healthCheck][%d] healthCheckOK %s", 200, payload)
 }
 
 func (o *HealthCheckOK) String() string {
-	return fmt.Sprintf("[GET /healthCheck][%d] healthCheckOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /healthCheck][%d] healthCheckOK %s", 200, payload)
 }
 
 func (o *HealthCheckOK) GetPayload() *models.HealthCheckResponse {
@@ -152,11 +155,11 @@ func (o *HealthCheckUnauthorized) Code() int {
 }
 
 func (o *HealthCheckUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /healthCheck][%d] healthCheckUnauthorized ", 401)
+	return fmt.Sprintf("[GET /healthCheck][%d] healthCheckUnauthorized", 401)
 }
 
 func (o *HealthCheckUnauthorized) String() string {
-	return fmt.Sprintf("[GET /healthCheck][%d] healthCheckUnauthorized ", 401)
+	return fmt.Sprintf("[GET /healthCheck][%d] healthCheckUnauthorized", 401)
 }
 
 func (o *HealthCheckUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

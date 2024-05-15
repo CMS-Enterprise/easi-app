@@ -6,6 +6,7 @@ package user
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *UserFindByUsernameOK) Code() int {
 }
 
 func (o *UserFindByUsernameOK) Error() string {
-	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameOK %s", 200, payload)
 }
 
 func (o *UserFindByUsernameOK) String() string {
-	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameOK %s", 200, payload)
 }
 
 func (o *UserFindByUsernameOK) GetPayload() *models.User {
@@ -165,11 +168,13 @@ func (o *UserFindByUsernameBadRequest) Code() int {
 }
 
 func (o *UserFindByUsernameBadRequest) Error() string {
-	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameBadRequest %s", 400, payload)
 }
 
 func (o *UserFindByUsernameBadRequest) String() string {
-	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameBadRequest %s", 400, payload)
 }
 
 func (o *UserFindByUsernameBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *UserFindByUsernameUnauthorized) Code() int {
 }
 
 func (o *UserFindByUsernameUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameUnauthorized %s", 401, payload)
 }
 
 func (o *UserFindByUsernameUnauthorized) String() string {
-	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameUnauthorized %s", 401, payload)
 }
 
 func (o *UserFindByUsernameUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *UserFindByUsernameInternalServerError) Code() int {
 }
 
 func (o *UserFindByUsernameInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameInternalServerError %s", 500, payload)
 }
 
 func (o *UserFindByUsernameInternalServerError) String() string {
-	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /user/username/{username}][%d] userFindByUsernameInternalServerError %s", 500, payload)
 }
 
 func (o *UserFindByUsernameInternalServerError) GetPayload() *models.Response {

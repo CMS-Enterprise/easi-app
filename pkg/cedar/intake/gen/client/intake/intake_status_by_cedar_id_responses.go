@@ -6,6 +6,7 @@ package intake
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *IntakeStatusByCedarIDOK) Code() int {
 }
 
 func (o *IntakeStatusByCedarIDOK) Error() string {
-	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdOK %s", 200, payload)
 }
 
 func (o *IntakeStatusByCedarIDOK) String() string {
-	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdOK %s", 200, payload)
 }
 
 func (o *IntakeStatusByCedarIDOK) GetPayload() *models.IntakeStatus {
@@ -165,11 +168,13 @@ func (o *IntakeStatusByCedarIDBadRequest) Code() int {
 }
 
 func (o *IntakeStatusByCedarIDBadRequest) Error() string {
-	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdBadRequest %s", 400, payload)
 }
 
 func (o *IntakeStatusByCedarIDBadRequest) String() string {
-	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdBadRequest %s", 400, payload)
 }
 
 func (o *IntakeStatusByCedarIDBadRequest) GetPayload() *models.Response {
@@ -233,11 +238,13 @@ func (o *IntakeStatusByCedarIDUnauthorized) Code() int {
 }
 
 func (o *IntakeStatusByCedarIDUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdUnauthorized %s", 401, payload)
 }
 
 func (o *IntakeStatusByCedarIDUnauthorized) String() string {
-	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdUnauthorized %s", 401, payload)
 }
 
 func (o *IntakeStatusByCedarIDUnauthorized) GetPayload() *models.Response {
@@ -301,11 +308,13 @@ func (o *IntakeStatusByCedarIDInternalServerError) Code() int {
 }
 
 func (o *IntakeStatusByCedarIDInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdInternalServerError %s", 500, payload)
 }
 
 func (o *IntakeStatusByCedarIDInternalServerError) String() string {
-	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /intake/status/cedar/{id}][%d] intakeStatusByCedarIdInternalServerError %s", 500, payload)
 }
 
 func (o *IntakeStatusByCedarIDInternalServerError) GetPayload() *models.Response {
