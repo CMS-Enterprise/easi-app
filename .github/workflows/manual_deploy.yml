@@ -51,7 +51,6 @@ jobs:
       env: ${{ inputs.env }}
   
   Build_Test_Frontend_Assets:
-    if: ${{ inputs.skip_tests == false }}
     uses: ./.github/workflows/build_frontend_assets.yml
     secrets: inherit
     with:
