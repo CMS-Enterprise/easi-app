@@ -17,6 +17,11 @@ on:
         default: false
         type: boolean
         description: Skip tests?
+      force_cedarproxy:
+        required: true
+        default: false
+        type: boolean
+        description: Rebuild and redeploy Cedarproxy
       confirm_production_deploy:
         required: true
         default: false
@@ -31,6 +36,13 @@ jobs:
   Build_Application_Images:
     uses: ./.github/workflows/build_application_images.yml
     secrets: inherit
+  
+  Build_Cedarproxy_Image:
+    if: ${{ inputs.force_cedarproxy == true }}
+    uses: ./.github/workflows/build_cedarproxy_image.yml
+    secrets: inherit
+    with:
+      force_cedarproxy: true
 
   Build_Frontend_Assets:
     uses: ./.github/workflows/build_frontend_assets.yml
@@ -60,6 +72,15 @@ jobs:
       lambda_version: 10
     secrets: inherit
 
+  deploy_dev_cedarproxy:
+    needs: [deploy_dev, Build_Cedarproxy_Image]
+    if: ${{ inputs.env == 'dev' && inputs.force_cedarproxy == true }}
+    uses: ./.github/workflows/deploy_cedarproxy.yml
+    with:
+      env: dev
+      force_cedarproxy: ${{ inputs.force_cedarproxy }}
+    secrets: inherit
+
   deploy_impl:
     needs: [Run_Tests, Build_Frontend_Assets]
     if: ${{ inputs.env == 'impl' }}
@@ -69,6 +90,15 @@ jobs:
       lambda_version: 9
     secrets: inherit
 
+  deploy_impl_cedarproxy:
+    needs: [deploy_impl, Build_Cedarproxy_Image]
+    if: ${{ inputs.env == 'impl' && inputs.force_cedarproxy == true }}
+    uses: ./.github/workflows/deploy_cedarproxy.yml
+    with:
+      env: impl
+      force_cedarproxy: ${{ inputs.force_cedarproxy }}
+    secrets: inherit
+
   deploy_prod:
     needs: [Run_Tests, Build_Frontend_Assets]
     if: ${{ inputs.env == 'prod' && inputs.confirm_production_deploy == true }}
@@ -76,4 +106,13 @@ jobs:
     with:
       env: prod
       lambda_version: 8
+    secrets: inherit
+
+  deploy_prod_cedarproxy:
+    needs: [deploy_prod, Build_Cedarproxy_Image]
+    if: ${{ inputs.env == 'prod' && inputs.force_cedarproxy == true }}
+    uses: ./.github/workflows/deploy_cedarproxy.yml
+    with:
+      env: prod
+      force_cedarproxy: ${{ inputs.force_cedarproxy }}
     secrets: inherit
