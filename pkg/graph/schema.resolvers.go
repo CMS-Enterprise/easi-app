@@ -1515,22 +1515,18 @@ func (r *queryResolver) UserAccount(ctx context.Context, username string) (*auth
 func (r *queryResolver) SystemWorkspace(ctx context.Context, cedarSystemID string) (*model.SystemWorkspace, error) {
 	g := new(errgroup.Group)
 
-	var (
-		systemIntakes []*models.SystemIntake
-		siErr         error
-	)
+	var systemIntakes []*models.SystemIntake
 	g.Go(func() error {
-		systemIntakes, siErr = r.store.SystemIntakesByCedarSystemID(ctx, cedarSystemID)
-		return siErr
+		var err error
+		systemIntakes, err = r.store.SystemIntakesByCedarSystemID(ctx, cedarSystemID)
+		return err
 	})
 
-	var (
-		trbRequests []*models.TRBRequest
-		trbErr      error
-	)
+	var trbRequests []*models.TRBRequest
 	g.Go(func() error {
-		trbRequests, trbErr = r.store.TRBRequestsByCedarSystemID(ctx, cedarSystemID)
-		return trbErr
+		var err error
+		trbRequests, err = r.store.TRBRequestsByCedarSystemID(ctx, cedarSystemID)
+		return err
 	})
 
 	if err := g.Wait(); err != nil {
