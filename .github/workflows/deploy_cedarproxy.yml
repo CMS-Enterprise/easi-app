@@ -21,7 +21,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy_cedar_proxy:
+  deploy_cedarproxy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.env }}
     steps:

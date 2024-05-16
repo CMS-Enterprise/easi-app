@@ -36,6 +36,7 @@ jobs:
   deploy_cedarproxy:
     needs: [confirm_deploy]
     uses: ./.github/workflows/deploy_cedarproxy.yml
+    secrets: inherit
     with:
       env: ${{ inputs.env }}
       force_cedarproxy: false
