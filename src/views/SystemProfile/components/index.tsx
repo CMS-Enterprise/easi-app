@@ -63,8 +63,18 @@ const sideNavItems = (
             }
           ]
         },
-        team: {
+        'tools-and-software': {
+          component: <ToolsAndSoftware system={system} />,
+          route: `/systems/${system.id}/tools-and-software`,
+          componentId: 'system-section-508'
+        },
+        'sub-systems': {
           groupEnd: true,
+          component: <SubSystems system={system} />,
+          route: `/systems/${system.id}/sub-systems`,
+          componentId: 'system-sub-systems'
+        },
+        team: {
           component: <Team system={system} />,
           route: `/systems/${system.id}/team`,
           componentId: 'system-team',
@@ -93,26 +103,21 @@ const sideNavItems = (
             }
           ]
         },
-        ato: {
-          component: <ATO system={system} />,
-          route: `/systems/${system.id}/ato`,
-          componentId: 'ato'
+        contracts: {
+          component: <Contracts system={system} />,
+          route: `/systems/${system.id}/contracts`,
+          componentId: 'contracts'
         },
         'funding-and-budget': {
           component: <FundingAndBudget system={system} />,
           route: `/systems/${system.id}/funding-and-budget`,
-          componentId: 'funding-and-budget'
+          componentId: 'funding-and-budget',
+          groupEnd: true
         },
-        'tools-and-software': {
-          component: <ToolsAndSoftware system={system} />,
-          route: `/systems/${system.id}/tools-and-software`,
-          componentId: 'system-section-508'
-        },
-        'sub-systems': {
-          groupEnd: true,
-          component: <SubSystems system={system} />,
-          route: `/systems/${system.id}/sub-systems`,
-          componentId: 'system-sub-systems'
+        ato: {
+          component: <ATO system={system} />,
+          route: `/systems/${system.id}/ato`,
+          componentId: 'ato'
         }
       }
     : {
