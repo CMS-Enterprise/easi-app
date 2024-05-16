@@ -6,7 +6,8 @@ linters-settings:
     excludes:
       - "G602"
   govet:
-    check-shadowing: true
+    enable:
+      - shadow
     settings:
       printf:
         funcs:
