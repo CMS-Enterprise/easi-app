@@ -43,7 +43,7 @@ jobs:
       force_cedarproxy: true
     secrets: inherit
 
-  deploy_impl:
+  deploy_impl_cedarproxy:
     needs: [Build_Cedarproxy_Image]
     if: ${{ inputs.env == 'impl' }}
     uses: ./.github/workflows/deploy_cedarproxy.yml
@@ -52,7 +52,7 @@ jobs:
       force_cedarproxy: true
     secrets: inherit
 
-  deploy_prod:
+  deploy_prod_cedarproxy:
     needs: [Build_Cedarproxy_Image]
     if: ${{ inputs.env == 'prod' && inputs.confirm_production_deploy == true }}
     uses: ./.github/workflows/deploy_cedarproxy.yml

@@ -39,7 +39,7 @@ jobs:
     secrets: inherit
     with:
       env: ${{ inputs.env }}
-      force_cedarproxy: false
+      force_cedarproxy: ${{ inputs.force_cedarproxy }}
   
   database_actions:
     runs-on: ubuntu-latest
