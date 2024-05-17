@@ -19,7 +19,7 @@ CREATE TYPE grb_reviewer_voting_role_type AS ENUM (
   'NON_VOTING'
 );
 
-CREATE TABLE IF NOT EXISTS grb_reviewers (
+CREATE TABLE IF NOT EXISTS system_intake_grb_reviewers (
   id UUID PRIMARY KEY NOT NULL,
   eua_user_id ZERO_STRING NOT NULL,
   system_intake_id UUID NOT NULL
