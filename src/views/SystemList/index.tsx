@@ -130,7 +130,11 @@ export const SystemList = () => {
           {loadingBookmarks ? (
             <PageLoading />
           ) : (
-            <SectionWrapper borderBottom className="margin-bottom-3">
+            <SectionWrapper
+              borderBottom
+              className="margin-bottom-3"
+              id="systemBookmarks"
+            >
               {bookmarks.length === 0 ? (
                 <Grid tablet={{ col: 12 }} className="margin-bottom-5">
                   <Alert
