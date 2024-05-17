@@ -33,7 +33,7 @@
     "@types/redux-saga-routines": "^3.1.8",
     "@types/text-encoding": "^0.0.39",
     "@types/yup": "^0.29.11",
-    "@uswds/uswds": "^3.8.0",
+    "@uswds/uswds": "3.3.0",
     "apollo": "^2.34",
     "apollo-upload-client": "^17.0.0",
     "axios": "^1.6.8",
@@ -168,7 +168,7 @@
     "ts-loader": "^7.0.5",
     "vite": "^4.5.3",
     "vite-plugin-svgr": "^3.2.0",
-    "vite-tsconfig-paths": "^4.3.2",
+    "vite-tsconfig-paths": "4.2.0",
     "vitest": "^0.34.1",
     "webpack": "^5.91.0"
   },
