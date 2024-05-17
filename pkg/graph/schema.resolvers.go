@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -1711,6 +1712,11 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		IsPresent: &isPresent,
 		Teams:     teams,
 	}, nil
+}
+
+// GrbReviewers is the resolver for the grbReviewers field.
+func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeGRBReviewer, error) {
+	panic(fmt.Errorf("not implemented: GrbReviewers - grbReviewers"))
 }
 
 // Isso is the resolver for the isso field.
