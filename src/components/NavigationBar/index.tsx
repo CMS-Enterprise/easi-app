@@ -68,7 +68,7 @@ const systemLinks = (
   isUserSet: boolean
 ) => [
   {
-    link: '/systems?table-type=all-systems#systemsTable',
+    link: '/systems?table-type=all-systems',
     label: 'allCMSSystems',
     isEnabled: true
   },
@@ -78,7 +78,7 @@ const systemLinks = (
     isEnabled: true
   },
   {
-    link: '/systems?table-type=bookmarked-systems#systemsTable',
+    link: '/systems?table-type=bookmarked-systems#systemBookmarks',
     label: 'bookmarkedSystems',
     isEnabled: true
   },
