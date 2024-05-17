@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Controller,
   FieldPath,
@@ -18,7 +18,6 @@ import {
   Radio,
   TextInput
 } from '@trussworks/react-uswds';
-import { camelCase } from 'lodash';
 
 import AdditionalContacts from 'components/AdditionalContacts';
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
@@ -43,14 +42,11 @@ import {
   UpdateSystemIntakeContactDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContactDetails';
 import {
+  SystemIntakeCollaboratorInput,
   SystemIntakeFormState,
   SystemIntakeRequestType
 } from 'types/graphql-global-types';
-import {
-  ContactDetailsForm,
-  SystemIntakeContactProps,
-  SystemIntakeRoleKeys
-} from 'types/systemIntake';
+import { SystemIntakeContactProps } from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
@@ -63,6 +59,35 @@ type ContactDetailsProps = {
   systemIntake: SystemIntake;
 };
 
+type ContactFields = Omit<SystemIntakeContactProps, 'role' | 'systemIntakeId'>;
+
+type ContactDetailsForm = {
+  requester: ContactFields;
+  businessOwner: ContactFields & { sameAsRequester: boolean };
+  productManager: ContactFields & { sameAsRequester: boolean };
+  isso: ContactFields & { isPresent: boolean };
+  governanceTeams: {
+    isPresent: boolean;
+    teams: SystemIntakeCollaboratorInput[] | null;
+  };
+};
+
+type SystemIntakeRoleKeys = keyof Omit<ContactDetailsForm, 'governanceTeams'>;
+
+const systemIntakeRolesMap: Record<SystemIntakeRoleKeys, string> = {
+  requester: 'Requester',
+  businessOwner: 'Business Owner',
+  productManager: 'Product Manager',
+  isso: 'ISSO'
+};
+
+/** Removes `role` and `systemIntakeId` fields from `SystemIntakeContactProps` type */
+const getContactFields = ({
+  role,
+  systemIntakeId,
+  ...contact
+}: SystemIntakeContactProps): ContactFields => contact;
+
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const { t } = useTranslation('intake');
   const history = useHistory();
@@ -71,16 +96,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     systemIntake.requestType === SystemIntakeRequestType.SHUTDOWN
       ? '/'
       : `/governance-task-list/${systemIntake.id}`;
-
-  const [
-    busOwnerSameAsRequester,
-    setBusOwnerSameAsRequester
-  ] = useState<boolean>(false);
-
-  const [
-    prodManagerSameAsRequester,
-    setProdManagerSameAsRequester
-  ] = useState<boolean>(false);
 
   const [
     activeContact,
@@ -93,52 +108,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     updateContact
     // deleteContact
   } = useSystemIntakeContacts(systemIntake.id);
-
-  const form = useEasiForm<ContactDetailsForm>({
-    defaultValues: async () =>
-      contacts
-        .refetch()
-        .then(({ requester, businessOwner, productManager, isso }) => ({
-          requester,
-          businessOwner,
-          productManager,
-          isso: {
-            isPresent: !!isso?.euaUserId,
-            ...isso
-          },
-          governanceTeams: {
-            isPresent: systemIntake.governanceTeams.isPresent,
-            teams:
-              systemIntake.governanceTeams.teams?.map(team => ({
-                collaborator: team.collaborator,
-                name: team.name,
-                key: team.key
-              })) || []
-          }
-        })),
-    resolver: yupResolver(SystemIntakeValidationSchema.contactDetails)
-  });
-
-  const {
-    control,
-    handleSubmit,
-    partialSubmit,
-    setError,
-    watch,
-    getValues,
-    formState: { defaultValues, dirtyFields, isDirty, errors }
-  } = form;
-
-  /** RHF's `setValue` function with `shouldDirty` option set to true */
-  const setValue: UseFormSetValue<ContactDetailsForm> = (
-    name,
-    value,
-    options
-  ) =>
-    form.setValue<FieldPath<ContactDetailsForm>>(name, value, {
-      ...options,
-      shouldDirty: options?.shouldDirty || true
-    });
 
   const [updateSystemIntake] = useMutation<
     UpdateSystemIntakeContactDetails,
@@ -154,24 +123,87 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     ]
   });
 
+  const form = useEasiForm<ContactDetailsForm>({
+    resolver: yupResolver(SystemIntakeValidationSchema.contactDetails),
+    defaultValues: async () =>
+      contacts.refetch().then(values => {
+        const requester = getContactFields(values.requester);
+        const businessOwner = getContactFields(values.businessOwner);
+        const productManager = getContactFields(values.productManager);
+        const isso = getContactFields(values.isso);
+
+        return {
+          requester,
+          businessOwner: {
+            ...businessOwner,
+            sameAsRequester:
+              businessOwner.euaUserId === requester.euaUserId &&
+              businessOwner.component === requester.component
+          },
+          productManager: {
+            ...productManager,
+            sameAsRequester:
+              productManager.euaUserId === requester.euaUserId &&
+              productManager.component === requester.component
+          },
+          isso: {
+            isPresent: !!systemIntake.isso.isPresent,
+            ...isso
+          },
+          governanceTeams: {
+            isPresent: !!systemIntake.governanceTeams.isPresent,
+            teams:
+              systemIntake.governanceTeams.teams?.map(team => ({
+                collaborator: team.collaborator,
+                name: team.name,
+                key: team.key
+              })) || []
+          }
+        };
+      })
+  });
+
+  const {
+    control,
+    handleSubmit,
+    partialSubmit,
+    setError,
+    watch,
+    getValues,
+    formState: { defaultValues, dirtyFields, isDirty, errors }
+  } = form;
+
+  /** RHF's `setValue` function with `shouldDirty` option set to true */
+  const setValue: UseFormSetValue<ContactDetailsForm> = useCallback(
+    (name, value, options) =>
+      form.setValue<FieldPath<ContactDetailsForm>>(name, value, {
+        ...options,
+        shouldDirty: options?.shouldDirty || true
+      }),
+    [form]
+  );
+
   /** Creates or updates contact in database and sets ID field for new contacts */
-  const setContact = async (contact?: SystemIntakeContactProps) => {
-    if (!contact) return null;
-
-    const fieldName = camelCase(contact.role) as SystemIntakeRoleKeys;
-
+  const setContact = async (
+    role: SystemIntakeRoleKeys,
+    contact?: ContactFields
+  ) => {
     /** Checks if contact fields are set */
     const shouldUpdate =
-      !!dirtyFields[fieldName] && !!contact.euaUserId && !!contact.component;
+      !!dirtyFields[role] && !!contact?.euaUserId && !!contact?.component;
 
-    if (!shouldUpdate) return null;
+    if (!contact || !shouldUpdate) return null;
 
     /** If ID field is empty, creates new contact */
     const mutation = contact?.id ? updateContact : createContact;
 
-    return mutation({ ...contact }).then(contactData =>
+    return mutation({
+      ...contact,
+      systemIntakeId: systemIntake.id,
+      role: systemIntakeRolesMap[role]
+    }).then(contactData =>
       // Set ID field for new contacts
-      setValue(`${fieldName}.id`, contactData?.id)
+      setValue(`${role}.id`, contactData?.id)
     );
   };
 
@@ -179,10 +211,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const submit = async (values: Partial<ContactDetailsForm>) => {
     // Update contacts
     await Promise.all([
-      setContact(values?.requester),
-      setContact(values?.businessOwner),
-      setContact(values?.productManager),
-      setContact(values?.isso)
+      setContact('requester', values?.requester),
+      setContact('businessOwner', values?.businessOwner),
+      setContact('productManager', values?.productManager),
+      setContact('isso', values?.isso)
     ]);
 
     /** Combines existing form values with (possibly partial) submitted values object */
@@ -223,19 +255,18 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     });
   };
 
-  /**
-   * Used to set contact details to match requester
-   *
-   * Resets contact fields when `values` is undefined
-   * */
-  const setContactDetails = (
-    role: SystemIntakeRoleKeys,
-    values?: SystemIntakeContactProps
+  /** Toggle updating fields to match requester */
+  const toggleSameAsRequester = (
+    sameAsRequester: boolean,
+    role: 'businessOwner' | 'productManager'
   ) => {
-    setValue(`${role}.euaUserId`, values ? values.euaUserId : '');
-    setValue(`${role}.commonName`, values ? values.commonName : '');
-    setValue(`${role}.email`, values ? values.email : '');
-    setValue(`${role}.component`, values ? values.component : '');
+    const requester = getValues('requester');
+
+    setValue(`${role}.euaUserId`, sameAsRequester ? requester.euaUserId : '');
+    setValue(`${role}.commonName`, sameAsRequester ? requester.commonName : '');
+    setValue(`${role}.email`, sameAsRequester ? requester.email : '');
+
+    setValue(`${role}.component`, sameAsRequester ? requester.component : '');
   };
 
   const hasErrors = Object.keys(errors).length > 0;
@@ -251,26 +282,28 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     }
   }, [errors, hasErrors]);
 
-  // Set same as requester checkbox default values
+  const businessOwner = watch('businessOwner');
+  const productManager = watch('productManager');
+  const requester = watch('requester');
+
+  /** Sync component fields when "same as requester" checkbox is checked */
   useEffect(() => {
-    if (defaultValues) {
-      const { requester, businessOwner, productManager } = defaultValues;
-
-      if (
-        requester?.euaUserId === businessOwner?.euaUserId &&
-        requester?.component === businessOwner?.component
-      ) {
-        setBusOwnerSameAsRequester(true);
-      }
-
-      if (
-        requester?.euaUserId === productManager?.euaUserId &&
-        requester?.component === productManager?.component
-      ) {
-        setProdManagerSameAsRequester(true);
-      }
+    if (
+      businessOwner &&
+      businessOwner.sameAsRequester &&
+      businessOwner.component !== requester.component
+    ) {
+      setValue('businessOwner.component', requester.component);
     }
-  }, [defaultValues]);
+
+    if (
+      productManager &&
+      productManager.sameAsRequester &&
+      productManager.component !== requester.component
+    ) {
+      setValue('businessOwner.component', requester.component);
+    }
+  }, [requester, businessOwner, productManager, setValue]);
 
   // Wait until default values have been updated
   if (!defaultValues) return <PageLoading />;
@@ -360,21 +393,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 as={FieldErrorMsg}
               />
 
-              <Dropdown
-                {...field}
-                id="IntakeForm-RequesterComponent"
-                onChange={e => {
-                  field.onChange(e);
-
-                  if (busOwnerSameAsRequester) {
-                    setValue('businessOwner.component', e.target.value);
-                  }
-
-                  if (prodManagerSameAsRequester) {
-                    setValue('productManager.component', e.target.value);
-                  }
-                }}
-              >
+              <Dropdown {...field} id="IntakeForm-RequesterComponent">
                 <option value="" disabled>
                   {t('Select an option')}
                 </option>
@@ -394,19 +413,20 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           {t('contactDetails.businessOwner.helpText')}
         </HelpText>
 
-        <Checkbox
-          id="IntakeForm-busOwnerSameAsRequester"
-          label={t('contactDetails.businessOwner.sameAsRequester')}
-          name="busOwnerSameAsRequester"
-          checked={!!busOwnerSameAsRequester}
-          onChange={e => {
-            setContactDetails(
-              'businessOwner',
-              e.target.checked ? watch('requester') : undefined
-            );
-
-            setBusOwnerSameAsRequester(!busOwnerSameAsRequester);
-          }}
+        <Controller
+          control={control}
+          name="businessOwner.sameAsRequester"
+          render={({ field: { ref, value, ...field } }) => (
+            <Checkbox
+              {...field}
+              id="IntakeForm-busOwnerSameAsRequester"
+              label={t('contactDetails.businessOwner.sameAsRequester')}
+              onChange={e => {
+                field.onChange(e);
+                toggleSameAsRequester(e.target.checked, 'businessOwner');
+              }}
+            />
+          )}
         />
 
         <Controller
@@ -446,7 +466,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     );
                     setValue('businessOwner.email', contact?.email || '');
                   }}
-                  disabled={busOwnerSameAsRequester}
+                  disabled={watch('businessOwner.sameAsRequester')}
                   autoSearch
                 />
               </FormGroup>
@@ -472,7 +492,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 {...field}
                 id="IntakeForm-BusinessOwnerComponent"
                 value={watch('businessOwner.component')}
-                disabled={busOwnerSameAsRequester}
+                disabled={watch('businessOwner.sameAsRequester')}
               >
                 <option value="" disabled>
                   {t('Select an option')}
@@ -506,19 +526,20 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           {t('contactDetails.productManager.helpText')}
         </HelpText>
 
-        <Checkbox
-          id="IntakeForm-prodManagerSameAsRequester"
-          label={t('contactDetails.productManager.sameAsRequester')}
-          name="prodManagerSameAsRequester"
-          checked={!!prodManagerSameAsRequester}
-          onChange={e => {
-            setContactDetails(
-              'productManager',
-              e.target.checked ? watch('requester') : undefined
-            );
-
-            setProdManagerSameAsRequester(!prodManagerSameAsRequester);
-          }}
+        <Controller
+          control={control}
+          name="productManager.sameAsRequester"
+          render={({ field: { ref, value, ...field } }) => (
+            <Checkbox
+              {...field}
+              id={field.name}
+              label={t('contactDetails.productManager.sameAsRequester')}
+              onChange={e => {
+                field.onChange(e);
+                toggleSameAsRequester(e.target.checked, 'productManager');
+              }}
+            />
+          )}
         />
 
         <Controller
@@ -558,7 +579,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     );
                     setValue('productManager.email', contact?.email || '');
                   }}
-                  disabled={prodManagerSameAsRequester}
+                  disabled={watch('productManager.sameAsRequester')}
                   autoSearch
                 />
               </FormGroup>
@@ -583,7 +604,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Dropdown
                 {...field}
                 id="IntakeForm-ProductManagerComponent"
-                disabled={prodManagerSameAsRequester}
+                disabled={watch('productManager.sameAsRequester')}
               >
                 <option value="" disabled>
                   {t('Select an option')}
@@ -645,6 +666,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     <Controller
                       control={control}
                       name="isso"
+                      shouldUnregister
                       render={({ field: { ref, ...field } }) => {
                         const error = errors?.isso?.commonName;
 
@@ -679,6 +701,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     <Controller
                       control={control}
                       name="isso.component"
+                      shouldUnregister
                       render={({
                         field: { ref, ...field },
                         fieldState: { error }
@@ -694,9 +717,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                           />
 
                           <Dropdown {...field} id="IntakeForm-IssoComponent">
-                            <option value="" disabled>
-                              {t('Select an option')}
-                            </option>
+                            <option disabled>{t('Select an option')}</option>
                             {cmsDivisionsAndOfficesOptions('IssoComponent')}
                           </Dropdown>
                         </FormGroup>
