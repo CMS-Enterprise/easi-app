@@ -583,19 +583,6 @@ type SystemIntakeFundingSourcesInput struct {
 	FundingSources  []*SystemIntakeFundingSourceInput `json:"fundingSources"`
 }
 
-// GRB Reviewers for a system intake request
-type SystemIntakeGRBReviewer struct {
-	ID             uuid.UUID                         `json:"id"`
-	EuaUserID      string                            `json:"euaUserID"`
-	SystemIntakeID uuid.UUID                         `json:"systemIntakeID"`
-	VotingRole     SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
-	GrbRole        SystemIntakeGRBReviewerRole       `json:"grbRole"`
-	CreatedBy      string                            `json:"createdBy"`
-	CreatedAt      time.Time                         `json:"createdAt"`
-	ModifiedBy     string                            `json:"modifiedBy"`
-	ModifiedAt     time.Time                         `json:"modifiedAt"`
-}
-
 // Contains multiple system request collaborators, if any
 type SystemIntakeGovernanceTeam struct {
 	IsPresent *bool                       `json:"isPresent,omitempty"`
