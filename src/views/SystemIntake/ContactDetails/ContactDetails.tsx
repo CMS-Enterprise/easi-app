@@ -105,8 +105,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const {
     contacts,
     createContact,
-    updateContact
-    // deleteContact
+    updateContact,
+    deleteContact
   } = useSystemIntakeContacts(systemIntake.id);
 
   const [updateSystemIntake] = useMutation<
@@ -214,7 +214,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       setContact('requester', values?.requester),
       setContact('businessOwner', values?.businessOwner),
       setContact('productManager', values?.productManager),
-      setContact('isso', values?.isso)
+      // If ISSO is not present, send undefined `values` prop
+      setContact('isso', values?.isso?.isPresent ? values?.isso : undefined)
     ]);
 
     /** Combines existing form values with (possibly partial) submitted values object */
@@ -227,6 +228,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       isso,
       governanceTeams
     } = formValuesObject;
+
+    // If ISSO is not present in field values but was previously added, delete contact
+    if (!isso?.isPresent && contacts.data.isso.id) {
+      deleteContact(contacts.data.isso.id);
+    }
 
     // Update system intake
     return updateSystemIntake({
@@ -666,7 +672,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     <Controller
                       control={control}
                       name="isso"
-                      shouldUnregister
+                      // shouldUnregister
                       render={({ field: { ref, ...field } }) => {
                         const error = errors?.isso?.commonName;
 
@@ -701,7 +707,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                     <Controller
                       control={control}
                       name="isso.component"
-                      shouldUnregister
                       render={({
                         field: { ref, ...field },
                         fieldState: { error }
@@ -717,7 +722,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                           />
 
                           <Dropdown {...field} id="IntakeForm-IssoComponent">
-                            <option disabled>{t('Select an option')}</option>
+                            <option value="" disabled>
+                              {t('Select an option')}
+                            </option>
                             {cmsDivisionsAndOfficesOptions('IssoComponent')}
                           </Dropdown>
                         </FormGroup>
@@ -752,7 +759,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   label={t('No')}
                   value="false"
                   checked={issoField.value === false}
-                  onChange={() => issoField.onChange(false)}
+                  onChange={() => {
+                    issoField.onChange(false);
+
+                    // Reset ISSO fields
+                    setValue('isso.commonName', '');
+                    setValue('isso.euaUserId', '');
+                    setValue('isso.email', '');
+                    setValue('isso.component', '');
+                  }}
                 />
               </fieldset>
             </FormGroup>
