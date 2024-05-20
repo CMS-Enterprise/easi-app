@@ -46,6 +46,7 @@ type Config struct {
 type ResolverRoot interface {
 	BusinessCase() BusinessCaseResolver
 	CedarBudgetSystemCost() CedarBudgetSystemCostResolver
+	CedarLinkedRequests() CedarLinkedRequestsResolver
 	CedarSoftwareProducts() CedarSoftwareProductsResolver
 	CedarSystem() CedarSystemResolver
 	CedarSystemDetails() CedarSystemDetailsResolver
@@ -354,6 +355,7 @@ type ComplexityRoot struct {
 		Description             func(childComplexity int) int
 		ID                      func(childComplexity int) int
 		IsBookmarked            func(childComplexity int) int
+		LinkedRequests          func(childComplexity int) int
 		Name                    func(childComplexity int) int
 		Status                  func(childComplexity int) int
 		SystemMaintainerOrg     func(childComplexity int) int
@@ -620,7 +622,6 @@ type ComplexityRoot struct {
 		SystemIntakeContacts     func(childComplexity int, id uuid.UUID) int
 		SystemIntakes            func(childComplexity int, openRequests bool) int
 		SystemIntakesWithLcids   func(childComplexity int) int
-		SystemWorkspace          func(childComplexity int, cedarSystemID string) int
 		TrbAdminNote             func(childComplexity int, id uuid.UUID) int
 		TrbLeadOptions           func(childComplexity int) int
 		TrbRequest               func(childComplexity int, id uuid.UUID) int
@@ -861,10 +862,6 @@ type ComplexityRoot struct {
 		Component func(childComplexity int) int
 		Email     func(childComplexity int) int
 		Name      func(childComplexity int) int
-	}
-
-	SystemWorkspace struct {
-		LinkedRequests func(childComplexity int) int
 	}
 
 	TRBAdminNote struct {
@@ -1113,6 +1110,10 @@ type BusinessCaseResolver interface {
 type CedarBudgetSystemCostResolver interface {
 	BudgetActualCost(ctx context.Context, obj *models.CedarBudgetSystemCost) ([]*model.CedarBudgetActualCost, error)
 }
+type CedarLinkedRequestsResolver interface {
+	TrbRequests(ctx context.Context, obj *model.CedarLinkedRequests) ([]*models.TRBRequest, error)
+	SystemIntakes(ctx context.Context, obj *model.CedarLinkedRequests) ([]*models.SystemIntake, error)
+}
 type CedarSoftwareProductsResolver interface {
 	SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error)
 }
@@ -1120,6 +1121,7 @@ type CedarSystemResolver interface {
 	BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error)
 
 	IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error)
+	LinkedRequests(ctx context.Context, obj *models.CedarSystem) (*model.CedarLinkedRequests, error)
 }
 type CedarSystemDetailsResolver interface {
 	SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error)
@@ -1242,7 +1244,6 @@ type QueryResolver interface {
 	TrbLeadOptions(ctx context.Context) ([]*models.UserInfo, error)
 	TrbAdminNote(ctx context.Context, id uuid.UUID) (*models.TRBAdminNote, error)
 	UserAccount(ctx context.Context, username string) (*authentication.UserAccount, error)
-	SystemWorkspace(ctx context.Context, cedarSystemID string) (*model.SystemWorkspace, error)
 }
 type SystemIntakeResolver interface {
 	Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error)
@@ -2949,6 +2950,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarSystem.IsBookmarked(childComplexity), true
+
+	case "CedarSystem.linkedRequests":
+		if e.complexity.CedarSystem.LinkedRequests == nil {
+			break
+		}
+
+		return e.complexity.CedarSystem.LinkedRequests(childComplexity), true
 
 	case "CedarSystem.name":
 		if e.complexity.CedarSystem.Name == nil {
@@ -4821,18 +4829,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.SystemIntakesWithLcids(childComplexity), true
 
-	case "Query.systemWorkspace":
-		if e.complexity.Query.SystemWorkspace == nil {
-			break
-		}
-
-		args, err := ec.field_Query_systemWorkspace_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.SystemWorkspace(childComplexity, args["cedarSystemId"].(string)), true
-
 	case "Query.trbAdminNote":
 		if e.complexity.Query.TrbAdminNote == nil {
 			break
@@ -6033,13 +6029,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntakeRequester.Name(childComplexity), true
-
-	case "SystemWorkspace.linkedRequests":
-		if e.complexity.SystemWorkspace.LinkedRequests == nil {
-			break
-		}
-
-		return e.complexity.SystemWorkspace.LinkedRequests(childComplexity), true
 
 	case "TRBAdminNote.author":
 		if e.complexity.TRBAdminNote.Author == nil {
@@ -7590,6 +7579,7 @@ type CedarSystem {
   systemMaintainerOrgComp: String
   versionId: String
   isBookmarked: Boolean!
+  linkedRequests: CedarLinkedRequests!
 }
 
 """
@@ -7696,16 +7686,12 @@ type CedarSystemDetails {
  urls: [CedarURL!]!
 }
 
-type SystemWorkspace {
-  linkedRequests: CedarLinkedRequests!
-}
-
 """
 This is a representation  of System Intakes/TRB Requests linked to a given CEDAR system
 """
 type CedarLinkedRequests {
-  trbRequests: [TRBRequest!]!
-  systemIntakes: [SystemIntake!]!
+  trbRequests: [TRBRequest!]! @goField(forceResolver: true)
+  systemIntakes: [SystemIntake!]! @goField(forceResolver: true)
 }
 
 """
@@ -9875,8 +9861,6 @@ type Query {
   trbAdminNote(id: UUID!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
   userAccount(username: String!): UserAccount
-
-  systemWorkspace(cedarSystemId: String!): SystemWorkspace!
 }
 
 enum TRBRequestType {
@@ -9940,6 +9924,13 @@ directive @goModel(
   models: [String!]
   forceGenerate: Boolean
 ) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
+
+# https://gqlgen.com/config/#inline-config-with-directives
+directive @goField(
+	forceResolver: Boolean
+	name: String
+	omittable: Boolean
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
 """
 A user role associated with a job code
@@ -11719,21 +11710,6 @@ func (ec *executionContext) field_Query_systemIntakes_args(ctx context.Context, 
 		}
 	}
 	args["openRequests"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_systemWorkspace_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["cedarSystemId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("cedarSystemId"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["cedarSystemId"] = arg0
 	return args, nil
 }
 
@@ -18905,7 +18881,7 @@ func (ec *executionContext) _CedarLinkedRequests_trbRequests(ctx context.Context
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.TrbRequests, nil
+		return ec.resolvers.CedarLinkedRequests().TrbRequests(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -18926,8 +18902,8 @@ func (ec *executionContext) fieldContext_CedarLinkedRequests_trbRequests(_ conte
 	fc = &graphql.FieldContext{
 		Object:     "CedarLinkedRequests",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -19005,7 +18981,7 @@ func (ec *executionContext) _CedarLinkedRequests_systemIntakes(ctx context.Conte
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.SystemIntakes, nil
+		return ec.resolvers.CedarLinkedRequests().SystemIntakes(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -19026,8 +19002,8 @@ func (ec *executionContext) fieldContext_CedarLinkedRequests_systemIntakes(_ con
 	fc = &graphql.FieldContext{
 		Object:     "CedarLinkedRequests",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "actions":
@@ -21908,6 +21884,56 @@ func (ec *executionContext) fieldContext_CedarSystem_isBookmarked(_ context.Cont
 	return fc, nil
 }
 
+func (ec *executionContext) _CedarSystem_linkedRequests(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSystem_linkedRequests(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.CedarSystem().LinkedRequests(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CedarLinkedRequests)
+	fc.Result = res
+	return ec.marshalNCedarLinkedRequests2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarLinkedRequests(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSystem_linkedRequests(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystem",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "trbRequests":
+				return ec.fieldContext_CedarLinkedRequests_trbRequests(ctx, field)
+			case "systemIntakes":
+				return ec.fieldContext_CedarLinkedRequests_systemIntakes(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CedarLinkedRequests", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CedarSystemBookmark_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemBookmark) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarSystemBookmark_euaUserId(ctx, field)
 	if err != nil {
@@ -22059,6 +22085,8 @@ func (ec *executionContext) fieldContext_CedarSystemDetails_cedarSystem(_ contex
 				return ec.fieldContext_CedarSystem_versionId(ctx, field)
 			case "isBookmarked":
 				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
+			case "linkedRequests":
+				return ec.fieldContext_CedarSystem_linkedRequests(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -33898,6 +33926,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystem(ctx context.Context, 
 				return ec.fieldContext_CedarSystem_versionId(ctx, field)
 			case "isBookmarked":
 				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
+			case "linkedRequests":
+				return ec.fieldContext_CedarSystem_linkedRequests(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -33979,6 +34009,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystems(_ context.Context, f
 				return ec.fieldContext_CedarSystem_versionId(ctx, field)
 			case "isBookmarked":
 				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
+			case "linkedRequests":
+				return ec.fieldContext_CedarSystem_linkedRequests(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -34189,6 +34221,8 @@ func (ec *executionContext) fieldContext_Query_myCedarSystems(_ context.Context,
 				return ec.fieldContext_CedarSystem_versionId(ctx, field)
 			case "isBookmarked":
 				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
+			case "linkedRequests":
+				return ec.fieldContext_CedarSystem_linkedRequests(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -35446,65 +35480,6 @@ func (ec *executionContext) fieldContext_Query_userAccount(ctx context.Context, 
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_userAccount_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Query_systemWorkspace(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_systemWorkspace(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().SystemWorkspace(rctx, fc.Args["cedarSystemId"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.SystemWorkspace)
-	fc.Result = res
-	return ec.marshalNSystemWorkspace2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemWorkspace(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_systemWorkspace(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "linkedRequests":
-				return ec.fieldContext_SystemWorkspace_linkedRequests(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type SystemWorkspace", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_systemWorkspace_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -39214,6 +39189,8 @@ func (ec *executionContext) fieldContext_SystemIntake_systems(_ context.Context,
 				return ec.fieldContext_CedarSystem_versionId(ctx, field)
 			case "isBookmarked":
 				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
+			case "linkedRequests":
+				return ec.fieldContext_CedarSystem_linkedRequests(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -43007,56 +42984,6 @@ func (ec *executionContext) fieldContext_SystemIntakeRequester_name(_ context.Co
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemWorkspace_linkedRequests(ctx context.Context, field graphql.CollectedField, obj *model.SystemWorkspace) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemWorkspace_linkedRequests(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.LinkedRequests, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.CedarLinkedRequests)
-	fc.Result = res
-	return ec.marshalNCedarLinkedRequests2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarLinkedRequests(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemWorkspace_linkedRequests(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemWorkspace",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "trbRequests":
-				return ec.fieldContext_CedarLinkedRequests_trbRequests(ctx, field)
-			case "systemIntakes":
-				return ec.fieldContext_CedarLinkedRequests_systemIntakes(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type CedarLinkedRequests", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _TRBAdminNote_id(ctx context.Context, field graphql.CollectedField, obj *models.TRBAdminNote) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TRBAdminNote_id(ctx, field)
 	if err != nil {
@@ -46831,6 +46758,8 @@ func (ec *executionContext) fieldContext_TRBRequest_systems(_ context.Context, f
 				return ec.fieldContext_CedarSystem_versionId(ctx, field)
 			case "isBookmarked":
 				return ec.fieldContext_CedarSystem_isBookmarked(ctx, field)
+			case "linkedRequests":
+				return ec.fieldContext_CedarSystem_linkedRequests(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -57452,15 +57381,77 @@ func (ec *executionContext) _CedarLinkedRequests(ctx context.Context, sel ast.Se
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("CedarLinkedRequests")
 		case "trbRequests":
-			out.Values[i] = ec._CedarLinkedRequests_trbRequests(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarLinkedRequests_trbRequests(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
 			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "systemIntakes":
-			out.Values[i] = ec._CedarLinkedRequests_systemIntakes(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarLinkedRequests_systemIntakes(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
 			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -57905,6 +57896,42 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 					}
 				}()
 				res = ec._CedarSystem_isBookmarked(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "linkedRequests":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._CedarSystem_linkedRequests(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -60279,28 +60306,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_userAccount(ctx, field)
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx,
-					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "systemWorkspace":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_systemWorkspace(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
 				return res
 			}
 
@@ -62796,45 +62801,6 @@ func (ec *executionContext) _SystemIntakeRequester(ctx context.Context, sel ast.
 			out.Values[i] = ec._SystemIntakeRequester_email(ctx, field, obj)
 		case "name":
 			out.Values[i] = ec._SystemIntakeRequester_name(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var systemWorkspaceImplementors = []string{"SystemWorkspace"}
-
-func (ec *executionContext) _SystemWorkspace(ctx context.Context, sel ast.SelectionSet, obj *model.SystemWorkspace) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, systemWorkspaceImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("SystemWorkspace")
-		case "linkedRequests":
-			out.Values[i] = ec._SystemWorkspace_linkedRequests(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -66052,6 +66018,10 @@ func (ec *executionContext) marshalNCedarExchangeTypeOfDataItem2ᚖgithubᚗcom�
 	return ec._CedarExchangeTypeOfDataItem(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCedarLinkedRequests2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarLinkedRequests(ctx context.Context, sel ast.SelectionSet, v model.CedarLinkedRequests) graphql.Marshaler {
+	return ec._CedarLinkedRequests(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNCedarLinkedRequests2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarLinkedRequests(ctx context.Context, sel ast.SelectionSet, v *model.CedarLinkedRequests) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -68025,20 +67995,6 @@ func (ec *executionContext) marshalNSystemIntakeTRBFollowUp2githubᚗcomᚋcmsgo
 func (ec *executionContext) unmarshalNSystemIntakeUpdateLCIDInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeUpdateLCIDInput(ctx context.Context, v interface{}) (model.SystemIntakeUpdateLCIDInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeUpdateLCIDInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNSystemWorkspace2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemWorkspace(ctx context.Context, sel ast.SelectionSet, v model.SystemWorkspace) graphql.Marshaler {
-	return ec._SystemWorkspace(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNSystemWorkspace2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemWorkspace(ctx context.Context, sel ast.SelectionSet, v *model.SystemWorkspace) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._SystemWorkspace(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNTRBAdminNote2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNote(ctx context.Context, sel ast.SelectionSet, v models.TRBAdminNote) graphql.Marshaler {

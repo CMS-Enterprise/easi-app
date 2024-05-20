@@ -180,6 +180,7 @@ type CedarSystem {
   systemMaintainerOrgComp: String
   versionId: String
   isBookmarked: Boolean!
+  linkedRequests: CedarLinkedRequests!
 }
 
 """
@@ -286,16 +287,12 @@ type CedarSystemDetails {
  urls: [CedarURL!]!
 }
 
-type SystemWorkspace {
-  linkedRequests: CedarLinkedRequests!
-}
-
 """
 This is a representation  of System Intakes/TRB Requests linked to a given CEDAR system
 """
 type CedarLinkedRequests {
-  trbRequests: [TRBRequest!]!
-  systemIntakes: [SystemIntake!]!
+  trbRequests: [TRBRequest!]! @goField(forceResolver: true)
+  systemIntakes: [SystemIntake!]! @goField(forceResolver: true)
 }
 
 """
@@ -2465,8 +2462,6 @@ type Query {
   trbAdminNote(id: UUID!): TRBAdminNote!
     @hasRole(role: EASI_TRB_ADMIN)
   userAccount(username: String!): UserAccount
-
-  systemWorkspace(cedarSystemId: String!): SystemWorkspace!
 }
 
 enum TRBRequestType {
@@ -2530,6 +2525,13 @@ directive @goModel(
   models: [String!]
   forceGenerate: Boolean
 ) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
+
+# https://gqlgen.com/config/#inline-config-with-directives
+directive @goField(
+	forceResolver: Boolean
+	name: String
+	omittable: Boolean
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
 """
 A user role associated with a job code

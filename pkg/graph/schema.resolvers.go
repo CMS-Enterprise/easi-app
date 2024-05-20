@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -133,6 +134,16 @@ func (r *cedarBudgetSystemCostResolver) BudgetActualCost(ctx context.Context, ob
 	return actualCosts, nil
 }
 
+// TrbRequests is the resolver for the trbRequests field.
+func (r *cedarLinkedRequestsResolver) TrbRequests(ctx context.Context, obj *model.CedarLinkedRequests) ([]*models.TRBRequest, error) {
+	panic(fmt.Errorf("not implemented: TrbRequests - trbRequests"))
+}
+
+// SystemIntakes is the resolver for the systemIntakes field.
+func (r *cedarLinkedRequestsResolver) SystemIntakes(ctx context.Context, obj *model.CedarLinkedRequests) ([]*models.SystemIntake, error) {
+	panic(fmt.Errorf("not implemented: SystemIntakes - systemIntakes"))
+}
+
 // SoftwareProducts is the resolver for the softwareProducts field.
 func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error) {
 	softwareProducts := obj.SoftwareProducts
@@ -177,6 +188,11 @@ func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *model
 // IsBookmarked is the resolver for the isBookmarked field.
 func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
 	return resolvers.CedarSystemIsBookmarked(ctx, obj.ID.String)
+}
+
+// LinkedRequests is the resolver for the linkedRequests field.
+func (r *cedarSystemResolver) LinkedRequests(ctx context.Context, obj *models.CedarSystem) (*model.CedarLinkedRequests, error) {
+	panic(fmt.Errorf("not implemented: LinkedRequests - linkedRequests"))
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
@@ -1511,36 +1527,6 @@ func (r *queryResolver) UserAccount(ctx context.Context, username string) (*auth
 	return resolvers.UserAccountGetByUsername(r.store, username)
 }
 
-// SystemWorkspace is the resolver for the systemWorkspace field.
-func (r *queryResolver) SystemWorkspace(ctx context.Context, cedarSystemID string) (*model.SystemWorkspace, error) {
-	g := new(errgroup.Group)
-
-	var systemIntakes []*models.SystemIntake
-	g.Go(func() error {
-		var err error
-		systemIntakes, err = r.store.SystemIntakesByCedarSystemID(ctx, cedarSystemID)
-		return err
-	})
-
-	var trbRequests []*models.TRBRequest
-	g.Go(func() error {
-		var err error
-		trbRequests, err = r.store.TRBRequestsByCedarSystemID(ctx, cedarSystemID)
-		return err
-	})
-
-	if err := g.Wait(); err != nil {
-		return nil, err
-	}
-
-	return &model.SystemWorkspace{
-		LinkedRequests: &model.CedarLinkedRequests{
-			TrbRequests:   trbRequests,
-			SystemIntakes: systemIntakes,
-		},
-	}, nil
-}
-
 // Actions is the resolver for the actions field.
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
 	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
@@ -2119,6 +2105,11 @@ func (r *Resolver) CedarBudgetSystemCost() generated.CedarBudgetSystemCostResolv
 	return &cedarBudgetSystemCostResolver{r}
 }
 
+// CedarLinkedRequests returns generated.CedarLinkedRequestsResolver implementation.
+func (r *Resolver) CedarLinkedRequests() generated.CedarLinkedRequestsResolver {
+	return &cedarLinkedRequestsResolver{r}
+}
+
 // CedarSoftwareProducts returns generated.CedarSoftwareProductsResolver implementation.
 func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolver {
 	return &cedarSoftwareProductsResolver{r}
@@ -2202,6 +2193,7 @@ func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResol
 
 type businessCaseResolver struct{ *Resolver }
 type cedarBudgetSystemCostResolver struct{ *Resolver }
+type cedarLinkedRequestsResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
 type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }

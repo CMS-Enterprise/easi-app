@@ -751,10 +751,6 @@ type SystemIntakeUpdateLCIDInput struct {
 	AdminNote              *models.HTML                        `json:"adminNote,omitempty"`
 }
 
-type SystemWorkspace struct {
-	LinkedRequests *CedarLinkedRequests `json:"linkedRequests"`
-}
-
 // Data specific to admin notes in the Advice Letter category
 // The "recommendations" property _will_ return deleted recommendations so that UI can reference the recommendation title
 type TRBAdminNoteAdviceLetterCategoryData struct {
