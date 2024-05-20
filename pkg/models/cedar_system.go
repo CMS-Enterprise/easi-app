@@ -103,7 +103,7 @@ type CedarSystemDetails struct {
 }
 
 type CedarLinkedRequests struct {
-	CedarSystemID zero.String     `json:"id"`
+	ID            zero.String     `json:"id"`
 	TrbRequests   []*TRBRequest   `json:"trbRequests"`
 	SystemIntakes []*SystemIntake `json:"systemIntakes"`
 }

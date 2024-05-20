@@ -135,12 +135,12 @@ func (r *cedarBudgetSystemCostResolver) BudgetActualCost(ctx context.Context, ob
 
 // TrbRequests is the resolver for the trbRequests field.
 func (r *cedarLinkedRequestsResolver) TrbRequests(ctx context.Context, obj *models.CedarLinkedRequests) ([]*models.TRBRequest, error) {
-	return r.store.TRBRequestsByCedarSystemID(ctx, obj.CedarSystemID.String)
+	return r.store.TRBRequestsByCedarSystemID(ctx, obj.ID.String)
 }
 
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *cedarLinkedRequestsResolver) SystemIntakes(ctx context.Context, obj *models.CedarLinkedRequests) ([]*models.SystemIntake, error) {
-	return r.store.SystemIntakesByCedarSystemID(ctx, obj.CedarSystemID.String)
+	return r.store.SystemIntakesByCedarSystemID(ctx, obj.ID.String)
 }
 
 // SoftwareProducts is the resolver for the softwareProducts field.
