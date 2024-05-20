@@ -266,36 +266,6 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                   class="usa-sidenav__item"
                 >
                   <a
-                    class="nav-group-border"
-                    href="/systems/000-100-0/team"
-                  >
-                    Team
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class=""
-                    href="/systems/000-100-0/ato"
-                  >
-                    ATO
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
-                    class=""
-                    href="/systems/000-100-0/funding-and-budget"
-                  >
-                    Funding and Budget
-                  </a>
-                </li>
-                <li
-                  class="usa-sidenav__item"
-                >
-                  <a
                     class=""
                     href="/systems/000-100-0/tools-and-software"
                   >
@@ -310,6 +280,46 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                     href="/systems/000-100-0/sub-systems"
                   >
                     Sub-systems
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/systems/000-100-0/team"
+                  >
+                    Team
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/systems/000-100-0/contracts"
+                  >
+                    Contracts
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class="nav-group-border"
+                    href="/systems/000-100-0/funding-and-budget"
+                  >
+                    Funding and Budget
+                  </a>
+                </li>
+                <li
+                  class="usa-sidenav__item"
+                >
+                  <a
+                    class=""
+                    href="/systems/000-100-0/ato"
+                  >
+                    ATO
                   </a>
                 </li>
               </ul>
