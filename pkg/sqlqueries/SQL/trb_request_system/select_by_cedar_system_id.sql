@@ -1,5 +1,5 @@
 SELECT
-    tr. *
+    tr.*
 FROM
     trb_request tr
     LEFT JOIN trb_request_systems trs ON trs.trb_request_id = tr.id
