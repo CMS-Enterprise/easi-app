@@ -1,6 +1,7 @@
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { ErrorMessage } from '@hookform/error-message';
 import { Checkbox, FormGroup, Radio, TextInput } from '@trussworks/react-uswds';
 
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -52,10 +53,10 @@ const GovernanceTeams = () => {
                   fieldState: { error }
                 }) => (
                   <FormGroup
-                    error={!!error}
+                    error={!!error?.message}
                     className="margin-left-4 margin-bottom-3 margin-top-1"
                   >
-                    {!!error && <FieldErrorMsg>{t('Error')}</FieldErrorMsg>}
+                    <ErrorMessage name={field.name} as={FieldErrorMsg} />
 
                     {cmsGovernanceTeams.map((team, index) => {
                       const teamIndex = teams.findIndex(
@@ -100,9 +101,12 @@ const GovernanceTeams = () => {
                                   <Label htmlFor={collaborator.field.name}>
                                     {t(`${team.acronym} Collaborator Name`)}
                                   </Label>
-                                  {!!collaborator.fieldState.error && (
-                                    <FieldErrorMsg>{t('Error')}</FieldErrorMsg>
-                                  )}
+
+                                  <ErrorMessage
+                                    name={collaborator.field.name}
+                                    as={FieldErrorMsg}
+                                  />
+
                                   <TextInput
                                     {...collaborator.field}
                                     ref={null}
