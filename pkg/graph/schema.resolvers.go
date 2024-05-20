@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strconv"
 	"time"
 
@@ -135,13 +134,13 @@ func (r *cedarBudgetSystemCostResolver) BudgetActualCost(ctx context.Context, ob
 }
 
 // TrbRequests is the resolver for the trbRequests field.
-func (r *cedarLinkedRequestsResolver) TrbRequests(ctx context.Context, obj *model.CedarLinkedRequests) ([]*models.TRBRequest, error) {
-	panic(fmt.Errorf("not implemented: TrbRequests - trbRequests"))
+func (r *cedarLinkedRequestsResolver) TrbRequests(ctx context.Context, obj *models.CedarLinkedRequests) ([]*models.TRBRequest, error) {
+	return r.store.TRBRequestsByCedarSystemID(ctx, obj.CedarSystemID.String)
 }
 
 // SystemIntakes is the resolver for the systemIntakes field.
-func (r *cedarLinkedRequestsResolver) SystemIntakes(ctx context.Context, obj *model.CedarLinkedRequests) ([]*models.SystemIntake, error) {
-	panic(fmt.Errorf("not implemented: SystemIntakes - systemIntakes"))
+func (r *cedarLinkedRequestsResolver) SystemIntakes(ctx context.Context, obj *models.CedarLinkedRequests) ([]*models.SystemIntake, error) {
+	return r.store.SystemIntakesByCedarSystemID(ctx, obj.CedarSystemID.String)
 }
 
 // SoftwareProducts is the resolver for the softwareProducts field.
@@ -188,11 +187,6 @@ func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *model
 // IsBookmarked is the resolver for the isBookmarked field.
 func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
 	return resolvers.CedarSystemIsBookmarked(ctx, obj.ID.String)
-}
-
-// LinkedRequests is the resolver for the linkedRequests field.
-func (r *cedarSystemResolver) LinkedRequests(ctx context.Context, obj *models.CedarSystem) (*model.CedarLinkedRequests, error) {
-	panic(fmt.Errorf("not implemented: LinkedRequests - linkedRequests"))
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.

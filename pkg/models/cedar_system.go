@@ -6,16 +6,17 @@ import (
 
 // CedarSystem is the model for a single system that comes back from the CEDAR Core API
 type CedarSystem struct {
-	ID                      zero.String `json:"id"`
-	Name                    zero.String `json:"name"`
-	Description             zero.String `json:"description"`
-	Acronym                 zero.String `json:"acronym"`
-	Status                  zero.String `json:"status"`
-	BusinessOwnerOrg        zero.String `json:"businessOwnerOrg"`
-	BusinessOwnerOrgComp    zero.String `json:"businessOwnerOrgComp"`
-	SystemMaintainerOrg     zero.String `json:"systemMaintainerOrg"`
-	SystemMaintainerOrgComp zero.String `json:"systemMaintainerOrgComp"`
-	VersionID               zero.String `json:"versionId"`
+	ID                      zero.String         `json:"id"`
+	Name                    zero.String         `json:"name"`
+	Description             zero.String         `json:"description"`
+	Acronym                 zero.String         `json:"acronym"`
+	Status                  zero.String         `json:"status"`
+	BusinessOwnerOrg        zero.String         `json:"businessOwnerOrg"`
+	BusinessOwnerOrgComp    zero.String         `json:"businessOwnerOrgComp"`
+	SystemMaintainerOrg     zero.String         `json:"systemMaintainerOrg"`
+	SystemMaintainerOrgComp zero.String         `json:"systemMaintainerOrgComp"`
+	VersionID               zero.String         `json:"versionId"`
+	LinkedRequests          CedarLinkedRequests `json:"cedarLinkedRequests"`
 }
 
 // CedarSubSystem is the model for a sub system that comes back from the CEDAR Core API
@@ -99,4 +100,10 @@ type CedarSystemDetails struct {
 	Deployments                 []*CedarDeployment `json:"deployments"`
 	Threats                     []*CedarThreat     `json:"threats"`
 	URLs                        []*CedarURL        `json:"urls"`
+}
+
+type CedarLinkedRequests struct {
+	CedarSystemID zero.String     `json:"id"`
+	TrbRequests   []*TRBRequest   `json:"trbRequests"`
+	SystemIntakes []*SystemIntake `json:"systemIntakes"`
 }

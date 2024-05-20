@@ -1111,8 +1111,8 @@ type CedarBudgetSystemCostResolver interface {
 	BudgetActualCost(ctx context.Context, obj *models.CedarBudgetSystemCost) ([]*model.CedarBudgetActualCost, error)
 }
 type CedarLinkedRequestsResolver interface {
-	TrbRequests(ctx context.Context, obj *model.CedarLinkedRequests) ([]*models.TRBRequest, error)
-	SystemIntakes(ctx context.Context, obj *model.CedarLinkedRequests) ([]*models.SystemIntake, error)
+	TrbRequests(ctx context.Context, obj *models.CedarLinkedRequests) ([]*models.TRBRequest, error)
+	SystemIntakes(ctx context.Context, obj *models.CedarLinkedRequests) ([]*models.SystemIntake, error)
 }
 type CedarSoftwareProductsResolver interface {
 	SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error)
@@ -1121,7 +1121,6 @@ type CedarSystemResolver interface {
 	BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error)
 
 	IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error)
-	LinkedRequests(ctx context.Context, obj *models.CedarSystem) (*model.CedarLinkedRequests, error)
 }
 type CedarSystemDetailsResolver interface {
 	SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error)
@@ -18867,7 +18866,7 @@ func (ec *executionContext) fieldContext_CedarExchangeTypeOfDataItem_name(_ cont
 	return fc, nil
 }
 
-func (ec *executionContext) _CedarLinkedRequests_trbRequests(ctx context.Context, field graphql.CollectedField, obj *model.CedarLinkedRequests) (ret graphql.Marshaler) {
+func (ec *executionContext) _CedarLinkedRequests_trbRequests(ctx context.Context, field graphql.CollectedField, obj *models.CedarLinkedRequests) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarLinkedRequests_trbRequests(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -18967,7 +18966,7 @@ func (ec *executionContext) fieldContext_CedarLinkedRequests_trbRequests(_ conte
 	return fc, nil
 }
 
-func (ec *executionContext) _CedarLinkedRequests_systemIntakes(ctx context.Context, field graphql.CollectedField, obj *model.CedarLinkedRequests) (ret graphql.Marshaler) {
+func (ec *executionContext) _CedarLinkedRequests_systemIntakes(ctx context.Context, field graphql.CollectedField, obj *models.CedarLinkedRequests) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarLinkedRequests_systemIntakes(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -21898,7 +21897,7 @@ func (ec *executionContext) _CedarSystem_linkedRequests(ctx context.Context, fie
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CedarSystem().LinkedRequests(rctx, obj)
+		return obj.LinkedRequests, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -21910,17 +21909,17 @@ func (ec *executionContext) _CedarSystem_linkedRequests(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.CedarLinkedRequests)
+	res := resTmp.(models.CedarLinkedRequests)
 	fc.Result = res
-	return ec.marshalNCedarLinkedRequests2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarLinkedRequests(ctx, field.Selections, res)
+	return ec.marshalNCedarLinkedRequests2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarLinkedRequests(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_CedarSystem_linkedRequests(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarSystem",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "trbRequests":
@@ -57371,7 +57370,7 @@ func (ec *executionContext) _CedarExchangeTypeOfDataItem(ctx context.Context, se
 
 var cedarLinkedRequestsImplementors = []string{"CedarLinkedRequests"}
 
-func (ec *executionContext) _CedarLinkedRequests(ctx context.Context, sel ast.SelectionSet, obj *model.CedarLinkedRequests) graphql.Marshaler {
+func (ec *executionContext) _CedarLinkedRequests(ctx context.Context, sel ast.SelectionSet, obj *models.CedarLinkedRequests) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, cedarLinkedRequestsImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -57923,41 +57922,10 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "linkedRequests":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._CedarSystem_linkedRequests(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._CedarSystem_linkedRequests(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
 			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -66018,18 +65986,8 @@ func (ec *executionContext) marshalNCedarExchangeTypeOfDataItem2ᚖgithubᚗcom�
 	return ec._CedarExchangeTypeOfDataItem(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNCedarLinkedRequests2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarLinkedRequests(ctx context.Context, sel ast.SelectionSet, v model.CedarLinkedRequests) graphql.Marshaler {
+func (ec *executionContext) marshalNCedarLinkedRequests2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarLinkedRequests(ctx context.Context, sel ast.SelectionSet, v models.CedarLinkedRequests) graphql.Marshaler {
 	return ec._CedarLinkedRequests(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNCedarLinkedRequests2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCedarLinkedRequests(ctx context.Context, sel ast.SelectionSet, v *model.CedarLinkedRequests) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._CedarLinkedRequests(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNCedarRole2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarRoleᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarRole) graphql.Marshaler {
