@@ -261,18 +261,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     });
   };
 
-  /** Toggle updating fields to match requester */
-  const toggleSameAsRequester = (
-    sameAsRequester: boolean,
-    role: 'businessOwner' | 'productManager'
-  ) => {
+  /** Set contact fields from requester values */
+  const setFieldsFromRequester = (role: 'businessOwner' | 'productManager') => {
     const requester = getValues('requester');
 
-    setValue(`${role}.euaUserId`, sameAsRequester ? requester.euaUserId : '');
-    setValue(`${role}.commonName`, sameAsRequester ? requester.commonName : '');
-    setValue(`${role}.email`, sameAsRequester ? requester.email : '');
+    setValue(`${role}.euaUserId`, requester.euaUserId);
+    setValue(`${role}.commonName`, requester.commonName);
+    setValue(`${role}.email`, requester.email);
 
-    setValue(`${role}.component`, sameAsRequester ? requester.component : '');
+    setValue(`${role}.component`, requester.component);
   };
 
   const hasErrors = Object.keys(errors).length > 0;
@@ -422,17 +419,20 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         <Controller
           control={control}
           name="businessOwner.sameAsRequester"
-          render={({ field: { ref, value, ...field } }) => (
-            <Checkbox
-              {...field}
-              id="IntakeForm-busOwnerSameAsRequester"
-              label={t('contactDetails.businessOwner.sameAsRequester')}
-              onChange={e => {
-                field.onChange(e);
-                toggleSameAsRequester(e.target.checked, 'businessOwner');
-              }}
-            />
-          )}
+          render={({ field: { ref, value, ...field } }) => {
+            return (
+              <Checkbox
+                {...field}
+                id="IntakeForm-busOwnerSameAsRequester"
+                label={t('contactDetails.businessOwner.sameAsRequester')}
+                checked={value}
+                onChange={e => {
+                  field.onChange(e);
+                  setFieldsFromRequester('businessOwner');
+                }}
+              />
+            );
+          }}
         />
 
         <Controller
@@ -540,9 +540,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               {...field}
               id={field.name}
               label={t('contactDetails.productManager.sameAsRequester')}
+              checked={value}
               onChange={e => {
                 field.onChange(e);
-                toggleSameAsRequester(e.target.checked, 'productManager');
+                setFieldsFromRequester('productManager');
               }}
             />
           )}
