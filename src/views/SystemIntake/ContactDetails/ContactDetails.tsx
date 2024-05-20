@@ -689,13 +689,17 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                             <CedarContactSelect
                               {...field}
                               id={field.name}
+                              // Manually update fields so that email field rerenders
                               onChange={contact => {
-                                field.onChange({
-                                  ...field.value,
-                                  commonName: contact?.commonName || '',
-                                  euaUserId: contact?.euaUserId || '',
-                                  email: contact?.email || ''
-                                });
+                                setValue(
+                                  'isso.commonName',
+                                  contact?.commonName || ''
+                                );
+                                setValue(
+                                  'isso.euaUserId',
+                                  contact?.euaUserId || ''
+                                );
+                                setValue('isso.email', contact?.email || '');
                               }}
                               autoSearch
                             />
