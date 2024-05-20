@@ -276,6 +276,7 @@ type ComplexityRoot struct {
 	}
 
 	CedarLinkedRequests struct {
+		ID            func(childComplexity int) int
 		SystemIntakes func(childComplexity int) int
 		TrbRequests   func(childComplexity int) int
 	}
@@ -2522,6 +2523,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarExchangeTypeOfDataItem.Name(childComplexity), true
+
+	case "CedarLinkedRequests.id":
+		if e.complexity.CedarLinkedRequests.ID == nil {
+			break
+		}
+
+		return e.complexity.CedarLinkedRequests.ID(childComplexity), true
 
 	case "CedarLinkedRequests.systemIntakes":
 		if e.complexity.CedarLinkedRequests.SystemIntakes == nil {
@@ -7582,6 +7590,15 @@ type CedarSystem {
 }
 
 """
+This is a representation  of System Intakes/TRB Requests linked to a given CEDAR system
+"""
+type CedarLinkedRequests {
+  id: String!
+  trbRequests: [TRBRequest!]! @goField(forceResolver: true)
+  systemIntakes: [SystemIntake!]! @goField(forceResolver: true)
+}
+
+"""
 CedarSubSystem represents the response from the /system/detail
 """
 type CedarSubSystem {
@@ -7683,14 +7700,6 @@ type CedarSystemDetails {
  deployments: [CedarDeployment!]!
  threats: [CedarThreat!]!
  urls: [CedarURL!]!
-}
-
-"""
-This is a representation  of System Intakes/TRB Requests linked to a given CEDAR system
-"""
-type CedarLinkedRequests {
-  trbRequests: [TRBRequest!]! @goField(forceResolver: true)
-  systemIntakes: [SystemIntake!]! @goField(forceResolver: true)
 }
 
 """
@@ -18866,6 +18875,50 @@ func (ec *executionContext) fieldContext_CedarExchangeTypeOfDataItem_name(_ cont
 	return fc, nil
 }
 
+func (ec *executionContext) _CedarLinkedRequests_id(ctx context.Context, field graphql.CollectedField, obj *models.CedarLinkedRequests) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarLinkedRequests_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalNString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarLinkedRequests_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarLinkedRequests",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CedarLinkedRequests_trbRequests(ctx context.Context, field graphql.CollectedField, obj *models.CedarLinkedRequests) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarLinkedRequests_trbRequests(ctx, field)
 	if err != nil {
@@ -21922,6 +21975,8 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedRequests(_ context.Co
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "id":
+				return ec.fieldContext_CedarLinkedRequests_id(ctx, field)
 			case "trbRequests":
 				return ec.fieldContext_CedarLinkedRequests_trbRequests(ctx, field)
 			case "systemIntakes":
@@ -57379,6 +57434,11 @@ func (ec *executionContext) _CedarLinkedRequests(ctx context.Context, sel ast.Se
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("CedarLinkedRequests")
+		case "id":
+			out.Values[i] = ec._CedarLinkedRequests_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
 		case "trbRequests":
 			field := field
 
