@@ -133,16 +133,6 @@ func (r *cedarBudgetSystemCostResolver) BudgetActualCost(ctx context.Context, ob
 	return actualCosts, nil
 }
 
-// TrbRequests is the resolver for the trbRequests field.
-func (r *cedarLinkedRequestsResolver) TrbRequests(ctx context.Context, obj *models.CedarLinkedRequests) ([]*models.TRBRequest, error) {
-	return r.store.TRBRequestsByCedarSystemID(ctx, obj.ID.String)
-}
-
-// SystemIntakes is the resolver for the systemIntakes field.
-func (r *cedarLinkedRequestsResolver) SystemIntakes(ctx context.Context, obj *models.CedarLinkedRequests) ([]*models.SystemIntake, error) {
-	return r.store.SystemIntakesByCedarSystemID(ctx, obj.ID.String)
-}
-
 // SoftwareProducts is the resolver for the softwareProducts field.
 func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error) {
 	softwareProducts := obj.SoftwareProducts
@@ -187,6 +177,16 @@ func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *model
 // IsBookmarked is the resolver for the isBookmarked field.
 func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
 	return resolvers.CedarSystemIsBookmarked(ctx, obj.ID.String)
+}
+
+// LinkedTrbRequests is the resolver for the linkedTrbRequests field.
+func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem) ([]*models.TRBRequest, error) {
+	return r.store.TRBRequestsByCedarSystemID(ctx, obj.ID.String)
+}
+
+// LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.
+func (r *cedarSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystem) ([]*models.SystemIntake, error) {
+	return r.store.SystemIntakesByCedarSystemID(ctx, obj.ID.String)
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
@@ -2099,11 +2099,6 @@ func (r *Resolver) CedarBudgetSystemCost() generated.CedarBudgetSystemCostResolv
 	return &cedarBudgetSystemCostResolver{r}
 }
 
-// CedarLinkedRequests returns generated.CedarLinkedRequestsResolver implementation.
-func (r *Resolver) CedarLinkedRequests() generated.CedarLinkedRequestsResolver {
-	return &cedarLinkedRequestsResolver{r}
-}
-
 // CedarSoftwareProducts returns generated.CedarSoftwareProductsResolver implementation.
 func (r *Resolver) CedarSoftwareProducts() generated.CedarSoftwareProductsResolver {
 	return &cedarSoftwareProductsResolver{r}
@@ -2187,7 +2182,6 @@ func (r *Resolver) UserInfo() generated.UserInfoResolver { return &userInfoResol
 
 type businessCaseResolver struct{ *Resolver }
 type cedarBudgetSystemCostResolver struct{ *Resolver }
-type cedarLinkedRequestsResolver struct{ *Resolver }
 type cedarSoftwareProductsResolver struct{ *Resolver }
 type cedarSystemResolver struct{ *Resolver }
 type cedarSystemDetailsResolver struct{ *Resolver }
