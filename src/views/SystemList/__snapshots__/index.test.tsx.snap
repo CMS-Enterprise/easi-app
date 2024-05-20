@@ -68,6 +68,7 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
     <div
       class="easi-section easi-section__border-bottom margin-bottom-3"
       data-testid="section-wrapper"
+      id="systemBookmarks"
     >
       <ul
         class="usa-card-group margin-bottom-3"
