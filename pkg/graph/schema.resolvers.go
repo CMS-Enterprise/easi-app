@@ -174,36 +174,56 @@ func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *model
 	return cedarRoles, nil
 }
 
+// IsBookmarked is the resolver for the isBookmarked field.
+func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
+	return resolvers.CedarSystemIsBookmarked(ctx, obj.ID.String)
+}
+
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
 func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error) {
-	ipEnabledCt := int(obj.SystemMaintainerInformation.IPEnabledAssetCount)
 	return &model.CedarSystemMaintainerInformation{
-		AgileUsed:                  &obj.SystemMaintainerInformation.AgileUsed,
-		BusinessArtifactsOnDemand:  &obj.SystemMaintainerInformation.BusinessArtifactsOnDemand,
-		DeploymentFrequency:        obj.SystemMaintainerInformation.DeploymentFrequency.Ptr(),
-		DevCompletionPercent:       obj.SystemMaintainerInformation.DevCompletionPercent.Ptr(),
-		DevWorkDescription:         obj.SystemMaintainerInformation.DevWorkDescription.Ptr(),
-		EcapParticipation:          &obj.SystemMaintainerInformation.EcapParticipation,
-		FrontendAccessType:         obj.SystemMaintainerInformation.FrontendAccessType.Ptr(),
-		HardCodedIPAddress:         &obj.SystemMaintainerInformation.HardCodedIPAddress,
-		IP6EnabledAssetPercent:     obj.SystemMaintainerInformation.IP6EnabledAssetPercent.Ptr(),
-		IP6TransitionPlan:          obj.SystemMaintainerInformation.IP6TransitionPlan.Ptr(),
-		IPEnabledAssetCount:        &ipEnabledCt,
-		MajorRefreshDate:           obj.SystemMaintainerInformation.MajorRefreshDate.Ptr(),
-		NetAccessibility:           obj.SystemMaintainerInformation.NetAccessibility.Ptr(),
-		OmDocumentationOnDemand:    &obj.SystemMaintainerInformation.OmDocumentationOnDemand,
-		PlansToRetireReplace:       obj.SystemMaintainerInformation.PlansToRetireReplace.Ptr(),
-		QuarterToRetireReplace:     obj.SystemMaintainerInformation.QuarterToRetireReplace.Ptr(),
-		RecordsManagementBucket:    models.StringsFromZeroStrs(obj.SystemMaintainerInformation.RecordsManagementBucket),
-		SourceCodeOnDemand:         &obj.SystemMaintainerInformation.SourceCodeOnDemand,
-		SystemCustomization:        obj.SystemMaintainerInformation.SystemCustomization.Ptr(),
-		SystemDesignOnDemand:       &obj.SystemMaintainerInformation.SystemDesignOnDemand,
-		SystemProductionDate:       obj.SystemMaintainerInformation.SystemProductionDate.Ptr(),
-		SystemRequirementsOnDemand: &obj.SystemMaintainerInformation.SystemRequirementsOnDemand,
-		TestPlanOnDemand:           &obj.SystemMaintainerInformation.TestPlanOnDemand,
-		TestReportsOnDemand:        &obj.SystemMaintainerInformation.TestReportsOnDemand,
-		TestScriptsOnDemand:        &obj.SystemMaintainerInformation.TestScriptsOnDemand,
-		YearToRetireReplace:        obj.SystemMaintainerInformation.YearToRetireReplace.Ptr(),
+		AdHocAgileDeploymentFrequency:         obj.SystemMaintainerInformation.AdHocAgileDeploymentFrequency.Ptr(),
+		AgileUsed:                             &obj.SystemMaintainerInformation.AgileUsed,
+		AuthoritativeDatasource:               obj.SystemMaintainerInformation.AuthoritativeDatasource.Ptr(),
+		BusinessArtifactsOnDemand:             &obj.SystemMaintainerInformation.BusinessArtifactsOnDemand,
+		DataAtRestEncryptionKeyManagement:     obj.SystemMaintainerInformation.DataAtRestEncryptionKeyManagement.Ptr(),
+		DeploymentFrequency:                   obj.SystemMaintainerInformation.DeploymentFrequency.Ptr(),
+		DevCompletionPercent:                  obj.SystemMaintainerInformation.DevCompletionPercent.Ptr(),
+		DevWorkDescription:                    obj.SystemMaintainerInformation.DevWorkDescription.Ptr(),
+		EcapParticipation:                     &obj.SystemMaintainerInformation.EcapParticipation,
+		FrontendAccessType:                    obj.SystemMaintainerInformation.FrontendAccessType.Ptr(),
+		HardCodedIPAddress:                    &obj.SystemMaintainerInformation.HardCodedIPAddress,
+		IP6EnabledAssetPercent:                obj.SystemMaintainerInformation.IP6EnabledAssetPercent.Ptr(),
+		IP6TransitionPlan:                     obj.SystemMaintainerInformation.IP6TransitionPlan.Ptr(),
+		IPEnabledAssetCount:                   &obj.SystemMaintainerInformation.IPEnabledAssetCount,
+		LegalHoldCaseName:                     obj.SystemMaintainerInformation.LegalHoldCaseName.Ptr(),
+		LocallyStoredUserInformation:          &obj.SystemMaintainerInformation.LocallyStoredUserInformation,
+		MajorRefreshDate:                      obj.SystemMaintainerInformation.MajorRefreshDate.Ptr(),
+		MultifactorAuthenticationMethod:       models.StringsFromZeroStrs(obj.SystemMaintainerInformation.MultifactorAuthenticationMethod),
+		MultifactorAuthenticationMethodOther:  obj.SystemMaintainerInformation.MultifactorAuthenticationMethodOther.Ptr(),
+		NetAccessibility:                      obj.SystemMaintainerInformation.NetAccessibility.Ptr(),
+		NetworkTrafficEncryptionKeyManagement: obj.SystemMaintainerInformation.NetworkTrafficEncryptionKeyManagement.Ptr(),
+		NoMajorRefresh:                        &obj.SystemMaintainerInformation.NoMajorRefresh,
+		NoPersistentRecordsFlag:               &obj.SystemMaintainerInformation.NoPersistentRecordsFlag,
+		NoPlannedMajorRefresh:                 &obj.SystemMaintainerInformation.NoPlannedMajorRefresh,
+		OmDocumentationOnDemand:               &obj.SystemMaintainerInformation.OmDocumentationOnDemand,
+		PlansToRetireReplace:                  obj.SystemMaintainerInformation.PlansToRetireReplace.Ptr(),
+		QuarterToRetireReplace:                obj.SystemMaintainerInformation.QuarterToRetireReplace.Ptr(),
+		RecordsManagementBucket:               models.StringsFromZeroStrs(obj.SystemMaintainerInformation.RecordsManagementBucket),
+		RecordsManagementDisposalLocation:     obj.SystemMaintainerInformation.RecordsManagementDisposalLocation.Ptr(),
+		RecordsManagementDisposalPlan:         obj.SystemMaintainerInformation.RecordsManagementDisposalPlan.Ptr(),
+		RecordsUnderLegalHold:                 &obj.SystemMaintainerInformation.RecordsUnderLegalHold,
+		SourceCodeOnDemand:                    &obj.SystemMaintainerInformation.SourceCodeOnDemand,
+		SystemCustomization:                   obj.SystemMaintainerInformation.SystemCustomization.Ptr(),
+		SystemDataLocation:                    models.StringsFromZeroStrs(obj.SystemMaintainerInformation.SystemDataLocation),
+		SystemDataLocationNotes:               obj.SystemMaintainerInformation.SystemDataLocationNotes.Ptr(),
+		SystemDesignOnDemand:                  &obj.SystemMaintainerInformation.SystemDesignOnDemand,
+		SystemProductionDate:                  obj.SystemMaintainerInformation.SystemProductionDate.Ptr(),
+		SystemRequirementsOnDemand:            &obj.SystemMaintainerInformation.SystemRequirementsOnDemand,
+		TestPlanOnDemand:                      &obj.SystemMaintainerInformation.TestPlanOnDemand,
+		TestReportsOnDemand:                   &obj.SystemMaintainerInformation.TestReportsOnDemand,
+		TestScriptsOnDemand:                   &obj.SystemMaintainerInformation.TestScriptsOnDemand,
+		YearToRetireReplace:                   obj.SystemMaintainerInformation.YearToRetireReplace.Ptr(),
 	}, nil
 }
 
@@ -214,8 +234,11 @@ func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Contex
 		BeneficiaryAddressPurposeOther: obj.BusinessOwnerInformation.BeneficiaryAddressPurposeOther.Ptr(),
 		BeneficiaryAddressSource:       models.StringsFromZeroStrs(obj.BusinessOwnerInformation.BeneficiaryAddressSource),
 		BeneficiaryAddressSourceOther:  obj.BusinessOwnerInformation.BeneficiaryAddressSourceOther.Ptr(),
+		BeneficiaryInformation:         models.StringsFromZeroStrs(obj.BusinessOwnerInformation.BeneficiaryInformation),
 		CostPerYear:                    obj.BusinessOwnerInformation.CostPerYear.Ptr(),
+		EditBeneficiaryInformation:     &obj.BusinessOwnerInformation.EditBeneficiaryInformation,
 		IsCmsOwned:                     &obj.BusinessOwnerInformation.IsCmsOwned,
+		Nr508UserInterface:             obj.BusinessOwnerInformation.Nr508UserInterface.Ptr(),
 		NumberOfContractorFte:          obj.BusinessOwnerInformation.NumberOfContractorFte.Ptr(),
 		NumberOfFederalFte:             obj.BusinessOwnerInformation.NumberOfFederalFte.Ptr(),
 		NumberOfSupportedUsersPerMonth: obj.BusinessOwnerInformation.NumberOfSupportedUsersPerMonth.Ptr(),
@@ -1236,12 +1259,12 @@ func (r *queryResolver) CedarSystem(ctx context.Context, cedarSystemID string) (
 
 // CedarSystems is the resolver for the cedarSystems field.
 func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
-	return r.cedarCoreClient.GetSystemSummary(ctx, true)
+	return r.cedarCoreClient.GetSystemSummary(ctx)
 }
 
 // CedarSubSystems is the resolver for the cedarSubSystems field.
 func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID string) ([]*models.CedarSubSystem, error) {
-	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, false, cedarcore.WithSubSystems(cedarSystemID))
+	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.WithSubSystems(cedarSystemID))
 	if err != nil {
 		return nil, err
 	}
@@ -1267,7 +1290,7 @@ func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemI
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
-	return r.cedarCoreClient.GetSystemSummary(ctx, false, cedarcore.WithEuaIDFilter(requesterEUAID))
+	return r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.WithEuaIDFilter(requesterEUAID))
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.
@@ -1338,7 +1361,6 @@ func (r *queryResolver) Roles(ctx context.Context, cedarSystemID string, roleTyp
 // Exchanges is the resolver for the exchanges field.
 func (r *queryResolver) Exchanges(ctx context.Context, cedarSystemID string) ([]*models.CedarExchange, error) {
 	exchanges, err := r.cedarCoreClient.GetExchangesBySystem(ctx, cedarSystemID)
-
 	if err != nil {
 		return nil, err
 	}
@@ -1815,7 +1837,7 @@ func (r *systemIntakeResolver) RelationType(ctx context.Context, obj *models.Sys
 
 // Systems is the resolver for the systems field on system intakes.
 func (r *systemIntakeResolver) Systems(ctx context.Context, obj *models.SystemIntake) ([]*models.CedarSystem, error) {
-	return resolvers.SystemIntakeSystems(ctx, r.cedarCoreClient.GetSystem, obj.ID)
+	return resolvers.SystemIntakeSystems(ctx, obj.ID)
 }
 
 // ContractNumbers is the resolver for the contractNumbers field on system intakes.
@@ -1975,7 +1997,7 @@ func (r *tRBRequestResolver) ContractNumbers(ctx context.Context, obj *models.TR
 
 // Systems is the resolver for the systems field.
 func (r *tRBRequestResolver) Systems(ctx context.Context, obj *models.TRBRequest) ([]*models.CedarSystem, error) {
-	return resolvers.TRBRequestSystems(ctx, r.cedarCoreClient.GetSystem, obj.ID)
+	return resolvers.TRBRequestSystems(ctx, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.

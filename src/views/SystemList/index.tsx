@@ -4,9 +4,8 @@
  * UX review, etc.
  */
 
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import {
   Button,
@@ -31,19 +30,13 @@ import {
 } from 'queries/types/GetCedarSystemBookmarks';
 import { GetCedarSystems } from 'queries/types/GetCedarSystems';
 
-import Table, { SystemTableType } from './Table';
+import Table from './Table';
 import filterBookmarks from './util';
 
 import './index.scss';
 
 export const SystemList = () => {
   const { t } = useTranslation('systemProfile');
-
-  const location = useLocation();
-  const params = useMemo(() => {
-    return new URLSearchParams(location.search);
-  }, [location.search]);
-  const tableType = params.get('table-type') as SystemTableType;
 
   const systemsRef = useRef<null | HTMLDivElement>(null);
 
@@ -62,24 +55,6 @@ export const SystemList = () => {
 
   const systemsTableData = data1?.cedarSystems ?? [];
   const bookmarks: CedarSystemBookmark[] = data2?.cedarSystemBookmarks ?? [];
-
-  useEffect(() => {
-    if (
-      (tableType === 'my-systems' || tableType === 'bookmarked-systems') &&
-      (!loadingBookmarks || data1?.cedarSystems) &&
-      (!loadingSystems || data2?.cedarSystemBookmarks)
-    ) {
-      systemsRef?.current?.scrollIntoView({
-        block: 'start'
-      });
-    }
-  }, [
-    tableType,
-    loadingBookmarks,
-    loadingSystems,
-    data1?.cedarSystems,
-    data2?.cedarSystemBookmarks
-  ]);
 
   return (
     <MainContent className="grid-container margin-bottom-5">
@@ -130,7 +105,11 @@ export const SystemList = () => {
           {loadingBookmarks ? (
             <PageLoading />
           ) : (
-            <SectionWrapper borderBottom className="margin-bottom-3">
+            <SectionWrapper
+              borderBottom
+              className="margin-bottom-3"
+              id="systemBookmarks"
+            >
               {bookmarks.length === 0 ? (
                 <Grid tablet={{ col: 12 }} className="margin-bottom-5">
                   <Alert

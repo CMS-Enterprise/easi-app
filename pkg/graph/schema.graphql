@@ -171,14 +171,15 @@ type CedarSystem {
   id: String!
   name: String!
   description: String
-	acronym: String
-	status: String
-	businessOwnerOrg: String
-	businessOwnerOrgComp: String
+  acronym: String
+  status: String
+  businessOwnerOrg: String
+  businessOwnerOrgComp: String
   businessOwnerRoles: [CedarRole!]!
-	systemMaintainerOrg: String
-	systemMaintainerOrgComp: String
+  systemMaintainerOrg: String
+  systemMaintainerOrgComp: String
   versionId: String
+  isBookmarked: Boolean!
 }
 
 """
@@ -208,49 +209,68 @@ type CedarThreat {
 BusinessOwnerInformation contains information about the business owner for a CEDAR system
 """
 type CedarBusinessOwnerInformation {
-	beneficiaryAddressPurpose: [String!]!
-	beneficiaryAddressPurposeOther: String
-	beneficiaryAddressSource: [String!]!
-	beneficiaryAddressSourceOther: String
-	costPerYear: String
-	isCmsOwned: Boolean
-	numberOfContractorFte: String
-	numberOfFederalFte: String
-	numberOfSupportedUsersPerMonth: String
-	storesBankingData: Boolean
-	storesBeneficiaryAddress: Boolean
+  beneficiaryAddressPurpose: [String!]!
+  beneficiaryAddressPurposeOther: String
+  beneficiaryAddressSource: [String!]!
+  beneficiaryAddressSourceOther: String
+  beneficiaryInformation: [String!]!
+  costPerYear: String
+  editBeneficiaryInformation: Boolean
+  isCmsOwned: Boolean
+  nr508UserInterface: String
+  numberOfContractorFte: String
+  numberOfFederalFte: String
+  numberOfSupportedUsersPerMonth: String
+  storesBankingData: Boolean
+  storesBeneficiaryAddress: Boolean
 }
 
 """
 SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
 """
 type CedarSystemMaintainerInformation {
-	agileUsed: Boolean
-	businessArtifactsOnDemand: Boolean
-	deploymentFrequency: String
-	devCompletionPercent: String
-	devWorkDescription: String
-	ecapParticipation: Boolean
-	frontendAccessType: String
-	hardCodedIPAddress: Boolean
-	ip6EnabledAssetPercent: String
-	ip6TransitionPlan: String
-	ipEnabledAssetCount: Int
-	majorRefreshDate: Time
-	netAccessibility: String
-	omDocumentationOnDemand: Boolean
-	plansToRetireReplace: String
-	quarterToRetireReplace: String
-	recordsManagementBucket: [String!]!
-	sourceCodeOnDemand: Boolean
-	systemCustomization: String
-	systemDesignOnDemand: Boolean
-	systemProductionDate: Time
-	systemRequirementsOnDemand: Boolean
-	testPlanOnDemand: Boolean
-	testReportsOnDemand: Boolean
-	testScriptsOnDemand: Boolean
-	yearToRetireReplace: String
+  agileUsed: Boolean
+  adHocAgileDeploymentFrequency: String
+  authoritativeDatasource: String
+  businessArtifactsOnDemand: Boolean
+  dataAtRestEncryptionKeyManagement: String
+  deploymentFrequency: String
+  devCompletionPercent: String
+  devWorkDescription: String
+  ecapParticipation: Boolean
+  frontendAccessType: String
+  hardCodedIPAddress: Boolean
+  ip6EnabledAssetPercent: String
+  ip6TransitionPlan: String
+  ipEnabledAssetCount: Int
+  legalHoldCaseName: String
+  locallyStoredUserInformation: Boolean
+  majorRefreshDate: Time
+  multifactorAuthenticationMethod: [String!]!
+  multifactorAuthenticationMethodOther: String
+  netAccessibility: String
+  networkTrafficEncryptionKeyManagement: String
+  noMajorRefresh: Boolean
+  noPersistentRecordsFlag: Boolean
+  noPlannedMajorRefresh: Boolean
+  omDocumentationOnDemand: Boolean
+  plansToRetireReplace: String
+  quarterToRetireReplace: String
+  recordsManagementBucket: [String!]!
+  recordsManagementDisposalLocation: String
+  recordsManagementDisposalPlan: String
+  recordsUnderLegalHold: Boolean
+  sourceCodeOnDemand: Boolean
+  systemCustomization: String
+  systemDataLocation: [String!]!
+  systemDataLocationNotes: String
+  systemDesignOnDemand: Boolean
+  systemProductionDate: Time
+  systemRequirementsOnDemand: Boolean
+  testPlanOnDemand: Boolean
+  testReportsOnDemand: Boolean
+  testScriptsOnDemand: Boolean
+  yearToRetireReplace: String
 }
 
 """
@@ -442,6 +462,7 @@ type CedarExchange {
 	containsBeneficiaryAddress: Boolean
 	containsPhi: Boolean
 	containsPii: Boolean
+  containsHealthDisparityData: Boolean
 	dataExchangeAgreement: String
 	dataFormat: String
 	dataFormatOther: String

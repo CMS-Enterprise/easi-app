@@ -7,7 +7,6 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
@@ -22,13 +21,7 @@ type trbRequestRelationTestCase struct {
 
 func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 	store := suite.testConfigs.Store
-	ctx := dataloaders.CTXWithLoaders(
-		suite.testConfigs.Context,
-		dataloaders.NewDataLoaders(
-			store,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		),
-	)
+	ctx := suite.testConfigs.Context
 
 	var contractNumberCases = map[string]trbRequestRelationTestCase{
 		"adds contract numbers when no initial contract numbers exist": {
@@ -54,7 +47,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 		"should remove existing system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"a", "b"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewSystemIDs:           []string{},
 		},
 		"should not add system IDs": {
@@ -92,7 +85,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 			})
 			suite.NoError(err)
 
-			updatedTRBRequestSystemIDs, err := TRBRequestSystems(ctx, mockGetCedarSystem, trbRequest.ID)
+			updatedTRBRequestSystemIDs, err := TRBRequestSystems(ctx, trbRequest.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedTRBRequestSystemIDs))
 
@@ -113,7 +106,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 			updatedTRBRequestContractNumbers, err = TRBRequestContractNumbers(ctx, updatedTRBRequest.ID)
 			suite.NoError(err)
 
-			updatedTRBRequestSystemIDs, err = TRBRequestSystems(ctx, mockGetCedarSystem, trbRequest.ID)
+			updatedTRBRequestSystemIDs, err = TRBRequestSystems(ctx, trbRequest.ID)
 			suite.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -138,44 +131,38 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 
 func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 	store := suite.testConfigs.Store
-	ctx := dataloaders.CTXWithLoaders(
-		suite.testConfigs.Context,
-		dataloaders.NewDataLoaders(
-			store,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		),
-	)
+	ctx := suite.testConfigs.Context
 
 	var cases = map[string]trbRequestRelationTestCase{
 		"adds contract numbers and system IDs when no initial ones exist": {
 			InitialContractNumbers: []string{},
 			InitialSystemIDs:       []string{},
 			NewContractNumbers:     []string{"1", "2"},
-			NewSystemIDs:           []string{"a", "b"},
+			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 		},
 		"removes existing contract numbers and system IDs when none are given": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"a", "b"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewContractNumbers:     []string{},
 			NewSystemIDs:           []string{},
 		},
 		"changes existing contract numbers and system IDs to different ones": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"a", "b"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewContractNumbers:     []string{"3", "4"},
-			NewSystemIDs:           []string{"c", "d"},
+			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"},
 		},
 		"changes existing contract numbers and system IDs to add new ones": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"a", "b"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewContractNumbers:     []string{"1", "2", "3"},
-			NewSystemIDs:           []string{"a", "b", "c"},
+			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}", "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"},
 		},
 		"changes existing contract numbers and system IDs to remove old ones": {
 			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"a", "b"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewContractNumbers:     []string{"1"},
-			NewSystemIDs:           []string{"a"},
+			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"},
 		},
 	}
 
@@ -206,7 +193,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 			})
 			suite.NoError(err)
 
-			updatedTRBRequestSystemIDs, err := TRBRequestSystems(ctx, mockGetCedarSystem, trbRequest.ID)
+			updatedTRBRequestSystemIDs, err := TRBRequestSystems(ctx, trbRequest.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedTRBRequestSystemIDs))
 
@@ -234,7 +221,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 			updatedTRBRequestContractNumbers, err = TRBRequestContractNumbers(ctx, updatedTRBRequest.ID)
 			suite.NoError(err)
 
-			updatedTRBRequestSystemIDs, err = TRBRequestSystems(ctx, mockGetCedarSystem, trbRequest.ID)
+			updatedTRBRequestSystemIDs, err = TRBRequestSystems(ctx, trbRequest.ID)
 			suite.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -258,13 +245,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 
 func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 	store := suite.testConfigs.Store
-	ctx := dataloaders.CTXWithLoaders(
-		suite.testConfigs.Context,
-		dataloaders.NewDataLoaders(
-			store,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		),
-	)
+	ctx := suite.testConfigs.Context
 
 	var cases = map[string]trbRequestRelationTestCase{
 		"adds contract numbers when no initial ones exist": {
@@ -290,7 +271,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 		"should remove existing system IDs": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"a", "b"},
+			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
 			NewSystemIDs:           []string{},
 		},
 		"should not add system IDs": {
@@ -324,7 +305,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 			})
 			suite.NoError(err)
 
-			updatedTRBRequestSystemIDs, err := TRBRequestSystems(ctx, mockGetCedarSystem, trbRequest.ID)
+			updatedTRBRequestSystemIDs, err := TRBRequestSystems(ctx, trbRequest.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedTRBRequestSystemIDs))
 
@@ -345,7 +326,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 			updatedTRBRequestContractNumbers, err = TRBRequestContractNumbers(ctx, updatedTRBRequest.ID)
 			suite.NoError(err)
 
-			updatedTRBRequestSystemIDs, err = TRBRequestSystems(ctx, mockGetCedarSystem, trbRequest.ID)
+			updatedTRBRequestSystemIDs, err = TRBRequestSystems(ctx, trbRequest.ID)
 			suite.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -371,13 +352,6 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 	ctx := suite.testConfigs.Context
 	store := suite.testConfigs.Store
-	ctx = dataloaders.CTXWithLoaders(
-		ctx,
-		dataloaders.NewDataLoaders(
-			store,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		),
-	)
 
 	suite.Run("unlink new trb request", func() {
 		// Create an inital TRBRequest
@@ -408,7 +382,7 @@ func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 		suite.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := TRBRequestSystems(ctx, mockGetCedarSystem, unlinkedTRBRequest.ID)
+		systemIDs, err := TRBRequestSystems(ctx, unlinkedTRBRequest.ID)
 		suite.NoError(err)
 		suite.Empty(systemIDs)
 	})
@@ -450,7 +424,7 @@ func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 		suite.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := TRBRequestSystems(ctx, mockGetCedarSystem, unlinkedTRBRequest.ID)
+		systemIDs, err := TRBRequestSystems(ctx, unlinkedTRBRequest.ID)
 		suite.NoError(err)
 		suite.Empty(systemIDs)
 	})
@@ -486,7 +460,7 @@ func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 		suite.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := TRBRequestSystems(ctx, mockGetCedarSystem, unlinkedTRBRequest.ID)
+		systemIDs, err := TRBRequestSystems(ctx, unlinkedTRBRequest.ID)
 		suite.NoError(err)
 		suite.Empty(systemIDs)
 	})

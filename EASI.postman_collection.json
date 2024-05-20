@@ -1997,18 +1997,16 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "66abedd0-227a-45c3-911c-8f90a7425de2"
 											}
 										],
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/system/summary?includeInSurvey=true&state=active",
+											"raw": "{{CedarApiUrl}}/system/summary?includeInSurvey=true&state=active",
 											"host": [
 												"{{CedarApiUrl}}"
 											],
 											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
 												"system",
 												"summary"
 											],
@@ -2034,18 +2032,16 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "30fd611b-4957-452b-a5f2-1dd4d18a3a36"
 											}
 										],
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/system/summary?includeInSurvey=true&state=active&userName={{EUAID}}",
+											"raw": "{{CedarApiUrl}}/system/summary?includeInSurvey=true&state=active&userName={{EUAID}}",
 											"host": [
 												"{{CedarApiUrl}}"
 											],
 											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
 												"system",
 												"summary"
 											],
@@ -2075,18 +2071,16 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "237105d8-1aed-4a95-8ea1-c8f3d4a8ceea"
 											}
 										],
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/authorityToOperate?systemId={{CedarSystemId}}",
+											"raw": "{{CedarApiUrl}}/authorityToOperate?systemId={{CedarSystemId}}",
 											"host": [
 												"{{CedarApiUrl}}"
 											],
 											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
 												"authorityToOperate"
 											],
 											"query": [
@@ -2107,18 +2101,16 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "f8b7702f-1072-4872-9245-21ff6535fe0b"
 											}
 										],
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/budget?systemId={{CedarSystemId}}",
+											"raw": "{{CedarApiUrl}}/budget?systemId={{CedarSystemId}}",
 											"host": [
 												"{{CedarApiUrl}}"
 											],
 											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
 												"budget"
 											],
 											"query": [
@@ -2139,18 +2131,16 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "a1d96bc4-8cd0-451a-9ae6-619f4f1afe77"
 											}
 										],
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/budgetSystemCost?systemId={{CedarSystemId}}",
+											"raw": "{{CedarApiUrl}}/budgetSystemCost?systemId={{CedarSystemId}}",
 											"host": [
 												"{{CedarApiUrl}}"
 											],
 											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
 												"budgetSystemCost"
 											],
 											"query": [
@@ -2171,18 +2161,16 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "5bd6f72f-051a-489e-b012-9ac4b5f21313"
 											}
 										],
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/contract?systemId={{CedarSystemId}}",
+											"raw": "{{CedarApiUrl}}/contract?systemId={{CedarSystemId}}",
 											"host": [
 												"{{CedarApiUrl}}"
 											],
 											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
 												"contract"
 											],
 											"query": [
@@ -2203,18 +2191,16 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "6f001ce6-df80-4126-81dc-861480dfbbee"
 											}
 										],
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/deployment?systemId={{CedarSystemId}}",
+											"raw": "{{CedarApiUrl}}/deployment?systemId={{CedarSystemId}}",
 											"host": [
 												"{{CedarApiUrl}}"
 											],
 											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
 												"deployment"
 											],
 											"query": [
@@ -2235,18 +2221,16 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "de4a010d-5873-471c-957e-a12c016049da"
 											}
 										],
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/exchange?systemId={{CedarSystemId}}&direction=both",
+											"raw": "{{CedarApiUrl}}/exchange?systemId={{CedarSystemId}}&direction=both",
 											"host": [
 												"{{CedarApiUrl}}"
 											],
 											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
 												"exchange"
 											],
 											"query": [
@@ -2271,18 +2255,16 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "f450eca2-6611-41be-bc03-dcb116864f22"
 											}
 										],
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/role?objectId={{CedarSystemId}}&application=alfabet",
+											"raw": "{{CedarApiUrl}}/role?objectId={{CedarSystemId}}&application=alfabet",
 											"host": [
 												"{{CedarApiUrl}}"
 											],
 											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
 												"role"
 											],
 											"query": [
@@ -2307,18 +2289,16 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "48eba07e-38d7-41e0-a2c3-0fba94efd170"
 											}
 										],
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/softwareProducts?id={{CedarSystemId}}",
+											"raw": "{{CedarApiUrl}}/softwareProducts?id={{CedarSystemId}}",
 											"host": [
 												"{{CedarApiUrl}}"
 											],
 											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
 												"softwareProducts"
 											],
 											"query": [
@@ -2339,18 +2319,16 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "db3cfb0f-ae81-4c15-8289-dbfa5a4871ab"
 											}
 										],
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/threat?ids={66F07935-7A48-4a83-AAC9-3D05DAE3F318}",
+											"raw": "{{CedarApiUrl}}/threat?ids={66F07935-7A48-4a83-AAC9-3D05DAE3F318}",
 											"host": [
 												"{{CedarApiUrl}}"
 											],
 											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
 												"threat"
 											],
 											"query": [
@@ -2371,20 +2349,42 @@
 											{
 												"key": "Content-Type",
 												"value": "application/json",
-												"type": "text"
+												"type": "text",
+												"uuid": "6059d646-2f4f-45a9-a4e7-ff4529296bbf"
 											}
 										],
 										"url": {
-											"raw": "{{CedarApiUrl}}/gateway/CEDAR%20Core%20API/2.0.0/url/{{CedarSystemId}}",
+											"raw": "{{CedarApiUrl}}/url/{{CedarSystemId}}",
 											"host": [
 												"{{CedarApiUrl}}"
 											],
 											"path": [
-												"gateway",
-												"CEDAR%20Core%20API",
-												"2.0.0",
 												"url",
 												"{{CedarSystemId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Organizations",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text",
+												"uuid": "f0d7e6cb-d5e7-4bf3-854c-b92b763efbc0"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/organization",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"organization"
 											]
 										}
 									},
@@ -2555,7 +2555,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query {\n  cedarSystems{\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n  }\n}",
+												"query": "query {\n  cedarSystems{\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n    isBookmarked\n  }\n}",
 												"variables": ""
 											}
 										},
@@ -2621,8 +2621,8 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query($systemID: String!) {\n  cedarSystem(cedarSystemId: $systemID){\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n  }\n}",
-												"variables": "{\r\n    \"systemID\": \"{9F23BC7D-4A61-4b89-97B2-BFB5597DF5D1}\"\r\n}"
+												"query": "query($systemID: String!) {\n  cedarSystem(cedarSystemId: $systemID){\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n    isBookmarked\n  }\n}",
+												"variables": "{\r\n    \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}\"\r\n}"
 											}
 										},
 										"url": {
@@ -2834,8 +2834,60 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query cedarSystemDetails($cedarSystemId: String!) {\n    cedarSystemDetails(cedarSystemId: $cedarSystemId){\n        cedarSystem {\n            id\n            name\n            description\n            acronym\n            status\n            businessOwnerOrg\n            businessOwnerOrgComp\n            businessOwnerRoles {\n                application\n                objectID\n                roleTypeID\n                assigneeType\n                assigneeUsername\n                assigneeEmail\n                assigneeOrgID\n                assigneeOrgName\n                assigneeFirstName\n                assigneeLastName\n                assigneePhone\n                assigneeDesc\n                roleTypeName\n                roleTypeDesc\n                roleID\n                objectType\n            }\n            systemMaintainerOrg\n            systemMaintainerOrgComp\n            versionId\n        }\n        systemMaintainerInformation {\n            agileUsed\n            businessArtifactsOnDemand\n            deploymentFrequency\n            devCompletionPercent\n            devWorkDescription\n            ecapParticipation\n            frontendAccessType\n            hardCodedIPAddress\n            ip6EnabledAssetPercent\n            ip6TransitionPlan\n            ipEnabledAssetCount\n            majorRefreshDate\n            netAccessibility\n            omDocumentationOnDemand\n            plansToRetireReplace\n            quarterToRetireReplace\n            recordsManagementBucket\n            sourceCodeOnDemand\n            systemCustomization\n            systemDesignOnDemand\n            systemProductionDate\n            systemRequirementsOnDemand\n            testPlanOnDemand\n            testReportsOnDemand\n            testScriptsOnDemand\n            yearToRetireReplace\n        }\n        businessOwnerInformation {\n            beneficiaryAddressPurpose\n            beneficiaryAddressPurposeOther\n            beneficiaryAddressSource\n            beneficiaryAddressSourceOther\n            costPerYear\n            isCmsOwned\n            numberOfContractorFte\n            numberOfFederalFte\n            numberOfSupportedUsersPerMonth\n            storesBankingData\n            storesBeneficiaryAddress\n        }\n        roles {\n            application\n            objectID\n            roleTypeID\n            assigneeType\n            assigneeUsername\n            assigneeEmail\n            assigneeOrgID\n            assigneeOrgName\n            assigneeFirstName\n            assigneeLastName\n            assigneePhone\n            assigneeDesc\n            roleTypeName\n            roleTypeDesc\n            roleID\n            objectType\n        }\n        deployments {\n            id\n            name\n            systemID\n            startDate\n            endDate\n            isHotSite\n            description\n            contractorName\n            systemVersion\n            hasProductionData\n            replicatedSystemElements\n            deploymentType\n            systemName\n            deploymentElementID\n            state\n            status\n            wanType\n            dataCenter {\n                id\n                name\n                version\n                description\n                state\n                status\n                startDate\n                endDate\n                address1\n                address2\n                city\n                addressState\n                zip\n            }\n        }\n        threats {\n            alternativeId\n            controlFamily\n            daysOpen\n            id\n            parentId\n            type\n            weaknessRiskLevel\n        }\n        urls {\n            id\n            address\n            isBehindWebApplicationFirewall\n            isAPIEndpoint\n            isVersionCodeRepository\n            urlHostingEnv\n        }\n    }\n}",
+												"query": "query cedarSystemDetails($cedarSystemId: String!) {\n    cedarSystemDetails(cedarSystemId: $cedarSystemId){\n        cedarSystem {\n            id\n            name\n            description\n            acronym\n            status\n            businessOwnerOrg\n            businessOwnerOrgComp\n            businessOwnerRoles {\n                application\n                objectID\n                roleTypeID\n                assigneeType\n                assigneeUsername\n                assigneeEmail\n                assigneeOrgID\n                assigneeOrgName\n                assigneeFirstName\n                assigneeLastName\n                assigneePhone\n                assigneeDesc\n                roleTypeName\n                roleTypeDesc\n                roleID\n                objectType\n            }\n            systemMaintainerOrg\n            systemMaintainerOrgComp\n            versionId\n        }\n        systemMaintainerInformation {\n            agileUsed\n            adHocAgileDeploymentFrequency\n            authoritativeDatasource\n            businessArtifactsOnDemand\n            dataAtRestEncryptionKeyManagement\n            deploymentFrequency\n            devCompletionPercent\n            devWorkDescription\n            ecapParticipation\n            frontendAccessType\n            hardCodedIPAddress\n            ip6EnabledAssetPercent\n            ip6TransitionPlan\n            ipEnabledAssetCount\n            legalHoldCaseName\n            locallyStoredUserInformation\n            majorRefreshDate\n            multifactorAuthenticationMethod\n            multifactorAuthenticationMethodOther\n            netAccessibility\n            networkTrafficEncryptionKeyManagement\n            noMajorRefresh\n            noPersistentRecordsFlag\n            noPlannedMajorRefresh\n            omDocumentationOnDemand\n            plansToRetireReplace\n            quarterToRetireReplace\n            recordsManagementBucket\n            recordsManagementDisposalLocation\n            recordsManagementDisposalPlan\n            recordsUnderLegalHold\n            sourceCodeOnDemand\n            systemCustomization\n            systemDataLocation\n            systemDataLocationNotes\n            systemDesignOnDemand\n            systemProductionDate\n            systemRequirementsOnDemand\n            testPlanOnDemand\n            testReportsOnDemand\n            testScriptsOnDemand\n            yearToRetireReplace\n        }\n        businessOwnerInformation {\n            beneficiaryAddressPurpose\n            beneficiaryAddressPurposeOther\n            beneficiaryAddressSource\n            beneficiaryAddressSourceOther\n            beneficiaryInformation\n            costPerYear\n            editBeneficiaryInformation\n            isCmsOwned\n            nr508UserInterface\n            numberOfContractorFte\n            numberOfFederalFte\n            numberOfSupportedUsersPerMonth\n            storesBankingData\n            storesBeneficiaryAddress\n        }\n        roles {\n            application\n            objectID\n            roleTypeID\n            assigneeType\n            assigneeUsername\n            assigneeEmail\n            assigneeOrgID\n            assigneeOrgName\n            assigneeFirstName\n            assigneeLastName\n            assigneePhone\n            assigneeDesc\n            roleTypeName\n            roleTypeDesc\n            roleID\n            objectType\n        }\n        deployments {\n            id\n            name\n            systemID\n            startDate\n            endDate\n            isHotSite\n            description\n            contractorName\n            systemVersion\n            hasProductionData\n            replicatedSystemElements\n            deploymentType\n            systemName\n            deploymentElementID\n            state\n            status\n            wanType\n            dataCenter {\n                id\n                name\n                version\n                description\n                state\n                status\n                startDate\n                endDate\n                address1\n                address2\n                city\n                addressState\n                zip\n            }\n        }\n        threats {\n            alternativeId\n            controlFamily\n            daysOpen\n            id\n            parentId\n            type\n            weaknessRiskLevel\n        }\n        urls {\n            id\n            address\n            isBehindWebApplicationFirewall\n            isAPIEndpoint\n            isVersionCodeRepository\n            urlHostingEnv\n        }\n    }\n}",
 												"variables": "{\n    \"cedarSystemId\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}\"\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Exchange",
+							"item": [
+								{
+									"name": "Get Exchanges",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query GetExchanges($cedarSystemId: String!) {\n    exchanges(cedarSystemId: $cedarSystemId) {\n    connectionFrequency\n    containsBankingData\n    containsBeneficiaryAddress\n    containsPhi\n    containsPii\n    containsHealthDisparityData\n    dataExchangeAgreement\n    dataFormat\n    dataFormatOther\n    exchangeDescription\n    exchangeEndDate\n    exchangeId\n    exchangeName\n    exchangeRetiredDate\n    exchangeStartDate\n    exchangeState\n    exchangeVersion\n    exchangeDirection\n    fromOwnerId\n    fromOwnerName\n    fromOwnerType\n    isBeneficiaryMailingFile\n    numOfRecords\n    sharedViaApi\n    toOwnerId\n    toOwnerName\n    toOwnerType\n    typeOfData {\n        id\n        name\n    }\n    }\n}",
+												"variables": "{\n    \"cedarSystemId\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}\"\n}"
+											}
+										},
+										"url": {
+											"raw": "{{url}}",
+											"host": [
+												"{{url}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Organization",
+							"item": [
+								{
+									"name": "Get Organizations",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "graphql",
+											"graphql": {
+												"query": "query GetOrganizations($organizationId: String, $organizationAcronym: String, $organizationName: String) {\n    organizations(organizationId: $organizationId, organizationAcronym: $organizationAcronym, organizationName: $organizationName) {\n        id\n        name\n        acronym\n        component\n        description\n        fullPath\n        isComponent\n        level\n        parentId\n    }\n}",
+												"variables": ""
 											}
 										},
 										"url": {
@@ -3025,7 +3077,7 @@
 		},
 		{
 			"key": "CedarApiUrl",
-			"value": "",
+			"value": "https://webmethods-apigw.cedarimpl.cms.gov/gateway/CEDAR Core API/2.0.0",
 			"type": "string"
 		},
 		{

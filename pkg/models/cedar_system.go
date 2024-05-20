@@ -32,8 +32,11 @@ type BusinessOwnerInformation struct {
 	BeneficiaryAddressPurposeOther zero.String   `json:"beneficiaryAddressPurposeOther"`
 	BeneficiaryAddressSource       []zero.String `json:"beneficiaryAddressSource"`
 	BeneficiaryAddressSourceOther  zero.String   `json:"beneficiaryAddressSourceOther"`
+	BeneficiaryInformation         []zero.String `json:"beneficiaryInformation"`
 	CostPerYear                    zero.String   `json:"costPerYear"`
+	EditBeneficiaryInformation     bool          `json:"editBeneficiaryInformation,omitempty"`
 	IsCmsOwned                     bool          `json:"isCmsOwned"`
+	Nr508UserInterface             zero.String   `json:"nr508UserInterface,omitempty"`
 	NumberOfContractorFte          zero.String   `json:"numberOfContractorFte"`
 	NumberOfFederalFte             zero.String   `json:"numberOfFederalFte"`
 	NumberOfSupportedUsersPerMonth zero.String   `json:"numberOfSupportedUsersPerMonth"`
@@ -43,32 +46,48 @@ type BusinessOwnerInformation struct {
 
 // SystemMaintainerInformation contains information about the system maintainer of a CEDAR system
 type SystemMaintainerInformation struct {
-	AgileUsed                  bool          `json:"agileUsed"`
-	BusinessArtifactsOnDemand  bool          `json:"businessArtifactsOnDemand"`
-	DeploymentFrequency        zero.String   `json:"deploymentFrequency"`
-	DevCompletionPercent       zero.String   `json:"devCompletionPercent"`
-	DevWorkDescription         zero.String   `json:"devWorkDescription"`
-	EcapParticipation          bool          `json:"ecapParticipation"`
-	FrontendAccessType         zero.String   `json:"frontendAccessType"`
-	HardCodedIPAddress         bool          `json:"hardCodedIpAddress"`
-	IP6EnabledAssetPercent     zero.String   `json:"ip6EnabledAssetPercent"`
-	IP6TransitionPlan          zero.String   `json:"ip6TransitionPlan"`
-	IPEnabledAssetCount        int           `json:"ipEnabledAssetCount"`
-	MajorRefreshDate           zero.Time     `json:"majorRefreshDate"`
-	NetAccessibility           zero.String   `json:"netAccessibility"`
-	OmDocumentationOnDemand    bool          `json:"omDocumentationOnDemand"`
-	PlansToRetireReplace       zero.String   `json:"plansToRetireReplace"`
-	QuarterToRetireReplace     zero.String   `json:"quarterToRetireReplace"`
-	RecordsManagementBucket    []zero.String `json:"recordsManagementBucket"`
-	SourceCodeOnDemand         bool          `json:"sourceCodeOnDemand"`
-	SystemCustomization        zero.String   `json:"systemCustomization"`
-	SystemDesignOnDemand       bool          `json:"systemDesignOnDemand"`
-	SystemProductionDate       zero.Time     `json:"systemProductionDate"`
-	SystemRequirementsOnDemand bool          `json:"systemRequirementsOnDemand"`
-	TestPlanOnDemand           bool          `json:"testPlanOnDemand"`
-	TestReportsOnDemand        bool          `json:"testReportsOnDemand"`
-	TestScriptsOnDemand        bool          `json:"testScriptsOnDemand"`
-	YearToRetireReplace        zero.String   `json:"yearToRetireReplace"`
+	AdHocAgileDeploymentFrequency         zero.String   `json:"adHocAgileDeploymentFrequency,omitempty"`
+	AgileUsed                             bool          `json:"agileUsed"`
+	AuthoritativeDatasource               zero.String   `json:"authoritativeDatasource,omitempty"`
+	BusinessArtifactsOnDemand             bool          `json:"businessArtifactsOnDemand"`
+	DataAtRestEncryptionKeyManagement     zero.String   `json:"dataAtRestEncryptionKeyManagement,omitempty"`
+	DeploymentFrequency                   zero.String   `json:"deploymentFrequency"`
+	DevCompletionPercent                  zero.String   `json:"devCompletionPercent"`
+	DevWorkDescription                    zero.String   `json:"devWorkDescription"`
+	EcapParticipation                     bool          `json:"ecapParticipation"`
+	FrontendAccessType                    zero.String   `json:"frontendAccessType"`
+	HardCodedIPAddress                    bool          `json:"hardCodedIpAddress"`
+	IP6EnabledAssetPercent                zero.String   `json:"ip6EnabledAssetPercent"`
+	IP6TransitionPlan                     zero.String   `json:"ip6TransitionPlan"`
+	IPEnabledAssetCount                   int           `json:"ipEnabledAssetCount"`
+	LegalHoldCaseName                     zero.String   `json:"legalHoldCaseName,omitempty"`
+	LocallyStoredUserInformation          bool          `json:"locallyStoredUserInformation,omitempty"`
+	MajorRefreshDate                      zero.Time     `json:"majorRefreshDate"`
+	MultifactorAuthenticationMethod       []zero.String `json:"multifactorAuthenticationMethod"`
+	MultifactorAuthenticationMethodOther  zero.String   `json:"multifactorAuthenticationMethodOther,omitempty"`
+	NetAccessibility                      zero.String   `json:"netAccessibility"`
+	NetworkTrafficEncryptionKeyManagement zero.String   `json:"networkTrafficEncryptionKeyManagement,omitempty"`
+	NoMajorRefresh                        bool          `json:"noMajorRefresh,omitempty"`
+	NoPersistentRecordsFlag               bool          `json:"noPersistentRecordsFlag,omitempty"`
+	NoPlannedMajorRefresh                 bool          `json:"noPlannedMajorRefresh,omitempty"`
+	OmDocumentationOnDemand               bool          `json:"omDocumentationOnDemand"`
+	PlansToRetireReplace                  zero.String   `json:"plansToRetireReplace"`
+	QuarterToRetireReplace                zero.String   `json:"quarterToRetireReplace"`
+	RecordsManagementBucket               []zero.String `json:"recordsManagementBucket"`
+	RecordsManagementDisposalLocation     zero.String   `json:"recordsManagementDisposalLocation,omitempty"`
+	RecordsManagementDisposalPlan         zero.String   `json:"recordsManagementDisposalPlan,omitempty"`
+	RecordsUnderLegalHold                 bool          `json:"recordsUnderLegalHold,omitempty"`
+	SourceCodeOnDemand                    bool          `json:"sourceCodeOnDemand"`
+	SystemCustomization                   zero.String   `json:"systemCustomization"`
+	SystemDesignOnDemand                  bool          `json:"systemDesignOnDemand"`
+	SystemDataLocation                    []zero.String `json:"systemDataLocation"`
+	SystemDataLocationNotes               zero.String   `json:"systemDataLocationNotes,omitempty"`
+	SystemProductionDate                  zero.Time     `json:"systemProductionDate"`
+	SystemRequirementsOnDemand            bool          `json:"systemRequirementsOnDemand"`
+	TestPlanOnDemand                      bool          `json:"testPlanOnDemand"`
+	TestReportsOnDemand                   bool          `json:"testReportsOnDemand"`
+	TestScriptsOnDemand                   bool          `json:"testScriptsOnDemand"`
+	YearToRetireReplace                   zero.String   `json:"yearToRetireReplace"`
 }
 
 // CedarSystemDetails contains more detailed information related to a CEDAR system

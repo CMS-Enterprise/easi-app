@@ -1,35 +1,23 @@
 package resolvers
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s *ResolverSuite) TestIntakeRelatedSystems() {
-	ctx := context.Background()
-	ctx = appcontext.WithLogger(ctx, s.testConfigs.Logger)
-
-	ctx = dataloaders.CTXWithLoaders(
-		ctx,
-		dataloaders.NewDataLoaders(
-			s.testConfigs.Store,
-			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		),
-	)
+	ctx := s.testConfigs.Context
 
 	const (
-		systemID1 = "1"
-		systemID2 = "2"
-		systemID3 = "3"
+		systemID1 = "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
+		systemID2 = "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"
+		systemID3 = "{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"
 	)
 
 	var createdIDs []uuid.UUID
@@ -61,7 +49,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		})
 		s.NoError(err)
 
-		data, err := SystemIntakeSystems(ctx, mockGetCedarSystem, createdIDs[0])
+		data, err := SystemIntakeSystems(ctx, createdIDs[0])
 		s.NoError(err)
 		s.Len(data, 3)
 
@@ -90,7 +78,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		s.True(found3)
 
 		// attempt to get systems for a system intake without linked systems
-		data, err = SystemIntakeSystems(ctx, mockGetCedarSystem, createdIDs[1])
+		data, err = SystemIntakeSystems(ctx, createdIDs[1])
 		s.NoError(err)
 		s.Empty(data)
 	})
