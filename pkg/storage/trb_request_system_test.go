@@ -124,3 +124,100 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 		s.NoError(err)
 	})
 }
+
+func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
+	ctx := context.Background()
+
+	var (
+		open1 uuid.UUID
+		open2 uuid.UUID
+
+		closed uuid.UUID
+	)
+
+	const (
+		system1 = "1"
+		system2 = "2"
+		system3 = "3"
+		system4 = "4"
+	)
+
+	s.Run("test getting open TRB requests by cedar system id", func() {
+		// create trb requests
+		trb1 := models.TRBRequest{
+			Type:  models.TRBTBrainstorm,
+			State: models.TRBRequestStateOpen,
+		}
+		trb1.CreatedBy = testhelpers.RandomEUAIDNull().String
+
+		create1, err := s.store.CreateTRBRequest(ctx, s.store, &trb1)
+		s.NoError(err)
+		s.NotNil(create1)
+
+		open1 = create1.ID
+
+		trb2 := models.TRBRequest{
+			Type:  models.TRBTBrainstorm,
+			State: models.TRBRequestStateOpen,
+		}
+
+		trb2.CreatedBy = testhelpers.RandomEUAIDNull().String
+
+		create2, err := s.store.CreateTRBRequest(ctx, s.store, &trb2)
+		s.NoError(err)
+		s.NotNil(create2)
+
+		open2 = create2.ID
+
+		trb3 := models.TRBRequest{
+			Type:  models.TRBTBrainstorm,
+			State: models.TRBRequestStateClosed,
+		}
+
+		trb3.CreatedBy = testhelpers.RandomEUAIDNull().String
+
+		create3, err := s.store.CreateTRBRequest(ctx, s.store, &trb3)
+		s.NoError(err)
+		s.NotNil(create3)
+
+		closed = create3.ID
+
+		// link all systems to all TRBs
+		systemNumbers := []string{
+			system1,
+			system2,
+			system3,
+			system4,
+		}
+
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			return s.store.SetTRBRequestSystems(ctx, tx, open1, systemNumbers)
+		})
+		s.NoError(err)
+
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			return s.store.SetTRBRequestSystems(ctx, tx, open2, systemNumbers)
+		})
+		s.NoError(err)
+
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			return s.store.SetTRBRequestSystems(ctx, tx, closed, systemNumbers)
+		})
+		s.NoError(err)
+
+		results, err := s.store.TRBRequestsByCedarSystemID(ctx, system1)
+		s.NoError(err)
+		s.Len(results, 2)
+
+		foundClosed := false
+
+		for _, result := range results {
+			if result.ID == closed {
+				foundClosed = true
+				break
+			}
+		}
+
+		s.False(foundClosed)
+	})
+}
