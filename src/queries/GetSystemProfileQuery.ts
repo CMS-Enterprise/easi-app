@@ -29,15 +29,16 @@ export default gql`
       isPiiLimitedToUserNameAndPass
     }
     exchanges(cedarSystemId: $cedarSystemId) {
-      exchangeId
-      containsPhi
-      containsHealthDisparityData
-      exchangeName
-      exchangeDescription
-      sharedViaApi
       connectionFrequency
-      numOfRecords
+      containsHealthDisparityData
+      containsPhi
       dataExchangeAgreement
+      exchangeDescription
+      exchangeDirection
+      exchangeName
+      id: exchangeId
+      numOfRecords
+      sharedViaApi
     }
     cedarBudget(cedarSystemID: $cedarSystemId) {
       fiscalYear
