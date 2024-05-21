@@ -84,6 +84,33 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, paramTab
 	return store, nil
 }
 
+func (s *Store) FetchCedarSystemIsBookmarkedLOADER2(ctx context.Context, cedarSystemIDs []string, euaUserID string) ([]*models.CedarSystemBookmark, []error) {
+	sqlStatement := "SELECT eua_user_id, cedar_system_id, created_at FROM cedar_system_bookmarks WHERE cedar_system_id = ANY($1::TEXT) AND eua_user_id = $2"
+
+	rows, err := s.db.QueryContext(ctx, sqlStatement, cedarSystemIDs, euaUserID)
+	if err != nil {
+		return nil, []error{err}
+	}
+	defer rows.Close()
+
+	var (
+		bookmarks []*models.CedarSystemBookmark
+		errs      []error
+	)
+
+	for rows.Next() {
+		var bookmark models.CedarSystemBookmark
+		if err := rows.Scan(&bookmark.EUAUserID, &bookmark.CedarSystemID, &bookmark.CreatedAt); err != nil {
+			errs = append(errs, err)
+			continue
+		}
+
+		bookmarks = append(bookmarks, &bookmark)
+	}
+
+	return bookmarks, errs
+}
+
 // DeleteCedarSystemBookmark deletes an existing cedar system bookmark object in the database
 func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookmark *models.CedarSystemBookmark) (*models.CedarSystemBookmark, error) {
 	euaUserID := appcontext.Principal(ctx).ID()
