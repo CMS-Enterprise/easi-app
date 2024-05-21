@@ -15,6 +15,11 @@ export enum CedarAssigneeType {
   PERSON = "PERSON",
 }
 
+export enum ExchangeDirection {
+  RECEIVER = "RECEIVER",
+  SENDER = "SENDER",
+}
+
 /**
  * Represents the possible forms on a governance request that can receive feedback
  */

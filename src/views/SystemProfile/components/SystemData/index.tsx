@@ -29,6 +29,9 @@ import { GetSystemProfile_exchanges as Exchange } from 'queries/types/GetSystemP
 import { SystemProfileSubviewProps } from 'types/systemProfile';
 import { showSystemVal } from 'utils/showVal';
 
+// The majority of values rendered for this component are one-offs
+// sometimes due to changing source data
+
 function ExchangeCard({ data }: { data: Exchange }) {
   const { t } = useTranslation('systemProfile');
 
@@ -422,7 +425,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
               {exchanges
                 .slice(0, isExchangesExpanded ? undefined : exchangesCountCap)
                 .map(data => (
-                  <ExchangeCard key={data.exchangeId} data={data} />
+                  <ExchangeCard key={data.id} data={data} />
                 ))}
             </CardGroup>
             {showMoreExchangesToggle && (
