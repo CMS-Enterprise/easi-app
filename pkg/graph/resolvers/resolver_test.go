@@ -12,8 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
-	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
+	"github.com/cmsgov/easi-app/pkg/dataloaders2"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -102,16 +101,13 @@ func (tc *TestConfigs) GetDefaults() {
 	// principal is fetched between each test in SetupTest()
 	ctx := appcontext.WithLogger(context.Background(), tc.Logger)
 	ctx = appcontext.WithPrincipal(ctx, getTestPrincipal(tc.Store, tc.UserInfo.Username))
-	coreClient := cedarcore.NewClient(ctx, "", "", "", true, true)
-	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
-		return coreClient.GetSystemSummary(ctx)
-	}
+	// coreClient := cedarcore.NewClient(ctx, "", "", "", true, true)
+	// getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
+	// 	return coreClient.GetSystemSummary(ctx)
+	// }
+
 	// Set up mocked dataloaders for the test context
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(
-		tc.Store,
-		func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		getCedarSystems,
-	))
+	ctx = dataloaders2.CTXWithLoaders(ctx, dataloaders2.NewDataLoaders(tc.Store))
 
 	tc.Context = ctx
 

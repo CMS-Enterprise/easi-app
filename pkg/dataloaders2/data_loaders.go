@@ -20,7 +20,7 @@ type dataReader struct {
 }
 
 type DataLoaders struct {
-	CedarSystemBookmark *dataloadgen.Loader[string, *models.CedarSystemBookmark]
+	CedarSystemBookmark *dataloadgen.Loader[string, *models.SystemBookmark]
 }
 
 func NewDataLoaders(store *storage.Store) *DataLoaders {
@@ -35,4 +35,8 @@ func NewDataLoaders(store *storage.Store) *DataLoaders {
 // Loaders returns the dataLoaders for a given context
 func Loaders(ctx context.Context) *DataLoaders {
 	return ctx.Value(loadersKey).(*DataLoaders)
+}
+
+func CTXWithLoaders(ctx context.Context, dataloaders *DataLoaders) context.Context {
+	return context.WithValue(ctx, loadersKey, dataloaders)
 }

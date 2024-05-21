@@ -7,6 +7,8 @@ import (
 
 	"go.uber.org/zap"
 
+	"github.com/lib/pq"
+
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/helpers"
@@ -84,18 +86,19 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, paramTab
 	return store, nil
 }
 
-func (s *Store) FetchCedarSystemIsBookmarkedLOADER2(ctx context.Context, cedarSystemIDs []string, euaUserID string) ([]*models.CedarSystemBookmark, []error) {
-	sqlStatement := "SELECT eua_user_id, cedar_system_id, created_at FROM cedar_system_bookmarks WHERE cedar_system_id = ANY($1::TEXT) AND eua_user_id = $2"
+func (s *Store) FetchCedarSystemIsBookmarkedLOADER2(ctx context.Context, cedarSystemIDs []string, euaUserID string) ([]*models.SystemBookmark, []error) {
+	sqlStatement := "SELECT eua_user_id, cedar_system_id, created_at FROM cedar_system_bookmarks WHERE cedar_system_id = ANY($1) AND eua_user_id = $2"
 
-	rows, err := s.db.QueryContext(ctx, sqlStatement, cedarSystemIDs, euaUserID)
+	rows, err := s.db.QueryContext(ctx, sqlStatement, pq.StringArray(cedarSystemIDs), euaUserID)
 	if err != nil {
 		return nil, []error{err}
 	}
 	defer rows.Close()
 
 	var (
-		bookmarks []*models.CedarSystemBookmark
-		errs      []error
+		bookmarksMap = map[string]struct{}{}
+		bookmarks    []*models.SystemBookmark
+		errs         []error
 	)
 
 	for rows.Next() {
@@ -105,7 +108,15 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER2(ctx context.Context, cedarSy
 			continue
 		}
 
-		bookmarks = append(bookmarks, &bookmark)
+		bookmarksMap[bookmark.CedarSystemID] = helpers.EmptyStruct
+	}
+
+	for _, id := range cedarSystemIDs {
+		_, ok := bookmarksMap[id]
+		bookmarks = append(bookmarks, &models.SystemBookmark{
+			CedarSystemID: id,
+			IsBookmarked:  ok,
+		})
 	}
 
 	return bookmarks, errs

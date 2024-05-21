@@ -10,3 +10,8 @@ type CedarSystemBookmark struct {
 	CedarSystemID string     `json:"cedarSystemId" db:"cedar_system_id"`
 	CreatedAt     *time.Time `db:"created_at"`
 }
+
+type SystemBookmark struct {
+	CedarSystemID string `json:"cedarSystemID"`
+	IsBookmarked  bool   `json:"isBookmarked"`
+}
