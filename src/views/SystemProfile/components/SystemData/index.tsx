@@ -16,7 +16,6 @@ import {
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
-// import classnames from 'classnames';
 import UswdsReactLink from 'components/LinkWrapper';
 import {
   DescriptionDefinition,
@@ -225,11 +224,15 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
         <h2 id="system" className="margin-top-0">
           {t('singleSystem.systemData.header')}
         </h2>
+        {/*
+        Enterprise status n/a
         <DescriptionTerm term={t('singleSystem.systemData.enterpriseStatus')} />
         <DescriptionDefinition
           className="font-body-md line-height-body-3"
           definition={showSystemVal(null)}
         />
+
+        Metadata indirect, would need parse
         <DescriptionTerm
           term={t('singleSystem.systemData.metadataGlossary')}
           className="margin-top-4"
@@ -238,6 +241,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           className="font-body-md line-height-body-3"
           definition="Yes, this system has glossary information or metadata descriptions"
         />
+        */}
         <Table bordered={false} fullWidth scrollable>
           <thead>
             <tr>
@@ -313,10 +317,9 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
               className="display-inline-flex margin-right-1"
               term={t('singleSystem.systemData.apiStatus')}
             />
-
             <DescriptionDefinition
               className="font-body-md line-height-body-3"
-              definition="API developed and launched"
+              definition={showSystemVal(null)}
             />
           </Grid>
           <Grid tablet={{ col: 6 }} className="margin-bottom-5">
@@ -324,10 +327,11 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
               className="display-inline-flex margin-right-1"
               term={t('singleSystem.systemData.fHIRUsage')}
             />
-
             <DescriptionDefinition
               className="line-height-body-3 font-body-md"
-              definition="This API does not use FHIR"
+              definition={showSystemVal(
+                system.cedarSoftwareProducts?.apiFHIRUse
+              )}
             />
           </Grid>
           <Grid tablet={{ col: 6 }} className="margin-bottom-5">
@@ -335,22 +339,26 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
               className="display-inline-flex margin-right-1"
               term={t('singleSystem.systemData.apiDescriptionLocation')}
             />
-
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-5 margin-right-1"
-              definition="Published on developer.cms.gov"
+              definition={showSystemVal(
+                system.cedarSoftwareProducts?.apiDescPublished
+              )}
             />
 
             <DescriptionTerm
               className="display-inline-flex margin-right-1"
               term={t('singleSystem.systemData.apiGateway')}
             />
-
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-2"
-              definition={showSystemVal(null)}
+              definition={showSystemVal(
+                system.cedarSoftwareProducts?.systemHasAPIGateway,
+                {
+                  format: v => (v ? 'Yes' : 'No')
+                }
+              )}
             />
-            {/* TODO: Add hash-fragment to direct and scroll on the tools subpage */}
             <UswdsReactLink to="tools-and-software">
               {t('singleSystem.systemData.viewGateway')}
             </UswdsReactLink>
@@ -360,36 +368,43 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
               className="display-inline-flex margin-right-1"
               term={t('singleSystem.systemData.access')}
             />
-
             <DescriptionDefinition
               className="line-height-body-3 margin-bottom-5"
-              definition="Both internal and external access"
+              definition={showSystemVal(
+                system.cedarSoftwareProducts?.apisAccessibility
+              )}
             />
+
             <DescriptionTerm
               className="display-inline-flex margin-right-1"
               term={t('singleSystem.systemData.apiPortal')}
             />
-
             <DescriptionDefinition
               className="line-height-body-3"
-              definition="This system has an API portal"
+              definition={showSystemVal(
+                system.cedarSoftwareProducts?.apiHasPortal,
+                {
+                  format: v =>
+                    v ? 'This system has an API portal' : 'No API portal'
+                }
+              )}
             />
           </Grid>
         </Grid>
 
-        {/*
         <h3 className="margin-top-0 margin-bottom-1">
           {t('singleSystem.systemData.dataCategories')}
         </h3>
-        {system?.developmentTags?.map((tag: string) => (
-          <Tag
-            key={tag}
-            className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-          >
-            {tag}
-          </Tag>
-        ))}
-        */}
+        {system.cedarSoftwareProducts?.apiDataArea
+          ? system.cedarSoftwareProducts?.apiDataArea.map(tag => (
+              <Tag
+                key={tag}
+                className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
+              >
+                {tag}
+              </Tag>
+            ))
+          : showSystemVal(null)}
       </SectionWrapper>
 
       <SectionWrapper
@@ -482,7 +497,8 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         </Grid>
 
-        {/* <h3 className="margin-top-2 margin-bottom-1">
+        {/*
+        <h3 className="margin-top-2 margin-bottom-1">
           {t('singleSystem.systemData.recordCategories')}
         </h3>
         {developmentTags?.map(tag => (
@@ -492,7 +508,8 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           >
             {tag}
           </Tag>
-        ))} */}
+        ))}
+        */}
       </SectionWrapper>
     </>
   );
