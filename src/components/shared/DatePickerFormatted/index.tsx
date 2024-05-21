@@ -4,7 +4,7 @@ import { DatePicker } from '@trussworks/react-uswds';
 import { DatePickerProps } from '@trussworks/react-uswds/lib/components/forms/DatePicker/DatePicker';
 import { DateTime } from 'luxon';
 
-function defaultFormat(dt: DateTime): string {
+function defaultFormat(dt: DateTime): string | null {
   return dt.toUTC().toISO();
 }
 
@@ -17,7 +17,7 @@ const DatePickerFormatted = ({
   onChange,
   format,
   ...props
-}: DatePickerProps & { format?: (dt: DateTime) => string }) => {
+}: DatePickerProps & { format?: (dt: DateTime) => string | null }) => {
   const dtFormat = format || defaultFormat;
 
   /** Memoized current field value */
@@ -49,7 +49,9 @@ const DatePickerFormatted = ({
           if (val === '') {
             onChange('');
           } else if (typeof val === 'string') {
-            onChange(dtFormat(DateTime.fromFormat(val, 'MM/dd/yyyy')));
+            onChange(
+              dtFormat(DateTime.fromFormat(val, 'MM/dd/yyyy')) || undefined
+            );
           }
         }
       }}
