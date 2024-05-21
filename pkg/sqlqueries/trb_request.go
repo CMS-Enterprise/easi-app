@@ -22,7 +22,7 @@ var trbRequestCollectionGetSQL string
 //go:embed SQL/trb_request/collection_get_by_user_and_archived_state.sql
 var trbRequestCollectionGetByUserAndArchivedStateSQL string
 
-// trbRequestGetByIDSQL  holds the SQL query to get a TRB request by a specifc ID
+// trbRequestGetByIDSQL holds the SQL query to get a TRB request by a specifc ID
 //
 //go:embed SQL/trb_request/get_by_id.sql
 var trbRequestGetByIDSQL string
