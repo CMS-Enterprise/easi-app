@@ -259,7 +259,7 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
     </span>
   </div>
   <div
-    class="easi-section easi-section__border-bottom padding-bottom-4 margin-bottom-4"
+    class="easi-section padding-bottom-4 margin-bottom-4"
     data-testid="section-wrapper"
   >
     <h2
@@ -592,84 +592,6 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
         </div>
       </li>
     </ul>
-  </div>
-  <div
-    class="easi-section margin-bottom-4 padding-bottom-4"
-    data-testid="section-wrapper"
-  >
-    <h2
-      class="margin-top-0"
-      id="records"
-    >
-      Records management
-    </h2>
-    <div
-      class="grid-row"
-      data-testid="grid"
-    >
-      <div
-        class="tablet:grid-col-6 margin-bottom-3"
-        data-testid="grid"
-      >
-        <dt
-          class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-        >
-          Records management schedule
-        </dt>
-        <dd
-          class="description-definition margin-0 font-body-md line-height-body-3"
-        >
-          <span
-            class="text-italic text-base"
-          >
-            No data available
-          </span>
-        </dd>
-      </div>
-      <div
-        class="tablet:grid-col-6 margin-bottom-3"
-        data-testid="grid"
-      >
-        <dt
-          class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-        >
-          Records disposal
-        </dt>
-        <dd
-          class="description-definition margin-0 font-body-md line-height-body-3"
-        >
-          <span
-            class="text-italic text-base"
-          >
-            No data available
-          </span>
-        </dd>
-      </div>
-    </div>
-    <div
-      class=""
-      data-testid="grid"
-    >
-      <div
-        class="tablet:grid-col"
-        data-testid="grid"
-      >
-        <dt
-          class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-        >
-          Persistent records
-        </dt>
-        <dd
-          class="description-definition margin-0 font-body-md line-height-body-3"
-        >
-          <span
-            class="text-italic text-base"
-          >
-            No data available
-          </span>
-        </dd>
-      </div>
-    </div>
   </div>
 </DocumentFragment>
 `;

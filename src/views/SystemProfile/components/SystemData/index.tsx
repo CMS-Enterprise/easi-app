@@ -24,7 +24,6 @@ import {
 import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
-import useCheckResponsiveScreen from 'hooks/checkMobile';
 import { GetSystemProfile_exchanges as Exchange } from 'queries/types/GetSystemProfile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
 import { showSystemVal } from 'utils/showVal';
@@ -212,7 +211,6 @@ function ExchangeCard({ data }: { data: Exchange }) {
 
 const SystemData = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
-  const isMobile = useCheckResponsiveScreen('tablet');
 
   const { exchanges } = system;
   // const exchanges = [];
@@ -410,10 +408,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           : showSystemVal(null)}
       </SectionWrapper>
 
-      <SectionWrapper
-        borderBottom={!isMobile}
-        className="padding-bottom-4 margin-bottom-4"
-      >
+      <SectionWrapper className="padding-bottom-4 margin-bottom-4">
         <h2 id="exchanges" className="margin-top-0">
           {t('singleSystem.systemData.dataExchanges')}
         </h2>
@@ -457,6 +452,9 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           </Alert>
         )}
       </SectionWrapper>
+
+      {/*
+      Records management n/a
       <SectionWrapper className="margin-bottom-4 padding-bottom-4">
         <h2 id="records" className="margin-top-0">
           {t('singleSystem.systemData.recordsManagement')}
@@ -500,7 +498,6 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         </Grid>
 
-        {/*
         <h3 className="margin-top-2 margin-bottom-1">
           {t('singleSystem.systemData.recordCategories')}
         </h3>
@@ -512,8 +509,8 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
             {tag}
           </Tag>
         ))}
-        */}
       </SectionWrapper>
+      */}
     </>
   );
 };
