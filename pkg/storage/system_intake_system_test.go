@@ -124,3 +124,98 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		s.NoError(err)
 	})
 }
+
+func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
+	ctx := context.Background()
+
+	var (
+		open1 uuid.UUID
+		open2 uuid.UUID
+
+		closed uuid.UUID
+	)
+
+	const (
+		system1 = "1"
+		system2 = "2"
+		system3 = "3"
+		system4 = "4"
+	)
+
+	s.Run("test getting open system intakes by cedar system id", func() {
+		// create some intakes
+		intake1 := models.SystemIntake{
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			State:       models.SystemIntakeStateOPEN,
+		}
+
+		create1, err := s.store.CreateSystemIntake(ctx, &intake1)
+		s.NoError(err)
+		s.NotNil(create1)
+
+		open1 = create1.ID
+
+		intake2 := models.SystemIntake{
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			State:       models.SystemIntakeStateOPEN,
+		}
+
+		create2, err := s.store.CreateSystemIntake(ctx, &intake2)
+		s.NoError(err)
+		s.NotNil(create2)
+
+		open2 = create2.ID
+
+		intake3 := models.SystemIntake{
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			State:       models.SystemIntakeStateCLOSED,
+		}
+
+		create3, err := s.store.CreateSystemIntake(ctx, &intake3)
+		s.NoError(err)
+		s.NotNil(create3)
+
+		closed = create3.ID
+
+		// link all systems to all system intakes
+		systemNumbers := []string{
+			system1,
+			system2,
+			system3,
+			system4,
+		}
+
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			return s.store.SetSystemIntakeSystems(ctx, tx, open1, systemNumbers)
+		})
+		s.NoError(err)
+
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			return s.store.SetSystemIntakeSystems(ctx, tx, open2, systemNumbers)
+		})
+		s.NoError(err)
+
+		err = sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
+			return s.store.SetSystemIntakeSystems(ctx, tx, closed, systemNumbers)
+		})
+		s.NoError(err)
+
+		results, err := s.store.SystemIntakesByCedarSystemID(ctx, system1)
+		s.NoError(err)
+		s.Len(results, 2)
+
+		foundClosed := false
+
+		for _, result := range results {
+			if result.ID == closed {
+				foundClosed = true
+				break
+			}
+		}
+
+		s.False(foundClosed)
+	})
+}
