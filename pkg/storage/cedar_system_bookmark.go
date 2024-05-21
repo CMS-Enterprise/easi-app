@@ -87,7 +87,7 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, paramTab
 }
 
 func (s *Store) FetchCedarSystemIsBookmarkedLOADER2(ctx context.Context, cedarSystemIDs []string, euaUserID string) ([]*models.SystemBookmark, []error) {
-	sqlStatement := "SELECT eua_user_id, cedar_system_id, created_at FROM cedar_system_bookmarks WHERE cedar_system_id = ANY($1) AND eua_user_id = $2"
+	sqlStatement := "SELECT cedar_system_id FROM cedar_system_bookmarks WHERE cedar_system_id = ANY($1) AND eua_user_id = $2"
 
 	rows, err := s.db.QueryContext(ctx, sqlStatement, pq.StringArray(cedarSystemIDs), euaUserID)
 	if err != nil {
@@ -102,13 +102,13 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER2(ctx context.Context, cedarSy
 	)
 
 	for rows.Next() {
-		var bookmark models.CedarSystemBookmark
-		if err := rows.Scan(&bookmark.EUAUserID, &bookmark.CedarSystemID, &bookmark.CreatedAt); err != nil {
+		var id string
+		if err := rows.Scan(&id); err != nil {
 			errs = append(errs, err)
 			continue
 		}
 
-		bookmarksMap[bookmark.CedarSystemID] = helpers.EmptyStruct
+		bookmarksMap[id] = helpers.EmptyStruct
 	}
 
 	for _, id := range cedarSystemIDs {
