@@ -11,3 +11,13 @@ func (d *dataReader) getBookmarkedCEDARSystems(ctx context.Context, cedarSystemI
 	euaUserID := appcontext.Principal(ctx).ID()
 	return d.db.FetchCedarSystemIsBookmarkedLOADER2(ctx, cedarSystemIDs, euaUserID)
 }
+
+func GetBookmarkedCEDARSystem(ctx context.Context, cedarSystemID string) (*models.CedarSystemBookmark, error) {
+	loaders := Loaders(ctx)
+	return loaders.CedarSystemBookmark.Load(ctx, cedarSystemID)
+}
+
+func GetBookmarkedCEDARSystems(ctx context.Context, cedarSystemIDs []string) ([]*models.CedarSystemBookmark, error) {
+	loaders := Loaders(ctx)
+	return loaders.CedarSystemBookmark.LoadAll(ctx, cedarSystemIDs)
+}
