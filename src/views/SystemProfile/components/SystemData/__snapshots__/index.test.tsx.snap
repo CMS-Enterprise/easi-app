@@ -8,79 +8,143 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
   >
     <h2
       class="margin-top-0"
+      id="system"
     >
-      System Data
+      System data
     </h2>
-    <h3
-      class="margin-top-2 margin-bottom-1"
+    <dt
+      class="text-bold margin-bottom-05"
     >
-      Records management categories
-    </h3>
-    <span
-      class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-      data-testid="tag"
+      Enterprise Data Lake status
+    </dt>
+    <dd
+      class="description-definition margin-0 font-body-md line-height-body-3"
     >
-      Agile Methodology
-    </span>
-    <div
-      class="grid-row margin-top-4"
-      data-testid="grid"
-    >
-      <div
-        class="tablet:grid-col margin-bottom-3"
-        data-testid="grid"
+      <span
+        class="text-italic text-base"
       >
-        <dt
-          class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-        >
-          Beneficiary addresses
-        </dt>
-        <dd
-          class="description-definition margin-0 font-body-md line-height-body-3"
-        >
-          This system does not use or store beneficiary addresses
-        </dd>
-      </div>
-    </div>
-    <div
-      class="grid-row margin-top-4"
-      data-testid="grid"
+        No data available
+      </span>
+    </dd>
+    <dt
+      class="text-bold margin-bottom-05 margin-top-4"
     >
-      <div
-        class="tablet:grid-col margin-bottom-3"
-        data-testid="grid"
-      >
-        <dt
-          class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-        >
-          Personally Identifiable Information (PII)
-        </dt>
-        <dd
-          class="description-definition margin-0 font-body-md line-height-body-3"
-        >
-          This system uses PII, but limited only to a username and password
-        </dd>
-      </div>
-    </div>
-    <div
-      class="grid-row margin-top-4"
-      data-testid="grid"
+      Metadata glossary
+    </dt>
+    <dd
+      class="description-definition margin-0 font-body-md line-height-body-3"
     >
-      <div
-        class="tablet:grid-col"
-        data-testid="grid"
+      Yes, this system has glossary information or metadata descriptions
+    </dd>
+    <div
+      class="usa-table-container--scrollable"
+      data-testid="scrollable-table-container"
+    >
+      <table
+        class="usa-table usa-table--borderless src-components-Table-Table-module__fullwidth--fOyj6"
+        data-testid="table"
       >
-        <dt
-          class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-        >
-          Protected Health Information (PHI)
-        </dt>
-        <dd
-          class="description-definition margin-0 font-body-md line-height-body-3"
-        >
-          The data in this system is not considered PHI
-        </dd>
-      </div>
+        <thead>
+          <tr>
+            <th
+              class="border-bottom-2px"
+              scope="col"
+              style="width: 50%;"
+            >
+              Data category
+            </th>
+            <th
+              class="border-bottom-2px"
+              scope="col"
+              style="width: 50%;"
+            >
+              Collected, used, or stored?
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            style="vertical-align: top;"
+          >
+            <td>
+              Beneficiary information (address, email, mobile number)
+            </td>
+            <td>
+              Yes
+            </td>
+          </tr>
+          <tr
+            style="vertical-align: top;"
+          >
+            <td>
+              Personally Identifiable Information (PII)
+            </td>
+            <td>
+              <span
+                class="text-italic text-base"
+              >
+                No data available
+              </span>
+            </td>
+          </tr>
+          <tr
+            style="vertical-align: top;"
+          >
+            <td>
+              Protected Health Information (PHI)
+            </td>
+            <td>
+              <span
+                class="text-italic text-base"
+              >
+                No data available
+              </span>
+            </td>
+          </tr>
+          <tr
+            style="vertical-align: top;"
+          >
+            <td>
+              Sensitive Information
+            </td>
+            <td>
+              <span
+                class="text-italic text-base"
+              >
+                No data available
+              </span>
+            </td>
+          </tr>
+          <tr
+            style="vertical-align: top;"
+          >
+            <td>
+              Collected, used, or stored?
+            </td>
+            <td>
+              <span
+                class="text-italic text-base"
+              >
+                No data available
+              </span>
+            </td>
+          </tr>
+          <tr
+            style="vertical-align: top;"
+          >
+            <td
+              class="border-bottom-0"
+            >
+              Banking data
+            </td>
+            <td
+              class="border-bottom-0"
+            >
+              Yes
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   <div
@@ -89,8 +153,9 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
   >
     <h2
       class="margin-top-0"
+      id="api"
     >
-      API Information
+      API information
     </h2>
     <div
       class="grid-row margin-top-3"
@@ -118,7 +183,7 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
         <dt
           class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
         >
-          FHIR Useage
+          FHIR Usage
         </dt>
         <dd
           class="description-definition margin-0 line-height-body-3 font-body-md"
@@ -133,12 +198,26 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
         <dt
           class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
         >
+          API description location
+        </dt>
+        <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-5 margin-right-1"
+        >
+          Published on developer.cms.gov
+        </dd>
+        <dt
+          class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+        >
           API Gateway
         </dt>
         <dd
           class="description-definition margin-0 line-height-body-3 margin-bottom-2"
         >
-          Kong
+          <span
+            class="text-italic text-base"
+          >
+            No data available
+          </span>
         </dd>
         <a
           class="usa-link"
@@ -157,32 +236,32 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
           Access
         </dt>
         <dd
+          class="description-definition margin-0 line-height-body-3 margin-bottom-5"
+        >
+          Both internal and external access
+        </dd>
+        <dt
+          class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+        >
+          API Portal
+        </dt>
+        <dd
           class="description-definition margin-0 line-height-body-3"
         >
-          Internal and external access
+          This system has an API portal
         </dd>
       </div>
     </div>
-    <h3
-      class="margin-top-0 margin-bottom-1"
-    >
-      Data content categories
-    </h3>
-    <span
-      class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-1"
-      data-testid="tag"
-    >
-      Agile Methodology
-    </span>
   </div>
   <div
-    class="easi-section margin-bottom-4 padding-bottom-5"
+    class="easi-section easi-section__border-bottom padding-bottom-4 margin-bottom-4"
     data-testid="section-wrapper"
   >
     <h2
       class="margin-top-0"
+      id="exchanges"
     >
-      Data Exchanges
+      Data exchanges
     </h2>
     <ul
       class="usa-card-group margin-0"
@@ -205,48 +284,96 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
               <h3
                 class="margin-top-0 margin-bottom-1"
               >
-                Beneficiary Information in the Cloud
+                CMS Exchange
               </h3>
               <span
-                class="easi-tag font-body-md margin-bottom-1 bg-success-dark text-white"
+                class="easi-tag bg-success-dark text-white"
                 data-testid="tag"
               >
+                <svg
+                  class="usa-icon margin-right-1"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+                  />
+                </svg>
                 Active
               </span>
             </div>
-            <span
-              class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-2"
-              data-testid="tag"
-            >
-              <svg
-                class="usa-icon text-base-darker margin-right-1"
-                focusable="false"
-                height="1em"
-                role="img"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
-                />
-              </svg>
-              Receives Data 
-            </span>
-            <div
-              class="easi-divider"
-            />
           </header>
           <div
-            class="usa-card__body padding-2"
+            class="usa-card__body padding-2 padding-top-0"
             data-testid="CardBody"
           >
             <div
-              class="grid-container padding-x-0 margin-bottom-2"
+              class="description-truncated margin-bottom-2"
+            >
+              <p
+                class="description-definition line-clamp-3 margin-y-0"
+              >
+                CMS Exchange description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </p>
+            </div>
+            <div
+              class="margin-bottom-3"
+            >
+              <span
+                class="easi-tag text-base-darker bg-base-lighter"
+                data-testid="tag"
+              >
+                Shared via API
+              </span>
+            </div>
+            <div
+              class="grid-row margin-top-3"
+              data-testid="grid"
+            >
+              <div
+                class="tablet:grid-col-6 margin-bottom-2"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                >
+                  Frequency
+                </dt>
+                <dd
+                  class="description-definition margin-0 font-body-md line-height-body-3"
+                >
+                  Daily, Hourly
+                </dd>
+              </div>
+              <div
+                class="tablet:grid-col-6 margin-bottom-2"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                >
+                  Number of records
+                </dt>
+                <dd
+                  class="description-definition margin-0 line-height-body-3 font-body-md"
+                >
+                  100
+                </dd>
+              </div>
+            </div>
+            <div
+              class="easi-divider"
+            />
+            <div
+              class="grid-container padding-x-0 margin-top-2"
               data-testid="gridContainer"
             >
               <div
@@ -263,58 +390,28 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
                     >
-                      Data Partner
+                      Data partner
                     </dt>
-                    <span
-                      class="easi-tag font-body-md margin-bottom-1 bg-success-dark text-white"
-                      data-testid="tag"
-                    >
-                      Active
-                    </span>
                   </div>
                   <dd
                     class="description-definition margin-0 line-height-body-3"
                   >
-                    Eligibility and Enrollment Medicare Online
-                  </dd>
-                </div>
-              </div>
-            </div>
-            <div
-              class="easi-divider"
-            />
-          </div>
-          <div
-            class="usa-card__footer padding-2 padding-top-0"
-            data-testid="CardFooter"
-          >
-            <div
-              class="grid-container padding-x-0"
-              data-testid="gridContainer"
-            >
-              <div
-                class="grid-row"
-                data-testid="grid"
-              >
-                <div
-                  class="grid-col"
-                  data-testid="grid"
-                >
-                  <div
-                    class="margin-bottom-0 easi-header__basic flex-align-center"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Quality Assurance
-                    </dt>
                     <span
-                      class="easi-tag font-body-md margin-bottom-1 bg-success-dark text-white"
-                      data-testid="tag"
+                      class="text-italic text-base"
                     >
-                      Passed
+                      No data available
                     </span>
-                  </div>
+                  </dd>
+                  <dt
+                    class="text-bold margin-bottom-05 display-inline-flex margin-top-2 margin-right-1"
+                  >
+                    Information exchange agreement
+                  </dt>
+                  <dd
+                    class="description-definition margin-0 line-height-body-3"
+                  >
+                    Yes, has agreement
+                  </dd>
                 </div>
               </div>
             </div>
@@ -338,181 +435,113 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
               <h3
                 class="margin-top-0 margin-bottom-1"
               >
-                Happiness Quality Information
+                EASI Exchange
               </h3>
               <span
-                class="easi-tag font-body-md margin-bottom-1 bg-warning"
+                class="easi-tag bg-success-dark text-white"
                 data-testid="tag"
               >
-                Requires response
-              </span>
-            </div>
-            <span
-              class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-2"
-              data-testid="tag"
-            >
-              <svg
-                class="usa-icon text-base-darker margin-right-1"
-                focusable="false"
-                height="1em"
-                role="img"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
-                />
-              </svg>
-              Receives Data 
-            </span>
-            <div
-              class="easi-divider"
-            />
-          </header>
-          <div
-            class="usa-card__body padding-2"
-            data-testid="CardBody"
-          >
-            <div
-              class="grid-container padding-x-0 margin-bottom-2"
-              data-testid="gridContainer"
-            >
-              <div
-                class="grid-row"
-                data-testid="grid"
-              >
-                <div
-                  class="grid-col"
-                  data-testid="grid"
+                <svg
+                  class="usa-icon margin-right-1"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <div
-                    class="margin-bottom-0 easi-header__basic flex-align-baseline"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                    >
-                      Data Partner
-                    </dt>
-                    <span
-                      class="easi-tag font-body-md margin-bottom-1 bg-success-dark text-white"
-                      data-testid="tag"
-                    >
-                      Active
-                    </span>
-                  </div>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3"
-                  >
-                    Eligibility and Enrollment Medicare Online
-                  </dd>
-                </div>
-              </div>
-            </div>
-            <div
-              class="easi-divider"
-            />
-          </div>
-          <div
-            class="usa-card__footer padding-2 padding-top-0"
-            data-testid="CardFooter"
-          >
-            <div
-              class="grid-container padding-x-0"
-              data-testid="gridContainer"
-            >
-              <div
-                class="grid-row"
-                data-testid="grid"
-              >
-                <div
-                  class="grid-col"
-                  data-testid="grid"
-                >
-                  <div
-                    class="margin-bottom-0 easi-header__basic flex-align-center"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Quality Assurance
-                    </dt>
-                    <span
-                      class="easi-tag font-body-md margin-bottom-1 bg-warning"
-                      data-testid="tag"
-                    >
-                      QA review pending
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li
-        class="usa-card grid-col-12 margin-bottom-2"
-        data-testid="Card"
-      >
-        <div
-          class="usa-card__container"
-        >
-          <header
-            class="usa-card__header padding-2 padding-bottom-0"
-            data-testid="CardHeader"
-          >
-            <div
-              class="margin-bottom-0 easi-header__basic flex-align-baseline"
-            >
-              <h3
-                class="margin-top-0 margin-bottom-1"
-              >
-                Public Happiness Rating
-              </h3>
-              <span
-                class="easi-tag font-body-md margin-bottom-1 bg-success-dark text-white"
-                data-testid="tag"
-              >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+                  />
+                </svg>
                 Active
               </span>
             </div>
-            <span
-              class="easi-tag system-profile__tag text-base-darker bg-base-lighter margin-bottom-2"
-              data-testid="tag"
-            >
-              <svg
-                class="usa-icon text-base-darker margin-right-1"
-                focusable="false"
-                height="1em"
-                role="img"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
-                />
-              </svg>
-              Receives Data 
-            </span>
-            <div
-              class="easi-divider"
-            />
           </header>
           <div
-            class="usa-card__body padding-2"
+            class="usa-card__body padding-2 padding-top-0"
             data-testid="CardBody"
           >
             <div
-              class="grid-container padding-x-0 margin-bottom-2"
+              class="description-truncated margin-bottom-2"
+            >
+              <p
+                class="description-definition line-clamp-3 margin-y-0"
+              >
+                EASI Exchange description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </p>
+            </div>
+            <div
+              class="margin-bottom-3"
+            >
+              <span
+                class="easi-tag text-base-darker bg-base-lighter text-normal text-italic"
+                data-testid="tag"
+              >
+                <svg
+                  class="usa-icon margin-right-1 "
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"
+                  />
+                </svg>
+                Exchange direction unknown
+              </span>
+            </div>
+            <div
+              class="grid-row margin-top-3"
+              data-testid="grid"
+            >
+              <div
+                class="tablet:grid-col-6 margin-bottom-2"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                >
+                  Frequency
+                </dt>
+                <dd
+                  class="description-definition margin-0 font-body-md line-height-body-3"
+                >
+                  Monthly, Annually
+                </dd>
+              </div>
+              <div
+                class="tablet:grid-col-6 margin-bottom-2"
+                data-testid="grid"
+              >
+                <dt
+                  class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+                >
+                  Number of records
+                </dt>
+                <dd
+                  class="description-definition margin-0 line-height-body-3 font-body-md"
+                >
+                  10000
+                </dd>
+              </div>
+            </div>
+            <div
+              class="easi-divider"
+            />
+            <div
+              class="grid-container padding-x-0 margin-top-2"
               data-testid="gridContainer"
             >
               <div
@@ -529,58 +558,28 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
                     <dt
                       class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
                     >
-                      Data Partner
+                      Data partner
                     </dt>
-                    <span
-                      class="easi-tag font-body-md margin-bottom-1 bg-white text-base border-base border-2px"
-                      data-testid="tag"
-                    >
-                      Not applicable
-                    </span>
                   </div>
                   <dd
                     class="description-definition margin-0 line-height-body-3"
                   >
-                    Happiness Public Reporting Info
-                  </dd>
-                </div>
-              </div>
-            </div>
-            <div
-              class="easi-divider"
-            />
-          </div>
-          <div
-            class="usa-card__footer padding-2 padding-top-0"
-            data-testid="CardFooter"
-          >
-            <div
-              class="grid-container padding-x-0"
-              data-testid="gridContainer"
-            >
-              <div
-                class="grid-row"
-                data-testid="grid"
-              >
-                <div
-                  class="grid-col"
-                  data-testid="grid"
-                >
-                  <div
-                    class="margin-bottom-0 easi-header__basic flex-align-center"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05"
-                    >
-                      Quality Assurance
-                    </dt>
                     <span
-                      class="easi-tag font-body-md margin-bottom-1 bg-success-dark text-white"
-                      data-testid="tag"
+                      class="text-italic text-base"
                     >
-                      Passed
+                      No data available
                     </span>
-                  </div>
+                  </dd>
+                  <dt
+                    class="text-bold margin-bottom-05 display-inline-flex margin-top-2 margin-right-1"
+                  >
+                    Information exchange agreement
+                  </dt>
+                  <dd
+                    class="description-definition margin-0 line-height-body-3"
+                  >
+                    No agreement on file
+                  </dd>
                 </div>
               </div>
             </div>
@@ -588,6 +587,84 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
         </div>
       </li>
     </ul>
+  </div>
+  <div
+    class="easi-section margin-bottom-4 padding-bottom-4"
+    data-testid="section-wrapper"
+  >
+    <h2
+      class="margin-top-0"
+      id="records"
+    >
+      Records management
+    </h2>
+    <div
+      class="grid-row"
+      data-testid="grid"
+    >
+      <div
+        class="tablet:grid-col-6 margin-bottom-3"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+        >
+          Records management schedule
+        </dt>
+        <dd
+          class="description-definition margin-0 font-body-md line-height-body-3"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data available
+          </span>
+        </dd>
+      </div>
+      <div
+        class="tablet:grid-col-6 margin-bottom-3"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+        >
+          Records disposal
+        </dt>
+        <dd
+          class="description-definition margin-0 font-body-md line-height-body-3"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data available
+          </span>
+        </dd>
+      </div>
+    </div>
+    <div
+      class=""
+      data-testid="grid"
+    >
+      <div
+        class="tablet:grid-col"
+        data-testid="grid"
+      >
+        <dt
+          class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
+        >
+          Persistent records
+        </dt>
+        <dd
+          class="description-definition margin-0 font-body-md line-height-body-3"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data available
+          </span>
+        </dd>
+      </div>
+    </div>
   </div>
 </DocumentFragment>
 `;

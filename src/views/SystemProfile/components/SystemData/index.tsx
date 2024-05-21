@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Alert,
+  Button,
   Card,
   CardBody,
   CardGroup,
@@ -8,9 +10,11 @@ import {
   Grid,
   GridContainer,
   IconCheck,
+  IconExpandMore,
   IconHelpOutline,
   Table
 } from '@trussworks/react-uswds';
+import classNames from 'classnames';
 
 // import classnames from 'classnames';
 import UswdsReactLink from 'components/LinkWrapper';
@@ -22,14 +26,198 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import useCheckResponsiveScreen from 'hooks/checkMobile';
+import { GetSystemProfile_exchanges as Exchange } from 'queries/types/GetSystemProfile';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
 import { showSystemVal } from 'utils/showVal';
+
+function ExchangeCard({ data }: { data: Exchange }) {
+  const { t } = useTranslation('systemProfile');
+
+  // Header description expand toggle
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const [
+    isDescriptionExpandable,
+    setIsDescriptionExpandable
+  ] = useState<boolean>(false);
+  const [descriptionExpanded, setDescriptionExpanded] = useState<boolean>(
+    false
+  );
+
+  // Enable the description toggle if it overflows
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const { current: el } = descriptionRef;
+    if (!el) return;
+    if (el.scrollHeight > el.offsetHeight) {
+      setIsDescriptionExpandable(true);
+    }
+  });
+
+  return (
+    <Card className="grid-col-12 margin-bottom-2">
+      <CardHeader className="padding-2 padding-bottom-0">
+        <div className="margin-bottom-0 easi-header__basic flex-align-baseline">
+          <h3 className="margin-top-0 margin-bottom-1">{data.exchangeName}</h3>
+          <Tag className="bg-success-dark text-white">
+            <IconCheck className="margin-right-1" margin-right />
+            Active
+          </Tag>
+
+          {/* <Tag
+                      className={classnames('font-body-md', 'margin-bottom-1', {
+                        'bg-success-dark text-white':
+                          data.status === 'Active' || data.status === 'Passed',
+                        'bg-warning':
+                          data.status === 'Requires response' ||
+                          data.status === 'QA review pending',
+                        'bg-white text-base border-base border-2px':
+                          data.status === 'Not applicable'
+                      })}
+                    >
+                      {data.status}
+                    </Tag> */}
+        </div>
+        {/* <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-2">
+                    <IconFileDownload className="text-base-darker margin-right-1" />
+                    Receives Data{' '}
+                  </Tag> */}
+      </CardHeader>
+      <CardBody className="padding-2 padding-top-0">
+        <div
+          className={classNames('description-truncated', 'margin-bottom-2', {
+            expanded: descriptionExpanded
+          })}
+        >
+          <p
+            ref={descriptionRef}
+            className="description-definition line-clamp-3 margin-y-0"
+          >
+            {data.exchangeDescription}
+          </p>
+          {isDescriptionExpandable && (
+            <div>
+              <Button
+                unstyled
+                type="button"
+                className="margin-top-1"
+                onClick={() => {
+                  setDescriptionExpanded(!descriptionExpanded);
+                }}
+              >
+                {t(
+                  descriptionExpanded
+                    ? 'singleSystem.description.less'
+                    : 'singleSystem.description.more'
+                )}
+                <IconExpandMore className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <div className="margin-bottom-3">
+          {data.sharedViaApi && (
+            <Tag className="text-base-darker bg-base-lighter">
+              Shared via API
+            </Tag>
+          )}
+          {!data.sharedViaApi && (
+            <Tag className="text-base-darker bg-base-lighter text-normal text-italic">
+              <IconHelpOutline className="margin-right-1 " margin-right />
+              Exchange direction unknown
+            </Tag>
+          )}
+        </div>
+
+        <Grid row className="margin-top-3">
+          <Grid tablet={{ col: 6 }} className="margin-bottom-2">
+            <DescriptionTerm
+              className="display-inline-flex margin-right-1"
+              term="Frequency"
+            />
+
+            <DescriptionDefinition
+              className="font-body-md line-height-body-3"
+              definition={data.connectionFrequency.join(', ')}
+            />
+          </Grid>
+          <Grid tablet={{ col: 6 }} className="margin-bottom-2">
+            <DescriptionTerm
+              className="display-inline-flex margin-right-1"
+              term="Number of records"
+            />
+
+            <DescriptionDefinition
+              className="line-height-body-3 font-body-md"
+              definition={data.numOfRecords}
+            />
+          </Grid>
+        </Grid>
+
+        <Divider />
+        <GridContainer className="padding-x-0 margin-top-2">
+          <Grid row>
+            <Grid col>
+              <div className="margin-bottom-0 easi-header__basic flex-align-baseline">
+                <DescriptionTerm
+                  className="display-inline-flex margin-right-1"
+                  term={t('singleSystem.systemData.dataPartner')}
+                />
+
+                {/*
+                          <Tag
+                            className={classnames(
+                              'font-body-md',
+                              'margin-bottom-1',
+                              {
+                                'bg-success-dark text-white':
+                                  data.dataPartnerStatus === 'Active' ||
+                                  data.dataPartnerStatus === 'Passed',
+                                'bg-warning':
+                                  data.dataPartnerStatus ===
+                                    'Requires response' ||
+                                  data.dataPartnerStatus ===
+                                    'QA review pending',
+                                'bg-white text-base border-base border-2px':
+                                  data.dataPartnerStatus === 'Not applicable'
+                              }
+                            )}
+                          >
+                            {data.dataPartnerStatus}
+                          </Tag>
+                          */}
+              </div>
+              <DescriptionDefinition
+                className="line-height-body-3"
+                definition={showSystemVal(null)}
+              />
+              <DescriptionTerm
+                className="display-inline-flex margin-top-2 margin-right-1"
+                term="Information exchange agreement"
+              />
+
+              <DescriptionDefinition
+                className="line-height-body-3"
+                definition={showSystemVal(data.dataExchangeAgreement)}
+              />
+            </Grid>
+          </Grid>
+        </GridContainer>
+      </CardBody>
+    </Card>
+  );
+}
 
 const SystemData = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
 
   const { exchanges } = system;
+  // const exchanges = [];
+
+  const exchangesCountCap = 5;
+  const [isExchangesExpanded, setExchangesExpanded] = useState<boolean>(false);
+  const showMoreExchangesToggle = exchanges.length - exchangesCountCap > 0;
 
   return (
     <>
@@ -37,12 +225,15 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
         <h2 id="system" className="margin-top-0">
           {t('singleSystem.systemData.header')}
         </h2>
-        <DescriptionTerm term="Enterprise Data Lake status" />
+        <DescriptionTerm term={t('singleSystem.systemData.enterpriseStatus')} />
         <DescriptionDefinition
           className="font-body-md line-height-body-3"
           definition={showSystemVal(null)}
         />
-        <DescriptionTerm term="Metadata glossary" className="margin-top-4" />
+        <DescriptionTerm
+          term={t('singleSystem.systemData.metadataGlossary')}
+          className="margin-top-4"
+        />
         <DescriptionDefinition
           className="font-body-md line-height-body-3"
           definition="Yes, this system has glossary information or metadata descriptions"
@@ -55,20 +246,20 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
                 className="border-bottom-2px"
                 style={{ width: '50%' }}
               >
-                Data category
+                {t('singleSystem.systemData.dataCategory')}
               </th>
               <th
                 scope="col"
                 className="border-bottom-2px"
                 style={{ width: '50%' }}
               >
-                Collected, used, or stored?
+                {t('singleSystem.systemData.collectedUsedStored')}
               </th>
             </tr>
           </thead>
           <tbody>
             <tr style={{ verticalAlign: 'top' }}>
-              <td>Beneficiary information (address, email, mobile number)</td>
+              <td>{t('singleSystem.systemData.beneficiaryInfo')}</td>
               <td>
                 {showSystemVal(
                   system.cedarSystemDetails?.businessOwnerInformation
@@ -79,23 +270,25 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
               </td>
             </tr>
             <tr style={{ verticalAlign: 'top' }}>
-              <td>Personally Identifiable Information (PII)</td>
+              <td>{t('singleSystem.systemData.pII')}</td>
               <td>{showSystemVal(null)}</td>
             </tr>
             <tr style={{ verticalAlign: 'top' }}>
-              <td>Protected Health Information (PHI)</td>
+              <td>{t('singleSystem.systemData.pHI')}</td>
               <td>{showSystemVal(null)}</td>
             </tr>
             <tr style={{ verticalAlign: 'top' }}>
-              <td>Sensitive Information</td>
+              <td>{t('singleSystem.systemData.sensitiveInformation')}</td>
               <td>{showSystemVal(null)}</td>
             </tr>
             <tr style={{ verticalAlign: 'top' }}>
-              <td>Data used to analyze beneficiary health disparities</td>
+              <td>{t('singleSystem.systemData.collectedUsedStored')}</td>
               <td>{showSystemVal(null)}</td>
             </tr>
             <tr style={{ verticalAlign: 'top' }}>
-              <td className="border-bottom-0">Banking data</td>
+              <td className="border-bottom-0">
+                {t('singleSystem.systemData.bankingData')}
+              </td>
               <td className="border-bottom-0">
                 {showSystemVal(
                   system.cedarSystemDetails?.businessOwnerInformation
@@ -140,7 +333,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           <Grid tablet={{ col: 6 }} className="margin-bottom-5">
             <DescriptionTerm
               className="display-inline-flex margin-right-1"
-              term="API description location"
+              term={t('singleSystem.systemData.apiDescriptionLocation')}
             />
 
             <DescriptionDefinition
@@ -174,7 +367,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
             />
             <DescriptionTerm
               className="display-inline-flex margin-right-1"
-              term="API Portal"
+              term={t('singleSystem.systemData.apiPortal')}
             />
 
             <DescriptionDefinition
@@ -207,153 +400,55 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           {t('singleSystem.systemData.dataExchanges')}
         </h2>
 
-        <CardGroup className="margin-0">
-          {/* {system.systemData?.map(data => { */}
-          {exchanges.map(data => {
-            return (
-              <Card
-                key={data.exchangeId}
-                className="grid-col-12 margin-bottom-2"
+        {/* {system.systemData?.map(data => { */}
+        {exchanges.length ? (
+          <>
+            <CardGroup className="margin-0">
+              {exchanges
+                .slice(0, isExchangesExpanded ? undefined : exchangesCountCap)
+                .map(data => (
+                  <ExchangeCard key={data.exchangeId} data={data} />
+                ))}
+            </CardGroup>
+            {showMoreExchangesToggle && (
+              <Button
+                unstyled
+                type="button"
+                className="line-height-body-5"
+                onClick={() => {
+                  setExchangesExpanded(!isExchangesExpanded);
+                }}
               >
-                <CardHeader className="padding-2 padding-bottom-0">
-                  <div className="margin-bottom-0 easi-header__basic flex-align-baseline">
-                    <h3 className="margin-top-0 margin-bottom-1">
-                      {data.exchangeName}
-                    </h3>
-                    <Tag className="bg-success-dark text-white">
-                      <IconCheck className="margin-right-1" margin-right />
-                      Active
-                    </Tag>
-
-                    {/* <Tag
-                      className={classnames('font-body-md', 'margin-bottom-1', {
-                        'bg-success-dark text-white':
-                          data.status === 'Active' || data.status === 'Passed',
-                        'bg-warning':
-                          data.status === 'Requires response' ||
-                          data.status === 'QA review pending',
-                        'bg-white text-base border-base border-2px':
-                          data.status === 'Not applicable'
-                      })}
-                    >
-                      {data.status}
-                    </Tag> */}
-                  </div>
-                  {/* <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-2">
-                    <IconFileDownload className="text-base-darker margin-right-1" />
-                    Receives Data{' '}
-                  </Tag> */}
-                </CardHeader>
-                <CardBody className="padding-2">
-                  <p className="line-clamp-3">{data.exchangeDescription}</p>
-
-                  <div className="margin-bottom-3">
-                    {data.sharedViaApi && (
-                      <Tag className="text-base-darker bg-base-lighter">
-                        Shared via API
-                      </Tag>
-                    )}
-                    {!data.sharedViaApi && (
-                      <Tag className="text-base-darker bg-base-lighter text-normal text-italic">
-                        <IconHelpOutline
-                          className="margin-right-1 "
-                          margin-right
-                        />
-                        Exchange direction unknown
-                      </Tag>
-                    )}
-                  </div>
-
-                  <Grid row className="margin-top-3">
-                    <Grid tablet={{ col: 6 }} className="margin-bottom-2">
-                      <DescriptionTerm
-                        className="display-inline-flex margin-right-1"
-                        term="Frequency"
-                      />
-
-                      <DescriptionDefinition
-                        className="font-body-md line-height-body-3"
-                        definition={data.connectionFrequency.join(', ')}
-                      />
-                    </Grid>
-                    <Grid tablet={{ col: 6 }} className="margin-bottom-2">
-                      <DescriptionTerm
-                        className="display-inline-flex margin-right-1"
-                        term="Number of records"
-                      />
-
-                      <DescriptionDefinition
-                        className="line-height-body-3 font-body-md"
-                        definition={data.numOfRecords}
-                      />
-                    </Grid>
-                  </Grid>
-
-                  <Divider />
-                  <GridContainer className="padding-x-0 margin-top-2">
-                    <Grid row>
-                      <Grid col>
-                        <div className="margin-bottom-0 easi-header__basic flex-align-baseline">
-                          <DescriptionTerm
-                            className="display-inline-flex margin-right-1"
-                            term={t('singleSystem.systemData.dataPartner')}
-                          />
-
-                          {/*
-                          <Tag
-                            className={classnames(
-                              'font-body-md',
-                              'margin-bottom-1',
-                              {
-                                'bg-success-dark text-white':
-                                  data.dataPartnerStatus === 'Active' ||
-                                  data.dataPartnerStatus === 'Passed',
-                                'bg-warning':
-                                  data.dataPartnerStatus ===
-                                    'Requires response' ||
-                                  data.dataPartnerStatus ===
-                                    'QA review pending',
-                                'bg-white text-base border-base border-2px':
-                                  data.dataPartnerStatus === 'Not applicable'
-                              }
-                            )}
-                          >
-                            {data.dataPartnerStatus}
-                          </Tag>
-                          */}
-                        </div>
-                        <DescriptionDefinition
-                          className="line-height-body-3"
-                          definition={showSystemVal(null)}
-                        />
-                        <DescriptionTerm
-                          className="display-inline-flex margin-top-2 margin-right-1"
-                          term="Information exchange agreement"
-                        />
-
-                        <DescriptionDefinition
-                          className="line-height-body-3"
-                          definition={showSystemVal(data.dataExchangeAgreement)}
-                        />
-                      </Grid>
-                    </Grid>
-                  </GridContainer>
-                </CardBody>
-              </Card>
-            );
-          })}
-        </CardGroup>
+                {t(
+                  `singleSystem.systemData.showExchanges.${
+                    isExchangesExpanded ? 'less' : 'more'
+                  }`
+                )}
+                <IconExpandMore
+                  className="margin-left-05 margin-bottom-2px text-tbottom"
+                  style={{
+                    transform: isExchangesExpanded ? 'rotate(180deg)' : ''
+                  }}
+                />
+              </Button>
+            )}
+          </>
+        ) : (
+          <Alert type="info">
+            {t('singleSystem.systemData.noExchangesAlert')}
+          </Alert>
+        )}
       </SectionWrapper>
       <SectionWrapper className="margin-bottom-4 padding-bottom-4">
         <h2 id="records" className="margin-top-0">
-          Records management
+          {t('singleSystem.systemData.recordsManagement')}
         </h2>
 
         <Grid row>
           <Grid tablet={{ col: 6 }} className="margin-bottom-3">
             <DescriptionTerm
               className="display-inline-flex margin-right-1"
-              term="Records management schedule"
+              term={t('singleSystem.systemData.recordsSchedule')}
             />
 
             <DescriptionDefinition
@@ -364,7 +459,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           <Grid tablet={{ col: 6 }} className="margin-bottom-3">
             <DescriptionTerm
               className="display-inline-flex margin-right-1"
-              term="Records diposal"
+              term={t('singleSystem.systemData.recordsDisposal')}
             />
             <DescriptionDefinition
               className="font-body-md line-height-body-3"
@@ -377,7 +472,7 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           <Grid tablet={{ col: true }}>
             <DescriptionTerm
               className="display-inline-flex margin-right-1"
-              term="Persistent records"
+              term={t('singleSystem.systemData.persistentRecords')}
             />
 
             <DescriptionDefinition
