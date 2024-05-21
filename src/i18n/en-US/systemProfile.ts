@@ -273,9 +273,12 @@ const systemProfile = {
       statusUnknown: 'Status unknown',
       readMore: 'Read more',
       readLess: 'Read less',
-
       sharedViaAPI: 'Shared via API',
-      exchangeDirectionUnknown: 'Exchange direction unknown',
+      exchangeDirection: {
+        receives: 'Receives data',
+        sends: 'Sends data',
+        unknown: 'Exchange direction unknown'
+      },
       frequency: 'Frequency',
       numberOfRecords: 'Number of records',
       dataPartner: 'Data partner',

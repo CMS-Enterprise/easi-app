@@ -27,8 +27,8 @@ export interface GetSystemProfile_exchanges {
   dataExchangeAgreement: string | null;
   exchangeDescription: string | null;
   exchangeDirection: ExchangeDirection | null;
+  exchangeId: string | null;
   exchangeName: string | null;
-  id: string | null;
   numOfRecords: string | null;
   sharedViaApi: boolean | null;
 }

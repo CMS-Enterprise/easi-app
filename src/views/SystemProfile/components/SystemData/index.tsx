@@ -10,6 +10,8 @@ import {
   Grid,
   GridContainer,
   IconExpandMore,
+  IconFileDownload,
+  IconFileUpload,
   IconHelpOutline,
   Table
 } from '@trussworks/react-uswds';
@@ -24,11 +26,45 @@ import Divider from 'components/shared/Divider';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import { GetSystemProfile_exchanges as Exchange } from 'queries/types/GetSystemProfile';
+import { ExchangeDirection } from 'types/graphql-global-types';
 import { SystemProfileSubviewProps } from 'types/systemProfile';
 import { showSystemVal } from 'utils/showVal';
 
-// The majority of values rendered for the main component are one-offs
+// The majority of values rendered the components here are one-offs
 // sometimes due to changing source data
+
+function ExchangeDirectionTag({
+  data
+}: {
+  data: Exchange['exchangeDirection'];
+}) {
+  const { t } = useTranslation('systemProfile');
+
+  return (
+    <Tag className="text-base-darker bg-base-lighter  display-flex flex-align-center">
+      {data === ExchangeDirection.RECEIVER && (
+        <>
+          <IconFileDownload className="margin-right-1" />
+          {t('singleSystem.systemData.exchangeDirection.receives')}
+        </>
+      )}
+      {data === ExchangeDirection.SENDER && (
+        <>
+          <IconFileUpload className="margin-right-1" />
+          {t('singleSystem.systemData.exchangeDirection.sends')}
+        </>
+      )}
+      {data === null && (
+        <>
+          <IconHelpOutline className="margin-right-1" />
+          <span className="text-normal text-italic">
+            {t('singleSystem.systemData.exchangeDirection.unknown')}
+          </span>
+        </>
+      )}
+    </Tag>
+  );
+}
 
 function ExchangeCard({ data }: { data: Exchange }) {
   const { t } = useTranslation('systemProfile');
@@ -97,16 +133,11 @@ function ExchangeCard({ data }: { data: Exchange }) {
           )}
         </div>
 
-        <div className="margin-bottom-3">
+        <div className="display-flex margin-bottom-3">
+          <ExchangeDirectionTag data={data.exchangeDirection} />
           {data.sharedViaApi && (
             <Tag className="text-base-darker bg-base-lighter">
-              Shared via API
-            </Tag>
-          )}
-          {!data.sharedViaApi && (
-            <Tag className="text-base-darker bg-base-lighter text-normal text-italic">
-              <IconHelpOutline className="margin-right-1 " margin-right />
-              Exchange direction unknown
+              {t('singleSystem.systemData.sharedViaAPI')}
             </Tag>
           )}
         </div>
@@ -401,7 +432,10 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
               {exchanges
                 .slice(0, isExchangesExpanded ? undefined : exchangesCountCap)
                 .map(data => (
-                  <ExchangeCard key={data.id} data={data} />
+                  <ExchangeCard
+                    key={`${data.exchangeId} ${data.exchangeName}`}
+                    data={data}
+                  />
                 ))}
             </CardGroup>
             {showMoreExchangesToggle && (

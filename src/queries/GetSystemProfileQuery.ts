@@ -35,8 +35,8 @@ export default gql`
       dataExchangeAgreement
       exchangeDescription
       exchangeDirection
+      exchangeId
       exchangeName
-      id: exchangeId
       numOfRecords
       sharedViaApi
     }
