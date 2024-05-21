@@ -79,11 +79,11 @@ const sideNavItems = (
             {
               name: 'Data exchanges',
               hash: '#exchanges'
-            },
-            {
+            }
+            /* {
               name: 'Records management',
               hash: '#records'
-            }
+            } */
           ]
         },
         'tools-and-software': {
