@@ -9,7 +9,6 @@ import {
   CardHeader,
   Grid,
   GridContainer,
-  IconCheck,
   IconExpandMore,
   IconHelpOutline,
   Table
@@ -28,7 +27,7 @@ import { GetSystemProfile_exchanges as Exchange } from 'queries/types/GetSystemP
 import { SystemProfileSubviewProps } from 'types/systemProfile';
 import { showSystemVal } from 'utils/showVal';
 
-// The majority of values rendered for this component are one-offs
+// The majority of values rendered for the main component are one-offs
 // sometimes due to changing source data
 
 function ExchangeCard({ data }: { data: Exchange }) {
@@ -59,29 +58,11 @@ function ExchangeCard({ data }: { data: Exchange }) {
       <CardHeader className="padding-2 padding-bottom-0">
         <div className="margin-bottom-0 easi-header__basic flex-align-baseline">
           <h3 className="margin-top-0 margin-bottom-1">{data.exchangeName}</h3>
-          <Tag className="bg-success-dark text-white">
-            <IconCheck className="margin-right-1" margin-right />
-            Active
+          <Tag className="bg-base-lighter text-darker text-normal text-italic display-flex flex-align-center">
+            <IconHelpOutline className="margin-right-1" />
+            {t('singleSystem.systemData.statusUnknown')}
           </Tag>
-
-          {/* <Tag
-                      className={classnames('font-body-md', 'margin-bottom-1', {
-                        'bg-success-dark text-white':
-                          data.status === 'Active' || data.status === 'Passed',
-                        'bg-warning':
-                          data.status === 'Requires response' ||
-                          data.status === 'QA review pending',
-                        'bg-white text-base border-base border-2px':
-                          data.status === 'Not applicable'
-                      })}
-                    >
-                      {data.status}
-                    </Tag> */}
         </div>
-        {/* <Tag className="system-profile__tag text-base-darker bg-base-lighter margin-bottom-2">
-                    <IconFileDownload className="text-base-darker margin-right-1" />
-                    Receives Data{' '}
-                  </Tag> */}
       </CardHeader>
       <CardBody className="padding-2 padding-top-0">
         <div
