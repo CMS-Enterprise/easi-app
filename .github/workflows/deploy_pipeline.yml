@@ -34,7 +34,7 @@ jobs:
     uses: ./.github/workflows/build_cedarproxy_image.yml
     secrets: inherit
     with:
-      force_cedarproxy: false
+      force_cedarproxy: true
 
   Run_Tests:
     uses: ./.github/workflows/run_tests.yml
@@ -47,7 +47,7 @@ jobs:
     with:
       env: dev
       lambda_version: 10
-      force_cedarproxy: false
+      force_cedarproxy: true # Per EASI-4374, we want to force cedarproxy deployments in the event pipeline deployment is skipped/cancelled
     secrets: inherit
 
   deploy_impl:
@@ -55,7 +55,7 @@ jobs:
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: impl
-      force_cedarproxy: false
+      force_cedarproxy: true # Per EASI-4374, we want to force cedarproxy deployments in the event pipeline deployment is skipped/cancelled
       lambda_version: 9
     secrets: inherit
   
@@ -64,6 +64,6 @@ jobs:
     uses: ./.github/workflows/deploy_to_environment.yml
     with:
       env: prod
-      force_cedarproxy: false
+      force_cedarproxy: true # Per EASI-4374, we want to force cedarproxy deployments in the event pipeline deployment is skipped/cancelled
       lambda_version: 8
     secrets: inherit

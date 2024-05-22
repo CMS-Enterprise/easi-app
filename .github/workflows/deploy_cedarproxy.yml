@@ -1,4 +1,4 @@
-name: Deploy to Environment
+name: Deploy Cedarproxy to Environment
 
 on:
   workflow_call:
@@ -9,7 +9,7 @@ on:
       force_cedarproxy:
         required: true
         type: boolean
-        default: false
+        default: true # Per EASI-4374, we want to force cedarproxy deployments in the event pipeline deployment is skipped/cancelled
 
 env:
   GIT_HASH: ${{ github.sha }}
