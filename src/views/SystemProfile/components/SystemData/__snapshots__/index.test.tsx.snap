@@ -400,49 +400,30 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
             <div
               class="easi-divider"
             />
-            <div
-              class="grid-container padding-x-0 margin-top-2"
-              data-testid="gridContainer"
+            <dt
+              class="text-bold margin-bottom-05 display-inline-flex margin-top-2 margin-right-1"
             >
-              <div
-                class="grid-row"
-                data-testid="grid"
+              Data partner
+            </dt>
+            <dd
+              class="description-definition margin-0 line-height-body-3"
+            >
+              <span
+                class="text-italic text-base"
               >
-                <div
-                  class="grid-col"
-                  data-testid="grid"
-                >
-                  <div
-                    class="margin-bottom-0 easi-header__basic flex-align-baseline"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                    >
-                      Data partner
-                    </dt>
-                  </div>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3"
-                  >
-                    <span
-                      class="text-italic text-base"
-                    >
-                      No data available
-                    </span>
-                  </dd>
-                  <dt
-                    class="text-bold margin-bottom-05 display-inline-flex margin-top-2 margin-right-1"
-                  >
-                    Information exchange agreement
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3"
-                  >
-                    Yes, has agreement
-                  </dd>
-                </div>
-              </div>
-            </div>
+                No data available
+              </span>
+            </dd>
+            <dt
+              class="text-bold margin-bottom-05 display-inline-flex margin-top-2 margin-right-1"
+            >
+              Information exchange agreement
+            </dt>
+            <dd
+              class="description-definition margin-0 line-height-body-3"
+            >
+              Yes, has agreement
+            </dd>
           </div>
         </div>
       </li>
@@ -568,49 +549,30 @@ exports[`System Data sub page for System Profile > matches snapshot 1`] = `
             <div
               class="easi-divider"
             />
-            <div
-              class="grid-container padding-x-0 margin-top-2"
-              data-testid="gridContainer"
+            <dt
+              class="text-bold margin-bottom-05 display-inline-flex margin-top-2 margin-right-1"
             >
-              <div
-                class="grid-row"
-                data-testid="grid"
+              Data partner
+            </dt>
+            <dd
+              class="description-definition margin-0 line-height-body-3"
+            >
+              <span
+                class="text-italic text-base"
               >
-                <div
-                  class="grid-col"
-                  data-testid="grid"
-                >
-                  <div
-                    class="margin-bottom-0 easi-header__basic flex-align-baseline"
-                  >
-                    <dt
-                      class="text-bold margin-bottom-05 display-inline-flex margin-right-1"
-                    >
-                      Data partner
-                    </dt>
-                  </div>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3"
-                  >
-                    <span
-                      class="text-italic text-base"
-                    >
-                      No data available
-                    </span>
-                  </dd>
-                  <dt
-                    class="text-bold margin-bottom-05 display-inline-flex margin-top-2 margin-right-1"
-                  >
-                    Information exchange agreement
-                  </dt>
-                  <dd
-                    class="description-definition margin-0 line-height-body-3"
-                  >
-                    No agreement on file
-                  </dd>
-                </div>
-              </div>
-            </div>
+                No data available
+              </span>
+            </dd>
+            <dt
+              class="text-bold margin-bottom-05 display-inline-flex margin-top-2 margin-right-1"
+            >
+              Information exchange agreement
+            </dt>
+            <dd
+              class="description-definition margin-0 line-height-body-3"
+            >
+              No agreement on file
+            </dd>
           </div>
         </div>
       </li>

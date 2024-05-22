@@ -8,7 +8,6 @@ import {
   CardGroup,
   CardHeader,
   Grid,
-  GridContainer,
   IconExpandMore,
   IconFileDownload,
   IconFileUpload,
@@ -146,9 +145,8 @@ function ExchangeCard({ data }: { data: Exchange }) {
           <Grid tablet={{ col: 6 }} className="margin-bottom-2">
             <DescriptionTerm
               className="display-inline-flex margin-right-1"
-              term="Frequency"
+              term={t('singleSystem.systemData.frequency')}
             />
-
             <DescriptionDefinition
               className="font-body-md line-height-body-3"
               definition={data.connectionFrequency.join(', ')}
@@ -157,65 +155,31 @@ function ExchangeCard({ data }: { data: Exchange }) {
           <Grid tablet={{ col: 6 }} className="margin-bottom-2">
             <DescriptionTerm
               className="display-inline-flex margin-right-1"
-              term="Number of records"
+              term={t('singleSystem.systemData.numberOfRecords')}
             />
-
             <DescriptionDefinition
               className="line-height-body-3 font-body-md"
               definition={data.numOfRecords}
             />
           </Grid>
         </Grid>
-
         <Divider />
-        <GridContainer className="padding-x-0 margin-top-2">
-          <Grid row>
-            <Grid col>
-              <div className="margin-bottom-0 easi-header__basic flex-align-baseline">
-                <DescriptionTerm
-                  className="display-inline-flex margin-right-1"
-                  term={t('singleSystem.systemData.dataPartner')}
-                />
-
-                {/*
-                          <Tag
-                            className={classnames(
-                              'font-body-md',
-                              'margin-bottom-1',
-                              {
-                                'bg-success-dark text-white':
-                                  data.dataPartnerStatus === 'Active' ||
-                                  data.dataPartnerStatus === 'Passed',
-                                'bg-warning':
-                                  data.dataPartnerStatus ===
-                                    'Requires response' ||
-                                  data.dataPartnerStatus ===
-                                    'QA review pending',
-                                'bg-white text-base border-base border-2px':
-                                  data.dataPartnerStatus === 'Not applicable'
-                              }
-                            )}
-                          >
-                            {data.dataPartnerStatus}
-                          </Tag>
-                          */}
-              </div>
-              <DescriptionDefinition
-                className="line-height-body-3"
-                definition={showSystemVal(null)}
-              />
-              <DescriptionTerm
-                className="display-inline-flex margin-top-2 margin-right-1"
-                term="Information exchange agreement"
-              />
-
-              <DescriptionDefinition
-                className="line-height-body-3"
-                definition={showSystemVal(data.dataExchangeAgreement)}
-              />
-            </Grid>
-          </Grid>
-        </GridContainer>
+        <DescriptionTerm
+          className="display-inline-flex margin-top-2 margin-right-1"
+          term={t('singleSystem.systemData.dataPartner')}
+        />
+        <DescriptionDefinition
+          className="line-height-body-3"
+          definition={showSystemVal(null)}
+        />
+        <DescriptionTerm
+          className="display-inline-flex margin-top-2 margin-right-1"
+          term={t('singleSystem.systemData.informationExchangeAgreement')}
+        />
+        <DescriptionDefinition
+          className="line-height-body-3"
+          definition={showSystemVal(data.dataExchangeAgreement)}
+        />
       </CardBody>
     </Card>
   );
@@ -225,7 +189,6 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
 
   const { exchanges } = system;
-  // const exchanges = [];
 
   const exchangesCountCap = 5;
   const [isExchangesExpanded, setExchangesExpanded] = useState<boolean>(false);
@@ -387,7 +350,6 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
                 system.cedarSoftwareProducts?.apisAccessibility
               )}
             />
-
             <DescriptionTerm
               className="display-inline-flex margin-right-1"
               term={t('singleSystem.systemData.apiPortal')}
@@ -425,7 +387,6 @@ const SystemData = ({ system }: SystemProfileSubviewProps) => {
           {t('singleSystem.systemData.dataExchanges')}
         </h2>
 
-        {/* {system.systemData?.map(data => { */}
         {exchanges.length ? (
           <>
             <CardGroup className="margin-0">
