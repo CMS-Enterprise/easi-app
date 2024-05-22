@@ -13,6 +13,7 @@ func Loaders(ctx context.Context) *DataLoaders {
 	return ctx.Value(loadersKey).(*DataLoaders)
 }
 
+// CTXWithLoaders sets the given dataloaders onto given context
 func CTXWithLoaders(ctx context.Context, dataloaders *DataLoaders) context.Context {
 	return context.WithValue(ctx, loadersKey, dataloaders)
 }
