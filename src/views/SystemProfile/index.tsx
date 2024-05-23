@@ -476,7 +476,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                 'maxw-none': modal
               })}
             >
-              <div className="display-flex flex-align-center margin-top-2">
+              <div className="display-flex flex-align-center margin-top-neg-1">
                 {!modal && (
                   <BreadcrumbBar
                     variant="wrap"
