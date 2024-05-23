@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -68,7 +69,11 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
 	for _, sys := range resp.Payload.SystemSummary {
 		if sys.IctObjectID != nil {
-			uuid, _ := uuid.Parse(sys.UUID)
+			uuid, uErr := uuid.Parse(sys.UUID)
+			// errors in parsing shouldn't stop the process, but we should log when it happens
+			if uErr != nil {
+				appcontext.ZLogger(ctx).Warn("failed to parse System UUID", zap.String("cedarUUID", sys.UUID))
+			}
 
 			cedarSys := &models.CedarSystem{
 				VersionID:               zero.StringFromPtr(sys.ID),
