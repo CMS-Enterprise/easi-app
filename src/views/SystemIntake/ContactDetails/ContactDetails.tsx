@@ -170,7 +170,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     setError,
     watch,
     getValues,
-    formState: { defaultValues, dirtyFields, isDirty, errors }
+    formState: { defaultValues, dirtyFields, isDirty, errors, isSubmitting }
   } = form;
 
   /** RHF's `setValue` function with `shouldDirty` option set to true */
@@ -279,11 +279,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
   // Scroll errors into view on submit
   useEffect(() => {
-    if (hasErrors) {
+    if (hasErrors && isSubmitting) {
       const err = document.querySelector('.usa-alert--error');
       err?.scrollIntoView();
     }
-  }, [errors, hasErrors]);
+  }, [errors, hasErrors, isSubmitting]);
 
   const businessOwner = watch('businessOwner');
   const productManager = watch('productManager');
