@@ -7,8 +7,6 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/lib/pq"
-
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/helpers"
@@ -86,41 +84,39 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, paramTab
 	return store, nil
 }
 
-func (s *Store) FetchCedarSystemIsBookmarkedLOADER2(ctx context.Context, cedarSystemIDs []string, euaUserID string) ([]*models.SystemBookmark, []error) {
-	sqlStatement := "SELECT cedar_system_id FROM cedar_system_bookmarks WHERE cedar_system_id = ANY($1) AND eua_user_id = $2"
+// func (s *Store) FetchCedarSystemIsBookmarkedLOADER2(ctx context.Context, cedarSystemIDs []models.BookmarkRequest) ([]bool, []error) {
+// 	sqlStatement := "SELECT cedar_system_id FROM cedar_system_bookmarks WHERE cedar_system_id = ANY($1) AND eua_user_id = $2"
 
-	rows, err := s.db.QueryContext(ctx, sqlStatement, pq.StringArray(cedarSystemIDs), euaUserID)
-	if err != nil {
-		return nil, []error{err}
-	}
-	defer rows.Close()
+// 	rows, err := s.db.QueryContext(ctx, sqlStatement, pq.StringArray(cedarSystemIDs), euaUserID)
 
-	var (
-		bookmarksMap = map[string]struct{}{}
-		bookmarks    []*models.SystemBookmark
-		errs         []error
-	)
+// 	if err != nil {
+// 		return nil, []error{err}
+// 	}
+// 	defer rows.Close()
 
-	for rows.Next() {
-		var id string
-		if err := rows.Scan(&id); err != nil {
-			errs = append(errs, err)
-			continue
-		}
+// 	var (
+// 		bookmarksMap = map[string]struct{}{}
+// 		bookmarks    []bool
+// 		errs         []error
+// 	)
 
-		bookmarksMap[id] = helpers.EmptyStruct
-	}
+// 	for rows.Next() {
+// 		var id string
+// 		if err := rows.Scan(&id); err != nil {
+// 			errs = append(errs, err)
+// 			continue
+// 		}
 
-	for _, id := range cedarSystemIDs {
-		_, ok := bookmarksMap[id]
-		bookmarks = append(bookmarks, &models.SystemBookmark{
-			CedarSystemID: id,
-			IsBookmarked:  ok,
-		})
-	}
+// 		bookmarksMap[id] = helpers.EmptyStruct
+// 	}
 
-	return bookmarks, errs
-}
+// 	for _, id := range cedarSystemIDs {
+// 		_, ok := bookmarksMap[id]
+// 		bookmarks = append(bookmarks, ok)
+// 	}
+
+// 	return bookmarks, errs
+// }
 
 // DeleteCedarSystemBookmark deletes an existing cedar system bookmark object in the database
 func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookmark *models.CedarSystemBookmark) (*models.CedarSystemBookmark, error) {

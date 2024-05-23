@@ -1,32 +1,26 @@
 package dataloaders2
 
-import (
-	"context"
-	"errors"
+// func (d *dataReader) getCedarSystemIsBookmarked(ctx context.Context, requests []models.BookmarkRequest) ([]bool, []error) {
+// 	return d.db.FetchCedarSystemIsBookmarkedLOADER2(ctx, requests)
+// }
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-)
+// func GetCedarSystemIsBookmarked(ctx context.Context, cedarSystemID string, euaUserID string) (bool, error) {
+// 	loaders := loaders(ctx)
+// 	if loaders == nil {
+// 		return false, errors.New("unexpected nil loaders in GetBookmarkedCEDARSystem")
+// 	}
 
-func (d *dataReader) getBookmarkedCEDARSystems(ctx context.Context, cedarSystemIDs []string) ([]*models.SystemBookmark, []error) {
-	euaUserID := appcontext.Principal(ctx).ID()
-	return d.db.FetchCedarSystemIsBookmarkedLOADER2(ctx, cedarSystemIDs, euaUserID)
-}
+// 	return loaders.CedarSystemBookmark.Load(ctx, models.BookmarkRequest{
+// 		CedarSystemID: cedarSystemID,
+// 		EuaUserID:     euaUserID,
+// 	})
+// }
 
-func GetBookmarkedCEDARSystem(ctx context.Context, cedarSystemID string) (*models.SystemBookmark, error) {
-	loaders := loaders(ctx)
-	if loaders == nil {
-		return nil, errors.New("unexpected nil loaders in GetBookmarkedCEDARSystem")
-	}
+// func GetBookmarkedCEDARSystems(ctx context.Context, cedarSystemIDs []string) ([]bool, error) {
+// 	loaders := loaders(ctx)
+// 	if loaders == nil {
+// 		return nil, errors.New("unexpected nil loaders in GetBookmarkedCEDARSystems")
+// 	}
 
-	return loaders.CedarSystemBookmark.Load(ctx, cedarSystemID)
-}
-
-func GetBookmarkedCEDARSystems(ctx context.Context, cedarSystemIDs []string) ([]*models.SystemBookmark, error) {
-	loaders := loaders(ctx)
-	if loaders == nil {
-		return nil, errors.New("unexpected nil loaders in GetBookmarkedCEDARSystems")
-	}
-
-	return loaders.CedarSystemBookmark.LoadAll(ctx, cedarSystemIDs)
-}
+// 	return loaders.CedarSystemBookmark.LoadAll(ctx, cedarSystemIDs)
+// }

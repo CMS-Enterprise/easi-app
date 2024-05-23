@@ -91,7 +91,7 @@ func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx context.Co
 	return store, nil
 }
 
-func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeContractNumber, []error) {
+func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContractNumber, []error) {
 	rows, err := s.db.QueryContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER2, pq.Array(systemIntakeIDs))
 	if err != nil {
 		return nil, []error{err}
@@ -121,5 +121,22 @@ func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx context.C
 		systemIntakeContractNumbers = append(systemIntakeContractNumbers, &systemIntakeContractNumber)
 	}
 
-	return systemIntakeContractNumbers, errs
+	contractNumberMap := map[uuid.UUID][]*models.SystemIntakeContractNumber{}
+
+	// populate map
+	for _, id := range systemIntakeIDs {
+		contractNumberMap[id] = []*models.SystemIntakeContractNumber{}
+	}
+
+	for _, contractNumber := range systemIntakeContractNumbers {
+		contractNumberMap[contractNumber.SystemIntakeID] = append(contractNumberMap[contractNumber.SystemIntakeID], contractNumber)
+	}
+
+	// return in order received
+	var out [][]*models.SystemIntakeContractNumber
+	for _, id := range systemIntakeIDs {
+		out = append(out, contractNumberMap[id])
+	}
+
+	return out, errs
 }

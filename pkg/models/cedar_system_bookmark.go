@@ -15,3 +15,8 @@ type SystemBookmark struct {
 	CedarSystemID string `json:"cedarSystemID"`
 	IsBookmarked  bool   `json:"isBookmarked"`
 }
+
+type BookmarkRequest struct {
+	CedarSystemID string
+	EuaUserID     string
+}

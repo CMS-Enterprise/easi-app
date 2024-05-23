@@ -9,24 +9,15 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (d *dataReader) getSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeContractNumber, []error) {
+func (d *dataReader) getSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContractNumber, []error) {
 	return d.db.SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx, systemIntakeIDs)
 }
 
-func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) (*models.SystemIntakeContractNumber, error) {
-	loaders := loaders(ctx)
-	if loaders == nil {
-		return nil, errors.New("unexpected nil loaders in GetSystemIntakeContractNumbersBySystemIntakeID")
-	}
-
-	return loaders.SystemIntakeContractNumbers.Load(ctx, systemIntakeID)
-}
-
-func GetSystemIntakeContractNumbersBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {
+func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {
 	loaders := loaders(ctx)
 	if loaders == nil {
 		return nil, errors.New("unexpected nil loaders in GetSystemIntakeContractNumbersBySystemIntakeIDs")
 	}
 
-	return loaders.SystemIntakeContractNumbers.LoadAll(ctx, systemIntakeIDs)
+	return loaders.SystemIntakeContractNumbers.Load(ctx, systemIntakeID)
 }
