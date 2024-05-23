@@ -366,7 +366,9 @@ const systemProfile = {
     header: 'Bookmarked systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',
     subHeader1: 'CMS Component',
-    subHeader2: 'ATO Status'
+    subHeader2: 'ATO Status',
+    bookmark: 'Bookmark',
+    bookmarked: 'Bookmarked'
   },
   noBookmark: {
     header: 'You have not bookmarked any systems yet.',
