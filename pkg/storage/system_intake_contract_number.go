@@ -92,9 +92,7 @@ func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx context.Co
 }
 
 func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeContractNumber, []error) {
-	sqlStatement := "SELECT id, system_intake_id, contract_number, created_by, created_at, modified_by, modified_at FROM system_intake_contract_numbers HWERE system_intake_id = ANY($1)"
-
-	rows, err := s.db.QueryContext(ctx, sqlStatement, pq.Array(systemIntakeIDs))
+	rows, err := s.db.QueryContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER2, pq.Array(systemIntakeIDs))
 	if err != nil {
 		return nil, []error{err}
 	}
