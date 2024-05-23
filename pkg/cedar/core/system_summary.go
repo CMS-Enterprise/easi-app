@@ -70,9 +70,11 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	for _, sys := range resp.Payload.SystemSummary {
 		if sys.IctObjectID != nil {
 			uuid, uErr := uuid.Parse(sys.UUID)
+			uuidString := zero.StringFrom(uuid.String())
 			// errors in parsing shouldn't stop the process, but we should log when it happens
 			if uErr != nil {
 				appcontext.ZLogger(ctx).Warn("failed to parse System UUID", zap.String("cedarUUID", sys.UUID))
+				uuidString = zero.StringFromPtr(nil)
 			}
 
 			cedarSys := &models.CedarSystem{
@@ -86,7 +88,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 				SystemMaintainerOrg:     zero.StringFrom(sys.SystemMaintainerOrg),
 				SystemMaintainerOrgComp: zero.StringFrom(sys.SystemMaintainerOrgComp),
 				ID:                      zero.StringFromPtr(sys.IctObjectID),
-				UUID:                    zero.StringFrom(uuid.String()),
+				UUID:                    uuidString,
 			}
 			retVal = append(retVal, cedarSys)
 		}
