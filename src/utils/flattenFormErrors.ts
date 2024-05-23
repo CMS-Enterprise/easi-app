@@ -1,47 +1,94 @@
-import { FieldErrors } from 'react-hook-form';
+import { FieldError, FieldErrors } from 'react-hook-form';
+
+/** Flattened form errors */
+type FlatErrors = { [key: string]: string };
+
+/** Checks if error is single `FieldError` type */
+function isFieldError(
+  error: FieldError | FieldErrors | Array<FieldErrors>
+): error is FieldError {
+  return (error as FieldError).message !== undefined;
+}
+
+/** Flattens nested subfield errors */
+const flattenSubfieldErrors = (
+  key: string,
+  errors: FieldErrors | Array<FieldErrors>,
+  flatErrors: FlatErrors = {}
+): FlatErrors => {
+  // Flatten array field type errors
+  if (Array.isArray(errors)) {
+    return flattenArrayFieldErrors(key, errors, flatErrors);
+  }
+
+  const entries = Object.entries(errors) as [
+    string,
+    FieldError | FieldErrors
+  ][];
+
+  return entries.reduce<FlatErrors>((acc, [errorKey, error]) => {
+    // Flatten array field type errors
+    if (Array.isArray(error)) {
+      return flattenArrayFieldErrors(`${key}.${errorKey}`, error, flatErrors);
+    }
+
+    if (!isFieldError(error)) return acc;
+
+    return flattenFieldError(`${key}.${errorKey}`, error, acc);
+  }, flatErrors);
+};
+
+/** Flattens single field errors */
+const flattenFieldError = (
+  key: string,
+  error: FieldError,
+  flatErrors: FlatErrors = {}
+): FlatErrors => {
+  if (!error.message) return flatErrors;
+
+  return {
+    ...flatErrors,
+    [key]: error.message
+  };
+};
+
+/** Flattens array type field errors */
+const flattenArrayFieldErrors = (
+  key: string,
+  errors: Array<FieldErrors>,
+  flatErrors: FlatErrors = {}
+): FlatErrors => {
+  return errors.reduce<FlatErrors>((acc, fieldErrors, index) => {
+    return flattenSubfieldErrors(`${key}.${index}`, fieldErrors, acc);
+  }, flatErrors);
+};
 
 /**
  * This function is used to flatten the error object from React Hook Forms
- * to the corresponding nested key and its error message.
+ * to the corresponding field key and its error message.
  *
  * Does not return root errors
  */
-const flattenFormErrors = (errors: FieldErrors): { [key: string]: string } => {
-  // Exclude root errors
-  const { root, ...fieldErrors } = errors;
-
-  const entries = Object.entries(fieldErrors);
-
+const flattenFormErrors = ({ root, ...errors }: FieldErrors): FlatErrors => {
   // If no errors, return empty object
-  if (Object.keys(errors).length === 0) return {};
+  if (!errors) return {};
 
-  return entries.reduce((flatErrors, [fieldKey, fieldError]) => {
-    if (!fieldError) return flatErrors;
+  const errorEntries = Object.entries(errors) as Array<
+    [string, FieldError | FieldErrors]
+  >;
 
-    // If `fieldError` does not have nested fields, add message to object
-    if ('message' in fieldError) {
-      return {
-        ...flatErrors,
-        [fieldKey]: fieldError.message
-      };
-    }
+  return errorEntries.reduce<FlatErrors>(
+    (flatErrors, [fieldKey, fieldError]) => {
+      // If no subfields, flatten error
+      if (isFieldError(fieldError)) {
+        return flattenFieldError(fieldKey, fieldError, flatErrors);
+      }
 
-    // Add nested subfield error messages to `flatErrors` object
-    const subfieldErrors = Object.entries(fieldError).reduce(
-      (acc, [subfieldKey, error]) => {
-        return {
-          ...acc,
-          [`${fieldKey}.${subfieldKey}`]: error?.message
-        };
-      },
-      flatErrors
-    );
-
-    return {
-      ...flatErrors,
-      ...subfieldErrors
-    };
-  }, {});
+      // Flatten subfield errors
+      return flattenSubfieldErrors(fieldKey, fieldError, flatErrors);
+    },
+    {}
+  );
 };
 
 export default flattenFormErrors;
