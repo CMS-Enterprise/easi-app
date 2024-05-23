@@ -8,7 +8,10 @@ import {
   GetSystemProfile_cedarSystemDetails_roles,
   GetSystemProfileVariables
 } from 'queries/types/GetSystemProfile';
-import { CedarAssigneeType } from 'types/graphql-global-types';
+import {
+  CedarAssigneeType,
+  ExchangeDirection
+} from 'types/graphql-global-types';
 import {
   CedarRoleAssigneePerson,
   SystemProfileData,
@@ -802,6 +805,7 @@ export const result: { data: GetSystemProfile } = {
     exchanges: [
       {
         __typename: 'CedarExchange',
+        exchangeId: '{1}',
         containsPhi: true,
         containsHealthDisparityData: true,
         exchangeName: 'CMS Exchange',
@@ -810,10 +814,12 @@ export const result: { data: GetSystemProfile } = {
         sharedViaApi: true,
         connectionFrequency: ['Daily', 'Hourly'],
         numOfRecords: '100',
-        dataExchangeAgreement: 'Yes, has agreement'
+        dataExchangeAgreement: 'Yes, has agreement',
+        exchangeDirection: ExchangeDirection.SENDER
       },
       {
         __typename: 'CedarExchange',
+        exchangeId: '{2}',
         containsPhi: false,
         containsHealthDisparityData: false,
         exchangeName: 'EASI Exchange',
@@ -822,7 +828,8 @@ export const result: { data: GetSystemProfile } = {
         sharedViaApi: false,
         connectionFrequency: ['Monthly', 'Annually'],
         numOfRecords: '10000',
-        dataExchangeAgreement: 'No agreement on file'
+        dataExchangeAgreement: 'No agreement on file',
+        exchangeDirection: ExchangeDirection.RECEIVER
       }
     ],
     cedarSubSystems: [

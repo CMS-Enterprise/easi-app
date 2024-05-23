@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { CedarAssigneeType } from "./../../types/graphql-global-types";
+import { ExchangeDirection, CedarAssigneeType } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemProfile
@@ -21,14 +21,16 @@ export interface GetSystemProfile_cedarAuthorityToOperate {
 
 export interface GetSystemProfile_exchanges {
   __typename: "CedarExchange";
-  containsPhi: boolean | null;
-  containsHealthDisparityData: boolean | null;
-  exchangeName: string | null;
-  exchangeDescription: string | null;
-  sharedViaApi: boolean | null;
   connectionFrequency: string[];
-  numOfRecords: string | null;
+  containsHealthDisparityData: boolean | null;
+  containsPhi: boolean | null;
   dataExchangeAgreement: string | null;
+  exchangeDescription: string | null;
+  exchangeDirection: ExchangeDirection | null;
+  exchangeId: string | null;
+  exchangeName: string | null;
+  numOfRecords: string | null;
+  sharedViaApi: boolean | null;
 }
 
 export interface GetSystemProfile_cedarBudget {
