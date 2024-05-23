@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import i18next from 'i18next';
 
 /**
@@ -11,7 +10,7 @@ export default function showVal(
   val: any,
   {
     defaultVal = i18next.t<string>('general:noInfoToDisplay'),
-    defaultClassName,
+    defaultClassName = 'text-italic',
     format
   }: {
     defaultVal?: string;
@@ -20,11 +19,7 @@ export default function showVal(
   } = {}
 ): React.ReactNode {
   if (val === null || val === undefined || val === '') {
-    return (
-      <span className={classNames('text-italic', defaultClassName)}>
-        {defaultVal}
-      </span>
-    );
+    return <span className={defaultClassName}>{defaultVal}</span>;
   }
 
   if (format) return format(val);
@@ -35,8 +30,8 @@ export default function showVal(
 export function showSystemVal(
   val: any,
   {
-    defaultVal = 'No data available',
-    defaultClassName = 'text-base',
+    defaultVal = i18next.t<string>('general:noDataAvailable'),
+    defaultClassName = 'text-italic text-base',
     format
   }: {
     defaultVal?: string;

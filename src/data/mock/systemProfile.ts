@@ -8,7 +8,10 @@ import {
   GetSystemProfile_cedarSystemDetails_roles,
   GetSystemProfileVariables
 } from 'queries/types/GetSystemProfile';
-import { CedarAssigneeType } from 'types/graphql-global-types';
+import {
+  CedarAssigneeType,
+  ExchangeDirection
+} from 'types/graphql-global-types';
 import {
   CedarRoleAssigneePerson,
   SystemProfileData,
@@ -681,6 +684,7 @@ export const result: { data: GetSystemProfile } = {
       },
       cedarSystem: {
         id: '000-100-0',
+        isBookmarked: false,
         name: 'CMS.gov',
         description:
           'CMS.gov provides the public and professionals the ability to access information regarding the CMS programs. CMS.gov website mission is to provide clear, accurate, and timely information about CMS programs to the entire health care community to improve quality and efficiency in an evolving health care system. CMS.gov website is a combination of static content and general content applications.  Core Function: * Information dissemination',
@@ -802,6 +806,7 @@ export const result: { data: GetSystemProfile } = {
     exchanges: [
       {
         __typename: 'CedarExchange',
+        exchangeId: '{1}',
         containsPhi: true,
         containsHealthDisparityData: true,
         exchangeName: 'CMS Exchange',
@@ -810,10 +815,12 @@ export const result: { data: GetSystemProfile } = {
         sharedViaApi: true,
         connectionFrequency: ['Daily', 'Hourly'],
         numOfRecords: '100',
-        dataExchangeAgreement: 'Yes, has agreement'
+        dataExchangeAgreement: 'Yes, has agreement',
+        exchangeDirection: ExchangeDirection.SENDER
       },
       {
         __typename: 'CedarExchange',
+        exchangeId: '{2}',
         containsPhi: false,
         containsHealthDisparityData: false,
         exchangeName: 'EASI Exchange',
@@ -822,7 +829,8 @@ export const result: { data: GetSystemProfile } = {
         sharedViaApi: false,
         connectionFrequency: ['Monthly', 'Annually'],
         numOfRecords: '10000',
-        dataExchangeAgreement: 'No agreement on file'
+        dataExchangeAgreement: 'No agreement on file',
+        exchangeDirection: ExchangeDirection.RECEIVER
       }
     ],
     cedarSubSystems: [
