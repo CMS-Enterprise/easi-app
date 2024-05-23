@@ -125,6 +125,7 @@ export interface GetSystemProfile_cedarSystemDetails_businessOwnerInformation {
 export interface GetSystemProfile_cedarSystemDetails_cedarSystem {
   __typename: "CedarSystem";
   id: string;
+  isBookmarked: boolean;
   name: string;
   description: string | null;
   acronym: string | null;

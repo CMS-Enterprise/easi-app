@@ -684,6 +684,7 @@ export const result: { data: GetSystemProfile } = {
       },
       cedarSystem: {
         id: '000-100-0',
+        isBookmarked: false,
         name: 'CMS.gov',
         description:
           'CMS.gov provides the public and professionals the ability to access information regarding the CMS programs. CMS.gov website mission is to provide clear, accurate, and timely information about CMS programs to the entire health care community to improve quality and efficiency in an evolving health care system. CMS.gov website is a combination of static content and general content applications.  Core Function: * Information dissemination',
