@@ -120,6 +120,7 @@ export default gql`
         businessOwnerOrgComp
         systemMaintainerOrg
         systemMaintainerOrgComp
+        uuid
       }
       deployments {
         id

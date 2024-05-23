@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -67,6 +68,8 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
 	for _, sys := range resp.Payload.SystemSummary {
 		if sys.IctObjectID != nil {
+			uuid, _ := uuid.Parse(sys.UUID)
+
 			cedarSys := &models.CedarSystem{
 				VersionID:               zero.StringFromPtr(sys.ID),
 				Name:                    zero.StringFromPtr(sys.Name),
@@ -78,6 +81,7 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 				SystemMaintainerOrg:     zero.StringFrom(sys.SystemMaintainerOrg),
 				SystemMaintainerOrgComp: zero.StringFrom(sys.SystemMaintainerOrgComp),
 				ID:                      zero.StringFromPtr(sys.IctObjectID),
+				UUID:                    zero.StringFrom(uuid.String()),
 			}
 			retVal = append(retVal, cedarSys)
 		}

@@ -182,6 +182,7 @@ type CedarSystem {
   isBookmarked: Boolean!
   linkedTrbRequests: [TRBRequest!]!
   linkedSystemIntakes: [SystemIntake!]! 
+  uuid: String!
 }
 
 """

@@ -22,6 +22,7 @@ var mockSystems = map[string]*models.CedarSystem{
 		BusinessOwnerOrgComp:    zero.StringFrom("IST"),
 		SystemMaintainerOrg:     zero.StringFrom("Division of Quality Assurance"),
 		SystemMaintainerOrgComp: zero.StringFrom("DQA"),
+		UUID:                    zero.StringFrom("f5172597-1f9d-4930-9db1-a565a2994c61"),
 	},
 	"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}": {
 		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
@@ -34,6 +35,7 @@ var mockSystems = map[string]*models.CedarSystem{
 		BusinessOwnerOrgComp:    zero.StringFrom("IST"),
 		SystemMaintainerOrg:     zero.StringFrom("Division of Quality Assurance"),
 		SystemMaintainerOrgComp: zero.StringFrom("DQA"),
+		UUID:                    zero.StringFrom("44feed75-a837-4fe6-94f2-f9d24e56697b"),
 	},
 	"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}": {
 		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"),
@@ -46,6 +48,7 @@ var mockSystems = map[string]*models.CedarSystem{
 		BusinessOwnerOrgComp:    zero.StringFrom("IST"),
 		SystemMaintainerOrg:     zero.StringFrom("Division of Quality Assurance"),
 		SystemMaintainerOrgComp: zero.StringFrom("DQA"),
+		UUID:                    zero.StringFrom("81b4638f-fbb3-4bb0-a0a4-d16f03eb8cc0"),
 	},
 	"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}": {
 		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"),
@@ -58,6 +61,7 @@ var mockSystems = map[string]*models.CedarSystem{
 		BusinessOwnerOrgComp:    zero.StringFrom("MMM"),
 		SystemMaintainerOrg:     zero.StringFrom("Division of Divisive Divergence"),
 		SystemMaintainerOrgComp: zero.StringFrom("DODD"),
+		UUID:                    zero.StringFrom("3d167844-8f36-49f4-a5d7-8c55c9d7621c"),
 	},
 	"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}": {
 		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"),
@@ -70,6 +74,7 @@ var mockSystems = map[string]*models.CedarSystem{
 		BusinessOwnerOrgComp:    zero.StringFrom("MMM"),
 		SystemMaintainerOrg:     zero.StringFrom("Division of Divisive Divergence"),
 		SystemMaintainerOrgComp: zero.StringFrom("DODD"),
+		UUID:                    zero.StringFrom("46434d7c-5193-4a9d-82b1-0c4d3ceb4237"),
 	},
 }
 
