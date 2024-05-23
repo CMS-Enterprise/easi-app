@@ -690,6 +690,7 @@ export const result: { data: GetSystemProfile } = {
         businessOwnerOrgComp: 'OC',
         systemMaintainerOrg: 'Web and Emerging Technologies Group',
         systemMaintainerOrgComp: 'OC',
+        uuid: '0ab8fafa-6857-497b-87c1-e054d732bd5d',
         __typename: 'CedarSystem'
       },
       deployments: [

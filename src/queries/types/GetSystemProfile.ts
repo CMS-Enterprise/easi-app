@@ -131,6 +131,7 @@ export interface GetSystemProfile_cedarSystemDetails_cedarSystem {
   businessOwnerOrgComp: string | null;
   systemMaintainerOrg: string | null;
   systemMaintainerOrgComp: string | null;
+  uuid: string | null;
 }
 
 export interface GetSystemProfile_cedarSystemDetails_deployments_dataCenter {

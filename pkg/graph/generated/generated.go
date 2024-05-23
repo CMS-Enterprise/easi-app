@@ -355,6 +355,7 @@ type ComplexityRoot struct {
 		Status                  func(childComplexity int) int
 		SystemMaintainerOrg     func(childComplexity int) int
 		SystemMaintainerOrgComp func(childComplexity int) int
+		UUID                    func(childComplexity int) int
 		VersionID               func(childComplexity int) int
 	}
 
@@ -2970,6 +2971,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarSystem.SystemMaintainerOrgComp(childComplexity), true
+
+	case "CedarSystem.uuid":
+		if e.complexity.CedarSystem.UUID == nil {
+			break
+		}
+
+		return e.complexity.CedarSystem.UUID(childComplexity), true
 
 	case "CedarSystem.versionId":
 		if e.complexity.CedarSystem.VersionID == nil {
@@ -7566,6 +7574,7 @@ type CedarSystem {
   isBookmarked: Boolean!
   linkedTrbRequests: [TRBRequest!]!
   linkedSystemIntakes: [SystemIntake!]! 
+  uuid: String
 }
 
 """
@@ -21855,6 +21864,47 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(_ conte
 	return fc, nil
 }
 
+func (ec *executionContext) _CedarSystem_uuid(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSystem_uuid(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UUID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.String)
+	fc.Result = res
+	return ec.marshalOString2githubᚗcomᚋgureguᚋnullᚋzeroᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSystem_uuid(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CedarSystemBookmark_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemBookmark) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarSystemBookmark_euaUserId(ctx, field)
 	if err != nil {
@@ -22010,6 +22060,8 @@ func (ec *executionContext) fieldContext_CedarSystemDetails_cedarSystem(_ contex
 				return ec.fieldContext_CedarSystem_linkedTrbRequests(ctx, field)
 			case "linkedSystemIntakes":
 				return ec.fieldContext_CedarSystem_linkedSystemIntakes(ctx, field)
+			case "uuid":
+				return ec.fieldContext_CedarSystem_uuid(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -33853,6 +33905,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystem(ctx context.Context, 
 				return ec.fieldContext_CedarSystem_linkedTrbRequests(ctx, field)
 			case "linkedSystemIntakes":
 				return ec.fieldContext_CedarSystem_linkedSystemIntakes(ctx, field)
+			case "uuid":
+				return ec.fieldContext_CedarSystem_uuid(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -33938,6 +33992,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystems(_ context.Context, f
 				return ec.fieldContext_CedarSystem_linkedTrbRequests(ctx, field)
 			case "linkedSystemIntakes":
 				return ec.fieldContext_CedarSystem_linkedSystemIntakes(ctx, field)
+			case "uuid":
+				return ec.fieldContext_CedarSystem_uuid(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -34152,6 +34208,8 @@ func (ec *executionContext) fieldContext_Query_myCedarSystems(_ context.Context,
 				return ec.fieldContext_CedarSystem_linkedTrbRequests(ctx, field)
 			case "linkedSystemIntakes":
 				return ec.fieldContext_CedarSystem_linkedSystemIntakes(ctx, field)
+			case "uuid":
+				return ec.fieldContext_CedarSystem_uuid(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -39122,6 +39180,8 @@ func (ec *executionContext) fieldContext_SystemIntake_systems(_ context.Context,
 				return ec.fieldContext_CedarSystem_linkedTrbRequests(ctx, field)
 			case "linkedSystemIntakes":
 				return ec.fieldContext_CedarSystem_linkedSystemIntakes(ctx, field)
+			case "uuid":
+				return ec.fieldContext_CedarSystem_uuid(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -46693,6 +46753,8 @@ func (ec *executionContext) fieldContext_TRBRequest_systems(_ context.Context, f
 				return ec.fieldContext_CedarSystem_linkedTrbRequests(ctx, field)
 			case "linkedSystemIntakes":
 				return ec.fieldContext_CedarSystem_linkedSystemIntakes(ctx, field)
+			case "uuid":
+				return ec.fieldContext_CedarSystem_uuid(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystem", field.Name)
 		},
@@ -57821,6 +57883,8 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "uuid":
+			out.Values[i] = ec._CedarSystem_uuid(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
