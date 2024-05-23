@@ -112,6 +112,7 @@ export default gql`
       }
       cedarSystem {
         id
+        isBookmarked
         name
         description
         acronym

@@ -11,7 +11,6 @@ import {
   Button,
   Grid,
   GridContainer,
-  IconBookmark,
   IconExpandMore,
   Link,
   SideNav,
@@ -67,6 +66,7 @@ import EditPageCallout from './components/EditPageCallout';
 import sideNavItems from './components/index';
 import SystemSubNav from './components/SystemSubNav/index';
 import EditTeam from './components/Team/Edit';
+import BookmarkToggleButton from './BookmarkToggleButton';
 import { getPersonFullName } from './helpers';
 import PointsOfContactSidebar from './PointsOfContactSidebar';
 
@@ -476,144 +476,146 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                 'maxw-none': modal
               })}
             >
-              {!modal && (
-                <BreadcrumbBar
-                  variant="wrap"
-                  className="bg-transparent padding-0"
-                >
-                  <Breadcrumb>
-                    <span>&larr; </span>
-                    <BreadcrumbLink asCustom={RouterLink} to="/systems">
-                      <span>{t('singleSystem.summary.back')}</span>
-                    </BreadcrumbLink>
-                  </Breadcrumb>
-                </BreadcrumbBar>
-              )}
+              <div className="display-flex flex-align-center margin-top-2">
+                {!modal && (
+                  <BreadcrumbBar
+                    variant="wrap"
+                    className="bg-transparent padding-0"
+                  >
+                    <Breadcrumb>
+                      <span>&larr; </span>
+                      <BreadcrumbLink asCustom={RouterLink} to="/systems">
+                        <span>{t('singleSystem.summary.back')}</span>
+                      </BreadcrumbLink>
+                    </Breadcrumb>
+                  </BreadcrumbBar>
+                )}
+                <div className="margin-left-auto" style={{ flexShrink: 0 }}>
+                  <BookmarkToggleButton
+                    id={cedarSystem.id}
+                    initialBookmarked={cedarSystem.isBookmarked}
+                  />
+                </div>
+              </div>
 
-              <PageHeading className="margin-top-2">
-                <IconBookmark size={4} className="text-primary" />{' '}
-                <span>{cedarSystem.name} </span>
+              <PageHeading className="margin-y-0">
+                {cedarSystem.name}
                 <span className="text-normal font-body-sm">
                   ({cedarSystem.acronym})
                 </span>
-                <div className="text-normal font-body-md">
-                  <CollapsableLink
-                    className="margin-top-3"
-                    eyeIcon
-                    startOpen
-                    labelPosition="bottom"
-                    closeLabel={t('singleSystem.summary.hide')}
-                    styleLeftBar={false}
-                    id={t('singleSystem.id')}
-                    label={t('singleSystem.summary.expand')}
-                  >
-                    <div
-                      className={classnames(
-                        'description-truncated',
-                        'margin-bottom-2',
-                        {
-                          expanded: descriptionExpanded
-                        }
-                      )}
-                    >
-                      <DescriptionDefinition
-                        definition={cedarSystem.description}
-                        ref={descriptionRef}
-                        className="font-body-lg line-height-body-5 text-light"
-                      />
-                      {isDescriptionExpandable && (
-                        <div>
-                          <Button
-                            unstyled
-                            type="button"
-                            className="margin-top-1"
-                            onClick={() => {
-                              setDescriptionExpanded(!descriptionExpanded);
-                            }}
-                          >
-                            {t(
-                              descriptionExpanded
-                                ? 'singleSystem.description.less'
-                                : 'singleSystem.description.more'
-                            )}
-                            <IconExpandMore className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                    {productionLocation && productionLocation.address && (
-                      <Link
-                        aria-label={t('singleSystem.summary.label')}
-                        className="line-height-body-5"
-                        href={productionLocation.address}
-                        variant="external"
-                        target="_blank"
-                      >
-                        {t('singleSystem.summary.view')} {cedarSystem.name}
-                        <span aria-hidden>&nbsp;</span>
-                      </Link>
-                    )}
-                    <Grid row className="margin-top-3">
-                      {cmsComponent && (
-                        <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                          <DescriptionDefinition
-                            definition={t('singleSystem.summary.subheader1')}
-                          />
-                          <DescriptionTerm
-                            className="font-body-md"
-                            term={cmsComponent}
-                          />
-                        </Grid>
-                      )}
-                      {businessOwners.length && (
-                        <Grid desktop={{ col: 6 }} className="margin-bottom-2">
-                          <DescriptionDefinition
-                            definition={t('singleSystem.summary.subheader2', {
-                              count: businessOwners.length
-                            })}
-                          />
-                          <DescriptionTerm
-                            className="font-body-md"
-                            term={businessOwners
-                              .map(bo => getPersonFullName(bo))
-                              .join(', ')}
-                          />
-                        </Grid>
-                      )}
-                      {flags.systemProfileHiddenFields && (
-                        <>
-                          {/* Go live date */}
-                          <Grid
-                            desktop={{ col: 6 }}
-                            className="margin-bottom-2"
-                          >
-                            <DescriptionDefinition
-                              definition={t('singleSystem.summary.subheader3')}
-                            />
-                            <DescriptionTerm
-                              className="font-body-md"
-                              term="July 27, 2015"
-                            />
-                          </Grid>
-                          {/* Most recent major change */}
-                          <Grid
-                            desktop={{ col: 6 }}
-                            className="margin-bottom-2"
-                          >
-                            <DescriptionDefinition
-                              definition={t('singleSystem.summary.subheader4')}
-                            />
-                            <DescriptionTerm
-                              className="font-body-md"
-                              term="December 4, 2021"
-                            />
-                          </Grid>
-                        </>
-                      )}
-                    </Grid>
-                  </CollapsableLink>
-                </div>
               </PageHeading>
+
+              <div className="text-normal font-body-md">
+                <CollapsableLink
+                  className="margin-top-3"
+                  eyeIcon
+                  startOpen
+                  labelPosition="bottom"
+                  closeLabel={t('singleSystem.summary.hide')}
+                  styleLeftBar={false}
+                  id={t('singleSystem.id')}
+                  label={t('singleSystem.summary.expand')}
+                >
+                  <div
+                    className={classnames(
+                      'description-truncated',
+                      'margin-bottom-2',
+                      {
+                        expanded: descriptionExpanded
+                      }
+                    )}
+                  >
+                    <DescriptionDefinition
+                      definition={cedarSystem.description}
+                      ref={descriptionRef}
+                      className="font-body-lg line-height-body-5 text-light"
+                    />
+                    {isDescriptionExpandable && (
+                      <div>
+                        <Button
+                          unstyled
+                          type="button"
+                          className="margin-top-1"
+                          onClick={() => {
+                            setDescriptionExpanded(!descriptionExpanded);
+                          }}
+                        >
+                          {t(
+                            descriptionExpanded
+                              ? 'singleSystem.description.less'
+                              : 'singleSystem.description.more'
+                          )}
+                          <IconExpandMore className="expand-icon margin-left-05 margin-bottom-2px text-tbottom" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                  {productionLocation && productionLocation.address && (
+                    <Link
+                      aria-label={t('singleSystem.summary.label')}
+                      className="line-height-body-5"
+                      href={productionLocation.address}
+                      variant="external"
+                      target="_blank"
+                    >
+                      {t('singleSystem.summary.view')} {cedarSystem.name}
+                      <span aria-hidden>&nbsp;</span>
+                    </Link>
+                  )}
+                  <Grid row className="margin-top-3">
+                    {cmsComponent && (
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          definition={t('singleSystem.summary.subheader1')}
+                        />
+                        <DescriptionTerm
+                          className="font-body-md"
+                          term={cmsComponent}
+                        />
+                      </Grid>
+                    )}
+                    {businessOwners.length && (
+                      <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                        <DescriptionDefinition
+                          definition={t('singleSystem.summary.subheader2', {
+                            count: businessOwners.length
+                          })}
+                        />
+                        <DescriptionTerm
+                          className="font-body-md"
+                          term={businessOwners
+                            .map(bo => getPersonFullName(bo))
+                            .join(', ')}
+                        />
+                      </Grid>
+                    )}
+                    {flags.systemProfileHiddenFields && (
+                      <>
+                        {/* Go live date */}
+                        <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                          <DescriptionDefinition
+                            definition={t('singleSystem.summary.subheader3')}
+                          />
+                          <DescriptionTerm
+                            className="font-body-md"
+                            term="July 27, 2015"
+                          />
+                        </Grid>
+                        {/* Most recent major change */}
+                        <Grid desktop={{ col: 6 }} className="margin-bottom-2">
+                          <DescriptionDefinition
+                            definition={t('singleSystem.summary.subheader4')}
+                          />
+                          <DescriptionTerm
+                            className="font-body-md"
+                            term="December 4, 2021"
+                          />
+                        </Grid>
+                      </>
+                    )}
+                  </Grid>
+                </CollapsableLink>
+              </div>
             </Grid>
           </div>
         </SummaryBox>
