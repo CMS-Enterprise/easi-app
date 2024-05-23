@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
@@ -22,7 +22,8 @@ const GovernanceTeams = () => {
   const {
     control,
     watch,
-    formState: { errors }
+    trigger,
+    formState: { errors, isSubmitted }
   } = useFormContext<ContactDetailsForm>();
 
   const { fields: teams, remove, append } = useFieldArray<ContactDetailsForm>({
@@ -31,6 +32,13 @@ const GovernanceTeams = () => {
   });
 
   const isPresent = watch('governanceTeams.isPresent');
+
+  // Revalidate teams fields after failed submission when updating values
+  useEffect(() => {
+    if (isSubmitted && teams.length > 0) {
+      trigger('governanceTeams.teams');
+    }
+  }, [errors, trigger, isSubmitted, teams]);
 
   return (
     <>
