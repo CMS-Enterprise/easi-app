@@ -2,7 +2,13 @@ import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
-import { Checkbox, FormGroup, Radio, TextInput } from '@trussworks/react-uswds';
+import {
+  Checkbox,
+  Fieldset,
+  FormGroup,
+  Radio,
+  TextInput
+} from '@trussworks/react-uswds';
 
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
@@ -13,136 +19,148 @@ import { ContactDetailsForm } from 'types/systemIntake';
 const GovernanceTeams = () => {
   const { t } = useTranslation('intake');
 
-  const { control } = useFormContext<ContactDetailsForm>();
+  const {
+    control,
+    watch,
+    formState: { errors }
+  } = useFormContext<ContactDetailsForm>();
 
   const { fields: teams, remove, append } = useFieldArray<ContactDetailsForm>({
     control,
     name: 'governanceTeams.teams'
   });
 
+  const isPresent = watch('governanceTeams.isPresent');
+
   return (
-    <Controller
-      control={control}
-      name="governanceTeams.isPresent"
-      render={({ field: govTeamsField }) => (
-        <FormGroup>
-          <fieldset className="usa-fieldset">
-            <legend className="usa-label margin-bottom-1">
-              {t('contactDetails.collaboration.label')}
-            </legend>
-            <HelpText id="IntakeForm-Collaborators">
-              {t('contactDetails.collaboration.helpText')}
-            </HelpText>
+    <>
+      <FormGroup>
+        <Controller
+          control={control}
+          name="governanceTeams.isPresent"
+          render={({ field: { ref, ...field } }) => (
+            <>
+              <Label htmlFor={field.name} className="margin-bottom-1">
+                {t('contactDetails.collaboration.label')}
+              </Label>
 
-            <Radio
-              {...govTeamsField}
-              ref={null}
-              id={`${govTeamsField.name}True`}
-              label={t('contactDetails.collaboration.oneOrMore')}
-              value="true"
-              checked={govTeamsField.value === true}
-              onChange={() => govTeamsField.onChange(true)}
-            />
+              <HelpText id="IntakeForm-Collaborators">
+                {t('contactDetails.collaboration.helpText')}
+              </HelpText>
 
-            {govTeamsField.value === true && (
-              <Controller
-                control={control}
-                name="governanceTeams.teams"
-                render={({
-                  field: { ref, ...field },
-                  fieldState: { error }
-                }) => (
-                  <FormGroup
-                    error={!!error?.message}
-                    className="margin-left-4 margin-bottom-3 margin-top-1"
-                  >
-                    <ErrorMessage name={field.name} as={FieldErrorMsg} />
-
-                    {cmsGovernanceTeams.map((team, index) => {
-                      const teamIndex = teams.findIndex(
-                        value => value.name === team.value
-                      );
-
-                      const isChecked: boolean = teamIndex !== -1;
-
-                      return (
-                        <fieldset key={team.key} className="usa-fieldset">
-                          <Checkbox
-                            {...field}
-                            id={`governanceTeam-${team.key}`}
-                            key={`governanceTeam-${team.key}`}
-                            label={team.label}
-                            name={`governanceTeams.teams.${index}`}
-                            value={team.value}
-                            checked={isChecked}
-                            onChange={() => {
-                              if (isChecked) {
-                                remove(teamIndex);
-                              } else {
-                                // Add team to governanceTeams.teams array with empty collaborator
-                                append({
-                                  name: team.value,
-                                  key: team.key,
-                                  collaborator: ''
-                                });
-                              }
-                            }}
-                          />
-
-                          {isChecked && (
-                            <Controller
-                              control={control}
-                              name={`governanceTeams.teams.${teamIndex}.collaborator`}
-                              render={collaborator => (
-                                <FormGroup
-                                  error={!!collaborator.fieldState.error}
-                                  className="margin-top-1 margin-left-4 margin-bottom-1"
-                                >
-                                  <Label htmlFor={collaborator.field.name}>
-                                    {t(`${team.acronym} Collaborator Name`)}
-                                  </Label>
-
-                                  <ErrorMessage
-                                    name={collaborator.field.name}
-                                    as={FieldErrorMsg}
-                                  />
-
-                                  <TextInput
-                                    {...collaborator.field}
-                                    ref={null}
-                                    id={collaborator.field.name}
-                                    type="text"
-                                  />
-                                </FormGroup>
-                              )}
-                            />
-                          )}
-                        </fieldset>
-                      );
-                    })}
-                  </FormGroup>
-                )}
+              <Radio
+                {...field}
+                inputRef={ref}
+                id={`${field.name}True`}
+                label={t('contactDetails.collaboration.oneOrMore')}
+                value="true"
+                checked={!!field.value}
+                onChange={() => field.onChange(true)}
               />
-            )}
+            </>
+          )}
+        />
 
+        {isPresent && (
+          <FormGroup
+            error={!!errors?.governanceTeams?.teams?.message}
+            className="margin-left-4 margin-bottom-3 margin-top-1"
+          >
+            <ErrorMessage name="governanceTeams.teams" as={FieldErrorMsg} />
+
+            {cmsGovernanceTeams.map(({ key, value: name, label, acronym }) => {
+              const teamIndex = teams.findIndex(team => team.key === key);
+
+              const isChecked = teamIndex > -1;
+
+              return (
+                <Fieldset key={key}>
+                  <Controller
+                    control={control}
+                    name="governanceTeams.teams"
+                    shouldUnregister
+                    render={({ field: { ref, ...field } }) => {
+                      return (
+                        <Checkbox
+                          {...field}
+                          inputRef={ref}
+                          id={`${field.name}.${key}`}
+                          label={label}
+                          value={name}
+                          defaultChecked={isChecked}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              append({
+                                name,
+                                key,
+                                collaborator: ''
+                              });
+                            } else {
+                              remove(teamIndex);
+                            }
+                          }}
+                        />
+                      );
+                    }}
+                  />
+
+                  {isChecked && (
+                    <Controller
+                      control={control}
+                      name={`governanceTeams.teams.${teamIndex}.collaborator`}
+                      shouldUnregister
+                      render={({
+                        field: { ref, ...field },
+                        fieldState: { error }
+                      }) => (
+                        <FormGroup
+                          error={!!error}
+                          className="margin-top-1 margin-left-4 margin-bottom-1"
+                        >
+                          <Label htmlFor={field.name}>
+                            {t(`${acronym} Collaborator Name`)}
+                          </Label>
+
+                          <ErrorMessage name={field.name} as={FieldErrorMsg} />
+
+                          <TextInput
+                            {...field}
+                            inputRef={ref}
+                            id={field.name}
+                            type="text"
+                          />
+                        </FormGroup>
+                      )}
+                    />
+                  )}
+                </Fieldset>
+              );
+            })}
+          </FormGroup>
+        )}
+
+        <Controller
+          control={control}
+          name="governanceTeams.isPresent"
+          render={({ field: { ref, ...field } }) => (
             <Radio
-              {...govTeamsField}
-              ref={null}
-              id={`${govTeamsField.name}False`}
+              {...field}
+              inputRef={ref}
+              id={`${field.name}False`}
               label={t('contactDetails.collaboration.none')}
               value="false"
-              checked={govTeamsField.value === false}
+              checked={!field.value}
               onChange={() => {
                 // Set governanceTeams.isPresent to false
-                govTeamsField.onChange(false);
+                field.onChange(false);
                 // Reset governanceTeams.teams array
                 remove();
               }}
             />
-          </fieldset>
-        </FormGroup>
-      )}
-    />
+          )}
+        />
+      </FormGroup>
+    </>
   );
 };
 
