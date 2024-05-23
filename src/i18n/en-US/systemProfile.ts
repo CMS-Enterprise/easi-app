@@ -49,7 +49,7 @@ const systemProfile = {
       hide: 'Hide system summary',
       label: 'Open system external link',
       view: 'View',
-      subheader1: 'CMS Component',
+      subheader1: 'CMS component owner',
       subheader2: 'Business Owner',
       subheader2_plural: 'Business Owners',
       subheader3: 'Go Live Date',
