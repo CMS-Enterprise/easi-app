@@ -30,7 +30,7 @@ export default function showVal(
 export function showSystemVal(
   val: any,
   {
-    defaultVal = 'No data available',
+    defaultVal = i18next.t<string>('general:noDataAvailable'),
     defaultClassName = 'text-italic text-base',
     format
   }: {

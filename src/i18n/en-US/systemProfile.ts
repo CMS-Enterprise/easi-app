@@ -43,16 +43,17 @@ const systemProfile = {
       more: 'Read more',
       less: 'Read less'
     },
+    noDescription: 'No system description available',
     summary: {
       back: 'Back to All systems',
-      expand: 'Expand system summary',
+      expand: 'Show system summary',
       hide: 'Hide system summary',
       label: 'Open system external link',
       view: 'View',
       subheader1: 'CMS component owner',
       subheader2: 'Business Owner',
       subheader2_plural: 'Business Owners',
-      subheader3: 'Go Live Date',
+      subheader3: 'Go live date',
       subheader4: 'Most recent major change release'
     },
     ato: {

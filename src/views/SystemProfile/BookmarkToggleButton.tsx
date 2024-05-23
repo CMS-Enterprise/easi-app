@@ -53,7 +53,7 @@ export default function BookmarkToggleButton({
   return (
     <Button
       type="button"
-      className="usa-button display-flex flex-align-center margin-right-0 padding-y-105 padding-left-105 padding-right-2 radius-0 bg-white text-primary"
+      className="usa-button display-flex flex-align-center margin-right-0 padding-y-1 padding-left-105 padding-right-2 radius-0 bg-white text-primary"
       onClick={toggle}
     >
       <IconBookmark
