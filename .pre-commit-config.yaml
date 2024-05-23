@@ -81,6 +81,14 @@ repos:
 
   - repo: local
     hooks:
+      - id: nginx-check
+        name: Run nginx config check
+        entry: scripts/pre-commit-nginx-lint
+        language: script
+        files: "cedarproxy/nginx\\.conf|cedarproxy/Dockerfile\\.cedarproxy|cedarproxy/modules/cachepurge/source"
+
+  - repo: local
+    hooks:
       - id: graphql-schema
         name: Lint GraphQL schema
         entry: scripts/pre-commit-graphql-schema-lint
