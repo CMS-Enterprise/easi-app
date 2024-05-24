@@ -10,7 +10,12 @@ import (
 )
 
 func (d *dataReader) getTRBRequestContractNumbersByTRBRequestID(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestContractNumber, []error) {
-	return nil, nil
+	data, err := d.db.TRBRequestContractNumbersByTRBRequestIDLOADER2(ctx, trbRequestIDs)
+	if err != nil {
+		return nil, []error{err}
+	}
+
+	return data, nil
 }
 
 func GetTRBRequestContractNumbersByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestContractNumber, error) {

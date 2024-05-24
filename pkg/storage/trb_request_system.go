@@ -91,6 +91,50 @@ func (s *Store) TRBRequestSystemsByTRBRequestIDLOADER(ctx context.Context, param
 	return store, nil
 }
 
+func (s *Store) TRBRequestSystemsByTRBRequestIDLOADER2(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestSystem, error) {
+	rows, err := s.db.QueryContext(ctx, sqlqueries.TRBRequestSystemForm.SelectByTRBRequestIDLOADER2, pq.Array(trbRequestIDs))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var trbRequestSystems []*models.TRBRequestSystem
+	for rows.Next() {
+		var trbRequestSystem models.TRBRequestSystem
+		if err := rows.Scan(
+			&trbRequestSystem.ID,
+			&trbRequestSystem.TRBRequestID,
+			&trbRequestSystem.SystemID,
+			&trbRequestSystem.CreatedBy,
+			&trbRequestSystem.CreatedAt,
+			&trbRequestSystem.ModifiedBy,
+			&trbRequestSystem.ModifiedAt,
+		); err != nil {
+			return nil, err
+		}
+
+		trbRequestSystems = append(trbRequestSystems, &trbRequestSystem)
+	}
+
+	systemMap := map[uuid.UUID][]*models.TRBRequestSystem{}
+
+	// populate map
+	for _, id := range trbRequestIDs {
+		systemMap[id] = []*models.TRBRequestSystem{}
+	}
+
+	for _, system := range trbRequestSystems {
+		systemMap[system.TRBRequestID] = append(systemMap[system.TRBRequestID], system)
+	}
+
+	var out [][]*models.TRBRequestSystem
+	for _, id := range trbRequestIDs {
+		out = append(out, systemMap[id])
+	}
+
+	return out, nil
+}
+
 // TRBRequestsByCedarSystemID gets TRB Requests related to given Cedar System ID
 func (s *Store) TRBRequestsByCedarSystemID(ctx context.Context, cedarSystemID string) ([]*models.TRBRequest, error) {
 	var trbRequests []*models.TRBRequest
