@@ -1,0 +1,13 @@
+#! /usr/bin/env bash
+
+echo "building and running nginx..."
+
+docker run --rm -e CEDAR_CACHE_EXPIRE_TIME -e CEDAR_API_URL "$(docker build -q -t cedarproxy:nginx-lint -f ./cedarproxy/Dockerfile.cedarproxy ./cedarproxy)" nginx -c /etc/nginx/nginx.conf -t
+exit_code=$?
+
+if [ $exit_code = 0 ]; then
+  echo nginx lint SUCCESS
+else
+  echo nginx lint FAILED
+  exit 1
+fi
