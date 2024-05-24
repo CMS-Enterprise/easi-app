@@ -8,8 +8,8 @@ const (
 	loadersKey = ctxKey("dataloaders")
 )
 
-// loaders returns the dataloaders for a given context
-func loaders(ctx context.Context) *DataLoaders {
+// loadersFromCTX returns the dataloaders for a given context
+func loadersFromCTX(ctx context.Context) *DataLoaders {
 	return ctx.Value(loadersKey).(*DataLoaders)
 }
 

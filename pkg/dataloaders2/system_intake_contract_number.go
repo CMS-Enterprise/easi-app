@@ -14,7 +14,7 @@ func (d *dataReader) getSystemIntakeContractNumbersBySystemIntakeID(ctx context.
 }
 
 func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {
-	loaders := loaders(ctx)
+	loaders := loadersFromCTX(ctx)
 	if loaders == nil {
 		return nil, errors.New("unexpected nil loaders in GetSystemIntakeContractNumbersBySystemIntakeIDs")
 	}

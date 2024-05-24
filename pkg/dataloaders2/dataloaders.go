@@ -13,7 +13,7 @@ type dataReader struct {
 }
 
 type DataLoaders struct {
-	// CedarSystemBookmark         *dataloadgen.Loader[models.BookmarkRequest, bool]
+	CedarSystemBookmark         *dataloadgen.Loader[models.BookmarkRequest, bool]
 	SystemIntakeContractNumbers *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
 
 	// FetchUserInfos      *dataloadgen.Loader[string, *models.UserInfo]
