@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -1883,6 +1884,11 @@ func (r *systemIntakeDocumentResolver) URL(ctx context.Context, obj *models.Syst
 	return resolvers.GetURLForSystemIntakeDocument(r.s3Client, obj.S3Key)
 }
 
+// EuaUserID is the resolver for the euaUserID field.
+func (r *systemIntakeGRBReviewerResolver) EuaUserID(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (string, error) {
+	panic(fmt.Errorf("not implemented: EuaUserID - euaUserID"))
+}
+
 // VotingRole is the resolver for the votingRole field.
 func (r *systemIntakeGRBReviewerResolver) VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (model.SystemIntakeGRBReviewerVotingRole, error) {
 	return model.SystemIntakeGRBReviewerVotingRole(obj.VotingRole), nil
@@ -1891,6 +1897,16 @@ func (r *systemIntakeGRBReviewerResolver) VotingRole(ctx context.Context, obj *m
 // GrbRole is the resolver for the grbRole field.
 func (r *systemIntakeGRBReviewerResolver) GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (model.SystemIntakeGRBReviewerRole, error) {
 	return model.SystemIntakeGRBReviewerRole(obj.GRBRole), nil
+}
+
+// CreatedBy is the resolver for the createdBy field.
+func (r *systemIntakeGRBReviewerResolver) CreatedBy(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (string, error) {
+	panic(fmt.Errorf("not implemented: CreatedBy - createdBy"))
+}
+
+// ModifiedBy is the resolver for the modifiedBy field.
+func (r *systemIntakeGRBReviewerResolver) ModifiedBy(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (string, error) {
+	panic(fmt.Errorf("not implemented: ModifiedBy - modifiedBy"))
 }
 
 // Author is the resolver for the author field.

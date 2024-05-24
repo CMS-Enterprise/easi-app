@@ -21,7 +21,7 @@ CREATE TYPE grb_reviewer_voting_role_type AS ENUM (
 
 CREATE TABLE IF NOT EXISTS system_intake_grb_reviewers (
   id UUID PRIMARY KEY NOT NULL,
-  eua_user_id UUID NOT NULL REFERENCES user_account(id),
+  user_id UUID NOT NULL REFERENCES user_account(id),
   system_intake_id UUID NOT NULL
     REFERENCES system_intakes(id)
     ON DELETE CASCADE
