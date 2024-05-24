@@ -91,18 +91,14 @@ func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER(ctx context.Context, p
 	return store, nil
 }
 
-func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER2(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeSystem, []error) {
+func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER2(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeSystem, error) {
 	rows, err := s.db.QueryContext(ctx, sqlqueries.SystemIntakeSystemForm.SelectBySystemIntakeIDLOADER2, pq.Array(systemIntakeIDs))
 	if err != nil {
-		return nil, []error{err}
+		return nil, err
 	}
 	defer rows.Close()
 
-	var (
-		systemIntakeSystems []*models.SystemIntakeSystem
-		errs                []error
-	)
-
+	var systemIntakeSystems []*models.SystemIntakeSystem
 	for rows.Next() {
 		var systemIntakeSystem models.SystemIntakeSystem
 		if err := rows.Scan(
@@ -114,8 +110,7 @@ func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER2(ctx context.Context, 
 			&systemIntakeSystem.ModifiedBy,
 			&systemIntakeSystem.ModifiedAt,
 		); err != nil {
-			errs = append(errs, err)
-			continue
+			return nil, err
 		}
 
 		systemIntakeSystems = append(systemIntakeSystems, &systemIntakeSystem)
@@ -137,7 +132,7 @@ func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER2(ctx context.Context, 
 		out = append(out, systemMap[id])
 	}
 
-	return out, errs
+	return out, nil
 }
 
 func (s *Store) SystemIntakesByCedarSystemID(ctx context.Context, cedarSystemID string) ([]*models.SystemIntake, error) {

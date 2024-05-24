@@ -10,7 +10,12 @@ import (
 )
 
 func (d *dataReader) getSystemIntakeSystemsBySystemIntakeID(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeSystem, []error) {
-	return d.db.SystemIntakeSystemsBySystemIntakeIDLOADER2(ctx, systemIntakeIDs)
+	data, err := d.db.SystemIntakeSystemsBySystemIntakeIDLOADER2(ctx, systemIntakeIDs)
+	if err != nil {
+		return nil, []error{err}
+	}
+
+	return data, nil
 }
 
 func GetSystemIntakeSystemsBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {

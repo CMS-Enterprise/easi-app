@@ -91,18 +91,14 @@ func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx context.Co
 	return store, nil
 }
 
-func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContractNumber, []error) {
+func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContractNumber, error) {
 	rows, err := s.db.QueryContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER2, pq.Array(systemIntakeIDs))
 	if err != nil {
-		return nil, []error{err}
+		return nil, err
 	}
 	defer rows.Close()
 
-	var (
-		systemIntakeContractNumbers []*models.SystemIntakeContractNumber
-		errs                        []error
-	)
-
+	var systemIntakeContractNumbers []*models.SystemIntakeContractNumber
 	for rows.Next() {
 		var systemIntakeContractNumber models.SystemIntakeContractNumber
 		if err := rows.Scan(
@@ -114,8 +110,7 @@ func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx context.C
 			&systemIntakeContractNumber.ModifiedBy,
 			&systemIntakeContractNumber.ModifiedAt,
 		); err != nil {
-			errs = append(errs, err)
-			continue
+			return nil, err
 		}
 
 		systemIntakeContractNumbers = append(systemIntakeContractNumbers, &systemIntakeContractNumber)
@@ -138,5 +133,5 @@ func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx context.C
 		out = append(out, contractNumberMap[id])
 	}
 
-	return out, errs
+	return out, nil
 }

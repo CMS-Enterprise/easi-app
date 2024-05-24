@@ -17,6 +17,7 @@ type DataLoaders struct {
 
 	SystemIntakeContractNumbers *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
 	SystemIntakeSystems         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
+	TRBRequestContractNumbers   *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestContractNumber]
 }
 
 func NewDataLoaders(store *storage.Store) *DataLoaders {
@@ -27,5 +28,6 @@ func NewDataLoaders(store *storage.Store) *DataLoaders {
 		// CedarSystemBookmark:         dataloadgen.NewLoader(dr.getCedarSystemIsBookmarked),
 		SystemIntakeContractNumbers: dataloadgen.NewLoader(dr.getSystemIntakeContractNumbersBySystemIntakeID),
 		SystemIntakeSystems:         dataloadgen.NewLoader(dr.getSystemIntakeSystemsBySystemIntakeID),
+		TRBRequestContractNumbers:   dataloadgen.NewLoader(dr.getTRBRequestContractNumbersByTRBRequestID),
 	}
 }

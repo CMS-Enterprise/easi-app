@@ -10,7 +10,12 @@ import (
 )
 
 func (d *dataReader) getSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContractNumber, []error) {
-	return d.db.SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx, systemIntakeIDs)
+	data, err := d.db.SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx, systemIntakeIDs)
+	if err != nil {
+		return nil, []error{err}
+	}
+
+	return data, nil
 }
 
 func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {

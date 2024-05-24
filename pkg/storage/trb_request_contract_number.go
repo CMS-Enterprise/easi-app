@@ -90,3 +90,47 @@ func (s *Store) TRBRequestContractNumbersByTRBRequestIDLOADER(ctx context.Contex
 
 	return store, nil
 }
+
+func (s *Store) TRBRequestContractNumbersByTRBRequestIDLOADER2(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestContractNumber, error) {
+	rows, err := s.db.QueryContext(ctx, sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDLOADER2, pq.Array(trbRequestIDs))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var trbRequestContractNumbers []*models.TRBRequestContractNumber
+	for rows.Next() {
+		var trbRequestContractNumber models.TRBRequestContractNumber
+		if err := rows.Scan(
+			&trbRequestContractNumber.ID,
+			&trbRequestContractNumber.TRBRequestID,
+			&trbRequestContractNumber.ContractNumber,
+			&trbRequestContractNumber.CreatedBy,
+			&trbRequestContractNumber.CreatedAt,
+			&trbRequestContractNumber.ModifiedBy,
+			&trbRequestContractNumber.ModifiedAt,
+		); err != nil {
+			return nil, err
+		}
+
+		trbRequestContractNumbers = append(trbRequestContractNumbers, &trbRequestContractNumber)
+	}
+
+	contractNumberMap := map[uuid.UUID][]*models.TRBRequestContractNumber{}
+
+	// populate map
+	for _, id := range trbRequestIDs {
+		contractNumberMap[id] = []*models.TRBRequestContractNumber{}
+	}
+
+	for _, contractNumber := range trbRequestContractNumbers {
+		contractNumberMap[contractNumber.TRBRequestID] = append(contractNumberMap[contractNumber.TRBRequestID], contractNumber)
+	}
+
+	var out [][]*models.TRBRequestContractNumber
+	for _, id := range trbRequestIDs {
+		out = append(out, contractNumberMap[id])
+	}
+
+	return out, nil
+}
