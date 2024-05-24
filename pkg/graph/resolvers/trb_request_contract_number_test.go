@@ -8,8 +8,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
-func (s *ResolverSuite) TestTRBRequestContractNumbers() {
-	ctx := s.testConfigs.Context
+func (suite *ResolverSuite) TestTRBRequestContractNumbers() {
+	ctx := suite.testConfigs.Context
 
 	const (
 		contract1 = "1"
@@ -19,10 +19,10 @@ func (s *ResolverSuite) TestTRBRequestContractNumbers() {
 
 	var createdIDs []uuid.UUID
 
-	s.Run("create TRB Requests for test", func() {
+	suite.Run("create TRB Requests for test", func() {
 		for i := 0; i < 2; i++ {
-			created, err := CreateTRBRequest(ctx, models.TRBTBrainstorm, s.testConfigs.Store)
-			s.NoError(err)
+			created, err := CreateTRBRequest(ctx, models.TRBTBrainstorm, suite.testConfigs.Store)
+			suite.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
 		}
 
@@ -33,14 +33,14 @@ func (s *ResolverSuite) TestTRBRequestContractNumbers() {
 		}
 
 		// set contract numbers on these TRB Requests
-		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetTRBRequestContractNumbers(ctx, tx, createdIDs[0], contractNumbers)
+		err := sqlutils.WithTransaction(ctx, suite.testConfigs.Store, func(tx *sqlx.Tx) error {
+			return suite.testConfigs.Store.SetTRBRequestContractNumbers(ctx, tx, createdIDs[0], contractNumbers)
 		})
-		s.NoError(err)
+		suite.NoError(err)
 
 		data, err := TRBRequestContractNumbers(ctx, createdIDs[0])
-		s.NoError(err)
-		s.Len(data, 3)
+		suite.NoError(err)
+		suite.Len(data, 3)
 
 		var (
 			found1 bool
@@ -49,7 +49,7 @@ func (s *ResolverSuite) TestTRBRequestContractNumbers() {
 		)
 
 		for _, result := range data {
-			s.Equal(result.TRBRequestID, createdIDs[0])
+			suite.Equal(result.TRBRequestID, createdIDs[0])
 
 			if result.ContractNumber == contract1 {
 				found1 = true
@@ -64,14 +64,14 @@ func (s *ResolverSuite) TestTRBRequestContractNumbers() {
 			}
 		}
 
-		s.True(found1)
-		s.True(found2)
-		s.True(found3)
+		suite.True(found1)
+		suite.True(found2)
+		suite.True(found3)
 
 		// confirm second TRB Request does not have any contract numbers on it
 		data, err = TRBRequestContractNumbers(ctx, createdIDs[1])
-		s.NoError(err)
-		s.Empty(data)
+		suite.NoError(err)
+		suite.Empty(data)
 	})
 
 }

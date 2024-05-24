@@ -11,8 +11,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s *ResolverSuite) TestIntakeRelatedSystems() {
-	ctx := s.testConfigs.Context
+func (suite *ResolverSuite) TestIntakeRelatedSystems() {
+	ctx := suite.testConfigs.Context
 
 	const (
 		systemID1 = "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
@@ -23,7 +23,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 	var createdIDs []uuid.UUID
 
 	// create system intake
-	s.Run("create system intakes for test", func() {
+	suite.Run("create system intakes for test", func() {
 		for i := 0; i < 2; i++ {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
@@ -31,8 +31,8 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 				Requester:   fmt.Sprintf("system intake system data loader %d", i),
 			}
 
-			created, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake)
-			s.NoError(err)
+			created, err := suite.testConfigs.Store.CreateSystemIntake(ctx, &intake)
+			suite.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
 		}
 
@@ -44,14 +44,14 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 			systemID3,
 		}
 
-		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], systemIDs)
+		err := sqlutils.WithTransaction(ctx, suite.testConfigs.Store, func(tx *sqlx.Tx) error {
+			return suite.testConfigs.Store.SetSystemIntakeSystems(ctx, tx, createdIDs[0], systemIDs)
 		})
-		s.NoError(err)
+		suite.NoError(err)
 
 		data, err := SystemIntakeSystems(ctx, createdIDs[0])
-		s.NoError(err)
-		s.Len(data, 3)
+		suite.NoError(err)
+		suite.Len(data, 3)
 
 		var (
 			found1 bool
@@ -73,13 +73,13 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 			}
 		}
 
-		s.True(found1)
-		s.True(found2)
-		s.True(found3)
+		suite.True(found1)
+		suite.True(found2)
+		suite.True(found3)
 
 		// attempt to get systems for a system intake without linked systems
 		data, err = SystemIntakeSystems(ctx, createdIDs[1])
-		s.NoError(err)
-		s.Empty(data)
+		suite.NoError(err)
+		suite.Empty(data)
 	})
 }

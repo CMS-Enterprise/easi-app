@@ -12,7 +12,7 @@ import (
 )
 
 // TestCreateTRBRequestForm tests the creation a new TRB request form
-func (s *ResolverSuite) TestCreateTRBRequestForm() {
+func (suite *ResolverSuite) TestCreateTRBRequestForm() {
 	ctx := context.Background()
 
 	config := testhelpers.NewConfig()
@@ -30,7 +30,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 	localSender := local.NewSender()
 	emailClient, err := email.NewClient(emailConfig, localSender)
 	if err != nil {
-		s.FailNow("Unable to construct email client with local sender")
+		suite.FailNow("Unable to construct email client with local sender")
 	}
 
 	anonEua := "ANON"
@@ -46,17 +46,17 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 	trbRequest := models.NewTRBRequest(anonEua)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.State = models.TRBRequestStateOpen
-	trbRequest, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
-	s.NoError(err)
+	trbRequest, err = CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
+	suite.NoError(err)
 
-	s.Run("create/update/fetch TRB request forms", func() {
+	suite.Run("create/update/fetch TRB request forms", func() {
 		// fetch the form
-		fetched, err := GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
-		s.NoError(err)
-		s.NotNil(fetched)
+		fetched, err := GetTRBRequestFormByTRBRequestID(ctx, suite.testConfigs.Store, trbRequest.ID)
+		suite.NoError(err)
+		suite.NotNil(fetched)
 
 		// confirm that the status is correctly marked "in progress"
-		s.EqualValues(fetched.Status, models.TRBFormStatusReadyToStart)
+		suite.EqualValues(fetched.Status, models.TRBFormStatusReadyToStart)
 
 		updatedCollabGroups := []models.TRBCollabGroupOption{
 			models.TRBCollabGroupOptionSecurity,
@@ -94,50 +94,50 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 			"subjectAreaOptions":               subjectAreaOptions,
 			"subjectAreaOptionOther":           "Some other technical topic",
 		}
-		updatedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, &emailClient, stubFetchUserInfo, formChanges)
-		s.NoError(err)
-		s.EqualValues(&anonEua, updatedForm.ModifiedBy)
-		s.EqualValues(formChanges["needsAssistanceWith"], *updatedForm.NeedsAssistanceWith)
-		s.EqualValues(formChanges["hasSolutionInMind"], *updatedForm.HasSolutionInMind)
-		s.EqualValues(formChanges["proposedSolution"], *updatedForm.ProposedSolution)
-		s.EqualValues(formChanges["whereInProcess"], *updatedForm.WhereInProcess)
-		s.EqualValues(formChanges["whereInProcessOther"], *updatedForm.WhereInProcessOther)
-		s.EqualValues(formChanges["hasExpectedStartEndDates"], *updatedForm.HasExpectedStartEndDates)
+		updatedForm, err := UpdateTRBRequestForm(ctx, suite.testConfigs.Store, &emailClient, stubFetchUserInfo, formChanges)
+		suite.NoError(err)
+		suite.EqualValues(&anonEua, updatedForm.ModifiedBy)
+		suite.EqualValues(formChanges["needsAssistanceWith"], *updatedForm.NeedsAssistanceWith)
+		suite.EqualValues(formChanges["hasSolutionInMind"], *updatedForm.HasSolutionInMind)
+		suite.EqualValues(formChanges["proposedSolution"], *updatedForm.ProposedSolution)
+		suite.EqualValues(formChanges["whereInProcess"], *updatedForm.WhereInProcess)
+		suite.EqualValues(formChanges["whereInProcessOther"], *updatedForm.WhereInProcessOther)
+		suite.EqualValues(formChanges["hasExpectedStartEndDates"], *updatedForm.HasExpectedStartEndDates)
 
-		s.True((*updatedForm.ExpectedStartDate).Equal(expectedStartDate))
-		s.True((*updatedForm.ExpectedEndDate).Equal(expectedEndDate))
+		suite.True((*updatedForm.ExpectedStartDate).Equal(expectedStartDate))
+		suite.True((*updatedForm.ExpectedEndDate).Equal(expectedEndDate))
 
-		s.EqualValues(updatedCollabGroups[0], updatedForm.CollabGroups[0])
-		s.EqualValues(updatedCollabGroups[1], updatedForm.CollabGroups[1])
-		s.EqualValues(updatedCollabGroups[2], updatedForm.CollabGroups[2])
+		suite.EqualValues(updatedCollabGroups[0], updatedForm.CollabGroups[0])
+		suite.EqualValues(updatedCollabGroups[1], updatedForm.CollabGroups[1])
+		suite.EqualValues(updatedCollabGroups[2], updatedForm.CollabGroups[2])
 
-		s.EqualValues(formChanges["collabDateSecurity"], *updatedForm.CollabDateSecurity)
-		s.EqualValues(formChanges["collabDateEnterpriseArchitecture"], *updatedForm.CollabDateEnterpriseArchitecture)
-		s.EqualValues(formChanges["collabDateCloud"], *updatedForm.CollabDateCloud)
-		s.EqualValues(formChanges["collabDatePrivacyAdvisor"], *updatedForm.CollabDatePrivacyAdvisor)
-		s.EqualValues(formChanges["collabDateGovernanceReviewBoard"], *updatedForm.CollabDateGovernanceReviewBoard)
-		s.EqualValues(formChanges["collabDateOther"], *updatedForm.CollabDateOther)
+		suite.EqualValues(formChanges["collabDateSecurity"], *updatedForm.CollabDateSecurity)
+		suite.EqualValues(formChanges["collabDateEnterpriseArchitecture"], *updatedForm.CollabDateEnterpriseArchitecture)
+		suite.EqualValues(formChanges["collabDateCloud"], *updatedForm.CollabDateCloud)
+		suite.EqualValues(formChanges["collabDatePrivacyAdvisor"], *updatedForm.CollabDatePrivacyAdvisor)
+		suite.EqualValues(formChanges["collabDateGovernanceReviewBoard"], *updatedForm.CollabDateGovernanceReviewBoard)
+		suite.EqualValues(formChanges["collabDateOther"], *updatedForm.CollabDateOther)
 
-		s.EqualValues(formChanges["collabGroupOther"], *updatedForm.CollabGroupOther)
-		s.EqualValues(3, len(updatedForm.CollabGroups))
+		suite.EqualValues(formChanges["collabGroupOther"], *updatedForm.CollabGroupOther)
+		suite.EqualValues(3, len(updatedForm.CollabGroups))
 
-		s.EqualValues(subjectAreaOptions[0], updatedForm.SubjectAreaOptions[0])
-		s.EqualValues(subjectAreaOptions[1], updatedForm.SubjectAreaOptions[1])
-		s.EqualValues(formChanges["subjectAreaOptionOther"], *updatedForm.SubjectAreaOptionOther)
+		suite.EqualValues(subjectAreaOptions[0], updatedForm.SubjectAreaOptions[0])
+		suite.EqualValues(subjectAreaOptions[1], updatedForm.SubjectAreaOptions[1])
+		suite.EqualValues(formChanges["subjectAreaOptionOther"], *updatedForm.SubjectAreaOptionOther)
 
 		// confirm that the status is correctly marked "in progress"
-		s.EqualValues(updatedForm.Status, models.TRBFormStatusInProgress)
+		suite.EqualValues(updatedForm.Status, models.TRBFormStatusInProgress)
 
 		// confirm we don't yet have a submission date
-		s.Nil(updatedForm.SubmittedAt)
+		suite.Nil(updatedForm.SubmittedAt)
 
 		submitChanges := map[string]interface{}{
 			"trbRequestId": trbRequest.ID,
 			"isSubmitted":  true,
 		}
-		submittedForm, err := UpdateTRBRequestForm(ctx, s.testConfigs.Store, &emailClient, stubFetchUserInfo, submitChanges)
-		s.NoError(err)
-		s.EqualValues(submittedForm.Status, models.TRBFormStatusCompleted)
-		s.NotNil(submittedForm.SubmittedAt) // we submitted, so this should be populated
+		submittedForm, err := UpdateTRBRequestForm(ctx, suite.testConfigs.Store, &emailClient, stubFetchUserInfo, submitChanges)
+		suite.NoError(err)
+		suite.EqualValues(submittedForm.Status, models.TRBFormStatusCompleted)
+		suite.NotNil(submittedForm.SubmittedAt) // we submitted, so this should be populated
 	})
 }

@@ -11,8 +11,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s *ResolverSuite) TestSystemIntakeContractNumbers() {
-	ctx := s.testConfigs.Context
+func (suite *ResolverSuite) TestSystemIntakeContractNumbers() {
+	ctx := suite.testConfigs.Context
 
 	const (
 		contract1 = "1"
@@ -23,7 +23,7 @@ func (s *ResolverSuite) TestSystemIntakeContractNumbers() {
 	var createdIDs []uuid.UUID
 
 	// create system intake
-	s.Run("create system intake for test", func() {
+	suite.Run("create system intake for test", func() {
 		for i := 0; i < 2; i++ {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
@@ -31,8 +31,8 @@ func (s *ResolverSuite) TestSystemIntakeContractNumbers() {
 				Requester:   fmt.Sprintf("system intake contract number data loader %d", i),
 			}
 
-			created, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake)
-			s.NoError(err)
+			created, err := suite.testConfigs.Store.CreateSystemIntake(ctx, &intake)
+			suite.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
 		}
 
@@ -44,14 +44,14 @@ func (s *ResolverSuite) TestSystemIntakeContractNumbers() {
 			contract3,
 		}
 
-		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return s.testConfigs.Store.SetSystemIntakeContractNumbers(ctx, tx, createdIDs[0], contractNumbers)
+		err := sqlutils.WithTransaction(ctx, suite.testConfigs.Store, func(tx *sqlx.Tx) error {
+			return suite.testConfigs.Store.SetSystemIntakeContractNumbers(ctx, tx, createdIDs[0], contractNumbers)
 		})
-		s.NoError(err)
+		suite.NoError(err)
 
 		data, err := SystemIntakeContractNumbers(ctx, createdIDs[0])
-		s.NoError(err)
-		s.Len(data, 3)
+		suite.NoError(err)
+		suite.Len(data, 3)
 
 		var (
 			found1 bool
@@ -60,7 +60,7 @@ func (s *ResolverSuite) TestSystemIntakeContractNumbers() {
 		)
 
 		for _, result := range data {
-			s.Equal(result.SystemIntakeID, createdIDs[0])
+			suite.Equal(result.SystemIntakeID, createdIDs[0])
 
 			if result.ContractNumber == contract1 {
 				found1 = true
@@ -75,13 +75,13 @@ func (s *ResolverSuite) TestSystemIntakeContractNumbers() {
 			}
 		}
 
-		s.True(found1)
-		s.True(found2)
-		s.True(found3)
+		suite.True(found1)
+		suite.True(found2)
+		suite.True(found3)
 
 		// attempt to get contract numbers for a system intake without linked contracts
 		data, err = SystemIntakeContractNumbers(ctx, createdIDs[1])
-		s.NoError(err)
-		s.Empty(data)
+		suite.NoError(err)
+		suite.Empty(data)
 	})
 }
