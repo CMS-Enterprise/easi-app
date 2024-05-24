@@ -13,9 +13,10 @@ type dataReader struct {
 }
 
 type DataLoaders struct {
-	CedarSystemBookmark         *dataloadgen.Loader[models.BookmarkRequest, bool]
-	SystemIntakeContractNumbers *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
+	CedarSystemBookmark *dataloadgen.Loader[models.BookmarkRequest, bool]
 
+	SystemIntakeContractNumbers *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
+	SystemIntakeSystems         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
 	// FetchUserInfos      *dataloadgen.Loader[string, *models.UserInfo]
 }
 
