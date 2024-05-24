@@ -11,6 +11,5 @@ import (
 
 // SystemIntakeContractNumbers utilizies a dataloader to retrieve contract numbers linked to a given system intake ID
 func SystemIntakeContractNumbers(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {
-	// return dataloaders.GetSystemIntakeContractNumbersBySystemIntakeID(ctx, systemIntakeID)
 	return dataloaders2.GetSystemIntakeContractNumbersBySystemIntakeID(ctx, systemIntakeID)
 }

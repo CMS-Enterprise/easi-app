@@ -12,7 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// SystemIntakeSystems utilizies dataloaders to retrieve systems linked to a given system intake ID
+// SystemIntakeSystems utilizes dataloaders to retrieve systems linked to a given system intake ID
 func SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.CedarSystem, error) {
 	siSystems, err := dataloaders2.GetSystemIntakeSystemsBySystemIntakeID(ctx, systemIntakeID)
 	if err != nil {
