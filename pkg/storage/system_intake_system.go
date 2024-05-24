@@ -91,6 +91,55 @@ func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER(ctx context.Context, p
 	return store, nil
 }
 
+func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER2(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeSystem, []error) {
+	rows, err := s.db.QueryContext(ctx, sqlqueries.SystemIntakeSystemForm.SelectBySystemIntakeIDLOADER2, pq.Array(systemIntakeIDs))
+	if err != nil {
+		return nil, []error{err}
+	}
+	defer rows.Close()
+
+	var (
+		systemIntakeSystems []*models.SystemIntakeSystem
+		errs                []error
+	)
+
+	for rows.Next() {
+		var systemIntakeSystem models.SystemIntakeSystem
+		if err := rows.Scan(
+			&systemIntakeSystem.ID,
+			&systemIntakeSystem.SystemIntakeID,
+			&systemIntakeSystem.SystemID,
+			&systemIntakeSystem.CreatedBy,
+			&systemIntakeSystem.CreatedAt,
+			&systemIntakeSystem.ModifiedBy,
+			&systemIntakeSystem.ModifiedAt,
+		); err != nil {
+			errs = append(errs, err)
+			continue
+		}
+
+		systemIntakeSystems = append(systemIntakeSystems, &systemIntakeSystem)
+	}
+
+	systemMap := map[uuid.UUID][]*models.SystemIntakeSystem{}
+
+	// populate map
+	for _, id := range systemIntakeIDs {
+		systemMap[id] = []*models.SystemIntakeSystem{}
+	}
+
+	for _, systemIntakeSystem := range systemIntakeSystems {
+		systemMap[systemIntakeSystem.SystemIntakeID] = append(systemMap[systemIntakeSystem.SystemIntakeID], systemIntakeSystem)
+	}
+
+	var out [][]*models.SystemIntakeSystem
+	for _, id := range systemIntakeIDs {
+		out = append(out, systemMap[id])
+	}
+
+	return out, errs
+}
+
 func (s *Store) SystemIntakesByCedarSystemID(ctx context.Context, cedarSystemID string) ([]*models.SystemIntake, error) {
 	var systemIntakes []*models.SystemIntake
 	return systemIntakes, s.db.Select(&systemIntakes, sqlqueries.SystemIntakeSystemForm.SelectByCedarSystemID, cedarSystemID)
