@@ -63,6 +63,29 @@ const sideNavItems = (
             }
           ]
         },
+        'system-data': {
+          component: <SystemData system={system} />,
+          route: `/systems/${system.id}/system-data`,
+          componentId: 'system-data',
+          hashLinks: [
+            {
+              name: 'System data',
+              hash: '#system'
+            },
+            {
+              name: 'API Information',
+              hash: '#api'
+            },
+            {
+              name: 'Data exchanges',
+              hash: '#exchanges'
+            }
+            /* {
+              name: 'Records management',
+              hash: '#records'
+            } */
+          ]
+        },
         'tools-and-software': {
           component: <ToolsAndSoftware system={system} />,
           route: `/systems/${system.id}/tools-and-software`,
@@ -156,11 +179,6 @@ const sideNavItems = (
           component: <SubSystems system={system} />,
           route: `/systems/${system.id}/sub-systems`,
           componentId: 'system-sub-systems'
-        },
-        'system-data': {
-          component: <SystemData system={system} />,
-          route: `/systems/${system.id}/system-data`,
-          componentId: 'system-data'
         },
         documents: {
           component: <SystemHome system={system} />,

@@ -23,7 +23,7 @@ const systemProfile = {
     ato: 'ATO',
     'lifecycle-id': 'Lifecyle ID',
     'sub-systems': 'Sub-systems',
-    'system-data': 'System Data',
+    'system-data': 'Data',
     documents: 'Documents'
   },
   tabs: {
@@ -43,16 +43,17 @@ const systemProfile = {
       more: 'Read more',
       less: 'Read less'
     },
+    noDescription: 'No system description available',
     summary: {
       back: 'Back to All systems',
-      expand: 'Expand system summary',
+      expand: 'Show system summary',
       hide: 'Hide system summary',
       label: 'Open system external link',
       view: 'View',
-      subheader1: 'CMS Component',
+      subheader1: 'CMS component owner',
       subheader2: 'Business Owner',
       subheader2_plural: 'Business Owners',
-      subheader3: 'Go Live Date',
+      subheader3: 'Go live date',
       subheader4: 'Most recent major change release'
     },
     ato: {
@@ -247,19 +248,52 @@ const systemProfile = {
       viewLess: 'View fewer software products'
     },
     systemData: {
-      header: 'System Data',
-      recordCategories: 'Records management categories',
-      beneficiariesAddress: 'Beneficiary addresses',
+      header: 'System data',
+      enterpriseStatus: 'Enterprise Data Lake status',
+      metadataGlossary: 'Metadata glossary',
+      dataCategory: 'Data category',
+      beneficiaryInfo:
+        'Beneficiary information (address, email, mobile number)',
       pII: 'Personally Identifiable Information (PII)',
       pHI: 'Protected Health Information (PHI)',
-      apiInfo: 'API Information',
+      sensitiveInformation: 'Sensitive Information',
+      dataUsedAnalyze: 'Data used to analyze beneficiary health disparities',
+      bankingData: 'Banking data',
+      collectedUsedStored: 'Collected, used, or stored?',
+      recordCategories: 'Records management categories',
+      apiInfo: 'API information',
       apiStatus: 'API status',
-      fHIRUsage: 'FHIR Useage',
-      apiGateway: 'API Gateway',
+      fHIRUsage: 'FHIR Usage',
+      apiDescriptionLocation: 'API description location',
       access: 'Access',
+      apiPortal: 'API Portal',
+      apiGateway: 'API Gateway',
+      dataExchanges: 'Data exchanges',
+      noExchangeTitle: 'No exchange title listed',
+      noDescriptionAvailable: 'No description available',
+      statusUnknown: 'Status unknown',
+      readMore: 'Read more',
+      readLess: 'Read less',
+      sharedViaAPI: 'Shared via API',
+      exchangeDirection: {
+        receives: 'Receives data',
+        sends: 'Sends data',
+        unknown: 'Exchange direction unknown'
+      },
+      frequency: 'Frequency',
+      numberOfRecords: 'Number of records',
+      dataPartner: 'Data partner',
+      informationExchangeAgreement: 'Information exchange agreement',
+      showExchanges: {
+        more: 'Show more data exchanges',
+        less: 'Show fewer data exchanges'
+      },
+      noExchangesAlert: 'This system does not have any data exchanges listed.',
+      recordsManagement: 'Records management',
+      recordsSchedule: 'Records management schedule',
+      recordsDisposal: 'Records disposal',
+      persistentRecords: 'Persistent records',
       dataCategories: 'Data content categories',
-      dataExchanges: 'Data Exchanges',
-      dataPartner: 'Data Partner',
       qualityAssurance: 'Quality Assurance',
       viewGateway: 'View gateway information',
       viewAPIInfo: 'View API information',
@@ -366,7 +400,9 @@ const systemProfile = {
     header: 'Bookmarked systems',
     subtitle: 'Bookmark systems that you want to access more quickly.',
     subHeader1: 'CMS Component',
-    subHeader2: 'ATO Status'
+    subHeader2: 'ATO Status',
+    bookmark: 'Bookmark',
+    bookmarked: 'Bookmarked'
   },
   noBookmark: {
     header: 'You have not bookmarked any systems yet.',
