@@ -116,23 +116,7 @@ func (s *Store) TRBRequestSystemsByTRBRequestIDLOADER2(ctx context.Context, trbR
 		trbRequestSystems = append(trbRequestSystems, &trbRequestSystem)
 	}
 
-	systemMap := map[uuid.UUID][]*models.TRBRequestSystem{}
-
-	// populate map
-	for _, id := range trbRequestIDs {
-		systemMap[id] = []*models.TRBRequestSystem{}
-	}
-
-	for _, system := range trbRequestSystems {
-		systemMap[system.TRBRequestID] = append(systemMap[system.TRBRequestID], system)
-	}
-
-	var out [][]*models.TRBRequestSystem
-	for _, id := range trbRequestIDs {
-		out = append(out, systemMap[id])
-	}
-
-	return out, nil
+	return oneToMany[*models.TRBRequestSystem](trbRequestIDs, trbRequestSystems), nil
 }
 
 // TRBRequestsByCedarSystemID gets TRB Requests related to given Cedar System ID

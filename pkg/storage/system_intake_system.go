@@ -116,23 +116,7 @@ func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER2(ctx context.Context, 
 		systemIntakeSystems = append(systemIntakeSystems, &systemIntakeSystem)
 	}
 
-	systemMap := map[uuid.UUID][]*models.SystemIntakeSystem{}
-
-	// populate map
-	for _, id := range systemIntakeIDs {
-		systemMap[id] = []*models.SystemIntakeSystem{}
-	}
-
-	for _, systemIntakeSystem := range systemIntakeSystems {
-		systemMap[systemIntakeSystem.SystemIntakeID] = append(systemMap[systemIntakeSystem.SystemIntakeID], systemIntakeSystem)
-	}
-
-	var out [][]*models.SystemIntakeSystem
-	for _, id := range systemIntakeIDs {
-		out = append(out, systemMap[id])
-	}
-
-	return out, nil
+	return oneToMany[*models.SystemIntakeSystem](systemIntakeIDs, systemIntakeSystems), nil
 }
 
 func (s *Store) SystemIntakesByCedarSystemID(ctx context.Context, cedarSystemID string) ([]*models.SystemIntake, error) {

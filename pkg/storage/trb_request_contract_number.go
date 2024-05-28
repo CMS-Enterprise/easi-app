@@ -116,21 +116,5 @@ func (s *Store) TRBRequestContractNumbersByTRBRequestIDLOADER2(ctx context.Conte
 		trbRequestContractNumbers = append(trbRequestContractNumbers, &trbRequestContractNumber)
 	}
 
-	//contractNumberMap := map[uuid.UUID][]*models.TRBRequestContractNumber{}
-	//
-	//// populate map
-	//for _, id := range trbRequestIDs {
-	//	contractNumberMap[id] = []*models.TRBRequestContractNumber{}
-	//}
-	//
-	//for _, contractNumber := range trbRequestContractNumbers {
-	//	contractNumberMap[contractNumber.TRBRequestID] = append(contractNumberMap[contractNumber.TRBRequestID], contractNumber)
-	//}
-	//
-	//var out [][]*models.TRBRequestContractNumber
-	//for _, id := range trbRequestIDs {
-	//	out = append(out, contractNumberMap[id])
-	//}
-
 	return oneToMany[*models.TRBRequestContractNumber](trbRequestIDs, trbRequestContractNumbers), nil
 }
