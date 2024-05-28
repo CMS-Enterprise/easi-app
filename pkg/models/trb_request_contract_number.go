@@ -2,7 +2,7 @@ package models
 
 import "github.com/google/uuid"
 
-// TRBRequestContractNumber is the insertion type for linking a TRB request to contract nunber(s)
+// TRBRequestContractNumber is the insertion type for linking a TRB request to contract number(s)
 type TRBRequestContractNumber struct {
 	BaseStructUser
 	TRBRequestID   uuid.UUID `db:"trb_request_id"`

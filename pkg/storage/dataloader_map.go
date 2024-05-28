@@ -6,7 +6,9 @@ type GetMappingID interface {
 	GetMappingID() uuid.UUID
 }
 
-func oneIDtoMany[valT GetMappingID](keys []uuid.UUID, vals []valT) [][]valT {
+// oneToMany takes a list of keys and a list of values which map one-to-many (key-to-value)
+// ex: vals could be a list of contract numbers where more than one value has the same mapped ID
+func oneToMany[valT GetMappingID](keys []uuid.UUID, vals []valT) [][]valT {
 	store := map[uuid.UUID][]valT{}
 
 	// populate map
@@ -15,7 +17,8 @@ func oneIDtoMany[valT GetMappingID](keys []uuid.UUID, vals []valT) [][]valT {
 	}
 
 	for _, val := range vals {
-		store[val.GetMappingID()] = append(store[val.GetMappingID()], val)
+		id := val.GetMappingID()
+		store[id] = append(store[id], val)
 	}
 
 	var out [][]valT

@@ -132,5 +132,5 @@ func (s *Store) TRBRequestContractNumbersByTRBRequestIDLOADER2(ctx context.Conte
 	//	out = append(out, contractNumberMap[id])
 	//}
 
-	return oneIDtoMany[*models.TRBRequestContractNumber](trbRequestIDs, trbRequestContractNumbers), nil
+	return oneToMany[*models.TRBRequestContractNumber](trbRequestIDs, trbRequestContractNumbers), nil
 }
