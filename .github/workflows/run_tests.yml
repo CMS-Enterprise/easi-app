@@ -201,6 +201,9 @@ jobs:
           chmod +x swagger
       - name: Pre-commit checks
         uses: pre-commit/action@v3.0.1
+        env:
+          CEDAR_CACHE_EXPIRE_TIME: "7d"
+          CEDAR_API_URL: "google.com"
         with:
           extra_args: --all-files
       - name: Announce failure
