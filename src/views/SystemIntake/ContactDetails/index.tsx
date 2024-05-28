@@ -170,17 +170,32 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     setError,
     watch,
     getValues,
-    formState: { defaultValues, dirtyFields, isDirty, errors, isSubmitting }
+    formState: {
+      defaultValues,
+      dirtyFields,
+      isDirty,
+      errors,
+      isSubmitting,
+      isSubmitted
+    }
   } = form;
 
-  /** RHF's `setValue` function with `shouldDirty` option set to true */
+  /**
+   * RHF's `setValue` function with default options:
+   *
+   * `shouldDirty`, `shouldTouch` = true
+   *
+   * `shouldValidate` = true when form has already been submitted
+   * */
   const setValue: UseFormSetValue<ContactDetailsForm> = useCallback(
     (name, value, options) =>
       form.setValue<FieldPath<ContactDetailsForm>>(name, value, {
-        ...options,
-        shouldDirty: options?.shouldDirty || true
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: isSubmitted,
+        ...options
       }),
-    [form]
+    [form.setValue, isSubmitted] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   /** Creates or updates contact in database and sets ID field for new contacts */
@@ -261,16 +276,29 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     });
   };
 
+  const requester = watch('requester');
+  const businessOwner = watch('businessOwner');
+  const productManager = watch('productManager');
+
   /** Set contact fields from requester values */
-  const setFieldsFromRequester = (role: 'businessOwner' | 'productManager') => {
-    const requester = getValues('requester');
+  const setFieldsFromRequester = useCallback(
+    (
+      role: 'businessOwner' | 'productManager',
+      /** If false, only component will be set */
+      setNameFields: boolean = true
+    ) => {
+      if (watch(`${role}.sameAsRequester`)) {
+        setValue(`${role}.component`, requester.component);
 
-    setValue(`${role}.euaUserId`, requester.euaUserId);
-    setValue(`${role}.commonName`, requester.commonName);
-    setValue(`${role}.email`, requester.email);
-
-    setValue(`${role}.component`, requester.component);
-  };
+        if (setNameFields) {
+          setValue(`${role}.euaUserId`, requester.euaUserId);
+          setValue(`${role}.commonName`, requester.commonName);
+          setValue(`${role}.email`, requester.email);
+        }
+      }
+    },
+    [requester, setValue, watch]
+  );
 
   const hasErrors = Object.keys(errors).length > 0;
 
@@ -285,28 +313,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     }
   }, [errors, hasErrors, isSubmitting]);
 
-  const businessOwner = watch('businessOwner');
-  const productManager = watch('productManager');
-  const requester = watch('requester');
-
-  /** Sync component fields when "same as requester" checkbox is checked */
+  // Sync contact fields when "same as requester" checkbox is checked
   useEffect(() => {
-    if (
-      businessOwner &&
-      businessOwner.sameAsRequester &&
-      businessOwner.component !== requester.component
-    ) {
-      setValue('businessOwner.component', requester.component);
-    }
-
-    if (
-      productManager &&
-      productManager.sameAsRequester &&
-      productManager.component !== requester.component
-    ) {
-      setValue('businessOwner.component', requester.component);
-    }
-  }, [requester, businessOwner, productManager, setValue]);
+    setFieldsFromRequester('businessOwner');
+    setFieldsFromRequester('productManager');
+  }, [
+    businessOwner?.sameAsRequester,
+    productManager?.sameAsRequester,
+    requester?.component,
+    setFieldsFromRequester
+  ]);
 
   // Wait until default values have been updated
   if (!defaultValues) return <PageLoading />;
@@ -426,10 +442,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 id="IntakeForm-busOwnerSameAsRequester"
                 label={t('contactDetails.businessOwner.sameAsRequester')}
                 checked={value}
-                onChange={e => {
-                  field.onChange(e);
-                  setFieldsFromRequester('businessOwner');
-                }}
               />
             );
           }}
@@ -497,7 +509,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Dropdown
                 {...field}
                 id="IntakeForm-BusinessOwnerComponent"
-                value={watch('businessOwner.component')}
                 disabled={watch('businessOwner.sameAsRequester')}
               >
                 <option value="" disabled>
@@ -541,10 +552,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               id={field.name}
               label={t('contactDetails.productManager.sameAsRequester')}
               checked={value}
-              onChange={e => {
-                field.onChange(e);
-                setFieldsFromRequester('productManager');
-              }}
             />
           )}
         />
