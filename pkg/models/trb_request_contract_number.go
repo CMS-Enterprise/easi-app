@@ -15,3 +15,7 @@ func NewTRBRequestContractNumber(createdBy uuid.UUID) TRBRequestContractNumber {
 		BaseStructUser: NewBaseStructUser(createdBy),
 	}
 }
+
+func (t *TRBRequestContractNumber) GetMappingID() uuid.UUID {
+	return t.TRBRequestID
+}
