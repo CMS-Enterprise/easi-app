@@ -205,7 +205,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 		})
 		s.NoError(err)
 
-		results, err := s.store.TRBRequestsByCedarSystemID(ctx, system1)
+		results, err := s.store.TRBRequestsByCedarSystemID(ctx, system1, models.TRBRequestStateOpen)
 		s.NoError(err)
 		s.Len(results, 2)
 

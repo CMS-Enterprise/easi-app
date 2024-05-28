@@ -203,7 +203,7 @@ func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
 		})
 		s.NoError(err)
 
-		results, err := s.store.SystemIntakesByCedarSystemID(ctx, system1)
+		results, err := s.store.SystemIntakesByCedarSystemID(ctx, system1, models.SystemIntakeStateOPEN)
 		s.NoError(err)
 		s.Len(results, 2)
 
