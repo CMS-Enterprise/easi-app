@@ -817,12 +817,12 @@ type ComplexityRoot struct {
 	SystemIntakeGRBReviewer struct {
 		CreatedAt      func(childComplexity int) int
 		CreatedBy      func(childComplexity int) int
-		EuaUserID      func(childComplexity int) int
 		GrbRole        func(childComplexity int) int
 		ID             func(childComplexity int) int
 		ModifiedAt     func(childComplexity int) int
 		ModifiedBy     func(childComplexity int) int
 		SystemIntakeID func(childComplexity int) int
+		UserID         func(childComplexity int) int
 		VotingRole     func(childComplexity int) int
 	}
 
@@ -1308,13 +1308,8 @@ type SystemIntakeDocumentResolver interface {
 	URL(ctx context.Context, obj *models.SystemIntakeDocument) (string, error)
 }
 type SystemIntakeGRBReviewerResolver interface {
-	EuaUserID(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (string, error)
-
 	VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (model.SystemIntakeGRBReviewerVotingRole, error)
 	GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (model.SystemIntakeGRBReviewerRole, error)
-	CreatedBy(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (string, error)
-
-	ModifiedBy(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (string, error)
 }
 type SystemIntakeNoteResolver interface {
 	Author(ctx context.Context, obj *models.SystemIntakeNote) (*model.SystemIntakeNoteAuthor, error)
@@ -5880,13 +5875,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeGRBReviewer.CreatedBy(childComplexity), true
 
-	case "SystemIntakeGRBReviewer.euaUserID":
-		if e.complexity.SystemIntakeGRBReviewer.EuaUserID == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeGRBReviewer.EuaUserID(childComplexity), true
-
 	case "SystemIntakeGRBReviewer.grbRole":
 		if e.complexity.SystemIntakeGRBReviewer.GrbRole == nil {
 			break
@@ -5921,6 +5909,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntakeGRBReviewer.SystemIntakeID(childComplexity), true
+
+	case "SystemIntakeGRBReviewer.userID":
+		if e.complexity.SystemIntakeGRBReviewer.UserID == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeGRBReviewer.UserID(childComplexity), true
 
 	case "SystemIntakeGRBReviewer.votingRole":
 		if e.complexity.SystemIntakeGRBReviewer.VotingRole == nil {
@@ -7668,7 +7663,7 @@ type CedarSystem {
   versionId: String
   isBookmarked: Boolean!
   linkedTrbRequests: [TRBRequest!]!
-  linkedSystemIntakes: [SystemIntake!]! 
+  linkedSystemIntakes: [SystemIntake!]!
   uuid: String
 }
 
@@ -8615,14 +8610,14 @@ GRB Reviewers for a system intake request
 """
 type SystemIntakeGRBReviewer {
   id: UUID!
-  euaUserID: String!
+  userID: UUID!
   systemIntakeID: UUID!
   votingRole: SystemIntakeGRBReviewerVotingRole!
   grbRole: SystemIntakeGRBReviewerRole!
-  createdBy: String!
+  createdBy: UUID!
   createdAt: Time!
-  modifiedBy: String!
-  modifiedAt: Time!
+  modifiedBy: UUID
+  modifiedAt: Time
 }
 
 enum SystemIntakeGRBReviewerVotingRole {
@@ -37290,8 +37285,8 @@ func (ec *executionContext) fieldContext_SystemIntake_grbReviewers(_ context.Con
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_SystemIntakeGRBReviewer_id(ctx, field)
-			case "euaUserID":
-				return ec.fieldContext_SystemIntakeGRBReviewer_euaUserID(ctx, field)
+			case "userID":
+				return ec.fieldContext_SystemIntakeGRBReviewer_userID(ctx, field)
 			case "systemIntakeID":
 				return ec.fieldContext_SystemIntakeGRBReviewer_systemIntakeID(ctx, field)
 			case "votingRole":
@@ -42062,8 +42057,8 @@ func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_id(_ context.Co
 	return fc, nil
 }
 
-func (ec *executionContext) _SystemIntakeGRBReviewer_euaUserID(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeGRBReviewer) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeGRBReviewer_euaUserID(ctx, field)
+func (ec *executionContext) _SystemIntakeGRBReviewer_userID(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeGRBReviewer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SystemIntakeGRBReviewer_userID(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -42076,7 +42071,7 @@ func (ec *executionContext) _SystemIntakeGRBReviewer_euaUserID(ctx context.Conte
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeGRBReviewer().EuaUserID(rctx, obj)
+		return obj.UserID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -42088,19 +42083,19 @@ func (ec *executionContext) _SystemIntakeGRBReviewer_euaUserID(ctx context.Conte
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(uuid.UUID)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_euaUserID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_userID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeGRBReviewer",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -42252,7 +42247,7 @@ func (ec *executionContext) _SystemIntakeGRBReviewer_createdBy(ctx context.Conte
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeGRBReviewer().CreatedBy(rctx, obj)
+		return obj.CreatedBy, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -42264,19 +42259,19 @@ func (ec *executionContext) _SystemIntakeGRBReviewer_createdBy(ctx context.Conte
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(uuid.UUID)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_createdBy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeGRBReviewer",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -42340,31 +42335,28 @@ func (ec *executionContext) _SystemIntakeGRBReviewer_modifiedBy(ctx context.Cont
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntakeGRBReviewer().ModifiedBy(rctx, obj)
+		return obj.ModifiedBy, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*uuid.UUID)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_modifiedBy(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeGRBReviewer",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type UUID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -42391,14 +42383,11 @@ func (ec *executionContext) _SystemIntakeGRBReviewer_modifiedAt(ctx context.Cont
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*time.Time)
 	fc.Result = res
-	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_modifiedAt(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -63032,42 +63021,11 @@ func (ec *executionContext) _SystemIntakeGRBReviewer(ctx context.Context, sel as
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
-		case "euaUserID":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeGRBReviewer_euaUserID(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
+		case "userID":
+			out.Values[i] = ec._SystemIntakeGRBReviewer_userID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
 			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "systemIntakeID":
 			out.Values[i] = ec._SystemIntakeGRBReviewer_systemIntakeID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -63146,87 +63104,19 @@ func (ec *executionContext) _SystemIntakeGRBReviewer(ctx context.Context, sel as
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "createdBy":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeGRBReviewer_createdBy(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._SystemIntakeGRBReviewer_createdBy(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
 			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "createdAt":
 			out.Values[i] = ec._SystemIntakeGRBReviewer_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "modifiedBy":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntakeGRBReviewer_modifiedBy(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._SystemIntakeGRBReviewer_modifiedBy(ctx, field, obj)
 		case "modifiedAt":
 			out.Values[i] = ec._SystemIntakeGRBReviewer_modifiedAt(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

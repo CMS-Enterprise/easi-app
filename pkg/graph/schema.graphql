@@ -181,7 +181,7 @@ type CedarSystem {
   versionId: String
   isBookmarked: Boolean!
   linkedTrbRequests: [TRBRequest!]!
-  linkedSystemIntakes: [SystemIntake!]! 
+  linkedSystemIntakes: [SystemIntake!]!
   uuid: String
 }
 
@@ -1128,14 +1128,14 @@ GRB Reviewers for a system intake request
 """
 type SystemIntakeGRBReviewer {
   id: UUID!
-  euaUserID: String!
+  userID: UUID!
   systemIntakeID: UUID!
   votingRole: SystemIntakeGRBReviewerVotingRole!
   grbRole: SystemIntakeGRBReviewerRole!
-  createdBy: String!
+  createdBy: UUID!
   createdAt: Time!
-  modifiedBy: String!
-  modifiedAt: Time!
+  modifiedBy: UUID
+  modifiedAt: Time
 }
 
 enum SystemIntakeGRBReviewerVotingRole {

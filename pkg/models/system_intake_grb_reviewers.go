@@ -32,7 +32,7 @@ const (
 // SystemIntakeGRBReviewer describes
 type SystemIntakeGRBReviewer struct {
 	BaseStructUser
-	UserID         uuid.UUID               `json:"userId" db:"user_id"`
+	UserID         uuid.UUID               `json:"userID" db:"user_id"`
 	SystemIntakeID uuid.UUID               `json:"systemIntakeId" db:"system_intake_id"`
 	VotingRole     SIGRBReviewerVotingRole `json:"votingRole" db:"voting_role"`
 	GRBRole        SIGRBReviewerRole       `json:"grbRole" db:"grb_role"`
