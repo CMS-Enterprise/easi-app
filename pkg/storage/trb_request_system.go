@@ -120,7 +120,10 @@ func (s *Store) TRBRequestSystemsByTRBRequestIDLOADER2(ctx context.Context, trbR
 }
 
 // TRBRequestsByCedarSystemID gets TRB Requests related to given Cedar System ID
-func (s *Store) TRBRequestsByCedarSystemID(ctx context.Context, cedarSystemID string) ([]*models.TRBRequest, error) {
+func (s *Store) TRBRequestsByCedarSystemID(ctx context.Context, cedarSystemID string, state models.TRBRequestState) ([]*models.TRBRequest, error) {
 	var trbRequests []*models.TRBRequest
-	return trbRequests, s.db.Select(&trbRequests, sqlqueries.TRBRequestSystemForm.SelectByCedarSystemID, cedarSystemID)
+	return trbRequests, selectNamed(ctx, s, &trbRequests, sqlqueries.TRBRequestSystemForm.SelectByCedarSystemID, args{
+		"system_id": cedarSystemID,
+		"state":     state,
+	})
 }

@@ -119,7 +119,10 @@ func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER2(ctx context.Context, 
 	return oneToMany[*models.SystemIntakeSystem](systemIntakeIDs, systemIntakeSystems), nil
 }
 
-func (s *Store) SystemIntakesByCedarSystemID(ctx context.Context, cedarSystemID string) ([]*models.SystemIntake, error) {
+func (s *Store) SystemIntakesByCedarSystemID(ctx context.Context, cedarSystemID string, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
 	var systemIntakes []*models.SystemIntake
-	return systemIntakes, s.db.Select(&systemIntakes, sqlqueries.SystemIntakeSystemForm.SelectByCedarSystemID, cedarSystemID)
+	return systemIntakes, selectNamed(ctx, s, &systemIntakes, sqlqueries.SystemIntakeSystemForm.SelectByCedarSystemID, args{
+		"system_id": cedarSystemID,
+		"state":     state,
+	})
 }

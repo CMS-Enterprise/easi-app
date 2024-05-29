@@ -24,7 +24,7 @@ func CreateSystemIntake(
 		EUAUserID:   null.StringFrom(appcontext.Principal(ctx).ID()),
 		RequestType: models.SystemIntakeRequestType(input.RequestType),
 		Requester:   input.Requester.Name,
-		State:       models.SystemIntakeStateOPEN,
+		State:       models.SystemIntakeStateOpen,
 		Step:        models.SystemIntakeStepINITIALFORM,
 	}
 	createdIntake, err := store.CreateSystemIntake(ctx, &systemIntake)
@@ -317,9 +317,9 @@ func SubmitIntake(
 func SystemIntakes(ctx context.Context, store *storage.Store, openRequests bool) ([]*models.SystemIntake, error) {
 	var stateFilter models.SystemIntakeState
 	if openRequests {
-		stateFilter = models.SystemIntakeStateOPEN
+		stateFilter = models.SystemIntakeStateOpen
 	} else {
-		stateFilter = models.SystemIntakeStateCLOSED
+		stateFilter = models.SystemIntakeStateClosed
 	}
 
 	intakes, err := store.FetchSystemIntakesByStateForAdmins(ctx, stateFilter)
