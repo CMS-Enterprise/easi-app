@@ -100,6 +100,21 @@ func NewStore(
 	}, nil
 }
 
+// args is a shortcut for passing an args map to a named statement
+/* ex: instead of
+
+map[string]interface{}{
+  "system_id": 1,
+  "state": OPEN
+}
+
+you can do
+
+args{
+  "system_id": 1,
+  "state": OPEN
+}
+*/
 type args map[string]any
 
 // selectNamed is a shortcut for using `sqlx` Select (SelectContext) with named arguments to prevent writing out the prepare step each time
