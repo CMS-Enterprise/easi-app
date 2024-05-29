@@ -6,6 +6,7 @@ import classnames from 'classnames';
 
 import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQuery';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
+// import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import {
   CreateCedarSystemBookmark,
   CreateCedarSystemBookmarkVariables
@@ -29,12 +30,16 @@ export default function BookmarkToggleButton({
   const [create, { loading: createLoading }] = useMutation<
     CreateCedarSystemBookmark,
     CreateCedarSystemBookmarkVariables
-  >(CreateCedarSystemBookmarkQuery);
+  >(CreateCedarSystemBookmarkQuery, {
+    // refetchQueries: [GetCedarSystemsQuery]
+  });
 
   const [del, { loading: delLoading }] = useMutation<
     DeleteCedarSystemBookmark,
     DeleteCedarSystemBookmarkVariables
-  >(DeleteCedarSystemBookmarkQuery);
+  >(DeleteCedarSystemBookmarkQuery, {
+    // refetchQueries: [GetCedarSystemsQuery]
+  });
 
   const toggle = () => {
     if (createLoading || delLoading) return;
