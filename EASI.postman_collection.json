@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "e419bb52-6eb6-4e55-b8e1-13739f505412",
+		"_postman_id": "c3118885-03b2-4dc9-8127-33243d8593cd",
 		"name": "EASI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "32724285"
+		"_exporter_id": "11253221"
 	},
 	"item": [
 		{
@@ -1996,8 +1996,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2024,14 +2023,50 @@
 									"response": []
 								},
 								{
+									"name": "Get Systems (include inactive)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// const systems = JSON.parse(pm.response.text())\r",
+													"// console.log(systems.count)\r",
+													"// console.log(systems.SystemSummary.filter(sys => sys.state !== 'Active').map(({name, id, state}) => ({name, id, state})))"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{CedarApiUrl}}/system/summary",
+											"host": [
+												"{{CedarApiUrl}}"
+											],
+											"path": [
+												"system",
+												"summary"
+											]
+										}
+									},
+									"response": []
+								},
+								{
 									"name": "Get My Systems",
 									"request": {
 										"method": "GET",
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2068,8 +2103,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2097,8 +2131,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2126,8 +2159,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2155,8 +2187,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2184,8 +2215,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2213,8 +2243,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2246,8 +2275,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2279,8 +2307,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2308,8 +2335,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2337,8 +2363,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2361,8 +2386,7 @@
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/json",
-												"type": "text"
+												"value": "application/json"
 											}
 										],
 										"url": {
@@ -2384,7 +2408,7 @@
 								"apikey": [
 									{
 										"key": "value",
-										"value": "{{CedarApiKeyG}}",
+										"value": "{{CedarApiKey}}",
 										"type": "string"
 									},
 									{
