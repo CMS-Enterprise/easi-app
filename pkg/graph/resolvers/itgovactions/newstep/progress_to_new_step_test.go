@@ -338,7 +338,7 @@ func TestIsIntakeValid(t *testing.T) {
 	t.Run("Closed intakes are invalid to progress", func(t *testing.T) {
 		intake := &models.SystemIntake{
 			Step:  models.SystemIntakeStepINITIALFORM,
-			State: models.SystemIntakeStateCLOSED,
+			State: models.SystemIntakeStateClosed,
 		}
 		newStep := model.SystemIntakeStepToProgressToDraftBusinessCase
 
@@ -389,7 +389,7 @@ func TestIsIntakeValid(t *testing.T) {
 		intake := &models.SystemIntake{
 			Step:             models.SystemIntakeStepINITIALFORM,
 			RequestFormState: models.SIRFSSubmitted,
-			State:            models.SystemIntakeStateOPEN,
+			State:            models.SystemIntakeStateOpen,
 		}
 		newStep := model.SystemIntakeStepToProgressToDraftBusinessCase
 

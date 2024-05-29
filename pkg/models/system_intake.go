@@ -26,10 +26,10 @@ const (
 type SystemIntakeState string
 
 const (
-	// SystemIntakeStateOPEN captures enum value "OPEN"
-	SystemIntakeStateOPEN SystemIntakeState = "OPEN"
-	// SystemIntakeStateCLOSED captures enum value "CLOSED"
-	SystemIntakeStateCLOSED SystemIntakeState = "CLOSED"
+	// SystemIntakeStateOpen captures enum value "OPEN"
+	SystemIntakeStateOpen SystemIntakeState = "OPEN"
+	// SystemIntakeStateClosed captures enum value "CLOSED"
+	SystemIntakeStateClosed SystemIntakeState = "CLOSED"
 )
 
 // SystemIntakeStep represents the current step in the intake process

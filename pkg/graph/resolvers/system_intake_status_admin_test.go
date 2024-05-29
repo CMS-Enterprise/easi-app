@@ -28,7 +28,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSNotStarted,
-				State:            models.SystemIntakeStateOPEN,
+				State:            models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAInitialRequestFormInProgress,
 			expectError:    false,
@@ -38,7 +38,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSInProgress,
-				State:            models.SystemIntakeStateOPEN,
+				State:            models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAInitialRequestFormInProgress,
 			expectError:    false,
@@ -48,7 +48,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSEditsRequested,
-				State:            models.SystemIntakeStateOPEN,
+				State:            models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAInitialRequestFormInProgress,
 			expectError:    false,
@@ -58,7 +58,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSSubmitted,
-				State:            models.SystemIntakeStateOPEN,
+				State:            models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAInitialRequestFormSubmitted,
 			expectError:    false,
@@ -69,7 +69,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSSubmitted,
 				DecisionState:    models.SIDSNoDecision,
-				State:            models.SystemIntakeStateCLOSED,
+				State:            models.SystemIntakeStateClosed,
 			},
 			expectedStatus: models.SISAClosed,
 			expectError:    false,
@@ -82,7 +82,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
-				State:                  models.SystemIntakeStateOPEN,
+				State:                  models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISADraftBusinessCaseInProgress,
 			expectError:    false,
@@ -92,7 +92,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSInProgress,
-				State:                  models.SystemIntakeStateOPEN,
+				State:                  models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISADraftBusinessCaseInProgress,
 			expectError:    false,
@@ -102,7 +102,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
-				State:                  models.SystemIntakeStateOPEN,
+				State:                  models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISADraftBusinessCaseInProgress,
 			expectError:    false,
@@ -112,7 +112,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
-				State:                  models.SystemIntakeStateOPEN,
+				State:                  models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISADraftBusinessCaseSubmitted,
 			expectError:    false,
@@ -123,7 +123,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 				DecisionState:          models.SIDSNoDecision,
-				State:                  models.SystemIntakeStateCLOSED,
+				State:                  models.SystemIntakeStateClosed,
 			},
 			expectedStatus: models.SISAClosed,
 			expectError:    false,
@@ -136,7 +136,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepGRTMEETING,
 				GRTDate: nil,
-				State:   models.SystemIntakeStateOPEN,
+				State:   models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAGrtMeetingReady,
 			expectError:    false,
@@ -146,7 +146,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepGRTMEETING,
 				GRTDate: &tomorrow,
-				State:   models.SystemIntakeStateOPEN,
+				State:   models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAGrtMeetingReady,
 			expectError:    false,
@@ -156,7 +156,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepGRTMEETING,
 				GRTDate: &yesterday,
-				State:   models.SystemIntakeStateOPEN,
+				State:   models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAGrtMeetingComplete,
 			expectError:    false,
@@ -166,7 +166,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepGRTMEETING,
 				GRTDate:       &yesterday,
-				State:         models.SystemIntakeStateCLOSED,
+				State:         models.SystemIntakeStateClosed,
 				DecisionState: models.SIDSNoDecision,
 			},
 			expectedStatus: models.SISAClosed,
@@ -180,7 +180,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
-				State:                  models.SystemIntakeStateOPEN,
+				State:                  models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAFinalBusinessCaseInProgress,
 			expectError:    false,
@@ -190,7 +190,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSInProgress,
-				State:                  models.SystemIntakeStateOPEN,
+				State:                  models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAFinalBusinessCaseInProgress,
 			expectError:    false,
@@ -200,7 +200,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
-				State:                  models.SystemIntakeStateOPEN,
+				State:                  models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAFinalBusinessCaseInProgress,
 			expectError:    false,
@@ -210,7 +210,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
-				State:                  models.SystemIntakeStateOPEN,
+				State:                  models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAFinalBusinessCaseSubmitted,
 			expectError:    false,
@@ -221,7 +221,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 				DecisionState:          models.SIDSNoDecision,
-				State:                  models.SystemIntakeStateCLOSED,
+				State:                  models.SystemIntakeStateClosed,
 			},
 			expectedStatus: models.SISAClosed,
 			expectError:    false,
@@ -233,7 +233,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepGRBMEETING,
 				GRBDate: nil,
-				State:   models.SystemIntakeStateOPEN,
+				State:   models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAGrbMeetingReady,
 			expectError:    false,
@@ -243,7 +243,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepGRBMEETING,
 				GRBDate: &tomorrow,
-				State:   models.SystemIntakeStateOPEN,
+				State:   models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAGrbMeetingReady,
 			expectError:    false,
@@ -253,7 +253,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:    models.SystemIntakeStepGRBMEETING,
 				GRBDate: &yesterday,
-				State:   models.SystemIntakeStateOPEN,
+				State:   models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISAGrbMeetingComplete,
 			expectError:    false,
@@ -263,7 +263,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepGRBMEETING,
 				GRBDate:       &yesterday,
-				State:         models.SystemIntakeStateCLOSED,
+				State:         models.SystemIntakeStateClosed,
 				DecisionState: models.SIDSNoDecision,
 			},
 			expectedStatus: models.SISAClosed,
@@ -277,7 +277,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSLcidIssued,
-				State:         models.SystemIntakeStateOPEN,
+				State:         models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISALcidIssued,
 			expectError:    false,
@@ -287,7 +287,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSLcidIssued,
-				State:         models.SystemIntakeStateCLOSED,
+				State:         models.SystemIntakeStateClosed,
 			},
 			expectedStatus: models.SISALcidIssued,
 			expectError:    false,
@@ -300,7 +300,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				// LifecycleID:        null.StringFrom("fake"), -- If there is no LCID, the status is closed
 				LifecycleExpiresAt: &yesterday,
 				LifecycleRetiresAt: &yesterday,
-				State:              models.SystemIntakeStateCLOSED,
+				State:              models.SystemIntakeStateClosed,
 			},
 			expectedStatus: models.SISALcidIssued,
 			expectError:    false,
@@ -313,7 +313,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				LifecycleRetiresAt: &yesterday,
 
 				DecisionState: models.SIDSLcidIssued,
-				State:         models.SystemIntakeStateCLOSED,
+				State:         models.SystemIntakeStateClosed,
 			},
 			expectedStatus: models.SISALcidRetired,
 			expectError:    false,
@@ -326,7 +326,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 				LifecycleExpiresAt: &yesterday,
 
 				DecisionState: models.SIDSLcidIssued,
-				State:         models.SystemIntakeStateCLOSED,
+				State:         models.SystemIntakeStateClosed,
 			},
 			expectedStatus: models.SISALcidExpired,
 			expectError:    false,
@@ -336,7 +336,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNotGovernance,
-				State:         models.SystemIntakeStateOPEN,
+				State:         models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISANotGovernance,
 			expectError:    false,
@@ -346,7 +346,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNotGovernance,
-				State:         models.SystemIntakeStateCLOSED,
+				State:         models.SystemIntakeStateClosed,
 			},
 			expectedStatus: models.SISANotGovernance,
 			expectError:    false,
@@ -356,7 +356,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNotApproved,
-				State:         models.SystemIntakeStateOPEN,
+				State:         models.SystemIntakeStateOpen,
 			},
 			expectedStatus: models.SISANotApproved,
 			expectError:    false,
@@ -366,7 +366,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNotApproved,
-				State:         models.SystemIntakeStateCLOSED,
+				State:         models.SystemIntakeStateClosed,
 			},
 			expectedStatus: models.SISANotApproved,
 			expectError:    false,
@@ -376,7 +376,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepFINALBIZCASE,
 				DecisionState: models.SIDSNotApproved,
-				State:         models.SystemIntakeStateCLOSED,
+				State:         models.SystemIntakeStateClosed,
 			},
 			expectedStatus: models.SISAClosed,
 			expectError:    false,
@@ -387,7 +387,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNoDecision,
-				State:         models.SystemIntakeStateCLOSED,
+				State:         models.SystemIntakeStateClosed,
 			},
 			expectedStatus: "",
 			expectError:    true,
@@ -398,7 +398,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNoDecision,
-				State:         models.SystemIntakeStateOPEN,
+				State:         models.SystemIntakeStateOpen,
 			},
 			expectedStatus: "",
 			expectError:    true,
