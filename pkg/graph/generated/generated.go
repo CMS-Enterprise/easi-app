@@ -349,8 +349,8 @@ type ComplexityRoot struct {
 		Description             func(childComplexity int) int
 		ID                      func(childComplexity int) int
 		IsBookmarked            func(childComplexity int) int
-		LinkedSystemIntakes     func(childComplexity int) int
-		LinkedTrbRequests       func(childComplexity int) int
+		LinkedSystemIntakes     func(childComplexity int, state models.SystemIntakeState) int
+		LinkedTrbRequests       func(childComplexity int, state models.TRBRequestState) int
 		Name                    func(childComplexity int) int
 		Status                  func(childComplexity int) int
 		SystemMaintainerOrg     func(childComplexity int) int
@@ -1113,8 +1113,8 @@ type CedarSystemResolver interface {
 	BusinessOwnerRoles(ctx context.Context, obj *models.CedarSystem) ([]*models.CedarRole, error)
 
 	IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error)
-	LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem) ([]*models.TRBRequest, error)
-	LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystem) ([]*models.SystemIntake, error)
+	LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem, state models.TRBRequestState) ([]*models.TRBRequest, error)
+	LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystem, state models.SystemIntakeState) ([]*models.SystemIntake, error)
 }
 type CedarSystemDetailsResolver interface {
 	SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error)
@@ -2935,14 +2935,24 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.CedarSystem.LinkedSystemIntakes(childComplexity), true
+		args, err := ec.field_CedarSystem_linkedSystemIntakes_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.CedarSystem.LinkedSystemIntakes(childComplexity, args["state"].(models.SystemIntakeState)), true
 
 	case "CedarSystem.linkedTrbRequests":
 		if e.complexity.CedarSystem.LinkedTrbRequests == nil {
 			break
 		}
 
-		return e.complexity.CedarSystem.LinkedTrbRequests(childComplexity), true
+		args, err := ec.field_CedarSystem_linkedTrbRequests_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.CedarSystem.LinkedTrbRequests(childComplexity, args["state"].(models.TRBRequestState)), true
 
 	case "CedarSystem.name":
 		if e.complexity.CedarSystem.Name == nil {
@@ -7572,8 +7582,8 @@ type CedarSystem {
   systemMaintainerOrgComp: String
   versionId: String
   isBookmarked: Boolean!
-  linkedTrbRequests: [TRBRequest!]!
-  linkedSystemIntakes: [SystemIntake!]! 
+  linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
+  linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!
   uuid: String
 }
 
@@ -10271,6 +10281,36 @@ func (ec *executionContext) dir_hasRole_args(ctx context.Context, rawArgs map[st
 		}
 	}
 	args["role"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_CedarSystem_linkedSystemIntakes_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 models.SystemIntakeState
+	if tmp, ok := rawArgs["state"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
+		arg0, err = ec.unmarshalNSystemIntakeState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeState(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["state"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_CedarSystem_linkedTrbRequests_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 models.TRBRequestState
+	if tmp, ok := rawArgs["state"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
+		arg0, err = ec.unmarshalNTRBRequestState2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestState(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["state"] = arg0
 	return args, nil
 }
 
@@ -21594,7 +21634,7 @@ func (ec *executionContext) _CedarSystem_linkedTrbRequests(ctx context.Context, 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CedarSystem().LinkedTrbRequests(rctx, obj)
+		return ec.resolvers.CedarSystem().LinkedTrbRequests(rctx, obj, fc.Args["state"].(models.TRBRequestState))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -21611,7 +21651,7 @@ func (ec *executionContext) _CedarSystem_linkedTrbRequests(ctx context.Context, 
 	return ec.marshalNTRBRequest2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_CedarSystem_linkedTrbRequests(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_CedarSystem_linkedTrbRequests(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarSystem",
 		Field:      field,
@@ -21677,6 +21717,17 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedTrbRequests(_ context
 			return nil, fmt.Errorf("no field named %q was found under type TRBRequest", field.Name)
 		},
 	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_CedarSystem_linkedTrbRequests_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
 	return fc, nil
 }
 
@@ -21694,7 +21745,7 @@ func (ec *executionContext) _CedarSystem_linkedSystemIntakes(ctx context.Context
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.CedarSystem().LinkedSystemIntakes(rctx, obj)
+		return ec.resolvers.CedarSystem().LinkedSystemIntakes(rctx, obj, fc.Args["state"].(models.SystemIntakeState))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -21711,7 +21762,7 @@ func (ec *executionContext) _CedarSystem_linkedSystemIntakes(ctx context.Context
 	return ec.marshalNSystemIntake2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CedarSystem",
 		Field:      field,
@@ -21860,6 +21911,17 @@ func (ec *executionContext) fieldContext_CedarSystem_linkedSystemIntakes(_ conte
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_CedarSystem_linkedSystemIntakes_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
 	}
 	return fc, nil
 }

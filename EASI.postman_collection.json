@@ -2632,7 +2632,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query($systemID: String!) {\n  cedarSystem(cedarSystemId: $systemID){\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n    isBookmarked\n    linkedRequests {\n        trbRequests {\n            id\n        }\n        systemIntakes {\n            id\n        }\n    }\n  }\n}",
+												"query": "query($systemID: String!) {\n  cedarSystem(cedarSystemId: $systemID){\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n    isBookmarked\n    linkedSystemIntakes(state: OPEN) {\n        id\n    }\n    linkedTrbRequests(state: OPEN) {\n        id\n    }\n  }\n}",
 												"variables": "{\r\n    \"systemID\": \"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}\"\r\n}"
 											}
 										},

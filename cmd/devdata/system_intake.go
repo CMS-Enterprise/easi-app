@@ -171,7 +171,7 @@ func createSystemIntake(
 		EUAUserID:   null.StringFromPtr(requesterEUAIDPtr),
 		RequestType: requestType,
 		Requester:   requesterName,
-		State:       models.SystemIntakeStateOPEN,
+		State:       models.SystemIntakeStateOpen,
 		Step:        models.SystemIntakeStepINITIALFORM,
 	}
 	intake, err := store.CreateSystemIntake(ctx, &i)
