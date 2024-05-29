@@ -4,20 +4,21 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button, CardGroup, Grid } from '@trussworks/react-uswds';
 
-import BookmarkTag from 'components/BookmarkTag';
+// import BookmarkTag from 'components/BookmarkTag';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import SystemProfileModal from 'components/SystemProfileModal';
 import TLCTag from 'components/TLCTag';
-import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
+// import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetSystemWorkspaceQuery from 'queries/GetSystemWorkspaceQuery';
-import { GetCedarSystemBookmarks } from 'queries/types/GetCedarSystemBookmarks';
+// import { GetCedarSystemBookmarks } from 'queries/types/GetCedarSystemBookmarks';
 import {
   GetSystemWorkspace,
   GetSystemWorkspaceVariables
 } from 'queries/types/GetSystemWorkspace';
 import NotFound from 'views/NotFound';
+import BookmarkToggleButton from 'views/SystemProfile/BookmarkToggleButton';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import HelpLinks from './components/HelpLinks';
@@ -44,22 +45,26 @@ export const SystemWorkspace = () => {
   const cedarSystem = data?.cedarSystemDetails?.cedarSystem;
   const ato = data?.cedarAuthorityToOperate[0];
 
+  /*
   const {
     data: bookmark,
     refetch: refetchBookmarks
   } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery);
+  */
 
-  const isBookmarked = !!bookmark?.cedarSystemBookmarks.find(
-    mark => mark.cedarSystemId === systemId
-  );
+  // const isBookmarked = !!bookmark?.cedarSystemBookmarks.find(
+  //   mark => mark.cedarSystemId === systemId
+  // );
 
   if (loading) {
     return <PageLoading />;
   }
 
-  if (error) {
+  if (error || !data || !data.cedarSystemDetails) {
     return <NotFound />;
   }
+
+  const { isBookmarked } = data.cedarSystemDetails.cedarSystem;
 
   return (
     <MainContent className="grid-container margin-bottom-8">
@@ -95,12 +100,15 @@ export const SystemWorkspace = () => {
           </div>
         </div>
 
+        {/*
         <BookmarkTag
           systemID={systemId}
           isBookmarked={isBookmarked}
           refetchBookmarks={refetchBookmarks}
           className="flex-align-self-start"
         />
+        */}
+        <BookmarkToggleButton id={systemId} initialBookmarked={isBookmarked} />
       </div>
 
       <HelpLinks classname="margin-top-3 margin-bottom-5" />
