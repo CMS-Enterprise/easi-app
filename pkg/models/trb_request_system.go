@@ -16,3 +16,7 @@ func NewTRBRequestSystem(createdBy uuid.UUID) TRBRequestSystem {
 		BaseStructUser: NewBaseStructUser(createdBy),
 	}
 }
+
+func (t TRBRequestSystem) GetMappingID() uuid.UUID {
+	return t.TRBRequestID
+}
