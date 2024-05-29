@@ -302,7 +302,7 @@ func RejectIntakeAsNotApproved(
 
 	// update workflow state
 	intake.Step = models.SystemIntakeStepDECISION
-	intake.State = models.SystemIntakeStateCLOSED
+	intake.State = models.SystemIntakeStateClosed
 	intake.DecisionState = models.SIDSNotApproved
 
 	// update other fields
@@ -432,7 +432,7 @@ func IssueLCID(
 
 	// update workflow state
 	intake.Step = models.SystemIntakeStepDECISION
-	intake.State = models.SystemIntakeStateCLOSED
+	intake.State = models.SystemIntakeStateClosed
 	intake.DecisionState = models.SIDSLcidIssued
 
 	// update LCID-related fields
@@ -553,12 +553,12 @@ func CreateSystemIntakeActionReopenRequest(
 		return nil, err
 	}
 
-	if intake.State == models.SystemIntakeStateOPEN {
+	if intake.State == models.SystemIntakeStateOpen {
 		return nil, &apperrors.BadRequestError{
 			Err: fmt.Errorf("intake is already open"),
 		}
 	}
-	intake.State = models.SystemIntakeStateOPEN
+	intake.State = models.SystemIntakeStateOpen
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -630,12 +630,12 @@ func CreateSystemIntakeActionCloseRequest(
 	if err != nil {
 		return nil, err
 	}
-	if intake.State == models.SystemIntakeStateCLOSED {
+	if intake.State == models.SystemIntakeStateClosed {
 		return nil, &apperrors.BadRequestError{
 			Err: fmt.Errorf("intake is already closed"),
 		}
 	}
-	intake.State = models.SystemIntakeStateCLOSED
+	intake.State = models.SystemIntakeStateClosed
 
 	updatedTime := time.Now()
 	intake.UpdatedAt = &updatedTime
@@ -707,7 +707,7 @@ func CreateSystemIntakeActionNotITGovRequest(
 	if err != nil {
 		return nil, err
 	}
-	intake.State = models.SystemIntakeStateCLOSED
+	intake.State = models.SystemIntakeStateClosed
 	intake.Step = models.SystemIntakeStepDECISION
 	intake.RejectionReason = input.Reason
 	intake.DecisionState = models.SIDSNotGovernance
@@ -796,7 +796,7 @@ func UpdateLCID(
 
 	// update workflow state
 	intake.Step = models.SystemIntakeStepDECISION
-	intake.State = models.SystemIntakeStateCLOSED
+	intake.State = models.SystemIntakeStateClosed
 	intake.DecisionState = models.SIDSLcidIssued
 
 	// Capture current LCID data for email notification
@@ -948,7 +948,7 @@ func ConfirmLCID(ctx context.Context,
 
 	// update workflow state
 	intake.Step = models.SystemIntakeStepDECISION
-	intake.State = models.SystemIntakeStateCLOSED
+	intake.State = models.SystemIntakeStateClosed
 	intake.DecisionState = models.SIDSLcidIssued
 
 	// update LCID-related fields

@@ -44,8 +44,8 @@ type TRBRequestState string
 
 // These are the options for TRBRequestStatus
 const (
-	TRBRequestStateOPEN   TRBRequestState = "OPEN"
-	TRBRequestStateCLOSED TRBRequestState = "CLOSED"
+	TRBRequestStateOpen   TRBRequestState = "OPEN"
+	TRBRequestStateClosed TRBRequestState = "CLOSED"
 )
 
 // TRBFeedbackStatus represents the types of TRBFeedbackStatus types

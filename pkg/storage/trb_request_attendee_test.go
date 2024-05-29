@@ -11,7 +11,7 @@ func (s *StoreTestSuite) TestCreateTRBRequestAttendee() {
 	anonEua := "ANON"
 	trbRequest := models.NewTRBRequest(anonEua)
 	trbRequest.Type = models.TRBTNeedHelp
-	trbRequest.State = models.TRBRequestStateOPEN
+	trbRequest.State = models.TRBRequestStateOpen
 	_, err := s.store.CreateTRBRequest(ctx, s.store, trbRequest)
 	s.NoError(err)
 

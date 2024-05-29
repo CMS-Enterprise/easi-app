@@ -310,7 +310,7 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 
 	// check workflow state
 	s.EqualValues(models.SystemIntakeStepDECISION, updatedIntake.Step)
-	s.EqualValues(models.SystemIntakeStateCLOSED, updatedIntake.State)
+	s.EqualValues(models.SystemIntakeStateClosed, updatedIntake.State)
 	s.EqualValues(models.SIDSNotApproved, updatedIntake.DecisionState)
 
 	// check fields from input
@@ -432,7 +432,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 
 		// check workflow state
 		s.EqualValues(models.SystemIntakeStepDECISION, updatedIntake.Step)
-		s.EqualValues(models.SystemIntakeStateCLOSED, updatedIntake.State)
+		s.EqualValues(models.SystemIntakeStateClosed, updatedIntake.State)
 		s.EqualValues(models.SIDSLcidIssued, updatedIntake.DecisionState)
 
 		// check fields from input
@@ -497,7 +497,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			intakeToCreate := &models.SystemIntake{
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        formStep,
-				State:       models.SystemIntakeStateOPEN,
+				State:       models.SystemIntakeStateOpen,
 			}
 			// If in the decision step, an intake should always have a decision
 			if formStep == models.SystemIntakeStepDECISION {
@@ -528,7 +528,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			// ensure correct intake was edited
 			s.Equal(intake.ID, actionedIntake.ID)
 			// Intake should now be closed
-			s.Equal(models.SystemIntakeStateCLOSED, actionedIntake.State)
+			s.Equal(models.SystemIntakeStateClosed, actionedIntake.State)
 			// Step and Decision State should be unaffected
 			s.Equal(intake.Step, actionedIntake.Step)
 			s.Equal(intake.DecisionState, actionedIntake.DecisionState)
@@ -539,7 +539,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			intakeToCreate := &models.SystemIntake{
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        formStep,
-				State:       models.SystemIntakeStateCLOSED,
+				State:       models.SystemIntakeStateClosed,
 			}
 			// If in the decision step, an intake should always have a decision
 			if formStep == models.SystemIntakeStepDECISION {
@@ -570,14 +570,14 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			// ensure intake is still closed and unaffected
 			fetchedIntake, err := s.testConfigs.Store.FetchSystemIntakeByID(ctx, intake.ID)
 			s.NoError(err)
-			s.Equal(fetchedIntake.State, models.SystemIntakeStateCLOSED)
+			s.Equal(fetchedIntake.State, models.SystemIntakeStateClosed)
 		})
 	}
 	s.Run("Should create action", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateOPEN,
+			State:       models.SystemIntakeStateOpen,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -686,7 +686,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			intakeToCreate := &models.SystemIntake{
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        formStep,
-				State:       models.SystemIntakeStateCLOSED,
+				State:       models.SystemIntakeStateClosed,
 			}
 			// If in the decision step, an intake should always have a decision
 			if formStep == models.SystemIntakeStepDECISION {
@@ -717,7 +717,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			// ensure correct intake was edited
 			s.Equal(intake.ID, actionedIntake.ID)
 			// Intake should now be open
-			s.Equal(actionedIntake.State, models.SystemIntakeStateOPEN)
+			s.Equal(actionedIntake.State, models.SystemIntakeStateOpen)
 			// Step and Decision State should be unaffected
 			s.Equal(intake.Step, actionedIntake.Step)
 			s.Equal(intake.DecisionState, actionedIntake.DecisionState)
@@ -728,7 +728,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			intakeToCreate := &models.SystemIntake{
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        formStep,
-				State:       models.SystemIntakeStateOPEN,
+				State:       models.SystemIntakeStateOpen,
 			}
 			// If in the decision step, an intake should always have a decision
 			if formStep == models.SystemIntakeStepDECISION {
@@ -759,14 +759,14 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			// ensure intake is still closed and unaffected
 			fetchedIntake, err := s.testConfigs.Store.FetchSystemIntakeByID(ctx, intake.ID)
 			s.NoError(err)
-			s.Equal(models.SystemIntakeStateOPEN, fetchedIntake.State)
+			s.Equal(models.SystemIntakeStateOpen, fetchedIntake.State)
 		})
 	}
 	s.Run("Should create action", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -800,7 +800,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -833,7 +833,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -873,8 +873,8 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		models.SystemIntakeStepDECISION,
 	}
 	formStates := []models.SystemIntakeState{
-		models.SystemIntakeStateCLOSED,
-		models.SystemIntakeStateOPEN,
+		models.SystemIntakeStateClosed,
+		models.SystemIntakeStateOpen,
 	}
 	for _, formStep := range formSteps {
 		for _, formState := range formStates {
@@ -914,7 +914,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 				// ensure correct intake was edited
 				s.Equal(intake.ID, actionedIntake.ID)
 				// Intake should now be closed
-				s.Equal(actionedIntake.State, models.SystemIntakeStateCLOSED)
+				s.Equal(actionedIntake.State, models.SystemIntakeStateClosed)
 				// Step should be decision
 				s.Equal(models.SystemIntakeStepDECISION, actionedIntake.Step)
 				// Decision state should be NOT_GOVERNANCE
@@ -928,7 +928,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -962,7 +962,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -995,7 +995,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")

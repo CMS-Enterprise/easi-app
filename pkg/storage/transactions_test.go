@@ -22,7 +22,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 
 			trb := models.NewTRBRequest(anonEua)
 			trb.Type = models.TRBTNeedHelp
-			trb.State = models.TRBRequestStateOPEN
+			trb.State = models.TRBRequestStateOpen
 
 			createdTRB, err := suite.store.CreateTRBRequest(ctx, tx, trb)
 			if err != nil {
@@ -45,7 +45,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 
 			trb := models.NewTRBRequest(anonEua)
 			trb.Type = models.TRBTNeedHelp
-			trb.State = models.TRBRequestStateOPEN
+			trb.State = models.TRBRequestStateOpen
 
 			created, err := suite.store.CreateTRBRequest(ctx, tx, trb)
 			if err != nil {
@@ -81,7 +81,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 
 			trb := models.NewTRBRequest(anonEua)
 			trb.Type = models.TRBTNeedHelp
-			trb.State = models.TRBRequestStateOPEN
+			trb.State = models.TRBRequestStateOpen
 
 			createdTRB, err := suite.store.CreateTRBRequest(ctx, suite.store, trb) //Call the method on the store itself, so it is automatically created
 			if err != nil {
@@ -107,7 +107,7 @@ func (suite *StoreTestSuite) TestWithTransaction() {
 			_ = sqlutils.WithTransaction(ctx, suite.store, func(tx *sqlx.Tx) error {
 				trb := models.NewTRBRequest(anonEua)
 				trb.Type = models.TRBTNeedHelp
-				trb.State = models.TRBRequestStateOPEN
+				trb.State = models.TRBRequestStateOpen
 
 				createdTRB, err := suite.store.CreateTRBRequest(ctx, tx, trb)
 				if err != nil {

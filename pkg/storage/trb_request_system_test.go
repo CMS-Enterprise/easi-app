@@ -31,7 +31,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 			for i := 0; i < 3; i++ {
 				trbRequest := models.NewTRBRequest(testhelpers.RandomEUAIDNull().String)
 				trbRequest.Type = models.TRBTBrainstorm
-				trbRequest.State = models.TRBRequestStateOPEN
+				trbRequest.State = models.TRBRequestStateOpen
 				created, err := s.store.CreateTRBRequest(ctx, tx, trbRequest)
 				s.NoError(err)
 				createdIDs = append(createdIDs, created.ID)
@@ -146,7 +146,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 		// create trb requests
 		trb1 := models.TRBRequest{
 			Type:  models.TRBTBrainstorm,
-			State: models.TRBRequestStateOPEN,
+			State: models.TRBRequestStateOpen,
 		}
 		trb1.CreatedBy = testhelpers.RandomEUAIDNull().String
 
@@ -158,7 +158,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 
 		trb2 := models.TRBRequest{
 			Type:  models.TRBTBrainstorm,
-			State: models.TRBRequestStateOPEN,
+			State: models.TRBRequestStateOpen,
 		}
 
 		trb2.CreatedBy = testhelpers.RandomEUAIDNull().String
@@ -171,7 +171,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 
 		trb3 := models.TRBRequest{
 			Type:  models.TRBTBrainstorm,
-			State: models.TRBRequestStateCLOSED,
+			State: models.TRBRequestStateClosed,
 		}
 
 		trb3.CreatedBy = testhelpers.RandomEUAIDNull().String
@@ -205,7 +205,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 		})
 		s.NoError(err)
 
-		results, err := s.store.TRBRequestsByCedarSystemID(ctx, system1, models.TRBRequestStateOPEN)
+		results, err := s.store.TRBRequestsByCedarSystemID(ctx, system1, models.TRBRequestStateOpen)
 		s.NoError(err)
 		s.Len(results, 2)
 
@@ -221,7 +221,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 		s.False(foundClosed)
 
 		// now find the closed one
-		results, err = s.store.TRBRequestsByCedarSystemID(ctx, system1, models.TRBRequestStateCLOSED)
+		results, err = s.store.TRBRequestsByCedarSystemID(ctx, system1, models.TRBRequestStateClosed)
 		s.NoError(err)
 		s.Len(results, 1)
 		s.Equal(results[0].ID, closed)

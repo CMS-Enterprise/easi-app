@@ -18,7 +18,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 	s.Run("create/update/fetch TRB request feedback", func() {
 		trbRequest := models.NewTRBRequest(anonEua)
 		trbRequest.Type = models.TRBTNeedHelp
-		trbRequest.State = models.TRBRequestStateOPEN
+		trbRequest.State = models.TRBRequestStateOpen
 		trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
 		s.NoError(err)
 
@@ -70,7 +70,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 	s.Run("cannot update deleted TRB recommendation", func() {
 		trbRequest := models.NewTRBRequest(anonEua)
 		trbRequest.Type = models.TRBTNeedHelp
-		trbRequest.State = models.TRBRequestStateOPEN
+		trbRequest.State = models.TRBRequestStateOpen
 		trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
 		s.NoError(err)
 
@@ -108,7 +108,7 @@ func (s *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
 	s.Run("deleting a recommendation updates other recommendations' positions to close any gaps", func() {
 		trbRequest := models.NewTRBRequest(anonEua)
 		trbRequest.Type = models.TRBTNeedHelp
-		trbRequest.State = models.TRBRequestStateOPEN
+		trbRequest.State = models.TRBRequestStateOpen
 		trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
 		s.NoError(err)
 

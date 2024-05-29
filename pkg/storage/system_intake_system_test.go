@@ -147,7 +147,7 @@ func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
 		intake1 := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			RequestType: models.SystemIntakeRequestTypeNEW,
-			State:       models.SystemIntakeStateOPEN,
+			State:       models.SystemIntakeStateOpen,
 		}
 
 		create1, err := s.store.CreateSystemIntake(ctx, &intake1)
@@ -159,7 +159,7 @@ func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
 		intake2 := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			RequestType: models.SystemIntakeRequestTypeNEW,
-			State:       models.SystemIntakeStateOPEN,
+			State:       models.SystemIntakeStateOpen,
 		}
 
 		create2, err := s.store.CreateSystemIntake(ctx, &intake2)
@@ -171,7 +171,7 @@ func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
 		intake3 := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			RequestType: models.SystemIntakeRequestTypeNEW,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		}
 
 		create3, err := s.store.CreateSystemIntake(ctx, &intake3)
@@ -203,7 +203,7 @@ func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
 		})
 		s.NoError(err)
 
-		results, err := s.store.SystemIntakesByCedarSystemID(ctx, system1, models.SystemIntakeStateOPEN)
+		results, err := s.store.SystemIntakesByCedarSystemID(ctx, system1, models.SystemIntakeStateOpen)
 		s.NoError(err)
 		s.Len(results, 2)
 
@@ -219,7 +219,7 @@ func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
 		s.False(foundClosed)
 
 		// now get the closed one
-		results, err = s.store.SystemIntakesByCedarSystemID(ctx, system1, models.SystemIntakeStateCLOSED)
+		results, err = s.store.SystemIntakesByCedarSystemID(ctx, system1, models.SystemIntakeStateClosed)
 		s.NoError(err)
 		s.Len(results, 1)
 		s.Equal(results[0].ID, closed)
