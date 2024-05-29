@@ -116,22 +116,5 @@ func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx context.C
 		systemIntakeContractNumbers = append(systemIntakeContractNumbers, &systemIntakeContractNumber)
 	}
 
-	contractNumberMap := map[uuid.UUID][]*models.SystemIntakeContractNumber{}
-
-	// populate map
-	for _, id := range systemIntakeIDs {
-		contractNumberMap[id] = []*models.SystemIntakeContractNumber{}
-	}
-
-	for _, contractNumber := range systemIntakeContractNumbers {
-		contractNumberMap[contractNumber.SystemIntakeID] = append(contractNumberMap[contractNumber.SystemIntakeID], contractNumber)
-	}
-
-	// return in order received
-	var out [][]*models.SystemIntakeContractNumber
-	for _, id := range systemIntakeIDs {
-		out = append(out, contractNumberMap[id])
-	}
-
-	return out, nil
+	return oneToMany[*models.SystemIntakeContractNumber](systemIntakeIDs, systemIntakeContractNumbers), nil
 }
