@@ -13,6 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Checkbox,
   Dropdown,
+  Fieldset,
   Form,
   FormGroup,
   Radio,
@@ -170,6 +171,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     setError,
     watch,
     getValues,
+    register,
     formState: {
       defaultValues,
       dirtyFields,
@@ -379,48 +381,40 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         className="maxw-none tablet:grid-col-6 margin-bottom-7"
       >
         {/* Requester */}
-        <Controller
-          control={control}
-          name="requester.commonName"
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
-            <FormGroup error={!!error}>
-              <Label htmlFor={field.name}>
-                {t('contactDetails.requester')}
-              </Label>
-              <ErrorMessage
-                errors={errors}
-                name={field.name}
-                as={FieldErrorMsg}
-              />
-              <ErrorMessage errors={errors} name={field.name} />
-              <TextInput {...field} id={field.name} type="text" disabled />
-            </FormGroup>
-          )}
-        />
+        <FormGroup>
+          <Label htmlFor="requester.commonName">
+            {t('contactDetails.requester')}
+          </Label>
+          <TextInput
+            {...register('requester.commonName')}
+            ref={null}
+            id="requester.commonName"
+            type="text"
+            disabled
+          />
+        </FormGroup>
 
-        <Controller
-          control={control}
-          name="requester.component"
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
-            <FormGroup error={!!error}>
-              <Label htmlFor={field.name}>
-                {t('contactDetails.requesterComponent')}
-              </Label>
-              <ErrorMessage
-                errors={errors}
-                name={field.name}
-                as={FieldErrorMsg}
-              />
+        <FormGroup error={!!errors?.requester?.component}>
+          <Label htmlFor="requester.component">
+            {t('contactDetails.requesterComponent')}
+          </Label>
+          <ErrorMessage
+            errors={errors}
+            name="requester.component"
+            as={FieldErrorMsg}
+          />
 
-              <Dropdown {...field} id="IntakeForm-RequesterComponent">
-                <option value="" disabled>
-                  {t('Select an option')}
-                </option>
-                {cmsDivisionsAndOfficesOptions('RequesterComponent')}
-              </Dropdown>
-            </FormGroup>
-          )}
-        />
+          <Dropdown
+            {...register('requester.component')}
+            ref={null}
+            id="requester.component"
+          >
+            <option value="" disabled>
+              {t('Select an option')}
+            </option>
+            {cmsDivisionsAndOfficesOptions('requester.component')}
+          </Dropdown>
+        </FormGroup>
 
         {/* Business Owner */}
 
@@ -432,19 +426,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           {t('contactDetails.businessOwner.helpText')}
         </HelpText>
 
-        <Controller
-          control={control}
-          name="businessOwner.sameAsRequester"
-          render={({ field: { ref, value, ...field } }) => {
-            return (
-              <Checkbox
-                {...field}
-                id="IntakeForm-busOwnerSameAsRequester"
-                label={t('contactDetails.businessOwner.sameAsRequester')}
-                checked={value}
-              />
-            );
-          }}
+        <Checkbox
+          {...register('businessOwner.sameAsRequester')}
+          ref={null}
+          id="businessOwner.sameAsRequester"
+          label={t('contactDetails.businessOwner.sameAsRequester')}
         />
 
         <Controller
@@ -492,46 +478,41 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           }}
         />
 
-        <Controller
-          control={control}
-          name="businessOwner.component"
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
-            <FormGroup error={!!error}>
-              <Label htmlFor={field.name}>
-                {t('contactDetails.businessOwner.component')}
-              </Label>
-              <ErrorMessage
-                errors={errors}
-                name={field.name}
-                as={FieldErrorMsg}
-              />
+        <FormGroup error={!!errors?.businessOwner?.component}>
+          <Label htmlFor="businessOwner.component">
+            {t('contactDetails.businessOwner.component')}
+          </Label>
+          <ErrorMessage
+            errors={errors}
+            name="businessOwner.component"
+            as={FieldErrorMsg}
+          />
 
-              <Dropdown
-                {...field}
-                id="IntakeForm-BusinessOwnerComponent"
-                disabled={watch('businessOwner.sameAsRequester')}
-              >
-                <option value="" disabled>
-                  {t('Select an option')}
-                </option>
-                {cmsDivisionsAndOfficesOptions('BusinessOwnerComponent')}
-              </Dropdown>
-            </FormGroup>
-          )}
-        />
+          <Dropdown
+            {...register('businessOwner.component')}
+            ref={null}
+            id="businessOwner.component"
+            disabled={watch('businessOwner.sameAsRequester')}
+          >
+            <option value="" disabled>
+              {t('Select an option')}
+            </option>
+            {cmsDivisionsAndOfficesOptions('businessOwner.component')}
+          </Dropdown>
+        </FormGroup>
 
-        <Controller
-          control={control}
-          name="businessOwner.email"
-          render={({ field: { ref, ...field } }) => (
-            <FormGroup>
-              <Label htmlFor={field.name}>
-                {t('contactDetails.businessOwner.email')}
-              </Label>
-              <TextInput {...field} id={field.name} type="text" disabled />
-            </FormGroup>
-          )}
-        />
+        <FormGroup>
+          <Label htmlFor="businessOwner.email">
+            {t('contactDetails.businessOwner.email')}
+          </Label>
+          <TextInput
+            {...register('businessOwner.email')}
+            ref={null}
+            id="businessOwner.email"
+            type="text"
+            disabled
+          />
+        </FormGroup>
 
         {/* Product Manager */}
 
@@ -543,17 +524,11 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           {t('contactDetails.productManager.helpText')}
         </HelpText>
 
-        <Controller
-          control={control}
-          name="productManager.sameAsRequester"
-          render={({ field: { ref, value, ...field } }) => (
-            <Checkbox
-              {...field}
-              id={field.name}
-              label={t('contactDetails.productManager.sameAsRequester')}
-              checked={value}
-            />
-          )}
+        <Checkbox
+          {...register('productManager.sameAsRequester')}
+          ref={null}
+          id="productManager.sameAsRequester"
+          label={t('contactDetails.productManager.sameAsRequester')}
         />
 
         <Controller
@@ -601,190 +576,162 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           }}
         />
 
-        <Controller
-          control={control}
-          name="productManager.component"
-          render={({ field: { ref, ...field }, fieldState: { error } }) => (
-            <FormGroup error={!!error}>
-              <Label htmlFor={field.name}>
-                {t('contactDetails.productManager.component')}
-              </Label>
-              <ErrorMessage
-                errors={errors}
-                name={field.name}
-                as={FieldErrorMsg}
-              />
+        <FormGroup error={!!errors?.productManager?.component}>
+          <Label htmlFor="productManager.component">
+            {t('contactDetails.productManager.component')}
+          </Label>
+          <ErrorMessage
+            errors={errors}
+            name="productManager.component"
+            as={FieldErrorMsg}
+          />
 
-              <Dropdown
-                {...field}
-                id="IntakeForm-ProductManagerComponent"
-                disabled={watch('productManager.sameAsRequester')}
-              >
-                <option value="" disabled>
-                  {t('Select an option')}
-                </option>
-                {cmsDivisionsAndOfficesOptions('ProductManagerComponent')}
-              </Dropdown>
-            </FormGroup>
-          )}
-        />
+          <Dropdown
+            {...register('productManager.component')}
+            ref={null}
+            id="productManager.component"
+            disabled={watch('productManager.sameAsRequester')}
+          >
+            <option value="" disabled>
+              {t('Select an option')}
+            </option>
+            {cmsDivisionsAndOfficesOptions('productManager.component')}
+          </Dropdown>
+        </FormGroup>
 
-        <Controller
-          control={control}
-          name="productManager.email"
-          render={({ field: { ref, ...field } }) => (
-            <FormGroup>
-              <Label htmlFor={field.name}>
-                {t('contactDetails.productManager.email')}
-              </Label>
-              <TextInput
-                {...field}
-                id={field.name}
-                type="text"
-                value={watch('productManager.email')}
-                disabled
-              />
-            </FormGroup>
-          )}
-        />
+        <FormGroup>
+          <Label htmlFor="productManager.email">
+            {t('contactDetails.productManager.email')}
+          </Label>
+          <TextInput
+            {...register('productManager.email')}
+            ref={null}
+            id="productManager.email"
+            type="text"
+            disabled
+          />
+        </FormGroup>
 
         {/* ISSO */}
 
-        <Controller
-          control={control}
-          name="isso.isPresent"
-          render={({ field: issoField }) => (
-            <FormGroup>
-              <fieldset className="usa-fieldset">
-                <legend className="usa-label margin-bottom-1">
-                  {t('contactDetails.isso.label')}
-                </legend>
-                <HelpText id="IntakeForm-ISSOHelp">
-                  {t('contactDetails.isso.helpText')}
-                </HelpText>
+        <FormGroup>
+          <Fieldset>
+            <legend className="usa-label margin-bottom-1">
+              {t('contactDetails.isso.label')}
+            </legend>
+            <HelpText id="IntakeForm-ISSOHelp">
+              {t('contactDetails.isso.helpText')}
+            </HelpText>
+
+            <Controller
+              control={control}
+              name="isso.isPresent"
+              render={({ field: { ref, value, ...field } }) => (
                 <Radio
-                  {...issoField}
-                  ref={null}
-                  id={`${issoField.name}True`}
+                  {...field}
+                  inputRef={ref}
+                  id={`${field.name}True`}
                   label={t('Yes')}
-                  value="true"
-                  checked={issoField.value === true}
-                  onChange={() => issoField.onChange(true)}
+                  checked={value}
+                  onChange={() => field.onChange(true)}
                 />
+              )}
+            />
 
-                {issoField.value === true && (
-                  <div
-                    data-testid="isso-name-container"
-                    className="margin-left-4 margin-bottom-3"
-                  >
-                    <Controller
-                      control={control}
-                      name="isso"
-                      // shouldUnregister
-                      render={({ field: { ref, ...field } }) => {
-                        const error = errors?.isso?.commonName;
+            {watch('isso.isPresent') && (
+              <Fieldset className="margin-left-4 margin-bottom-3">
+                <Controller
+                  control={control}
+                  name="isso"
+                  shouldUnregister
+                  render={({ field: { ref, ...field } }) => {
+                    const error = errors?.isso?.commonName;
 
-                        return (
-                          <FormGroup error={!!error}>
-                            <Label htmlFor={field.name}>
-                              {t('contactDetails.isso.name')}
-                            </Label>
-                            <ErrorMessage
-                              errors={errors}
-                              name="isso.commonName"
-                              as={FieldErrorMsg}
-                            />
-                            <CedarContactSelect
-                              {...field}
-                              id={field.name}
-                              // Manually update fields so that email field rerenders
-                              onChange={contact => {
-                                setValue(
-                                  'isso.commonName',
-                                  contact?.commonName || ''
-                                );
-                                setValue(
-                                  'isso.euaUserId',
-                                  contact?.euaUserId || ''
-                                );
-                                setValue('isso.email', contact?.email || '');
-                              }}
-                              autoSearch
-                            />
-                          </FormGroup>
-                        );
-                      }}
-                    />
-
-                    <Controller
-                      control={control}
-                      name="isso.component"
-                      render={({
-                        field: { ref, ...field },
-                        fieldState: { error }
-                      }) => (
-                        <FormGroup error={!!error}>
-                          <Label htmlFor={field.name}>
-                            {t('contactDetails.isso.component')}
-                          </Label>
-                          <ErrorMessage
-                            errors={errors}
-                            name={field.name}
-                            as={FieldErrorMsg}
-                          />
-
-                          <Dropdown {...field} id="IntakeForm-IssoComponent">
-                            <option value="" disabled>
-                              {t('Select an option')}
-                            </option>
-                            {cmsDivisionsAndOfficesOptions('IssoComponent')}
-                          </Dropdown>
-                        </FormGroup>
-                      )}
-                    />
-
-                    <Controller
-                      control={control}
-                      name="isso.email"
-                      render={({ field: { ref, ...field } }) => (
-                        <FormGroup>
-                          <Label htmlFor={field.name}>
-                            {t('contactDetails.isso.email')}
-                          </Label>
-                          <TextInput
-                            {...field}
-                            id={field.name}
-                            value={watch('isso.email')}
-                            type="text"
-                            disabled
-                          />
-                        </FormGroup>
-                      )}
-                    />
-                  </div>
-                )}
-
-                <Radio
-                  {...issoField}
-                  ref={null}
-                  id={`${issoField.name}False`}
-                  label={t('No')}
-                  value="false"
-                  checked={issoField.value === false}
-                  onChange={() => {
-                    issoField.onChange(false);
-
-                    // Reset ISSO fields
-                    setValue('isso.commonName', '');
-                    setValue('isso.euaUserId', '');
-                    setValue('isso.email', '');
-                    setValue('isso.component', '');
+                    return (
+                      <FormGroup error={!!error}>
+                        <Label htmlFor={field.name}>
+                          {t('contactDetails.isso.name')}
+                        </Label>
+                        <ErrorMessage
+                          errors={errors}
+                          name="isso.commonName"
+                          as={FieldErrorMsg}
+                        />
+                        <CedarContactSelect
+                          {...field}
+                          id={field.name}
+                          // Manually update fields so that email field rerenders
+                          onChange={contact => {
+                            setValue(
+                              'isso.commonName',
+                              contact?.commonName || ''
+                            );
+                            setValue(
+                              'isso.euaUserId',
+                              contact?.euaUserId || ''
+                            );
+                            setValue('isso.email', contact?.email || '');
+                          }}
+                          autoSearch
+                        />
+                      </FormGroup>
+                    );
                   }}
                 />
-              </fieldset>
-            </FormGroup>
-          )}
-        />
+
+                <FormGroup error={!!errors?.isso?.component}>
+                  <Label htmlFor="isso.component">
+                    {t('contactDetails.isso.component')}
+                  </Label>
+                  <ErrorMessage
+                    errors={errors}
+                    name="isso.component"
+                    as={FieldErrorMsg}
+                  />
+
+                  <Dropdown
+                    {...register('isso.component')}
+                    ref={null}
+                    id="isso.component"
+                  >
+                    <option value="" disabled>
+                      {t('Select an option')}
+                    </option>
+                    {cmsDivisionsAndOfficesOptions('isso.component')}
+                  </Dropdown>
+                </FormGroup>
+
+                <FormGroup>
+                  <Label htmlFor="isso.email">
+                    {t('contactDetails.isso.email')}
+                  </Label>
+                  <TextInput
+                    {...register('isso.email')}
+                    ref={null}
+                    id="isso.email"
+                    type="text"
+                    disabled
+                  />
+                </FormGroup>
+              </Fieldset>
+            )}
+
+            <Controller
+              control={control}
+              name="isso.isPresent"
+              render={({ field: { ref, value, ...field } }) => (
+                <Radio
+                  {...field}
+                  inputRef={ref}
+                  id={`${field.name}False`}
+                  label={t('No')}
+                  checked={!value}
+                  onChange={() => field.onChange(false)}
+                />
+              )}
+            />
+          </Fieldset>
+        </FormGroup>
 
         {/* Add new contacts */}
         <AdditionalContacts
