@@ -16,7 +16,7 @@ func (s *ResolverSuite) TestModifyTRBFundingSources() {
 
 	trbRequest := models.NewTRBRequest(anonEua)
 	trbRequest.Type = models.TRBTNeedHelp
-	trbRequest.State = models.TRBRequestStateOpen
+	trbRequest.State = models.TRBRequestStateOPEN
 	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 

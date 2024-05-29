@@ -21,7 +21,7 @@ func (s *ResolverSuite) TestCreateTRBRequest() {
 
 	s.EqualValues(false, trb.Archived)
 	s.Nil(trb.Name)
-	s.EqualValues(models.TRBRequestStateOpen, trb.State)
+	s.EqualValues(models.TRBRequestStateOPEN, trb.State)
 	s.EqualValues(s.testConfigs.Principal.EUAID, trb.CreatedBy)
 	s.NotNil(trb.ID)
 	s.NotNil(trb.CreatedAt)
@@ -37,7 +37,7 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 
 	changes := map[string]interface{}{
 		"Name":     "Testing",
-		"state":    models.TRBRequestStateClosed,
+		"state":    models.TRBRequestStateCLOSED,
 		"archived": false,
 	}
 	princ := s.testConfigs.Principal.ID()
@@ -46,7 +46,7 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 	s.NotNil(updated)
 	s.NoError(err)
 	s.EqualValues(*updated.Name, "Testing")
-	s.EqualValues(updated.State, models.TRBRequestStateClosed)
+	s.EqualValues(updated.State, models.TRBRequestStateCLOSED)
 	s.EqualValues(updated.Archived, false)
 	s.EqualValues(updated.ModifiedBy, &princ)
 	s.NotNil(updated.ModifiedAt)
@@ -96,7 +96,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 	s.Len(col, 2)
 
 	changes := map[string]interface{}{
-		"state":    models.TRBRequestStateClosed,
+		"state":    models.TRBRequestStateCLOSED,
 		"archived": true,
 	}
 
@@ -157,7 +157,7 @@ func (s *ResolverSuite) TestGetMyTRBRequests() {
 	s.EqualValues(trb2, col[0])
 
 	changes := map[string]interface{}{
-		"state":    models.TRBRequestStateClosed,
+		"state":    models.TRBRequestStateCLOSED,
 		"archived": true,
 	}
 
@@ -303,7 +303,7 @@ func (s *ResolverSuite) TestIsRecentTRBRequest() {
 				trb.TRBLead = zero.StringFrom("TRBA").Ptr()
 			}
 			if test.isRequestClosed {
-				trb.State = models.TRBRequestStateClosed
+				trb.State = models.TRBRequestStateCLOSED
 			}
 			s.Equal(test.expected, IsRecentTRBRequest(s.testConfigs.Context, trb, now))
 		})

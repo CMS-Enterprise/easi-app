@@ -31,7 +31,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 			for i := 0; i < 3; i++ {
 				trbRequest := models.NewTRBRequest(testhelpers.RandomEUAIDNull().String)
 				trbRequest.Type = models.TRBTBrainstorm
-				trbRequest.State = models.TRBRequestStateOpen
+				trbRequest.State = models.TRBRequestStateOPEN
 				created, err := s.store.CreateTRBRequest(ctx, tx, trbRequest)
 				s.NoError(err)
 				createdIDs = append(createdIDs, created.ID)
@@ -142,11 +142,11 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 		system4 = "4"
 	)
 
-	s.Run("test getting open TRB requests by cedar system id", func() {
+	s.Run("test getting TRB requests by cedar system id", func() {
 		// create trb requests
 		trb1 := models.TRBRequest{
 			Type:  models.TRBTBrainstorm,
-			State: models.TRBRequestStateOpen,
+			State: models.TRBRequestStateOPEN,
 		}
 		trb1.CreatedBy = testhelpers.RandomEUAIDNull().String
 
@@ -158,7 +158,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 
 		trb2 := models.TRBRequest{
 			Type:  models.TRBTBrainstorm,
-			State: models.TRBRequestStateOpen,
+			State: models.TRBRequestStateOPEN,
 		}
 
 		trb2.CreatedBy = testhelpers.RandomEUAIDNull().String
@@ -171,7 +171,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 
 		trb3 := models.TRBRequest{
 			Type:  models.TRBTBrainstorm,
-			State: models.TRBRequestStateClosed,
+			State: models.TRBRequestStateCLOSED,
 		}
 
 		trb3.CreatedBy = testhelpers.RandomEUAIDNull().String
@@ -205,7 +205,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 		})
 		s.NoError(err)
 
-		results, err := s.store.TRBRequestsByCedarSystemID(ctx, system1, models.TRBRequestStateOpen)
+		results, err := s.store.TRBRequestsByCedarSystemID(ctx, system1, models.TRBRequestStateOPEN)
 		s.NoError(err)
 		s.Len(results, 2)
 
@@ -219,5 +219,11 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 		}
 
 		s.False(foundClosed)
+
+		// now find the closed one
+		results, err = s.store.TRBRequestsByCedarSystemID(ctx, system1, models.TRBRequestStateCLOSED)
+		s.NoError(err)
+		s.Len(results, 1)
+		s.Equal(results[0].ID, closed)
 	})
 }

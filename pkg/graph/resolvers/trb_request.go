@@ -28,7 +28,7 @@ func CreateTRBRequest(
 
 		trb := models.NewTRBRequest(princ.ID())
 		trb.Type = requestType
-		trb.State = models.TRBRequestStateOpen
+		trb.State = models.TRBRequestStateOPEN
 		createdTRB, err := store.CreateTRBRequest(ctx, tx, trb)
 		if err != nil {
 			return nil, err
@@ -267,12 +267,12 @@ func CloseTRBRequest(
 	}
 
 	// Check if request is already closed so an unnecesary email won't be sent
-	if trb.State != models.TRBRequestStateOpen {
+	if trb.State != models.TRBRequestStateOPEN {
 		return nil, errors.New("cannot close a TRB request that is not open")
 	}
 
 	trbChanges := map[string]interface{}{
-		"state": models.TRBRequestStateClosed,
+		"state": models.TRBRequestStateCLOSED,
 	}
 
 	err = ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
@@ -340,12 +340,12 @@ func ReopenTRBRequest(
 	}
 
 	// Check if request is already open so an unnecesary email won't be sent
-	if trb.State != models.TRBRequestStateClosed {
+	if trb.State != models.TRBRequestStateCLOSED {
 		return nil, errors.New("cannot re-open a TRB request that is not closed")
 	}
 
 	trbChanges := map[string]interface{}{
-		"state": models.TRBRequestStateOpen,
+		"state": models.TRBRequestStateOPEN,
 	}
 
 	err = ApplyChangesAndMetaData(trbChanges, trb, appcontext.Principal(ctx))
@@ -398,7 +398,7 @@ func ReopenTRBRequest(
 func IsRecentTRBRequest(ctx context.Context, obj *models.TRBRequest, now time.Time) bool {
 	numDaysToConsiderRecent := -7
 	recencyDate := now.AddDate(0, 0, numDaysToConsiderRecent)
-	isRequestClosed := obj.State == models.TRBRequestStateClosed
+	isRequestClosed := obj.State == models.TRBRequestStateCLOSED
 	hasNoLeadAssigned := obj.TRBLead == nil
 
 	// A request is only recent if it's not closed

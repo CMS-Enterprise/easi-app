@@ -65,7 +65,7 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 
 	trb := models.NewTRBRequest(anonEua)
 	trb.Type = models.TRBTNeedHelp
-	trb.State = models.TRBRequestStateOpen
+	trb.State = models.TRBRequestStateOPEN
 	trb, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 

@@ -142,7 +142,7 @@ func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
 		system4 = "4"
 	)
 
-	s.Run("test getting open system intakes by cedar system id", func() {
+	s.Run("test getting system intakes by cedar system id", func() {
 		// create some intakes
 		intake1 := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
@@ -217,5 +217,11 @@ func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
 		}
 
 		s.False(foundClosed)
+
+		// now get the closed one
+		results, err = s.store.SystemIntakesByCedarSystemID(ctx, system1, models.SystemIntakeStateCLOSED)
+		s.NoError(err)
+		s.Len(results, 1)
+		s.Equal(results[0].ID, closed)
 	})
 }
