@@ -48,13 +48,25 @@ export const SystemList = () => {
 
   const {
     loading: loadingBookmarks,
-    error: error2,
-    data: data2,
-    refetch: refetchBookmarks
+    error: error2
+    // data: data2
+    // refetch: refetchBookmarks
   } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery);
+  const refetchBookmarks = () => {};
 
   const systemsTableData = data1?.cedarSystems ?? [];
-  const bookmarks: CedarSystemBookmark[] = data2?.cedarSystemBookmarks ?? [];
+  // const bookmarks: CedarSystemBookmark[] = data2?.cedarSystemBookmarks ?? [];
+  const bookmarks: CedarSystemBookmark[] = data1?.cedarSystems
+    ? data1.cedarSystems
+        .filter(s => s.isBookmarked)
+        .map(s => {
+          return {
+            euaUserId: 'ABCD',
+            __typename: 'CedarSystemBookmark',
+            cedarSystemId: s.id
+          };
+        })
+    : [];
 
   return (
     <MainContent className="grid-container margin-bottom-5">
