@@ -557,6 +557,20 @@ func main() {
 	)
 	unlinkSystemIntakeRelation(logger, store, intakeID)
 
+	// 5. Link deactivated Systems
+	intakeID = uuid.MustParse("04cb8a97-3515-4071-9b80-2710834cd94c")
+	makeSystemIntakeAndSubmit("System Intake Relation (Deactivated System)", &intakeID, requesterEUA, logger, store)
+	setSystemIntakeRelationExistingSystem(
+		logger,
+		store,
+		intakeID,
+		[]string{"12345", "67890"},
+		[]string{
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC6G}",
+		},
+	)
+
 	// initial intake form
 	intakeID = uuid.MustParse("14ecf18c-8367-402d-a48e-92e7d2853f50")
 	makeSystemIntakeAndSubmit("initial form filled and submitted", &intakeID, requesterEUA, logger, store)

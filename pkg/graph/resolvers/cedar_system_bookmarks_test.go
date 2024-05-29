@@ -8,7 +8,7 @@ import (
 func (s *ResolverSuite) TestCedarSystemBookmarks() {
 	ctx := s.testConfigs.Context
 
-	mockSystems := cedarcoremock.GetSystems()
+	mockSystems := cedarcoremock.GetActiveSystems()
 	s.Len(mockSystems, 5)
 
 	cedarSystemID := mockSystems[0].ID.String
