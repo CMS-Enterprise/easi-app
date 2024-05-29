@@ -23,17 +23,15 @@ type dataReader struct {
 
 type DataLoaders struct {
 	//CedarSystemBookmark *dataloadgen.Loader[models.BookmarkRequest, bool]
-	CedarSystem *dataloadgen.Loader[string, *models.CedarSystem]
+	//CedarSystem *dataloadgen.Loader[string, *models.CedarSystem]
 
 	SystemIntakeContractNumbers *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
 	SystemIntakeSystems         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
 	TRBRequestContractNumbers   *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestContractNumber]
 	TRBRequestSystems           *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestSystem]
 
-	FetchUserInfosL *dataloadgen.Loader[string, *models.UserInfo]
-
-	//FetchUserInfos  fetchUserInfosFunc
-	GetCedarSystems getCedarSystemsFunc
+	FetchUserInfos  *dataloadgen.Loader[string, *models.UserInfo]
+	GetCedarSystems *dataloadgen.Loader[string, *models.CedarSystem]
 }
 
 func NewDataLoaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, getCedarSystems getCedarSystemsFunc) *DataLoaders {
@@ -50,12 +48,12 @@ func NewDataLoaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		TRBRequestSystems:           dataloadgen.NewLoader(dr.getTRBRequestSystemsByTRBRequestID),
 
 		//FetchUserInfos:  fetchUserInfos,
-		GetCedarSystems: getCedarSystems,
+		GetCedarSystems: dataloadgen.NewLoader(dr.getCedarSystemsByIDs),
 
-		FetchUserInfosL: dataloadgen.NewLoader(dr.fetchUserInfosByEUAUserIDs),
+		FetchUserInfos: dataloadgen.NewLoader(dr.fetchUserInfosByEUAUserIDs),
 
 		//// we need to use `fetchUserInfos` but wouldn't be able to pass it as an arg to the actual function
-		//FetchUserInfosL: dataloadgen.NewLoader(func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, []error) {
+		//FetchUserInfos: dataloadgen.NewLoader(func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, []error) {
 		//	data, err := fetchUserInfos(ctx, euaUserIDs)
 		//	if err != nil {
 		//		return nil, []error{err}
