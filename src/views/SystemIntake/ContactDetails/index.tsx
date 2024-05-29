@@ -3,6 +3,7 @@ import {
   Controller,
   FieldPath,
   FormProvider,
+  UseFormReturn,
   UseFormSetValue
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -744,7 +745,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
         {/* Governance Teams */}
 
-        <FormProvider<ContactDetailsForm> {...form}>
+        <FormProvider<ContactDetailsForm>
+          {...(form as UseFormReturn<ContactDetailsForm>)}
+        >
           <GovernanceTeams />
         </FormProvider>
 

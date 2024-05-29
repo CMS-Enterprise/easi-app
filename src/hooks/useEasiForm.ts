@@ -1,27 +1,16 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import {
+  FieldPath,
   FieldValues,
-  Path,
-  SubmitErrorHandler,
-  SubmitHandler,
+  RefCallBack,
+  RegisterOptions,
   useForm,
   UseFormProps,
+  UseFormRegisterReturn,
   UseFormReturn
 } from 'react-hook-form';
 
-export type UseEasiFormHandleSubmit<TFieldValues extends FieldValues> = (
-  onValid: SubmitHandler<TFieldValues>,
-  onInvalid?: SubmitErrorHandler<TFieldValues>,
-  options?: {
-    fields: Path<TFieldValues>[];
-  }
-) => (e?: React.BaseSyntheticEvent) => Promise<void>;
-
-type PartialSubmit<TFieldValues extends FieldValues> = ({
-  update,
-  clearErrors,
-  callback
-}: {
+type PartialSubmitProps<TFieldValues extends FieldValues> = {
   update: (
     /** Object containing valid dirty field values */
     formData: Partial<TFieldValues>
@@ -30,7 +19,30 @@ type PartialSubmit<TFieldValues extends FieldValues> = ({
   callback?: () => void;
   /** Whether to clear field error messages */
   clearErrors?: boolean;
-}) => Promise<void>;
+};
+
+type PartialSubmit<TFieldValues extends FieldValues> = ({
+  update,
+  clearErrors,
+  callback
+}: PartialSubmitProps<TFieldValues>) => Promise<void>;
+
+type UseEasiFormRegister<TFieldValues extends FieldValues> = <
+  TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>(
+  name: TFieldName,
+  options?: RegisterOptions<TFieldValues, TFieldName>
+) => UseFormRegisterReturn<TFieldName> & { inputRef: RefCallBack };
+
+type UseEasiFormReturn<
+  TFieldValues extends FieldValues = FieldValues,
+  TContext = any
+> = Omit<UseFormReturn<TFieldValues, TContext>, 'register'> & {
+  /** Ignore errors and submit valid dirty field values */
+  partialSubmit: PartialSubmit<TFieldValues>;
+  /** Custom register function that returns `inputRef` for function components */
+  register: UseEasiFormRegister<TFieldValues>;
+};
 
 /**
  * Extension of React Hook Form's `useForm` hook
@@ -40,10 +52,7 @@ function useEasiForm<
   TContext = any
 >(
   props?: UseFormProps<TFieldValues, TContext>
-): UseFormReturn<TFieldValues, TContext> & {
-  /** Ignore errors and submit valid dirty field values */
-  partialSubmit: PartialSubmit<TFieldValues>;
-} {
+): UseEasiFormReturn<TFieldValues, TContext> {
   const form = useForm<TFieldValues, TContext>(props);
 
   const {
@@ -89,9 +98,20 @@ function useEasiForm<
     [dirtyFields, getValues, errors, form, isDirty]
   );
 
+  /** Custom register function that returns `inputRef` for function components */
+  const register: UseEasiFormRegister<TFieldValues> = (name, options) => {
+    const field = form.register(name, options);
+
+    return {
+      ...field,
+      inputRef: field.ref
+    };
+  };
+
   return {
     ...form,
-    partialSubmit
+    partialSubmit,
+    register
   };
 }
 
