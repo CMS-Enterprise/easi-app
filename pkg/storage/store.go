@@ -10,6 +10,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
@@ -121,6 +122,7 @@ type args map[string]any
 func selectNamed(ctx context.Context, np sqlutils.NamedPreparer, dest interface{}, sqlStatement string, arg args) error {
 	if ctx == nil {
 		ctx = context.TODO()
+		appcontext.ZLogger(ctx).Debug("nil ctx passed to selectNamed")
 	}
 
 	stmt, err := np.PrepareNamed(sqlStatement)
