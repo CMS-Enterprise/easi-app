@@ -37,7 +37,7 @@ import TableResults from 'components/TableResults';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
 import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQuery';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
-import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
+import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import GetMyCedarSystemsQuery from 'queries/GetMyCedarSystemsQuery';
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
 import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
@@ -89,12 +89,8 @@ export const Table = ({
     GetMyCedarSystemsQuery
   );
 
-  const [createMutate] = useMutation(CreateCedarSystemBookmarkQuery, {
-    refetchQueries: [GetCedarSystemsQuery]
-  });
-  const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery, {
-    refetchQueries: [GetCedarSystemsQuery]
-  });
+  const [createMutate] = useMutation(CreateCedarSystemBookmarkQuery);
+  const [deleteMutate] = useMutation(DeleteCedarSystemBookmarkQuery);
 
   // Sets the systemTableType state to the query param, defaults to all-systems if no param present
   // If the query param changes, update the component state
@@ -144,8 +140,14 @@ export const Table = ({
           input: {
             cedarSystemId
           }
-        }
-      }).then(refetchBookmarks);
+        },
+        refetchQueries: [
+          {
+            query: GetCedarSystemQuery,
+            variables: { id: cedarSystemId }
+          }
+        ]
+      });
     };
 
     return [
@@ -217,7 +219,7 @@ export const Table = ({
       }
       */
     ];
-  }, [t, savedBookmarks, createMutate, deleteMutate, refetchBookmarks]);
+  }, [t, savedBookmarks, createMutate, deleteMutate]);
 
   // Remove bookmark column if showing My systems table
   if (isMySystems) {
