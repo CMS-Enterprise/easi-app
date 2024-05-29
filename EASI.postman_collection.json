@@ -2029,9 +2029,9 @@
 											"listen": "test",
 											"script": {
 												"exec": [
-													"// const systems = JSON.parse(pm.response.text())\r",
-													"// console.log(systems.count)\r",
-													"// console.log(systems.SystemSummary.filter(sys => sys.state !== 'Active').map(({name, id, state}) => ({name, id, state})))"
+													"const systems = JSON.parse(pm.response.text())\r",
+													"console.log(systems.count)\r",
+													"console.log(systems.SystemSummary.filter(sys => sys.state !== 'Active').map(({name, id, state}) => ({name, id, state})))"
 												],
 												"type": "text/javascript",
 												"packages": {}
