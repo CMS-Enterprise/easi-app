@@ -309,7 +309,7 @@ func (suite *ResolverSuite) TestRejectIntakeAsNotApproved() {
 
 	// check workflow state
 	suite.EqualValues(models.SystemIntakeStepDECISION, updatedIntake.Step)
-	suite.EqualValues(models.SystemIntakeStateCLOSED, updatedIntake.State)
+	suite.EqualValues(models.SystemIntakeStateClosed, updatedIntake.State)
 	suite.EqualValues(models.SIDSNotApproved, updatedIntake.DecisionState)
 
 	// check fields from input
@@ -431,7 +431,7 @@ func (suite *ResolverSuite) TestIssueLCID() {
 
 		// check workflow state
 		suite.EqualValues(models.SystemIntakeStepDECISION, updatedIntake.Step)
-		suite.EqualValues(models.SystemIntakeStateCLOSED, updatedIntake.State)
+		suite.EqualValues(models.SystemIntakeStateClosed, updatedIntake.State)
 		suite.EqualValues(models.SIDSLcidIssued, updatedIntake.DecisionState)
 
 		// check fields from input
@@ -496,7 +496,7 @@ func (suite *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			intakeToCreate := &models.SystemIntake{
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        formStep,
-				State:       models.SystemIntakeStateOPEN,
+				State:       models.SystemIntakeStateOpen,
 			}
 			// If in the decision step, an intake should always have a decision
 			if formStep == models.SystemIntakeStepDECISION {
@@ -527,7 +527,7 @@ func (suite *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			// ensure correct intake was edited
 			suite.Equal(intake.ID, actionedIntake.ID)
 			// Intake should now be closed
-			suite.Equal(models.SystemIntakeStateCLOSED, actionedIntake.State)
+			suite.Equal(models.SystemIntakeStateClosed, actionedIntake.State)
 			// Step and Decision State should be unaffected
 			suite.Equal(intake.Step, actionedIntake.Step)
 			suite.Equal(intake.DecisionState, actionedIntake.DecisionState)
@@ -538,7 +538,7 @@ func (suite *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			intakeToCreate := &models.SystemIntake{
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        formStep,
-				State:       models.SystemIntakeStateCLOSED,
+				State:       models.SystemIntakeStateClosed,
 			}
 			// If in the decision step, an intake should always have a decision
 			if formStep == models.SystemIntakeStepDECISION {
@@ -569,14 +569,14 @@ func (suite *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			// ensure intake is still closed and unaffected
 			fetchedIntake, err := suite.testConfigs.Store.FetchSystemIntakeByID(ctx, intake.ID)
 			suite.NoError(err)
-			suite.Equal(fetchedIntake.State, models.SystemIntakeStateCLOSED)
+			suite.Equal(fetchedIntake.State, models.SystemIntakeStateClosed)
 		})
 	}
 	suite.Run("Should create action", func() {
 		intake, err := suite.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateOPEN,
+			State:       models.SystemIntakeStateOpen,
 		})
 		suite.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -685,7 +685,7 @@ func (suite *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			intakeToCreate := &models.SystemIntake{
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        formStep,
-				State:       models.SystemIntakeStateCLOSED,
+				State:       models.SystemIntakeStateClosed,
 			}
 			// If in the decision step, an intake should always have a decision
 			if formStep == models.SystemIntakeStepDECISION {
@@ -716,7 +716,7 @@ func (suite *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			// ensure correct intake was edited
 			suite.Equal(intake.ID, actionedIntake.ID)
 			// Intake should now be open
-			suite.Equal(actionedIntake.State, models.SystemIntakeStateOPEN)
+			suite.Equal(actionedIntake.State, models.SystemIntakeStateOpen)
 			// Step and Decision State should be unaffected
 			suite.Equal(intake.Step, actionedIntake.Step)
 			suite.Equal(intake.DecisionState, actionedIntake.DecisionState)
@@ -727,7 +727,7 @@ func (suite *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			intakeToCreate := &models.SystemIntake{
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Step:        formStep,
-				State:       models.SystemIntakeStateOPEN,
+				State:       models.SystemIntakeStateOpen,
 			}
 			// If in the decision step, an intake should always have a decision
 			if formStep == models.SystemIntakeStepDECISION {
@@ -758,14 +758,14 @@ func (suite *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			// ensure intake is still closed and unaffected
 			fetchedIntake, err := suite.testConfigs.Store.FetchSystemIntakeByID(ctx, intake.ID)
 			suite.NoError(err)
-			suite.Equal(models.SystemIntakeStateOPEN, fetchedIntake.State)
+			suite.Equal(models.SystemIntakeStateOpen, fetchedIntake.State)
 		})
 	}
 	suite.Run("Should create action", func() {
 		intake, err := suite.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		suite.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -799,7 +799,7 @@ func (suite *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 		intake, err := suite.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		suite.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -832,7 +832,7 @@ func (suite *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 		intake, err := suite.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		suite.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -872,8 +872,8 @@ func (suite *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		models.SystemIntakeStepDECISION,
 	}
 	formStates := []models.SystemIntakeState{
-		models.SystemIntakeStateCLOSED,
-		models.SystemIntakeStateOPEN,
+		models.SystemIntakeStateClosed,
+		models.SystemIntakeStateOpen,
 	}
 	for _, formStep := range formSteps {
 		for _, formState := range formStates {
@@ -913,7 +913,7 @@ func (suite *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 				// ensure correct intake was edited
 				suite.Equal(intake.ID, actionedIntake.ID)
 				// Intake should now be closed
-				suite.Equal(actionedIntake.State, models.SystemIntakeStateCLOSED)
+				suite.Equal(actionedIntake.State, models.SystemIntakeStateClosed)
 				// Step should be decision
 				suite.Equal(models.SystemIntakeStepDECISION, actionedIntake.Step)
 				// Decision state should be NOT_GOVERNANCE
@@ -927,7 +927,7 @@ func (suite *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		intake, err := suite.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		suite.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -961,7 +961,7 @@ func (suite *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		intake, err := suite.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		suite.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -994,7 +994,7 @@ func (suite *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		intake, err := suite.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Step:        models.SystemIntakeStepINITIALFORM,
-			State:       models.SystemIntakeStateCLOSED,
+			State:       models.SystemIntakeStateClosed,
 		})
 		suite.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
