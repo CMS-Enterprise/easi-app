@@ -12,7 +12,7 @@ import (
 // IsIntakeValid checks if in an intake and a new step from a Progress to New Step action are valid
 // the frontend shouldn't allow users to take any invalid actions, but we validate server-side to make sure
 func IsIntakeValid(intake *models.SystemIntake, newStep model.SystemIntakeStepToProgressTo) error {
-	if intake.State == models.SystemIntakeStateCLOSED {
+	if intake.State == models.SystemIntakeStateClosed {
 		return &apperrors.BadRequestError{
 			Err: &apperrors.InvalidActionError{
 				ActionType: models.ActionTypePROGRESSTONEWSTEP,

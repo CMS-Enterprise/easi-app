@@ -180,8 +180,8 @@ type CedarSystem {
   systemMaintainerOrgComp: String
   versionId: String
   isBookmarked: Boolean!
-  linkedTrbRequests: [TRBRequest!]!
-  linkedSystemIntakes: [SystemIntake!]! 
+  linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
+  linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!
   uuid: String
 }
 
