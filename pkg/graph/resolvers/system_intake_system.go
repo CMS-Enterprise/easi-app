@@ -7,7 +7,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/dataloaders2"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -22,7 +21,7 @@ func SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*mode
 
 	var systems []*models.CedarSystem
 	for _, v := range siSystems {
-		cedarSystemSummary, err := dataloaders.GetCedarSystemByID(ctx, v.SystemID)
+		cedarSystemSummary, err := dataloaders2.GetCedarSystemByID(ctx, v.SystemID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("unable to retrieve system from cedar", zap.Error(err))
 			continue
