@@ -10,7 +10,6 @@ import (
 
 // DataLoaders wrap your data loaders to inject via middleware
 type DataLoaders struct {
-	UserAccountLoader                 *WrappedDataLoader
 	DataReader                        *DataReader
 	UserInfoLoader                    *WrappedDataLoader
 	systemIntakeContractNumbersLoader *WrappedDataLoader
@@ -32,8 +31,6 @@ func NewDataLoaders(store *storage.Store, fetchUserInfos func(context.Context, [
 		FetchUserInfos:  fetchUserInfos,
 		GetCedarSystems: getCedarSystems,
 	}
-
-	loaders.UserAccountLoader = newWrappedDataLoader(loaders.GetUserAccountsByIDLoader)
 
 	loaders.UserInfoLoader = newWrappedDataLoader(loaders.BatchUserInfos)
 

@@ -11,11 +11,6 @@ type CedarSystemBookmark struct {
 	CreatedAt     *time.Time `db:"created_at"`
 }
 
-type SystemBookmark struct {
-	CedarSystemID string `json:"cedarSystemID"`
-	IsBookmarked  bool   `json:"isBookmarked"`
-}
-
 type BookmarkRequest struct {
 	CedarSystemID string `db:"eua_user_id"`
 	EuaUserID     string `db:"cedar_system_id"`
