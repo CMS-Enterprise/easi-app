@@ -22,8 +22,8 @@ type dataReader struct {
 }
 
 type DataLoaders struct {
-	//CedarSystemBookmark *dataloadgen.Loader[models.BookmarkRequest, bool]
 	//CedarSystem *dataloadgen.Loader[string, *models.CedarSystem]
+	CedarSystemBookmark *dataloadgen.Loader[models.BookmarkRequest, bool]
 
 	SystemIntakeContractNumbers *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
 	SystemIntakeSystems         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
@@ -41,7 +41,7 @@ func NewDataLoaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		getCedarSystems: getCedarSystems,
 	}
 	return &DataLoaders{
-		// CedarSystemBookmark:         dataloadgen.NewLoader(dr.getCedarSystemIsBookmarked),
+		CedarSystemBookmark:         dataloadgen.NewLoader(dr.getCedarSystemIsBookmarked),
 		SystemIntakeContractNumbers: dataloadgen.NewLoader(dr.getSystemIntakeContractNumbersBySystemIntakeID),
 		SystemIntakeSystems:         dataloadgen.NewLoader(dr.getSystemIntakeSystemsBySystemIntakeID),
 		TRBRequestContractNumbers:   dataloadgen.NewLoader(dr.getTRBRequestContractNumbersByTRBRequestID),

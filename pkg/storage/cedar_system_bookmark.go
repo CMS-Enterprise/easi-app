@@ -84,40 +84,6 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, paramTab
 	return store, nil
 }
 
-// func (s *Store) FetchCedarSystemIsBookmarkedLOADER2(ctx context.Context, cedarSystemIDs []models.BookmarkRequest) ([]bool, []error) {
-// 	sqlStatement := "SELECT cedar_system_id FROM cedar_system_bookmarks WHERE cedar_system_id = ANY($1) AND eua_user_id = $2"
-
-// 	rows, err := s.db.QueryContext(ctx, sqlStatement, pq.StringArray(cedarSystemIDs), euaUserID)
-
-// 	if err != nil {
-// 		return nil, []error{err}
-// 	}
-// 	defer rows.Close()
-
-// 	var (
-// 		bookmarksMap = map[string]struct{}{}
-// 		bookmarks    []bool
-// 		errs         []error
-// 	)
-
-// 	for rows.Next() {
-// 		var id string
-// 		if err := rows.Scan(&id); err != nil {
-// 			errs = append(errs, err)
-// 			continue
-// 		}
-
-// 		bookmarksMap[id] = helpers.EmptyStruct
-// 	}
-
-// 	for _, id := range cedarSystemIDs {
-// 		_, ok := bookmarksMap[id]
-// 		bookmarks = append(bookmarks, ok)
-// 	}
-
-// 	return bookmarks, errs
-// }
-
 // DeleteCedarSystemBookmark deletes an existing cedar system bookmark object in the database
 func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookmark *models.CedarSystemBookmark) (*models.CedarSystemBookmark, error) {
 	euaUserID := appcontext.Principal(ctx).ID()
@@ -135,4 +101,36 @@ func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookma
 	}
 
 	return cedarSystemBookmark, nil
+}
+
+func (s *Store) FetchCedarSystemIsBookmarkedLOADER2(ctx context.Context, bookmarkRequests []models.BookmarkRequest) ([]bool, error) {
+	sqlStatement := "SELECT cedar_system_id FROM cedar_system_bookmarks WHERE (cedar_system_id, eua_user_id) = ANY(:cedar_system_id, :eua_user_id)"
+
+	rows, err := s.db.QueryContext(ctx, sqlStatement, bookmarkRequests)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var (
+		bookmarksMap = map[string]struct{}{}
+		bookmarks    []bool
+	)
+
+	for rows.Next() {
+		var id string
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+
+		bookmarksMap[id] = helpers.EmptyStruct
+	}
+
+	for _, req := range bookmarkRequests {
+		_, ok := bookmarksMap[req.CedarSystemID]
+		bookmarks = append(bookmarks, ok)
+	}
+
+	return bookmarks, nil
 }
