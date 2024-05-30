@@ -113,11 +113,7 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER2(ctx context.Context, bookmar
 	}
 	defer rows.Close()
 
-	var (
-		bookmarksMap = map[string]struct{}{}
-		bookmarks    []bool
-	)
-
+	bookmarksMap := map[string]struct{}{}
 	for rows.Next() {
 		var id string
 		if err := rows.Scan(&id); err != nil {
@@ -127,6 +123,7 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER2(ctx context.Context, bookmar
 		bookmarksMap[id] = helpers.EmptyStruct
 	}
 
+	var bookmarks []bool
 	for _, req := range bookmarkRequests {
 		_, ok := bookmarksMap[req.CedarSystemID]
 		bookmarks = append(bookmarks, ok)
