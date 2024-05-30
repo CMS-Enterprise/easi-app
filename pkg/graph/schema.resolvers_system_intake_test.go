@@ -8,7 +8,6 @@ import (
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -252,7 +251,6 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() 
 		}`, intake.ID),
 		&resp,
 		addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()),
-		addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)),
 	)
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
@@ -323,8 +321,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 			}
 		}`, intake.ID),
 		&resp,
-		addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()),
-		addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)))
+		addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
@@ -1349,7 +1346,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 					}
 				}
 			}
-		}`, intake.ID), &resp, addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)))
+		}`, intake.ID), &resp)
 
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
 
@@ -1429,7 +1426,7 @@ func (s *GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
 					contractNumber
 				}
 			}
-		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()), addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)))
+		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
 	s.Equal(contractVehicle, *resp.SystemIntake.Contract.Vehicle)
 	s.Empty(resp.SystemIntake.ContractNumbers)
@@ -1482,7 +1479,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithC
 					}
 				}
 			}
-		}`, intake.ID, contractNumber), &resp, addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)))
+		}`, intake.ID, contractNumber), &resp)
 
 	found := false
 
@@ -1689,7 +1686,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 					}
 				}
 			}
-		}`, intake.ID), &resp, addDataLoadersToGraphQLClientTest(dataloaders.Loaders(ctx)))
+		}`, intake.ID), &resp)
 
 	s.Equal(intake.ID.String(), resp.UpdateSystemIntakeContractDetails.SystemIntake.ID)
 
