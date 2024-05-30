@@ -19,7 +19,7 @@ go tool cover -html=go-coverage.out -o "go-coverage.html"
 # parse out the total coverage percentage which is on the line with (statements) and strip off the % sign
 # https://unix.stackexchange.com/questions/305190/remove-last-character-from-string-captured-with-awk
 percent=$(grep '(statements)' "go-coverage.txt" | awk '{print substr($NF, 1, length($NF)-1)}')
-goal_percent=40
+goal_percent=0 # We don't want to block on coverage for now -- just report coverage %
 
 # use bc to perform floating-point comparison,
 # then use (( )) to have bash use an arithmetic context to interpret bc's output
