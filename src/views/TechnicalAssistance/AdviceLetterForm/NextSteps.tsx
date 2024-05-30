@@ -13,11 +13,11 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 
+// import TextAreaField from 'components/shared/TextAreaField';
+import useEasiForm from 'components/EasiForm/useEasiForm';
 import RichTextEditor from 'components/RichTextEditor';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-// import TextAreaField from 'components/shared/TextAreaField';
-import useEasiForm from 'hooks/useEasiForm';
 import { UpdateTrbAdviceLetterQuery } from 'queries/TrbAdviceLetterQueries';
 import {
   UpdateTrbAdviceLetter,

@@ -19,6 +19,7 @@ import {
 import { camelCase, lowerFirst, pick, upperFirst } from 'lodash';
 
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
+import useEasiForm from 'components/EasiForm/useEasiForm';
 import Alert from 'components/shared/Alert';
 import DatePickerFormatted from 'components/shared/DatePickerFormatted';
 import Divider from 'components/shared/Divider';
@@ -30,7 +31,6 @@ import TextAreaField from 'components/shared/TextAreaField';
 import Spinner from 'components/Spinner';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import useCacheQuery from 'hooks/useCacheQuery';
-import useEasiForm from 'hooks/useEasiForm';
 import DeleteTRBRequestFundingSource from 'queries/DeleteTRBRequestFundingSource';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import {
