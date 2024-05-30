@@ -38,18 +38,18 @@
 
         &__link {
             color: color('base-dark');
-            padding: 1em;            
+            padding: 1em;
         }
 
         &__sublink {
-            
+
             padding-left: 1rem !important;
             &:hover {
                 text-decoration: none !important;
             }
             @media (min-width: $desktop) {
                 color: white !important;
-            }           
+            }
         }
 
         &__current {
@@ -63,10 +63,10 @@
             margin-top: 2em
         };
 
-        a {   
+        a {
             &:visited {
                 color: color('base-dark')
-            }             
+            }
         }
 
         .usa-current {
@@ -112,9 +112,4 @@
     &::after {
         bottom: 0 !important;
     }
-}
-
-.system-dropdown {
-    padding-top: 0.9rem !important;
-    padding-bottom: 1.1rem !important;
 }
