@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { Controller, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
 import {
@@ -10,12 +10,16 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 
+import { useEasiFormContext } from 'components/EasiForm';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { ContactDetailsForm } from 'types/systemIntake';
 
+/**
+ * Governance team fields for use in Contact Details section of System Intake form
+ */
 const GovernanceTeams = () => {
   const { t } = useTranslation('intake');
 
@@ -23,8 +27,9 @@ const GovernanceTeams = () => {
     control,
     watch,
     trigger,
+    register,
     formState: { errors, isSubmitted }
-  } = useFormContext<ContactDetailsForm>();
+  } = useEasiFormContext<ContactDetailsForm>();
 
   const { fields: teams, remove, append } = useFieldArray<ContactDetailsForm>({
     control,
@@ -42,30 +47,31 @@ const GovernanceTeams = () => {
 
   return (
     <>
-      <FormGroup>
+      <Fieldset className="margin-top-3">
+        <legend
+          className="text-bold margin-bottom-1"
+          aria-describedby="govTeamHelpText"
+        >
+          {t('contactDetails.collaboration.label')}
+        </legend>
+
+        <HelpText id="govTeamHelpText">
+          {t('contactDetails.collaboration.helpText')}
+        </HelpText>
+
         <Controller
           control={control}
           name="governanceTeams.isPresent"
           render={({ field: { ref, ...field } }) => (
-            <>
-              <Label htmlFor={field.name} className="margin-bottom-1">
-                {t('contactDetails.collaboration.label')}
-              </Label>
-
-              <HelpText id="IntakeForm-Collaborators">
-                {t('contactDetails.collaboration.helpText')}
-              </HelpText>
-
-              <Radio
-                {...field}
-                inputRef={ref}
-                id={`${field.name}True`}
-                label={t('contactDetails.collaboration.oneOrMore')}
-                value="true"
-                checked={!!field.value}
-                onChange={() => field.onChange(true)}
-              />
-            </>
+            <Radio
+              {...field}
+              inputRef={ref}
+              id={`${field.name}True`}
+              label={t('contactDetails.collaboration.oneOrMore')}
+              value="true"
+              checked={!!field.value}
+              onChange={() => field.onChange(true)}
+            />
           )}
         />
 
@@ -81,12 +87,16 @@ const GovernanceTeams = () => {
 
               const isChecked = teamIndex > -1;
 
+              const collaboratorField = `governanceTeams.teams.${teamIndex}.collaborator` as const;
+
+              const error =
+                errors?.governanceTeams?.teams?.[teamIndex]?.collaborator;
+
               return (
-                <Fieldset key={key}>
+                <div key={key}>
                   <Controller
                     control={control}
                     name="governanceTeams.teams"
-                    shouldUnregister
                     render={({ field: { ref, ...field } }) => {
                       return (
                         <Checkbox
@@ -95,7 +105,7 @@ const GovernanceTeams = () => {
                           id={`${field.name}.${key}`}
                           label={label}
                           value={name}
-                          defaultChecked={isChecked}
+                          checked={isChecked}
                           onChange={e => {
                             if (e.target.checked) {
                               append({
@@ -113,35 +123,28 @@ const GovernanceTeams = () => {
                   />
 
                   {isChecked && (
-                    <Controller
-                      control={control}
-                      name={`governanceTeams.teams.${teamIndex}.collaborator`}
-                      shouldUnregister
-                      render={({
-                        field: { ref, ...field },
-                        fieldState: { error }
-                      }) => (
-                        <FormGroup
-                          error={!!error}
-                          className="margin-top-1 margin-left-4 margin-bottom-1"
-                        >
-                          <Label htmlFor={field.name}>
-                            {t(`${acronym} Collaborator Name`)}
-                          </Label>
+                    <FormGroup
+                      error={!!error}
+                      className="margin-top-1 margin-bottom-2 margin-left-4"
+                    >
+                      <Label htmlFor={collaboratorField}>
+                        {t(`${acronym} Collaborator Name`)}
+                      </Label>
 
-                          <ErrorMessage name={field.name} as={FieldErrorMsg} />
+                      <ErrorMessage
+                        name={collaboratorField}
+                        as={FieldErrorMsg}
+                      />
 
-                          <TextInput
-                            {...field}
-                            inputRef={ref}
-                            id={field.name}
-                            type="text"
-                          />
-                        </FormGroup>
-                      )}
-                    />
+                      <TextInput
+                        {...register(collaboratorField)}
+                        ref={null}
+                        id={collaboratorField}
+                        type="text"
+                      />
+                    </FormGroup>
                   )}
-                </Fieldset>
+                </div>
               );
             })}
           </FormGroup>
@@ -167,7 +170,7 @@ const GovernanceTeams = () => {
             />
           )}
         />
-      </FormGroup>
+      </Fieldset>
     </>
   );
 };
