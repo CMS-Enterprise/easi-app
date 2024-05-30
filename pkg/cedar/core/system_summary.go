@@ -143,7 +143,7 @@ type systemSummaryParamOpts struct{}
 var SystemSummaryParams = systemSummaryParamOpts{}
 
 // WithDeactivatedSystems returns all systems
-func (_ systemSummaryParamOpts) WithDeactivatedSystems() systemSummaryParamFilterOpt {
+func (systemSummaryParamOpts) WithDeactivatedSystems() systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
 		params.SetState(nil)
 		params.SetIncludeInSurvey(nil)
@@ -151,14 +151,14 @@ func (_ systemSummaryParamOpts) WithDeactivatedSystems() systemSummaryParamFilte
 }
 
 // WithEuaIDFilter sets given EUA onto the params
-func (_ systemSummaryParamOpts) WithEuaIDFilter(euaUserId string) systemSummaryParamFilterOpt {
+func (systemSummaryParamOpts) WithEuaIDFilter(euaUserId string) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
 		params.SetUserName(&euaUserId)
 	}
 }
 
 // WithSubSystems sets given cedar system ID as the parent system for which we are looking for sub-systems
-func (_ systemSummaryParamOpts) WithSubSystems(cedarSystemId string) systemSummaryParamFilterOpt {
+func (systemSummaryParamOpts) WithSubSystems(cedarSystemId string) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
 		params.SetBelongsTo(&cedarSystemId)
 
