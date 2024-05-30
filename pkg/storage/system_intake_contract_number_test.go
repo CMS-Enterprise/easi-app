@@ -53,12 +53,12 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 			s.NoError(err)
 		}
 
-		data, err := s.store.SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx, formatParamTableJSON("system_intake_id", createdIDs))
+		data, err := s.store.SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx, createdIDs)
 		s.NoError(err)
+		s.Equal(len(data), len(createdIDs))
 
-		for _, systemIntakeID := range createdIDs {
-			contractsFound, ok := data[systemIntakeID.String()]
-			s.True(ok)
+		for i, systemIntakeID := range createdIDs {
+			contractsFound := data[i]
 			s.Len(contractsFound, 3)
 
 			var (
@@ -68,6 +68,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 			)
 
 			for _, contract := range contractsFound {
+				s.Equal(systemIntakeID, contract.SystemIntakeID)
 				if contract.ContractNumber == contract1 {
 					found1 = true
 				}
@@ -92,10 +93,10 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx, formatParamTableJSON("system_intake_id", []uuid.UUID{createdIDs[0]}))
+		data, err = s.store.SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
-		contractsFound, ok := data[createdIDs[0].String()]
-		s.True(ok)
+		s.Len(data, 1)
+		contractsFound := data[0]
 		s.Len(contractsFound, 4)
 
 		var (
@@ -104,6 +105,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		)
 
 		for _, contract := range contractsFound {
+			s.Equal(createdIDs[0], contract.SystemIntakeID)
 			if contract.ContractNumber == contract1 ||
 				contract.ContractNumber == contract2 ||
 				contract.ContractNumber == contract3 {

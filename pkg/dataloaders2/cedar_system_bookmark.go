@@ -8,7 +8,7 @@ import (
 )
 
 func (d *dataReader) getCedarSystemIsBookmarked(ctx context.Context, requests []models.BookmarkRequest) ([]bool, []error) {
-	data, err := d.db.FetchCedarSystemIsBookmarkedLOADER2(ctx, requests)
+	data, err := d.db.FetchCedarSystemIsBookmarkedLOADER(ctx, requests)
 	if err != nil {
 		return nil, []error{err}
 	}

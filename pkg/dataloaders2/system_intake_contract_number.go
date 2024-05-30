@@ -10,7 +10,7 @@ import (
 )
 
 func (d *dataReader) getSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContractNumber, []error) {
-	data, err := d.db.SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx, systemIntakeIDs)
+	data, err := d.db.SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx, systemIntakeIDs)
 	if err != nil {
 		return nil, []error{err}
 	}

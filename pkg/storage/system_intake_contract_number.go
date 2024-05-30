@@ -56,43 +56,8 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 	return nil
 }
 
-// SystemIntakeContractNumbersBySystemIntakeIDLOADER gets multiple groups of Contract Numbers by System Intake ID
-func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx context.Context, paramTableJSON string) (map[string][]*models.SystemIntakeContractNumber, error) {
-	stmt, err := s.db.PrepareNamed(sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER)
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-
-	var contracts []*models.SystemIntakeContractNumber
-	err = stmt.Select(&contracts, map[string]interface{}{
-		"param_table_json": paramTableJSON,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	ids, err := extractSystemIntakeIDs(paramTableJSON)
-	if err != nil {
-		return nil, err
-	}
-
-	store := map[string][]*models.SystemIntakeContractNumber{}
-
-	for _, id := range ids {
-		store[id] = []*models.SystemIntakeContractNumber{}
-	}
-
-	for _, contract := range contracts {
-		key := contract.SystemIntakeID.String()
-		store[key] = append(store[key], contract)
-	}
-
-	return store, nil
-}
-
-func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER2(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContractNumber, error) {
-	rows, err := s.db.QueryContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER2, pq.Array(systemIntakeIDs))
+func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContractNumber, error) {
+	rows, err := s.db.QueryContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER, pq.Array(systemIntakeIDs))
 	if err != nil {
 		return nil, err
 	}

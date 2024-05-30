@@ -10,7 +10,7 @@ import (
 )
 
 func (d *dataReader) getTRBRequestSystemsByTRBRequestID(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestSystem, []error) {
-	data, err := d.db.TRBRequestSystemsByTRBRequestIDLOADER2(ctx, trbRequestIDs)
+	data, err := d.db.TRBRequestSystemsByTRBRequestIDLOADER(ctx, trbRequestIDs)
 	if err != nil {
 		return nil, []error{err}
 	}

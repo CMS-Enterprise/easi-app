@@ -42,12 +42,12 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 			s.NoError(err)
 		}
 		// retrieve these contract numbers
-		data, err := s.store.TRBRequestContractNumbersByTRBRequestIDLOADER(ctx, formatParamTableJSON("trb_request_id", createdIDs))
+		data, err := s.store.TRBRequestContractNumbersByTRBRequestIDLOADER(ctx, createdIDs)
 		s.NoError(err)
+		s.Equal(len(data), len(createdIDs))
 
-		for _, trbRequestID := range createdIDs {
-			contractsFound, ok := data[trbRequestID.String()]
-			s.True(ok)
+		for i, trbRequestID := range createdIDs {
+			contractsFound := data[i]
 			s.Len(contractsFound, 3)
 
 			var (
@@ -57,6 +57,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 			)
 
 			for _, contract := range contractsFound {
+				s.Equal(trbRequestID, contract.TRBRequestID)
 				if contract.ContractNumber == contract1 {
 					found1 = true
 				}
@@ -81,11 +82,11 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.TRBRequestContractNumbersByTRBRequestIDLOADER(ctx, formatParamTableJSON("trb_request_id", []uuid.UUID{createdIDs[0]}))
+		data, err = s.store.TRBRequestContractNumbersByTRBRequestIDLOADER(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
+		s.Len(data, 1)
 
-		contractsFound, ok := data[createdIDs[0].String()]
-		s.True(ok)
+		contractsFound := data[0]
 		s.Len(contractsFound, 4)
 
 		var (
@@ -94,6 +95,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 		)
 
 		for _, contract := range contractsFound {
+			s.Equal(createdIDs[0], contract.TRBRequestID)
 			if contract.ContractNumber == contract1 ||
 				contract.ContractNumber == contract2 ||
 				contract.ContractNumber == contract3 {

@@ -56,43 +56,8 @@ func (s *Store) SetTRBRequestSystems(ctx context.Context, tx *sqlx.Tx, trbReques
 	return nil
 }
 
-// TRBRequestSystemsByTRBRequestIDLOADER gets multiple groups of system ids by TRB Request ID
-func (s *Store) TRBRequestSystemsByTRBRequestIDLOADER(ctx context.Context, paramTableJSON string) (map[string][]*models.TRBRequestSystem, error) {
-	stmt, err := s.db.PrepareNamed(sqlqueries.TRBRequestSystemForm.SelectByTRBRequestIDLOADER)
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-
-	var systems []*models.TRBRequestSystem
-	err = stmt.Select(&systems, map[string]interface{}{
-		"param_table_json": paramTableJSON,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	ids, err := extractTRBRequestIDs(paramTableJSON)
-	if err != nil {
-		return nil, err
-	}
-
-	store := map[string][]*models.TRBRequestSystem{}
-
-	for _, id := range ids {
-		store[id] = []*models.TRBRequestSystem{}
-	}
-
-	for _, system := range systems {
-		key := system.TRBRequestID.String()
-		store[key] = append(store[key], system)
-	}
-
-	return store, nil
-}
-
-func (s *Store) TRBRequestSystemsByTRBRequestIDLOADER2(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestSystem, error) {
-	rows, err := s.db.QueryContext(ctx, sqlqueries.TRBRequestSystemForm.SelectByTRBRequestIDLOADER2, pq.Array(trbRequestIDs))
+func (s *Store) TRBRequestSystemsByTRBRequestIDLOADER(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestSystem, error) {
+	rows, err := s.db.QueryContext(ctx, sqlqueries.TRBRequestSystemForm.SelectByTRBRequestIDLOADER, pq.Array(trbRequestIDs))
 	if err != nil {
 		return nil, err
 	}

@@ -17,11 +17,6 @@ var setSystemIntakeSystemsSQL string
 //go:embed SQL/system_intake_system/get_by_system_intake_id_LOADER.sql
 var selectSystemsBySystemIntakeIDLOADERSQL string
 
-// selectSystemsBySystemIntakeIDLOADERSQL2 holds the SQL command to get linked systems by System Intake ID via dataloader
-//
-//go:embed SQL/system_intake_system/get_by_system_intake_id_LOADER2.sql
-var selectSystemsBySystemIntakeIDLOADERSQL2 string
-
 // systemIntakeSelectByCedarSystemID holds the SQL query to get System Intakes by their Cedar System ID
 //
 //go:embed SQL/system_intake_system/select_by_cedar_system_id.sql
@@ -29,17 +24,15 @@ var systemIntakeSelectByCedarSystemID string
 
 // SystemIntakeSystemForm holds all relevant SQL scripts for a System Intake system
 var SystemIntakeSystemForm = systemIntakeSystemScripts{
-	Set:                           setSystemIntakeSystemsSQL,
-	Delete:                        deleteSystemIntakeSystemsSQL,
-	SelectByCedarSystemID:         systemIntakeSelectByCedarSystemID,
-	SelectBySystemIntakeIDLOADER:  selectSystemsBySystemIntakeIDLOADERSQL,
-	SelectBySystemIntakeIDLOADER2: selectSystemsBySystemIntakeIDLOADERSQL2,
+	Set:                          setSystemIntakeSystemsSQL,
+	Delete:                       deleteSystemIntakeSystemsSQL,
+	SelectByCedarSystemID:        systemIntakeSelectByCedarSystemID,
+	SelectBySystemIntakeIDLOADER: selectSystemsBySystemIntakeIDLOADERSQL,
 }
 
 type systemIntakeSystemScripts struct {
-	Set                           string
-	Delete                        string
-	SelectByCedarSystemID         string
-	SelectBySystemIntakeIDLOADER  string
-	SelectBySystemIntakeIDLOADER2 string
+	Set                          string
+	Delete                       string
+	SelectByCedarSystemID        string
+	SelectBySystemIntakeIDLOADER string
 }

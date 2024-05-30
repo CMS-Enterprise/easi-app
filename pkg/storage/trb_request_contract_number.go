@@ -56,43 +56,8 @@ func (s *Store) SetTRBRequestContractNumbers(ctx context.Context, tx *sqlx.Tx, t
 	return nil
 }
 
-// TRBRequestContractNumbersByTRBRequestIDLOADER gets multiple groups of Contract Numbers by TRB Request ID
-func (s *Store) TRBRequestContractNumbersByTRBRequestIDLOADER(ctx context.Context, paramTableJSON string) (map[string][]*models.TRBRequestContractNumber, error) {
-	stmt, err := s.db.PrepareNamed(sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDLOADER)
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-
-	var contracts []*models.TRBRequestContractNumber
-	err = stmt.Select(&contracts, map[string]interface{}{
-		"param_table_json": paramTableJSON,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	ids, err := extractTRBRequestIDs(paramTableJSON)
-	if err != nil {
-		return nil, err
-	}
-
-	store := map[string][]*models.TRBRequestContractNumber{}
-
-	for _, id := range ids {
-		store[id] = []*models.TRBRequestContractNumber{}
-	}
-
-	for _, contract := range contracts {
-		key := contract.TRBRequestID.String()
-		store[key] = append(store[key], contract)
-	}
-
-	return store, nil
-}
-
-func (s *Store) TRBRequestContractNumbersByTRBRequestIDLOADER2(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestContractNumber, error) {
-	rows, err := s.db.QueryContext(ctx, sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDLOADER2, pq.Array(trbRequestIDs))
+func (s *Store) TRBRequestContractNumbersByTRBRequestIDLOADER(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestContractNumber, error) {
+	rows, err := s.db.QueryContext(ctx, sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDLOADER, pq.Array(trbRequestIDs))
 	if err != nil {
 		return nil, err
 	}
