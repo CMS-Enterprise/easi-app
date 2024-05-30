@@ -1,11 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  Controller,
-  FieldPath,
-  FormProvider,
-  UseFormReturn,
-  UseFormSetValue
-} from 'react-hook-form';
+import { Controller, FieldPath, UseFormSetValue } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -24,6 +18,7 @@ import {
 import AdditionalContacts from 'components/AdditionalContacts';
 import cmsDivisionsAndOfficesOptions from 'components/AdditionalContacts/cmsDivisionsAndOfficesOptions';
 import CedarContactSelect from 'components/CedarContactSelect';
+import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -34,7 +29,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-import useEasiForm from 'hooks/useEasiForm';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContactDetails as UpdateSystemIntakeContactDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -404,7 +398,6 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             name="requester.component"
             as={FieldErrorMsg}
           />
-
           <Dropdown
             {...register('requester.component')}
             ref={null}
@@ -419,320 +412,327 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
         {/* Business Owner */}
 
-        <h4 className="margin-bottom-1">
-          {t('contactDetails.businessOwner.name')}
-        </h4>
-
-        <HelpText id="IntakeForm-BusinessOwnerHelp">
-          {t('contactDetails.businessOwner.helpText')}
-        </HelpText>
-
-        <Checkbox
-          {...register('businessOwner.sameAsRequester')}
-          ref={null}
-          id="businessOwner.sameAsRequester"
-          label={t('contactDetails.businessOwner.sameAsRequester')}
-        />
-
-        <Controller
-          control={control}
-          name="businessOwner"
-          render={({ field: { ref, ...field } }) => {
-            const error = errors?.businessOwner?.commonName;
-
-            return (
-              <FormGroup error={!!error}>
-                <Label htmlFor={field.name}>
-                  {t('contactDetails.businessOwner.nameField')}
-                </Label>
-                <ErrorMessage
-                  errors={errors}
-                  name="businessOwner.commonName"
-                  as={FieldErrorMsg}
-                />
-                <CedarContactSelect
-                  {...field}
-                  id={field.name}
-                  // Manually set value so that field rerenders when values are updated
-                  value={{
-                    euaUserId: watch('businessOwner.euaUserId'),
-                    commonName: watch('businessOwner.commonName'),
-                    email: watch('businessOwner.email')
-                  }}
-                  // Manually update fields so that email field rerenders
-                  onChange={contact => {
-                    setValue(
-                      'businessOwner.commonName',
-                      contact?.commonName || ''
-                    );
-                    setValue(
-                      'businessOwner.euaUserId',
-                      contact?.euaUserId || ''
-                    );
-                    setValue('businessOwner.email', contact?.email || '');
-                  }}
-                  disabled={watch('businessOwner.sameAsRequester')}
-                  autoSearch
-                />
-              </FormGroup>
-            );
-          }}
-        />
-
-        <FormGroup error={!!errors?.businessOwner?.component}>
-          <Label htmlFor="businessOwner.component">
-            {t('contactDetails.businessOwner.component')}
-          </Label>
-          <ErrorMessage
-            errors={errors}
-            name="businessOwner.component"
-            as={FieldErrorMsg}
-          />
-
-          <Dropdown
-            {...register('businessOwner.component')}
-            ref={null}
-            id="businessOwner.component"
-            disabled={watch('businessOwner.sameAsRequester')}
+        <Fieldset className="margin-top-3">
+          <legend
+            className="text-bold margin-bottom-1"
+            aria-describedby="businessOwnerHelpText"
           >
-            <option value="" disabled>
-              {t('Select an option')}
-            </option>
-            {cmsDivisionsAndOfficesOptions('businessOwner.component')}
-          </Dropdown>
-        </FormGroup>
+            {t('contactDetails.businessOwner.name')}
+          </legend>
 
-        <FormGroup>
-          <Label htmlFor="businessOwner.email">
-            {t('contactDetails.businessOwner.email')}
-          </Label>
-          <TextInput
-            {...register('businessOwner.email')}
+          <HelpText id="businessOwnerHelpText">
+            {t('contactDetails.businessOwner.helpText')}
+          </HelpText>
+
+          <Checkbox
+            {...register('businessOwner.sameAsRequester')}
             ref={null}
-            id="businessOwner.email"
-            type="text"
-            disabled
+            id="businessOwner.sameAsRequester"
+            label={t('contactDetails.businessOwner.sameAsRequester')}
           />
-        </FormGroup>
+
+          <FormGroup error={!!errors?.businessOwner?.commonName}>
+            <Label htmlFor="businessOwner">
+              {t('contactDetails.businessOwner.nameField')}
+            </Label>
+            <ErrorMessage
+              errors={errors}
+              name="businessOwner.commonName"
+              as={FieldErrorMsg}
+            />
+            <Controller
+              control={control}
+              name="businessOwner"
+              render={({ field: { ref, ...field } }) => {
+                return (
+                  <CedarContactSelect
+                    {...field}
+                    inputRef={ref}
+                    id={field.name}
+                    // Manually set value so that field rerenders when values are updated
+                    value={{
+                      euaUserId: watch('businessOwner.euaUserId'),
+                      commonName: watch('businessOwner.commonName'),
+                      email: watch('businessOwner.email')
+                    }}
+                    // Manually update fields so that email field rerenders
+                    onChange={contact => {
+                      setValue(
+                        'businessOwner.commonName',
+                        contact?.commonName || ''
+                      );
+                      setValue(
+                        'businessOwner.euaUserId',
+                        contact?.euaUserId || ''
+                      );
+                      setValue('businessOwner.email', contact?.email || '');
+                    }}
+                    disabled={watch('businessOwner.sameAsRequester')}
+                    autoSearch
+                  />
+                );
+              }}
+            />
+          </FormGroup>
+
+          <FormGroup error={!!errors?.businessOwner?.component}>
+            <Label htmlFor="businessOwner.component">
+              {t('contactDetails.businessOwner.component')}
+            </Label>
+            <ErrorMessage
+              errors={errors}
+              name="businessOwner.component"
+              as={FieldErrorMsg}
+            />
+            <Dropdown
+              {...register('businessOwner.component')}
+              ref={null}
+              id="businessOwner.component"
+              disabled={watch('businessOwner.sameAsRequester')}
+            >
+              <option value="" disabled>
+                {t('Select an option')}
+              </option>
+              {cmsDivisionsAndOfficesOptions('businessOwner.component')}
+            </Dropdown>
+          </FormGroup>
+
+          <FormGroup>
+            <Label htmlFor="businessOwner.email">
+              {t('contactDetails.businessOwner.email')}
+            </Label>
+            <TextInput
+              {...register('businessOwner.email')}
+              ref={null}
+              id="businessOwner.email"
+              type="text"
+              disabled
+            />
+          </FormGroup>
+        </Fieldset>
 
         {/* Product Manager */}
-
-        <h4 className="margin-bottom-1">
-          {t('contactDetails.productManager.name')}
-        </h4>
-
-        <HelpText id="IntakeForm-ProductManagerHelp">
-          {t('contactDetails.productManager.helpText')}
-        </HelpText>
-
-        <Checkbox
-          {...register('productManager.sameAsRequester')}
-          ref={null}
-          id="productManager.sameAsRequester"
-          label={t('contactDetails.productManager.sameAsRequester')}
-        />
-
-        <Controller
-          control={control}
-          name="productManager"
-          render={({ field: { ref, ...field } }) => {
-            const error = errors?.productManager?.commonName;
-
-            return (
-              <FormGroup error={!!error}>
-                <Label htmlFor={field.name}>
-                  {t('contactDetails.productManager.nameField')}
-                </Label>
-                <ErrorMessage
-                  errors={errors}
-                  name="productManager.commonName"
-                  as={FieldErrorMsg}
-                />
-                <CedarContactSelect
-                  {...field}
-                  id={field.name}
-                  // Manually set value so that field rerenders when values are updated
-                  value={{
-                    euaUserId: watch('productManager.euaUserId'),
-                    commonName: watch('productManager.commonName'),
-                    email: watch('productManager.email')
-                  }}
-                  // Manually update fields so that email field rerenders
-                  onChange={contact => {
-                    setValue(
-                      'productManager.commonName',
-                      contact?.commonName || ''
-                    );
-                    setValue(
-                      'productManager.euaUserId',
-                      contact?.euaUserId || ''
-                    );
-                    setValue('productManager.email', contact?.email || '');
-                  }}
-                  disabled={watch('productManager.sameAsRequester')}
-                  autoSearch
-                />
-              </FormGroup>
-            );
-          }}
-        />
-
-        <FormGroup error={!!errors?.productManager?.component}>
-          <Label htmlFor="productManager.component">
-            {t('contactDetails.productManager.component')}
-          </Label>
-          <ErrorMessage
-            errors={errors}
-            name="productManager.component"
-            as={FieldErrorMsg}
-          />
-
-          <Dropdown
-            {...register('productManager.component')}
-            ref={null}
-            id="productManager.component"
-            disabled={watch('productManager.sameAsRequester')}
+        <Fieldset className="margin-top-3">
+          <legend
+            className="text-bold margin-bottom-1"
+            aria-describedby="productManagerHelpText"
           >
-            <option value="" disabled>
-              {t('Select an option')}
-            </option>
-            {cmsDivisionsAndOfficesOptions('productManager.component')}
-          </Dropdown>
-        </FormGroup>
+            {t('contactDetails.productManager.name')}
+          </legend>
 
-        <FormGroup>
-          <Label htmlFor="productManager.email">
-            {t('contactDetails.productManager.email')}
-          </Label>
-          <TextInput
-            {...register('productManager.email')}
+          <HelpText id="productManagerHelpText">
+            {t('contactDetails.productManager.helpText')}
+          </HelpText>
+
+          <Checkbox
+            {...register('productManager.sameAsRequester')}
             ref={null}
-            id="productManager.email"
-            type="text"
-            disabled
+            id="productManager.sameAsRequester"
+            label={t('contactDetails.productManager.sameAsRequester')}
           />
-        </FormGroup>
+
+          <FormGroup error={!!errors?.productManager?.commonName}>
+            <Label htmlFor="productManager">
+              {t('contactDetails.productManager.nameField')}
+            </Label>
+            <ErrorMessage
+              errors={errors}
+              name="productManager.commonName"
+              as={FieldErrorMsg}
+            />
+            <Controller
+              control={control}
+              name="productManager"
+              render={({ field: { ref, ...field } }) => {
+                return (
+                  <CedarContactSelect
+                    {...field}
+                    inputRef={ref}
+                    id={field.name}
+                    // Manually set value so that field rerenders when values are updated
+                    value={{
+                      euaUserId: watch('productManager.euaUserId'),
+                      commonName: watch('productManager.commonName'),
+                      email: watch('productManager.email')
+                    }}
+                    // Manually update fields so that email field rerenders
+                    onChange={contact => {
+                      setValue(
+                        'productManager.commonName',
+                        contact?.commonName || ''
+                      );
+                      setValue(
+                        'productManager.euaUserId',
+                        contact?.euaUserId || ''
+                      );
+                      setValue('productManager.email', contact?.email || '');
+                    }}
+                    disabled={watch('productManager.sameAsRequester')}
+                    autoSearch
+                  />
+                );
+              }}
+            />
+          </FormGroup>
+
+          <FormGroup error={!!errors?.productManager?.component}>
+            <Label htmlFor="productManager.component">
+              {t('contactDetails.productManager.component')}
+            </Label>
+            <ErrorMessage
+              errors={errors}
+              name="productManager.component"
+              as={FieldErrorMsg}
+            />
+            <Dropdown
+              {...register('productManager.component')}
+              ref={null}
+              id="productManager.component"
+              disabled={watch('productManager.sameAsRequester')}
+            >
+              <option value="" disabled>
+                {t('Select an option')}
+              </option>
+              {cmsDivisionsAndOfficesOptions('productManager.component')}
+            </Dropdown>
+          </FormGroup>
+
+          <FormGroup>
+            <Label htmlFor="productManager.email">
+              {t('contactDetails.productManager.email')}
+            </Label>
+            <TextInput
+              {...register('productManager.email')}
+              ref={null}
+              id="productManager.email"
+              type="text"
+              disabled
+            />
+          </FormGroup>
+        </Fieldset>
 
         {/* ISSO */}
 
-        <FormGroup>
-          <Fieldset>
-            <legend className="usa-label margin-bottom-1">
-              {t('contactDetails.isso.label')}
-            </legend>
-            <HelpText id="IntakeForm-ISSOHelp">
-              {t('contactDetails.isso.helpText')}
-            </HelpText>
+        <Fieldset className="margin-top-3">
+          <legend
+            className="text-bold margin-bottom-1"
+            aria-describedby="issoHelpText"
+          >
+            {t('contactDetails.isso.label')}
+          </legend>
 
-            <Controller
-              control={control}
-              name="isso.isPresent"
-              render={({ field: { ref, value, ...field } }) => (
-                <Radio
-                  {...field}
-                  inputRef={ref}
-                  id={`${field.name}True`}
-                  label={t('Yes')}
-                  checked={value}
-                  onChange={() => field.onChange(true)}
+          <HelpText id="issoHelpText">
+            {t('contactDetails.isso.helpText')}
+          </HelpText>
+
+          <Controller
+            control={control}
+            name="isso.isPresent"
+            render={({ field: { ref, value, ...field } }) => (
+              <Radio
+                {...field}
+                inputRef={ref}
+                id={`${field.name}True`}
+                label={t('Yes')}
+                checked={value}
+                onChange={() => field.onChange(true)}
+              />
+            )}
+          />
+
+          {watch('isso.isPresent') && (
+            <div className="margin-left-4 margin-bottom-3">
+              <FormGroup error={!!errors?.isso?.commonName}>
+                <Label htmlFor="isso">{t('contactDetails.isso.name')}</Label>
+                <ErrorMessage
+                  errors={errors}
+                  name="isso.commonName"
+                  as={FieldErrorMsg}
                 />
-              )}
-            />
-
-            {watch('isso.isPresent') && (
-              <Fieldset className="margin-left-4 margin-bottom-3">
                 <Controller
                   control={control}
                   name="isso"
-                  shouldUnregister
                   render={({ field: { ref, ...field } }) => {
-                    const error = errors?.isso?.commonName;
-
                     return (
-                      <FormGroup error={!!error}>
-                        <Label htmlFor={field.name}>
-                          {t('contactDetails.isso.name')}
-                        </Label>
-                        <ErrorMessage
-                          errors={errors}
-                          name="isso.commonName"
-                          as={FieldErrorMsg}
-                        />
-                        <CedarContactSelect
-                          {...field}
-                          id={field.name}
-                          // Manually update fields so that email field rerenders
-                          onChange={contact => {
-                            setValue(
-                              'isso.commonName',
-                              contact?.commonName || ''
-                            );
-                            setValue(
-                              'isso.euaUserId',
-                              contact?.euaUserId || ''
-                            );
-                            setValue('isso.email', contact?.email || '');
-                          }}
-                          autoSearch
-                        />
-                      </FormGroup>
+                      <CedarContactSelect
+                        {...field}
+                        inputRef={ref}
+                        id={field.name}
+                        // Manually update fields so that email field rerenders
+                        onChange={contact => {
+                          setValue(
+                            'isso.commonName',
+                            contact?.commonName || ''
+                          );
+                          setValue('isso.euaUserId', contact?.euaUserId || '');
+                          setValue('isso.email', contact?.email || '');
+                        }}
+                        autoSearch
+                      />
                     );
                   }}
                 />
+              </FormGroup>
 
-                <FormGroup error={!!errors?.isso?.component}>
-                  <Label htmlFor="isso.component">
-                    {t('contactDetails.isso.component')}
-                  </Label>
-                  <ErrorMessage
-                    errors={errors}
-                    name="isso.component"
-                    as={FieldErrorMsg}
-                  />
-
-                  <Dropdown
-                    {...register('isso.component')}
-                    ref={null}
-                    id="isso.component"
-                  >
-                    <option value="" disabled>
-                      {t('Select an option')}
-                    </option>
-                    {cmsDivisionsAndOfficesOptions('isso.component')}
-                  </Dropdown>
-                </FormGroup>
-
-                <FormGroup>
-                  <Label htmlFor="isso.email">
-                    {t('contactDetails.isso.email')}
-                  </Label>
-                  <TextInput
-                    {...register('isso.email')}
-                    ref={null}
-                    id="isso.email"
-                    type="text"
-                    disabled
-                  />
-                </FormGroup>
-              </Fieldset>
-            )}
-
-            <Controller
-              control={control}
-              name="isso.isPresent"
-              render={({ field: { ref, value, ...field } }) => (
-                <Radio
-                  {...field}
-                  inputRef={ref}
-                  id={`${field.name}False`}
-                  label={t('No')}
-                  checked={!value}
-                  onChange={() => field.onChange(false)}
+              <FormGroup error={!!errors?.isso?.component}>
+                <Label htmlFor="isso.component">
+                  {t('contactDetails.isso.component')}
+                </Label>
+                <ErrorMessage
+                  errors={errors}
+                  name="isso.component"
+                  as={FieldErrorMsg}
                 />
-              )}
-            />
-          </Fieldset>
-        </FormGroup>
+                <Dropdown
+                  {...register('isso.component')}
+                  ref={null}
+                  id="isso.component"
+                >
+                  <option value="" disabled>
+                    {t('Select an option')}
+                  </option>
+                  {cmsDivisionsAndOfficesOptions('isso.component')}
+                </Dropdown>
+              </FormGroup>
+
+              <FormGroup>
+                <Label htmlFor="isso.email">
+                  {t('contactDetails.isso.email')}
+                </Label>
+                <TextInput
+                  {...register('isso.email')}
+                  ref={null}
+                  id="isso.email"
+                  type="text"
+                  disabled
+                />
+              </FormGroup>
+            </div>
+          )}
+
+          <Controller
+            control={control}
+            name="isso.isPresent"
+            render={({ field: { ref, value, ...field } }) => (
+              <Radio
+                {...field}
+                inputRef={ref}
+                id={`${field.name}False`}
+                label={t('No')}
+                checked={!value}
+                onChange={() => {
+                  field.onChange(false);
+
+                  // Reset ISSO fields
+                  setValue('isso.commonName', '');
+                  setValue('isso.euaUserId', '');
+                  setValue('isso.email', '');
+                  setValue('isso.component', '');
+                }}
+              />
+            )}
+          />
+        </Fieldset>
 
         {/* Add new contacts */}
         <AdditionalContacts
@@ -745,11 +745,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
         {/* Governance Teams */}
 
-        <FormProvider<ContactDetailsForm>
-          {...(form as UseFormReturn<ContactDetailsForm>)}
-        >
+        <EasiFormProvider<ContactDetailsForm> {...form}>
           <GovernanceTeams />
-        </FormProvider>
+        </EasiFormProvider>
 
         <Pager
           next={{

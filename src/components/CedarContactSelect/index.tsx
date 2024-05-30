@@ -6,6 +6,7 @@ import React, {
   useRef,
   useState
 } from 'react';
+import { RefCallBack } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Select, {
   ClearIndicatorProps,
@@ -34,6 +35,7 @@ type CedarContactSelectProps = {
   onChange: (contact: CedarContactProps | null) => void;
   disabled?: boolean;
   autoSearch?: boolean;
+  inputRef?: RefCallBack;
 };
 
 type CedarContactSelectOption = {
@@ -134,7 +136,8 @@ export default function CedarContactSelect({
   value,
   onChange,
   disabled,
-  autoSearch
+  autoSearch,
+  inputRef
 }: CedarContactSelectProps) {
   const { t } = useTranslation();
 
@@ -335,6 +338,7 @@ export default function CedarContactSelect({
       placeholder={false}
       backspaceRemovesValue={false}
       controlShouldRenderValue={false}
+      ref={inputRef}
       isSearchable
       isClearable
     />
