@@ -233,7 +233,7 @@ func (s *Server) routes(
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
 
 	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
-		return coreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryParams.WithDeactivatedSystems())
+		return coreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithDeactivatedSystems())
 	}
 
 	dataLoaders := dataloaders.NewDataLoaders(store, userSearchClient.FetchUserInfos, getCedarSystems)

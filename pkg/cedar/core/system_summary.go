@@ -117,7 +117,7 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 		return cedarcoremock.GetSystem(systemID), nil
 	}
 
-	systemSummary, err := c.GetSystemSummary(ctx, SystemSummaryParams.WithDeactivatedSystems())
+	systemSummary, err := c.GetSystemSummary(ctx, SystemSummaryOpts.WithDeactivatedSystems())
 	if err != nil {
 		return nil, err
 	}
@@ -137,13 +137,13 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 
 type systemSummaryParamFilterOpt func(*apisystems.SystemSummaryFindListParams)
 
-type systemSummaryParamOpts struct{}
+type systemSummaryOpts struct{}
 
-// SystemSummaryParams contains methods for options to pass to system summary calls
-var SystemSummaryParams = systemSummaryParamOpts{}
+// SystemSummaryOpts contains methods for options to pass to system summary calls
+var SystemSummaryOpts = systemSummaryOpts{}
 
 // WithDeactivatedSystems returns all systems
-func (systemSummaryParamOpts) WithDeactivatedSystems() systemSummaryParamFilterOpt {
+func (systemSummaryOpts) WithDeactivatedSystems() systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
 		params.SetState(nil)
 		params.SetIncludeInSurvey(nil)
@@ -151,14 +151,14 @@ func (systemSummaryParamOpts) WithDeactivatedSystems() systemSummaryParamFilterO
 }
 
 // WithEuaIDFilter sets given EUA onto the params
-func (systemSummaryParamOpts) WithEuaIDFilter(euaUserId string) systemSummaryParamFilterOpt {
+func (systemSummaryOpts) WithEuaIDFilter(euaUserId string) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
 		params.SetUserName(&euaUserId)
 	}
 }
 
 // WithSubSystems sets given cedar system ID as the parent system for which we are looking for sub-systems
-func (systemSummaryParamOpts) WithSubSystems(cedarSystemId string) systemSummaryParamFilterOpt {
+func (systemSummaryOpts) WithSubSystems(cedarSystemId string) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
 		params.SetBelongsTo(&cedarSystemId)
 

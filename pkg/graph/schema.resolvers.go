@@ -1274,7 +1274,7 @@ func (r *queryResolver) CedarSystems(ctx context.Context) ([]*models.CedarSystem
 
 // CedarSubSystems is the resolver for the cedarSubSystems field.
 func (r *queryResolver) CedarSubSystems(ctx context.Context, cedarSystemID string) ([]*models.CedarSubSystem, error) {
-	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryParams.WithSubSystems(cedarSystemID))
+	systems, err := r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithSubSystems(cedarSystemID))
 	if err != nil {
 		return nil, err
 	}
@@ -1300,7 +1300,7 @@ func (r *queryResolver) CedarContractsBySystem(ctx context.Context, cedarSystemI
 // MyCedarSystems is the resolver for the myCedarSystems field.
 func (r *queryResolver) MyCedarSystems(ctx context.Context) ([]*models.CedarSystem, error) {
 	requesterEUAID := appcontext.Principal(ctx).ID()
-	return r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryParams.WithEuaIDFilter(requesterEUAID))
+	return r.cedarCoreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithEuaIDFilter(requesterEUAID))
 }
 
 // CedarSystemBookmarks is the resolver for the cedarSystemBookmarks field.
