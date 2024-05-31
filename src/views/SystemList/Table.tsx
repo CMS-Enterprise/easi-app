@@ -59,7 +59,6 @@ export type SystemTableType =
 type TableProps = {
   systems?: CedarSystem[];
   savedBookmarks?: CedarSystemBookmark[];
-  refetchBookmarks?: () => any;
   defaultPageSize?: number;
   isMySystems?: boolean;
 };
@@ -67,7 +66,6 @@ type TableProps = {
 export const Table = ({
   systems = [],
   savedBookmarks = [],
-  refetchBookmarks = () => null,
   defaultPageSize = 10,
   isMySystems
 }: TableProps) => {

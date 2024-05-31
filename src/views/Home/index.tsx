@@ -74,7 +74,6 @@ const Home = () => {
                 <SystemsListTable
                   systems={[]}
                   savedBookmarks={[]}
-                  refetchBookmarks={() => null}
                   isMySystems
                   defaultPageSize={5}
                 />

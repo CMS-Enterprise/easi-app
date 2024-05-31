@@ -52,7 +52,6 @@ export const SystemList = () => {
     // data: data2
     // refetch: refetchBookmarks
   } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery);
-  const refetchBookmarks = () => {};
 
   const systemsTableData = data1?.cedarSystems ?? [];
   // const bookmarks: CedarSystemBookmark[] = data2?.cedarSystemBookmarks ?? [];
@@ -142,11 +141,7 @@ export const SystemList = () => {
                 </Grid>
               ) : (
                 <CardGroup className="margin-bottom-3">
-                  {filterBookmarks(
-                    systemsTableData,
-                    bookmarks,
-                    refetchBookmarks
-                  )}
+                  {filterBookmarks(systemsTableData, bookmarks)}
                 </CardGroup>
               )}
             </SectionWrapper>
@@ -172,11 +167,7 @@ export const SystemList = () => {
               </ErrorAlert>
             ) : (
               <div ref={systemsRef}>
-                <Table
-                  systems={systemsTableData}
-                  savedBookmarks={bookmarks}
-                  refetchBookmarks={refetchBookmarks}
-                />
+                <Table systems={systemsTableData} savedBookmarks={bookmarks} />
               </div>
             )}
           </SectionWrapper>

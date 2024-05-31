@@ -109,7 +109,6 @@ describe('System List View', () => {
               defaultPageSize={3}
               systems={mockSystemInfo}
               savedBookmarks={[]}
-              refetchBookmarks={() => null}
             />
           </MockedProvider>
         </MemoryRouter>

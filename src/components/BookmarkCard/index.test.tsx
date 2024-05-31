@@ -31,7 +31,6 @@ describe('BookmarkCard', () => {
           <BookmarkCard
             type="systemProfile"
             statusIcon={mapCedarStatusToIcon(mockSystemInfo[0].status)}
-            refetch={() => {}}
             {...mockSystemInfo[0]}
           />
         </MockedProvider>
@@ -47,7 +46,6 @@ describe('BookmarkCard', () => {
           <BookmarkCard
             type="systemProfile"
             statusIcon={mapCedarStatusToIcon(mockSystemInfo[0].status)}
-            refetch={() => {}}
             {...mockSystemInfo[0]}
           />
         </MockedProvider>
@@ -71,7 +69,6 @@ describe('BookmarkCard', () => {
           <BookmarkCard
             type="systemProfile"
             statusIcon={mapCedarStatusToIcon(mockSystemInfo[0].status)}
-            refetch={() => {}}
             {...mockSystemInfo[0]}
           />
         </MockedProvider>
@@ -90,7 +87,6 @@ describe('BookmarkCard', () => {
           <BookmarkCard
             type="systemProfile"
             statusIcon={mapCedarStatusToIcon(mockSystemInfo[1].status)}
-            refetch={() => {}}
             {...mockSystemInfo[1]}
           />
         </MockedProvider>
@@ -109,7 +105,6 @@ describe('BookmarkCard', () => {
           <BookmarkCard
             type="systemProfile"
             statusIcon={mapCedarStatusToIcon(mockSystemInfo[2].status)}
-            refetch={() => {}}
             {...mockSystemInfo[2]}
           />
         </MockedProvider>

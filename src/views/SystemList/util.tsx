@@ -7,8 +7,7 @@ import { mapCedarStatusToIcon } from 'types/iconStatus';
 
 const filterBookmarks = (
   systems: CedarSystem[],
-  savedBookmarks: CedarSystemBookmark[],
-  refetch: () => any | undefined
+  savedBookmarks: CedarSystemBookmark[]
 ): React.ReactNode => {
   const bookmarkIdSet: Set<string> = new Set(
     savedBookmarks.map(sys => sys.cedarSystemId)
@@ -22,7 +21,6 @@ const filterBookmarks = (
       key={system.id}
       statusIcon={mapCedarStatusToIcon(system.status)}
       {...system}
-      refetch={refetch}
     />
   ));
 };
