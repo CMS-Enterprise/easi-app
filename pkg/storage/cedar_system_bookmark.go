@@ -11,6 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlqueries"
 )
 
 // CreateCedarSystemBookmark creates a new cedar system bookmark object in the database
@@ -80,33 +81,9 @@ func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookma
 }
 
 func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, bookmarkRequests []models.BookmarkRequest) ([]bool, error) {
-	sqlStatement := "SELECT cedar_system_id FROM cedar_system_bookmarks WHERE (cedar_system_id, eua_user_id) = ANY(:bookmark_requests.cedar_system_id, :bookmark_requests.eua_user_id)"
-
-	//rows, err := s.db.QueryContext(ctx, sqlStatement, bookmarkRequests)
-	//
-	//if err != nil {
-	//	return nil, err
-	//}
-	//defer rows.Close()
-	//
-	//bookmarksMap := map[string]struct{}{}
-	//for rows.Next() {
-	//	var id string
-	//	if err := rows.Scan(&id); err != nil {
-	//		return nil, err
-	//	}
-	//
-	//	bookmarksMap[id] = helpers.EmptyStruct
-	//}
-	//
-	//var bookmarks []bool
-	//for _, req := range bookmarkRequests {
-	//	_, ok := bookmarksMap[req.CedarSystemID]
-	//	bookmarks = append(bookmarks, ok)
-	//}
 
 	var ids []string
-	if err := selectNamed(ctx, s, &ids, sqlStatement, args{
+	if err := selectNamed(ctx, s, &ids, sqlqueries.CedarBookmarkSystemsForm.SelectLOADER, args{
 		"bookmark_requests": bookmarkRequests,
 	}); err != nil {
 		return nil, err
