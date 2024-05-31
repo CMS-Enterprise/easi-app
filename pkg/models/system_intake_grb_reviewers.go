@@ -32,14 +32,15 @@ const (
 // SystemIntakeGRBReviewer describes
 type SystemIntakeGRBReviewer struct {
 	BaseStructUser
-	UserID         uuid.UUID               `json:"userID" db:"user_id"`
+	userIDRelation
 	SystemIntakeID uuid.UUID               `json:"systemIntakeId" db:"system_intake_id"`
 	VotingRole     SIGRBReviewerVotingRole `json:"votingRole" db:"voting_role"`
 	GRBRole        SIGRBReviewerRole       `json:"grbRole" db:"grb_role"`
 }
 
-func NewSystemIntakeGRBReviewer(createdBy uuid.UUID) *SystemIntakeGRBReviewer {
+func NewSystemIntakeGRBReviewer(userID uuid.UUID, createdBy uuid.UUID) *SystemIntakeGRBReviewer {
 	return &SystemIntakeGRBReviewer{
 		BaseStructUser: NewBaseStructUser(createdBy),
+		userIDRelation: NewUserIDRelation(userID),
 	}
 }
