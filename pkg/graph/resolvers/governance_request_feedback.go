@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/dataloaders2"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -28,7 +28,7 @@ func GetGovernanceRequestFeedbackAuthor(
 	}
 
 	// Handled nil value above, safe to dereference and pass to GetUserInfo
-	authorInfo, err := dataloaders2.FetchUserInfosByEUAUserID(ctx, *feedbackAuthorEUAID)
+	authorInfo, err := dataloaders.FetchUserInfosByEUAUserID(ctx, *feedbackAuthorEUAID)
 	if err != nil {
 		return nil, err
 	}

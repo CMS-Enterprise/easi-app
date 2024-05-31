@@ -24,7 +24,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
-	"github.com/cmsgov/easi-app/pkg/dataloaders2"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
@@ -173,18 +173,19 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})
-	dataloaders := dataloaders2.NewDataLoaders(
+	loaders := dataloaders.NewDataLoaders(
 		store,
 		func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
 		func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
 	)
+
 	graphQLClient := client.New(
 		handler.NewDefaultServer(schema),
-		addDataLoadersToGraphQLClientTest(dataloaders),
+		addDataLoadersToGraphQLClientTest(loaders),
 	)
 
 	ctx := context.Background()
-	ctx = dataloaders2.CTXWithLoaders(ctx, dataloaders)
+	ctx = dataloaders.CTXWithLoaders(ctx, loaders)
 
 	storeTestSuite := &GraphQLTestSuite{
 		Suite:    suite.Suite{},
@@ -200,10 +201,10 @@ func TestGraphQLTestSuite(t *testing.T) {
 }
 
 // addDataLoadersToGraphQLClientTest adds all dataloaders into the test context for use in tests
-func addDataLoadersToGraphQLClientTest(loaders *dataloaders2.DataLoaders) func(*client.Request) {
+func addDataLoadersToGraphQLClientTest(loaders *dataloaders.DataLoaders) func(*client.Request) {
 	return func(request *client.Request) {
 		ctx := request.HTTP.Context()
-		ctx = dataloaders2.CTXWithLoaders(ctx, loaders)
+		ctx = dataloaders.CTXWithLoaders(ctx, loaders)
 		request.HTTP = request.HTTP.WithContext(ctx)
 	}
 }

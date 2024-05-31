@@ -13,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
-	"github.com/cmsgov/easi-app/pkg/dataloaders2"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -113,7 +113,7 @@ func (tc *TestConfigs) GetDefaults() {
 	}
 
 	// Set up mocked dataloaders for the test context
-	ctx = dataloaders2.CTXWithLoaders(ctx, dataloaders2.NewDataLoaders(tc.Store, fetchUserInfos, getCedarSystems))
+	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(tc.Store, fetchUserInfos, getCedarSystems))
 
 	tc.Context = ctx
 

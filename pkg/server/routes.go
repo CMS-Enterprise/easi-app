@@ -24,7 +24,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/authorization"
-	"github.com/cmsgov/easi-app/pkg/dataloaders2"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/oktaapi"
 	"github.com/cmsgov/easi-app/pkg/usersearch"
 
@@ -236,8 +236,8 @@ func (s *Server) routes(
 		return coreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithDeactivatedSystems())
 	}
 
-	dataLoaders := dataloaders2.NewDataLoaders(store, userSearchClient.FetchUserInfos, getCedarSystems)
-	dataLoaderMiddleware := dataloaders2.NewDataloaderMiddleware(dataLoaders)
+	dataLoaders := dataloaders.NewDataLoaders(store, userSearchClient.FetchUserInfos, getCedarSystems)
+	dataLoaderMiddleware := dataloaders.NewDataloaderMiddleware(dataLoaders)
 	s.router.Use(dataLoaderMiddleware)
 
 	gql.Handle("/query", graphqlServer)

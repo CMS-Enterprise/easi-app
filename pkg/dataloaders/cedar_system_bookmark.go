@@ -1,4 +1,4 @@
-package dataloaders2
+package dataloaders
 
 import (
 	"context"

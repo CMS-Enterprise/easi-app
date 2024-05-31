@@ -59,6 +59,10 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 			}
 		}`, intake.ID), &resp, addAuthWithAllJobCodesToGraphQLClientTest(testhelpers.RandomEUAID()))
 
+	fmt.Println("==== resp ====")
+	fmt.Printf("%+v\n", resp)
+	fmt.Println("==== resp ====")
+
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
 	respBusinessCase := resp.SystemIntake.BusinessCase
@@ -74,6 +78,10 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuer
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	s.NoError(intakeErr)
+
+	fmt.Println("==== intake ====")
+	fmt.Println(intake)
+	fmt.Println("==== intake ====")
 
 	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCase{
 		SystemIntakeID:                      intake.ID,

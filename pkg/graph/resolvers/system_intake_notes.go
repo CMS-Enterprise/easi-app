@@ -6,7 +6,7 @@ import (
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/dataloaders2"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -71,7 +71,7 @@ func SystemIntakeNoteAuthor(obj *models.SystemIntakeNote) (*model.SystemIntakeNo
 func SystemIntakeNoteEditor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error) {
 	var systemIntakeNoteEditorInfo *models.UserInfo
 	if obj.ModifiedBy != nil {
-		info, err := dataloaders2.FetchUserInfosByEUAUserID(ctx, *obj.ModifiedBy)
+		info, err := dataloaders.FetchUserInfosByEUAUserID(ctx, *obj.ModifiedBy)
 		if err != nil {
 			return nil, err
 		}

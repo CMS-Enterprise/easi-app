@@ -1,4 +1,4 @@
-package dataloaders2
+package dataloaders
 
 // func (d *dataReader) getUserInfo(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, []error) {
 // 	// return d.db.
