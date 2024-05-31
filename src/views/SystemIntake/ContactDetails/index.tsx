@@ -167,6 +167,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     watch,
     getValues,
     register,
+    setFocus,
     formState: {
       defaultValues,
       dirtyFields,
@@ -300,7 +301,10 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const hasErrors = Object.keys(errors).length > 0;
 
   /** Flattened field errors, excluding any root errors */
-  const fieldErrors = useMemo(() => flattenFormErrors(errors), [errors]);
+  const fieldErrors = useMemo(
+    () => flattenFormErrors<ContactDetailsForm>(errors),
+    [errors]
+  );
 
   // Scroll errors into view on submit
   useEffect(() => {
@@ -326,18 +330,25 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
 
   return (
     <>
-      {Object.keys(fieldErrors).length > 0 && (
+      {Object.keys(errors).length > 0 && (
         <ErrorAlert
           test-id="contact-details-errors"
           classNames="margin-top-3"
           heading={t('form:inputError.checkFix')}
         >
-          {Object.entries(fieldErrors).map(([key, message]) => {
+          {Object.keys(fieldErrors).map(key => {
             return (
-              <ErrorAlertMessage
-                key={`Error.${key}`}
-                errorKey={key}
-                message={t(message)}
+              <ErrorMessage
+                errors={errors}
+                name={key}
+                render={({ message }) => (
+                  <ErrorAlertMessage
+                    message={message}
+                    onClick={() =>
+                      setFocus(key as FieldPath<ContactDetailsForm>)
+                    }
+                  />
+                )}
               />
             );
           })}
@@ -432,7 +443,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           />
 
           <FormGroup error={!!errors?.businessOwner?.commonName}>
-            <Label htmlFor="businessOwner">
+            <Label htmlFor="businessOwner.commonName">
               {t('contactDetails.businessOwner.nameField')}
             </Label>
             <ErrorMessage
@@ -442,7 +453,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             />
             <Controller
               control={control}
-              name="businessOwner"
+              name="businessOwner.commonName"
               render={({ field: { ref, ...field } }) => {
                 return (
                   <CedarContactSelect
@@ -532,7 +543,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           />
 
           <FormGroup error={!!errors?.productManager?.commonName}>
-            <Label htmlFor="productManager">
+            <Label htmlFor="productManager.commonName">
               {t('contactDetails.productManager.nameField')}
             </Label>
             <ErrorMessage
@@ -542,7 +553,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             />
             <Controller
               control={control}
-              name="productManager"
+              name="productManager.commonName"
               render={({ field: { ref, ...field } }) => {
                 return (
                   <CedarContactSelect
@@ -643,7 +654,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           {watch('isso.isPresent') && (
             <div className="margin-left-4 margin-bottom-3">
               <FormGroup error={!!errors?.isso?.commonName}>
-                <Label htmlFor="isso">{t('contactDetails.isso.name')}</Label>
+                <Label htmlFor="isso.commonName">
+                  {t('contactDetails.isso.name')}
+                </Label>
                 <ErrorMessage
                   errors={errors}
                   name="isso.commonName"
@@ -651,13 +664,19 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 />
                 <Controller
                   control={control}
-                  name="isso"
+                  name="isso.commonName"
                   render={({ field: { ref, ...field } }) => {
                     return (
                       <CedarContactSelect
                         {...field}
                         inputRef={ref}
                         id={field.name}
+                        // Manually set value
+                        value={{
+                          euaUserId: watch('isso.euaUserId'),
+                          commonName: watch('isso.commonName'),
+                          email: watch('isso.email')
+                        }}
                         // Manually update fields so that email field rerenders
                         onChange={contact => {
                           setValue(

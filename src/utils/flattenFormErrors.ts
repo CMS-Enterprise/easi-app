@@ -1,7 +1,14 @@
-import { FieldError, FieldErrors } from 'react-hook-form';
+import {
+  FieldError,
+  FieldErrors,
+  FieldPath,
+  FieldValues
+} from 'react-hook-form';
 
 /** Flattened form errors */
-type FlatErrors = { [key: string]: string };
+type FlatErrors<TFieldValues extends FieldValues = FieldValues> = Partial<
+  Record<FieldPath<TFieldValues>, string>
+>;
 
 /** Checks if error is single `FieldError` type */
 function isFieldError(
@@ -69,7 +76,10 @@ const flattenArrayFieldErrors = (
  *
  * Does not return root errors
  */
-const flattenFormErrors = ({ root, ...errors }: FieldErrors): FlatErrors => {
+const flattenFormErrors = <TFieldValues extends FieldValues = FieldValues>({
+  root,
+  ...errors
+}: FieldErrors): FlatErrors<TFieldValues> => {
   // If no errors, return empty object
   if (!errors) return {};
 
@@ -77,7 +87,7 @@ const flattenFormErrors = ({ root, ...errors }: FieldErrors): FlatErrors => {
     [string, FieldError | FieldErrors]
   >;
 
-  return errorEntries.reduce<FlatErrors>(
+  return errorEntries.reduce<FlatErrors<TFieldValues>>(
     (flatErrors, [fieldKey, fieldError]) => {
       // If no subfields, flatten error
       if (isFieldError(fieldError)) {
