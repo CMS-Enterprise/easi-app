@@ -8,6 +8,7 @@ import UswdsReactLink from 'components/LinkWrapper';
 // import Divider from 'components/shared/Divider';
 // import SystemHealthIcon from 'components/SystemHealthIcon';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
+import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import { IconStatus } from 'types/iconStatus';
 
@@ -42,8 +43,14 @@ const BookmarkCard = ({
         input: {
           cedarSystemId
         }
-      }
-    }).then(refetch);
+      },
+      refetchQueries: [
+        {
+          query: GetCedarSystemQuery,
+          variables: { id: cedarSystemId }
+        }
+      ]
+    });
   };
 
   return (
