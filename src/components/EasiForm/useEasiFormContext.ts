@@ -4,6 +4,11 @@ import { UseEasiFormReturn } from './types';
 import useEasiFormRegister from './useEasiFormRegister';
 import useEasiPartialSubmit from './useEasiPartialSubmit';
 
+/**
+ * Extension of React Hook Form's `useFormContext` hook
+ *
+ * For use with forms created with `useEasiForm`
+ */
 const useEasiFormContext = <
   TFieldValues extends FieldValues
 >(): UseEasiFormReturn<TFieldValues> => {

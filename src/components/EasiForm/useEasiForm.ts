@@ -15,7 +15,10 @@ const useEasiForm = <
 ): UseEasiFormReturn<TFieldValues, TContext> => {
   const form = useForm<TFieldValues, TContext>(props);
 
+  /** Ignore errors and submit valid dirty field values */
   const partialSubmit = useEasiPartialSubmit<TFieldValues>(form);
+
+  /** Custom register function that returns inputRef for function components */
   const register = useEasiFormRegister<TFieldValues>(form);
 
   return {

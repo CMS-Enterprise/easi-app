@@ -3,6 +3,7 @@ import { FieldValues, UseFormReturn } from 'react-hook-form';
 
 import { EasiPartialSubmit } from './types';
 
+/** Returns partial submit function for `useEasiForm` */
 const useEasiPartialSubmit = <TFieldValues extends FieldValues = FieldValues>(
   form: UseFormReturn<TFieldValues>
 ): EasiPartialSubmit<TFieldValues> =>
