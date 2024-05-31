@@ -81,7 +81,7 @@ func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookma
 }
 
 func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, bookmarkRequests []models.BookmarkRequest) ([]bool, error) {
-
+	//sqlStatement := ""
 	var ids []string
 	if err := selectNamed(ctx, s, &ids, sqlqueries.CedarBookmarkSystemsForm.SelectLOADER, args{
 		"bookmark_requests": bookmarkRequests,
@@ -89,5 +89,17 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, bookmark
 		return nil, err
 	}
 
-	return nil, nil
+	idMap := map[string]struct{}{}
+
+	for _, id := range ids {
+		idMap[id] = helpers.EmptyStruct
+	}
+
+	var out []bool
+	for _, req := range bookmarkRequests {
+		_, ok := idMap[req.CedarSystemID]
+		out = append(out, ok)
+	}
+
+	return out, nil
 }
