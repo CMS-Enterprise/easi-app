@@ -1,0 +1,1647 @@
+?   	github.com/cmsgov/easi-app/pkg/graph/generated	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/graph/model	[no test files]
+=== RUN   TestGraphQLTestSuite
+[LaunchDarkly] 2024/05/31 10:46:18 INFO: Starting LaunchDarkly client 5.10.1
+[LaunchDarkly] 2024/05/31 10:46:18 INFO: Starting LaunchDarkly client in offline mode
+=== RUN   TestGraphQLTestSuite/TestContractQueryReturnsVehicleForLegacyIntakes
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestCreateSystemIntakeMutation
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestCurrentUserQuery
+=== RUN   TestGraphQLTestSuite/TestFetchBusinessCaseForSystemIntakeQuery
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestFetchBusinessCaseWithSolutionAForSystemIntakeQuery
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestFetchSystemIntakeQuery
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestFetchSystemIntakeWithActionsQuery
+Logger not found on context.
+Logger not found on context.
+    schema.resolvers_system_intake_test.go:470: 
+        	Error Trace:	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/schema.resolvers_system_intake_test.go:470
+        	Error:      	Received unexpected error:
+        	            	pq: insert or update on table "actions" violates foreign key constraint "actions_intake_id_fkey"
+        	Test:       	TestGraphQLTestSuite/TestFetchSystemIntakeWithActionsQuery
+Logger not found on context.
+    schema.resolvers_system_intake_test.go:481: 
+        	Error Trace:	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/schema.resolvers_system_intake_test.go:481
+        	Error:      	Received unexpected error:
+        	            	pq: insert or update on table "actions" violates foreign key constraint "actions_intake_id_fkey"
+        	Test:       	TestGraphQLTestSuite/TestFetchSystemIntakeWithActionsQuery
+Logger not found on context.
+Logger not found on context.
+    client.go:61: test panicked: [{"message":"Could not find resource models.SystemIntake with error: sql: no rows in result set","path":["systemIntake"]}]
+        goroutine 93 [running]:
+        runtime/debug.Stack()
+        	/usr/local/go/src/runtime/debug/stack.go:24 +0x64
+        github.com/stretchr/testify/suite.failOnPanic(0x140008a4680, {0x105f87420, 0x14000533188})
+        	/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:89 +0x38
+        github.com/stretchr/testify/suite.Run.func1.1()
+        	/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:188 +0x230
+        panic({0x105f87420?, 0x14000533188?})
+        	/usr/local/go/src/runtime/panic.go:770 +0x124
+        github.com/99designs/gqlgen/client.(*Client).MustPost(...)
+        	/Users/samlawson/go/pkg/mod/github.com/99designs/gqlgen@v0.17.47/client/client.go:61
+        github.com/cmsgov/easi-app/pkg/graph.(*GraphQLTestSuite).TestFetchSystemIntakeWithActionsQuery(0x1400091dc80)
+        	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/schema.resolvers_system_intake_test.go:501 +0x990
+        reflect.Value.call({0x140001c2780?, 0x14000133860?, 0x1400055dd78?}, {0x1057bc57b, 0x4}, {0x1400055df20, 0x1, 0x105740390?})
+        	/usr/local/go/src/reflect/value.go:596 +0x970
+        reflect.Value.Call({0x140001c2780?, 0x14000133860?, 0x604?}, {0x1400055df20?, 0x104a45610?, 0x10683fa78?})
+        	/usr/local/go/src/reflect/value.go:380 +0x94
+        github.com/stretchr/testify/suite.Run.func1(0x140008a4680)
+        	/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:202 +0x3a0
+        testing.tRunner(0x140008a4680, 0x140005c4c60)
+        	/usr/local/go/src/testing/testing.go:1689 +0xec
+        created by testing.(*T).Run in goroutine 6
+        	/usr/local/go/src/testing/testing.go:1742 +0x318
+=== RUN   TestGraphQLTestSuite/TestFetchSystemIntakeWithCollaboratorsQuery
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestFetchSystemIntakeWithContractDatesQuery
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestFetchSystemIntakeWithContractMonthAndYearQuery
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestFetchSystemIntakeWithNoCollaboratorsQuery
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestFetchSystemIntakeWithNotesQuery
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestSubmitIntake
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestUpdateContactDetails
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestUpdateContactDetailsEmptyEUA
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+    client.go:61: test panicked: [{"message":"Could not find resource models.SystemIntake with error: sql: no rows in result set","path":["updateSystemIntakeContactDetails"]}]
+        goroutine 163 [running]:
+        runtime/debug.Stack()
+        	/usr/local/go/src/runtime/debug/stack.go:24 +0x64
+        github.com/stretchr/testify/suite.failOnPanic(0x14000149380, {0x105f87420, 0x14000868810})
+        	/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:89 +0x38
+        github.com/stretchr/testify/suite.Run.func1.1()
+        	/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:188 +0x230
+        panic({0x105f87420?, 0x14000868810?})
+        	/usr/local/go/src/runtime/panic.go:770 +0x124
+        github.com/99designs/gqlgen/client.(*Client).MustPost(...)
+        	/Users/samlawson/go/pkg/mod/github.com/99designs/gqlgen@v0.17.47/client/client.go:61
+        github.com/cmsgov/easi-app/pkg/graph.(*GraphQLTestSuite).TestUpdateContactDetailsEmptyEUA(0x1400091dc80)
+        	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/schema.resolvers_system_intake_test.go:691 +0x4b4
+        reflect.Value.call({0x140001c2780?, 0x14000133920?, 0x14000639d78?}, {0x1057bc57b, 0x4}, {0x14000639f20, 0x1, 0x105740390?})
+        	/usr/local/go/src/reflect/value.go:596 +0x970
+        reflect.Value.Call({0x140001c2780?, 0x14000133920?, 0x604?}, {0x14000639f20?, 0x104a45610?, 0x10683fa78?})
+        	/usr/local/go/src/reflect/value.go:380 +0x94
+        github.com/stretchr/testify/suite.Run.func1(0x14000149380)
+        	/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:202 +0x3a0
+        testing.tRunner(0x14000149380, 0x140005c50e0)
+        	/usr/local/go/src/testing/testing.go:1689 +0xec
+        created by testing.(*T).Run in goroutine 6
+        	/usr/local/go/src/testing/testing.go:1742 +0x318
+=== RUN   TestGraphQLTestSuite/TestUpdateContactDetailsWillClearISSOAndTeams
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestUpdateContactDetailsWillClearOneTeam
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+    client.go:61: test panicked: [{"message":"Could not find resource models.SystemIntake with error: sql: no rows in result set","path":["updateSystemIntakeContactDetails"]}]
+        goroutine 197 [running]:
+        runtime/debug.Stack()
+        	/usr/local/go/src/runtime/debug/stack.go:24 +0x64
+        github.com/stretchr/testify/suite.failOnPanic(0x14000980000, {0x105f87420, 0x14000887b00})
+        	/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:89 +0x38
+        github.com/stretchr/testify/suite.Run.func1.1()
+        	/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:188 +0x230
+        panic({0x105f87420?, 0x14000887b00?})
+        	/usr/local/go/src/runtime/panic.go:770 +0x124
+        github.com/99designs/gqlgen/client.(*Client).MustPost(...)
+        	/Users/samlawson/go/pkg/mod/github.com/99designs/gqlgen@v0.17.47/client/client.go:61
+        github.com/cmsgov/easi-app/pkg/graph.(*GraphQLTestSuite).TestUpdateContactDetailsWillClearOneTeam(0x1400091dc80)
+        	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/schema.resolvers_system_intake_test.go:1044 +0x470
+        reflect.Value.call({0x140001c2780?, 0x14000133950?, 0x140008fbd58?}, {0x1057bc57b, 0x4}, {0x140008fbf20, 0x1, 0x105740390?})
+        	/usr/local/go/src/reflect/value.go:596 +0x970
+        reflect.Value.Call({0x140001c2780?, 0x14000133950?, 0x604?}, {0x140008fbf20?, 0x104a45610?, 0x10683fa78?})
+        	/usr/local/go/src/reflect/value.go:380 +0x94
+        github.com/stretchr/testify/suite.Run.func1(0x14000980000)
+        	/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:202 +0x3a0
+        testing.tRunner(0x14000980000, 0x140005c5200)
+        	/usr/local/go/src/testing/testing.go:1689 +0xec
+        created by testing.(*T).Run in goroutine 6
+        	/usr/local/go/src/testing/testing.go:1742 +0x318
+=== RUN   TestGraphQLTestSuite/TestUpdateContactDetailsWithISSOAndTeams
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestUpdateContractDetailsImmediatelyAfterIntakeCreation
+Logger not found on context.
+Logger not found on context.
+    schema.resolvers_system_intake_test.go:1376: 
+        	Error Trace:	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/schema.resolvers_system_intake_test.go:1376
+        	Error:      	Should be true
+        	Test:       	TestGraphQLTestSuite/TestUpdateContractDetailsImmediatelyAfterIntakeCreation
+=== RUN   TestGraphQLTestSuite/TestUpdateContractDetailsRemoveContract
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestUpdateContractDetailsRemoveCosts
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestUpdateContractDetailsRemoveFundingSource
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestUpdateContractDetailsReplacesContractVehicleWithContractNumber
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+    client.go:61: test panicked: [{"message":"Could not find resource models.SystemIntake with error: sql: no rows in result set","path":["updateSystemIntakeContractDetails"]}]
+        goroutine 267 [running]:
+        runtime/debug.Stack()
+        	/usr/local/go/src/runtime/debug/stack.go:24 +0x64
+        github.com/stretchr/testify/suite.failOnPanic(0x14000148000, {0x105f87420, 0x140006c85e8})
+        	/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:89 +0x38
+        github.com/stretchr/testify/suite.Run.func1.1()
+        	/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:188 +0x230
+        panic({0x105f87420?, 0x140006c85e8?})
+        	/usr/local/go/src/runtime/panic.go:770 +0x124
+        github.com/99designs/gqlgen/client.(*Client).MustPost(...)
+        	/Users/samlawson/go/pkg/mod/github.com/99designs/gqlgen@v0.17.47/client/client.go:61
+        github.com/cmsgov/easi-app/pkg/graph.(*GraphQLTestSuite).TestUpdateContractDetailsReplacesContractVehicleWithContractNumber(0x1400091dc80)
+        	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/schema.resolvers_system_intake_test.go:1463 +0x3fc
+        reflect.Value.call({0x140001c2780?, 0x140001339e0?, 0x13?}, {0x1057bc57b, 0x4}, {0x140008f7f20, 0x1, 0x1?})
+        	/usr/local/go/src/reflect/value.go:596 +0x970
+        reflect.Value.Call({0x140001c2780?, 0x140001339e0?, 0x604?}, {0x14000233f20?, 0x104a45610?, 0x10683fa78?})
+        	/usr/local/go/src/reflect/value.go:380 +0x94
+        github.com/stretchr/testify/suite.Run.func1(0x14000148000)
+        	/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:202 +0x3a0
+        testing.tRunner(0x14000148000, 0x140005c5560)
+        	/usr/local/go/src/testing/testing.go:1689 +0xec
+        created by testing.(*T).Run in goroutine 6
+        	/usr/local/go/src/testing/testing.go:1742 +0x318
+=== RUN   TestGraphQLTestSuite/TestUpdateRequestDetails
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestUpdateRequestDetailsHasUiChangesNull
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestGraphQLTestSuite/TestUpdateRequestDetailsHasUiChangesTrue
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+--- FAIL: TestGraphQLTestSuite (0.64s)
+    --- PASS: TestGraphQLTestSuite/TestContractQueryReturnsVehicleForLegacyIntakes (0.08s)
+    --- PASS: TestGraphQLTestSuite/TestCreateSystemIntakeMutation (0.00s)
+    --- PASS: TestGraphQLTestSuite/TestCurrentUserQuery (0.00s)
+    --- PASS: TestGraphQLTestSuite/TestFetchBusinessCaseForSystemIntakeQuery (0.01s)
+    --- PASS: TestGraphQLTestSuite/TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery (0.05s)
+    --- PASS: TestGraphQLTestSuite/TestFetchBusinessCaseWithSolutionAForSystemIntakeQuery (0.00s)
+    --- PASS: TestGraphQLTestSuite/TestFetchSystemIntakeQuery (0.00s)
+    --- FAIL: TestGraphQLTestSuite/TestFetchSystemIntakeWithActionsQuery (0.05s)
+    --- PASS: TestGraphQLTestSuite/TestFetchSystemIntakeWithCollaboratorsQuery (0.00s)
+    --- PASS: TestGraphQLTestSuite/TestFetchSystemIntakeWithContractDatesQuery (0.00s)
+    --- PASS: TestGraphQLTestSuite/TestFetchSystemIntakeWithContractMonthAndYearQuery (0.05s)
+    --- PASS: TestGraphQLTestSuite/TestFetchSystemIntakeWithNoCollaboratorsQuery (0.00s)
+    --- PASS: TestGraphQLTestSuite/TestFetchSystemIntakeWithNotesQuery (0.01s)
+    --- PASS: TestGraphQLTestSuite/TestSubmitIntake (0.05s)
+    --- PASS: TestGraphQLTestSuite/TestUpdateContactDetails (0.01s)
+    --- FAIL: TestGraphQLTestSuite/TestUpdateContactDetailsEmptyEUA (0.05s)
+    --- PASS: TestGraphQLTestSuite/TestUpdateContactDetailsWillClearISSOAndTeams (0.01s)
+    --- FAIL: TestGraphQLTestSuite/TestUpdateContactDetailsWillClearOneTeam (0.06s)
+    --- PASS: TestGraphQLTestSuite/TestUpdateContactDetailsWithISSOAndTeams (0.01s)
+    --- FAIL: TestGraphQLTestSuite/TestUpdateContractDetailsImmediatelyAfterIntakeCreation (0.06s)
+    --- PASS: TestGraphQLTestSuite/TestUpdateContractDetailsRemoveContract (0.05s)
+    --- PASS: TestGraphQLTestSuite/TestUpdateContractDetailsRemoveCosts (0.01s)
+    --- PASS: TestGraphQLTestSuite/TestUpdateContractDetailsRemoveFundingSource (0.01s)
+    --- FAIL: TestGraphQLTestSuite/TestUpdateContractDetailsReplacesContractVehicleWithContractNumber (0.05s)
+    --- PASS: TestGraphQLTestSuite/TestUpdateRequestDetails (0.01s)
+    --- PASS: TestGraphQLTestSuite/TestUpdateRequestDetailsHasUiChangesNull (0.01s)
+    --- PASS: TestGraphQLTestSuite/TestUpdateRequestDetailsHasUiChangesTrue (0.01s)
+FAIL
+FAIL	github.com/cmsgov/easi-app/pkg/graph	1.136s
+=== RUN   TestIntakeFormStatus
+=== RUN   TestIntakeFormStatus/Request_form_not_started
+=== RUN   TestIntakeFormStatus/Request_form_started
+=== RUN   TestIntakeFormStatus/Request_form_edits_requested
+=== RUN   TestIntakeFormStatus/Request_form_submitted
+=== RUN   TestIntakeFormStatus/Request_form_default_case
+=== RUN   TestIntakeFormStatus/Request_form_not_started:_not_at_intake_form_step
+=== RUN   TestIntakeFormStatus/Request_form_started:_not_at_intake_form_step
+=== RUN   TestIntakeFormStatus/Request_form_edits_requested:_not_at_intake_form_step
+=== RUN   TestIntakeFormStatus/Request_form_submitted:_not_at_intake_form_step
+=== RUN   TestIntakeFormStatus/Request_form_default_state:_not_at_intake_form_step,_expect_complete
+--- PASS: TestIntakeFormStatus (0.00s)
+    --- PASS: TestIntakeFormStatus/Request_form_not_started (0.00s)
+    --- PASS: TestIntakeFormStatus/Request_form_started (0.00s)
+    --- PASS: TestIntakeFormStatus/Request_form_edits_requested (0.00s)
+    --- PASS: TestIntakeFormStatus/Request_form_submitted (0.00s)
+    --- PASS: TestIntakeFormStatus/Request_form_default_case (0.00s)
+    --- PASS: TestIntakeFormStatus/Request_form_not_started:_not_at_intake_form_step (0.00s)
+    --- PASS: TestIntakeFormStatus/Request_form_started:_not_at_intake_form_step (0.00s)
+    --- PASS: TestIntakeFormStatus/Request_form_edits_requested:_not_at_intake_form_step (0.00s)
+    --- PASS: TestIntakeFormStatus/Request_form_submitted:_not_at_intake_form_step (0.00s)
+    --- PASS: TestIntakeFormStatus/Request_form_default_state:_not_at_intake_form_step,_expect_complete (0.00s)
+=== RUN   TestFeedbackFromInitialReviewStatus
+=== RUN   TestFeedbackFromInitialReviewStatus/Request_form_not_started
+=== RUN   TestFeedbackFromInitialReviewStatus/Request_form_started
+=== RUN   TestFeedbackFromInitialReviewStatus/Request_form_Submitted
+=== RUN   TestFeedbackFromInitialReviewStatus/Request_form_edits_requested
+=== RUN   TestFeedbackFromInitialReviewStatus/Request_form_default_case
+=== RUN   TestFeedbackFromInitialReviewStatus/Request_form_not_started:_not_at_intake_form_step
+=== RUN   TestFeedbackFromInitialReviewStatus/Request_form_started:_not_at_intake_form_step
+=== RUN   TestFeedbackFromInitialReviewStatus/Request_form_edits_requested:_not_at_intake_form_step
+=== RUN   TestFeedbackFromInitialReviewStatus/Request_form_submitted:_not_at_intake_form_step
+=== RUN   TestFeedbackFromInitialReviewStatus/Request_form_default_state:_not_at_intake_form_step,_expect_complete
+--- PASS: TestFeedbackFromInitialReviewStatus (0.00s)
+    --- PASS: TestFeedbackFromInitialReviewStatus/Request_form_not_started (0.00s)
+    --- PASS: TestFeedbackFromInitialReviewStatus/Request_form_started (0.00s)
+    --- PASS: TestFeedbackFromInitialReviewStatus/Request_form_Submitted (0.00s)
+    --- PASS: TestFeedbackFromInitialReviewStatus/Request_form_edits_requested (0.00s)
+    --- PASS: TestFeedbackFromInitialReviewStatus/Request_form_default_case (0.00s)
+    --- PASS: TestFeedbackFromInitialReviewStatus/Request_form_not_started:_not_at_intake_form_step (0.00s)
+    --- PASS: TestFeedbackFromInitialReviewStatus/Request_form_started:_not_at_intake_form_step (0.00s)
+    --- PASS: TestFeedbackFromInitialReviewStatus/Request_form_edits_requested:_not_at_intake_form_step (0.00s)
+    --- PASS: TestFeedbackFromInitialReviewStatus/Request_form_submitted:_not_at_intake_form_step (0.00s)
+    --- PASS: TestFeedbackFromInitialReviewStatus/Request_form_default_state:_not_at_intake_form_step,_expect_complete (0.00s)
+=== RUN   TestDecisionAndNextStepsStatus
+=== RUN   TestDecisionAndNextStepsStatus/Request_form_not_started
+=== RUN   TestDecisionAndNextStepsStatus/Draft_Business_Case
+=== RUN   TestDecisionAndNextStepsStatus/GRT_Meeting
+=== RUN   TestDecisionAndNextStepsStatus/Final_Business_Case
+=== RUN   TestDecisionAndNextStepsStatus/GRB_Meeting:_no_meeting_scheduled
+=== RUN   TestDecisionAndNextStepsStatus/GRB_Meeting:_meeting_scheduled,_but_hasn't_happened
+=== RUN   TestDecisionAndNextStepsStatus/GRB_Meeting:_meeting_scheduled,_it_already_happened
+=== RUN   TestDecisionAndNextStepsStatus/Decision_issued_step:_LCID_Issued
+=== RUN   TestDecisionAndNextStepsStatus/Decision_issued_step:_Not_Approved
+=== RUN   TestDecisionAndNextStepsStatus/Decision_issued_step:_Not_an_IT_Governance_Request
+=== RUN   TestDecisionAndNextStepsStatus/Decision_issued_step:_No_decision_issued
+--- PASS: TestDecisionAndNextStepsStatus (0.00s)
+    --- PASS: TestDecisionAndNextStepsStatus/Request_form_not_started (0.00s)
+    --- PASS: TestDecisionAndNextStepsStatus/Draft_Business_Case (0.00s)
+    --- PASS: TestDecisionAndNextStepsStatus/GRT_Meeting (0.00s)
+    --- PASS: TestDecisionAndNextStepsStatus/Final_Business_Case (0.00s)
+    --- PASS: TestDecisionAndNextStepsStatus/GRB_Meeting:_no_meeting_scheduled (0.00s)
+    --- PASS: TestDecisionAndNextStepsStatus/GRB_Meeting:_meeting_scheduled,_but_hasn't_happened (0.00s)
+    --- PASS: TestDecisionAndNextStepsStatus/GRB_Meeting:_meeting_scheduled,_it_already_happened (0.00s)
+    --- PASS: TestDecisionAndNextStepsStatus/Decision_issued_step:_LCID_Issued (0.00s)
+    --- PASS: TestDecisionAndNextStepsStatus/Decision_issued_step:_Not_Approved (0.00s)
+    --- PASS: TestDecisionAndNextStepsStatus/Decision_issued_step:_Not_an_IT_Governance_Request (0.00s)
+    --- PASS: TestDecisionAndNextStepsStatus/Decision_issued_step:_No_decision_issued (0.00s)
+=== RUN   TestBizCaseDraftStatus
+=== RUN   TestBizCaseDraftStatus/Request_form_not_started
+=== RUN   TestBizCaseDraftStatus/Invalid_Step
+=== RUN   TestBizCaseDraftStatus/Draft_Business_Case_Step:_Invalid_State
+=== RUN   TestBizCaseDraftStatus/Draft_Business_Case_Step:_Not_Started
+=== RUN   TestBizCaseDraftStatus/Draft_Business_Case_Step:_In_Progress
+=== RUN   TestBizCaseDraftStatus/Draft_Business_Case_Step:_Submitted
+=== RUN   TestBizCaseDraftStatus/Draft_Business_Case_Step:_Edits_Requested
+=== RUN   TestBizCaseDraftStatus/Decision_Step:_Invalid_State
+=== RUN   TestBizCaseDraftStatus/GRT_Step:_Invalid_State
+=== RUN   TestBizCaseDraftStatus/GRB_Step:_Invalid_State
+=== RUN   TestBizCaseDraftStatus/Final_Business_Case:_Invalid_State
+=== RUN   TestBizCaseDraftStatus/Decision_Step:_Draft_Business_Case_Not_Needed
+=== RUN   TestBizCaseDraftStatus/GRT_Step:_Draft_Business_Case_Not_Needed
+=== RUN   TestBizCaseDraftStatus/GRB_Step:_Draft_Business_Case_Not_Needed
+=== RUN   TestBizCaseDraftStatus/Final_Business_Case:_Draft_Business_Case_Not_Needed
+=== RUN   TestBizCaseDraftStatus/Decision_Step:_Draft_Business_Case_Edits_Requested_-->_Done
+=== RUN   TestBizCaseDraftStatus/GRT_Step:_Draft_Business_Case_Edits_Requested_-->_Done
+=== RUN   TestBizCaseDraftStatus/GRB_Step:_Draft_Business_Case_Edits_Requested_-->_Done
+=== RUN   TestBizCaseDraftStatus/Final_Business_Case:_Draft_Business_Case_Edits_Requested_-->_Done
+=== RUN   TestBizCaseDraftStatus/Decision_Step:_Draft_Business_Case_In_Progress_-->_Done
+=== RUN   TestBizCaseDraftStatus/GRT_Step:_Draft_Business_Case_In_Progress_-->_Done
+=== RUN   TestBizCaseDraftStatus/GRB_Step:_Draft_Business_Case_In_Progress_-->_Done
+=== RUN   TestBizCaseDraftStatus/Final_Business_Case:_Draft_Business_Case_In_Progress_-->_Done
+=== RUN   TestBizCaseDraftStatus/Decision_Step:_Draft_Business_Case_Submitted_-->_Done
+=== RUN   TestBizCaseDraftStatus/GRT_Step:_Draft_Business_Case_Submitted_-->_Done
+=== RUN   TestBizCaseDraftStatus/GRB_Step:_Draft_Business_Case_Submitted_-->_Done
+=== RUN   TestBizCaseDraftStatus/Final_Business_Case:_Draft_Business_Case_Submitted_-->_Done
+--- PASS: TestBizCaseDraftStatus (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Request_form_not_started (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Invalid_Step (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Draft_Business_Case_Step:_Invalid_State (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Draft_Business_Case_Step:_Not_Started (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Draft_Business_Case_Step:_In_Progress (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Draft_Business_Case_Step:_Submitted (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Draft_Business_Case_Step:_Edits_Requested (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Decision_Step:_Invalid_State (0.00s)
+    --- PASS: TestBizCaseDraftStatus/GRT_Step:_Invalid_State (0.00s)
+    --- PASS: TestBizCaseDraftStatus/GRB_Step:_Invalid_State (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Final_Business_Case:_Invalid_State (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Decision_Step:_Draft_Business_Case_Not_Needed (0.00s)
+    --- PASS: TestBizCaseDraftStatus/GRT_Step:_Draft_Business_Case_Not_Needed (0.00s)
+    --- PASS: TestBizCaseDraftStatus/GRB_Step:_Draft_Business_Case_Not_Needed (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Final_Business_Case:_Draft_Business_Case_Not_Needed (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Decision_Step:_Draft_Business_Case_Edits_Requested_-->_Done (0.00s)
+    --- PASS: TestBizCaseDraftStatus/GRT_Step:_Draft_Business_Case_Edits_Requested_-->_Done (0.00s)
+    --- PASS: TestBizCaseDraftStatus/GRB_Step:_Draft_Business_Case_Edits_Requested_-->_Done (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Final_Business_Case:_Draft_Business_Case_Edits_Requested_-->_Done (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Decision_Step:_Draft_Business_Case_In_Progress_-->_Done (0.00s)
+    --- PASS: TestBizCaseDraftStatus/GRT_Step:_Draft_Business_Case_In_Progress_-->_Done (0.00s)
+    --- PASS: TestBizCaseDraftStatus/GRB_Step:_Draft_Business_Case_In_Progress_-->_Done (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Final_Business_Case:_Draft_Business_Case_In_Progress_-->_Done (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Decision_Step:_Draft_Business_Case_Submitted_-->_Done (0.00s)
+    --- PASS: TestBizCaseDraftStatus/GRT_Step:_Draft_Business_Case_Submitted_-->_Done (0.00s)
+    --- PASS: TestBizCaseDraftStatus/GRB_Step:_Draft_Business_Case_Submitted_-->_Done (0.00s)
+    --- PASS: TestBizCaseDraftStatus/Final_Business_Case:_Draft_Business_Case_Submitted_-->_Done (0.00s)
+=== RUN   TestGrtMeetingStatus
+=== RUN   TestGrtMeetingStatus/Request_form:_No_GRT_Date_Scheduled
+=== RUN   TestGrtMeetingStatus/Request_form:_GRT_Date_Yesterday
+=== RUN   TestGrtMeetingStatus/Request_form:_GRT_Date_Tommorrow
+=== RUN   TestGrtMeetingStatus/Draft_Business_Case:_No_GRT_Date_Scheduled
+=== RUN   TestGrtMeetingStatus/Draft_Business_Case:_GRT_Date_Yesterday
+=== RUN   TestGrtMeetingStatus/Draft_Business_Case:_GRT_Date_Tommorrow
+=== RUN   TestGrtMeetingStatus/GRT_Step:_No_GRT_Date_Scheduled
+=== RUN   TestGrtMeetingStatus/GRT_Step:_GRT_Date_Yesterday
+=== RUN   TestGrtMeetingStatus/GRT_Step:_GRT_Date_Tommorrow
+=== RUN   TestGrtMeetingStatus/Final_Business_Case_Step:_No_GRT_Date_Scheduled
+=== RUN   TestGrtMeetingStatus/Final_Business_Case_Step:_GRT_Date_Yesterday
+=== RUN   TestGrtMeetingStatus/Final_Business_Case_Step:_GRT_Date_Tommorrow
+=== RUN   TestGrtMeetingStatus/GRB_Step:_No_GRT_Date_Scheduled
+=== RUN   TestGrtMeetingStatus/GRB_Step:_GRT_Date_Yesterday
+=== RUN   TestGrtMeetingStatus/GRB_Step:_GRT_Date_Tommorrow
+=== RUN   TestGrtMeetingStatus/Decision_Step:_No_GRT_Date_Scheduled
+=== RUN   TestGrtMeetingStatus/Decision_Step:_GRT_Date_Yesterday
+=== RUN   TestGrtMeetingStatus/Decision_Step:_GRT_Date_Tommorrow
+=== RUN   TestGrtMeetingStatus/Invalid_Step:_No_GRT_Date_Scheduled,_expect_error
+=== RUN   TestGrtMeetingStatus/Invalid_Step:_GRT_Date_Yesterday,_no_error
+=== RUN   TestGrtMeetingStatus/Invalid_Step:_GRT_Date_Tommorrow,_no_error
+--- PASS: TestGrtMeetingStatus (0.00s)
+    --- PASS: TestGrtMeetingStatus/Request_form:_No_GRT_Date_Scheduled (0.00s)
+    --- PASS: TestGrtMeetingStatus/Request_form:_GRT_Date_Yesterday (0.00s)
+    --- PASS: TestGrtMeetingStatus/Request_form:_GRT_Date_Tommorrow (0.00s)
+    --- PASS: TestGrtMeetingStatus/Draft_Business_Case:_No_GRT_Date_Scheduled (0.00s)
+    --- PASS: TestGrtMeetingStatus/Draft_Business_Case:_GRT_Date_Yesterday (0.00s)
+    --- PASS: TestGrtMeetingStatus/Draft_Business_Case:_GRT_Date_Tommorrow (0.00s)
+    --- PASS: TestGrtMeetingStatus/GRT_Step:_No_GRT_Date_Scheduled (0.00s)
+    --- PASS: TestGrtMeetingStatus/GRT_Step:_GRT_Date_Yesterday (0.00s)
+    --- PASS: TestGrtMeetingStatus/GRT_Step:_GRT_Date_Tommorrow (0.00s)
+    --- PASS: TestGrtMeetingStatus/Final_Business_Case_Step:_No_GRT_Date_Scheduled (0.00s)
+    --- PASS: TestGrtMeetingStatus/Final_Business_Case_Step:_GRT_Date_Yesterday (0.00s)
+    --- PASS: TestGrtMeetingStatus/Final_Business_Case_Step:_GRT_Date_Tommorrow (0.00s)
+    --- PASS: TestGrtMeetingStatus/GRB_Step:_No_GRT_Date_Scheduled (0.00s)
+    --- PASS: TestGrtMeetingStatus/GRB_Step:_GRT_Date_Yesterday (0.00s)
+    --- PASS: TestGrtMeetingStatus/GRB_Step:_GRT_Date_Tommorrow (0.00s)
+    --- PASS: TestGrtMeetingStatus/Decision_Step:_No_GRT_Date_Scheduled (0.00s)
+    --- PASS: TestGrtMeetingStatus/Decision_Step:_GRT_Date_Yesterday (0.00s)
+    --- PASS: TestGrtMeetingStatus/Decision_Step:_GRT_Date_Tommorrow (0.00s)
+    --- PASS: TestGrtMeetingStatus/Invalid_Step:_No_GRT_Date_Scheduled,_expect_error (0.00s)
+    --- PASS: TestGrtMeetingStatus/Invalid_Step:_GRT_Date_Yesterday,_no_error (0.00s)
+    --- PASS: TestGrtMeetingStatus/Invalid_Step:_GRT_Date_Tommorrow,_no_error (0.00s)
+=== RUN   TestBizCaseFinalStatus
+=== RUN   TestBizCaseFinalStatus/Request_form_not_started
+=== RUN   TestBizCaseFinalStatus/Invalid_Step
+=== RUN   TestBizCaseFinalStatus/Final_Business_Case_Step:_Invalid_State
+=== RUN   TestBizCaseFinalStatus/Final_Business_Case_Step:_Not_Started
+=== RUN   TestBizCaseFinalStatus/Final_Business_Case_Step:_In_Progress
+=== RUN   TestBizCaseFinalStatus/Final_Business_Case_Step:_Submitted
+=== RUN   TestBizCaseFinalStatus/Final_Business_Case_Step:_Edits_Requested
+=== RUN   TestBizCaseFinalStatus/Decision_Step:_Invalid_State
+=== RUN   TestBizCaseFinalStatus/GRT_Step:_Invalid_State
+=== RUN   TestBizCaseFinalStatus/GRB_Step:_Invalid_State
+=== RUN   TestBizCaseFinalStatus/Draft_Business_Case:_Invalid_State
+=== RUN   TestBizCaseFinalStatus/Decision_Step:_Final_Business_Case_Not_Needed
+=== RUN   TestBizCaseFinalStatus/GRT_Step:_Final_Business_Case_Cant_Start
+=== RUN   TestBizCaseFinalStatus/GRB_Step:_Final_Business_Case_Not_Needed
+=== RUN   TestBizCaseFinalStatus/Draft_Business_Case:_Final_Business_Case_Cant_Start
+=== RUN   TestBizCaseFinalStatus/Decision_Step:_Final_Business_Case_Edits_Requested_-->_Done
+=== RUN   TestBizCaseFinalStatus/GRT_Step:_Final_Business_Case_Edits_Requested_-->_Cant_start
+=== RUN   TestBizCaseFinalStatus/GRB_Step:_Final_Business_Case_Edits_Requested_-->_Done
+=== RUN   TestBizCaseFinalStatus/Draft_Business_Case:_Final_Business_Case_Edits_Requested_-->_Done
+=== RUN   TestBizCaseFinalStatus/Decision_Step:_Final_Business_Case_In_Progress_-->_Done
+=== RUN   TestBizCaseFinalStatus/GRT_Step:_Final_Business_Case_In_Progress_-->_Can't_Start
+=== RUN   TestBizCaseFinalStatus/GRB_Step:_Final_Business_Case_In_Progress_-->_Done
+=== RUN   TestBizCaseFinalStatus/Draft_Business_Case:_Final_Business_Case_In_Progress_-->_Cant_Start
+=== RUN   TestBizCaseFinalStatus/Decision_Step:_Final_Business_Case_Submitted_-->_Done
+=== RUN   TestBizCaseFinalStatus/GRT_Step:_Final_Business_Case_Submitted_-->_Cant_Start
+=== RUN   TestBizCaseFinalStatus/GRB_Step:_Final_Business_Case_Submitted_-->_Done
+=== RUN   TestBizCaseFinalStatus/Draft_Business_Case:_Final_Business_Case_Submitted_-->_Cant_Start
+--- PASS: TestBizCaseFinalStatus (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Request_form_not_started (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Invalid_Step (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Final_Business_Case_Step:_Invalid_State (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Final_Business_Case_Step:_Not_Started (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Final_Business_Case_Step:_In_Progress (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Final_Business_Case_Step:_Submitted (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Final_Business_Case_Step:_Edits_Requested (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Decision_Step:_Invalid_State (0.00s)
+    --- PASS: TestBizCaseFinalStatus/GRT_Step:_Invalid_State (0.00s)
+    --- PASS: TestBizCaseFinalStatus/GRB_Step:_Invalid_State (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Draft_Business_Case:_Invalid_State (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Decision_Step:_Final_Business_Case_Not_Needed (0.00s)
+    --- PASS: TestBizCaseFinalStatus/GRT_Step:_Final_Business_Case_Cant_Start (0.00s)
+    --- PASS: TestBizCaseFinalStatus/GRB_Step:_Final_Business_Case_Not_Needed (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Draft_Business_Case:_Final_Business_Case_Cant_Start (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Decision_Step:_Final_Business_Case_Edits_Requested_-->_Done (0.00s)
+    --- PASS: TestBizCaseFinalStatus/GRT_Step:_Final_Business_Case_Edits_Requested_-->_Cant_start (0.00s)
+    --- PASS: TestBizCaseFinalStatus/GRB_Step:_Final_Business_Case_Edits_Requested_-->_Done (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Draft_Business_Case:_Final_Business_Case_Edits_Requested_-->_Done (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Decision_Step:_Final_Business_Case_In_Progress_-->_Done (0.00s)
+    --- PASS: TestBizCaseFinalStatus/GRT_Step:_Final_Business_Case_In_Progress_-->_Can't_Start (0.00s)
+    --- PASS: TestBizCaseFinalStatus/GRB_Step:_Final_Business_Case_In_Progress_-->_Done (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Draft_Business_Case:_Final_Business_Case_In_Progress_-->_Cant_Start (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Decision_Step:_Final_Business_Case_Submitted_-->_Done (0.00s)
+    --- PASS: TestBizCaseFinalStatus/GRT_Step:_Final_Business_Case_Submitted_-->_Cant_Start (0.00s)
+    --- PASS: TestBizCaseFinalStatus/GRB_Step:_Final_Business_Case_Submitted_-->_Done (0.00s)
+    --- PASS: TestBizCaseFinalStatus/Draft_Business_Case:_Final_Business_Case_Submitted_-->_Cant_Start (0.00s)
+=== RUN   TestGrbMeetingStatus
+=== RUN   TestGrbMeetingStatus/Request_form:_No_GRB_Date_Scheduled
+=== RUN   TestGrbMeetingStatus/Request_form:_GRB_Date_Yesterday
+=== RUN   TestGrbMeetingStatus/Request_form:_GRB_Date_Tommorrow
+=== RUN   TestGrbMeetingStatus/Draft_Business_Case:_No_GRB_Date_Scheduled
+=== RUN   TestGrbMeetingStatus/Draft_Business_Case:_GRB_Date_Yesterday
+=== RUN   TestGrbMeetingStatus/Draft_Business_Case:_GRB_Date_Tommorrow
+=== RUN   TestGrbMeetingStatus/GRT_Step:_No_GRB_Date_Scheduled
+=== RUN   TestGrbMeetingStatus/GRT_Step:_GRB_Date_Yesterday
+=== RUN   TestGrbMeetingStatus/GRT_Step:_GRB_Date_Tommorrow
+=== RUN   TestGrbMeetingStatus/Final_Business_Case_Step:_No_GRB_Date_Scheduled
+=== RUN   TestGrbMeetingStatus/Final_Business_Case_Step:_GRB_Date_Yesterday
+=== RUN   TestGrbMeetingStatus/Final_Business_Case_Step:_GRB_Date_Tommorrow
+=== RUN   TestGrbMeetingStatus/GRB_Step:_No_GRB_Date_Scheduled
+=== RUN   TestGrbMeetingStatus/GRB_Step:_GRB_Date_Yesterday
+=== RUN   TestGrbMeetingStatus/GRB_Step:_GRB_Date_Tommorrow
+=== RUN   TestGrbMeetingStatus/Decision_Step:_No_GRB_Date_Scheduled
+=== RUN   TestGrbMeetingStatus/Decision_Step:_GRB_Date_Yesterday
+=== RUN   TestGrbMeetingStatus/Decision_Step:_GRB_Date_Tommorrow
+=== RUN   TestGrbMeetingStatus/Invalid_Step:_No_GRB_Date_Scheduled,_expect_error
+=== RUN   TestGrbMeetingStatus/Invalid_Step:_GRB_Date_Yesterday,_no_error
+=== RUN   TestGrbMeetingStatus/Invalid_Step:_GRB_Date_Tommorrow,_no_error
+--- PASS: TestGrbMeetingStatus (0.00s)
+    --- PASS: TestGrbMeetingStatus/Request_form:_No_GRB_Date_Scheduled (0.00s)
+    --- PASS: TestGrbMeetingStatus/Request_form:_GRB_Date_Yesterday (0.00s)
+    --- PASS: TestGrbMeetingStatus/Request_form:_GRB_Date_Tommorrow (0.00s)
+    --- PASS: TestGrbMeetingStatus/Draft_Business_Case:_No_GRB_Date_Scheduled (0.00s)
+    --- PASS: TestGrbMeetingStatus/Draft_Business_Case:_GRB_Date_Yesterday (0.00s)
+    --- PASS: TestGrbMeetingStatus/Draft_Business_Case:_GRB_Date_Tommorrow (0.00s)
+    --- PASS: TestGrbMeetingStatus/GRT_Step:_No_GRB_Date_Scheduled (0.00s)
+    --- PASS: TestGrbMeetingStatus/GRT_Step:_GRB_Date_Yesterday (0.00s)
+    --- PASS: TestGrbMeetingStatus/GRT_Step:_GRB_Date_Tommorrow (0.00s)
+    --- PASS: TestGrbMeetingStatus/Final_Business_Case_Step:_No_GRB_Date_Scheduled (0.00s)
+    --- PASS: TestGrbMeetingStatus/Final_Business_Case_Step:_GRB_Date_Yesterday (0.00s)
+    --- PASS: TestGrbMeetingStatus/Final_Business_Case_Step:_GRB_Date_Tommorrow (0.00s)
+    --- PASS: TestGrbMeetingStatus/GRB_Step:_No_GRB_Date_Scheduled (0.00s)
+    --- PASS: TestGrbMeetingStatus/GRB_Step:_GRB_Date_Yesterday (0.00s)
+    --- PASS: TestGrbMeetingStatus/GRB_Step:_GRB_Date_Tommorrow (0.00s)
+    --- PASS: TestGrbMeetingStatus/Decision_Step:_No_GRB_Date_Scheduled (0.00s)
+    --- PASS: TestGrbMeetingStatus/Decision_Step:_GRB_Date_Yesterday (0.00s)
+    --- PASS: TestGrbMeetingStatus/Decision_Step:_GRB_Date_Tommorrow (0.00s)
+    --- PASS: TestGrbMeetingStatus/Invalid_Step:_No_GRB_Date_Scheduled,_expect_error (0.00s)
+    --- PASS: TestGrbMeetingStatus/Invalid_Step:_GRB_Date_Yesterday,_no_error (0.00s)
+    --- PASS: TestGrbMeetingStatus/Invalid_Step:_GRB_Date_Tommorrow,_no_error (0.00s)
+=== RUN   TestResolverSuite
+[LaunchDarkly] 2024/05/31 10:46:18 INFO: Starting LaunchDarkly client 5.10.1
+[LaunchDarkly] 2024/05/31 10:46:18 INFO: Starting LaunchDarkly client in offline mode
+=== RUN   TestResolverSuite/TestChangeLCIDRetirementDate
+=== RUN   TestResolverSuite/TestChangeLCIDRetirementDate/Changing_an_LCID's_retirement_date_on_a_retired_intake_updates_the_retirement_date,_creates_an_action,_and_creates_an_admin_note
+=== RUN   TestResolverSuite/TestCreateTRBAdminNoteAdviceLetter
+=== RUN   TestResolverSuite/TestCreateTRBAdminNoteAdviceLetter/Creating_Advice_Letter_Admin_Note_referencing_recommendations_attached_to_the_same_TRB_request_works
+=== RUN   TestResolverSuite/TestCreateTRBAdminNoteAdviceLetter/Creating_Admin_Note_referencing_advice_letter_recommendations_attached_to_a_*different*_TRB_request_fails
+=== RUN   TestResolverSuite/TestCreateTRBAdminNoteConsultSession
+=== RUN   TestResolverSuite/TestCreateTRBAdminNoteConsultSession/Creating_Admin_Note_with_General_Request_category_works
+=== RUN   TestResolverSuite/TestCreateTRBAdminNoteGeneralRequest
+=== RUN   TestResolverSuite/TestCreateTRBAdminNoteGeneralRequest/Creating_Admin_Note_with_General_Request_category_works
+=== RUN   TestResolverSuite/TestCreateTRBAdminNoteInitialRequestForm
+=== RUN   TestResolverSuite/TestCreateTRBAdminNoteInitialRequestForm/Creating_Admin_Note_with_Initial_Request_Form_category_works
+=== RUN   TestResolverSuite/TestCreateTRBAdminNoteSupportingDocuments
+=== RUN   TestResolverSuite/TestCreateTRBAdminNoteSupportingDocuments/Creating_Supporting_Documents_Admin_Note_referencing_documents_attached_to_the_same_TRB_request_works
+=== RUN   TestResolverSuite/TestCreateTRBAdminNoteSupportingDocuments/Creating_Admin_Note_referencing_supporting_documents_attached_to_a_*different*_TRB_request_fails_and_does_*not*_create_an_admin_note
+=== RUN   TestResolverSuite/TestCreateTRBRequest
+=== RUN   TestResolverSuite/TestCreateTRBRequestAttendee
+=== RUN   TestResolverSuite/TestCreateTRBRequestAttendee/fetches_TRB_request_attendees_(default_attendee_should_exist)
+=== RUN   TestResolverSuite/TestCreateTRBRequestAttendee/create/update/fetch_TRB_request_attendees
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestCreateTRBRequestAttendee/fetches_TRB_request_attendees
+=== RUN   TestResolverSuite/TestCreateTRBRequestFeedback
+=== RUN   TestResolverSuite/TestCreateTRBRequestFeedback/create/update/fetch_TRB_request_feedback
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestCreateTRBRequestForm
+=== RUN   TestResolverSuite/TestCreateTRBRequestForm/create/update/fetch_TRB_request_forms
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestExpireLCID
+=== RUN   TestResolverSuite/TestExpireLCID/Expiring_an_LCID_on_an_intake_with_an_LCID_issued_sets_it_to_expired,_sets_the_correct_fields,_creates_an_action,_and_creates_an_admin_note
+=== RUN   TestResolverSuite/TestGenerateNewLCID
+=== RUN   TestResolverSuite/TestGenerateNewLCID/Should_return_existing_LCID_if_one_is_provided
+=== RUN   TestResolverSuite/TestGenerateNewLCID/Should_generate_new_LCID_if_nil_is_passed
+=== RUN   TestResolverSuite/TestGenerateNewLCID/Should_generate_new_LCID_if_empty_string_is_passed
+=== RUN   TestResolverSuite/TestGetMyTRBRequests
+=== RUN   TestResolverSuite/TestGetTRBAdminNoteCategorySpecificData
+=== RUN   TestResolverSuite/TestGetTRBAdminNoteCategorySpecificData/Supporting_Documents_notes_return_related_documents_for_the_note's_category-specific_data
+=== RUN   TestResolverSuite/TestGetTRBAdminNoteCategorySpecificData/Advice_Letter_notes_return_related_recommendations_for_the_note's_category-specific_data
+=== RUN   TestResolverSuite/TestGetTRBRequestByID
+=== RUN   TestResolverSuite/TestGetTRBRequests
+=== RUN   TestResolverSuite/TestIntakeRelatedSystems
+=== RUN   TestResolverSuite/TestIntakeRelatedSystems/create_system_intakes_for_test
+=== RUN   TestResolverSuite/TestIsRecentTRBRequest
+=== RUN   TestResolverSuite/TestIsRecentTRBRequest/numDaysOld=10,_isLeadAssigned=false,_isRequestClosed=false,_expected=true
+=== RUN   TestResolverSuite/TestIsRecentTRBRequest/numDaysOld=10,_isLeadAssigned=true,_isRequestClosed=false,_expected=false
+=== RUN   TestResolverSuite/TestIsRecentTRBRequest/numDaysOld=10,_isLeadAssigned=true,_isRequestClosed=true,_expected=false
+=== RUN   TestResolverSuite/TestIsRecentTRBRequest/numDaysOld=5,_isLeadAssigned=true,_isRequestClosed=false,_expected=true
+=== RUN   TestResolverSuite/TestIsRecentTRBRequest/numDaysOld=5,_isLeadAssigned=false,_isRequestClosed=false,_expected=true
+=== RUN   TestResolverSuite/TestIsRecentTRBRequest/numDaysOld=5,_isLeadAssigned=false,_isRequestClosed=true,_expected=false
+=== RUN   TestResolverSuite/TestIssueLCID
+=== RUN   TestResolverSuite/TestIssueLCID/When_LCID_is_provided,_that_LCID_is_set_on_the_intake
+=== RUN   TestResolverSuite/TestIssueLCID/When_LCID_is_*not*_provided,_a_new_LCID_is_generated
+=== RUN   TestResolverSuite/TestIssueLCID/Issuing_an_LCID_sets_the_correct_fields,_creates_an_action,_and_disallows_further_issuing_on_the_intake
+=== RUN   TestResolverSuite/TestModifyTRBFundingSources
+=== RUN   TestResolverSuite/TestModifyTRBFundingSources/create/fetch/update/delete_TRB_request_form_funding_sources
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestRejectIntakeAsNotApproved
+=== RUN   TestResolverSuite/TestRetireLCID
+=== RUN   TestResolverSuite/TestRetireLCID/Retiring_an_LCID_on_an_intake_with_an_LCID_issued_(but_not_yet_retired)_sets_it_to_retired_if_the_retirement_date_is_in_the_past,_sets_the_retirement_date_field,_creates_an_action,_and_creates_an_admin_note
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationExistingService
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationExistingService/adds_contract_numbers_when_no_initial_ones_exist
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationExistingService/removes_existing_contract_numbers_when_none_are_given
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationExistingService/changes_existing_contract_numbers_to_different_ones
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationExistingService/changes_existing_contract_numbers_to_add_new_ones
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationExistingService/changes_existing_contract_numbers_to_remove_old_ones
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationExistingService/should_remove_existing_system_IDs
+=== NAME  TestResolverSuite/TestSetSystemIntakeRelationExistingService
+    system_intake_relation_test.go:352: 
+        	Error Trace:	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/resolvers/system_intake_relation_test.go:352
+        	            				/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:115
+        	Error:      	Not equal: 
+        	            	expected: 0
+        	            	actual  : 2
+        	Test:       	TestResolverSuite/TestSetSystemIntakeRelationExistingService
+=== NAME  TestResolverSuite/TestSetSystemIntakeRelationExistingService/should_remove_existing_system_IDs
+    testing.go:1576: test executed panic(nil) or runtime.Goexit: subtest may have called FailNow on a parent test
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationExistingSystem
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationExistingSystem/adds_contract_numbers_and_system_IDs_when_no_initial_ones_exist
+=== NAME  TestResolverSuite/TestSetSystemIntakeRelationExistingSystem
+    system_intake_relation_test.go:236: 
+        	Error Trace:	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/resolvers/system_intake_relation_test.go:236
+        	            				/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:115
+        	Error:      	Not equal: 
+        	            	expected: 2
+        	            	actual  : 0
+        	Test:       	TestResolverSuite/TestSetSystemIntakeRelationExistingSystem
+=== NAME  TestResolverSuite/TestSetSystemIntakeRelationExistingSystem/adds_contract_numbers_and_system_IDs_when_no_initial_ones_exist
+    testing.go:1576: test executed panic(nil) or runtime.Goexit: subtest may have called FailNow on a parent test
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationNewSystem
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationNewSystem/changes_existing_contract_numbers_to_add_new_ones
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationNewSystem/changes_existing_contract_numbers_to_remove_old_ones
+=== RUN   TestResolverSuite/TestSetSystemIntakeRelationNewSystem/should_remove_existing_system_IDs
+=== NAME  TestResolverSuite/TestSetSystemIntakeRelationNewSystem
+    system_intake_relation_test.go:117: 
+        	Error Trace:	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/resolvers/system_intake_relation_test.go:117
+        	            				/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:115
+        	Error:      	Not equal: 
+        	            	expected: 0
+        	            	actual  : 2
+        	Test:       	TestResolverSuite/TestSetSystemIntakeRelationNewSystem
+=== NAME  TestResolverSuite/TestSetSystemIntakeRelationNewSystem/should_remove_existing_system_IDs
+    testing.go:1576: test executed panic(nil) or runtime.Goexit: subtest may have called FailNow on a parent test
+=== RUN   TestResolverSuite/TestSetTRBRequestRelationExistingService
+=== RUN   TestResolverSuite/TestSetTRBRequestRelationExistingService/adds_contract_numbers_when_no_initial_ones_exist
+=== NAME  TestResolverSuite/TestSetTRBRequestRelationExistingService
+    trb_request_relation_test.go:340: 
+        	Error Trace:	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/resolvers/trb_request_relation_test.go:340
+        	            				/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:115
+        	Error:      	Not equal: 
+        	            	expected: 2
+        	            	actual  : 0
+        	Test:       	TestResolverSuite/TestSetTRBRequestRelationExistingService
+=== NAME  TestResolverSuite/TestSetTRBRequestRelationExistingService/adds_contract_numbers_when_no_initial_ones_exist
+    testing.go:1576: test executed panic(nil) or runtime.Goexit: subtest may have called FailNow on a parent test
+=== RUN   TestResolverSuite/TestSetTRBRequestRelationExistingSystem
+=== RUN   TestResolverSuite/TestSetTRBRequestRelationExistingSystem/adds_contract_numbers_and_system_IDs_when_no_initial_ones_exist
+=== NAME  TestResolverSuite/TestSetTRBRequestRelationExistingSystem
+    trb_request_relation_test.go:228: 
+        	Error Trace:	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/resolvers/trb_request_relation_test.go:228
+        	            				/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:115
+        	Error:      	Not equal: 
+        	            	expected: 2
+        	            	actual  : 0
+        	Test:       	TestResolverSuite/TestSetTRBRequestRelationExistingSystem
+=== NAME  TestResolverSuite/TestSetTRBRequestRelationExistingSystem/adds_contract_numbers_and_system_IDs_when_no_initial_ones_exist
+    testing.go:1576: test executed panic(nil) or runtime.Goexit: subtest may have called FailNow on a parent test
+=== RUN   TestResolverSuite/TestSetTRBRequestRelationNewSystem
+=== RUN   TestResolverSuite/TestSetTRBRequestRelationNewSystem/changes_existing_contract_numbers_to_different_ones
+=== NAME  TestResolverSuite/TestSetTRBRequestRelationNewSystem
+    trb_request_relation_test.go:122: 
+        	Error Trace:	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/resolvers/trb_request_relation_test.go:122
+        	            				/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:115
+        	Error:      	[]string{"3", "4"} does not contain "1"
+        	Test:       	TestResolverSuite/TestSetTRBRequestRelationNewSystem
+=== NAME  TestResolverSuite/TestSetTRBRequestRelationNewSystem/changes_existing_contract_numbers_to_different_ones
+    testing.go:1576: test executed panic(nil) or runtime.Goexit: subtest may have called FailNow on a parent test
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_close_request_when_in_INITIAL_REQUEST_FORM_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_close_request_when_in_DRAFT_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_close_request_when_in_FINAL_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_close_request_when_in_GRB_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_close_request_when_in_GRT_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_close_request_when_in_DECISION_AND_NEXT_STEPS_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_error_on_closed_request_when_in_INITIAL_REQUEST_FORM_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_error_on_closed_request_when_in_DRAFT_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_error_on_closed_request_when_in_FINAL_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_error_on_closed_request_when_in_GRB_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_error_on_closed_request_when_in_GRT_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_error_on_closed_request_when_in_DECISION_AND_NEXT_STEPS_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_create_action
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_create_admin_note_given_input
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_NOT_create_admin_note_without_input
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeConfirmLCID
+=== RUN   TestResolverSuite/TestSystemIntakeConfirmLCID/Can't_confirm_an_LCID_that_wasn't_issued
+=== RUN   TestResolverSuite/TestSystemIntakeConfirmLCID/Can_confirm_an_LCID_that_was_issued
+=== RUN   TestResolverSuite/TestSystemIntakeConfirmLCID/Can_confirm_an_LCID_that_was_issued/Can_confirm_an_already_confirmd_LCID
+=== RUN   TestResolverSuite/TestSystemIntakeContractNumbers
+=== RUN   TestResolverSuite/TestSystemIntakeContractNumbers/create_system_intake_for_test
+=== RUN   TestResolverSuite/TestSystemIntakeDocumentResolvers
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_CLOSED_request_in_INITIAL_REQUEST_FORM_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_OPEN_request_in_INITIAL_REQUEST_FORM_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_CLOSED_request_in_DRAFT_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_OPEN_request_in_DRAFT_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_CLOSED_request_in_FINAL_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_OPEN_request_in_FINAL_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_CLOSED_request_in_GRB_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_OPEN_request_in_GRB_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_CLOSED_request_in_GRT_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_OPEN_request_in_GRT_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_CLOSED_request_in_DECISION_AND_NEXT_STEPS_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_OPEN_request_in_DECISION_AND_NEXT_STEPS_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_create_action
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_create_admin_note_given_input
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_NOT_create_admin_note_without_input
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_reopen_request_when_in_INITIAL_REQUEST_FORM_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_reopen_request_when_in_DRAFT_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_reopen_request_when_in_FINAL_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_reopen_request_when_in_GRB_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_reopen_request_when_in_GRT_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_reopen_request_when_in_DECISION_AND_NEXT_STEPS_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_error_on_open_request_when_in_INITIAL_REQUEST_FORM_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_error_on_open_request_when_in_DRAFT_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_error_on_open_request_when_in_FINAL_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_error_on_open_request_when_in_GRB_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_error_on_open_request_when_in_GRT_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_error_on_open_request_when_in_DECISION_AND_NEXT_STEPS_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_create_action
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_create_admin_note_given_input
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_NOT_create_admin_note_without_input
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_error_targetting_GRT_MEETING_step
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_error_targetting_GRB_MEETING_step
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_error_targetting_DECISION_AND_NEXT_STEPS_step
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_error_targetting_meatloaf_step
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_INITIAL_REQUEST_FORM_step_as_active_when_in_INITIAL_REQUEST_FORM_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_DRAFT_BUSINESS_CASE_step_as_active_when_in_INITIAL_REQUEST_FORM_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_FINAL_BUSINESS_CASE_step_as_active_when_in_INITIAL_REQUEST_FORM_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_INITIAL_REQUEST_FORM_step_as_active_when_in_DRAFT_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_DRAFT_BUSINESS_CASE_step_as_active_when_in_DRAFT_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_FINAL_BUSINESS_CASE_step_as_active_when_in_DRAFT_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_INITIAL_REQUEST_FORM_step_as_active_when_in_FINAL_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_DRAFT_BUSINESS_CASE_step_as_active_when_in_FINAL_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_FINAL_BUSINESS_CASE_step_as_active_when_in_FINAL_BUSINESS_CASE_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_INITIAL_REQUEST_FORM_step_as_active_when_in_GRB_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_DRAFT_BUSINESS_CASE_step_as_active_when_in_GRB_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_FINAL_BUSINESS_CASE_step_as_active_when_in_GRB_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_INITIAL_REQUEST_FORM_step_as_active_when_in_GRT_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_DRAFT_BUSINESS_CASE_step_as_active_when_in_GRT_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_FINAL_BUSINESS_CASE_step_as_active_when_in_GRT_MEETING_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_INITIAL_REQUEST_FORM_step_as_active_when_in_DECISION_AND_NEXT_STEPS_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_DRAFT_BUSINESS_CASE_step_as_active_when_in_DECISION_AND_NEXT_STEPS_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_FINAL_BUSINESS_CASE_step_as_active_when_in_DECISION_AND_NEXT_STEPS_step
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_create_feedback
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_create_action
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_create_admin_note_given_input
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_NOT_create_admin_note_without_input
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestSystemIntakeUpdateLCID
+=== RUN   TestResolverSuite/TestSystemIntakeUpdateLCID/Can't_update_an_LCID_that_wasn't_issued
+=== RUN   TestResolverSuite/TestSystemIntakeUpdateLCID/Can_update_an_LCID_that_was_issued
+=== RUN   TestResolverSuite/TestSystemIntakeUpdateLCID/Can_update_an_LCID_that_was_issued/Can_update_an_already_updated_LCID
+=== RUN   TestResolverSuite/TestSystemIntakesQuery
+=== RUN   TestResolverSuite/TestSystemIntakesQueryArchived
+=== RUN   TestResolverSuite/TestSystemIntakesQueryUnsubmitted
+=== RUN   TestResolverSuite/TestTRBAdviceLetterRecommendationCRUD
+=== RUN   TestResolverSuite/TestTRBAdviceLetterRecommendationCRUD/create/update/fetch_TRB_request_feedback
+=== RUN   TestResolverSuite/TestTRBAdviceLetterRecommendationCRUD/cannot_update_deleted_TRB_recommendation
+Logger not found on context.
+=== RUN   TestResolverSuite/TestTRBAdviceLetterRecommendationCRUD/deleting_a_recommendation_updates_other_recommendations'_positions_to_close_any_gaps
+=== RUN   TestResolverSuite/TestTRBLeadOptions
+=== RUN   TestResolverSuite/TestTRBLeadOptions/create/delete/fetch_TRB_lead_options
+=== RUN   TestResolverSuite/TestTRBRequestContractNumbers
+=== RUN   TestResolverSuite/TestTRBRequestContractNumbers/create_TRB_Requests_for_test
+=== RUN   TestResolverSuite/TestTRBRequestDocumentResolvers
+=== RUN   TestResolverSuite/TestTRBRequestLCID
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestTRBRequestLCID/create/read/update_TRB_request_system_intakes
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestTRBRequestRelatedSystems
+=== RUN   TestResolverSuite/TestTRBRequestRelatedSystems/create_trb_requests_for_test
+=== RUN   TestResolverSuite/TestTRBRequestStatus
+=== RUN   TestResolverSuite/TestTRBRequestStatus/status_is_correctly_calculated_as_TRB_tasks_are_performed
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+Logger not found on context.
+=== RUN   TestResolverSuite/TestUnlinkSystemIntakeRelation
+=== RUN   TestResolverSuite/TestUnlinkSystemIntakeRelation/unlink_new_system_intake
+=== RUN   TestResolverSuite/TestUnlinkSystemIntakeRelation/unlink_existing_system_intake
+=== RUN   TestResolverSuite/TestUnlinkSystemIntakeRelation/unlink_existing_service_intake
+=== RUN   TestResolverSuite/TestUnlinkTRBRequestRelation
+=== RUN   TestResolverSuite/TestUnlinkTRBRequestRelation/unlink_new_trb_request
+=== RUN   TestResolverSuite/TestUnlinkTRBRequestRelation/unlink_existing_trb_request
+=== RUN   TestResolverSuite/TestUnlinkTRBRequestRelation/unlink_existing_service_TRBRequest
+=== RUN   TestResolverSuite/TestUpdateTRBRequest
+=== RUN   TestResolverSuite/TestUpdateTRBRequestConsultMeetingTime
+=== RUN   TestResolverSuite/TestUpdateTRBRequestTRBLead
+--- FAIL: TestResolverSuite (4.36s)
+    --- PASS: TestResolverSuite/TestChangeLCIDRetirementDate (0.09s)
+        --- PASS: TestResolverSuite/TestChangeLCIDRetirementDate/Changing_an_LCID's_retirement_date_on_a_retired_intake_updates_the_retirement_date,_creates_an_action,_and_creates_an_admin_note (0.03s)
+    --- PASS: TestResolverSuite/TestCreateTRBAdminNoteAdviceLetter (0.07s)
+        --- PASS: TestResolverSuite/TestCreateTRBAdminNoteAdviceLetter/Creating_Advice_Letter_Admin_Note_referencing_recommendations_attached_to_the_same_TRB_request_works (0.01s)
+        --- PASS: TestResolverSuite/TestCreateTRBAdminNoteAdviceLetter/Creating_Admin_Note_referencing_advice_letter_recommendations_attached_to_a_*different*_TRB_request_fails (0.01s)
+    --- PASS: TestResolverSuite/TestCreateTRBAdminNoteConsultSession (0.05s)
+        --- PASS: TestResolverSuite/TestCreateTRBAdminNoteConsultSession/Creating_Admin_Note_with_General_Request_category_works (0.00s)
+    --- PASS: TestResolverSuite/TestCreateTRBAdminNoteGeneralRequest (0.06s)
+        --- PASS: TestResolverSuite/TestCreateTRBAdminNoteGeneralRequest/Creating_Admin_Note_with_General_Request_category_works (0.00s)
+    --- PASS: TestResolverSuite/TestCreateTRBAdminNoteInitialRequestForm (0.05s)
+        --- PASS: TestResolverSuite/TestCreateTRBAdminNoteInitialRequestForm/Creating_Admin_Note_with_Initial_Request_Form_category_works (0.00s)
+    --- PASS: TestResolverSuite/TestCreateTRBAdminNoteSupportingDocuments (0.06s)
+        --- PASS: TestResolverSuite/TestCreateTRBAdminNoteSupportingDocuments/Creating_Supporting_Documents_Admin_Note_referencing_documents_attached_to_the_same_TRB_request_works (0.01s)
+        --- PASS: TestResolverSuite/TestCreateTRBAdminNoteSupportingDocuments/Creating_Admin_Note_referencing_supporting_documents_attached_to_a_*different*_TRB_request_fails_and_does_*not*_create_an_admin_note (0.01s)
+    --- PASS: TestResolverSuite/TestCreateTRBRequest (0.06s)
+    --- PASS: TestResolverSuite/TestCreateTRBRequestAttendee (0.06s)
+        --- PASS: TestResolverSuite/TestCreateTRBRequestAttendee/fetches_TRB_request_attendees_(default_attendee_should_exist) (0.00s)
+        --- PASS: TestResolverSuite/TestCreateTRBRequestAttendee/create/update/fetch_TRB_request_attendees (0.00s)
+        --- PASS: TestResolverSuite/TestCreateTRBRequestAttendee/fetches_TRB_request_attendees (0.00s)
+    --- PASS: TestResolverSuite/TestCreateTRBRequestFeedback (0.06s)
+        --- PASS: TestResolverSuite/TestCreateTRBRequestFeedback/create/update/fetch_TRB_request_feedback (0.01s)
+    --- PASS: TestResolverSuite/TestCreateTRBRequestForm (0.06s)
+        --- PASS: TestResolverSuite/TestCreateTRBRequestForm/create/update/fetch_TRB_request_forms (0.00s)
+    --- PASS: TestResolverSuite/TestExpireLCID (0.07s)
+        --- PASS: TestResolverSuite/TestExpireLCID/Expiring_an_LCID_on_an_intake_with_an_LCID_issued_sets_it_to_expired,_sets_the_correct_fields,_creates_an_action,_and_creates_an_admin_note (0.01s)
+    --- PASS: TestResolverSuite/TestGenerateNewLCID (0.05s)
+        --- PASS: TestResolverSuite/TestGenerateNewLCID/Should_return_existing_LCID_if_one_is_provided (0.00s)
+        --- PASS: TestResolverSuite/TestGenerateNewLCID/Should_generate_new_LCID_if_nil_is_passed (0.00s)
+        --- PASS: TestResolverSuite/TestGenerateNewLCID/Should_generate_new_LCID_if_empty_string_is_passed (0.00s)
+    --- PASS: TestResolverSuite/TestGetMyTRBRequests (0.06s)
+    --- PASS: TestResolverSuite/TestGetTRBAdminNoteCategorySpecificData (0.07s)
+        --- PASS: TestResolverSuite/TestGetTRBAdminNoteCategorySpecificData/Supporting_Documents_notes_return_related_documents_for_the_note's_category-specific_data (0.01s)
+        --- PASS: TestResolverSuite/TestGetTRBAdminNoteCategorySpecificData/Advice_Letter_notes_return_related_recommendations_for_the_note's_category-specific_data (0.01s)
+    --- PASS: TestResolverSuite/TestGetTRBRequestByID (0.05s)
+    --- PASS: TestResolverSuite/TestGetTRBRequests (0.06s)
+    --- PASS: TestResolverSuite/TestIntakeRelatedSystems (0.14s)
+        --- PASS: TestResolverSuite/TestIntakeRelatedSystems/create_system_intakes_for_test (0.09s)
+    --- PASS: TestResolverSuite/TestIsRecentTRBRequest (0.05s)
+        --- PASS: TestResolverSuite/TestIsRecentTRBRequest/numDaysOld=10,_isLeadAssigned=false,_isRequestClosed=false,_expected=true (0.00s)
+        --- PASS: TestResolverSuite/TestIsRecentTRBRequest/numDaysOld=10,_isLeadAssigned=true,_isRequestClosed=false,_expected=false (0.00s)
+        --- PASS: TestResolverSuite/TestIsRecentTRBRequest/numDaysOld=10,_isLeadAssigned=true,_isRequestClosed=true,_expected=false (0.00s)
+        --- PASS: TestResolverSuite/TestIsRecentTRBRequest/numDaysOld=5,_isLeadAssigned=true,_isRequestClosed=false,_expected=true (0.00s)
+        --- PASS: TestResolverSuite/TestIsRecentTRBRequest/numDaysOld=5,_isLeadAssigned=false,_isRequestClosed=false,_expected=true (0.00s)
+        --- PASS: TestResolverSuite/TestIsRecentTRBRequest/numDaysOld=5,_isLeadAssigned=false,_isRequestClosed=true,_expected=false (0.00s)
+    --- PASS: TestResolverSuite/TestIssueLCID (0.07s)
+        --- PASS: TestResolverSuite/TestIssueLCID/When_LCID_is_provided,_that_LCID_is_set_on_the_intake (0.00s)
+        --- PASS: TestResolverSuite/TestIssueLCID/When_LCID_is_*not*_provided,_a_new_LCID_is_generated (0.00s)
+        --- PASS: TestResolverSuite/TestIssueLCID/Issuing_an_LCID_sets_the_correct_fields,_creates_an_action,_and_disallows_further_issuing_on_the_intake (0.01s)
+    --- PASS: TestResolverSuite/TestModifyTRBFundingSources (0.06s)
+        --- PASS: TestResolverSuite/TestModifyTRBFundingSources/create/fetch/update/delete_TRB_request_form_funding_sources (0.01s)
+    --- PASS: TestResolverSuite/TestRejectIntakeAsNotApproved (0.06s)
+    --- PASS: TestResolverSuite/TestRetireLCID (0.06s)
+        --- PASS: TestResolverSuite/TestRetireLCID/Retiring_an_LCID_on_an_intake_with_an_LCID_issued_(but_not_yet_retired)_sets_it_to_retired_if_the_retirement_date_is_in_the_past,_sets_the_retirement_date_field,_creates_an_action,_and_creates_an_admin_note (0.01s)
+    --- FAIL: TestResolverSuite/TestSetSystemIntakeRelationExistingService (0.31s)
+        --- PASS: TestResolverSuite/TestSetSystemIntakeRelationExistingService/adds_contract_numbers_when_no_initial_ones_exist (0.04s)
+        --- PASS: TestResolverSuite/TestSetSystemIntakeRelationExistingService/removes_existing_contract_numbers_when_none_are_given (0.04s)
+        --- PASS: TestResolverSuite/TestSetSystemIntakeRelationExistingService/changes_existing_contract_numbers_to_different_ones (0.04s)
+        --- PASS: TestResolverSuite/TestSetSystemIntakeRelationExistingService/changes_existing_contract_numbers_to_add_new_ones (0.04s)
+        --- PASS: TestResolverSuite/TestSetSystemIntakeRelationExistingService/changes_existing_contract_numbers_to_remove_old_ones (0.04s)
+        --- FAIL: TestResolverSuite/TestSetSystemIntakeRelationExistingService/should_remove_existing_system_IDs (0.04s)
+    --- FAIL: TestResolverSuite/TestSetSystemIntakeRelationExistingSystem (0.09s)
+        --- FAIL: TestResolverSuite/TestSetSystemIntakeRelationExistingSystem/adds_contract_numbers_and_system_IDs_when_no_initial_ones_exist (0.04s)
+    --- FAIL: TestResolverSuite/TestSetSystemIntakeRelationNewSystem (0.17s)
+        --- PASS: TestResolverSuite/TestSetSystemIntakeRelationNewSystem/changes_existing_contract_numbers_to_add_new_ones (0.04s)
+        --- PASS: TestResolverSuite/TestSetSystemIntakeRelationNewSystem/changes_existing_contract_numbers_to_remove_old_ones (0.04s)
+        --- FAIL: TestResolverSuite/TestSetSystemIntakeRelationNewSystem/should_remove_existing_system_IDs (0.04s)
+    --- FAIL: TestResolverSuite/TestSetTRBRequestRelationExistingService (0.09s)
+        --- FAIL: TestResolverSuite/TestSetTRBRequestRelationExistingService/adds_contract_numbers_when_no_initial_ones_exist (0.04s)
+    --- FAIL: TestResolverSuite/TestSetTRBRequestRelationExistingSystem (0.09s)
+        --- FAIL: TestResolverSuite/TestSetTRBRequestRelationExistingSystem/adds_contract_numbers_and_system_IDs_when_no_initial_ones_exist (0.04s)
+    --- FAIL: TestResolverSuite/TestSetTRBRequestRelationNewSystem (0.10s)
+        --- FAIL: TestResolverSuite/TestSetTRBRequestRelationNewSystem/changes_existing_contract_numbers_to_different_ones (0.04s)
+    --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction (0.13s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_close_request_when_in_INITIAL_REQUEST_FORM_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_close_request_when_in_DRAFT_BUSINESS_CASE_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_close_request_when_in_FINAL_BUSINESS_CASE_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_close_request_when_in_GRB_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_close_request_when_in_GRT_MEETING_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_close_request_when_in_DECISION_AND_NEXT_STEPS_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_error_on_closed_request_when_in_INITIAL_REQUEST_FORM_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_error_on_closed_request_when_in_DRAFT_BUSINESS_CASE_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_error_on_closed_request_when_in_FINAL_BUSINESS_CASE_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_error_on_closed_request_when_in_GRB_MEETING_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_error_on_closed_request_when_in_GRT_MEETING_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_error_on_closed_request_when_in_DECISION_AND_NEXT_STEPS_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_create_action (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_create_admin_note_given_input (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeCloseRequestAction/Should_NOT_create_admin_note_without_input (0.00s)
+    --- PASS: TestResolverSuite/TestSystemIntakeConfirmLCID (0.07s)
+        --- PASS: TestResolverSuite/TestSystemIntakeConfirmLCID/Can't_confirm_an_LCID_that_wasn't_issued (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeConfirmLCID/Can_confirm_an_LCID_that_was_issued (0.01s)
+            --- PASS: TestResolverSuite/TestSystemIntakeConfirmLCID/Can_confirm_an_LCID_that_was_issued/Can_confirm_an_already_confirmd_LCID (0.01s)
+    --- PASS: TestResolverSuite/TestSystemIntakeContractNumbers (0.09s)
+        --- PASS: TestResolverSuite/TestSystemIntakeContractNumbers/create_system_intake_for_test (0.04s)
+    --- PASS: TestResolverSuite/TestSystemIntakeDocumentResolvers (0.06s)
+    --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction (0.14s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_CLOSED_request_in_INITIAL_REQUEST_FORM_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_OPEN_request_in_INITIAL_REQUEST_FORM_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_CLOSED_request_in_DRAFT_BUSINESS_CASE_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_OPEN_request_in_DRAFT_BUSINESS_CASE_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_CLOSED_request_in_FINAL_BUSINESS_CASE_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_OPEN_request_in_FINAL_BUSINESS_CASE_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_CLOSED_request_in_GRB_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_OPEN_request_in_GRB_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_CLOSED_request_in_GRT_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_OPEN_request_in_GRT_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_CLOSED_request_in_DECISION_AND_NEXT_STEPS_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_issue_decision_on_OPEN_request_in_DECISION_AND_NEXT_STEPS_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_create_action (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_create_admin_note_given_input (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeNotITGovRequestAction/Should_NOT_create_admin_note_without_input (0.00s)
+    --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction (0.12s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_reopen_request_when_in_INITIAL_REQUEST_FORM_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_reopen_request_when_in_DRAFT_BUSINESS_CASE_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_reopen_request_when_in_FINAL_BUSINESS_CASE_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_reopen_request_when_in_GRB_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_reopen_request_when_in_GRT_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_reopen_request_when_in_DECISION_AND_NEXT_STEPS_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_error_on_open_request_when_in_INITIAL_REQUEST_FORM_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_error_on_open_request_when_in_DRAFT_BUSINESS_CASE_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_error_on_open_request_when_in_FINAL_BUSINESS_CASE_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_error_on_open_request_when_in_GRB_MEETING_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_error_on_open_request_when_in_GRT_MEETING_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_error_on_open_request_when_in_DECISION_AND_NEXT_STEPS_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_create_action (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_create_admin_note_given_input (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeReopenRequestAction/Should_NOT_create_admin_note_without_input (0.00s)
+    --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction (0.18s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_error_targetting_GRT_MEETING_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_error_targetting_GRB_MEETING_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_error_targetting_DECISION_AND_NEXT_STEPS_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_error_targetting_meatloaf_step (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_INITIAL_REQUEST_FORM_step_as_active_when_in_INITIAL_REQUEST_FORM_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_DRAFT_BUSINESS_CASE_step_as_active_when_in_INITIAL_REQUEST_FORM_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_FINAL_BUSINESS_CASE_step_as_active_when_in_INITIAL_REQUEST_FORM_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_INITIAL_REQUEST_FORM_step_as_active_when_in_DRAFT_BUSINESS_CASE_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_DRAFT_BUSINESS_CASE_step_as_active_when_in_DRAFT_BUSINESS_CASE_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_FINAL_BUSINESS_CASE_step_as_active_when_in_DRAFT_BUSINESS_CASE_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_INITIAL_REQUEST_FORM_step_as_active_when_in_FINAL_BUSINESS_CASE_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_DRAFT_BUSINESS_CASE_step_as_active_when_in_FINAL_BUSINESS_CASE_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_FINAL_BUSINESS_CASE_step_as_active_when_in_FINAL_BUSINESS_CASE_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_INITIAL_REQUEST_FORM_step_as_active_when_in_GRB_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_DRAFT_BUSINESS_CASE_step_as_active_when_in_GRB_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_FINAL_BUSINESS_CASE_step_as_active_when_in_GRB_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_INITIAL_REQUEST_FORM_step_as_active_when_in_GRT_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_DRAFT_BUSINESS_CASE_step_as_active_when_in_GRT_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_FINAL_BUSINESS_CASE_step_as_active_when_in_GRT_MEETING_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_INITIAL_REQUEST_FORM_step_as_active_when_in_DECISION_AND_NEXT_STEPS_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_DRAFT_BUSINESS_CASE_step_as_active_when_in_DECISION_AND_NEXT_STEPS_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_set_state_and_FINAL_BUSINESS_CASE_step_as_active_when_in_DECISION_AND_NEXT_STEPS_step (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_create_feedback (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_create_action (0.01s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_create_admin_note_given_input (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeRequestEditsAction/Should_NOT_create_admin_note_without_input (0.00s)
+    --- PASS: TestResolverSuite/TestSystemIntakeUpdateLCID (0.06s)
+        --- PASS: TestResolverSuite/TestSystemIntakeUpdateLCID/Can't_update_an_LCID_that_wasn't_issued (0.00s)
+        --- PASS: TestResolverSuite/TestSystemIntakeUpdateLCID/Can_update_an_LCID_that_was_issued (0.02s)
+            --- PASS: TestResolverSuite/TestSystemIntakeUpdateLCID/Can_update_an_LCID_that_was_issued/Can_update_an_already_updated_LCID (0.01s)
+    --- PASS: TestResolverSuite/TestSystemIntakesQuery (0.05s)
+    --- PASS: TestResolverSuite/TestSystemIntakesQueryArchived (0.06s)
+    --- PASS: TestResolverSuite/TestSystemIntakesQueryUnsubmitted (0.05s)
+    --- PASS: TestResolverSuite/TestTRBAdviceLetterRecommendationCRUD (0.07s)
+        --- PASS: TestResolverSuite/TestTRBAdviceLetterRecommendationCRUD/create/update/fetch_TRB_request_feedback (0.01s)
+        --- PASS: TestResolverSuite/TestTRBAdviceLetterRecommendationCRUD/cannot_update_deleted_TRB_recommendation (0.00s)
+        --- PASS: TestResolverSuite/TestTRBAdviceLetterRecommendationCRUD/deleting_a_recommendation_updates_other_recommendations'_positions_to_close_any_gaps (0.00s)
+    --- PASS: TestResolverSuite/TestTRBLeadOptions (0.05s)
+        --- PASS: TestResolverSuite/TestTRBLeadOptions/create/delete/fetch_TRB_lead_options (0.00s)
+    --- PASS: TestResolverSuite/TestTRBRequestContractNumbers (0.09s)
+        --- PASS: TestResolverSuite/TestTRBRequestContractNumbers/create_TRB_Requests_for_test (0.04s)
+    --- PASS: TestResolverSuite/TestTRBRequestDocumentResolvers (0.05s)
+    --- PASS: TestResolverSuite/TestTRBRequestLCID (0.06s)
+        --- PASS: TestResolverSuite/TestTRBRequestLCID/create/read/update_TRB_request_system_intakes (0.01s)
+    --- PASS: TestResolverSuite/TestTRBRequestRelatedSystems (0.09s)
+        --- PASS: TestResolverSuite/TestTRBRequestRelatedSystems/create_trb_requests_for_test (0.04s)
+    --- PASS: TestResolverSuite/TestTRBRequestStatus (0.21s)
+        --- PASS: TestResolverSuite/TestTRBRequestStatus/status_is_correctly_calculated_as_TRB_tasks_are_performed (0.16s)
+    --- PASS: TestResolverSuite/TestUnlinkSystemIntakeRelation (0.15s)
+        --- PASS: TestResolverSuite/TestUnlinkSystemIntakeRelation/unlink_new_system_intake (0.03s)
+        --- PASS: TestResolverSuite/TestUnlinkSystemIntakeRelation/unlink_existing_system_intake (0.02s)
+        --- PASS: TestResolverSuite/TestUnlinkSystemIntakeRelation/unlink_existing_service_intake (0.04s)
+    --- PASS: TestResolverSuite/TestUnlinkTRBRequestRelation (0.16s)
+        --- PASS: TestResolverSuite/TestUnlinkTRBRequestRelation/unlink_new_trb_request (0.04s)
+        --- PASS: TestResolverSuite/TestUnlinkTRBRequestRelation/unlink_existing_trb_request (0.04s)
+        --- PASS: TestResolverSuite/TestUnlinkTRBRequestRelation/unlink_existing_service_TRBRequest (0.04s)
+    --- PASS: TestResolverSuite/TestUpdateTRBRequest (0.05s)
+    --- PASS: TestResolverSuite/TestUpdateTRBRequestConsultMeetingTime (0.05s)
+    --- PASS: TestResolverSuite/TestUpdateTRBRequestTRBLead (0.06s)
+=== RUN   TestCalculateSystemIntakeAdminStatus
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_system_intake_form_Statuses
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_system_intake_form_Statuses/Request_form_not_started
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_system_intake_form_Statuses/Request_form_in_progress
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_system_intake_form_Statuses/Request_form_edits_requested
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_system_intake_form_Statuses/Request_form_submitted
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_system_intake_form_Statuses/Request_form_closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_draft_Business_Case_Statuses
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_draft_Business_Case_Statuses/Draft_Biz_Case_form_not_started
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_draft_Business_Case_Statuses/Draft_Biz_Case_form_in_progress
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_draft_Business_Case_Statuses/Draft_Biz_Case_edits_requested
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_draft_Business_Case_Statuses/Draft_Biz_Case_Submitted
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_draft_Business_Case_Statuses/Draft_Biz_Case,_Closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_GRT_Meeting_Statuses
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_GRT_Meeting_Statuses/GRT_meeting_not_scheduled_yet
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_GRT_Meeting_Statuses/GRT_meeting_happens_tomorrow
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_GRT_Meeting_Statuses/GRT_meeting_happened_yesterday
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_GRT_Meeting_Statuses/GRT,_request_closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_final_Business_Case_Statuses
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_final_Business_Case_Statuses/Final_Biz_Case_form_not_started
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_final_Business_Case_Statuses/Final_Biz_Case_form_in_progress
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_final_Business_Case_Statuses/Final_Biz_Case_edits_requested
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_final_Business_Case_Statuses/Final_Biz_Case_Submitted
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_final_Business_Case_Statuses/Final_Biz_Case,_Closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_GRB_Meeting_Statuses
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_GRB_Meeting_Statuses/GRB_meeting_not_scheduled_yet
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_GRB_Meeting_Statuses/GRB_meeting_happens_tomorrow
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_GRB_Meeting_Statuses/GRB_meeting_happened_yesterday
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_GRB_Meeting_Statuses/GRB,_request_closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_LCID_issued,_open
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_LCID_issued,_closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_made,_LCID_issued,_but_not_added,_closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_LCID_Retired,_closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_LCID_Expired,_closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_No_Governance,_open
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_No_Governance,_closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_Not_Approved,_open
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_Not_Approved,_closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_made,_but_re-opened,_progressed,_then_closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_No_Decision,_closed
+=== RUN   TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_No_Decision,_closed#01
+--- PASS: TestCalculateSystemIntakeAdminStatus (0.00s)
+    --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_system_intake_form_Statuses (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_system_intake_form_Statuses/Request_form_not_started (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_system_intake_form_Statuses/Request_form_in_progress (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_system_intake_form_Statuses/Request_form_edits_requested (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_system_intake_form_Statuses/Request_form_submitted (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_system_intake_form_Statuses/Request_form_closed (0.00s)
+    --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_draft_Business_Case_Statuses (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_draft_Business_Case_Statuses/Draft_Biz_Case_form_not_started (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_draft_Business_Case_Statuses/Draft_Biz_Case_form_in_progress (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_draft_Business_Case_Statuses/Draft_Biz_Case_edits_requested (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_draft_Business_Case_Statuses/Draft_Biz_Case_Submitted (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_draft_Business_Case_Statuses/Draft_Biz_Case,_Closed (0.00s)
+    --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_GRT_Meeting_Statuses (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_GRT_Meeting_Statuses/GRT_meeting_not_scheduled_yet (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_GRT_Meeting_Statuses/GRT_meeting_happens_tomorrow (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_GRT_Meeting_Statuses/GRT_meeting_happened_yesterday (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_GRT_Meeting_Statuses/GRT,_request_closed (0.00s)
+    --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_final_Business_Case_Statuses (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_final_Business_Case_Statuses/Final_Biz_Case_form_not_started (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_final_Business_Case_Statuses/Final_Biz_Case_form_in_progress (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_final_Business_Case_Statuses/Final_Biz_Case_edits_requested (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_final_Business_Case_Statuses/Final_Biz_Case_Submitted (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_final_Business_Case_Statuses/Final_Biz_Case,_Closed (0.00s)
+    --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_GRB_Meeting_Statuses (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_GRB_Meeting_Statuses/GRB_meeting_not_scheduled_yet (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_GRB_Meeting_Statuses/GRB_meeting_happens_tomorrow (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_GRB_Meeting_Statuses/GRB_meeting_happened_yesterday (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_GRB_Meeting_Statuses/GRB,_request_closed (0.00s)
+    --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_LCID_issued,_open (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_LCID_issued,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_made,_LCID_issued,_but_not_added,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_LCID_Retired,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_LCID_Expired,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_No_Governance,_open (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_No_Governance,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_Not_Approved,_open (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_Not_Approved,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_made,_but_re-opened,_progressed,_then_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_No_Decision,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeAdminStatus/Testing_all_Decision_and_Next_Steps_Statuses/Decision_No_Decision,_closed#01 (0.00s)
+=== RUN   TestCalculateSystemIntakeRequesterStatus
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Initial_Request_form_step
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Initial_Request_form_step/Request_form_not_started
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Initial_Request_form_step/Request_form_in_progress
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Initial_Request_form_step/Request_form_edits_requested
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Initial_Request_form_step/Request_form_submitted
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Initial_Request_form_step/Closed_while_in_request_form
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Draft_business_case_step
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Draft_business_case_step/Draft_Biz_Case_form_not_started
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Draft_business_case_step/Draft_Biz_Case_form_in_progress
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Draft_business_case_step/Draft_Biz_Case_form_edits_requested
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Draft_business_case_step/Draft_Biz_Case_form_submitted
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Draft_business_case_step/Closed_while_in_Draft_Biz_Case_form
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRT_meeting_step
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRT_meeting_step/GRT_meeting_not_scheduled_yet
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRT_meeting_step/GRT_meeting_scheduled_for_tomorrow
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRT_meeting_step/GRT_meeting_happened_yesterday
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRT_meeting_step/Closed_while_GRT_meeting_scheduled
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Final_business_case_step
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Final_business_case_step/Final_Biz_Case_form_not_started
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Final_business_case_step/Final_Biz_Case_form_in_progress
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Final_business_case_step/Final_Biz_Case_form_edits_requested
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Final_business_case_step/Final_Biz_Case_form_submitted
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Final_business_case_step/Closed_while_in_Final_Biz_Case_form
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRB_meeting_step
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRB_meeting_step/GRB_meeting_not_scheduled_yet
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRB_meeting_step/GRB_meeting_scheduled_for_tomorrow
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRB_meeting_step/GRB_meeting_happened_yesterday
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRB_meeting_step/Closed_while_GRB_meeting_scheduled
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_LCID_issued,_closed
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_LCID_issued,_but_not_added,_closed
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_LCID_expired,_closed
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_LCID_Retired,_closed
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_LCID_issued,_re-opened
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_Not_Governance,_closed
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_Not_Governance,_re-opened
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_Not_Approved,_closed
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_Not_Approved,_re-opened
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_but_re-opened,_progressed,_then_closed
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Closed_with_no_decision_while_in_the_decision_step
+=== RUN   TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Open_with_decisionState_set_to_No_Decision_while_in_the_decision_step
+--- PASS: TestCalculateSystemIntakeRequesterStatus (0.00s)
+    --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Initial_Request_form_step (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Initial_Request_form_step/Request_form_not_started (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Initial_Request_form_step/Request_form_in_progress (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Initial_Request_form_step/Request_form_edits_requested (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Initial_Request_form_step/Request_form_submitted (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Initial_Request_form_step/Closed_while_in_request_form (0.00s)
+    --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Draft_business_case_step (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Draft_business_case_step/Draft_Biz_Case_form_not_started (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Draft_business_case_step/Draft_Biz_Case_form_in_progress (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Draft_business_case_step/Draft_Biz_Case_form_edits_requested (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Draft_business_case_step/Draft_Biz_Case_form_submitted (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Draft_business_case_step/Closed_while_in_Draft_Biz_Case_form (0.00s)
+    --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRT_meeting_step (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRT_meeting_step/GRT_meeting_not_scheduled_yet (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRT_meeting_step/GRT_meeting_scheduled_for_tomorrow (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRT_meeting_step/GRT_meeting_happened_yesterday (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRT_meeting_step/Closed_while_GRT_meeting_scheduled (0.00s)
+    --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Final_business_case_step (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Final_business_case_step/Final_Biz_Case_form_not_started (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Final_business_case_step/Final_Biz_Case_form_in_progress (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Final_business_case_step/Final_Biz_Case_form_edits_requested (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Final_business_case_step/Final_Biz_Case_form_submitted (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Final_business_case_step/Closed_while_in_Final_Biz_Case_form (0.00s)
+    --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRB_meeting_step (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRB_meeting_step/GRB_meeting_not_scheduled_yet (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRB_meeting_step/GRB_meeting_scheduled_for_tomorrow (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRB_meeting_step/GRB_meeting_happened_yesterday (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_GRB_meeting_step/Closed_while_GRB_meeting_scheduled (0.00s)
+    --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_LCID_issued,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_LCID_issued,_but_not_added,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_LCID_expired,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_LCID_Retired,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_LCID_issued,_re-opened (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_Not_Governance,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_Not_Governance,_re-opened (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_Not_Approved,_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_Not_Approved,_re-opened (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Decision_made,_but_re-opened,_progressed,_then_closed (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Closed_with_no_decision_while_in_the_decision_step (0.00s)
+        --- PASS: TestCalculateSystemIntakeRequesterStatus/Testing_statuses_for_the_Decision_step/Open_with_decisionState_set_to_No_Decision_while_in_the_decision_step (0.00s)
+FAIL
+FAIL	github.com/cmsgov/easi-app/pkg/graph/resolvers	4.600s
+=== RUN   TestIsLCIDValidToChangeRetirementDate
+=== RUN   TestIsLCIDValidToChangeRetirementDate/Intake_without_an_LCID_issued_is_invalid_(even_if_it_somehow_has_a_retirement_date_set)
+=== RUN   TestIsLCIDValidToChangeRetirementDate/Intake_with_an_LCID_issued,_but_with_no_retirement_date_set,_is_invalid
+=== RUN   TestIsLCIDValidToChangeRetirementDate/Intake_with_an_LCID_issued_and_with_a_retirement_date_set_is_valid
+--- PASS: TestIsLCIDValidToChangeRetirementDate (0.00s)
+    --- PASS: TestIsLCIDValidToChangeRetirementDate/Intake_without_an_LCID_issued_is_invalid_(even_if_it_somehow_has_a_retirement_date_set) (0.00s)
+    --- PASS: TestIsLCIDValidToChangeRetirementDate/Intake_with_an_LCID_issued,_but_with_no_retirement_date_set,_is_invalid (0.00s)
+    --- PASS: TestIsLCIDValidToChangeRetirementDate/Intake_with_an_LCID_issued_and_with_a_retirement_date_set_is_valid (0.00s)
+=== RUN   TestGetChangeLCIDRetirementDateAction
+--- PASS: TestGetChangeLCIDRetirementDateAction (0.00s)
+=== RUN   TestGetBaseLCIDAction
+--- PASS: TestGetBaseLCIDAction (0.00s)
+=== RUN   TestGetConfirmLCIDAction
+--- PASS: TestGetConfirmLCIDAction (0.00s)
+=== RUN   TestIsLCIDValidToConfirm
+--- PASS: TestIsLCIDValidToConfirm (0.00s)
+=== RUN   TestIsIntakeValidToExpireLCID
+=== RUN   TestIsIntakeValidToExpireLCID/Intake_without_an_LCID_issued_is_invalid
+=== RUN   TestIsIntakeValidToExpireLCID/Intake_without_an_LCID_expiration_date_set_is_invalid
+=== RUN   TestIsIntakeValidToExpireLCID/Intake_that's_expired_(expiration_date_is_in_the_past)_is_invalid
+=== RUN   TestIsIntakeValidToExpireLCID/Intake_with_an_expiration_date_in_the_future_is_valid
+--- PASS: TestIsIntakeValidToExpireLCID (0.00s)
+    --- PASS: TestIsIntakeValidToExpireLCID/Intake_without_an_LCID_issued_is_invalid (0.00s)
+    --- PASS: TestIsIntakeValidToExpireLCID/Intake_without_an_LCID_expiration_date_set_is_invalid (0.00s)
+    --- PASS: TestIsIntakeValidToExpireLCID/Intake_that's_expired_(expiration_date_is_in_the_past)_is_invalid (0.00s)
+    --- PASS: TestIsIntakeValidToExpireLCID/Intake_with_an_expiration_date_in_the_future_is_valid (0.00s)
+=== RUN   TestGetExpireLCIDAction
+--- PASS: TestGetExpireLCIDAction (0.00s)
+=== RUN   TestIsIntakeValidToIssueLCID
+=== RUN   TestIsIntakeValidToIssueLCID/Issuing_an_LCID_for_an_intake_without_an_LCID_value_already_set_and_with_its_decision_state_not_set_to_LCID_issued_is_valid
+=== RUN   TestIsIntakeValidToIssueLCID/Issuing_an_LCID_for_an_intake_with_an_LCID_value_already_set_is_invalid,_even_if_its_decision_state_isn't_set_to_LCID_issued
+=== RUN   TestIsIntakeValidToIssueLCID/Issuing_an_LCID_for_an_intake_with_its_decision_state_set_to_LCID_issued_is_invalid,_even_if_the_intake_doesn't_have_an_LCID_value_already_set
+=== RUN   TestIsIntakeValidToIssueLCID/Issuing_an_LCID_for_an_intake_with_an_LCID_value_already_set_and_with_its_decision_state_set_to_LCID_issued_is_invalid
+--- PASS: TestIsIntakeValidToIssueLCID (0.00s)
+    --- PASS: TestIsIntakeValidToIssueLCID/Issuing_an_LCID_for_an_intake_without_an_LCID_value_already_set_and_with_its_decision_state_not_set_to_LCID_issued_is_valid (0.00s)
+    --- PASS: TestIsIntakeValidToIssueLCID/Issuing_an_LCID_for_an_intake_with_an_LCID_value_already_set_is_invalid,_even_if_its_decision_state_isn't_set_to_LCID_issued (0.00s)
+    --- PASS: TestIsIntakeValidToIssueLCID/Issuing_an_LCID_for_an_intake_with_its_decision_state_set_to_LCID_issued_is_invalid,_even_if_the_intake_doesn't_have_an_LCID_value_already_set (0.00s)
+    --- PASS: TestIsIntakeValidToIssueLCID/Issuing_an_LCID_for_an_intake_with_an_LCID_value_already_set_and_with_its_decision_state_set_to_LCID_issued_is_invalid (0.00s)
+=== RUN   TestIsLCIDValidToRetire
+=== RUN   TestIsLCIDValidToRetire/Intake_without_an_LCID_issued_is_invalid
+=== RUN   TestIsLCIDValidToRetire/Intake_with_an_LCID_issued_and_with_a_retirement_date_already_set_is_invalid
+=== RUN   TestIsLCIDValidToRetire/Intake_with_an_LCID_issued_but_no_retirement_date_set_is_valid
+--- PASS: TestIsLCIDValidToRetire (0.00s)
+    --- PASS: TestIsLCIDValidToRetire/Intake_without_an_LCID_issued_is_invalid (0.00s)
+    --- PASS: TestIsLCIDValidToRetire/Intake_with_an_LCID_issued_and_with_a_retirement_date_already_set_is_invalid (0.00s)
+    --- PASS: TestIsLCIDValidToRetire/Intake_with_an_LCID_issued_but_no_retirement_date_set_is_valid (0.00s)
+=== RUN   TestGetRetireLCIDAction
+--- PASS: TestGetRetireLCIDAction (0.00s)
+=== RUN   TestGetUpdateLCIDAction
+--- PASS: TestGetUpdateLCIDAction (0.00s)
+=== RUN   TestIsLCIDValidToUpdate
+--- PASS: TestIsLCIDValidToUpdate (0.00s)
+PASS
+ok  	github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions	(cached)
+=== RUN   TestUpdateIntake
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_INITIAL_REQUEST_FORM,_progressing_to_DRAFT_BUSINESS_CASE,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_INITIAL_REQUEST_FORM,_progressing_to_GRT_MEETING,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_INITIAL_REQUEST_FORM,_progressing_to_FINAL_BUSINESS_CASE,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_INITIAL_REQUEST_FORM,_progressing_to_GRB_MEETING,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DRAFT_BUSINESS_CASE,_progressing_to_DRAFT_BUSINESS_CASE,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DRAFT_BUSINESS_CASE,_progressing_to_GRT_MEETING,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DRAFT_BUSINESS_CASE,_progressing_to_FINAL_BUSINESS_CASE,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DRAFT_BUSINESS_CASE,_progressing_to_GRB_MEETING,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRT_MEETING,_progressing_to_DRAFT_BUSINESS_CASE,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRT_MEETING,_progressing_to_GRT_MEETING,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRT_MEETING,_progressing_to_FINAL_BUSINESS_CASE,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRT_MEETING,_progressing_to_GRB_MEETING,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_FINAL_BUSINESS_CASE,_progressing_to_DRAFT_BUSINESS_CASE,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_FINAL_BUSINESS_CASE,_progressing_to_GRT_MEETING,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_FINAL_BUSINESS_CASE,_progressing_to_FINAL_BUSINESS_CASE,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_FINAL_BUSINESS_CASE,_progressing_to_GRB_MEETING,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRB_MEETING,_progressing_to_DRAFT_BUSINESS_CASE,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRB_MEETING,_progressing_to_GRT_MEETING,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRB_MEETING,_progressing_to_FINAL_BUSINESS_CASE,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRB_MEETING,_progressing_to_GRB_MEETING,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DECISION_AND_NEXT_STEPS,_progressing_to_DRAFT_BUSINESS_CASE,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DECISION_AND_NEXT_STEPS,_progressing_to_GRT_MEETING,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DECISION_AND_NEXT_STEPS,_progressing_to_FINAL_BUSINESS_CASE,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DECISION_AND_NEXT_STEPS,_progressing_to_GRB_MEETING,_intake_step_should_be_updated
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/No_date_was_scheduled_for_the_meeting_before_this_action
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/No_date_was_scheduled_for_the_meeting_before_this_action/Should_*not*_update_GRT_date_if_no_date_was_previously_scheduled_and_no_new_date_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/No_date_was_scheduled_for_the_meeting_before_this_action/*Should*_update_GRT_date_if_no_date_was_previously_scheduled_and_a_new_date_in_the_past_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/No_date_was_scheduled_for_the_meeting_before_this_action/*Should*_update_GRT_date_if_no_date_was_previously_scheduled_and_a_new_date_in_the_future_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past/Should_*clear*_GRT_date_if_the_previously_scheduled_date_is_in_the_past_and_no_new_date_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past/*Should*_update_GRT_date_if_the_previously_scheduled_date_is_in_the_past_and_a_new_date_in_the_past_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past/*Should*_update_GRT_date_if_the_previously_scheduled_date_is_in_the_past_and_a_new_date_in_the_future_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future/Should_*not*_update_GRT_date_if_the_previously_scheduled_date_is_in_the_future_and_no_new_date_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future/*Should*_update_GRT_date_if_the_previously_scheduled_date_is_in_the_future_and_a_new_date_in_the_past_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future/*Should*_update_GRT_date_if_the_previously_scheduled_date_is_in_the_future_and_a_new_date_in_the_future_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/No_date_was_scheduled_for_the_meeting_before_this_action
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/No_date_was_scheduled_for_the_meeting_before_this_action/Should_*not*_update_GRB_date_if_no_date_was_previously_scheduled_and_no_new_date_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/No_date_was_scheduled_for_the_meeting_before_this_action/*Should*_update_GRB_date_if_no_date_was_previously_scheduled_and_a_new_date_in_the_past_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/No_date_was_scheduled_for_the_meeting_before_this_action/*Should*_update_GRB_date_if_no_date_was_previously_scheduled_and_a_new_date_in_the_future_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past/Should_*clear*_GRB_date_if_the_previously_scheduled_date_is_in_the_past_and_no_new_date_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past/*Should*_update_GRB_date_if_the_previously_scheduled_date_is_in_the_past_and_a_new_date_in_the_past_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past/*Should*_update_GRB_date_if_the_previously_scheduled_date_is_in_the_past_and_a_new_date_in_the_future_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future/Should_*not*_update_GRB_date_if_the_previously_scheduled_date_is_in_the_future_and_no_new_date_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future/*Should*_update_GRB_date_if_the_previously_scheduled_date_is_in_the_future_and_a_new_date_in_the_past_is_provided
+=== RUN   TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future/*Should*_update_GRB_date_if_the_previously_scheduled_date_is_in_the_future_and_a_new_date_in_the_future_is_provided
+=== RUN   TestUpdateIntake/invalid_new_step_should_return_InvalidEnumError
+--- PASS: TestUpdateIntake (0.00s)
+    --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_INITIAL_REQUEST_FORM,_progressing_to_DRAFT_BUSINESS_CASE,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_INITIAL_REQUEST_FORM,_progressing_to_GRT_MEETING,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_INITIAL_REQUEST_FORM,_progressing_to_FINAL_BUSINESS_CASE,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_INITIAL_REQUEST_FORM,_progressing_to_GRB_MEETING,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DRAFT_BUSINESS_CASE,_progressing_to_DRAFT_BUSINESS_CASE,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DRAFT_BUSINESS_CASE,_progressing_to_GRT_MEETING,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DRAFT_BUSINESS_CASE,_progressing_to_FINAL_BUSINESS_CASE,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DRAFT_BUSINESS_CASE,_progressing_to_GRB_MEETING,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRT_MEETING,_progressing_to_DRAFT_BUSINESS_CASE,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRT_MEETING,_progressing_to_GRT_MEETING,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRT_MEETING,_progressing_to_FINAL_BUSINESS_CASE,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRT_MEETING,_progressing_to_GRB_MEETING,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_FINAL_BUSINESS_CASE,_progressing_to_DRAFT_BUSINESS_CASE,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_FINAL_BUSINESS_CASE,_progressing_to_GRT_MEETING,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_FINAL_BUSINESS_CASE,_progressing_to_FINAL_BUSINESS_CASE,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_FINAL_BUSINESS_CASE,_progressing_to_GRB_MEETING,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRB_MEETING,_progressing_to_DRAFT_BUSINESS_CASE,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRB_MEETING,_progressing_to_GRT_MEETING,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRB_MEETING,_progressing_to_FINAL_BUSINESS_CASE,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_GRB_MEETING,_progressing_to_GRB_MEETING,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DECISION_AND_NEXT_STEPS,_progressing_to_DRAFT_BUSINESS_CASE,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DECISION_AND_NEXT_STEPS,_progressing_to_GRT_MEETING,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DECISION_AND_NEXT_STEPS,_progressing_to_FINAL_BUSINESS_CASE,_intake_step_should_be_updated (0.00s)
+        --- PASS: TestUpdateIntake/modifying_intake_to_new_step_should_update_intake_step/Starting_from_DECISION_AND_NEXT_STEPS,_progressing_to_GRB_MEETING,_intake_step_should_be_updated (0.00s)
+    --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings (0.00s)
+        --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting (0.00s)
+            --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/No_date_was_scheduled_for_the_meeting_before_this_action (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/No_date_was_scheduled_for_the_meeting_before_this_action/Should_*not*_update_GRT_date_if_no_date_was_previously_scheduled_and_no_new_date_is_provided (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/No_date_was_scheduled_for_the_meeting_before_this_action/*Should*_update_GRT_date_if_no_date_was_previously_scheduled_and_a_new_date_in_the_past_is_provided (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/No_date_was_scheduled_for_the_meeting_before_this_action/*Should*_update_GRT_date_if_no_date_was_previously_scheduled_and_a_new_date_in_the_future_is_provided (0.00s)
+            --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past/Should_*clear*_GRT_date_if_the_previously_scheduled_date_is_in_the_past_and_no_new_date_is_provided (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past/*Should*_update_GRT_date_if_the_previously_scheduled_date_is_in_the_past_and_a_new_date_in_the_past_is_provided (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past/*Should*_update_GRT_date_if_the_previously_scheduled_date_is_in_the_past_and_a_new_date_in_the_future_is_provided (0.00s)
+            --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future/Should_*not*_update_GRT_date_if_the_previously_scheduled_date_is_in_the_future_and_no_new_date_is_provided (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future/*Should*_update_GRT_date_if_the_previously_scheduled_date_is_in_the_future_and_a_new_date_in_the_past_is_provided (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRT_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future/*Should*_update_GRT_date_if_the_previously_scheduled_date_is_in_the_future_and_a_new_date_in_the_future_is_provided (0.00s)
+        --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting (0.00s)
+            --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/No_date_was_scheduled_for_the_meeting_before_this_action (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/No_date_was_scheduled_for_the_meeting_before_this_action/Should_*not*_update_GRB_date_if_no_date_was_previously_scheduled_and_no_new_date_is_provided (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/No_date_was_scheduled_for_the_meeting_before_this_action/*Should*_update_GRB_date_if_no_date_was_previously_scheduled_and_a_new_date_in_the_past_is_provided (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/No_date_was_scheduled_for_the_meeting_before_this_action/*Should*_update_GRB_date_if_no_date_was_previously_scheduled_and_a_new_date_in_the_future_is_provided (0.00s)
+            --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past/Should_*clear*_GRB_date_if_the_previously_scheduled_date_is_in_the_past_and_no_new_date_is_provided (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past/*Should*_update_GRB_date_if_the_previously_scheduled_date_is_in_the_past_and_a_new_date_in_the_past_is_provided (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_past/*Should*_update_GRB_date_if_the_previously_scheduled_date_is_in_the_past_and_a_new_date_in_the_future_is_provided (0.00s)
+            --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future/Should_*not*_update_GRB_date_if_the_previously_scheduled_date_is_in_the_future_and_no_new_date_is_provided (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future/*Should*_update_GRB_date_if_the_previously_scheduled_date_is_in_the_future_and_a_new_date_in_the_past_is_provided (0.00s)
+                --- PASS: TestUpdateIntake/Updating_dates_of_GRT_and_GRB_meetings/Progressing_to_GRB_meeting/Meeting_was_scheduled_before_this_action_for_a_date_in_the_future/*Should*_update_GRB_date_if_the_previously_scheduled_date_is_in_the_future_and_a_new_date_in_the_future_is_provided (0.00s)
+    --- PASS: TestUpdateIntake/invalid_new_step_should_return_InvalidEnumError (0.00s)
+=== RUN   TestIsIntakeValid
+=== RUN   TestIsIntakeValid/Closed_intakes_are_invalid_to_progress
+=== RUN   TestIsIntakeValid/Intakes_that_haven't_started_the_request_form_can't_be_progressed
+=== RUN   TestIsIntakeValid/Trying_to_progress_to_the_intake's_current_step_is_invalid
+=== RUN   TestIsIntakeValid/Trying_to_progress_to_the_intake's_current_step_is_invalid/Checking_step_DRAFT_BUSINESS_CASE
+=== RUN   TestIsIntakeValid/Trying_to_progress_to_the_intake's_current_step_is_invalid/Checking_step_GRT_MEETING
+=== RUN   TestIsIntakeValid/Trying_to_progress_to_the_intake's_current_step_is_invalid/Checking_step_GRB_MEETING
+=== RUN   TestIsIntakeValid/Trying_to_progress_to_the_intake's_current_step_is_invalid/Checking_step_FINAL_BUSINESS_CASE
+=== RUN   TestIsIntakeValid/Valid_intake_should_not_return_an_error
+--- PASS: TestIsIntakeValid (0.00s)
+    --- PASS: TestIsIntakeValid/Closed_intakes_are_invalid_to_progress (0.00s)
+    --- PASS: TestIsIntakeValid/Intakes_that_haven't_started_the_request_form_can't_be_progressed (0.00s)
+    --- PASS: TestIsIntakeValid/Trying_to_progress_to_the_intake's_current_step_is_invalid (0.00s)
+        --- PASS: TestIsIntakeValid/Trying_to_progress_to_the_intake's_current_step_is_invalid/Checking_step_DRAFT_BUSINESS_CASE (0.00s)
+        --- PASS: TestIsIntakeValid/Trying_to_progress_to_the_intake's_current_step_is_invalid/Checking_step_GRT_MEETING (0.00s)
+        --- PASS: TestIsIntakeValid/Trying_to_progress_to_the_intake's_current_step_is_invalid/Checking_step_GRB_MEETING (0.00s)
+        --- PASS: TestIsIntakeValid/Trying_to_progress_to_the_intake's_current_step_is_invalid/Checking_step_FINAL_BUSINESS_CASE (0.00s)
+    --- PASS: TestIsIntakeValid/Valid_intake_should_not_return_an_error (0.00s)
+PASS
+ok  	github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep	(cached)
+=== RUN   TestGetNewStateForUpdatedForm
+--- PASS: TestGetNewStateForUpdatedForm (0.00s)
+PASS
+ok  	github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate	(cached)
+=== RUN   TestIsNewRecommendationOrderValid
+=== RUN   TestIsNewRecommendationOrderValid/happy_path_-_valid_new_order_for_the_existing_recommendations
+=== RUN   TestIsNewRecommendationOrderValid/newOrder_has_more_IDs_than_there_are_current_recommendations_-_invalid
+=== RUN   TestIsNewRecommendationOrderValid/newOrder_has_fewer_IDs_than_there_are_current_recommendations_-_invalid
+=== RUN   TestIsNewRecommendationOrderValid/newOrder_has_an_ID_that_is_not_in_the_current_recommendations_-_invalid
+=== RUN   TestIsNewRecommendationOrderValid/newOrder_has_at_least_one_duplicate_ID_-_invalid
+--- PASS: TestIsNewRecommendationOrderValid (0.00s)
+    --- PASS: TestIsNewRecommendationOrderValid/happy_path_-_valid_new_order_for_the_existing_recommendations (0.00s)
+    --- PASS: TestIsNewRecommendationOrderValid/newOrder_has_more_IDs_than_there_are_current_recommendations_-_invalid (0.00s)
+    --- PASS: TestIsNewRecommendationOrderValid/newOrder_has_fewer_IDs_than_there_are_current_recommendations_-_invalid (0.00s)
+    --- PASS: TestIsNewRecommendationOrderValid/newOrder_has_an_ID_that_is_not_in_the_current_recommendations_-_invalid (0.00s)
+    --- PASS: TestIsNewRecommendationOrderValid/newOrder_has_at_least_one_duplicate_ID_-_invalid (0.00s)
+PASS
+ok  	github.com/cmsgov/easi-app/pkg/graph/resolvers/trb/recommendations	(cached)
+FAIL
