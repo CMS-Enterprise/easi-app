@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -12,7 +13,8 @@ import (
 
 // TestCreateTRBRequestAttendee makes a new TRB request
 func (suite *ResolverSuite) TestCreateTRBRequestAttendee() {
-	ctx := suite.testConfigs.Context
+	ctx := context.Background()
+	ctx = appcontext.WithLogger(ctx, suite.testConfigs.Logger)
 
 	config := testhelpers.NewConfig()
 
