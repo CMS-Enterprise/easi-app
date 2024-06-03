@@ -10,12 +10,11 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-func CreateTRBAdminNoteGeneralRequest(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
+func CreateTRBAdminNoteGeneralRequest(ctx context.Context, store *storage.Store, input models.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,
 		Category:     models.TRBAdminNoteCategoryGeneralRequest,
@@ -31,7 +30,7 @@ func CreateTRBAdminNoteGeneralRequest(ctx context.Context, store *storage.Store,
 	return createdNote, nil
 }
 
-func CreateTRBAdminNoteInitialRequestForm(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteInitialRequestFormInput) (*models.TRBAdminNote, error) {
+func CreateTRBAdminNoteInitialRequestForm(ctx context.Context, store *storage.Store, input models.CreateTRBAdminNoteInitialRequestFormInput) (*models.TRBAdminNote, error) {
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,
 		Category:     models.TRBAdminNoteCategoryInitialRequestForm,
@@ -51,7 +50,7 @@ func CreateTRBAdminNoteInitialRequestForm(ctx context.Context, store *storage.St
 	return createdNote, nil
 }
 
-func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error) {
+func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.Store, input models.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error) {
 	// it's valid for input.DocumentIDs to be empty; see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
 
 	// check that the documents belong to the same TRB request
@@ -96,7 +95,7 @@ func CreateTRBAdminNoteSupportingDocuments(ctx context.Context, store *storage.S
 	return createdNote, nil
 }
 
-func CreateTRBAdminNoteConsultSession(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteConsultSessionInput) (*models.TRBAdminNote, error) {
+func CreateTRBAdminNoteConsultSession(ctx context.Context, store *storage.Store, input models.CreateTRBAdminNoteConsultSessionInput) (*models.TRBAdminNote, error) {
 	noteToCreate := models.TRBAdminNote{
 		TRBRequestID: input.TrbRequestID,
 		Category:     models.TRBAdminNoteCategoryConsultSession,
@@ -112,7 +111,7 @@ func CreateTRBAdminNoteConsultSession(ctx context.Context, store *storage.Store,
 	return createdNote, nil
 }
 
-func CreateTRBAdminNoteAdviceLetter(ctx context.Context, store *storage.Store, input model.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error) {
+func CreateTRBAdminNoteAdviceLetter(ctx context.Context, store *storage.Store, input models.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error) {
 	// it's valid for input.RecommendationIDs to be empty; see note in acceptance criteria in https://jiraent.cms.gov/browse/EASI-3362
 
 	// check that the recommendations belong to the same TRB request
@@ -189,14 +188,14 @@ func GetTRBAdminNotesByTRBRequestID(ctx context.Context, store *storage.Store, t
 
 // GetTRBAdminNoteCategorySpecificData returns the category-specific data for TRB admin notes that can be loaded from the database;
 // fields that require querying other data sources (such as documents' Status and URL fields, which require querying S3) are handled by other resolvers if they're requested
-func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Store, note *models.TRBAdminNote) (model.TRBAdminNoteCategorySpecificData, error) {
+func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Store, note *models.TRBAdminNote) (models.TRBAdminNoteCategorySpecificData, error) {
 	switch note.Category {
 	case models.TRBAdminNoteCategoryGeneralRequest:
-		return model.TRBAdminNoteGeneralRequestCategoryData{
+		return models.TRBAdminNoteGeneralRequestCategoryData{
 			PlaceholderField: nil,
 		}, nil
 	case models.TRBAdminNoteCategoryInitialRequestForm:
-		return model.TRBAdminNoteInitialRequestFormCategoryData{
+		return models.TRBAdminNoteInitialRequestFormCategoryData{
 			AppliesToBasicRequestDetails: note.AppliesToBasicRequestDetails.Bool,
 			AppliesToSubjectAreas:        note.AppliesToSubjectAreas.Bool,
 			AppliesToAttendees:           note.AppliesToAttendees.Bool,
@@ -206,11 +205,11 @@ func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Sto
 		if err != nil {
 			return nil, err
 		}
-		return model.TRBAdminNoteSupportingDocumentsCategoryData{
+		return models.TRBAdminNoteSupportingDocumentsCategoryData{
 			Documents: documents,
 		}, nil
 	case models.TRBAdminNoteCategoryConsultSession:
-		return model.TRBAdminNoteConsultSessionCategoryData{
+		return models.TRBAdminNoteConsultSessionCategoryData{
 			PlaceholderField: nil,
 		}, nil
 	case models.TRBAdminNoteCategoryAdviceLetter:
@@ -218,7 +217,7 @@ func GetTRBAdminNoteCategorySpecificData(ctx context.Context, store *storage.Sto
 		if err != nil {
 			return nil, err
 		}
-		return model.TRBAdminNoteAdviceLetterCategoryData{
+		return models.TRBAdminNoteAdviceLetterCategoryData{
 			AppliesToMeetingSummary: note.AppliesToMeetingSummary.Bool,
 			AppliesToNextSteps:      note.AppliesToNextSteps.Bool,
 			Recommendations:         recommendations,

@@ -13,7 +13,6 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
 
@@ -322,7 +321,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	)
 	noErr(err)
 
-	for _, step := range model.AllSystemIntakeStepToProgressTo {
+	for _, step := range models.AllSystemIntakeStepToProgressTo {
 		err = client.SystemIntake.SendProgressToNewStepNotification(
 			ctx,
 			emailNotificationRecipients,

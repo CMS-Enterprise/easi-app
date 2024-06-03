@@ -23,15 +23,14 @@ import (
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 )
 
 // AlternativeASolution is the resolver for the alternativeASolution field.
-func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
-	return &model.BusinessCaseSolution{
+func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*models.BusinessCaseSolution, error) {
+	return &models.BusinessCaseSolution{
 		AcquisitionApproach:     obj.AlternativeAAcquisitionApproach.Ptr(),
 		Cons:                    obj.AlternativeACons.Ptr(),
 		CostSavings:             obj.AlternativeACostSavings.Ptr(),
@@ -48,8 +47,8 @@ func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *mo
 }
 
 // AlternativeBSolution is the resolver for the alternativeBSolution field.
-func (r *businessCaseResolver) AlternativeBSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
-	return &model.BusinessCaseSolution{
+func (r *businessCaseResolver) AlternativeBSolution(ctx context.Context, obj *models.BusinessCase) (*models.BusinessCaseSolution, error) {
+	return &models.BusinessCaseSolution{
 		AcquisitionApproach:     obj.AlternativeBAcquisitionApproach.Ptr(),
 		Cons:                    obj.AlternativeBCons.Ptr(),
 		CostSavings:             obj.AlternativeBCostSavings.Ptr(),
@@ -90,8 +89,8 @@ func (r *businessCaseResolver) LifecycleCostLines(ctx context.Context, obj *mode
 }
 
 // PreferredSolution is the resolver for the preferredSolution field.
-func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
-	return &model.BusinessCaseSolution{
+func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *models.BusinessCase) (*models.BusinessCaseSolution, error) {
+	return &models.BusinessCaseSolution{
 		AcquisitionApproach:     obj.PreferredAcquisitionApproach.Ptr(),
 		Cons:                    obj.PreferredCons.Ptr(),
 		CostSavings:             obj.PreferredCostSavings.Ptr(),
@@ -113,16 +112,16 @@ func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.Bus
 }
 
 // BudgetActualCost is the resolver for the budgetActualCost field.
-func (r *cedarBudgetSystemCostResolver) BudgetActualCost(ctx context.Context, obj *models.CedarBudgetSystemCost) ([]*model.CedarBudgetActualCost, error) {
+func (r *cedarBudgetSystemCostResolver) BudgetActualCost(ctx context.Context, obj *models.CedarBudgetSystemCost) ([]*models.CedarBudgetActualCost, error) {
 	budgetActualCosts := obj.BudgetActualCosts
 
 	if len(budgetActualCosts) == 0 {
 		return nil, nil
 	}
 
-	var actualCosts []*model.CedarBudgetActualCost
+	var actualCosts []*models.CedarBudgetActualCost
 	for _, cost := range budgetActualCosts {
-		fyCost := &model.CedarBudgetActualCost{
+		fyCost := &models.CedarBudgetActualCost{
 			ActualSystemCost: cost.ActualSystemCost.Ptr(),
 			FiscalYear:       cost.FiscalYear.Ptr(),
 			SystemID:         cost.SystemID.Ptr(),
@@ -134,16 +133,16 @@ func (r *cedarBudgetSystemCostResolver) BudgetActualCost(ctx context.Context, ob
 }
 
 // SoftwareProducts is the resolver for the softwareProducts field.
-func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*model.CedarSoftwareProductItem, error) {
+func (r *cedarSoftwareProductsResolver) SoftwareProducts(ctx context.Context, obj *models.CedarSoftwareProducts) ([]*models.CedarSoftwareProductItem, error) {
 	softwareProducts := obj.SoftwareProducts
 
 	if len(softwareProducts) == 0 {
 		return nil, nil
 	}
 
-	var softwareProductItems []*model.CedarSoftwareProductItem
+	var softwareProductItems []*models.CedarSoftwareProductItem
 	for _, softwareProduct := range softwareProducts {
-		softwareProductItem := &model.CedarSoftwareProductItem{
+		softwareProductItem := &models.CedarSoftwareProductItem{
 			APIGatewayUse:                  &softwareProduct.APIGatewayUse,
 			ElaPurchase:                    softwareProduct.ElaPurchase.Ptr(),
 			ElaVendorID:                    softwareProduct.ElaVendorID.Ptr(),
@@ -190,8 +189,8 @@ func (r *cedarSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *mode
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
-func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarSystemMaintainerInformation, error) {
-	return &model.CedarSystemMaintainerInformation{
+func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*models.CedarSystemMaintainerInformation, error) {
+	return &models.CedarSystemMaintainerInformation{
 		AdHocAgileDeploymentFrequency:         obj.SystemMaintainerInformation.AdHocAgileDeploymentFrequency.Ptr(),
 		AgileUsed:                             &obj.SystemMaintainerInformation.AgileUsed,
 		AuthoritativeDatasource:               obj.SystemMaintainerInformation.AuthoritativeDatasource.Ptr(),
@@ -238,8 +237,8 @@ func (r *cedarSystemDetailsResolver) SystemMaintainerInformation(ctx context.Con
 }
 
 // BusinessOwnerInformation is the resolver for the businessOwnerInformation field.
-func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*model.CedarBusinessOwnerInformation, error) {
-	return &model.CedarBusinessOwnerInformation{
+func (r *cedarSystemDetailsResolver) BusinessOwnerInformation(ctx context.Context, obj *models.CedarSystemDetails) (*models.CedarBusinessOwnerInformation, error) {
+	return &models.CedarBusinessOwnerInformation{
 		BeneficiaryAddressPurpose:      models.StringsFromZeroStrs(obj.BusinessOwnerInformation.BeneficiaryAddressPurpose),
 		BeneficiaryAddressPurposeOther: obj.BusinessOwnerInformation.BeneficiaryAddressPurposeOther.Ptr(),
 		BeneficiaryAddressSource:       models.StringsFromZeroStrs(obj.BusinessOwnerInformation.BeneficiaryAddressSource),
@@ -298,7 +297,7 @@ func (r *iTGovTaskStatusesResolver) DecisionAndNextStepsStatus(ctx context.Conte
 }
 
 // CreateSystemIntakeActionProgressToNewStep is the resolver for the createSystemIntakeActionProgressToNewStep field.
-func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input model.SystemIntakeProgressToNewStepsInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context.Context, input models.SystemIntakeProgressToNewStepsInput) (*models.UpdateSystemIntakePayload, error) {
 	updatedIntake, err := resolvers.ProgressIntake(
 		ctx,
 		r.store,
@@ -307,13 +306,13 @@ func (r *mutationResolver) CreateSystemIntakeActionProgressToNewStep(ctx context
 		input,
 	)
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
 	}, err
 }
 
 // CreateSystemIntakeActionRequestEdits is the resolver for the createSystemIntakeActionRequestEdits field.
-func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Context, input model.SystemIntakeRequestEditsInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Context, input models.SystemIntakeRequestEditsInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := resolvers.CreateSystemIntakeActionRequestEdits(
 		ctx,
 		r.store,
@@ -321,13 +320,13 @@ func (r *mutationResolver) CreateSystemIntakeActionRequestEdits(ctx context.Cont
 		r.service.FetchUserInfo,
 		input,
 	)
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
 }
 
 // CreateSystemIntakeActionExpireLcid is the resolver for the createSystemIntakeActionExpireLCID field.
-func (r *mutationResolver) CreateSystemIntakeActionExpireLcid(ctx context.Context, input model.SystemIntakeExpireLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionExpireLcid(ctx context.Context, input models.SystemIntakeExpireLCIDInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := resolvers.ExpireLCID(
 		ctx,
 		r.store,
@@ -336,13 +335,13 @@ func (r *mutationResolver) CreateSystemIntakeActionExpireLcid(ctx context.Contex
 		input,
 	)
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
 }
 
 // CreateSystemIntakeActionUpdateLcid is the resolver for the createSystemIntakeActionUpdateLCID field.
-func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Context, input model.SystemIntakeUpdateLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Context, input models.SystemIntakeUpdateLCIDInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := resolvers.UpdateLCID(
 		ctx,
 		r.store,
@@ -351,13 +350,13 @@ func (r *mutationResolver) CreateSystemIntakeActionUpdateLcid(ctx context.Contex
 		input,
 	)
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
 }
 
 // CreateSystemIntakeActionRetireLcid is the resolver for the createSystemIntakeActionRetireLCID field.
-func (r *mutationResolver) CreateSystemIntakeActionRetireLcid(ctx context.Context, input model.SystemIntakeRetireLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionRetireLcid(ctx context.Context, input models.SystemIntakeRetireLCIDInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := resolvers.RetireLCID(
 		ctx,
 		r.store,
@@ -366,13 +365,13 @@ func (r *mutationResolver) CreateSystemIntakeActionRetireLcid(ctx context.Contex
 		input,
 	)
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
 }
 
 // CreateSystemIntakeActionChangeLCIDRetirementDate is the resolver for the createSystemIntakeActionChangeLCIDRetirementDate field.
-func (r *mutationResolver) CreateSystemIntakeActionChangeLCIDRetirementDate(ctx context.Context, input model.SystemIntakeChangeLCIDRetirementDateInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionChangeLCIDRetirementDate(ctx context.Context, input models.SystemIntakeChangeLCIDRetirementDateInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := resolvers.ChangeLCIDRetirementDate(
 		ctx,
 		r.store,
@@ -381,13 +380,13 @@ func (r *mutationResolver) CreateSystemIntakeActionChangeLCIDRetirementDate(ctx 
 		input,
 	)
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
 }
 
 // CreateSystemIntakeActionConfirmLcid is the resolver for the createSystemIntakeActionConfirmLCID field.
-func (r *mutationResolver) CreateSystemIntakeActionConfirmLcid(ctx context.Context, input model.SystemIntakeConfirmLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionConfirmLcid(ctx context.Context, input models.SystemIntakeConfirmLCIDInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := resolvers.ConfirmLCID(
 		ctx,
 		r.store,
@@ -396,13 +395,13 @@ func (r *mutationResolver) CreateSystemIntakeActionConfirmLcid(ctx context.Conte
 		input,
 	)
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
 }
 
 // CreateSystemIntakeActionIssueLcid is the resolver for the createSystemIntakeActionIssueLCID field.
-func (r *mutationResolver) CreateSystemIntakeActionIssueLcid(ctx context.Context, input model.SystemIntakeIssueLCIDInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionIssueLcid(ctx context.Context, input models.SystemIntakeIssueLCIDInput) (*models.UpdateSystemIntakePayload, error) {
 	updatedIntake, err := resolvers.IssueLCID(
 		ctx,
 		r.store,
@@ -411,13 +410,13 @@ func (r *mutationResolver) CreateSystemIntakeActionIssueLcid(ctx context.Context
 		input,
 	)
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
 	}, err
 }
 
 // CreateSystemIntakeActionRejectIntake is the resolver for the createSystemIntakeActionRejectIntake field.
-func (r *mutationResolver) CreateSystemIntakeActionRejectIntake(ctx context.Context, input model.SystemIntakeRejectIntakeInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionRejectIntake(ctx context.Context, input models.SystemIntakeRejectIntakeInput) (*models.UpdateSystemIntakePayload, error) {
 	updatedIntake, err := resolvers.RejectIntakeAsNotApproved(
 		ctx,
 		r.store,
@@ -426,13 +425,13 @@ func (r *mutationResolver) CreateSystemIntakeActionRejectIntake(ctx context.Cont
 		input,
 	)
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: updatedIntake,
 	}, err
 }
 
 // CreateSystemIntakeActionReopenRequest is the resolver for the createSystemIntakeActionReopenRequest field.
-func (r *mutationResolver) CreateSystemIntakeActionReopenRequest(ctx context.Context, input model.SystemIntakeReopenRequestInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionReopenRequest(ctx context.Context, input models.SystemIntakeReopenRequestInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := resolvers.CreateSystemIntakeActionReopenRequest(
 		ctx,
 		r.store,
@@ -440,13 +439,13 @@ func (r *mutationResolver) CreateSystemIntakeActionReopenRequest(ctx context.Con
 		r.service.FetchUserInfo,
 		input,
 	)
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
 }
 
 // CreateSystemIntakeActionCloseRequest is the resolver for the createSystemIntakeActionCloseRequest field.
-func (r *mutationResolver) CreateSystemIntakeActionCloseRequest(ctx context.Context, input model.SystemIntakeCloseRequestInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionCloseRequest(ctx context.Context, input models.SystemIntakeCloseRequestInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := resolvers.CreateSystemIntakeActionCloseRequest(
 		ctx,
 		r.store,
@@ -454,13 +453,13 @@ func (r *mutationResolver) CreateSystemIntakeActionCloseRequest(ctx context.Cont
 		r.service.FetchUserInfo,
 		input,
 	)
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
 }
 
 // CreateSystemIntakeActionNotITGovRequest is the resolver for the createSystemIntakeActionNotITGovRequest field.
-func (r *mutationResolver) CreateSystemIntakeActionNotITGovRequest(ctx context.Context, input model.SystemIntakeNotITGovReqInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionNotITGovRequest(ctx context.Context, input models.SystemIntakeNotITGovReqInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := resolvers.CreateSystemIntakeActionNotITGovRequest(
 		ctx,
 		r.store,
@@ -468,68 +467,68 @@ func (r *mutationResolver) CreateSystemIntakeActionNotITGovRequest(ctx context.C
 		r.service.FetchUserInfo,
 		input,
 	)
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
 }
 
 // CreateSystemIntakeNote is the resolver for the createSystemIntakeNote field.
-func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
+func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input models.CreateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
 	return resolvers.CreateSystemIntakeNote(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeNote is the resolver for the updateSystemIntakeNote field.
-func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input model.UpdateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
+func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input models.UpdateSystemIntakeNoteInput) (*models.SystemIntakeNote, error) {
 	return resolvers.UpdateSystemIntakeNote(ctx, r.store, r.service.FetchUserInfo, input)
 }
 
 // CreateSystemIntake is the resolver for the createSystemIntake field.
-func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input model.CreateSystemIntakeInput) (*models.SystemIntake, error) {
+func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input models.CreateSystemIntakeInput) (*models.SystemIntake, error) {
 	return resolvers.CreateSystemIntake(ctx, r.store, input)
 }
 
 // SubmitIntake is the resolver for the submitIntake field.
-func (r *mutationResolver) SubmitIntake(ctx context.Context, input model.SubmitIntakeInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) SubmitIntake(ctx context.Context, input models.SubmitIntakeInput) (*models.UpdateSystemIntakePayload, error) {
 	return resolvers.SubmitIntake(ctx, r.store, r.service.FetchUserInfo, r.service.SubmitIntake, input)
 }
 
 // UpdateSystemIntakeAdminLead is the resolver for the updateSystemIntakeAdminLead field.
-func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input models.UpdateSystemIntakeAdminLeadInput) (*models.UpdateSystemIntakePayload, error) {
 	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
 	systemIntake := models.SystemIntake{
 		AdminLead: null.StringFrom(savedAdminLead),
 		ID:        input.ID,
 	}
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: &systemIntake,
 	}, err
 }
 
 // UpdateSystemIntakeReviewDates is the resolver for the updateSystemIntakeReviewDates field.
-func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, input models.UpdateSystemIntakeReviewDatesInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := r.store.UpdateReviewDates(ctx, input.ID, input.GrbDate, input.GrtDate)
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
 }
 
 // UpdateSystemIntakeContactDetails is the resolver for the updateSystemIntakeContactDetails field.
-func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input model.UpdateSystemIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) UpdateSystemIntakeContactDetails(ctx context.Context, input models.UpdateSystemIntakeContactDetailsInput) (*models.UpdateSystemIntakePayload, error) {
 	return resolvers.SystemIntakeUpdateContactDetails(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeRequestDetails is the resolver for the updateSystemIntakeRequestDetails field.
-func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context, input model.UpdateSystemIntakeRequestDetailsInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) UpdateSystemIntakeRequestDetails(ctx context.Context, input models.UpdateSystemIntakeRequestDetailsInput) (*models.UpdateSystemIntakePayload, error) {
 	return resolvers.SystemIntakeUpdate(ctx, r.store, r.cedarCoreClient.GetSystem, input)
 }
 
 // UpdateSystemIntakeContractDetails is the resolver for the updateSystemIntakeContractDetails field.
-func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context, input model.UpdateSystemIntakeContractDetailsInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) UpdateSystemIntakeContractDetails(ctx context.Context, input models.UpdateSystemIntakeContractDetailsInput) (*models.UpdateSystemIntakePayload, error) {
 	return resolvers.SystemIntakeUpdateContractDetails(ctx, r.store, input)
 }
 
 // CreateCedarSystemBookmark is the resolver for the createCedarSystemBookmark field.
-func (r *mutationResolver) CreateCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.CreateCedarSystemBookmarkPayload, error) {
+func (r *mutationResolver) CreateCedarSystemBookmark(ctx context.Context, input models.CreateCedarSystemBookmarkInput) (*models.CreateCedarSystemBookmarkPayload, error) {
 	bookmark := models.CedarSystemBookmark{
 		EUAUserID:     appcontext.Principal(ctx).ID(),
 		CedarSystemID: input.CedarSystemID,
@@ -538,24 +537,24 @@ func (r *mutationResolver) CreateCedarSystemBookmark(ctx context.Context, input 
 	if err != nil {
 		return nil, err
 	}
-	return &model.CreateCedarSystemBookmarkPayload{
+	return &models.CreateCedarSystemBookmarkPayload{
 		CedarSystemBookmark: createdBookmark,
 	}, nil
 }
 
 // DeleteCedarSystemBookmark is the resolver for the deleteCedarSystemBookmark field.
-func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input model.CreateCedarSystemBookmarkInput) (*model.DeleteCedarSystemBookmarkPayload, error) {
+func (r *mutationResolver) DeleteCedarSystemBookmark(ctx context.Context, input models.CreateCedarSystemBookmarkInput) (*models.DeleteCedarSystemBookmarkPayload, error) {
 	_, err := r.store.DeleteCedarSystemBookmark(ctx, &models.CedarSystemBookmark{
 		CedarSystemID: input.CedarSystemID,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &model.DeleteCedarSystemBookmarkPayload{CedarSystemID: input.CedarSystemID}, nil
+	return &models.DeleteCedarSystemBookmarkPayload{CedarSystemID: input.CedarSystemID}, nil
 }
 
 // SetSystemIntakeRelationNewSystem is the resolver for the setSystemIntakeRelationNewSystem field.
-func (r *mutationResolver) SetSystemIntakeRelationNewSystem(ctx context.Context, input *model.SetSystemIntakeRelationNewSystemInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) SetSystemIntakeRelationNewSystem(ctx context.Context, input *models.SetSystemIntakeRelationNewSystemInput) (*models.UpdateSystemIntakePayload, error) {
 	// This resolver's only real purpose is to delete existing relations or data that might have been set previously by selecting other options when
 	// selecting if the intake relates to another system, service, or contract.
 	// It is also responsible for creating contract number relationships for this intake
@@ -569,13 +568,13 @@ func (r *mutationResolver) SetSystemIntakeRelationNewSystem(ctx context.Context,
 		return nil, err
 	}
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, nil
 }
 
 // SetSystemIntakeRelationExistingSystem is the resolver for the setSystemIntakeRelationExistingSystem field.
-func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Context, input *model.SetSystemIntakeRelationExistingSystemInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Context, input *models.SetSystemIntakeRelationExistingSystemInput) (*models.UpdateSystemIntakePayload, error) {
 	// This resolver's purpose is to relate this System Intake to some number of CEDAR System IDs and Contract Numbers
 	// It is also responsible for clearing any previous relations that might have been set by SetSystemIntakeRelationExistingService(), which,
 	// in practice, should just be the `contractName` field.
@@ -584,13 +583,13 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingSystem(ctx context.Con
 		return nil, err
 	}
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, nil
 }
 
 // SetSystemIntakeRelationExistingService is the resolver for the setSystemIntakeRelationExistingService field.
-func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Context, input *model.SetSystemIntakeRelationExistingServiceInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Context, input *models.SetSystemIntakeRelationExistingServiceInput) (*models.UpdateSystemIntakePayload, error) {
 	// This resolver's purpose is to relate this System Intake to a free-text contract/service name, and some number of Contract Numbers
 	// It is also responsible for clearing any previous relations that might have been set by SetSystemIntakeRelationExistingSystem(), which,
 	// in practice, should just be the CEDAR System ID relations.
@@ -604,36 +603,36 @@ func (r *mutationResolver) SetSystemIntakeRelationExistingService(ctx context.Co
 		return nil, err
 	}
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, nil
 }
 
 // UnlinkSystemIntakeRelation is the resolver for the unlinkSystemIntakeRelation field.
-func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intakeID uuid.UUID) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) UnlinkSystemIntakeRelation(ctx context.Context, intakeID uuid.UUID) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := resolvers.UnlinkSystemIntakeRelation(ctx, r.store, intakeID)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, nil
 }
 
 // CreateSystemIntakeContact is the resolver for the createSystemIntakeContact field.
-func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input model.CreateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error) {
+func (r *mutationResolver) CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
 	return resolvers.CreateSystemIntakeContact(ctx, r.store, input)
 }
 
 // UpdateSystemIntakeContact is the resolver for the updateSystemIntakeContact field.
-func (r *mutationResolver) UpdateSystemIntakeContact(ctx context.Context, input model.UpdateSystemIntakeContactInput) (*model.CreateSystemIntakeContactPayload, error) {
+func (r *mutationResolver) UpdateSystemIntakeContact(ctx context.Context, input models.UpdateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error) {
 	return resolvers.UpdateSystemIntakeContact(ctx, r.store, input)
 }
 
 // DeleteSystemIntakeContact is the resolver for the deleteSystemIntakeContact field.
-func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input model.DeleteSystemIntakeContactInput) (*model.DeleteSystemIntakeContactPayload, error) {
+func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input models.DeleteSystemIntakeContactInput) (*models.DeleteSystemIntakeContactPayload, error) {
 	contact := &models.SystemIntakeContact{
 		ID: input.ID,
 	}
@@ -641,13 +640,13 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	if err != nil {
 		return nil, err
 	}
-	return &model.DeleteSystemIntakeContactPayload{
+	return &models.DeleteSystemIntakeContactPayload{
 		SystemIntakeContact: contact,
 	}, nil
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
-func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input model.UpdateSystemIntakeLinkedCedarSystemInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error) {
 	// If the linked system is not nil, make sure it's a valid CEDAR system, otherwise return an error
 	if input.CedarSystemID != nil && len(*input.CedarSystemID) > 0 {
 		_, err := r.cedarCoreClient.GetSystem(ctx, *input.CedarSystemID)
@@ -663,13 +662,13 @@ func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Conte
 		return nil, err
 	}
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, nil
 }
 
 // SendFeedbackEmail is the resolver for the sendFeedbackEmail field.
-func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.SendFeedbackEmailInput) (*string, error) {
+func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input models.SendFeedbackEmailInput) (*string, error) {
 	var reporterName, reporterEmail string
 
 	if !input.IsAnonymous {
@@ -706,7 +705,7 @@ func (r *mutationResolver) SendFeedbackEmail(ctx context.Context, input model.Se
 }
 
 // SendCantFindSomethingEmail is the resolver for the sendCantFindSomethingEmail field.
-func (r *mutationResolver) SendCantFindSomethingEmail(ctx context.Context, input model.SendCantFindSomethingEmailInput) (*string, error) {
+func (r *mutationResolver) SendCantFindSomethingEmail(ctx context.Context, input models.SendCantFindSomethingEmailInput) (*string, error) {
 	euaUserID := appcontext.Principal(ctx).ID()
 	userInfo, err := r.service.FetchUserInfo(ctx, euaUserID)
 	if err != nil {
@@ -728,7 +727,7 @@ func (r *mutationResolver) SendCantFindSomethingEmail(ctx context.Context, input
 }
 
 // SendReportAProblemEmail is the resolver for the sendReportAProblemEmail field.
-func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input model.SendReportAProblemEmailInput) (*string, error) {
+func (r *mutationResolver) SendReportAProblemEmail(ctx context.Context, input models.SendReportAProblemEmailInput) (*string, error) {
 	var reporterName, reporterEmail string
 
 	if !input.IsAnonymous {
@@ -771,7 +770,7 @@ func (r *mutationResolver) UpdateTRBRequest(ctx context.Context, id uuid.UUID, c
 }
 
 // CreateTRBRequestAttendee is the resolver for the createTRBRequestAttendee field.
-func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input model.CreateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
+func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input models.CreateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
 	role := models.PersonRole(input.Role)
 	return resolvers.CreateTRBRequestAttendee(
 		ctx,
@@ -788,7 +787,7 @@ func (r *mutationResolver) CreateTRBRequestAttendee(ctx context.Context, input m
 }
 
 // UpdateTRBRequestAttendee is the resolver for the updateTRBRequestAttendee field.
-func (r *mutationResolver) UpdateTRBRequestAttendee(ctx context.Context, input model.UpdateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
+func (r *mutationResolver) UpdateTRBRequestAttendee(ctx context.Context, input models.UpdateTRBRequestAttendeeInput) (*models.TRBRequestAttendee, error) {
 	role := models.PersonRole(input.Role)
 	attendee := &models.TRBRequestAttendee{
 		Component: &input.Component,
@@ -804,49 +803,49 @@ func (r *mutationResolver) DeleteTRBRequestAttendee(ctx context.Context, id uuid
 }
 
 // CreateTRBRequestDocument is the resolver for the createTRBRequestDocument field.
-func (r *mutationResolver) CreateTRBRequestDocument(ctx context.Context, input model.CreateTRBRequestDocumentInput) (*model.CreateTRBRequestDocumentPayload, error) {
+func (r *mutationResolver) CreateTRBRequestDocument(ctx context.Context, input models.CreateTRBRequestDocumentInput) (*models.CreateTRBRequestDocumentPayload, error) {
 	doc, err := resolvers.CreateTRBRequestDocument(ctx, r.store, r.s3Client, input)
 	if err != nil {
 		return nil, err
 	}
 
-	return &model.CreateTRBRequestDocumentPayload{
+	return &models.CreateTRBRequestDocumentPayload{
 		Document: doc,
 	}, nil
 }
 
 // DeleteTRBRequestDocument is the resolver for the deleteTRBRequestDocument field.
-func (r *mutationResolver) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*model.DeleteTRBRequestDocumentPayload, error) {
+func (r *mutationResolver) DeleteTRBRequestDocument(ctx context.Context, id uuid.UUID) (*models.DeleteTRBRequestDocumentPayload, error) {
 	doc, err := resolvers.DeleteTRBRequestDocument(ctx, r.store, id)
 	if err != nil {
 		return nil, err
 	}
 
-	return &model.DeleteTRBRequestDocumentPayload{
+	return &models.DeleteTRBRequestDocumentPayload{
 		Document: doc,
 	}, nil
 }
 
 // CreateSystemIntakeDocument is the resolver for the createSystemIntakeDocument field.
-func (r *mutationResolver) CreateSystemIntakeDocument(ctx context.Context, input model.CreateSystemIntakeDocumentInput) (*model.CreateSystemIntakeDocumentPayload, error) {
+func (r *mutationResolver) CreateSystemIntakeDocument(ctx context.Context, input models.CreateSystemIntakeDocumentInput) (*models.CreateSystemIntakeDocumentPayload, error) {
 	doc, err := resolvers.CreateSystemIntakeDocument(ctx, r.store, r.s3Client, input)
 	if err != nil {
 		return nil, err
 	}
 
-	return &model.CreateSystemIntakeDocumentPayload{
+	return &models.CreateSystemIntakeDocumentPayload{
 		Document: doc,
 	}, nil
 }
 
 // DeleteSystemIntakeDocument is the resolver for the deleteSystemIntakeDocument field.
-func (r *mutationResolver) DeleteSystemIntakeDocument(ctx context.Context, id uuid.UUID) (*model.DeleteSystemIntakeDocumentPayload, error) {
+func (r *mutationResolver) DeleteSystemIntakeDocument(ctx context.Context, id uuid.UUID) (*models.DeleteSystemIntakeDocumentPayload, error) {
 	doc, err := resolvers.DeleteSystemIntakeDocument(ctx, r.store, id)
 	if err != nil {
 		return nil, err
 	}
 
-	return &model.DeleteSystemIntakeDocumentPayload{
+	return &models.DeleteSystemIntakeDocumentPayload{
 		Document: doc,
 	}, nil
 }
@@ -863,17 +862,17 @@ func (r *mutationResolver) UpdateTRBRequestForm(ctx context.Context, input map[s
 }
 
 // UpdateTRBRequestFundingSources is the resolver for the updateTRBRequestFundingSources field.
-func (r *mutationResolver) UpdateTRBRequestFundingSources(ctx context.Context, input model.UpdateTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error) {
+func (r *mutationResolver) UpdateTRBRequestFundingSources(ctx context.Context, input models.UpdateTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error) {
 	return resolvers.UpdateTRBRequestFundingSources(ctx, r.store, input.TrbRequestID, input.FundingNumber, input.Sources)
 }
 
 // DeleteTRBRequestFundingSources is the resolver for the deleteTRBRequestFundingSources field.
-func (r *mutationResolver) DeleteTRBRequestFundingSources(ctx context.Context, input model.DeleteTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error) {
+func (r *mutationResolver) DeleteTRBRequestFundingSources(ctx context.Context, input models.DeleteTRBRequestFundingSourcesInput) ([]*models.TRBFundingSource, error) {
 	return resolvers.DeleteTRBRequestFundingSources(ctx, r.store, input.TrbRequestID, input.FundingNumber)
 }
 
 // SetRolesForUserOnSystem is the resolver for the setRolesForUserOnSystem field.
-func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input model.SetRolesForUserOnSystemInput) (*string, error) {
+func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input models.SetRolesForUserOnSystemInput) (*string, error) {
 	rs, err := r.cedarCoreClient.SetRolesForUser(ctx, input.CedarSystemID, input.EuaUserID, input.DesiredRoleTypeIDs)
 	if err != nil {
 		return nil, err
@@ -922,7 +921,7 @@ func (r *mutationResolver) SetRolesForUserOnSystem(ctx context.Context, input mo
 }
 
 // CreateTRBRequestFeedback is the resolver for the createTRBRequestFeedback field.
-func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input model.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error) {
+func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input models.CreateTRBRequestFeedbackInput) (*models.TRBRequestFeedback, error) {
 	notifyEuas := models.ConvertEnums[string](input.NotifyEuaIds)
 	return resolvers.CreateTRBRequestFeedback(
 		ctx,
@@ -940,7 +939,7 @@ func (r *mutationResolver) CreateTRBRequestFeedback(ctx context.Context, input m
 }
 
 // UpdateTRBRequestConsultMeetingTime is the resolver for the updateTRBRequestConsultMeetingTime field.
-func (r *mutationResolver) UpdateTRBRequestConsultMeetingTime(ctx context.Context, input model.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error) {
+func (r *mutationResolver) UpdateTRBRequestConsultMeetingTime(ctx context.Context, input models.UpdateTRBRequestConsultMeetingTimeInput) (*models.TRBRequest, error) {
 	return resolvers.UpdateTRBRequestConsultMeetingTime(
 		ctx,
 		r.store,
@@ -956,7 +955,7 @@ func (r *mutationResolver) UpdateTRBRequestConsultMeetingTime(ctx context.Contex
 }
 
 // UpdateTRBRequestTRBLead is the resolver for the updateTRBRequestTRBLead field.
-func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input model.UpdateTRBRequestTRBLeadInput) (*models.TRBRequest, error) {
+func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input models.UpdateTRBRequestTRBLeadInput) (*models.TRBRequest, error) {
 	return resolvers.UpdateTRBRequestTRBLead(
 		ctx,
 		r.store,
@@ -968,17 +967,17 @@ func (r *mutationResolver) UpdateTRBRequestTRBLead(ctx context.Context, input mo
 }
 
 // SetTRBRequestRelationNewSystem is the resolver for the setTRBRequestRelationNewSystem field.
-func (r *mutationResolver) SetTRBRequestRelationNewSystem(ctx context.Context, input model.SetTRBRequestRelationNewSystemInput) (*models.TRBRequest, error) {
+func (r *mutationResolver) SetTRBRequestRelationNewSystem(ctx context.Context, input models.SetTRBRequestRelationNewSystemInput) (*models.TRBRequest, error) {
 	return resolvers.SetTRBRequestRelationNewSystem(ctx, r.store, input)
 }
 
 // SetTRBRequestRelationExistingSystem is the resolver for the setTRBRequestRelationExistingSystem field.
-func (r *mutationResolver) SetTRBRequestRelationExistingSystem(ctx context.Context, input model.SetTRBRequestRelationExistingSystemInput) (*models.TRBRequest, error) {
+func (r *mutationResolver) SetTRBRequestRelationExistingSystem(ctx context.Context, input models.SetTRBRequestRelationExistingSystemInput) (*models.TRBRequest, error) {
 	return resolvers.SetTRBRequestRelationExistingSystem(ctx, r.store, r.cedarCoreClient.GetSystem, input)
 }
 
 // SetTRBRequestRelationExistingService is the resolver for the setTRBRequestRelationExistingService field.
-func (r *mutationResolver) SetTRBRequestRelationExistingService(ctx context.Context, input model.SetTRBRequestRelationExistingServiceInput) (*models.TRBRequest, error) {
+func (r *mutationResolver) SetTRBRequestRelationExistingService(ctx context.Context, input models.SetTRBRequestRelationExistingServiceInput) (*models.TRBRequest, error) {
 	return resolvers.SetTRBRequestRelationExistingService(ctx, r.store, input)
 }
 
@@ -988,27 +987,27 @@ func (r *mutationResolver) UnlinkTRBRequestRelation(ctx context.Context, trbRequ
 }
 
 // CreateTRBAdminNoteGeneralRequest is the resolver for the createTRBAdminNoteGeneralRequest field.
-func (r *mutationResolver) CreateTRBAdminNoteGeneralRequest(ctx context.Context, input model.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
+func (r *mutationResolver) CreateTRBAdminNoteGeneralRequest(ctx context.Context, input models.CreateTRBAdminNoteGeneralRequestInput) (*models.TRBAdminNote, error) {
 	return resolvers.CreateTRBAdminNoteGeneralRequest(ctx, r.store, input)
 }
 
 // CreateTRBAdminNoteInitialRequestForm is the resolver for the createTRBAdminNoteInitialRequestForm field.
-func (r *mutationResolver) CreateTRBAdminNoteInitialRequestForm(ctx context.Context, input model.CreateTRBAdminNoteInitialRequestFormInput) (*models.TRBAdminNote, error) {
+func (r *mutationResolver) CreateTRBAdminNoteInitialRequestForm(ctx context.Context, input models.CreateTRBAdminNoteInitialRequestFormInput) (*models.TRBAdminNote, error) {
 	return resolvers.CreateTRBAdminNoteInitialRequestForm(ctx, r.store, input)
 }
 
 // CreateTRBAdminNoteSupportingDocuments is the resolver for the createTRBAdminNoteSupportingDocuments field.
-func (r *mutationResolver) CreateTRBAdminNoteSupportingDocuments(ctx context.Context, input model.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error) {
+func (r *mutationResolver) CreateTRBAdminNoteSupportingDocuments(ctx context.Context, input models.CreateTRBAdminNoteSupportingDocumentsInput) (*models.TRBAdminNote, error) {
 	return resolvers.CreateTRBAdminNoteSupportingDocuments(ctx, r.store, input)
 }
 
 // CreateTRBAdminNoteConsultSession is the resolver for the createTRBAdminNoteConsultSession field.
-func (r *mutationResolver) CreateTRBAdminNoteConsultSession(ctx context.Context, input model.CreateTRBAdminNoteConsultSessionInput) (*models.TRBAdminNote, error) {
+func (r *mutationResolver) CreateTRBAdminNoteConsultSession(ctx context.Context, input models.CreateTRBAdminNoteConsultSessionInput) (*models.TRBAdminNote, error) {
 	return resolvers.CreateTRBAdminNoteConsultSession(ctx, r.store, input)
 }
 
 // CreateTRBAdminNoteAdviceLetter is the resolver for the createTRBAdminNoteAdviceLetter field.
-func (r *mutationResolver) CreateTRBAdminNoteAdviceLetter(ctx context.Context, input model.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error) {
+func (r *mutationResolver) CreateTRBAdminNoteAdviceLetter(ctx context.Context, input models.CreateTRBAdminNoteAdviceLetterInput) (*models.TRBAdminNote, error) {
 	return resolvers.CreateTRBAdminNoteAdviceLetter(ctx, r.store, input)
 }
 
@@ -1038,7 +1037,7 @@ func (r *mutationResolver) RequestReviewForTRBAdviceLetter(ctx context.Context, 
 }
 
 // SendTRBAdviceLetter is the resolver for the sendTRBAdviceLetter field.
-func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input model.SendTRBAdviceLetterInput) (*models.TRBAdviceLetter, error) {
+func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input models.SendTRBAdviceLetterInput) (*models.TRBAdviceLetter, error) {
 	return resolvers.SendTRBAdviceLetter(
 		ctx,
 		r.store,
@@ -1051,7 +1050,7 @@ func (r *mutationResolver) SendTRBAdviceLetter(ctx context.Context, input model.
 }
 
 // CreateTRBAdviceLetterRecommendation is the resolver for the createTRBAdviceLetterRecommendation field.
-func (r *mutationResolver) CreateTRBAdviceLetterRecommendation(ctx context.Context, input model.CreateTRBAdviceLetterRecommendationInput) (*models.TRBAdviceLetterRecommendation, error) {
+func (r *mutationResolver) CreateTRBAdviceLetterRecommendation(ctx context.Context, input models.CreateTRBAdviceLetterRecommendationInput) (*models.TRBAdviceLetterRecommendation, error) {
 	links := models.ConvertEnums[string](input.Links)
 	return resolvers.CreateTRBAdviceLetterRecommendation(
 		ctx,
@@ -1070,7 +1069,7 @@ func (r *mutationResolver) UpdateTRBAdviceLetterRecommendation(ctx context.Conte
 }
 
 // UpdateTRBAdviceLetterRecommendationOrder is the resolver for the updateTRBAdviceLetterRecommendationOrder field.
-func (r *mutationResolver) UpdateTRBAdviceLetterRecommendationOrder(ctx context.Context, input model.UpdateTRBAdviceLetterRecommendationOrderInput) ([]*models.TRBAdviceLetterRecommendation, error) {
+func (r *mutationResolver) UpdateTRBAdviceLetterRecommendationOrder(ctx context.Context, input models.UpdateTRBAdviceLetterRecommendationOrderInput) ([]*models.TRBAdviceLetterRecommendation, error) {
 	return resolvers.UpdateTRBAdviceLetterRecommendationOrder(ctx, r.store, input.TrbRequestID, input.NewOrder)
 }
 
@@ -1080,7 +1079,7 @@ func (r *mutationResolver) DeleteTRBAdviceLetterRecommendation(ctx context.Conte
 }
 
 // CloseTRBRequest is the resolver for the closeTRBRequest field.
-func (r *mutationResolver) CloseTRBRequest(ctx context.Context, input model.CloseTRBRequestInput) (*models.TRBRequest, error) {
+func (r *mutationResolver) CloseTRBRequest(ctx context.Context, input models.CloseTRBRequestInput) (*models.TRBRequest, error) {
 	return resolvers.CloseTRBRequest(
 		ctx,
 		r.store,
@@ -1095,7 +1094,7 @@ func (r *mutationResolver) CloseTRBRequest(ctx context.Context, input model.Clos
 }
 
 // ReopenTrbRequest is the resolver for the reopenTrbRequest field.
-func (r *mutationResolver) ReopenTrbRequest(ctx context.Context, input model.ReopenTRBRequestInput) (*models.TRBRequest, error) {
+func (r *mutationResolver) ReopenTrbRequest(ctx context.Context, input models.ReopenTRBRequestInput) (*models.TRBRequest, error) {
 	return resolvers.ReopenTRBRequest(
 		ctx,
 		r.store,
@@ -1120,13 +1119,13 @@ func (r *mutationResolver) DeleteTrbLeadOption(ctx context.Context, eua string) 
 }
 
 // Requests is the resolver for the requests field. (First is not in use)
-func (r *queryResolver) Requests(ctx context.Context, first int) (*model.RequestsConnection, error) {
+func (r *queryResolver) Requests(ctx context.Context, first int) (*models.RequestsConnection, error) {
 	intakes, queryErr := r.store.FetchSystemIntakesByEuaID(ctx, appcontext.Principal(ctx).ID())
 	if queryErr != nil {
 		return nil, gqlerror.Errorf("query error: %s", queryErr)
 	}
 
-	edges := []*model.RequestEdge{}
+	edges := []*models.RequestEdge{}
 
 	for _, intake := range intakes {
 		var requesterStatus models.SystemIntakeStatusRequester
@@ -1148,22 +1147,22 @@ func (r *queryResolver) Requests(ctx context.Context, first int) (*model.Request
 		} else if grbDateIsSetAndNotInPast {
 			nextMeetingDate = intake.GRBDate
 		}
-		node := model.Request{
+		node := models.Request{
 			ID:              intake.ID,
 			SubmittedAt:     intake.SubmittedAt,
 			Name:            intake.ProjectName.Ptr(),
-			Type:            model.RequestTypeGovernanceRequest,
+			Type:            models.RequestTypeGovernanceRequest,
 			StatusRequester: &requesterStatus,
 			StatusCreatedAt: intake.CreatedAt,
 			Lcid:            intake.LifecycleID.Ptr(),
 			NextMeetingDate: nextMeetingDate,
 		}
-		edges = append(edges, &model.RequestEdge{
+		edges = append(edges, &models.RequestEdge{
 			Node: &node,
 		})
 	}
 
-	return &model.RequestsConnection{Edges: edges}, nil
+	return &models.RequestsConnection{Edges: edges}, nil
 }
 
 // SystemIntake is the resolver for the systemIntake field.
@@ -1195,13 +1194,13 @@ func (r *queryResolver) SystemIntakesWithLcids(ctx context.Context) ([]*models.S
 }
 
 // CurrentUser is the resolver for the currentUser field.
-func (r *queryResolver) CurrentUser(ctx context.Context) (*model.CurrentUser, error) {
+func (r *queryResolver) CurrentUser(ctx context.Context) (*models.CurrentUser, error) {
 	ldUser := flags.Principal(ctx)
 	userKey := ldUser.GetKey()
 	signedHash := r.ldClient.SecureModeHash(ldUser)
 
-	currentUser := model.CurrentUser{
-		LaunchDarkly: &model.LaunchDarklySettings{
+	currentUser := models.CurrentUser{
+		LaunchDarkly: &models.LaunchDarklySettings{
 			UserKey:    userKey,
 			SignedHash: signedHash,
 		},
@@ -1444,14 +1443,14 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 }
 
 // SystemIntakeContacts is the resolver for the systemIntakeContacts field.
-func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*model.SystemIntakeContactsPayload, error) {
+func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) (*models.SystemIntakeContactsPayload, error) {
 	contacts, err := r.store.FetchSystemIntakeContactsBySystemIntakeID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
 	if len(contacts) == 0 {
-		return &model.SystemIntakeContactsPayload{}, nil
+		return &models.SystemIntakeContactsPayload{}, nil
 	}
 
 	euaIDs := make([]string, len(contacts))
@@ -1485,7 +1484,7 @@ func (r *queryResolver) SystemIntakeContacts(ctx context.Context, id uuid.UUID) 
 		}
 	}
 
-	return &model.SystemIntakeContactsPayload{
+	return &models.SystemIntakeContactsPayload{
 		SystemIntakeContacts: augmentedContacts,
 		InvalidEUAIDs:        invalidEUAIDs,
 	}, nil
@@ -1522,19 +1521,19 @@ func (r *queryResolver) UserAccount(ctx context.Context, username string) (*auth
 }
 
 // Actions is the resolver for the actions field.
-func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
+func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeAction, error) {
 	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
 	if actionsErr != nil {
 		return nil, actionsErr
 	}
 
-	var results []*model.SystemIntakeAction
+	var results []*models.SystemIntakeAction
 	for _, action := range actions {
-		graphAction := model.SystemIntakeAction{
+		graphAction := models.SystemIntakeAction{
 			ID:   action.ID,
 			Step: action.Step,
-			Type: model.SystemIntakeActionType(action.ActionType),
-			Actor: &model.SystemIntakeActionActor{
+			Type: models.SystemIntakeActionType(action.ActionType),
+			Actor: &models.SystemIntakeActionActor{
 				Name:  action.ActorName,
 				Email: action.ActorEmail.String(),
 			},
@@ -1545,7 +1544,7 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 		}
 
 		if action.LCIDExpirationChangeNewDate != nil && action.LCIDExpirationChangePreviousDate != nil {
-			graphAction.LcidExpirationChange = &model.SystemIntakeLCIDExpirationChange{
+			graphAction.LcidExpirationChange = &models.SystemIntakeLCIDExpirationChange{
 				NewDate:              *action.LCIDExpirationChangeNewDate,
 				PreviousDate:         *action.LCIDExpirationChangePreviousDate,
 				NewScope:             action.LCIDExpirationChangeNewScope,
@@ -1567,8 +1566,8 @@ func (r *systemIntakeResolver) BusinessCase(ctx context.Context, obj *models.Sys
 }
 
 // BusinessOwner is the resolver for the businessOwner field.
-func (r *systemIntakeResolver) BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeBusinessOwner, error) {
-	return &model.SystemIntakeBusinessOwner{
+func (r *systemIntakeResolver) BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeBusinessOwner, error) {
+	return &models.SystemIntakeBusinessOwner{
 		Component: obj.BusinessOwnerComponent.Ptr(),
 		Name:      obj.BusinessOwner.Ptr(),
 	}, nil
@@ -1580,8 +1579,8 @@ func (r *systemIntakeResolver) BusinessSolution(ctx context.Context, obj *models
 }
 
 // Contract is the resolver for the contract field.
-func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeContract, error) {
-	contractEnd := model.ContractDate{}
+func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeContract, error) {
+	contractEnd := models.ContractDate{}
 	if len(obj.ContractEndMonth.String) > 0 {
 		contractEnd.Month = obj.ContractEndMonth.Ptr()
 	}
@@ -1603,7 +1602,7 @@ func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemI
 		contractEnd.Year = &yearStr
 	}
 
-	contractStart := model.ContractDate{}
+	contractStart := models.ContractDate{}
 	if len(obj.ContractStartMonth.String) > 0 {
 		contractStart.Month = obj.ContractStartMonth.Ptr()
 	}
@@ -1625,7 +1624,7 @@ func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemI
 		contractStart.Year = &yearStr
 	}
 
-	return &model.SystemIntakeContract{
+	return &models.SystemIntakeContract{
 		Contractor:  obj.Contractor.Ptr(),
 		EndDate:     &contractEnd,
 		HasContract: obj.ExistingContract.Ptr(),
@@ -1635,16 +1634,16 @@ func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemI
 }
 
 // Costs is the resolver for the costs field.
-func (r *systemIntakeResolver) Costs(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeCosts, error) {
-	return &model.SystemIntakeCosts{
+func (r *systemIntakeResolver) Costs(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeCosts, error) {
+	return &models.SystemIntakeCosts{
 		ExpectedIncreaseAmount: obj.CostIncreaseAmount.Ptr(),
 		IsExpectingIncrease:    obj.CostIncrease.Ptr(),
 	}, nil
 }
 
 // AnnualSpending is the resolver for the annualSpending field.
-func (r *systemIntakeResolver) AnnualSpending(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeAnnualSpending, error) {
-	return &model.SystemIntakeAnnualSpending{
+func (r *systemIntakeResolver) AnnualSpending(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeAnnualSpending, error) {
+	return &models.SystemIntakeAnnualSpending{
 		CurrentAnnualSpending:           obj.CurrentAnnualSpending.Ptr(),
 		CurrentAnnualSpendingITPortion:  obj.CurrentAnnualSpendingITPortion.Ptr(),
 		PlannedYearOneSpending:          obj.PlannedYearOneSpending.Ptr(),
@@ -1668,8 +1667,8 @@ func (r *systemIntakeResolver) GovernanceRequestFeedbacks(ctx context.Context, o
 }
 
 // GovernanceTeams is the resolver for the governanceTeams field.
-func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeGovernanceTeam, error) {
-	var teams []*model.SystemIntakeCollaborator
+func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeGovernanceTeam, error) {
+	var teams []*models.SystemIntakeCollaborator
 
 	if len(obj.TRBCollaboratorName.String) > 0 {
 		key := "technicalReviewBoard"
@@ -1677,7 +1676,7 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		acronym := "TRB"
 		name := "Technical Review Board"
 
-		teams = append(teams, &model.SystemIntakeCollaborator{
+		teams = append(teams, &models.SystemIntakeCollaborator{
 			Key:          key,
 			Label:        label,
 			Acronym:      acronym,
@@ -1692,7 +1691,7 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		acronym := "ISPG"
 		name := "OIT's Security and Privacy Group"
 
-		teams = append(teams, &model.SystemIntakeCollaborator{
+		teams = append(teams, &models.SystemIntakeCollaborator{
 			Key:          key,
 			Label:        label,
 			Acronym:      acronym,
@@ -1707,7 +1706,7 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		acronym := "EA"
 		name := "Enterprise Architecture"
 
-		teams = append(teams, &model.SystemIntakeCollaborator{
+		teams = append(teams, &models.SystemIntakeCollaborator{
 			Key:          key,
 			Label:        label,
 			Acronym:      acronym,
@@ -1717,7 +1716,7 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 	}
 
 	isPresent := len(teams) > 0
-	return &model.SystemIntakeGovernanceTeam{
+	return &models.SystemIntakeGovernanceTeam{
 		IsPresent: &isPresent,
 		Teams:     teams,
 	}, nil
@@ -1729,10 +1728,10 @@ func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.Sys
 }
 
 // Isso is the resolver for the isso field.
-func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error) {
+func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeIsso, error) {
 	isPresent := len(obj.ISSOName.String) > 0
 
-	return &model.SystemIntakeIsso{
+	return &models.SystemIntakeIsso{
 		IsPresent: &isPresent,
 		Name:      obj.ISSOName.Ptr(),
 	}, nil
@@ -1764,8 +1763,8 @@ func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemInta
 }
 
 // ProductManager is the resolver for the productManager field.
-func (r *systemIntakeResolver) ProductManager(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeProductManager, error) {
-	return &model.SystemIntakeProductManager{
+func (r *systemIntakeResolver) ProductManager(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeProductManager, error) {
+	return &models.SystemIntakeProductManager{
 		Component: obj.ProductManagerComponent.Ptr(),
 		Name:      obj.ProductManager.Ptr(),
 	}, nil
@@ -1777,8 +1776,8 @@ func (r *systemIntakeResolver) RequestName(ctx context.Context, obj *models.Syst
 }
 
 // Requester is the resolver for the requester field.
-func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRequester, error) {
-	requesterWithoutEmail := &model.SystemIntakeRequester{
+func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*models.SystemIntakeRequester, error) {
+	requesterWithoutEmail := &models.SystemIntakeRequester{
 		Component: obj.Component.Ptr(),
 		Email:     nil,
 		Name:      obj.Requester,
@@ -1801,7 +1800,7 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 	}
 
 	email := user.Email.String()
-	return &model.SystemIntakeRequester{
+	return &models.SystemIntakeRequester{
 		Component: obj.Component.Ptr(),
 		Email:     &email,
 		Name:      obj.Requester,
@@ -1861,8 +1860,8 @@ func (r *systemIntakeResolver) ContractNumbers(ctx context.Context, obj *models.
 }
 
 // DocumentType is the resolver for the documentType field.
-func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*model.SystemIntakeDocumentType, error) {
-	return &model.SystemIntakeDocumentType{
+func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
+	return &models.SystemIntakeDocumentType{
 		CommonType:           obj.CommonDocumentType,
 		OtherTypeDescription: &obj.OtherType,
 	}, nil
@@ -1884,17 +1883,17 @@ func (r *systemIntakeDocumentResolver) URL(ctx context.Context, obj *models.Syst
 }
 
 // VotingRole is the resolver for the votingRole field.
-func (r *systemIntakeGRBReviewerResolver) VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (model.SystemIntakeGRBReviewerVotingRole, error) {
-	return model.SystemIntakeGRBReviewerVotingRole(obj.VotingRole), nil
+func (r *systemIntakeGRBReviewerResolver) VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerVotingRole, error) {
+	return models.SystemIntakeGRBReviewerVotingRole(obj.VotingRole), nil
 }
 
 // GrbRole is the resolver for the grbRole field.
-func (r *systemIntakeGRBReviewerResolver) GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (model.SystemIntakeGRBReviewerRole, error) {
-	return model.SystemIntakeGRBReviewerRole(obj.GRBRole), nil
+func (r *systemIntakeGRBReviewerResolver) GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (models.SystemIntakeGRBReviewerRole, error) {
+	return models.SystemIntakeGRBReviewerRole(obj.GRBRole), nil
 }
 
 // Author is the resolver for the author field.
-func (r *systemIntakeNoteResolver) Author(ctx context.Context, obj *models.SystemIntakeNote) (*model.SystemIntakeNoteAuthor, error) {
+func (r *systemIntakeNoteResolver) Author(ctx context.Context, obj *models.SystemIntakeNote) (*models.SystemIntakeNoteAuthor, error) {
 	return resolvers.SystemIntakeNoteAuthor(obj)
 }
 
@@ -1914,7 +1913,7 @@ func (r *tRBAdminNoteResolver) Author(ctx context.Context, obj *models.TRBAdminN
 }
 
 // CategorySpecificData is the resolver for the categorySpecificData field.
-func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *models.TRBAdminNote) (model.TRBAdminNoteCategorySpecificData, error) {
+func (r *tRBAdminNoteResolver) CategorySpecificData(ctx context.Context, obj *models.TRBAdminNote) (models.TRBAdminNoteCategorySpecificData, error) {
 	return resolvers.GetTRBAdminNoteCategorySpecificData(ctx, r.store, obj)
 }
 
@@ -2035,8 +2034,8 @@ func (r *tRBRequestAttendeeResolver) UserInfo(ctx context.Context, obj *models.T
 }
 
 // DocumentType is the resolver for the documentType field.
-func (r *tRBRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.TRBRequestDocument) (*model.TRBRequestDocumentType, error) {
-	return &model.TRBRequestDocumentType{
+func (r *tRBRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.TRBRequestDocument) (*models.TRBRequestDocumentType, error) {
+	return &models.TRBRequestDocumentType{
 		CommonType:           obj.CommonDocumentType,
 		OtherTypeDescription: &obj.OtherType,
 	}, nil
