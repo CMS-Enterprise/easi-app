@@ -20,6 +20,7 @@ import {
 import NotFound from 'views/NotFound';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
+import AtoCard from './components/AtoCard';
 import HelpLinks from './components/HelpLinks';
 import SpacesCard from './components/SpacesCard';
 
@@ -122,6 +123,8 @@ export const SystemWorkspace = () => {
               </Button>
             }
           />
+
+          <AtoCard />
         </CardGroup>
       </Grid>
     </MainContent>
