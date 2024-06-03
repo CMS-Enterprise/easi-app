@@ -10,6 +10,7 @@ type CedarSystem struct {
 	Name                    zero.String `json:"name"`
 	Description             zero.String `json:"description"`
 	Acronym                 zero.String `json:"acronym"`
+	State                   zero.String `json:"state"`
 	Status                  zero.String `json:"status"`
 	BusinessOwnerOrg        zero.String `json:"businessOwnerOrg"`
 	BusinessOwnerOrgComp    zero.String `json:"businessOwnerOrgComp"`

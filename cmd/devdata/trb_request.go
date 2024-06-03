@@ -38,6 +38,7 @@ func (s *seederConfig) seedTRBRequests(ctx context.Context) error {
 		s.seedTRBCase13,
 		s.seedTRBCase14,
 		s.seedTRBCase15,
+		s.seedTRBCase16,
 	}
 
 	for _, seedFunc := range cases {
@@ -432,6 +433,26 @@ func (s *seederConfig) seedTRBCase15(ctx context.Context) error {
 		return err
 	}
 	err = s.seedTRBWithAttendees(ctx, trbRequest.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase16(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 16 - Completed request form with Existing Inactive System Relation").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingSystemRelation(
+		ctx,
+		trbRequest.ID,
+		[]string{"123", "456"}, // contract numbers
+		[]string{ // cedar system IDs, these mock IDs are from the client helper
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC6G}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
+		},
+	)
 	if err != nil {
 		return err
 	}
