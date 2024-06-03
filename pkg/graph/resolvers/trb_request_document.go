@@ -9,7 +9,6 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/easiencoding"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/upload"
@@ -48,7 +47,7 @@ func GetStatusForTRBRequestDocument(s3Client *upload.S3Client, s3Key string) (mo
 }
 
 // CreateTRBRequestDocument uploads a document to S3, then saves its metadata to our database.
-func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input model.CreateTRBRequestDocumentInput) (*models.TRBRequestDocument, error) {
+func CreateTRBRequestDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input models.CreateTRBRequestDocumentInput) (*models.TRBRequestDocument, error) {
 	s3Key := uuid.New().String()
 
 	existingExtension := filepath.Ext(input.FileData.Filename)

@@ -10,7 +10,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
@@ -125,7 +124,7 @@ func submitSystemIntake(
 		}
 		return nil
 	}
-	input := model.SubmitIntakeInput{
+	input := models.SubmitIntakeInput{
 		ID: intake.ID,
 	}
 	payload, err := resolvers.SubmitIntake(ctx, store, mock.FetchUserInfoMock, mockSubmitIntake, input)
@@ -153,9 +152,9 @@ func createSystemIntake(
 	// The resolver requires an EUA ID and creates a random intake ID.
 	// Only use the resolver if there is no pre-made intake ID and the Requester EUA is given.
 	if intakeID == nil && requesterEUAIDPtr != nil {
-		input := model.CreateSystemIntakeInput{
+		input := models.CreateSystemIntakeInput{
 			RequestType: requestType,
-			Requester: &model.SystemIntakeRequesterInput{
+			Requester: &models.SystemIntakeRequesterInput{
 				Name: requesterName,
 			},
 		}
@@ -195,7 +194,7 @@ func updateSystemIntakeRequestDetails(
 	hasUIChanges bool,
 ) *models.SystemIntake {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
-	input := model.UpdateSystemIntakeRequestDetailsInput{
+	input := models.UpdateSystemIntakeRequestDetailsInput{
 		ID:               intake.ID,
 		RequestName:      &requestName,
 		BusinessNeed:     &businessNeed,
@@ -224,7 +223,7 @@ func createSystemIntakeContact(
 	role string,
 ) {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
-	input := model.CreateSystemIntakeContactInput{
+	input := models.CreateSystemIntakeContactInput{
 		Component:      component,
 		Role:           role,
 		EuaUserID:      euaUserID,
@@ -245,7 +244,7 @@ func updateSystemIntakeContact(
 	role string,
 ) {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
-	input := model.UpdateSystemIntakeContactInput{
+	input := models.UpdateSystemIntakeContactInput{
 		Component: component,
 		Role:      role,
 		EuaUserID: euaUserID,
@@ -263,7 +262,7 @@ func setSystemIntakeRelationNewSystem(
 	contractNumbers []string,
 ) {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
-	input := &model.SetSystemIntakeRelationNewSystemInput{
+	input := &models.SetSystemIntakeRelationNewSystemInput{
 		SystemIntakeID:  intakeID,
 		ContractNumbers: contractNumbers,
 	}
@@ -289,7 +288,7 @@ func setSystemIntakeRelationExistingSystem(
 	cedarSystemIDs []string,
 ) {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
-	input := &model.SetSystemIntakeRelationExistingSystemInput{
+	input := &models.SetSystemIntakeRelationExistingSystemInput{
 		SystemIntakeID:  intakeID,
 		ContractNumbers: contractNumbers,
 		CedarSystemIDs:  cedarSystemIDs,
@@ -324,7 +323,7 @@ func setSystemIntakeRelationExistingService(
 	contractNumbers []string,
 ) {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
-	input := &model.SetSystemIntakeRelationExistingServiceInput{
+	input := &models.SetSystemIntakeRelationExistingServiceInput{
 		SystemIntakeID:  intakeID,
 		ContractName:    contractName,
 		ContractNumbers: contractNumbers,
@@ -376,27 +375,27 @@ func updateSystemIntakeContactDetails(
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	govTeamsPresent := true
 
-	input := model.UpdateSystemIntakeContactDetailsInput{
+	input := models.UpdateSystemIntakeContactDetailsInput{
 		ID: intake.ID,
-		Requester: &model.SystemIntakeRequesterWithComponentInput{
+		Requester: &models.SystemIntakeRequesterWithComponentInput{
 			Name:      requesterName,
 			Component: requesterComponent,
 		},
-		BusinessOwner: &model.SystemIntakeBusinessOwnerInput{
+		BusinessOwner: &models.SystemIntakeBusinessOwnerInput{
 			Name:      businessOwnerName,
 			Component: businessOwnerComponent,
 		},
-		ProductManager: &model.SystemIntakeProductManagerInput{
+		ProductManager: &models.SystemIntakeProductManagerInput{
 			Name:      productManagerName,
 			Component: productManagerComponent,
 		},
-		Isso: &model.SystemIntakeISSOInput{
+		Isso: &models.SystemIntakeISSOInput{
 			IsPresent: &issoIsPresent,
 			Name:      &issoName,
 		},
-		GovernanceTeams: &model.SystemIntakeGovernanceTeamInput{
+		GovernanceTeams: &models.SystemIntakeGovernanceTeamInput{
 			IsPresent: &govTeamsPresent,
-			Teams: []*model.SystemIntakeCollaboratorInput{
+			Teams: []*models.SystemIntakeCollaboratorInput{
 				{
 					Collaborator: "Mrs TRB member",
 					Key:          "technicalReviewBoard",
@@ -440,11 +439,11 @@ func updateSystemIntakeContractDetails(
 	hasContract := "HAVE_CONTRACT"
 	endDate := time.Now().AddDate(3, 0, 0)
 	contractNumbers := []string{"123456789"}
-	input := model.UpdateSystemIntakeContractDetailsInput{
+	input := models.UpdateSystemIntakeContractDetailsInput{
 		ID: intake.ID,
-		FundingSources: &model.SystemIntakeFundingSourcesInput{
+		FundingSources: &models.SystemIntakeFundingSourcesInput{
 			ExistingFunding: &existingFunding,
-			FundingSources: []*model.SystemIntakeFundingSourceInput{
+			FundingSources: []*models.SystemIntakeFundingSourceInput{
 				{
 					FundingNumber: &fundingNumber1,
 					Source:        &source1,
@@ -459,14 +458,14 @@ func updateSystemIntakeContractDetails(
 				},
 			},
 		},
-		Costs: &model.SystemIntakeCostsInput{}, //doesn't appear in current form
-		AnnualSpending: &model.SystemIntakeAnnualSpendingInput{
+		Costs: &models.SystemIntakeCostsInput{}, //doesn't appear in current form
+		AnnualSpending: &models.SystemIntakeAnnualSpendingInput{
 			CurrentAnnualSpending:           &currentAnnualSpending,
 			CurrentAnnualSpendingITPortion:  &currentAnnualSpendingITPortion,
 			PlannedYearOneSpending:          &plannedYearOneSpending,
 			PlannedYearOneSpendingITPortion: &plannedYearOneSpendingITPortion,
 		},
-		Contract: &model.SystemIntakeContractInput{
+		Contract: &models.SystemIntakeContractInput{
 			Contractor:  &contractor,
 			StartDate:   &startDate,
 			HasContract: &hasContract,
@@ -489,7 +488,7 @@ func createSystemIntakeNote(
 ) *models.SystemIntakeNote {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
 	content := models.HTML(noteContent)
-	input := model.CreateSystemIntakeNoteInput{
+	input := models.CreateSystemIntakeNoteInput{
 		Content:    content,
 		AuthorName: "Author Name",
 		IntakeID:   intake.ID,

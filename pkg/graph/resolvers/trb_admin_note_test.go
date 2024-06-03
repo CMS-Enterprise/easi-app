@@ -6,7 +6,6 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -21,7 +20,7 @@ func (suite *ResolverSuite) TestCreateTRBAdminNoteGeneralRequest() {
 		suite.NotNil(trbRequest)
 
 		// create admin note
-		input := model.CreateTRBAdminNoteGeneralRequestInput{
+		input := models.CreateTRBAdminNoteGeneralRequestInput{
 			TrbRequestID: trbRequest.ID,
 			NoteText:     "test TRB admin note - general request",
 		}
@@ -53,7 +52,7 @@ func (suite *ResolverSuite) TestCreateTRBAdminNoteInitialRequestForm() {
 		suite.NotNil(trbRequest)
 
 		// create admin note
-		input := model.CreateTRBAdminNoteInitialRequestFormInput{
+		input := models.CreateTRBAdminNoteInitialRequestFormInput{
 			TrbRequestID:                 trbRequest.ID,
 			NoteText:                     "test TRB admin note - initial request form",
 			AppliesToBasicRequestDetails: true,
@@ -125,7 +124,7 @@ func (suite *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 		documentID2 := createdDoc2.ID
 
 		// create admin note referencing the documents
-		input := model.CreateTRBAdminNoteSupportingDocumentsInput{
+		input := models.CreateTRBAdminNoteSupportingDocumentsInput{
 			TrbRequestID: trbRequest.ID,
 			NoteText:     "test TRB admin note - supporting documents",
 			DocumentIDs: []uuid.UUID{
@@ -193,7 +192,7 @@ func (suite *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 
 		// try to create an admin note referencing the document
 		// should fail due to database constraints, because the referenced document belongs to a different TRB request
-		input := model.CreateTRBAdminNoteSupportingDocumentsInput{
+		input := models.CreateTRBAdminNoteSupportingDocumentsInput{
 			TrbRequestID: trbRequestForNote.ID,
 			NoteText:     "test TRB admin note - supporting documents",
 			DocumentIDs: []uuid.UUID{
@@ -221,7 +220,7 @@ func (suite *ResolverSuite) TestCreateTRBAdminNoteConsultSession() {
 		suite.NotNil(trbRequest)
 
 		// create admin note
-		input := model.CreateTRBAdminNoteConsultSessionInput{
+		input := models.CreateTRBAdminNoteConsultSessionInput{
 			TrbRequestID: trbRequest.ID,
 			NoteText:     "test TRB admin note - consult session",
 		}
@@ -282,7 +281,7 @@ func (suite *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 		recommendationID2 := createdRec2.ID
 
 		// create admin note referencing the recommendations
-		input := model.CreateTRBAdminNoteAdviceLetterInput{
+		input := models.CreateTRBAdminNoteAdviceLetterInput{
 			TrbRequestID:            trbRequest.ID,
 			NoteText:                "test TRB admin note - advice letter",
 			AppliesToMeetingSummary: true,
@@ -360,7 +359,7 @@ func (suite *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 		// try to create an admin note referencing the recommendation
 		// should fail due to database constraints, because the referenced recommendation belongs to a different TRB request
 		recommendationID := createdRec.ID
-		input := model.CreateTRBAdminNoteAdviceLetterInput{
+		input := models.CreateTRBAdminNoteAdviceLetterInput{
 			TrbRequestID:            trbRequestForNote.ID,
 			NoteText:                "test TRB admin note - advice letter",
 			AppliesToMeetingSummary: false,
@@ -413,7 +412,7 @@ func (suite *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		}
 
 		// set up admin note referencing two of the documents
-		input := model.CreateTRBAdminNoteSupportingDocumentsInput{
+		input := models.CreateTRBAdminNoteSupportingDocumentsInput{
 			TrbRequestID: trbRequest.ID,
 			NoteText:     "test TRB admin note - supporting documents",
 			DocumentIDs: []uuid.UUID{
@@ -429,7 +428,7 @@ func (suite *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		categorySpecificData, err := GetTRBAdminNoteCategorySpecificData(ctx, store, createdNote)
 		suite.NoError(err)
 		suite.NotNil(categorySpecificData)
-		supportingDocumentsData, ok := categorySpecificData.(model.TRBAdminNoteSupportingDocumentsCategoryData)
+		supportingDocumentsData, ok := categorySpecificData.(models.TRBAdminNoteSupportingDocumentsCategoryData)
 		suite.True(ok) // test that categorySpecificData is of the right type
 
 		// test that resolver returns the right documents
@@ -484,7 +483,7 @@ func (suite *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		}
 
 		// set up admin note referencing two of the recommendations
-		input := model.CreateTRBAdminNoteAdviceLetterInput{
+		input := models.CreateTRBAdminNoteAdviceLetterInput{
 			TrbRequestID: trbRequest.ID,
 			NoteText:     "test TRB admin note - advice letter",
 			RecommendationIDs: []uuid.UUID{
@@ -504,7 +503,7 @@ func (suite *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		categorySpecificData, err := GetTRBAdminNoteCategorySpecificData(ctx, store, createdNote)
 		suite.NoError(err)
 		suite.NotNil(categorySpecificData)
-		adviceLetterData, ok := categorySpecificData.(model.TRBAdminNoteAdviceLetterCategoryData)
+		adviceLetterData, ok := categorySpecificData.(models.TRBAdminNoteAdviceLetterCategoryData)
 		suite.True(ok) // test that categorySpecificData is of the right type
 
 		// test that resolver returns the right recommendations

@@ -7,7 +7,6 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -120,7 +119,7 @@ func (s *ServicesTestSuite) TestHasRole() {
 
 	for name, tc := range testCases {
 		s.Run(name, func() {
-			ok, err := fnAuth(tc.ctx, model.RoleEasiGovteam)
+			ok, err := fnAuth(tc.ctx, models.RoleEasiGovteam)
 			s.NoError(err)
 			s.Equal(tc.allowed, ok)
 		})

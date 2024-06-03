@@ -7,7 +7,6 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/dataloaders"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -16,7 +15,7 @@ import (
 func CreateSystemIntakeNote(
 	ctx context.Context,
 	store *storage.Store,
-	input model.CreateSystemIntakeNoteInput,
+	input models.CreateSystemIntakeNoteInput,
 ) (*models.SystemIntakeNote, error) {
 	systemIntakeNote := models.SystemIntakeNote{
 		AuthorEUAID:    appcontext.Principal(ctx).ID(),
@@ -34,7 +33,7 @@ func UpdateSystemIntakeNote(
 	ctx context.Context,
 	store *storage.Store,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	input model.UpdateSystemIntakeNoteInput,
+	input models.UpdateSystemIntakeNoteInput,
 ) (*models.SystemIntakeNote, error) {
 	userInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 	if err != nil {
@@ -60,8 +59,8 @@ func SystemIntakeNotes(
 }
 
 // SystemIntakeNoteAuthor returns the system intake note author
-func SystemIntakeNoteAuthor(obj *models.SystemIntakeNote) (*model.SystemIntakeNoteAuthor, error) {
-	return &model.SystemIntakeNoteAuthor{
+func SystemIntakeNoteAuthor(obj *models.SystemIntakeNote) (*models.SystemIntakeNoteAuthor, error) {
+	return &models.SystemIntakeNoteAuthor{
 		Eua:  obj.AuthorEUAID,
 		Name: obj.AuthorName.ValueOrZero(),
 	}, nil
