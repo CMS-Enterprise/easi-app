@@ -7,21 +7,31 @@ import {
   CardHeader,
   Grid
 } from '@trussworks/react-uswds';
-import classNames from 'classnames';
+import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
 import { ATO_LEARN_MORE, CFACTS } from 'constants/externalUrls';
 import { GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate } from 'queries/types/GetSystemProfile';
-import { showAtoExpirationDate } from 'views/SystemProfile/helpers';
+import { GetSystemWorkspace_cedarSystemDetails_roles as CedarRole } from 'queries/types/GetSystemWorkspace';
+import {
+  getPersonFullName,
+  showAtoExpirationDate
+} from 'views/SystemProfile/helpers';
 
 type Props = {
   status: string;
   dateAuthorizationMemoExpires?: CedarAuthorityToOperate['dateAuthorizationMemoExpires'];
+  isso?: CedarRole;
   className?: string;
 };
 
-function AtoCard({ status, dateAuthorizationMemoExpires, className }: Props) {
+function AtoCard({
+  status,
+  dateAuthorizationMemoExpires,
+  isso,
+  className
+}: Props) {
   const { t } = useTranslation('systemWorkspace');
 
   return (
@@ -31,7 +41,7 @@ function AtoCard({ status, dateAuthorizationMemoExpires, className }: Props) {
       className="display-flex flex-align-stretch"
     >
       <Card
-        className={classNames(
+        className={classnames(
           className,
           'radius-sm width-full workspaces__card'
         )}
@@ -48,8 +58,14 @@ function AtoCard({ status, dateAuthorizationMemoExpires, className }: Props) {
           </div>
           <p>
             <strong>{t('spaces.ato.isso')}</strong>
-            <br />
-            Name
+            {isso ? (
+              <>
+                <br />
+                {getPersonFullName(isso)}
+              </>
+            ) : (
+              t('spaces.ato.noIsso')
+            )}
           </p>
         </CardBody>
 
@@ -58,7 +74,9 @@ function AtoCard({ status, dateAuthorizationMemoExpires, className }: Props) {
         <CardFooter className="padding-0 margin-bottom-05">
           <UswdsReactLink
             variant="unstyled"
-            className="usa-button usa-button--outline-x usa-button--disabled-x"
+            className={classnames('usa-button', {
+              'usa-button--disabled': !isso?.assigneeEmail
+            })}
             to=""
           >
             {t('spaces.ato.contact')}
