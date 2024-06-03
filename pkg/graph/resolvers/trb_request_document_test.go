@@ -7,7 +7,6 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/easiencoding"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -38,7 +37,7 @@ func createTRBRequestDocumentSubtest(suite *ResolverSuite, trbRequestID uuid.UUI
 	testContents := "Test file content"
 	encodedFileContent := easiencoding.EncodeBase64String(testContents)
 	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
-	gqlInput := model.CreateTRBRequestDocumentInput{
+	gqlInput := models.CreateTRBRequestDocumentInput{
 		RequestID:            documentToCreate.TRBRequestID,
 		DocumentType:         documentToCreate.CommonDocumentType,
 		OtherTypeDescription: &documentToCreate.OtherType,

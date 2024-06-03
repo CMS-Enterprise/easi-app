@@ -7,7 +7,6 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
@@ -18,7 +17,7 @@ import (
 func CreateSystemIntake(
 	ctx context.Context,
 	store *storage.Store,
-	input model.CreateSystemIntakeInput,
+	input models.CreateSystemIntakeInput,
 ) (*models.SystemIntake, error) {
 	systemIntake := models.SystemIntake{
 		EUAUserID:   null.StringFrom(appcontext.Principal(ctx).ID()),
@@ -35,8 +34,8 @@ func CreateSystemIntake(
 func CreateSystemIntakeContact(
 	ctx context.Context,
 	store *storage.Store,
-	input model.CreateSystemIntakeContactInput,
-) (*model.CreateSystemIntakeContactPayload, error) {
+	input models.CreateSystemIntakeContactInput,
+) (*models.CreateSystemIntakeContactPayload, error) {
 	contact := &models.SystemIntakeContact{
 		SystemIntakeID: input.SystemIntakeID,
 		EUAUserID:      input.EuaUserID,
@@ -47,7 +46,7 @@ func CreateSystemIntakeContact(
 	if err != nil {
 		return nil, err
 	}
-	return &model.CreateSystemIntakeContactPayload{
+	return &models.CreateSystemIntakeContactPayload{
 		SystemIntakeContact: createdContact,
 	}, nil
 }
@@ -56,8 +55,8 @@ func CreateSystemIntakeContact(
 func UpdateSystemIntakeContact(
 	ctx context.Context,
 	store *storage.Store,
-	input model.UpdateSystemIntakeContactInput,
-) (*model.CreateSystemIntakeContactPayload, error) {
+	input models.UpdateSystemIntakeContactInput,
+) (*models.CreateSystemIntakeContactPayload, error) {
 	contact := &models.SystemIntakeContact{
 		ID:             input.ID,
 		SystemIntakeID: input.SystemIntakeID,
@@ -70,7 +69,7 @@ func UpdateSystemIntakeContact(
 	if err != nil {
 		return nil, err
 	}
-	return &model.CreateSystemIntakeContactPayload{
+	return &models.CreateSystemIntakeContactPayload{
 		SystemIntakeContact: updatedContact,
 	}, nil
 }
@@ -79,7 +78,7 @@ func UpdateSystemIntakeContact(
 
 // SystemIntakeUpdate takes a UpdateSystemIntakeRequestDetailsInput struct and updates the database with the provided information.
 // It also updates the request form state to show in progress, unless the state was EDITS_REQUESTED
-func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSystem func(context.Context, string) (*models.CedarSystem, error), input model.UpdateSystemIntakeRequestDetailsInput) (*model.UpdateSystemIntakePayload, error) {
+func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSystem func(context.Context, string) (*models.CedarSystem, error), input models.UpdateSystemIntakeRequestDetailsInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := store.FetchSystemIntakeByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
@@ -104,14 +103,14 @@ func SystemIntakeUpdate(ctx context.Context, store *storage.Store, fetchCedarSys
 	}
 
 	savedIntake, err := store.UpdateSystemIntake(ctx, intake)
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
 	}, err
 }
 
 // SystemIntakeUpdateContactDetails updates the various contacts requested from the input.
 // It also updates the request form state to show in progress, unless the state was EDITS_REQUESTED
-func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store, input model.UpdateSystemIntakeContactDetailsInput) (*model.UpdateSystemIntakePayload, error) {
+func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store, input models.UpdateSystemIntakeContactDetailsInput) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := store.FetchSystemIntakeByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
@@ -162,15 +161,15 @@ func SystemIntakeUpdateContactDetails(ctx context.Context, store *storage.Store,
 	}
 
 	savedIntake, err := store.UpdateSystemIntake(ctx, intake)
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: savedIntake,
 	}, err
 }
 
 // SystemIntakeUpdateContractDetails updates specific contract information about a system intake
 // It also updates the request form state to show in progress, unless the state was EDITS_REQUESTED
-func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store, input model.UpdateSystemIntakeContractDetailsInput) (*model.UpdateSystemIntakePayload, error) {
-	return sqlutils.WithTransactionRet[*model.UpdateSystemIntakePayload](ctx, store, func(tx *sqlx.Tx) (*model.UpdateSystemIntakePayload, error) {
+func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store, input models.UpdateSystemIntakeContractDetailsInput) (*models.UpdateSystemIntakePayload, error) {
+	return sqlutils.WithTransactionRet[*models.UpdateSystemIntakePayload](ctx, store, func(tx *sqlx.Tx) (*models.UpdateSystemIntakePayload, error) {
 
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.ID)
 		if err != nil {
@@ -261,7 +260,7 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 		}
 
 		savedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
-		return &model.UpdateSystemIntakePayload{
+		return &models.UpdateSystemIntakePayload{
 			SystemIntake: savedIntake,
 		}, err
 
@@ -274,8 +273,8 @@ func SubmitIntake(
 	store *storage.Store,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	submitIntake func(context.Context, *models.SystemIntake, *models.Action) error,
-	input model.SubmitIntakeInput,
-) (*model.UpdateSystemIntakePayload, error) {
+	input models.SubmitIntakeInput,
+) (*models.UpdateSystemIntakePayload, error) {
 	intake, err := store.FetchSystemIntakeByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
@@ -307,7 +306,7 @@ func SubmitIntake(
 		return nil, err
 	}
 
-	return &model.UpdateSystemIntakePayload{
+	return &models.UpdateSystemIntakePayload{
 		SystemIntake: intake,
 	}, err
 
