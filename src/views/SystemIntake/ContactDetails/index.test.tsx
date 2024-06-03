@@ -45,6 +45,7 @@ describe('System intake form - Contact Details', () => {
   it('renders fields for new request', async () => {
     render(
       <VerboseMockedProvider
+        addTypename
         mocks={[
           getSystemIntakeQuery(emptySystemIntake),
           getSystemIntakeContactsQuery
@@ -69,6 +70,7 @@ describe('System intake form - Contact Details', () => {
   it('renders error messages', async () => {
     render(
       <VerboseMockedProvider
+        addTypename
         mocks={[
           getSystemIntakeQuery(emptySystemIntake),
           getSystemIntakeContactsQuery
