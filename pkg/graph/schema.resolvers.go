@@ -1723,6 +1723,11 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 	}, nil
 }
 
+// GrbReviewers is the resolver for the grbReviewers field.
+func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error) {
+	return []*models.SystemIntakeGRBReviewer{}, nil
+}
+
 // Isso is the resolver for the isso field.
 func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error) {
 	isPresent := len(obj.ISSOName.String) > 0
@@ -1876,6 +1881,16 @@ func (r *systemIntakeDocumentResolver) UploadedAt(ctx context.Context, obj *mode
 // URL is the resolver for the url field.
 func (r *systemIntakeDocumentResolver) URL(ctx context.Context, obj *models.SystemIntakeDocument) (string, error) {
 	return resolvers.GetURLForSystemIntakeDocument(r.s3Client, obj.S3Key)
+}
+
+// VotingRole is the resolver for the votingRole field.
+func (r *systemIntakeGRBReviewerResolver) VotingRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (model.SystemIntakeGRBReviewerVotingRole, error) {
+	return model.SystemIntakeGRBReviewerVotingRole(obj.VotingRole), nil
+}
+
+// GrbRole is the resolver for the grbRole field.
+func (r *systemIntakeGRBReviewerResolver) GrbRole(ctx context.Context, obj *models.SystemIntakeGRBReviewer) (model.SystemIntakeGRBReviewerRole, error) {
+	return model.SystemIntakeGRBReviewerRole(obj.GRBRole), nil
 }
 
 // Author is the resolver for the author field.
@@ -2136,6 +2151,11 @@ func (r *Resolver) SystemIntakeDocument() generated.SystemIntakeDocumentResolver
 	return &systemIntakeDocumentResolver{r}
 }
 
+// SystemIntakeGRBReviewer returns generated.SystemIntakeGRBReviewerResolver implementation.
+func (r *Resolver) SystemIntakeGRBReviewer() generated.SystemIntakeGRBReviewerResolver {
+	return &systemIntakeGRBReviewerResolver{r}
+}
+
 // SystemIntakeNote returns generated.SystemIntakeNoteResolver implementation.
 func (r *Resolver) SystemIntakeNote() generated.SystemIntakeNoteResolver {
 	return &systemIntakeNoteResolver{r}
@@ -2191,6 +2211,7 @@ type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
 type systemIntakeDocumentResolver struct{ *Resolver }
+type systemIntakeGRBReviewerResolver struct{ *Resolver }
 type systemIntakeNoteResolver struct{ *Resolver }
 type tRBAdminNoteResolver struct{ *Resolver }
 type tRBAdviceLetterResolver struct{ *Resolver }

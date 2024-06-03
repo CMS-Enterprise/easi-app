@@ -1139,6 +1139,110 @@ func (e SystemIntakeFormStep) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+type SystemIntakeGRBReviewerRole string
+
+const (
+	SystemIntakeGRBReviewerRoleVoting    SystemIntakeGRBReviewerRole = "VOTING"
+	SystemIntakeGRBReviewerRoleAlternate SystemIntakeGRBReviewerRole = "ALTERNATE"
+	SystemIntakeGRBReviewerRoleNonVoting SystemIntakeGRBReviewerRole = "NON_VOTING"
+)
+
+var AllSystemIntakeGRBReviewerRole = []SystemIntakeGRBReviewerRole{
+	SystemIntakeGRBReviewerRoleVoting,
+	SystemIntakeGRBReviewerRoleAlternate,
+	SystemIntakeGRBReviewerRoleNonVoting,
+}
+
+func (e SystemIntakeGRBReviewerRole) IsValid() bool {
+	switch e {
+	case SystemIntakeGRBReviewerRoleVoting, SystemIntakeGRBReviewerRoleAlternate, SystemIntakeGRBReviewerRoleNonVoting:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeGRBReviewerRole) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeGRBReviewerRole) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeGRBReviewerRole(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeGRBReviewerRole", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeGRBReviewerRole) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type SystemIntakeGRBReviewerVotingRole string
+
+const (
+	SystemIntakeGRBReviewerVotingRoleCoChairCio                SystemIntakeGRBReviewerVotingRole = "CO_CHAIR_CIO"
+	SystemIntakeGRBReviewerVotingRoleCoChairCfo                SystemIntakeGRBReviewerVotingRole = "CO_CHAIR_CFO"
+	SystemIntakeGRBReviewerVotingRoleCoChairHca                SystemIntakeGRBReviewerVotingRole = "CO_CHAIR_HCA"
+	SystemIntakeGRBReviewerVotingRoleAca3021Rep                SystemIntakeGRBReviewerVotingRole = "ACA_3021_REP"
+	SystemIntakeGRBReviewerVotingRoleCciioRep                  SystemIntakeGRBReviewerVotingRole = "CCIIO_REP"
+	SystemIntakeGRBReviewerVotingRoleProgramOperationsBdgChair SystemIntakeGRBReviewerVotingRole = "PROGRAM_OPERATIONS_BDG_CHAIR"
+	SystemIntakeGRBReviewerVotingRoleCmcsRep                   SystemIntakeGRBReviewerVotingRole = "CMCS_REP"
+	SystemIntakeGRBReviewerVotingRoleFedAdminBdgChair          SystemIntakeGRBReviewerVotingRole = "FED_ADMIN_BDG_CHAIR"
+	SystemIntakeGRBReviewerVotingRoleProgramIntegrityBdgChair  SystemIntakeGRBReviewerVotingRole = "PROGRAM_INTEGRITY_BDG_CHAIR"
+	SystemIntakeGRBReviewerVotingRoleQioRep                    SystemIntakeGRBReviewerVotingRole = "QIO_REP"
+	SystemIntakeGRBReviewerVotingRoleSubjectMatterExpert       SystemIntakeGRBReviewerVotingRole = "SUBJECT_MATTER_EXPERT"
+	SystemIntakeGRBReviewerVotingRoleOther                     SystemIntakeGRBReviewerVotingRole = "OTHER"
+)
+
+var AllSystemIntakeGRBReviewerVotingRole = []SystemIntakeGRBReviewerVotingRole{
+	SystemIntakeGRBReviewerVotingRoleCoChairCio,
+	SystemIntakeGRBReviewerVotingRoleCoChairCfo,
+	SystemIntakeGRBReviewerVotingRoleCoChairHca,
+	SystemIntakeGRBReviewerVotingRoleAca3021Rep,
+	SystemIntakeGRBReviewerVotingRoleCciioRep,
+	SystemIntakeGRBReviewerVotingRoleProgramOperationsBdgChair,
+	SystemIntakeGRBReviewerVotingRoleCmcsRep,
+	SystemIntakeGRBReviewerVotingRoleFedAdminBdgChair,
+	SystemIntakeGRBReviewerVotingRoleProgramIntegrityBdgChair,
+	SystemIntakeGRBReviewerVotingRoleQioRep,
+	SystemIntakeGRBReviewerVotingRoleSubjectMatterExpert,
+	SystemIntakeGRBReviewerVotingRoleOther,
+}
+
+func (e SystemIntakeGRBReviewerVotingRole) IsValid() bool {
+	switch e {
+	case SystemIntakeGRBReviewerVotingRoleCoChairCio, SystemIntakeGRBReviewerVotingRoleCoChairCfo, SystemIntakeGRBReviewerVotingRoleCoChairHca, SystemIntakeGRBReviewerVotingRoleAca3021Rep, SystemIntakeGRBReviewerVotingRoleCciioRep, SystemIntakeGRBReviewerVotingRoleProgramOperationsBdgChair, SystemIntakeGRBReviewerVotingRoleCmcsRep, SystemIntakeGRBReviewerVotingRoleFedAdminBdgChair, SystemIntakeGRBReviewerVotingRoleProgramIntegrityBdgChair, SystemIntakeGRBReviewerVotingRoleQioRep, SystemIntakeGRBReviewerVotingRoleSubjectMatterExpert, SystemIntakeGRBReviewerVotingRoleOther:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeGRBReviewerVotingRole) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeGRBReviewerVotingRole) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeGRBReviewerVotingRole(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeGRBReviewerVotingRole", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeGRBReviewerVotingRole) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Steps in the system intake process that a Progress to New Step action can progress to
 type SystemIntakeStepToProgressTo string
 
