@@ -79,7 +79,11 @@ const GovernanceTeams = () => {
           error={!!errors?.governanceTeams?.teams?.message}
           className="margin-left-4 margin-bottom-3 margin-top-1"
         >
-          <ErrorMessage name="governanceTeams.teams" as={FieldErrorMsg} />
+          <ErrorMessage
+            errors={errors}
+            name="governanceTeams.teams"
+            as={FieldErrorMsg}
+          />
 
           {cmsGovernanceTeams.map(({ key, value: name, label, acronym }) => {
             const teamIndex = teams.findIndex(team => team.key === key);
