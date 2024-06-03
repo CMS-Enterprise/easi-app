@@ -33,8 +33,8 @@ import useCheckResponsiveScreen from 'hooks/checkMobile';
 import GetSystemProfileQuery from 'queries/GetSystemProfileQuery';
 import {
   GetSystemProfile,
+  GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate,
   /* eslint-disable camelcase */
-  GetSystemProfile_cedarAuthorityToOperate,
   GetSystemProfile_cedarSystemDetails,
   /* eslint-enable camelcase */
   GetSystemProfileVariables
@@ -78,16 +78,18 @@ import './index.scss';
  */
 export function getAtoStatus(
   // eslint-disable-next-line camelcase
-  cedarAuthorityToOperate?: GetSystemProfile_cedarAuthorityToOperate
+  data?: {
+    dateAuthorizationMemoExpires: CedarAuthorityToOperate['dateAuthorizationMemoExpires'];
+  }
 ): AtoStatus {
   // `ato.dateAuthorizationMemoExpires` will be null if tlcPhase is Initiate|Develop
 
   // No ato if it doesn't exist
-  if (!cedarAuthorityToOperate) return 'No ATO';
+  if (!data) return 'No ATO';
 
   // return 'In progress'; // tbd
 
-  const { dateAuthorizationMemoExpires } = cedarAuthorityToOperate;
+  const { dateAuthorizationMemoExpires } = data;
 
   if (!dateAuthorizationMemoExpires) return 'No ATO';
 

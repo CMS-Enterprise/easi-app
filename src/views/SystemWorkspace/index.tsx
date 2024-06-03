@@ -18,6 +18,7 @@ import {
   GetSystemWorkspaceVariables
 } from 'queries/types/GetSystemWorkspace';
 import NotFound from 'views/NotFound';
+import { getAtoStatus } from 'views/SystemProfile';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import AtoCard from './components/AtoCard';
@@ -44,6 +45,7 @@ export const SystemWorkspace = () => {
 
   const cedarSystem = data?.cedarSystemDetails?.cedarSystem;
   const ato = data?.cedarAuthorityToOperate[0];
+  const atoStatus = getAtoStatus(ato);
 
   const {
     data: bookmark,
@@ -124,7 +126,10 @@ export const SystemWorkspace = () => {
             }
           />
 
-          <AtoCard />
+          <AtoCard
+            status={atoStatus}
+            dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
+          />
         </CardGroup>
       </Grid>
     </MainContent>

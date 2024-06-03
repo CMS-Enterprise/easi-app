@@ -139,7 +139,9 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                   <DescriptionTerm term={t('singleSystem.ato.expiration')} />
                   <DescriptionDefinition
                     className="line-height-body-3 font-body-md"
-                    definition={showAtoExpirationDate(ato)}
+                    definition={showAtoExpirationDate(
+                      ato.dateAuthorizationMemoExpires
+                    )}
                   />
                 </CardFooter>
               )}

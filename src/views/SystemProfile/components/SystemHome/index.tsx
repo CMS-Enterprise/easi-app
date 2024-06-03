@@ -144,7 +144,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
             <Grid row>
               <Grid desktop={{ col: 12 }} className="padding-0">
                 <h3 className="link-header margin-top-0 margin-bottom-2">
-                  {showAtoExpirationDate(ato)}
+                  {showAtoExpirationDate(ato?.dateAuthorizationMemoExpires)}
                 </h3>
                 <div className="margin-bottom-2">
                   <UswdsReactLink

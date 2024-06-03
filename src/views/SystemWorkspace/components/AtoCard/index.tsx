@@ -12,12 +12,16 @@ import classNames from 'classnames';
 import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
 import { ATO_LEARN_MORE, CFACTS } from 'constants/externalUrls';
+import { GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate } from 'queries/types/GetSystemProfile';
+import { showAtoExpirationDate } from 'views/SystemProfile/helpers';
 
 type Props = {
+  status: string;
+  dateAuthorizationMemoExpires?: CedarAuthorityToOperate['dateAuthorizationMemoExpires'];
   className?: string;
 };
 
-function AtoCard({ className }: Props) {
+function AtoCard({ status, dateAuthorizationMemoExpires, className }: Props) {
   const { t } = useTranslation('systemWorkspace');
 
   return (
@@ -38,6 +42,10 @@ function AtoCard({ className }: Props) {
 
         <CardBody className="padding-0 flex-1 workspaces__fill-card-space">
           <p className="text-base margin-o">{t('spaces.ato.description')}</p>
+          <div>
+            {status}{' '}
+            <span>{showAtoExpirationDate(dateAuthorizationMemoExpires)}</span>
+          </div>
           <p>
             <strong>{t('spaces.ato.isso')}</strong>
             <br />
