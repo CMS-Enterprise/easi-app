@@ -75,80 +75,76 @@ const GovernanceTeams = () => {
           )}
         />
 
-        {isPresent && (
-          <FormGroup
-            error={!!errors?.governanceTeams?.teams?.message}
-            className="margin-left-4 margin-bottom-3 margin-top-1"
-          >
-            <ErrorMessage name="governanceTeams.teams" as={FieldErrorMsg} />
+        <FormGroup
+          error={!!errors?.governanceTeams?.teams?.message}
+          className="margin-left-4 margin-bottom-3 margin-top-1"
+        >
+          <ErrorMessage name="governanceTeams.teams" as={FieldErrorMsg} />
 
-            {cmsGovernanceTeams.map(({ key, value: name, label, acronym }) => {
-              const teamIndex = teams.findIndex(team => team.key === key);
+          {cmsGovernanceTeams.map(({ key, value: name, label, acronym }) => {
+            const teamIndex = teams.findIndex(team => team.key === key);
 
-              const isChecked = teamIndex > -1;
+            const isChecked = teamIndex > -1;
 
-              const collaboratorField = `governanceTeams.teams.${teamIndex}.collaborator` as const;
+            const collaboratorField = `governanceTeams.teams.${teamIndex}.collaborator` as const;
 
-              const error =
-                errors?.governanceTeams?.teams?.[teamIndex]?.collaborator;
+            const error =
+              errors?.governanceTeams?.teams?.[teamIndex]?.collaborator;
 
-              return (
-                <div key={key}>
-                  <Controller
-                    control={control}
-                    name="governanceTeams.teams"
-                    render={({ field: { ref, ...field } }) => {
-                      return (
-                        <Checkbox
-                          {...field}
-                          inputRef={ref}
-                          id={`${field.name}.${key}`}
-                          label={label}
-                          value={name}
-                          checked={isChecked}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              append({
-                                name,
-                                key,
-                                collaborator: ''
-                              });
-                            } else {
-                              remove(teamIndex);
-                            }
-                          }}
-                        />
-                      );
-                    }}
-                  />
-
-                  {isChecked && (
-                    <FormGroup
-                      error={!!error}
-                      className="margin-top-1 margin-bottom-2 margin-left-4"
-                    >
-                      <Label htmlFor={collaboratorField}>
-                        {t(`${acronym} Collaborator Name`)}
-                      </Label>
-
-                      <ErrorMessage
-                        name={collaboratorField}
-                        as={FieldErrorMsg}
+            return (
+              <div key={key}>
+                <Controller
+                  control={control}
+                  name="governanceTeams.teams"
+                  render={({ field: { ref, ...field } }) => {
+                    return (
+                      <Checkbox
+                        {...field}
+                        inputRef={ref}
+                        id={`${field.name}.${key}`}
+                        label={label}
+                        value={name}
+                        checked={isChecked}
+                        disabled={!isPresent}
+                        onChange={e => {
+                          if (e.target.checked) {
+                            append({
+                              name,
+                              key,
+                              collaborator: ''
+                            });
+                          } else {
+                            remove(teamIndex);
+                          }
+                        }}
                       />
+                    );
+                  }}
+                />
 
-                      <TextInput
-                        {...register(collaboratorField)}
-                        ref={null}
-                        id={collaboratorField}
-                        type="text"
-                      />
-                    </FormGroup>
-                  )}
-                </div>
-              );
-            })}
-          </FormGroup>
-        )}
+                {isChecked && (
+                  <FormGroup
+                    error={!!error}
+                    className="margin-top-1 margin-bottom-2 margin-left-4"
+                  >
+                    <Label htmlFor={collaboratorField}>
+                      {t(`${acronym} Collaborator Name`)}
+                    </Label>
+
+                    <ErrorMessage name={collaboratorField} as={FieldErrorMsg} />
+
+                    <TextInput
+                      {...register(collaboratorField)}
+                      ref={null}
+                      id={collaboratorField}
+                      type="text"
+                    />
+                  </FormGroup>
+                )}
+              </div>
+            );
+          })}
+        </FormGroup>
 
         <Controller
           control={control}
