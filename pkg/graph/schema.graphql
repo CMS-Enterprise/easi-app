@@ -1128,7 +1128,6 @@ GRB Reviewers for a system intake request
 """
 type SystemIntakeGRBReviewer {
   id: UUID!
-  userID: UUID!
   userAccount: UserAccount!
   systemIntakeID: UUID!
   votingRole: SystemIntakeGRBReviewerVotingRole!

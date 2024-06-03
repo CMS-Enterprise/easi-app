@@ -823,7 +823,6 @@ type ComplexityRoot struct {
 		ModifiedBy     func(childComplexity int) int
 		SystemIntakeID func(childComplexity int) int
 		UserAccount    func(childComplexity int) int
-		UserID         func(childComplexity int) int
 		VotingRole     func(childComplexity int) int
 	}
 
@@ -5928,13 +5927,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntakeGRBReviewer.UserAccount(childComplexity), true
 
-	case "SystemIntakeGRBReviewer.userID":
-		if e.complexity.SystemIntakeGRBReviewer.UserID == nil {
-			break
-		}
-
-		return e.complexity.SystemIntakeGRBReviewer.UserID(childComplexity), true
-
 	case "SystemIntakeGRBReviewer.votingRole":
 		if e.complexity.SystemIntakeGRBReviewer.VotingRole == nil {
 			break
@@ -8628,7 +8620,6 @@ GRB Reviewers for a system intake request
 """
 type SystemIntakeGRBReviewer {
   id: UUID!
-  userID: UUID!
   userAccount: UserAccount!
   systemIntakeID: UUID!
   votingRole: SystemIntakeGRBReviewerVotingRole!
@@ -37356,8 +37347,6 @@ func (ec *executionContext) fieldContext_SystemIntake_grbReviewers(_ context.Con
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_SystemIntakeGRBReviewer_id(ctx, field)
-			case "userID":
-				return ec.fieldContext_SystemIntakeGRBReviewer_userID(ctx, field)
 			case "userAccount":
 				return ec.fieldContext_SystemIntakeGRBReviewer_userAccount(ctx, field)
 			case "systemIntakeID":
@@ -42118,50 +42107,6 @@ func (ec *executionContext) _SystemIntakeGRBReviewer_id(ctx context.Context, fie
 }
 
 func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SystemIntakeGRBReviewer",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _SystemIntakeGRBReviewer_userID(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntakeGRBReviewer) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SystemIntakeGRBReviewer_userID(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(uuid.UUID)
-	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SystemIntakeGRBReviewer_userID(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SystemIntakeGRBReviewer",
 		Field:      field,
@@ -63155,11 +63100,6 @@ func (ec *executionContext) _SystemIntakeGRBReviewer(ctx context.Context, sel as
 			out.Values[i] = graphql.MarshalString("SystemIntakeGRBReviewer")
 		case "id":
 			out.Values[i] = ec._SystemIntakeGRBReviewer_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "userID":
-			out.Values[i] = ec._SystemIntakeGRBReviewer_userID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
