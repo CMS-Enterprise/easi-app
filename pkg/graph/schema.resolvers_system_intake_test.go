@@ -1,7 +1,6 @@
 package graph
 
 import (
-	"context"
 	"fmt"
 	"time"
 
@@ -52,7 +51,7 @@ func (s *GraphQLTestSuite) TestCreateSystemIntakeMutation() {
 }
 
 func (s *GraphQLTestSuite) TestFetchSystemIntakeQuery() {
-	ctx := context.Background()
+	ctx := s.context
 	projectName := "Big Project"
 	businessOwner := "Firstname Lastname"
 	businessOwnerComponent := "OIT"
@@ -107,7 +106,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 }
 
 func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
-	ctx := context.Background()
+	ctx := s.context
 	projectName := "Big Project"
 	businessOwner := "Firstname Lastname"
 	businessOwnerComponent := "OIT"
@@ -337,7 +336,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 }
 
 func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
-	ctx := context.Background()
+	ctx := s.context
 	projectName := "My cool project"
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -391,7 +390,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 }
 
 func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
-	ctx := context.Background()
+	ctx := s.context
 	projectName := "My cool project"
 	eaName := "My EA Rep"
 	oitName := "My OIT Rep"
@@ -450,7 +449,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 }
 
 func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
@@ -535,7 +534,7 @@ func (s *GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 }
 
 func (s *GraphQLTestSuite) TestUpdateContactDetails() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
@@ -649,7 +648,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 }
 
 func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		// EUAUserID:   null.StringFrom("TEST"),
@@ -763,7 +762,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsEmptyEUA() {
 }
 
 func (s *GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
@@ -882,7 +881,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWithISSOAndTeams() {
 }
 
 func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
@@ -992,7 +991,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearISSOAndTeams() {
 }
 
 func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
@@ -1112,12 +1111,13 @@ func (s *GraphQLTestSuite) TestUpdateContactDetailsWillClearOneTeam() {
 }
 
 func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
+
 	s.NoError(intakeErr)
 
 	var resp struct {
@@ -1171,7 +1171,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetails() {
 }
 
 func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesNull() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
@@ -1208,7 +1208,7 @@ func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesNull() {
 }
 
 func (s *GraphQLTestSuite) TestUpdateRequestDetailsHasUiChangesTrue() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
@@ -1398,6 +1398,10 @@ func (s *GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
 		RequestType:     models.SystemIntakeRequestTypeNEW,
 		ContractVehicle: null.StringFrom(contractVehicle),
 	})
+	fmt.Println("==== intake.ID Legacy ====")
+	fmt.Println(intake.ID)
+	fmt.Println("==== intake.ID ====")
+
 	s.NoError(intakeErr)
 
 	var resp struct {
@@ -1495,7 +1499,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithC
 
 func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:       null.StringFrom("TEST"),
@@ -1555,7 +1559,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveFundingSource() {
 }
 
 func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveCosts() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:          null.StringFrom("TEST"),
@@ -1709,7 +1713,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 }
 
 func (s *GraphQLTestSuite) TestSubmitIntake() {
-	ctx := context.Background()
+	ctx := s.context
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		EUAUserID:   null.StringFrom("TEST"),
