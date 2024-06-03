@@ -1,8 +1,6 @@
 package resolvers
 
 import (
-	"context"
-
 	"github.com/lib/pq"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -11,7 +9,7 @@ import (
 
 // TestTRBAdviceLetterRecommendationCRUD tests CRUD for TRB advice letter recommendations
 func (suite *ResolverSuite) TestTRBAdviceLetterRecommendationCRUD() {
-	ctx := context.Background()
+	ctx := suite.testConfigs.Context
 	anonEua := "ANON"
 	store := suite.testConfigs.Store
 

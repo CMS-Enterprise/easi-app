@@ -44,7 +44,7 @@ func (suite *ResolverSuite) SetupTest() {
 	assert.NoError(suite.T(), err)
 
 	// Get the user account from the DB fresh for each test
-	princ := getTestPrincipal(suite.testConfigs.Store, suite.testConfigs.UserInfo.Username)
+	princ := getTestPrincipal(suite.testConfigs.Context, suite.testConfigs.Store, suite.testConfigs.UserInfo.Username)
 	suite.testConfigs.Principal = princ
 }
 
@@ -101,7 +101,7 @@ func (tc *TestConfigs) GetDefaults() {
 	// create the test context
 	// principal is fetched between each test in SetupTest()
 	ctx := appcontext.WithLogger(context.Background(), tc.Logger)
-	ctx = appcontext.WithPrincipal(ctx, getTestPrincipal(tc.Store, tc.UserInfo.Username))
+	ctx = appcontext.WithPrincipal(ctx, getTestPrincipal(ctx, tc.Store, tc.UserInfo.Username))
 
 	fetchUserInfos := func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error) {
 		return nil, nil
@@ -140,9 +140,9 @@ func NewEmailClient() *email.Client {
 
 }
 
-func getTestPrincipal(store *storage.Store, userName string) *authentication.EUAPrincipal {
+func getTestPrincipal(ctx context.Context, store *storage.Store, userName string) *authentication.EUAPrincipal {
 
-	userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
 
 	princ := &authentication.EUAPrincipal{
 		EUAID:       userName,

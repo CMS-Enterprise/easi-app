@@ -13,7 +13,7 @@ import (
 
 // TestCreateTRBRequestForm tests the creation a new TRB request form
 func (suite *ResolverSuite) TestCreateTRBRequestForm() {
-	ctx := context.Background()
+	ctx := suite.testConfigs.Context
 
 	config := testhelpers.NewConfig()
 

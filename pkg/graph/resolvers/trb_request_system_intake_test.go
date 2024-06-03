@@ -1,8 +1,6 @@
 package resolvers
 
 import (
-	"context"
-
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
@@ -11,7 +9,7 @@ import (
 
 // TestTRBRequestLCIDCrud tests creation/deletion of TRB request LCIDs
 func (suite *ResolverSuite) TestTRBRequestLCID() {
-	ctx := context.Background()
+	ctx := suite.testConfigs.Context
 	anonEua := "ANON"
 	store := suite.testConfigs.Store
 

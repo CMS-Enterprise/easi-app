@@ -1,7 +1,6 @@
 package resolvers
 
 import (
-	"context"
 	"fmt"
 	"time"
 
@@ -12,7 +11,7 @@ import (
 )
 
 func (suite *ResolverSuite) TestSystemIntakeRequestEditsAction() {
-	ctx := context.Background()
+	ctx := suite.testConfigs.Context
 	initialSteps := []models.SystemIntakeStep{
 		models.SystemIntakeStepINITIALFORM,
 		models.SystemIntakeStepDRAFTBIZCASE,
@@ -481,7 +480,7 @@ func (suite *ResolverSuite) TestIssueLCID() {
 }
 
 func (suite *ResolverSuite) TestSystemIntakeCloseRequestAction() {
-	ctx := context.Background()
+	ctx := suite.testConfigs.Context
 	formSteps := []models.SystemIntakeStep{
 		models.SystemIntakeStepINITIALFORM,
 		models.SystemIntakeStepDRAFTBIZCASE,
@@ -670,7 +669,7 @@ func (suite *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 }
 
 func (suite *ResolverSuite) TestSystemIntakeReopenRequestAction() {
-	ctx := context.Background()
+	ctx := suite.testConfigs.Context
 	formSteps := []models.SystemIntakeStep{
 		models.SystemIntakeStepINITIALFORM,
 		models.SystemIntakeStepDRAFTBIZCASE,
@@ -861,7 +860,7 @@ func (suite *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 }
 
 func (suite *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
-	ctx := context.Background()
+	ctx := suite.testConfigs.Context
 	formSteps := []models.SystemIntakeStep{
 		models.SystemIntakeStepINITIALFORM,
 		models.SystemIntakeStepDRAFTBIZCASE,

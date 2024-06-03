@@ -17,7 +17,7 @@ import (
 
 // TestTRBRequestStatus tests the overall status of a TRB request
 func (suite *ResolverSuite) TestTRBRequestStatus() {
-	ctx := context.Background()
+	ctx := suite.testConfigs.Context
 	store := suite.testConfigs.Store
 
 	config := testhelpers.NewConfig()

@@ -12,7 +12,7 @@ import (
 
 // TestCreateTRBRequestAttendee makes a new TRB request
 func (suite *ResolverSuite) TestCreateTRBRequestAttendee() {
-	ctx := context.Background()
+	ctx := suite.testConfigs.Context
 
 	config := testhelpers.NewConfig()
 
