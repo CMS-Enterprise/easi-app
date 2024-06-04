@@ -348,6 +348,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <ErrorMessage
                 errors={errors}
                 name={key}
+                key={key}
                 render={({ message }) => (
                   <ErrorAlertMessage
                     message={message}
