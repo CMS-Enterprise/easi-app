@@ -1166,6 +1166,56 @@ func (e GovernanceRequestFeedbackType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// The requester view of the IT gov intake step status
+type ITGovIntakeFormStatus string
+
+const (
+	// Ready to begin filling out
+	ITGovIntakeFormStatusReady ITGovIntakeFormStatus = "READY"
+	// The form has started to be filled out
+	ITGovIntakeFormStatusInProgress ITGovIntakeFormStatus = "IN_PROGRESS"
+	// The form has edits requested
+	ITGovIntakeFormStatusEditsRequested ITGovIntakeFormStatus = "EDITS_REQUESTED"
+	// The Form is completed
+	ITGovIntakeFormStatusCompleted ITGovIntakeFormStatus = "COMPLETED"
+)
+
+var AllITGovIntakeFormStatus = []ITGovIntakeFormStatus{
+	ITGovIntakeFormStatusReady,
+	ITGovIntakeFormStatusInProgress,
+	ITGovIntakeFormStatusEditsRequested,
+	ITGovIntakeFormStatusCompleted,
+}
+
+func (e ITGovIntakeFormStatus) IsValid() bool {
+	switch e {
+	case ITGovIntakeFormStatusReady, ITGovIntakeFormStatusInProgress, ITGovIntakeFormStatusEditsRequested, ITGovIntakeFormStatusCompleted:
+		return true
+	}
+	return false
+}
+
+func (e ITGovIntakeFormStatus) String() string {
+	return string(e)
+}
+
+func (e *ITGovIntakeFormStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ITGovIntakeFormStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ITGovIntakeFormStatus", str)
+	}
+	return nil
+}
+
+func (e ITGovIntakeFormStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Indicates the type of a request being made with the EASi system
 type RequestType string
 

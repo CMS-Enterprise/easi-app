@@ -13,20 +13,20 @@ import (
 // IntakeFormStatus calculates the ITGovTaskListStatus of a system intake for the requester view
 func IntakeFormStatus(intake *models.SystemIntake) (models.ITGovIntakeFormStatus, error) {
 	if intake.Step != models.SystemIntakeStepINITIALFORM {
-		return models.ITGISCompleted, nil
+		return models.ITGovIntakeFormStatusCompleted, nil
 	}
 	switch intake.RequestFormState {
 	case models.SIRFSNotStarted:
-		return models.ITGISReady, nil
+		return models.ITGovIntakeFormStatusReady, nil
 
 	case models.SIRFSInProgress:
-		return models.ITGISInProgress, nil
+		return models.ITGovIntakeFormStatusInProgress, nil
 
 	case models.SIRFSEditsRequested:
-		return models.ITGISEditsRequested, nil
+		return models.ITGovIntakeFormStatusEditsRequested, nil
 
 	case models.SIRFSSubmitted:
-		return models.ITGISCompleted, nil
+		return models.ITGovIntakeFormStatusCompleted, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string
 		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form state"), intake.RequestFormState, "SystemIntakeFormState")
 	}

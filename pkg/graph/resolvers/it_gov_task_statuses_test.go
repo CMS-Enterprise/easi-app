@@ -68,7 +68,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGISReady,
+			expectedStatus: models.ITGovIntakeFormStatusReady,
 			expectError:    false,
 		},
 		{
@@ -77,7 +77,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGISInProgress,
+			expectedStatus: models.ITGovIntakeFormStatusInProgress,
 			expectError:    false,
 		},
 		{
@@ -86,7 +86,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGISEditsRequested,
+			expectedStatus: models.ITGovIntakeFormStatusEditsRequested,
 			expectError:    false,
 		},
 		{
@@ -95,7 +95,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGISCompleted,
+			expectedStatus: models.ITGovIntakeFormStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -115,7 +115,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepGRBMEETING,
 				RequestFormState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGISCompleted,
+			expectedStatus: models.ITGovIntakeFormStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -124,7 +124,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepGRBMEETING,
 				RequestFormState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGISCompleted,
+			expectedStatus: models.ITGovIntakeFormStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -133,7 +133,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepGRBMEETING,
 				RequestFormState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGISCompleted,
+			expectedStatus: models.ITGovIntakeFormStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -142,7 +142,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepGRBMEETING,
 				RequestFormState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGISCompleted,
+			expectedStatus: models.ITGovIntakeFormStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -151,7 +151,7 @@ func TestIntakeFormStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepGRBMEETING,
 				RequestFormState: defaultTestState,
 			},
-			expectedStatus: models.ITGISCompleted,
+			expectedStatus: models.ITGovIntakeFormStatusCompleted,
 			expectError:    false,
 		},
 	}

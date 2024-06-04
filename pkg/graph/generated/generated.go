@@ -67627,19 +67627,13 @@ func (ec *executionContext) marshalNITGovGRTStatus2githubᚗcomᚋcmsgovᚋeasi�
 }
 
 func (ec *executionContext) unmarshalNITGovIntakeFormStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovIntakeFormStatus(ctx context.Context, v interface{}) (models.ITGovIntakeFormStatus, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.ITGovIntakeFormStatus(tmp)
+	var res models.ITGovIntakeFormStatus
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNITGovIntakeFormStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovIntakeFormStatus(ctx context.Context, sel ast.SelectionSet, v models.ITGovIntakeFormStatus) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) marshalNITGovTaskStatuses2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovTaskStatuses(ctx context.Context, sel ast.SelectionSet, v models.ITGovTaskStatuses) graphql.Marshaler {

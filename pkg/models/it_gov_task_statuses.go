@@ -5,17 +5,6 @@ type ITGovTaskStatuses struct {
 	ParentSystemIntake *SystemIntake
 }
 
-// ITGovIntakeFormStatus represents the types of ITGovIntakeFormStatus types. This is what the requester sees for the first task
-type ITGovIntakeFormStatus string
-
-// These are the options for ITGovIntakeStatus
-const (
-	ITGISReady          ITGovIntakeFormStatus = "READY"
-	ITGISInProgress     ITGovIntakeFormStatus = "IN_PROGRESS"
-	ITGISEditsRequested ITGovIntakeFormStatus = "EDITS_REQUESTED"
-	ITGISCompleted      ITGovIntakeFormStatus = "COMPLETED"
-)
-
 // ITGovFeedbackStatus represents the types of ITGovFeedbackStatus types. This is what the requestor sees for the second task.
 type ITGovFeedbackStatus string
 
