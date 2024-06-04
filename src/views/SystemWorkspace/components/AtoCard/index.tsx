@@ -86,6 +86,7 @@ function AtoCard({
             <Link
               variant="unstyled"
               href={ATO_LEARN_MORE}
+              target="_blank"
               className="margin-left-1 display-flex flex-align-center text-primary"
             >
               {t('spaces.ato.learn')}
