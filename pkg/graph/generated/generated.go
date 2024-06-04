@@ -69438,19 +69438,13 @@ func (ec *executionContext) marshalNTRBRequestState2githubᚗcomᚋcmsgovᚋeasi
 }
 
 func (ec *executionContext) unmarshalNTRBRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestStatus(ctx context.Context, v interface{}) (models.TRBRequestStatus, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBRequestStatus(tmp)
+	var res models.TRBRequestStatus
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTRBRequestStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestStatus(ctx context.Context, sel ast.SelectionSet, v models.TRBRequestStatus) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalNTRBRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestType(ctx context.Context, v interface{}) (models.TRBRequestType, error) {

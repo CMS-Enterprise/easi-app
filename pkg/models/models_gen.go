@@ -2983,6 +2983,63 @@ func (e TRBRequestState) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+type TRBRequestStatus string
+
+const (
+	TRBRequestStatusNew                  TRBRequestStatus = "NEW"
+	TRBRequestStatusDraftRequestForm     TRBRequestStatus = "DRAFT_REQUEST_FORM"
+	TRBRequestStatusRequestFormComplete  TRBRequestStatus = "REQUEST_FORM_COMPLETE"
+	TRBRequestStatusReadyForConsult      TRBRequestStatus = "READY_FOR_CONSULT"
+	TRBRequestStatusConsultScheduled     TRBRequestStatus = "CONSULT_SCHEDULED"
+	TRBRequestStatusConsultComplete      TRBRequestStatus = "CONSULT_COMPLETE"
+	TRBRequestStatusDraftAdviceLetter    TRBRequestStatus = "DRAFT_ADVICE_LETTER"
+	TRBRequestStatusAdviceLetterInReview TRBRequestStatus = "ADVICE_LETTER_IN_REVIEW"
+	TRBRequestStatusAdviceLetterSent     TRBRequestStatus = "ADVICE_LETTER_SENT"
+	TRBRequestStatusFollowUpRequested    TRBRequestStatus = "FOLLOW_UP_REQUESTED"
+)
+
+var AllTRBRequestStatus = []TRBRequestStatus{
+	TRBRequestStatusNew,
+	TRBRequestStatusDraftRequestForm,
+	TRBRequestStatusRequestFormComplete,
+	TRBRequestStatusReadyForConsult,
+	TRBRequestStatusConsultScheduled,
+	TRBRequestStatusConsultComplete,
+	TRBRequestStatusDraftAdviceLetter,
+	TRBRequestStatusAdviceLetterInReview,
+	TRBRequestStatusAdviceLetterSent,
+	TRBRequestStatusFollowUpRequested,
+}
+
+func (e TRBRequestStatus) IsValid() bool {
+	switch e {
+	case TRBRequestStatusNew, TRBRequestStatusDraftRequestForm, TRBRequestStatusRequestFormComplete, TRBRequestStatusReadyForConsult, TRBRequestStatusConsultScheduled, TRBRequestStatusConsultComplete, TRBRequestStatusDraftAdviceLetter, TRBRequestStatusAdviceLetterInReview, TRBRequestStatusAdviceLetterSent, TRBRequestStatusFollowUpRequested:
+		return true
+	}
+	return false
+}
+
+func (e TRBRequestStatus) String() string {
+	return string(e)
+}
+
+func (e *TRBRequestStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBRequestStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBRequestStatus", str)
+	}
+	return nil
+}
+
+func (e TRBRequestStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type TRBRequestType string
 
 const (

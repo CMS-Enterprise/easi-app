@@ -37,23 +37,6 @@ type TRBTaskStatuses struct {
 	AdviceLetterStatusTaskList TRBAdviceLetterStatusTaskList `json:"adviceLetterStatusTaskList"`
 }
 
-// TRBRequestStatus is an enumeration of the possible values for the overall status of a TRB request
-type TRBRequestStatus string
-
-// These are the possible values for TRBRequestStatus
-const (
-	TRBRequestStatusNew                  = "NEW"
-	TRBRequestStatusDraftRequestForm     = "DRAFT_REQUEST_FORM"
-	TRBRequestStatusRequestFormComplete  = "REQUEST_FORM_COMPLETE"
-	TRBRequestStatusReadyForConsult      = "READY_FOR_CONSULT"
-	TRBRequestStatusConsultScheduled     = "CONSULT_SCHEDULED"
-	TRBRequestStatusConsultComplete      = "CONSULT_COMPLETE"
-	TRBRequestStatusDraftAdviceLetter    = "DRAFT_ADVICE_LETTER"
-	TRBRequestStatusAdviceLetterInReview = "ADVICE_LETTER_IN_REVIEW"
-	TRBRequestStatusAdviceLetterSent     = "ADVICE_LETTER_SENT"
-	TRBRequestStatusFollowUpRequested    = "FOLLOW_UP_REQUESTED"
-)
-
 // GetName returns the name of the TRB request as a string. If the "Name" property is nil, it returns "Draft"
 func (t *TRBRequest) GetName() string {
 	if t.Name != nil {
