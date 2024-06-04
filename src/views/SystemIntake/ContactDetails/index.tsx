@@ -120,43 +120,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   });
 
   const form = useEasiForm<ContactDetailsForm>({
-    resolver: yupResolver(SystemIntakeValidationSchema.contactDetails),
-    defaultValues: async () =>
-      contacts.refetch().then(values => {
-        const requester = getContactFields(values.requester);
-        const businessOwner = getContactFields(values.businessOwner);
-        const productManager = getContactFields(values.productManager);
-        const isso = getContactFields(values.isso);
-
-        return {
-          requester,
-          businessOwner: {
-            ...businessOwner,
-            sameAsRequester:
-              businessOwner.euaUserId === requester.euaUserId &&
-              businessOwner.component === requester.component
-          },
-          productManager: {
-            ...productManager,
-            sameAsRequester:
-              productManager.euaUserId === requester.euaUserId &&
-              productManager.component === requester.component
-          },
-          isso: {
-            isPresent: !!systemIntake.isso.isPresent,
-            ...isso
-          },
-          governanceTeams: {
-            isPresent: !!systemIntake.governanceTeams.isPresent,
-            teams:
-              systemIntake.governanceTeams.teams?.map(team => ({
-                collaborator: team.collaborator,
-                name: team.name,
-                key: team.key
-              })) || []
-          }
-        };
-      })
+    resolver: yupResolver(SystemIntakeValidationSchema.contactDetails)
   });
 
   const {
@@ -168,6 +132,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     getValues,
     register,
     setFocus,
+    reset,
     formState: {
       defaultValues,
       dirtyFields,
@@ -323,6 +288,48 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     productManager?.sameAsRequester,
     requester?.component,
     setFieldsFromRequester
+  ]);
+
+  // Set default form values after contacts are loaded
+  useEffect(() => {
+    if (!contacts.loading && !defaultValues) {
+      const { data } = contacts;
+
+      reset({
+        requester: getContactFields(data.requester),
+        businessOwner: {
+          ...getContactFields(data.businessOwner),
+          sameAsRequester:
+            data.businessOwner.euaUserId === data.requester.euaUserId &&
+            data.businessOwner.component === data.requester.component
+        },
+        productManager: {
+          ...getContactFields(data.productManager),
+          sameAsRequester:
+            data.productManager.euaUserId === data.requester.euaUserId &&
+            data.productManager.component === data.requester.component
+        },
+        isso: {
+          isPresent: !!systemIntake.isso.isPresent,
+          ...getContactFields(data.isso)
+        },
+        governanceTeams: {
+          isPresent: !!systemIntake.governanceTeams.isPresent,
+          teams:
+            systemIntake.governanceTeams.teams?.map(team => ({
+              collaborator: team.collaborator,
+              name: team.name,
+              key: team.key
+            })) || []
+        }
+      });
+    }
+  }, [
+    contacts,
+    defaultValues,
+    reset,
+    systemIntake.governanceTeams,
+    systemIntake.isso.isPresent
   ]);
 
   // Wait until default values have been updated

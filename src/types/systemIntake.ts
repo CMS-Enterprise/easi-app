@@ -252,8 +252,6 @@ export type UseSystemIntakeContactsType = {
     data: FormattedContacts;
     /** GetSystemIntakeContactsQuery loading state */
     loading: boolean;
-    /** Refetch contacts from database and return formatted object */
-    refetch: () => Promise<FormattedContacts>;
   };
   /** Creates system intake contact in database */
   createContact: CreateContactType;
