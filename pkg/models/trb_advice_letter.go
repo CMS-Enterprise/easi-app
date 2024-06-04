@@ -6,28 +6,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// TRBAdviceLetterStatus is an enumeration of the possible statuses of a TRBAdviceLetter
-type TRBAdviceLetterStatus string
-
-// These are the possible statuses for a TRB advice letter
-const (
-	TRBAdviceLetterStatusCannotStartYet TRBAdviceLetterStatus = "CANNOT_START_YET"
-	TRBAdviceLetterStatusReadyToStart   TRBAdviceLetterStatus = "READY_TO_START"
-	TRBAdviceLetterStatusInProgress     TRBAdviceLetterStatus = "IN_PROGRESS"
-	TRBAdviceLetterStatusReadyForReview TRBAdviceLetterStatus = "READY_FOR_REVIEW"
-	TRBAdviceLetterStatusCompleted      TRBAdviceLetterStatus = "COMPLETED"
-)
-
-// TRBAdviceLetterStatusTaskList is an enum of statuses for the task list page.
-type TRBAdviceLetterStatusTaskList string
-
-// These statuses are a simplified version of the regular TRBAdviceLetterStatus enum above that are computed in the resolver.
-const (
-	TRBAdviceLetterStatusTaskListCannotStartYet TRBAdviceLetterStatusTaskList = "CANNOT_START_YET"
-	TRBAdviceLetterStatusTaskListInReview       TRBAdviceLetterStatusTaskList = "IN_REVIEW"
-	TRBAdviceLetterStatusTaskListCompleted      TRBAdviceLetterStatusTaskList = "COMPLETED"
-)
-
 // TRBAdviceLetter represents the data for a TRB advice letter
 type TRBAdviceLetter struct {
 	BaseStruct

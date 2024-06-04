@@ -68909,35 +68909,23 @@ func (ec *executionContext) marshalNTRBAdviceLetterRecommendation2ᚖgithubᚗco
 }
 
 func (ec *executionContext) unmarshalNTRBAdviceLetterStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterStatus(ctx context.Context, v interface{}) (models.TRBAdviceLetterStatus, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBAdviceLetterStatus(tmp)
+	var res models.TRBAdviceLetterStatus
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTRBAdviceLetterStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterStatus(ctx context.Context, sel ast.SelectionSet, v models.TRBAdviceLetterStatus) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalNTRBAdviceLetterStatusTaskList2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterStatusTaskList(ctx context.Context, v interface{}) (models.TRBAdviceLetterStatusTaskList, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBAdviceLetterStatusTaskList(tmp)
+	var res models.TRBAdviceLetterStatusTaskList
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTRBAdviceLetterStatusTaskList2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdviceLetterStatusTaskList(ctx context.Context, sel ast.SelectionSet, v models.TRBAdviceLetterStatusTaskList) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalNTRBAttendConsultStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAttendConsultStatus(ctx context.Context, v interface{}) (models.TRBAttendConsultStatus, error) {

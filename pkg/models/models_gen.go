@@ -2426,3 +2426,95 @@ func (e *TRBAdminNoteCategory) UnmarshalGQL(v interface{}) error {
 func (e TRBAdminNoteCategory) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
+
+// Represents the status of the TRB advice letter step
+type TRBAdviceLetterStatus string
+
+const (
+	TRBAdviceLetterStatusCannotStartYet TRBAdviceLetterStatus = "CANNOT_START_YET"
+	TRBAdviceLetterStatusReadyToStart   TRBAdviceLetterStatus = "READY_TO_START"
+	TRBAdviceLetterStatusInProgress     TRBAdviceLetterStatus = "IN_PROGRESS"
+	TRBAdviceLetterStatusReadyForReview TRBAdviceLetterStatus = "READY_FOR_REVIEW"
+	TRBAdviceLetterStatusCompleted      TRBAdviceLetterStatus = "COMPLETED"
+)
+
+var AllTRBAdviceLetterStatus = []TRBAdviceLetterStatus{
+	TRBAdviceLetterStatusCannotStartYet,
+	TRBAdviceLetterStatusReadyToStart,
+	TRBAdviceLetterStatusInProgress,
+	TRBAdviceLetterStatusReadyForReview,
+	TRBAdviceLetterStatusCompleted,
+}
+
+func (e TRBAdviceLetterStatus) IsValid() bool {
+	switch e {
+	case TRBAdviceLetterStatusCannotStartYet, TRBAdviceLetterStatusReadyToStart, TRBAdviceLetterStatusInProgress, TRBAdviceLetterStatusReadyForReview, TRBAdviceLetterStatusCompleted:
+		return true
+	}
+	return false
+}
+
+func (e TRBAdviceLetterStatus) String() string {
+	return string(e)
+}
+
+func (e *TRBAdviceLetterStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBAdviceLetterStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBAdviceLetterStatus", str)
+	}
+	return nil
+}
+
+func (e TRBAdviceLetterStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Represents the status of the TRB advice letter step
+type TRBAdviceLetterStatusTaskList string
+
+const (
+	TRBAdviceLetterStatusTaskListCannotStartYet TRBAdviceLetterStatusTaskList = "CANNOT_START_YET"
+	TRBAdviceLetterStatusTaskListInReview       TRBAdviceLetterStatusTaskList = "IN_REVIEW"
+	TRBAdviceLetterStatusTaskListCompleted      TRBAdviceLetterStatusTaskList = "COMPLETED"
+)
+
+var AllTRBAdviceLetterStatusTaskList = []TRBAdviceLetterStatusTaskList{
+	TRBAdviceLetterStatusTaskListCannotStartYet,
+	TRBAdviceLetterStatusTaskListInReview,
+	TRBAdviceLetterStatusTaskListCompleted,
+}
+
+func (e TRBAdviceLetterStatusTaskList) IsValid() bool {
+	switch e {
+	case TRBAdviceLetterStatusTaskListCannotStartYet, TRBAdviceLetterStatusTaskListInReview, TRBAdviceLetterStatusTaskListCompleted:
+		return true
+	}
+	return false
+}
+
+func (e TRBAdviceLetterStatusTaskList) String() string {
+	return string(e)
+}
+
+func (e *TRBAdviceLetterStatusTaskList) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBAdviceLetterStatusTaskList(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBAdviceLetterStatusTaskList", str)
+	}
+	return nil
+}
+
+func (e TRBAdviceLetterStatusTaskList) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
