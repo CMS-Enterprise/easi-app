@@ -68923,19 +68923,13 @@ func (ec *executionContext) marshalNTRBAdviceLetterStatusTaskList2githubᚗcom�
 }
 
 func (ec *executionContext) unmarshalNTRBAttendConsultStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAttendConsultStatus(ctx context.Context, v interface{}) (models.TRBAttendConsultStatus, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBAttendConsultStatus(tmp)
+	var res models.TRBAttendConsultStatus
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTRBAttendConsultStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAttendConsultStatus(ctx context.Context, sel ast.SelectionSet, v models.TRBAttendConsultStatus) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalNTRBCollabGroupOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOption(ctx context.Context, v interface{}) (models.TRBCollabGroupOption, error) {

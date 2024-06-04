@@ -27,17 +27,6 @@ func NewTRBRequest(createdBy string) *TRBRequest {
 
 }
 
-// TRBAttendConsultStatus represents the types of TRBAttendConsultStatus types
-type TRBAttendConsultStatus string
-
-// These are the options for TRBAttendConsultStatus
-const (
-	TRBAttendConsultStatusCannotStartYet  TRBAttendConsultStatus = "CANNOT_START_YET"
-	TRBAttendConsultStatusReadyToSchedule TRBAttendConsultStatus = "READY_TO_SCHEDULE"
-	TRBAttendConsultStatusScheduled       TRBAttendConsultStatus = "SCHEDULED"
-	TRBAttendConsultStatusCompleted       TRBAttendConsultStatus = "COMPLETED"
-)
-
 // TRBTaskStatuses contains the individual statuses for the steps of the TRB task list
 type TRBTaskStatuses struct {
 	FormStatus                 TRBFormStatus                 `json:"formStatus"`

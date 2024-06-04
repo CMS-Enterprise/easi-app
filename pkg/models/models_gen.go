@@ -2577,6 +2577,52 @@ func (e TRBAdviceLetterStatusTaskList) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Represents the status of the TRB consult attendance step
+type TRBAttendConsultStatus string
+
+const (
+	TRBAttendConsultStatusCannotStartYet  TRBAttendConsultStatus = "CANNOT_START_YET"
+	TRBAttendConsultStatusReadyToSchedule TRBAttendConsultStatus = "READY_TO_SCHEDULE"
+	TRBAttendConsultStatusScheduled       TRBAttendConsultStatus = "SCHEDULED"
+	TRBAttendConsultStatusCompleted       TRBAttendConsultStatus = "COMPLETED"
+)
+
+var AllTRBAttendConsultStatus = []TRBAttendConsultStatus{
+	TRBAttendConsultStatusCannotStartYet,
+	TRBAttendConsultStatusReadyToSchedule,
+	TRBAttendConsultStatusScheduled,
+	TRBAttendConsultStatusCompleted,
+}
+
+func (e TRBAttendConsultStatus) IsValid() bool {
+	switch e {
+	case TRBAttendConsultStatusCannotStartYet, TRBAttendConsultStatusReadyToSchedule, TRBAttendConsultStatusScheduled, TRBAttendConsultStatusCompleted:
+		return true
+	}
+	return false
+}
+
+func (e TRBAttendConsultStatus) String() string {
+	return string(e)
+}
+
+func (e *TRBAttendConsultStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBAttendConsultStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBAttendConsultStatus", str)
+	}
+	return nil
+}
+
+func (e TRBAttendConsultStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Represents an option selected for collaboration groups in the TRB request form
 type TRBCollabGroupOption string
 
