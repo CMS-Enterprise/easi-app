@@ -806,7 +806,7 @@ func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, 
 			Size:        fileStats.Size(),
 			ContentType: "application/pdf",
 		},
-		DocumentType:         models.TRBRequestDocumentCommonTypeOther,
+		DocumentType:         models.TRBDocumentCommonTypeOther,
 		OtherTypeDescription: &otherDesc,
 	}
 	document, err := resolvers.CreateTRBRequestDocument(ctx, s.store, s.s3Client, input)

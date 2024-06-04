@@ -2576,3 +2576,94 @@ func (e *TRBAdviceLetterStatusTaskList) UnmarshalGQL(v interface{}) error {
 func (e TRBAdviceLetterStatusTaskList) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
+
+// Represents the common options for document type that is attached to a
+// TRB Request
+type TRBDocumentCommonType string
+
+const (
+	TRBDocumentCommonTypeArchitectureDiagram   TRBDocumentCommonType = "ARCHITECTURE_DIAGRAM"
+	TRBDocumentCommonTypePresentationSlideDeck TRBDocumentCommonType = "PRESENTATION_SLIDE_DECK"
+	TRBDocumentCommonTypeBusinessCase          TRBDocumentCommonType = "BUSINESS_CASE"
+	TRBDocumentCommonTypeOther                 TRBDocumentCommonType = "OTHER"
+)
+
+var AllTRBDocumentCommonType = []TRBDocumentCommonType{
+	TRBDocumentCommonTypeArchitectureDiagram,
+	TRBDocumentCommonTypePresentationSlideDeck,
+	TRBDocumentCommonTypeBusinessCase,
+	TRBDocumentCommonTypeOther,
+}
+
+func (e TRBDocumentCommonType) IsValid() bool {
+	switch e {
+	case TRBDocumentCommonTypeArchitectureDiagram, TRBDocumentCommonTypePresentationSlideDeck, TRBDocumentCommonTypeBusinessCase, TRBDocumentCommonTypeOther:
+		return true
+	}
+	return false
+}
+
+func (e TRBDocumentCommonType) String() string {
+	return string(e)
+}
+
+func (e *TRBDocumentCommonType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBDocumentCommonType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBDocumentCommonType", str)
+	}
+	return nil
+}
+
+func (e TRBDocumentCommonType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Enumeration of the possible statuses of documents uploaded in the TRB workflow
+type TRBRequestDocumentStatus string
+
+const (
+	TRBRequestDocumentStatusAvailable   TRBRequestDocumentStatus = "AVAILABLE"
+	TRBRequestDocumentStatusPending     TRBRequestDocumentStatus = "PENDING"
+	TRBRequestDocumentStatusUnavailable TRBRequestDocumentStatus = "UNAVAILABLE"
+)
+
+var AllTRBRequestDocumentStatus = []TRBRequestDocumentStatus{
+	TRBRequestDocumentStatusAvailable,
+	TRBRequestDocumentStatusPending,
+	TRBRequestDocumentStatusUnavailable,
+}
+
+func (e TRBRequestDocumentStatus) IsValid() bool {
+	switch e {
+	case TRBRequestDocumentStatusAvailable, TRBRequestDocumentStatusPending, TRBRequestDocumentStatusUnavailable:
+		return true
+	}
+	return false
+}
+
+func (e TRBRequestDocumentStatus) String() string {
+	return string(e)
+}
+
+func (e *TRBRequestDocumentStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBRequestDocumentStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBRequestDocumentStatus", str)
+	}
+	return nil
+}
+
+func (e TRBRequestDocumentStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}

@@ -97,7 +97,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 		// just create the database record for the documents; don't go through the resolver so we don't need to set up file uploads
 		documentToCreate1 := &models.TRBRequestDocument{
 			TRBRequestID:       trbRequest.ID,
-			CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
+			CommonDocumentType: models.TRBDocumentCommonTypeArchitectureDiagram,
 			FileName:           "admin_note_test_1.pdf",
 			Bucket:             "bukkit",
 			S3Key:              uuid.NewString(),
@@ -111,7 +111,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 
 		documentToCreate2 := &models.TRBRequestDocument{
 			TRBRequestID:       trbRequest.ID,
-			CommonDocumentType: models.TRBRequestDocumentCommonTypeBusinessCase,
+			CommonDocumentType: models.TRBDocumentCommonTypeBusinessCase,
 			FileName:           "admin_note_test_2.pdf",
 			Bucket:             "bukkit",
 			S3Key:              uuid.NewString(),
@@ -178,7 +178,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 		// create database record for a document attached to request 2
 		documentToCreate := &models.TRBRequestDocument{
 			TRBRequestID:       trbRequestForDoc.ID,
-			CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
+			CommonDocumentType: models.TRBDocumentCommonTypeArchitectureDiagram,
 			FileName:           "create_and_get.pdf",
 			Bucket:             "bukkit",
 			S3Key:              uuid.NewString(),
@@ -398,7 +398,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 			// just create the database record for the documents; don't go through the resolver so we don't need to set up file uploads
 			documentToCreate := &models.TRBRequestDocument{
 				TRBRequestID:       trbRequest.ID,
-				CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
+				CommonDocumentType: models.TRBDocumentCommonTypeArchitectureDiagram,
 				FileName:           fmt.Sprintf("admin_note_test_%v.pdf", i),
 				Bucket:             "bukkit",
 				S3Key:              uuid.NewString(),

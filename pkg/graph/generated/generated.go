@@ -69032,19 +69032,13 @@ func (ec *executionContext) marshalNTRBConsultPrepStatus2githubᚗcomᚋcmsgov�
 }
 
 func (ec *executionContext) unmarshalNTRBDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBDocumentCommonType(ctx context.Context, v interface{}) (models.TRBDocumentCommonType, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBDocumentCommonType(tmp)
+	var res models.TRBDocumentCommonType
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTRBDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBDocumentCommonType(ctx context.Context, sel ast.SelectionSet, v models.TRBDocumentCommonType) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalNTRBFeedbackAction2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFeedbackAction(ctx context.Context, v interface{}) (models.TRBFeedbackAction, error) {
@@ -69374,19 +69368,13 @@ func (ec *executionContext) marshalNTRBRequestDocument2ᚖgithubᚗcomᚋcmsgov�
 }
 
 func (ec *executionContext) unmarshalNTRBRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestDocumentStatus(ctx context.Context, v interface{}) (models.TRBRequestDocumentStatus, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBRequestDocumentStatus(tmp)
+	var res models.TRBRequestDocumentStatus
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTRBRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestDocumentStatus(ctx context.Context, sel ast.SelectionSet, v models.TRBRequestDocumentStatus) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) marshalNTRBRequestDocumentType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestDocumentType(ctx context.Context, sel ast.SelectionSet, v models.TRBRequestDocumentType) graphql.Marshaler {

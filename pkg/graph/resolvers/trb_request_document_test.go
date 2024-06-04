@@ -19,7 +19,7 @@ func (suite *ResolverSuite) TestTRBRequestDocumentResolvers() {
 
 	documentToCreate := &models.TRBRequestDocument{
 		TRBRequestID:       trbRequestID,
-		CommonDocumentType: models.TRBRequestDocumentCommonTypeArchitectureDiagram,
+		CommonDocumentType: models.TRBDocumentCommonTypeArchitectureDiagram,
 		FileName:           "create_and_get.pdf",
 		Bucket:             "bukkit",
 		S3Key:              uuid.NewString(),
