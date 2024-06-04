@@ -1213,6 +1213,65 @@ func (e ITGovDecisionStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// The requester view of the IT gov draft business case step status
+type ITGovDraftBusinessCaseStatus string
+
+const (
+	// This step can't be started yet
+	ITGovDraftBusinessCaseStatusCantStart ITGovDraftBusinessCaseStatus = "CANT_START"
+	// This step is no longer needed
+	ITGovDraftBusinessCaseStatusNotNeeded ITGovDraftBusinessCaseStatus = "NOT_NEEDED"
+	// Ready to begin filling out
+	ITGovDraftBusinessCaseStatusReady ITGovDraftBusinessCaseStatus = "READY"
+	// The form has started to be filled out
+	ITGovDraftBusinessCaseStatusInProgress ITGovDraftBusinessCaseStatus = "IN_PROGRESS"
+	// This draft business case has edits requested
+	ITGovDraftBusinessCaseStatusEditsRequested ITGovDraftBusinessCaseStatus = "EDITS_REQUESTED"
+	// The draft business case has been submitted and it is waiting for feedback from the governance team
+	ITGovDraftBusinessCaseStatusSubmitted ITGovDraftBusinessCaseStatus = "SUBMITTED"
+	// The draft business case has been completed and the intake is on a further step
+	ITGovDraftBusinessCaseStatusDone ITGovDraftBusinessCaseStatus = "DONE"
+)
+
+var AllITGovDraftBusinessCaseStatus = []ITGovDraftBusinessCaseStatus{
+	ITGovDraftBusinessCaseStatusCantStart,
+	ITGovDraftBusinessCaseStatusNotNeeded,
+	ITGovDraftBusinessCaseStatusReady,
+	ITGovDraftBusinessCaseStatusInProgress,
+	ITGovDraftBusinessCaseStatusEditsRequested,
+	ITGovDraftBusinessCaseStatusSubmitted,
+	ITGovDraftBusinessCaseStatusDone,
+}
+
+func (e ITGovDraftBusinessCaseStatus) IsValid() bool {
+	switch e {
+	case ITGovDraftBusinessCaseStatusCantStart, ITGovDraftBusinessCaseStatusNotNeeded, ITGovDraftBusinessCaseStatusReady, ITGovDraftBusinessCaseStatusInProgress, ITGovDraftBusinessCaseStatusEditsRequested, ITGovDraftBusinessCaseStatusSubmitted, ITGovDraftBusinessCaseStatusDone:
+		return true
+	}
+	return false
+}
+
+func (e ITGovDraftBusinessCaseStatus) String() string {
+	return string(e)
+}
+
+func (e *ITGovDraftBusinessCaseStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ITGovDraftBusinessCaseStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ITGovDraftBusinessCaseStatus", str)
+	}
+	return nil
+}
+
+func (e ITGovDraftBusinessCaseStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // The requester view of the IT gov feedback step status
 type ITGovFeedbackStatus string
 

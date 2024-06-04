@@ -417,7 +417,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGDBCSCantStart,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -443,7 +443,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGDBCSReady,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusReady,
 			expectError:    false,
 		},
 		{
@@ -452,7 +452,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGDBCSInProgress,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusInProgress,
 			expectError:    false,
 		},
 		{
@@ -461,7 +461,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGDBCSSubmitted,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusSubmitted,
 			expectError:    false,
 		},
 		{
@@ -470,7 +470,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGDBCSEditsRequested,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusEditsRequested,
 			expectError:    false,
 		},
 		{
@@ -515,7 +515,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDECISION,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGDBCSNotNeeded,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusNotNeeded,
 			expectError:    false,
 		},
 		{
@@ -524,7 +524,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRTMEETING,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGDBCSNotNeeded,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusNotNeeded,
 			expectError:    false,
 		},
 		{
@@ -533,7 +533,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRBMEETING,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGDBCSNotNeeded,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusNotNeeded,
 			expectError:    false,
 		},
 		{
@@ -542,7 +542,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGDBCSNotNeeded,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusNotNeeded,
 			expectError:    false,
 		},
 		{
@@ -551,7 +551,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDECISION,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGDBCSDone,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -560,7 +560,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRTMEETING,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGDBCSDone,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -569,7 +569,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRBMEETING,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGDBCSDone,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -578,7 +578,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGDBCSDone,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -587,7 +587,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDECISION,
 				DraftBusinessCaseState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGDBCSDone,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -596,7 +596,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRTMEETING,
 				DraftBusinessCaseState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGDBCSDone,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -605,7 +605,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRBMEETING,
 				DraftBusinessCaseState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGDBCSDone,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -614,7 +614,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				DraftBusinessCaseState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGDBCSDone,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -623,7 +623,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDECISION,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGDBCSDone,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -632,7 +632,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRTMEETING,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGDBCSDone,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -641,7 +641,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRBMEETING,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGDBCSDone,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -650,7 +650,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGDBCSDone,
+			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
 			expectError:    false,
 		},
 	}

@@ -57,17 +57,17 @@ func FeedbackFromInitialReviewStatus(intake *models.SystemIntake) (models.ITGovF
 func BizCaseDraftStatus(intake *models.SystemIntake) (models.ITGovDraftBusinessCaseStatus, error) {
 	switch intake.Step {
 	case models.SystemIntakeStepINITIALFORM: //This is before the draft business case, always show can't start for clarity
-		return models.ITGDBCSCantStart, nil
+		return models.ITGovDraftBusinessCaseStatusCantStart, nil
 	case models.SystemIntakeStepDRAFTBIZCASE:
 		switch intake.DraftBusinessCaseState { // The business case status depends on the state if in the draft business case step.
 		case models.SIRFSSubmitted:
-			return models.ITGDBCSSubmitted, nil
+			return models.ITGovDraftBusinessCaseStatusSubmitted, nil
 		case models.SIRFSNotStarted:
-			return models.ITGDBCSReady, nil
+			return models.ITGovDraftBusinessCaseStatusReady, nil
 		case models.SIRFSInProgress:
-			return models.ITGDBCSInProgress, nil
+			return models.ITGovDraftBusinessCaseStatusInProgress, nil
 		case models.SIRFSEditsRequested:
-			return models.ITGDBCSEditsRequested, nil
+			return models.ITGovDraftBusinessCaseStatusEditsRequested, nil
 		default:
 			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its draft business case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
 		}
@@ -76,9 +76,9 @@ func BizCaseDraftStatus(intake *models.SystemIntake) (models.ITGovDraftBusinessC
 
 		switch intake.DraftBusinessCaseState {
 		case models.SIRFSSubmitted, models.SIRFSInProgress, models.SIRFSEditsRequested: // If the draft business case had any progress made on it, and then the step advances, the case is considered complete.
-			return models.ITGDBCSDone, nil
+			return models.ITGovDraftBusinessCaseStatusDone, nil
 		case models.SIRFSNotStarted: // If in a more advanced step, and nothing has been completed, the draft business case is not needed.
-			return models.ITGDBCSNotNeeded, nil
+			return models.ITGovDraftBusinessCaseStatusNotNeeded, nil
 		default:
 			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its draft business case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
 		}
