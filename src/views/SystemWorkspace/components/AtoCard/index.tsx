@@ -1,21 +1,10 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Grid,
-  IconLaunch,
-  Link
-} from '@trussworks/react-uswds';
+import { Button, ButtonGroup, IconLaunch, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import Modal from 'components/Modal';
 import AtoStatusTag from 'components/shared/AtoStatusTag';
-import Divider from 'components/shared/Divider';
 import { ATO_LEARN_MORE, CFACTS } from 'constants/externalUrls';
 import { GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate } from 'queries/types/GetSystemProfile';
 import { GetSystemWorkspace_cedarSystemDetails_roles as CedarRole } from 'queries/types/GetSystemWorkspace';
@@ -23,6 +12,8 @@ import { AtoStatus } from 'types/systemProfile';
 import { formatDateUtc } from 'utils/date';
 import showVal from 'utils/showVal';
 import { getPersonFullName } from 'views/SystemProfile/helpers';
+
+import SpacesCard from '../SpacesCard';
 
 type Props = {
   status: AtoStatus;
@@ -45,23 +36,11 @@ function AtoCard({
 
   return (
     <>
-      <Grid
-        tablet={{ col: 12 }}
-        desktop={{ col: 6 }}
-        className="display-flex flex-align-stretch"
-      >
-        <Card
-          className={classnames(
-            className,
-            'radius-sm width-full workspaces__card'
-          )}
-        >
-          <CardHeader className="text-bold padding-0 line-height-serif-2 margin-bottom-1 text-body-lg">
-            {t('spaces.ato.header')}
-          </CardHeader>
-
-          <CardBody className="padding-0 flex-1 workspaces__fill-card-space">
-            <p className="text-base margin-o">{t('spaces.ato.description')}</p>
+      <SpacesCard
+        header={t('spaces.ato.header')}
+        description={t('spaces.ato.description')}
+        body={
+          <>
             <div className="display-flex">
               <AtoStatusTag
                 status={status}
@@ -82,11 +61,10 @@ function AtoCard({
                 defaultVal: t('spaces.ato.noIsso')
               })}
             </p>
-          </CardBody>
-
-          <Divider className="margin-y-2" />
-
-          <CardFooter className="padding-0 margin-bottom-05 display-flex">
+          </>
+        }
+        footer={
+          <div className="display-flex">
             <Link
               className={classnames('usa-button', {
                 'usa-button--disabled': !isso?.assigneeEmail
@@ -113,9 +91,9 @@ function AtoCard({
               {t('spaces.ato.learn')}
               <IconLaunch className="margin-left-1" />
             </Link>
-          </CardFooter>
-        </Card>
-      </Grid>
+          </div>
+        }
+      />
 
       {/* Leaving easi modal */}
       <Modal
