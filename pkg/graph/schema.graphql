@@ -180,8 +180,8 @@ type CedarSystem {
   systemMaintainerOrgComp: String
   versionId: String
   isBookmarked: Boolean!
-  linkedTrbRequests: [TRBRequest!]!
-  linkedSystemIntakes: [SystemIntake!]! 
+  linkedTrbRequests(state: TRBRequestState! = OPEN): [TRBRequest!]!
+  linkedSystemIntakes(state: SystemIntakeState! = OPEN): [SystemIntake!]!
   uuid: String
 }
 
@@ -733,6 +733,7 @@ type SystemIntake {
   governanceRequestFeedbacks: [GovernanceRequestFeedback!]!
   governanceTeams: SystemIntakeGovernanceTeam!
   grbDate: Time
+  grbReviewers: [SystemIntakeGRBReviewer!]!
   grtDate: Time
   id: UUID!
   isso: SystemIntakeISSO!
@@ -1120,6 +1121,42 @@ The contact who is associated with an action being done to a system request
 type SystemIntakeActionActor {
   name: String!
   email: String!
+}
+
+"""
+GRB Reviewers for a system intake request
+"""
+type SystemIntakeGRBReviewer {
+  id: UUID!
+  userAccount: UserAccount!
+  systemIntakeID: UUID!
+  votingRole: SystemIntakeGRBReviewerVotingRole!
+  grbRole: SystemIntakeGRBReviewerRole!
+  createdBy: UUID!
+  createdAt: Time!
+  modifiedBy: UUID
+  modifiedAt: Time
+}
+
+enum SystemIntakeGRBReviewerVotingRole {
+  CO_CHAIR_CIO
+  CO_CHAIR_CFO
+  CO_CHAIR_HCA
+  ACA_3021_REP
+  CCIIO_REP
+  PROGRAM_OPERATIONS_BDG_CHAIR
+  CMCS_REP
+  FED_ADMIN_BDG_CHAIR
+  PROGRAM_INTEGRITY_BDG_CHAIR
+  QIO_REP
+  SUBJECT_MATTER_EXPERT
+  OTHER
+}
+
+enum SystemIntakeGRBReviewerRole {
+  VOTING
+  ALTERNATE
+  NON_VOTING
 }
 
 """

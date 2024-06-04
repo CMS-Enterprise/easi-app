@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -8,6 +9,9 @@ import (
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
+
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
 // Store performs database operations for EASi
@@ -95,4 +99,37 @@ func NewStore(
 		easternTZ: tz,
 		ldClient:  ldClient,
 	}, nil
+}
+
+// args is a shortcut for passing an args map to a named statement
+/* ex: instead of
+
+map[string]interface{}{
+  "system_id": 1,
+  "state": OPEN
+}
+
+you can do
+
+args{
+  "system_id": 1,
+  "state": OPEN
+}
+*/
+type args map[string]any
+
+// selectNamed is a shortcut for using `sqlx` Select (SelectContext) with named arguments to prevent writing out the prepare step each time
+func selectNamed(ctx context.Context, np sqlutils.NamedPreparer, dest interface{}, sqlStatement string, arg args) error {
+	if ctx == nil {
+		ctx = context.TODO()
+		appcontext.ZLogger(ctx).Debug("nil ctx passed to selectNamed")
+	}
+
+	stmt, err := np.PrepareNamed(sqlStatement)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	return stmt.SelectContext(ctx, dest, arg)
 }

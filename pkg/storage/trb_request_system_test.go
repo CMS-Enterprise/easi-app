@@ -142,7 +142,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 		system4 = "4"
 	)
 
-	s.Run("test getting open TRB requests by cedar system id", func() {
+	s.Run("test getting TRB requests by cedar system id", func() {
 		// create trb requests
 		trb1 := models.TRBRequest{
 			Type:  models.TRBTBrainstorm,
@@ -205,7 +205,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 		})
 		s.NoError(err)
 
-		results, err := s.store.TRBRequestsByCedarSystemID(ctx, system1)
+		results, err := s.store.TRBRequestsByCedarSystemID(ctx, system1, models.TRBRequestStateOpen)
 		s.NoError(err)
 		s.Len(results, 2)
 
@@ -219,5 +219,11 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 		}
 
 		s.False(foundClosed)
+
+		// now find the closed one
+		results, err = s.store.TRBRequestsByCedarSystemID(ctx, system1, models.TRBRequestStateClosed)
+		s.NoError(err)
+		s.Len(results, 1)
+		s.Equal(results[0].ID, closed)
 	})
 }

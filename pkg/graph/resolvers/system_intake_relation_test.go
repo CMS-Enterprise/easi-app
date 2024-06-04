@@ -7,7 +7,6 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
@@ -63,7 +62,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 	for caseName, caseValues := range contractNumberCases {
 		suite.Run(caseName, func() {
 			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
-				State:        models.SystemIntakeStateOPEN,
+				State:        models.SystemIntakeStateOpen,
 				RequestType:  models.SystemIntakeRequestTypeNEW,
 				SubmittedAt:  &submittedAt,
 				ContractName: zero.StringFrom("My Test Contract Name"),
@@ -93,7 +92,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
 			// Set the "new system" relationship
-			input := &model.SetSystemIntakeRelationNewSystemInput{
+			input := &models.SetSystemIntakeRelationNewSystemInput{
 				SystemIntakeID:  openIntake.ID,
 				ContractNumbers: caseValues.NewContractNumbers,
 			}
@@ -177,7 +176,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 	for caseName, caseValues := range cases {
 		suite.Run(caseName, func() {
 			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
-				State:        models.SystemIntakeStateOPEN,
+				State:        models.SystemIntakeStateOpen,
 				RequestType:  models.SystemIntakeRequestTypeNEW,
 				SubmittedAt:  &submittedAt,
 				ContractName: zero.StringFrom("My Test Contract Name"),
@@ -206,7 +205,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
 			// Set the "existing system" relationship
-			input := &model.SetSystemIntakeRelationExistingSystemInput{
+			input := &models.SetSystemIntakeRelationExistingSystemInput{
 				SystemIntakeID:  openIntake.ID,
 				CedarSystemIDs:  caseValues.NewSystemIDs,
 				ContractNumbers: caseValues.NewContractNumbers,
@@ -298,7 +297,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 	for caseName, caseValues := range cases {
 		suite.Run(caseName, func() {
 			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
-				State:        models.SystemIntakeStateOPEN,
+				State:        models.SystemIntakeStateOpen,
 				RequestType:  models.SystemIntakeRequestTypeNEW,
 				SubmittedAt:  &submittedAt,
 				ContractName: zero.StringFrom("My Test Contract Name"),
@@ -330,7 +329,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 
 			// Set the existing service relationship
 			newContractName := "My New Contract Name"
-			input := &model.SetSystemIntakeRelationExistingServiceInput{
+			input := &models.SetSystemIntakeRelationExistingServiceInput{
 				SystemIntakeID:  openIntake.ID,
 				ContractName:    newContractName,
 				ContractNumbers: caseValues.NewContractNumbers,
@@ -380,7 +379,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 	suite.Run("unlink new system intake", func() {
 		// Create an inital intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
-			State:        models.SystemIntakeStateOPEN,
+			State:        models.SystemIntakeStateOpen,
 			RequestType:  models.SystemIntakeRequestTypeNEW,
 			SubmittedAt:  &submittedAt,
 			ContractName: zero.StringFrom("My Test Contract Name"),
@@ -389,7 +388,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.NotNil(openIntake)
 
 		// Set the new system relationship
-		input := &model.SetSystemIntakeRelationNewSystemInput{
+		input := &models.SetSystemIntakeRelationNewSystemInput{
 			SystemIntakeID:  openIntake.ID,
 			ContractNumbers: []string{"12345", "67890"},
 		}
@@ -419,7 +418,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 	suite.Run("unlink existing system intake", func() {
 		// Create an inital intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
-			State:        models.SystemIntakeStateOPEN,
+			State:        models.SystemIntakeStateOpen,
 			RequestType:  models.SystemIntakeRequestTypeNEW,
 			SubmittedAt:  &submittedAt,
 			ContractName: zero.StringFrom("My Test Contract Name"),
@@ -428,7 +427,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		suite.NotNil(openIntake)
 
 		// Set the existing system relationship
-		input := &model.SetSystemIntakeRelationExistingSystemInput{
+		input := &models.SetSystemIntakeRelationExistingSystemInput{
 			SystemIntakeID:  openIntake.ID,
 			CedarSystemIDs:  []string{"abcde", "fghijk"},
 			ContractNumbers: []string{"12345", "67890"},
@@ -466,7 +465,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 	suite.Run("unlink existing service intake", func() {
 		// Create an inital intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
-			State:       models.SystemIntakeStateOPEN,
+			State:       models.SystemIntakeStateOpen,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			SubmittedAt: &submittedAt,
 		})
@@ -475,7 +474,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 
 		// Set the existing service relationship
 		contractName := "My Test Contract Name"
-		input := &model.SetSystemIntakeRelationExistingServiceInput{
+		input := &models.SetSystemIntakeRelationExistingServiceInput{
 			SystemIntakeID:  openIntake.ID,
 			ContractName:    contractName,
 			ContractNumbers: []string{"12345", "67890"},

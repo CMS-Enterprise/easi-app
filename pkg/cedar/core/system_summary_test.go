@@ -33,15 +33,15 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 		s.NoError(err)
 
 		// ensure mock data is returned
-		s.Equal(len(cedarcoremock.GetSystems()), len(resp))
-		for _, v := range cedarcoremock.GetSystems() {
+		s.Equal(len(cedarcoremock.GetActiveSystems()), len(resp))
+		for _, v := range cedarcoremock.GetActiveSystems() {
 			s.Contains(resp, v)
 		}
 	})
 
 	s.Run("Retrieves filtered list when EUA filter is present", func() {
 		c := NewClient(ctx, "fake", "fake", "1.0.0", false, true)
-		resp, err := c.GetSystemSummary(ctx, WithEuaIDFilter("USR1"))
+		resp, err := c.GetSystemSummary(ctx, SystemSummaryOpts.WithEuaIDFilter("USR1"))
 		s.NoError(err)
 
 		// ensure filtered mock data is returned
@@ -53,7 +53,7 @@ func (s *SystemSummaryTestSuite) TestGetSystemSummary() {
 
 	s.Run("Retrieves filtered list when Sub-System filter is present", func() {
 		c := NewClient(ctx, "fake", "fake", "1.0.0", false, true)
-		resp, err := c.GetSystemSummary(ctx, WithSubSystems("1"))
+		resp, err := c.GetSystemSummary(ctx, SystemSummaryOpts.WithSubSystems("1"))
 		s.NoError(err)
 
 		// ensure filtered mock data is returned
@@ -72,8 +72,8 @@ func (s *SystemSummaryTestSuite) TestGetSystem() {
 		_, err := c.GetSystem(ctx, "fake")
 		s.NoError(err)
 
-		// should return mocked system when given corresponding mockKey
-		for _, v := range cedarcoremock.GetSystems() {
+		// should return mocked system when given corresponding mockKey, including inactive/deactivated systems
+		for _, v := range cedarcoremock.GetAllSystems() {
 			resp, err := c.GetSystem(ctx, v.ID.String)
 			s.NoError(err)
 			s.Equal(v, resp)

@@ -368,7 +368,7 @@ func (c *Client) SetRolesForUser(ctx context.Context, cedarSystemID string, euaU
 		return nil, err
 	}
 	// re-populate the cache for "My Systems"
-	_, err = c.GetSystemSummary(ctx, WithEuaIDFilter(euaUserID))
+	_, err = c.GetSystemSummary(ctx, SystemSummaryOpts.WithEuaIDFilter(euaUserID))
 	if err != nil {
 		appcontext.ZLogger(ctx).Warn("error refreshing my systems for user")
 	}

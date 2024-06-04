@@ -11,7 +11,6 @@ import (
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
 	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -82,7 +81,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
+		models.SystemIntakeStepToProgressToGrtMeeting,
 		&progressOptions{
 			completeOtherSteps: true,
 			meetingDate:        &pastMeetingDate,
@@ -107,7 +106,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
+		models.SystemIntakeStepToProgressToFinalBusinessCase,
 		&progressOptions{
 			completeOtherSteps: true,
 		},
@@ -125,12 +124,12 @@ func main() {
 	intakeID = uuid.MustParse("8edb237e-ad48-49b2-91cf-8534362bc6cf")
 	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened and edits requested", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
 	intake = reopenIntake(logger, store, intake)
-	requestEditsToIntakeForm(logger, store, intake, model.SystemIntakeFormStepFinalBusinessCase)
+	requestEditsToIntakeForm(logger, store, intake, models.SystemIntakeFormStepFinalBusinessCase)
 
 	intakeID = uuid.MustParse("cd795d09-6afb-4fdd-b0a2-c37716297f41")
 	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened and progressed backward", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
 	intake = reopenIntake(logger, store, intake)
-	progressIntake(logger, store, intake, model.SystemIntakeStepToProgressToDraftBusinessCase, nil)
+	progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToDraftBusinessCase, nil)
 
 	intakeID = uuid.MustParse("fec8e351-809c-4af2-bd0d-197b6b433206")
 	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
@@ -186,7 +185,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
+		models.SystemIntakeStepToProgressToGrbMeeting,
 		&progressOptions{
 			meetingDate: &pastMeetingDate,
 		},
@@ -199,7 +198,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
+		models.SystemIntakeStepToProgressToGrbMeeting,
 		&progressOptions{
 			meetingDate: &futureMeetingDate,
 		},
@@ -212,7 +211,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
+		models.SystemIntakeStepToProgressToGrbMeeting,
 		nil,
 	)
 
@@ -223,7 +222,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
+		models.SystemIntakeStepToProgressToGrbMeeting,
 		&progressOptions{
 			meetingDate:        &pastMeetingDate,
 			completeOtherSteps: true,
@@ -237,7 +236,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
+		models.SystemIntakeStepToProgressToGrbMeeting,
 		&progressOptions{
 			meetingDate:        &futureMeetingDate,
 			completeOtherSteps: true,
@@ -251,7 +250,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
+		models.SystemIntakeStepToProgressToGrbMeeting,
 		&progressOptions{
 			completeOtherSteps: true,
 		},
@@ -264,7 +263,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
+		models.SystemIntakeStepToProgressToFinalBusinessCase,
 		&progressOptions{
 			fillForm:     true,
 			submitForm:   true,
@@ -279,7 +278,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
+		models.SystemIntakeStepToProgressToFinalBusinessCase,
 		&progressOptions{
 			completeOtherSteps: true,
 			submitForm:         true,
@@ -293,7 +292,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
+		models.SystemIntakeStepToProgressToFinalBusinessCase,
 		&progressOptions{
 			completeOtherSteps: false,
 			fillForm:           true,
@@ -307,7 +306,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
+		models.SystemIntakeStepToProgressToFinalBusinessCase,
 		&progressOptions{
 			completeOtherSteps: false,
 		},
@@ -320,7 +319,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
+		models.SystemIntakeStepToProgressToFinalBusinessCase,
 		&progressOptions{
 			completeOtherSteps: true,
 			submitForm:         true,
@@ -335,7 +334,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
+		models.SystemIntakeStepToProgressToFinalBusinessCase,
 		&progressOptions{
 			completeOtherSteps: true,
 			submitForm:         true,
@@ -353,7 +352,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToFinalBusinessCase,
+		models.SystemIntakeStepToProgressToFinalBusinessCase,
 		&progressOptions{
 			completeOtherSteps: true,
 		},
@@ -366,7 +365,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
+		models.SystemIntakeStepToProgressToGrtMeeting,
 		&progressOptions{
 			completeOtherSteps: false,
 		},
@@ -379,7 +378,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
+		models.SystemIntakeStepToProgressToGrtMeeting,
 		&progressOptions{
 			meetingDate:        &pastMeetingDate,
 			completeOtherSteps: false,
@@ -393,7 +392,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
+		models.SystemIntakeStepToProgressToGrtMeeting,
 		&progressOptions{
 			meetingDate:        &futureMeetingDate,
 			completeOtherSteps: false,
@@ -407,7 +406,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
+		models.SystemIntakeStepToProgressToGrtMeeting,
 		&progressOptions{
 			meetingDate:        &pastMeetingDate,
 			completeOtherSteps: true,
@@ -421,7 +420,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
+		models.SystemIntakeStepToProgressToGrtMeeting,
 		&progressOptions{
 			meetingDate:        &futureMeetingDate,
 			completeOtherSteps: true,
@@ -435,7 +434,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
+		models.SystemIntakeStepToProgressToGrtMeeting,
 		&progressOptions{
 			completeOtherSteps: true,
 		},
@@ -448,7 +447,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToDraftBusinessCase,
+		models.SystemIntakeStepToProgressToDraftBusinessCase,
 		&progressOptions{
 			fillForm:     true,
 			submitForm:   true,
@@ -463,7 +462,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToDraftBusinessCase,
+		models.SystemIntakeStepToProgressToDraftBusinessCase,
 		&progressOptions{
 			fillForm:   true,
 			submitForm: true,
@@ -477,7 +476,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToDraftBusinessCase,
+		models.SystemIntakeStepToProgressToDraftBusinessCase,
 		&progressOptions{
 			fillForm: true,
 		},
@@ -492,7 +491,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToDraftBusinessCase,
+		models.SystemIntakeStepToProgressToDraftBusinessCase,
 		nil,
 	)
 
@@ -504,7 +503,7 @@ func main() {
 		logger,
 		store,
 	)
-	requestEditsToIntakeForm(logger, store, intake, model.SystemIntakeFormStepInitialRequestForm)
+	requestEditsToIntakeForm(logger, store, intake, models.SystemIntakeFormStepInitialRequestForm)
 
 	// Intakes with Relation data
 	// 1. Intake with no related systems/services
@@ -557,6 +556,20 @@ func main() {
 	)
 	unlinkSystemIntakeRelation(logger, store, intakeID)
 
+	// 5. Link deactivated Systems
+	intakeID = uuid.MustParse("04cb8a97-3515-4071-9b80-2710834cd94c")
+	makeSystemIntakeAndSubmit("System Intake Relation (Deactivated System)", &intakeID, requesterEUA, logger, store)
+	setSystemIntakeRelationExistingSystem(
+		logger,
+		store,
+		intakeID,
+		[]string{"12345", "67890"},
+		[]string{
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC6G}",
+		},
+	)
+
 	// initial intake form
 	intakeID = uuid.MustParse("14ecf18c-8367-402d-a48e-92e7d2853f50")
 	makeSystemIntakeAndSubmit("initial form filled and submitted", &intakeID, requesterEUA, logger, store)
@@ -581,7 +594,7 @@ func main() {
 		"E2E1",
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToDraftBusinessCase,
+		models.SystemIntakeStepToProgressToDraftBusinessCase,
 		&progressOptions{
 			fillForm: false,
 		},
@@ -632,7 +645,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToDraftBusinessCase,
+		models.SystemIntakeStepToProgressToDraftBusinessCase,
 		&progressOptions{
 			fillForm: true,
 		},
@@ -645,7 +658,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrbMeeting,
+		models.SystemIntakeStepToProgressToGrbMeeting,
 		&progressOptions{
 			meetingDate:        &futureMeetingDate,
 			completeOtherSteps: true,
@@ -659,7 +672,7 @@ func main() {
 		requesterEUA,
 		logger,
 		store,
-		model.SystemIntakeStepToProgressToGrtMeeting,
+		models.SystemIntakeStepToProgressToGrtMeeting,
 		&progressOptions{
 			meetingDate:        &futureMeetingDate,
 			completeOtherSteps: true,
