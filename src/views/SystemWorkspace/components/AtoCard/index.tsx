@@ -11,17 +11,18 @@ import {
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
+import AtoStatusTag from 'components/shared/AtoStatusTag';
 import Divider from 'components/shared/Divider';
 import { ATO_LEARN_MORE, CFACTS } from 'constants/externalUrls';
 import { GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate } from 'queries/types/GetSystemProfile';
 import { GetSystemWorkspace_cedarSystemDetails_roles as CedarRole } from 'queries/types/GetSystemWorkspace';
-import {
-  getPersonFullName,
-  showAtoExpirationDate
-} from 'views/SystemProfile/helpers';
+import { AtoStatus } from 'types/systemProfile';
+import { formatDateUtc } from 'utils/date';
+import showVal from 'utils/showVal';
+import { getPersonFullName } from 'views/SystemProfile/helpers';
 
 type Props = {
-  status: string;
+  status: AtoStatus;
   dateAuthorizationMemoExpires?: CedarAuthorityToOperate['dateAuthorizationMemoExpires'];
   isso?: CedarRole;
   className?: string;
@@ -53,14 +54,25 @@ function AtoCard({
 
         <CardBody className="padding-0 flex-1 workspaces__fill-card-space">
           <p className="text-base margin-o">{t('spaces.ato.description')}</p>
-          <div>
-            {status}{' '}
-            <span>{showAtoExpirationDate(dateAuthorizationMemoExpires)}</span>
+          <div className="display-flex">
+            <AtoStatusTag
+              status={status}
+              className="display-flex flex-align-center margin-right-1"
+            />
+            {dateAuthorizationMemoExpires && (
+              <span className="display-flex flex-align-center text-base">
+                {status === 'Expired' ? 'Expired' : 'Expires'}{' '}
+                {formatDateUtc(dateAuthorizationMemoExpires, 'MM/dd/yyyy')}
+              </span>
+            )}
           </div>
           <p>
             <strong>{t('spaces.ato.isso')}</strong>
             <br />
-            {isso ? getPersonFullName(isso) : t('spaces.ato.noIsso')}
+            {showVal(isso, {
+              format: v => getPersonFullName(v),
+              defaultVal: t('spaces.ato.noIsso')
+            })}
           </p>
         </CardBody>
 
