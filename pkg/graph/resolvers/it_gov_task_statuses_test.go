@@ -893,7 +893,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGFBCSCantStart,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -919,7 +919,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGFBCSReady,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusReady,
 			expectError:    false,
 		},
 		{
@@ -928,7 +928,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGFBCSInProgress,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusInProgress,
 			expectError:    false,
 		},
 		{
@@ -937,7 +937,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGFBCSSubmitted,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusSubmitted,
 			expectError:    false,
 		},
 		{
@@ -946,7 +946,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepFINALBIZCASE,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGFBCSEditsRequested,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusEditsRequested,
 			expectError:    false,
 		},
 		{
@@ -964,7 +964,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRTMEETING,
 				FinalBusinessCaseState: defaultTestState,
 			},
-			expectedStatus: models.ITGFBCSCantStart, // because it isn't there yet, we don't care about the invalid state
+			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart, // because it isn't there yet, we don't care about the invalid state
 			expectError:    false,
 		},
 		{
@@ -982,7 +982,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				FinalBusinessCaseState: defaultTestState,
 			},
-			expectedStatus: models.ITGFBCSCantStart, // because it isn't there yet, we don't care about the invalid state
+			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart, // because it isn't there yet, we don't care about the invalid state
 			expectError:    false,
 		},
 		{
@@ -991,7 +991,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDECISION,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGFBCSNotNeeded,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusNotNeeded,
 			expectError:    false,
 		},
 		{
@@ -1000,7 +1000,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRTMEETING,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGFBCSCantStart,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -1009,7 +1009,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRBMEETING,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGFBCSNotNeeded,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusNotNeeded,
 			expectError:    false,
 		},
 		{
@@ -1018,7 +1018,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGFBCSCantStart,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -1027,7 +1027,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDECISION,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGFBCSDone,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -1036,7 +1036,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRTMEETING,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGFBCSCantStart,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -1045,7 +1045,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRBMEETING,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGFBCSDone,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -1054,7 +1054,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGFBCSCantStart,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -1063,7 +1063,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDECISION,
 				FinalBusinessCaseState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGFBCSDone,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -1072,7 +1072,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRTMEETING,
 				FinalBusinessCaseState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGFBCSCantStart,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -1081,7 +1081,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRBMEETING,
 				FinalBusinessCaseState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGFBCSDone,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -1090,7 +1090,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				FinalBusinessCaseState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGFBCSCantStart,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -1099,7 +1099,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDECISION,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGFBCSDone,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -1108,7 +1108,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRTMEETING,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGFBCSCantStart,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -1117,7 +1117,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepGRBMEETING,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGFBCSDone,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusDone,
 			expectError:    false,
 		},
 		{
@@ -1126,7 +1126,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGFBCSCantStart,
+			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
 			expectError:    false,
 		},
 	}
