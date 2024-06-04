@@ -27,18 +27,6 @@ func NewTRBRequest(createdBy string) *TRBRequest {
 
 }
 
-// TRBRequestType represents the types of TRBRequestType types
-type TRBRequestType string
-
-// These are the options for TRBRequestType
-const (
-	TRBTNeedHelp     TRBRequestType = "NEED_HELP"
-	TRBTBrainstorm   TRBRequestType = "BRAINSTORM"
-	TRBTFollowup     TRBRequestType = "FOLLOWUP"
-	TRBTFormalReview TRBRequestType = "FORMAL_REVIEW"
-	TRBTOther        TRBRequestType = "OTHER"
-)
-
 // TRBRequestState represents the types of TRBRequestState types
 type TRBRequestState string
 

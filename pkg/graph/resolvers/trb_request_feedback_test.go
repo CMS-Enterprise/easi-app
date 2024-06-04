@@ -64,9 +64,9 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 
 	store := s.testConfigs.Store
 	trbRequest := models.NewTRBRequest(anonEua)
-	trbRequest.Type = models.TRBTNeedHelp
+	trbRequest.Type = models.TRBRequestTypeNeedHelp
 	trbRequest.State = models.TRBRequestStateOpen
-	trbRequest, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
+	trbRequest, err = CreateTRBRequest(s.testConfigs.Context, models.TRBRequestTypeBrainstorm, store)
 	s.NoError(err)
 
 	form, err := GetTRBRequestFormByTRBRequestID(ctx, store, trbRequest.ID)

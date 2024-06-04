@@ -15,7 +15,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteGeneralRequest() {
 
 	s.Run("Creating Admin Note with General Request category works", func() {
 		// set up request
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequest)
 
@@ -47,7 +47,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteInitialRequestForm() {
 
 	s.Run("Creating Admin Note with Initial Request Form category works", func() {
 		// set up request
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequest)
 
@@ -90,7 +90,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 
 	s.Run("Creating Supporting Documents Admin Note referencing documents attached to the same TRB request works", func() {
 		// set up request and two documents
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequest)
 
@@ -166,12 +166,12 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteSupportingDocuments() {
 
 	s.Run("Creating Admin Note referencing supporting documents attached to a *different* TRB request fails and does *not* create an admin note", func() {
 		// create request 1 - admin note will be attached to this
-		trbRequestForNote, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		trbRequestForNote, err := CreateTRBRequest(ctx, models.TRBRequestTypeFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequestForNote)
 
 		// create request 2 - document will be attached to this
-		trbRequestForDoc, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		trbRequestForDoc, err := CreateTRBRequest(ctx, models.TRBRequestTypeFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequestForDoc)
 
@@ -215,7 +215,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteConsultSession() {
 
 	s.Run("Creating Admin Note with General Request category works", func() {
 		// set up request
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequest)
 
@@ -248,7 +248,7 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 
 	s.Run("Creating Advice Letter Admin Note referencing recommendations attached to the same TRB request works", func() {
 		// set up request
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequest)
 
@@ -331,12 +331,12 @@ func (s *ResolverSuite) TestCreateTRBAdminNoteAdviceLetter() {
 
 	s.Run("Creating Admin Note referencing advice letter recommendations attached to a *different* TRB request fails", func() {
 		// create request 1 - admin note will be attached to this
-		trbRequestForNote, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		trbRequestForNote, err := CreateTRBRequest(ctx, models.TRBRequestTypeFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequestForNote)
 
 		// create request 2 - advice letter and recommendation will be attached to this
-		trbRequestForRecommendation, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		trbRequestForRecommendation, err := CreateTRBRequest(ctx, models.TRBRequestTypeFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequestForRecommendation)
 
@@ -386,7 +386,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 
 	s.Run("Supporting Documents notes return related documents for the note's category-specific data", func() {
 		// set up request
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequest)
 
@@ -456,7 +456,7 @@ func (s *ResolverSuite) TestGetTRBAdminNoteCategorySpecificData() {
 		// don't need to test AppliesToMeetingSummary/AppliesToNextSteps fields - code is trivial, just accessing fields on the note model
 
 		// set up request
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTFormalReview, store)
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeFormalReview, store)
 		s.NoError(err)
 		s.NotNil(trbRequest)
 

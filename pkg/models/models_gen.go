@@ -2804,6 +2804,53 @@ func (e TRBRequestDocumentStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+type TRBRequestType string
+
+const (
+	TRBRequestTypeNeedHelp     TRBRequestType = "NEED_HELP"
+	TRBRequestTypeBrainstorm   TRBRequestType = "BRAINSTORM"
+	TRBRequestTypeFollowup     TRBRequestType = "FOLLOWUP"
+	TRBRequestTypeFormalReview TRBRequestType = "FORMAL_REVIEW"
+	TRBRequestTypeOther        TRBRequestType = "OTHER"
+)
+
+var AllTRBRequestType = []TRBRequestType{
+	TRBRequestTypeNeedHelp,
+	TRBRequestTypeBrainstorm,
+	TRBRequestTypeFollowup,
+	TRBRequestTypeFormalReview,
+	TRBRequestTypeOther,
+}
+
+func (e TRBRequestType) IsValid() bool {
+	switch e {
+	case TRBRequestTypeNeedHelp, TRBRequestTypeBrainstorm, TRBRequestTypeFollowup, TRBRequestTypeFormalReview, TRBRequestTypeOther:
+		return true
+	}
+	return false
+}
+
+func (e TRBRequestType) String() string {
+	return string(e)
+}
+
+func (e *TRBRequestType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBRequestType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBRequestType", str)
+	}
+	return nil
+}
+
+func (e TRBRequestType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // The possible options on the TRB "Subject Areas" page
 type TRBSubjectAreaOption string
 

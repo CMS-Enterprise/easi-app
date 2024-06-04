@@ -15,9 +15,9 @@ func (s *ResolverSuite) TestModifyTRBFundingSources() {
 	anonEua := "ANON"
 
 	trbRequest := models.NewTRBRequest(anonEua)
-	trbRequest.Type = models.TRBTNeedHelp
+	trbRequest.Type = models.TRBRequestTypeNeedHelp
 	trbRequest.State = models.TRBRequestStateOpen
-	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBRequestTypeBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 
 	s.Run("create/fetch/update/delete TRB request form funding sources", func() {

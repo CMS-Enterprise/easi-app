@@ -64,9 +64,9 @@ func (s *ResolverSuite) TestTRBRequestStatus() {
 	}
 
 	trb := models.NewTRBRequest(anonEua)
-	trb.Type = models.TRBTNeedHelp
+	trb.Type = models.TRBRequestTypeNeedHelp
 	trb.State = models.TRBRequestStateOpen
-	trb, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err = CreateTRBRequest(s.testConfigs.Context, models.TRBRequestTypeBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 
 	s.Run("status is correctly calculated as TRB tasks are performed", func() {

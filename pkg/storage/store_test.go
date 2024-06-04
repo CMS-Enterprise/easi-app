@@ -81,7 +81,7 @@ func createTRBRequest(ctx context.Context, s *StoreTestSuite, createdBy string) 
 	// resolvers.CreateTRBRequest(ctx,models.TRBTNeedHelp, s.store)
 
 	trbRequest := models.NewTRBRequest(createdBy)
-	trbRequest.Type = models.TRBTNeedHelp
+	trbRequest.Type = models.TRBRequestTypeNeedHelp
 	trbRequest.State = models.TRBRequestStateOpen
 	createdRequest, err := s.store.CreateTRBRequest(ctx, s.store, trbRequest)
 	s.NoError(err)

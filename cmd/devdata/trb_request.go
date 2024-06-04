@@ -49,7 +49,7 @@ func (s *seederConfig) seedTRBRequests(ctx context.Context) error {
 }
 
 func (s *seederConfig) seedTRBCase1(ctx context.Context) error {
-	_, err := s.addTRBRequest(ctx, models.TRBTNeedHelp, null.StringFrom("Case 1 - Draft request form").Ptr())
+	_, err := s.addTRBRequest(ctx, models.TRBRequestTypeNeedHelp, null.StringFrom("Case 1 - Draft request form").Ptr())
 	if err != nil {
 		return err
 	}
@@ -502,7 +502,7 @@ func (s *seederConfig) seedTRBLeadOptions(ctx context.Context) ([]*models.UserIn
 }
 
 func (s *seederConfig) seedTRBWithForm(ctx context.Context, trbName *string, isSubmitted bool) (*models.TRBRequest, error) {
-	trb, err := s.addTRBRequest(ctx, models.TRBTNeedHelp, trbName)
+	trb, err := s.addTRBRequest(ctx, models.TRBRequestTypeNeedHelp, trbName)
 	if err != nil {
 		return nil, err
 	}

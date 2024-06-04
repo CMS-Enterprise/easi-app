@@ -63,7 +63,7 @@ func sendTRBEmails(ctx context.Context, client *email.Client) {
 		email.SendTRBAdviceLetterSubmittedEmailInput{
 			TRBRequestID:   requestID,
 			RequestName:    requestName,
-			RequestType:    string(models.TRBTBrainstorm),
+			RequestType:    string(models.TRBRequestTypeBrainstorm),
 			RequesterName:  requesterName,
 			Component:      component,
 			SubmissionDate: &submissionDate,

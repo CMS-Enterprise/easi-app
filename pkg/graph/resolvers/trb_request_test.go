@@ -15,7 +15,7 @@ import (
 // TestCreateTRBRequest makes a new TRB request
 func (s *ResolverSuite) TestCreateTRBRequest() {
 	//TODO get the context in the test configs
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBRequestTypeBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 
@@ -31,7 +31,7 @@ func (s *ResolverSuite) TestCreateTRBRequest() {
 
 // TestUpdateTRBRequest updates a TRB request
 func (s *ResolverSuite) TestUpdateTRBRequest() {
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBRequestTypeBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 
@@ -54,7 +54,7 @@ func (s *ResolverSuite) TestUpdateTRBRequest() {
 
 // TestGetTRBRequestByID returns a TRB request by it's ID
 func (s *ResolverSuite) TestGetTRBRequestByID() {
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBRequestTypeBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 
@@ -76,7 +76,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
 
 	// Create a TRB request with TEST
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBRequestTypeBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 
@@ -87,7 +87,7 @@ func (s *ResolverSuite) TestGetTRBRequests() {
 	s.EqualValues(trb, col[0])
 
 	// Create a TRB request under ABCD
-	trb2, err := CreateTRBRequest(ctxABCD, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb2, err := CreateTRBRequest(ctxABCD, models.TRBRequestTypeBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb2)
 	//Check for 2 request
@@ -124,7 +124,7 @@ func (s *ResolverSuite) TestGetMyTRBRequests() {
 	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
 
 	// Create a TRB request with TEST
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBRequestTypeBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 
@@ -140,7 +140,7 @@ func (s *ResolverSuite) TestGetMyTRBRequests() {
 	s.Len(col, 0)
 
 	// Create a TRB request under ABCD
-	trb2, err := CreateTRBRequest(ctxABCD, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb2, err := CreateTRBRequest(ctxABCD, models.TRBRequestTypeBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb2)
 
@@ -179,7 +179,7 @@ func (s *ResolverSuite) TestGetMyTRBRequests() {
 
 // TestUpdateTRBRequestConsultMeetingTime tests the scheduling of consult meeting
 func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBRequestTypeBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 
@@ -225,7 +225,7 @@ func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
 
 // TestUpdateTRBRequestTRBLead tests the scheduling of consult meeting
 func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
-	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBRequestTypeBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 	s.NotNil(trb)
 

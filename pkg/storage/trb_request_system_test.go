@@ -30,7 +30,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 		err := sqlutils.WithTransaction(ctx, s.db, func(tx *sqlx.Tx) error {
 			for i := 0; i < 3; i++ {
 				trbRequest := models.NewTRBRequest(testhelpers.RandomEUAIDNull().String)
-				trbRequest.Type = models.TRBTBrainstorm
+				trbRequest.Type = models.TRBRequestTypeBrainstorm
 				trbRequest.State = models.TRBRequestStateOpen
 				created, err := s.store.CreateTRBRequest(ctx, tx, trbRequest)
 				s.NoError(err)
@@ -145,7 +145,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 	s.Run("test getting TRB requests by cedar system id", func() {
 		// create trb requests
 		trb1 := models.TRBRequest{
-			Type:  models.TRBTBrainstorm,
+			Type:  models.TRBRequestTypeBrainstorm,
 			State: models.TRBRequestStateOpen,
 		}
 		trb1.CreatedBy = testhelpers.RandomEUAIDNull().String
@@ -157,7 +157,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 		open1 = create1.ID
 
 		trb2 := models.TRBRequest{
-			Type:  models.TRBTBrainstorm,
+			Type:  models.TRBRequestTypeBrainstorm,
 			State: models.TRBRequestStateOpen,
 		}
 
@@ -170,7 +170,7 @@ func (s *StoreTestSuite) TestTRBRequestsByCedarSystemID() {
 		open2 = create2.ID
 
 		trb3 := models.TRBRequest{
-			Type:  models.TRBTBrainstorm,
+			Type:  models.TRBRequestTypeBrainstorm,
 			State: models.TRBRequestStateClosed,
 		}
 

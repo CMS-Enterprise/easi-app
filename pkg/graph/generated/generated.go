@@ -69478,19 +69478,13 @@ func (ec *executionContext) marshalNTRBRequestStatus2githubᚗcomᚋcmsgovᚋeas
 }
 
 func (ec *executionContext) unmarshalNTRBRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestType(ctx context.Context, v interface{}) (models.TRBRequestType, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBRequestType(tmp)
+	var res models.TRBRequestType
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTRBRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestType(ctx context.Context, sel ast.SelectionSet, v models.TRBRequestType) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalNTRBSubjectAreaOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBSubjectAreaOption(ctx context.Context, v interface{}) (models.TRBSubjectAreaOption, error) {
@@ -70926,17 +70920,16 @@ func (ec *executionContext) unmarshalOTRBRequestType2ᚖgithubᚗcomᚋcmsgovᚋ
 	if v == nil {
 		return nil, nil
 	}
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBRequestType(tmp)
-	return &res, graphql.ErrorOnPath(ctx, err)
+	var res = new(models.TRBRequestType)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOTRBRequestType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBRequestType(ctx context.Context, sel ast.SelectionSet, v *models.TRBRequestType) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalString(string(*v))
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalOTRBSubjectAreaOption2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBSubjectAreaOptionᚄ(ctx context.Context, v interface{}) ([]models.TRBSubjectAreaOption, error) {

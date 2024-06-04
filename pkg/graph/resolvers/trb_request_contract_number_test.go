@@ -21,7 +21,7 @@ func (s *ResolverSuite) TestTRBRequestContractNumbers() {
 
 	s.Run("create TRB Requests for test", func() {
 		for i := 0; i < 2; i++ {
-			created, err := CreateTRBRequest(ctx, models.TRBTBrainstorm, s.testConfigs.Store)
+			created, err := CreateTRBRequest(ctx, models.TRBRequestTypeBrainstorm, s.testConfigs.Store)
 			s.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
 		}

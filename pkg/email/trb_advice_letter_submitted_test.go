@@ -117,7 +117,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		requestType := models.TRBTNeedHelp
+		requestType := models.TRBRequestTypeNeedHelp
 		input := SendTRBAdviceLetterSubmittedEmailInput{
 			TRBRequestID:   trbID,
 			RequestName:    "Test TRB Request",
@@ -149,7 +149,7 @@ func (s *EmailTestSuite) TestTRBAdviceLetterSubmittedEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		requestType := models.TRBTNeedHelp
+		requestType := models.TRBRequestTypeNeedHelp
 		input := SendTRBAdviceLetterSubmittedEmailInput{
 			TRBRequestID:   trbID,
 			RequestName:    "Test TRB Request",

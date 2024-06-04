@@ -59,7 +59,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 
 	for caseName, caseValues := range contractNumberCases {
 		suite.Run(caseName, func() {
-			trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
+			trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeNeedHelp, store)
 			suite.NoError(err)
 			changes := map[string]interface{}{"contractName": zero.StringFrom("Test Name")}
 			trbRequest, err = UpdateTRBRequest(ctx, trbRequest.ID, changes, store)
@@ -167,7 +167,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 
 	for caseName, caseValues := range cases {
 		suite.Run(caseName, func() {
-			trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
+			trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeNeedHelp, store)
 			suite.NoError(err)
 			changes := map[string]interface{}{"contractName": zero.StringFrom("Test Name")}
 			trbRequest, err = UpdateTRBRequest(ctx, trbRequest.ID, changes, store)
@@ -283,7 +283,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 
 	for caseName, caseValues := range cases {
 		suite.Run(caseName, func() {
-			trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
+			trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeNeedHelp, store)
 			suite.NoError(err)
 			suite.NotEqual(trbRequest.ID, uuid.Nil)
 			suite.NotNil(trbRequest)
@@ -354,7 +354,7 @@ func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 
 	suite.Run("unlink new trb request", func() {
 		// Create an inital TRBRequest
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeNeedHelp, store)
 		suite.NoError(err)
 		suite.NotEqual(trbRequest.ID, uuid.Nil)
 		suite.NotNil(trbRequest)
@@ -388,7 +388,7 @@ func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 
 	suite.Run("unlink existing trb request", func() {
 		// Create an inital TRBRequest
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeNeedHelp, store)
 		suite.NoError(err)
 		suite.NotEqual(trbRequest.ID, uuid.Nil)
 		suite.NotNil(trbRequest)
@@ -430,7 +430,7 @@ func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 
 	suite.Run("unlink existing service TRBRequest", func() {
 		// Create an inital TRBRequest
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
+		trbRequest, err := CreateTRBRequest(ctx, models.TRBRequestTypeNeedHelp, store)
 		suite.NoError(err)
 		suite.NotEqual(trbRequest.ID, uuid.Nil)
 		suite.NotNil(trbRequest)
