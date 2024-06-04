@@ -2666,6 +2666,50 @@ func (e TRBFeedbackAction) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Represents the status of a TRB request form
+type TRBFormStatus string
+
+const (
+	TRBFormStatusReadyToStart TRBFormStatus = "READY_TO_START"
+	TRBFormStatusInProgress   TRBFormStatus = "IN_PROGRESS"
+	TRBFormStatusCompleted    TRBFormStatus = "COMPLETED"
+)
+
+var AllTRBFormStatus = []TRBFormStatus{
+	TRBFormStatusReadyToStart,
+	TRBFormStatusInProgress,
+	TRBFormStatusCompleted,
+}
+
+func (e TRBFormStatus) IsValid() bool {
+	switch e {
+	case TRBFormStatusReadyToStart, TRBFormStatusInProgress, TRBFormStatusCompleted:
+		return true
+	}
+	return false
+}
+
+func (e TRBFormStatus) String() string {
+	return string(e)
+}
+
+func (e *TRBFormStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBFormStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBFormStatus", str)
+	}
+	return nil
+}
+
+func (e TRBFormStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Enumeration of the possible statuses of documents uploaded in the TRB workflow
 type TRBRequestDocumentStatus string
 
@@ -2707,5 +2751,55 @@ func (e *TRBRequestDocumentStatus) UnmarshalGQL(v interface{}) error {
 }
 
 func (e TRBRequestDocumentStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Represents an option selected to the "where are you in the process?" TRB request form
+type TRBWhereInProcessOption string
+
+const (
+	TRBWhereInProcessOptionIHaveAnIDEaAndWantToBrainstorm       TRBWhereInProcessOption = "I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM"
+	TRBWhereInProcessOptionContractingWorkHasStarted            TRBWhereInProcessOption = "CONTRACTING_WORK_HAS_STARTED"
+	TRBWhereInProcessOptionDevelopmentHasRecentlyStarted        TRBWhereInProcessOption = "DEVELOPMENT_HAS_RECENTLY_STARTED"
+	TRBWhereInProcessOptionDevelopmentIsSignificantlyUnderway   TRBWhereInProcessOption = "DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY"
+	TRBWhereInProcessOptionTheSystemIsInOperationAndMaintenance TRBWhereInProcessOption = "THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE"
+	TRBWhereInProcessOptionOther                                TRBWhereInProcessOption = "OTHER"
+)
+
+var AllTRBWhereInProcessOption = []TRBWhereInProcessOption{
+	TRBWhereInProcessOptionIHaveAnIDEaAndWantToBrainstorm,
+	TRBWhereInProcessOptionContractingWorkHasStarted,
+	TRBWhereInProcessOptionDevelopmentHasRecentlyStarted,
+	TRBWhereInProcessOptionDevelopmentIsSignificantlyUnderway,
+	TRBWhereInProcessOptionTheSystemIsInOperationAndMaintenance,
+	TRBWhereInProcessOptionOther,
+}
+
+func (e TRBWhereInProcessOption) IsValid() bool {
+	switch e {
+	case TRBWhereInProcessOptionIHaveAnIDEaAndWantToBrainstorm, TRBWhereInProcessOptionContractingWorkHasStarted, TRBWhereInProcessOptionDevelopmentHasRecentlyStarted, TRBWhereInProcessOptionDevelopmentIsSignificantlyUnderway, TRBWhereInProcessOptionTheSystemIsInOperationAndMaintenance, TRBWhereInProcessOptionOther:
+		return true
+	}
+	return false
+}
+
+func (e TRBWhereInProcessOption) String() string {
+	return string(e)
+}
+
+func (e *TRBWhereInProcessOption) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBWhereInProcessOption(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBWhereInProcessOption", str)
+	}
+	return nil
+}
+
+func (e TRBWhereInProcessOption) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

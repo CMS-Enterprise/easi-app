@@ -69068,19 +69068,13 @@ func (ec *executionContext) marshalNTRBFeedbackStatus2githubᚗcomᚋcmsgovᚋea
 }
 
 func (ec *executionContext) unmarshalNTRBFormStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFormStatus(ctx context.Context, v interface{}) (models.TRBFormStatus, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBFormStatus(tmp)
+	var res models.TRBFormStatus
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTRBFormStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFormStatus(ctx context.Context, sel ast.SelectionSet, v models.TRBFormStatus) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) marshalNTRBFundingSource2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBFundingSourceᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.TRBFundingSource) graphql.Marshaler {
@@ -71028,17 +71022,16 @@ func (ec *executionContext) unmarshalOTRBWhereInProcessOption2ᚖgithubᚗcomᚋ
 	if v == nil {
 		return nil, nil
 	}
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBWhereInProcessOption(tmp)
-	return &res, graphql.ErrorOnPath(ctx, err)
+	var res = new(models.TRBWhereInProcessOption)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOTRBWhereInProcessOption2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBWhereInProcessOption(ctx context.Context, sel ast.SelectionSet, v *models.TRBWhereInProcessOption) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalString(string(*v))
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalOTime2githubᚗcomᚋgureguᚋnullᚋzeroᚐTime(ctx context.Context, v interface{}) (zero.Time, error) {

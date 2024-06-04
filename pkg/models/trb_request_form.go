@@ -7,32 +7,6 @@ import (
 	"github.com/lib/pq"
 )
 
-// TRBFormStatus is an enumeration of the possible statuses of a TRBRequestForm
-type TRBFormStatus string
-
-// These are the possible statuses for a TRB request form
-const (
-	TRBFormStatusReadyToStart TRBFormStatus = "READY_TO_START"
-	TRBFormStatusInProgress   TRBFormStatus = "IN_PROGRESS"
-	TRBFormStatusCompleted    TRBFormStatus = "COMPLETED"
-)
-
-// TRBWhereInProcessOption is an enumeration of possible responses to the "Where are you in
-// your process?" question on the TRB request form
-type TRBWhereInProcessOption string
-
-// These are the individual options for the response to the "Where are you in your process?"
-// question on the TRB request form
-const (
-	TRBWhereInProcessOptionIHaveAnIdeaAndWantToBrainstorm       TRBWhereInProcessOption = "I_HAVE_AN_IDEA_AND_WANT_TO_BRAINSTORM"
-	TRBWhereInProcessOptionContractingWorkHasStarted            TRBWhereInProcessOption = "CONTRACTING_WORK_HAS_STARTED"
-	TRBWhereInProcessOptionDevelopmentHasRecentlyStarted        TRBWhereInProcessOption = "DEVELOPMENT_HAS_RECENTLY_STARTED"
-	TRBWhereInProcessOptionDevelopmentIsSignificantlyUnderway   TRBWhereInProcessOption = "DEVELOPMENT_IS_SIGNIFICANTLY_UNDERWAY"
-	TRBWhereInProcessOptionTheSystemIsInOperationAndMaintenance TRBWhereInProcessOption = "THE_SYSTEM_IS_IN_OPERATION_AND_MAINTENANCE"
-	TRBWhereInProcessOptionOther                                TRBWhereInProcessOption = "OTHER"
-	TRBWhereInProcessOptionUnknown                              TRBWhereInProcessOption = "UNKNOWN"
-)
-
 // TRBCollabGroupOption is an enumeration of the possible OIT collaboration groups that can be
 // selected for a TRB request form
 type TRBCollabGroupOption string
