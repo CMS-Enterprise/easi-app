@@ -53,9 +53,9 @@ func (c *Client) GetExchangesBySystem(ctx context.Context, cedarSystemID string)
 
 		var direction models.ExchangeDirection
 		if exch.FromOwnerID == cedarSystem.VersionID.String {
-			direction = models.ExchangeDirection(models.ExchangeDirectionSender)
+			direction = models.ExchangeDirectionSender
 		} else if exch.ToOwnerID == cedarSystem.VersionID.String {
-			direction = models.ExchangeDirection(models.ExchangeDirectionReceiver)
+			direction = models.ExchangeDirectionReceiver
 		}
 
 		connectionFrequency := []zero.String{}

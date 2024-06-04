@@ -70474,14 +70474,13 @@ func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋ
 }
 
 func (ec *executionContext) unmarshalOExchangeDirection2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐExchangeDirection(ctx context.Context, v interface{}) (models.ExchangeDirection, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.ExchangeDirection(tmp)
+	var res models.ExchangeDirection
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOExchangeDirection2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐExchangeDirection(ctx context.Context, sel ast.SelectionSet, v models.ExchangeDirection) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalOFloat2float64(ctx context.Context, v interface{}) (float64, error) {

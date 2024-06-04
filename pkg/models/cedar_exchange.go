@@ -4,16 +4,6 @@ import (
 	"github.com/guregu/null/zero"
 )
 
-// ExchangeDirection indicates the direction of data flow in a CEDAR exchange
-type ExchangeDirection string
-
-const (
-	// ExchangeDirectionSender indicates that the system is the sender of data in the data exchange
-	ExchangeDirectionSender ExchangeDirection = "SENDER"
-	// ExchangeDirectionReceiver indicates that the system is the receiver of data in the data exchange
-	ExchangeDirectionReceiver ExchangeDirection = "RECEIVER"
-)
-
 // CedarExchangeTypeOfDataItem is one item of the TypeofData slice in a CedarExchange
 type CedarExchangeTypeOfDataItem struct {
 	ID   zero.String `json:"id,omitempty"`

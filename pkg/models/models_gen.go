@@ -953,6 +953,47 @@ func (e BusinessCaseStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+type ExchangeDirection string
+
+const (
+	ExchangeDirectionSender   ExchangeDirection = "SENDER"
+	ExchangeDirectionReceiver ExchangeDirection = "RECEIVER"
+)
+
+var AllExchangeDirection = []ExchangeDirection{
+	ExchangeDirectionSender,
+	ExchangeDirectionReceiver,
+}
+
+func (e ExchangeDirection) IsValid() bool {
+	switch e {
+	case ExchangeDirectionSender, ExchangeDirectionReceiver:
+		return true
+	}
+	return false
+}
+
+func (e ExchangeDirection) String() string {
+	return string(e)
+}
+
+func (e *ExchangeDirection) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ExchangeDirection(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ExchangeDirection", str)
+	}
+	return nil
+}
+
+func (e ExchangeDirection) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Indicates the type of a request being made with the EASi system
 type RequestType string
 
