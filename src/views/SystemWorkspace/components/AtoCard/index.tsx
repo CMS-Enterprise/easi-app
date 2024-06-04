@@ -39,8 +39,9 @@ function AtoCard({
 }: Props) {
   const { t } = useTranslation('systemWorkspace');
 
-  // Assigned url is also purposed for modal open vs false to close
-  const [leavingModalUrl, setLeavingModalUrl] = useState<string | false>(false);
+  const [cfactsLinkModalOpen, setCfactsLinkModalOpen] = useState<boolean>(
+    false
+  );
 
   return (
     <>
@@ -99,7 +100,7 @@ function AtoCard({
               href={CFACTS}
               onClick={e => {
                 e.preventDefault();
-                setLeavingModalUrl((e.target as HTMLAnchorElement).href);
+                setCfactsLinkModalOpen(true);
               }}
             >
               {t('spaces.ato.cfacts')}
@@ -115,24 +116,30 @@ function AtoCard({
           </CardFooter>
         </Card>
       </Grid>
+
       {/* Leaving easi modal */}
       <Modal
-        isOpen={!!leavingModalUrl}
-        closeModal={() => setLeavingModalUrl(false)}
+        isOpen={!!cfactsLinkModalOpen}
+        closeModal={() => setCfactsLinkModalOpen(false)}
       >
         <h2 className="usa-modal__heading margin-bottom-2">
           {t('spaces.ato.modal.header')}
         </h2>
         <p className="margin-y-0">{t('spaces.ato.modal.text')}</p>
         <ButtonGroup className="margin-top-3">
-          <Link className="usa-button" href={CFACTS}>
+          <Link
+            className="usa-button"
+            href={CFACTS}
+            target="_blank"
+            onClick={() => setCfactsLinkModalOpen(false)}
+          >
             {t('spaces.ato.modal.continue')}
           </Link>
           <Button
             type="button"
             unstyled
             className="margin-left-1"
-            onClick={() => setLeavingModalUrl(false)}
+            onClick={() => setCfactsLinkModalOpen(false)}
           >
             {t('spaces.ato.modal.cancel')}
           </Button>
