@@ -27,17 +27,6 @@ func NewTRBRequest(createdBy string) *TRBRequest {
 
 }
 
-// TRBFeedbackStatus represents the types of TRBFeedbackStatus types
-type TRBFeedbackStatus string
-
-// These are the options for TRBFeedbackStatus
-const (
-	TRBFeedbackStatusCannotStartYet TRBFeedbackStatus = "CANNOT_START_YET"
-	TRBFeedbackStatusInReview       TRBFeedbackStatus = "IN_REVIEW"
-	TRBFeedbackStatusEditsRequested TRBFeedbackStatus = "EDITS_REQUESTED"
-	TRBFeedbackStatusCompleted      TRBFeedbackStatus = "COMPLETED"
-)
-
 // TRBConsultPrepStatus represents the types of TRBConsultPrepStatus types
 type TRBConsultPrepStatus string
 

@@ -2716,6 +2716,54 @@ func (e TRBFeedbackAction) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Represents the status of the TRB feedback step
+type TRBFeedbackStatus string
+
+const (
+	TRBFeedbackStatusCannotStartYet TRBFeedbackStatus = "CANNOT_START_YET"
+	TRBFeedbackStatusReadyToStart   TRBFeedbackStatus = "READY_TO_START"
+	TRBFeedbackStatusInReview       TRBFeedbackStatus = "IN_REVIEW"
+	TRBFeedbackStatusEditsRequested TRBFeedbackStatus = "EDITS_REQUESTED"
+	TRBFeedbackStatusCompleted      TRBFeedbackStatus = "COMPLETED"
+)
+
+var AllTRBFeedbackStatus = []TRBFeedbackStatus{
+	TRBFeedbackStatusCannotStartYet,
+	TRBFeedbackStatusReadyToStart,
+	TRBFeedbackStatusInReview,
+	TRBFeedbackStatusEditsRequested,
+	TRBFeedbackStatusCompleted,
+}
+
+func (e TRBFeedbackStatus) IsValid() bool {
+	switch e {
+	case TRBFeedbackStatusCannotStartYet, TRBFeedbackStatusReadyToStart, TRBFeedbackStatusInReview, TRBFeedbackStatusEditsRequested, TRBFeedbackStatusCompleted:
+		return true
+	}
+	return false
+}
+
+func (e TRBFeedbackStatus) String() string {
+	return string(e)
+}
+
+func (e *TRBFeedbackStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBFeedbackStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBFeedbackStatus", str)
+	}
+	return nil
+}
+
+func (e TRBFeedbackStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Represents the status of a TRB request form
 type TRBFormStatus string
 
