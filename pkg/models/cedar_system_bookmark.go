@@ -12,6 +12,6 @@ type CedarSystemBookmark struct {
 }
 
 type BookmarkRequest struct {
-	CedarSystemID string `db:"eua_user_id"`
-	EuaUserID     string `db:"cedar_system_id"`
+	CedarSystemID string `db:"cedar_system_id"`
+	EuaUserID     string `db:"eua_user_id"`
 }
