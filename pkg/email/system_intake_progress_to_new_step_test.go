@@ -6,7 +6,6 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -16,7 +15,7 @@ func (s *EmailTestSuite) TestSendProgressToNewStepNotification() {
 	intakeID := uuid.MustParse("27883155-46ad-4c30-b3b0-30e8d093756e")
 	requestName := "Test Request"
 	requester := "Sir Requester"
-	newStep := model.SystemIntakeStepToProgressToGrbMeeting
+	newStep := models.SystemIntakeStepToProgressToGrbMeeting
 	additionalInfo := models.HTMLPointer("additional info") // empty info is left out
 	requestLink := fmt.Sprintf(
 		"%s://%s/governance-task-list/%s",
@@ -45,7 +44,7 @@ func (s *EmailTestSuite) TestSendProgressToNewStepNotification() {
 	s.NoError(err)
 
 	getExpectedEmail := func(
-		nextStep model.SystemIntakeStepToProgressTo,
+		nextStep models.SystemIntakeStepToProgressTo,
 		feedback *models.HTML,
 		additionalInfo *models.HTML,
 	) string {
@@ -115,7 +114,7 @@ func (s *EmailTestSuite) TestSendProgressToNewStepNotification() {
 		)
 	}
 
-	for _, step := range model.AllSystemIntakeStepToProgressTo {
+	for _, step := range models.AllSystemIntakeStepToProgressTo {
 		err = client.SystemIntake.SendProgressToNewStepNotification(
 			ctx,
 			recipients,

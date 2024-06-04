@@ -4,9 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
-	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -19,18 +17,6 @@ import (
 // GetSystemSummary makes a GET call to the /system/summary endpoint
 // If `tryCache` is true and `euaUserID` is nil, we will try to hit the cache. Otherwise, we will make an API call as we cannot filter on EUA on our end
 func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryParamFilterOpt) ([]*models.CedarSystem, error) {
-	if c.mockEnabled {
-		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
-
-		// Simulate a filter by only returning a subset of the mock systems
-		if len(opts) > 0 {
-			return cedarcoremock.GetFilteredSystems(), nil
-		}
-
-		// Else return entire set
-		return cedarcoremock.GetSystems(), nil
-	}
-
 	// Construct the parameters
 	params := apisystems.NewSystemSummaryFindListParams()
 
@@ -43,6 +29,22 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 		if opt != nil {
 			opt(params)
 		}
+	}
+
+	if c.mockEnabled {
+		appcontext.ZLogger(ctx).Info("CEDAR Core is disabled")
+
+		// Simulate a filter by only returning a subset of the mock systems
+		if params.UserName != nil || params.BelongsTo != nil {
+			return cedarcoremock.GetFilteredSystems(), nil
+		}
+		// nil State should return all systems including inactive/deactivated
+		if params.State == nil {
+			return cedarcoremock.GetAllSystems(), nil
+		}
+
+		// Else return entire set of active systems
+		return cedarcoremock.GetActiveSystems(), nil
 	}
 
 	params.HTTPClient = c.hc
@@ -69,26 +71,19 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 	// Populate the SystemSummary field by converting each item in resp.Payload.SystemSummary
 	for _, sys := range resp.Payload.SystemSummary {
 		if sys.IctObjectID != nil {
-			uuid, uErr := uuid.Parse(sys.UUID)
-			uuidString := zero.StringFrom(uuid.String())
-			// errors in parsing shouldn't stop the process, but we should log when it happens
-			if uErr != nil {
-				appcontext.ZLogger(ctx).Warn("failed to parse System UUID", zap.String("cedarUUID", sys.UUID))
-				uuidString = zero.StringFromPtr(nil)
-			}
-
 			cedarSys := &models.CedarSystem{
 				VersionID:               zero.StringFromPtr(sys.ID),
 				Name:                    zero.StringFromPtr(sys.Name),
 				Description:             zero.StringFrom(sys.Description),
 				Acronym:                 zero.StringFrom(sys.Acronym),
+				State:                   zero.StringFrom(sys.State),
 				Status:                  zero.StringFrom(sys.Status),
 				BusinessOwnerOrg:        zero.StringFrom(sys.BusinessOwnerOrg),
 				BusinessOwnerOrgComp:    zero.StringFrom(sys.BusinessOwnerOrgComp),
 				SystemMaintainerOrg:     zero.StringFrom(sys.SystemMaintainerOrg),
 				SystemMaintainerOrgComp: zero.StringFrom(sys.SystemMaintainerOrgComp),
 				ID:                      zero.StringFromPtr(sys.IctObjectID),
-				UUID:                    uuidString,
+				UUID:                    zero.StringFrom(sys.UUID),
 			}
 			retVal = append(retVal, cedarSys)
 		}
@@ -112,7 +107,7 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 		return cedarcoremock.GetSystem(systemID), nil
 	}
 
-	systemSummary, err := c.GetSystemSummary(ctx, nil)
+	systemSummary, err := c.GetSystemSummary(ctx, SystemSummaryOpts.WithDeactivatedSystems())
 	if err != nil {
 		return nil, err
 	}
@@ -132,15 +127,28 @@ func (c *Client) GetSystem(ctx context.Context, systemID string) (*models.CedarS
 
 type systemSummaryParamFilterOpt func(*apisystems.SystemSummaryFindListParams)
 
+type systemSummaryOpts struct{}
+
+// SystemSummaryOpts contains methods for options to pass to system summary calls
+var SystemSummaryOpts = systemSummaryOpts{}
+
+// WithDeactivatedSystems returns all systems
+func (systemSummaryOpts) WithDeactivatedSystems() systemSummaryParamFilterOpt {
+	return func(params *apisystems.SystemSummaryFindListParams) {
+		params.SetState(nil)
+		params.SetIncludeInSurvey(nil)
+	}
+}
+
 // WithEuaIDFilter sets given EUA onto the params
-func WithEuaIDFilter(euaUserId string) systemSummaryParamFilterOpt {
+func (systemSummaryOpts) WithEuaIDFilter(euaUserId string) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
 		params.SetUserName(&euaUserId)
 	}
 }
 
 // WithSubSystems sets given cedar system ID as the parent system for which we are looking for sub-systems
-func WithSubSystems(cedarSystemId string) systemSummaryParamFilterOpt {
+func (systemSummaryOpts) WithSubSystems(cedarSystemId string) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
 		params.SetBelongsTo(&cedarSystemId)
 

@@ -128,7 +128,7 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 		LifecycleExpiresAt:    &times.threeYearsInTheFuture,
 
 		Step:          models.SystemIntakeStepDECISION,
-		State:         models.SystemIntakeStateOPEN,
+		State:         models.SystemIntakeStateOpen,
 		DecisionState: models.SIDSNotApproved,
 	}
 

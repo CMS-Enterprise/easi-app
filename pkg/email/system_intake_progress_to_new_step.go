@@ -11,7 +11,6 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -64,7 +63,7 @@ func (sie systemIntakeEmails) SendProgressToNewStepNotification(
 	ctx context.Context,
 	recipients models.EmailNotificationRecipients,
 	systemIntakeID uuid.UUID,
-	newStep model.SystemIntakeStepToProgressTo,
+	newStep models.SystemIntakeStepToProgressTo,
 	requestName string,
 	requesterName string,
 	feedback *models.HTML,

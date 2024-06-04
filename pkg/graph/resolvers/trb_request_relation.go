@@ -7,7 +7,6 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
@@ -20,7 +19,7 @@ import (
 func SetTRBRequestRelationNewSystem(
 	ctx context.Context,
 	store *storage.Store,
-	input model.SetTRBRequestRelationNewSystemInput,
+	input models.SetTRBRequestRelationNewSystemInput,
 ) (*models.TRBRequest, error) {
 	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
@@ -58,7 +57,7 @@ func SetTRBRequestRelationExistingSystem(
 	ctx context.Context,
 	store *storage.Store,
 	getCedarSystem func(ctx context.Context, systemID string) (*models.CedarSystem, error),
-	input model.SetTRBRequestRelationExistingSystemInput,
+	input models.SetTRBRequestRelationExistingSystemInput,
 ) (*models.TRBRequest, error) {
 	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID
@@ -99,7 +98,7 @@ func SetTRBRequestRelationExistingSystem(
 func SetTRBRequestRelationExistingService(
 	ctx context.Context,
 	store *storage.Store,
-	input model.SetTRBRequestRelationExistingServiceInput,
+	input models.SetTRBRequestRelationExistingServiceInput,
 ) (*models.TRBRequest, error) {
 	return sqlutils.WithTransactionRet[*models.TRBRequest](ctx, store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 		// Fetch TRB Request by ID

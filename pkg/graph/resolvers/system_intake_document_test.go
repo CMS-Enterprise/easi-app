@@ -7,7 +7,6 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/easiencoding"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -48,7 +47,7 @@ func createSystemIntakeDocumentSubtest(suite *ResolverSuite, systemIntakeID uuid
 	testContents := "Test file content"
 	encodedFileContent := easiencoding.EncodeBase64String(testContents)
 	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
-	gqlInput := model.CreateSystemIntakeDocumentInput{
+	gqlInput := models.CreateSystemIntakeDocumentInput{
 		RequestID:            documentToCreate.SystemIntakeRequestID,
 		DocumentType:         documentToCreate.CommonDocumentType,
 		OtherTypeDescription: &documentToCreate.OtherType,

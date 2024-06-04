@@ -17,6 +17,7 @@ var mockSystems = map[string]*models.CedarSystem{
 		Acronym:                 zero.StringFrom("CMS"),
 		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
 		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		State:                   zero.StringFrom("active"),
 		Status:                  zero.StringFrom(""),
 		BusinessOwnerOrg:        zero.StringFrom("Information Systems Team"),
 		BusinessOwnerOrgComp:    zero.StringFrom("IST"),
@@ -30,6 +31,7 @@ var mockSystems = map[string]*models.CedarSystem{
 		Acronym:                 zero.StringFrom("OFW"),
 		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
 		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		State:                   zero.StringFrom("active"),
 		Status:                  zero.StringFrom(""),
 		BusinessOwnerOrg:        zero.StringFrom("Information Systems Team"),
 		BusinessOwnerOrgComp:    zero.StringFrom("IST"),
@@ -43,6 +45,7 @@ var mockSystems = map[string]*models.CedarSystem{
 		Acronym:                 zero.StringFrom("QAT"),
 		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
 		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		State:                   zero.StringFrom("active"),
 		Status:                  zero.StringFrom(""),
 		BusinessOwnerOrg:        zero.StringFrom("Information Systems Team"),
 		BusinessOwnerOrgComp:    zero.StringFrom("IST"),
@@ -56,6 +59,7 @@ var mockSystems = map[string]*models.CedarSystem{
 		Acronym:                 zero.StringFrom("SWIMS"),
 		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
 		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		State:                   zero.StringFrom("active"),
 		Status:                  zero.StringFrom(""),
 		BusinessOwnerOrg:        zero.StringFrom("Managerial Mission Management"),
 		BusinessOwnerOrgComp:    zero.StringFrom("MMM"),
@@ -69,6 +73,7 @@ var mockSystems = map[string]*models.CedarSystem{
 		Acronym:                 zero.StringFrom("CCCC"),
 		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
 		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		State:                   zero.StringFrom("active"),
 		Status:                  zero.StringFrom(""),
 		BusinessOwnerOrg:        zero.StringFrom("Managerial Mission Management"),
 		BusinessOwnerOrgComp:    zero.StringFrom("MMM"),
@@ -76,10 +81,38 @@ var mockSystems = map[string]*models.CedarSystem{
 		SystemMaintainerOrgComp: zero.StringFrom("DODD"),
 		UUID:                    zero.StringFrom("46434d7c-5193-4a9d-82b1-0c4d3ceb4237"),
 	},
+	"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}": {
+		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"),
+		Name:                    zero.StringFrom("Office of Official Obfuscation"),
+		Acronym:                 zero.StringFrom("OOO"),
+		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
+		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		State:                   zero.StringFrom("deactivated"),
+		Status:                  zero.StringFrom(""),
+		BusinessOwnerOrg:        zero.StringFrom("Managerial Mission Management"),
+		BusinessOwnerOrgComp:    zero.StringFrom("MMM"),
+		SystemMaintainerOrg:     zero.StringFrom("Division of Divisive Divergence"),
+		SystemMaintainerOrgComp: zero.StringFrom("DODD"),
+		UUID:                    zero.StringFrom("1cd0e318-7a30-4fc9-8e28-388019f56851"),
+	},
+	"{11AB1A00-1234-5678-ABC1-1A001B00CC6G}": {
+		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC6G}"),
+		Name:                    zero.StringFrom("Artificial Intelligence Task Force"),
+		Acronym:                 zero.StringFrom("AITF"),
+		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
+		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		State:                   zero.StringFrom("deactivated"),
+		Status:                  zero.StringFrom(""),
+		BusinessOwnerOrg:        zero.StringFrom("Managerial Mission Management"),
+		BusinessOwnerOrgComp:    zero.StringFrom("MMM"),
+		SystemMaintainerOrg:     zero.StringFrom("Division of Divisive Divergence"),
+		SystemMaintainerOrgComp: zero.StringFrom("DODD"),
+		UUID:                    zero.StringFrom("a967ad28-4a69-4031-b53f-687396b87fa5"),
+	},
 }
 
 // GetSystems returns a mocked list of Cedar Systems
-func GetSystems() []*models.CedarSystem {
+func GetAllSystems() []*models.CedarSystem {
 	var systems []*models.CedarSystem
 	for _, v := range mockSystems {
 		systems = append(systems, v)
@@ -87,9 +120,20 @@ func GetSystems() []*models.CedarSystem {
 	return systems
 }
 
+// GetActiveSystems returns only active systems
+func GetActiveSystems() []*models.CedarSystem {
+	var systems []*models.CedarSystem
+	for _, v := range mockSystems {
+		if v.State.String == "active" {
+			systems = append(systems, v)
+		}
+	}
+	return systems
+}
+
 // GetFilteredSystems returns the first two mocked Cedar Systems, ordered by ID
 func GetFilteredSystems() []*models.CedarSystem {
-	systems := GetSystems()
+	systems := GetActiveSystems()
 	sort.Slice(systems, func(i, j int) bool {
 		return systems[i].ID.String < systems[j].ID.String
 	})

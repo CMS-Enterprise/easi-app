@@ -34,7 +34,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		intake.Step = models.SystemIntakeStepINITIALFORM
 	}
 	if intake.State == "" {
-		intake.State = models.SystemIntakeStateOPEN
+		intake.State = models.SystemIntakeStateOpen
 	}
 	if intake.RequestFormState == "" {
 		intake.RequestFormState = models.SIRFSNotStarted
