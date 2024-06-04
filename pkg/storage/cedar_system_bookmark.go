@@ -94,7 +94,7 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, bookmark
 	}
 
 	var results []models.BookmarkRequest
-	if err := s.db.Select(&results, sqlqueries.CedarBookmarkSystemsForm.SelectLOADER, pq.Array(euaUserIDs), pq.Array(systemIDs)); err != nil {
+	if err := s.db.SelectContext(ctx, &results, sqlqueries.CedarBookmarkSystemsForm.SelectLOADER, pq.Array(euaUserIDs), pq.Array(systemIDs)); err != nil {
 		return nil, err
 	}
 
