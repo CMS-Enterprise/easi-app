@@ -18,6 +18,15 @@ type LifecycleCostSolution string
 type LifecycleCostYear string
 
 const (
+	// TODO: The LifeCycleCostPhase types here (of which there are 8) accurately
+	// reflect the enums in the database. However, the enums defined in schema.graphql only
+	// allows for `DEVELOPMENT`, `OPERATIONS_AND_MAINTENANCE`, and `OTHER`.
+	//
+	// Additionally, the values defined here are sentence-cased, whereas the values
+	// that _would_ be defined by codegen would be in all caps (as written).
+	// We should re-visit these types, and keep them defined here (rather than relying on codegen
+	// like we do for many of our enum types)
+
 	// LifecycleCostPhaseDEVELOPMENT captures enum value "Development"
 	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"
 	// LifecycleCostPhaseOPERATIONMAINTENANCE captures enum value "Operations and Maintenance"
@@ -35,6 +44,15 @@ const (
 	// LifecycleCostPhaseOTHER captures enum value "Other"
 	LifecycleCostPhaseOTHER LifecycleCostPhase = "Other"
 
+	// TODO: Similar to the LifecycleCostPhase types, the LifecycleCostSolution types here
+	// have slight differences in casing compared to the enums defined in schema.graphql.
+	//
+	// The fix for this is likely to:
+	// 1) Delete these enums
+	// 2) Re-run codegen
+	// 3) Write a migration to update values of "Preferred" to "PREFERRED"
+	// 4) Ensure the frontend is rendering the enum values in sentence case
+
 	// LifecycleCostSolutionPREFERRED captures enum value "Preferred"
 	LifecycleCostSolutionPREFERRED LifecycleCostSolution = "Preferred"
 	// LifecycleCostSolutionA captures enum value "A"
@@ -42,6 +60,9 @@ const (
 	// LifecycleCostSolutionB captures enum value "B"
 	LifecycleCostSolutionB LifecycleCostSolution = "B"
 
+	// TODO: Again, the enums here are "1", "2", etc. whereas the enums in schema.graphql
+	// are "LIFECYCLE_COST_YEAR_1", "LIFECYCLE_COST_YEAR_2", etc. so we can't just replace these
+	// with codegen'd enums just yet.
 	// LifecycleCostYear1 captures enum value "1"
 	LifecycleCostYear1 LifecycleCostYear = "1"
 	// LifecycleCostYear2 captures enum value "2"
