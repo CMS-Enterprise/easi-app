@@ -57,28 +57,11 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 }
 
 func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContractNumber, error) {
-	rows, err := s.db.QueryContext(ctx, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER, pq.Array(systemIntakeIDs))
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
 	var systemIntakeContractNumbers []*models.SystemIntakeContractNumber
-	for rows.Next() {
-		var systemIntakeContractNumber models.SystemIntakeContractNumber
-		if err := rows.Scan(
-			&systemIntakeContractNumber.ID,
-			&systemIntakeContractNumber.SystemIntakeID,
-			&systemIntakeContractNumber.ContractNumber,
-			&systemIntakeContractNumber.CreatedBy,
-			&systemIntakeContractNumber.CreatedAt,
-			&systemIntakeContractNumber.ModifiedBy,
-			&systemIntakeContractNumber.ModifiedAt,
-		); err != nil {
-			return nil, err
-		}
-
-		systemIntakeContractNumbers = append(systemIntakeContractNumbers, &systemIntakeContractNumber)
+	if err := selectNamed(ctx, s, &systemIntakeContractNumbers, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDLOADER, args{
+		"system_intake_ids": pq.Array(systemIntakeIDs),
+	}); err != nil {
+		return nil, err
 	}
 
 	return oneToMany[*models.SystemIntakeContractNumber](systemIntakeIDs, systemIntakeContractNumbers), nil

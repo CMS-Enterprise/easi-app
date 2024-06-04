@@ -6,4 +6,4 @@ SELECT id,
        modified_by,
        modified_at
 FROM system_intake_contract_numbers
-WHERE system_intake_id = ANY ($1);
+WHERE system_intake_id = ANY (:system_intake_ids);

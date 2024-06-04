@@ -57,28 +57,11 @@ func (s *Store) SetTRBRequestContractNumbers(ctx context.Context, tx *sqlx.Tx, t
 }
 
 func (s *Store) TRBRequestContractNumbersByTRBRequestIDLOADER(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestContractNumber, error) {
-	rows, err := s.db.QueryContext(ctx, sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDLOADER, pq.Array(trbRequestIDs))
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
 	var trbRequestContractNumbers []*models.TRBRequestContractNumber
-	for rows.Next() {
-		var trbRequestContractNumber models.TRBRequestContractNumber
-		if err := rows.Scan(
-			&trbRequestContractNumber.ID,
-			&trbRequestContractNumber.TRBRequestID,
-			&trbRequestContractNumber.ContractNumber,
-			&trbRequestContractNumber.CreatedBy,
-			&trbRequestContractNumber.CreatedAt,
-			&trbRequestContractNumber.ModifiedBy,
-			&trbRequestContractNumber.ModifiedAt,
-		); err != nil {
-			return nil, err
-		}
-
-		trbRequestContractNumbers = append(trbRequestContractNumbers, &trbRequestContractNumber)
+	if err := selectNamed(ctx, s, &trbRequestContractNumbers, sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDLOADER, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	}); err != nil {
+		return nil, err
 	}
 
 	return oneToMany[*models.TRBRequestContractNumber](trbRequestIDs, trbRequestContractNumbers), nil

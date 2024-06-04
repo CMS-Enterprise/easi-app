@@ -57,28 +57,11 @@ func (s *Store) SetTRBRequestSystems(ctx context.Context, tx *sqlx.Tx, trbReques
 }
 
 func (s *Store) TRBRequestSystemsByTRBRequestIDLOADER(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestSystem, error) {
-	rows, err := s.db.QueryContext(ctx, sqlqueries.TRBRequestSystemForm.SelectByTRBRequestIDLOADER, pq.Array(trbRequestIDs))
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
 	var trbRequestSystems []*models.TRBRequestSystem
-	for rows.Next() {
-		var trbRequestSystem models.TRBRequestSystem
-		if err := rows.Scan(
-			&trbRequestSystem.ID,
-			&trbRequestSystem.TRBRequestID,
-			&trbRequestSystem.SystemID,
-			&trbRequestSystem.CreatedBy,
-			&trbRequestSystem.CreatedAt,
-			&trbRequestSystem.ModifiedBy,
-			&trbRequestSystem.ModifiedAt,
-		); err != nil {
-			return nil, err
-		}
-
-		trbRequestSystems = append(trbRequestSystems, &trbRequestSystem)
+	if err := selectNamed(ctx, s, &trbRequestSystems, sqlqueries.TRBRequestSystemForm.SelectByTRBRequestIDLOADER, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	}); err != nil {
+		return nil, err
 	}
 
 	return oneToMany[*models.TRBRequestSystem](trbRequestIDs, trbRequestSystems), nil

@@ -57,28 +57,11 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 }
 
 func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeSystem, error) {
-	rows, err := s.db.QueryContext(ctx, sqlqueries.SystemIntakeSystemForm.SelectBySystemIntakeIDLOADER, pq.Array(systemIntakeIDs))
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
 	var systemIntakeSystems []*models.SystemIntakeSystem
-	for rows.Next() {
-		var systemIntakeSystem models.SystemIntakeSystem
-		if err := rows.Scan(
-			&systemIntakeSystem.ID,
-			&systemIntakeSystem.SystemIntakeID,
-			&systemIntakeSystem.SystemID,
-			&systemIntakeSystem.CreatedBy,
-			&systemIntakeSystem.CreatedAt,
-			&systemIntakeSystem.ModifiedBy,
-			&systemIntakeSystem.ModifiedAt,
-		); err != nil {
-			return nil, err
-		}
-
-		systemIntakeSystems = append(systemIntakeSystems, &systemIntakeSystem)
+	if err := selectNamed(ctx, s, &systemIntakeSystems, sqlqueries.SystemIntakeSystemForm.SelectBySystemIntakeIDLOADER, args{
+		"system_intake_ids": pq.Array(systemIntakeIDs),
+	}); err != nil {
+		return nil, err
 	}
 
 	return oneToMany[*models.SystemIntakeSystem](systemIntakeIDs, systemIntakeSystems), nil
