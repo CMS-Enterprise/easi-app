@@ -59,7 +59,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					RequestFormState: models.SIRFSNotStarted,
 					State:            models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRInitialRequestFormNew,
+				expectedStatus: models.SystemIntakeStatusRequesterInitialRequestFormNew,
 				errorExpected:  false,
 			},
 			{
@@ -69,7 +69,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					RequestFormState: models.SIRFSInProgress,
 					State:            models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRInitialRequestFormInProgress,
+				expectedStatus: models.SystemIntakeStatusRequesterInitialRequestFormInProgress,
 				errorExpected:  false,
 			},
 			{
@@ -79,7 +79,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					RequestFormState: models.SIRFSEditsRequested,
 					State:            models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRInitialRequestFormEditsRequested,
+				expectedStatus: models.SystemIntakeStatusRequesterInitialRequestFormEditsRequested,
 				errorExpected:  false,
 			},
 			{
@@ -89,7 +89,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					RequestFormState: models.SIRFSSubmitted,
 					State:            models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRInitialRequestFormSubmitted,
+				expectedStatus: models.SystemIntakeStatusRequesterInitialRequestFormSubmitted,
 				errorExpected:  false,
 			},
 			{
@@ -100,7 +100,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					State:            models.SystemIntakeStateClosed,
 					DecisionState:    models.SIDSNoDecision,
 				},
-				expectedStatus: models.SISRClosed,
+				expectedStatus: models.SystemIntakeStatusRequesterClosed,
 				errorExpected:  false,
 			},
 		},
@@ -116,7 +116,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					DraftBusinessCaseState: models.SIRFSNotStarted,
 					State:                  models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRDraftBusinessCaseInProgress,
+				expectedStatus: models.SystemIntakeStatusRequesterDraftBusinessCaseInProgress,
 				errorExpected:  false,
 			},
 			{
@@ -126,7 +126,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					DraftBusinessCaseState: models.SIRFSInProgress,
 					State:                  models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRDraftBusinessCaseInProgress,
+				expectedStatus: models.SystemIntakeStatusRequesterDraftBusinessCaseInProgress,
 				errorExpected:  false,
 			},
 			{
@@ -136,7 +136,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					DraftBusinessCaseState: models.SIRFSEditsRequested,
 					State:                  models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRDraftBusinessCaseEditsRequested,
+				expectedStatus: models.SystemIntakeStatusRequesterDraftBusinessCaseEditsRequested,
 				errorExpected:  false,
 			},
 			{
@@ -146,7 +146,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					DraftBusinessCaseState: models.SIRFSSubmitted,
 					State:                  models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRDraftBusinessCaseSubmitted,
+				expectedStatus: models.SystemIntakeStatusRequesterDraftBusinessCaseSubmitted,
 				errorExpected:  false,
 			},
 			{
@@ -157,7 +157,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					State:                  models.SystemIntakeStateClosed,
 					DecisionState:          models.SIDSNoDecision,
 				},
-				expectedStatus: models.SISRClosed,
+				expectedStatus: models.SystemIntakeStatusRequesterClosed,
 				errorExpected:  false,
 			},
 		},
@@ -173,7 +173,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					GRTDate: nil,
 					State:   models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRGrtMeetingReady,
+				expectedStatus: models.SystemIntakeStatusRequesterGrtMeetingReady,
 				errorExpected:  false,
 			},
 			{
@@ -183,7 +183,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					GRTDate: &tomorrow,
 					State:   models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRGrtMeetingReady,
+				expectedStatus: models.SystemIntakeStatusRequesterGrtMeetingReady,
 				errorExpected:  false,
 			},
 			{
@@ -193,7 +193,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					GRTDate: &yesterday,
 					State:   models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRGrtMeetingAwaitingDecision,
+				expectedStatus: models.SystemIntakeStatusRequesterGrtMeetingAwaitingDecision,
 				errorExpected:  false,
 			},
 			{
@@ -204,7 +204,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					State:         models.SystemIntakeStateClosed,
 					DecisionState: models.SIDSNoDecision,
 				},
-				expectedStatus: models.SISRClosed,
+				expectedStatus: models.SystemIntakeStatusRequesterClosed,
 				errorExpected:  false,
 			},
 		},
@@ -220,7 +220,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					FinalBusinessCaseState: models.SIRFSNotStarted,
 					State:                  models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRFinalBusinessCaseInProgress,
+				expectedStatus: models.SystemIntakeStatusRequesterFinalBusinessCaseInProgress,
 				errorExpected:  false,
 			},
 			{
@@ -230,7 +230,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					FinalBusinessCaseState: models.SIRFSInProgress,
 					State:                  models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRFinalBusinessCaseInProgress,
+				expectedStatus: models.SystemIntakeStatusRequesterFinalBusinessCaseInProgress,
 				errorExpected:  false,
 			},
 			{
@@ -240,7 +240,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					FinalBusinessCaseState: models.SIRFSEditsRequested,
 					State:                  models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRFinalBusinessCaseEditsRequested,
+				expectedStatus: models.SystemIntakeStatusRequesterFinalBusinessCaseEditsRequested,
 				errorExpected:  false,
 			},
 			{
@@ -250,7 +250,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					FinalBusinessCaseState: models.SIRFSSubmitted,
 					State:                  models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRFinalBusinessCaseSubmitted,
+				expectedStatus: models.SystemIntakeStatusRequesterFinalBusinessCaseSubmitted,
 				errorExpected:  false,
 			},
 			{
@@ -261,7 +261,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					State:                  models.SystemIntakeStateClosed,
 					DecisionState:          models.SIDSNoDecision,
 				},
-				expectedStatus: models.SISRClosed,
+				expectedStatus: models.SystemIntakeStatusRequesterClosed,
 				errorExpected:  false,
 			},
 		},
@@ -277,7 +277,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					GRBDate: nil,
 					State:   models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRGrbMeetingReady,
+				expectedStatus: models.SystemIntakeStatusRequesterGrbMeetingReady,
 				errorExpected:  false,
 			},
 			{
@@ -287,7 +287,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					GRBDate: &tomorrow,
 					State:   models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRGrbMeetingReady,
+				expectedStatus: models.SystemIntakeStatusRequesterGrbMeetingReady,
 				errorExpected:  false,
 			},
 			{
@@ -297,7 +297,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					GRBDate: &yesterday,
 					State:   models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRGrbMeetingAwaitingDecision,
+				expectedStatus: models.SystemIntakeStatusRequesterGrbMeetingAwaitingDecision,
 				errorExpected:  false,
 			},
 			{
@@ -308,7 +308,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					State:         models.SystemIntakeStateClosed,
 					DecisionState: models.SIDSNoDecision,
 				},
-				expectedStatus: models.SISRClosed,
+				expectedStatus: models.SystemIntakeStatusRequesterClosed,
 				errorExpected:  false,
 			},
 		},
@@ -324,7 +324,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					DecisionState: models.SIDSLcidIssued,
 					State:         models.SystemIntakeStateClosed,
 				},
-				expectedStatus: models.SISRLcidIssued,
+				expectedStatus: models.SystemIntakeStatusRequesterLcidIssued,
 				errorExpected:  false,
 			},
 			{
@@ -337,7 +337,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					LifecycleRetiresAt: &yesterday,
 					State:              models.SystemIntakeStateClosed,
 				},
-				expectedStatus: models.SISRLcidIssued,
+				expectedStatus: models.SystemIntakeStatusRequesterLcidIssued,
 				errorExpected:  false,
 			},
 			{
@@ -349,7 +349,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					LifecycleExpiresAt: &yesterday,
 					State:              models.SystemIntakeStateClosed,
 				},
-				expectedStatus: models.SISRLcidExpired,
+				expectedStatus: models.SystemIntakeStatusRequesterLcidExpired,
 				errorExpected:  false,
 			},
 
@@ -362,7 +362,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					LifecycleRetiresAt: &yesterday,
 					State:              models.SystemIntakeStateClosed,
 				},
-				expectedStatus: models.SISRLcidRetired,
+				expectedStatus: models.SystemIntakeStatusRequesterLcidRetired,
 				errorExpected:  false,
 			},
 			{
@@ -372,7 +372,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					DecisionState: models.SIDSLcidIssued,
 					State:         models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRLcidIssued,
+				expectedStatus: models.SystemIntakeStatusRequesterLcidIssued,
 				errorExpected:  false,
 			},
 			{
@@ -382,7 +382,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					DecisionState: models.SIDSNotGovernance,
 					State:         models.SystemIntakeStateClosed,
 				},
-				expectedStatus: models.SISRNotGovernance,
+				expectedStatus: models.SystemIntakeStatusRequesterNotGovernance,
 				errorExpected:  false,
 			},
 			{
@@ -392,7 +392,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					DecisionState: models.SIDSNotGovernance,
 					State:         models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRNotGovernance,
+				expectedStatus: models.SystemIntakeStatusRequesterNotGovernance,
 				errorExpected:  false,
 			},
 			{
@@ -402,7 +402,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					DecisionState: models.SIDSNotApproved,
 					State:         models.SystemIntakeStateClosed,
 				},
-				expectedStatus: models.SISRNotApproved,
+				expectedStatus: models.SystemIntakeStatusRequesterNotApproved,
 				errorExpected:  false,
 			},
 			{
@@ -412,7 +412,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					DecisionState: models.SIDSNotApproved,
 					State:         models.SystemIntakeStateOpen,
 				},
-				expectedStatus: models.SISRNotApproved,
+				expectedStatus: models.SystemIntakeStatusRequesterNotApproved,
 				errorExpected:  false,
 			},
 			{
@@ -422,7 +422,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 					DecisionState: models.SIDSNotApproved,
 					State:         models.SystemIntakeStateClosed,
 				},
-				expectedStatus: models.SISRClosed,
+				expectedStatus: models.SystemIntakeStatusRequesterClosed,
 				errorExpected:  false,
 			},
 			{

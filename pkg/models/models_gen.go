@@ -2073,6 +2073,84 @@ func (e SystemIntakeStatusAdmin) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// This represents the (calculated) statuses that a requester view of a system intake request can show as part of the IT Gov v2 workflow
+type SystemIntakeStatusRequester string
+
+const (
+	SystemIntakeStatusRequesterInitialRequestFormNew            SystemIntakeStatusRequester = "INITIAL_REQUEST_FORM_NEW"
+	SystemIntakeStatusRequesterInitialRequestFormInProgress     SystemIntakeStatusRequester = "INITIAL_REQUEST_FORM_IN_PROGRESS"
+	SystemIntakeStatusRequesterInitialRequestFormSubmitted      SystemIntakeStatusRequester = "INITIAL_REQUEST_FORM_SUBMITTED"
+	SystemIntakeStatusRequesterInitialRequestFormEditsRequested SystemIntakeStatusRequester = "INITIAL_REQUEST_FORM_EDITS_REQUESTED"
+	SystemIntakeStatusRequesterDraftBusinessCaseInProgress      SystemIntakeStatusRequester = "DRAFT_BUSINESS_CASE_IN_PROGRESS"
+	SystemIntakeStatusRequesterDraftBusinessCaseSubmitted       SystemIntakeStatusRequester = "DRAFT_BUSINESS_CASE_SUBMITTED"
+	SystemIntakeStatusRequesterDraftBusinessCaseEditsRequested  SystemIntakeStatusRequester = "DRAFT_BUSINESS_CASE_EDITS_REQUESTED"
+	SystemIntakeStatusRequesterGrtMeetingReady                  SystemIntakeStatusRequester = "GRT_MEETING_READY"
+	SystemIntakeStatusRequesterGrtMeetingAwaitingDecision       SystemIntakeStatusRequester = "GRT_MEETING_AWAITING_DECISION"
+	SystemIntakeStatusRequesterFinalBusinessCaseInProgress      SystemIntakeStatusRequester = "FINAL_BUSINESS_CASE_IN_PROGRESS"
+	SystemIntakeStatusRequesterFinalBusinessCaseSubmitted       SystemIntakeStatusRequester = "FINAL_BUSINESS_CASE_SUBMITTED"
+	SystemIntakeStatusRequesterFinalBusinessCaseEditsRequested  SystemIntakeStatusRequester = "FINAL_BUSINESS_CASE_EDITS_REQUESTED"
+	SystemIntakeStatusRequesterGrbMeetingReady                  SystemIntakeStatusRequester = "GRB_MEETING_READY"
+	SystemIntakeStatusRequesterGrbMeetingAwaitingDecision       SystemIntakeStatusRequester = "GRB_MEETING_AWAITING_DECISION"
+	SystemIntakeStatusRequesterLcidIssued                       SystemIntakeStatusRequester = "LCID_ISSUED"
+	SystemIntakeStatusRequesterLcidExpired                      SystemIntakeStatusRequester = "LCID_EXPIRED"
+	SystemIntakeStatusRequesterLcidRetired                      SystemIntakeStatusRequester = "LCID_RETIRED"
+	SystemIntakeStatusRequesterNotGovernance                    SystemIntakeStatusRequester = "NOT_GOVERNANCE"
+	SystemIntakeStatusRequesterNotApproved                      SystemIntakeStatusRequester = "NOT_APPROVED"
+	SystemIntakeStatusRequesterClosed                           SystemIntakeStatusRequester = "CLOSED"
+)
+
+var AllSystemIntakeStatusRequester = []SystemIntakeStatusRequester{
+	SystemIntakeStatusRequesterInitialRequestFormNew,
+	SystemIntakeStatusRequesterInitialRequestFormInProgress,
+	SystemIntakeStatusRequesterInitialRequestFormSubmitted,
+	SystemIntakeStatusRequesterInitialRequestFormEditsRequested,
+	SystemIntakeStatusRequesterDraftBusinessCaseInProgress,
+	SystemIntakeStatusRequesterDraftBusinessCaseSubmitted,
+	SystemIntakeStatusRequesterDraftBusinessCaseEditsRequested,
+	SystemIntakeStatusRequesterGrtMeetingReady,
+	SystemIntakeStatusRequesterGrtMeetingAwaitingDecision,
+	SystemIntakeStatusRequesterFinalBusinessCaseInProgress,
+	SystemIntakeStatusRequesterFinalBusinessCaseSubmitted,
+	SystemIntakeStatusRequesterFinalBusinessCaseEditsRequested,
+	SystemIntakeStatusRequesterGrbMeetingReady,
+	SystemIntakeStatusRequesterGrbMeetingAwaitingDecision,
+	SystemIntakeStatusRequesterLcidIssued,
+	SystemIntakeStatusRequesterLcidExpired,
+	SystemIntakeStatusRequesterLcidRetired,
+	SystemIntakeStatusRequesterNotGovernance,
+	SystemIntakeStatusRequesterNotApproved,
+	SystemIntakeStatusRequesterClosed,
+}
+
+func (e SystemIntakeStatusRequester) IsValid() bool {
+	switch e {
+	case SystemIntakeStatusRequesterInitialRequestFormNew, SystemIntakeStatusRequesterInitialRequestFormInProgress, SystemIntakeStatusRequesterInitialRequestFormSubmitted, SystemIntakeStatusRequesterInitialRequestFormEditsRequested, SystemIntakeStatusRequesterDraftBusinessCaseInProgress, SystemIntakeStatusRequesterDraftBusinessCaseSubmitted, SystemIntakeStatusRequesterDraftBusinessCaseEditsRequested, SystemIntakeStatusRequesterGrtMeetingReady, SystemIntakeStatusRequesterGrtMeetingAwaitingDecision, SystemIntakeStatusRequesterFinalBusinessCaseInProgress, SystemIntakeStatusRequesterFinalBusinessCaseSubmitted, SystemIntakeStatusRequesterFinalBusinessCaseEditsRequested, SystemIntakeStatusRequesterGrbMeetingReady, SystemIntakeStatusRequesterGrbMeetingAwaitingDecision, SystemIntakeStatusRequesterLcidIssued, SystemIntakeStatusRequesterLcidExpired, SystemIntakeStatusRequesterLcidRetired, SystemIntakeStatusRequesterNotGovernance, SystemIntakeStatusRequesterNotApproved, SystemIntakeStatusRequesterClosed:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeStatusRequester) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeStatusRequester) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeStatusRequester(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeStatusRequester", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeStatusRequester) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Steps in the system intake process that a Progress to New Step action can progress to
 type SystemIntakeStepToProgressTo string
 

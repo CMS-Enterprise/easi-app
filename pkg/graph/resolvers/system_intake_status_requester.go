@@ -17,14 +17,14 @@ func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTi
 	}
 
 	if intake.State == models.SystemIntakeStateClosed && intake.DecisionState == models.SIDSNoDecision {
-		return models.SISRClosed, nil
+		return models.SystemIntakeStatusRequesterClosed, nil
 	}
 	if intake.State == models.SystemIntakeStateClosed &&
 		intake.DecisionState != models.SIDSNoDecision &&
 		intake.Step != models.SystemIntakeStepDECISION {
 		// If an intake has a decision but is re-opened, progressed to an earlier step,
 		// and then closed without a decision, show closed.
-		return models.SISRClosed, nil
+		return models.SystemIntakeStatusRequesterClosed, nil
 	}
 
 	switch intake.Step {
@@ -50,13 +50,13 @@ func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTi
 func calcSystemIntakeInitialFormStatusRequester(intakeFormState models.SystemIntakeFormState) (models.SystemIntakeStatusRequester, error) {
 	switch intakeFormState {
 	case models.SIRFSNotStarted:
-		return models.SISRInitialRequestFormNew, nil
+		return models.SystemIntakeStatusRequesterInitialRequestFormNew, nil
 	case models.SIRFSInProgress:
-		return models.SISRInitialRequestFormInProgress, nil
+		return models.SystemIntakeStatusRequesterInitialRequestFormInProgress, nil
 	case models.SIRFSEditsRequested:
-		return models.SISRInitialRequestFormEditsRequested, nil
+		return models.SystemIntakeStatusRequesterInitialRequestFormEditsRequested, nil
 	case models.SIRFSSubmitted:
-		return models.SISRInitialRequestFormSubmitted, nil
+		return models.SystemIntakeStatusRequesterInitialRequestFormSubmitted, nil
 	default:
 		return "", fmt.Errorf("issue calculating the requester intake status, no valid intakeFormState")
 	}
@@ -65,11 +65,11 @@ func calcSystemIntakeInitialFormStatusRequester(intakeFormState models.SystemInt
 func calcSystemIntakeDraftBusinessCaseStatusRequester(draftBusinessCaseState models.SystemIntakeFormState) (models.SystemIntakeStatusRequester, error) {
 	switch draftBusinessCaseState {
 	case models.SIRFSNotStarted, models.SIRFSInProgress:
-		return models.SISRDraftBusinessCaseInProgress, nil
+		return models.SystemIntakeStatusRequesterDraftBusinessCaseInProgress, nil
 	case models.SIRFSEditsRequested:
-		return models.SISRDraftBusinessCaseEditsRequested, nil
+		return models.SystemIntakeStatusRequesterDraftBusinessCaseEditsRequested, nil
 	case models.SIRFSSubmitted:
-		return models.SISRDraftBusinessCaseSubmitted, nil
+		return models.SystemIntakeStatusRequesterDraftBusinessCaseSubmitted, nil
 	default:
 		return "", fmt.Errorf("issue calculating the requester intake status, no valid draftBusinessCaseState")
 	}
@@ -77,20 +77,20 @@ func calcSystemIntakeDraftBusinessCaseStatusRequester(draftBusinessCaseState mod
 
 func calcSystemIntakeGRTMeetingStatusRequester(grtDate *time.Time, currentTime time.Time) models.SystemIntakeStatusRequester {
 	if grtDate == nil || grtDate.After(currentTime) {
-		return models.SISRGrtMeetingReady
+		return models.SystemIntakeStatusRequesterGrtMeetingReady
 	}
 
-	return models.SISRGrtMeetingAwaitingDecision
+	return models.SystemIntakeStatusRequesterGrtMeetingAwaitingDecision
 }
 
 func calcSystemIntakeFinalBusinessCaseStatusRequester(finalBusinessCaseState models.SystemIntakeFormState) (models.SystemIntakeStatusRequester, error) {
 	switch finalBusinessCaseState {
 	case models.SIRFSNotStarted, models.SIRFSInProgress:
-		return models.SISRFinalBusinessCaseInProgress, nil
+		return models.SystemIntakeStatusRequesterFinalBusinessCaseInProgress, nil
 	case models.SIRFSEditsRequested:
-		return models.SISRFinalBusinessCaseEditsRequested, nil
+		return models.SystemIntakeStatusRequesterFinalBusinessCaseEditsRequested, nil
 	case models.SIRFSSubmitted:
-		return models.SISRFinalBusinessCaseSubmitted, nil
+		return models.SystemIntakeStatusRequesterFinalBusinessCaseSubmitted, nil
 	default:
 		return "", fmt.Errorf("issue calculating the requester intake status, no valid finalBusinessCaseState")
 	}
@@ -98,10 +98,10 @@ func calcSystemIntakeFinalBusinessCaseStatusRequester(finalBusinessCaseState mod
 
 func calcSystemIntakeGRBMeetingStatusRequester(grbDate *time.Time, currentTime time.Time) models.SystemIntakeStatusRequester {
 	if grbDate == nil || grbDate.After(currentTime) {
-		return models.SISRGrbMeetingReady
+		return models.SystemIntakeStatusRequesterGrbMeetingReady
 	}
 
-	return models.SISRGrbMeetingAwaitingDecision
+	return models.SystemIntakeStatusRequesterGrbMeetingAwaitingDecision
 }
 
 func calcSystemIntakeDecisionStatusRequester(decisionState models.SystemIntakeDecisionState, lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusRequester, error) {
@@ -109,9 +109,9 @@ func calcSystemIntakeDecisionStatusRequester(decisionState models.SystemIntakeDe
 	case models.SIDSLcidIssued:
 		return calcLCIDIssuedDecisionStatusRequester(lcidStatus)
 	case models.SIDSNotApproved:
-		return models.SISRNotApproved, nil
+		return models.SystemIntakeStatusRequesterNotApproved, nil
 	case models.SIDSNotGovernance:
-		return models.SISRNotGovernance, nil
+		return models.SystemIntakeStatusRequesterNotGovernance, nil
 	case models.SIDSNoDecision:
 		// we shouldn't hit this case, it should be caught by the check at the start of CalculateSystemIntakeRequesterStatus(),
 		// but it's repeated here for clarity and to make sure we handle all possible values of decisionState in this function
@@ -124,16 +124,16 @@ func calcSystemIntakeDecisionStatusRequester(decisionState models.SystemIntakeDe
 // calcLCIDIssuedDecisionStatusRequester checks an LCID status and appropriately converts it to a SystemIntakeStatusRequester
 func calcLCIDIssuedDecisionStatusRequester(lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusRequester, error) {
 	if lcidStatus == nil {
-		return models.SISRLcidIssued, nil
+		return models.SystemIntakeStatusRequesterLcidIssued, nil
 	}
 	if *lcidStatus == models.SystemIntakeLCIDStatusIssued {
-		return models.SISRLcidIssued, nil
+		return models.SystemIntakeStatusRequesterLcidIssued, nil
 	}
 	if *lcidStatus == models.SystemIntakeLCIDStatusExpired {
-		return models.SISRLcidExpired, nil
+		return models.SystemIntakeStatusRequesterLcidExpired, nil
 	}
 	if *lcidStatus == models.SystemIntakeLCIDStatusRetired {
-		return models.SISRLcidRetired, nil
+		return models.SystemIntakeStatusRequesterLcidRetired, nil
 	}
 	return "", fmt.Errorf("invalid lcid status provided: %v", lcidStatus)
 
