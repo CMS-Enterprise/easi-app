@@ -347,6 +347,19 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, openIntake.ID)
 			suite.NoError(err)
 
+			openID := openIntake.ID.String()
+			updatedID := updatedIntake.ID.String()
+
+			if openID != updatedID {
+				panic("ids don't match")
+			}
+
+			l1 := len(caseValues.NewSystemIDs)
+			l2 := len(updatedIntakeSystemIDs)
+
+			if l1 != l2 {
+				panic("len wrong for: " + caseName)
+			}
 			// Ensure the system IDs were modified properly
 			suite.Equal(len(caseValues.NewSystemIDs), len(updatedIntakeSystemIDs))
 			for _, v := range updatedIntakeSystemIDs {
@@ -377,7 +390,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 	submittedAt := time.Now()
 
 	suite.Run("unlink new system intake", func() {
-		// Create an inital intake
+		// Create an initial intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			State:        models.SystemIntakeStateOpen,
 			RequestType:  models.SystemIntakeRequestTypeNEW,
@@ -416,7 +429,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 	})
 
 	suite.Run("unlink existing system intake", func() {
-		// Create an inital intake
+		// Create an initial intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			State:        models.SystemIntakeStateOpen,
 			RequestType:  models.SystemIntakeRequestTypeNEW,
@@ -463,7 +476,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 	})
 
 	suite.Run("unlink existing service intake", func() {
-		// Create an inital intake
+		// Create an initial intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			State:       models.SystemIntakeStateOpen,
 			RequestType: models.SystemIntakeRequestTypeNEW,

@@ -353,7 +353,7 @@ func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 	store := suite.testConfigs.Store
 
 	suite.Run("unlink new trb request", func() {
-		// Create an inital TRBRequest
+		// Create an initial TRBRequest
 		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
 		suite.NoError(err)
 		suite.NotEqual(trbRequest.ID, uuid.Nil)
@@ -387,7 +387,7 @@ func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 	})
 
 	suite.Run("unlink existing trb request", func() {
-		// Create an inital TRBRequest
+		// Create an initial TRBRequest
 		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
 		suite.NoError(err)
 		suite.NotEqual(trbRequest.ID, uuid.Nil)
@@ -429,7 +429,7 @@ func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 	})
 
 	suite.Run("unlink existing service TRBRequest", func() {
-		// Create an inital TRBRequest
+		// Create an initial TRBRequest
 		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
 		suite.NoError(err)
 		suite.NotEqual(trbRequest.ID, uuid.Nil)

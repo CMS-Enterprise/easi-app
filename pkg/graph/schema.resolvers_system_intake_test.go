@@ -1398,9 +1398,6 @@ func (s *GraphQLTestSuite) TestContractQueryReturnsVehicleForLegacyIntakes() {
 		RequestType:     models.SystemIntakeRequestTypeNEW,
 		ContractVehicle: null.StringFrom(contractVehicle),
 	})
-	fmt.Println("==== intake.ID Legacy ====")
-	fmt.Println(intake.ID)
-	fmt.Println("==== intake.ID ====")
 
 	s.NoError(intakeErr)
 
