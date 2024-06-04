@@ -2,20 +2,10 @@ package models
 
 import "github.com/google/uuid"
 
-// SystemIntakeDocumentStatus represents the availability of a document in regards to virus scanning
-type SystemIntakeDocumentStatus string
-
 // SystemIntakeDocumentCommonType represents the document type, including an "OTHER" option for user-specified types
 type SystemIntakeDocumentCommonType string
 
 const (
-	// SystemIntakeDocumentStatusAvailable means that the document passed the virus scanning
-	SystemIntakeDocumentStatusAvailable SystemIntakeDocumentStatus = "AVAILABLE"
-	// SystemIntakeDocumentStatusPending means that the document was just uploaded and hasn't yet been scanned for viruses
-	SystemIntakeDocumentStatusPending SystemIntakeDocumentStatus = "PENDING"
-	// SystemIntakeDocumentStatusUnavailable means that the document failed virus scanning
-	SystemIntakeDocumentStatusUnavailable SystemIntakeDocumentStatus = "UNAVAILABLE"
-
 	// SystemIntakeDocumentCommonTypeSOOSOW means the document is an SOO or SOW
 	SystemIntakeDocumentCommonTypeSOOSOW SystemIntakeDocumentCommonType = "SOO_SOW"
 	// SystemIntakeDocumentCommonTypeDraftICGE means the document is a draft ICGE

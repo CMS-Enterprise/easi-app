@@ -68275,19 +68275,13 @@ func (ec *executionContext) marshalNSystemIntakeDocumentCommonType2githubᚗcom�
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentStatus(ctx context.Context, v interface{}) (models.SystemIntakeDocumentStatus, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.SystemIntakeDocumentStatus(tmp)
+	var res models.SystemIntakeDocumentStatus
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNSystemIntakeDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentStatus(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeDocumentStatus) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) marshalNSystemIntakeDocumentType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeDocumentType(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeDocumentType) graphql.Marshaler {

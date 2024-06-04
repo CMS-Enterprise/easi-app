@@ -1766,6 +1766,50 @@ func (e SystemIntakeActionType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Enumeration of the possible statuses of documents uploaded in the System Intake
+type SystemIntakeDocumentStatus string
+
+const (
+	SystemIntakeDocumentStatusAvailable   SystemIntakeDocumentStatus = "AVAILABLE"
+	SystemIntakeDocumentStatusPending     SystemIntakeDocumentStatus = "PENDING"
+	SystemIntakeDocumentStatusUnavailable SystemIntakeDocumentStatus = "UNAVAILABLE"
+)
+
+var AllSystemIntakeDocumentStatus = []SystemIntakeDocumentStatus{
+	SystemIntakeDocumentStatusAvailable,
+	SystemIntakeDocumentStatusPending,
+	SystemIntakeDocumentStatusUnavailable,
+}
+
+func (e SystemIntakeDocumentStatus) IsValid() bool {
+	switch e {
+	case SystemIntakeDocumentStatusAvailable, SystemIntakeDocumentStatusPending, SystemIntakeDocumentStatusUnavailable:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeDocumentStatus) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeDocumentStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeDocumentStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeDocumentStatus", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeDocumentStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // SystemIntakeRequestEditsOptions represents the current step in the intake process
 type SystemIntakeFormStep string
 
