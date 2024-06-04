@@ -1319,6 +1319,62 @@ func (e ITGovFeedbackStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// The requester view of the IT Gov GRT step status
+type ITGovGRTStatus string
+
+const (
+	// This step can't be started yet
+	ITGovGRTStatusCantStart ITGovGRTStatus = "CANT_START"
+	// This step is not needed and has been skipped
+	ITGovGRTStatusNotNeeded ITGovGRTStatus = "NOT_NEEDED"
+	// The GRT meeting is waiting to be scheduled
+	ITGovGRTStatusReadyToSchedule ITGovGRTStatus = "READY_TO_SCHEDULE"
+	// The GRT meeting has been scheduled
+	ITGovGRTStatusScheduled ITGovGRTStatus = "SCHEDULED"
+	// The GRT meeting has already happened, and an outcome hasn't been noted yet
+	ITGovGRTStatusAwaitingDecision ITGovGRTStatus = "AWAITING_DECISION"
+	// The step is completed
+	ITGovGRTStatusCompleted ITGovGRTStatus = "COMPLETED"
+)
+
+var AllITGovGRTStatus = []ITGovGRTStatus{
+	ITGovGRTStatusCantStart,
+	ITGovGRTStatusNotNeeded,
+	ITGovGRTStatusReadyToSchedule,
+	ITGovGRTStatusScheduled,
+	ITGovGRTStatusAwaitingDecision,
+	ITGovGRTStatusCompleted,
+}
+
+func (e ITGovGRTStatus) IsValid() bool {
+	switch e {
+	case ITGovGRTStatusCantStart, ITGovGRTStatusNotNeeded, ITGovGRTStatusReadyToSchedule, ITGovGRTStatusScheduled, ITGovGRTStatusAwaitingDecision, ITGovGRTStatusCompleted:
+		return true
+	}
+	return false
+}
+
+func (e ITGovGRTStatus) String() string {
+	return string(e)
+}
+
+func (e *ITGovGRTStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ITGovGRTStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ITGovGRTStatus", str)
+	}
+	return nil
+}
+
+func (e ITGovGRTStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // The requester view of the IT gov intake step status
 type ITGovIntakeFormStatus string
 

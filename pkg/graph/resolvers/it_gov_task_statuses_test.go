@@ -682,7 +682,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepINITIALFORM,
 				GRTDate: nil,
 			},
-			expectedStatus: models.ITGGRTSCantStart,
+			expectedStatus: models.ITGovGRTStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -691,7 +691,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepINITIALFORM,
 				GRTDate: &yesterday,
 			},
-			expectedStatus: models.ITGGRTSCompleted,
+			expectedStatus: models.ITGovGRTStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -700,7 +700,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepINITIALFORM,
 				GRTDate: &tomorrow,
 			},
-			expectedStatus: models.ITGGRTSScheduled,
+			expectedStatus: models.ITGovGRTStatusScheduled,
 			expectError:    false,
 		},
 		{
@@ -709,7 +709,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepDRAFTBIZCASE,
 				GRTDate: nil,
 			},
-			expectedStatus: models.ITGGRTSCantStart,
+			expectedStatus: models.ITGovGRTStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -718,7 +718,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepDRAFTBIZCASE,
 				GRTDate: &yesterday,
 			},
-			expectedStatus: models.ITGGRTSCompleted,
+			expectedStatus: models.ITGovGRTStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -727,7 +727,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepDRAFTBIZCASE,
 				GRTDate: &tomorrow,
 			},
-			expectedStatus: models.ITGGRTSScheduled,
+			expectedStatus: models.ITGovGRTStatusScheduled,
 			expectError:    false,
 		},
 		{
@@ -736,7 +736,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepGRTMEETING,
 				GRTDate: nil,
 			},
-			expectedStatus: models.ITGGRTSReadyToSchedule,
+			expectedStatus: models.ITGovGRTStatusReadyToSchedule,
 			expectError:    false,
 		},
 		{
@@ -745,7 +745,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepGRTMEETING,
 				GRTDate: &yesterday,
 			},
-			expectedStatus: models.ITGGRTSAwaitingDecision,
+			expectedStatus: models.ITGovGRTStatusAwaitingDecision,
 			expectError:    false,
 		},
 		{
@@ -754,7 +754,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepGRTMEETING,
 				GRTDate: &tomorrow,
 			},
-			expectedStatus: models.ITGGRTSScheduled,
+			expectedStatus: models.ITGovGRTStatusScheduled,
 			expectError:    false,
 		},
 		{
@@ -763,7 +763,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepFINALBIZCASE,
 				GRTDate: nil,
 			},
-			expectedStatus: models.ITGGRTSNotNeeded,
+			expectedStatus: models.ITGovGRTStatusNotNeeded,
 			expectError:    false,
 		},
 		{
@@ -772,7 +772,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepFINALBIZCASE,
 				GRTDate: &yesterday,
 			},
-			expectedStatus: models.ITGGRTSCompleted,
+			expectedStatus: models.ITGovGRTStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -781,7 +781,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepFINALBIZCASE,
 				GRTDate: &tomorrow,
 			},
-			expectedStatus: models.ITGGRTSScheduled,
+			expectedStatus: models.ITGovGRTStatusScheduled,
 			expectError:    false,
 		},
 		{
@@ -790,7 +790,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepGRBMEETING,
 				GRTDate: nil,
 			},
-			expectedStatus: models.ITGGRTSNotNeeded,
+			expectedStatus: models.ITGovGRTStatusNotNeeded,
 			expectError:    false,
 		},
 		{
@@ -799,7 +799,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepGRBMEETING,
 				GRTDate: &yesterday,
 			},
-			expectedStatus: models.ITGGRTSCompleted,
+			expectedStatus: models.ITGovGRTStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -808,7 +808,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepGRBMEETING,
 				GRTDate: &tomorrow,
 			},
-			expectedStatus: models.ITGGRTSScheduled,
+			expectedStatus: models.ITGovGRTStatusScheduled,
 			expectError:    false,
 		},
 		{
@@ -817,7 +817,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepDECISION,
 				GRTDate: nil,
 			},
-			expectedStatus: models.ITGGRTSNotNeeded,
+			expectedStatus: models.ITGovGRTStatusNotNeeded,
 			expectError:    false,
 		},
 		{
@@ -826,7 +826,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepDECISION,
 				GRTDate: &yesterday,
 			},
-			expectedStatus: models.ITGGRTSCompleted,
+			expectedStatus: models.ITGovGRTStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -835,7 +835,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepDECISION,
 				GRTDate: &tomorrow,
 			},
-			expectedStatus: models.ITGGRTSScheduled,
+			expectedStatus: models.ITGovGRTStatusScheduled,
 			expectError:    false,
 		},
 		{
@@ -853,7 +853,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    invalidTestStep,
 				GRTDate: &yesterday,
 			},
-			expectedStatus: models.ITGGRTSCompleted,
+			expectedStatus: models.ITGovGRTStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -862,7 +862,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 				Step:    invalidTestStep,
 				GRTDate: &tomorrow,
 			},
-			expectedStatus: models.ITGGRTSScheduled,
+			expectedStatus: models.ITGovGRTStatusScheduled,
 			expectError:    false,
 		},
 	}

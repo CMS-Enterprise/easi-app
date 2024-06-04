@@ -93,24 +93,24 @@ func GrtMeetingStatus(intake *models.SystemIntake) (models.ITGovGRTStatus, error
 
 	if intake.GRTDate != nil { // status depends on if there is a date scheduled or not
 		if intake.GRTDate.After(time.Now()) { // Meeting has not happened
-			return models.ITGGRTSScheduled, nil
+			return models.ITGovGRTStatusScheduled, nil
 		}
 		if intake.Step == models.SystemIntakeStepGRTMEETING { //if the step is GRT meeting, status is awaiting decision
-			return models.ITGGRTSAwaitingDecision, nil
+			return models.ITGovGRTStatusAwaitingDecision, nil
 		}
-		return models.ITGGRTSCompleted, nil // if the step is not GRT meeting, the status is completed
+		return models.ITGovGRTStatusCompleted, nil // if the step is not GRT meeting, the status is completed
 	}
 
 	//intake.GRTDate is nil
 	switch intake.Step {
 	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE: // Any step before GRT should show can't start
-		return models.ITGGRTSCantStart, nil
+		return models.ITGovGRTStatusCantStart, nil
 
 	case models.SystemIntakeStepGRTMEETING: // If at the GRT step, show ready to schedule
-		return models.ITGGRTSReadyToSchedule, nil
+		return models.ITGovGRTStatusReadyToSchedule, nil
 
 	case models.SystemIntakeStepDECISION, models.SystemIntakeStepFINALBIZCASE, models.SystemIntakeStepGRBMEETING: // If after GRT step, show that it was not needed (skipped)
-		return models.ITGGRTSNotNeeded, nil
+		return models.ITGovGRTStatusNotNeeded, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
 		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
 	}

@@ -5,19 +5,6 @@ type ITGovTaskStatuses struct {
 	ParentSystemIntake *SystemIntake
 }
 
-// ITGovGRTStatus represents the types of ITGovGRTStatus types. This is what the requestor sees for the  optional fifth task.
-type ITGovGRTStatus string
-
-// These are the options for ITGovGRTStatus
-const (
-	ITGGRTSCantStart        ITGovGRTStatus = "CANT_START"
-	ITGGRTSNotNeeded        ITGovGRTStatus = "NOT_NEEDED"
-	ITGGRTSReadyToSchedule  ITGovGRTStatus = "READY_TO_SCHEDULE"
-	ITGGRTSScheduled        ITGovGRTStatus = "SCHEDULED"
-	ITGGRTSAwaitingDecision ITGovGRTStatus = "AWAITING_DECISION"
-	ITGGRTSCompleted        ITGovGRTStatus = "COMPLETED"
-)
-
 // ITGovFinalBusinessCaseStatus represents the types of ITGovFinalBusinessCaseStatus types. This is what the requestor sees for the  optional sixth task.
 type ITGovFinalBusinessCaseStatus string
 
