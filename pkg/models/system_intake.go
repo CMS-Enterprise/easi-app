@@ -8,16 +8,6 @@ import (
 	"github.com/guregu/null/zero"
 )
 
-// SystemIntakeLCIDStatus represents the possible statuses that an issued LCID can be in
-type SystemIntakeLCIDStatus string
-
-// possible values of SystemIntakeLCIDStatus - corresponds to SystemIntakeLCIDStatus enum in GraphQL schema
-const (
-	SystemIntakeLCIDStatusIssued  SystemIntakeLCIDStatus = "ISSUED"
-	SystemIntakeLCIDStatusExpired SystemIntakeLCIDStatus = "EXPIRED"
-	SystemIntakeLCIDStatusRetired SystemIntakeLCIDStatus = "RETIRED"
-)
-
 // SystemIntake is the model for the system intake form
 type SystemIntake struct {
 	ID                              uuid.UUID                    `json:"id"`

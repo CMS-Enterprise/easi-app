@@ -70772,17 +70772,16 @@ func (ec *executionContext) unmarshalOSystemIntakeLCIDStatus2ᚖgithubᚗcomᚋc
 	if v == nil {
 		return nil, nil
 	}
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.SystemIntakeLCIDStatus(tmp)
-	return &res, graphql.ErrorOnPath(ctx, err)
+	var res = new(models.SystemIntakeLCIDStatus)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOSystemIntakeLCIDStatus2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeLCIDStatus(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeLCIDStatus) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalString(string(*v))
-	return res
+	return v
 }
 
 func (ec *executionContext) marshalOSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeNote(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeNote) graphql.Marshaler {
