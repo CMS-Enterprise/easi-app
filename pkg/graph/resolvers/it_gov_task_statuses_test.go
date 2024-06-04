@@ -183,7 +183,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGFBSCantStart,
+			expectedStatus: models.ITGovFeedbackStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -192,7 +192,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGFBSCantStart,
+			expectedStatus: models.ITGovFeedbackStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -201,7 +201,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGFBSInReview,
+			expectedStatus: models.ITGovFeedbackStatusInReview,
 			expectError:    false,
 		},
 
@@ -211,7 +211,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepINITIALFORM,
 				RequestFormState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGFBSCompleted,
+			expectedStatus: models.ITGovFeedbackStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -231,7 +231,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepGRBMEETING,
 				RequestFormState: models.SIRFSNotStarted,
 			},
-			expectedStatus: models.ITGFBSCompleted,
+			expectedStatus: models.ITGovFeedbackStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -240,7 +240,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepGRBMEETING,
 				RequestFormState: models.SIRFSInProgress,
 			},
-			expectedStatus: models.ITGFBSCompleted,
+			expectedStatus: models.ITGovFeedbackStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -249,7 +249,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepGRBMEETING,
 				RequestFormState: models.SIRFSEditsRequested,
 			},
-			expectedStatus: models.ITGFBSCompleted,
+			expectedStatus: models.ITGovFeedbackStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -258,7 +258,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepGRBMEETING,
 				RequestFormState: models.SIRFSSubmitted,
 			},
-			expectedStatus: models.ITGFBSCompleted,
+			expectedStatus: models.ITGovFeedbackStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -267,7 +267,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 				Step:             models.SystemIntakeStepGRBMEETING,
 				RequestFormState: defaultTestState,
 			},
-			expectedStatus: models.ITGFBSCompleted,
+			expectedStatus: models.ITGovFeedbackStatusCompleted,
 			expectError:    false,
 		},
 	}

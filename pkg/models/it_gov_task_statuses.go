@@ -5,16 +5,6 @@ type ITGovTaskStatuses struct {
 	ParentSystemIntake *SystemIntake
 }
 
-// ITGovFeedbackStatus represents the types of ITGovFeedbackStatus types. This is what the requestor sees for the second task.
-type ITGovFeedbackStatus string
-
-// These are the options for ITGovFeedbackStatus
-const (
-	ITGFBSCantStart ITGovFeedbackStatus = "CANT_START"
-	ITGFBSInReview  ITGovFeedbackStatus = "IN_REVIEW"
-	ITGFBSCompleted ITGovFeedbackStatus = "COMPLETED"
-)
-
 // ITGovDecisionStatus represents the types of ITGovDecisionStatus types. This is what the requestor sees for the third task.
 type ITGovDecisionStatus string
 

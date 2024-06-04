@@ -67563,19 +67563,13 @@ func (ec *executionContext) marshalNITGovDraftBusinessCaseStatus2githubᚗcomᚋ
 }
 
 func (ec *executionContext) unmarshalNITGovFeedbackStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovFeedbackStatus(ctx context.Context, v interface{}) (models.ITGovFeedbackStatus, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.ITGovFeedbackStatus(tmp)
+	var res models.ITGovFeedbackStatus
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNITGovFeedbackStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovFeedbackStatus(ctx context.Context, sel ast.SelectionSet, v models.ITGovFeedbackStatus) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalNITGovFinalBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐITGovFinalBusinessCaseStatus(ctx context.Context, v interface{}) (models.ITGovFinalBusinessCaseStatus, error) {
