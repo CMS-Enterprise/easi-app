@@ -68718,19 +68718,13 @@ func (ec *executionContext) marshalNSystemIntakeStatusRequester2githubᚗcomᚋc
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeStep2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStep(ctx context.Context, v interface{}) (models.SystemIntakeStep, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.SystemIntakeStep(tmp)
+	var res models.SystemIntakeStep
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNSystemIntakeStep2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStep(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeStep) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeStepToProgressTo2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStepToProgressTo(ctx context.Context, v interface{}) (models.SystemIntakeStepToProgressTo, error) {
@@ -70818,17 +70812,16 @@ func (ec *executionContext) unmarshalOSystemIntakeStep2ᚖgithubᚗcomᚋcmsgov�
 	if v == nil {
 		return nil, nil
 	}
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.SystemIntakeStep(tmp)
-	return &res, graphql.ErrorOnPath(ctx, err)
+	var res = new(models.SystemIntakeStep)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOSystemIntakeStep2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStep(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntakeStep) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalString(string(*v))
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalOSystemIntakeTRBFollowUp2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeTRBFollowUp(ctx context.Context, v interface{}) (*models.SystemIntakeTRBFollowUp, error) {

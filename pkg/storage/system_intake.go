@@ -31,7 +31,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		intake.UpdatedAt = &createAt
 	}
 	if intake.Step == "" {
-		intake.Step = models.SystemIntakeStepINITIALFORM
+		intake.Step = models.SystemIntakeStepInitialRequestForm
 	}
 	if intake.State == "" {
 		intake.State = models.SystemIntakeStateOpen

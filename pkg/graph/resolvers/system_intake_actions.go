@@ -195,15 +195,15 @@ func CreateSystemIntakeActionRequestEdits(
 	switch input.IntakeFormStep {
 	case models.SystemIntakeFormStepInitialRequestForm:
 		intake.RequestFormState = models.SIRFSEditsRequested
-		intake.Step = models.SystemIntakeStepINITIALFORM
+		intake.Step = models.SystemIntakeStepInitialRequestForm
 		targetForm = models.GovernanceRequestFeedbackTargetFormIntakeRequest
 	case models.SystemIntakeFormStepDraftBusinessCase:
 		intake.DraftBusinessCaseState = models.SIRFSEditsRequested
-		intake.Step = models.SystemIntakeStepDRAFTBIZCASE
+		intake.Step = models.SystemIntakeStepDraftBusinessCase
 		targetForm = models.GovernanceRequestFeedbackTargetFormDraftBusinessCase
 	case models.SystemIntakeFormStepFinalBusinessCase:
 		intake.FinalBusinessCaseState = models.SIRFSEditsRequested
-		intake.Step = models.SystemIntakeStepFINALBIZCASE
+		intake.Step = models.SystemIntakeStepFinalBusinessCase
 		targetForm = models.GovernanceRequestFeedbackTargetFormFinalBusinessCase
 	default:
 		return nil, &apperrors.BadRequestError{
@@ -300,7 +300,7 @@ func RejectIntakeAsNotApproved(
 	// * Even if a rejection decision has already been issued, an admin can confirm that decision on a reopened intake through this action
 
 	// update workflow state
-	intake.Step = models.SystemIntakeStepDECISION
+	intake.Step = models.SystemIntakeStepDecisionAndNextSteps
 	intake.State = models.SystemIntakeStateClosed
 	intake.DecisionState = models.SIDSNotApproved
 
@@ -430,7 +430,7 @@ func IssueLCID(
 	currTime := time.Now()
 
 	// update workflow state
-	intake.Step = models.SystemIntakeStepDECISION
+	intake.Step = models.SystemIntakeStepDecisionAndNextSteps
 	intake.State = models.SystemIntakeStateClosed
 	intake.DecisionState = models.SIDSLcidIssued
 
@@ -707,7 +707,7 @@ func CreateSystemIntakeActionNotITGovRequest(
 		return nil, err
 	}
 	intake.State = models.SystemIntakeStateClosed
-	intake.Step = models.SystemIntakeStepDECISION
+	intake.Step = models.SystemIntakeStepDecisionAndNextSteps
 	intake.RejectionReason = input.Reason
 	intake.DecisionState = models.SIDSNotGovernance
 
@@ -794,7 +794,7 @@ func UpdateLCID(
 	intake.UpdatedAt = &updatedTime
 
 	// update workflow state
-	intake.Step = models.SystemIntakeStepDECISION
+	intake.Step = models.SystemIntakeStepDecisionAndNextSteps
 	intake.State = models.SystemIntakeStateClosed
 	intake.DecisionState = models.SIDSLcidIssued
 
@@ -946,7 +946,7 @@ func ConfirmLCID(ctx context.Context,
 	intake.UpdatedAt = &updatedTime
 
 	// update workflow state
-	intake.Step = models.SystemIntakeStepDECISION
+	intake.Step = models.SystemIntakeStepDecisionAndNextSteps
 	intake.State = models.SystemIntakeStateClosed
 	intake.DecisionState = models.SIDSLcidIssued
 

@@ -20,7 +20,7 @@ func IsIntakeValid(intake *models.SystemIntake, newStep models.SystemIntakeStepT
 		}
 	}
 
-	if intake.Step == models.SystemIntakeStepINITIALFORM && intake.RequestFormState == models.SIRFSNotStarted {
+	if intake.Step == models.SystemIntakeStepInitialRequestForm && intake.RequestFormState == models.SIRFSNotStarted {
 		return &apperrors.BadRequestError{
 			Err: &apperrors.InvalidActionError{
 				ActionType: models.ActionTypePROGRESSTONEWSTEP,
@@ -47,11 +47,11 @@ func UpdateIntake(intake *models.SystemIntake, newStep models.SystemIntakeStepTo
 
 	switch newStep {
 	case models.SystemIntakeStepToProgressToDraftBusinessCase:
-		intake.Step = models.SystemIntakeStepDRAFTBIZCASE
+		intake.Step = models.SystemIntakeStepDraftBusinessCase
 		return nil
 
 	case models.SystemIntakeStepToProgressToGrtMeeting:
-		intake.Step = models.SystemIntakeStepGRTMEETING
+		intake.Step = models.SystemIntakeStepGrtMeeting
 
 		if newMeetingDate != nil {
 			intake.GRTDate = newMeetingDate
@@ -62,11 +62,11 @@ func UpdateIntake(intake *models.SystemIntake, newStep models.SystemIntakeStepTo
 		return nil
 
 	case models.SystemIntakeStepToProgressToFinalBusinessCase:
-		intake.Step = models.SystemIntakeStepFINALBIZCASE
+		intake.Step = models.SystemIntakeStepFinalBusinessCase
 		return nil
 
 	case models.SystemIntakeStepToProgressToGrbMeeting:
-		intake.Step = models.SystemIntakeStepGRBMEETING
+		intake.Step = models.SystemIntakeStepGrbMeeting
 
 		if newMeetingDate != nil {
 			intake.GRBDate = newMeetingDate

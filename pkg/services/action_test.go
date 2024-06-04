@@ -474,7 +474,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		intake := models.SystemIntake{Step: models.SystemIntakeStepDRAFTBIZCASE}
+		intake := models.SystemIntake{Step: models.SystemIntakeStepDraftBusinessCase}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		failValidation := func(businessCase *models.BusinessCase) error {
 			return &apperrors.ValidationError{
@@ -532,7 +532,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 			return nil
 		}
 
-		intake := models.SystemIntake{Step: models.SystemIntakeStepFINALBIZCASE}
+		intake := models.SystemIntake{Step: models.SystemIntakeStepFinalBusinessCase}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		failValidation := func(businessCase *models.BusinessCase) error {
 			return &apperrors.ValidationError{
@@ -688,7 +688,7 @@ func (s *ServicesTestSuite) TestNewSubmitBizCase() {
 		}
 
 		intake := models.SystemIntake{
-			Step: models.SystemIntakeStepDRAFTBIZCASE,
+			Step: models.SystemIntakeStepDraftBusinessCase,
 		}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 

@@ -24,7 +24,7 @@ func CreateSystemIntake(
 		RequestType: models.SystemIntakeRequestType(input.RequestType),
 		Requester:   input.Requester.Name,
 		State:       models.SystemIntakeStateOpen,
-		Step:        models.SystemIntakeStepINITIALFORM,
+		Step:        models.SystemIntakeStepInitialRequestForm,
 	}
 	createdIntake, err := store.CreateSystemIntake(ctx, &systemIntake)
 	return createdIntake, err

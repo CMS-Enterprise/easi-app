@@ -9,7 +9,7 @@ import (
 
 // CalculateSystemIntakeAdminStatus calculates the status to display in the admin view for a System Intake request, based on the current step, and the state of that step and the overall state
 func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.SystemIntakeStatusAdmin, error) {
-	if intake.Step == models.SystemIntakeStepDECISION && intake.DecisionState == models.SIDSNoDecision {
+	if intake.Step == models.SystemIntakeStepDecisionAndNextSteps && intake.DecisionState == models.SIDSNoDecision {
 		return "", fmt.Errorf("invalid state") // This status should not be returned in normal use of the application
 	}
 
@@ -21,7 +21,7 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 
 	if intake.State == models.SystemIntakeStateClosed &&
 		intake.DecisionState != models.SIDSNoDecision &&
-		intake.Step != models.SystemIntakeStepDECISION {
+		intake.Step != models.SystemIntakeStepDecisionAndNextSteps {
 		// If an intake has a decision but is re-opened, progressed to an earlier step,
 		// and then closed without a decision, show closed.
 		return models.SystemIntakeStatusAdminClosed, nil
@@ -30,17 +30,17 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 	var retStatus models.SystemIntakeStatusAdmin
 	var err error
 	switch intake.Step {
-	case models.SystemIntakeStepINITIALFORM:
+	case models.SystemIntakeStepInitialRequestForm:
 		retStatus = calcSystemIntakeInitialFormStatusAdmin(intake.RequestFormState)
-	case models.SystemIntakeStepDRAFTBIZCASE:
+	case models.SystemIntakeStepDraftBusinessCase:
 		retStatus = calcSystemIntakeDraftBusinessCaseStatusAdmin(intake.DraftBusinessCaseState)
-	case models.SystemIntakeStepGRTMEETING:
+	case models.SystemIntakeStepGrtMeeting:
 		retStatus = calcSystemIntakeGRTMeetingStatusAdmin(intake.GRTDate)
-	case models.SystemIntakeStepFINALBIZCASE:
+	case models.SystemIntakeStepFinalBusinessCase:
 		retStatus = calcSystemIntakeFinalBusinessCaseStatusAdmin(intake.FinalBusinessCaseState)
-	case models.SystemIntakeStepGRBMEETING:
+	case models.SystemIntakeStepGrbMeeting:
 		retStatus = calcSystemIntakeGRBMeetingStatusAdmin(intake.GRBDate)
-	case models.SystemIntakeStepDECISION:
+	case models.SystemIntakeStepDecisionAndNextSteps:
 		retStatus, err = calcSystemIntakeDecisionStatusAdmin(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
 		return retStatus, fmt.Errorf("issue calculating the admin state status, no valid step: %s", intake.Step)

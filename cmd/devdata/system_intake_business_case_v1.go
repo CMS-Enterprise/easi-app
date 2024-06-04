@@ -59,10 +59,10 @@ func submitBusinessCaseV1(
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
-	if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+	if intake.Step == models.SystemIntakeStepDraftBusinessCase {
 		intake.DraftBusinessCaseState = models.SIRFSSubmitted
 	}
-	if intake.Step == models.SystemIntakeStepFINALBIZCASE {
+	if intake.Step == models.SystemIntakeStepFinalBusinessCase {
 		intake.FinalBusinessCaseState = models.SIRFSSubmitted
 	}
 	intake, err := store.UpdateSystemIntake(ctx, intake)
@@ -77,10 +77,10 @@ func makeBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, i
 	if intake == nil {
 		intake = makeSystemIntake(name, nil, "USR1", logger, store)
 	}
-	if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+	if intake.Step == models.SystemIntakeStepDraftBusinessCase {
 		intake.DraftBusinessCaseState = models.SIRFSInProgress
 	}
-	if intake.Step == models.SystemIntakeStepFINALBIZCASE {
+	if intake.Step == models.SystemIntakeStepFinalBusinessCase {
 		intake.FinalBusinessCaseState = models.SIRFSInProgress
 	}
 	intake, err := store.UpdateSystemIntake(ctx, intake)

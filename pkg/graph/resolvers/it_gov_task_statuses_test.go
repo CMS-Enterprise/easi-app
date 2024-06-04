@@ -65,7 +65,7 @@ func TestIntakeFormStatus(t *testing.T) {
 		{
 			testCase: "Request form not started",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovIntakeFormStatusReady,
@@ -74,7 +74,7 @@ func TestIntakeFormStatus(t *testing.T) {
 		{
 			testCase: "Request form started",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovIntakeFormStatusInProgress,
@@ -83,7 +83,7 @@ func TestIntakeFormStatus(t *testing.T) {
 		{
 			testCase: "Request form edits requested",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovIntakeFormStatusEditsRequested,
@@ -92,7 +92,7 @@ func TestIntakeFormStatus(t *testing.T) {
 		{
 			testCase: "Request form submitted",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovIntakeFormStatusCompleted,
@@ -101,7 +101,7 @@ func TestIntakeFormStatus(t *testing.T) {
 		{
 			testCase: "Request form default case",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: defaultTestState,
 			},
 			expectedStatus: "",
@@ -112,7 +112,7 @@ func TestIntakeFormStatus(t *testing.T) {
 		{
 			testCase: "Request form not started: not at intake form step",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepGRBMEETING,
+				Step:             models.SystemIntakeStepGrbMeeting,
 				RequestFormState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovIntakeFormStatusCompleted,
@@ -121,7 +121,7 @@ func TestIntakeFormStatus(t *testing.T) {
 		{
 			testCase: "Request form started: not at intake form step",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepGRBMEETING,
+				Step:             models.SystemIntakeStepGrbMeeting,
 				RequestFormState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovIntakeFormStatusCompleted,
@@ -130,7 +130,7 @@ func TestIntakeFormStatus(t *testing.T) {
 		{
 			testCase: "Request form edits requested: not at intake form step",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepGRBMEETING,
+				Step:             models.SystemIntakeStepGrbMeeting,
 				RequestFormState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovIntakeFormStatusCompleted,
@@ -139,7 +139,7 @@ func TestIntakeFormStatus(t *testing.T) {
 		{
 			testCase: "Request form submitted: not at intake form step",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepGRBMEETING,
+				Step:             models.SystemIntakeStepGrbMeeting,
 				RequestFormState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovIntakeFormStatusCompleted,
@@ -148,7 +148,7 @@ func TestIntakeFormStatus(t *testing.T) {
 		{
 			testCase: "Request form default state: not at intake form step, expect complete",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepGRBMEETING,
+				Step:             models.SystemIntakeStepGrbMeeting,
 				RequestFormState: defaultTestState,
 			},
 			expectedStatus: models.ITGovIntakeFormStatusCompleted,
@@ -180,7 +180,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 		{
 			testCase: "Request form not started",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovFeedbackStatusCantStart,
@@ -189,7 +189,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 		{
 			testCase: "Request form started",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovFeedbackStatusCantStart,
@@ -198,7 +198,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 		{
 			testCase: "Request form Submitted",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovFeedbackStatusInReview,
@@ -208,7 +208,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 		{
 			testCase: "Request form edits requested",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovFeedbackStatusCompleted,
@@ -217,7 +217,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 		{
 			testCase: "Request form default case",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: defaultTestState,
 			},
 			expectedStatus: "",
@@ -228,7 +228,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 		{
 			testCase: "Request form not started: not at intake form step",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepGRBMEETING,
+				Step:             models.SystemIntakeStepGrbMeeting,
 				RequestFormState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovFeedbackStatusCompleted,
@@ -237,7 +237,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 		{
 			testCase: "Request form started: not at intake form step",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepGRBMEETING,
+				Step:             models.SystemIntakeStepGrbMeeting,
 				RequestFormState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovFeedbackStatusCompleted,
@@ -246,7 +246,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 		{
 			testCase: "Request form edits requested: not at intake form step",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepGRBMEETING,
+				Step:             models.SystemIntakeStepGrbMeeting,
 				RequestFormState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovFeedbackStatusCompleted,
@@ -255,7 +255,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 		{
 			testCase: "Request form submitted: not at intake form step",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepGRBMEETING,
+				Step:             models.SystemIntakeStepGrbMeeting,
 				RequestFormState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovFeedbackStatusCompleted,
@@ -264,7 +264,7 @@ func TestFeedbackFromInitialReviewStatus(t *testing.T) {
 		{
 			testCase: "Request form default state: not at intake form step, expect complete",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepGRBMEETING,
+				Step:             models.SystemIntakeStepGrbMeeting,
 				RequestFormState: defaultTestState,
 			},
 			expectedStatus: models.ITGovFeedbackStatusCompleted,
@@ -295,7 +295,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "Request form not started",
 			intake: models.SystemIntake{
-				Step: models.SystemIntakeStepINITIALFORM,
+				Step: models.SystemIntakeStepInitialRequestForm,
 			},
 			expectedStatus: models.ITGovDecisionStatusCantStart,
 			expectError:    false,
@@ -303,7 +303,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case",
 			intake: models.SystemIntake{
-				Step: models.SystemIntakeStepDRAFTBIZCASE,
+				Step: models.SystemIntakeStepDraftBusinessCase,
 			},
 			expectedStatus: models.ITGovDecisionStatusCantStart,
 			expectError:    false,
@@ -311,7 +311,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "GRT Meeting",
 			intake: models.SystemIntake{
-				Step: models.SystemIntakeStepGRTMEETING,
+				Step: models.SystemIntakeStepGrtMeeting,
 			},
 			expectedStatus: models.ITGovDecisionStatusCantStart,
 			expectError:    false,
@@ -319,7 +319,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case",
 			intake: models.SystemIntake{
-				Step: models.SystemIntakeStepFINALBIZCASE,
+				Step: models.SystemIntakeStepFinalBusinessCase,
 			},
 			expectedStatus: models.ITGovDecisionStatusCantStart,
 			expectError:    false,
@@ -328,7 +328,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "GRB Meeting: no meeting scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
+				Step:    models.SystemIntakeStepGrbMeeting,
 				GRBDate: nil,
 			},
 			expectedStatus: models.ITGovDecisionStatusCantStart,
@@ -337,7 +337,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "GRB Meeting: meeting scheduled, but hasn't happened",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
+				Step:    models.SystemIntakeStepGrbMeeting,
 				GRBDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovDecisionStatusCantStart,
@@ -346,7 +346,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "GRB Meeting: meeting scheduled, it already happened",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
+				Step:    models.SystemIntakeStepGrbMeeting,
 				GRBDate: &yesterday,
 			},
 			expectedStatus: models.ITGovDecisionStatusInReview,
@@ -355,7 +355,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "Decision issued step: LCID Issued",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSLcidIssued,
 			},
 			expectedStatus: models.ITGovDecisionStatusCompleted,
@@ -364,7 +364,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "Decision issued step: Not Approved",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSNotApproved,
 			},
 			expectedStatus: models.ITGovDecisionStatusCompleted,
@@ -373,7 +373,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "Decision issued step: Not an IT Governance Request",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSNotGovernance,
 			},
 			expectedStatus: models.ITGovDecisionStatusCompleted,
@@ -382,7 +382,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 		{
 			testCase: "Decision issued step: No decision issued",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSNoDecision,
 			},
 			expectedStatus: "",
@@ -414,7 +414,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Request form not started",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusCantStart,
@@ -431,7 +431,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case Step: Invalid State",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				DraftBusinessCaseState: defaultTestState,
 			},
 			expectedStatus: "",
@@ -440,7 +440,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case Step: Not Started",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusReady,
@@ -449,7 +449,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case Step: In Progress",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				DraftBusinessCaseState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusInProgress,
@@ -458,7 +458,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case Step: Submitted",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusSubmitted,
@@ -467,7 +467,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case Step: Edits Requested",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusEditsRequested,
@@ -476,7 +476,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: Invalid State",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDECISION,
+				Step:                   models.SystemIntakeStepDecisionAndNextSteps,
 				DraftBusinessCaseState: defaultTestState,
 			},
 			expectedStatus: "",
@@ -485,7 +485,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: Invalid State",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRTMEETING,
+				Step:                   models.SystemIntakeStepGrtMeeting,
 				DraftBusinessCaseState: defaultTestState,
 			},
 			expectedStatus: "",
@@ -494,7 +494,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: Invalid State",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRBMEETING,
+				Step:                   models.SystemIntakeStepGrbMeeting,
 				DraftBusinessCaseState: defaultTestState,
 			},
 			expectedStatus: "",
@@ -503,7 +503,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case: Invalid State",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				DraftBusinessCaseState: defaultTestState,
 			},
 			expectedStatus: "",
@@ -512,7 +512,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: Draft Business Case Not Needed",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDECISION,
+				Step:                   models.SystemIntakeStepDecisionAndNextSteps,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusNotNeeded,
@@ -521,7 +521,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: Draft Business Case Not Needed",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRTMEETING,
+				Step:                   models.SystemIntakeStepGrtMeeting,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusNotNeeded,
@@ -530,7 +530,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: Draft Business Case Not Needed",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRBMEETING,
+				Step:                   models.SystemIntakeStepGrbMeeting,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusNotNeeded,
@@ -539,7 +539,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case: Draft Business Case Not Needed",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusNotNeeded,
@@ -548,7 +548,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: Draft Business Case Edits Requested --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDECISION,
+				Step:                   models.SystemIntakeStepDecisionAndNextSteps,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
@@ -557,7 +557,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: Draft Business Case Edits Requested --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRTMEETING,
+				Step:                   models.SystemIntakeStepGrtMeeting,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
@@ -566,7 +566,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: Draft Business Case Edits Requested --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRBMEETING,
+				Step:                   models.SystemIntakeStepGrbMeeting,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
@@ -575,7 +575,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case: Draft Business Case Edits Requested --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
@@ -584,7 +584,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: Draft Business Case In Progress --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDECISION,
+				Step:                   models.SystemIntakeStepDecisionAndNextSteps,
 				DraftBusinessCaseState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
@@ -593,7 +593,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: Draft Business Case In Progress --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRTMEETING,
+				Step:                   models.SystemIntakeStepGrtMeeting,
 				DraftBusinessCaseState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
@@ -602,7 +602,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: Draft Business Case In Progress --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRBMEETING,
+				Step:                   models.SystemIntakeStepGrbMeeting,
 				DraftBusinessCaseState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
@@ -611,7 +611,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case: Draft Business Case In Progress --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				DraftBusinessCaseState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
@@ -620,7 +620,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: Draft Business Case Submitted --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDECISION,
+				Step:                   models.SystemIntakeStepDecisionAndNextSteps,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
@@ -629,7 +629,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: Draft Business Case Submitted --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRTMEETING,
+				Step:                   models.SystemIntakeStepGrtMeeting,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
@@ -638,7 +638,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: Draft Business Case Submitted --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRBMEETING,
+				Step:                   models.SystemIntakeStepGrbMeeting,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
@@ -647,7 +647,7 @@ func TestBizCaseDraftStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case: Draft Business Case Submitted --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovDraftBusinessCaseStatusDone,
@@ -679,7 +679,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "Request form: No GRT Date Scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepINITIALFORM,
+				Step:    models.SystemIntakeStepInitialRequestForm,
 				GRTDate: nil,
 			},
 			expectedStatus: models.ITGovGRTStatusCantStart,
@@ -688,7 +688,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "Request form: GRT Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepINITIALFORM,
+				Step:    models.SystemIntakeStepInitialRequestForm,
 				GRTDate: &yesterday,
 			},
 			expectedStatus: models.ITGovGRTStatusCompleted,
@@ -697,7 +697,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "Request form: GRT Date Tommorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepINITIALFORM,
+				Step:    models.SystemIntakeStepInitialRequestForm,
 				GRTDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovGRTStatusScheduled,
@@ -706,7 +706,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case: No GRT Date Scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDRAFTBIZCASE,
+				Step:    models.SystemIntakeStepDraftBusinessCase,
 				GRTDate: nil,
 			},
 			expectedStatus: models.ITGovGRTStatusCantStart,
@@ -715,7 +715,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case: GRT Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDRAFTBIZCASE,
+				Step:    models.SystemIntakeStepDraftBusinessCase,
 				GRTDate: &yesterday,
 			},
 			expectedStatus: models.ITGovGRTStatusCompleted,
@@ -724,7 +724,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case: GRT Date Tommorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDRAFTBIZCASE,
+				Step:    models.SystemIntakeStepDraftBusinessCase,
 				GRTDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovGRTStatusScheduled,
@@ -733,7 +733,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: No GRT Date Scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
+				Step:    models.SystemIntakeStepGrtMeeting,
 				GRTDate: nil,
 			},
 			expectedStatus: models.ITGovGRTStatusReadyToSchedule,
@@ -742,7 +742,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: GRT Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
+				Step:    models.SystemIntakeStepGrtMeeting,
 				GRTDate: &yesterday,
 			},
 			expectedStatus: models.ITGovGRTStatusAwaitingDecision,
@@ -751,7 +751,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: GRT Date Tommorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
+				Step:    models.SystemIntakeStepGrtMeeting,
 				GRTDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovGRTStatusScheduled,
@@ -760,7 +760,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case Step: No GRT Date Scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepFINALBIZCASE,
+				Step:    models.SystemIntakeStepFinalBusinessCase,
 				GRTDate: nil,
 			},
 			expectedStatus: models.ITGovGRTStatusNotNeeded,
@@ -769,7 +769,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case Step: GRT Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepFINALBIZCASE,
+				Step:    models.SystemIntakeStepFinalBusinessCase,
 				GRTDate: &yesterday,
 			},
 			expectedStatus: models.ITGovGRTStatusCompleted,
@@ -778,7 +778,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case Step: GRT Date Tommorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepFINALBIZCASE,
+				Step:    models.SystemIntakeStepFinalBusinessCase,
 				GRTDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovGRTStatusScheduled,
@@ -787,7 +787,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: No GRT Date Scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
+				Step:    models.SystemIntakeStepGrbMeeting,
 				GRTDate: nil,
 			},
 			expectedStatus: models.ITGovGRTStatusNotNeeded,
@@ -796,7 +796,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: GRT Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
+				Step:    models.SystemIntakeStepGrbMeeting,
 				GRTDate: &yesterday,
 			},
 			expectedStatus: models.ITGovGRTStatusCompleted,
@@ -805,7 +805,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: GRT Date Tommorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
+				Step:    models.SystemIntakeStepGrbMeeting,
 				GRTDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovGRTStatusScheduled,
@@ -814,7 +814,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: No GRT Date Scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDECISION,
+				Step:    models.SystemIntakeStepDecisionAndNextSteps,
 				GRTDate: nil,
 			},
 			expectedStatus: models.ITGovGRTStatusNotNeeded,
@@ -823,7 +823,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: GRT Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDECISION,
+				Step:    models.SystemIntakeStepDecisionAndNextSteps,
 				GRTDate: &yesterday,
 			},
 			expectedStatus: models.ITGovGRTStatusCompleted,
@@ -832,7 +832,7 @@ func TestGrtMeetingStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: GRT Date Tommorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDECISION,
+				Step:    models.SystemIntakeStepDecisionAndNextSteps,
 				GRTDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovGRTStatusScheduled,
@@ -890,7 +890,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Request form not started",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
@@ -907,7 +907,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case Step: Invalid State",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				FinalBusinessCaseState: defaultTestState,
 			},
 			expectedStatus: "",
@@ -916,7 +916,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case Step: Not Started",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusReady,
@@ -925,7 +925,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case Step: In Progress",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				FinalBusinessCaseState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusInProgress,
@@ -934,7 +934,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case Step: Submitted",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusSubmitted,
@@ -943,7 +943,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case Step: Edits Requested",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusEditsRequested,
@@ -952,7 +952,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: Invalid State",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDECISION,
+				Step:                   models.SystemIntakeStepDecisionAndNextSteps,
 				FinalBusinessCaseState: defaultTestState,
 			},
 			expectedStatus: "",
@@ -961,7 +961,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: Invalid State",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRTMEETING,
+				Step:                   models.SystemIntakeStepGrtMeeting,
 				FinalBusinessCaseState: defaultTestState,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart, // because it isn't there yet, we don't care about the invalid state
@@ -970,7 +970,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: Invalid State",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRBMEETING,
+				Step:                   models.SystemIntakeStepGrbMeeting,
 				FinalBusinessCaseState: defaultTestState,
 			},
 			expectedStatus: "",
@@ -979,7 +979,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case: Invalid State",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				FinalBusinessCaseState: defaultTestState,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart, // because it isn't there yet, we don't care about the invalid state
@@ -988,7 +988,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: Final Business Case Not Needed",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDECISION,
+				Step:                   models.SystemIntakeStepDecisionAndNextSteps,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusNotNeeded,
@@ -997,7 +997,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: Final Business Case Cant Start",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRTMEETING,
+				Step:                   models.SystemIntakeStepGrtMeeting,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
@@ -1006,7 +1006,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: Final Business Case Not Needed",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRBMEETING,
+				Step:                   models.SystemIntakeStepGrbMeeting,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusNotNeeded,
@@ -1015,7 +1015,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case: Final Business Case Cant Start",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
@@ -1024,7 +1024,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: Final Business Case Edits Requested --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDECISION,
+				Step:                   models.SystemIntakeStepDecisionAndNextSteps,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusDone,
@@ -1033,7 +1033,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: Final Business Case Edits Requested --> Cant start",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRTMEETING,
+				Step:                   models.SystemIntakeStepGrtMeeting,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
@@ -1042,7 +1042,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: Final Business Case Edits Requested --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRBMEETING,
+				Step:                   models.SystemIntakeStepGrbMeeting,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusDone,
@@ -1051,7 +1051,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case: Final Business Case Edits Requested --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
@@ -1060,7 +1060,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: Final Business Case In Progress --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDECISION,
+				Step:                   models.SystemIntakeStepDecisionAndNextSteps,
 				FinalBusinessCaseState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusDone,
@@ -1069,7 +1069,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: Final Business Case In Progress --> Can't Start",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRTMEETING,
+				Step:                   models.SystemIntakeStepGrtMeeting,
 				FinalBusinessCaseState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
@@ -1078,7 +1078,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: Final Business Case In Progress --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRBMEETING,
+				Step:                   models.SystemIntakeStepGrbMeeting,
 				FinalBusinessCaseState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusDone,
@@ -1087,7 +1087,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case: Final Business Case In Progress --> Cant Start",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				FinalBusinessCaseState: models.SIRFSInProgress,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
@@ -1096,7 +1096,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: Final Business Case Submitted --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDECISION,
+				Step:                   models.SystemIntakeStepDecisionAndNextSteps,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusDone,
@@ -1105,7 +1105,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: Final Business Case Submitted --> Cant Start",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRTMEETING,
+				Step:                   models.SystemIntakeStepGrtMeeting,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
@@ -1114,7 +1114,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: Final Business Case Submitted --> Done",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepGRBMEETING,
+				Step:                   models.SystemIntakeStepGrbMeeting,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusDone,
@@ -1123,7 +1123,7 @@ func TestBizCaseFinalStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case: Final Business Case Submitted --> Cant Start",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 			},
 			expectedStatus: models.ITGovFinalBusinessCaseStatusCantStart,
@@ -1156,7 +1156,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Request form: No GRB Date Scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepINITIALFORM,
+				Step:    models.SystemIntakeStepInitialRequestForm,
 				GRBDate: nil,
 			},
 			expectedStatus: models.ITGovGRBStatusCantStart,
@@ -1165,7 +1165,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Request form: GRB Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepINITIALFORM,
+				Step:    models.SystemIntakeStepInitialRequestForm,
 				GRBDate: &yesterday,
 			},
 			expectedStatus: models.ITGovGRBStatusCompleted,
@@ -1174,7 +1174,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Request form: GRB Date Tommorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepINITIALFORM,
+				Step:    models.SystemIntakeStepInitialRequestForm,
 				GRBDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovGRBStatusScheduled,
@@ -1183,7 +1183,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case: No GRB Date Scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDRAFTBIZCASE,
+				Step:    models.SystemIntakeStepDraftBusinessCase,
 				GRBDate: nil,
 			},
 			expectedStatus: models.ITGovGRBStatusCantStart,
@@ -1192,7 +1192,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case: GRB Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDRAFTBIZCASE,
+				Step:    models.SystemIntakeStepDraftBusinessCase,
 				GRBDate: &yesterday,
 			},
 			expectedStatus: models.ITGovGRBStatusCompleted,
@@ -1201,7 +1201,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Draft Business Case: GRB Date Tommorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDRAFTBIZCASE,
+				Step:    models.SystemIntakeStepDraftBusinessCase,
 				GRBDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovGRBStatusScheduled,
@@ -1210,7 +1210,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: No GRB Date Scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
+				Step:    models.SystemIntakeStepGrtMeeting,
 				GRBDate: nil,
 			},
 			expectedStatus: models.ITGovGRBStatusCantStart,
@@ -1219,7 +1219,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: GRB Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
+				Step:    models.SystemIntakeStepGrtMeeting,
 				GRBDate: &yesterday,
 			},
 			expectedStatus: models.ITGovGRBStatusCompleted,
@@ -1228,7 +1228,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "GRT Step: GRB Date Tommorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
+				Step:    models.SystemIntakeStepGrtMeeting,
 				GRBDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovGRBStatusScheduled,
@@ -1237,7 +1237,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case Step: No GRB Date Scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepFINALBIZCASE,
+				Step:    models.SystemIntakeStepFinalBusinessCase,
 				GRBDate: nil,
 			},
 			expectedStatus: models.ITGovGRBStatusCantStart,
@@ -1246,7 +1246,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case Step: GRB Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepFINALBIZCASE,
+				Step:    models.SystemIntakeStepFinalBusinessCase,
 				GRBDate: &yesterday,
 			},
 			expectedStatus: models.ITGovGRBStatusCompleted,
@@ -1255,7 +1255,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Final Business Case Step: GRB Date Tommorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepFINALBIZCASE,
+				Step:    models.SystemIntakeStepFinalBusinessCase,
 				GRBDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovGRBStatusScheduled,
@@ -1264,7 +1264,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: No GRB Date Scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
+				Step:    models.SystemIntakeStepGrbMeeting,
 				GRBDate: nil,
 			},
 			expectedStatus: models.ITGovGRBStatusReadyToSchedule,
@@ -1273,7 +1273,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: GRB Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
+				Step:    models.SystemIntakeStepGrbMeeting,
 				GRBDate: &yesterday,
 			},
 			expectedStatus: models.ITGovGRBStatusAwaitingDecision,
@@ -1282,7 +1282,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "GRB Step: GRB Date Tommorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
+				Step:    models.SystemIntakeStepGrbMeeting,
 				GRBDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovGRBStatusScheduled,
@@ -1291,7 +1291,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: No GRB Date Scheduled",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDECISION,
+				Step:    models.SystemIntakeStepDecisionAndNextSteps,
 				GRBDate: nil,
 			},
 			expectedStatus: models.ITGovGRBStatusNotNeeded,
@@ -1300,7 +1300,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: GRB Date Yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDECISION,
+				Step:    models.SystemIntakeStepDecisionAndNextSteps,
 				GRBDate: &yesterday,
 			},
 			expectedStatus: models.ITGovGRBStatusCompleted,
@@ -1309,7 +1309,7 @@ func TestGrbMeetingStatus(t *testing.T) {
 		{
 			testCase: "Decision Step: GRB Date Tommorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepDECISION,
+				Step:    models.SystemIntakeStepDecisionAndNextSteps,
 				GRBDate: &tomorrow,
 			},
 			expectedStatus: models.ITGovGRBStatusScheduled,

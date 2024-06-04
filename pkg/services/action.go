@@ -241,7 +241,7 @@ func NewSubmitBusinessCase(
 		updatedAt := config.clock.Now()
 		businessCase.UpdatedAt = &updatedAt
 
-		if intake.Step == models.SystemIntakeStepFINALBIZCASE {
+		if intake.Step == models.SystemIntakeStepFinalBusinessCase {
 			err = validateForSubmit(businessCase)
 			if err != nil {
 				return err
@@ -267,19 +267,19 @@ func NewSubmitBusinessCase(
 		}
 
 		isResubmitted := false
-		if (intake.Step == models.SystemIntakeStepDRAFTBIZCASE && intake.DraftBusinessCaseState == models.SIRFSEditsRequested) ||
-			(intake.Step == models.SystemIntakeStepFINALBIZCASE && intake.FinalBusinessCaseState == models.SIRFSEditsRequested) {
+		if (intake.Step == models.SystemIntakeStepDraftBusinessCase && intake.DraftBusinessCaseState == models.SIRFSEditsRequested) ||
+			(intake.Step == models.SystemIntakeStepFinalBusinessCase && intake.FinalBusinessCaseState == models.SIRFSEditsRequested) {
 			isResubmitted = true
 		}
 		isDraft := false
-		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+		if intake.Step == models.SystemIntakeStepDraftBusinessCase {
 			isDraft = true
 		}
 
 		// Set intake state based on v2 logic
-		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+		if intake.Step == models.SystemIntakeStepDraftBusinessCase {
 			intake.DraftBusinessCaseState = models.SIRFSSubmitted
-		} else if intake.Step == models.SystemIntakeStepFINALBIZCASE {
+		} else if intake.Step == models.SystemIntakeStepFinalBusinessCase {
 			intake.FinalBusinessCaseState = models.SIRFSSubmitted
 		}
 
@@ -317,7 +317,7 @@ func NewSubmitBusinessCase(
 		}
 
 		// TODO - EASI-2363 - rework conditional to also trigger on publishing finalized system intakes
-		if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
+		if intake.Step == models.SystemIntakeStepDraftBusinessCase {
 			err = submitToCEDAR(ctx, *businessCase)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("Submission to CEDAR failed", zap.Error(err))

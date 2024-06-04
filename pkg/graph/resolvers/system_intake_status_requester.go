@@ -12,7 +12,7 @@ const noDecisionInvalidStateErrMsg = "issue calculating the requester intake sta
 // CalculateSystemIntakeRequesterStatus calculates the status to display in the requester view for a System Intake request,
 // based on the intake's current step, the state of that step, and the overall intake state (open/closed)
 func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTime time.Time) (models.SystemIntakeStatusRequester, error) {
-	if intake.Step == models.SystemIntakeStepDECISION && intake.DecisionState == models.SIDSNoDecision {
+	if intake.Step == models.SystemIntakeStepDecisionAndNextSteps && intake.DecisionState == models.SIDSNoDecision {
 		return "", fmt.Errorf(noDecisionInvalidStateErrMsg)
 	}
 
@@ -21,26 +21,26 @@ func CalculateSystemIntakeRequesterStatus(intake *models.SystemIntake, currentTi
 	}
 	if intake.State == models.SystemIntakeStateClosed &&
 		intake.DecisionState != models.SIDSNoDecision &&
-		intake.Step != models.SystemIntakeStepDECISION {
+		intake.Step != models.SystemIntakeStepDecisionAndNextSteps {
 		// If an intake has a decision but is re-opened, progressed to an earlier step,
 		// and then closed without a decision, show closed.
 		return models.SystemIntakeStatusRequesterClosed, nil
 	}
 
 	switch intake.Step {
-	case models.SystemIntakeStepINITIALFORM:
+	case models.SystemIntakeStepInitialRequestForm:
 		return calcSystemIntakeInitialFormStatusRequester(intake.RequestFormState)
-	case models.SystemIntakeStepDRAFTBIZCASE:
+	case models.SystemIntakeStepDraftBusinessCase:
 		return calcSystemIntakeDraftBusinessCaseStatusRequester(intake.DraftBusinessCaseState)
-	case models.SystemIntakeStepGRTMEETING:
+	case models.SystemIntakeStepGrtMeeting:
 		// this calc function doesn't use a switch statement and can't possibly return an error
 		return calcSystemIntakeGRTMeetingStatusRequester(intake.GRTDate, currentTime), nil
-	case models.SystemIntakeStepFINALBIZCASE:
+	case models.SystemIntakeStepFinalBusinessCase:
 		return calcSystemIntakeFinalBusinessCaseStatusRequester(intake.FinalBusinessCaseState)
-	case models.SystemIntakeStepGRBMEETING:
+	case models.SystemIntakeStepGrbMeeting:
 		// this calc function doesn't use a switch statement and can't possibly return an error
 		return calcSystemIntakeGRBMeetingStatusRequester(intake.GRBDate, currentTime), nil
-	case models.SystemIntakeStepDECISION:
+	case models.SystemIntakeStepDecisionAndNextSteps:
 		return calcSystemIntakeDecisionStatusRequester(intake.DecisionState, intake.LCIDStatus(time.Now()))
 	default:
 		return "", fmt.Errorf("issue calculating the requester intake status, no valid step")

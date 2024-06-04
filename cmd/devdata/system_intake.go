@@ -171,7 +171,7 @@ func createSystemIntake(
 		RequestType: requestType,
 		Requester:   requesterName,
 		State:       models.SystemIntakeStateOpen,
-		Step:        models.SystemIntakeStepINITIALFORM,
+		Step:        models.SystemIntakeStepInitialRequestForm,
 	}
 	intake, err := store.CreateSystemIntake(ctx, &i)
 	if err != nil {

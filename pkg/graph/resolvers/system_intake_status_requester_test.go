@@ -55,7 +55,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Request form not started",
 				intake: models.SystemIntake{
-					Step:             models.SystemIntakeStepINITIALFORM,
+					Step:             models.SystemIntakeStepInitialRequestForm,
 					RequestFormState: models.SIRFSNotStarted,
 					State:            models.SystemIntakeStateOpen,
 				},
@@ -65,7 +65,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Request form in progress",
 				intake: models.SystemIntake{
-					Step:             models.SystemIntakeStepINITIALFORM,
+					Step:             models.SystemIntakeStepInitialRequestForm,
 					RequestFormState: models.SIRFSInProgress,
 					State:            models.SystemIntakeStateOpen,
 				},
@@ -75,7 +75,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Request form edits requested",
 				intake: models.SystemIntake{
-					Step:             models.SystemIntakeStepINITIALFORM,
+					Step:             models.SystemIntakeStepInitialRequestForm,
 					RequestFormState: models.SIRFSEditsRequested,
 					State:            models.SystemIntakeStateOpen,
 				},
@@ -85,7 +85,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Request form submitted",
 				intake: models.SystemIntake{
-					Step:             models.SystemIntakeStepINITIALFORM,
+					Step:             models.SystemIntakeStepInitialRequestForm,
 					RequestFormState: models.SIRFSSubmitted,
 					State:            models.SystemIntakeStateOpen,
 				},
@@ -95,7 +95,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Closed while in request form",
 				intake: models.SystemIntake{
-					Step:             models.SystemIntakeStepINITIALFORM,
+					Step:             models.SystemIntakeStepInitialRequestForm,
 					RequestFormState: models.SIRFSInProgress,
 					State:            models.SystemIntakeStateClosed,
 					DecisionState:    models.SIDSNoDecision,
@@ -112,7 +112,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Draft Biz Case form not started",
 				intake: models.SystemIntake{
-					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+					Step:                   models.SystemIntakeStepDraftBusinessCase,
 					DraftBusinessCaseState: models.SIRFSNotStarted,
 					State:                  models.SystemIntakeStateOpen,
 				},
@@ -122,7 +122,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Draft Biz Case form in progress",
 				intake: models.SystemIntake{
-					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+					Step:                   models.SystemIntakeStepDraftBusinessCase,
 					DraftBusinessCaseState: models.SIRFSInProgress,
 					State:                  models.SystemIntakeStateOpen,
 				},
@@ -132,7 +132,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Draft Biz Case form edits requested",
 				intake: models.SystemIntake{
-					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+					Step:                   models.SystemIntakeStepDraftBusinessCase,
 					DraftBusinessCaseState: models.SIRFSEditsRequested,
 					State:                  models.SystemIntakeStateOpen,
 				},
@@ -142,7 +142,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Draft Biz Case form submitted",
 				intake: models.SystemIntake{
-					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+					Step:                   models.SystemIntakeStepDraftBusinessCase,
 					DraftBusinessCaseState: models.SIRFSSubmitted,
 					State:                  models.SystemIntakeStateOpen,
 				},
@@ -152,7 +152,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Closed while in Draft Biz Case form",
 				intake: models.SystemIntake{
-					Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+					Step:                   models.SystemIntakeStepDraftBusinessCase,
 					DraftBusinessCaseState: models.SIRFSInProgress,
 					State:                  models.SystemIntakeStateClosed,
 					DecisionState:          models.SIDSNoDecision,
@@ -169,7 +169,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "GRT meeting not scheduled yet",
 				intake: models.SystemIntake{
-					Step:    models.SystemIntakeStepGRTMEETING,
+					Step:    models.SystemIntakeStepGrtMeeting,
 					GRTDate: nil,
 					State:   models.SystemIntakeStateOpen,
 				},
@@ -179,7 +179,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "GRT meeting scheduled for tomorrow",
 				intake: models.SystemIntake{
-					Step:    models.SystemIntakeStepGRTMEETING,
+					Step:    models.SystemIntakeStepGrtMeeting,
 					GRTDate: &tomorrow,
 					State:   models.SystemIntakeStateOpen,
 				},
@@ -189,7 +189,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "GRT meeting happened yesterday",
 				intake: models.SystemIntake{
-					Step:    models.SystemIntakeStepGRTMEETING,
+					Step:    models.SystemIntakeStepGrtMeeting,
 					GRTDate: &yesterday,
 					State:   models.SystemIntakeStateOpen,
 				},
@@ -199,7 +199,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Closed while GRT meeting scheduled",
 				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepGRTMEETING,
+					Step:          models.SystemIntakeStepGrtMeeting,
 					GRTDate:       &tomorrow,
 					State:         models.SystemIntakeStateClosed,
 					DecisionState: models.SIDSNoDecision,
@@ -216,7 +216,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Final Biz Case form not started",
 				intake: models.SystemIntake{
-					Step:                   models.SystemIntakeStepFINALBIZCASE,
+					Step:                   models.SystemIntakeStepFinalBusinessCase,
 					FinalBusinessCaseState: models.SIRFSNotStarted,
 					State:                  models.SystemIntakeStateOpen,
 				},
@@ -226,7 +226,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Final Biz Case form in progress",
 				intake: models.SystemIntake{
-					Step:                   models.SystemIntakeStepFINALBIZCASE,
+					Step:                   models.SystemIntakeStepFinalBusinessCase,
 					FinalBusinessCaseState: models.SIRFSInProgress,
 					State:                  models.SystemIntakeStateOpen,
 				},
@@ -236,7 +236,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Final Biz Case form edits requested",
 				intake: models.SystemIntake{
-					Step:                   models.SystemIntakeStepFINALBIZCASE,
+					Step:                   models.SystemIntakeStepFinalBusinessCase,
 					FinalBusinessCaseState: models.SIRFSEditsRequested,
 					State:                  models.SystemIntakeStateOpen,
 				},
@@ -246,7 +246,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Final Biz Case form submitted",
 				intake: models.SystemIntake{
-					Step:                   models.SystemIntakeStepFINALBIZCASE,
+					Step:                   models.SystemIntakeStepFinalBusinessCase,
 					FinalBusinessCaseState: models.SIRFSSubmitted,
 					State:                  models.SystemIntakeStateOpen,
 				},
@@ -256,7 +256,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Closed while in Final Biz Case form",
 				intake: models.SystemIntake{
-					Step:                   models.SystemIntakeStepFINALBIZCASE,
+					Step:                   models.SystemIntakeStepFinalBusinessCase,
 					FinalBusinessCaseState: models.SIRFSInProgress,
 					State:                  models.SystemIntakeStateClosed,
 					DecisionState:          models.SIDSNoDecision,
@@ -273,7 +273,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "GRB meeting not scheduled yet",
 				intake: models.SystemIntake{
-					Step:    models.SystemIntakeStepGRBMEETING,
+					Step:    models.SystemIntakeStepGrbMeeting,
 					GRBDate: nil,
 					State:   models.SystemIntakeStateOpen,
 				},
@@ -283,7 +283,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "GRB meeting scheduled for tomorrow",
 				intake: models.SystemIntake{
-					Step:    models.SystemIntakeStepGRBMEETING,
+					Step:    models.SystemIntakeStepGrbMeeting,
 					GRBDate: &tomorrow,
 					State:   models.SystemIntakeStateOpen,
 				},
@@ -293,7 +293,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "GRB meeting happened yesterday",
 				intake: models.SystemIntake{
-					Step:    models.SystemIntakeStepGRBMEETING,
+					Step:    models.SystemIntakeStepGrbMeeting,
 					GRBDate: &yesterday,
 					State:   models.SystemIntakeStateOpen,
 				},
@@ -303,7 +303,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Closed while GRB meeting scheduled",
 				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepGRBMEETING,
+					Step:          models.SystemIntakeStepGrbMeeting,
 					GRBDate:       &tomorrow,
 					State:         models.SystemIntakeStateClosed,
 					DecisionState: models.SIDSNoDecision,
@@ -320,7 +320,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Decision made, LCID issued, closed",
 				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepDECISION,
+					Step:          models.SystemIntakeStepDecisionAndNextSteps,
 					DecisionState: models.SIDSLcidIssued,
 					State:         models.SystemIntakeStateClosed,
 				},
@@ -330,7 +330,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Decision made, LCID issued, but not added, closed",
 				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepDECISION,
+					Step:          models.SystemIntakeStepDecisionAndNextSteps,
 					DecisionState: models.SIDSLcidIssued,
 					// LifecycleID:        null.StringFrom("fake"), -- If there is no LCID, the status is closed
 					LifecycleExpiresAt: &yesterday,
@@ -343,7 +343,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Decision made, LCID expired, closed",
 				intake: models.SystemIntake{
-					Step:               models.SystemIntakeStepDECISION,
+					Step:               models.SystemIntakeStepDecisionAndNextSteps,
 					DecisionState:      models.SIDSLcidIssued,
 					LifecycleID:        null.StringFrom("fake"),
 					LifecycleExpiresAt: &yesterday,
@@ -356,7 +356,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Decision made, LCID Retired, closed",
 				intake: models.SystemIntake{
-					Step:               models.SystemIntakeStepDECISION,
+					Step:               models.SystemIntakeStepDecisionAndNextSteps,
 					DecisionState:      models.SIDSLcidIssued,
 					LifecycleID:        null.StringFrom("fake"),
 					LifecycleRetiresAt: &yesterday,
@@ -368,7 +368,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Decision made, LCID issued, re-opened",
 				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepDECISION,
+					Step:          models.SystemIntakeStepDecisionAndNextSteps,
 					DecisionState: models.SIDSLcidIssued,
 					State:         models.SystemIntakeStateOpen,
 				},
@@ -378,7 +378,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Decision made, Not Governance, closed",
 				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepDECISION,
+					Step:          models.SystemIntakeStepDecisionAndNextSteps,
 					DecisionState: models.SIDSNotGovernance,
 					State:         models.SystemIntakeStateClosed,
 				},
@@ -388,7 +388,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Decision made, Not Governance, re-opened",
 				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepDECISION,
+					Step:          models.SystemIntakeStepDecisionAndNextSteps,
 					DecisionState: models.SIDSNotGovernance,
 					State:         models.SystemIntakeStateOpen,
 				},
@@ -398,7 +398,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Decision made, Not Approved, closed",
 				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepDECISION,
+					Step:          models.SystemIntakeStepDecisionAndNextSteps,
 					DecisionState: models.SIDSNotApproved,
 					State:         models.SystemIntakeStateClosed,
 				},
@@ -408,7 +408,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Decision made, Not Approved, re-opened",
 				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepDECISION,
+					Step:          models.SystemIntakeStepDecisionAndNextSteps,
 					DecisionState: models.SIDSNotApproved,
 					State:         models.SystemIntakeStateOpen,
 				},
@@ -418,7 +418,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 			{
 				testName: "Decision made, but re-opened, progressed, then closed",
 				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepFINALBIZCASE,
+					Step:          models.SystemIntakeStepFinalBusinessCase,
 					DecisionState: models.SIDSNotApproved,
 					State:         models.SystemIntakeStateClosed,
 				},
@@ -429,7 +429,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 				// this state is invalid - an intake that's been closed with no decision should not have reached the decision step
 				testName: "Closed with no decision while in the decision step",
 				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepDECISION,
+					Step:          models.SystemIntakeStepDecisionAndNextSteps,
 					DecisionState: models.SIDSNoDecision,
 					State:         models.SystemIntakeStateClosed,
 				},
@@ -440,7 +440,7 @@ func systemIntakeStatusRequesterTestCases(mockCurrentTime time.Time) []testCases
 				// this state is invalid - if an intake has been closed with no decision, it should not be re-opened and remain in the decision step
 				testName: "Open with decisionState set to No Decision while in the decision step",
 				intake: models.SystemIntake{
-					Step:          models.SystemIntakeStepDECISION,
+					Step:          models.SystemIntakeStepDecisionAndNextSteps,
 					DecisionState: models.SIDSNoDecision,
 					State:         models.SystemIntakeStateOpen,
 				},

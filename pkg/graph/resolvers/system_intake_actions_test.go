@@ -15,17 +15,17 @@ import (
 func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 	ctx := context.Background()
 	initialSteps := []models.SystemIntakeStep{
-		models.SystemIntakeStepINITIALFORM,
-		models.SystemIntakeStepDRAFTBIZCASE,
-		models.SystemIntakeStepFINALBIZCASE,
-		models.SystemIntakeStepGRBMEETING,
-		models.SystemIntakeStepGRTMEETING,
-		models.SystemIntakeStepDECISION,
+		models.SystemIntakeStepInitialRequestForm,
+		models.SystemIntakeStepDraftBusinessCase,
+		models.SystemIntakeStepFinalBusinessCase,
+		models.SystemIntakeStepGrbMeeting,
+		models.SystemIntakeStepGrtMeeting,
+		models.SystemIntakeStepDecisionAndNextSteps,
 	}
 	formStepMap := map[models.SystemIntakeFormStep]models.SystemIntakeStep{
-		models.SystemIntakeFormStepInitialRequestForm: models.SystemIntakeStepINITIALFORM,
-		models.SystemIntakeFormStepDraftBusinessCase:  models.SystemIntakeStepDRAFTBIZCASE,
-		models.SystemIntakeFormStepFinalBusinessCase:  models.SystemIntakeStepFINALBIZCASE,
+		models.SystemIntakeFormStepInitialRequestForm: models.SystemIntakeStepInitialRequestForm,
+		models.SystemIntakeFormStepDraftBusinessCase:  models.SystemIntakeStepDraftBusinessCase,
+		models.SystemIntakeFormStepFinalBusinessCase:  models.SystemIntakeStepFinalBusinessCase,
 	}
 	invalidFormSteps := []models.SystemIntakeFormStep{
 		"GRT_MEETING",
@@ -37,7 +37,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		s.Run(fmt.Sprintf("Should error targetting %s step", invalidStep), func() {
 			intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 				RequestType: models.SystemIntakeRequestTypeNew,
-				Step:        models.SystemIntakeStepINITIALFORM,
+				Step:        models.SystemIntakeStepInitialRequestForm,
 			})
 			s.NoError(err)
 			additionalInfo := models.HTMLPointer("banana")
@@ -70,7 +70,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 					RequestType: models.SystemIntakeRequestTypeNew,
 					Step:        initialStep,
 				}
-				if initialStep == models.SystemIntakeStepDECISION {
+				if initialStep == models.SystemIntakeStepDecisionAndNextSteps {
 					intakeToCreate.DecisionState = models.SIDSLcidIssued
 				}
 				intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
@@ -120,7 +120,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 	s.Run("Should create feedback", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -153,7 +153,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 	s.Run("Should create action", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -182,12 +182,12 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(additionalInfo, createdAction.Feedback)
-		s.Equal(models.SystemIntakeStepINITIALFORM, *createdAction.Step)
+		s.Equal(models.SystemIntakeStepInitialRequestForm, *createdAction.Step)
 	})
 	s.Run("Should create admin note given input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -220,7 +220,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 	s.Run("Should NOT create admin note without input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -308,7 +308,7 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 	s.NoError(err)
 
 	// check workflow state
-	s.EqualValues(models.SystemIntakeStepDECISION, updatedIntake.Step)
+	s.EqualValues(models.SystemIntakeStepDecisionAndNextSteps, updatedIntake.Step)
 	s.EqualValues(models.SystemIntakeStateClosed, updatedIntake.State)
 	s.EqualValues(models.SIDSNotApproved, updatedIntake.DecisionState)
 
@@ -325,7 +325,7 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 	s.EqualValues(updatedIntake.ID, *action.IntakeID)
 	s.EqualValues(models.ActionTypeREJECT, action.ActionType)
 	s.EqualValues(additionalInfo, *action.Feedback)
-	s.EqualValues(models.SystemIntakeStepDECISION, *action.Step)
+	s.EqualValues(models.SystemIntakeStepDecisionAndNextSteps, *action.Step)
 
 	// should create admin note (since input included it)
 	allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
@@ -430,7 +430,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.NoError(err)
 
 		// check workflow state
-		s.EqualValues(models.SystemIntakeStepDECISION, updatedIntake.Step)
+		s.EqualValues(models.SystemIntakeStepDecisionAndNextSteps, updatedIntake.Step)
 		s.EqualValues(models.SystemIntakeStateClosed, updatedIntake.State)
 		s.EqualValues(models.SIDSLcidIssued, updatedIntake.DecisionState)
 
@@ -460,7 +460,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 		s.EqualValues(updatedIntake.ID, *action.IntakeID)
 		s.EqualValues(models.ActionTypeISSUELCID, action.ActionType)
 		s.EqualValues(additionalInfo, *action.Feedback)
-		s.EqualValues(models.SystemIntakeStepDECISION, *action.Step)
+		s.EqualValues(models.SystemIntakeStepDecisionAndNextSteps, *action.Step)
 
 		// should create admin note (since input included it)
 		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, updatedIntake.ID)
@@ -484,12 +484,12 @@ func (s *ResolverSuite) TestIssueLCID() {
 func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 	ctx := context.Background()
 	formSteps := []models.SystemIntakeStep{
-		models.SystemIntakeStepINITIALFORM,
-		models.SystemIntakeStepDRAFTBIZCASE,
-		models.SystemIntakeStepFINALBIZCASE,
-		models.SystemIntakeStepGRBMEETING,
-		models.SystemIntakeStepGRTMEETING,
-		models.SystemIntakeStepDECISION,
+		models.SystemIntakeStepInitialRequestForm,
+		models.SystemIntakeStepDraftBusinessCase,
+		models.SystemIntakeStepFinalBusinessCase,
+		models.SystemIntakeStepGrbMeeting,
+		models.SystemIntakeStepGrtMeeting,
+		models.SystemIntakeStepDecisionAndNextSteps,
 	}
 	for _, formStep := range formSteps {
 		s.Run(fmt.Sprintf("Should close request when in %s step", formStep), func() {
@@ -499,7 +499,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 				State:       models.SystemIntakeStateOpen,
 			}
 			// If in the decision step, an intake should always have a decision
-			if formStep == models.SystemIntakeStepDECISION {
+			if formStep == models.SystemIntakeStepDecisionAndNextSteps {
 				intakeToCreate.DecisionState = models.SIDSLcidIssued
 			}
 			intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
@@ -541,7 +541,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 				State:       models.SystemIntakeStateClosed,
 			}
 			// If in the decision step, an intake should always have a decision
-			if formStep == models.SystemIntakeStepDECISION {
+			if formStep == models.SystemIntakeStepDecisionAndNextSteps {
 				intakeToCreate.DecisionState = models.SIDSLcidIssued
 			}
 			intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
@@ -575,7 +575,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 	s.Run("Should create action", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 			State:       models.SystemIntakeStateOpen,
 		})
 		s.NoError(err)
@@ -604,12 +604,12 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(additionalInfo, createdAction.Feedback)
-		s.Equal(models.SystemIntakeStepINITIALFORM, *createdAction.Step)
+		s.Equal(models.SystemIntakeStepInitialRequestForm, *createdAction.Step)
 	})
 	s.Run("Should create admin note given input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -641,7 +641,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 	s.Run("Should NOT create admin note without input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 		})
 		s.NoError(err)
 		additionalInfo := models.HTMLPointer("banana")
@@ -673,12 +673,12 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 	ctx := context.Background()
 	formSteps := []models.SystemIntakeStep{
-		models.SystemIntakeStepINITIALFORM,
-		models.SystemIntakeStepDRAFTBIZCASE,
-		models.SystemIntakeStepFINALBIZCASE,
-		models.SystemIntakeStepGRBMEETING,
-		models.SystemIntakeStepGRTMEETING,
-		models.SystemIntakeStepDECISION,
+		models.SystemIntakeStepInitialRequestForm,
+		models.SystemIntakeStepDraftBusinessCase,
+		models.SystemIntakeStepFinalBusinessCase,
+		models.SystemIntakeStepGrbMeeting,
+		models.SystemIntakeStepGrtMeeting,
+		models.SystemIntakeStepDecisionAndNextSteps,
 	}
 	for _, formStep := range formSteps {
 		s.Run(fmt.Sprintf("Should reopen request when in %s step", formStep), func() {
@@ -688,7 +688,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 				State:       models.SystemIntakeStateClosed,
 			}
 			// If in the decision step, an intake should always have a decision
-			if formStep == models.SystemIntakeStepDECISION {
+			if formStep == models.SystemIntakeStepDecisionAndNextSteps {
 				intakeToCreate.DecisionState = models.SIDSLcidIssued
 			}
 			intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
@@ -730,7 +730,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 				State:       models.SystemIntakeStateOpen,
 			}
 			// If in the decision step, an intake should always have a decision
-			if formStep == models.SystemIntakeStepDECISION {
+			if formStep == models.SystemIntakeStepDecisionAndNextSteps {
 				intakeToCreate.DecisionState = models.SIDSLcidIssued
 			}
 			intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
@@ -764,7 +764,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 	s.Run("Should create action", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
@@ -793,12 +793,12 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(additionalInfo, createdAction.Feedback)
-		s.Equal(models.SystemIntakeStepINITIALFORM, *createdAction.Step)
+		s.Equal(models.SystemIntakeStepInitialRequestForm, *createdAction.Step)
 	})
 	s.Run("Should create admin note given input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
@@ -831,7 +831,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 	s.Run("Should NOT create admin note without input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
@@ -864,12 +864,12 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 	ctx := context.Background()
 	formSteps := []models.SystemIntakeStep{
-		models.SystemIntakeStepINITIALFORM,
-		models.SystemIntakeStepDRAFTBIZCASE,
-		models.SystemIntakeStepFINALBIZCASE,
-		models.SystemIntakeStepGRBMEETING,
-		models.SystemIntakeStepGRTMEETING,
-		models.SystemIntakeStepDECISION,
+		models.SystemIntakeStepInitialRequestForm,
+		models.SystemIntakeStepDraftBusinessCase,
+		models.SystemIntakeStepFinalBusinessCase,
+		models.SystemIntakeStepGrbMeeting,
+		models.SystemIntakeStepGrtMeeting,
+		models.SystemIntakeStepDecisionAndNextSteps,
 	}
 	formStates := []models.SystemIntakeState{
 		models.SystemIntakeStateClosed,
@@ -884,7 +884,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 					State:       formState,
 				}
 				// If in the decision step, an intake should always have a decision
-				if formStep == models.SystemIntakeStepDECISION {
+				if formStep == models.SystemIntakeStepDecisionAndNextSteps {
 					intakeToCreate.DecisionState = models.SIDSLcidIssued
 				}
 				intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, intakeToCreate)
@@ -915,7 +915,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 				// Intake should now be closed
 				s.Equal(actionedIntake.State, models.SystemIntakeStateClosed)
 				// Step should be decision
-				s.Equal(models.SystemIntakeStepDECISION, actionedIntake.Step)
+				s.Equal(models.SystemIntakeStepDecisionAndNextSteps, actionedIntake.Step)
 				// Decision state should be NOT_GOVERNANCE
 				s.Equal(models.SIDSNotGovernance, actionedIntake.DecisionState)
 				// Rejection Reason should be stored
@@ -926,7 +926,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 	s.Run("Should create action", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
@@ -955,12 +955,12 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 		s.NoError(err)
 		createdAction := allActions[0]
 		s.Equal(additionalInfo, createdAction.Feedback)
-		s.Equal(models.SystemIntakeStepDECISION, *createdAction.Step)
+		s.Equal(models.SystemIntakeStepDecisionAndNextSteps, *createdAction.Step)
 	})
 	s.Run("Should create admin note given input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
@@ -993,7 +993,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 	s.Run("Should NOT create admin note without input", func() {
 		intake, err := s.testConfigs.Store.CreateSystemIntake(ctx, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 			State:       models.SystemIntakeStateClosed,
 		})
 		s.NoError(err)
@@ -1028,7 +1028,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 	s.Run("Can't update an LCID that wasn't issued", func() {
 		intakeNoLCID, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 		})
 		s.NoError(err)
 		_, err2 := UpdateLCID(
@@ -1046,7 +1046,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 	s.Run("Can update an LCID that was issued", func() {
 		intakeWLCID, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 		})
 		s.NoError(err)
 		intakeWLCID.LifecycleID = null.StringFrom("123456")
@@ -1130,7 +1130,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 	s.Run("Can't confirm an LCID that wasn't issued", func() {
 		intakeNoLCID, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 		})
 		s.NoError(err)
 		_, err2 := ConfirmLCID(
@@ -1148,7 +1148,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 	s.Run("Can confirm an LCID that was issued", func() {
 		intakeWLCID, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
 			RequestType: models.SystemIntakeRequestTypeNew,
-			Step:        models.SystemIntakeStepINITIALFORM,
+			Step:        models.SystemIntakeStepInitialRequestForm,
 		})
 		s.NoError(err)
 		intakeWLCID.LifecycleID = null.StringFrom("123456")
@@ -1312,7 +1312,7 @@ func (s *ResolverSuite) TestExpireLCID() {
 		s.EqualValues(expiredIntake.ID, *action.IntakeID)
 		s.EqualValues(models.ActionTypeEXPIRELCID, action.ActionType)
 		s.EqualValues(expireLCIDInput.AdditionalInfo, action.Feedback)
-		s.EqualValues(models.SystemIntakeStepDECISION, *action.Step)
+		s.EqualValues(models.SystemIntakeStepDecisionAndNextSteps, *action.Step)
 
 		// should create admin note (since input included it)
 		allNotesForIntake, err := s.testConfigs.Store.FetchNotesBySystemIntakeID(s.testConfigs.Context, expiredIntake.ID)

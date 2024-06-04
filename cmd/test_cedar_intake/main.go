@@ -127,7 +127,7 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 		LifecycleCostBaseline: null.StringFrom("about 10,000,000"),
 		LifecycleExpiresAt:    &times.threeYearsInTheFuture,
 
-		Step:          models.SystemIntakeStepDECISION,
+		Step:          models.SystemIntakeStepDecisionAndNextSteps,
 		State:         models.SystemIntakeStateOpen,
 		DecisionState: models.SIDSNotApproved,
 	}

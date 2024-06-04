@@ -26,7 +26,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Request form not started",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSNotStarted,
 				State:            models.SystemIntakeStateOpen,
 			},
@@ -36,7 +36,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Request form in progress",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSInProgress,
 				State:            models.SystemIntakeStateOpen,
 			},
@@ -46,7 +46,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Request form edits requested",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSEditsRequested,
 				State:            models.SystemIntakeStateOpen,
 			},
@@ -56,7 +56,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Request form submitted",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSSubmitted,
 				State:            models.SystemIntakeStateOpen,
 			},
@@ -66,7 +66,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Request form closed",
 			intake: models.SystemIntake{
-				Step:             models.SystemIntakeStepINITIALFORM,
+				Step:             models.SystemIntakeStepInitialRequestForm,
 				RequestFormState: models.SIRFSSubmitted,
 				DecisionState:    models.SIDSNoDecision,
 				State:            models.SystemIntakeStateClosed,
@@ -80,7 +80,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Draft Biz Case form not started",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				DraftBusinessCaseState: models.SIRFSNotStarted,
 				State:                  models.SystemIntakeStateOpen,
 			},
@@ -90,7 +90,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Draft Biz Case form in progress",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				DraftBusinessCaseState: models.SIRFSInProgress,
 				State:                  models.SystemIntakeStateOpen,
 			},
@@ -100,7 +100,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Draft Biz Case edits requested",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				DraftBusinessCaseState: models.SIRFSEditsRequested,
 				State:                  models.SystemIntakeStateOpen,
 			},
@@ -110,7 +110,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Draft Biz Case Submitted",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 				State:                  models.SystemIntakeStateOpen,
 			},
@@ -120,7 +120,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Draft Biz Case, Closed",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepDRAFTBIZCASE,
+				Step:                   models.SystemIntakeStepDraftBusinessCase,
 				DraftBusinessCaseState: models.SIRFSSubmitted,
 				DecisionState:          models.SIDSNoDecision,
 				State:                  models.SystemIntakeStateClosed,
@@ -134,7 +134,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRT meeting not scheduled yet",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
+				Step:    models.SystemIntakeStepGrtMeeting,
 				GRTDate: nil,
 				State:   models.SystemIntakeStateOpen,
 			},
@@ -144,7 +144,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRT meeting happens tomorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
+				Step:    models.SystemIntakeStepGrtMeeting,
 				GRTDate: &tomorrow,
 				State:   models.SystemIntakeStateOpen,
 			},
@@ -154,7 +154,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRT meeting happened yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRTMEETING,
+				Step:    models.SystemIntakeStepGrtMeeting,
 				GRTDate: &yesterday,
 				State:   models.SystemIntakeStateOpen,
 			},
@@ -164,7 +164,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRT, request closed",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepGRTMEETING,
+				Step:          models.SystemIntakeStepGrtMeeting,
 				GRTDate:       &yesterday,
 				State:         models.SystemIntakeStateClosed,
 				DecisionState: models.SIDSNoDecision,
@@ -178,7 +178,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Final Biz Case form not started",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				FinalBusinessCaseState: models.SIRFSNotStarted,
 				State:                  models.SystemIntakeStateOpen,
 			},
@@ -188,7 +188,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Final Biz Case form in progress",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				FinalBusinessCaseState: models.SIRFSInProgress,
 				State:                  models.SystemIntakeStateOpen,
 			},
@@ -198,7 +198,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Final Biz Case edits requested",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				FinalBusinessCaseState: models.SIRFSEditsRequested,
 				State:                  models.SystemIntakeStateOpen,
 			},
@@ -208,7 +208,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Final Biz Case Submitted",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 				State:                  models.SystemIntakeStateOpen,
 			},
@@ -218,7 +218,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Final Biz Case, Closed",
 			intake: models.SystemIntake{
-				Step:                   models.SystemIntakeStepFINALBIZCASE,
+				Step:                   models.SystemIntakeStepFinalBusinessCase,
 				FinalBusinessCaseState: models.SIRFSSubmitted,
 				DecisionState:          models.SIDSNoDecision,
 				State:                  models.SystemIntakeStateClosed,
@@ -231,7 +231,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRB meeting not scheduled yet",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
+				Step:    models.SystemIntakeStepGrbMeeting,
 				GRBDate: nil,
 				State:   models.SystemIntakeStateOpen,
 			},
@@ -241,7 +241,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRB meeting happens tomorrow",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
+				Step:    models.SystemIntakeStepGrbMeeting,
 				GRBDate: &tomorrow,
 				State:   models.SystemIntakeStateOpen,
 			},
@@ -251,7 +251,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRB meeting happened yesterday",
 			intake: models.SystemIntake{
-				Step:    models.SystemIntakeStepGRBMEETING,
+				Step:    models.SystemIntakeStepGrbMeeting,
 				GRBDate: &yesterday,
 				State:   models.SystemIntakeStateOpen,
 			},
@@ -261,7 +261,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "GRB, request closed",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepGRBMEETING,
+				Step:          models.SystemIntakeStepGrbMeeting,
 				GRBDate:       &yesterday,
 				State:         models.SystemIntakeStateClosed,
 				DecisionState: models.SIDSNoDecision,
@@ -275,7 +275,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Decision LCID issued, open",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSLcidIssued,
 				State:         models.SystemIntakeStateOpen,
 			},
@@ -285,7 +285,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Decision LCID issued, closed",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSLcidIssued,
 				State:         models.SystemIntakeStateClosed,
 			},
@@ -295,7 +295,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Decision made, LCID issued, but not added, closed",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSLcidIssued,
 				// LifecycleID:        null.StringFrom("fake"), -- If there is no LCID, the status is closed
 				LifecycleExpiresAt: &yesterday,
@@ -308,7 +308,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Decision LCID Retired, closed",
 			intake: models.SystemIntake{
-				Step:               models.SystemIntakeStepDECISION,
+				Step:               models.SystemIntakeStepDecisionAndNextSteps,
 				LifecycleID:        null.StringFrom("fake"),
 				LifecycleRetiresAt: &yesterday,
 
@@ -321,7 +321,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Decision LCID Expired, closed",
 			intake: models.SystemIntake{
-				Step:               models.SystemIntakeStepDECISION,
+				Step:               models.SystemIntakeStepDecisionAndNextSteps,
 				LifecycleID:        null.StringFrom("fake"),
 				LifecycleExpiresAt: &yesterday,
 
@@ -334,7 +334,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Decision No Governance, open",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSNotGovernance,
 				State:         models.SystemIntakeStateOpen,
 			},
@@ -344,7 +344,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Decision No Governance, closed",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSNotGovernance,
 				State:         models.SystemIntakeStateClosed,
 			},
@@ -354,7 +354,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Decision Not Approved, open",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSNotApproved,
 				State:         models.SystemIntakeStateOpen,
 			},
@@ -364,7 +364,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Decision Not Approved, closed",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSNotApproved,
 				State:         models.SystemIntakeStateClosed,
 			},
@@ -374,7 +374,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Decision made, but re-opened, progressed, then closed",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepFINALBIZCASE,
+				Step:          models.SystemIntakeStepFinalBusinessCase,
 				DecisionState: models.SIDSNotApproved,
 				State:         models.SystemIntakeStateClosed,
 			},
@@ -385,7 +385,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Decision No Decision, closed",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSNoDecision,
 				State:         models.SystemIntakeStateClosed,
 			},
@@ -396,7 +396,7 @@ func TestCalculateSystemIntakeAdminStatus(t *testing.T) {
 		{
 			testCase: "Decision No Decision, closed",
 			intake: models.SystemIntake{
-				Step:          models.SystemIntakeStepDECISION,
+				Step:          models.SystemIntakeStepDecisionAndNextSteps,
 				DecisionState: models.SIDSNoDecision,
 				State:         models.SystemIntakeStateOpen,
 			},

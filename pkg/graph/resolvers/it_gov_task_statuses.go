@@ -12,7 +12,7 @@ import (
 
 // IntakeFormStatus calculates the ITGovTaskListStatus of a system intake for the requester view
 func IntakeFormStatus(intake *models.SystemIntake) (models.ITGovIntakeFormStatus, error) {
-	if intake.Step != models.SystemIntakeStepINITIALFORM {
+	if intake.Step != models.SystemIntakeStepInitialRequestForm {
 		return models.ITGovIntakeFormStatusCompleted, nil
 	}
 	switch intake.RequestFormState {
@@ -34,7 +34,7 @@ func IntakeFormStatus(intake *models.SystemIntake) (models.ITGovIntakeFormStatus
 
 // FeedbackFromInitialReviewStatus calculates the ITGovTaskListStatus for the feedback section of a system intake task list  for the requester view
 func FeedbackFromInitialReviewStatus(intake *models.SystemIntake) (models.ITGovFeedbackStatus, error) {
-	if intake.Step != models.SystemIntakeStepINITIALFORM { // If the step is past the initial form, the review is complete
+	if intake.Step != models.SystemIntakeStepInitialRequestForm { // If the step is past the initial form, the review is complete
 		return models.ITGovFeedbackStatusCompleted, nil
 	}
 	switch intake.RequestFormState {
@@ -56,9 +56,9 @@ func FeedbackFromInitialReviewStatus(intake *models.SystemIntake) (models.ITGovF
 // BizCaseDraftStatus calculates the ITGovDraftBusinessCaseStatus for the BizCaseDraft section for the system intake task list for the requester view
 func BizCaseDraftStatus(intake *models.SystemIntake) (models.ITGovDraftBusinessCaseStatus, error) {
 	switch intake.Step {
-	case models.SystemIntakeStepINITIALFORM: //This is before the draft business case, always show can't start for clarity
+	case models.SystemIntakeStepInitialRequestForm: //This is before the draft business case, always show can't start for clarity
 		return models.ITGovDraftBusinessCaseStatusCantStart, nil
-	case models.SystemIntakeStepDRAFTBIZCASE:
+	case models.SystemIntakeStepDraftBusinessCase:
 		switch intake.DraftBusinessCaseState { // The business case status depends on the state if in the draft business case step.
 		case models.SIRFSSubmitted:
 			return models.ITGovDraftBusinessCaseStatusSubmitted, nil
@@ -72,7 +72,7 @@ func BizCaseDraftStatus(intake *models.SystemIntake) (models.ITGovDraftBusinessC
 			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its draft business case state"), intake.DraftBusinessCaseState, "SystemIntakeFormState")
 		}
 
-	case models.SystemIntakeStepDECISION, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE, models.SystemIntakeStepGRBMEETING:
+	case models.SystemIntakeStepDecisionAndNextSteps, models.SystemIntakeStepGrtMeeting, models.SystemIntakeStepFinalBusinessCase, models.SystemIntakeStepGrbMeeting:
 
 		switch intake.DraftBusinessCaseState {
 		case models.SIRFSSubmitted, models.SIRFSInProgress, models.SIRFSEditsRequested: // If the draft business case had any progress made on it, and then the step advances, the case is considered complete.
@@ -95,7 +95,7 @@ func GrtMeetingStatus(intake *models.SystemIntake) (models.ITGovGRTStatus, error
 		if intake.GRTDate.After(time.Now()) { // Meeting has not happened
 			return models.ITGovGRTStatusScheduled, nil
 		}
-		if intake.Step == models.SystemIntakeStepGRTMEETING { //if the step is GRT meeting, status is awaiting decision
+		if intake.Step == models.SystemIntakeStepGrtMeeting { //if the step is GRT meeting, status is awaiting decision
 			return models.ITGovGRTStatusAwaitingDecision, nil
 		}
 		return models.ITGovGRTStatusCompleted, nil // if the step is not GRT meeting, the status is completed
@@ -103,13 +103,13 @@ func GrtMeetingStatus(intake *models.SystemIntake) (models.ITGovGRTStatus, error
 
 	//intake.GRTDate is nil
 	switch intake.Step {
-	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE: // Any step before GRT should show can't start
+	case models.SystemIntakeStepInitialRequestForm, models.SystemIntakeStepDraftBusinessCase: // Any step before GRT should show can't start
 		return models.ITGovGRTStatusCantStart, nil
 
-	case models.SystemIntakeStepGRTMEETING: // If at the GRT step, show ready to schedule
+	case models.SystemIntakeStepGrtMeeting: // If at the GRT step, show ready to schedule
 		return models.ITGovGRTStatusReadyToSchedule, nil
 
-	case models.SystemIntakeStepDECISION, models.SystemIntakeStepFINALBIZCASE, models.SystemIntakeStepGRBMEETING: // If after GRT step, show that it was not needed (skipped)
+	case models.SystemIntakeStepDecisionAndNextSteps, models.SystemIntakeStepFinalBusinessCase, models.SystemIntakeStepGrbMeeting: // If after GRT step, show that it was not needed (skipped)
 		return models.ITGovGRTStatusNotNeeded, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
 		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
@@ -120,9 +120,9 @@ func GrtMeetingStatus(intake *models.SystemIntake) (models.ITGovGRTStatus, error
 // BizCaseFinalStatus calculates the ITGovFinalBusinessCaseStatus for the BizCaseFinal section for the system intake task list for the requester view
 func BizCaseFinalStatus(intake *models.SystemIntake) (models.ITGovFinalBusinessCaseStatus, error) {
 	switch intake.Step {
-	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepDRAFTBIZCASE: //Any task before final business case, always show can't start for clarity
+	case models.SystemIntakeStepInitialRequestForm, models.SystemIntakeStepGrtMeeting, models.SystemIntakeStepDraftBusinessCase: //Any task before final business case, always show can't start for clarity
 		return models.ITGovFinalBusinessCaseStatusCantStart, nil
-	case models.SystemIntakeStepFINALBIZCASE:
+	case models.SystemIntakeStepFinalBusinessCase:
 		switch intake.FinalBusinessCaseState { // The business case status depends on the state if in the final business case step.
 		case models.SIRFSSubmitted:
 			return models.ITGovFinalBusinessCaseStatusSubmitted, nil
@@ -136,7 +136,7 @@ func BizCaseFinalStatus(intake *models.SystemIntake) (models.ITGovFinalBusinessC
 			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its final business case state"), intake.FinalBusinessCaseState, "SystemIntakeFormState")
 		}
 
-	case models.SystemIntakeStepDECISION, models.SystemIntakeStepGRBMEETING:
+	case models.SystemIntakeStepDecisionAndNextSteps, models.SystemIntakeStepGrbMeeting:
 
 		switch intake.FinalBusinessCaseState {
 		case models.SIRFSSubmitted, models.SIRFSInProgress, models.SIRFSEditsRequested: // If the final business case had any progress made on it, and then the step advances, the case is considered complete.
@@ -158,20 +158,20 @@ func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error
 		if intake.GRBDate.After(time.Now()) { // Meeting has not happened
 			return models.ITGovGRBStatusScheduled, nil
 		}
-		if intake.Step == models.SystemIntakeStepGRBMEETING { //if the step is GRB meeting, status is awaiting decision
+		if intake.Step == models.SystemIntakeStepGrbMeeting { //if the step is GRB meeting, status is awaiting decision
 			return models.ITGovGRBStatusAwaitingDecision, nil
 		}
 		return models.ITGovGRBStatusCompleted, nil // if the step is not GRB meeting, the status is completed
 	}
 	// the grb date is nil.
 	switch intake.Step {
-	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE: // Any step before GRB should show can't start
+	case models.SystemIntakeStepInitialRequestForm, models.SystemIntakeStepDraftBusinessCase, models.SystemIntakeStepGrtMeeting, models.SystemIntakeStepFinalBusinessCase: // Any step before GRB should show can't start
 		return models.ITGovGRBStatusCantStart, nil
 
-	case models.SystemIntakeStepGRBMEETING: // If at the GRB step, show ready to schedule
+	case models.SystemIntakeStepGrbMeeting: // If at the GRB step, show ready to schedule
 		return models.ITGovGRBStatusReadyToSchedule, nil
 
-	case models.SystemIntakeStepDECISION: // If after GRB step, show that it was not needed (skipped)
+	case models.SystemIntakeStepDecisionAndNextSteps: // If after GRB step, show that it was not needed (skipped)
 		return models.ITGovGRBStatusNotNeeded, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
 		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
@@ -183,9 +183,9 @@ func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error
 func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisionStatus, error) {
 
 	switch intake.Step {
-	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE:
+	case models.SystemIntakeStepInitialRequestForm, models.SystemIntakeStepDraftBusinessCase, models.SystemIntakeStepGrtMeeting, models.SystemIntakeStepFinalBusinessCase:
 		return models.ITGovDecisionStatusCantStart, nil
-	case models.SystemIntakeStepGRBMEETING:
+	case models.SystemIntakeStepGrbMeeting:
 		if intake.GRBDate == nil {
 			return models.ITGovDecisionStatusCantStart, nil
 		}
@@ -195,7 +195,7 @@ func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisi
 		// Meeting has  happened, intake is waiting on a decision
 		return models.ITGovDecisionStatusInReview, nil
 
-	case models.SystemIntakeStepDECISION:
+	case models.SystemIntakeStepDecisionAndNextSteps:
 
 		if intake.DecisionState == models.SIDSNoDecision { // if the step is decision state, the step has to be completed, and a decision has to have been made
 			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its decision state. a decision must be made in order to be in the decision state"), intake.RequestFormState, "SystemIntakeDecisionState")

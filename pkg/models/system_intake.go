@@ -8,24 +8,6 @@ import (
 	"github.com/guregu/null/zero"
 )
 
-// SystemIntakeStep represents the current step in the intake process
-type SystemIntakeStep string
-
-const (
-	// SystemIntakeStepINITIALFORM captures enum value "INITIAL_REQUEST_FORM"
-	SystemIntakeStepINITIALFORM SystemIntakeStep = "INITIAL_REQUEST_FORM"
-	// SystemIntakeStepDRAFTBIZCASE captures enum value "DRAFT_BUSINESS_CASE"
-	SystemIntakeStepDRAFTBIZCASE SystemIntakeStep = "DRAFT_BUSINESS_CASE"
-	// SystemIntakeStepGRTMEETING captures enum value "GRT_MEETING"
-	SystemIntakeStepGRTMEETING SystemIntakeStep = "GRT_MEETING"
-	// SystemIntakeStepFINALBIZCASE captures enum value "FINAL_BUSINESS_CASE"
-	SystemIntakeStepFINALBIZCASE SystemIntakeStep = "FINAL_BUSINESS_CASE"
-	// SystemIntakeStepGRBMEETING captures enum value "GRB_MEETING"
-	SystemIntakeStepGRBMEETING SystemIntakeStep = "GRB_MEETING"
-	// SystemIntakeStepDECISION captures enum value "DECISION_AND_NEXT_STEPS"
-	SystemIntakeStepDECISION SystemIntakeStep = "DECISION_AND_NEXT_STEPS"
-)
-
 // SystemIntakeLCIDStatus represents the possible statuses that an issued LCID can be in
 type SystemIntakeLCIDStatus string
 

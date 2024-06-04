@@ -82,7 +82,7 @@ func migrateIntakes() {
 		noErr(err)
 		if bizCase != nil {
 			fmt.Println("Found biz case for intake", intake.ID.String())
-			if intake.Step == models.SystemIntakeStepDECISION {
+			if intake.Step == models.SystemIntakeStepDecisionAndNextSteps {
 				intake.FinalBusinessCaseState = models.SIRFSSubmitted
 			} else {
 				intake.DraftBusinessCaseState = models.SIRFSInProgress

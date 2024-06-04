@@ -16,12 +16,12 @@ func TestUpdateIntake(t *testing.T) {
 		mockCurrentTime := time.Unix(0, 0)
 
 		allStartingSteps := []models.SystemIntakeStep{
-			models.SystemIntakeStepINITIALFORM,
-			models.SystemIntakeStepDRAFTBIZCASE,
-			models.SystemIntakeStepGRTMEETING,
-			models.SystemIntakeStepFINALBIZCASE,
-			models.SystemIntakeStepGRBMEETING,
-			models.SystemIntakeStepDECISION,
+			models.SystemIntakeStepInitialRequestForm,
+			models.SystemIntakeStepDraftBusinessCase,
+			models.SystemIntakeStepGrtMeeting,
+			models.SystemIntakeStepFinalBusinessCase,
+			models.SystemIntakeStepGrbMeeting,
+			models.SystemIntakeStepDecisionAndNextSteps,
 		}
 		allValidNewSteps := []models.SystemIntakeStepToProgressTo{
 			models.SystemIntakeStepToProgressToDraftBusinessCase,
@@ -56,7 +56,7 @@ func TestUpdateIntake(t *testing.T) {
 			t.Run("No date was scheduled for the meeting before this action", func(t *testing.T) {
 				t.Run("Should *not* update GRT date if no date was previously scheduled and no new date is provided", func(t *testing.T) {
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRTDate: nil,
 					}
 
@@ -70,7 +70,7 @@ func TestUpdateIntake(t *testing.T) {
 				t.Run("*Should* update GRT date if no date was previously scheduled and a new date in the past is provided", func(t *testing.T) {
 					newDate := &yesterday
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRTDate: nil,
 					}
 
@@ -83,7 +83,7 @@ func TestUpdateIntake(t *testing.T) {
 				t.Run("*Should* update GRT date if no date was previously scheduled and a new date in the future is provided", func(t *testing.T) {
 					newDate := &tomorrow
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRTDate: nil,
 					}
 
@@ -98,7 +98,7 @@ func TestUpdateIntake(t *testing.T) {
 				t.Run("Should *clear* GRT date if the previously scheduled date is in the past and no new date is provided", func(t *testing.T) {
 					previousDate := &twoDaysAgo
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRTDate: previousDate,
 					}
 
@@ -113,7 +113,7 @@ func TestUpdateIntake(t *testing.T) {
 					previousDate := &twoDaysAgo
 					newDate := &yesterday
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRTDate: previousDate,
 					}
 
@@ -127,7 +127,7 @@ func TestUpdateIntake(t *testing.T) {
 					previousDate := &twoDaysAgo
 					newDate := &tomorrow
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRTDate: previousDate,
 					}
 
@@ -142,7 +142,7 @@ func TestUpdateIntake(t *testing.T) {
 				t.Run("Should *not* update GRT date if the previously scheduled date is in the future and no new date is provided", func(t *testing.T) {
 					previousDate := &tomorrow
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRTDate: previousDate,
 					}
 
@@ -157,7 +157,7 @@ func TestUpdateIntake(t *testing.T) {
 					previousDate := &tomorrow
 					newDate := &yesterday
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRTDate: previousDate,
 					}
 
@@ -171,7 +171,7 @@ func TestUpdateIntake(t *testing.T) {
 					previousDate := &tomorrow
 					newDate := &inTwoDays
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRTDate: previousDate,
 					}
 
@@ -187,7 +187,7 @@ func TestUpdateIntake(t *testing.T) {
 			t.Run("No date was scheduled for the meeting before this action", func(t *testing.T) {
 				t.Run("Should *not* update GRB date if no date was previously scheduled and no new date is provided", func(t *testing.T) {
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRBDate: nil,
 					}
 
@@ -201,7 +201,7 @@ func TestUpdateIntake(t *testing.T) {
 				t.Run("*Should* update GRB date if no date was previously scheduled and a new date in the past is provided", func(t *testing.T) {
 					newDate := &yesterday
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRBDate: nil,
 					}
 
@@ -214,7 +214,7 @@ func TestUpdateIntake(t *testing.T) {
 				t.Run("*Should* update GRB date if no date was previously scheduled and a new date in the future is provided", func(t *testing.T) {
 					newDate := &tomorrow
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRBDate: nil,
 					}
 
@@ -229,7 +229,7 @@ func TestUpdateIntake(t *testing.T) {
 				t.Run("Should *clear* GRB date if the previously scheduled date is in the past and no new date is provided", func(t *testing.T) {
 					previousDate := &twoDaysAgo
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRBDate: previousDate,
 					}
 
@@ -244,7 +244,7 @@ func TestUpdateIntake(t *testing.T) {
 					previousDate := &twoDaysAgo
 					newDate := &yesterday
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRBDate: previousDate,
 					}
 
@@ -258,7 +258,7 @@ func TestUpdateIntake(t *testing.T) {
 					previousDate := &twoDaysAgo
 					newDate := &tomorrow
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRBDate: previousDate,
 					}
 
@@ -273,7 +273,7 @@ func TestUpdateIntake(t *testing.T) {
 				t.Run("Should *not* update GRB date if the previously scheduled date is in the future and no new date is provided", func(t *testing.T) {
 					previousDate := &tomorrow
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRBDate: previousDate,
 					}
 
@@ -288,7 +288,7 @@ func TestUpdateIntake(t *testing.T) {
 					previousDate := &tomorrow
 					newDate := &yesterday
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRBDate: previousDate,
 					}
 
@@ -302,7 +302,7 @@ func TestUpdateIntake(t *testing.T) {
 					previousDate := &tomorrow
 					newDate := &inTwoDays
 					intake := &models.SystemIntake{
-						Step:    models.SystemIntakeStepINITIALFORM,
+						Step:    models.SystemIntakeStepInitialRequestForm,
 						GRBDate: previousDate,
 					}
 
@@ -318,7 +318,7 @@ func TestUpdateIntake(t *testing.T) {
 	t.Run("invalid new step should return InvalidEnumError", func(t *testing.T) {
 		mockCurrentTime := time.Unix(0, 0)
 		intake := &models.SystemIntake{
-			Step: models.SystemIntakeStepINITIALFORM,
+			Step: models.SystemIntakeStepInitialRequestForm,
 		}
 		invalidNewStep := models.SystemIntakeStepToProgressTo("")
 
@@ -336,7 +336,7 @@ func TestUpdateIntake(t *testing.T) {
 func TestIsIntakeValid(t *testing.T) {
 	t.Run("Closed intakes are invalid to progress", func(t *testing.T) {
 		intake := &models.SystemIntake{
-			Step:  models.SystemIntakeStepINITIALFORM,
+			Step:  models.SystemIntakeStepInitialRequestForm,
 			State: models.SystemIntakeStateClosed,
 		}
 		newStep := models.SystemIntakeStepToProgressToDraftBusinessCase
@@ -352,7 +352,7 @@ func TestIsIntakeValid(t *testing.T) {
 
 	t.Run("Intakes that haven't started the request form can't be progressed", func(t *testing.T) {
 		intake := &models.SystemIntake{
-			Step:             models.SystemIntakeStepINITIALFORM,
+			Step:             models.SystemIntakeStepInitialRequestForm,
 			RequestFormState: models.SIRFSNotStarted,
 		}
 		newStep := models.SystemIntakeStepToProgressToDraftBusinessCase
@@ -386,7 +386,7 @@ func TestIsIntakeValid(t *testing.T) {
 
 	t.Run("Valid intake should not return an error", func(t *testing.T) {
 		intake := &models.SystemIntake{
-			Step:             models.SystemIntakeStepINITIALFORM,
+			Step:             models.SystemIntakeStepInitialRequestForm,
 			RequestFormState: models.SIRFSSubmitted,
 			State:            models.SystemIntakeStateOpen,
 		}

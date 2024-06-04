@@ -2239,6 +2239,56 @@ func (e SystemIntakeStatusRequester) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// SystemIntakeStep represents the current step in the intake process
+type SystemIntakeStep string
+
+const (
+	SystemIntakeStepInitialRequestForm   SystemIntakeStep = "INITIAL_REQUEST_FORM"
+	SystemIntakeStepDraftBusinessCase    SystemIntakeStep = "DRAFT_BUSINESS_CASE"
+	SystemIntakeStepGrtMeeting           SystemIntakeStep = "GRT_MEETING"
+	SystemIntakeStepGrbMeeting           SystemIntakeStep = "GRB_MEETING"
+	SystemIntakeStepFinalBusinessCase    SystemIntakeStep = "FINAL_BUSINESS_CASE"
+	SystemIntakeStepDecisionAndNextSteps SystemIntakeStep = "DECISION_AND_NEXT_STEPS"
+)
+
+var AllSystemIntakeStep = []SystemIntakeStep{
+	SystemIntakeStepInitialRequestForm,
+	SystemIntakeStepDraftBusinessCase,
+	SystemIntakeStepGrtMeeting,
+	SystemIntakeStepGrbMeeting,
+	SystemIntakeStepFinalBusinessCase,
+	SystemIntakeStepDecisionAndNextSteps,
+}
+
+func (e SystemIntakeStep) IsValid() bool {
+	switch e {
+	case SystemIntakeStepInitialRequestForm, SystemIntakeStepDraftBusinessCase, SystemIntakeStepGrtMeeting, SystemIntakeStepGrbMeeting, SystemIntakeStepFinalBusinessCase, SystemIntakeStepDecisionAndNextSteps:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeStep) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeStep) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeStep(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeStep", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeStep) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Steps in the system intake process that a Progress to New Step action can progress to
 type SystemIntakeStepToProgressTo string
 
