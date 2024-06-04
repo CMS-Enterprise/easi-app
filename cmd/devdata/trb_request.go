@@ -14,7 +14,6 @@ import (
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
 	"github.com/cmsgov/easi-app/pkg/easiencoding"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -320,7 +319,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 
 	// create admin notes of all five categories
 
-	generalRequestNoteInput := model.CreateTRBAdminNoteGeneralRequestInput{
+	generalRequestNoteInput := models.CreateTRBAdminNoteGeneralRequestInput{
 		TrbRequestID: trb.ID,
 		NoteText:     "This is a general request admin note from seed data",
 	}
@@ -329,7 +328,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 		return err
 	}
 
-	initialRequestFormNoteInput := model.CreateTRBAdminNoteInitialRequestFormInput{
+	initialRequestFormNoteInput := models.CreateTRBAdminNoteInitialRequestFormInput{
 		TrbRequestID:                 trb.ID,
 		NoteText:                     "This is an initial request form admin note from seed data",
 		AppliesToBasicRequestDetails: true,
@@ -342,7 +341,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	}
 
 	// link to 2 of the documents so we can check that it links to multiple docs *and* that it doesn't link to all the docs on the request
-	supportingDocumentsNoteInput := model.CreateTRBAdminNoteSupportingDocumentsInput{
+	supportingDocumentsNoteInput := models.CreateTRBAdminNoteSupportingDocumentsInput{
 		TrbRequestID: trb.ID,
 		NoteText:     "This is a supporting documents admin note from seed data",
 		DocumentIDs: []uuid.UUID{
@@ -355,7 +354,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 		return err
 	}
 
-	consultSessionNoteInput := model.CreateTRBAdminNoteConsultSessionInput{
+	consultSessionNoteInput := models.CreateTRBAdminNoteConsultSessionInput{
 		TrbRequestID: trb.ID,
 		NoteText:     "This is a consult session admin note from seed data",
 	}
@@ -365,7 +364,7 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	}
 
 	// link to 2 of the recommendations so we can check that it links to multiple recs *and* that it doesn't link to all the recs on the request
-	adviceLetterNoteInput := model.CreateTRBAdminNoteAdviceLetterInput{
+	adviceLetterNoteInput := models.CreateTRBAdminNoteAdviceLetterInput{
 		TrbRequestID:            trb.ID,
 		NoteText:                "This is an advice letter admin note from seed data",
 		AppliesToMeetingSummary: true,
@@ -799,7 +798,7 @@ func (s *seederConfig) addDocument(ctx context.Context, trb *models.TRBRequest, 
 	fileToUpload := bytes.NewReader([]byte(encodedContents))
 
 	otherDesc := "Some other type of doc"
-	input := model.CreateTRBRequestDocumentInput{
+	input := models.CreateTRBRequestDocumentInput{
 		RequestID: trb.ID,
 		FileData: graphql.Upload{
 			File:        fileToUpload,
@@ -860,7 +859,7 @@ func (s *seederConfig) addTRBNewSystemRelation(
 	trbRequestID uuid.UUID,
 	contractNumbers []string,
 ) (*models.TRBRequest, error) {
-	return resolvers.SetTRBRequestRelationNewSystem(ctx, s.store, model.SetTRBRequestRelationNewSystemInput{
+	return resolvers.SetTRBRequestRelationNewSystem(ctx, s.store, models.SetTRBRequestRelationNewSystemInput{
 		TrbRequestID:    trbRequestID,
 		ContractNumbers: contractNumbers,
 	})
@@ -872,7 +871,7 @@ func (s *seederConfig) addTRBExistingServiceRelation(
 	contractName string,
 	contractNumbers []string,
 ) (*models.TRBRequest, error) {
-	return resolvers.SetTRBRequestRelationExistingService(ctx, s.store, model.SetTRBRequestRelationExistingServiceInput{
+	return resolvers.SetTRBRequestRelationExistingService(ctx, s.store, models.SetTRBRequestRelationExistingServiceInput{
 		TrbRequestID:    trbRequestID,
 		ContractName:    contractName,
 		ContractNumbers: contractNumbers,
@@ -891,7 +890,7 @@ func (s *seederConfig) addTRBExistingSystemRelation(
 		func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
 			return &models.CedarSystem{}, nil
 		},
-		model.SetTRBRequestRelationExistingSystemInput{
+		models.SetTRBRequestRelationExistingSystemInput{
 			TrbRequestID:    trbRequestID,
 			ContractNumbers: contractNumbers,
 			CedarSystemIDs:  cedarSystemIDs,

@@ -8,7 +8,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -32,7 +31,7 @@ func makeSystemIntakeAndIssueLCID(
 			requesterEUA,
 			logger,
 			store,
-			model.SystemIntakeStepToProgressToDraftBusinessCase,
+			models.SystemIntakeStepToProgressToDraftBusinessCase,
 			nil,
 		)
 	} else {
@@ -42,7 +41,7 @@ func makeSystemIntakeAndIssueLCID(
 			requesterEUA,
 			logger,
 			store,
-			model.SystemIntakeStepToProgressToGrbMeeting,
+			models.SystemIntakeStepToProgressToGrbMeeting,
 			&progressOptions{
 				completeOtherSteps: true,
 				meetingDate:        &pastMeetingDate,
@@ -81,7 +80,7 @@ func issueLCID(
 	lcidToIssue++
 	// The %06d adds leading 0s to the fake LCID so it's 6 digits
 	lcidStr := fmt.Sprintf("%06d", lcidToIssue)
-	input := model.SystemIntakeIssueLCIDInput{
+	input := models.SystemIntakeIssueLCIDInput{
 		SystemIntakeID: intake.ID,
 		Lcid:           &lcidStr,
 		Scope:          scope,
@@ -114,7 +113,7 @@ func updateLCID(
 	additionalInfo := models.HTML("additional info about updating this LCID")
 	adminNote := models.HTML("admin note about updating this LCID")
 
-	input := model.SystemIntakeUpdateLCIDInput{
+	input := models.SystemIntakeUpdateLCIDInput{
 		SystemIntakeID: intake.ID,
 		Scope:          &scope,
 		NextSteps:      &nextSteps,
@@ -146,7 +145,7 @@ func confirmLCID(
 	additionalInfo := models.HTML("additional info about confirming this LCID")
 	adminNote := models.HTML("admin note about confirming this LCID")
 
-	input := model.SystemIntakeConfirmLCIDInput{
+	input := models.SystemIntakeConfirmLCIDInput{
 		SystemIntakeID: intake.ID,
 		Scope:          scope,
 		NextSteps:      nextSteps,
@@ -176,7 +175,7 @@ func expireLCID(
 	additionalInfo := models.HTML("additional info about expiring this LCID")
 	adminNote := models.HTML("admin note about expiring this LCID")
 
-	input := model.SystemIntakeExpireLCIDInput{
+	input := models.SystemIntakeExpireLCIDInput{
 		SystemIntakeID: intake.ID,
 		Reason:         reason,
 		NextSteps:      &nextSteps,
@@ -203,7 +202,7 @@ func retireLCID(
 	additionalInfo := models.HTML("additional info about retiring this LCID")
 	adminNote := models.HTML("admin note about retiring this LCID")
 
-	input := model.SystemIntakeRetireLCIDInput{
+	input := models.SystemIntakeRetireLCIDInput{
 		SystemIntakeID: intake.ID,
 		Reason:         &reason,
 		RetiresAt:      retiresAt,
@@ -229,7 +228,7 @@ func changeLCIDRetireDate(
 	additionalInfo := models.HTML("additional info about retiring this LCID")
 	adminNote := models.HTML("admin note about retiring this LCID")
 
-	input := model.SystemIntakeChangeLCIDRetirementDateInput{
+	input := models.SystemIntakeChangeLCIDRetirementDateInput{
 		SystemIntakeID: intake.ID,
 		RetiresAt:      retiresAt,
 		AdditionalInfo: &additionalInfo,
@@ -254,7 +253,7 @@ func closeIntake(
 	additionalInfo := models.HTML("additional info about closing this request")
 	adminNote := models.HTML("admin note about closing this intake")
 
-	input := model.SystemIntakeCloseRequestInput{
+	input := models.SystemIntakeCloseRequestInput{
 		SystemIntakeID: intake.ID,
 		Reason:         &reason,
 		AdditionalInfo: &additionalInfo,
@@ -279,7 +278,7 @@ func reopenIntake(
 	additionalInfo := models.HTML("additional info about reopening this request")
 	adminNote := models.HTML("admin note about reopening this intake")
 
-	input := model.SystemIntakeReopenRequestInput{
+	input := models.SystemIntakeReopenRequestInput{
 		SystemIntakeID: intake.ID,
 		Reason:         &reason,
 		AdditionalInfo: &additionalInfo,
@@ -306,7 +305,7 @@ func closeIntakeNotApproved(
 	additionalInfo := models.HTML("additional info about rejecting this request")
 	adminNote := models.HTML("admin note about rejecting this intake")
 
-	input := model.SystemIntakeRejectIntakeInput{
+	input := models.SystemIntakeRejectIntakeInput{
 		SystemIntakeID: intake.ID,
 		Reason:         reason,
 		NextSteps:      nextSteps,
@@ -333,7 +332,7 @@ func closeIntakeNotITGovRequest(
 	additionalInfo := models.HTML("additional info about rejecting this request")
 	adminNote := models.HTML("admin note about rejecting this intake")
 
-	input := model.SystemIntakeNotITGovReqInput{
+	input := models.SystemIntakeNotITGovReqInput{
 		SystemIntakeID: intake.ID,
 		Reason:         &reason,
 		AdditionalInfo: &additionalInfo,

@@ -8,7 +8,6 @@ import (
 
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -23,12 +22,12 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		models.SystemIntakeStepGRTMEETING,
 		models.SystemIntakeStepDECISION,
 	}
-	formStepMap := map[model.SystemIntakeFormStep]models.SystemIntakeStep{
-		model.SystemIntakeFormStepInitialRequestForm: models.SystemIntakeStepINITIALFORM,
-		model.SystemIntakeFormStepDraftBusinessCase:  models.SystemIntakeStepDRAFTBIZCASE,
-		model.SystemIntakeFormStepFinalBusinessCase:  models.SystemIntakeStepFINALBIZCASE,
+	formStepMap := map[models.SystemIntakeFormStep]models.SystemIntakeStep{
+		models.SystemIntakeFormStepInitialRequestForm: models.SystemIntakeStepINITIALFORM,
+		models.SystemIntakeFormStepDraftBusinessCase:  models.SystemIntakeStepDRAFTBIZCASE,
+		models.SystemIntakeFormStepFinalBusinessCase:  models.SystemIntakeStepFINALBIZCASE,
 	}
-	invalidFormSteps := []model.SystemIntakeFormStep{
+	invalidFormSteps := []models.SystemIntakeFormStep{
 		"GRT_MEETING",
 		"GRB_MEETING",
 		"DECISION_AND_NEXT_STEPS",
@@ -48,7 +47,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeRequestEditsInput{
+				models.SystemIntakeRequestEditsInput{
 					SystemIntakeID: intake.ID,
 					IntakeFormStep: invalidStep,
 					NotificationRecipients: &models.EmailNotificationRecipients{
@@ -65,7 +64,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 		})
 	}
 	for _, initialStep := range initialSteps {
-		for _, step := range model.AllSystemIntakeFormStep {
+		for _, step := range models.AllSystemIntakeFormStep {
 			s.Run(fmt.Sprintf("Should set state and %s step as active when in %s step", step, initialStep), func() {
 				intakeToCreate := &models.SystemIntake{
 					RequestType: models.SystemIntakeRequestTypeNEW,
@@ -83,7 +82,7 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 					s.testConfigs.Store,
 					s.testConfigs.EmailClient,
 					s.fetchUserInfoStub,
-					model.SystemIntakeRequestEditsInput{
+					models.SystemIntakeRequestEditsInput{
 						SystemIntakeID: intake.ID,
 						IntakeFormStep: step,
 						NotificationRecipients: &models.EmailNotificationRecipients{
@@ -102,11 +101,11 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 				// test that edits requested state was set
 				var stepState models.SystemIntakeFormState
 				switch step {
-				case model.SystemIntakeFormStepInitialRequestForm:
+				case models.SystemIntakeFormStepInitialRequestForm:
 					stepState = actionedIntake.RequestFormState
-				case model.SystemIntakeFormStepDraftBusinessCase:
+				case models.SystemIntakeFormStepDraftBusinessCase:
 					stepState = actionedIntake.DraftBusinessCaseState
-				case model.SystemIntakeFormStepFinalBusinessCase:
+				case models.SystemIntakeFormStepFinalBusinessCase:
 					stepState = actionedIntake.FinalBusinessCaseState
 				default:
 					stepState = ""
@@ -131,9 +130,9 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeRequestEditsInput{
+			models.SystemIntakeRequestEditsInput{
 				SystemIntakeID: intake.ID,
-				IntakeFormStep: model.SystemIntakeFormStepInitialRequestForm,
+				IntakeFormStep: models.SystemIntakeFormStepInitialRequestForm,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
 					ShouldNotifyITGovernance: false,
@@ -164,9 +163,9 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeRequestEditsInput{
+			models.SystemIntakeRequestEditsInput{
 				SystemIntakeID: intake.ID,
-				IntakeFormStep: model.SystemIntakeFormStepInitialRequestForm,
+				IntakeFormStep: models.SystemIntakeFormStepInitialRequestForm,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
 					ShouldNotifyITGovernance: false,
@@ -198,9 +197,9 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeRequestEditsInput{
+			models.SystemIntakeRequestEditsInput{
 				SystemIntakeID: intake.ID,
-				IntakeFormStep: model.SystemIntakeFormStepInitialRequestForm,
+				IntakeFormStep: models.SystemIntakeFormStepInitialRequestForm,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
 					ShouldNotifyITGovernance: false,
@@ -230,9 +229,9 @@ func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeRequestEditsInput{
+			models.SystemIntakeRequestEditsInput{
 				SystemIntakeID: intake.ID,
-				IntakeFormStep: model.SystemIntakeFormStepInitialRequestForm,
+				IntakeFormStep: models.SystemIntakeFormStepInitialRequestForm,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
 					ShouldNotifyITGovernance: false,
@@ -287,7 +286,7 @@ func (s *ResolverSuite) TestRejectIntakeAsNotApproved() {
 
 	adminNote := models.HTML("test admin note for rejecting")
 	additionalInfo := models.HTML("test additional info for rejecting")
-	input := model.SystemIntakeRejectIntakeInput{
+	input := models.SystemIntakeRejectIntakeInput{
 		// required fields
 		SystemIntakeID: newIntake.ID,
 		Reason:         "test rejection reason",
@@ -352,7 +351,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 
 		providedLCID := "123456"
 
-		input := model.SystemIntakeIssueLCIDInput{
+		input := models.SystemIntakeIssueLCIDInput{
 			Lcid: &providedLCID,
 
 			// required fields
@@ -378,7 +377,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 	s.Run("When LCID is *not* provided, a new LCID is generated", func() {
 		newIntake := s.createNewIntake()
 
-		input := model.SystemIntakeIssueLCIDInput{
+		input := models.SystemIntakeIssueLCIDInput{
 			Lcid: nil,
 
 			// required fields
@@ -407,7 +406,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 		costBaseline := "test cost baseline"
 		adminNote := models.HTML("test admin note for issuing LCID")
 		additionalInfo := models.HTML("test additional info for issuing LCID")
-		input := model.SystemIntakeIssueLCIDInput{
+		input := models.SystemIntakeIssueLCIDInput{
 			// required fields
 			SystemIntakeID: newIntake.ID,
 			ExpiresAt:      time.Now().AddDate(2, 0, 0),
@@ -512,7 +511,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeCloseRequestInput{
+				models.SystemIntakeCloseRequestInput{
 					SystemIntakeID: intake.ID,
 					NotificationRecipients: &models.EmailNotificationRecipients{
 						RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -554,7 +553,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeCloseRequestInput{
+				models.SystemIntakeCloseRequestInput{
 					SystemIntakeID: intake.ID,
 					NotificationRecipients: &models.EmailNotificationRecipients{
 						RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -587,7 +586,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeCloseRequestInput{
+			models.SystemIntakeCloseRequestInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -620,7 +619,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeCloseRequestInput{
+			models.SystemIntakeCloseRequestInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -651,7 +650,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeCloseRequestInput{
+			models.SystemIntakeCloseRequestInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -701,7 +700,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeReopenRequestInput{
+				models.SystemIntakeReopenRequestInput{
 					SystemIntakeID: intake.ID,
 					NotificationRecipients: &models.EmailNotificationRecipients{
 						RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -743,7 +742,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeReopenRequestInput{
+				models.SystemIntakeReopenRequestInput{
 					SystemIntakeID: intake.ID,
 					NotificationRecipients: &models.EmailNotificationRecipients{
 						RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -776,7 +775,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeReopenRequestInput{
+			models.SystemIntakeReopenRequestInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -810,7 +809,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeReopenRequestInput{
+			models.SystemIntakeReopenRequestInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -842,7 +841,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeReopenRequestInput{
+			models.SystemIntakeReopenRequestInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -898,7 +897,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 					s.testConfigs.Store,
 					s.testConfigs.EmailClient,
 					s.fetchUserInfoStub,
-					model.SystemIntakeNotITGovReqInput{
+					models.SystemIntakeNotITGovReqInput{
 						SystemIntakeID: intake.ID,
 						NotificationRecipients: &models.EmailNotificationRecipients{
 							RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -938,7 +937,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeNotITGovReqInput{
+			models.SystemIntakeNotITGovReqInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -972,7 +971,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeNotITGovReqInput{
+			models.SystemIntakeNotITGovReqInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -1004,7 +1003,7 @@ func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeNotITGovReqInput{
+			models.SystemIntakeNotITGovReqInput{
 				SystemIntakeID: intake.ID,
 				NotificationRecipients: &models.EmailNotificationRecipients{
 					RegularRecipientEmails:   []models.EmailAddress{"banana"},
@@ -1037,7 +1036,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeUpdateLCIDInput{
+			models.SystemIntakeUpdateLCIDInput{
 				SystemIntakeID: intakeNoLCID.ID,
 			})
 		s.Error(err2)
@@ -1062,7 +1061,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeUpdateLCIDInput{
+			models.SystemIntakeUpdateLCIDInput{
 				SystemIntakeID: intakeWLCID.ID,
 				Scope:          scope,
 				AdditionalInfo: additionalInfo,
@@ -1096,7 +1095,7 @@ func (s *ResolverSuite) TestSystemIntakeUpdateLCID() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeUpdateLCIDInput{
+				models.SystemIntakeUpdateLCIDInput{
 					SystemIntakeID: updatedIntakeLCID.ID,
 					Scope:          updatedScope,
 					AdditionalInfo: additionalInfoUpdate,
@@ -1139,7 +1138,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeConfirmLCIDInput{
+			models.SystemIntakeConfirmLCIDInput{
 				SystemIntakeID: intakeNoLCID.ID,
 			})
 		s.Error(err2)
@@ -1169,7 +1168,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 			s.testConfigs.Store,
 			s.testConfigs.EmailClient,
 			s.fetchUserInfoStub,
-			model.SystemIntakeConfirmLCIDInput{
+			models.SystemIntakeConfirmLCIDInput{
 				SystemIntakeID: intakeWLCID.ID,
 				ExpiresAt:      expiresAt,
 				Scope:          scope,
@@ -1216,7 +1215,7 @@ func (s *ResolverSuite) TestSystemIntakeConfirmLCID() {
 				s.testConfigs.Store,
 				s.testConfigs.EmailClient,
 				s.fetchUserInfoStub,
-				model.SystemIntakeConfirmLCIDInput{
+				models.SystemIntakeConfirmLCIDInput{
 					SystemIntakeID: confirmedIntakeLCID.ID,
 					ExpiresAt:      expiresAt,
 					Scope:          confirmedScope,
@@ -1254,7 +1253,7 @@ func (s *ResolverSuite) TestExpireLCID() {
 
 		// create an intake, issue an LCID for it with an expiration date in the future
 		newIntake := s.createNewIntake()
-		issueLCIDInput := model.SystemIntakeIssueLCIDInput{
+		issueLCIDInput := models.SystemIntakeIssueLCIDInput{
 			// required fields
 			SystemIntakeID: newIntake.ID,
 			ExpiresAt:      currentTime.AddDate(2, 0, 0),
@@ -1272,7 +1271,7 @@ func (s *ResolverSuite) TestExpireLCID() {
 		s.NoError(err)
 
 		// expire the LCID
-		expireLCIDInput := model.SystemIntakeExpireLCIDInput{
+		expireLCIDInput := models.SystemIntakeExpireLCIDInput{
 			// required fields
 			SystemIntakeID: updatedIntake.ID,
 			Reason:         "test reason for expiring LCID",
@@ -1331,7 +1330,7 @@ func (s *ResolverSuite) TestRetireLCID() {
 
 		// create an intake, issue an LCID for it
 		newIntake := s.createNewIntake()
-		issueLCIDInput := model.SystemIntakeIssueLCIDInput{
+		issueLCIDInput := models.SystemIntakeIssueLCIDInput{
 			// required fields
 			SystemIntakeID: newIntake.ID,
 			ExpiresAt:      currentTime.AddDate(2, 0, 0),
@@ -1350,7 +1349,7 @@ func (s *ResolverSuite) TestRetireLCID() {
 
 		// retire the LCID
 		retirementDate := time.Unix(0, 0) // in the past, so LCID should be retired
-		retireLCIDInput := model.SystemIntakeRetireLCIDInput{
+		retireLCIDInput := models.SystemIntakeRetireLCIDInput{
 			// required fields
 			SystemIntakeID: updatedIntake.ID,
 			RetiresAt:      retirementDate,
@@ -1404,7 +1403,7 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 
 		// create an intake, issue an LCID for it, retire the LCID
 		newIntake := s.createNewIntake()
-		issueLCIDInput := model.SystemIntakeIssueLCIDInput{
+		issueLCIDInput := models.SystemIntakeIssueLCIDInput{
 			// required fields
 			SystemIntakeID: newIntake.ID,
 			ExpiresAt:      expirationDate,
@@ -1422,7 +1421,7 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 		s.NoError(err)
 
 		// retire the LCID
-		retireLCIDInput := model.SystemIntakeRetireLCIDInput{
+		retireLCIDInput := models.SystemIntakeRetireLCIDInput{
 			// required fields
 			SystemIntakeID: intakeWithLCID.ID,
 			RetiresAt:      originalRetirementDate,
@@ -1437,7 +1436,7 @@ func (s *ResolverSuite) TestChangeLCIDRetirementDate() {
 		s.NoError(err)
 
 		// change the LCID's retirement date
-		changeRetirementDateInput := model.SystemIntakeChangeLCIDRetirementDateInput{
+		changeRetirementDateInput := models.SystemIntakeChangeLCIDRetirementDateInput{
 			// required fields
 			SystemIntakeID: retiredIntake.ID,
 			RetiresAt:      newRetirementDate,
