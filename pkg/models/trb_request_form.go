@@ -7,45 +7,6 @@ import (
 	"github.com/lib/pq"
 )
 
-// TRBCollabGroupOption is an enumeration of the possible OIT collaboration groups that can be
-// selected for a TRB request form
-type TRBCollabGroupOption string
-
-// These are the individual options for responses to the "Select any other OIT groups that you
-// have met with or collaborated with" on the TRB request form
-const (
-	TRBCollabGroupOptionSecurity               TRBCollabGroupOption = "SECURITY"
-	TRBCollabGroupOptionEnterpriseArchitecture TRBCollabGroupOption = "ENTERPRISE_ARCHITECTURE"
-	TRBCollabGroupOptionCloud                  TRBCollabGroupOption = "CLOUD"
-	TRBCollabGroupOptionPrivacyAdvisor         TRBCollabGroupOption = "PRIVACY_ADVISOR"
-	TRBCollabGroupOptionGovernanceReviewBoard  TRBCollabGroupOption = "GOVERNANCE_REVIEW_BOARD"
-	TRBCollabGroupOptionOther                  TRBCollabGroupOption = "OTHER"
-)
-
-// TRBSubjectAreaOption is an enum of the possible answers to the input on the TRB "Subject Areas" page
-type TRBSubjectAreaOption string
-
-// These are the individual options for the "technical reference architecture" input
-const (
-	TRBSubjectAreaOptionAccessControlAndIdentityMgmt   TRBSubjectAreaOption = "ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT"
-	TRBSubjectAreaOptionAccessibilityCompliance        TRBSubjectAreaOption = "ACCESSIBILITY_COMPLIANCE"
-	TRBSubjectAreaOptionAssistanceWithSystemConceptDev TRBSubjectAreaOption = "ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT"
-	TRBSubjectAreaOptionBusinessIntelligence           TRBSubjectAreaOption = "BUSINESS_INTELLIGENCE"
-	TRBSubjectAreaOptionCloudMigration                 TRBSubjectAreaOption = "CLOUD_MIGRATION"
-	TRBSubjectAreaOptionContainersAndMicroservices     TRBSubjectAreaOption = "CONTAINERS_AND_MICROSERVICES"
-	TRBSubjectAreaOptionDisasterRecovery               TRBSubjectAreaOption = "DISASTER_RECOVERY"
-	TRBSubjectAreaOptionEmailIntegration               TRBSubjectAreaOption = "EMAIL_INTEGRATION"
-	TRBSubjectAreaOptionEnterpriseDataLakeIntegration  TRBSubjectAreaOption = "ENTERPRISE_DATA_LAKE_INTEGRATION"
-	TRBSubjectAreaOptionFrameworkOrToolAlternatives    TRBSubjectAreaOption = "FRAMEWORK_OR_TOOL_ALTERNATIVES"
-	TRBSubjectAreaOptionOpenSourceSoftware             TRBSubjectAreaOption = "OPEN_SOURCE_SOFTWARE"
-	TRBSubjectAreaOptionPortalIntegration              TRBSubjectAreaOption = "PORTAL_INTEGRATION"
-	TRBSubjectAreaOptionTechnicalReferenceArchitecture TRBSubjectAreaOption = "TECHNICAL_REFERENCE_ARCHITECTURE"
-	TRBSubjectAreaOptionSystemArchitectureReview       TRBSubjectAreaOption = "SYSTEM_ARCHITECTURE_REVIEW"
-	TRBSubjectAreaOptionSystemDispositionPlanning      TRBSubjectAreaOption = "SYSTEM_DISPOSITION_PLANNING"
-	TRBSubjectAreaOptionWebServicesAndAPIs             TRBSubjectAreaOption = "WEB_SERVICES_AND_APIS"
-	TRBSubjectAreaOptionWebBasedUIService              TRBSubjectAreaOption = "WEB_BASED_UI_SERVICE"
-)
-
 // NewTRBRequestForm instantiates a TRB request form with default field values
 func NewTRBRequestForm(createdBy string) *TRBRequestForm {
 	return &TRBRequestForm{

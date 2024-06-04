@@ -68939,19 +68939,13 @@ func (ec *executionContext) marshalNTRBAttendConsultStatus2githubᚗcomᚋcmsgov
 }
 
 func (ec *executionContext) unmarshalNTRBCollabGroupOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOption(ctx context.Context, v interface{}) (models.TRBCollabGroupOption, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBCollabGroupOption(tmp)
+	var res models.TRBCollabGroupOption
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTRBCollabGroupOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOption(ctx context.Context, sel ast.SelectionSet, v models.TRBCollabGroupOption) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalNTRBCollabGroupOption2ᚕgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBCollabGroupOptionᚄ(ctx context.Context, v interface{}) ([]models.TRBCollabGroupOption, error) {
@@ -69500,19 +69494,13 @@ func (ec *executionContext) marshalNTRBRequestType2githubᚗcomᚋcmsgovᚋeasi�
 }
 
 func (ec *executionContext) unmarshalNTRBSubjectAreaOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBSubjectAreaOption(ctx context.Context, v interface{}) (models.TRBSubjectAreaOption, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBSubjectAreaOption(tmp)
+	var res models.TRBSubjectAreaOption
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTRBSubjectAreaOption2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBSubjectAreaOption(ctx context.Context, sel ast.SelectionSet, v models.TRBSubjectAreaOption) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) marshalNTRBTaskStatuses2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBTaskStatuses(ctx context.Context, sel ast.SelectionSet, v models.TRBTaskStatuses) graphql.Marshaler {

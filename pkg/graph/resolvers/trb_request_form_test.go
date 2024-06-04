@@ -67,7 +67,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 		expectedEndDate, _ := time.Parse(time.RFC3339, "2050-10-10T12:00:00+00:00")
 
 		subjectAreaOptions := []models.TRBSubjectAreaOption{
-			models.TRBSubjectAreaOptionAccessControlAndIdentityMgmt,
+			models.TRBSubjectAreaOptionAccessControlAndIDEntityManagement,
 			models.TRBSubjectAreaOptionCloudMigration,
 		}
 

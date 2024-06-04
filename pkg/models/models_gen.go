@@ -2577,6 +2577,56 @@ func (e TRBAdviceLetterStatusTaskList) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Represents an option selected for collaboration groups in the TRB request form
+type TRBCollabGroupOption string
+
+const (
+	TRBCollabGroupOptionSecurity               TRBCollabGroupOption = "SECURITY"
+	TRBCollabGroupOptionEnterpriseArchitecture TRBCollabGroupOption = "ENTERPRISE_ARCHITECTURE"
+	TRBCollabGroupOptionCloud                  TRBCollabGroupOption = "CLOUD"
+	TRBCollabGroupOptionPrivacyAdvisor         TRBCollabGroupOption = "PRIVACY_ADVISOR"
+	TRBCollabGroupOptionGovernanceReviewBoard  TRBCollabGroupOption = "GOVERNANCE_REVIEW_BOARD"
+	TRBCollabGroupOptionOther                  TRBCollabGroupOption = "OTHER"
+)
+
+var AllTRBCollabGroupOption = []TRBCollabGroupOption{
+	TRBCollabGroupOptionSecurity,
+	TRBCollabGroupOptionEnterpriseArchitecture,
+	TRBCollabGroupOptionCloud,
+	TRBCollabGroupOptionPrivacyAdvisor,
+	TRBCollabGroupOptionGovernanceReviewBoard,
+	TRBCollabGroupOptionOther,
+}
+
+func (e TRBCollabGroupOption) IsValid() bool {
+	switch e {
+	case TRBCollabGroupOptionSecurity, TRBCollabGroupOptionEnterpriseArchitecture, TRBCollabGroupOptionCloud, TRBCollabGroupOptionPrivacyAdvisor, TRBCollabGroupOptionGovernanceReviewBoard, TRBCollabGroupOptionOther:
+		return true
+	}
+	return false
+}
+
+func (e TRBCollabGroupOption) String() string {
+	return string(e)
+}
+
+func (e *TRBCollabGroupOption) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBCollabGroupOption(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBCollabGroupOption", str)
+	}
+	return nil
+}
+
+func (e TRBCollabGroupOption) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Represents the common options for document type that is attached to a
 // TRB Request
 type TRBDocumentCommonType string
@@ -2751,6 +2801,78 @@ func (e *TRBRequestDocumentStatus) UnmarshalGQL(v interface{}) error {
 }
 
 func (e TRBRequestDocumentStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// The possible options on the TRB "Subject Areas" page
+type TRBSubjectAreaOption string
+
+const (
+	TRBSubjectAreaOptionAccessControlAndIDEntityManagement     TRBSubjectAreaOption = "ACCESS_CONTROL_AND_IDENTITY_MANAGEMENT"
+	TRBSubjectAreaOptionAccessibilityCompliance                TRBSubjectAreaOption = "ACCESSIBILITY_COMPLIANCE"
+	TRBSubjectAreaOptionAssistanceWithSystemConceptDevelopment TRBSubjectAreaOption = "ASSISTANCE_WITH_SYSTEM_CONCEPT_DEVELOPMENT"
+	TRBSubjectAreaOptionBusinessIntelligence                   TRBSubjectAreaOption = "BUSINESS_INTELLIGENCE"
+	TRBSubjectAreaOptionCloudMigration                         TRBSubjectAreaOption = "CLOUD_MIGRATION"
+	TRBSubjectAreaOptionContainersAndMicroservices             TRBSubjectAreaOption = "CONTAINERS_AND_MICROSERVICES"
+	TRBSubjectAreaOptionDisasterRecovery                       TRBSubjectAreaOption = "DISASTER_RECOVERY"
+	TRBSubjectAreaOptionEmailIntegration                       TRBSubjectAreaOption = "EMAIL_INTEGRATION"
+	TRBSubjectAreaOptionEnterpriseDataLakeIntegration          TRBSubjectAreaOption = "ENTERPRISE_DATA_LAKE_INTEGRATION"
+	TRBSubjectAreaOptionFrameworkOrToolAlternatives            TRBSubjectAreaOption = "FRAMEWORK_OR_TOOL_ALTERNATIVES"
+	TRBSubjectAreaOptionOpenSourceSoftware                     TRBSubjectAreaOption = "OPEN_SOURCE_SOFTWARE"
+	TRBSubjectAreaOptionPortalIntegration                      TRBSubjectAreaOption = "PORTAL_INTEGRATION"
+	TRBSubjectAreaOptionTechnicalReferenceArchitecture         TRBSubjectAreaOption = "TECHNICAL_REFERENCE_ARCHITECTURE"
+	TRBSubjectAreaOptionSystemArchitectureReview               TRBSubjectAreaOption = "SYSTEM_ARCHITECTURE_REVIEW"
+	TRBSubjectAreaOptionSystemDispositionPlanning              TRBSubjectAreaOption = "SYSTEM_DISPOSITION_PLANNING"
+	TRBSubjectAreaOptionWebServicesAndAPIS                     TRBSubjectAreaOption = "WEB_SERVICES_AND_APIS"
+	TRBSubjectAreaOptionWebBasedUIServices                     TRBSubjectAreaOption = "WEB_BASED_UI_SERVICES"
+)
+
+var AllTRBSubjectAreaOption = []TRBSubjectAreaOption{
+	TRBSubjectAreaOptionAccessControlAndIDEntityManagement,
+	TRBSubjectAreaOptionAccessibilityCompliance,
+	TRBSubjectAreaOptionAssistanceWithSystemConceptDevelopment,
+	TRBSubjectAreaOptionBusinessIntelligence,
+	TRBSubjectAreaOptionCloudMigration,
+	TRBSubjectAreaOptionContainersAndMicroservices,
+	TRBSubjectAreaOptionDisasterRecovery,
+	TRBSubjectAreaOptionEmailIntegration,
+	TRBSubjectAreaOptionEnterpriseDataLakeIntegration,
+	TRBSubjectAreaOptionFrameworkOrToolAlternatives,
+	TRBSubjectAreaOptionOpenSourceSoftware,
+	TRBSubjectAreaOptionPortalIntegration,
+	TRBSubjectAreaOptionTechnicalReferenceArchitecture,
+	TRBSubjectAreaOptionSystemArchitectureReview,
+	TRBSubjectAreaOptionSystemDispositionPlanning,
+	TRBSubjectAreaOptionWebServicesAndAPIS,
+	TRBSubjectAreaOptionWebBasedUIServices,
+}
+
+func (e TRBSubjectAreaOption) IsValid() bool {
+	switch e {
+	case TRBSubjectAreaOptionAccessControlAndIDEntityManagement, TRBSubjectAreaOptionAccessibilityCompliance, TRBSubjectAreaOptionAssistanceWithSystemConceptDevelopment, TRBSubjectAreaOptionBusinessIntelligence, TRBSubjectAreaOptionCloudMigration, TRBSubjectAreaOptionContainersAndMicroservices, TRBSubjectAreaOptionDisasterRecovery, TRBSubjectAreaOptionEmailIntegration, TRBSubjectAreaOptionEnterpriseDataLakeIntegration, TRBSubjectAreaOptionFrameworkOrToolAlternatives, TRBSubjectAreaOptionOpenSourceSoftware, TRBSubjectAreaOptionPortalIntegration, TRBSubjectAreaOptionTechnicalReferenceArchitecture, TRBSubjectAreaOptionSystemArchitectureReview, TRBSubjectAreaOptionSystemDispositionPlanning, TRBSubjectAreaOptionWebServicesAndAPIS, TRBSubjectAreaOptionWebBasedUIServices:
+		return true
+	}
+	return false
+}
+
+func (e TRBSubjectAreaOption) String() string {
+	return string(e)
+}
+
+func (e *TRBSubjectAreaOption) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBSubjectAreaOption(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBSubjectAreaOption", str)
+	}
+	return nil
+}
+
+func (e TRBSubjectAreaOption) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

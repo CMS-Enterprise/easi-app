@@ -528,7 +528,7 @@ func (s *seederConfig) seedTRBWithForm(ctx context.Context, trbName *string, isS
 		"collabDateOther":                  "Last week",
 		"collabGRBConsultRequested":        true,
 		"subjectAreaOptions": []models.TRBSubjectAreaOption{
-			models.TRBSubjectAreaOptionAssistanceWithSystemConceptDev,
+			models.TRBSubjectAreaOptionAssistanceWithSystemConceptDevelopment,
 			models.TRBSubjectAreaOptionCloudMigration,
 		},
 		"subjectAreaOptionOther": "Rocket science",
