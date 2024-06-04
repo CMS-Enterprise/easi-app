@@ -5,11 +5,12 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Grid
+  Grid,
+  IconLaunch,
+  Link
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
-import UswdsReactLink from 'components/LinkWrapper';
 import Divider from 'components/shared/Divider';
 import { ATO_LEARN_MORE, CFACTS } from 'constants/externalUrls';
 import { GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate } from 'queries/types/GetSystemProfile';
@@ -58,39 +59,33 @@ function AtoCard({
           </div>
           <p>
             <strong>{t('spaces.ato.isso')}</strong>
-            {isso ? (
-              <>
-                <br />
-                {getPersonFullName(isso)}
-              </>
-            ) : (
-              t('spaces.ato.noIsso')
-            )}
+            <br />
+            {isso ? getPersonFullName(isso) : t('spaces.ato.noIsso')}
           </p>
         </CardBody>
 
         <Divider className="margin-y-2" />
 
-        <CardFooter className="padding-0 margin-bottom-05">
-          <UswdsReactLink
-            variant="unstyled"
+        <CardFooter className="padding-0 margin-bottom-05 display-flex">
+          <Link
             className={classnames('usa-button', {
               'usa-button--disabled': !isso?.assigneeEmail
             })}
-            to=""
+            href={`mailto:${isso?.assigneeEmail}`}
           >
             {t('spaces.ato.contact')}
-          </UswdsReactLink>
-          <UswdsReactLink
-            variant="unstyled"
-            className="usa-button usa-button--outline"
-            to={CFACTS}
-          >
+          </Link>
+          <Link className="usa-button usa-button--outline" href={CFACTS}>
             {t('spaces.ato.cfacts')}
-          </UswdsReactLink>
-          <UswdsReactLink variant="unstyled" to={ATO_LEARN_MORE}>
+          </Link>
+          <Link
+            variant="unstyled"
+            href={ATO_LEARN_MORE}
+            className="margin-left-1 display-flex flex-align-center text-primary"
+          >
             {t('spaces.ato.learn')}
-          </UswdsReactLink>
+            <IconLaunch className="margin-left-1" />
+          </Link>
         </CardFooter>
       </Card>
     </Grid>
