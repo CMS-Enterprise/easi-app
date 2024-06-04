@@ -1540,6 +1540,49 @@ func (e ITGovIntakeFormStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+type RequestRelationType string
+
+const (
+	RequestRelationTypeNewSystem       RequestRelationType = "NEW_SYSTEM"
+	RequestRelationTypeExistingSystem  RequestRelationType = "EXISTING_SYSTEM"
+	RequestRelationTypeExistingService RequestRelationType = "EXISTING_SERVICE"
+)
+
+var AllRequestRelationType = []RequestRelationType{
+	RequestRelationTypeNewSystem,
+	RequestRelationTypeExistingSystem,
+	RequestRelationTypeExistingService,
+}
+
+func (e RequestRelationType) IsValid() bool {
+	switch e {
+	case RequestRelationTypeNewSystem, RequestRelationTypeExistingSystem, RequestRelationTypeExistingService:
+		return true
+	}
+	return false
+}
+
+func (e RequestRelationType) String() string {
+	return string(e)
+}
+
+func (e *RequestRelationType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = RequestRelationType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid RequestRelationType", str)
+	}
+	return nil
+}
+
+func (e RequestRelationType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Indicates the type of a request being made with the EASi system
 type RequestType string
 

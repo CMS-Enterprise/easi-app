@@ -123,7 +123,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 
 			// Check relation type
 			suite.NotNil(updatedTRBRequest.SystemRelationType)
-			suite.Equal(models.RelationTypeNewSystem, *updatedTRBRequest.SystemRelationType)
+			suite.Equal(models.RequestRelationTypeNewSystem, *updatedTRBRequest.SystemRelationType)
 		})
 	}
 }
@@ -237,7 +237,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 
 			// Check relation type
 			suite.NotNil(updatedTRBRequest.SystemRelationType)
-			suite.Equal(models.RelationTypeExistingSystem, *updatedTRBRequest.SystemRelationType)
+			suite.Equal(models.RequestRelationTypeExistingSystem, *updatedTRBRequest.SystemRelationType)
 		})
 	}
 }
@@ -343,7 +343,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 
 			// Check relation type
 			suite.NotNil(updatedTRBRequest.SystemRelationType)
-			suite.Equal(models.RelationTypeExistingService, *updatedTRBRequest.SystemRelationType)
+			suite.Equal(models.RequestRelationTypeExistingService, *updatedTRBRequest.SystemRelationType)
 		})
 	}
 }

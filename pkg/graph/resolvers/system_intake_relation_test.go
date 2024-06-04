@@ -129,7 +129,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 
 			// Check relation type
 			suite.NotNil(updatedIntake.SystemRelationType)
-			suite.Equal(models.RelationTypeNewSystem, *updatedIntake.SystemRelationType)
+			suite.Equal(models.RequestRelationTypeNewSystem, *updatedIntake.SystemRelationType)
 		})
 	}
 }
@@ -248,7 +248,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 			// Check relation type
 			suite.NotNil(updatedIntake.SystemRelationType)
-			suite.Equal(models.RelationTypeExistingSystem, *updatedIntake.SystemRelationType)
+			suite.Equal(models.RequestRelationTypeExistingSystem, *updatedIntake.SystemRelationType)
 		})
 	}
 }
@@ -365,7 +365,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 
 			// Check relation type
 			suite.NotNil(updatedIntake.SystemRelationType)
-			suite.Equal(models.RelationTypeExistingService, *updatedIntake.SystemRelationType)
+			suite.Equal(models.RequestRelationTypeExistingService, *updatedIntake.SystemRelationType)
 		})
 	}
 }

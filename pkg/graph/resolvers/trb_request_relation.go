@@ -30,7 +30,7 @@ func SetTRBRequestRelationNewSystem(
 
 		// Clear contract name
 		trbRequest.ContractName = zero.StringFromPtr(nil)
-		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeNewSystem)
+		trbRequest.SystemRelationType = helpers.PointerTo(models.RequestRelationTypeNewSystem)
 		updatedTRBRequest, err := store.UpdateTRBRequestNP(ctx, tx, trbRequest)
 		if err != nil {
 			return nil, err
@@ -67,7 +67,7 @@ func SetTRBRequestRelationExistingSystem(
 		}
 
 		trbRequest.ContractName = zero.StringFromPtr(nil)
-		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeExistingSystem)
+		trbRequest.SystemRelationType = helpers.PointerTo(models.RequestRelationTypeExistingSystem)
 		updatedTRBRequest, err := store.UpdateTRBRequestNP(ctx, tx, trbRequest)
 		if err != nil {
 			return nil, err
@@ -109,7 +109,7 @@ func SetTRBRequestRelationExistingService(
 
 		// set contract name
 		trbRequest.ContractName = zero.StringFrom(input.ContractName)
-		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeExistingService)
+		trbRequest.SystemRelationType = helpers.PointerTo(models.RequestRelationTypeExistingService)
 		updatedTRBRequest, err := store.UpdateTRBRequestNP(ctx, tx, trbRequest)
 		if err != nil {
 			return nil, err

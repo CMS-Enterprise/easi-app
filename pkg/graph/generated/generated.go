@@ -70534,17 +70534,16 @@ func (ec *executionContext) unmarshalORequestRelationType2ᚖgithubᚗcomᚋcmsg
 	if v == nil {
 		return nil, nil
 	}
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.RequestRelationType(tmp)
-	return &res, graphql.ErrorOnPath(ctx, err)
+	var res = new(models.RequestRelationType)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalORequestRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐRequestRelationType(ctx context.Context, sel ast.SelectionSet, v *models.RequestRelationType) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalString(string(*v))
-	return res
+	return v
 }
 
 func (ec *executionContext) marshalORequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐRequestsConnection(ctx context.Context, sel ast.SelectionSet, v *models.RequestsConnection) graphql.Marshaler {
