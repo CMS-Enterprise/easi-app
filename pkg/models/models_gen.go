@@ -1166,6 +1166,53 @@ func (e GovernanceRequestFeedbackType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// The requester view of the IT gov Decision step status
+type ITGovDecisionStatus string
+
+const (
+	// This step can't be started yet
+	ITGovDecisionStatusCantStart ITGovDecisionStatus = "CANT_START"
+	// This step is in review
+	ITGovDecisionStatusInReview ITGovDecisionStatus = "IN_REVIEW"
+	// The step is completed
+	ITGovDecisionStatusCompleted ITGovDecisionStatus = "COMPLETED"
+)
+
+var AllITGovDecisionStatus = []ITGovDecisionStatus{
+	ITGovDecisionStatusCantStart,
+	ITGovDecisionStatusInReview,
+	ITGovDecisionStatusCompleted,
+}
+
+func (e ITGovDecisionStatus) IsValid() bool {
+	switch e {
+	case ITGovDecisionStatusCantStart, ITGovDecisionStatusInReview, ITGovDecisionStatusCompleted:
+		return true
+	}
+	return false
+}
+
+func (e ITGovDecisionStatus) String() string {
+	return string(e)
+}
+
+func (e *ITGovDecisionStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ITGovDecisionStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ITGovDecisionStatus", str)
+	}
+	return nil
+}
+
+func (e ITGovDecisionStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // The requester view of the IT gov feedback step status
 type ITGovFeedbackStatus string
 

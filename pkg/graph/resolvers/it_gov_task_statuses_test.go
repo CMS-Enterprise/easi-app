@@ -297,7 +297,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step: models.SystemIntakeStepINITIALFORM,
 			},
-			expectedStatus: models.ITGDSCantStart,
+			expectedStatus: models.ITGovDecisionStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -305,7 +305,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step: models.SystemIntakeStepDRAFTBIZCASE,
 			},
-			expectedStatus: models.ITGDSCantStart,
+			expectedStatus: models.ITGovDecisionStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -313,7 +313,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step: models.SystemIntakeStepGRTMEETING,
 			},
-			expectedStatus: models.ITGDSCantStart,
+			expectedStatus: models.ITGovDecisionStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -321,7 +321,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 			intake: models.SystemIntake{
 				Step: models.SystemIntakeStepFINALBIZCASE,
 			},
-			expectedStatus: models.ITGDSCantStart,
+			expectedStatus: models.ITGovDecisionStatusCantStart,
 			expectError:    false,
 		},
 		//Testing GRB Meeting States
@@ -331,7 +331,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepGRBMEETING,
 				GRBDate: nil,
 			},
-			expectedStatus: models.ITGDSCantStart,
+			expectedStatus: models.ITGovDecisionStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -340,7 +340,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepGRBMEETING,
 				GRBDate: &tomorrow,
 			},
-			expectedStatus: models.ITGDSCantStart,
+			expectedStatus: models.ITGovDecisionStatusCantStart,
 			expectError:    false,
 		},
 		{
@@ -349,7 +349,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 				Step:    models.SystemIntakeStepGRBMEETING,
 				GRBDate: &yesterday,
 			},
-			expectedStatus: models.ITGDSInReview,
+			expectedStatus: models.ITGovDecisionStatusInReview,
 			expectError:    false,
 		},
 		{
@@ -358,7 +358,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSLcidIssued,
 			},
-			expectedStatus: models.ITGDSCompleted,
+			expectedStatus: models.ITGovDecisionStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -367,7 +367,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNotApproved,
 			},
-			expectedStatus: models.ITGDSCompleted,
+			expectedStatus: models.ITGovDecisionStatusCompleted,
 			expectError:    false,
 		},
 		{
@@ -376,7 +376,7 @@ func TestDecisionAndNextStepsStatus(t *testing.T) {
 				Step:          models.SystemIntakeStepDECISION,
 				DecisionState: models.SIDSNotGovernance,
 			},
-			expectedStatus: models.ITGDSCompleted,
+			expectedStatus: models.ITGovDecisionStatusCompleted,
 			expectError:    false,
 		},
 		{

@@ -184,16 +184,16 @@ func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisi
 
 	switch intake.Step {
 	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE:
-		return models.ITGDSCantStart, nil
+		return models.ITGovDecisionStatusCantStart, nil
 	case models.SystemIntakeStepGRBMEETING:
 		if intake.GRBDate == nil {
-			return models.ITGDSCantStart, nil
+			return models.ITGovDecisionStatusCantStart, nil
 		}
 		if intake.GRBDate.After(time.Now()) { // Meeting has not happened
-			return models.ITGDSCantStart, nil
+			return models.ITGovDecisionStatusCantStart, nil
 		}
 		// Meeting has  happened, intake is waiting on a decision
-		return models.ITGDSInReview, nil
+		return models.ITGovDecisionStatusInReview, nil
 
 	case models.SystemIntakeStepDECISION:
 
@@ -201,7 +201,7 @@ func DecisionAndNextStepsStatus(intake *models.SystemIntake) (models.ITGovDecisi
 			return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its decision state. a decision must be made in order to be in the decision state"), intake.RequestFormState, "SystemIntakeDecisionState")
 		}
 
-		return models.ITGDSCompleted, nil
+		return models.ITGovDecisionStatusCompleted, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
 		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.RequestFormState, "SystemIntakeStep")
 	}
