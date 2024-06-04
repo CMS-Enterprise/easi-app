@@ -1,2 +1,3 @@
-SELECT cedar_system_id, eua_user_id, created_at
-FROM cedar_system_bookmarks WHERE ;
+SELECT eua_user_id, cedar_system_id
+FROM cedar_system_bookmarks
+WHERE (eua_user_id, cedar_system_id) = ANY (SELECT UNNEST($1::TEXT[]), UNNEST($2::TEXT[]));

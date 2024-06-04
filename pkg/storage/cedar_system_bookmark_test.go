@@ -4,6 +4,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/google/uuid"
+
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 
@@ -55,30 +58,30 @@ func (s *StoreTestSuite) TestDuplicateCedarSystemBookmark() {
 	})
 }
 
-//func (s *StoreTestSuite) TestFetchCedarSystemIsBookmarkedLOADER() {
-//	ctx := context.Background()
-//
-//	cedarSystemID := uuid.New().String()
-//	s.NotEmpty(cedarSystemID)
-//
-//	otherID := uuid.New().String()
-//	s.NotEmpty(otherID)
-//
-//	s.Run("saves and retrieves a bookmark", func() {
-//		_, err := s.store.CreateCedarSystemBookmark(ctx, &models.CedarSystemBookmark{
-//			CedarSystemID: cedarSystemID,
-//		})
-//		s.NoError(err)
-//
-//		req := models.BookmarkRequest{
-//			CedarSystemID: cedarSystemID,
-//			EuaUserID:     appcontext.Principal(ctx).ID(),
-//		}
-//
-//		bookmarks, err := s.store.FetchCedarSystemIsBookmarkedLOADER(ctx, []models.BookmarkRequest{req})
-//		s.NoError(err)
-//		s.NotEmpty(bookmarks)
-//		s.Len(bookmarks, 1)
-//		s.True(bookmarks[0])
-//	})
-//}
+func (s *StoreTestSuite) TestFetchCedarSystemIsBookmarkedLOADER() {
+	ctx := context.Background()
+
+	cedarSystemID := uuid.New().String()
+	s.NotEmpty(cedarSystemID)
+
+	otherID := uuid.New().String()
+	s.NotEmpty(otherID)
+
+	s.Run("saves and retrieves a bookmark", func() {
+		_, err := s.store.CreateCedarSystemBookmark(ctx, &models.CedarSystemBookmark{
+			CedarSystemID: cedarSystemID,
+		})
+		s.NoError(err)
+
+		req := models.BookmarkRequest{
+			CedarSystemID: cedarSystemID,
+			EuaUserID:     appcontext.Principal(ctx).ID(),
+		}
+
+		bookmarks, err := s.store.FetchCedarSystemIsBookmarkedLOADER(ctx, []models.BookmarkRequest{req})
+		s.NoError(err)
+		s.NotEmpty(bookmarks)
+		s.Len(bookmarks, 1)
+		s.True(bookmarks[0])
+	})
+}

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -81,23 +82,37 @@ func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookma
 }
 
 func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, bookmarkRequests []models.BookmarkRequest) ([]bool, error) {
-	//sqlStatement := ""
-	var ids []string
-	if err := selectNamed(ctx, s, &ids, sqlqueries.CedarBookmarkSystemsForm.SelectLOADER, args{
-		"bookmark_requests": bookmarkRequests,
-	}); err != nil {
-		return nil, err
+	// build lists for multiple `where` clauses
+	var (
+		euaUserIDs = make([]string, len(bookmarkRequests))
+		systemIDs  = make([]string, len(bookmarkRequests))
+	)
+
+	for i, req := range bookmarkRequests {
+		euaUserIDs[i] = req.EuaUserID
+		systemIDs[i] = req.CedarSystemID
 	}
 
-	idMap := map[string]struct{}{}
+	var results []models.BookmarkRequest
+	if err := s.db.Select(&results, sqlqueries.CedarBookmarkSystemsForm.SelectLOADER, pq.Array(euaUserIDs), pq.Array(systemIDs)); err != nil {
+		return nil, err
+	}
+	//if err := selectNamed(ctx, s, &results, sqlqueries.CedarBookmarkSystemsForm.SelectLOADER, args{
+	//	"eua_user_ids": pq.Array(euaUserIDs),
+	//	"system_ids":   pq.Array(systemIDs),
+	//}); err != nil {
+	//	return nil, err
+	//}
 
-	for _, id := range ids {
-		idMap[id] = helpers.EmptyStruct
+	store := map[models.BookmarkRequest]struct{}{}
+
+	for _, result := range results {
+		store[result] = helpers.EmptyStruct
 	}
 
 	var out []bool
 	for _, req := range bookmarkRequests {
-		_, ok := idMap[req.CedarSystemID]
+		_, ok := store[req]
 		out = append(out, ok)
 	}
 
