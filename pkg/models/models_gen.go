@@ -1766,6 +1766,51 @@ func (e SystemIntakeActionType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Represents the common options for document type that is attached to a
+// System Intake document
+type SystemIntakeDocumentCommonType string
+
+const (
+	SystemIntakeDocumentCommonTypeSooSow    SystemIntakeDocumentCommonType = "SOO_SOW"
+	SystemIntakeDocumentCommonTypeDraftIcge SystemIntakeDocumentCommonType = "DRAFT_ICGE"
+	SystemIntakeDocumentCommonTypeOther     SystemIntakeDocumentCommonType = "OTHER"
+)
+
+var AllSystemIntakeDocumentCommonType = []SystemIntakeDocumentCommonType{
+	SystemIntakeDocumentCommonTypeSooSow,
+	SystemIntakeDocumentCommonTypeDraftIcge,
+	SystemIntakeDocumentCommonTypeOther,
+}
+
+func (e SystemIntakeDocumentCommonType) IsValid() bool {
+	switch e {
+	case SystemIntakeDocumentCommonTypeSooSow, SystemIntakeDocumentCommonTypeDraftIcge, SystemIntakeDocumentCommonTypeOther:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeDocumentCommonType) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeDocumentCommonType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeDocumentCommonType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeDocumentCommonType", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeDocumentCommonType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Enumeration of the possible statuses of documents uploaded in the System Intake
 type SystemIntakeDocumentStatus string
 

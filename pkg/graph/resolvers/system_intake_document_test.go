@@ -30,7 +30,7 @@ func (suite *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 	// Create a document
 	documentToCreate := &models.SystemIntakeDocument{
 		SystemIntakeRequestID: intake.ID,
-		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftICGE,
+		CommonDocumentType:    models.SystemIntakeDocumentCommonTypeDraftIcge,
 		FileName:              "create_and_get.pdf",
 		Bucket:                "bukkit",
 		S3Key:                 uuid.NewString(),

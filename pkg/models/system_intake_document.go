@@ -2,18 +2,6 @@ package models
 
 import "github.com/google/uuid"
 
-// SystemIntakeDocumentCommonType represents the document type, including an "OTHER" option for user-specified types
-type SystemIntakeDocumentCommonType string
-
-const (
-	// SystemIntakeDocumentCommonTypeSOOSOW means the document is an SOO or SOW
-	SystemIntakeDocumentCommonTypeSOOSOW SystemIntakeDocumentCommonType = "SOO_SOW"
-	// SystemIntakeDocumentCommonTypeDraftICGE means the document is a draft ICGE
-	SystemIntakeDocumentCommonTypeDraftICGE SystemIntakeDocumentCommonType = "DRAFT_ICGE"
-	// SystemIntakeDocumentCommonTypeDraftOther means the document is some type other than the common document types
-	SystemIntakeDocumentCommonTypeDraftOther SystemIntakeDocumentCommonType = "OTHER"
-)
-
 // SystemIntakeDocument represents a document attached to a system intake that has been uploaded to S3
 type SystemIntakeDocument struct {
 	BaseStruct
