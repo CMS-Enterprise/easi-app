@@ -90,8 +90,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
             <Card
               className={classnames('grid-col-12', {
                 'bg-success-dark': atoStatus === 'Active',
-                'bg-warning':
-                  atoStatus === 'Due Soon' || atoStatus === 'In progress',
+                'bg-warning': atoStatus === 'Due Soon', // || atoStatus === 'In progress',
                 'bg-error-dark': atoStatus === 'Expired',
                 'bg-base-lighter': atoStatus === 'No ATO'
               })}
@@ -101,9 +100,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                   'text-white':
                     atoStatus === 'Active' || atoStatus === 'Expired',
                   'text-base-darkest':
-                    atoStatus === 'Due Soon' ||
-                    atoStatus === 'No ATO' ||
-                    atoStatus === 'In progress'
+                    atoStatus === 'Due Soon' || atoStatus === 'No ATO' // || atoStatus === 'In progress'
                 })}
               >
                 <DescriptionTerm term={t('singleSystem.ato.status')} />
@@ -117,8 +114,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                   <Divider
                     className={classnames('grid-col-12', {
                       'border-success-darker': atoStatus === 'Active',
-                      'border-warning-dark':
-                        atoStatus === 'Due Soon' || atoStatus === 'In progress',
+                      'border-warning-dark': atoStatus === 'Due Soon', // || atoStatus === 'In progress',
                       'border-error-darker': atoStatus === 'Expired'
                       // 'border-base-light': atoStatus === 'No ATO'
                     })}
@@ -130,10 +126,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                   className={classnames('padding-2', {
                     'text-white':
                       atoStatus === 'Active' || atoStatus === 'Expired',
-                    'text-base-darkest':
-                      atoStatus === 'Due Soon' ||
-                      // atoStatus === 'No ATO' ||
-                      atoStatus === 'In progress'
+                    'text-base-darkest': atoStatus === 'Due Soon' // || atoStatus === 'No ATO' || atoStatus === 'In progress'
                   })}
                 >
                   <DescriptionTerm term={t('singleSystem.ato.expiration')} />
@@ -156,7 +149,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
         )}
 
         {flags.systemProfileHiddenFields &&
-          atoStatus === 'In progress' &&
+          // atoStatus === 'In progress' &&
           system.activities !== undefined && (
             <ProcessList>
               {system.activities.map(act => (

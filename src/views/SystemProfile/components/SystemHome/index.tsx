@@ -125,9 +125,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
               <Tag
                 className={classnames('grid-col-12', {
                   'bg-success-dark': system.atoStatus === 'Active',
-                  'bg-warning':
-                    system.atoStatus === 'Due Soon' ||
-                    system.atoStatus === 'In progress',
+                  'bg-warning': system.atoStatus === 'Due Soon', // || system.atoStatus === 'In progress',
                   'bg-error-dark': system.atoStatus === 'Expired',
                   'bg-base-lighter': system.atoStatus === 'No ATO',
                   'text-white':
