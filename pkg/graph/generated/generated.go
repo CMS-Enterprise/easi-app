@@ -68817,19 +68817,13 @@ func (ec *executionContext) marshalNTRBAdminNote2ᚖgithubᚗcomᚋcmsgovᚋeasi
 }
 
 func (ec *executionContext) unmarshalNTRBAdminNoteCategory2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx context.Context, v interface{}) (models.TRBAdminNoteCategory, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.TRBAdminNoteCategory(tmp)
+	var res models.TRBAdminNoteCategory
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTRBAdminNoteCategory2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategory(ctx context.Context, sel ast.SelectionSet, v models.TRBAdminNoteCategory) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) marshalNTRBAdminNoteCategorySpecificData2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTRBAdminNoteCategorySpecificData(ctx context.Context, sel ast.SelectionSet, v models.TRBAdminNoteCategorySpecificData) graphql.Marshaler {

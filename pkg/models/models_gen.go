@@ -2378,3 +2378,51 @@ func (e *SystemIntakeStepToProgressTo) UnmarshalGQL(v interface{}) error {
 func (e SystemIntakeStepToProgressTo) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
+
+// Represents the category of a single TRB admin note
+type TRBAdminNoteCategory string
+
+const (
+	TRBAdminNoteCategoryGeneralRequest      TRBAdminNoteCategory = "GENERAL_REQUEST"
+	TRBAdminNoteCategoryInitialRequestForm  TRBAdminNoteCategory = "INITIAL_REQUEST_FORM"
+	TRBAdminNoteCategorySupportingDocuments TRBAdminNoteCategory = "SUPPORTING_DOCUMENTS"
+	TRBAdminNoteCategoryConsultSession      TRBAdminNoteCategory = "CONSULT_SESSION"
+	TRBAdminNoteCategoryAdviceLetter        TRBAdminNoteCategory = "ADVICE_LETTER"
+)
+
+var AllTRBAdminNoteCategory = []TRBAdminNoteCategory{
+	TRBAdminNoteCategoryGeneralRequest,
+	TRBAdminNoteCategoryInitialRequestForm,
+	TRBAdminNoteCategorySupportingDocuments,
+	TRBAdminNoteCategoryConsultSession,
+	TRBAdminNoteCategoryAdviceLetter,
+}
+
+func (e TRBAdminNoteCategory) IsValid() bool {
+	switch e {
+	case TRBAdminNoteCategoryGeneralRequest, TRBAdminNoteCategoryInitialRequestForm, TRBAdminNoteCategorySupportingDocuments, TRBAdminNoteCategoryConsultSession, TRBAdminNoteCategoryAdviceLetter:
+		return true
+	}
+	return false
+}
+
+func (e TRBAdminNoteCategory) String() string {
+	return string(e)
+}
+
+func (e *TRBAdminNoteCategory) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBAdminNoteCategory(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBAdminNoteCategory", str)
+	}
+	return nil
+}
+
+func (e TRBAdminNoteCategory) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
