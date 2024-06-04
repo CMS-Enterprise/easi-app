@@ -156,23 +156,23 @@ func BizCaseFinalStatus(intake *models.SystemIntake) (models.ITGovFinalBusinessC
 func GrbMeetingStatus(intake *models.SystemIntake) (models.ITGovGRBStatus, error) {
 	if intake.GRBDate != nil { // status depends on if there is a date scheduled or not
 		if intake.GRBDate.After(time.Now()) { // Meeting has not happened
-			return models.ITGGRBSScheduled, nil
+			return models.ITGovGRBStatusScheduled, nil
 		}
 		if intake.Step == models.SystemIntakeStepGRBMEETING { //if the step is GRB meeting, status is awaiting decision
-			return models.ITGGRBSAwaitingDecision, nil
+			return models.ITGovGRBStatusAwaitingDecision, nil
 		}
-		return models.ITGGRBSCompleted, nil // if the step is not GRB meeting, the status is completed
+		return models.ITGovGRBStatusCompleted, nil // if the step is not GRB meeting, the status is completed
 	}
 	// the grb date is nil.
 	switch intake.Step {
 	case models.SystemIntakeStepINITIALFORM, models.SystemIntakeStepDRAFTBIZCASE, models.SystemIntakeStepGRTMEETING, models.SystemIntakeStepFINALBIZCASE: // Any step before GRB should show can't start
-		return models.ITGGRBSCantStart, nil
+		return models.ITGovGRBStatusCantStart, nil
 
 	case models.SystemIntakeStepGRBMEETING: // If at the GRB step, show ready to schedule
-		return models.ITGGRBSReadyToSchedule, nil
+		return models.ITGovGRBStatusReadyToSchedule, nil
 
 	case models.SystemIntakeStepDECISION: // If after GRB step, show that it was not needed (skipped)
-		return models.ITGGRBSNotNeeded, nil
+		return models.ITGovGRBStatusNotNeeded, nil
 	default: //This is included to be explicit. This should not technically happen in normal use, but it is technically possible as the type is a type alias for string. It will also provide an error if a new state is added and not handled.
 		return "", apperrors.NewInvalidEnumError(fmt.Errorf("intake has an invalid value for its intake form step"), intake.Step, "SystemIntakeStep")
 	}
