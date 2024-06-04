@@ -2627,6 +2627,50 @@ func (e TRBCollabGroupOption) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Represents the status of the TRB consult step
+type TRBConsultPrepStatus string
+
+const (
+	TRBConsultPrepStatusCannotStartYet TRBConsultPrepStatus = "CANNOT_START_YET"
+	TRBConsultPrepStatusReadyToStart   TRBConsultPrepStatus = "READY_TO_START"
+	TRBConsultPrepStatusCompleted      TRBConsultPrepStatus = "COMPLETED"
+)
+
+var AllTRBConsultPrepStatus = []TRBConsultPrepStatus{
+	TRBConsultPrepStatusCannotStartYet,
+	TRBConsultPrepStatusReadyToStart,
+	TRBConsultPrepStatusCompleted,
+}
+
+func (e TRBConsultPrepStatus) IsValid() bool {
+	switch e {
+	case TRBConsultPrepStatusCannotStartYet, TRBConsultPrepStatusReadyToStart, TRBConsultPrepStatusCompleted:
+		return true
+	}
+	return false
+}
+
+func (e TRBConsultPrepStatus) String() string {
+	return string(e)
+}
+
+func (e *TRBConsultPrepStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBConsultPrepStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBConsultPrepStatus", str)
+	}
+	return nil
+}
+
+func (e TRBConsultPrepStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Represents the common options for document type that is attached to a
 // TRB Request
 type TRBDocumentCommonType string

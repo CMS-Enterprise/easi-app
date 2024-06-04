@@ -27,16 +27,6 @@ func NewTRBRequest(createdBy string) *TRBRequest {
 
 }
 
-// TRBConsultPrepStatus represents the types of TRBConsultPrepStatus types
-type TRBConsultPrepStatus string
-
-// These are the options for TRBConsultPrepStatus
-const (
-	TRBConsultPrepStatusCannotStartYet TRBConsultPrepStatus = "CANNOT_START_YET"
-	TRBConsultPrepStatusReadyToStart   TRBConsultPrepStatus = "READY_TO_START"
-	TRBConsultPrepStatusCompleted      TRBConsultPrepStatus = "COMPLETED"
-)
-
 // TRBAttendConsultStatus represents the types of TRBAttendConsultStatus types
 type TRBAttendConsultStatus string
 
