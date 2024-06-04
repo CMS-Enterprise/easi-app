@@ -113,7 +113,7 @@ func NewCreateBusinessCase(
 		businessCase.BusinessOwner = intake.BusinessOwner
 		businessCase.ProjectName = intake.ProjectName
 		businessCase.BusinessNeed = intake.BusinessNeed
-		businessCase.Status = models.BusinessCaseStatusOPEN
+		businessCase.Status = models.BusinessCaseStatusOpen
 		if businessCase, err = createBizCase(ctx, businessCase); err != nil {
 			return &models.BusinessCase{}, err
 		}
@@ -217,10 +217,10 @@ func NewCloseBusinessCase(
 			}
 		}
 
-		if businessCase.Status != models.BusinessCaseStatusCLOSED {
+		if businessCase.Status != models.BusinessCaseStatusClosed {
 			updatedTime := config.clock.Now()
 			businessCase.UpdatedAt = &updatedTime
-			businessCase.Status = models.BusinessCaseStatusCLOSED
+			businessCase.Status = models.BusinessCaseStatusClosed
 
 			_, err := update(ctx, businessCase)
 			if err != nil {

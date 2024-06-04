@@ -911,6 +911,48 @@ type UserError struct {
 	Path    []string `json:"path"`
 }
 
+// The status of a business case associated with an system IT governence request
+type BusinessCaseStatus string
+
+const (
+	BusinessCaseStatusClosed BusinessCaseStatus = "CLOSED"
+	BusinessCaseStatusOpen   BusinessCaseStatus = "OPEN"
+)
+
+var AllBusinessCaseStatus = []BusinessCaseStatus{
+	BusinessCaseStatusClosed,
+	BusinessCaseStatusOpen,
+}
+
+func (e BusinessCaseStatus) IsValid() bool {
+	switch e {
+	case BusinessCaseStatusClosed, BusinessCaseStatusOpen:
+		return true
+	}
+	return false
+}
+
+func (e BusinessCaseStatus) String() string {
+	return string(e)
+}
+
+func (e *BusinessCaseStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = BusinessCaseStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid BusinessCaseStatus", str)
+	}
+	return nil
+}
+
+func (e BusinessCaseStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Indicates the type of a request being made with the EASi system
 type RequestType string
 

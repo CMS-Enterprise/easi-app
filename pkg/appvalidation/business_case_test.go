@@ -251,7 +251,7 @@ func (s *AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
 func (s *AppValidateTestSuite) TestBusinessCaseForSubmit() {
 	s.Run("golden path", func() {
 		businessCase := testhelpers.NewBusinessCase(uuid.New())
-		businessCase.Status = models.BusinessCaseStatusOPEN
+		businessCase.Status = models.BusinessCaseStatusOpen
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 		err := BusinessCaseForSubmit(&businessCase)
 		s.NoError(err)
@@ -301,7 +301,7 @@ func (s *AppValidateTestSuite) TestBusinessCaseForSubmit() {
 
 	s.Run("returns validations when optional alternative", func() {
 		businessCase := testhelpers.NewBusinessCase(uuid.New())
-		businessCase.Status = models.BusinessCaseStatusOPEN
+		businessCase.Status = models.BusinessCaseStatusOpen
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 		businessCase.AlternativeBTitle = null.NewString("B Title", true)
 		businessCase.AlternativeBSummary = null.NewString("", false)

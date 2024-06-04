@@ -34,7 +34,7 @@ func (s *StoreTestSuite) TestFetchBusinessCaseByID() {
 		retIntake, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 		businessCase := testhelpers.NewBusinessCase(retIntake.ID)
-		businessCase.Status = models.BusinessCaseStatusOPEN
+		businessCase.Status = models.BusinessCaseStatusOpen
 		created, err := s.store.CreateBusinessCase(ctx, &businessCase)
 		s.NoError(err)
 		fetched, err := s.store.FetchOpenBusinessCaseByIntakeID(ctx, intake.ID)
@@ -65,7 +65,7 @@ func (s *StoreTestSuite) TestCreateBusinessCase() {
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
 			EUAUserID:      testhelpers.RandomEUAID(),
-			Status:         models.BusinessCaseStatusOPEN,
+			Status:         models.BusinessCaseStatusOpen,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 			},
@@ -81,7 +81,7 @@ func (s *StoreTestSuite) TestCreateBusinessCase() {
 	s.Run("requires a system intake ID", func() {
 		businessCase := models.BusinessCase{
 			EUAUserID: testhelpers.RandomEUAID(),
-			Status:    models.BusinessCaseStatusOPEN,
+			Status:    models.BusinessCaseStatusOpen,
 		}
 
 		_, err := s.store.CreateBusinessCase(ctx, &businessCase)
@@ -96,7 +96,7 @@ func (s *StoreTestSuite) TestCreateBusinessCase() {
 		businessCase := models.BusinessCase{
 			SystemIntakeID: badintakeID,
 			EUAUserID:      testhelpers.RandomEUAID(),
-			Status:         models.BusinessCaseStatusOPEN,
+			Status:         models.BusinessCaseStatusOpen,
 		}
 
 		_, err := s.store.CreateBusinessCase(ctx, &businessCase)
@@ -112,7 +112,7 @@ func (s *StoreTestSuite) TestCreateBusinessCase() {
 		s.NoError(err)
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
-			Status:         models.BusinessCaseStatusOPEN,
+			Status:         models.BusinessCaseStatusOpen,
 		}
 		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
 
@@ -159,7 +159,7 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 		expectedProjectName := null.StringFrom("Fake name")
 		businessCaseToUpdate := models.BusinessCase{
 			ID:                   id,
-			Status:               models.BusinessCaseStatusOPEN,
+			Status:               models.BusinessCaseStatusOpen,
 			ProjectName:          expectedProjectName,
 			RequesterPhoneNumber: expectedPhoneNumber,
 			PriorityAlignment:    null.String{},
@@ -187,7 +187,7 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 	s.Run("lifecycle costs are recreated", func() {
 		businessCaseToUpdate := models.BusinessCase{
 			ID:     id,
-			Status: models.BusinessCaseStatusOPEN,
+			Status: models.BusinessCaseStatusOpen,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{
@@ -223,7 +223,7 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 		unwantedEUAUserID := testhelpers.RandomEUAID()
 		businessCaseToUpdate := models.BusinessCase{
 			ID:             id,
-			Status:         models.BusinessCaseStatusOPEN,
+			Status:         models.BusinessCaseStatusOpen,
 			SystemIntakeID: unwantedSystemIntakeID,
 			EUAUserID:      unwantedEUAUserID,
 		}
@@ -242,7 +242,7 @@ func (s *StoreTestSuite) TestUpdateBusinessCase() {
 		badUUID := uuid.New()
 		businessCaseToUpdate := models.BusinessCase{
 			ID:                 badUUID,
-			Status:             models.BusinessCaseStatusOPEN,
+			Status:             models.BusinessCaseStatusOpen,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{},
 		}
 		_, err := s.store.UpdateBusinessCase(ctx, &businessCaseToUpdate)

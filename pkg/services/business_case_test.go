@@ -255,7 +255,7 @@ func (s *ServicesTestSuite) TestBusinessCaseCloser() {
 	fetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 		return &models.BusinessCase{
 			ID:     id,
-			Status: models.BusinessCaseStatusOPEN,
+			Status: models.BusinessCaseStatusOpen,
 		}, nil
 	}
 	update := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {

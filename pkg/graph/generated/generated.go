@@ -66464,19 +66464,13 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 }
 
 func (ec *executionContext) unmarshalNBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCaseStatus(ctx context.Context, v interface{}) (models.BusinessCaseStatus, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.BusinessCaseStatus(tmp)
+	var res models.BusinessCaseStatus
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCaseStatus(ctx context.Context, sel ast.SelectionSet, v models.BusinessCaseStatus) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) marshalNCedarAuthorityToOperate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAuthorityToOperateᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarAuthorityToOperate) graphql.Marshaler {

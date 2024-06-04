@@ -96,7 +96,7 @@ func makeBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, i
 		EUAUserID:            intake.EUAUserID.ValueOrZero(),
 		Requester:            null.StringFrom("Shane Clark"),
 		RequesterPhoneNumber: null.StringFrom("3124567890"),
-		Status:               models.BusinessCaseStatusOPEN,
+		Status:               models.BusinessCaseStatusOpen,
 		ProjectName:          null.StringFrom(name),
 		BusinessOwner:        null.StringFrom("Shane Clark"),
 		BusinessNeed:         null.StringFrom("business need"),

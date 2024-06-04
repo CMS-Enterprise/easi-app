@@ -195,7 +195,7 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase) error {
 		businessCase.ID.String(),
 	)
 
-	if businessCase.Status != models.BusinessCaseStatusOPEN {
+	if businessCase.Status != models.BusinessCaseStatusOpen {
 		expectedErr.WithValidation("Status", "must be OPEN")
 	}
 

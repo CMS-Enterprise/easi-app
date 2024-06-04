@@ -193,7 +193,7 @@ func NewBusinessCase(systemIntakeID uuid.UUID) models.BusinessCase {
 		EUAUserID:                       RandomEUAID(),
 		SystemIntakeID:                  systemIntakeID,
 		ProjectName:                     null.StringFrom("Test Project Name"),
-		Status:                          models.BusinessCaseStatusOPEN,
+		Status:                          models.BusinessCaseStatusOpen,
 		Requester:                       null.StringFrom("Test Requester"),
 		RequesterPhoneNumber:            null.StringFrom("6666666666"),
 		BusinessOwner:                   null.StringFrom("Test Business Owner"),

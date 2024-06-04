@@ -177,7 +177,7 @@ func makeTestBusinessCase(times usefulTimes, systemIntake models.SystemIntake) *
 		BusinessOwner:        systemIntake.BusinessOwner,
 		ProjectName:          systemIntake.ProjectName,
 		BusinessNeed:         systemIntake.BusinessNeed,
-		Status:               models.BusinessCaseStatusOPEN,
+		Status:               models.BusinessCaseStatusOpen,
 
 		CMSBenefit:             null.StringFrom("Reduce FTE hours and generate better end products"),
 		CurrentSolutionSummary: null.StringFrom("Nothing good"),

@@ -80,7 +80,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{
-			"status":    string(models.BusinessCaseStatusOPEN),
+			"status":    string(models.BusinessCaseStatusOpen),
 			"requester": requester,
 		})
 		s.NoError(err)
@@ -98,7 +98,7 @@ func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{
-			"status":    string(models.BusinessCaseStatusOPEN),
+			"status":    string(models.BusinessCaseStatusOpen),
 			"requester": requester,
 		})
 		s.NoError(err)

@@ -21,7 +21,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 
 	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCase{
 		SystemIntakeID: intake.ID,
-		Status:         models.BusinessCaseStatusOPEN,
+		Status:         models.BusinessCaseStatusOpen,
 		EUAUserID:      "TEST",
 	})
 	s.NoError(businessCaseErr)
@@ -77,7 +77,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuer
 
 	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCase{
 		SystemIntakeID:                      intake.ID,
-		Status:                              models.BusinessCaseStatusOPEN,
+		Status:                              models.BusinessCaseStatusOpen,
 		EUAUserID:                           "TEST",
 		AlternativeAAcquisitionApproach:     null.StringFrom("Aquisition Approach"),
 		AlternativeACons:                    null.StringFrom("Cons"),
@@ -197,7 +197,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuer
 	}
 	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCase{
 		SystemIntakeID:     intake.ID,
-		Status:             models.BusinessCaseStatusOPEN,
+		Status:             models.BusinessCaseStatusOpen,
 		EUAUserID:          "TEST",
 		LifecycleCostLines: lifecycleCostLines,
 	})

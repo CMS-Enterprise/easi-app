@@ -155,7 +155,7 @@ func (bc *TranslatableBusinessCase) CreateIntakeModel(ctx context.Context) (*wir
 		Schema:     versionStr(IntakeInputSchemaEASIBizCaseVersion),
 	}
 
-	if bc.Status == models.BusinessCaseStatusCLOSED {
+	if bc.Status == models.BusinessCaseStatusClosed {
 		result.ClientStatus = statusStr(inputStatusFinal)
 	} else {
 		result.ClientStatus = statusStr(inputStatusInitiated)

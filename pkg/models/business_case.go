@@ -8,9 +8,6 @@ import (
 	"github.com/guregu/null"
 )
 
-// BusinessCaseStatus represents the status of a system intake
-type BusinessCaseStatus string
-
 // LifecycleCostPhase represents the phase of a lifecycle cost line
 type LifecycleCostPhase string
 
@@ -21,11 +18,6 @@ type LifecycleCostSolution string
 type LifecycleCostYear string
 
 const (
-	// BusinessCaseStatusOPEN captures enum value "OPEN"
-	BusinessCaseStatusOPEN BusinessCaseStatus = "OPEN"
-	// BusinessCaseStatusCLOSED captures enum value "CLOSED"
-	BusinessCaseStatusCLOSED BusinessCaseStatus = "CLOSED"
-
 	// LifecycleCostPhaseDEVELOPMENT captures enum value "Development"
 	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"
 	// LifecycleCostPhaseOPERATIONMAINTENANCE captures enum value "Operations and Maintenance"
