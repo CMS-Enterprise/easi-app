@@ -70242,17 +70242,16 @@ func (ec *executionContext) unmarshalOCedarAssigneeType2ᚖgithubᚗcomᚋcmsgov
 	if v == nil {
 		return nil, nil
 	}
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.CedarAssigneeType(tmp)
-	return &res, graphql.ErrorOnPath(ctx, err)
+	var res = new(models.CedarAssigneeType)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOCedarAssigneeType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarAssigneeType(ctx context.Context, sel ast.SelectionSet, v *models.CedarAssigneeType) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalString(string(*v))
-	return res
+	return v
 }
 
 func (ec *executionContext) marshalOCedarBudget2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCedarBudgetᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.CedarBudget) graphql.Marshaler {

@@ -136,7 +136,7 @@ func GetSystemRoles(cedarSystemID string, roleTypeID *string) []*models.CedarRol
 		return &models.CedarRole{
 			Application:       zero.StringFrom("alfabet"), // should always be "alfabet"
 			ObjectID:          zero.StringFrom(cedarSystemID),
-			AssigneeType:      helpers.PointerTo(models.PersonAssignee),
+			AssigneeType:      helpers.PointerTo(models.CedarAssigneeTypePerson),
 			AssigneeUsername:  zero.StringFrom(user.Username),
 			AssigneeEmail:     zero.StringFrom(fmt.Sprintf(`%s.%s@fake.local`, user.FirstName, user.LastName)),
 			AssigneeFirstName: zero.StringFrom(user.FirstName),

@@ -953,6 +953,48 @@ func (e BusinessCaseStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// The possible types of assignees for CedarRoles
+type CedarAssigneeType string
+
+const (
+	CedarAssigneeTypePerson       CedarAssigneeType = "PERSON"
+	CedarAssigneeTypeOrganization CedarAssigneeType = "ORGANIZATION"
+)
+
+var AllCedarAssigneeType = []CedarAssigneeType{
+	CedarAssigneeTypePerson,
+	CedarAssigneeTypeOrganization,
+}
+
+func (e CedarAssigneeType) IsValid() bool {
+	switch e {
+	case CedarAssigneeTypePerson, CedarAssigneeTypeOrganization:
+		return true
+	}
+	return false
+}
+
+func (e CedarAssigneeType) String() string {
+	return string(e)
+}
+
+func (e *CedarAssigneeType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = CedarAssigneeType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid CedarAssigneeType", str)
+	}
+	return nil
+}
+
+func (e CedarAssigneeType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type ExchangeDirection string
 
 const (

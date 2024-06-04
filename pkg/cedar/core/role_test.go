@@ -26,12 +26,12 @@ func (s *RoleTestSuite) TestDecodeAssigneeType() {
 	s.Run("\"person\" decodes to correct role assignee type", func() {
 		assigneeType, isValid := decodeAssigneeType("person")
 		s.True(isValid)
-		s.Equal(models.PersonAssignee, assigneeType)
+		s.Equal(models.CedarAssigneeTypePerson, assigneeType)
 	})
 	s.Run("\"organization\" decodes to correct role assignee type", func() {
 		assigneeType, isValid := decodeAssigneeType("organization")
 		s.True(isValid)
-		s.Equal(models.OrganizationAssignee, assigneeType)
+		s.Equal(models.CedarAssigneeTypeOrganization, assigneeType)
 	})
 	s.Run("Empty assignee type decodes to empty string", func() {
 		assigneeType, isValid := decodeAssigneeType("")

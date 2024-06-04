@@ -63,9 +63,9 @@ func decodeAssigneeType(rawAssigneeType string) (models.CedarAssigneeType, bool)
 	lowered := strings.ToLower(rawAssigneeType)
 
 	if lowered == cedarPersonAssignee {
-		return models.PersonAssignee, true
+		return models.CedarAssigneeTypePerson, true
 	} else if lowered == cedarOrganizationAssignee {
-		return models.OrganizationAssignee, true
+		return models.CedarAssigneeTypeOrganization, true
 	} else if lowered == "" {
 		return "", true
 	} else {
