@@ -97,12 +97,6 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, bookmark
 	if err := s.db.Select(&results, sqlqueries.CedarBookmarkSystemsForm.SelectLOADER, pq.Array(euaUserIDs), pq.Array(systemIDs)); err != nil {
 		return nil, err
 	}
-	//if err := selectNamed(ctx, s, &results, sqlqueries.CedarBookmarkSystemsForm.SelectLOADER, args{
-	//	"eua_user_ids": pq.Array(euaUserIDs),
-	//	"system_ids":   pq.Array(systemIDs),
-	//}); err != nil {
-	//	return nil, err
-	//}
 
 	store := map[models.BookmarkRequest]struct{}{}
 
