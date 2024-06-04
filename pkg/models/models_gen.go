@@ -2624,6 +2624,48 @@ func (e TRBDocumentCommonType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Represents the action an admin is taking on a TRB request when leaving feedback
+type TRBFeedbackAction string
+
+const (
+	TRBFeedbackActionReadyForConsult TRBFeedbackAction = "READY_FOR_CONSULT"
+	TRBFeedbackActionRequestEdits    TRBFeedbackAction = "REQUEST_EDITS"
+)
+
+var AllTRBFeedbackAction = []TRBFeedbackAction{
+	TRBFeedbackActionReadyForConsult,
+	TRBFeedbackActionRequestEdits,
+}
+
+func (e TRBFeedbackAction) IsValid() bool {
+	switch e {
+	case TRBFeedbackActionReadyForConsult, TRBFeedbackActionRequestEdits:
+		return true
+	}
+	return false
+}
+
+func (e TRBFeedbackAction) String() string {
+	return string(e)
+}
+
+func (e *TRBFeedbackAction) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBFeedbackAction(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBFeedbackAction", str)
+	}
+	return nil
+}
+
+func (e TRBFeedbackAction) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Enumeration of the possible statuses of documents uploaded in the TRB workflow
 type TRBRequestDocumentStatus string
 
