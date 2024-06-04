@@ -17,7 +17,7 @@ func NewSystemIntake() models.SystemIntake {
 		EUAUserID:               null.StringFrom(RandomEUAID()),
 		State:                   models.SystemIntakeStateOpen,
 		Step:                    models.SystemIntakeStepINITIALFORM,
-		RequestType:             models.SystemIntakeRequestTypeNEW,
+		RequestType:             models.SystemIntakeRequestTypeNew,
 		Requester:               "Test Requester",
 		Component:               null.StringFrom("Test Component"),
 		BusinessOwner:           null.StringFrom("Test Business Owner"),

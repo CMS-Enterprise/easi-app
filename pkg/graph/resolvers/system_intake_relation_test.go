@@ -63,7 +63,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 		suite.Run(caseName, func() {
 			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 				State:        models.SystemIntakeStateOpen,
-				RequestType:  models.SystemIntakeRequestTypeNEW,
+				RequestType:  models.SystemIntakeRequestTypeNew,
 				SubmittedAt:  &submittedAt,
 				ContractName: zero.StringFrom("My Test Contract Name"),
 			})
@@ -177,7 +177,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 		suite.Run(caseName, func() {
 			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 				State:        models.SystemIntakeStateOpen,
-				RequestType:  models.SystemIntakeRequestTypeNEW,
+				RequestType:  models.SystemIntakeRequestTypeNew,
 				SubmittedAt:  &submittedAt,
 				ContractName: zero.StringFrom("My Test Contract Name"),
 			})
@@ -298,7 +298,7 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 		suite.Run(caseName, func() {
 			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 				State:        models.SystemIntakeStateOpen,
-				RequestType:  models.SystemIntakeRequestTypeNEW,
+				RequestType:  models.SystemIntakeRequestTypeNew,
 				SubmittedAt:  &submittedAt,
 				ContractName: zero.StringFrom("My Test Contract Name"),
 			})
@@ -380,7 +380,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		// Create an inital intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			State:        models.SystemIntakeStateOpen,
-			RequestType:  models.SystemIntakeRequestTypeNEW,
+			RequestType:  models.SystemIntakeRequestTypeNew,
 			SubmittedAt:  &submittedAt,
 			ContractName: zero.StringFrom("My Test Contract Name"),
 		})
@@ -419,7 +419,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		// Create an inital intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			State:        models.SystemIntakeStateOpen,
-			RequestType:  models.SystemIntakeRequestTypeNEW,
+			RequestType:  models.SystemIntakeRequestTypeNew,
 			SubmittedAt:  &submittedAt,
 			ContractName: zero.StringFrom("My Test Contract Name"),
 		})
@@ -466,7 +466,7 @@ func (suite *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		// Create an inital intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			State:       models.SystemIntakeStateOpen,
-			RequestType: models.SystemIntakeRequestTypeNEW,
+			RequestType: models.SystemIntakeRequestTypeNew,
 			SubmittedAt: &submittedAt,
 		})
 		suite.NoError(err)

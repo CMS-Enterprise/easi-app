@@ -467,7 +467,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		"Almond M&Ms",
 		"Johnny Bravo",
 		"some component",
-		models.SystemIntakeRequestTypeMAJORCHANGES,
+		models.SystemIntakeRequestTypeMajorChanges,
 		"some stage",
 		false, // isResubmitted
 	)
@@ -487,7 +487,7 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		"Almond M&Ms",
 		"Johnny Bravo",
 		"some component",
-		models.SystemIntakeRequestTypeMAJORCHANGES,
+		models.SystemIntakeRequestTypeMajorChanges,
 		"some stage",
 		true, // isResubmitted
 	)

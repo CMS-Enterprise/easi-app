@@ -55,7 +55,7 @@ func (s *ServicesTestSuite) TestBusinessCaseCreator() {
 	euaID := testhelpers.RandomEUAIDNull()
 	intake := &models.SystemIntake{
 		EUAUserID:        euaID,
-		RequestType:      models.SystemIntakeRequestTypeNEW,
+		RequestType:      models.SystemIntakeRequestTypeNew,
 		RequestFormState: models.SIRFSSubmitted,
 		Step:             models.SystemIntakeStepDRAFTBIZCASE,
 	}
@@ -192,7 +192,7 @@ func (s *ServicesTestSuite) TestBusinessCaseUpdater() {
 	euaID := testhelpers.RandomEUAIDNull()
 	intake := &models.SystemIntake{
 		EUAUserID:        euaID,
-		RequestType:      models.SystemIntakeRequestTypeNEW,
+		RequestType:      models.SystemIntakeRequestTypeNew,
 		RequestFormState: models.SIRFSSubmitted,
 	}
 	retIntake, err := s.store.CreateSystemIntake(ctx, intake)

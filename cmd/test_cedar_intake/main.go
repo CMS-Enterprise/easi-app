@@ -71,7 +71,7 @@ func makeTestSystemIntake(times usefulTimes, projectName string) *models.SystemI
 
 		EUAUserID: null.StringFrom("SWKJ"),
 
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		RequestType: models.SystemIntakeRequestTypeNew,
 
 		Requester: "Dylan Sprague",
 		Component: null.StringFrom("Center for Medicaid and CHIP Services"),

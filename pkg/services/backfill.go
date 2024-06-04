@@ -54,7 +54,7 @@ func NewBackfill(
 
 		if existingRecord != nil {
 			appcontext.ZLogger(ctx).Info("updating existing system intake", zap.String("lcid", intake.LifecycleID.String))
-			intake.RequestType = models.SystemIntakeRequestTypeNEW
+			intake.RequestType = models.SystemIntakeRequestTypeNew
 			intake.ID = existingRecord.ID
 			if _, updateErr := updateIntake(ctx, &intake); updateErr != nil {
 				return false, err
@@ -63,7 +63,7 @@ func NewBackfill(
 		}
 
 		appcontext.ZLogger(ctx).Info("creating new system intake", zap.String("lcid", intake.LifecycleID.String))
-		intake.RequestType = models.SystemIntakeRequestTypeNEW
+		intake.RequestType = models.SystemIntakeRequestTypeNew
 
 		// If no ID is provided, generate a new V3 UUID using the lifecycle ID. This will always result in
 		// the same UUID being generated when given the same input.

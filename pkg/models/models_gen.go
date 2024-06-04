@@ -2003,6 +2003,94 @@ func (e SystemIntakeGRBReviewerVotingRole) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// The type of an IT governance (system) request
+type SystemIntakeRequestType string
+
+const (
+	SystemIntakeRequestTypeMajorChanges SystemIntakeRequestType = "MAJOR_CHANGES"
+	SystemIntakeRequestTypeNew          SystemIntakeRequestType = "NEW"
+	SystemIntakeRequestTypeRecompete    SystemIntakeRequestType = "RECOMPETE"
+	SystemIntakeRequestTypeShutdown     SystemIntakeRequestType = "SHUTDOWN"
+)
+
+var AllSystemIntakeRequestType = []SystemIntakeRequestType{
+	SystemIntakeRequestTypeMajorChanges,
+	SystemIntakeRequestTypeNew,
+	SystemIntakeRequestTypeRecompete,
+	SystemIntakeRequestTypeShutdown,
+}
+
+func (e SystemIntakeRequestType) IsValid() bool {
+	switch e {
+	case SystemIntakeRequestTypeMajorChanges, SystemIntakeRequestTypeNew, SystemIntakeRequestTypeRecompete, SystemIntakeRequestTypeShutdown:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeRequestType) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeRequestType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeRequestType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeRequestType", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeRequestType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// SystemIntakeState represents whether the intake is open or closed
+type SystemIntakeState string
+
+const (
+	SystemIntakeStateOpen   SystemIntakeState = "OPEN"
+	SystemIntakeStateClosed SystemIntakeState = "CLOSED"
+)
+
+var AllSystemIntakeState = []SystemIntakeState{
+	SystemIntakeStateOpen,
+	SystemIntakeStateClosed,
+}
+
+func (e SystemIntakeState) IsValid() bool {
+	switch e {
+	case SystemIntakeStateOpen, SystemIntakeStateClosed:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeState) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeState) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeState(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeState", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeState) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
 type SystemIntakeStatusAdmin string
 

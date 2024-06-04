@@ -575,7 +575,7 @@ func main() {
 	makeSystemIntakeAndSubmit("initial form filled and submitted", &intakeID, requesterEUA, logger, store)
 
 	intakeID = uuid.MustParse("43fe5a4e-525c-40da-b0f6-3b36b5f84cc1")
-	createSystemIntake(&intakeID, logger, store, "USR1", "User One", models.SystemIntakeRequestTypeNEW)
+	createSystemIntake(&intakeID, logger, store, "USR1", "User One", models.SystemIntakeRequestTypeNew)
 
 	intakeID = uuid.MustParse("d2b96357-3a76-42e3-82ab-978a20f5acad")
 	makeSystemIntake("initial form filled but not yet submitted", nil, requesterEUA, logger, store)
@@ -600,7 +600,7 @@ func main() {
 		},
 	)
 	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
-		i.RequestType = models.SystemIntakeRequestTypeNEW
+		i.RequestType = models.SystemIntakeRequestTypeNew
 		i.Requester = "EndToEnd One" // matches pkg/local/okta_api.go, but doesn't really have to :shrug:
 		i.Component = null.StringFrom("Center for Consumer Information and Insurance Oversight")
 		i.BusinessOwner = null.StringFrom("John BusinessOwner")

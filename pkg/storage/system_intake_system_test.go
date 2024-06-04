@@ -31,7 +31,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		for i := 0; i < 3; i++ {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
-				RequestType: models.SystemIntakeRequestTypeNEW,
+				RequestType: models.SystemIntakeRequestTypeNew,
 				Requester:   fmt.Sprintf("link to systems %d", i),
 			}
 
@@ -146,7 +146,7 @@ func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
 		// create some intakes
 		intake1 := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			RequestType: models.SystemIntakeRequestTypeNEW,
+			RequestType: models.SystemIntakeRequestTypeNew,
 			State:       models.SystemIntakeStateOpen,
 		}
 
@@ -158,7 +158,7 @@ func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
 
 		intake2 := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			RequestType: models.SystemIntakeRequestTypeNEW,
+			RequestType: models.SystemIntakeRequestTypeNew,
 			State:       models.SystemIntakeStateOpen,
 		}
 
@@ -170,7 +170,7 @@ func (s *StoreTestSuite) TestSystemIntakesByCedarSystemID() {
 
 		intake3 := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAIDNull(),
-			RequestType: models.SystemIntakeRequestTypeNEW,
+			RequestType: models.SystemIntakeRequestTypeNew,
 			State:       models.SystemIntakeStateClosed,
 		}
 

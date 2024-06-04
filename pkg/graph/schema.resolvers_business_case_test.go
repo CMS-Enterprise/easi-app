@@ -15,7 +15,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		RequestType: models.SystemIntakeRequestTypeNew,
 	})
 	s.NoError(intakeErr)
 
@@ -71,7 +71,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuer
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		RequestType: models.SystemIntakeRequestTypeNew,
 	})
 	s.NoError(intakeErr)
 
@@ -167,7 +167,7 @@ func (s *GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuer
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		RequestType: models.SystemIntakeRequestTypeNew,
 	})
 	s.NoError(intakeErr)
 

@@ -22,7 +22,7 @@ func (s *EmailTestSuite) TestSubmitInitialIntakeFormReviewer() {
 	requestName := "Test Request"
 	requesterName := "Danny Rand"
 	requestComponent := "samophlange"
-	requestType := models.SystemIntakeRequestTypeRECOMPETE
+	requestType := models.SystemIntakeRequestTypeRecompete
 	processStage := "some kind of stage"
 	adminLink := fmt.Sprintf(
 		"%s://%s/governance-review-team/%s/intake-request",

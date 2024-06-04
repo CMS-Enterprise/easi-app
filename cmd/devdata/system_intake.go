@@ -42,7 +42,7 @@ func makeSystemIntake(
 		store,
 		requesterEUAID,
 		"Requester Name",
-		models.SystemIntakeRequestTypeNEW,
+		models.SystemIntakeRequestTypeNew,
 	)
 	return fillOutInitialIntake(requestName, logger, store, intake)
 }

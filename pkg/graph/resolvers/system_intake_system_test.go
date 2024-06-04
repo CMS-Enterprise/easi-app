@@ -27,7 +27,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		for i := 0; i < 2; i++ {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
-				RequestType: models.SystemIntakeRequestTypeNEW,
+				RequestType: models.SystemIntakeRequestTypeNew,
 				Requester:   fmt.Sprintf("system intake system data loader %d", i),
 			}
 

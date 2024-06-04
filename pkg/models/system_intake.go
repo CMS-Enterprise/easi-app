@@ -8,30 +8,6 @@ import (
 	"github.com/guregu/null/zero"
 )
 
-// SystemIntakeRequestType represents the type of a system intake
-type SystemIntakeRequestType string
-
-const (
-	// SystemIntakeRequestTypeNEW captures enum value of "NEW"
-	SystemIntakeRequestTypeNEW SystemIntakeRequestType = "NEW"
-	// SystemIntakeRequestTypeMAJORCHANGES captures enum value of "MAJOR_CHANGES"
-	SystemIntakeRequestTypeMAJORCHANGES SystemIntakeRequestType = "MAJOR_CHANGES"
-	// SystemIntakeRequestTypeRECOMPETE captures enum value of "RECOMPETE"
-	SystemIntakeRequestTypeRECOMPETE SystemIntakeRequestType = "RECOMPETE"
-	// SystemIntakeRequestTypeSHUTDOWN captures enum value of "SHUTDOWN"
-	SystemIntakeRequestTypeSHUTDOWN SystemIntakeRequestType = "SHUTDOWN"
-)
-
-// SystemIntakeState represents whether the intake is open or closed
-type SystemIntakeState string
-
-const (
-	// SystemIntakeStateOpen captures enum value "OPEN"
-	SystemIntakeStateOpen SystemIntakeState = "OPEN"
-	// SystemIntakeStateClosed captures enum value "CLOSED"
-	SystemIntakeStateClosed SystemIntakeState = "CLOSED"
-)
-
 // SystemIntakeStep represents the current step in the intake process
 type SystemIntakeStep string
 

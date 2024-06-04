@@ -31,7 +31,7 @@ func (s *IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 	systemIntake := models.SystemIntake{
 		Requester:   "TEST REQUESTER",
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		RequestType: models.SystemIntakeRequestTypeNew,
 		EUAUserID:   null.StringFrom(s.user.euaID),
 	}
 	createdIntake, _ := s.store.CreateSystemIntake(context.Background(), &systemIntake)

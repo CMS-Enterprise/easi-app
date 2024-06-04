@@ -15,7 +15,7 @@ func (suite *ResolverSuite) TestSystemIntakesQuery() {
 	// Create an open intake
 	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateOpen,
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		RequestType: models.SystemIntakeRequestTypeNew,
 		SubmittedAt: &submittedAt,
 	})
 	suite.NoError(err)
@@ -29,7 +29,7 @@ func (suite *ResolverSuite) TestSystemIntakesQuery() {
 	// Create a closed intake
 	closedIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateClosed,
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		RequestType: models.SystemIntakeRequestTypeNew,
 		SubmittedAt: &submittedAt,
 	})
 	suite.NoError(err)
@@ -60,7 +60,7 @@ func (suite *ResolverSuite) TestSystemIntakesQueryUnsubmitted() {
 	// Create an open intake
 	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateOpen,
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		RequestType: models.SystemIntakeRequestTypeNew,
 	})
 	suite.NoError(err)
 	suite.NotNil(openIntake)
@@ -68,7 +68,7 @@ func (suite *ResolverSuite) TestSystemIntakesQueryUnsubmitted() {
 	// Create a closed intake
 	closedIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateClosed,
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		RequestType: models.SystemIntakeRequestTypeNew,
 	})
 	suite.NoError(err)
 	suite.NotNil(closedIntake)
@@ -93,7 +93,7 @@ func (suite *ResolverSuite) TestSystemIntakesQueryArchived() {
 	// Create an open intake with an `archived_at`
 	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateOpen,
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		RequestType: models.SystemIntakeRequestTypeNew,
 	})
 	suite.NoError(err)
 	suite.NotNil(openIntake)
@@ -106,7 +106,7 @@ func (suite *ResolverSuite) TestSystemIntakesQueryArchived() {
 	// Create a closed intake with an `archived_at`
 	closedIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		State:       models.SystemIntakeStateClosed,
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		RequestType: models.SystemIntakeRequestTypeNew,
 	})
 	suite.NoError(err)
 	suite.NotNil(closedIntake)
