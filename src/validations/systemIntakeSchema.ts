@@ -45,7 +45,7 @@ const SystemIntakeValidationSchema = {
         .trim()
         .required('Enter the CMS Project/Product Manager or Lead name'),
       component: Yup.string().required(
-        'Select a project/product manager, or Lead Component'
+        'Select a Project/Product Manager or Lead Component'
       )
     }),
     isso: Yup.object().shape({

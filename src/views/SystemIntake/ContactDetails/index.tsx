@@ -339,7 +339,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     <>
       {Object.keys(errors).length > 0 && (
         <ErrorAlert
-          test-id="contact-details-errors"
+          testId="contact-details-errors"
           classNames="margin-top-3"
           heading={t('form:inputError.checkFix')}
         >

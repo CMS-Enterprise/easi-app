@@ -115,7 +115,7 @@ describe('System intake form - Contact Details', () => {
 
     expect(
       within(errorSummary).getByText(
-        'Select a project/ product manager, or Lead Component'
+        'Select a Project/Product Manager or Lead Component'
       )
     ).toBeInTheDocument();
   });
