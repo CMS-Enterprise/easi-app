@@ -94,8 +94,8 @@ func ProgressIntake(
 			feedbackForRequester := &models.GovernanceRequestFeedback{
 				IntakeID:     intake.ID,
 				Feedback:     *input.Feedback,
-				SourceAction: models.GRFSAProgressToNewStep,
-				TargetForm:   models.GRFTFNoTargetProvided,
+				SourceAction: models.GovernanceRequestFeedbackSourceActionProgressToNewStep,
+				TargetForm:   models.GovernanceRequestFeedbackTargetFormNoTargetProvided,
 				Type:         models.GRFTRequester,
 			}
 			feedbackForRequester.CreatedBy = &adminEUAID
@@ -115,8 +115,8 @@ func ProgressIntake(
 			feedbackForGRB := &models.GovernanceRequestFeedback{
 				IntakeID:     intake.ID,
 				Feedback:     *input.GrbRecommendations,
-				SourceAction: models.GRFSAProgressToNewStep,
-				TargetForm:   models.GRFTFNoTargetProvided,
+				SourceAction: models.GovernanceRequestFeedbackSourceActionProgressToNewStep,
+				TargetForm:   models.GovernanceRequestFeedbackTargetFormNoTargetProvided,
 				Type:         models.GRFTGRB,
 			}
 			feedbackForGRB.CreatedBy = &adminEUAID
@@ -196,15 +196,15 @@ func CreateSystemIntakeActionRequestEdits(
 	case models.SystemIntakeFormStepInitialRequestForm:
 		intake.RequestFormState = models.SIRFSEditsRequested
 		intake.Step = models.SystemIntakeStepINITIALFORM
-		targetForm = models.GRFTFIntakeRequest
+		targetForm = models.GovernanceRequestFeedbackTargetFormIntakeRequest
 	case models.SystemIntakeFormStepDraftBusinessCase:
 		intake.DraftBusinessCaseState = models.SIRFSEditsRequested
 		intake.Step = models.SystemIntakeStepDRAFTBIZCASE
-		targetForm = models.GRFTFDraftBusinessCase
+		targetForm = models.GovernanceRequestFeedbackTargetFormDraftBusinessCase
 	case models.SystemIntakeFormStepFinalBusinessCase:
 		intake.FinalBusinessCaseState = models.SIRFSEditsRequested
 		intake.Step = models.SystemIntakeStepFINALBIZCASE
-		targetForm = models.GRFTFinalBusinessCase
+		targetForm = models.GovernanceRequestFeedbackTargetFormFinalBusinessCase
 	default:
 		return nil, &apperrors.BadRequestError{
 			Err: fmt.Errorf("cannot request edits on %s", input.IntakeFormStep),
@@ -238,7 +238,7 @@ func CreateSystemIntakeActionRequestEdits(
 	govReqFeedback := &models.GovernanceRequestFeedback{}
 	govReqFeedback.IntakeID = intake.ID
 	govReqFeedback.CreatedBy = &adminTakingAction.Username
-	govReqFeedback.SourceAction = models.GRFSARequestEdits
+	govReqFeedback.SourceAction = models.GovernanceRequestFeedbackSourceActionRequestEdits
 	govReqFeedback.TargetForm = targetForm
 	govReqFeedback.Feedback = input.EmailFeedback
 	govReqFeedback.Type = models.GRFTRequester

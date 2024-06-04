@@ -13,7 +13,7 @@ func (s *EmailTestSuite) TestSendRequestEditsNotification() {
 
 	ctx := context.Background()
 	intakeID := uuid.MustParse("27883155-46ad-4c30-b3b0-30e8d093756e")
-	formName := models.GRFTFinalBusinessCase
+	formName := models.GovernanceRequestFeedbackTargetFormFinalBusinessCase
 	requestName := "Test Request"
 	requester := "Sir Requester"
 	additionalInfo := models.HTMLPointer("<p>additional info</p>")
@@ -57,13 +57,13 @@ func (s *EmailTestSuite) TestSendRequestEditsNotification() {
 			intakeID.String(),
 		)
 		switch formName {
-		case models.GRFTFIntakeRequest:
+		case models.GovernanceRequestFeedbackTargetFormIntakeRequest:
 			adminLink += "intake-request"
-		case models.GRFTFinalBusinessCase:
+		case models.GovernanceRequestFeedbackTargetFormFinalBusinessCase:
 			fallthrough
-		case models.GRFTFDraftBusinessCase:
+		case models.GovernanceRequestFeedbackTargetFormDraftBusinessCase:
 			adminLink += "business-case"
-		case models.GRFTFNoTargetProvided:
+		case models.GovernanceRequestFeedbackTargetFormNoTargetProvided:
 			fallthrough
 		default:
 			panic("no target form")
@@ -120,9 +120,9 @@ func (s *EmailTestSuite) TestSendRequestEditsNotification() {
 	})
 
 	for _, targetedForm := range []models.GovernanceRequestFeedbackTargetForm{
-		models.GRFTFIntakeRequest,
-		models.GRFTFDraftBusinessCase,
-		models.GRFTFinalBusinessCase,
+		models.GovernanceRequestFeedbackTargetFormIntakeRequest,
+		models.GovernanceRequestFeedbackTargetFormDraftBusinessCase,
+		models.GovernanceRequestFeedbackTargetFormFinalBusinessCase,
 	} {
 		err = client.SystemIntake.SendRequestEditsNotification(ctx, recipients, intakeID, targetedForm, requestName, requester, feedback, additionalInfo)
 		s.NoError(err)

@@ -67475,35 +67475,23 @@ func (ec *executionContext) marshalNGovernanceRequestFeedback2ᚖgithubᚗcomᚋ
 }
 
 func (ec *executionContext) unmarshalNGovernanceRequestFeedbackSourceAction2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackSourceAction(ctx context.Context, v interface{}) (models.GovernanceRequestFeedbackSourceAction, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.GovernanceRequestFeedbackSourceAction(tmp)
+	var res models.GovernanceRequestFeedbackSourceAction
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNGovernanceRequestFeedbackSourceAction2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackSourceAction(ctx context.Context, sel ast.SelectionSet, v models.GovernanceRequestFeedbackSourceAction) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalNGovernanceRequestFeedbackTargetForm2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackTargetForm(ctx context.Context, v interface{}) (models.GovernanceRequestFeedbackTargetForm, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.GovernanceRequestFeedbackTargetForm(tmp)
+	var res models.GovernanceRequestFeedbackTargetForm
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNGovernanceRequestFeedbackTargetForm2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackTargetForm(ctx context.Context, sel ast.SelectionSet, v models.GovernanceRequestFeedbackTargetForm) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalNGovernanceRequestFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGovernanceRequestFeedbackType(ctx context.Context, v interface{}) (models.GovernanceRequestFeedbackType, error) {

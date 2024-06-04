@@ -36,13 +36,13 @@ func (sie systemIntakeEmails) requestEditsBody(
 	requesterPath := path.Join("governance-task-list", systemIntakeID.String())
 	var adminFormPath string
 	switch formName {
-	case models.GRFTFIntakeRequest:
+	case models.GovernanceRequestFeedbackTargetFormIntakeRequest:
 		adminFormPath = "intake-request"
-	case models.GRFTFDraftBusinessCase:
+	case models.GovernanceRequestFeedbackTargetFormDraftBusinessCase:
 		fallthrough
-	case models.GRFTFinalBusinessCase:
+	case models.GovernanceRequestFeedbackTargetFormFinalBusinessCase:
 		adminFormPath = "business-case"
-	case models.GRFTFNoTargetProvided:
+	case models.GovernanceRequestFeedbackTargetFormNoTargetProvided:
 		return "", errors.New("no target form provided")
 	}
 	adminPath := path.Join("governance-review-team", systemIntakeID.String(), adminFormPath)

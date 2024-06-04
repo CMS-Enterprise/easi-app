@@ -1036,6 +1036,94 @@ func (e ExchangeDirection) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Represents the possible actions that can provide feedback on a governance request
+type GovernanceRequestFeedbackSourceAction string
+
+const (
+	GovernanceRequestFeedbackSourceActionRequestEdits      GovernanceRequestFeedbackSourceAction = "REQUEST_EDITS"
+	GovernanceRequestFeedbackSourceActionProgressToNewStep GovernanceRequestFeedbackSourceAction = "PROGRESS_TO_NEW_STEP"
+)
+
+var AllGovernanceRequestFeedbackSourceAction = []GovernanceRequestFeedbackSourceAction{
+	GovernanceRequestFeedbackSourceActionRequestEdits,
+	GovernanceRequestFeedbackSourceActionProgressToNewStep,
+}
+
+func (e GovernanceRequestFeedbackSourceAction) IsValid() bool {
+	switch e {
+	case GovernanceRequestFeedbackSourceActionRequestEdits, GovernanceRequestFeedbackSourceActionProgressToNewStep:
+		return true
+	}
+	return false
+}
+
+func (e GovernanceRequestFeedbackSourceAction) String() string {
+	return string(e)
+}
+
+func (e *GovernanceRequestFeedbackSourceAction) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = GovernanceRequestFeedbackSourceAction(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid GovernanceRequestFeedbackSourceAction", str)
+	}
+	return nil
+}
+
+func (e GovernanceRequestFeedbackSourceAction) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Represents the possible forms on a governance request that can receive feedback
+type GovernanceRequestFeedbackTargetForm string
+
+const (
+	GovernanceRequestFeedbackTargetFormNoTargetProvided  GovernanceRequestFeedbackTargetForm = "NO_TARGET_PROVIDED"
+	GovernanceRequestFeedbackTargetFormIntakeRequest     GovernanceRequestFeedbackTargetForm = "INTAKE_REQUEST"
+	GovernanceRequestFeedbackTargetFormDraftBusinessCase GovernanceRequestFeedbackTargetForm = "DRAFT_BUSINESS_CASE"
+	GovernanceRequestFeedbackTargetFormFinalBusinessCase GovernanceRequestFeedbackTargetForm = "FINAL_BUSINESS_CASE"
+)
+
+var AllGovernanceRequestFeedbackTargetForm = []GovernanceRequestFeedbackTargetForm{
+	GovernanceRequestFeedbackTargetFormNoTargetProvided,
+	GovernanceRequestFeedbackTargetFormIntakeRequest,
+	GovernanceRequestFeedbackTargetFormDraftBusinessCase,
+	GovernanceRequestFeedbackTargetFormFinalBusinessCase,
+}
+
+func (e GovernanceRequestFeedbackTargetForm) IsValid() bool {
+	switch e {
+	case GovernanceRequestFeedbackTargetFormNoTargetProvided, GovernanceRequestFeedbackTargetFormIntakeRequest, GovernanceRequestFeedbackTargetFormDraftBusinessCase, GovernanceRequestFeedbackTargetFormFinalBusinessCase:
+		return true
+	}
+	return false
+}
+
+func (e GovernanceRequestFeedbackTargetForm) String() string {
+	return string(e)
+}
+
+func (e *GovernanceRequestFeedbackTargetForm) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = GovernanceRequestFeedbackTargetForm(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid GovernanceRequestFeedbackTargetForm", str)
+	}
+	return nil
+}
+
+func (e GovernanceRequestFeedbackTargetForm) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Indicates the type of a request being made with the EASi system
 type RequestType string
 

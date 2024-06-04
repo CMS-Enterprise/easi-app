@@ -280,9 +280,9 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 	additionalInfo := models.HTMLPointer(loremParagraphs)
 
 	for _, targetForm := range []models.GovernanceRequestFeedbackTargetForm{
-		models.GRFTFinalBusinessCase,
-		models.GRFTFDraftBusinessCase,
-		models.GRFTFIntakeRequest,
+		models.GovernanceRequestFeedbackTargetFormFinalBusinessCase,
+		models.GovernanceRequestFeedbackTargetFormDraftBusinessCase,
+		models.GovernanceRequestFeedbackTargetFormIntakeRequest,
 	} {
 		err := client.SystemIntake.SendRequestEditsNotification(
 			ctx,

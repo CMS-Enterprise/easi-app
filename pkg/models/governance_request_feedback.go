@@ -6,37 +6,17 @@ import (
 	"github.com/google/uuid"
 )
 
-// GovernanceRequestFeedbackSourceAction is an eumeration of the possible actions that can provide feedback on a governance request
-type GovernanceRequestFeedbackSourceAction string
-
-// These are the possible forms that can provide feedback
-const (
-	GRFSARequestEdits      GovernanceRequestFeedbackSourceAction = "REQUEST_EDITS"
-	GRFSAProgressToNewStep GovernanceRequestFeedbackSourceAction = "PROGRESS_TO_NEW_STEP"
-)
-
-// GovernanceRequestFeedbackTargetForm is an enumeration of the possible forms on a governance intake request that can receive feedback
-type GovernanceRequestFeedbackTargetForm string
-
-// These are the possible forms that can have governance request feedback
-const (
-	GRFTFNoTargetProvided  GovernanceRequestFeedbackTargetForm = "NO_TARGET_PROVIDED"
-	GRFTFIntakeRequest     GovernanceRequestFeedbackTargetForm = "INTAKE_REQUEST"
-	GRFTFDraftBusinessCase GovernanceRequestFeedbackTargetForm = "DRAFT_BUSINESS_CASE"
-	GRFTFinalBusinessCase  GovernanceRequestFeedbackTargetForm = "FINAL_BUSINESS_CASE"
-)
-
 // Humanize translates a GovernanceRequestFeedbackTargetForm to human readable text
 func (tf GovernanceRequestFeedbackTargetForm) Humanize() string {
 	switch tf {
 
-	case GRFTFIntakeRequest:
+	case GovernanceRequestFeedbackTargetFormIntakeRequest:
 		return "Intake Request Form"
-	case GRFTFDraftBusinessCase:
+	case GovernanceRequestFeedbackTargetFormDraftBusinessCase:
 		return "Draft Business Case"
-	case GRFTFinalBusinessCase:
+	case GovernanceRequestFeedbackTargetFormFinalBusinessCase:
 		return "Final Business Case"
-	case GRFTFNoTargetProvided:
+	case GovernanceRequestFeedbackTargetFormNoTargetProvided:
 		fallthrough
 	default:
 		return "No Form Selected"
