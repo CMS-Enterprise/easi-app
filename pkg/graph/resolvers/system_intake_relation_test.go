@@ -347,19 +347,6 @@ func (suite *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, openIntake.ID)
 			suite.NoError(err)
 
-			//openID := openIntake.ID.String()
-			//updatedID := updatedIntake.ID.String()
-			//
-			//if openID != updatedID {
-			//	panic("ids don't match")
-			//}
-			//
-			//l1 := len(caseValues.NewSystemIDs)
-			//l2 := len(updatedIntakeSystemIDs)
-			//
-			//if l1 != l2 {
-			//	panic("len wrong for: " + caseName)
-			//}
 			// Ensure the system IDs were modified properly
 			suite.Equal(len(caseValues.NewSystemIDs), len(updatedIntakeSystemIDs))
 			for _, v := range updatedIntakeSystemIDs {
