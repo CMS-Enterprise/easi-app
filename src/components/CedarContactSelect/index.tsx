@@ -266,10 +266,10 @@ export default function CedarContactSelect({
   // Update contact when value changes
   // Fix for 'same as requester' checkboxes in system intake form
   useEffect(() => {
-    if (value?.euaUserId !== selectedContact.current) {
+    if (shouldAutoSearch && value?.euaUserId !== selectedContact.current) {
       updateContact(value);
     }
-  }, [value, contacts, updateContact]);
+  }, [value, contacts, updateContact, shouldAutoSearch]);
 
   // Update contact with first result after autoSearch on initial render
   useEffect(() => {
