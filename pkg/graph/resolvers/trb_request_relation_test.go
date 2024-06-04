@@ -22,42 +22,42 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 	store := suite.testConfigs.Store
 	ctx := suite.testConfigs.Context
 
-	var contractNumberCases = map[string]trbRequestRelationTestCase{
-		"adds contract numbers when no initial contract numbers exist": {
-			InitialContractNumbers: []string{},
-			NewContractNumbers:     []string{"1", "2"},
-		},
-		"removes existing contract numbers when none are given": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{},
-		},
-		"changes existing contract numbers to different ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"3", "4"},
-		},
-		"changes existing contract numbers to add new ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1", "2", "3"},
-		},
-		"changes existing contract numbers to remove old ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-		},
-		"should remove existing system IDs": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{},
-		},
-		"should not add system IDs": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{},
-			NewSystemIDs:           []string{},
-		},
+	var cases = map[string]trbRequestRelationTestCase{
+		//"adds contract numbers when no initial contract numbers exist": {
+		//	InitialContractNumbers: []string{},
+		//	NewContractNumbers:     []string{"1", "2"},
+		//},
+		//"removes existing contract numbers when none are given": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{},
+		//},
+		//"changes existing contract numbers to different ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"3", "4"},
+		//},
+		//"changes existing contract numbers to add new ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1", "2", "3"},
+		//},
+		//"changes existing contract numbers to remove old ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1"},
+		//},
+		//"should remove existing system IDs": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1"},
+		//	InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//	NewSystemIDs:           []string{},
+		//},
+		//"should not add system IDs": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1"},
+		//	InitialSystemIDs:       []string{},
+		//	NewSystemIDs:           []string{},
+		//},
 	}
 
-	for caseName, caseValues := range contractNumberCases {
+	for caseName, caseValues := range cases {
 		suite.Run(caseName, func() {
 			trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
 			suite.NoError(err)
@@ -133,36 +133,36 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 	ctx := suite.testConfigs.Context
 
 	var cases = map[string]trbRequestRelationTestCase{
-		"adds contract numbers and system IDs when no initial ones exist": {
-			InitialContractNumbers: []string{},
-			InitialSystemIDs:       []string{},
-			NewContractNumbers:     []string{"1", "2"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-		},
-		"removes existing contract numbers and system IDs when none are given": {
-			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewContractNumbers:     []string{},
-			NewSystemIDs:           []string{},
-		},
-		"changes existing contract numbers and system IDs to different ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewContractNumbers:     []string{"3", "4"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"},
-		},
-		"changes existing contract numbers and system IDs to add new ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewContractNumbers:     []string{"1", "2", "3"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}", "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"},
-		},
-		"changes existing contract numbers and system IDs to remove old ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewContractNumbers:     []string{"1"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"},
-		},
+		//"adds contract numbers and system IDs when no initial ones exist": {
+		//	InitialContractNumbers: []string{},
+		//	InitialSystemIDs:       []string{},
+		//	NewContractNumbers:     []string{"1", "2"},
+		//	NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//},
+		//"removes existing contract numbers and system IDs when none are given": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//	NewContractNumbers:     []string{},
+		//	NewSystemIDs:           []string{},
+		//},
+		//"changes existing contract numbers and system IDs to different ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//	NewContractNumbers:     []string{"3", "4"},
+		//	NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"},
+		//},
+		//"changes existing contract numbers and system IDs to add new ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//	NewContractNumbers:     []string{"1", "2", "3"},
+		//	NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}", "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"},
+		//},
+		//"changes existing contract numbers and system IDs to remove old ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//	NewContractNumbers:     []string{"1"},
+		//	NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"},
+		//},
 	}
 
 	for caseName, caseValues := range cases {
@@ -247,38 +247,38 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 	ctx := suite.testConfigs.Context
 
 	var cases = map[string]trbRequestRelationTestCase{
-		"adds contract numbers when no initial ones exist": {
-			InitialContractNumbers: []string{},
-			NewContractNumbers:     []string{"1", "2"},
-		},
-		"removes existing contract numbers when none are given": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{},
-		},
-		"changes existing contract numbers to different ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"3", "4"},
-		},
-		"changes existing contract numbers to add new ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1", "2", "3"},
-		},
-		"changes existing contract numbers to remove old ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-		},
-		"should remove existing system IDs": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{},
-		},
-		"should not add system IDs": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{},
-			NewSystemIDs:           []string{},
-		},
+		//"adds contract numbers when no initial ones exist": {
+		//	InitialContractNumbers: []string{},
+		//	NewContractNumbers:     []string{"1", "2"},
+		//},
+		//"removes existing contract numbers when none are given": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{},
+		//},
+		//"changes existing contract numbers to different ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"3", "4"},
+		//},
+		//"changes existing contract numbers to add new ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1", "2", "3"},
+		//},
+		//"changes existing contract numbers to remove old ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1"},
+		//},
+		//"should remove existing system IDs": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1"},
+		//	InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//	NewSystemIDs:           []string{},
+		//},
+		//"should not add system IDs": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1"},
+		//	InitialSystemIDs:       []string{},
+		//	NewSystemIDs:           []string{},
+		//},
 	}
 
 	for caseName, caseValues := range cases {

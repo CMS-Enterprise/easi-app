@@ -1,6 +1,8 @@
 package storage
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 type GetMappingID interface {
 	GetMappingID() uuid.UUID

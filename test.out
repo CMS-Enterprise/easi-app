@@ -1,0 +1,98 @@
+Cleaning database...
+ok  	github.com/cmsgov/easi-app/cmd/backfill	1.137s
+?   	github.com/cmsgov/easi-app/cmd/devdata	[no test files]
+?   	github.com/cmsgov/easi-app/cmd/devdata/mock	[no test files]
+?   	github.com/cmsgov/easi-app/cmd/easi	[no test files]
+?   	github.com/cmsgov/easi-app/cmd/easi/test	[no test files]
+?   	github.com/cmsgov/easi-app/cmd/gen_intake_schema	[no test files]
+?   	github.com/cmsgov/easi-app/cmd/migrate_intakes	[no test files]
+?   	github.com/cmsgov/easi-app/cmd/populate_user_table	[no test files]
+?   	github.com/cmsgov/easi-app/cmd/test_cedar_intake	[no test files]
+?   	github.com/cmsgov/easi-app/cmd/test_email_templates	[no test files]
+ok  	github.com/cmsgov/easi-app/pkg/alerts	1.118s
+ok  	github.com/cmsgov/easi-app/pkg/appconfig	1.136s
+ok  	github.com/cmsgov/easi-app/pkg/appcontext	1.145s
+?   	github.com/cmsgov/easi-app/pkg/apperrors	[no test files]
+ok  	github.com/cmsgov/easi-app/pkg/applychanges	1.105s
+ok  	github.com/cmsgov/easi-app/pkg/appses	1.257s
+ok  	github.com/cmsgov/easi-app/pkg/appvalidation	1.154s
+?   	github.com/cmsgov/easi-app/pkg/authentication	[no test files]
+ok  	github.com/cmsgov/easi-app/pkg/authorization	1.106s
+ok  	github.com/cmsgov/easi-app/pkg/cedar/core	1.294s
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/authority_to_operate	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/budget	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/budget_system_cost	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/component	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/contract	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/cost_type	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/data_center	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/deployment	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/domain_model	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/enumeration	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/exchange	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/organization	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/person	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/software_products	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/stakeholder	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/support_contact	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/system	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/threat	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/url	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/user	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/core/gen/models	[no test files]
+ok  	github.com/cmsgov/easi-app/pkg/cedar/intake	1.350s
+?   	github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/health_check	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/intake	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/intake/models	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/cedar/intake/translation	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/dataloaders	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/easiencoding	[no test files]
+ok  	github.com/cmsgov/easi-app/pkg/email	1.987s
+?   	github.com/cmsgov/easi-app/pkg/email/translation	[no test files]
+ok  	github.com/cmsgov/easi-app/pkg/flags	1.107s
+ok  	github.com/cmsgov/easi-app/pkg/graph	1.733s
+?   	github.com/cmsgov/easi-app/pkg/graph/generated	[no test files]
+[LaunchDarkly] 2024/06/04 15:18:23 INFO: Starting LaunchDarkly client 5.10.1
+[LaunchDarkly] 2024/06/04 15:18:23 INFO: Starting LaunchDarkly client in offline mode
+--- FAIL: TestResolverSuite (5.70s)
+    --- FAIL: TestResolverSuite/TestSetSystemIntakeRelationExistingService (0.12s)
+        system_intake_relation_test.go:396: 
+            	Error Trace:	/Users/samlawson/Desktop/oddball_repos/easi-app/pkg/graph/resolvers/system_intake_relation_test.go:396
+            	            				/Users/samlawson/go/pkg/mod/github.com/stretchr/testify@v1.9.0/suite/suite.go:115
+            	Error:      	Not equal: 
+            	            	expected: 0
+            	            	actual  : 2
+            	Test:       	TestResolverSuite/TestSetSystemIntakeRelationExistingService
+        --- FAIL: TestResolverSuite/TestSetSystemIntakeRelationExistingService/should_remove_existing_system_IDs (0.05s)
+            testing.go:1576: test executed panic(nil) or runtime.Goexit: subtest may have called FailNow on a parent test
+FAIL
+FAIL	github.com/cmsgov/easi-app/pkg/graph/resolvers	6.054s
+ok  	github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/lcidactions	1.189s
+ok  	github.com/cmsgov/easi-app/pkg/graph/resolvers/itgovactions/newstep	1.116s
+ok  	github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate	1.112s
+ok  	github.com/cmsgov/easi-app/pkg/graph/resolvers/trb/recommendations	1.113s
+ok  	github.com/cmsgov/easi-app/pkg/handlers	1.163s
+?   	github.com/cmsgov/easi-app/pkg/helpers	[no test files]
+ok  	github.com/cmsgov/easi-app/pkg/integration	1.479s
+?   	github.com/cmsgov/easi-app/pkg/local	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/local/cedarcoremock	[no test files]
+ok  	github.com/cmsgov/easi-app/pkg/models	1.138s
+ok  	github.com/cmsgov/easi-app/pkg/okta	1.313s
+?   	github.com/cmsgov/easi-app/pkg/oktaapi	[no test files]
+ok  	github.com/cmsgov/easi-app/pkg/sanitization	1.115s
+ok  	github.com/cmsgov/easi-app/pkg/server	1.308s
+ok  	github.com/cmsgov/easi-app/pkg/services	1.327s
+?   	github.com/cmsgov/easi-app/pkg/sqlqueries	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/sqlutils	[no test files]
+ok  	github.com/cmsgov/easi-app/pkg/storage	1.732s
+?   	github.com/cmsgov/easi-app/pkg/testhelpers	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/upload	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/userhelpers	[no test files]
+?   	github.com/cmsgov/easi-app/pkg/usersearch	[no test files]
+ok  	github.com/cmsgov/easi-app/pkg/validate	1.140s
+FAIL
+Command failed with status (1): [go test -race -short -count=1 -p=1 ./......]
