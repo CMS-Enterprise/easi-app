@@ -117,7 +117,7 @@ export enum ITGovIntakeFormStatus {
 }
 
 /**
- * PersonRole is an enumeration of values for a person's role
+ * PersonRole is an enumeration of values for a person's role for a TRB Request attendee
  */
 export enum PersonRole {
   BUSINESS_OWNER = "BUSINESS_OWNER",

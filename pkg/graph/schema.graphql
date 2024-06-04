@@ -15,7 +15,7 @@ enum RequestType {
 }
 
 """
-PersonRole is an enumeration of values for a person's role
+PersonRole is an enumeration of values for a person's role for a TRB Request attendee
 """
 enum PersonRole {
   BUSINESS_OWNER

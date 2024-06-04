@@ -1540,6 +1540,64 @@ func (e ITGovIntakeFormStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// PersonRole is an enumeration of values for a person's role for a TRB Request attendee
+type PersonRole string
+
+const (
+	PersonRoleBusinessOwner                    PersonRole = "BUSINESS_OWNER"
+	PersonRoleProductOwner                     PersonRole = "PRODUCT_OWNER"
+	PersonRoleSystemOwner                      PersonRole = "SYSTEM_OWNER"
+	PersonRoleSystemMaintainer                 PersonRole = "SYSTEM_MAINTAINER"
+	PersonRoleContractOfficeRsrepresentative   PersonRole = "CONTRACT_OFFICE_RSREPRESENTATIVE"
+	PersonRoleCloudNavigator                   PersonRole = "CLOUD_NAVIGATOR"
+	PersonRoleInformationSystemSecurityAdvisor PersonRole = "INFORMATION_SYSTEM_SECURITY_ADVISOR"
+	PersonRolePrivacyAdvisor                   PersonRole = "PRIVACY_ADVISOR"
+	PersonRoleCra                              PersonRole = "CRA"
+	PersonRoleOther                            PersonRole = "OTHER"
+)
+
+var AllPersonRole = []PersonRole{
+	PersonRoleBusinessOwner,
+	PersonRoleProductOwner,
+	PersonRoleSystemOwner,
+	PersonRoleSystemMaintainer,
+	PersonRoleContractOfficeRsrepresentative,
+	PersonRoleCloudNavigator,
+	PersonRoleInformationSystemSecurityAdvisor,
+	PersonRolePrivacyAdvisor,
+	PersonRoleCra,
+	PersonRoleOther,
+}
+
+func (e PersonRole) IsValid() bool {
+	switch e {
+	case PersonRoleBusinessOwner, PersonRoleProductOwner, PersonRoleSystemOwner, PersonRoleSystemMaintainer, PersonRoleContractOfficeRsrepresentative, PersonRoleCloudNavigator, PersonRoleInformationSystemSecurityAdvisor, PersonRolePrivacyAdvisor, PersonRoleCra, PersonRoleOther:
+		return true
+	}
+	return false
+}
+
+func (e PersonRole) String() string {
+	return string(e)
+}
+
+func (e *PersonRole) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = PersonRole(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid PersonRole", str)
+	}
+	return nil
+}
+
+func (e PersonRole) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type RequestRelationType string
 
 const (

@@ -7506,7 +7506,7 @@ enum RequestType {
 }
 
 """
-PersonRole is an enumeration of values for a person's role
+PersonRole is an enumeration of values for a person's role for a TRB Request attendee
 """
 enum PersonRole {
   BUSINESS_OWNER
@@ -67640,19 +67640,13 @@ func (ec *executionContext) marshalNLaunchDarklySettings2ᚖgithubᚗcomᚋcmsgo
 }
 
 func (ec *executionContext) unmarshalNPersonRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx context.Context, v interface{}) (models.PersonRole, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.PersonRole(tmp)
+	var res models.PersonRole
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNPersonRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx context.Context, sel ast.SelectionSet, v models.PersonRole) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalNReopenTRBRequestInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐReopenTRBRequestInput(ctx context.Context, v interface{}) (models.ReopenTRBRequestInput, error) {
@@ -70457,17 +70451,16 @@ func (ec *executionContext) unmarshalOPersonRole2ᚖgithubᚗcomᚋcmsgovᚋeasi
 	if v == nil {
 		return nil, nil
 	}
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.PersonRole(tmp)
-	return &res, graphql.ErrorOnPath(ctx, err)
+	var res = new(models.PersonRole)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOPersonRole2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐPersonRole(ctx context.Context, sel ast.SelectionSet, v *models.PersonRole) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	res := graphql.MarshalString(string(*v))
-	return res
+	return v
 }
 
 func (ec *executionContext) unmarshalORequestRelationType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐRequestRelationType(ctx context.Context, v interface{}) (*models.RequestRelationType, error) {

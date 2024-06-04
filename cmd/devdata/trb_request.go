@@ -586,7 +586,7 @@ func (s *seederConfig) seedTRBWithAttendees(ctx context.Context, trbRequestID uu
 		ctx,
 		trbRequestID,
 		"A11Y",
-		models.PersonRoleCRA,
+		models.PersonRoleCra,
 		"Cyber Component",
 	)
 	if err != nil {
