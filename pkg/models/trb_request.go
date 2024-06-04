@@ -27,15 +27,6 @@ func NewTRBRequest(createdBy string) *TRBRequest {
 
 }
 
-// TRBRequestState represents the types of TRBRequestState types
-type TRBRequestState string
-
-// These are the options for TRBRequestStatus
-const (
-	TRBRequestStateOpen   TRBRequestState = "OPEN"
-	TRBRequestStateClosed TRBRequestState = "CLOSED"
-)
-
 // TRBFeedbackStatus represents the types of TRBFeedbackStatus types
 type TRBFeedbackStatus string
 

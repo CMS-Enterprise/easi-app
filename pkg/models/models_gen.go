@@ -2804,6 +2804,47 @@ func (e TRBRequestDocumentStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+type TRBRequestState string
+
+const (
+	TRBRequestStateOpen   TRBRequestState = "OPEN"
+	TRBRequestStateClosed TRBRequestState = "CLOSED"
+)
+
+var AllTRBRequestState = []TRBRequestState{
+	TRBRequestStateOpen,
+	TRBRequestStateClosed,
+}
+
+func (e TRBRequestState) IsValid() bool {
+	switch e {
+	case TRBRequestStateOpen, TRBRequestStateClosed:
+		return true
+	}
+	return false
+}
+
+func (e TRBRequestState) String() string {
+	return string(e)
+}
+
+func (e *TRBRequestState) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TRBRequestState(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TRBRequestState", str)
+	}
+	return nil
+}
+
+func (e TRBRequestState) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type TRBRequestType string
 
 const (
