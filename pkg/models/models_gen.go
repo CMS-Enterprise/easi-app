@@ -2003,6 +2003,76 @@ func (e SystemIntakeGRBReviewerVotingRole) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// This represents the statuses that and admin would see as a representation of a system intake. Note, there is no status for a brand new request, because and Admin doesn't see the request until it is in progress.
+type SystemIntakeStatusAdmin string
+
+const (
+	SystemIntakeStatusAdminInitialRequestFormInProgress SystemIntakeStatusAdmin = "INITIAL_REQUEST_FORM_IN_PROGRESS"
+	SystemIntakeStatusAdminInitialRequestFormSubmitted  SystemIntakeStatusAdmin = "INITIAL_REQUEST_FORM_SUBMITTED"
+	SystemIntakeStatusAdminDraftBusinessCaseInProgress  SystemIntakeStatusAdmin = "DRAFT_BUSINESS_CASE_IN_PROGRESS"
+	SystemIntakeStatusAdminDraftBusinessCaseSubmitted   SystemIntakeStatusAdmin = "DRAFT_BUSINESS_CASE_SUBMITTED"
+	SystemIntakeStatusAdminGrtMeetingReady              SystemIntakeStatusAdmin = "GRT_MEETING_READY"
+	SystemIntakeStatusAdminGrtMeetingComplete           SystemIntakeStatusAdmin = "GRT_MEETING_COMPLETE"
+	SystemIntakeStatusAdminGrbMeetingReady              SystemIntakeStatusAdmin = "GRB_MEETING_READY"
+	SystemIntakeStatusAdminGrbMeetingComplete           SystemIntakeStatusAdmin = "GRB_MEETING_COMPLETE"
+	SystemIntakeStatusAdminFinalBusinessCaseInProgress  SystemIntakeStatusAdmin = "FINAL_BUSINESS_CASE_IN_PROGRESS"
+	SystemIntakeStatusAdminFinalBusinessCaseSubmitted   SystemIntakeStatusAdmin = "FINAL_BUSINESS_CASE_SUBMITTED"
+	SystemIntakeStatusAdminLcidIssued                   SystemIntakeStatusAdmin = "LCID_ISSUED"
+	SystemIntakeStatusAdminLcidExpired                  SystemIntakeStatusAdmin = "LCID_EXPIRED"
+	SystemIntakeStatusAdminLcidRetired                  SystemIntakeStatusAdmin = "LCID_RETIRED"
+	SystemIntakeStatusAdminNotGovernance                SystemIntakeStatusAdmin = "NOT_GOVERNANCE"
+	SystemIntakeStatusAdminNotApproved                  SystemIntakeStatusAdmin = "NOT_APPROVED"
+	SystemIntakeStatusAdminClosed                       SystemIntakeStatusAdmin = "CLOSED"
+)
+
+var AllSystemIntakeStatusAdmin = []SystemIntakeStatusAdmin{
+	SystemIntakeStatusAdminInitialRequestFormInProgress,
+	SystemIntakeStatusAdminInitialRequestFormSubmitted,
+	SystemIntakeStatusAdminDraftBusinessCaseInProgress,
+	SystemIntakeStatusAdminDraftBusinessCaseSubmitted,
+	SystemIntakeStatusAdminGrtMeetingReady,
+	SystemIntakeStatusAdminGrtMeetingComplete,
+	SystemIntakeStatusAdminGrbMeetingReady,
+	SystemIntakeStatusAdminGrbMeetingComplete,
+	SystemIntakeStatusAdminFinalBusinessCaseInProgress,
+	SystemIntakeStatusAdminFinalBusinessCaseSubmitted,
+	SystemIntakeStatusAdminLcidIssued,
+	SystemIntakeStatusAdminLcidExpired,
+	SystemIntakeStatusAdminLcidRetired,
+	SystemIntakeStatusAdminNotGovernance,
+	SystemIntakeStatusAdminNotApproved,
+	SystemIntakeStatusAdminClosed,
+}
+
+func (e SystemIntakeStatusAdmin) IsValid() bool {
+	switch e {
+	case SystemIntakeStatusAdminInitialRequestFormInProgress, SystemIntakeStatusAdminInitialRequestFormSubmitted, SystemIntakeStatusAdminDraftBusinessCaseInProgress, SystemIntakeStatusAdminDraftBusinessCaseSubmitted, SystemIntakeStatusAdminGrtMeetingReady, SystemIntakeStatusAdminGrtMeetingComplete, SystemIntakeStatusAdminGrbMeetingReady, SystemIntakeStatusAdminGrbMeetingComplete, SystemIntakeStatusAdminFinalBusinessCaseInProgress, SystemIntakeStatusAdminFinalBusinessCaseSubmitted, SystemIntakeStatusAdminLcidIssued, SystemIntakeStatusAdminLcidExpired, SystemIntakeStatusAdminLcidRetired, SystemIntakeStatusAdminNotGovernance, SystemIntakeStatusAdminNotApproved, SystemIntakeStatusAdminClosed:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeStatusAdmin) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeStatusAdmin) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeStatusAdmin(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeStatusAdmin", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeStatusAdmin) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Steps in the system intake process that a Progress to New Step action can progress to
 type SystemIntakeStepToProgressTo string
 

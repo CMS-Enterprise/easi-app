@@ -16,7 +16,7 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 	if intake.State == models.SystemIntakeStateClosed && intake.DecisionState == models.SIDSNoDecision {
 		// If the decision is closed and a decision wasn't issued, show closed
 		// An intake that is closed without a decision doesn't progress to the SystemIntakeStepDECISION step, but remains on it's current step. This allows it to stay on that step if re-opened.
-		return models.SISAClosed, nil
+		return models.SystemIntakeStatusAdminClosed, nil
 	}
 
 	if intake.State == models.SystemIntakeStateClosed &&
@@ -24,7 +24,7 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 		intake.Step != models.SystemIntakeStepDECISION {
 		// If an intake has a decision but is re-opened, progressed to an earlier step,
 		// and then closed without a decision, show closed.
-		return models.SISAClosed, nil
+		return models.SystemIntakeStatusAdminClosed, nil
 	}
 
 	var retStatus models.SystemIntakeStatusAdmin
@@ -51,47 +51,47 @@ func CalculateSystemIntakeAdminStatus(intake *models.SystemIntake) (models.Syste
 
 func calcSystemIntakeInitialFormStatusAdmin(intakeFormState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
 	if intakeFormState == models.SIRFSSubmitted {
-		return models.SISAInitialRequestFormSubmitted
+		return models.SystemIntakeStatusAdminInitialRequestFormSubmitted
 	}
-	return models.SISAInitialRequestFormInProgress
+	return models.SystemIntakeStatusAdminInitialRequestFormInProgress
 }
 
 func calcSystemIntakeDraftBusinessCaseStatusAdmin(draftBusinessCaseState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
 	if draftBusinessCaseState == models.SIRFSSubmitted {
-		return models.SISADraftBusinessCaseSubmitted
+		return models.SystemIntakeStatusAdminDraftBusinessCaseSubmitted
 	}
-	return models.SISADraftBusinessCaseInProgress
+	return models.SystemIntakeStatusAdminDraftBusinessCaseInProgress
 }
 
 func calcSystemIntakeGRTMeetingStatusAdmin(grtDate *time.Time) models.SystemIntakeStatusAdmin {
 	if grtDate == nil {
-		return models.SISAGrtMeetingReady
+		return models.SystemIntakeStatusAdminGrtMeetingReady
 	}
 
 	if grtDate.After(time.Now()) {
-		return models.SISAGrtMeetingReady
+		return models.SystemIntakeStatusAdminGrtMeetingReady
 	}
 
-	return models.SISAGrtMeetingComplete
+	return models.SystemIntakeStatusAdminGrtMeetingComplete
 }
 
 func calcSystemIntakeFinalBusinessCaseStatusAdmin(finalBusinessCaseState models.SystemIntakeFormState) models.SystemIntakeStatusAdmin {
 	if finalBusinessCaseState == models.SIRFSSubmitted {
-		return models.SISAFinalBusinessCaseSubmitted
+		return models.SystemIntakeStatusAdminFinalBusinessCaseSubmitted
 	}
-	return models.SISAFinalBusinessCaseInProgress
+	return models.SystemIntakeStatusAdminFinalBusinessCaseInProgress
 }
 
 func calcSystemIntakeGRBMeetingStatusAdmin(grbDate *time.Time) models.SystemIntakeStatusAdmin {
 
 	if grbDate == nil {
-		return models.SISAGrbMeetingReady
+		return models.SystemIntakeStatusAdminGrbMeetingReady
 	}
 
 	if grbDate.After(time.Now()) {
-		return models.SISAGrbMeetingReady
+		return models.SystemIntakeStatusAdminGrbMeetingReady
 	}
-	return models.SISAGrbMeetingComplete
+	return models.SystemIntakeStatusAdminGrbMeetingComplete
 }
 
 func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisionState, lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusAdmin, error) {
@@ -99,9 +99,9 @@ func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisi
 	case models.SIDSLcidIssued:
 		return calcLCIDIssuedDecisionStatus(lcidStatus)
 	case models.SIDSNotGovernance:
-		return models.SISANotGovernance, nil
+		return models.SystemIntakeStatusAdminNotGovernance, nil
 	case models.SIDSNotApproved:
-		return models.SISANotApproved, nil
+		return models.SystemIntakeStatusAdminNotApproved, nil
 	case models.SIDSNoDecision:
 		fallthrough
 	default:
@@ -113,16 +113,16 @@ func calcSystemIntakeDecisionStatusAdmin(decisionState models.SystemIntakeDecisi
 // calcLCIDIssuedDecisionStatus checks an LCID status and appropriately converts it to a SystemIntakeStatusAdmin
 func calcLCIDIssuedDecisionStatus(lcidStatus *models.SystemIntakeLCIDStatus) (models.SystemIntakeStatusAdmin, error) {
 	if lcidStatus == nil {
-		return models.SISALcidIssued, nil
+		return models.SystemIntakeStatusAdminLcidIssued, nil
 	}
 
 	switch *lcidStatus {
 	case models.SystemIntakeLCIDStatusIssued:
-		return models.SISALcidIssued, nil
+		return models.SystemIntakeStatusAdminLcidIssued, nil
 	case models.SystemIntakeLCIDStatusExpired:
-		return models.SISALcidExpired, nil
+		return models.SystemIntakeStatusAdminLcidExpired, nil
 	case models.SystemIntakeLCIDStatusRetired:
-		return models.SISALcidRetired, nil
+		return models.SystemIntakeStatusAdminLcidRetired, nil
 	default:
 		return "", fmt.Errorf("invalid lcid status provided: %s", *lcidStatus)
 	}
