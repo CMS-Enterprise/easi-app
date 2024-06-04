@@ -32,6 +32,11 @@ const (
 )
 
 // v1 actions - no longer used in IT Gov v2 workflow
+// TODO: Now that V1 is deprecated entirely, new actions should not use these
+// action types. However, old actions will still be in the database of these types.
+//
+// If we want to remove these definitions and replace them with codegen, we should
+// find a way to flag these differently from the actions that _should_ be used
 const (
 	// ActionTypeNOTITREQUEST captures enum value NOT_IT_REQUEST
 	ActionTypeNOTITREQUEST ActionType = "NOT_IT_REQUEST"
