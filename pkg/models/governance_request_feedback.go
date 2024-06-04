@@ -25,15 +25,6 @@ func (tf GovernanceRequestFeedbackTargetForm) Humanize() string {
 
 }
 
-// GovernanceRequestFeedbackType is an enumeration of the possible types of feedback on governance requests, based on who it's directed to
-type GovernanceRequestFeedbackType string
-
-// These are the possible types of recipients of feedback on governanance requests
-const (
-	GRFTRequester GovernanceRequestFeedbackType = "REQUESTER"
-	GRFTGRB       GovernanceRequestFeedbackType = "GRB"
-)
-
 // GovernanceRequestFeedback represents feedback given to the requester on a governance request
 type GovernanceRequestFeedback struct {
 	// Can't use BaseStruct here since CreatedBy is nullable in the DB

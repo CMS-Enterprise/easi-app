@@ -1124,6 +1124,48 @@ func (e GovernanceRequestFeedbackTargetForm) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// Represents the possible types of feedback on governance requests, based on who it's directed to
+type GovernanceRequestFeedbackType string
+
+const (
+	GovernanceRequestFeedbackTypeRequester GovernanceRequestFeedbackType = "REQUESTER"
+	GovernanceRequestFeedbackTypeGrb       GovernanceRequestFeedbackType = "GRB"
+)
+
+var AllGovernanceRequestFeedbackType = []GovernanceRequestFeedbackType{
+	GovernanceRequestFeedbackTypeRequester,
+	GovernanceRequestFeedbackTypeGrb,
+}
+
+func (e GovernanceRequestFeedbackType) IsValid() bool {
+	switch e {
+	case GovernanceRequestFeedbackTypeRequester, GovernanceRequestFeedbackTypeGrb:
+		return true
+	}
+	return false
+}
+
+func (e GovernanceRequestFeedbackType) String() string {
+	return string(e)
+}
+
+func (e *GovernanceRequestFeedbackType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = GovernanceRequestFeedbackType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid GovernanceRequestFeedbackType", str)
+	}
+	return nil
+}
+
+func (e GovernanceRequestFeedbackType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // Indicates the type of a request being made with the EASi system
 type RequestType string
 
