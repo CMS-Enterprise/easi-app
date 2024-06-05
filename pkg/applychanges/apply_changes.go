@@ -37,6 +37,11 @@ func sanitizeChanges(changes map[string]interface{}) {
 			changes[key] = valAsString
 		}
 
+		// Same as the above block, but handle pointers to strings
+		if reflectValue.Kind() == reflect.Ptr && reflectValue.Elem().Kind() == reflect.String {
+			changes[key] = reflectValue.Elem().String()
+		}
+
 		// Empty slices don't play well with mapstructure, as they enter as []interface{}
 		// which promptly gets ignored by mapstructure.
 		// In order to get around this, we'll convert empty slices to a real "nil" value
