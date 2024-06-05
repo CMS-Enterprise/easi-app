@@ -13,13 +13,6 @@ describe('ATO subpage for System Profile', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  // it('renders a yellow card for In progress', () => {
-  //   const { getByTestId } = render(
-  //     <ATO system={{ ...systemProfileData, atoStatus: 'In progress' }} />
-  //   );
-  //   expect(getByTestId('Card')).toHaveClass('bg-warning');
-  // });
-
   it('renders a green card for Active', () => {
     const { getByTestId } = render(
       <ATO system={{ ...systemProfileData, atoStatus: 'Active' }} />

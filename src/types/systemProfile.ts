@@ -42,12 +42,7 @@ export interface UsernameWithRoles {
 
 // ATO
 
-export type AtoStatus =
-  | 'Active'
-  | 'Due Soon'
-  // | 'In progress'
-  | 'Expired'
-  | 'No ATO';
+export type AtoStatus = 'Active' | 'Due Soon' | 'Expired' | 'No ATO';
 
 export type ThreatLevel = typeof threatLevelGrades[number];
 

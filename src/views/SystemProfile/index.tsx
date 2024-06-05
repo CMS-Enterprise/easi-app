@@ -87,8 +87,6 @@ export function getAtoStatus(
   // No ato if it doesn't exist
   if (!data) return 'No ATO';
 
-  // return 'In progress'; // tbd
-
   const { dateAuthorizationMemoExpires } = data;
 
   if (!dateAuthorizationMemoExpires) return 'No ATO';
