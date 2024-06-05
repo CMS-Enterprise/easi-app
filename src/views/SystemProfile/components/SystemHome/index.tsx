@@ -125,9 +125,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
               <Tag
                 className={classnames('grid-col-12', {
                   'bg-success-dark': system.atoStatus === 'Active',
-                  'bg-warning':
-                    system.atoStatus === 'Due Soon' ||
-                    system.atoStatus === 'In progress',
+                  'bg-warning': system.atoStatus === 'Due Soon', // || system.atoStatus === 'In progress',
                   'bg-error-dark': system.atoStatus === 'Expired',
                   'bg-base-lighter': system.atoStatus === 'No ATO',
                   'text-white':
@@ -144,7 +142,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
             <Grid row>
               <Grid desktop={{ col: 12 }} className="padding-0">
                 <h3 className="link-header margin-top-0 margin-bottom-2">
-                  {showAtoExpirationDate(ato)}
+                  {showAtoExpirationDate(ato?.dateAuthorizationMemoExpires)}
                 </h3>
                 <div className="margin-bottom-2">
                   <UswdsReactLink

@@ -17,9 +17,12 @@ import {
   GetSystemWorkspace,
   GetSystemWorkspaceVariables
 } from 'queries/types/GetSystemWorkspace';
+import { RoleTypeName } from 'types/systemProfile';
 import NotFound from 'views/NotFound';
+import { getAtoStatus } from 'views/SystemProfile';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
+import AtoCard from './components/AtoCard';
 import HelpLinks from './components/HelpLinks';
 import SpacesCard from './components/SpacesCard';
 
@@ -43,6 +46,13 @@ export const SystemWorkspace = () => {
 
   const cedarSystem = data?.cedarSystemDetails?.cedarSystem;
   const ato = data?.cedarAuthorityToOperate[0];
+  const atoStatus = getAtoStatus(ato);
+
+  const isso = data?.cedarSystemDetails?.roles.length
+    ? data.cedarSystemDetails.roles.find(
+        role => role.roleTypeName === RoleTypeName.ISSO
+      )
+    : undefined;
 
   const {
     data: bookmark,
@@ -121,6 +131,12 @@ export const SystemWorkspace = () => {
                 {t('spaces.systemProfile.linktext')}
               </Button>
             }
+          />
+
+          <AtoCard
+            status={atoStatus}
+            dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
+            isso={isso}
           />
         </CardGroup>
       </Grid>
