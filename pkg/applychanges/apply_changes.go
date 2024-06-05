@@ -19,14 +19,22 @@ func sanitizeChanges(changes map[string]interface{}) {
 		reflectValue := reflect.ValueOf(value)
 
 		// String operations
+		// If the value is a string, we need to do a few things:
+		// 1) Convert empty strings to `nil`
+		// 2) Ensure that, for the sake of ApplyChanges calling `UnmarshalGQL` on custom enums, we convert the type to an actual `string`
+		//    This second step is necessary because gqlgen tries to call `UnmarshalGQL` on enum types, which attempts
+		//    to convert interface{} to string, but fails because the type is not actually a string (but is whatever type defined in models_gen.go)
 		if reflectValue.Kind() == reflect.String {
-			valAsString, ok := reflectValue.Interface().(string)
+			valAsString := reflectValue.String() // safe to do since we know reflectValue.Kind() is reflect.String
 
 			// Convert empty strings to `nil`
-			if ok && len(valAsString) == 0 {
+			if len(valAsString) == 0 {
 				changes[key] = nil
 				continue
 			}
+
+			// Modify changes map to have "string" version of enums that are not technically of type `string`
+			changes[key] = valAsString
 		}
 
 		// Empty slices don't play well with mapstructure, as they enter as []interface{}

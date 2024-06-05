@@ -6,7 +6,19 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
+
+func TestSanitizeChangesEnumStrings(t *testing.T) {
+	clayChanges := map[string]interface{}{
+		"state": models.TRBRequestStateOpen, // testing an enum type that should get converted to a string
+	}
+	sanitizeChanges(clayChanges)
+
+	assert.IsType(t, "", clayChanges["state"]) // check that its a string (""), not a TRBRequestState
+	assert.Equal(t, "OPEN", clayChanges["state"])
+}
 
 type Person struct {
 	Name      string   `json:"name"`
