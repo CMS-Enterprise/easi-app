@@ -3,6 +3,8 @@ package dataloaders
 import (
 	"context"
 	"errors"
+	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 
@@ -23,6 +25,11 @@ func GetTRBRequestContractNumbersByTRBRequestID(ctx context.Context, trbRequestI
 	if loaders == nil {
 		return nil, errors.New("unexpected nil loaders in GetTRBRequestContractNumbersByTRBRequestID")
 	}
+
+	time.Sleep(5 * time.Second)
+	fmt.Println("==== trbRequestID ====")
+	fmt.Println(trbRequestID)
+	fmt.Println("==== trbRequestID ====")
 
 	return loaders.TRBRequestContractNumbers.Load(ctx, trbRequestID)
 }

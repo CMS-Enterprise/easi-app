@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -21,7 +22,11 @@ func (s *Store) SetTRBRequestContractNumbers(ctx context.Context, tx *sqlx.Tx, t
 		return errors.New("unexpected nil TRB Request ID when linking TRB Request to contract numbers")
 	}
 
-	if _, err := tx.NamedExec(sqlqueries.TRBRequestContractNumbersForm.Delete, map[string]interface{}{
+	fmt.Println("==== contractNumbers to save ====")
+	fmt.Println(contractNumbers)
+	fmt.Println("==== contractNumbers ====")
+
+	if _, err := tx.NamedExec(sqlqueries.TRBRequestContractNumbersForm.Delete, args{
 		"contract_numbers": pq.Array(contractNumbers),
 		"trb_request_id":   trbRequestID,
 	}); err != nil {
@@ -57,11 +62,21 @@ func (s *Store) SetTRBRequestContractNumbers(ctx context.Context, tx *sqlx.Tx, t
 }
 
 func (s *Store) TRBRequestContractNumbersByTRBRequestIDLOADER(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestContractNumber, error) {
+	fmt.Println("==== TRBRequestContractNumbersByTRBRequestIDLOADER ====")
+	//fmt.Println(TRBRequestContractNumbersByTRBRequestIDLOADER)
+	fmt.Println("==== TRBRequestContractNumbersByTRBRequestIDLOADER ====")
+
 	var trbRequestContractNumbers []*models.TRBRequestContractNumber
 	if err := selectNamed(ctx, s, &trbRequestContractNumbers, sqlqueries.TRBRequestContractNumbersForm.SelectByTRBRequestIDLOADER, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	}); err != nil {
 		return nil, err
+	}
+
+	for _, v := range trbRequestContractNumbers {
+		fmt.Println("==== v ====")
+		fmt.Printf("%+v\n", v)
+		fmt.Println("==== v ====")
 	}
 
 	return oneToMany[*models.TRBRequestContractNumber](trbRequestIDs, trbRequestContractNumbers), nil

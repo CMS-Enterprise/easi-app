@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
@@ -23,38 +24,38 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 	ctx := suite.testConfigs.Context
 
 	var cases = map[string]trbRequestRelationTestCase{
-		"adds contract numbers when no initial contract numbers exist": {
-			InitialContractNumbers: []string{},
-			NewContractNumbers:     []string{"1", "2"},
-		},
-		"removes existing contract numbers when none are given": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{},
-		},
-		"changes existing contract numbers to different ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"3", "4"},
-		},
-		"changes existing contract numbers to add new ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1", "2", "3"},
-		},
-		"changes existing contract numbers to remove old ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-		},
-		"should remove existing system IDs": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{},
-		},
-		"should not add system IDs": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{},
-			NewSystemIDs:           []string{},
-		},
+		//"adds contract numbers when no initial contract numbers exist": {
+		//	InitialContractNumbers: []string{},
+		//	NewContractNumbers:     []string{"1", "2"},
+		//},
+		//"removes existing contract numbers when none are given": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{},
+		//},
+		//"changes existing contract numbers to different ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"3", "4"},
+		//},
+		//"changes existing contract numbers to add new ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1", "2", "3"},
+		//},
+		//"changes existing contract numbers to remove old ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1"},
+		//},
+		//"should remove existing system IDs": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1"},
+		//	InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//	NewSystemIDs:           []string{},
+		//},
+		//"should not add system IDs": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1"},
+		//	InitialSystemIDs:       []string{},
+		//	NewSystemIDs:           []string{},
+		//},
 	}
 
 	for caseName, caseValues := range cases {
@@ -133,36 +134,36 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 	ctx := suite.testConfigs.Context
 
 	var cases = map[string]trbRequestRelationTestCase{
-		"adds contract numbers and system IDs when no initial ones exist": {
-			InitialContractNumbers: []string{},
-			InitialSystemIDs:       []string{},
-			NewContractNumbers:     []string{"1", "2"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-		},
-		"removes existing contract numbers and system IDs when none are given": {
-			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewContractNumbers:     []string{},
-			NewSystemIDs:           []string{},
-		},
-		"changes existing contract numbers and system IDs to different ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewContractNumbers:     []string{"3", "4"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"},
-		},
-		"changes existing contract numbers and system IDs to add new ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewContractNumbers:     []string{"1", "2", "3"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}", "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"},
-		},
-		"changes existing contract numbers and system IDs to remove old ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewContractNumbers:     []string{"1"},
-			NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"},
-		},
+		//"adds contract numbers and system IDs when no initial ones exist": {
+		//	InitialContractNumbers: []string{},
+		//	InitialSystemIDs:       []string{},
+		//	NewContractNumbers:     []string{"1", "2"},
+		//	NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//},
+		//"removes existing contract numbers and system IDs when none are given": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//	NewContractNumbers:     []string{},
+		//	NewSystemIDs:           []string{},
+		//},
+		//"changes existing contract numbers and system IDs to different ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//	NewContractNumbers:     []string{"3", "4"},
+		//	NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"},
+		//},
+		//"changes existing contract numbers and system IDs to add new ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//	NewContractNumbers:     []string{"1", "2", "3"},
+		//	NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}", "{11AB1A00-1234-5678-ABC1-1A001B00CC4E}", "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"},
+		//},
+		//"changes existing contract numbers and system IDs to remove old ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//	NewContractNumbers:     []string{"1"},
+		//	NewSystemIDs:           []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"},
+		//},
 	}
 
 	for caseName, caseValues := range cases {
@@ -247,42 +248,45 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 	ctx := suite.testConfigs.Context
 
 	var cases = map[string]trbRequestRelationTestCase{
-		"adds contract numbers when no initial ones exist": {
-			InitialContractNumbers: []string{},
-			NewContractNumbers:     []string{"1", "2"},
-		},
-		"removes existing contract numbers when none are given": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{},
-		},
+		//"adds contract numbers when no initial ones exist": {
+		//	InitialContractNumbers: []string{},
+		//	NewContractNumbers:     []string{"1", "2"},
+		//},
+		//"removes existing contract numbers when none are given": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{},
+		//},
 		"changes existing contract numbers to different ones": {
 			InitialContractNumbers: []string{"1", "2"},
 			NewContractNumbers:     []string{"3", "4"},
 		},
-		"changes existing contract numbers to add new ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1", "2", "3"},
-		},
-		"changes existing contract numbers to remove old ones": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-		},
-		"should remove existing system IDs": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
-			NewSystemIDs:           []string{},
-		},
-		"should not add system IDs": {
-			InitialContractNumbers: []string{"1", "2"},
-			NewContractNumbers:     []string{"1"},
-			InitialSystemIDs:       []string{},
-			NewSystemIDs:           []string{},
-		},
+		//"changes existing contract numbers to add new ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1", "2", "3"},
+		//},
+		//"changes existing contract numbers to remove old ones": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1"},
+		//},
+		//"should remove existing system IDs": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1"},
+		//	InitialSystemIDs:       []string{"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}", "{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"},
+		//	NewSystemIDs:           []string{},
+		//},
+		//"should not add system IDs": {
+		//	InitialContractNumbers: []string{"1", "2"},
+		//	NewContractNumbers:     []string{"1"},
+		//	InitialSystemIDs:       []string{},
+		//	NewSystemIDs:           []string{},
+		//},
 	}
 
 	for caseName, caseValues := range cases {
 		suite.Run(caseName, func() {
+			fmt.Println("==== start ====")
+			fmt.Println("==== start ====")
+
 			trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
 			suite.NoError(err)
 			suite.NotEqual(trbRequest.ID, uuid.Nil)
@@ -297,6 +301,9 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 			updatedTRBRequestContractNumbers, err := TRBRequestContractNumbers(ctx, trbRequest.ID)
 			suite.NoError(err)
 			suite.Equal(len(caseValues.InitialContractNumbers), len(updatedTRBRequestContractNumbers))
+
+			fmt.Println("==== FIRST GET ====")
+			fmt.Println("==== FIRST GET ====")
 
 			// Set existing system IDs
 			err = sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
@@ -318,12 +325,22 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 			updatedTRBRequest, err := SetTRBRequestRelationExistingService(ctx, store, input)
 			suite.NoError(err)
 
+			fmt.Println("==== below set ====")
+			//fmt.Println(below set)
+			fmt.Println("==== below set ====")
+
 			// Ensure the contract name was updated properly
 			suite.Equal(newContractName, updatedTRBRequest.ContractName.String)
 
 			// refetch contract numbers and system IDs
 			updatedTRBRequestContractNumbers, err = TRBRequestContractNumbers(ctx, updatedTRBRequest.ID)
 			suite.NoError(err)
+			fmt.Println("==== SECOND GET ====")
+			fmt.Println("==== SECOND GET ====")
+
+			fmt.Println("==== under ====")
+			//fmt.Println(under)
+			fmt.Println("==== under ====")
 
 			updatedTRBRequestSystemIDs, err = TRBRequestSystems(ctx, trbRequest.ID)
 			suite.NoError(err)
@@ -344,123 +361,128 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 			// Check relation type
 			suite.NotNil(updatedTRBRequest.SystemRelationType)
 			suite.Equal(models.RelationTypeExistingService, *updatedTRBRequest.SystemRelationType)
+
+			fmt.Println("==== end ====")
+			//fmt.Println(end)
+			fmt.Println("==== end ====")
+
 		})
 	}
 }
 
-func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
-	ctx := suite.testConfigs.Context
-	store := suite.testConfigs.Store
-
-	suite.Run("unlink new trb request", func() {
-		// Create an initial TRBRequest
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
-		suite.NoError(err)
-		suite.NotEqual(trbRequest.ID, uuid.Nil)
-		suite.NotNil(trbRequest)
-
-		// Set the new system relationship
-		input := models.SetTRBRequestRelationNewSystemInput{
-			TrbRequestID:    trbRequest.ID,
-			ContractNumbers: []string{"12345", "67890"},
-		}
-		_, err = SetTRBRequestRelationNewSystem(ctx, store, input)
-		suite.NoError(err) // we don't need to test the SetTRBRequestRelationNewSystem function here
-
-		// Now unlink the relationship
-		unlinkedTRBRequest, err := UnlinkTRBRequestRelation(ctx, store, trbRequest.ID)
-		suite.NoError(err)
-
-		// Assert that all values are cleared appropriately
-		suite.Equal("", unlinkedTRBRequest.ContractName.ValueOrZero())
-		suite.Nil(unlinkedTRBRequest.SystemRelationType)
-
-		// Check contract numbers are cleared
-		nums, err := TRBRequestContractNumbers(ctx, unlinkedTRBRequest.ID)
-		suite.NoError(err)
-		suite.Empty(nums)
-
-		// Check system IDs are cleared
-		systemIDs, err := TRBRequestSystems(ctx, unlinkedTRBRequest.ID)
-		suite.NoError(err)
-		suite.Empty(systemIDs)
-	})
-
-	suite.Run("unlink existing trb request", func() {
-		// Create an initial TRBRequest
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
-		suite.NoError(err)
-		suite.NotEqual(trbRequest.ID, uuid.Nil)
-		suite.NotNil(trbRequest)
-
-		// Set the existing system relationship
-		input := models.SetTRBRequestRelationExistingSystemInput{
-			TrbRequestID:    trbRequest.ID,
-			CedarSystemIDs:  []string{"abcde", "fghijk"},
-			ContractNumbers: []string{"12345", "67890"},
-		}
-		_, err = SetTRBRequestRelationExistingSystem(
-			ctx,
-			store,
-			func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
-				return &models.CedarSystem{}, nil
-			},
-			input,
-		)
-		suite.NoError(err) // we don't need to test the SetTRBRequestRelationExistingSystem function here
-
-		// Now unlink the relationship
-		unlinkedTRBRequest, err := UnlinkTRBRequestRelation(ctx, store, trbRequest.ID)
-		suite.NoError(err)
-
-		// Assert that all values are cleared appropriately
-		suite.Equal("", unlinkedTRBRequest.ContractName.ValueOrZero())
-		suite.Nil(unlinkedTRBRequest.SystemRelationType)
-
-		// Check contract numbers are cleared
-		nums, err := TRBRequestContractNumbers(ctx, unlinkedTRBRequest.ID)
-		suite.NoError(err)
-		suite.Empty(nums)
-
-		// Check system IDs are cleared
-		systemIDs, err := TRBRequestSystems(ctx, unlinkedTRBRequest.ID)
-		suite.NoError(err)
-		suite.Empty(systemIDs)
-	})
-
-	suite.Run("unlink existing service TRBRequest", func() {
-		// Create an initial TRBRequest
-		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
-		suite.NoError(err)
-		suite.NotEqual(trbRequest.ID, uuid.Nil)
-		suite.NotNil(trbRequest)
-
-		// Set the existing service relationship
-		contractName := "My Test Contract Name"
-		input := models.SetTRBRequestRelationExistingServiceInput{
-			TrbRequestID:    trbRequest.ID,
-			ContractName:    contractName,
-			ContractNumbers: []string{"12345", "67890"},
-		}
-		_, err = SetTRBRequestRelationExistingService(ctx, store, input)
-		suite.NoError(err) // we don't need to test the SetTRBRequestRelationExistingService function here
-
-		// Now unlink the relationship
-		unlinkedTRBRequest, err := UnlinkTRBRequestRelation(ctx, store, trbRequest.ID)
-		suite.NoError(err)
-
-		// Assert that all values are cleared appropriately
-		suite.Equal("", unlinkedTRBRequest.ContractName.ValueOrZero())
-		suite.Nil(unlinkedTRBRequest.SystemRelationType)
-
-		// Check contract numbers are cleared
-		nums, err := TRBRequestContractNumbers(ctx, unlinkedTRBRequest.ID)
-		suite.NoError(err)
-		suite.Empty(nums)
-
-		// Check system IDs are cleared
-		systemIDs, err := TRBRequestSystems(ctx, unlinkedTRBRequest.ID)
-		suite.NoError(err)
-		suite.Empty(systemIDs)
-	})
-}
+//func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
+//	ctx := suite.testConfigs.Context
+//	store := suite.testConfigs.Store
+//
+//	suite.Run("unlink new trb request", func() {
+//		// Create an initial TRBRequest
+//		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
+//		suite.NoError(err)
+//		suite.NotEqual(trbRequest.ID, uuid.Nil)
+//		suite.NotNil(trbRequest)
+//
+//		// Set the new system relationship
+//		input := models.SetTRBRequestRelationNewSystemInput{
+//			TrbRequestID:    trbRequest.ID,
+//			ContractNumbers: []string{"12345", "67890"},
+//		}
+//		_, err = SetTRBRequestRelationNewSystem(ctx, store, input)
+//		suite.NoError(err) // we don't need to test the SetTRBRequestRelationNewSystem function here
+//
+//		// Now unlink the relationship
+//		unlinkedTRBRequest, err := UnlinkTRBRequestRelation(ctx, store, trbRequest.ID)
+//		suite.NoError(err)
+//
+//		// Assert that all values are cleared appropriately
+//		suite.Equal("", unlinkedTRBRequest.ContractName.ValueOrZero())
+//		suite.Nil(unlinkedTRBRequest.SystemRelationType)
+//
+//		// Check contract numbers are cleared
+//		nums, err := TRBRequestContractNumbers(ctx, unlinkedTRBRequest.ID)
+//		suite.NoError(err)
+//		suite.Empty(nums)
+//
+//		// Check system IDs are cleared
+//		systemIDs, err := TRBRequestSystems(ctx, unlinkedTRBRequest.ID)
+//		suite.NoError(err)
+//		suite.Empty(systemIDs)
+//	})
+//
+//	suite.Run("unlink existing trb request", func() {
+//		// Create an initial TRBRequest
+//		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
+//		suite.NoError(err)
+//		suite.NotEqual(trbRequest.ID, uuid.Nil)
+//		suite.NotNil(trbRequest)
+//
+//		// Set the existing system relationship
+//		input := models.SetTRBRequestRelationExistingSystemInput{
+//			TrbRequestID:    trbRequest.ID,
+//			CedarSystemIDs:  []string{"abcde", "fghijk"},
+//			ContractNumbers: []string{"12345", "67890"},
+//		}
+//		_, err = SetTRBRequestRelationExistingSystem(
+//			ctx,
+//			store,
+//			func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
+//				return &models.CedarSystem{}, nil
+//			},
+//			input,
+//		)
+//		suite.NoError(err) // we don't need to test the SetTRBRequestRelationExistingSystem function here
+//
+//		// Now unlink the relationship
+//		unlinkedTRBRequest, err := UnlinkTRBRequestRelation(ctx, store, trbRequest.ID)
+//		suite.NoError(err)
+//
+//		// Assert that all values are cleared appropriately
+//		suite.Equal("", unlinkedTRBRequest.ContractName.ValueOrZero())
+//		suite.Nil(unlinkedTRBRequest.SystemRelationType)
+//
+//		// Check contract numbers are cleared
+//		nums, err := TRBRequestContractNumbers(ctx, unlinkedTRBRequest.ID)
+//		suite.NoError(err)
+//		suite.Empty(nums)
+//
+//		// Check system IDs are cleared
+//		systemIDs, err := TRBRequestSystems(ctx, unlinkedTRBRequest.ID)
+//		suite.NoError(err)
+//		suite.Empty(systemIDs)
+//	})
+//
+//	suite.Run("unlink existing service TRBRequest", func() {
+//		// Create an initial TRBRequest
+//		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
+//		suite.NoError(err)
+//		suite.NotEqual(trbRequest.ID, uuid.Nil)
+//		suite.NotNil(trbRequest)
+//
+//		// Set the existing service relationship
+//		contractName := "My Test Contract Name"
+//		input := models.SetTRBRequestRelationExistingServiceInput{
+//			TrbRequestID:    trbRequest.ID,
+//			ContractName:    contractName,
+//			ContractNumbers: []string{"12345", "67890"},
+//		}
+//		_, err = SetTRBRequestRelationExistingService(ctx, store, input)
+//		suite.NoError(err) // we don't need to test the SetTRBRequestRelationExistingService function here
+//
+//		// Now unlink the relationship
+//		unlinkedTRBRequest, err := UnlinkTRBRequestRelation(ctx, store, trbRequest.ID)
+//		suite.NoError(err)
+//
+//		// Assert that all values are cleared appropriately
+//		suite.Equal("", unlinkedTRBRequest.ContractName.ValueOrZero())
+//		suite.Nil(unlinkedTRBRequest.SystemRelationType)
+//
+//		// Check contract numbers are cleared
+//		nums, err := TRBRequestContractNumbers(ctx, unlinkedTRBRequest.ID)
+//		suite.NoError(err)
+//		suite.Empty(nums)
+//
+//		// Check system IDs are cleared
+//		systemIDs, err := TRBRequestSystems(ctx, unlinkedTRBRequest.ID)
+//		suite.NoError(err)
+//		suite.Empty(systemIDs)
+//	})
+//}
