@@ -140,7 +140,25 @@ const sideNavItems = (
         ato: {
           component: <ATO system={system} />,
           route: `/systems/${system.id}/ato`,
-          componentId: 'ato'
+          componentId: 'ato',
+          hashLinks: [
+            {
+              name: i18next.t<string>('systemProfile:navigation.ato'),
+              hash: '#ato'
+            },
+            {
+              name: i18next.t<string>(
+                'systemProfile:navigation.atoPoamsAndFindings'
+              ),
+              hash: '#poamsAndFindings'
+            },
+            {
+              name: i18next.t<string>(
+                'systemProfile:navigation.atoDatesFormsAndTesting'
+              ),
+              hash: '#datesFormsAndTesting'
+            }
+          ]
         }
       }
     : {

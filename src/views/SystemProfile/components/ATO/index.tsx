@@ -1,20 +1,19 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Button,
   Card,
   CardFooter,
   CardGroup,
   CardHeader,
   Grid,
-  IconCheckCircle,
+  IconInfo,
   Link,
   ProcessList,
   ProcessListHeading,
-  ProcessListItem
+  ProcessListItem,
+  Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 import { camelCase } from 'lodash';
 
 import Alert from 'components/shared/Alert';
@@ -23,6 +22,7 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import Divider from 'components/shared/Divider';
+import HelpText from 'components/shared/HelpText';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import Tag from 'components/shared/Tag';
 import { securityFindingKeys } from 'constants/systemProfile';
@@ -36,7 +36,10 @@ import {
 } from 'types/systemProfile';
 import { formatDateUtc } from 'utils/date';
 import showVal from 'utils/showVal';
-import { showAtoExpirationDate } from 'views/SystemProfile/helpers';
+import {
+  showAtoEffectiveDate,
+  showAtoExpirationDate
+} from 'views/SystemProfile/helpers';
 
 import './index.scss';
 
@@ -63,25 +66,40 @@ function getSecurityFindings(
   return findings;
 }
 
+function getLongestOpenFinding(
+  // eslint-disable-next-line camelcase
+  cedarThreat: GetSystemProfile_cedarThreat[]
+): number {
+  let longestOpenFinding = 0;
+  // eslint-disable-next-line no-restricted-syntax
+  for (const threat of cedarThreat) {
+    const { daysOpen } = threat;
+    if (daysOpen !== null && daysOpen > longestOpenFinding) {
+      longestOpenFinding = daysOpen;
+    }
+  }
+  return longestOpenFinding;
+}
+
 const ATO = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
-  const flags = useFlags();
 
-  const { ato, atoStatus, developmentTags, cedarThreat } = system;
+  const { ato, atoStatus, cedarThreat } = system;
 
   const fields = useMemo(() => {
     return {
-      securityFindings: cedarThreat && getSecurityFindings(cedarThreat)
+      securityFindings: cedarThreat && getSecurityFindings(cedarThreat),
+      longestOpenFinding: getLongestOpenFinding(cedarThreat)
     };
   }, [cedarThreat]);
 
-  const { securityFindings } = fields;
+  const { securityFindings, longestOpenFinding } = fields;
 
   return (
     <>
       <SectionWrapper borderBottom className="margin-bottom-4 padding-bottom-4">
-        <h2 className="margin-top-0 margin-bottom-4">
+        <h2 id="ato" className="margin-top-0 margin-bottom-4">
           {t('singleSystem.ato.header')}
         </h2>
 
@@ -135,9 +153,35 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                       ato.dateAuthorizationMemoExpires
                     )}
                   />
+                  <Grid row>
+                    <Grid desktop={{ col: 6 }}>
+                      <DescriptionTerm
+                        term={t('singleSystem.ato.expirationDate')}
+                      />
+                      <DescriptionDefinition
+                        className="line-height-body-3 font-body-md"
+                        definition={showAtoExpirationDate(
+                          ato.dateAuthorizationMemoExpires
+                        )}
+                      />
+                    </Grid>
+                    <Grid desktop={{ col: 6 }}>
+                      <DescriptionTerm
+                        term={t('singleSystem.ato.effectiveDate')}
+                      />
+                      <DescriptionDefinition
+                        className="line-height-body-3 font-body-md"
+                        definition={showAtoEffectiveDate(ato)}
+                      />
+                    </Grid>
+                  </Grid>
                 </CardFooter>
               )}
             </Card>
+            <HelpText className="display-flex">
+              <IconInfo className="margin-right-1" />
+              {t('singleSystem.ato.atoExpiringSoonLogicInfo')}
+            </HelpText>
           </CardGroup>
         ) : (
           <Grid row gap className="margin-top-0 margin-bottom-4">
@@ -147,7 +191,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         )}
 
-        {flags.systemProfileHiddenFields && system.activities !== undefined && (
+        {system.activities !== undefined && (
           <ProcessList>
             {system.activities.map(act => (
               <ProcessListItem key={act.id}>
@@ -186,25 +230,61 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
           </ProcessList>
         )}
 
-        {flags.systemProfileHiddenFields && (
-          <>
-            <h3 className="margin-top-2 margin-bottom-1">
-              {t('singleSystem.ato.methodologies')}
+        <SectionWrapper className="margin-bottom-4 margin-top-4">
+          <Alert type="info" noIcon>
+            <h3 className="margin-top-0">
+              {t('singleSystem.ato.securityAndPrivacy.header')}
             </h3>
-            {developmentTags?.map(tag => (
-              <Tag
-                key={tag}
-                className="system-profile__tag margin-bottom-2 text-primary-dark bg-primary-lighter"
+            <p>{t('singleSystem.ato.securityAndPrivacy.atoInfo')}</p>
+            <div className="margin-top-1">
+              <Link
+                aria-label="Open 'Lean more about ATO' in a new tab"
+                className="line-height-body-5"
+                href="https://security.cms.gov/learn/authorization-operate-ato"
+                variant="external"
+                target="_blank"
               >
-                <IconCheckCircle className="text-primary-dark margin-right-1" />
-                {tag}
-              </Tag>
-            ))}
-          </>
-        )}
+                {t('singleSystem.ato.securityAndPrivacy.learnMoreAboutATO')}
+                <span aria-hidden>&nbsp;</span>
+              </Link>
+            </div>
+            <p>{t('singleSystem.ato.securityAndPrivacy.cfactsInfo')}</p>
+            <div className="margin-top-1 margin-bottom-2">
+              <Link
+                aria-label="Open 'CFACTS' in a new tab"
+                className="line-height-body-5"
+                href="https://cfacts.cms.gov"
+                variant="external"
+                target="_blank"
+              >
+                {t('singleSystem.ato.goToCfacts')}
+                <span aria-hidden>&nbsp;</span>
+              </Link>
+            </div>
+            <Divider />
+            <div className="margin-top-2">
+              <Link
+                aria-label="Open 'Cybergeek' in a new tab"
+                className="line-height-body-5"
+                href="https://security.cms.gov"
+                variant="external"
+                target="_blank"
+              >
+                {t(
+                  'singleSystem.ato.securityAndPrivacy.learnMoreAboutSecurityAndPrivacy'
+                )}
+                <span aria-hidden>&nbsp;</span>
+              </Link>
+            </div>
+          </Alert>
+        </SectionWrapper>
+        {/* TODO: add security methodologies and programs (e.g. Zero Trust, DevSecOps) when/if data becomes available */}
       </SectionWrapper>
+
       <SectionWrapper borderBottom className="margin-bottom-4">
-        <h2 className="margin-top-0">{t('singleSystem.ato.POAM')}</h2>
+        <h2 id="poamsAndFindings" className="margin-top-0">
+          {t('singleSystem.ato.POAMandSecurityFindings')}
+        </h2>
 
         {atoStatus === 'No ATO' && (
           <Grid row gap className="margin-top-2 margin-bottom-2">
@@ -214,6 +294,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         )}
 
+        {/* TODO: can we combine/simplify all these No ATO checks */}
         {atoStatus !== 'No ATO' && (
           <div>
             <Grid row gap className="margin-top-2">
@@ -224,93 +305,73 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                   definition={showVal(ato?.countOfOpenPoams)}
                 />
               </Grid>
-              {flags.systemProfileHiddenFields && (
-                <Grid tablet={{ col: 6 }} className="padding-right-2">
-                  <DescriptionTerm term={t('singleSystem.ato.highPOAM')} />
-                  <DescriptionDefinition
-                    className="line-height-body-3 margin-bottom-4"
-                    definition="4"
-                  />
-                </Grid>
-              )}
-            </Grid>
-
-            {flags.systemProfileHiddenFields && (
-              <Grid row gap className="margin-top-2 margin-bottom-2">
-                <Grid tablet={{ col: 12 }}>
-                  <Alert type="info">{t('singleSystem.ato.cfactsInfo')}</Alert>
-                </Grid>
+              <Grid tablet={{ col: 6 }} className="padding-right-2">
+                <DescriptionTerm term={t('singleSystem.ato.longestOpenPOAM')} />
+                <DescriptionDefinition
+                  className="line-height-body-3 margin-bottom-4"
+                  definition={showVal(longestOpenFinding)}
+                />
               </Grid>
-            )}
+            </Grid>
           </div>
         )}
-        {/* TODO: Fill external CFACT link */}
-        {flags.systemProfileHiddenFields && (
-          <Link href="/" target="_blank">
-            <Button type="button" outline>
-              {t('singleSystem.ato.viewPOAMs')}
-            </Button>
-          </Link>
+        {atoStatus === 'No ATO' && (
+          <Grid row gap className="margin-top-2">
+            <Grid tablet={{ col: 12 }}>
+              <Alert type="info">{t('singleSystem.ato.noEmailContact')}</Alert>
+            </Grid>
+          </Grid>
         )}
+
+        {atoStatus !== 'No ATO' && (
+          <Grid row gap>
+            {securityFindingKeys
+              .filter(
+                k =>
+                  k === 'total' || // always show total
+                  securityFindings[k] !== 0 // otherwise hide 0 count
+              )
+              .map(k => {
+                const camelKey = camelCase(k);
+                return (
+                  <Grid key={camelKey} className="padding-right-2 grid-col-6">
+                    <DescriptionTerm
+                      term={t(`singleSystem.ato.${camelKey}Findings`)}
+                    />
+                    <DescriptionDefinition
+                      className="line-height-body-3 margin-bottom-4"
+                      definition={securityFindings[k]}
+                    />
+                  </Grid>
+                );
+              })}
+          </Grid>
+        )}
+        <Grid row gap className="margin-top-2 margin-bottom-2">
+          <Grid tablet={{ col: 12 }}>
+            <Alert type="info">
+              {t('singleSystem.ato.cfactsAccessInfo')}
+              <div className="margin-top-1">
+                <Link
+                  aria-label="Open 'CFACTS' in a new tab"
+                  className="line-height-body-5"
+                  href="https://cfacts.cms.gov"
+                  variant="external"
+                  target="_blank"
+                >
+                  {t('singleSystem.ato.goToCfacts')}
+                  <span aria-hidden>&nbsp;</span>
+                </Link>
+              </div>
+            </Alert>
+          </Grid>
+        </Grid>
       </SectionWrapper>
 
-      {securityFindings && (
-        <SectionWrapper borderBottom className="margin-bottom-4">
-          <h2 className="margin-top-0">
-            {t('singleSystem.ato.securityFindings')}
-          </h2>
-
-          {atoStatus === 'No ATO' && (
-            <Grid row gap className="margin-top-2 margin-bottom-2">
-              <Grid tablet={{ col: 12 }}>
-                <Alert type="info">
-                  {t('singleSystem.ato.noEmailContact')}
-                </Alert>
-              </Grid>
-            </Grid>
-          )}
-
-          {atoStatus !== 'No ATO' && (
-            <Grid row gap className="margin-top-2 margin-bottom-2">
-              {securityFindingKeys
-                .filter(
-                  k =>
-                    k === 'total' || // always show total
-                    securityFindings[k] !== 0 // otherwise hide 0 count
-                )
-                .map(k => {
-                  const camelKey = camelCase(k);
-                  return (
-                    <Grid key={camelKey} className="padding-right-2 grid-col-6">
-                      <DescriptionTerm
-                        term={t(`singleSystem.ato.${camelKey}Findings`)}
-                      />
-                      <DescriptionDefinition
-                        className="line-height-body-3 margin-bottom-4"
-                        definition={securityFindings[k]}
-                      />
-                    </Grid>
-                  );
-                })}
-            </Grid>
-          )}
-          {/* TODO: Fill external CFACT link */}
-          {flags.systemProfileHiddenFields && (
-            <Link href="/" target="_blank">
-              <Button type="button" outline>
-                {t('singleSystem.ato.viewFindings')}
-              </Button>
-            </Link>
-          )}
-        </SectionWrapper>
-      )}
-
-      <SectionWrapper
-        borderBottom={isMobile}
-        className="margin-bottom-4 padding-bottom-6"
-      >
-        <h2 className="margin-top-0 margin-bottom-2">
-          {t('singleSystem.ato.datesAndTests')}
+      {/* Dates, Forms, and Testing */}
+      <SectionWrapper borderBottom={isMobile}>
+        <h2 id="datesFormsAndTesting" className="margin-top-0 margin-bottom-2">
+          {t('singleSystem.ato.datesFormsAndTesting')}
         </h2>
 
         {atoStatus === 'No ATO' && (
@@ -320,105 +381,47 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
             </Grid>
           </Grid>
         )}
-
-        {/* TODO: Map and populate tags with CEDAR */}
         {atoStatus !== 'No ATO' && (
           <div>
-            {flags.systemProfileHiddenFields ? (
-              <>
-                <Grid row gap>
-                  <Grid tablet={{ col: 6 }}>
-                    <DescriptionTerm term={t('singleSystem.ato.lastTest')} />
-                    <DescriptionDefinition
-                      className="line-height-body-3 margin-bottom-4"
-                      definition="Oct 12, 2021"
-                    />
-                  </Grid>
-                  <Grid tablet={{ col: 6 }}>
-                    <DescriptionTerm
-                      term={t('singleSystem.ato.lastAssessment')}
-                    />
-                    <DescriptionDefinition
-                      className="line-height-body-3 margin-bottom-4"
-                      definition="September 24, 2021"
-                    />
-                  </Grid>
-                </Grid>
-                <Grid row gap>
-                  <Grid tablet={{ col: 6 }}>
-                    <DescriptionTerm
-                      term={t('singleSystem.ato.contingencyCompletion')}
-                    />
-                    <DescriptionDefinition
-                      className="line-height-body-3 margin-bottom-4"
-                      definition="March 18, 2022"
-                    />
-                  </Grid>
-                  <Grid tablet={{ col: 6 }}>
-                    <DescriptionTerm
-                      term={t('singleSystem.ato.contingencyTest')}
-                    />
-                    <DescriptionDefinition
-                      className="line-height-body-3 margin-bottom-4"
-                      definition="January 7, 2022"
-                    />
-                  </Grid>
-                </Grid>
-                <Grid row gap>
-                  <Grid tablet={{ col: 6 }}>
-                    <DescriptionTerm
-                      term={t('singleSystem.ato.securityReview')}
-                    />
-                    <DescriptionDefinition
-                      className="line-height-body-3 margin-bottom-4"
-                      definition="Dec 2, 2021"
-                    />
-                  </Grid>
-                  <Grid tablet={{ col: 6 }}>
-                    <DescriptionTerm
-                      term={t('singleSystem.ato.authorizationExpiration')}
-                    />
-                    <DescriptionDefinition
-                      className="line-height-body-3 margin-bottom-4"
-                      definition="April 14, 2022"
-                    />
-                  </Grid>
-                </Grid>
-                <Grid row gap>
-                  <Grid tablet={{ col: 6 }}>
-                    <DescriptionTerm
-                      term={t('singleSystem.ato.piaCompletion')}
-                    />
-                    <DescriptionDefinition
-                      className="line-height-body-3 margin-bottom-4"
-                      definition="Oct 14, 2021"
-                    />
-                  </Grid>
-                  <Grid tablet={{ col: 6 }}>
-                    <DescriptionTerm
-                      term={t('singleSystem.ato.sornCompletion')}
-                    />
-                    <DescriptionDefinition
-                      className="line-height-body-3 margin-bottom-4"
-                      definition="September 2, 2021"
-                    />
-                  </Grid>
-                </Grid>
-                <Grid row gap>
-                  <Grid tablet={{ col: 6 }}>
-                    <DescriptionTerm term={t('singleSystem.ato.lastSCA')} />
-                    <DescriptionDefinition
-                      className="line-height-body-3 margin-bottom-4"
-                      definition="September 2, 2021"
-                    />
-                  </Grid>
-                </Grid>
-              </>
-            ) : (
+            <>
               <Grid row gap>
                 <Grid tablet={{ col: 6 }}>
                   <DescriptionTerm
-                    term={t('singleSystem.ato.lastAssessment')}
+                    term={t('singleSystem.ato.lastActScaDate')}
+                  />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition={showVal(
+                      ato?.lastActScaDate &&
+                        formatDateUtc(ato.lastActScaDate, 'MMMM d, yyyy')
+                    )}
+                  />
+                </Grid>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm term={t('singleSystem.ato.lastPenTest')} />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition={showVal(
+                      ato?.lastPenTestDate &&
+                        formatDateUtc(ato.lastPenTestDate, 'MMMM d, yyyy')
+                    )}
+                  />
+                </Grid>
+              </Grid>
+              <Grid row gap>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm term={t('singleSystem.ato.lastPIA')} />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition={showVal(
+                      ato?.piaCompletionDate &&
+                        formatDateUtc(ato.piaCompletionDate, 'MMMM d, yyyy')
+                    )}
+                  />
+                </Grid>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm
+                    term={t('singleSystem.ato.lastATOAssessment')}
                   />
                   <DescriptionDefinition
                     className="line-height-body-3 margin-bottom-4"
@@ -429,9 +432,155 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                   />
                 </Grid>
               </Grid>
-            )}
+              <Grid row gap>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm term={t('singleSystem.ato.lastSIA')} />
+                  {/* TODO: remove this? SIA not listed in EA Data Dictionary */}
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition={t('singleSystem.noDataAvailable')}
+                  />
+                </Grid>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm
+                    term={t('singleSystem.ato.lastDisasterRecoveryExercise')}
+                  />
+                  {/* TODO: display disaster recovery plan date once DR Exercise Date field is exposed through API */}
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition={t('singleSystem.noDataAvailable')}
+                  />
+                </Grid>
+              </Grid>
+              <Grid row gap>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm
+                    term={t('singleSystem.ato.lastContingencyCompletion')}
+                  />
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition={showVal(
+                      ato?.lastContingencyPlanCompletionDate &&
+                        formatDateUtc(
+                          ato.lastContingencyPlanCompletionDate,
+                          'MMMM d, yyyy'
+                        )
+                    )}
+                  />
+                </Grid>
+                <Grid tablet={{ col: 6 }}>
+                  <DescriptionTerm
+                    term={t('singleSystem.ato.lastDisasterRecoveryPlanUpdate')}
+                  />
+                  {/* TODO: display last disaster recovery plan update once Last DR Plan Update field is exposed through API */}
+                  <DescriptionDefinition
+                    className="line-height-body-3 margin-bottom-4"
+                    definition={t('singleSystem.noDataAvailable')}
+                  />
+                </Grid>
+              </Grid>
+            </>
           </div>
         )}
+      </SectionWrapper>
+
+      {/* Documents Table */}
+      <SectionWrapper>
+        <Table bordered={false} fullWidth scrollable>
+          <thead>
+            <tr>
+              <th scope="col" className="border-bottom-2px">
+                {t('singleSystem.ato.documentType')}
+              </th>
+              <th scope="col" className="border-bottom-2px">
+                {t('singleSystem.ato.doesSystemHaveDoc')}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{t('singleSystem.ato.disasterRecoveryPlanDoc')}</td>
+              {/* TODO: display yes/no for disaster recovery plan once DR Plan field is exposed through API */}
+              <td>{t('singleSystem.noDataAvailable')}</td>
+            </tr>
+            <tr>
+              <td>{t('singleSystem.ato.sornDoc')}</td>
+              {ato?.systemOfRecordsNotice ? <td>Yes</td> : <td>No</td>}
+            </tr>
+            <tr>
+              <td>{t('singleSystem.ato.contingencyPlanDoc')}</td>
+              {ato?.lastContingencyPlanCompletionDate ? (
+                <td>Yes</td>
+              ) : (
+                <td>No</td>
+              )}
+            </tr>
+          </tbody>
+        </Table>
+      </SectionWrapper>
+
+      {/* Acronym Definitions and Information */}
+      <SectionWrapper className="margin-bottom-4 margin-top-4">
+        <div className="margin-top-3 padding-2 bg-base-lightest">
+          <h4 className="margin-top-0">
+            {t('singleSystem.ato.acronymsDefined')}
+          </h4>
+          <Link
+            aria-label="Open 'Full list of security acronyms' in a new tab'"
+            className="line-height-body-5"
+            href="https://security.cms.gov/learn/acronyms"
+            variant="external"
+            target="_blank"
+          >
+            {t('singleSystem.ato.acronymsFullList')}
+            <span aria-hidden>&nbsp;</span>
+          </Link>
+
+          {/* ACT */}
+          <p>{t('singleSystem.ato.actAcronym')}</p>
+
+          {/* SCA */}
+          <p>{t('singleSystem.ato.scaAcronym')}</p>
+
+          {/* PIA */}
+          <p>{t('singleSystem.ato.piaAcronym')}</p>
+          <Link
+            aria-label="Open 'Lean more about PIA' in a new tab"
+            className="line-height-body-5"
+            href="https://security.cms.gov/learn/privacy-impact-assessment-pia"
+            variant="external"
+            target="_blank"
+          >
+            {t('singleSystem.ato.piaLearnMore')}
+            <span aria-hidden>&nbsp;</span>
+          </Link>
+
+          {/* SIA */}
+          <p>{t('singleSystem.ato.siaAcronym')}</p>
+          <Link
+            aria-label="Open 'Lean more about SIA' in a new tab"
+            className="line-height-body-5"
+            href="https://security.cms.gov/learn/security-impact-analysis-sia"
+            variant="external"
+            target="_blank"
+          >
+            {t('singleSystem.ato.siaLearnMore')}
+            <span aria-hidden>&nbsp;</span>
+          </Link>
+
+          {/* SORN */}
+          <p>{t('singleSystem.ato.sornAcronym')}</p>
+          <Link
+            aria-label="Open 'Lean more about SORN' in a new tab"
+            className="line-height-body-5"
+            href="https://security.cms.gov/learn/system-records-notice-sorn"
+            variant="external"
+            target="_blank"
+          >
+            {t('singleSystem.ato.sornLearnMore')}
+            <span aria-hidden>&nbsp;</span>
+          </Link>
+        </div>
       </SectionWrapper>
     </>
   );
