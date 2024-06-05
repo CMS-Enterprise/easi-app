@@ -34,7 +34,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -214,7 +213,7 @@ func (s *Server) routes(
 		ldClient,
 		coreClient,
 	)
-	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
+	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role models.Role) (res interface{}, err error) {
 		hasRole, err := services.HasRole(ctx, role)
 		if err != nil {
 			return nil, err
@@ -233,7 +232,7 @@ func (s *Server) routes(
 	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
 
 	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
-		return coreClient.GetSystemSummary(ctx)
+		return coreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithDeactivatedSystems())
 	}
 
 	dataLoaders := dataloaders.NewDataLoaders(store, userSearchClient.FetchUserInfos, getCedarSystems)

@@ -7,7 +7,6 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -19,7 +18,7 @@ import (
 func SetSystemIntakeRelationExistingService(
 	ctx context.Context,
 	store *storage.Store,
-	input *model.SetSystemIntakeRelationExistingServiceInput,
+	input *models.SetSystemIntakeRelationExistingServiceInput,
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
@@ -58,7 +57,7 @@ func SetSystemIntakeRelationExistingService(
 func SetSystemIntakeRelationNewSystem(
 	ctx context.Context,
 	store *storage.Store,
-	input *model.SetSystemIntakeRelationNewSystemInput,
+	input *models.SetSystemIntakeRelationNewSystemInput,
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
@@ -98,7 +97,7 @@ func SetSystemIntakeRelationExistingSystem(
 	ctx context.Context,
 	store *storage.Store,
 	getCedarSystem func(ctx context.Context, systemID string) (*models.CedarSystem, error),
-	input *model.SetSystemIntakeRelationExistingSystemInput,
+	input *models.SetSystemIntakeRelationExistingSystemInput,
 ) (*models.SystemIntake, error) {
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID

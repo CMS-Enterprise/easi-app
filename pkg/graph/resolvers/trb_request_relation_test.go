@@ -7,7 +7,6 @@ import (
 	"github.com/guregu/null/zero"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
@@ -90,7 +89,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedTRBRequestSystemIDs))
 
 			// Set the "new system" relationship
-			input := model.SetTRBRequestRelationNewSystemInput{
+			input := models.SetTRBRequestRelationNewSystemInput{
 				TrbRequestID:    trbRequest.ID,
 				ContractNumbers: caseValues.NewContractNumbers,
 			}
@@ -198,7 +197,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 			suite.Equal(len(caseValues.InitialSystemIDs), len(updatedTRBRequestSystemIDs))
 
 			// Set the "existing system" relationship
-			input := model.SetTRBRequestRelationExistingSystemInput{
+			input := models.SetTRBRequestRelationExistingSystemInput{
 				TrbRequestID:    trbRequest.ID,
 				CedarSystemIDs:  caseValues.NewSystemIDs,
 				ContractNumbers: caseValues.NewContractNumbers,
@@ -311,7 +310,7 @@ func (suite *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 
 			// Set the existing service relationship
 			newContractName := "My New Contract Name"
-			input := model.SetTRBRequestRelationExistingServiceInput{
+			input := models.SetTRBRequestRelationExistingServiceInput{
 				TrbRequestID:    trbRequest.ID,
 				ContractName:    newContractName,
 				ContractNumbers: caseValues.NewContractNumbers,
@@ -361,7 +360,7 @@ func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 		suite.NotNil(trbRequest)
 
 		// Set the new system relationship
-		input := model.SetTRBRequestRelationNewSystemInput{
+		input := models.SetTRBRequestRelationNewSystemInput{
 			TrbRequestID:    trbRequest.ID,
 			ContractNumbers: []string{"12345", "67890"},
 		}
@@ -395,7 +394,7 @@ func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 		suite.NotNil(trbRequest)
 
 		// Set the existing system relationship
-		input := model.SetTRBRequestRelationExistingSystemInput{
+		input := models.SetTRBRequestRelationExistingSystemInput{
 			TrbRequestID:    trbRequest.ID,
 			CedarSystemIDs:  []string{"abcde", "fghijk"},
 			ContractNumbers: []string{"12345", "67890"},
@@ -438,7 +437,7 @@ func (suite *ResolverSuite) TestUnlinkTRBRequestRelation() {
 
 		// Set the existing service relationship
 		contractName := "My Test Contract Name"
-		input := model.SetTRBRequestRelationExistingServiceInput{
+		input := models.SetTRBRequestRelationExistingServiceInput{
 			TrbRequestID:    trbRequest.ID,
 			ContractName:    contractName,
 			ContractNumbers: []string{"12345", "67890"},

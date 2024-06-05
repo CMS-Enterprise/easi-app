@@ -4,8 +4,8 @@ import { startCase } from 'lodash';
 // eslint-disable-next-line camelcase
 import { GetSystemIntake_systemIntake_systems_businessOwnerRoles } from 'queries/types/GetSystemIntake';
 import {
+  GetSystemProfile_cedarAuthorityToOperate as CedarAuthorityToOperate,
   /* eslint-disable camelcase */
-  GetSystemProfile_cedarAuthorityToOperate,
   GetSystemProfile_cedarSystemDetails_roles
   /* eslint-enable camelcase */
 } from 'queries/types/GetSystemProfile';
@@ -29,14 +29,10 @@ export function getPersonFullName(
 }
 
 export function showAtoExpirationDate(
-  // eslint-disable-next-line camelcase
-  systemProfileAto?: GetSystemProfile_cedarAuthorityToOperate
+  dateAuthorizationMemoExpires?: CedarAuthorityToOperate['dateAuthorizationMemoExpires']
 ): React.ReactNode {
   return showVal(
-    systemProfileAto?.dateAuthorizationMemoExpires &&
-      formatDateUtc(
-        systemProfileAto.dateAuthorizationMemoExpires,
-        'MMMM d, yyyy'
-      )
+    dateAuthorizationMemoExpires &&
+      formatDateUtc(dateAuthorizationMemoExpires, 'MMMM d, yyyy')
   );
 }
