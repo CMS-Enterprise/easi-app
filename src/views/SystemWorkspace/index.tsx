@@ -4,15 +4,12 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button, CardGroup, Grid } from '@trussworks/react-uswds';
 
-// import BookmarkTag from 'components/BookmarkTag';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import SystemProfileModal from 'components/SystemProfileModal';
 import TLCTag from 'components/TLCTag';
-// import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetSystemWorkspaceQuery from 'queries/GetSystemWorkspaceQuery';
-// import { GetCedarSystemBookmarks } from 'queries/types/GetCedarSystemBookmarks';
 import {
   GetSystemWorkspace,
   GetSystemWorkspaceVariables
@@ -54,17 +51,6 @@ export const SystemWorkspace = () => {
         role => role.roleTypeName === RoleTypeName.ISSO
       )
     : undefined;
-
-  /*
-  const {
-    data: bookmark,
-    refetch: refetchBookmarks
-  } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery);
-  */
-
-  // const isBookmarked = !!bookmark?.cedarSystemBookmarks.find(
-  //   mark => mark.cedarSystemId === systemId
-  // );
 
   if (loading) {
     return <PageLoading />;
@@ -110,14 +96,6 @@ export const SystemWorkspace = () => {
           </div>
         </div>
 
-        {/*
-        <BookmarkTag
-          systemID={systemId}
-          isBookmarked={isBookmarked}
-          refetchBookmarks={refetchBookmarks}
-          className="flex-align-self-start"
-        />
-        */}
         <BookmarkToggleButton id={systemId} initialBookmarked={isBookmarked} />
       </div>
 

@@ -5,8 +5,6 @@ import { Button, Card, IconBookmark } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
-// import Divider from 'components/shared/Divider';
-// import SystemHealthIcon from 'components/SystemHealthIcon';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
 import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
