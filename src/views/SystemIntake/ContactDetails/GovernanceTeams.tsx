@@ -66,7 +66,7 @@ const GovernanceTeams = () => {
             <Radio
               {...field}
               inputRef={ref}
-              id={`${field.name}True`}
+              id="governanceTeamsIsPresentTrue"
               label={t('contactDetails.collaboration.oneOrMore')}
               value="true"
               checked={!!field.value}
@@ -105,7 +105,7 @@ const GovernanceTeams = () => {
                       <Checkbox
                         {...field}
                         inputRef={ref}
-                        id={`${field.name}.${key}`}
+                        id={`governanceTeam-${key}`}
                         label={label}
                         value={name}
                         checked={isChecked}
@@ -131,7 +131,7 @@ const GovernanceTeams = () => {
                     error={!!error}
                     className="margin-top-1 margin-bottom-2 margin-left-4"
                   >
-                    <Label htmlFor={collaboratorField}>
+                    <Label htmlFor={`governanceTeam-${key}-collaborator`}>
                       {t(`${acronym} Collaborator Name`)}
                     </Label>
 
@@ -140,7 +140,7 @@ const GovernanceTeams = () => {
                     <TextInput
                       {...register(collaboratorField)}
                       ref={null}
-                      id={collaboratorField}
+                      id={`governanceTeam-${key}-collaborator`}
                       type="text"
                     />
                   </FormGroup>
@@ -157,7 +157,7 @@ const GovernanceTeams = () => {
             <Radio
               {...field}
               inputRef={ref}
-              id={`${field.name}False`}
+              id="governanceTeamsIsPresentFalse"
               label={t('contactDetails.collaboration.none')}
               value="false"
               checked={!field.value}

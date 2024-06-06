@@ -397,20 +397,20 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       >
         {/* Requester */}
         <FormGroup>
-          <Label htmlFor="requester.commonName">
+          <Label htmlFor="requesterCommonName">
             {t('contactDetails.requester')}
           </Label>
           <TextInput
             {...register('requester.commonName')}
             ref={null}
-            id="requester.commonName"
+            id="requesterCommonName"
             type="text"
             disabled
           />
         </FormGroup>
 
         <FormGroup error={!!errors?.requester?.component}>
-          <Label htmlFor="requester.component">
+          <Label htmlFor="requesterComponent">
             {t('contactDetails.requesterComponent')}
           </Label>
           <ErrorMessage
@@ -421,7 +421,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           <Dropdown
             {...register('requester.component')}
             ref={null}
-            id="requester.component"
+            id="requesterComponent"
           >
             <option value="" disabled>
               {t('Select an option')}
@@ -447,12 +447,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           <Checkbox
             {...register('businessOwner.sameAsRequester')}
             ref={null}
-            id="businessOwner.sameAsRequester"
+            id="businessOwnerSameAsRequester"
             label={t('contactDetails.businessOwner.sameAsRequester')}
           />
 
           <FormGroup error={!!errors?.businessOwner?.commonName}>
-            <Label htmlFor="businessOwner.commonName">
+            <Label htmlFor="businessOwnerCommonName">
               {t('contactDetails.businessOwner.nameField')}
             </Label>
             <ErrorMessage
@@ -468,7 +468,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   <CedarContactSelect
                     {...field}
                     inputRef={ref}
-                    id={field.name}
+                    id="businessOwnerCommonName"
                     // Manually set value so that field rerenders when values are updated
                     value={{
                       euaUserId: watch('businessOwner.euaUserId'),
@@ -496,7 +496,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           </FormGroup>
 
           <FormGroup error={!!errors?.businessOwner?.component}>
-            <Label htmlFor="businessOwner.component">
+            <Label htmlFor="businessOwnerComponent">
               {t('contactDetails.businessOwner.component')}
             </Label>
             <ErrorMessage
@@ -507,7 +507,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             <Dropdown
               {...register('businessOwner.component')}
               ref={null}
-              id="businessOwner.component"
+              id="businessOwnerComponent"
               disabled={watch('businessOwner.sameAsRequester')}
             >
               <option value="" disabled>
@@ -518,13 +518,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           </FormGroup>
 
           <FormGroup>
-            <Label htmlFor="businessOwner.email">
+            <Label htmlFor="businessOwnerEmail">
               {t('contactDetails.businessOwner.email')}
             </Label>
             <TextInput
               {...register('businessOwner.email')}
               ref={null}
-              id="businessOwner.email"
+              id="businessOwnerEmail"
               type="text"
               disabled
             />
@@ -547,12 +547,12 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           <Checkbox
             {...register('productManager.sameAsRequester')}
             ref={null}
-            id="productManager.sameAsRequester"
+            id="productManagerSameAsRequester"
             label={t('contactDetails.productManager.sameAsRequester')}
           />
 
           <FormGroup error={!!errors?.productManager?.commonName}>
-            <Label htmlFor="productManager.commonName">
+            <Label htmlFor="productManagerCommonName">
               {t('contactDetails.productManager.nameField')}
             </Label>
             <ErrorMessage
@@ -568,7 +568,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                   <CedarContactSelect
                     {...field}
                     inputRef={ref}
-                    id={field.name}
+                    id="productManagerCommonName"
                     // Manually set value so that field rerenders when values are updated
                     value={{
                       euaUserId: watch('productManager.euaUserId'),
@@ -596,7 +596,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           </FormGroup>
 
           <FormGroup error={!!errors?.productManager?.component}>
-            <Label htmlFor="productManager.component">
+            <Label htmlFor="productManagerComponent">
               {t('contactDetails.productManager.component')}
             </Label>
             <ErrorMessage
@@ -607,7 +607,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             <Dropdown
               {...register('productManager.component')}
               ref={null}
-              id="productManager.component"
+              id="productManagerComponent"
               disabled={watch('productManager.sameAsRequester')}
             >
               <option value="" disabled>
@@ -618,13 +618,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           </FormGroup>
 
           <FormGroup>
-            <Label htmlFor="productManager.email">
+            <Label htmlFor="productManagerEmail">
               {t('contactDetails.productManager.email')}
             </Label>
             <TextInput
               {...register('productManager.email')}
               ref={null}
-              id="productManager.email"
+              id="productManagerEmail"
               type="text"
               disabled
             />
@@ -652,7 +652,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Radio
                 {...field}
                 inputRef={ref}
-                id={`${field.name}True`}
+                id="issoIsPresentTrue"
                 label={t('Yes')}
                 checked={value}
                 onChange={() => field.onChange(true)}
@@ -663,7 +663,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           {watch('isso.isPresent') && (
             <div className="margin-left-4 margin-bottom-3">
               <FormGroup error={!!errors?.isso?.commonName}>
-                <Label htmlFor="isso.commonName">
+                <Label htmlFor="issoCommonName">
                   {t('contactDetails.isso.name')}
                 </Label>
                 <ErrorMessage
@@ -679,7 +679,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                       <CedarContactSelect
                         {...field}
                         inputRef={ref}
-                        id={field.name}
+                        id="issoCommonName"
                         // Manually set value
                         value={{
                           euaUserId: watch('isso.euaUserId'),
@@ -703,7 +703,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               </FormGroup>
 
               <FormGroup error={!!errors?.isso?.component}>
-                <Label htmlFor="isso.component">
+                <Label htmlFor="issoComponent">
                   {t('contactDetails.isso.component')}
                 </Label>
                 <ErrorMessage
@@ -714,7 +714,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
                 <Dropdown
                   {...register('isso.component')}
                   ref={null}
-                  id="isso.component"
+                  id="issoComponent"
                 >
                   <option value="" disabled>
                     {t('Select an option')}
@@ -724,13 +724,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               </FormGroup>
 
               <FormGroup>
-                <Label htmlFor="isso.email">
+                <Label htmlFor="issoEmail">
                   {t('contactDetails.isso.email')}
                 </Label>
                 <TextInput
                   {...register('isso.email')}
                   ref={null}
-                  id="isso.email"
+                  id="issoEmail"
                   type="text"
                   disabled
                 />
@@ -745,7 +745,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
               <Radio
                 {...field}
                 inputRef={ref}
-                id={`${field.name}False`}
+                id="issoIsPresentFalse"
                 label={t('No')}
                 checked={!value}
                 onChange={() => {
