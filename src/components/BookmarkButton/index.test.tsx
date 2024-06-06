@@ -10,7 +10,7 @@ describe('BookmarkButton', () => {
     const { getByTestId } = render(
       <MemoryRouter>
         <MockedProvider>
-          <BookmarkButton id="123" initialBookmarked />
+          <BookmarkButton id="123" isBookmarked />
         </MockedProvider>
       </MemoryRouter>
     );
@@ -21,7 +21,7 @@ describe('BookmarkButton', () => {
     const { getByTestId } = render(
       <MemoryRouter>
         <MockedProvider>
-          <BookmarkButton id="123" initialBookmarked={false} />
+          <BookmarkButton id="123" isBookmarked={false} />
         </MockedProvider>
       </MemoryRouter>
     );

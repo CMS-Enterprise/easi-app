@@ -495,7 +495,7 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                 <div className="margin-left-auto" style={{ flexShrink: 0 }}>
                   <BookmarkButton
                     id={cedarSystem.id}
-                    initialBookmarked={cedarSystem.isBookmarked}
+                    isBookmarked={cedarSystem.isBookmarked}
                   />
                 </div>
               </div>

@@ -98,7 +98,7 @@ export const SystemWorkspace = () => {
 
         <BookmarkButton
           id={systemId}
-          initialBookmarked={isBookmarked}
+          isBookmarked={isBookmarked}
           className="bg-primary-lighter"
         />
       </div>

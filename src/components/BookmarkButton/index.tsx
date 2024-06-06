@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@apollo/client';
 import { Button, IconBookmark } from '@trussworks/react-uswds';
@@ -20,16 +20,22 @@ import './index.scss';
 
 export default function BookmarkButton({
   id,
-  initialBookmarked,
+  isBookmarked,
   className
 }: {
   id: string;
-  initialBookmarked: boolean;
+  isBookmarked: boolean;
   className?: string;
 }) {
   const { t } = useTranslation('systemProfile');
 
-  const [isBookmarked, setBookmarked] = useState<boolean>(initialBookmarked);
+  const [isBookmarkedState, setBookmarkedState] = useState<boolean>(
+    isBookmarked
+  );
+
+  useEffect(() => {
+    setBookmarkedState(isBookmarked);
+  }, [isBookmarked]);
 
   const refetchCedarSystemIsBookmarkedQuery = {
     query: GetCedarSystemIsBookmarkedQuery,
@@ -53,14 +59,14 @@ export default function BookmarkButton({
   const toggle = () => {
     if (createLoading || delLoading) return;
 
-    (isBookmarked ? del : create)({
+    (isBookmarkedState ? del : create)({
       variables: {
         input: {
           cedarSystemId: id
         }
       }
     }).then(res => {
-      setBookmarked(!isBookmarked);
+      setBookmarkedState(!isBookmarkedState);
     });
   };
 
@@ -75,11 +81,11 @@ export default function BookmarkButton({
     >
       <IconBookmark
         className={classnames('margin-right-1', {
-          'outline text-base': !isBookmarked
+          'outline text-base': !isBookmarkedState
         })}
-        data-testid={isBookmarked ? 'is-bookmarked' : 'is-not-bookmarked'}
+        data-testid={isBookmarkedState ? 'is-bookmarked' : 'is-not-bookmarked'}
       />
-      {t(`bookmark.${isBookmarked ? 'bookmarked' : 'bookmark'}`)}
+      {t(`bookmark.${isBookmarkedState ? 'bookmarked' : 'bookmark'}`)}
     </Button>
   );
 }
