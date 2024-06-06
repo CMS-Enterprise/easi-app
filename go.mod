@@ -5,7 +5,7 @@ go 1.22.3
 require (
 	github.com/99designs/gqlgen v0.17.47
 	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
-	github.com/aws/aws-sdk-go v1.53.10
+	github.com/aws/aws-sdk-go v1.53.14
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-openapi/errors v0.22.0
 	github.com/go-openapi/runtime v0.28.0
@@ -23,7 +23,7 @@ require (
 	github.com/pquerna/otp v1.4.0
 	github.com/samber/lo v1.39.0
 	github.com/spf13/cobra v1.8.0
-	github.com/spf13/viper v1.18.2
+	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
 	github.com/vektah/gqlparser/v2 v2.5.12
 	github.com/vikstrous/dataloadgen v0.0.6
@@ -34,7 +34,7 @@ require (
 )
 
 require (
-	github.com/charmbracelet/x/ansi v0.1.1 // indirect
+	github.com/charmbracelet/x/ansi v0.1.2 // indirect
 	github.com/charmbracelet/x/input v0.1.0 // indirect
 	github.com/charmbracelet/x/term v0.1.1 // indirect
 	github.com/charmbracelet/x/windows v0.1.0 // indirect
@@ -69,7 +69,7 @@ require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
-	github.com/charmbracelet/bubbletea v0.26.3
+	github.com/charmbracelet/bubbletea v0.26.4
 	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
@@ -103,7 +103,7 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/okta/okta-sdk-golang/v2 v2.20.0
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
-	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
+	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
