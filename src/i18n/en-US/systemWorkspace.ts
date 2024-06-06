@@ -66,6 +66,23 @@ const systemWorkspace = {
       description:
         'Your System Profile compiles the information that CMS knows about your system and its status in the Target Life Cycle (TLC). Compiling more system information in EASi allows OIT and CMS to stay up-to-date about your system and proactively prompt you if there are any governance activities or TLC related tasks to complete.',
       linktext: 'View system profile'
+    },
+    ato: {
+      header: 'Authority to Operate (ATO)',
+      description:
+        'Information systems that intend to operate for 3 years or more are required to get and maintain an ATO.',
+      isso: 'Information System Security Officer (ISSO)',
+      noIsso: 'This system has no ISSO',
+      contact: 'Contact ISSO',
+      cfacts: 'Go to CFACTs',
+      learn: 'Learn more',
+      modal: {
+        header: 'Are you sure you want to leave EASi?',
+        text:
+          'CFACTS requires additional job codes and/or permissions as well as connectivity via VPN in order to access content within the system.',
+        continue: 'Continue to CFACTS',
+        cancel: 'Go back to EASi'
+      }
     }
   }
 };

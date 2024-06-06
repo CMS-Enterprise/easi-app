@@ -8,7 +8,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -29,7 +28,7 @@ func makeSystemIntakeAndProgressToStep(
 	requesterEUA string,
 	logger *zap.Logger,
 	store *storage.Store,
-	newStep model.SystemIntakeStepToProgressTo,
+	newStep models.SystemIntakeStepToProgressTo,
 	options *progressOptions,
 ) *models.SystemIntake {
 	intake := makeSystemIntakeAndSubmit(name, intakeID, requesterEUA, logger, store)
@@ -37,36 +36,36 @@ func makeSystemIntakeAndProgressToStep(
 		return progressIntake(logger, store, intake, newStep, nil)
 	}
 	if options.meetingDate != nil &&
-		(newStep == model.SystemIntakeStepToProgressToDraftBusinessCase ||
-			newStep == model.SystemIntakeStepToProgressToFinalBusinessCase) {
+		(newStep == models.SystemIntakeStepToProgressToDraftBusinessCase ||
+			newStep == models.SystemIntakeStepToProgressToFinalBusinessCase) {
 		panic("cannot assign meeting date to business case")
 	}
 	if options.completeOtherSteps {
 		pastMeetingDate := time.Now().AddDate(0, -2, 0)
 		switch newStep {
-		case model.SystemIntakeStepToProgressToDraftBusinessCase:
+		case models.SystemIntakeStepToProgressToDraftBusinessCase:
 			panic("no prior steps to fill!")
-		case model.SystemIntakeStepToProgressToGrtMeeting:
+		case models.SystemIntakeStepToProgressToGrtMeeting:
 			// completed draft biz case step
-			intake = progressIntake(logger, store, intake, model.SystemIntakeStepToProgressToDraftBusinessCase, nil)
+			intake = progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToDraftBusinessCase, nil)
 			intake = makeDraftBusinessCaseV1("draft biz case", logger, store, intake) // partially fills biz case form
 			intake = submitBusinessCaseV1(logger, store, intake)
-		case model.SystemIntakeStepToProgressToFinalBusinessCase:
+		case models.SystemIntakeStepToProgressToFinalBusinessCase:
 			// complete draft biz case step
-			intake = progressIntake(logger, store, intake, model.SystemIntakeStepToProgressToDraftBusinessCase, nil)
+			intake = progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToDraftBusinessCase, nil)
 			intake = makeFinalBusinessCaseV1("final biz case", logger, store, intake) // fully fills biz case form
 			intake = submitBusinessCaseV1(logger, store, intake)
 			// complete GRT meeting step
-			intake = progressIntake(logger, store, intake, model.SystemIntakeStepToProgressToGrtMeeting, &pastMeetingDate)
-		case model.SystemIntakeStepToProgressToGrbMeeting:
+			intake = progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToGrtMeeting, &pastMeetingDate)
+		case models.SystemIntakeStepToProgressToGrbMeeting:
 			// complete draft biz case step
-			intake = progressIntake(logger, store, intake, model.SystemIntakeStepToProgressToDraftBusinessCase, nil)
+			intake = progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToDraftBusinessCase, nil)
 			intake = makeFinalBusinessCaseV1("final biz case", logger, store, intake) // fully fills biz case form
 			intake = submitBusinessCaseV1(logger, store, intake)
 			// complete GRT meeting step
-			intake = progressIntake(logger, store, intake, model.SystemIntakeStepToProgressToGrtMeeting, &pastMeetingDate)
+			intake = progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToGrtMeeting, &pastMeetingDate)
 			// complete final biz case step
-			intake = progressIntake(logger, store, intake, model.SystemIntakeStepToProgressToFinalBusinessCase, nil)
+			intake = progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToFinalBusinessCase, nil)
 			// no need to fill biz case form again, draft/final are the same form
 			intake = submitBusinessCaseV1(logger, store, intake)
 		}
@@ -75,13 +74,13 @@ func makeSystemIntakeAndProgressToStep(
 	// skip if previous steps already filled out the business case
 	if options.fillForm && !options.completeOtherSteps {
 		switch newStep {
-		case model.SystemIntakeStepToProgressToDraftBusinessCase:
+		case models.SystemIntakeStepToProgressToDraftBusinessCase:
 			intake = makeDraftBusinessCaseV1("draft biz case", logger, store, intake)
-		case model.SystemIntakeStepToProgressToFinalBusinessCase:
+		case models.SystemIntakeStepToProgressToFinalBusinessCase:
 			intake = makeFinalBusinessCaseV1("final biz case", logger, store, intake)
-		case model.SystemIntakeStepToProgressToGrbMeeting:
+		case models.SystemIntakeStepToProgressToGrbMeeting:
 			fallthrough
-		case model.SystemIntakeStepToProgressToGrtMeeting:
+		case models.SystemIntakeStepToProgressToGrtMeeting:
 			panic("cannot fill non-form step")
 		}
 	}
@@ -90,13 +89,13 @@ func makeSystemIntakeAndProgressToStep(
 			panic("must fill form or complete prior steps to submit")
 		}
 		switch newStep {
-		case model.SystemIntakeStepToProgressToDraftBusinessCase:
+		case models.SystemIntakeStepToProgressToDraftBusinessCase:
 			intake = submitBusinessCaseV1(logger, store, intake)
-		case model.SystemIntakeStepToProgressToFinalBusinessCase:
+		case models.SystemIntakeStepToProgressToFinalBusinessCase:
 			intake = submitBusinessCaseV1(logger, store, intake)
-		case model.SystemIntakeStepToProgressToGrbMeeting:
+		case models.SystemIntakeStepToProgressToGrbMeeting:
 			fallthrough
-		case model.SystemIntakeStepToProgressToGrtMeeting:
+		case models.SystemIntakeStepToProgressToGrtMeeting:
 			panic("cannot submit non-form step")
 		}
 	}
@@ -104,15 +103,15 @@ func makeSystemIntakeAndProgressToStep(
 		if !options.submitForm {
 			panic("must submit form to request edits")
 		}
-		var targetedForm model.SystemIntakeFormStep
+		var targetedForm models.SystemIntakeFormStep
 		switch newStep {
-		case model.SystemIntakeStepToProgressToDraftBusinessCase:
-			targetedForm = model.SystemIntakeFormStepDraftBusinessCase
-		case model.SystemIntakeStepToProgressToFinalBusinessCase:
-			targetedForm = model.SystemIntakeFormStepFinalBusinessCase
-		case model.SystemIntakeStepToProgressToGrbMeeting:
+		case models.SystemIntakeStepToProgressToDraftBusinessCase:
+			targetedForm = models.SystemIntakeFormStepDraftBusinessCase
+		case models.SystemIntakeStepToProgressToFinalBusinessCase:
+			targetedForm = models.SystemIntakeFormStepFinalBusinessCase
+		case models.SystemIntakeStepToProgressToGrbMeeting:
 			fallthrough
-		case model.SystemIntakeStepToProgressToGrtMeeting:
+		case models.SystemIntakeStepToProgressToGrtMeeting:
 			panic("cannot request edits to non-form step")
 		}
 		requestEditsToIntakeForm(logger, store, intake, targetedForm)
@@ -125,7 +124,7 @@ func progressIntake(
 	logger *zap.Logger,
 	store *storage.Store,
 	intake *models.SystemIntake,
-	newStep model.SystemIntakeStepToProgressTo,
+	newStep models.SystemIntakeStepToProgressTo,
 	meetingDate *time.Time,
 ) *models.SystemIntake {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
@@ -135,7 +134,7 @@ func progressIntake(
 	additionalInfo := models.HTML(fmt.Sprintf("additional info for %s progressing to %s", string(intake.Step), string(newStep)))
 	adminNote := models.HTML(fmt.Sprintf("admin note about %s progressing to %s", string(intake.Step), string(newStep)))
 
-	input := model.SystemIntakeProgressToNewStepsInput{
+	input := models.SystemIntakeProgressToNewStepsInput{
 		SystemIntakeID:     intake.ID,
 		NewStep:            newStep,
 		Feedback:           &feedbackText,
@@ -159,13 +158,13 @@ func requestEditsToIntakeForm(
 	logger *zap.Logger,
 	store *storage.Store,
 	intake *models.SystemIntake,
-	targetedForm model.SystemIntakeFormStep,
+	targetedForm models.SystemIntakeFormStep,
 ) *models.SystemIntake {
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
 	adminNote := models.HTML(fmt.Sprintf("admin note that edits were requested to %s form", string(targetedForm)))
 	additionalInfo := models.HTML(fmt.Sprintf("add'l info about edits requested on %s form", string(targetedForm)))
 
-	input := &model.SystemIntakeRequestEditsInput{
+	input := &models.SystemIntakeRequestEditsInput{
 		SystemIntakeID: intake.ID,
 		IntakeFormStep: targetedForm,
 		NotificationRecipients: &models.EmailNotificationRecipients{
