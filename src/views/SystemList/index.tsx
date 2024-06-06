@@ -15,6 +15,7 @@ import {
   SummaryBox
 } from '@trussworks/react-uswds';
 
+import BookmarkCard from 'components/BookmarkCard';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -25,9 +26,9 @@ import SectionWrapper from 'components/shared/SectionWrapper';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import { GetCedarSystemBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemBookmarks';
 import { GetCedarSystems } from 'queries/types/GetCedarSystems';
+import { mapCedarStatusToIcon } from 'types/iconStatus';
 
 import Table from './Table';
-import filterBookmarks from './util';
 
 import './index.scss';
 
@@ -127,7 +128,16 @@ export const SystemList = () => {
               </Grid>
             ) : (
               <CardGroup className="margin-bottom-3">
-                {filterBookmarks(systemsTableData, bookmarks)}
+                {systemsTableData
+                  .filter(system => system.isBookmarked)
+                  .map(system => (
+                    <BookmarkCard
+                      type="systemProfile"
+                      key={system.id}
+                      statusIcon={mapCedarStatusToIcon(system.status)}
+                      {...system}
+                    />
+                  ))}
               </CardGroup>
             )}
           </SectionWrapper>
