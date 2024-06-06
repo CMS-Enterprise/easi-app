@@ -4,7 +4,6 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import { mockSystemInfo } from 'views/SystemProfile/mockSystemData';
 
@@ -25,16 +24,6 @@ describe('System List View', () => {
           result: {
             data: {
               cedarSystems: []
-            }
-          }
-        },
-        {
-          request: {
-            query: GetCedarSystemBookmarksQuery
-          },
-          result: {
-            data: {
-              cedarSystemBookmarks: []
             }
           }
         }
