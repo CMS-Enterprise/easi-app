@@ -86,11 +86,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
                 <dd
                   class="description-definition margin-0 line-height-body-3 font-body-md"
                 >
-                  <span
-                    class="text-italic"
-                  >
-                    No information to display
-                  </span>
+                  February 26, 2022
                 </dd>
               </div>
             </div>
@@ -445,7 +441,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
           <dd
             class="description-definition margin-0 line-height-body-3 margin-bottom-4"
           >
-            0
+            255
           </dd>
         </div>
       </div>
@@ -585,11 +581,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
           <dd
             class="description-definition margin-0 line-height-body-3 margin-bottom-4"
           >
-            <span
-              class="text-italic"
-            >
-              No information to display
-            </span>
+            January 23, 2022
           </dd>
         </div>
         <div
@@ -604,11 +596,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
           <dd
             class="description-definition margin-0 line-height-body-3 margin-bottom-4"
           >
-            <span
-              class="text-italic"
-            >
-              No information to display
-            </span>
+            May 31, 2022
           </dd>
         </div>
       </div>
@@ -628,11 +616,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
           <dd
             class="description-definition margin-0 line-height-body-3 margin-bottom-4"
           >
-            <span
-              class="text-italic"
-            >
-              No information to display
-            </span>
+            December 28, 2022
           </dd>
         </div>
         <div
@@ -702,11 +686,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
           <dd
             class="description-definition margin-0 line-height-body-3 margin-bottom-4"
           >
-            <span
-              class="text-italic"
-            >
-              No information to display
-            </span>
+            June 11, 2022
           </dd>
         </div>
         <div
@@ -769,7 +749,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
               SORN*
             </td>
             <td>
-              No
+              Yes
             </td>
           </tr>
           <tr>
@@ -777,7 +757,7 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
               ContingencyPlan
             </td>
             <td>
-              No
+              Yes
             </td>
           </tr>
         </tbody>
