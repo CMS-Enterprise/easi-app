@@ -90,8 +90,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
             <Card
               className={classnames('grid-col-12', {
                 'bg-success-dark': atoStatus === 'Active',
-                'bg-warning':
-                  atoStatus === 'Due Soon' || atoStatus === 'In progress',
+                'bg-warning': atoStatus === 'Due Soon',
                 'bg-error-dark': atoStatus === 'Expired',
                 'bg-base-lighter': atoStatus === 'No ATO'
               })}
@@ -101,9 +100,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                   'text-white':
                     atoStatus === 'Active' || atoStatus === 'Expired',
                   'text-base-darkest':
-                    atoStatus === 'Due Soon' ||
-                    atoStatus === 'No ATO' ||
-                    atoStatus === 'In progress'
+                    atoStatus === 'Due Soon' || atoStatus === 'No ATO'
                 })}
               >
                 <DescriptionTerm term={t('singleSystem.ato.status')} />
@@ -117,10 +114,8 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                   <Divider
                     className={classnames('grid-col-12', {
                       'border-success-darker': atoStatus === 'Active',
-                      'border-warning-dark':
-                        atoStatus === 'Due Soon' || atoStatus === 'In progress',
+                      'border-warning-dark': atoStatus === 'Due Soon',
                       'border-error-darker': atoStatus === 'Expired'
-                      // 'border-base-light': atoStatus === 'No ATO'
                     })}
                   />
                 )}
@@ -130,16 +125,15 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                   className={classnames('padding-2', {
                     'text-white':
                       atoStatus === 'Active' || atoStatus === 'Expired',
-                    'text-base-darkest':
-                      atoStatus === 'Due Soon' ||
-                      // atoStatus === 'No ATO' ||
-                      atoStatus === 'In progress'
+                    'text-base-darkest': atoStatus === 'Due Soon'
                   })}
                 >
                   <DescriptionTerm term={t('singleSystem.ato.expiration')} />
                   <DescriptionDefinition
                     className="line-height-body-3 font-body-md"
-                    definition={showAtoExpirationDate(ato)}
+                    definition={showAtoExpirationDate(
+                      ato.dateAuthorizationMemoExpires
+                    )}
                   />
                 </CardFooter>
               )}
@@ -153,50 +147,44 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         )}
 
-        {flags.systemProfileHiddenFields &&
-          atoStatus === 'In progress' &&
-          system.activities !== undefined && (
-            <ProcessList>
-              {system.activities.map(act => (
-                <ProcessListItem key={act.id}>
-                  <ProcessListHeading
-                    type="h4"
-                    className="easi-header__basic flex-align-start"
-                  >
-                    <div className="margin-0 font-body-lg">Start a process</div>
-                    <div className="text-right margin-bottom-0">
-                      <Tag
-                        className={classnames(
-                          'font-body-md',
-                          'margin-bottom-1',
-                          {
-                            'bg-success-dark text-white':
-                              act.status === 'Completed',
-                            'bg-warning': act.status === 'In progress',
-                            'bg-white text-base border-base border-2px':
-                              act.status === 'Not started'
-                          }
-                        )}
-                      >
-                        {act.status}
-                      </Tag>
-                      <h5 className="text-normal margin-y-0 text-base-dark">
-                        {act.status === 'Completed'
-                          ? t('singleSystem.ato.completed')
-                          : t('singleSystem.ato.due')}
-                        {act.dueDate}
-                      </h5>
-                    </div>
-                  </ProcessListHeading>
-                  <DescriptionTerm term={t('singleSystem.ato.activityOwner')} />
-                  <DescriptionDefinition
-                    className="line-height-body-3 font-body-md margin-bottom-0"
-                    definition={act.activityOwner}
-                  />
-                </ProcessListItem>
-              ))}
-            </ProcessList>
-          )}
+        {flags.systemProfileHiddenFields && system.activities !== undefined && (
+          <ProcessList>
+            {system.activities.map(act => (
+              <ProcessListItem key={act.id}>
+                <ProcessListHeading
+                  type="h4"
+                  className="easi-header__basic flex-align-start"
+                >
+                  <div className="margin-0 font-body-lg">Start a process</div>
+                  <div className="text-right margin-bottom-0">
+                    <Tag
+                      className={classnames('font-body-md', 'margin-bottom-1', {
+                        'bg-success-dark text-white':
+                          act.status === 'Completed',
+                        'bg-warning': act.status === 'In progress',
+                        'bg-white text-base border-base border-2px':
+                          act.status === 'Not started'
+                      })}
+                    >
+                      {act.status}
+                    </Tag>
+                    <h5 className="text-normal margin-y-0 text-base-dark">
+                      {act.status === 'Completed'
+                        ? t('singleSystem.ato.completed')
+                        : t('singleSystem.ato.due')}
+                      {act.dueDate}
+                    </h5>
+                  </div>
+                </ProcessListHeading>
+                <DescriptionTerm term={t('singleSystem.ato.activityOwner')} />
+                <DescriptionDefinition
+                  className="line-height-body-3 font-body-md margin-bottom-0"
+                  definition={act.activityOwner}
+                />
+              </ProcessListItem>
+            ))}
+          </ProcessList>
+        )}
 
         {flags.systemProfileHiddenFields && (
           <>
