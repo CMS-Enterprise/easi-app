@@ -797,7 +797,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         values={watch()}
         onSave={() =>
           partialSubmit({
-            update: submit
+            update: submit,
+            clearErrors: false
           })
         }
         debounceDelay={3000}
