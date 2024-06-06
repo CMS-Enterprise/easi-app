@@ -194,26 +194,6 @@ export const mockSystemInfo: CedarSystemProps[] = [
   }
 ];
 
-export interface CedarSystemBookmark {
-  euaUserId: string;
-  cedarSystemId: string;
-}
-
-export const mockBookmarkInfo: CedarSystemBookmark[] = [
-  {
-    euaUserId: 'A',
-    cedarSystemId: '326-7-0'
-  },
-  {
-    euaUserId: 'A',
-    cedarSystemId: '326-74-0'
-  },
-  {
-    euaUserId: 'A',
-    cedarSystemId: '326-99-0'
-  }
-];
-
 export const products: tempProductsProp[] = [
   {
     id: '1',

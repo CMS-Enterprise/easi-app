@@ -40,7 +40,6 @@ import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQue
 import GetCedarSystemIsBookmarkedQuery from 'queries/GetCedarSystemIsBookmarkedQuery';
 import GetMyCedarSystemsQuery from 'queries/GetMyCedarSystemsQuery';
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
-import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
 import { GetMyCedarSystems as GetMyCedarSystemsType } from 'queries/types/GetMyCedarSystems';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -58,14 +57,12 @@ export type SystemTableType =
 
 type TableProps = {
   systems?: CedarSystem[];
-  savedBookmarks?: CedarSystemBookmark[];
   defaultPageSize?: number;
   isMySystems?: boolean;
 };
 
 export const Table = ({
   systems = [],
-  savedBookmarks = [],
   defaultPageSize = 10,
   isMySystems
 }: TableProps) => {
@@ -117,17 +114,15 @@ export const Table = ({
       case 'my-systems':
         return mySystems?.myCedarSystems || [];
       case 'bookmarked-systems':
-        return systems.filter(system =>
-          savedBookmarks.find(bookmark => bookmark.cedarSystemId === system.id)
-        );
+        return systems.filter(system => system.isBookmarked);
       default:
         return systems;
     }
-  }, [systemTableType, systems, savedBookmarks, mySystems]);
+  }, [systemTableType, systems, mySystems]);
 
   const columns = useMemo<Column<CedarSystem>[]>(() => {
     const isBookmarked = (cedarSystemId: string): boolean =>
-      !!savedBookmarks.find(system => system.cedarSystemId === cedarSystemId);
+      !!systems.find(system => system.id === cedarSystemId)?.isBookmarked;
 
     /** Create or delete bookmark */
     const toggleBookmark = (cedarSystemId: string) => {
@@ -217,7 +212,7 @@ export const Table = ({
       }
       */
     ];
-  }, [t, savedBookmarks, createMutate, deleteMutate]);
+  }, [t, systems, createMutate, deleteMutate]);
 
   // Remove bookmark column if showing My systems table
   if (isMySystems) {

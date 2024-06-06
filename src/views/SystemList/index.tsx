@@ -24,7 +24,6 @@ import Alert, { AlertText } from 'components/shared/Alert';
 import { ErrorAlert } from 'components/shared/ErrorAlert';
 import SectionWrapper from 'components/shared/SectionWrapper';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
-import { GetCedarSystemBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemBookmarks';
 import { GetCedarSystems } from 'queries/types/GetCedarSystems';
 import { mapCedarStatusToIcon } from 'types/iconStatus';
 
@@ -45,17 +44,9 @@ export const SystemList = () => {
 
   const systemsTableData = data1?.cedarSystems ?? [];
 
-  const bookmarks: CedarSystemBookmark[] = data1?.cedarSystems
-    ? data1.cedarSystems
-        .filter(s => s.isBookmarked)
-        .map(s => {
-          return {
-            euaUserId: 'ABCD',
-            __typename: 'CedarSystemBookmark',
-            cedarSystemId: s.id
-          };
-        })
-    : [];
+  const bookmarkedSystems = systemsTableData.filter(
+    system => system.isBookmarked
+  );
 
   return (
     <MainContent className="grid-container margin-bottom-5">
@@ -108,7 +99,7 @@ export const SystemList = () => {
             className="margin-bottom-3"
             id="systemBookmarks"
           >
-            {bookmarks.length === 0 ? (
+            {bookmarkedSystems.length === 0 ? (
               <Grid tablet={{ col: 12 }} className="margin-bottom-5">
                 <Alert
                   type="info"
@@ -128,16 +119,14 @@ export const SystemList = () => {
               </Grid>
             ) : (
               <CardGroup className="margin-bottom-3">
-                {systemsTableData
-                  .filter(system => system.isBookmarked)
-                  .map(system => (
-                    <BookmarkCard
-                      type="systemProfile"
-                      key={system.id}
-                      statusIcon={mapCedarStatusToIcon(system.status)}
-                      {...system}
-                    />
-                  ))}
+                {bookmarkedSystems.map(system => (
+                  <BookmarkCard
+                    type="systemProfile"
+                    key={system.id}
+                    statusIcon={mapCedarStatusToIcon(system.status)}
+                    {...system}
+                  />
+                ))}
               </CardGroup>
             )}
           </SectionWrapper>
@@ -162,7 +151,7 @@ export const SystemList = () => {
               </ErrorAlert>
             ) : (
               <div ref={systemsRef}>
-                <Table systems={systemsTableData} savedBookmarks={bookmarks} />
+                <Table systems={systemsTableData} />
               </div>
             )}
           </SectionWrapper>
