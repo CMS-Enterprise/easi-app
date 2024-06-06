@@ -11,6 +11,7 @@ import (
 )
 
 type (
+	DataloaderFunc      func() *DataLoaders
 	fetchUserInfosFunc  func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error)
 	getCedarSystemsFunc func(ctx context.Context) ([]*models.CedarSystem, error)
 )

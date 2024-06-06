@@ -19,6 +19,6 @@ func loadersFromCTX(ctx context.Context) *DataLoaders {
 }
 
 // CTXWithLoaders sets the given dataloaders onto given context
-func CTXWithLoaders(ctx context.Context, dataloaders *DataLoaders) context.Context {
-	return context.WithValue(ctx, loadersKey, dataloaders)
+func CTXWithLoaders(ctx context.Context, buildDataloaders DataloaderFunc) context.Context {
+	return context.WithValue(ctx, loadersKey, buildDataloaders())
 }

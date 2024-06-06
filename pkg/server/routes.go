@@ -235,8 +235,10 @@ func (s *Server) routes(
 		return coreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithDeactivatedSystems())
 	}
 
-	dataLoaders := dataloaders.NewDataLoaders(store, userSearchClient.FetchUserInfos, getCedarSystems)
-	dataLoaderMiddleware := dataloaders.NewDataloaderMiddleware(dataLoaders)
+	dataLoadersFN := func() *dataloaders.DataLoaders {
+		return dataloaders.NewDataLoaders(store, userSearchClient.FetchUserInfos, getCedarSystems)
+	}
+	dataLoaderMiddleware := dataloaders.NewDataloaderMiddleware(dataLoadersFN)
 	s.router.Use(dataLoaderMiddleware)
 
 	gql.Handle("/query", graphqlServer)
