@@ -68,7 +68,8 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                       type="button"
                     >
                       <svg
-                        class="usa-icon usa-icon--size-3 margin-right-1 text-base-lighter"
+                        class="usa-icon usa-icon--size-3 margin-right-1 text-primary bookmark-tag__outline"
+                        data-testid="is-not-bookmarked"
                         focusable="false"
                         height="1em"
                         role="img"

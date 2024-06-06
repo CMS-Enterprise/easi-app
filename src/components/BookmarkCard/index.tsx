@@ -6,7 +6,7 @@ import classnames from 'classnames';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
-import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
+import GetCedarSystemIsBookmarkedQuery from 'queries/GetCedarSystemIsBookmarkedQuery';
 import { GetCedarSystems_cedarSystems as CedarSystemProps } from 'queries/types/GetCedarSystems';
 import { IconStatus } from 'types/iconStatus';
 
@@ -42,7 +42,7 @@ const BookmarkCard = ({
       },
       refetchQueries: [
         {
-          query: GetCedarSystemQuery,
+          query: GetCedarSystemIsBookmarkedQuery,
           variables: { id: cedarSystemId }
         }
       ]

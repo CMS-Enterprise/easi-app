@@ -67,7 +67,7 @@ import EditPageCallout from './components/EditPageCallout';
 import sideNavItems from './components/index';
 import SystemSubNav from './components/SystemSubNav/index';
 import EditTeam from './components/Team/Edit';
-import BookmarkToggleButton from './BookmarkToggleButton';
+import BookmarkToggleButton from './BookmarkButton';
 import { getPersonFullName } from './helpers';
 import PointsOfContactSidebar from './PointsOfContactSidebar';
 

@@ -1,0 +1,12 @@
+@use 'uswds-core' as *;
+
+.bookmark-tag {
+    text-transform: none !important;
+
+    &__outline path:nth-child(2) {
+        fill: none;
+        stroke: color('primary');
+        stroke-width: 2px;
+        stroke-linejoin: round;
+    }
+}

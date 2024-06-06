@@ -17,7 +17,7 @@ import {
 import { RoleTypeName } from 'types/systemProfile';
 import NotFound from 'views/NotFound';
 import { getAtoStatus } from 'views/SystemProfile';
-import BookmarkToggleButton from 'views/SystemProfile/BookmarkToggleButton';
+import BookmarkToggleButton from 'views/SystemProfile/BookmarkButton';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import AtoCard from './components/AtoCard';

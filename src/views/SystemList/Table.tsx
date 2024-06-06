@@ -37,7 +37,7 @@ import TableResults from 'components/TableResults';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
 import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQuery';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
-import GetCedarSystemQuery from 'queries/GetCedarSystemQuery';
+import GetCedarSystemIsBookmarkedQuery from 'queries/GetCedarSystemIsBookmarkedQuery';
 import GetMyCedarSystemsQuery from 'queries/GetMyCedarSystemsQuery';
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
 import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
@@ -141,7 +141,7 @@ export const Table = ({
         },
         refetchQueries: [
           {
-            query: GetCedarSystemQuery,
+            query: GetCedarSystemIsBookmarkedQuery,
             variables: { id: cedarSystemId }
           }
         ]

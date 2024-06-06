@@ -6,7 +6,7 @@ import classnames from 'classnames';
 
 import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQuery';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
-// import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
+import GetCedarSystemIsBookmarkedQuery from 'queries/GetCedarSystemIsBookmarkedQuery';
 import {
   CreateCedarSystemBookmark,
   CreateCedarSystemBookmarkVariables
@@ -15,6 +15,8 @@ import {
   DeleteCedarSystemBookmark,
   DeleteCedarSystemBookmarkVariables
 } from 'queries/types/DeleteCedarSystemBookmark';
+
+import './index.scss';
 
 export default function BookmarkToggleButton({
   id,
@@ -27,18 +29,23 @@ export default function BookmarkToggleButton({
 
   const [isBookmarked, setBookmarked] = useState<boolean>(initialBookmarked);
 
+  const refetchCedarSystemIsBookmarkedQuery = {
+    query: GetCedarSystemIsBookmarkedQuery,
+    variables: { id }
+  };
+
   const [create, { loading: createLoading }] = useMutation<
     CreateCedarSystemBookmark,
     CreateCedarSystemBookmarkVariables
   >(CreateCedarSystemBookmarkQuery, {
-    // refetchQueries: [GetCedarSystemsQuery]
+    refetchQueries: [refetchCedarSystemIsBookmarkedQuery]
   });
 
   const [del, { loading: delLoading }] = useMutation<
     DeleteCedarSystemBookmark,
     DeleteCedarSystemBookmarkVariables
   >(DeleteCedarSystemBookmarkQuery, {
-    // refetchQueries: [GetCedarSystemsQuery]
+    refetchQueries: [refetchCedarSystemIsBookmarkedQuery]
   });
 
   const toggle = () => {
@@ -63,10 +70,10 @@ export default function BookmarkToggleButton({
     >
       <IconBookmark
         size={3}
-        className={classnames(
-          'margin-right-1',
-          isBookmarked ? 'text-primary' : 'text-base-lighter'
-        )}
+        className={classnames('margin-right-1 text-primary', {
+          'bookmark-tag__outline': !isBookmarked
+        })}
+        data-testid={isBookmarked ? 'is-bookmarked' : 'is-not-bookmarked'}
       />
       {t(`bookmark.${isBookmarked ? 'bookmarked' : 'bookmark'}`)}
     </Button>
