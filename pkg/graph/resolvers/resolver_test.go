@@ -46,6 +46,9 @@ func (suite *ResolverSuite) SetupTest() {
 	// Get the user account from the DB fresh for each test
 	princ := getTestPrincipal(suite.testConfigs.Context, suite.testConfigs.Store, suite.testConfigs.UserInfo.Username)
 	suite.testConfigs.Principal = princ
+
+	// get new dataloaders to clear any existing cached data
+	suite.testConfigs.Context = suite.ctxWithNewDataloaders()
 }
 
 // TestResolverSuite runs the resolver test suite
@@ -102,18 +105,6 @@ func (tc *TestConfigs) GetDefaults() {
 	// principal is fetched between each test in SetupTest()
 	ctx := appcontext.WithLogger(context.Background(), tc.Logger)
 	ctx = appcontext.WithPrincipal(ctx, getTestPrincipal(ctx, tc.Store, tc.UserInfo.Username))
-
-	fetchUserInfos := func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error) {
-		return nil, nil
-	}
-
-	coreClient := cedarcore.NewClient(ctx, "", "", "", true, true)
-	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
-		return coreClient.GetSystemSummary(ctx)
-	}
-
-	// Set up mocked dataloaders for the test context
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(tc.Store, fetchUserInfos, getCedarSystems))
 
 	tc.Context = ctx
 
@@ -187,4 +178,23 @@ func (suite *ResolverSuite) createNewIntake() *models.SystemIntake {
 	suite.NoError(err)
 
 	return newIntake
+}
+
+// ctxWithNewDataloaders sets new Dataloaders on the test suite's existing context and returns that context.
+// this is necessary in order to avoid the caching feature of the dataloadgen library.
+// that caching feature is great for app code, but in test code, where we often load something,
+// update that thing, and load it again to confirm updates worked, caching the first version breaks that flow
+func (suite *ResolverSuite) ctxWithNewDataloaders() context.Context {
+	fetchUserInfos := func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error) {
+		return nil, nil
+	}
+
+	coreClient := cedarcore.NewClient(suite.testConfigs.Context, "", "", "", true, true)
+	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
+		return coreClient.GetSystemSummary(ctx)
+	}
+
+	// Set up mocked dataloaders for the test context
+	suite.testConfigs.Context = dataloaders.CTXWithLoaders(suite.testConfigs.Context, dataloaders.NewDataLoaders(suite.testConfigs.Store, fetchUserInfos, getCedarSystems))
+	return suite.testConfigs.Context
 }

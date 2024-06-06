@@ -23,11 +23,11 @@ func (suite *ResolverSuite) TestCedarSystemBookmarks() {
 		})
 		suite.NoError(err)
 
-		isBookmarked, err := GetCedarSystemIsBookmarked(ctx, cedarSystemID)
+		isBookmarked, err := GetCedarSystemIsBookmarked(suite.ctxWithNewDataloaders(), cedarSystemID)
 		suite.NoError(err)
 		suite.True(isBookmarked)
 
-		isOtherBookmarked, err := GetCedarSystemIsBookmarked(ctx, otherID)
+		isOtherBookmarked, err := GetCedarSystemIsBookmarked(suite.ctxWithNewDataloaders(), otherID)
 		suite.NoError(err)
 		suite.False(isOtherBookmarked)
 	})

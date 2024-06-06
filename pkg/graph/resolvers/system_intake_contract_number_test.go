@@ -49,7 +49,7 @@ func (suite *ResolverSuite) TestSystemIntakeContractNumbers() {
 		})
 		suite.NoError(err)
 
-		data, err := SystemIntakeContractNumbers(ctx, createdIDs[0])
+		data, err := SystemIntakeContractNumbers(suite.ctxWithNewDataloaders(), createdIDs[0])
 		suite.NoError(err)
 		suite.Len(data, 3)
 
@@ -80,7 +80,7 @@ func (suite *ResolverSuite) TestSystemIntakeContractNumbers() {
 		suite.True(found3)
 
 		// attempt to get contract numbers for a system intake without linked contracts
-		data, err = SystemIntakeContractNumbers(ctx, createdIDs[1])
+		data, err = SystemIntakeContractNumbers(suite.ctxWithNewDataloaders(), createdIDs[1])
 		suite.NoError(err)
 		suite.Empty(data)
 	})
