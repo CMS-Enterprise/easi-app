@@ -25,6 +25,7 @@ import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import PageNumber from 'components/PageNumber';
 import Alert from 'components/shared/Alert';
+import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
@@ -792,10 +793,15 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         />
       </Form>
 
-      {/*
-        TODO: Fix autosave
-        <AutoSave values={values} onSave={() => null} debounceDelay={3000} /> 
-      */}
+      <AutoSave
+        values={watch()}
+        onSave={() =>
+          partialSubmit({
+            update: submit
+          })
+        }
+        debounceDelay={3000}
+      />
 
       <PageNumber currentPage={1} totalPages={5} />
     </>
