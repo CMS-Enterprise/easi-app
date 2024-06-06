@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button, CardGroup, Grid } from '@trussworks/react-uswds';
 
+import BookmarkButton from 'components/BookmarkButton';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -17,7 +18,6 @@ import {
 import { RoleTypeName } from 'types/systemProfile';
 import NotFound from 'views/NotFound';
 import { getAtoStatus } from 'views/SystemProfile';
-import BookmarkToggleButton from 'views/SystemProfile/BookmarkButton';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import AtoCard from './components/AtoCard';
@@ -77,7 +77,7 @@ export const SystemWorkspace = () => {
         closeModal={() => toggleSystemProfile(false)}
       />
 
-      <div className="display-flex flex-align-center flex-justify margin-top-5">
+      <div className="display-flex flex-align-start flex-justify margin-top-5">
         <div>
           <PageHeading className="margin-bottom-1 margin-top-0">
             {t('header')}
@@ -96,7 +96,11 @@ export const SystemWorkspace = () => {
           </div>
         </div>
 
-        <BookmarkToggleButton id={systemId} initialBookmarked={isBookmarked} />
+        <BookmarkButton
+          id={systemId}
+          initialBookmarked={isBookmarked}
+          className="bg-primary-lighter"
+        />
       </div>
 
       <HelpLinks classname="margin-top-3 margin-bottom-5" />

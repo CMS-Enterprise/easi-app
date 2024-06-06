@@ -18,12 +18,14 @@ import {
 
 import './index.scss';
 
-export default function BookmarkToggleButton({
+export default function BookmarkButton({
   id,
-  initialBookmarked
+  initialBookmarked,
+  className
 }: {
   id: string;
   initialBookmarked: boolean;
+  className?: string;
 }) {
   const { t } = useTranslation('systemProfile');
 
@@ -65,13 +67,15 @@ export default function BookmarkToggleButton({
   return (
     <Button
       type="button"
-      className="usa-button display-flex flex-align-center margin-right-0 padding-y-1 padding-left-105 padding-right-2 radius-0 bg-white text-primary"
+      className={classnames(
+        'usa-button display-flex flex-align-center margin-right-0 padding-y-105 padding-left-105 padding-right-2 radius-0 bg-white text-primary',
+        className
+      )}
       onClick={toggle}
     >
       <IconBookmark
-        size={3}
-        className={classnames('margin-right-1 text-primary', {
-          'bookmark-tag__outline': !isBookmarked
+        className={classnames('margin-right-1', {
+          'outline text-base': !isBookmarked
         })}
         data-testid={isBookmarked ? 'is-bookmarked' : 'is-not-bookmarked'}
       />
