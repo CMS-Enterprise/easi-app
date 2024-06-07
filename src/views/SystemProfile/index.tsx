@@ -61,13 +61,14 @@ import {
   systemData as mockSystemData
 } from 'views/SystemProfile/mockSystemData';
 
+import BookmarkButton from '../../components/BookmarkButton';
+
 import EditPageCallout from './components/EditPageCallout';
 // components/index contains all the sideNavItems components, routes, labels and translations
 // The sideNavItems object keys are mapped to the url param - 'subinfo'
 import sideNavItems from './components/index';
 import SystemSubNav from './components/SystemSubNav/index';
 import EditTeam from './components/Team/Edit';
-import BookmarkToggleButton from './BookmarkToggleButton';
 import { getPersonFullName } from './helpers';
 import PointsOfContactSidebar from './PointsOfContactSidebar';
 
@@ -492,9 +493,9 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                   </BreadcrumbBar>
                 )}
                 <div className="margin-left-auto" style={{ flexShrink: 0 }}>
-                  <BookmarkToggleButton
+                  <BookmarkButton
                     id={cedarSystem.id}
-                    initialBookmarked={cedarSystem.isBookmarked}
+                    isBookmarked={cedarSystem.isBookmarked}
                   />
                 </div>
               </div>

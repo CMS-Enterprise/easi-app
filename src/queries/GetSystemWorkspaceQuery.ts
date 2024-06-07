@@ -16,6 +16,7 @@ export default gql`
       cedarSystem {
         id
         name
+        isBookmarked
       }
       roles {
         ...CedarRole

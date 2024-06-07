@@ -131,7 +131,8 @@ export const mockSystemInfo: CedarSystemProps[] = [
     systemMaintainerOrgComp: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
-    Sollicitudin donec aliquam dui sed odio porta.`
+    Sollicitudin donec aliquam dui sed odio porta.`,
+    isBookmarked: false
   },
   {
     __typename: 'CedarSystem',
@@ -149,7 +150,8 @@ export const mockSystemInfo: CedarSystemProps[] = [
     systemMaintainerOrgComp: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
-    Sollicitudin donec aliquam dui sed odio porta.`
+    Sollicitudin donec aliquam dui sed odio porta.`,
+    isBookmarked: false
   },
   {
     __typename: 'CedarSystem',
@@ -167,7 +169,8 @@ export const mockSystemInfo: CedarSystemProps[] = [
     systemMaintainerOrgComp: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
-    Sollicitudin donec aliquam dui sed odio porta.`
+    Sollicitudin donec aliquam dui sed odio porta.`,
+    isBookmarked: false
   },
   {
     __typename: 'CedarSystem',
@@ -186,27 +189,8 @@ export const mockSystemInfo: CedarSystemProps[] = [
     systemMaintainerOrgComp: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Sollicitudin donec aliquam dui sed odio porta. Faucibus quam egestas
     feugiat laoreet quis. Sapien, sagittis, consectetur adipiscing elit.
-    Sollicitudin donec aliquam dui sed odio porta.`
-  }
-];
-
-export interface CedarSystemBookmark {
-  euaUserId: string;
-  cedarSystemId: string;
-}
-
-export const mockBookmarkInfo: CedarSystemBookmark[] = [
-  {
-    euaUserId: 'A',
-    cedarSystemId: '326-7-0'
-  },
-  {
-    euaUserId: 'A',
-    cedarSystemId: '326-74-0'
-  },
-  {
-    euaUserId: 'A',
-    cedarSystemId: '326-99-0'
+    Sollicitudin donec aliquam dui sed odio porta.`,
+    isBookmarked: false
   }
 ];
 
