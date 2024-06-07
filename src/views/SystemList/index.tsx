@@ -15,6 +15,7 @@ import {
   SummaryBox
 } from '@trussworks/react-uswds';
 
+import BookmarkCard from 'components/BookmarkCard';
 import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
@@ -22,16 +23,11 @@ import PageLoading from 'components/PageLoading';
 import Alert, { AlertText } from 'components/shared/Alert';
 import { ErrorAlert } from 'components/shared/ErrorAlert';
 import SectionWrapper from 'components/shared/SectionWrapper';
-import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
-import {
-  GetCedarSystemBookmarks,
-  GetCedarSystemBookmarks_cedarSystemBookmarks as CedarSystemBookmark
-} from 'queries/types/GetCedarSystemBookmarks';
 import { GetCedarSystems } from 'queries/types/GetCedarSystems';
+import { mapCedarStatusToIcon } from 'types/iconStatus';
 
 import Table from './Table';
-import filterBookmarks from './util';
 
 import './index.scss';
 
@@ -46,15 +42,11 @@ export const SystemList = () => {
     data: data1
   } = useQuery<GetCedarSystems>(GetCedarSystemsQuery);
 
-  const {
-    loading: loadingBookmarks,
-    error: error2,
-    data: data2,
-    refetch: refetchBookmarks
-  } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery);
-
   const systemsTableData = data1?.cedarSystems ?? [];
-  const bookmarks: CedarSystemBookmark[] = data2?.cedarSystemBookmarks ?? [];
+
+  const bookmarkedSystems = systemsTableData.filter(
+    system => system.isBookmarked
+  );
 
   return (
     <MainContent className="grid-container margin-bottom-5">
@@ -90,7 +82,7 @@ export const SystemList = () => {
         </SummaryBox>
       </SectionWrapper>
 
-      {(loadingSystems || loadingBookmarks) && !data1?.cedarSystems ? (
+      {loadingSystems && !data1?.cedarSystems ? (
         <PageLoading />
       ) : (
         <>
@@ -102,43 +94,42 @@ export const SystemList = () => {
             {t('systemProfile:bookmark.subtitle')}
           </p>
 
-          {loadingBookmarks ? (
-            <PageLoading />
-          ) : (
-            <SectionWrapper
-              borderBottom
-              className="margin-bottom-3"
-              id="systemBookmarks"
-            >
-              {bookmarks.length === 0 ? (
-                <Grid tablet={{ col: 12 }} className="margin-bottom-5">
-                  <Alert
-                    type="info"
-                    className="padding-1"
-                    heading={t('systemProfile:noBookmark.header')}
-                  >
-                    <span className="display-flex flex-align-center">
-                      <span className="margin-0">
-                        {t('systemProfile:noBookmark.text1')}
-                      </span>
-                      <IconBookmark />
-                      <span className="margin-0">
-                        {t('systemProfile:noBookmark.text2')}
-                      </span>
+          <SectionWrapper
+            borderBottom
+            className="margin-bottom-3"
+            id="systemBookmarks"
+          >
+            {bookmarkedSystems.length === 0 ? (
+              <Grid tablet={{ col: 12 }} className="margin-bottom-5">
+                <Alert
+                  type="info"
+                  className="padding-1"
+                  heading={t('systemProfile:noBookmark.header')}
+                >
+                  <span className="display-flex flex-align-center">
+                    <span className="margin-0">
+                      {t('systemProfile:noBookmark.text1')}
                     </span>
-                  </Alert>
-                </Grid>
-              ) : (
-                <CardGroup className="margin-bottom-3">
-                  {filterBookmarks(
-                    systemsTableData,
-                    bookmarks,
-                    refetchBookmarks
-                  )}
-                </CardGroup>
-              )}
-            </SectionWrapper>
-          )}
+                    <IconBookmark />
+                    <span className="margin-0">
+                      {t('systemProfile:noBookmark.text2')}
+                    </span>
+                  </span>
+                </Alert>
+              </Grid>
+            ) : (
+              <CardGroup className="margin-bottom-3">
+                {bookmarkedSystems.map(system => (
+                  <BookmarkCard
+                    type="systemProfile"
+                    key={system.id}
+                    statusIcon={mapCedarStatusToIcon(system.status)}
+                    {...system}
+                  />
+                ))}
+              </CardGroup>
+            )}
+          </SectionWrapper>
 
           <SectionWrapper id="systemsTable">
             <h2 className="margin-bottom-2">
@@ -152,7 +143,7 @@ export const SystemList = () => {
               }}
             />
 
-            {error1 || error2 ? (
+            {error1 ? (
               <ErrorAlert heading="System error">
                 <AlertText>
                   <span>{t('systemProfile:gql.fail')}</span>
@@ -160,11 +151,7 @@ export const SystemList = () => {
               </ErrorAlert>
             ) : (
               <div ref={systemsRef}>
-                <Table
-                  systems={systemsTableData}
-                  savedBookmarks={bookmarks}
-                  refetchBookmarks={refetchBookmarks}
-                />
+                <Table systems={systemsTableData} />
               </div>
             )}
           </SectionWrapper>

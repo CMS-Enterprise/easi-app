@@ -3,18 +3,14 @@ import { MemoryRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 
-import BookmarkTag from '.';
+import BookmarkButton from '.';
 
-describe('BookmarkTag', () => {
+describe('BookmarkButton', () => {
   it('renders a bookmarked icon', () => {
     const { getByTestId } = render(
       <MemoryRouter>
         <MockedProvider>
-          <BookmarkTag
-            refetchBookmarks={() => {}}
-            systemID="123"
-            isBookmarked
-          />
+          <BookmarkButton id="123" isBookmarked />
         </MockedProvider>
       </MemoryRouter>
     );
@@ -25,11 +21,7 @@ describe('BookmarkTag', () => {
     const { getByTestId } = render(
       <MemoryRouter>
         <MockedProvider>
-          <BookmarkTag
-            refetchBookmarks={() => {}}
-            systemID="123"
-            isBookmarked={false}
-          />
+          <BookmarkButton id="123" isBookmarked={false} />
         </MockedProvider>
       </MemoryRouter>
     );

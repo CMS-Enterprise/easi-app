@@ -18,6 +18,7 @@ export interface GetMyCedarSystems_myCedarSystems {
   businessOwnerOrgComp: string | null;
   systemMaintainerOrg: string | null;
   systemMaintainerOrgComp: string | null;
+  isBookmarked: boolean;
 }
 
 export interface GetMyCedarSystems {

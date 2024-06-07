@@ -37,9 +37,9 @@ import TableResults from 'components/TableResults';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices'; // May be temporary if we want to hard code all the CMS acronyms.  For now it creates an acronym for all capitalized words
 import CreateCedarSystemBookmarkQuery from 'queries/CreateCedarSystemBookmarkQuery';
 import DeleteCedarSystemBookmarkQuery from 'queries/DeleteCedarSystemBookmarkQuery';
+import GetCedarSystemIsBookmarkedQuery from 'queries/GetCedarSystemIsBookmarkedQuery';
 import GetMyCedarSystemsQuery from 'queries/GetMyCedarSystemsQuery';
 import { GetCedarSystems_cedarSystems as CedarSystem } from 'queries/types/GetCedarSystems';
-import { GetCedarSystemsAndBookmarks_cedarSystemBookmarks as CedarSystemBookmark } from 'queries/types/GetCedarSystemsAndBookmarks';
 import { GetMyCedarSystems as GetMyCedarSystemsType } from 'queries/types/GetMyCedarSystems';
 import globalFilterCellText from 'utils/globalFilterCellText';
 import {
@@ -57,16 +57,12 @@ export type SystemTableType =
 
 type TableProps = {
   systems?: CedarSystem[];
-  savedBookmarks?: CedarSystemBookmark[];
-  refetchBookmarks?: () => any;
   defaultPageSize?: number;
   isMySystems?: boolean;
 };
 
 export const Table = ({
   systems = [],
-  savedBookmarks = [],
-  refetchBookmarks = () => null,
   defaultPageSize = 10,
   isMySystems
 }: TableProps) => {
@@ -118,17 +114,15 @@ export const Table = ({
       case 'my-systems':
         return mySystems?.myCedarSystems || [];
       case 'bookmarked-systems':
-        return systems.filter(system =>
-          savedBookmarks.find(bookmark => bookmark.cedarSystemId === system.id)
-        );
+        return systems.filter(system => system.isBookmarked);
       default:
         return systems;
     }
-  }, [systemTableType, systems, savedBookmarks, mySystems]);
+  }, [systemTableType, systems, mySystems]);
 
   const columns = useMemo<Column<CedarSystem>[]>(() => {
     const isBookmarked = (cedarSystemId: string): boolean =>
-      !!savedBookmarks.find(system => system.cedarSystemId === cedarSystemId);
+      !!systems.find(system => system.id === cedarSystemId)?.isBookmarked;
 
     /** Create or delete bookmark */
     const toggleBookmark = (cedarSystemId: string) => {
@@ -139,8 +133,14 @@ export const Table = ({
           input: {
             cedarSystemId
           }
-        }
-      }).then(refetchBookmarks);
+        },
+        refetchQueries: [
+          {
+            query: GetCedarSystemIsBookmarkedQuery,
+            variables: { id: cedarSystemId }
+          }
+        ]
+      });
     };
 
     return [
@@ -212,7 +212,7 @@ export const Table = ({
       }
       */
     ];
-  }, [t, savedBookmarks, createMutate, deleteMutate, refetchBookmarks]);
+  }, [t, systems, createMutate, deleteMutate]);
 
   // Remove bookmark column if showing My systems table
   if (isMySystems) {

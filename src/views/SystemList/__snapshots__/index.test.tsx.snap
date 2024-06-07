@@ -70,10 +70,60 @@ exports[`System List View > when there are requests > matches snapshot 1`] = `
       data-testid="section-wrapper"
       id="systemBookmarks"
     >
-      <ul
-        class="usa-card-group margin-bottom-3"
-        data-testid="CardGroup"
-      />
+      <div
+        class="tablet:grid-col-12 margin-bottom-5"
+        data-testid="grid"
+      >
+        <div
+          class="usa-alert usa-alert--info padding-1"
+          data-testid="alert"
+        >
+          <div
+            class="usa-alert__body"
+          >
+            <h4
+              class="usa-alert__heading"
+            >
+              You have not bookmarked any systems yet.
+            </h4>
+            <p
+              class="usa-alert__text"
+            >
+              <span
+                class="display-flex flex-align-center"
+              >
+                <span
+                  class="margin-0"
+                >
+                  Click the bookmark icon ( 
+                </span>
+                <svg
+                  class="usa-icon"
+                  focusable="false"
+                  height="1em"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+                <span
+                  class="margin-0"
+                >
+                   ) for any system to add it to this section.
+                </span>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
     <div
       class="easi-section"

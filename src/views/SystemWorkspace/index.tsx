@@ -4,15 +4,13 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button, CardGroup, Grid } from '@trussworks/react-uswds';
 
-import BookmarkTag from 'components/BookmarkTag';
+import BookmarkButton from 'components/BookmarkButton';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
 import SystemProfileModal from 'components/SystemProfileModal';
 import TLCTag from 'components/TLCTag';
-import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetSystemWorkspaceQuery from 'queries/GetSystemWorkspaceQuery';
-import { GetCedarSystemBookmarks } from 'queries/types/GetCedarSystemBookmarks';
 import {
   GetSystemWorkspace,
   GetSystemWorkspaceVariables
@@ -54,22 +52,15 @@ export const SystemWorkspace = () => {
       )
     : undefined;
 
-  const {
-    data: bookmark,
-    refetch: refetchBookmarks
-  } = useQuery<GetCedarSystemBookmarks>(GetCedarSystemBookmarksQuery);
-
-  const isBookmarked = !!bookmark?.cedarSystemBookmarks.find(
-    mark => mark.cedarSystemId === systemId
-  );
-
   if (loading) {
     return <PageLoading />;
   }
 
-  if (error) {
+  if (error || !data || !data.cedarSystemDetails) {
     return <NotFound />;
   }
+
+  const { isBookmarked } = data.cedarSystemDetails.cedarSystem;
 
   return (
     <MainContent className="grid-container margin-bottom-8">
@@ -86,7 +77,7 @@ export const SystemWorkspace = () => {
         closeModal={() => toggleSystemProfile(false)}
       />
 
-      <div className="display-flex flex-align-center flex-justify margin-top-5">
+      <div className="display-flex flex-align-start flex-justify margin-top-5">
         <div>
           <PageHeading className="margin-bottom-1 margin-top-0">
             {t('header')}
@@ -105,11 +96,10 @@ export const SystemWorkspace = () => {
           </div>
         </div>
 
-        <BookmarkTag
-          systemID={systemId}
+        <BookmarkButton
+          id={systemId}
           isBookmarked={isBookmarked}
-          refetchBookmarks={refetchBookmarks}
-          className="flex-align-self-start"
+          className="bg-primary-lighter"
         />
       </div>
 
