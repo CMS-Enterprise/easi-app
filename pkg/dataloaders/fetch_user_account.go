@@ -5,17 +5,38 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
 )
 
 func (d *dataReader) getUserAccountByID(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, []error) {
-	data, err := d.db.UserAccountByIDLOADER(ctx, userIDs)
+	data, err := d.db.UserAccountByIDs(ctx, userIDs)
 	if err != nil {
 		return nil, []error{err}
 	}
 
-	return data, nil
+	accountMap := map[uuid.UUID]*authentication.UserAccount{}
+
+	// populate
+	for _, account := range data {
+		accountMap[account.ID] = account
+	}
+
+	// order
+	var result []*authentication.UserAccount
+	for _, id := range userIDs {
+		val, ok := accountMap[id]
+		if !ok {
+			appcontext.ZLogger(ctx).Warn("account not found for user", zap.String("user.id", id.String()))
+			// insert an empty? - not sure
+			val = &authentication.UserAccount{}
+		}
+		result = append(result, val)
+	}
+
+	return result, nil
 }
 
 func GetUserAccountByID(ctx context.Context, userID uuid.UUID) (*authentication.UserAccount, error) {

@@ -10,11 +10,14 @@ func (suite *ResolverSuite) TestGetUserAccountByID() {
 	store := suite.testConfigs.Store
 
 	suite.Run("should get user accounts by id", func() {
-		userID := uuid.New()
+		var (
+			userID   = uuid.New()
+			username = "1111"
+		)
 		// create user
 		user := authentication.UserAccount{
 			ID:          userID,
-			Username:    "0000",
+			Username:    username,
 			CommonName:  "TestGetUserAccountByID",
 			Locale:      "TestGetUserAccountByID",
 			Email:       "TestGetUserAccountByID@oddball.io",
@@ -32,5 +35,8 @@ func (suite *ResolverSuite) TestGetUserAccountByID() {
 		suite.NoError(err)
 
 		suite.Equal(data.ID, userID)
+
+		// clean up
+		suite.NoError(store.DeleteUserAccountDANGEROUS(username))
 	})
 }

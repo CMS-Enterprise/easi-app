@@ -6,9 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/lib/pq"
-	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/sqlqueries"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
@@ -86,35 +84,12 @@ func (s *Store) UserAccountGetByID(np sqlutils.NamedPreparer, id uuid.UUID) (*au
 	return user, nil
 }
 
-// UserAccountByIDLOADER gets user accounts by user ID
-func (s *Store) UserAccountByIDLOADER(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, error) {
+// UserAccountByIDs gets user accounts by user ID
+func (s *Store) UserAccountByIDs(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, error) {
 	var accounts []*authentication.UserAccount
-	if err := selectNamed(ctx, s, &accounts, sqlqueries.UserAccount.GetByIDLOADER, args{
+	return accounts, selectNamed(ctx, s, &accounts, sqlqueries.UserAccount.GetByIDs, args{
 		"user_ids": pq.Array(userIDs),
-	}); err != nil {
-		return nil, err
-	}
-
-	accountMap := map[uuid.UUID]*authentication.UserAccount{}
-
-	// populate
-	for _, account := range accounts {
-		accountMap[account.ID] = account
-	}
-
-	// order
-	var result []*authentication.UserAccount
-	for _, id := range userIDs {
-		val, ok := accountMap[id]
-		if !ok {
-			appcontext.ZLogger(ctx).Warn("account not found for user", zap.String("user.id", id.String()))
-			// insert an empty? - not sure
-			val = &authentication.UserAccount{}
-		}
-		result = append(result, val)
-	}
-
-	return result, nil
+	})
 }
 
 // UserAccountCreate creates a new user account for a given username

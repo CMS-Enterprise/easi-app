@@ -20,8 +20,8 @@ var userAccountGetByID string
 // Holds the SQL to return a collection of user accounts for a collection of internal UUIDs
 // this is meant to be used primarily by a data loader
 //
-//go:embed SQL/user_account/get_by_id_LOADER.sql
-var userAccountGetByIDLOADER string
+//go:embed SQL/user_account/get_by_ids.sql
+var userAccountGetByIDs string
 
 // Holds the SQL to create a new user account record
 //
@@ -38,7 +38,7 @@ var UserAccount = userAccount{
 	GetByUsername:    userAccountGetByUsername,
 	GetByCommonName:  userAccountGetByCommonName,
 	GetByID:          userAccountGetByID,
-	GetByIDLOADER:    userAccountGetByIDLOADER,
+	GetByIDs:         userAccountGetByIDs,
 	Create:           userAccountCreate,
 	UpdateByUsername: userAccountUpdateByUsername,
 }
@@ -51,8 +51,7 @@ type userAccount struct {
 	// Holds the SQL to return a user account for a given internal UUID
 	GetByID string
 	// Holds the SQL to return a collection of user accounts for a collection of internal UUIDs
-	// this is meant to be used primarily by a data loader
-	GetByIDLOADER string
+	GetByIDs string
 	// Holds the SQL to create a new user account record
 	Create string
 	//  Holds the SQL to update a user account record for a matching username

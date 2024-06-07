@@ -14,11 +14,14 @@ func (s *StoreTestSuite) TestUserAccountByIDLOADER() {
 	var (
 		userID1 = uuid.New()
 		userID2 = uuid.New()
+
+		username1 = "1234"
+		username2 = "4321"
 	)
 
 	user1 := authentication.UserAccount{
 		ID:          userID1,
-		Username:    "1234",
+		Username:    username1,
 		CommonName:  "TestUserAccountByIDLOADER1",
 		Locale:      "TestUserAccountByIDLOADER1",
 		Email:       "TestUserAccountByIDLOADER1@oddball.io",
@@ -30,7 +33,7 @@ func (s *StoreTestSuite) TestUserAccountByIDLOADER() {
 
 	user2 := authentication.UserAccount{
 		ID:          userID2,
-		Username:    "5678",
+		Username:    username2,
 		CommonName:  "TestUserAccountByIDLOADER2",
 		Locale:      "TestUserAccountByIDLOADER2",
 		Email:       "TestUserAccountByIDLOADER2@oddball.io",
@@ -48,7 +51,7 @@ func (s *StoreTestSuite) TestUserAccountByIDLOADER() {
 	s.NoError(err)
 
 	// get both
-	data, err := s.store.UserAccountByIDLOADER(ctx, []uuid.UUID{userID1, userID2})
+	data, err := s.store.UserAccountByIDs(ctx, []uuid.UUID{userID1, userID2})
 	s.NoError(err)
 	s.Len(data, 2)
 
@@ -69,4 +72,7 @@ func (s *StoreTestSuite) TestUserAccountByIDLOADER() {
 
 	s.True(found1)
 	s.True(found2)
+
+	s.NoError(s.store.DeleteUserAccountDANGEROUS(username1))
+	s.NoError(s.store.DeleteUserAccountDANGEROUS(username2))
 }
