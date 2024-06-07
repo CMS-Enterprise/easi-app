@@ -8,7 +8,6 @@ import (
 
 func (suite *ResolverSuite) TestGetUserAccountByID() {
 	store := suite.testConfigs.Store
-	ctx := suite.testConfigs.Context
 
 	suite.Run("should get user accounts by id", func() {
 		userID := uuid.New()
@@ -29,7 +28,7 @@ func (suite *ResolverSuite) TestGetUserAccountByID() {
 		suite.NoError(err)
 
 		// get that user
-		data, err := GetUserAccountByID(ctx, userID)
+		data, err := GetUserAccountByID(suite.ctxWithNewDataloaders(), userID)
 		suite.NoError(err)
 
 		suite.Equal(data.ID, userID)
