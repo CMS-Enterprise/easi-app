@@ -12,7 +12,7 @@ import (
 )
 
 func (d *dataReader) getUserAccountByID(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, []error) {
-	data, err := d.db.UserAccountByIDs(ctx, userIDs)
+	data, err := d.db.UserAccountsByIDs(ctx, userIDs)
 	if err != nil {
 		return nil, []error{err}
 	}

@@ -51,7 +51,7 @@ func (s *StoreTestSuite) TestUserAccountByIDLOADER() {
 	s.NoError(err)
 
 	// get both
-	data, err := s.store.UserAccountByIDs(ctx, []uuid.UUID{userID1, userID2})
+	data, err := s.store.UserAccountsByIDs(ctx, []uuid.UUID{userID1, userID2})
 	s.NoError(err)
 	s.Len(data, 2)
 
