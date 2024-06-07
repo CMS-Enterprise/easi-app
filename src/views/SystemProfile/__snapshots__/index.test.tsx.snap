@@ -63,12 +63,13 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                     style="flex-shrink: 0;"
                   >
                     <button
-                      class="usa-button usa-button display-flex flex-align-center margin-right-0 padding-y-1 padding-left-105 padding-right-2 radius-0 bg-white text-primary"
+                      class="usa-button usa-button display-flex flex-align-center margin-right-0 padding-y-105 padding-left-105 padding-right-2 radius-0 bg-white text-primary"
                       data-testid="button"
                       type="button"
                     >
                       <svg
-                        class="usa-icon usa-icon--size-3 margin-right-1 text-base-lighter"
+                        class="usa-icon margin-right-1 outline text-base"
+                        data-testid="is-not-bookmarked"
                         focusable="false"
                         height="1em"
                         role="img"
