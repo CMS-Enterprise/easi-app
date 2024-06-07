@@ -1,11 +1,14 @@
 package storage
 
 import (
+	"context"
 	_ "embed"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/sqlqueries"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
@@ -83,30 +86,35 @@ func (s *Store) UserAccountGetByID(np sqlutils.NamedPreparer, id uuid.UUID) (*au
 	return user, nil
 }
 
-// UserAccountGetByIDLOADER gets multiple User account from the database by its internal id.
-func (s *Store) UserAccountGetByIDLOADER(
-	_ *zap.Logger,
-	paramTableJSON string,
-) ([]*authentication.UserAccount, error) {
-
-	var userSlice []*authentication.UserAccount
-
-	stmt, err := s.db.PrepareNamed(sqlqueries.UserAccount.GetByIDLoader)
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-
-	arg := map[string]interface{}{
-		"paramTableJSON": paramTableJSON,
-	}
-
-	err = stmt.Select(&userSlice, arg)
-	if err != nil {
+// UserAccountByIDLOADER gets user accounts by user ID
+func (s *Store) UserAccountByIDLOADER(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, error) {
+	var accounts []*authentication.UserAccount
+	if err := selectNamed(ctx, s, &accounts, sqlqueries.UserAccount.GetByIDLOADER, args{
+		"user_ids": pq.Array(userIDs),
+	}); err != nil {
 		return nil, err
 	}
 
-	return userSlice, nil
+	accountMap := map[uuid.UUID]*authentication.UserAccount{}
+
+	// populate
+	for _, account := range accounts {
+		accountMap[account.ID] = account
+	}
+
+	// order
+	var result []*authentication.UserAccount
+	for _, id := range userIDs {
+		val, ok := accountMap[id]
+		if !ok {
+			appcontext.ZLogger(ctx).Warn("account not found for user", zap.String("user.id", id.String()))
+			// insert an empty? - not sure
+			val = &authentication.UserAccount{}
+		}
+		result = append(result, val)
+	}
+
+	return result, nil
 }
 
 // UserAccountCreate creates a new user account for a given username

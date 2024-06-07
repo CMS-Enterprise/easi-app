@@ -38,7 +38,7 @@ var UserAccount = userAccount{
 	GetByUsername:    userAccountGetByUsername,
 	GetByCommonName:  userAccountGetByCommonName,
 	GetByID:          userAccountGetByID,
-	GetByIDLoader:    userAccountGetByIDLOADER,
+	GetByIDLOADER:    userAccountGetByIDLOADER,
 	Create:           userAccountCreate,
 	UpdateByUsername: userAccountUpdateByUsername,
 }
@@ -52,7 +52,7 @@ type userAccount struct {
 	GetByID string
 	// Holds the SQL to return a collection of user accounts for a collection of internal UUIDs
 	// this is meant to be used primarily by a data loader
-	GetByIDLoader string
+	GetByIDLOADER string
 	// Holds the SQL to create a new user account record
 	Create string
 	//  Holds the SQL to update a user account record for a matching username

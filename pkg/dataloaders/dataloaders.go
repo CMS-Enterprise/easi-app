@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/vikstrous/dataloadgen"
 
+	"github.com/cmsgov/easi-app/pkg/authentication"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -25,6 +26,7 @@ type dataReader struct {
 type DataLoaders struct {
 	CedarSystemBookmark         *dataloadgen.Loader[models.BookmarkRequest, bool]
 	FetchUserInfos              *dataloadgen.Loader[string, *models.UserInfo]
+	GetUserAccounts             *dataloadgen.Loader[uuid.UUID, *authentication.UserAccount]
 	GetCedarSystems             *dataloadgen.Loader[string, *models.CedarSystem]
 	SystemIntakeContractNumbers *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
 	SystemIntakeSystems         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
@@ -41,6 +43,7 @@ func NewDataLoaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 	return &DataLoaders{
 		CedarSystemBookmark:         dataloadgen.NewLoader(dr.getCedarSystemIsBookmarked),
 		FetchUserInfos:              dataloadgen.NewLoader(dr.fetchUserInfosByEUAUserIDs),
+		GetUserAccounts:             dataloadgen.NewLoader(dr.getUserAccountByID),
 		GetCedarSystems:             dataloadgen.NewLoader(dr.getCedarSystemsByIDs),
 		SystemIntakeContractNumbers: dataloadgen.NewLoader(dr.getSystemIntakeContractNumbersBySystemIntakeID),
 		SystemIntakeSystems:         dataloadgen.NewLoader(dr.getSystemIntakeSystemsBySystemIntakeID),
