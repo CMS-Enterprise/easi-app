@@ -18,5 +18,4 @@ func UserAccountGetByUsername(store *storage.Store, userName string) (*authentic
 // GetUserAccountByID returns a user account by its internal ID, utilizing a dataloader
 func GetUserAccountByID(ctx context.Context, id uuid.UUID) (*authentication.UserAccount, error) {
 	return dataloaders.GetUserAccountByID(ctx, id)
-
 }
