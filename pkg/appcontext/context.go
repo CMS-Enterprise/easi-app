@@ -84,8 +84,17 @@ func EnhancedJWT(c context.Context) *authentication.EnhancedJwt {
 }
 
 // UserAccountService returns a GetUserAccountFromDBFunc that is decorating the context
-func UserAccountService(ctx context.Context) authentication.GetUserAccountFromDBFunc {
-	return ctx.Value(userAccountServiceKey).(authentication.GetUserAccountFromDBFunc)
+func UserAccountService(ctx context.Context) (authentication.GetUserAccountFromDBFunc, error) {
+	userAccountServiceInterface := ctx.Value(userAccountServiceKey)
+	if userAccountServiceInterface == nil {
+		return nil, fmt.Errorf("the user account service was not found on the provided ctx")
+	}
+	userAccountService, ok := userAccountServiceInterface.(authentication.GetUserAccountFromDBFunc)
+	if !ok {
+		return nil, fmt.Errorf("a value was found for the user account service on the ctx, but it is not the correct type. It is type %T", userAccountServiceInterface)
+	}
+
+	return userAccountService, nil
 }
 
 // WithUserAccountService decorates the context with a GetUserAccountFromDBFunc
