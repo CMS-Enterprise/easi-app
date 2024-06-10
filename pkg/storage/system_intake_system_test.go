@@ -53,7 +53,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 			s.NoError(err)
 		}
 
-		data, err := s.store.SystemIntakeSystemsBySystemIntakeIDLOADER(ctx, createdIDs)
+		data, err := s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, createdIDs)
 		s.NoError(err)
 		s.Equal(len(data), len(createdIDs))
 
@@ -93,7 +93,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.SystemIntakeSystemsBySystemIntakeIDLOADER(ctx, []uuid.UUID{createdIDs[0]})
+		data, err = s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
 		s.Len(data, 1)
 		systemsFound := data[0]

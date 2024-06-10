@@ -56,9 +56,9 @@ func (s *Store) SetTRBRequestSystems(ctx context.Context, tx *sqlx.Tx, trbReques
 	return nil
 }
 
-func (s *Store) TRBRequestSystemsByTRBRequestIDLOADER(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestSystem, error) {
+func (s *Store) TRBRequestSystemsByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestSystem, error) {
 	var trbRequestSystems []*models.TRBRequestSystem
-	if err := selectNamed(ctx, s, &trbRequestSystems, sqlqueries.TRBRequestSystemForm.SelectByTRBRequestIDLOADER, args{
+	if err := selectNamed(ctx, s, &trbRequestSystems, sqlqueries.TRBRequestSystemForm.SelectByTRBRequestIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	}); err != nil {
 		return nil, err

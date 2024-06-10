@@ -42,7 +42,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 			s.NoError(err)
 		}
 		// retrieve these contract numbers
-		data, err := s.store.TRBRequestContractNumbersByTRBRequestIDLOADER(ctx, createdIDs)
+		data, err := s.store.TRBRequestContractNumbersByTRBRequestIDs(ctx, createdIDs)
 		s.NoError(err)
 		s.Equal(len(data), len(createdIDs))
 
@@ -82,7 +82,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.TRBRequestContractNumbersByTRBRequestIDLOADER(ctx, []uuid.UUID{createdIDs[0]})
+		data, err = s.store.TRBRequestContractNumbersByTRBRequestIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
 		s.Len(data, 1)
 

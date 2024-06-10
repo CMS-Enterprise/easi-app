@@ -53,7 +53,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 			s.NoError(err)
 		}
 
-		data, err := s.store.TRBRequestSystemsByTRBRequestIDLOADER(ctx, createdIDs)
+		data, err := s.store.TRBRequestSystemsByTRBRequestIDs(ctx, createdIDs)
 		s.NoError(err)
 		s.Equal(len(data), len(createdIDs))
 
@@ -93,7 +93,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.TRBRequestSystemsByTRBRequestIDLOADER(ctx, []uuid.UUID{createdIDs[0]})
+		data, err = s.store.TRBRequestSystemsByTRBRequestIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
 		s.Len(data, 1)
 		systemsFound := data[0]

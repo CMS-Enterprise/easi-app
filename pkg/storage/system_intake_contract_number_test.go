@@ -53,7 +53,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 			s.NoError(err)
 		}
 
-		data, err := s.store.SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx, createdIDs)
+		data, err := s.store.SystemIntakeContractNumbersBySystemIntakeIDs(ctx, createdIDs)
 		s.NoError(err)
 		s.Equal(len(data), len(createdIDs))
 
@@ -93,7 +93,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx, []uuid.UUID{createdIDs[0]})
+		data, err = s.store.SystemIntakeContractNumbersBySystemIntakeIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
 		s.Len(data, 1)
 		contractsFound := data[0]
