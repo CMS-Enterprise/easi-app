@@ -4,12 +4,8 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
-import {
-  mockBookmarkInfo,
-  mockSystemInfo
-} from 'views/SystemProfile/mockSystemData';
+import { mockSystemInfo } from 'views/SystemProfile/mockSystemData';
 
 import SystemList from './index';
 import Table from './Table';
@@ -28,16 +24,6 @@ describe('System List View', () => {
           result: {
             data: {
               cedarSystems: []
-            }
-          }
-        },
-        {
-          request: {
-            query: GetCedarSystemBookmarksQuery
-          },
-          result: {
-            data: {
-              cedarSystemBookmarks: []
             }
           }
         }
@@ -68,16 +54,6 @@ describe('System List View', () => {
             cedarSystems: mockSystemInfo
           }
         }
-      },
-      {
-        request: {
-          query: GetCedarSystemBookmarksQuery
-        },
-        result: {
-          data: {
-            cedarSystemBookmarks: mockBookmarkInfo
-          }
-        }
       }
     ];
 
@@ -105,12 +81,7 @@ describe('System List View', () => {
       render(
         <MemoryRouter>
           <MockedProvider mocks={mocks} addTypename={false}>
-            <Table
-              defaultPageSize={3}
-              systems={mockSystemInfo}
-              savedBookmarks={[]}
-              refetchBookmarks={() => null}
-            />
+            <Table defaultPageSize={3} systems={mockSystemInfo} />
           </MockedProvider>
         </MemoryRouter>
       );

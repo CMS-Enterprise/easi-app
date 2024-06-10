@@ -73,8 +73,6 @@ const Home = () => {
                 {/* TODO: figure out why need to pass empty params here when they are optional with defaults */}
                 <SystemsListTable
                   systems={[]}
-                  savedBookmarks={[]}
-                  refetchBookmarks={() => null}
                   isMySystems
                   defaultPageSize={5}
                 />
