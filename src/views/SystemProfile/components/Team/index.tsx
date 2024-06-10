@@ -283,14 +283,17 @@ const Team = ({ system }: SystemProfileSubviewProps) => {
           <CardGroup className="margin-0">
             {mockVendors.map(vendor => {
               return (
-                <Card className="grid-col-12 margin-bottom-2">
+                <Card
+                  className="grid-col-12 margin-bottom-2"
+                  key={vendor.contractNumber}
+                >
                   <CardHeader className="padding-2 padding-bottom-0">
                     <h5 className="margin-y-0 font-sans-2xs text-normal">
                       {t('singleSystem.team.vendors')}
                     </h5>
                     <h3 className="margin-y-0 line-height-body-3">
                       {vendor.vendors.map(name => (
-                        <div>{name}</div>
+                        <div key={name}>{name}</div>
                       ))}
                     </h3>
                     <DescriptionTerm

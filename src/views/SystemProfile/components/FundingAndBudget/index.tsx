@@ -66,9 +66,10 @@ const FundingAndBudget = ({ system }: SystemProfileSubviewProps) => {
           <tbody>
             {system.budgetSystemCosts?.budgetActualCost
               .concat()
-              .map(budgetRow => {
+              .map((budgetRow, index) => {
                 return (
-                  <tr>
+                  // eslint-disable-next-line react/no-array-index-key
+                  <tr key={index}>
                     <td>
                       {budgetRow.fiscalYear
                         ? budgetRow.fiscalYear

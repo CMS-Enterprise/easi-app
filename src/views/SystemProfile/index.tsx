@@ -54,7 +54,7 @@ import {
 import { parseAsUTC } from 'utils/date';
 import { formatHttpsUrl } from 'utils/formatUrl';
 import { showSystemVal } from 'utils/showVal';
-import NotFound from 'views/NotFound';
+import NotFound, { NotFoundPartial } from 'views/NotFound';
 import {
   activities as mockActivies,
   subSystems as mockSubSystems,
@@ -705,47 +705,51 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
               )}
 
               <Grid desktop={{ col: 9 }}>
-                <div id={subComponent.componentId ?? ''}>
-                  <GridContainer className="padding-left-0 padding-right-0">
-                    <Grid row gap>
-                      {/* Central component */}
-                      <Grid
-                        desktop={{ col: modal ? 12 : 8 }}
-                        className="padding-top-3"
-                      >
-                        {subComponent.component}
-                      </Grid>
-
-                      {/* Contact info sidebar */}
-                      {!modal && (
+                {subComponent ? (
+                  <div id={subComponent.componentId ?? ''}>
+                    <GridContainer className="padding-left-0 padding-right-0">
+                      <Grid row gap>
+                        {/* Central component */}
                         <Grid
-                          desktop={{ col: 4 }}
-                          className={classnames({
-                            'sticky side-nav padding-top-7': !isMobile,
-                            'margin-top-3': isMobile
-                          })}
+                          desktop={{ col: modal ? 12 : 8 }}
+                          className="padding-top-3"
                         >
-                          {/* Setting a ref here to reference the grid width for the fixed side nav */}
-                          <div className="side-divider">
-                            <div className="top-divider" />
-                            <PointsOfContactSidebar
-                              subpageKey={subpageKey}
-                              system={systemProfileData}
-                              systemId={systemId}
-                            />
-                          </div>
-                          {subinfo === 'team' && isMobile && (
-                            <EditPageCallout
-                              className="margin-top-4"
-                              // TODO: Get system modifiedAt value and add to props
-                              // modifiedAt={}
-                            />
-                          )}
+                          {subComponent.component}
                         </Grid>
-                      )}
-                    </Grid>
-                  </GridContainer>
-                </div>
+
+                        {/* Contact info sidebar */}
+                        {!modal && (
+                          <Grid
+                            desktop={{ col: 4 }}
+                            className={classnames({
+                              'sticky side-nav padding-top-7': !isMobile,
+                              'margin-top-3': isMobile
+                            })}
+                          >
+                            {/* Setting a ref here to reference the grid width for the fixed side nav */}
+                            <div className="side-divider">
+                              <div className="top-divider" />
+                              <PointsOfContactSidebar
+                                subpageKey={subpageKey}
+                                system={systemProfileData}
+                                systemId={systemId}
+                              />
+                            </div>
+                            {subinfo === 'team' && isMobile && (
+                              <EditPageCallout
+                                className="margin-top-4"
+                                // TODO: Get system modifiedAt value and add to props
+                                // modifiedAt={}
+                              />
+                            )}
+                          </Grid>
+                        )}
+                      </Grid>
+                    </GridContainer>
+                  </div>
+                ) : (
+                  <NotFoundPartial />
+                )}
               </Grid>
             </Grid>
           </GridContainer>
