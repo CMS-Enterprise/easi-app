@@ -3,16 +3,16 @@ FROM cedar_system_bookmarks
 WHERE (eua_user_id, cedar_system_id) = ANY
       (SELECT UNNEST(CAST(:eua_user_ids AS TEXT[])), UNNEST(CAST(:cedar_system_ids AS TEXT[])));
 
--- unnest doc:
+-- unnest doc
 -- unnest takes an array and turns it into rows
--- ex: [1,2,3,4] becomes
+-- example, [1,2,3,4] becomes
 -- col
 -- 1
 -- 2
 -- 3
 -- 4
 -- multiple arrays being unnested next to each other in the example above looks like this
--- ex: [1,2,3,4,5,6] [60,50,40,30,20,10]
+-- example, [1,2,3,4,5,6] [60,50,40,30,20,10]
 -- col1   col2
 -- 1      60
 -- 2      50
