@@ -40,8 +40,8 @@ func (d *dataReader) getUserAccountByID(ctx context.Context, userIDs []uuid.UUID
 }
 
 func GetUserAccountByID(ctx context.Context, userID uuid.UUID) (*authentication.UserAccount, error) {
-	loaders := loadersFromCTX(ctx)
-	if loaders == nil {
+	loaders, ok := loadersFromCTX(ctx)
+	if !ok {
 		return nil, errors.New("unexpected nil loaders in GetUserAccountByID")
 	}
 

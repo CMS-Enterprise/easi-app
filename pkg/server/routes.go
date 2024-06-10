@@ -238,6 +238,7 @@ func (s *Server) routes(
 	dataLoadersFN := func() *dataloaders.DataLoaders {
 		return dataloaders.NewDataLoaders(store, userSearchClient.FetchUserInfos, getCedarSystems)
 	}
+
 	dataLoaderMiddleware := dataloaders.NewDataloaderMiddleware(dataLoadersFN)
 	s.router.Use(dataLoaderMiddleware)
 

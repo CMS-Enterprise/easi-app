@@ -10,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (d *dataReader) getSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContractNumber, []error) {
+func (d *dataReader) batchSystemIntakeContractNumbersBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContractNumber, []error) {
 	data, err := d.db.SystemIntakeContractNumbersBySystemIntakeIDs(ctx, systemIntakeIDs)
 	if err != nil {
 		return nil, []error{err}
@@ -20,8 +20,8 @@ func (d *dataReader) getSystemIntakeContractNumbersBySystemIntakeID(ctx context.
 }
 
 func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {
-	loaders := loadersFromCTX(ctx)
-	if loaders == nil {
+	loaders, ok := loadersFromCTX(ctx)
+	if !ok {
 		return nil, errors.New("unexpected nil loaders in GetSystemIntakeContractNumbersBySystemIntakeIDs")
 	}
 

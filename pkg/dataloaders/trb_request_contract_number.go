@@ -10,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (d *dataReader) getTRBRequestContractNumbersByTRBRequestID(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestContractNumber, []error) {
+func (d *dataReader) batchTRBRequestContractNumbersByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([][]*models.TRBRequestContractNumber, []error) {
 	data, err := d.db.TRBRequestContractNumbersByTRBRequestIDs(ctx, trbRequestIDs)
 	if err != nil {
 		return nil, []error{err}
@@ -20,8 +20,8 @@ func (d *dataReader) getTRBRequestContractNumbersByTRBRequestID(ctx context.Cont
 }
 
 func GetTRBRequestContractNumbersByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestContractNumber, error) {
-	loaders := loadersFromCTX(ctx)
-	if loaders == nil {
+	loaders, ok := loadersFromCTX(ctx)
+	if !ok {
 		return nil, errors.New("unexpected nil loaders in GetTRBRequestContractNumbersByTRBRequestID")
 	}
 
