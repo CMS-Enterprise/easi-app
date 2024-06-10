@@ -18,8 +18,8 @@ func (d *dataReader) fetchUserInfosByEUAUserIDs(ctx context.Context, euaUserIDs 
 }
 
 func FetchUserInfosByEUAUserID(ctx context.Context, euaUserID string) (*models.UserInfo, error) {
-	loaders := loadersFromCTX(ctx)
-	if loaders == nil {
+	loaders, ok := loadersFromCTX(ctx)
+	if !ok {
 		return nil, errors.New("unexpected nil dataloaders in FetchUserInfosByEUAUserID")
 	}
 

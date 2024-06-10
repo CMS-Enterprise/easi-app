@@ -9,13 +9,14 @@ const (
 )
 
 // loadersFromCTX returns the dataloaders for a given context
-func loadersFromCTX(ctx context.Context) *DataLoaders {
-	loaders, ok := ctx.Value(loadersKey).(*DataLoaders)
-	if !ok {
-		return nil
+func loadersFromCTX(ctx context.Context) (*DataLoaders, bool) {
+	loaders := ctx.Value(loadersKey)
+	if loaders == nil {
+		return nil, false
 	}
 
-	return loaders
+	dl, ok := loaders.(*DataLoaders)
+	return dl, ok
 }
 
 // CTXWithLoaders sets the given dataloaders onto given context

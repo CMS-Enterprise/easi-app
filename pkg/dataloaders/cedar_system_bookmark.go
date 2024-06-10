@@ -7,7 +7,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (d *dataReader) getCedarSystemIsBookmarked(ctx context.Context, requests []models.BookmarkRequest) ([]bool, []error) {
+func (d *dataReader) batchCedarSystemIsBookmarked(ctx context.Context, requests []models.BookmarkRequest) ([]bool, []error) {
 	data, err := d.db.FetchCedarSystemIsBookmarkedByCedarSystemIDs(ctx, requests)
 	if err != nil {
 		return nil, []error{err}
@@ -17,8 +17,8 @@ func (d *dataReader) getCedarSystemIsBookmarked(ctx context.Context, requests []
 }
 
 func GetCedarSystemIsBookmarked(ctx context.Context, cedarSystemID string, euaUserID string) (bool, error) {
-	loaders := loadersFromCTX(ctx)
-	if loaders == nil {
+	loaders, ok := loadersFromCTX(ctx)
+	if !ok {
 		return false, errors.New("unexpected nil loaders in GetBookmarkedCEDARSystem")
 	}
 

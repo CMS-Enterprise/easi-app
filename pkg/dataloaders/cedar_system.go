@@ -33,8 +33,8 @@ func (d *dataReader) getCedarSystemsByIDs(ctx context.Context, cedarSystemIDs []
 }
 
 func GetCedarSystemByID(ctx context.Context, cedarSystemID string) (*models.CedarSystem, error) {
-	loaders := loadersFromCTX(ctx)
-	if loaders == nil {
+	loaders, ok := loadersFromCTX(ctx)
+	if !ok {
 		return nil, errors.New("unexpected nil dataloaders in GetCedarSystemByID")
 	}
 
