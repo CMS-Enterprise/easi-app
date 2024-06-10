@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -26,6 +27,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
+	"github.com/cmsgov/easi-app/pkg/userhelpers"
 )
 
 // AlternativeASolution is the resolver for the alternativeASolution field.
@@ -643,6 +645,21 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	return &models.DeleteSystemIntakeContactPayload{
 		SystemIntakeContact: contact,
 	}, nil
+}
+
+// CreateSystemIntakeGRBReviewer is the resolver for the createSystemIntakeGRBReviewer field.
+func (r *mutationResolver) CreateSystemIntakeGRBReviewer(ctx context.Context, input models.CreateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
+	return resolvers.CreateSystemIntakeGRBReviewer(ctx, r.store, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo), &input)
+}
+
+// UpdateSystemIntakeGRBReviewer is the resolver for the updateSystemIntakeGRBReviewer field.
+func (r *mutationResolver) UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
+	panic(fmt.Errorf("not implemented: UpdateSystemIntakeGRBReviewer - updateSystemIntakeGRBReviewer"))
+}
+
+// DeleteSystemIntakeGRBReviewer is the resolver for the deleteSystemIntakeGRBReviewer field.
+func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
+	panic(fmt.Errorf("not implemented: DeleteSystemIntakeGRBReviewer - deleteSystemIntakeGRBReviewer"))
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.

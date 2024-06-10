@@ -27,5 +27,4 @@ func (b *userIDRelation) UserAccount(ctx context.Context) (*authentication.UserA
 		return nil, err
 	}
 	return account, nil
-
 }
