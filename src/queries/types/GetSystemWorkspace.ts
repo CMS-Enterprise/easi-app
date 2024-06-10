@@ -22,6 +22,7 @@ export interface GetSystemWorkspace_cedarSystemDetails_cedarSystem {
   __typename: "CedarSystem";
   id: string;
   name: string;
+  isBookmarked: boolean;
 }
 
 export interface GetSystemWorkspace_cedarSystemDetails_roles {
