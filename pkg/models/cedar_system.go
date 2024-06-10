@@ -101,4 +101,5 @@ type CedarSystemDetails struct {
 	Deployments                 []*CedarDeployment `json:"deployments"`
 	Threats                     []*CedarThreat     `json:"threats"`
 	URLs                        []*CedarURL        `json:"urls"`
+	IsMySystem                  bool               `json:"isMySystem"`
 }
