@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, toString } from 'lodash';
 
 import { BUDGET_ITEMS_COUNT_CAP } from 'constants/systemProfile';
 import { getMockSystemProfileData, result } from 'data/mock/systemProfile';
@@ -29,7 +29,7 @@ describe(`System Profile Funding and Budget section collapse/expand toggle at ${
           funding: '',
           fundingId: '',
           fundingSource: '',
-          id: '',
+          id: toString(index),
           name: '',
           projectId: '12345',
           projectTitle: '',
