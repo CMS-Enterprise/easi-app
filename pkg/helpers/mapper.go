@@ -4,6 +4,8 @@ import (
 	"github.com/google/uuid"
 )
 
+// GetMappingID can be implemented so that it can use OneToMany below to map a flat list of values
+// to a flat list of their relative keys
 type GetMappingID interface {
 	GetMappingID() uuid.UUID
 }
