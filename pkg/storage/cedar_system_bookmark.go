@@ -81,7 +81,7 @@ func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookma
 	return cedarSystemBookmark, nil
 }
 
-func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, bookmarkRequests []models.BookmarkRequest) ([]bool, error) {
+func (s *Store) FetchCedarSystemIsBookmarkedByCedarSystemIDs(ctx context.Context, bookmarkRequests []models.BookmarkRequest) ([]bool, error) {
 	// build lists for multiple `where` clauses
 	var (
 		euaUserIDs = make([]string, len(bookmarkRequests))
@@ -94,7 +94,7 @@ func (s *Store) FetchCedarSystemIsBookmarkedLOADER(ctx context.Context, bookmark
 	}
 
 	var results []models.BookmarkRequest
-	if err := selectNamed(ctx, s, &results, sqlqueries.CedarBookmarkSystemsForm.SelectLOADER, args{
+	if err := selectNamed(ctx, s, &results, sqlqueries.CedarBookmarkSystemsForm.SelectByCedarSystemIDs, args{
 		"eua_user_ids":     pq.Array(euaUserIDs),
 		"cedar_system_ids": pq.Array(systemIDs),
 	}); err != nil {

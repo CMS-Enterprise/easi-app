@@ -78,7 +78,7 @@ func (s *StoreTestSuite) TestFetchCedarSystemIsBookmarkedLOADER() {
 			EuaUserID:     appcontext.Principal(ctx).ID(),
 		}
 
-		bookmarks, err := s.store.FetchCedarSystemIsBookmarkedLOADER(ctx, []models.BookmarkRequest{req})
+		bookmarks, err := s.store.FetchCedarSystemIsBookmarkedByCedarSystemIDs(ctx, []models.BookmarkRequest{req})
 		s.NoError(err)
 		s.NotEmpty(bookmarks)
 		s.Len(bookmarks, 1)

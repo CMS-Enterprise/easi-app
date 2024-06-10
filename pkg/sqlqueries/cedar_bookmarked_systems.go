@@ -2,13 +2,13 @@ package sqlqueries
 
 import _ "embed"
 
-//go:embed SQL/cedar_bookmarked_systems/select_LOADER.sql
-var selectCedarBookmarkedSCEDARSystemsLOADERSQL string
+//go:embed SQL/cedar_bookmarked_systems/select_by_cedar_system_ids.sql
+var selectCedarSystemBookmarkedByCedarSystemIDsSQL string
 
 var CedarBookmarkSystemsForm = cedarBookmarkSystemScripts{
-	SelectLOADER: selectCedarBookmarkedSCEDARSystemsLOADERSQL,
+	SelectByCedarSystemIDs: selectCedarSystemBookmarkedByCedarSystemIDsSQL,
 }
 
 type cedarBookmarkSystemScripts struct {
-	SelectLOADER string
+	SelectByCedarSystemIDs string
 }
