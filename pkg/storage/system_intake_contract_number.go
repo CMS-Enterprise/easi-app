@@ -56,13 +56,9 @@ func (s *Store) SetSystemIntakeContractNumbers(ctx context.Context, tx *sqlx.Tx,
 	return nil
 }
 
-func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeContractNumber, error) {
+func (s *Store) SystemIntakeContractNumbersBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {
 	var systemIntakeContractNumbers []*models.SystemIntakeContractNumber
-	if err := selectNamed(ctx, s, &systemIntakeContractNumbers, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDs, args{
+	return systemIntakeContractNumbers, selectNamed(ctx, s, &systemIntakeContractNumbers, sqlqueries.SystemIntakeContractNumberForm.SelectBySystemIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
-	}); err != nil {
-		return nil, err
-	}
-
-	return oneToMany[*models.SystemIntakeContractNumber](systemIntakeIDs, systemIntakeContractNumbers), nil
+	})
 }

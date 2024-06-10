@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -15,7 +16,7 @@ func (d *dataReader) getTRBRequestSystemsByTRBRequestID(ctx context.Context, trb
 		return nil, []error{err}
 	}
 
-	return data, nil
+	return helpers.OneToMany[*models.TRBRequestSystem](trbRequestIDs, data), nil
 }
 
 func GetTRBRequestSystemsByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestSystem, error) {

@@ -9,6 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -53,8 +54,10 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 			s.NoError(err)
 		}
 
-		data, err := s.store.SystemIntakeContractNumbersBySystemIntakeIDs(ctx, createdIDs)
+		results, err := s.store.SystemIntakeContractNumbersBySystemIntakeIDs(ctx, createdIDs)
 		s.NoError(err)
+
+		data := helpers.OneToMany[*models.SystemIntakeContractNumber](createdIDs, results)
 		s.Equal(len(data), len(createdIDs))
 
 		for i, systemIntakeID := range createdIDs {
@@ -93,8 +96,10 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.SystemIntakeContractNumbersBySystemIntakeIDs(ctx, []uuid.UUID{createdIDs[0]})
+		results, err = s.store.SystemIntakeContractNumbersBySystemIntakeIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
+
+		data = helpers.OneToMany[*models.SystemIntakeContractNumber]([]uuid.UUID{createdIDs[0]}, results)
 		s.Len(data, 1)
 		contractsFound := data[0]
 		s.Len(contractsFound, 4)

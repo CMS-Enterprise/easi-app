@@ -8,6 +8,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
+	"github.com/cmsgov/easi-app/pkg/helpers"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
@@ -42,8 +44,10 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 			s.NoError(err)
 		}
 		// retrieve these contract numbers
-		data, err := s.store.TRBRequestContractNumbersByTRBRequestIDs(ctx, createdIDs)
+		results, err := s.store.TRBRequestContractNumbersByTRBRequestIDs(ctx, createdIDs)
 		s.NoError(err)
+
+		data := helpers.OneToMany[*models.TRBRequestContractNumber](createdIDs, results)
 		s.Equal(len(data), len(createdIDs))
 
 		for i, trbRequestID := range createdIDs {
@@ -82,8 +86,10 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.TRBRequestContractNumbersByTRBRequestIDs(ctx, []uuid.UUID{createdIDs[0]})
+		results, err = s.store.TRBRequestContractNumbersByTRBRequestIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
+
+		data = helpers.OneToMany[*models.TRBRequestContractNumber]([]uuid.UUID{createdIDs[0]}, results)
 		s.Len(data, 1)
 
 		contractsFound := data[0]

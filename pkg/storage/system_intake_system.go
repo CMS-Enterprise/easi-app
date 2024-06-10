@@ -56,15 +56,11 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 	return nil
 }
 
-func (s *Store) SystemIntakeSystemsBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeSystem, error) {
+func (s *Store) SystemIntakeSystemsBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeSystem, error) {
 	var systemIntakeSystems []*models.SystemIntakeSystem
-	if err := selectNamed(ctx, s, &systemIntakeSystems, sqlqueries.SystemIntakeSystemForm.SelectBySystemIntakeIDs, args{
+	return systemIntakeSystems, selectNamed(ctx, s, &systemIntakeSystems, sqlqueries.SystemIntakeSystemForm.SelectBySystemIntakeIDs, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
-	}); err != nil {
-		return nil, err
-	}
-
-	return oneToMany[*models.SystemIntakeSystem](systemIntakeIDs, systemIntakeSystems), nil
+	})
 }
 
 func (s *Store) SystemIntakesByCedarSystemID(ctx context.Context, cedarSystemID string, state models.SystemIntakeState) ([]*models.SystemIntake, error) {

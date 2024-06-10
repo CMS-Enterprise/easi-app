@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -15,7 +16,7 @@ func (d *dataReader) getSystemIntakeContractNumbersBySystemIntakeID(ctx context.
 		return nil, []error{err}
 	}
 
-	return data, nil
+	return helpers.OneToMany[*models.SystemIntakeContractNumber](systemIntakeIDs, data), nil
 }
 
 func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {

@@ -9,6 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -53,8 +54,10 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 			s.NoError(err)
 		}
 
-		data, err := s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, createdIDs)
+		results, err := s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, createdIDs)
 		s.NoError(err)
+
+		data := helpers.OneToMany[*models.SystemIntakeSystem](createdIDs, results)
 		s.Equal(len(data), len(createdIDs))
 
 		for i, systemIntakeID := range createdIDs {
@@ -93,8 +96,10 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, []uuid.UUID{createdIDs[0]})
+		results, err = s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
+
+		data = helpers.OneToMany[*models.SystemIntakeSystem]([]uuid.UUID{createdIDs[0]}, results)
 		s.Len(data, 1)
 		systemsFound := data[0]
 		s.Len(systemsFound, 4)

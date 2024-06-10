@@ -8,6 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -53,8 +54,10 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 			s.NoError(err)
 		}
 
-		data, err := s.store.TRBRequestSystemsByTRBRequestIDs(ctx, createdIDs)
+		results, err := s.store.TRBRequestSystemsByTRBRequestIDs(ctx, createdIDs)
 		s.NoError(err)
+		// map data
+		data := helpers.OneToMany[*models.TRBRequestSystem](createdIDs, results)
 		s.Equal(len(data), len(createdIDs))
 
 		for i, trbRequestID := range createdIDs {
@@ -93,8 +96,10 @@ func (s *StoreTestSuite) TestLinkTRBRequestSystems() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.TRBRequestSystemsByTRBRequestIDs(ctx, []uuid.UUID{createdIDs[0]})
+		results, err = s.store.TRBRequestSystemsByTRBRequestIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
+
+		data = helpers.OneToMany[*models.TRBRequestSystem]([]uuid.UUID{createdIDs[0]}, results)
 		s.Len(data, 1)
 		systemsFound := data[0]
 		s.Len(systemsFound, 4)
