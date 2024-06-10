@@ -11,6 +11,7 @@ import {
   ProcessList,
   ProcessListHeading,
   ProcessListItem,
+  SummaryBox,
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -146,13 +147,6 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                     'text-base-darkest': atoStatus === 'Due Soon'
                   })}
                 >
-                  <DescriptionTerm term={t('singleSystem.ato.expiration')} />
-                  <DescriptionDefinition
-                    className="line-height-body-3 font-body-md"
-                    definition={showAtoExpirationDate(
-                      ato.dateAuthorizationMemoExpires
-                    )}
-                  />
                   <Grid row>
                     <Grid desktop={{ col: 6 }}>
                       <DescriptionTerm
@@ -231,10 +225,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
         )}
 
         <SectionWrapper className="margin-bottom-4 margin-top-4">
-          <Alert type="info" noIcon>
-            <h3 className="margin-top-0">
-              {t('singleSystem.ato.securityAndPrivacy.header')}
-            </h3>
+          <SummaryBox heading={t('singleSystem.ato.securityAndPrivacy.header')}>
             <p>{t('singleSystem.ato.securityAndPrivacy.atoInfo')}</p>
             <div className="margin-top-1">
               <Link
@@ -276,7 +267,7 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                 <span aria-hidden>&nbsp;</span>
               </Link>
             </div>
-          </Alert>
+          </SummaryBox>
         </SectionWrapper>
         {/* TODO: add security methodologies and programs (e.g. Zero Trust, DevSecOps) when/if data becomes available */}
       </SectionWrapper>

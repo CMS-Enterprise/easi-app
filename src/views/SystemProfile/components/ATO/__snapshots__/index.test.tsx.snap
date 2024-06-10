@@ -45,16 +45,6 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
             class="usa-card__footer padding-2 text-white"
             data-testid="CardFooter"
           >
-            <dt
-              class="text-bold margin-bottom-05"
-            >
-              singleSystem.ato.expiration
-            </dt>
-            <dd
-              class="description-definition margin-0 line-height-body-3 font-body-md"
-            >
-              July 30, 2022
-            </dd>
             <div
               class="grid-row"
               data-testid="grid"
@@ -320,81 +310,81 @@ exports[`ATO subpage for System Profile > matches snapshot 1`] = `
       data-testid="section-wrapper"
     >
       <div
-        class="usa-alert usa-alert--info usa-alert--no-icon"
-        data-testid="alert"
+        class="usa-summary-box"
+        data-testid="summary-box"
       >
         <div
-          class="usa-alert__body"
+          class="usa-summary-box__body"
         >
-          <p
-            class="usa-alert__text"
-          />
           <h3
-            class="margin-top-0"
+            class="usa-summary-box__heading"
           >
             Security and privacy compliance at CMS
           </h3>
-          <p>
-            Every information system operated by or on behalf of the U.S federal government is required to meet FISMA standards, which includes system authorization (ATO) signed by an Authoirizing Official (AO).
-          </p>
           <div
-            class="margin-top-1"
+            class="usa-summary-box__text"
           >
-            <a
-              aria-label="Open 'Lean more about ATO' in a new tab"
-              class="usa-link usa-link--external line-height-body-5"
-              href="https://security.cms.gov/learn/authorization-operate-ato"
-              target="_blank"
+            <p>
+              Every information system operated by or on behalf of the U.S federal government is required to meet FISMA standards, which includes system authorization (ATO) signed by an Authoirizing Official (AO).
+            </p>
+            <div
+              class="margin-top-1"
             >
-              Learn more about ATO
-              <span
-                aria-hidden="true"
+              <a
+                aria-label="Open 'Lean more about ATO' in a new tab"
+                class="usa-link usa-link--external line-height-body-5"
+                href="https://security.cms.gov/learn/authorization-operate-ato"
+                target="_blank"
               >
-                 
-              </span>
-            </a>
-          </div>
-          <p>
-            CMS FISMA Continuous Tracking System (CFACTS) is a CMS database that tracks application security deficiencies and POA&Ms, and supports the ATO process. IT is the CMS governance, risk, and compliance tool used as a repository to manage CMS' information systems security and privacy requirements.
-          </p>
-          <div
-            class="margin-top-1 margin-bottom-2"
-          >
-            <a
-              aria-label="Open 'CFACTS' in a new tab"
-              class="usa-link usa-link--external line-height-body-5"
-              href="https://cfacts.cms.gov"
-              target="_blank"
+                Learn more about ATO
+                <span
+                  aria-hidden="true"
+                >
+                   
+                </span>
+              </a>
+            </div>
+            <p>
+              CMS FISMA Continuous Tracking System (CFACTS) is a CMS database that tracks application security deficiencies and POA&Ms, and supports the ATO process. IT is the CMS governance, risk, and compliance tool used as a repository to manage CMS' information systems security and privacy requirements.
+            </p>
+            <div
+              class="margin-top-1 margin-bottom-2"
             >
-              Go to CFACTS
-              <span
-                aria-hidden="true"
+              <a
+                aria-label="Open 'CFACTS' in a new tab"
+                class="usa-link usa-link--external line-height-body-5"
+                href="https://cfacts.cms.gov"
+                target="_blank"
               >
-                 
-              </span>
-            </a>
-          </div>
-          <div
-            class="easi-divider"
-          />
-          <div
-            class="margin-top-2"
-          >
-            <a
-              aria-label="Open 'Cybergeek' in a new tab"
-              class="usa-link usa-link--external line-height-body-5"
-              href="https://security.cms.gov"
-              target="_blank"
+                Go to CFACTS
+                <span
+                  aria-hidden="true"
+                >
+                   
+                </span>
+              </a>
+            </div>
+            <div
+              class="easi-divider"
+            />
+            <div
+              class="margin-top-2"
             >
-              Learn more about security and privacy at CMS
-              <span
-                aria-hidden="true"
+              <a
+                aria-label="Open 'Cybergeek' in a new tab"
+                class="usa-link usa-link--external line-height-body-5"
+                href="https://security.cms.gov"
+                target="_blank"
               >
-                 
-              </span>
-            </a>
+                Learn more about security and privacy at CMS
+                <span
+                  aria-hidden="true"
+                >
+                   
+                </span>
+              </a>
+            </div>
           </div>
-          <p />
         </div>
       </div>
     </div>
