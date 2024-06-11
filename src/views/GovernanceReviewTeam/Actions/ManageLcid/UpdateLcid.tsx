@@ -91,7 +91,6 @@ const UpdateLcid = ({
         successMessage={t('updateLcid.success', { lcid })}
         onSubmit={onSubmit}
         requiredFields={false}
-        disableSubmit={!formIsValid}
         title={
           <LcidTitleBox
             systemIntakeId={systemIntakeId}
