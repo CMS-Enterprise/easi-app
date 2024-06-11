@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"slices"
 	"strconv"
 	"time"
 
@@ -1429,6 +1430,11 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 		return nil, err
 	}
 
+	userEua := appcontext.Principal(ctx).ID()
+	isMySystem := slices.ContainsFunc(cedarRoles, func(role *models.CedarRole) bool {
+		return role.AssigneeUsername.String == userEua
+	})
+
 	dCedarSys := models.CedarSystemDetails{
 		CedarSystem:                 sysDetail.CedarSystem,
 		BusinessOwnerInformation:    sysDetail.BusinessOwnerInformation,
@@ -1437,6 +1443,7 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 		Deployments:                 cedarDeployments,
 		Threats:                     cedarThreats,
 		URLs:                        cedarURLs,
+		IsMySystem:                  isMySystem,
 	}
 
 	return &dCedarSys, nil

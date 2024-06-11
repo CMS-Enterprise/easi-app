@@ -423,14 +423,14 @@ exports[`Additional contacts component > displays form when editing contact 1`] 
           class="system-intake-contacts__contact-actions"
         >
           <button
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled margin-top-0"
             data-testid="button"
             type="button"
           >
             Edit
           </button>
           <button
-            class="usa-button usa-button--unstyled text-error margin-left-2"
+            class="usa-button usa-button--unstyled text-error margin-left-2 margin-top-0"
             data-testid="button"
             type="button"
           >
@@ -482,14 +482,14 @@ exports[`Additional contacts component > renders without crashing 1`] = `
           class="system-intake-contacts__contact-actions"
         >
           <button
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled margin-top-0"
             data-testid="button"
             type="button"
           >
             Edit
           </button>
           <button
-            class="usa-button usa-button--unstyled text-error margin-left-2"
+            class="usa-button usa-button--unstyled text-error margin-left-2 margin-top-0"
             data-testid="button"
             type="button"
           >
@@ -516,14 +516,14 @@ exports[`Additional contacts component > renders without crashing 1`] = `
           class="system-intake-contacts__contact-actions"
         >
           <button
-            class="usa-button usa-button--unstyled"
+            class="usa-button usa-button--unstyled margin-top-0"
             data-testid="button"
             type="button"
           >
             Edit
           </button>
           <button
-            class="usa-button usa-button--unstyled text-error margin-left-2"
+            class="usa-button usa-button--unstyled text-error margin-left-2 margin-top-0"
             data-testid="button"
             type="button"
           >

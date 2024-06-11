@@ -12,11 +12,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Form, IconArrowBack } from '@trussworks/react-uswds';
 import classNames from 'classnames';
 
+import useEasiForm from 'components/EasiForm/useEasiForm';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageLoading from 'components/PageLoading';
 import Alert from 'components/shared/Alert';
 import Divider from 'components/shared/Divider';
-import useEasiForm from 'hooks/useEasiForm';
 import useTRBAttendees from 'hooks/useTRBAttendees';
 import {
   GetTrbRequest,

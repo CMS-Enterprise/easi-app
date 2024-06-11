@@ -37,10 +37,7 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
     resolver: yupResolver(expireLcidSchema)
   });
 
-  const {
-    control,
-    formState: { isValid }
-  } = form;
+  const { control } = form;
 
   const [expireLcid] = useMutation<
     CreateSystemIntakeActionExpireLcid,
@@ -70,7 +67,6 @@ const ExpireLcid = ({ systemIntakeId, lcidStatus, lcid }: ExpireLcidProps) => {
         systemIntakeId={systemIntakeId}
         successMessage={t('expireLcid.success', { lcid })}
         onSubmit={onSubmit}
-        disableSubmit={!isValid}
         title={
           <LcidTitleBox
             systemIntakeId={systemIntakeId}
