@@ -73,10 +73,7 @@ const NotApproved = ({
     defaultValues
   });
 
-  const {
-    control,
-    formState: { isValid }
-  } = form;
+  const { control } = form;
 
   /**
    * Reject intake on form submit
@@ -100,7 +97,6 @@ const NotApproved = ({
         successMessage={t('notApproved.success')}
         onSubmit={onSubmit}
         errorKeyContext="notApproved"
-        disableSubmit={!isValid}
         title={
           <ResolutionTitleBox
             title={t('resolutions.summary.notApproved')}

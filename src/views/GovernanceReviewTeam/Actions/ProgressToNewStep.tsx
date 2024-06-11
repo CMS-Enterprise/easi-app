@@ -147,7 +147,6 @@ const ProgressToNewStep = ({
           newStep: t(`progressToNewStep.${newStep}`)
         })}
         onSubmit={onSubmit}
-        disableSubmit={!newStep}
         modal={
           editsRequestedKey && {
             title: t('decisionModal.title', { context: 'nextStep' }),
