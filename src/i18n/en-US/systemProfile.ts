@@ -104,7 +104,7 @@ const systemProfile = {
       doesSystemHaveDoc: 'Does this sytem have one?',
       disasterRecoveryPlanDoc: 'Disaster Recovery Plan',
       sornDoc: 'SORN*',
-      contingencyPlanDoc: 'ContingencyPlan',
+      contingencyPlanDoc: 'Contingency Plan',
       acronymsDefined: '*Acronyms defined',
       acronymsFullList: 'Full list of security related acronyms',
       actAcronym: 'ACT: Adaptive Capabilities Testing',
