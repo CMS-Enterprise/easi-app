@@ -368,6 +368,7 @@ type ComplexityRoot struct {
 		BusinessOwnerInformation    func(childComplexity int) int
 		CedarSystem                 func(childComplexity int) int
 		Deployments                 func(childComplexity int) int
+		IsMySystem                  func(childComplexity int) int
 		Roles                       func(childComplexity int) int
 		SystemMaintainerInformation func(childComplexity int) int
 		Threats                     func(childComplexity int) int
@@ -3049,6 +3050,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarSystemDetails.Deployments(childComplexity), true
+
+	case "CedarSystemDetails.isMySystem":
+		if e.complexity.CedarSystemDetails.IsMySystem == nil {
+			break
+		}
+
+		return e.complexity.CedarSystemDetails.IsMySystem(childComplexity), true
 
 	case "CedarSystemDetails.roles":
 		if e.complexity.CedarSystemDetails.Roles == nil {
@@ -7778,6 +7786,7 @@ type CedarSystemDetails {
  deployments: [CedarDeployment!]!
  threats: [CedarThreat!]!
  urls: [CedarURL!]!
+ isMySystem: Boolean
 }
 
 """
@@ -22743,6 +22752,47 @@ func (ec *executionContext) fieldContext_CedarSystemDetails_urls(_ context.Conte
 	return fc, nil
 }
 
+func (ec *executionContext) _CedarSystemDetails_isMySystem(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemDetails) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSystemDetails_isMySystem(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsMySystem, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalOBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSystemDetails_isMySystem(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystemDetails",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CedarSystemMaintainerInformation_agileUsed(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemMaintainerInformation) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarSystemMaintainerInformation_agileUsed(ctx, field)
 	if err != nil {
@@ -35006,6 +35056,8 @@ func (ec *executionContext) fieldContext_Query_cedarSystemDetails(ctx context.Co
 				return ec.fieldContext_CedarSystemDetails_threats(ctx, field)
 			case "urls":
 				return ec.fieldContext_CedarSystemDetails_urls(ctx, field)
+			case "isMySystem":
+				return ec.fieldContext_CedarSystemDetails_isMySystem(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystemDetails", field.Name)
 		},
@@ -58740,6 +58792,8 @@ func (ec *executionContext) _CedarSystemDetails(ctx context.Context, sel ast.Sel
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
+		case "isMySystem":
+			out.Values[i] = ec._CedarSystemDetails_isMySystem(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
