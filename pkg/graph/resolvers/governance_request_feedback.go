@@ -28,7 +28,7 @@ func GetGovernanceRequestFeedbackAuthor(
 	}
 
 	// Handled nil value above, safe to dereference and pass to GetUserInfo
-	authorInfo, err := dataloaders.FetchUserInfosByEUAUserID(ctx, *feedbackAuthorEUAID)
+	authorInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, *feedbackAuthorEUAID)
 	if err != nil {
 		return nil, err
 	}

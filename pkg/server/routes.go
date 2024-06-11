@@ -235,11 +235,15 @@ func (s *Server) routes(
 		return coreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithDeactivatedSystems())
 	}
 
-	dataLoadersFN := func() *dataloaders.DataLoaders {
-		return dataloaders.NewDataLoaders(store, userSearchClient.FetchUserInfos, getCedarSystems)
+	buildDataloaders := func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(store, userSearchClient.FetchUserInfos, getCedarSystems)
 	}
 
-	dataLoaderMiddleware := dataloaders.NewDataloaderMiddleware(dataLoadersFN)
+	// we need to construct a NEW set of dataloaders for each incoming HTTP request to avoid the forced caching of
+	// the dataloaders
+	// dataloader caches remain indefinitely once constructed, and we do not return the same (potentially stale) piece
+	// of data for every single HTTP request from server start
+	dataLoaderMiddleware := dataloaders.NewDataloaderMiddleware(buildDataloaders)
 	s.router.Use(dataLoaderMiddleware)
 
 	gql.Handle("/query", graphqlServer)

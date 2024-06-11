@@ -8,7 +8,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/authentication"
 )
 
-func (s *StoreTestSuite) TestUserAccountByIDLOADER() {
+func (s *StoreTestSuite) TestUserAccountsByIDs() {
 	ctx := context.Background()
 
 	var (

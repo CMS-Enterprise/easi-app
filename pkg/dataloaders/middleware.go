@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func dataloaderMiddleware(buildDataloaders DataloaderFunc, next http.Handler) http.HandlerFunc {
+func dataloaderMiddleware(buildDataloaders BuildDataloaders, next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := CTXWithLoaders(r.Context(), buildDataloaders)
 		r = r.WithContext(ctx)
@@ -14,8 +14,8 @@ func dataloaderMiddleware(buildDataloaders DataloaderFunc, next http.Handler) ht
 	}
 }
 
-func NewDataloaderMiddleware(loaders DataloaderFunc) mux.MiddlewareFunc {
+func NewDataloaderMiddleware(buildDataloaders BuildDataloaders) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
-		return dataloaderMiddleware(loaders, next)
+		return dataloaderMiddleware(buildDataloaders, next)
 	}
 }

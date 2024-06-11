@@ -8,7 +8,6 @@ import (
 )
 
 func (d *dataReader) fetchUserInfosByEUAUserIDs(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, []error) {
-	// not sure about this - will look at
 	data, err := d.fetchUserInfos(ctx, euaUserIDs)
 	if err != nil {
 		return nil, []error{err}
@@ -17,11 +16,11 @@ func (d *dataReader) fetchUserInfosByEUAUserIDs(ctx context.Context, euaUserIDs 
 	return data, nil
 }
 
-func FetchUserInfosByEUAUserID(ctx context.Context, euaUserID string) (*models.UserInfo, error) {
+func FetchUserInfoByEUAUserID(ctx context.Context, euaUserID string) (*models.UserInfo, error) {
 	loaders, ok := loadersFromCTX(ctx)
 	if !ok {
-		return nil, errors.New("unexpected nil dataloaders in FetchUserInfosByEUAUserID")
+		return nil, errors.New("unexpected nil dataloaders in FetchUserInfoByEUAUserID")
 	}
 
-	return loaders.FetchUserInfos.Load(ctx, euaUserID)
+	return loaders.FetchUserInfo.Load(ctx, euaUserID)
 }

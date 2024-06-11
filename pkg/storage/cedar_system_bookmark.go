@@ -81,6 +81,9 @@ func (s *Store) DeleteCedarSystemBookmark(ctx context.Context, cedarSystemBookma
 	return cedarSystemBookmark, nil
 }
 
+// FetchCedarSystemIsBookmarkedByCedarSystemIDs returns a slice of `bool` for each incoming BookmarkRequest. This method differs from
+// other Store methods used by dataloaders as it IS responsible for ordering the output. Once this function exits, we lose
+// all context of what came back from the DB, so we order in here before returning to the caller
 func (s *Store) FetchCedarSystemIsBookmarkedByCedarSystemIDs(ctx context.Context, bookmarkRequests []models.BookmarkRequest) ([]bool, error) {
 	// build lists for multiple `where` clauses
 	var (
@@ -107,6 +110,7 @@ func (s *Store) FetchCedarSystemIsBookmarkedByCedarSystemIDs(ctx context.Context
 		store[result] = helpers.EmptyStruct
 	}
 
+	// order results map by the input keys (`bookmarkRequests`)
 	var out []bool
 	for _, req := range bookmarkRequests {
 		_, ok := store[req]

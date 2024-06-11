@@ -173,19 +173,19 @@ func TestGraphQLTestSuite(t *testing.T) {
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})
 
-	loaders := dataloaders.NewDataLoaders(
+	loaders := dataloaders.NewDataloaders(
 		store,
 		func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
 		func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
 	)
 
-	dataloaderFunc := func() *dataloaders.DataLoaders {
+	dataloaderFunc := func() *dataloaders.Dataloaders {
 		return loaders
 	}
 
 	graphQLClient := client.New(
 		handler.NewDefaultServer(schema),
-		addDataLoadersToGraphQLClientTest(dataloaderFunc),
+		addDataloadersToGraphQLClientTest(dataloaderFunc),
 	)
 
 	ctx := context.Background()
@@ -204,11 +204,11 @@ func TestGraphQLTestSuite(t *testing.T) {
 	suite.Run(t, storeTestSuite)
 }
 
-// addDataLoadersToGraphQLClientTest adds all dataloaders into the test context for use in tests
-func addDataLoadersToGraphQLClientTest(dataloaderFunc dataloaders.DataloaderFunc) func(*client.Request) {
+// addDataloadersToGraphQLClientTest adds all dataloaders into the test context for use in tests
+func addDataloadersToGraphQLClientTest(buildDataloaders dataloaders.BuildDataloaders) func(*client.Request) {
 	return func(request *client.Request) {
 		ctx := request.HTTP.Context()
-		ctx = dataloaders.CTXWithLoaders(ctx, dataloaderFunc)
+		ctx = dataloaders.CTXWithLoaders(ctx, buildDataloaders)
 		request.HTTP = request.HTTP.WithContext(ctx)
 	}
 }

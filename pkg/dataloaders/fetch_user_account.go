@@ -11,7 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/authentication"
 )
 
-func (d *dataReader) getUserAccountByID(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, []error) {
+func (d *dataReader) batchUserAccountsByIDs(ctx context.Context, userIDs []uuid.UUID) ([]*authentication.UserAccount, []error) {
 	data, err := d.db.UserAccountsByIDs(ctx, userIDs)
 	if err != nil {
 		return nil, []error{err}
@@ -45,5 +45,5 @@ func GetUserAccountByID(ctx context.Context, userID uuid.UUID) (*authentication.
 		return nil, errors.New("unexpected nil loaders in GetUserAccountByID")
 	}
 
-	return loaders.GetUserAccounts.Load(ctx, userID)
+	return loaders.GetUserAccount.Load(ctx, userID)
 }

@@ -58,7 +58,7 @@ func (s *StoreTestSuite) TestDuplicateCedarSystemBookmark() {
 	})
 }
 
-func (s *StoreTestSuite) TestFetchCedarSystemIsBookmarkedLOADER() {
+func (s *StoreTestSuite) TestFetchCedarSystemIsBookmarkedByCedarSystemIDs() {
 	ctx := context.Background()
 
 	cedarSystemID := uuid.New().String()
