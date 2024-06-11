@@ -56,33 +56,31 @@ describe('The System Intake Form', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
     // Test "Business owner same as requester" checkbox
-    cy.get('#IntakeForm-IsBusinessOwnerSameAsRequester')
+    cy.get('#businessOwnerSameAsRequester')
       .check({ force: true })
       .should('be.checked');
 
     // Business Owner name should be disabled when checkbox is checked
-    cy.get('#react-select-IntakeForm-BusinessOwnerName-input').should(
-      'be.disabled'
-    );
+    cy.get('#react-select-businessOwnerCommonName-input').should('be.disabled');
 
     // Check that business owner fields updated to display requester values
-    cy.get('#react-select-IntakeForm-BusinessOwnerName-input').should(
+    cy.get('#react-select-businessOwnerCommonName-input').should(
       'have.value',
       // Requester name shows as User E2E1 instead of "EndToEnd One" (their actual name) during testing
       'User E2E1, E2E1 (endtoend.one@local.fake)'
     );
-    cy.get('#IntakeForm-BusinessOwnerEmail').should(
+    cy.get('#businessOwnerEmail').should(
       'have.value',
       'endtoend.one@local.fake'
     );
-    cy.get('#IntakeForm-BusinessOwnerComponent').should(
+    cy.get('#businessOwnerComponent').should(
       'have.value',
       'Center for Medicare'
     );
 
-    cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
+    cy.get('#issoIsPresentFalse').check({ force: true }).should('be.checked');
 
-    cy.get('#IntakeForm-NoGovernanceTeam')
+    cy.get('#governanceTeamsIsPresentFalse')
       .check({ force: true })
       .should('be.checked');
 
@@ -139,17 +137,15 @@ describe('The System Intake Form', () => {
     // Test "same as requester" checkbox
 
     // ISSO
-    cy.get('#IntakeForm-HasIssoYes')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#issoIsPresentTrue').check({ force: true }).should('be.checked');
 
-    cy.get('#react-select-IntakeForm-IssoName-input')
+    cy.get('#react-select-issoCommonName-input')
       .type('Rudolph')
       .wait(2000)
       .type('{downArrow}{enter}')
       .should('have.value', 'Rudolph Pagac, POJG (rudolph.pagac@local.fake)');
 
-    cy.get('#IntakeForm-IssoComponent')
+    cy.get('#issoComponent')
       .select('Center for Program Integrity')
       .should('have.value', 'Center for Program Integrity');
 
@@ -178,7 +174,7 @@ describe('The System Intake Form', () => {
     cy.contains('p', 'Annetta Lockman, Other');
 
     // Governance teams
-    cy.get('#IntakeForm-YesGovernanceTeams')
+    cy.get('#governanceTeamsIsPresentTrue')
       .check({ force: true })
       .should('be.checked');
 
@@ -187,7 +183,7 @@ describe('The System Intake Form', () => {
         .check({ force: true })
         .should('be.checked');
 
-      cy.get(`#IntakeForm-${team.key}-Collaborator`)
+      cy.get(`#governanceTeam-${team.key}-collaborator`)
         .type(`${team.value} Collaborator`)
         .should('have.value', `${team.value} Collaborator`);
     });
@@ -424,9 +420,9 @@ describe('The System Intake Form', () => {
 
   it('saves on back click', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
-    cy.get('#IntakeForm-HasIssoNo').check({ force: true }).should('be.checked');
+    cy.get('#issoIsPresentFalse').check({ force: true }).should('be.checked');
 
-    cy.get('#IntakeForm-NoGovernanceTeam')
+    cy.get('#governanceTeamsIsPresentFalse')
       .check({ force: true })
       .should('be.checked');
 

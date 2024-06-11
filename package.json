@@ -5,6 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@babel/plugin-syntax-class-properties": "^7.12.13",
+    "@hookform/error-message": "^2.0.1",
     "@cypress/code-coverage": "^3.12.39",
     "@hookform/resolvers": "^2.9.8",
     "@okta/okta-auth-js": "^6.1.0",
