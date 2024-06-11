@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { useOktaAuth } from '@okta/okta-react';
 import {
@@ -44,6 +45,17 @@ const RequestTypeForm = () => {
         }
       };
 
+      // Move create mutation to before tasklist
+      // carry state variable
+      if (requestType === 'NEW') {
+        history.push(`/governance-overview/`, { requestType });
+      } else if (requestType === 'MAJOR_CHANGES') {
+        history.push(`/system/link/`, { isNew: true });
+      } else if (requestType === 'RECOMPETE') {
+        history.push(`/system/link/`, { isNew: true });
+      }
+
+      /*
       mutate({ variables: { input } }).then(response => {
         if (!response.errors) {
           const { id } = response.data.createSystemIntake;
@@ -65,6 +77,7 @@ const RequestTypeForm = () => {
           }
         }
       });
+      */
     });
   };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -20,6 +20,9 @@ const GovernanceOverview = () => {
   const { systemId } = useParams<{
     systemId: string;
   }>();
+  const { state } = useLocation<{ requestType: string }>();
+  const requestType = state?.requestType;
+
   return (
     <MainContent
       className="easi-governance-overview grid-container margin-bottom-2"
@@ -50,18 +53,19 @@ const GovernanceOverview = () => {
 
       <GovernanceOverviewContent />
 
-      {systemId && (
-        <UswdsReactLink
-          className="usa-button margin-bottom-5"
-          variant="unstyled"
-          to={{
-            pathname: `/system/link/${systemId}`,
-            state: { isNew: true }
-          }}
-        >
-          {t('getStarted')}
-        </UswdsReactLink>
-      )}
+      {systemId ||
+        (requestType && (
+          <UswdsReactLink
+            className="usa-button margin-bottom-5"
+            variant="unstyled"
+            to={{
+              pathname: `/system/link/${systemId ?? ''}`,
+              state: { isNew: true, requestType }
+            }}
+          >
+            {t('getStarted')}
+          </UswdsReactLink>
+        ))}
     </MainContent>
   );
 };
