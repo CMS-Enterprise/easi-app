@@ -55,7 +55,7 @@ func TestClientTestSuite(t *testing.T) {
 
 	ctx := context.Background()
 
-	dataloaderFunc := func() *dataloaders.Dataloaders {
+	buildDataloaders := func() *dataloaders.Dataloaders {
 		return dataloaders.NewDataloaders(
 			store,
 			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
@@ -63,7 +63,7 @@ func TestClientTestSuite(t *testing.T) {
 		)
 	}
 
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaderFunc)
+	ctx = dataloaders.CTXWithLoaders(ctx, buildDataloaders)
 
 	tests := &ClientTestSuite{
 		Suite:  suite.Suite{},

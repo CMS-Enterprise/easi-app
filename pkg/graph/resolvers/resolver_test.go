@@ -194,11 +194,11 @@ func (suite *ResolverSuite) ctxWithNewDataloaders() context.Context {
 		return coreClient.GetSystemSummary(ctx)
 	}
 
-	dataloaderFunc := func() *dataloaders.Dataloaders {
+	buildDataloaders := func() *dataloaders.Dataloaders {
 		return dataloaders.NewDataloaders(suite.testConfigs.Store, fetchUserInfos, getCedarSystems)
 	}
 
 	// Set up mocked dataloaders for the test context
-	suite.testConfigs.Context = dataloaders.CTXWithLoaders(suite.testConfigs.Context, dataloaderFunc)
+	suite.testConfigs.Context = dataloaders.CTXWithLoaders(suite.testConfigs.Context, buildDataloaders)
 	return suite.testConfigs.Context
 }

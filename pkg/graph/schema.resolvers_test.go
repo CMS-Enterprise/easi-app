@@ -173,23 +173,21 @@ func TestGraphQLTestSuite(t *testing.T) {
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})
 
-	loaders := dataloaders.NewDataloaders(
-		store,
-		func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
-	)
-
-	dataloaderFunc := func() *dataloaders.Dataloaders {
-		return loaders
+	buildDataloaders := func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(
+			store,
+			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
+			func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
+		)
 	}
 
 	graphQLClient := client.New(
 		handler.NewDefaultServer(schema),
-		addDataloadersToGraphQLClientTest(dataloaderFunc),
+		addDataloadersToGraphQLClientTest(buildDataloaders),
 	)
 
 	ctx := context.Background()
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaderFunc)
+	ctx = dataloaders.CTXWithLoaders(ctx, buildDataloaders)
 
 	storeTestSuite := &GraphQLTestSuite{
 		Suite:    suite.Suite{},
