@@ -13,7 +13,6 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 
-// import TextAreaField from 'components/shared/TextAreaField';
 import useEasiForm from 'components/EasiForm/useEasiForm';
 import RichTextEditor from 'components/RichTextEditor';
 import HelpText from 'components/shared/HelpText';
