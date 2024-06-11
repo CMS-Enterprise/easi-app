@@ -41,27 +41,27 @@ type dataReader struct {
 //  2. an exported function which takes/returns the one-one relationship defined below
 //
 // example of this:
-//
-//	// take in a slice of inputs (uuids) and returns a slice of outputs (each uuid gets its own slice of `*models.SystemIntakeSystem`)
-//	func (d *dataReader) batchSystemIntakeSystemsBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeSystem, []error) {
-//		data, err := d.db.SystemIntakeSystemsBySystemIntakeIDs(ctx, systemIntakeIDs)
-//		if err != nil {
-//			return nil, []error{err}
-//		}
-//
-//		return helpers.OneToMany[*models.SystemIntakeSystem](systemIntakeIDs, data), nil
-//	}
-//
-//	// take in a one-one relationship (a single uuid gets a single slice)
-//	func GetSystemIntakeSystemsBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
-//		loaders, ok := loadersFromCTX(ctx)
-//		if !ok {
-//			return nil, errors.New("unexpected nil loaders in GetSystemIntakeSystemsBySystemIntakeID")
-//		}
-//
-//		return loaders.SystemIntakeSystems.Load(ctx, systemIntakeID)
-//	}
-//
+/*
+	// take in a slice of inputs (uuids) and returns a slice of outputs (each uuid gets its own slice of `*models.SystemIntakeSystem`)
+	func (d *dataReader) batchSystemIntakeSystemsBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeSystem, []error) {
+		data, err := d.db.SystemIntakeSystemsBySystemIntakeIDs(ctx, systemIntakeIDs)
+		if err != nil {
+			return nil, []error{err}
+		}
+
+		return helpers.OneToMany[*models.SystemIntakeSystem](systemIntakeIDs, data), nil
+	}
+
+	// take in a one-one relationship (a single uuid gets a single slice)
+	func GetSystemIntakeSystemsBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeSystem, error) {
+		loaders, ok := loadersFromCTX(ctx)
+		if !ok {
+			return nil, errors.New("unexpected nil loaders in GetSystemIntakeSystemsBySystemIntakeID")
+		}
+
+		return loaders.SystemIntakeSystems.Load(ctx, systemIntakeID)
+	}
+*/
 // you can then edit NewDataloaders below to include your new dataloader in the return
 type Dataloaders struct {
 	CedarSystemBookmark         *dataloadgen.Loader[models.BookmarkRequest, bool]
