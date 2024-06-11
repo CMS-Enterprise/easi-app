@@ -11,8 +11,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (suite *ResolverSuite) TestSystemIntakeContractNumbers() {
-	ctx := suite.testConfigs.Context
+func (s *ResolverSuite) TestSystemIntakeContractNumbers() {
+	ctx := s.testConfigs.Context
 
 	const (
 		contract1 = "1"
@@ -23,7 +23,7 @@ func (suite *ResolverSuite) TestSystemIntakeContractNumbers() {
 	var createdIDs []uuid.UUID
 
 	// create system intake
-	suite.Run("create system intake for test", func() {
+	s.Run("create system intake for test", func() {
 		for i := 0; i < 2; i++ {
 			intake := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAIDNull(),
@@ -31,8 +31,8 @@ func (suite *ResolverSuite) TestSystemIntakeContractNumbers() {
 				Requester:   fmt.Sprintf("system intake contract number data loader %d", i),
 			}
 
-			created, err := suite.testConfigs.Store.CreateSystemIntake(ctx, &intake)
-			suite.NoError(err)
+			created, err := s.testConfigs.Store.CreateSystemIntake(ctx, &intake)
+			s.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
 		}
 
@@ -44,14 +44,14 @@ func (suite *ResolverSuite) TestSystemIntakeContractNumbers() {
 			contract3,
 		}
 
-		err := sqlutils.WithTransaction(ctx, suite.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return suite.testConfigs.Store.SetSystemIntakeContractNumbers(ctx, tx, createdIDs[0], contractNumbers)
+		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
+			return s.testConfigs.Store.SetSystemIntakeContractNumbers(ctx, tx, createdIDs[0], contractNumbers)
 		})
-		suite.NoError(err)
+		s.NoError(err)
 
-		data, err := SystemIntakeContractNumbers(suite.ctxWithNewDataloaders(), createdIDs[0])
-		suite.NoError(err)
-		suite.Len(data, 3)
+		data, err := SystemIntakeContractNumbers(s.ctxWithNewDataloaders(), createdIDs[0])
+		s.NoError(err)
+		s.Len(data, 3)
 
 		var (
 			found1 bool
@@ -60,7 +60,7 @@ func (suite *ResolverSuite) TestSystemIntakeContractNumbers() {
 		)
 
 		for _, result := range data {
-			suite.Equal(result.SystemIntakeID, createdIDs[0])
+			s.Equal(result.SystemIntakeID, createdIDs[0])
 
 			if result.ContractNumber == contract1 {
 				found1 = true
@@ -75,13 +75,13 @@ func (suite *ResolverSuite) TestSystemIntakeContractNumbers() {
 			}
 		}
 
-		suite.True(found1)
-		suite.True(found2)
-		suite.True(found3)
+		s.True(found1)
+		s.True(found2)
+		s.True(found3)
 
 		// attempt to get contract numbers for a system intake without linked contracts
-		data, err = SystemIntakeContractNumbers(suite.ctxWithNewDataloaders(), createdIDs[1])
-		suite.NoError(err)
-		suite.Empty(data)
+		data, err = SystemIntakeContractNumbers(s.ctxWithNewDataloaders(), createdIDs[1])
+		s.NoError(err)
+		s.Empty(data)
 	})
 }

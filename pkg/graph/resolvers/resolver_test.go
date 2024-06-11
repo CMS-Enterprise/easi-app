@@ -34,21 +34,21 @@ type ResolverSuite struct {
 }
 
 // SetupTest clears the database between each test
-func (suite *ResolverSuite) SetupTest() {
+func (s *ResolverSuite) SetupTest() {
 	// We need to set the *require.Assertions here, as we need to have already called suite.Run() to ensure the
 	// test suite has been constructed before we call suite.Require()
-	suite.Assertions = suite.Require()
+	s.Assertions = s.Require()
 
 	// Clean all tables before each test
-	err := suite.testConfigs.Store.TruncateAllTablesDANGEROUS(suite.testConfigs.Logger)
-	assert.NoError(suite.T(), err)
+	err := s.testConfigs.Store.TruncateAllTablesDANGEROUS(s.testConfigs.Logger)
+	assert.NoError(s.T(), err)
 
 	// Get the user account from the DB fresh for each test
-	princ := getTestPrincipal(suite.testConfigs.Context, suite.testConfigs.Store, suite.testConfigs.UserInfo.Username)
-	suite.testConfigs.Principal = princ
+	princ := getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.UserInfo.Username)
+	s.testConfigs.Principal = princ
 
 	// get new dataloaders to clear any existing cached data
-	suite.testConfigs.Context = suite.ctxWithNewDataloaders()
+	s.testConfigs.Context = s.ctxWithNewDataloaders()
 }
 
 // TestResolverSuite runs the resolver test suite
@@ -170,12 +170,12 @@ func newS3Config() upload.Config {
 }
 
 // utility method for creating a valid new system intake, checking for any errors
-func (suite *ResolverSuite) createNewIntake() *models.SystemIntake {
-	newIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, &models.SystemIntake{
+func (s *ResolverSuite) createNewIntake() *models.SystemIntake {
+	newIntake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
 		// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
-	suite.NoError(err)
+	s.NoError(err)
 
 	return newIntake
 }
@@ -184,21 +184,21 @@ func (suite *ResolverSuite) createNewIntake() *models.SystemIntake {
 // this is necessary in order to avoid the caching feature of the dataloadgen library.
 // that caching feature is great for app code, but in test code, where we often load something,
 // update that thing, and load it again to confirm updates worked, caching the first version breaks that flow
-func (suite *ResolverSuite) ctxWithNewDataloaders() context.Context {
+func (s *ResolverSuite) ctxWithNewDataloaders() context.Context {
 	fetchUserInfos := func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error) {
 		return nil, nil
 	}
 
-	coreClient := cedarcore.NewClient(suite.testConfigs.Context, "", "", "", true, true)
+	coreClient := cedarcore.NewClient(s.testConfigs.Context, "", "", "", true, true)
 	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
 		return coreClient.GetSystemSummary(ctx)
 	}
 
 	buildDataloaders := func() *dataloaders.Dataloaders {
-		return dataloaders.NewDataloaders(suite.testConfigs.Store, fetchUserInfos, getCedarSystems)
+		return dataloaders.NewDataloaders(s.testConfigs.Store, fetchUserInfos, getCedarSystems)
 	}
 
 	// Set up mocked dataloaders for the test context
-	suite.testConfigs.Context = dataloaders.CTXWithLoaders(suite.testConfigs.Context, buildDataloaders)
-	return suite.testConfigs.Context
+	s.testConfigs.Context = dataloaders.CTXWithLoaders(s.testConfigs.Context, buildDataloaders)
+	return s.testConfigs.Context
 }

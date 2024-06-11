@@ -10,22 +10,22 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (suite *ResolverSuite) TestSystemIntakeDocumentResolvers() {
-	ctx := suite.testConfigs.Context
-	store := suite.testConfigs.Store
-	s3Client := suite.testConfigs.S3Client
+func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+	s3Client := s.testConfigs.S3Client
 
 	// Create a system intake
 	intake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 		RequestType: models.SystemIntakeRequestTypeMAJORCHANGES,
 	})
-	suite.NoError(err)
-	suite.NotNil(intake)
+	s.NoError(err)
+	s.NotNil(intake)
 
 	// Check that there are no docs by default
 	docs, err := GetSystemIntakeDocumentsByRequestID(ctx, store, s3Client, intake.ID)
-	suite.NoError(err)
-	suite.Len(docs, 0)
+	s.NoError(err)
+	s.Len(docs, 0)
 
 	// Create a document
 	documentToCreate := &models.SystemIntakeDocument{
@@ -37,9 +37,9 @@ func (suite *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 	}
 	// documentToCreate.CreatedBy will be set based on principal in test config
 
-	createdDocument := createSystemIntakeDocumentSubtest(suite, intake.ID, documentToCreate)
-	getSystemIntakeDocumentsByRequestIDSubtest(suite, intake.ID, createdDocument)
-	deleteSystemIntakeDocumentSubtest(suite, createdDocument)
+	createdDocument := createSystemIntakeDocumentSubtest(s, intake.ID, documentToCreate)
+	getSystemIntakeDocumentsByRequestIDSubtest(s, intake.ID, createdDocument)
+	deleteSystemIntakeDocumentSubtest(s, createdDocument)
 }
 
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially

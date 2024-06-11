@@ -5,30 +5,30 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (suite *ResolverSuite) TestCedarSystemBookmarks() {
-	ctx := suite.testConfigs.Context
+func (s *ResolverSuite) TestCedarSystemBookmarks() {
+	ctx := s.testConfigs.Context
 
 	mockSystems := cedarcoremock.GetActiveSystems()
-	suite.Len(mockSystems, 5)
+	s.Len(mockSystems, 5)
 
 	cedarSystemID := mockSystems[0].ID.String
-	suite.NotEmpty(cedarSystemID)
+	s.NotEmpty(cedarSystemID)
 
 	otherID := mockSystems[1].ID.String
-	suite.NotEmpty(otherID)
+	s.NotEmpty(otherID)
 
-	suite.Run("saves and retrieves a bookmark", func() {
-		_, err := suite.testConfigs.Store.CreateCedarSystemBookmark(ctx, &models.CedarSystemBookmark{
+	s.Run("saves and retrieves a bookmark", func() {
+		_, err := s.testConfigs.Store.CreateCedarSystemBookmark(ctx, &models.CedarSystemBookmark{
 			CedarSystemID: cedarSystemID,
 		})
-		suite.NoError(err)
+		s.NoError(err)
 
-		isBookmarked, err := GetCedarSystemIsBookmarked(suite.ctxWithNewDataloaders(), cedarSystemID)
-		suite.NoError(err)
-		suite.True(isBookmarked)
+		isBookmarked, err := GetCedarSystemIsBookmarked(s.ctxWithNewDataloaders(), cedarSystemID)
+		s.NoError(err)
+		s.True(isBookmarked)
 
-		isOtherBookmarked, err := GetCedarSystemIsBookmarked(suite.ctxWithNewDataloaders(), otherID)
-		suite.NoError(err)
-		suite.False(isOtherBookmarked)
+		isOtherBookmarked, err := GetCedarSystemIsBookmarked(s.ctxWithNewDataloaders(), otherID)
+		s.NoError(err)
+		s.False(isOtherBookmarked)
 	})
 }

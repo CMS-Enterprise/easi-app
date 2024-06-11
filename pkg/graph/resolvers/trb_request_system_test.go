@@ -8,8 +8,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
-func (suite *ResolverSuite) TestTRBRequestRelatedSystems() {
-	ctx := suite.testConfigs.Context
+func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
+	ctx := s.testConfigs.Context
 
 	const (
 		systemID1 = "{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"
@@ -20,10 +20,10 @@ func (suite *ResolverSuite) TestTRBRequestRelatedSystems() {
 	var createdIDs []uuid.UUID
 
 	// create trb request
-	suite.Run("create trb requests for test", func() {
+	s.Run("create trb requests for test", func() {
 		for i := 0; i < 2; i++ {
-			created, err := CreateTRBRequest(ctx, models.TRBTBrainstorm, suite.testConfigs.Store)
-			suite.NoError(err)
+			created, err := CreateTRBRequest(ctx, models.TRBTBrainstorm, s.testConfigs.Store)
+			s.NoError(err)
 			createdIDs = append(createdIDs, created.ID)
 		}
 
@@ -35,14 +35,14 @@ func (suite *ResolverSuite) TestTRBRequestRelatedSystems() {
 			systemID3,
 		}
 
-		err := sqlutils.WithTransaction(ctx, suite.testConfigs.Store, func(tx *sqlx.Tx) error {
-			return suite.testConfigs.Store.SetTRBRequestSystems(ctx, tx, createdIDs[0], systemIDs)
+		err := sqlutils.WithTransaction(ctx, s.testConfigs.Store, func(tx *sqlx.Tx) error {
+			return s.testConfigs.Store.SetTRBRequestSystems(ctx, tx, createdIDs[0], systemIDs)
 		})
-		suite.NoError(err)
+		s.NoError(err)
 
-		data, err := TRBRequestSystems(suite.ctxWithNewDataloaders(), createdIDs[0])
-		suite.NoError(err)
-		suite.Len(data, 3)
+		data, err := TRBRequestSystems(s.ctxWithNewDataloaders(), createdIDs[0])
+		s.NoError(err)
+		s.Len(data, 3)
 
 		var (
 			found1 bool
@@ -64,13 +64,13 @@ func (suite *ResolverSuite) TestTRBRequestRelatedSystems() {
 			}
 		}
 
-		suite.True(found1)
-		suite.True(found2)
-		suite.True(found3)
+		s.True(found1)
+		s.True(found2)
+		s.True(found3)
 
 		// attempt to get systems for a trb request without linked systems
-		data, err = TRBRequestSystems(suite.ctxWithNewDataloaders(), createdIDs[1])
-		suite.NoError(err)
-		suite.Empty(data)
+		data, err = TRBRequestSystems(s.ctxWithNewDataloaders(), createdIDs[1])
+		s.NoError(err)
+		s.Empty(data)
 	})
 }

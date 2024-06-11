@@ -6,10 +6,10 @@ import (
 	"github.com/cmsgov/easi-app/pkg/authentication"
 )
 
-func (suite *ResolverSuite) TestGetUserAccountByID() {
-	store := suite.testConfigs.Store
+func (s *ResolverSuite) TestGetUserAccountByID() {
+	store := s.testConfigs.Store
 
-	suite.Run("should get user accounts by id", func() {
+	s.Run("should get user accounts by id", func() {
 		var (
 			userID   = uuid.New()
 			username = "1111"
@@ -28,15 +28,15 @@ func (suite *ResolverSuite) TestGetUserAccountByID() {
 		}
 
 		_, err := store.UserAccountCreate(store, &user)
-		suite.NoError(err)
+		s.NoError(err)
 
 		// get that user
-		data, err := GetUserAccountByID(suite.ctxWithNewDataloaders(), userID)
-		suite.NoError(err)
+		data, err := GetUserAccountByID(s.ctxWithNewDataloaders(), userID)
+		s.NoError(err)
 
-		suite.Equal(data.ID, userID)
+		s.Equal(data.ID, userID)
 
 		// clean up
-		suite.NoError(store.DeleteUserAccountDANGEROUS(username))
+		s.NoError(store.DeleteUserAccountDANGEROUS(username))
 	})
 }

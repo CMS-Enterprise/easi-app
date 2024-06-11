@@ -16,9 +16,9 @@ import (
 )
 
 // TestTRBRequestStatus tests the overall status of a TRB request
-func (suite *ResolverSuite) TestTRBRequestStatus() {
-	ctx := suite.testConfigs.Context
-	store := suite.testConfigs.Store
+func (s *ResolverSuite) TestTRBRequestStatus() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
 
 	config := testhelpers.NewConfig()
 
@@ -35,7 +35,7 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 	localSender := local.NewSender()
 	emailClient, err := email.NewClient(emailConfig, localSender)
 	if err != nil {
-		suite.FailNow("Unable to construct email client with local sender")
+		s.FailNow("Unable to construct email client with local sender")
 	}
 
 	anonEua := "ANON"
@@ -66,19 +66,19 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 	trb := models.NewTRBRequest(anonEua)
 	trb.Type = models.TRBTNeedHelp
 	trb.State = models.TRBRequestStateOpen
-	trb, err = CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
-	suite.NoError(err)
+	trb, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
 
-	suite.Run("status is correctly calculated as TRB tasks are performed", func() {
+	s.Run("status is correctly calculated as TRB tasks are performed", func() {
 		// Test the "NEW" TRB status
-		trb, err = GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
-		suite.NoError(err)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		s.NoError(err)
 		trbStatus, err := GetTRBRequestStatus(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBRequestStatusNew, trbStatus)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusNew, trbStatus)
 		taskStatuses, err := GetTRBTaskStatuses(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBTaskStatuses{
+		s.NoError(err)
+		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusReadyToStart,
 			FeedbackStatus:             models.TRBFeedbackStatusCannotStartYet,
 			ConsultPrepStatus:          models.TRBConsultPrepStatusCannotStartYet,
@@ -89,25 +89,25 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 
 		// Test the "DRAFT_REQUEST_FORM" status by making a random update to the form but not
 		// submitting it
-		form, err := GetTRBRequestFormByTRBRequestID(ctx, suite.testConfigs.Store, trb.ID)
-		suite.NoError(err)
-		suite.NotNil(form)
+		form, err := GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trb.ID)
+		s.NoError(err)
+		s.NotNil(form)
 		formChanges := map[string]interface{}{
 			"isSubmitted":  false,
 			"trbRequestId": trb.ID,
 			"component":    "Taco Cart",
 		}
 		_, err = UpdateTRBRequestForm(ctx, store, &emailClient, stubFetchUserInfo, formChanges)
-		suite.NoError(err)
+		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
-		suite.NoError(err)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBRequestStatusDraftRequestForm, trbStatus)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusDraftRequestForm, trbStatus)
 		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBTaskStatuses{
+		s.NoError(err)
+		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusInProgress,
 			FeedbackStatus:             models.TRBFeedbackStatusCannotStartYet,
 			ConsultPrepStatus:          models.TRBConsultPrepStatusCannotStartYet,
@@ -117,25 +117,25 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 		}, *taskStatuses)
 
 		// Test the "REQUEST_FORM_COMPLETE" status by submitting it
-		form, err = GetTRBRequestFormByTRBRequestID(ctx, suite.testConfigs.Store, trb.ID)
-		suite.NoError(err)
-		suite.NotNil(form)
+		form, err = GetTRBRequestFormByTRBRequestID(ctx, s.testConfigs.Store, trb.ID)
+		s.NoError(err)
+		s.NotNil(form)
 		formChanges = map[string]interface{}{
 			"isSubmitted":  true,
 			"trbRequestId": trb.ID,
 			"component":    "Taco Cart",
 		}
 		_, err = UpdateTRBRequestForm(ctx, store, &emailClient, stubFetchUserInfo, formChanges)
-		suite.NoError(err)
+		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
-		suite.NoError(err)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBRequestStatusRequestFormComplete, trbStatus)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusRequestFormComplete, trbStatus)
 		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBTaskStatuses{
+		s.NoError(err)
+		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
 			FeedbackStatus:             models.TRBFeedbackStatusInReview,
 			ConsultPrepStatus:          models.TRBConsultPrepStatusCannotStartYet,
@@ -155,22 +155,22 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 		}
 		_, err = CreateTRBRequestFeedback(
 			ctx,
-			suite.testConfigs.Store,
+			s.testConfigs.Store,
 			&emailClient,
 			stubFetchUserInfo,
 			stubFetchUserInfos,
 			feedback,
 		)
-		suite.NoError(err)
+		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
-		suite.NoError(err)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBRequestStatusReadyForConsult, trbStatus)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusReadyForConsult, trbStatus)
 		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBTaskStatuses{
+		s.NoError(err)
+		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
 			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
 			ConsultPrepStatus:          models.TRBConsultPrepStatusReadyToStart,
@@ -181,10 +181,10 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 
 		// Test the "CONSULT_SCHEDULED" status by scheduling a consult session in the future
 		meetingTime := time.Now().Local().Add(time.Hour * 24)
-		suite.NoError(err)
+		s.NoError(err)
 		_, err = UpdateTRBRequestConsultMeetingTime(
-			suite.testConfigs.Context,
-			suite.testConfigs.Store,
+			s.testConfigs.Context,
+			s.testConfigs.Store,
 			nil,
 			stubFetchUserInfo,
 			stubFetchUserInfos,
@@ -194,16 +194,16 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 			[]string{"mclovin@example.com"},
 			"See you then!",
 		)
-		suite.NoError(err)
+		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
-		suite.NoError(err)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBRequestStatusConsultScheduled, trbStatus)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusConsultScheduled, trbStatus)
 		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBTaskStatuses{
+		s.NoError(err)
+		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
 			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
 			ConsultPrepStatus:          models.TRBConsultPrepStatusReadyToStart,
@@ -214,10 +214,10 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 
 		// Test the "CONSULT_COMPLETE" status by updating the meeting time to be a time in the past
 		meetingTime = time.Now().Local().Add(time.Hour * -24)
-		suite.NoError(err)
+		s.NoError(err)
 		_, err = UpdateTRBRequestConsultMeetingTime(
-			suite.testConfigs.Context,
-			suite.testConfigs.Store,
+			s.testConfigs.Context,
+			s.testConfigs.Store,
 			nil,
 			stubFetchUserInfo,
 			stubFetchUserInfos,
@@ -227,16 +227,16 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 			[]string{"mclovin@example.com"},
 			"See you then!",
 		)
-		suite.NoError(err)
+		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
-		suite.NoError(err)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBRequestStatusConsultComplete, trbStatus)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusConsultComplete, trbStatus)
 		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBTaskStatuses{
+		s.NoError(err)
+		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
 			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
 			ConsultPrepStatus:          models.TRBConsultPrepStatusCompleted,
@@ -247,23 +247,23 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 
 		// Test the "DRAFT_ADVICE_LETTER" status by making a change to the advice letter
 		adviceLetter, err := CreateTRBAdviceLetter(ctx, store, trb.ID)
-		suite.NoError(err)
-		suite.NotNil(adviceLetter)
+		s.NoError(err)
+		s.NotNil(adviceLetter)
 		adviceLetterChanges := map[string]interface{}{
 			"trbRequestId":   trb.ID,
 			"meetingSummary": "Talked about stuff",
 		}
 		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
-		suite.NoError(err)
+		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
-		suite.NoError(err)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBRequestStatusDraftAdviceLetter, trbStatus)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusDraftAdviceLetter, trbStatus)
 		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBTaskStatuses{
+		s.NoError(err)
+		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
 			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
 			ConsultPrepStatus:          models.TRBConsultPrepStatusCompleted,
@@ -274,16 +274,16 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 
 		// Test the "ADVICE_LETTER_IN_REVIEW" status by requesting review for the advice letter
 		_, err = RequestReviewForTRBAdviceLetter(ctx, store, &emailClient, stubFetchUserInfo, adviceLetter.ID)
-		suite.NoError(err)
+		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
-		suite.NoError(err)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBRequestStatusAdviceLetterInReview, trbStatus)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusAdviceLetterInReview, trbStatus)
 		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBTaskStatuses{
+		s.NoError(err)
+		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
 			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
 			ConsultPrepStatus:          models.TRBConsultPrepStatusCompleted,
@@ -294,16 +294,16 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 
 		// Test the "ADVICE_LETTER_SENT" status by sending the advice letter
 		_, err = SendTRBAdviceLetter(ctx, store, adviceLetter.ID, &emailClient, stubFetchUserInfo, stubFetchUserInfos, false, nil)
-		suite.NoError(err)
+		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
-		suite.NoError(err)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBRequestStatusAdviceLetterSent, trbStatus)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusAdviceLetterSent, trbStatus)
 		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBTaskStatuses{
+		s.NoError(err)
+		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
 			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
 			ConsultPrepStatus:          models.TRBConsultPrepStatusCompleted,
@@ -318,16 +318,16 @@ func (suite *ResolverSuite) TestTRBRequestStatus() {
 			"isFollowupRecommended": true,
 		}
 		_, err = UpdateTRBAdviceLetter(ctx, store, adviceLetterChanges)
-		suite.NoError(err)
+		s.NoError(err)
 		// Fetch the updated request
-		trb, err = GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
-		suite.NoError(err)
+		trb, err = GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+		s.NoError(err)
 		trbStatus, err = GetTRBRequestStatus(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBRequestStatusFollowUpRequested, trbStatus)
+		s.NoError(err)
+		s.EqualValues(models.TRBRequestStatusFollowUpRequested, trbStatus)
 		taskStatuses, err = GetTRBTaskStatuses(ctx, store, *trb)
-		suite.NoError(err)
-		suite.EqualValues(models.TRBTaskStatuses{
+		s.NoError(err)
+		s.EqualValues(models.TRBTaskStatuses{
 			FormStatus:                 models.TRBFormStatusCompleted,
 			FeedbackStatus:             models.TRBFeedbackStatusCompleted,
 			ConsultPrepStatus:          models.TRBConsultPrepStatusCompleted,

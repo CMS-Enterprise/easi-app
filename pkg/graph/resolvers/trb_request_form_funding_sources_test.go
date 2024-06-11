@@ -7,41 +7,41 @@ import (
 )
 
 // TestCreateTRBRequestForm makes a new TRB request
-func (suite *ResolverSuite) TestModifyTRBFundingSources() {
-	ctx := suite.testConfigs.Context
+func (s *ResolverSuite) TestModifyTRBFundingSources() {
+	ctx := s.testConfigs.Context
 
 	anonEua := "ANON"
 
 	trbRequest := models.NewTRBRequest(anonEua)
 	trbRequest.Type = models.TRBTNeedHelp
 	trbRequest.State = models.TRBRequestStateOpen
-	trbRequest, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
-	suite.NoError(err)
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
 
-	suite.Run("create/fetch/update/delete TRB request form funding sources", func() {
+	s.Run("create/fetch/update/delete TRB request form funding sources", func() {
 
-		fetched, err := GetFundingSourcesByRequestID(ctx, suite.testConfigs.Store, trbRequest.ID)
-		suite.NoError(err)
-		suite.NotNil(fetched)
+		fetched, err := GetFundingSourcesByRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		s.NoError(err)
+		s.NotNil(fetched)
 		// should have no sources initially
-		suite.Len(fetched, 0)
+		s.Len(fetched, 0)
 		// add first funding sources
 		newFundingNumber1 := "12345"
 		newFundingSources1 := []string{"banana", "apple", "mango"}
 
 		updatedSources, err := UpdateTRBRequestFundingSources(
 			ctx,
-			suite.testConfigs.Store,
+			s.testConfigs.Store,
 			trbRequest.ID,
 			newFundingNumber1,
 			newFundingSources1,
 		)
-		suite.NoError(err)
-		suite.Len(updatedSources, 3)
+		s.NoError(err)
+		s.Len(updatedSources, 3)
 		for _, source := range newFundingSources1 {
 			updatedSource, _, _ := lo.FindIndexOf(updatedSources, func(s *models.TRBFundingSource) bool { return s.Source == source })
-			suite.NotNil(updatedSource)
-			suite.EqualValues(updatedSource.FundingNumber, newFundingNumber1)
+			s.NotNil(updatedSource)
+			s.EqualValues(updatedSource.FundingNumber, newFundingNumber1)
 		}
 		// add second funding source
 		newFundingNumber2 := "67890"
@@ -49,71 +49,71 @@ func (suite *ResolverSuite) TestModifyTRBFundingSources() {
 
 		_, err = UpdateTRBRequestFundingSources(
 			ctx,
-			suite.testConfigs.Store,
+			s.testConfigs.Store,
 			trbRequest.ID,
 			newFundingNumber2,
 			newFundingSources2,
 		)
-		suite.NoError(err)
-		updatedSources, err = GetFundingSourcesByRequestID(ctx, suite.testConfigs.Store, trbRequest.ID)
-		suite.NoError(err)
-		suite.Len(updatedSources, 6)
+		s.NoError(err)
+		updatedSources, err = GetFundingSourcesByRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		s.NoError(err)
+		s.Len(updatedSources, 6)
 		// should have all funding sources
 		for _, source := range newFundingSources1 {
 			updatedSource, _, _ := lo.FindIndexOf(updatedSources, func(s *models.TRBFundingSource) bool { return s.Source == source })
-			suite.NotNil(updatedSource)
-			suite.EqualValues(updatedSource.FundingNumber, newFundingNumber1)
+			s.NotNil(updatedSource)
+			s.EqualValues(updatedSource.FundingNumber, newFundingNumber1)
 		}
 		for _, source := range newFundingSources2 {
 			updatedSource, _, _ := lo.FindIndexOf(updatedSources, func(s *models.TRBFundingSource) bool { return s.Source == source })
-			suite.NotNil(updatedSource)
-			suite.EqualValues(updatedSource.FundingNumber, newFundingNumber2)
+			s.NotNil(updatedSource)
+			s.EqualValues(updatedSource.FundingNumber, newFundingNumber2)
 		}
 
 		// remove a funding source (cereal)
 		newFundingSources2 = []string{"meatloaf", "spaghetti"}
 		_, err = UpdateTRBRequestFundingSources(
 			ctx,
-			suite.testConfigs.Store,
+			s.testConfigs.Store,
 			trbRequest.ID,
 			newFundingNumber2,
 			newFundingSources2,
 		)
-		suite.NoError(err)
-		updatedSources, err = GetFundingSourcesByRequestID(ctx, suite.testConfigs.Store, trbRequest.ID)
-		suite.NoError(err)
-		suite.Len(updatedSources, 5)
+		s.NoError(err)
+		updatedSources, err = GetFundingSourcesByRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		s.NoError(err)
+		s.Len(updatedSources, 5)
 		// ensure other funding sources are unaffected
 		for _, source := range newFundingSources1 {
 			updatedSource, _, _ := lo.FindIndexOf(updatedSources, func(s *models.TRBFundingSource) bool { return s.Source == source })
-			suite.NotNil(updatedSource)
-			suite.EqualValues(updatedSource.FundingNumber, newFundingNumber1)
+			s.NotNil(updatedSource)
+			s.EqualValues(updatedSource.FundingNumber, newFundingNumber1)
 		}
 		for _, source := range newFundingSources2 {
 			updatedSource, _, _ := lo.FindIndexOf(updatedSources, func(s *models.TRBFundingSource) bool { return s.Source == source })
-			suite.NotNil(updatedSource)
-			suite.EqualValues(updatedSource.FundingNumber, newFundingNumber2)
+			s.NotNil(updatedSource)
+			s.EqualValues(updatedSource.FundingNumber, newFundingNumber2)
 		}
 		// removed source should be removed
 		deletedSource, _, _ := lo.FindIndexOf(updatedSources, func(s *models.TRBFundingSource) bool { return s.Source == "cereal" })
-		suite.Nil(deletedSource)
+		s.Nil(deletedSource)
 
 		// delete a funding source by number
-		_, err = DeleteTRBRequestFundingSources(ctx, suite.testConfigs.Store, trbRequest.ID, newFundingNumber2)
-		suite.NoError(err)
-		updatedSources, err = GetFundingSourcesByRequestID(ctx, suite.testConfigs.Store, trbRequest.ID)
-		suite.NoError(err)
-		suite.Len(updatedSources, 3)
+		_, err = DeleteTRBRequestFundingSources(ctx, s.testConfigs.Store, trbRequest.ID, newFundingNumber2)
+		s.NoError(err)
+		updatedSources, err = GetFundingSourcesByRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		s.NoError(err)
+		s.Len(updatedSources, 3)
 		// original funding sources should exist
 		for _, source := range newFundingSources1 {
 			updatedSource, _, _ := lo.FindIndexOf(updatedSources, func(s *models.TRBFundingSource) bool { return s.Source == source })
-			suite.NotNil(updatedSource)
-			suite.EqualValues(updatedSource.FundingNumber, newFundingNumber1)
+			s.NotNil(updatedSource)
+			s.EqualValues(updatedSource.FundingNumber, newFundingNumber1)
 		}
 		// funding sources added later should be removed
 		for _, source := range newFundingSources2 {
 			deletedSource, _, _ := lo.FindIndexOf(updatedSources, func(s *models.TRBFundingSource) bool { return s.Source == source })
-			suite.Nil(deletedSource)
+			s.Nil(deletedSource)
 		}
 	})
 }

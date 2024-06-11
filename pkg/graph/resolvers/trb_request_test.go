@@ -13,58 +13,58 @@ import (
 )
 
 // TestCreateTRBRequest makes a new TRB request
-func (suite *ResolverSuite) TestCreateTRBRequest() {
+func (s *ResolverSuite) TestCreateTRBRequest() {
 	//TODO get the context in the test configs
-	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.NotNil(trb)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
 
-	suite.EqualValues(false, trb.Archived)
-	suite.Nil(trb.Name)
-	suite.EqualValues(models.TRBRequestStateOpen, trb.State)
-	suite.EqualValues(suite.testConfigs.Principal.EUAID, trb.CreatedBy)
-	suite.NotNil(trb.ID)
-	suite.NotNil(trb.CreatedAt)
-	suite.Nil(trb.ModifiedBy)
-	suite.Nil(trb.ModifiedAt)
+	s.EqualValues(false, trb.Archived)
+	s.Nil(trb.Name)
+	s.EqualValues(models.TRBRequestStateOpen, trb.State)
+	s.EqualValues(s.testConfigs.Principal.EUAID, trb.CreatedBy)
+	s.NotNil(trb.ID)
+	s.NotNil(trb.CreatedAt)
+	s.Nil(trb.ModifiedBy)
+	s.Nil(trb.ModifiedAt)
 }
 
 // TestUpdateTRBRequest updates a TRB request
-func (suite *ResolverSuite) TestUpdateTRBRequest() {
-	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.NotNil(trb)
+func (s *ResolverSuite) TestUpdateTRBRequest() {
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
 
 	changes := map[string]interface{}{
 		"Name":     "Testing",
 		"state":    models.TRBRequestStateClosed,
 		"archived": false,
 	}
-	princ := suite.testConfigs.Principal.ID()
+	princ := s.testConfigs.Principal.ID()
 
-	updated, err := UpdateTRBRequest(suite.testConfigs.Context, trb.ID, changes, suite.testConfigs.Store)
-	suite.NotNil(updated)
-	suite.NoError(err)
-	suite.EqualValues(*updated.Name, "Testing")
-	suite.EqualValues(updated.State, models.TRBRequestStateClosed)
-	suite.EqualValues(updated.Archived, false)
-	suite.EqualValues(updated.ModifiedBy, &princ)
-	suite.NotNil(updated.ModifiedAt)
+	updated, err := UpdateTRBRequest(s.testConfigs.Context, trb.ID, changes, s.testConfigs.Store)
+	s.NotNil(updated)
+	s.NoError(err)
+	s.EqualValues(*updated.Name, "Testing")
+	s.EqualValues(updated.State, models.TRBRequestStateClosed)
+	s.EqualValues(updated.Archived, false)
+	s.EqualValues(updated.ModifiedBy, &princ)
+	s.NotNil(updated.ModifiedAt)
 }
 
 // TestGetTRBRequestByID returns a TRB request by it's ID
-func (suite *ResolverSuite) TestGetTRBRequestByID() {
-	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.NotNil(trb)
+func (s *ResolverSuite) TestGetTRBRequestByID() {
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
 
-	ret, err := GetTRBRequestByID(suite.testConfigs.Context, trb.ID, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.NotNil(ret)
+	ret, err := GetTRBRequestByID(s.testConfigs.Context, trb.ID, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(ret)
 }
 
 // TestGetTRBRequests returns all TRB Requests
-func (suite *ResolverSuite) TestGetTRBRequests() {
+func (s *ResolverSuite) TestGetTRBRequests() {
 	// Create a context to use for requests from another user
 	principalABCD := &authentication.EUAPrincipal{
 		EUAID:           "ABCD",
@@ -72,28 +72,28 @@ func (suite *ResolverSuite) TestGetTRBRequests() {
 		JobCodeGRT:      true,
 		JobCodeTRBAdmin: true,
 	}
-	ctxABCD := appcontext.WithLogger(context.Background(), suite.testConfigs.Logger)
+	ctxABCD := appcontext.WithLogger(context.Background(), s.testConfigs.Logger)
 	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
 
 	// Create a TRB request with TEST
-	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.NotNil(trb)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
 
 	// Check TEST sees 1 request
-	col, err := GetTRBRequests(suite.testConfigs.Context, false, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.Len(col, 1)
-	suite.EqualValues(trb, col[0])
+	col, err := GetTRBRequests(s.testConfigs.Context, false, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 1)
+	s.EqualValues(trb, col[0])
 
 	// Create a TRB request under ABCD
-	trb2, err := CreateTRBRequest(ctxABCD, models.TRBTBrainstorm, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.NotNil(trb2)
+	trb2, err := CreateTRBRequest(ctxABCD, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb2)
 	//Check for 2 request
-	col, err = GetTRBRequests(suite.testConfigs.Context, false, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.Len(col, 2)
+	col, err = GetTRBRequests(s.testConfigs.Context, false, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 2)
 
 	changes := map[string]interface{}{
 		"state":    models.TRBRequestStateClosed,
@@ -101,18 +101,18 @@ func (suite *ResolverSuite) TestGetTRBRequests() {
 	}
 
 	// archive
-	trbUpdate, err := UpdateTRBRequest(ctxABCD, trb2.ID, changes, suite.testConfigs.Store)
-	suite.NoError(err)
+	trbUpdate, err := UpdateTRBRequest(ctxABCD, trb2.ID, changes, s.testConfigs.Store)
+	s.NoError(err)
 
 	// GET archived collection from ABCD's perspective
-	col, err = GetTRBRequests(ctxABCD, true, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.Len(col, 1)
-	suite.EqualValues(trbUpdate, col[0])
+	col, err = GetTRBRequests(ctxABCD, true, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 1)
+	s.EqualValues(trbUpdate, col[0])
 }
 
 // TestGetMyTRBRequests returns a users TRB Requests
-func (suite *ResolverSuite) TestGetMyTRBRequests() {
+func (s *ResolverSuite) TestGetMyTRBRequests() {
 	// Create a context to use for requests from another user
 	principalABCD := &authentication.EUAPrincipal{
 		EUAID:           "ABCD",
@@ -120,41 +120,41 @@ func (suite *ResolverSuite) TestGetMyTRBRequests() {
 		JobCodeGRT:      true,
 		JobCodeTRBAdmin: true,
 	}
-	ctxABCD := appcontext.WithLogger(context.Background(), suite.testConfigs.Logger)
+	ctxABCD := appcontext.WithLogger(context.Background(), s.testConfigs.Logger)
 	ctxABCD = appcontext.WithPrincipal(ctxABCD, principalABCD)
 
 	// Create a TRB request with TEST
-	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.NotNil(trb)
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
 
 	// Check TEST sees 1 request
-	col, err := GetMyTRBRequests(suite.testConfigs.Context, false, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.Len(col, 1)
-	suite.EqualValues(trb, col[0])
+	col, err := GetMyTRBRequests(s.testConfigs.Context, false, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 1)
+	s.EqualValues(trb, col[0])
 
 	// Check ABCD sees 0 requests
-	col, err = GetMyTRBRequests(ctxABCD, false, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.Len(col, 0)
+	col, err = GetMyTRBRequests(ctxABCD, false, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 0)
 
 	// Create a TRB request under ABCD
-	trb2, err := CreateTRBRequest(ctxABCD, models.TRBTBrainstorm, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.NotNil(trb2)
+	trb2, err := CreateTRBRequest(ctxABCD, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb2)
 
 	// TEST should see 1 request (their already created one)
-	col, err = GetMyTRBRequests(suite.testConfigs.Context, false, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.Len(col, 1)
-	suite.EqualValues(trb, col[0])
+	col, err = GetMyTRBRequests(s.testConfigs.Context, false, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 1)
+	s.EqualValues(trb, col[0])
 
 	// ABCD should see 1 request (the one we just created)
-	col, err = GetMyTRBRequests(ctxABCD, false, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.Len(col, 1)
-	suite.EqualValues(trb2, col[0])
+	col, err = GetMyTRBRequests(ctxABCD, false, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 1)
+	s.EqualValues(trb2, col[0])
 
 	changes := map[string]interface{}{
 		"state":    models.TRBRequestStateClosed,
@@ -162,26 +162,26 @@ func (suite *ResolverSuite) TestGetMyTRBRequests() {
 	}
 
 	// archive ABCD's request
-	trbUpdate, err := UpdateTRBRequest(ctxABCD, trb2.ID, changes, suite.testConfigs.Store)
-	suite.NoError(err)
+	trbUpdate, err := UpdateTRBRequest(ctxABCD, trb2.ID, changes, s.testConfigs.Store)
+	s.NoError(err)
 
 	// GET collection from ABCD's perspective and expect to not see any
-	col, err = GetMyTRBRequests(ctxABCD, false, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.Len(col, 0)
+	col, err = GetMyTRBRequests(ctxABCD, false, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 0)
 
 	// GET collection from ABCD's perspective (with archived true) and expect to see one
-	col, err = GetMyTRBRequests(ctxABCD, true, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.Len(col, 1)
-	suite.EqualValues(trbUpdate, col[0])
+	col, err = GetMyTRBRequests(ctxABCD, true, s.testConfigs.Store)
+	s.NoError(err)
+	s.Len(col, 1)
+	s.EqualValues(trbUpdate, col[0])
 }
 
 // TestUpdateTRBRequestConsultMeetingTime tests the scheduling of consult meeting
-func (suite *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
-	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.NotNil(trb)
+func (s *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
 
 	fetchUserInfo := func(ctx context.Context, eua string) (*models.UserInfo, error) {
 		return &models.UserInfo{
@@ -204,11 +204,11 @@ func (suite *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
 	}
 
 	meetingTime, err := time.Parse(time.RFC3339, "2022-10-10T12:00:00+00:00")
-	suite.NoError(err)
+	s.NoError(err)
 
 	updated, err := UpdateTRBRequestConsultMeetingTime(
-		suite.testConfigs.Context,
-		suite.testConfigs.Store,
+		s.testConfigs.Context,
+		s.testConfigs.Store,
 		nil,
 		fetchUserInfo,
 		fetchUserInfos,
@@ -219,15 +219,15 @@ func (suite *ResolverSuite) TestUpdateTRBRequestConsultMeetingTime() {
 		"See you then!",
 	)
 
-	suite.NoError(err)
-	suite.True((*updated.ConsultMeetingTime).Equal(meetingTime))
+	s.NoError(err)
+	s.True((*updated.ConsultMeetingTime).Equal(meetingTime))
 }
 
 // TestUpdateTRBRequestTRBLead tests the scheduling of consult meeting
-func (suite *ResolverSuite) TestUpdateTRBRequestTRBLead() {
-	trb, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTBrainstorm, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.NotNil(trb)
+func (s *ResolverSuite) TestUpdateTRBRequestTRBLead() {
+	trb, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trb)
 
 	fetchUserInfo := func(ctx context.Context, eua string) (*models.UserInfo, error) {
 		return &models.UserInfo{
@@ -238,20 +238,20 @@ func (suite *ResolverSuite) TestUpdateTRBRequestTRBLead() {
 	}
 
 	updated, err := UpdateTRBRequestTRBLead(
-		suite.testConfigs.Context,
-		suite.testConfigs.Store,
+		s.testConfigs.Context,
+		s.testConfigs.Store,
 		nil,
 		fetchUserInfo,
 		trb.ID,
 		"MCLV",
 	)
 
-	suite.NoError(err)
-	suite.EqualValues("MCLV", *updated.TRBLead)
+	s.NoError(err)
+	s.EqualValues("MCLV", *updated.TRBLead)
 }
 
 // TestIsRecentTRBRequest tests the IsRecentTRBRequest function
-func (suite *ResolverSuite) TestIsRecentTRBRequest() {
+func (s *ResolverSuite) TestIsRecentTRBRequest() {
 	tests := []struct {
 		numDaysOld      int
 		isLeadAssigned  bool
@@ -292,12 +292,12 @@ func (suite *ResolverSuite) TestIsRecentTRBRequest() {
 	// Set up mocked "now" time
 	dateOnlyLayout := "2006-01-02"
 	now, err := time.Parse(dateOnlyLayout, "2020-01-10")
-	suite.NoError(err)
+	s.NoError(err)
 
 	// Run all tests
 	for _, test := range tests {
-		suite.Run(fmt.Sprintf("numDaysOld=%d, isLeadAssigned=%t, isRequestClosed=%t, expected=%t", test.numDaysOld, test.isLeadAssigned, test.isRequestClosed, test.expected), func() {
-			trb := models.NewTRBRequest(suite.testConfigs.Principal.ID())
+		s.Run(fmt.Sprintf("numDaysOld=%d, isLeadAssigned=%t, isRequestClosed=%t, expected=%t", test.numDaysOld, test.isLeadAssigned, test.isRequestClosed, test.expected), func() {
+			trb := models.NewTRBRequest(s.testConfigs.Principal.ID())
 			trb.CreatedAt = now.AddDate(0, 0, -test.numDaysOld)
 			if test.isLeadAssigned {
 				trb.TRBLead = zero.StringFrom("TRBA").Ptr()
@@ -305,7 +305,7 @@ func (suite *ResolverSuite) TestIsRecentTRBRequest() {
 			if test.isRequestClosed {
 				trb.State = models.TRBRequestStateClosed
 			}
-			suite.Equal(test.expected, IsRecentTRBRequest(suite.testConfigs.Context, trb, now))
+			s.Equal(test.expected, IsRecentTRBRequest(s.testConfigs.Context, trb, now))
 		})
 	}
 }

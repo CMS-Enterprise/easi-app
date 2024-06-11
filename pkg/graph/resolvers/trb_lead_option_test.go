@@ -7,8 +7,8 @@ import (
 )
 
 // TestTRBLeadOptions tests the TRBLeadOption creation/deletion/retrieval
-func (suite *ResolverSuite) TestTRBLeadOptions() {
-	ctx := suite.testConfigs.Context
+func (s *ResolverSuite) TestTRBLeadOptions() {
+	ctx := s.testConfigs.Context
 	leadUsers := map[string]*models.UserInfo{
 		"ABCD": {
 			DisplayName: "Adeline Aarons",
@@ -53,23 +53,23 @@ func (suite *ResolverSuite) TestTRBLeadOptions() {
 		return userInfos, nil
 	}
 
-	store := suite.testConfigs.Store
+	store := s.testConfigs.Store
 
-	suite.Run("create/delete/fetch TRB lead options", func() {
+	s.Run("create/delete/fetch TRB lead options", func() {
 		for euaID := range leadUsers {
 			_, err := CreateTRBLeadOption(ctx, store, stubFetchUserInfo, euaID)
-			suite.NoError(err)
+			s.NoError(err)
 		}
 
 		userInfos, err := GetTRBLeadOptions(ctx, store, stubFetchUserInfos)
-		suite.NoError(err)
-		suite.True(len(userInfos) == 4)
+		s.NoError(err)
+		s.True(len(userInfos) == 4)
 
 		_, err = DeleteTRBLeadOption(ctx, store, "TEST")
-		suite.NoError(err)
+		s.NoError(err)
 
 		userInfos, err = GetTRBLeadOptions(ctx, store, stubFetchUserInfos)
-		suite.NoError(err)
-		suite.True(len(userInfos) == 3)
+		s.NoError(err)
+		s.True(len(userInfos) == 3)
 	})
 }
