@@ -5,7 +5,30 @@ import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntakeDocumentCommonType } from 'types/graphql-global-types';
 
 const governanceTeamNames = cmsGovernanceTeams.map(team => team.value);
-const SystemIntakeValidationSchema: any = {
+
+const govTeam = Yup.object().shape({
+  name: Yup.string().oneOf(governanceTeamNames),
+  collaborator: Yup.string().when('name', (name: string, schema) =>
+    schema.required(
+      `Tell us the name of the person you've been working with from the ${name}`
+    )
+  )
+});
+
+const governanceTeams = Yup.object().shape({
+  isPresent: Yup.boolean()
+    .nullable()
+    .required('Select if you are working with any teams'),
+  teams: Yup.array().when('isPresent', {
+    is: true,
+    then: schema =>
+      schema
+        .min(1, 'Mark all teams you are currently collaborating with')
+        .of(govTeam)
+  })
+});
+
+const SystemIntakeValidationSchema = {
   contactDetails: Yup.object().shape({
     requester: Yup.object().shape({
       commonName: Yup.string().trim().required('Enter a name for this request'),
@@ -22,7 +45,7 @@ const SystemIntakeValidationSchema: any = {
         .trim()
         .required('Enter the CMS Project/Product Manager or Lead name'),
       component: Yup.string().required(
-        'Select a project/ product manager, or Lead Component'
+        'Select a Project/Product Manager or Lead Component'
       )
     }),
     isso: Yup.object().shape({
@@ -38,46 +61,7 @@ const SystemIntakeValidationSchema: any = {
         then: Yup.string().required('Select an ISSO component')
       })
     }),
-    governanceTeams: Yup.object().shape({
-      isPresent: Yup.boolean()
-        .nullable()
-        .required('Select if you are working with any teams'),
-      teams: Yup.array().when('isPresent', {
-        is: true,
-        then: Yup.array()
-          .min(1, 'Mark all teams you are currently collaborating with')
-          .of(
-            Yup.object().shape({
-              name: Yup.string().oneOf(governanceTeamNames),
-              collaborator: Yup.string()
-                .when('name', {
-                  is: 'Technical Review Board',
-                  then: Yup.string()
-                    .trim()
-                    .required(
-                      "Tell us the name of the person you've been working with from the Technical Review Board"
-                    )
-                })
-                .when('name', {
-                  is: "OIT's Security and Privacy Group",
-                  then: Yup.string()
-                    .trim()
-                    .required(
-                      "Tell us the name of the person you've been working with from OIT's Security and Privacy Group"
-                    )
-                })
-                .when('name', {
-                  is: 'Enterprise Architecture',
-                  then: Yup.string()
-                    .trim()
-                    .required(
-                      "Tell us the name of the person you've been working with from Enterprise Architecture"
-                    )
-                })
-            })
-          )
-      })
-    })
+    governanceTeams
   }),
   requestDetails: Yup.object().shape({
     requestName: Yup.string()

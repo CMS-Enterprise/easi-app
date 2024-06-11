@@ -92,6 +92,7 @@ describe('Issue LCID form', async () => {
             getSystemIntakeQuery(),
             getSystemIntakesWithLcidsQuery
           ]}
+          addTypename
         >
           <MemoryRouter>
             <MessageProvider>
