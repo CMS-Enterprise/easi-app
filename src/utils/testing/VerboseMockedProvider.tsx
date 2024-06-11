@@ -46,8 +46,8 @@ const VerboseMockedProvider = (props: Props) => {
 
   return (
     <MockedProvider
-      {...otherProps}
       addTypename={false}
+      {...otherProps}
       mocks={mocks}
       link={link}
     />
