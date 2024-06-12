@@ -319,13 +319,13 @@ type ComplexityRoot struct {
 
 	CedarSoftwareProducts struct {
 		AISolnCatgOther     func(childComplexity int) int
+		APIDataArea         func(childComplexity int) int
 		APIDescPubLocation  func(childComplexity int) int
 		APIDescPublished    func(childComplexity int) int
 		APIFHIRUse          func(childComplexity int) int
 		APIFHIRUseOther     func(childComplexity int) int
 		APIHasPortal        func(childComplexity int) int
 		AiSolnCatg          func(childComplexity int) int
-		ApiDataArea         func(childComplexity int) int
 		ApisAccessibility   func(childComplexity int) int
 		ApisDeveloped       func(childComplexity int) int
 		DevelopmentStage    func(childComplexity int) int
@@ -2782,6 +2782,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CedarSoftwareProducts.AISolnCatgOther(childComplexity), true
 
+	case "CedarSoftwareProducts.apiDataArea":
+		if e.complexity.CedarSoftwareProducts.APIDataArea == nil {
+			break
+		}
+
+		return e.complexity.CedarSoftwareProducts.APIDataArea(childComplexity), true
+
 	case "CedarSoftwareProducts.apiDescPubLocation":
 		if e.complexity.CedarSoftwareProducts.APIDescPubLocation == nil {
 			break
@@ -2823,13 +2830,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarSoftwareProducts.AiSolnCatg(childComplexity), true
-
-	case "CedarSoftwareProducts.apiDataArea":
-		if e.complexity.CedarSoftwareProducts.ApiDataArea == nil {
-			break
-		}
-
-		return e.complexity.CedarSoftwareProducts.ApiDataArea(childComplexity), true
 
 	case "CedarSoftwareProducts.apisAccessibility":
 		if e.complexity.CedarSoftwareProducts.ApisAccessibility == nil {
