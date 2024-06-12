@@ -40,7 +40,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 	})
 
 	s.Run("Errors will rollback a transaction", func() {
-		var createId uuid.UUID
+		var createID uuid.UUID
 		retVal, err := sqlutils.WithTransactionRet[*models.TRBRequest](ctx, s.store, func(tx *sqlx.Tx) (*models.TRBRequest, error) {
 
 			trb := models.NewTRBRequest(anonEua)
@@ -56,7 +56,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 			s.NotNil(created)
 
 			// assign id to external var for later
-			createId = created.ID
+			createID = created.ID
 
 			return created, errArtifical
 
@@ -67,7 +67,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 		s.Nil(retVal)
 
 		// attempt to get new TRB by the created ID - we should not get anything
-		trb, err := s.store.GetTRBRequestByID(ctx, createId)
+		trb, err := s.store.GetTRBRequestByID(ctx, createID)
 		s.Error(err)
 
 		// that same TRB request that was not nil in the tx will now be nil after rollback
@@ -101,7 +101,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 	})
 
 	s.Run("With Transaction will rollback on panic", func() {
-		var createId uuid.UUID
+		var createID uuid.UUID
 
 		panicFunc := func() {
 			_ = sqlutils.WithTransaction(ctx, s.store, func(tx *sqlx.Tx) error {
@@ -118,7 +118,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 				s.NotNil(createdTRB)
 
 				// assign id for later
-				createId = createdTRB.ID
+				createID = createdTRB.ID
 
 				panic("panic!")
 			})
@@ -128,7 +128,7 @@ func (s *StoreTestSuite) TestWithTransaction() {
 		s.Panics(panicFunc)
 
 		// attempt to get new TRB by the created ID - we should not get anything
-		trb, err := s.store.GetTRBRequestByID(ctx, createId)
+		trb, err := s.store.GetTRBRequestByID(ctx, createID)
 		s.Error(err)
 
 		// should no longer exist due to panic-induced rollback

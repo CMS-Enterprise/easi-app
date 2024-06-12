@@ -43,7 +43,7 @@ func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 }
 
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially
-func createSystemIntakeDocumentSubtest(suite *ResolverSuite, systemIntakeID uuid.UUID, documentToCreate *models.SystemIntakeDocument) *models.SystemIntakeDocument {
+func createSystemIntakeDocumentSubtest(s *ResolverSuite, systemIntakeID uuid.UUID, documentToCreate *models.SystemIntakeDocument) *models.SystemIntakeDocument {
 	testContents := "Test file content"
 	encodedFileContent := easiencoding.EncodeBase64String(testContents)
 	fileToUpload := bytes.NewReader([]byte(encodedFileContent))
@@ -60,50 +60,50 @@ func createSystemIntakeDocumentSubtest(suite *ResolverSuite, systemIntakeID uuid
 	}
 
 	createdDocument, err := CreateSystemIntakeDocument(
-		suite.testConfigs.Context,
-		suite.testConfigs.Store,
-		suite.testConfigs.S3Client,
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		s.testConfigs.S3Client,
 		gqlInput,
 	)
-	suite.NoError(err)
-	suite.NotNil(createdDocument)
+	s.NoError(err)
+	s.NotNil(createdDocument)
 
-	checkSystemIntakeDocumentEquality(suite, documentToCreate, suite.testConfigs.Principal.ID(), systemIntakeID, createdDocument)
-	suite.EqualValues(suite.testConfigs.S3Client.GetBucket(), createdDocument.Bucket)
+	checkSystemIntakeDocumentEquality(s, documentToCreate, s.testConfigs.Principal.ID(), systemIntakeID, createdDocument)
+	s.EqualValues(s.testConfigs.S3Client.GetBucket(), createdDocument.Bucket)
 
 	return createdDocument // used by other tests
 }
 
-func getSystemIntakeDocumentsByRequestIDSubtest(suite *ResolverSuite, systemIntakeID uuid.UUID, createdDocument *models.SystemIntakeDocument) {
+func getSystemIntakeDocumentsByRequestIDSubtest(s *ResolverSuite, systemIntakeID uuid.UUID, createdDocument *models.SystemIntakeDocument) {
 	documents, err := GetSystemIntakeDocumentsByRequestID(
-		suite.testConfigs.Context,
-		suite.testConfigs.Store,
-		suite.testConfigs.S3Client,
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		s.testConfigs.S3Client,
 		systemIntakeID,
 	)
-	suite.NoError(err)
-	suite.Equal(1, len(documents))
+	s.NoError(err)
+	s.Equal(1, len(documents))
 
 	fetchedDocument := documents[0]
-	suite.NotNil(fetchedDocument)
+	s.NotNil(fetchedDocument)
 
-	checkSystemIntakeDocumentEquality(suite, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeRequestID, fetchedDocument)
+	checkSystemIntakeDocumentEquality(s, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeRequestID, fetchedDocument)
 	// TODO - try downloading fetchedDocument.URL? compare content to fileToUpload from create subtest?
 }
 
-func deleteSystemIntakeDocumentSubtest(suite *ResolverSuite, createdDocument *models.SystemIntakeDocument) {
-	deletedDocument, err := DeleteSystemIntakeDocument(suite.testConfigs.Context, suite.testConfigs.Store, createdDocument.ID)
-	suite.NoError(err)
-	checkSystemIntakeDocumentEquality(suite, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeRequestID, deletedDocument)
+func deleteSystemIntakeDocumentSubtest(s *ResolverSuite, createdDocument *models.SystemIntakeDocument) {
+	deletedDocument, err := DeleteSystemIntakeDocument(s.testConfigs.Context, s.testConfigs.Store, createdDocument.ID)
+	s.NoError(err)
+	checkSystemIntakeDocumentEquality(s, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeRequestID, deletedDocument)
 
 	remainingDocuments, err := GetSystemIntakeDocumentsByRequestID(
-		suite.testConfigs.Context,
-		suite.testConfigs.Store,
-		suite.testConfigs.S3Client,
+		s.testConfigs.Context,
+		s.testConfigs.Store,
+		s.testConfigs.S3Client,
 		createdDocument.SystemIntakeRequestID,
 	)
-	suite.NoError(err)
-	suite.Equal(0, len(remainingDocuments))
+	s.NoError(err)
+	s.Equal(0, len(remainingDocuments))
 }
 
 func checkSystemIntakeDocumentEquality(

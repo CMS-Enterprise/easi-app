@@ -68,7 +68,7 @@ func (c *Client) GetSoftwareProductsBySystem(ctx context.Context, cedarSystemID 
 	// Convert the rest of the parent SoftwareProducts object
 	retVal := &models.CedarSoftwareProducts{
 		AiSolnCatg:       models.ZeroStringsFrom(resp.Payload.AiSolnCatg),
-		ApiDataArea:      models.ZeroStringsFrom(resp.Payload.APIDataArea),
+		APIDataArea:      models.ZeroStringsFrom(resp.Payload.APIDataArea),
 		SoftwareProducts: softwareProductItems,
 
 		AISolnCatgOther:     zero.StringFrom(resp.Payload.AiSolnCatgOther),

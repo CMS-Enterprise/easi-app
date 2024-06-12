@@ -1281,7 +1281,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsImmediatelyAfterIntakeCreati
 					}
 				}
 				ContractNumbers []struct {
-					Id             string
+					ID             string
 					SystemIntakeID string
 					ContractNumber string
 				}
@@ -1451,7 +1451,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsReplacesContractVehicleWithC
 					Vehicle *string
 				}
 				ContractNumbers []struct {
-					Id             string
+					ID             string
 					SystemIntakeID string
 					ContractNumber string
 				}
@@ -1643,7 +1643,7 @@ func (s *GraphQLTestSuite) TestUpdateContractDetailsRemoveContract() {
 					Vehicle *string
 				}
 				ContractNumbers []struct {
-					Id             string
+					ID             string
 					SystemIntakeID string
 					ContractNumber string
 				}

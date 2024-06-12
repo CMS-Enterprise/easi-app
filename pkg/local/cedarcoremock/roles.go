@@ -118,7 +118,7 @@ func GetRoleTypeByRoleTypeID(roleTypeID string) *models.CedarRoleType {
 	return &models.CedarRoleType{}
 }
 
-// GetMockSystemRoles returns mocked roles for a single CEDAR system, filtered by role type ID
+// GetSystemRoles returns mocked roles for a single CEDAR system, filtered by role type ID
 func GetSystemRoles(cedarSystemID string, roleTypeID *string) []*models.CedarRole {
 	var roleTypeIDStr string
 	if roleTypeID != nil {

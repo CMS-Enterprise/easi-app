@@ -12,6 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
+// UpdateSystemIntakeFundingSources clears and updates the funding sources of a system intake using an automatically created transaction
 func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemIntakeID uuid.UUID, fundingSources []*models.SystemIntakeFundingSource) ([]*models.SystemIntakeFundingSource, error) {
 	return sqlutils.WithTransactionRet[[]*models.SystemIntakeFundingSource](ctx, s, func(tx *sqlx.Tx) ([]*models.SystemIntakeFundingSource, error) {
 		return s.UpdateSystemIntakeFundingSourcesNP(ctx, tx, systemIntakeID, fundingSources)
@@ -19,7 +20,7 @@ func (s *Store) UpdateSystemIntakeFundingSources(ctx context.Context, systemInta
 	})
 }
 
-// UpdateSystemIntakeFundingSources clears and updates the funding sources of a system intake
+// UpdateSystemIntakeFundingSourcesNP clears and updates the funding sources of a system intake
 func (s *Store) UpdateSystemIntakeFundingSourcesNP(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, fundingSources []*models.SystemIntakeFundingSource) ([]*models.SystemIntakeFundingSource, error) {
 	now := s.clock.Now()
 
