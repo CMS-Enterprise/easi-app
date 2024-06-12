@@ -89,8 +89,9 @@ var mockBusinessOwnerInformation = map[string]*models.BusinessOwnerInformation{
 	},
 }
 
-func GetBusinessOwnerInformation(cedarSystemId string) *models.BusinessOwnerInformation {
-	if val, ok := mockBusinessOwnerInformation[cedarSystemId]; ok {
+// GetBusinessOwnerInformation returns a mocked BusinessOwnerInformation struct
+func GetBusinessOwnerInformation(cedarSystemID string) *models.BusinessOwnerInformation {
+	if val, ok := mockBusinessOwnerInformation[cedarSystemID]; ok {
 		return val
 	}
 
