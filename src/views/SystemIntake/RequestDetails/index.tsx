@@ -20,7 +20,7 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import Alert from 'components/shared/Alert';
-import AutoSave from 'components/shared/AutoSave';
+// import AutoSave from 'components/shared/AutoSave';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -74,8 +74,8 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     setFocus,
     handleSubmit,
     setError,
-    partialSubmit,
-    watch,
+    // partialSubmit,
+    // watch,
     formState: { errors, isSubmitting, isDirty }
   } = useEasiForm<RequestDetailsForm>({
     resolver: yupResolver(SystemIntakeValidationSchema.requestDetails),
@@ -416,25 +416,26 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           }}
           back={{
             type: 'button',
-            onClick: () =>
-              partialSubmit({
-                update: updateSystemIntake,
-                callback: () => history.push('contact-details')
-              })
+            onClick: () => history.push('contact-details')
+            // partialSubmit({
+            //   update: updateSystemIntake,
+            //   callback: () => history.push('contact-details')
+            // })
           }}
           border={false}
           taskListUrl={saveExitLink}
-          submit={() =>
-            partialSubmit({
-              update: updateSystemIntake,
-              callback: () => history.push(saveExitLink)
-            })
+          submit={
+            async () => history.push(saveExitLink)
+            // partialSubmit({
+            //   update: updateSystemIntake,
+            //   callback: () => history.push(saveExitLink)
+            // })
           }
           className="margin-top-4"
         />
       </Form>
 
-      <AutoSave
+      {/* <AutoSave
         values={watch()}
         onSave={() =>
           partialSubmit({
@@ -443,7 +444,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           })
         }
         debounceDelay={3000}
-      />
+      /> */}
 
       <PageNumber currentPage={2} totalPages={5} />
     </>
