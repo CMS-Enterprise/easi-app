@@ -111,7 +111,7 @@ var mockSystems = map[string]*models.CedarSystem{
 	},
 }
 
-// GetSystems returns a mocked list of Cedar Systems
+// GetAllSystems returns a mocked list of Cedar Systems
 func GetAllSystems() []*models.CedarSystem {
 	var systems []*models.CedarSystem
 	for _, v := range mockSystems {
