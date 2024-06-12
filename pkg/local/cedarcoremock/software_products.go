@@ -9,7 +9,7 @@ import (
 func GetSoftwareProducts() *models.CedarSoftwareProducts {
 	return &models.CedarSoftwareProducts{
 		AiSolnCatg: []zero.String{},
-		ApiDataArea: []zero.String{
+		APIDataArea: []zero.String{
 			zero.StringFrom("Supporting Resource"),
 			zero.StringFrom("Healthcare Quality"),
 		},

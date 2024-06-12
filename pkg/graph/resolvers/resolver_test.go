@@ -34,18 +34,18 @@ type ResolverSuite struct {
 }
 
 // SetupTest clears the database between each test
-func (suite *ResolverSuite) SetupTest() {
+func (s *ResolverSuite) SetupTest() {
 	// We need to set the *require.Assertions here, as we need to have already called suite.Run() to ensure the
 	// test suite has been constructed before we call suite.Require()
-	suite.Assertions = suite.Require()
+	s.Assertions = s.Require()
 
 	// Clean all tables before each test
-	err := suite.testConfigs.Store.TruncateAllTablesDANGEROUS(suite.testConfigs.Logger)
-	assert.NoError(suite.T(), err)
+	err := s.testConfigs.Store.TruncateAllTablesDANGEROUS(s.testConfigs.Logger)
+	assert.NoError(s.T(), err)
 
 	// Get the user account from the DB fresh for each test
-	princ := getTestPrincipal(suite.testConfigs.Store, suite.testConfigs.UserInfo.Username)
-	suite.testConfigs.Principal = princ
+	princ := getTestPrincipal(s.testConfigs.Store, s.testConfigs.UserInfo.Username)
+	s.testConfigs.Principal = princ
 }
 
 // TestResolverSuite runs the resolver test suite
@@ -177,12 +177,12 @@ func newS3Config() upload.Config {
 }
 
 // utility method for creating a valid new system intake, checking for any errors
-func (suite *ResolverSuite) createNewIntake() *models.SystemIntake {
-	newIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, &models.SystemIntake{
+func (s *ResolverSuite) createNewIntake() *models.SystemIntake {
+	newIntake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
 		// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
-	suite.NoError(err)
+	s.NoError(err)
 
 	return newIntake
 }

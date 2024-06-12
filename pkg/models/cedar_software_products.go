@@ -22,11 +22,11 @@ type SoftwareProductItem struct {
 	VendorName                     zero.String `json:"vendor_name,omitempty"`
 }
 
-// CedarSoftwareProduct represents a single SoftwareProduct object returned from the CEDAR API
+// CedarSoftwareProducts represents a single SoftwareProduct object returned from the CEDAR API
 type CedarSoftwareProducts struct {
 	// Always present fields
 	AiSolnCatg       []zero.String          `json:"aiSolnCatg"`
-	ApiDataArea      []zero.String          `json:"apiDataArea"`
+	APIDataArea      []zero.String          `json:"apiDataArea"`
 	SoftwareProducts []*SoftwareProductItem `json:"softwareProducts"`
 
 	// Possibly null fields

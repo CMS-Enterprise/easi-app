@@ -54,12 +54,12 @@ func (loaders *DataLoaders) getBookmarkedCEDARSystems(ctx context.Context, keys 
 	return output
 }
 
-func GetCedarSystemIsBookmarked(ctx context.Context, cedarSystemId string) (bool, error) {
+func GetCedarSystemIsBookmarked(ctx context.Context, cedarSystemID string) (bool, error) {
 	allLoaders := Loaders(ctx)
 	loader := allLoaders.cedarSystemIsBookmarked
 
 	key := NewKeyArgs()
-	key.Args["cedar_system_id"] = cedarSystemId
+	key.Args["cedar_system_id"] = cedarSystemID
 	key.Args["eua_user_id"] = appcontext.Principal(ctx).ID()
 
 	thunk := loader.Loader.Load(ctx, key)

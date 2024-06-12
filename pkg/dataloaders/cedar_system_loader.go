@@ -11,7 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-const cedar_system_loader_key = "id"
+const cedarSystemLoaderKey = "id"
 
 func (loaders *DataLoaders) getCedarSystemBatchFunction(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
 	logger := appcontext.ZLogger(ctx)
@@ -36,7 +36,7 @@ func (loaders *DataLoaders) getCedarSystemBatchFunction(ctx context.Context, key
 	for index, key := range keys {
 		ck, ok := key.Raw().(KeyArgs)
 		if ok {
-			resKey := fmt.Sprint(ck.Args[cedar_system_loader_key])
+			resKey := fmt.Sprint(ck.Args[cedarSystemLoaderKey])
 			cedarSystem, ok := systemSummaryMap[resKey]
 			if ok {
 				output[index] = &dataloader.Result{Data: cedarSystem, Error: nil}
@@ -58,7 +58,7 @@ func GetCedarSystemByID(ctx context.Context, id string) (*models.CedarSystem, er
 	cedarSystemLoader := allLoaders.cedarSystemByIDLoader
 
 	key := NewKeyArgs()
-	key.Args[cedar_system_loader_key] = id
+	key.Args[cedarSystemLoaderKey] = id
 
 	thunk := cedarSystemLoader.Loader.Load(ctx, key)
 	result, err := thunk()

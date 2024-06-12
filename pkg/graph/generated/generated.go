@@ -20535,7 +20535,7 @@ func (ec *executionContext) _CedarSoftwareProducts_apiDataArea(ctx context.Conte
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ApiDataArea, nil
+		return obj.APIDataArea, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
