@@ -38,6 +38,7 @@ linters:
      - ineffassign
      - revive
      - staticcheck
+     - stylecheck
      - gosimple #will be deprecated in golangci-lint v2.0 in favor of staticcheck https://github.com/golangci/golangci-lint/issues/357
      - unused #will be deprecated in golangci-lint v2.0 in favor of staticcheck https://github.com/golangci/golangci-lint/issues/357
      - exhaustive
@@ -47,7 +48,7 @@ linters:
 issues:
   exclude-use-default: false
   exclude:
-    - "package-comments"
+    - "ST1000" # Exclude package comments from `stylecheck`
   exclude-rules:
     - text: 'shadow: declaration of "err" shadows declaration at'
       linters: [ govet ]
