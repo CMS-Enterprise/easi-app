@@ -10,11 +10,11 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (suite *ResolverSuite) TestTRBRequestDocumentResolvers() {
+func (s *ResolverSuite) TestTRBRequestDocumentResolvers() {
 	// general setup
-	trbRequest, err := CreateTRBRequest(suite.testConfigs.Context, models.TRBTFormalReview, suite.testConfigs.Store)
-	suite.NoError(err)
-	suite.NotNil(trbRequest)
+	trbRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTFormalReview, s.testConfigs.Store)
+	s.NoError(err)
+	s.NotNil(trbRequest)
 	trbRequestID := trbRequest.ID
 
 	documentToCreate := &models.TRBRequestDocument{
@@ -26,9 +26,9 @@ func (suite *ResolverSuite) TestTRBRequestDocumentResolvers() {
 	}
 	// docToBeCreated.CreatedBy will be set based on principal in test config
 
-	createdDocument := createTRBRequestDocumentSubtest(suite, trbRequestID, documentToCreate)
-	getTRBRequestDocumentsByRequestIDSubtest(suite, trbRequestID, createdDocument)
-	deleteTRBRequestDocumentSubtest(suite, createdDocument)
+	createdDocument := createTRBRequestDocumentSubtest(s, trbRequestID, documentToCreate)
+	getTRBRequestDocumentsByRequestIDSubtest(s, trbRequestID, createdDocument)
+	deleteTRBRequestDocumentSubtest(s, createdDocument)
 }
 
 // subtests are regular functions, not suite methods, so we can guarantee they run sequentially

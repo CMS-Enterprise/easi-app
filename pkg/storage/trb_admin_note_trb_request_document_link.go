@@ -12,7 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// Creates multiple link records relating a single TRB admin note to all TRB documents it references
+// CreateTRBAdminNoteTRBDocumentLinks creates multiple link records relating a single TRB admin note to all TRB documents it references
 func (s *Store) CreateTRBAdminNoteTRBDocumentLinks(
 	ctx context.Context,
 	trbRequestID uuid.UUID,

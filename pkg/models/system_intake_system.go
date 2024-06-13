@@ -16,3 +16,7 @@ func NewSystemIntakeSystem(createdBy uuid.UUID) SystemIntakeSystem {
 		BaseStructUser: NewBaseStructUser(createdBy),
 	}
 }
+
+func (s SystemIntakeSystem) GetMappingID() uuid.UUID {
+	return s.SystemIntakeID
+}

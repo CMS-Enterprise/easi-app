@@ -1,8 +1,6 @@
 package resolvers
 
 import (
-	"context"
-
 	"github.com/samber/lo"
 
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -10,7 +8,7 @@ import (
 
 // TestCreateTRBRequestForm makes a new TRB request
 func (s *ResolverSuite) TestModifyTRBFundingSources() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 
 	anonEua := "ANON"
 

@@ -3,7 +3,6 @@ package storage
 import (
 	"context"
 	"fmt"
-	"strings"
 	"testing"
 	"time"
 
@@ -111,16 +110,4 @@ func createTestPrincipal(store *Store, userName string) *authentication.EUAPrinc
 		UserAccount: userAccount,
 	}
 	return princ
-
-}
-
-// formatParamTableJSON returns a string in this format `[{"system_intake_id":"84f41936-9d81-4c06-aa8e-df8010bfec72"}]`
-func formatParamTableJSON(key string, ids []uuid.UUID) string {
-	var out []string
-
-	for _, id := range ids {
-		out = append(out, fmt.Sprintf(`{"%[1]s":"%[2]s"}`, key, id.String()))
-	}
-
-	return fmt.Sprintf(`[%s]`, strings.Join(out, ","))
 }

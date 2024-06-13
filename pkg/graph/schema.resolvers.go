@@ -176,7 +176,7 @@ func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *model
 
 // IsBookmarked is the resolver for the isBookmarked field.
 func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
-	return resolvers.CedarSystemIsBookmarked(ctx, obj.ID.String)
+	return resolvers.GetCedarSystemIsBookmarked(ctx, obj.ID.String)
 }
 
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
@@ -486,6 +486,11 @@ func (r *mutationResolver) UpdateSystemIntakeNote(ctx context.Context, input mod
 // CreateSystemIntake is the resolver for the createSystemIntake field.
 func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input models.CreateSystemIntakeInput) (*models.SystemIntake, error) {
 	return resolvers.CreateSystemIntake(ctx, r.store, input)
+}
+
+// UpdateSystemIntakeRequestType is the resolver for the updateSystemIntakeRequestType field.
+func (r *mutationResolver) UpdateSystemIntakeRequestType(ctx context.Context, id uuid.UUID, newType models.SystemIntakeRequestType) (*models.SystemIntake, error) {
+	return resolvers.UpdateSystemIntakeRequestType(ctx, r.store, id, newType)
 }
 
 // SubmitIntake is the resolver for the submitIntake field.

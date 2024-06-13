@@ -8,7 +8,7 @@ import (
 
 // TestTRBLeadOptions tests the TRBLeadOption creation/deletion/retrieval
 func (s *ResolverSuite) TestTRBLeadOptions() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 	leadUsers := map[string]*models.UserInfo{
 		"ABCD": {
 			DisplayName: "Adeline Aarons",

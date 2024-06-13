@@ -2,12 +2,15 @@ package resolvers
 
 import (
 	"context"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate"
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -72,6 +75,24 @@ func UpdateSystemIntakeContact(
 	return &models.CreateSystemIntakeContactPayload{
 		SystemIntakeContact: updatedContact,
 	}, nil
+}
+
+// UpdateSystemIntakeRequestType updates a system intake's request type and returns the updated intake.
+// It will return an error if the intake is not found by the ID, or the update fails for any reason.
+func UpdateSystemIntakeRequestType(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID, newType models.SystemIntakeRequestType) (*models.SystemIntake, error) {
+	// Fetch intake by ID
+	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Update request type and set UpdatedAt
+	intake.RequestType = newType
+	intake.UpdatedAt = helpers.PointerTo(time.Now())
+
+	// Save intake to DB
+	savedIntake, err := store.UpdateSystemIntake(ctx, intake)
+	return savedIntake, err
 }
 
 // TODO: thes calls could largely be combined in a more general call to Update the System Intake. It would rely on a similar approach that was taken in TRB
@@ -175,6 +196,7 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 		if err != nil {
 			return nil, err
 		}
+
 		intake.RequestFormState = formstate.GetNewStateForUpdatedForm(intake.RequestFormState)
 
 		if input.FundingSources != nil && input.FundingSources.FundingSources != nil {

@@ -356,7 +356,7 @@ export const prepareBusinessCaseForApi = (
     ...(alternativeBExists
       ? formatLifecycleCostsForApi(
           businessCase.alternativeB.estimatedLifecycleCost,
-          'A'
+          'B'
         )
       : [])
   ];
