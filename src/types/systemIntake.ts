@@ -1,3 +1,4 @@
+import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 
 import { SystemIntakeStatusAdmin } from './graphql-global-types';
@@ -148,7 +149,7 @@ export type ContractDetailsForm = {
     plannedYearOneSpendingITPortion: string;
   };
   contract: {
-    hasContract: string;
+    hasContract: SystemIntakeContractStatus | null;
     contractor: string;
     startDate: {
       month: string;

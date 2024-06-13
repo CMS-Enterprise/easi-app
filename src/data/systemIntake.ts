@@ -55,7 +55,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     plannedYearOneSpendingITPortion: ''
   },
   contract: {
-    hasContract: '',
+    hasContract: null,
     contractor: '',
     startDate: {
       month: '',

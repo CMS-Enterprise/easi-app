@@ -1,3 +1,17 @@
+import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
+
+const hasContractRadioLabels: Record<
+  `hasContractRadio_${SystemIntakeContractStatus}`,
+  string
+> = {
+  hasContractRadio_HAVE_CONTRACT:
+    'I am planning project changes during my existing contract/InterAgency Agreement (IAA) period of performance',
+  hasContractRadio_IN_PROGRESS:
+    'I am currently working on my OAGM Acquisition Plan/IAA documents',
+  hasContractRadio_NOT_STARTED: "I haven't started acquisition planning yet",
+  hasContractRadio_NOT_NEEDED: "I don't anticipate needing contractor support"
+};
+
 const intake = {
   navigation: {
     itGovernance: 'IT Governance',
@@ -289,21 +303,15 @@ const intake = {
       'Do you already have a contract in place to support this effort?',
     hasContractHelpText:
       'This information helps the Office of Acquisition and Grants Management (OAGM) track work',
-    hasContractRadio_HAVE_CONTRACT:
-      'I am planning project changes during my existing contract/InterAgency Agreement (IAA) period of performance',
     contractors: 'Contractor(s)',
     periodOfPerformance:
       'Period of Performance dates (include all option years)',
     newPeriodOfPerformance:
       'New Period of Performance dates (include all option years)',
     periodOfPerformanceHelpText: 'For example: 4/10/2020 - 4/9/2025',
-    hasContractRadio_IN_PROGRESS:
-      'I am currently working on my OAGM Acquisition Plan/IAA documents',
-    hasContractRadio_NOT_STARTED: "I haven't started acquisition planning yet",
-    hasContractRadio_NOT_NEEDED:
-      "I don't anticipate needing contractor support",
     hasContractRadioHint:
-      'Choosing this option will remove previously-entered contract number(s).'
+      'Choosing this option will remove previously-entered contract number(s).',
+    ...hasContractRadioLabels
   },
   review: {
     heading: 'Check your answers before sending',

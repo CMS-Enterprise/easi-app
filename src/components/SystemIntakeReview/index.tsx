@@ -7,7 +7,6 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import useSystemIntakeContacts from 'hooks/useSystemIntakeContacts';
 import { SystemIntake } from 'queries/types/SystemIntake';
@@ -332,9 +331,9 @@ export const SystemIntakeReview = ({
           <div>
             <DescriptionTerm term={t('review.contract')} />
             <DescriptionDefinition
-              definition={
-                contractStatus[`${systemIntake.contract.hasContract}`]
-              }
+              definition={t(
+                `intake:contractDetails.${systemIntake.contract.hasContract}`
+              )}
             />
           </div>
         </ReviewRow>

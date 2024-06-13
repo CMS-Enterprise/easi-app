@@ -24,6 +24,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
 import { SystemIntake } from 'queries/types/SystemIntake';
@@ -98,7 +99,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           month: contract.endDate.month || '',
           year: contract.endDate.year || ''
         },
-        hasContract: contract.hasContract || '',
+        hasContract: contract.hasContract as SystemIntakeContractStatus,
         startDate: {
           day: contract.startDate.day || '',
           month: contract.startDate.month || '',
@@ -361,12 +362,15 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               {...register('contract.hasContract')}
               ref={null}
               id="contractHaveContract"
-              value="HAVE_CONTRACT"
+              value={SystemIntakeContractStatus.HAVE_CONTRACT}
               aria-describedby="hasContractHelpText"
-              aria-expanded={watch('contract.hasContract') === 'HAVE_CONTRACT'}
+              aria-expanded={
+                watch('contract.hasContract') ===
+                SystemIntakeContractStatus.HAVE_CONTRACT
+              }
               aria-controls="hasContractBranchWrapper"
               label={t('contractDetails.hasContractRadio', {
-                context: 'HAVE_CONTRACT'
+                context: SystemIntakeContractStatus.HAVE_CONTRACT
               })}
             />
 
@@ -374,12 +378,15 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               {...register('contract.hasContract')}
               ref={null}
               id="contractInProgress"
-              value="IN_PROGRESS"
+              value={SystemIntakeContractStatus.IN_PROGRESS}
               aria-describedby="hasContractHelpText"
-              aria-expanded={watch('contract.hasContract') === 'IN_PROGRESS'}
+              aria-expanded={
+                watch('contract.hasContract') ===
+                SystemIntakeContractStatus.IN_PROGRESS
+              }
               aria-controls="inProgressBranchWrapper"
               label={t('contractDetails.hasContractRadio', {
-                context: 'IN_PROGRESS'
+                context: SystemIntakeContractStatus.IN_PROGRESS
               })}
             />
 
@@ -387,10 +394,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               {...register('contract.hasContract')}
               ref={null}
               id="contractNotStarted"
-              value="NOT_STARTED"
+              value={SystemIntakeContractStatus.NOT_STARTED}
               aria-describedby="hasContractHelpText"
               label={t('contractDetails.hasContractRadio', {
-                context: 'NOT_STARTED'
+                context: SystemIntakeContractStatus.NOT_STARTED
               })}
               labelDescription={
                 <p className="text-base margin-bottom-0 margin-top-neg-1 font-sans-xs">
@@ -403,10 +410,10 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               {...register('contract.hasContract')}
               ref={null}
               id="contractNotNeeded"
-              value="NOT_NEEDED"
+              value={SystemIntakeContractStatus.NOT_NEEDED}
               aria-describedby="hasContractHelpText"
               label={t('contractDetails.hasContractRadio', {
-                context: 'NOT_NEEDED'
+                context: SystemIntakeContractStatus.NOT_NEEDED
               })}
               labelDescription={
                 <p className="text-base margin-bottom-0 margin-top-neg-1 font-sans-xs">
