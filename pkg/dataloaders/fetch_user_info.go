@@ -13,7 +13,18 @@ func (d *dataReader) fetchUserInfosByEUAUserIDs(ctx context.Context, euaUserIDs 
 		return nil, []error{err}
 	}
 
-	return data, nil
+	store := map[string]*models.UserInfo{}
+
+	for _, info := range data {
+		store[info.Username] = info
+	}
+
+	var out []*models.UserInfo
+	for _, id := range euaUserIDs {
+		out = append(out, store[id])
+	}
+
+	return out, nil
 }
 
 func FetchUserInfoByEUAUserID(ctx context.Context, euaUserID string) (*models.UserInfo, error) {
