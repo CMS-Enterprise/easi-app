@@ -3,6 +3,7 @@ package cedarcoremock
 import (
 	"fmt"
 	"sort"
+	"time"
 
 	"github.com/guregu/null/zero"
 
@@ -10,25 +11,31 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+var now = time.Now()
+
 var mockSystems = map[string]*models.CedarSystem{
 	"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}": {
 		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC0A}"),
 		Name:                    zero.StringFrom("Centers for Management Services"),
-		Acronym:                 zero.StringFrom("CMS"),
 		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
-		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
+		Acronym:                 zero.StringFrom("CMS"),
+		ATOEffectiveDate:        zero.TimeFrom(now.AddDate(-1, 0, 0)),
+		ATOExpirationDate:       zero.TimeFrom(now.AddDate(0, -1, 0)),
 		State:                   zero.StringFrom("active"),
 		Status:                  zero.StringFrom(""),
 		BusinessOwnerOrg:        zero.StringFrom("Information Systems Team"),
 		BusinessOwnerOrgComp:    zero.StringFrom("IST"),
 		SystemMaintainerOrg:     zero.StringFrom("Division of Quality Assurance"),
 		SystemMaintainerOrgComp: zero.StringFrom("DQA"),
+		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
 		UUID:                    zero.StringFrom("f5172597-1f9d-4930-9db1-a565a2994c61"),
 	},
 	"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}": {
 		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC1B}"),
 		Name:                    zero.StringFrom("Office of Funny Walks"),
 		Acronym:                 zero.StringFrom("OFW"),
+		ATOEffectiveDate:        zero.TimeFrom(now.AddDate(-1, 0, 0)),
+		ATOExpirationDate:       zero.TimeFrom(now.AddDate(1, 0, 0)),
 		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
 		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
 		State:                   zero.StringFrom("active"),
@@ -43,6 +50,8 @@ var mockSystems = map[string]*models.CedarSystem{
 		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC2C}"),
 		Name:                    zero.StringFrom("Quality Assurance Team"),
 		Acronym:                 zero.StringFrom("QAT"),
+		ATOEffectiveDate:        zero.TimeFrom(now),
+		ATOExpirationDate:       zero.TimeFrom(now.AddDate(0, 0, 1)),
 		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
 		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
 		State:                   zero.StringFrom("active"),
@@ -57,6 +66,8 @@ var mockSystems = map[string]*models.CedarSystem{
 		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC3D}"),
 		Name:                    zero.StringFrom("Strategic Work Information Management System"),
 		Acronym:                 zero.StringFrom("SWIMS"),
+		ATOEffectiveDate:        zero.TimeFrom(now.AddDate(-2, 0, 0)),
+		ATOExpirationDate:       zero.TimeFrom(now.AddDate(1, 0, 0)),
 		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
 		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
 		State:                   zero.StringFrom("active"),
@@ -71,6 +82,8 @@ var mockSystems = map[string]*models.CedarSystem{
 		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC4E}"),
 		Name:                    zero.StringFrom("Center for Central Centrifugal Certainty"),
 		Acronym:                 zero.StringFrom("CCCC"),
+		ATOEffectiveDate:        zero.TimeFrom(time.Time{}),
+		ATOExpirationDate:       zero.TimeFrom(time.Time{}),
 		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
 		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
 		State:                   zero.StringFrom("active"),
@@ -85,6 +98,8 @@ var mockSystems = map[string]*models.CedarSystem{
 		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC5F}"),
 		Name:                    zero.StringFrom("Office of Official Obfuscation"),
 		Acronym:                 zero.StringFrom("OOO"),
+		ATOEffectiveDate:        zero.TimeFrom(now),
+		ATOExpirationDate:       zero.TimeFrom(now.AddDate(1, 0, 0)),
 		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
 		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
 		State:                   zero.StringFrom("deactivated"),
@@ -99,6 +114,8 @@ var mockSystems = map[string]*models.CedarSystem{
 		ID:                      zero.StringFrom("{11AB1A00-1234-5678-ABC1-1A001B00CC6G}"),
 		Name:                    zero.StringFrom("Artificial Intelligence Task Force"),
 		Acronym:                 zero.StringFrom("AITF"),
+		ATOEffectiveDate:        zero.TimeFrom(time.Time{}),
+		ATOExpirationDate:       zero.TimeFrom(time.Time{}),
 		Description:             zero.StringFrom("Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."),
 		VersionID:               zero.StringFrom("{12A123B1-1A2B-1A23-1AB2-12A3456BC7D8}"),
 		State:                   zero.StringFrom("deactivated"),
