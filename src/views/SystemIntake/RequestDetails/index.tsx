@@ -110,18 +110,17 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       }
     });
 
-  const submit = () =>
-    handleSubmit(values => {
-      if (!isDirty) return history.push('contract-details');
+  const submit = handleSubmit(values => {
+    if (!isDirty) return history.push('contract-details');
 
-      return updateSystemIntake(values)
-        .then(() => history.push('contract-details'))
-        .catch(() => {
-          setError('root', {
-            message: t('error:encounteredIssueTryAgain')
-          });
+    return updateSystemIntake(values)
+      .then(() => history.push('contract-details'))
+      .catch(() => {
+        setError('root', {
+          message: t('error:encounteredIssueTryAgain')
         });
-    });
+      });
+  });
 
   const saveExitLink = (() => {
     let link = '';
