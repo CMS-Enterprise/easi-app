@@ -3767,6 +3767,11 @@
           "type": "string",
           "example": "Enterprise Architecture and Data Group"
         },
+        "atoExpirationDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
+        },
         "belongsTo": {
           "type": "string",
           "example": "326-10-0"
@@ -3774,6 +3779,11 @@
         "status": {
           "type": "string",
           "example": "Approved"
+        },
+        "atoEffectiveDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
         }
       }
     },
