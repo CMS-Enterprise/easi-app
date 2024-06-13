@@ -4,9 +4,11 @@ import (
 	"context"
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -45,4 +47,12 @@ func CreateSystemIntakeGRBReviewer(
 
 		return reviewer, nil
 	})
+}
+
+func SystemIntakeGRBReviewers(
+	ctx context.Context,
+	store *storage.Store,
+	intakeID uuid.UUID,
+) ([]*models.SystemIntakeGRBReviewer, error) {
+	return dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intakeID)
 }

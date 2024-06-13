@@ -2,10 +2,10 @@ package storage
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -19,11 +19,17 @@ func (s *Store) CreateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, 
 	if reviewer.ID == uuid.Nil {
 		reviewer.ID = uuid.New()
 	}
-	fmt.Printf("%v\n", reviewer)
 	if _, err := tx.NamedExec(sqlqueries.SystemIntakeGRBReviewer.Create, reviewer); err != nil {
 		appcontext.ZLogger(ctx).Error("failed to create GRB reviewer", zap.Error(err))
 		return err
 	}
 
 	return nil
+}
+
+func (s *Store) SystemIntakeGRBReviewersBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeGRBReviewer, error) {
+	var systemIntakeGRBReviewers []*models.SystemIntakeGRBReviewer
+	return systemIntakeGRBReviewers, selectNamed(ctx, s, &systemIntakeGRBReviewers, sqlqueries.SystemIntakeGRBReviewer.GetBySystemIntakeID, args{
+		"system_intake_ids": pq.Array(systemIntakeIDs),
+	})
 }
