@@ -342,6 +342,8 @@ type ComplexityRoot struct {
 	}
 
 	CedarSystem struct {
+		ATOEffectiveDate        func(childComplexity int) int
+		ATOExpirationDate       func(childComplexity int) int
 		Acronym                 func(childComplexity int) int
 		BusinessOwnerOrg        func(childComplexity int) int
 		BusinessOwnerOrgComp    func(childComplexity int) int
@@ -2900,6 +2902,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarSubSystem.Name(childComplexity), true
+
+	case "CedarSystem.atoEffectiveDate":
+		if e.complexity.CedarSystem.ATOEffectiveDate == nil {
+			break
+		}
+
+		return e.complexity.CedarSystem.ATOEffectiveDate(childComplexity), true
+
+	case "CedarSystem.atoExpirationDate":
+		if e.complexity.CedarSystem.ATOExpirationDate == nil {
+			break
+		}
+
+		return e.complexity.CedarSystem.ATOExpirationDate(childComplexity), true
 
 	case "CedarSystem.acronym":
 		if e.complexity.CedarSystem.Acronym == nil {
@@ -7671,6 +7687,8 @@ type CedarSystem {
   name: String!
   description: String
   acronym: String
+  atoEffectiveDate: Time
+  atoExpirationDate: Time
   status: String
   businessOwnerOrg: String
   businessOwnerOrgComp: String
@@ -21389,6 +21407,88 @@ func (ec *executionContext) fieldContext_CedarSystem_acronym(_ context.Context, 
 	return fc, nil
 }
 
+func (ec *executionContext) _CedarSystem_atoEffectiveDate(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ATOEffectiveDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.Time)
+	fc.Result = res
+	return ec.marshalOTime2githubᚗcomᚋgureguᚋnullᚋzeroᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSystem_atoEffectiveDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSystem_atoExpirationDate(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ATOExpirationDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.Time)
+	fc.Result = res
+	return ec.marshalOTime2githubᚗcomᚋgureguᚋnullᚋzeroᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSystem_atoExpirationDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CedarSystem_status(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarSystem_status(ctx, field)
 	if err != nil {
@@ -22241,6 +22341,10 @@ func (ec *executionContext) fieldContext_CedarSystemDetails_cedarSystem(_ contex
 				return ec.fieldContext_CedarSystem_description(ctx, field)
 			case "acronym":
 				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -34135,6 +34239,10 @@ func (ec *executionContext) fieldContext_Query_cedarSystem(ctx context.Context, 
 				return ec.fieldContext_CedarSystem_description(ctx, field)
 			case "acronym":
 				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -34222,6 +34330,10 @@ func (ec *executionContext) fieldContext_Query_cedarSystems(_ context.Context, f
 				return ec.fieldContext_CedarSystem_description(ctx, field)
 			case "acronym":
 				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -34438,6 +34550,10 @@ func (ec *executionContext) fieldContext_Query_myCedarSystems(_ context.Context,
 				return ec.fieldContext_CedarSystem_description(ctx, field)
 			case "acronym":
 				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -39476,6 +39592,10 @@ func (ec *executionContext) fieldContext_SystemIntake_systems(_ context.Context,
 				return ec.fieldContext_CedarSystem_description(ctx, field)
 			case "acronym":
 				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -47461,6 +47581,10 @@ func (ec *executionContext) fieldContext_TRBRequest_systems(_ context.Context, f
 				return ec.fieldContext_CedarSystem_description(ctx, field)
 			case "acronym":
 				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -58459,6 +58583,10 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 			out.Values[i] = ec._CedarSystem_description(ctx, field, obj)
 		case "acronym":
 			out.Values[i] = ec._CedarSystem_acronym(ctx, field, obj)
+		case "atoEffectiveDate":
+			out.Values[i] = ec._CedarSystem_atoEffectiveDate(ctx, field, obj)
+		case "atoExpirationDate":
+			out.Values[i] = ec._CedarSystem_atoExpirationDate(ctx, field, obj)
 		case "status":
 			out.Values[i] = ec._CedarSystem_status(ctx, field, obj)
 		case "businessOwnerOrg":
