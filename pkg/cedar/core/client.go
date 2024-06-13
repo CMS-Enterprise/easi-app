@@ -51,7 +51,7 @@ var (
 	skipPurge  bool
 )
 
-// Purges Proxy Cache by URL using a given path
+// PurgeCacheByPath purges the Proxy Cache by URL using a given path
 func PurgeCacheByPath(ctx context.Context, path string) error {
 	if skipPurge {
 		return nil

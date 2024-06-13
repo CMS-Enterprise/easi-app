@@ -8,6 +8,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"strconv"
 	"time"
 
@@ -177,7 +178,7 @@ func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *model
 
 // IsBookmarked is the resolver for the isBookmarked field.
 func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
-	return resolvers.CedarSystemIsBookmarked(ctx, obj.ID.String)
+	return resolvers.GetCedarSystemIsBookmarked(ctx, obj.ID.String)
 }
 
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
@@ -1446,6 +1447,11 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 		return nil, err
 	}
 
+	userEua := appcontext.Principal(ctx).ID()
+	isMySystem := slices.ContainsFunc(cedarRoles, func(role *models.CedarRole) bool {
+		return role.AssigneeUsername.String == userEua
+	})
+
 	dCedarSys := models.CedarSystemDetails{
 		CedarSystem:                 sysDetail.CedarSystem,
 		BusinessOwnerInformation:    sysDetail.BusinessOwnerInformation,
@@ -1454,6 +1460,7 @@ func (r *queryResolver) CedarSystemDetails(ctx context.Context, cedarSystemID st
 		Deployments:                 cedarDeployments,
 		Threats:                     cedarThreats,
 		URLs:                        cedarURLs,
+		IsMySystem:                  isMySystem,
 	}
 
 	return &dCedarSys, nil

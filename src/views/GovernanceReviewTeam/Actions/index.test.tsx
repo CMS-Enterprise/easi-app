@@ -36,7 +36,7 @@ const renderActionPage = ({
   action?: string;
 }) => {
   return render(
-    <VerboseMockedProvider mocks={mocks}>
+    <VerboseMockedProvider mocks={mocks} addTypename>
       <MemoryRouter
         initialEntries={[
           `/governance-review-team/${systemIntake.id}/actions/${action}`

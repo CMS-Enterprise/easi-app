@@ -44,6 +44,8 @@
   }
   .toastui-editor-contents ol  {
     list-style-type: decimal;
+    // Need to assign `list-item` since the lib's original uses `li`, which breaks ff
+    counter-reset: list-item;
   }
 }
 

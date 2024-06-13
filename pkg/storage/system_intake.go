@@ -330,6 +330,7 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 	err = intakeStmt.Get(&intake, map[string]interface{}{
 		"id": id.String(),
 	})
+
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			appcontext.ZLogger(ctx).Info(
@@ -376,10 +377,10 @@ func (s *Store) FetchSystemIntakeByIDNP(ctx context.Context, np sqlutils.NamedPr
 	})
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		appcontext.ZLogger(ctx).Error("Failed to fetch system intake contacts", zap.Error(err), zap.String("id", id.String()))
+		appcontext.ZLogger(ctx).Error("Failed to fetch system intake funding sources", zap.Error(err), zap.String("id", id.String()))
 		return nil, &apperrors.QueryError{
 			Err:       err,
-			Model:     models.SystemIntakeContact{},
+			Model:     models.SystemIntakeFundingSource{},
 			Operation: apperrors.QueryFetch,
 		}
 	}

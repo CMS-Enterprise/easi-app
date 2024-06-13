@@ -13,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/userhelpers"
 )
 
-// SetSystemIntakeRelationExistingService sets the relationship between a system intake and
+// CreateSystemIntakeGRBReviewer creates a GRB Reviewer for a System Intake
 func CreateSystemIntakeGRBReviewer(
 	ctx context.Context,
 	store *storage.Store,

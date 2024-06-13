@@ -7,7 +7,7 @@ import _ "embed"
 //go:embed SQL/system_intake_grb_reviewer/insert.sql
 var insertSystemIntakeSystemsSQL string
 
-// SystemIntakeSystemForm holds all relevant SQL scripts for a System Intake system
+// SystemIntakeGRBReviewer holds all SQL scripts for GRB Reviewers
 var SystemIntakeGRBReviewer = systemIntakeGRBReviewerScripts{
 	Create: insertSystemIntakeSystemsSQL,
 }

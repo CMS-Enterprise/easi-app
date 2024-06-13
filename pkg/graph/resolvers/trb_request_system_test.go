@@ -40,7 +40,7 @@ func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 		})
 		s.NoError(err)
 
-		data, err := TRBRequestSystems(ctx, createdIDs[0])
+		data, err := TRBRequestSystems(s.ctxWithNewDataloaders(), createdIDs[0])
 		s.NoError(err)
 		s.Len(data, 3)
 
@@ -69,7 +69,7 @@ func (s *ResolverSuite) TestTRBRequestRelatedSystems() {
 		s.True(found3)
 
 		// attempt to get systems for a trb request without linked systems
-		data, err = TRBRequestSystems(ctx, createdIDs[1])
+		data, err = TRBRequestSystems(s.ctxWithNewDataloaders(), createdIDs[1])
 		s.NoError(err)
 		s.Empty(data)
 	})

@@ -16,7 +16,6 @@ import RichTextEditor from 'components/RichTextEditor';
 import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
-// import TextAreaField from 'components/shared/TextAreaField';
 import {
   CreateTrbRecommendationQuery,
   GetTrbAdviceLetterQuery,
