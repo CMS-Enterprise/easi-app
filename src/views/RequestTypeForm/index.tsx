@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { useOktaAuth } from '@okta/okta-react';
 import {
@@ -17,15 +17,39 @@ import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import { RadioField } from 'components/shared/RadioField';
-import { CreateSystemIntake } from 'queries/SystemIntakeQueries';
+import {
+  CreateSystemIntake,
+  UpdateSystemIntakeRequestType as UpdateSystemIntakeRequestTypeQuery
+} from 'queries/SystemIntakeQueries';
+import {
+  UpdateSystemIntakeRequestType,
+  UpdateSystemIntakeRequestTypeVariables
+} from 'queries/types/UpdateSystemIntakeRequestType';
+import { SystemIntakeRequestType } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 const RequestTypeForm = () => {
+  const { systemId } = useParams<{
+    systemId?: string;
+  }>();
+
+  const { state } = useLocation<{ isNew?: boolean }>();
+
+  // Set isNew from checking loc state false explicitly
+  // This is done in such a way as a stop gap to fix the problem where
+  // changing Intake Request Types, from the overview page, will create new intake requests
+  const isNew = state?.isNew !== false;
+
   const { t } = useTranslation('intake');
   const { oktaAuth } = useOktaAuth();
   const history = useHistory();
   const [mutate] = useMutation(CreateSystemIntake);
+
+  const [edit] = useMutation<
+    UpdateSystemIntakeRequestType,
+    UpdateSystemIntakeRequestTypeVariables
+  >(UpdateSystemIntakeRequestTypeQuery);
 
   const majorChangesExamples: string[] = t(
     'requestTypeForm.helpAndGuidance.majorChanges.list',
@@ -44,27 +68,46 @@ const RequestTypeForm = () => {
         }
       };
 
-      mutate({ variables: { input } }).then(response => {
-        if (!response.errors) {
-          const { id } = response.data.createSystemIntake;
-          const navigationLink = `/system/link/${id}`;
+      const nextPage = (id: string) => {
+        const navigationLink = `/system/link/${id}`;
 
-          switch (requestType) {
-            case 'NEW':
-              history.push(`/governance-overview/${id}`);
-              break;
-            case 'MAJOR_CHANGES':
-              history.push(navigationLink, { isNew: true });
-              break;
-            case 'RECOMPETE':
-              history.push(navigationLink, { isNew: true });
-              break;
-            default:
-              // console.warn(`Unknown request type: ${systemIntake.requestType}`);
-              break;
-          }
+        switch (requestType) {
+          case 'NEW':
+            history.push(`/governance-overview/${id}`, { isNew });
+            break;
+          case 'MAJOR_CHANGES':
+            history.push(navigationLink, { isNew });
+            break;
+          case 'RECOMPETE':
+            history.push(navigationLink, { isNew });
+            break;
+          default:
+            // console.warn(`Unknown request type: ${systemIntake.requestType}`);
+            break;
         }
-      });
+      };
+
+      if (!systemId) {
+        mutate({ variables: { input } }).then(response => {
+          if (!response.errors) {
+            const { id } = response.data.createSystemIntake;
+            nextPage(id);
+          }
+        });
+      } else {
+        // Edit is actually only available when backtracking from the "new system or service" option
+        edit({
+          variables: {
+            id: systemId,
+            requestType: requestType as SystemIntakeRequestType
+          }
+        }).then(response => {
+          if (!response.errors) {
+            const id = systemId;
+            nextPage(id);
+          }
+        });
+      }
     });
   };
 
