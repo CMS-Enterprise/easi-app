@@ -8,6 +8,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
+	"github.com/cmsgov/easi-app/pkg/helpers"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
@@ -42,12 +44,14 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 			s.NoError(err)
 		}
 		// retrieve these contract numbers
-		data, err := s.store.TRBRequestContractNumbersByTRBRequestIDLOADER(ctx, formatParamTableJSON("trb_request_id", createdIDs))
+		results, err := s.store.TRBRequestContractNumbersByTRBRequestIDs(ctx, createdIDs)
 		s.NoError(err)
 
-		for _, trbRequestID := range createdIDs {
-			contractsFound, ok := data[trbRequestID.String()]
-			s.True(ok)
+		data := helpers.OneToMany[*models.TRBRequestContractNumber](createdIDs, results)
+		s.Equal(len(data), len(createdIDs))
+
+		for i, trbRequestID := range createdIDs {
+			contractsFound := data[i]
 			s.Len(contractsFound, 3)
 
 			var (
@@ -57,6 +61,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 			)
 
 			for _, contract := range contractsFound {
+				s.Equal(trbRequestID, contract.TRBRequestID)
 				if contract.ContractNumber == contract1 {
 					found1 = true
 				}
@@ -81,11 +86,13 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.TRBRequestContractNumbersByTRBRequestIDLOADER(ctx, formatParamTableJSON("trb_request_id", []uuid.UUID{createdIDs[0]}))
+		results, err = s.store.TRBRequestContractNumbersByTRBRequestIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
 
-		contractsFound, ok := data[createdIDs[0].String()]
-		s.True(ok)
+		data = helpers.OneToMany[*models.TRBRequestContractNumber]([]uuid.UUID{createdIDs[0]}, results)
+		s.Len(data, 1)
+
+		contractsFound := data[0]
 		s.Len(contractsFound, 4)
 
 		var (
@@ -94,6 +101,7 @@ func (s *StoreTestSuite) TestLinkTRBRequestContractNumbers() {
 		)
 
 		for _, contract := range contractsFound {
+			s.Equal(createdIDs[0], contract.TRBRequestID)
 			if contract.ContractNumber == contract1 ||
 				contract.ContractNumber == contract2 ||
 				contract.ContractNumber == contract3 {

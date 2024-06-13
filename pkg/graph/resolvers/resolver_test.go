@@ -44,8 +44,11 @@ func (s *ResolverSuite) SetupTest() {
 	assert.NoError(s.T(), err)
 
 	// Get the user account from the DB fresh for each test
-	princ := getTestPrincipal(s.testConfigs.Store, s.testConfigs.UserInfo.Username)
+	princ := getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.UserInfo.Username)
 	s.testConfigs.Principal = princ
+
+	// get new dataloaders to clear any existing cached data
+	s.testConfigs.Context = s.ctxWithNewDataloaders()
 }
 
 // TestResolverSuite runs the resolver test suite
@@ -101,17 +104,7 @@ func (tc *TestConfigs) GetDefaults() {
 	// create the test context
 	// principal is fetched between each test in SetupTest()
 	ctx := appcontext.WithLogger(context.Background(), tc.Logger)
-	ctx = appcontext.WithPrincipal(ctx, getTestPrincipal(tc.Store, tc.UserInfo.Username))
-	coreClient := cedarcore.NewClient(ctx, "", "", "", true, true)
-	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
-		return coreClient.GetSystemSummary(ctx)
-	}
-	// Set up mocked dataloaders for the test context
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(
-		tc.Store,
-		func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		getCedarSystems,
-	))
+	ctx = appcontext.WithPrincipal(ctx, getTestPrincipal(ctx, tc.Store, tc.UserInfo.Username))
 
 	tc.Context = ctx
 
@@ -138,9 +131,9 @@ func NewEmailClient() *email.Client {
 
 }
 
-func getTestPrincipal(store *storage.Store, userName string) *authentication.EUAPrincipal {
+func getTestPrincipal(ctx context.Context, store *storage.Store, userName string) *authentication.EUAPrincipal {
 
-	userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
 
 	princ := &authentication.EUAPrincipal{
 		EUAID:       userName,
@@ -185,4 +178,27 @@ func (s *ResolverSuite) createNewIntake() *models.SystemIntake {
 	s.NoError(err)
 
 	return newIntake
+}
+
+// ctxWithNewDataloaders sets new Dataloaders on the test suite's existing context and returns that context.
+// this is necessary in order to avoid the caching feature of the dataloadgen library.
+// that caching feature is great for app code, but in test code, where we often load something,
+// update that thing, and load it again to confirm updates worked, caching the first version breaks that flow
+func (s *ResolverSuite) ctxWithNewDataloaders() context.Context {
+	fetchUserInfos := func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error) {
+		return nil, nil
+	}
+
+	coreClient := cedarcore.NewClient(s.testConfigs.Context, "", "", "", true, true)
+	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
+		return coreClient.GetSystemSummary(ctx)
+	}
+
+	buildDataloaders := func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(s.testConfigs.Store, fetchUserInfos, getCedarSystems)
+	}
+
+	// Set up mocked dataloaders for the test context
+	s.testConfigs.Context = dataloaders.CTXWithLoaders(s.testConfigs.Context, buildDataloaders)
+	return s.testConfigs.Context
 }

@@ -24,7 +24,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 
 	submittedAt := time.Now()
 
-	var contractNumberCases = map[string]systemIntakeRelationTestCase{
+	var cases = map[string]systemIntakeRelationTestCase{
 		"adds contract numbers when no initial contract numbers exist": {
 			InitialContractNumbers: []string{},
 			NewContractNumbers:     []string{"1", "2"},
@@ -59,7 +59,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 		},
 	}
 
-	for caseName, caseValues := range contractNumberCases {
+	for caseName, caseValues := range cases {
 		s.Run(caseName, func() {
 			openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 				State:        models.SystemIntakeStateOpen,
@@ -76,7 +76,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			})
 			s.NoError(err)
 
-			updatedIntakeContractNumbers, err := SystemIntakeContractNumbers(ctx, openIntake.ID)
+			updatedIntakeContractNumbers, err := SystemIntakeContractNumbers(s.ctxWithNewDataloaders(), openIntake.ID)
 			s.NoError(err)
 			s.Equal(len(caseValues.InitialContractNumbers), len(updatedIntakeContractNumbers))
 
@@ -87,7 +87,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			})
 			s.NoError(err)
 
-			updatedIntakeSystemIDs, err := SystemIntakeSystems(ctx, openIntake.ID)
+			updatedIntakeSystemIDs, err := SystemIntakeSystems(s.ctxWithNewDataloaders(), openIntake.ID)
 			s.NoError(err)
 			s.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
@@ -105,10 +105,10 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 			s.True(updatedIntake.ContractName.IsZero())
 
 			// refetch contract numbers and system IDs
-			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(ctx, updatedIntake.ID)
+			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(s.ctxWithNewDataloaders(), updatedIntake.ID)
 			s.NoError(err)
 
-			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, openIntake.ID)
+			updatedIntakeSystemIDs, err = SystemIntakeSystems(s.ctxWithNewDataloaders(), openIntake.ID)
 			s.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -120,9 +120,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationNewSystem() {
 
 			// Ensure the contract numbers were modified properly
 			// skip the following test, see Note [EASI-4160 Disable Contract Number Linking]
-			// suite.Equal(len(caseValues.NewContractNumbers), len(updatedIntakeContractNumbers))
+			// s.Equal(len(caseValues.NewContractNumbers), len(updatedIntakeContractNumbers))
 			// for _, v := range updatedIntakeContractNumbers {
-			// 	suite.Contains(caseValues.NewContractNumbers, v.ContractNumber)
+			// 	s.Contains(caseValues.NewContractNumbers, v.ContractNumber)
 			// }
 			// temp, remove after the above is uncommented
 			_ = updatedIntakeContractNumbers
@@ -190,7 +190,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			})
 			s.NoError(err)
 
-			updatedIntakeContractNumbers, err := SystemIntakeContractNumbers(ctx, openIntake.ID)
+			updatedIntakeContractNumbers, err := SystemIntakeContractNumbers(s.ctxWithNewDataloaders(), openIntake.ID)
 			s.NoError(err)
 			s.Equal(len(caseValues.InitialContractNumbers), len(updatedIntakeContractNumbers))
 
@@ -200,7 +200,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			})
 			s.NoError(err)
 
-			updatedIntakeSystemIDs, err := SystemIntakeSystems(ctx, openIntake.ID)
+			updatedIntakeSystemIDs, err := SystemIntakeSystems(s.ctxWithNewDataloaders(), openIntake.ID)
 			s.NoError(err)
 			s.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
@@ -225,10 +225,10 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 			s.True(updatedIntake.ContractName.IsZero())
 
 			// refetch contract numbers and system IDs
-			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(ctx, updatedIntake.ID)
+			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(s.ctxWithNewDataloaders(), updatedIntake.ID)
 			s.NoError(err)
 
-			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, openIntake.ID)
+			updatedIntakeSystemIDs, err = SystemIntakeSystems(s.ctxWithNewDataloaders(), openIntake.ID)
 			s.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -239,9 +239,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingSystem() {
 
 			// Ensure the contract numbers were modified properly
 			// skip the following test, see Note [EASI-4160 Disable Contract Number Linking]
-			// suite.Equal(len(caseValues.NewContractNumbers), len(updatedIntakeContractNumbers))
+			// s.Equal(len(caseValues.NewContractNumbers), len(updatedIntakeContractNumbers))
 			// for _, v := range updatedIntakeContractNumbers {
-			// 	suite.Contains(caseValues.NewContractNumbers, v.ContractNumber)
+			// 	s.Contains(caseValues.NewContractNumbers, v.ContractNumber)
 			// }
 			// temp, remove when above is uncommented
 			_ = updatedIntakeContractNumbers
@@ -312,7 +312,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			})
 			s.NoError(err)
 
-			updatedIntakeContractNumbers, err := SystemIntakeContractNumbers(ctx, openIntake.ID)
+			updatedIntakeContractNumbers, err := SystemIntakeContractNumbers(s.ctxWithNewDataloaders(), openIntake.ID)
 			s.NoError(err)
 			s.Equal(len(caseValues.InitialContractNumbers), len(updatedIntakeContractNumbers))
 
@@ -323,7 +323,7 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			})
 			s.NoError(err)
 
-			updatedIntakeSystemIDs, err := SystemIntakeSystems(ctx, openIntake.ID)
+			updatedIntakeSystemIDs, err := SystemIntakeSystems(s.ctxWithNewDataloaders(), openIntake.ID)
 			s.NoError(err)
 			s.Equal(len(caseValues.InitialSystemIDs), len(updatedIntakeSystemIDs))
 
@@ -341,10 +341,10 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			s.Equal(newContractName, updatedIntake.ContractName.String)
 
 			// refetch contract numbers and system IDs
-			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(ctx, updatedIntake.ID)
+			updatedIntakeContractNumbers, err = SystemIntakeContractNumbers(s.ctxWithNewDataloaders(), updatedIntake.ID)
 			s.NoError(err)
 
-			updatedIntakeSystemIDs, err = SystemIntakeSystems(ctx, openIntake.ID)
+			updatedIntakeSystemIDs, err = SystemIntakeSystems(s.ctxWithNewDataloaders(), openIntake.ID)
 			s.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -356,9 +356,9 @@ func (s *ResolverSuite) TestSetSystemIntakeRelationExistingService() {
 			// Ensure the contract numbers were modified properly
 			// Existing Service relation should always remove existing system IDs
 			// skip the following test, see Note [EASI-4160 Disable Contract Number Linking]
-			// suite.Equal(len(caseValues.NewContractNumbers), len(updatedIntakeContractNumbers))
+			// s.Equal(len(caseValues.NewContractNumbers), len(updatedIntakeContractNumbers))
 			// for _, v := range updatedIntakeContractNumbers {
-			// 	suite.Contains(caseValues.NewContractNumbers, v.ContractNumber)
+			// 	s.Contains(caseValues.NewContractNumbers, v.ContractNumber)
 			// }
 			// temp, remove after the above is uncommented
 			_ = updatedIntakeContractNumbers
@@ -377,7 +377,7 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 	submittedAt := time.Now()
 
 	s.Run("unlink new system intake", func() {
-		// Create an inital intake
+		// Create an initial intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			State:        models.SystemIntakeStateOpen,
 			RequestType:  models.SystemIntakeRequestTypeNEW,
@@ -405,18 +405,18 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 
 		// Check contract numbers are cleared
 		// skip the following test, see Note [EASI-4160 Disable Contract Number Linking]
-		// nums, err := SystemIntakeContractNumbers(ctx, unlinkedIntake.ID)
-		// suite.NoError(err)
-		// suite.Empty(nums)
+		// nums, err := SystemIntakeContractNumbers(s.ctxWithNewDataloaders(), unlinkedIntake.ID)
+		// s.NoError(err)
+		// s.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := SystemIntakeSystems(ctx, unlinkedIntake.ID)
+		systemIDs, err := SystemIntakeSystems(s.ctxWithNewDataloaders(), unlinkedIntake.ID)
 		s.NoError(err)
 		s.Empty(systemIDs)
 	})
 
 	s.Run("unlink existing system intake", func() {
-		// Create an inital intake
+		// Create an initial intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			State:        models.SystemIntakeStateOpen,
 			RequestType:  models.SystemIntakeRequestTypeNEW,
@@ -452,18 +452,18 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 
 		// Check contract numbers are cleared
 		// skip the following test, see Note [EASI-4160 Disable Contract Number Linking]
-		// nums, err := SystemIntakeContractNumbers(ctx, unlinkedIntake.ID)
-		// suite.NoError(err)
-		// suite.Empty(nums)
+		// nums, err := SystemIntakeContractNumbers(s.ctxWithNewDataloaders(), unlinkedIntake.ID)
+		// s.NoError(err)
+		// s.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := SystemIntakeSystems(ctx, unlinkedIntake.ID)
+		systemIDs, err := SystemIntakeSystems(s.ctxWithNewDataloaders(), unlinkedIntake.ID)
 		s.NoError(err)
 		s.Empty(systemIDs)
 	})
 
 	s.Run("unlink existing service intake", func() {
-		// Create an inital intake
+		// Create an initial intake
 		openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
 			State:       models.SystemIntakeStateOpen,
 			RequestType: models.SystemIntakeRequestTypeNEW,
@@ -491,12 +491,12 @@ func (s *ResolverSuite) TestUnlinkSystemIntakeRelation() {
 		s.Nil(unlinkedIntake.SystemRelationType)
 
 		// Check contract numbers are cleared
-		nums, err := SystemIntakeContractNumbers(ctx, unlinkedIntake.ID)
+		nums, err := SystemIntakeContractNumbers(s.ctxWithNewDataloaders(), unlinkedIntake.ID)
 		s.NoError(err)
 		s.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := SystemIntakeSystems(ctx, unlinkedIntake.ID)
+		systemIDs, err := SystemIntakeSystems(s.ctxWithNewDataloaders(), unlinkedIntake.ID)
 		s.NoError(err)
 		s.Empty(systemIDs)
 	})

@@ -28,14 +28,6 @@ func SetTRBRequestRelationNewSystem(
 			return nil, err
 		}
 
-		// Clear contract name
-		trbRequest.ContractName = zero.StringFromPtr(nil)
-		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeNewSystem)
-		updatedTRBRequest, err := store.UpdateTRBRequestNP(ctx, tx, trbRequest)
-		if err != nil {
-			return nil, err
-		}
-
 		// Delete CEDAR relationships
 		if err := store.SetTRBRequestSystems(ctx, tx, input.TrbRequestID, []string{}); err != nil {
 			return nil, err
@@ -46,7 +38,10 @@ func SetTRBRequestRelationNewSystem(
 			return nil, err
 		}
 
-		return updatedTRBRequest, nil
+		// Clear contract name
+		trbRequest.ContractName = zero.StringFromPtr(nil)
+		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeNewSystem)
+		return store.UpdateTRBRequestNP(ctx, tx, trbRequest)
 	})
 }
 
@@ -66,12 +61,6 @@ func SetTRBRequestRelationExistingSystem(
 			return nil, err
 		}
 
-		trbRequest.ContractName = zero.StringFromPtr(nil)
-		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeExistingSystem)
-		updatedTRBRequest, err := store.UpdateTRBRequestNP(ctx, tx, trbRequest)
-		if err != nil {
-			return nil, err
-		}
 		// ensure all given CEDAR system IDs are valid by checking with CEDAR
 		for _, systemID := range input.CedarSystemIDs {
 			if _, err = getCedarSystem(ctx, systemID); err != nil {
@@ -83,12 +72,15 @@ func SetTRBRequestRelationExistingSystem(
 		if err := store.SetTRBRequestSystems(ctx, tx, input.TrbRequestID, input.CedarSystemIDs); err != nil {
 			return nil, err
 		}
+
 		// Set contract number relationships
 		if err := store.SetTRBRequestContractNumbers(ctx, tx, input.TrbRequestID, input.ContractNumbers); err != nil {
 			return nil, err
 		}
 
-		return updatedTRBRequest, nil
+		trbRequest.ContractName = zero.StringFromPtr(nil)
+		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeExistingSystem)
+		return store.UpdateTRBRequestNP(ctx, tx, trbRequest)
 	})
 }
 
@@ -107,23 +99,20 @@ func SetTRBRequestRelationExistingService(
 			return nil, err
 		}
 
-		// set contract name
-		trbRequest.ContractName = zero.StringFrom(input.ContractName)
-		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeExistingService)
-		updatedTRBRequest, err := store.UpdateTRBRequestNP(ctx, tx, trbRequest)
-		if err != nil {
-			return nil, err
-		}
 		// Delete CEDAR relationships
 		if err := store.SetTRBRequestSystems(ctx, tx, input.TrbRequestID, []string{}); err != nil {
 			return nil, err
 		}
+
 		// Set contract number relationships
 		if err := store.SetTRBRequestContractNumbers(ctx, tx, input.TrbRequestID, input.ContractNumbers); err != nil {
 			return nil, err
 		}
 
-		return updatedTRBRequest, nil
+		// set contract name
+		trbRequest.ContractName = zero.StringFrom(input.ContractName)
+		trbRequest.SystemRelationType = helpers.PointerTo(models.RelationTypeExistingService)
+		return store.UpdateTRBRequestNP(ctx, tx, trbRequest)
 	})
 }
 
@@ -141,18 +130,6 @@ func UnlinkTRBRequestRelation(
 			return nil, err
 		}
 
-		// Clear system relation type by setting to nil
-		trbRequest.SystemRelationType = nil
-
-		// Clear contract name
-		trbRequest.ContractName = zero.StringFromPtr(nil)
-
-		// update TRB Request
-		updatedTRBRequest, err := store.UpdateTRBRequestNP(ctx, tx, trbRequest)
-		if err != nil {
-			return nil, err
-		}
-
 		// Delete CEDAR relationships
 		if err := store.SetTRBRequestSystems(ctx, tx, trbRequestID, []string{}); err != nil {
 			return nil, err
@@ -165,6 +142,13 @@ func UnlinkTRBRequestRelation(
 			return nil, err
 		}
 
-		return updatedTRBRequest, nil
+		// Clear system relation type by setting to nil
+		trbRequest.SystemRelationType = nil
+
+		// Clear contract name
+		trbRequest.ContractName = zero.StringFromPtr(nil)
+
+		// update TRB Request
+		return store.UpdateTRBRequestNP(ctx, tx, trbRequest)
 	})
 }

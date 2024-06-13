@@ -27,16 +27,8 @@ func SetSystemIntakeRelationExistingService(
 			return nil, err
 		}
 
-		// Set contract name
-		intake.ContractName = zero.StringFrom(input.ContractName)
-		relationType := models.RelationTypeExistingService
-		intake.SystemRelationType = &relationType
-		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
-		if err != nil {
-			return nil, err
-		}
-
 		// Remove CEDAR system relationships
+		// do this first, so we fetch the updated one below in `UpdateSystemIntakeNP`
 		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}); err != nil {
 			return nil, err
 		}
@@ -47,7 +39,11 @@ func SetSystemIntakeRelationExistingService(
 		// 	return nil, err
 		// }
 
-		return updatedIntake, nil
+		// Set contract name
+		intake.ContractName = zero.StringFrom(input.ContractName)
+		relationType := models.RelationTypeExistingService
+		intake.SystemRelationType = &relationType
+		return store.UpdateSystemIntakeNP(ctx, tx, intake)
 	})
 }
 
@@ -66,15 +62,6 @@ func SetSystemIntakeRelationNewSystem(
 			return nil, err
 		}
 
-		// Clear contract name
-		intake.ContractName = zero.StringFromPtr(nil)
-		relationType := models.RelationTypeNewSystem
-		intake.SystemRelationType = &relationType
-		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
-		if err != nil {
-			return nil, err
-		}
-
 		// Remove CEDAR system relationships
 		if err := store.SetSystemIntakeSystems(ctx, tx, input.SystemIntakeID, []string{}); err != nil {
 			return nil, err
@@ -86,7 +73,11 @@ func SetSystemIntakeRelationNewSystem(
 		// 	return nil, err
 		// }
 
-		return updatedIntake, nil
+		// Clear contract name
+		intake.ContractName = zero.StringFromPtr(nil)
+		relationType := models.RelationTypeNewSystem
+		intake.SystemRelationType = &relationType
+		return store.UpdateSystemIntakeNP(ctx, tx, intake)
 	})
 }
 
@@ -102,15 +93,6 @@ func SetSystemIntakeRelationExistingSystem(
 	return sqlutils.WithTransactionRet[*models.SystemIntake](ctx, store, func(tx *sqlx.Tx) (*models.SystemIntake, error) {
 		// Fetch intake by ID
 		intake, err := store.FetchSystemIntakeByIDNP(ctx, tx, input.SystemIntakeID)
-		if err != nil {
-			return nil, err
-		}
-
-		// Clear contract name
-		intake.ContractName = zero.StringFromPtr(nil)
-		relationType := models.RelationTypeExistingSystem
-		intake.SystemRelationType = &relationType
-		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
 		if err != nil {
 			return nil, err
 		}
@@ -133,7 +115,11 @@ func SetSystemIntakeRelationExistingSystem(
 		// 	return nil, err
 		// }
 
-		return updatedIntake, nil
+		// Clear contract name
+		intake.ContractName = zero.StringFromPtr(nil)
+		relationType := models.RelationTypeExistingSystem
+		intake.SystemRelationType = &relationType
+		return store.UpdateSystemIntakeNP(ctx, tx, intake)
 	})
 }
 
@@ -151,12 +137,6 @@ func UnlinkSystemIntakeRelation(
 			return nil, err
 		}
 
-		// Clear system relation type by setting to nil
-		intake.SystemRelationType = nil
-
-		// Clear contract name
-		intake.ContractName = zero.StringFromPtr(nil)
-
 		// Clear contract number relationships by setting an empty array of contract #'s
 		// declare this as an explicit empty slice instead of `nil`
 		// TODO: (Sam) update `SetSystemIntakeContractNumbers` to allow for `nil`
@@ -170,13 +150,14 @@ func UnlinkSystemIntakeRelation(
 			return nil, err
 		}
 
-		// Update system intake
-		updatedIntake, err := store.UpdateSystemIntakeNP(ctx, tx, intake)
-		if err != nil {
-			return nil, err
-		}
+		// Clear system relation type by setting to nil
+		intake.SystemRelationType = nil
 
-		return updatedIntake, nil
+		// Clear contract name
+		intake.ContractName = zero.StringFromPtr(nil)
+
+		// Update system intake
+		return store.UpdateSystemIntakeNP(ctx, tx, intake)
 	})
 }
 

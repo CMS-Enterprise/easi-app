@@ -14,7 +14,6 @@ require (
 	github.com/go-openapi/validate v0.24.0
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
-	github.com/graph-gophers/dataloader v5.0.0+incompatible
 	github.com/guregu/null v4.0.0+incompatible
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
@@ -27,6 +26,7 @@ require (
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
 	github.com/vektah/gqlparser/v2 v2.5.14
+	github.com/vikstrous/dataloadgen v0.0.6
 	go.uber.org/zap v1.27.0
 	golang.org/x/sync v0.7.0
 	gopkg.in/launchdarkly/go-sdk-common.v2 v2.5.1

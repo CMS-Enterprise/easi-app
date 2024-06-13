@@ -2,8 +2,6 @@ package storage
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -60,7 +58,7 @@ func (s *StoreTestSuite) TestDuplicateCedarSystemBookmark() {
 	})
 }
 
-func (s *StoreTestSuite) TestFetchCedarSystemIsBookmarkedLOADER() {
+func (s *StoreTestSuite) TestFetchCedarSystemIsBookmarkedByCedarSystemIDs() {
 	ctx := context.Background()
 
 	cedarSystemID := uuid.New().String()
@@ -75,24 +73,15 @@ func (s *StoreTestSuite) TestFetchCedarSystemIsBookmarkedLOADER() {
 		})
 		s.NoError(err)
 
-		m := map[string]any{
-			"cedar_system_id": cedarSystemID,
-			"eua_user_id":     appcontext.Principal(ctx).ID(),
+		req := models.BookmarkRequest{
+			CedarSystemID: cedarSystemID,
+			EuaUserID:     appcontext.Principal(ctx).ID(),
 		}
 
-		b, err := json.Marshal(m)
+		bookmarks, err := s.store.FetchCedarSystemIsBookmarkedByCedarSystemIDs(ctx, []models.BookmarkRequest{req})
 		s.NoError(err)
-
-		bookmarkMap, err := s.store.FetchCedarSystemIsBookmarkedLOADER(ctx, fmt.Sprintf("[%s]", string(b)))
-		s.NoError(err)
-		s.NotEmpty(bookmarkMap)
-
-		found := false
-		for k := range bookmarkMap {
-			if k == cedarSystemID {
-				found = true
-			}
-		}
-		s.True(found)
+		s.NotEmpty(bookmarks)
+		s.Len(bookmarks, 1)
+		s.True(bookmarks[0])
 	})
 }

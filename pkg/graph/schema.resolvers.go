@@ -176,7 +176,7 @@ func (r *cedarSystemResolver) BusinessOwnerRoles(ctx context.Context, obj *model
 
 // IsBookmarked is the resolver for the isBookmarked field.
 func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.CedarSystem) (bool, error) {
-	return resolvers.CedarSystemIsBookmarked(ctx, obj.ID.String)
+	return resolvers.GetCedarSystemIsBookmarked(ctx, obj.ID.String)
 }
 
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.

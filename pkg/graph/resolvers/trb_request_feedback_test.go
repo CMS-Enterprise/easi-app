@@ -17,7 +17,7 @@ import (
 
 // TestCreateTRBRequestFeedback makes a new TRB request feedback
 func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 
 	config := testhelpers.NewConfig()
 

@@ -11,18 +11,15 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// SystemIntakeSystems utilizies dataloaders to retrieve systems linked to a given system intake ID
-func SystemIntakeSystems(
-	ctx context.Context,
-	systemIntakeID uuid.UUID,
-) ([]*models.CedarSystem, error) {
-
+// SystemIntakeSystems utilizes dataloaders to retrieve systems linked to a given system intake ID
+func SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.CedarSystem, error) {
 	siSystems, err := dataloaders.GetSystemIntakeSystemsBySystemIntakeID(ctx, systemIntakeID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("unable to retrieve cedar system ids from db", zap.Error(err))
 		return nil, err
 	}
-	systems := []*models.CedarSystem{}
+
+	var systems []*models.CedarSystem
 	for _, v := range siSystems {
 		cedarSystemSummary, err := dataloaders.GetCedarSystemByID(ctx, v.SystemID)
 		if err != nil {

@@ -175,6 +175,7 @@ func SystemIntakeUpdateContractDetails(ctx context.Context, store *storage.Store
 		if err != nil {
 			return nil, err
 		}
+
 		intake.RequestFormState = formstate.GetNewStateForUpdatedForm(intake.RequestFormState)
 
 		if input.FundingSources != nil && input.FundingSources.FundingSources != nil {
