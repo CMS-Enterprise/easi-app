@@ -6,6 +6,8 @@ import (
 
 // TruncateAllTablesDANGEROUS is a function to reset all tables in the DB. It should only be called within test code.
 // this list of tables should match the list of tables in scripts/dev's db:clean task
+//
+// NOTE: we DO NOT truncate the `user_account` table - it would remove the default users, which is behavior we do not want
 func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	tables := `
 	cedar_system_bookmarks,
@@ -49,4 +51,11 @@ func (s *Store) TruncateAllTablesDANGEROUS(logger *zap.Logger) error {
 	}
 
 	return nil
+}
+
+// DeleteUserAccountDANGEROUS deletes a given user account from the DB
+// only to be used in test code as we do not truncate `user_account` table
+func (s *Store) DeleteUserAccountDANGEROUS(username string) error {
+	_, err := s.db.Exec("DELETE FROM user_account WHERE username = $1", username)
+	return err
 }

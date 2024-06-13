@@ -9,6 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -53,12 +54,14 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 			s.NoError(err)
 		}
 
-		data, err := s.store.SystemIntakeSystemsBySystemIntakeIDLOADER(ctx, formatParamTableJSON("system_intake_id", createdIDs))
+		results, err := s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, createdIDs)
 		s.NoError(err)
 
-		for _, systemIntakeID := range createdIDs {
-			systemsFound, ok := data[systemIntakeID.String()]
-			s.True(ok)
+		data := helpers.OneToMany[*models.SystemIntakeSystem](createdIDs, results)
+		s.Equal(len(data), len(createdIDs))
+
+		for i, systemIntakeID := range createdIDs {
+			systemsFound := data[i]
 			s.Len(systemsFound, 3)
 
 			var (
@@ -68,6 +71,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 			)
 
 			for _, system := range systemsFound {
+				s.Equal(systemIntakeID, system.SystemIntakeID)
 				if system.SystemID == system1 {
 					found1 = true
 				}
@@ -92,33 +96,36 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.SystemIntakeSystemsBySystemIntakeIDLOADER(ctx, formatParamTableJSON("system_intake_id", []uuid.UUID{createdIDs[0]}))
+		results, err = s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
-		systemsFound, ok := data[createdIDs[0].String()]
-		s.True(ok)
+
+		data = helpers.OneToMany[*models.SystemIntakeSystem]([]uuid.UUID{createdIDs[0]}, results)
+		s.Len(data, 1)
+		systemsFound := data[0]
 		s.Len(systemsFound, 4)
 
 		var (
-			firstThreesystemsTime time.Time
-			fourthsystemTime      time.Time
+			firstThreeSystemsTime time.Time
+			fourthSystemTime      time.Time
 		)
 
 		for _, system := range systemsFound {
+			s.Equal(createdIDs[0], system.SystemIntakeID)
 			if system.SystemID == system1 ||
 				system.SystemID == system2 ||
 				system.SystemID == system3 {
-				firstThreesystemsTime = system.CreatedAt
+				firstThreeSystemsTime = system.CreatedAt
 			}
 
 			if system.SystemID == system4 {
-				fourthsystemTime = system.CreatedAt
+				fourthSystemTime = system.CreatedAt
 			}
 		}
 
-		s.False(firstThreesystemsTime.IsZero())
-		s.False(fourthsystemTime.IsZero())
+		s.False(firstThreeSystemsTime.IsZero())
+		s.False(fourthSystemTime.IsZero())
 
-		s.True(fourthsystemTime.After(firstThreesystemsTime))
+		s.True(fourthSystemTime.After(firstThreeSystemsTime))
 
 		_, err = s.db.Exec("DELETE FROM system_intakes WHERE id = ANY($1)", pq.Array(createdIDs))
 		s.NoError(err)

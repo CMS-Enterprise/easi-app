@@ -38,7 +38,7 @@ func (s *ResolverSuite) TestTRBRequestContractNumbers() {
 		})
 		s.NoError(err)
 
-		data, err := TRBRequestContractNumbers(ctx, createdIDs[0])
+		data, err := TRBRequestContractNumbers(s.ctxWithNewDataloaders(), createdIDs[0])
 		s.NoError(err)
 		s.Len(data, 3)
 
@@ -69,7 +69,7 @@ func (s *ResolverSuite) TestTRBRequestContractNumbers() {
 		s.True(found3)
 
 		// confirm second TRB Request does not have any contract numbers on it
-		data, err = TRBRequestContractNumbers(ctx, createdIDs[1])
+		data, err = TRBRequestContractNumbers(s.ctxWithNewDataloaders(), createdIDs[1])
 		s.NoError(err)
 		s.Empty(data)
 	})

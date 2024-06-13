@@ -22,7 +22,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 	store := s.testConfigs.Store
 	ctx := s.testConfigs.Context
 
-	var contractNumberCases = map[string]trbRequestRelationTestCase{
+	var cases = map[string]trbRequestRelationTestCase{
 		"adds contract numbers when no initial contract numbers exist": {
 			InitialContractNumbers: []string{},
 			NewContractNumbers:     []string{"1", "2"},
@@ -57,7 +57,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 		},
 	}
 
-	for caseName, caseValues := range contractNumberCases {
+	for caseName, caseValues := range cases {
 		s.Run(caseName, func() {
 			trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
 			s.NoError(err)
@@ -74,7 +74,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 			})
 			s.NoError(err)
 
-			updatedTRBRequestContractNumbers, err := TRBRequestContractNumbers(ctx, trbRequest.ID)
+			updatedTRBRequestContractNumbers, err := TRBRequestContractNumbers(s.ctxWithNewDataloaders(), trbRequest.ID)
 			s.NoError(err)
 			s.Equal(len(caseValues.InitialContractNumbers), len(updatedTRBRequestContractNumbers))
 
@@ -84,7 +84,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 			})
 			s.NoError(err)
 
-			updatedTRBRequestSystemIDs, err := TRBRequestSystems(ctx, trbRequest.ID)
+			updatedTRBRequestSystemIDs, err := TRBRequestSystems(s.ctxWithNewDataloaders(), trbRequest.ID)
 			s.NoError(err)
 			s.Equal(len(caseValues.InitialSystemIDs), len(updatedTRBRequestSystemIDs))
 
@@ -102,10 +102,10 @@ func (s *ResolverSuite) TestSetTRBRequestRelationNewSystem() {
 			s.True(updatedTRBRequest.ContractName.IsZero())
 
 			// refetch contract numbers and system IDs
-			updatedTRBRequestContractNumbers, err = TRBRequestContractNumbers(ctx, updatedTRBRequest.ID)
+			updatedTRBRequestContractNumbers, err = TRBRequestContractNumbers(s.ctxWithNewDataloaders(), updatedTRBRequest.ID)
 			s.NoError(err)
 
-			updatedTRBRequestSystemIDs, err = TRBRequestSystems(ctx, trbRequest.ID)
+			updatedTRBRequestSystemIDs, err = TRBRequestSystems(s.ctxWithNewDataloaders(), trbRequest.ID)
 			s.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -182,7 +182,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 			})
 			s.NoError(err)
 
-			updatedTRBRequestContractNumbers, err := TRBRequestContractNumbers(ctx, trbRequest.ID)
+			updatedTRBRequestContractNumbers, err := TRBRequestContractNumbers(s.ctxWithNewDataloaders(), trbRequest.ID)
 			s.NoError(err)
 			s.Equal(len(caseValues.InitialContractNumbers), len(updatedTRBRequestContractNumbers))
 
@@ -192,7 +192,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 			})
 			s.NoError(err)
 
-			updatedTRBRequestSystemIDs, err := TRBRequestSystems(ctx, trbRequest.ID)
+			updatedTRBRequestSystemIDs, err := TRBRequestSystems(s.ctxWithNewDataloaders(), trbRequest.ID)
 			s.NoError(err)
 			s.Equal(len(caseValues.InitialSystemIDs), len(updatedTRBRequestSystemIDs))
 
@@ -217,10 +217,10 @@ func (s *ResolverSuite) TestSetTRBRequestRelationExistingSystem() {
 			s.True(updatedTRBRequest.ContractName.IsZero())
 
 			// refetch contract numbers and system IDs
-			updatedTRBRequestContractNumbers, err = TRBRequestContractNumbers(ctx, updatedTRBRequest.ID)
+			updatedTRBRequestContractNumbers, err = TRBRequestContractNumbers(s.ctxWithNewDataloaders(), updatedTRBRequest.ID)
 			s.NoError(err)
 
-			updatedTRBRequestSystemIDs, err = TRBRequestSystems(ctx, trbRequest.ID)
+			updatedTRBRequestSystemIDs, err = TRBRequestSystems(s.ctxWithNewDataloaders(), trbRequest.ID)
 			s.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -294,7 +294,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 			})
 			s.NoError(err)
 
-			updatedTRBRequestContractNumbers, err := TRBRequestContractNumbers(ctx, trbRequest.ID)
+			updatedTRBRequestContractNumbers, err := TRBRequestContractNumbers(s.ctxWithNewDataloaders(), trbRequest.ID)
 			s.NoError(err)
 			s.Equal(len(caseValues.InitialContractNumbers), len(updatedTRBRequestContractNumbers))
 
@@ -304,7 +304,7 @@ func (s *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 			})
 			s.NoError(err)
 
-			updatedTRBRequestSystemIDs, err := TRBRequestSystems(ctx, trbRequest.ID)
+			updatedTRBRequestSystemIDs, err := TRBRequestSystems(s.ctxWithNewDataloaders(), trbRequest.ID)
 			s.NoError(err)
 			s.Equal(len(caseValues.InitialSystemIDs), len(updatedTRBRequestSystemIDs))
 
@@ -322,10 +322,10 @@ func (s *ResolverSuite) TestSetTRBRequestRelationExistingService() {
 			s.Equal(newContractName, updatedTRBRequest.ContractName.String)
 
 			// refetch contract numbers and system IDs
-			updatedTRBRequestContractNumbers, err = TRBRequestContractNumbers(ctx, updatedTRBRequest.ID)
+			updatedTRBRequestContractNumbers, err = TRBRequestContractNumbers(s.ctxWithNewDataloaders(), updatedTRBRequest.ID)
 			s.NoError(err)
 
-			updatedTRBRequestSystemIDs, err = TRBRequestSystems(ctx, trbRequest.ID)
+			updatedTRBRequestSystemIDs, err = TRBRequestSystems(s.ctxWithNewDataloaders(), trbRequest.ID)
 			s.NoError(err)
 
 			// Ensure the system IDs were modified properly
@@ -353,7 +353,7 @@ func (s *ResolverSuite) TestUnlinkTRBRequestRelation() {
 	store := s.testConfigs.Store
 
 	s.Run("unlink new trb request", func() {
-		// Create an inital TRBRequest
+		// Create an initial TRBRequest
 		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
 		s.NoError(err)
 		s.NotEqual(trbRequest.ID, uuid.Nil)
@@ -376,18 +376,18 @@ func (s *ResolverSuite) TestUnlinkTRBRequestRelation() {
 		s.Nil(unlinkedTRBRequest.SystemRelationType)
 
 		// Check contract numbers are cleared
-		nums, err := TRBRequestContractNumbers(ctx, unlinkedTRBRequest.ID)
+		nums, err := TRBRequestContractNumbers(s.ctxWithNewDataloaders(), unlinkedTRBRequest.ID)
 		s.NoError(err)
 		s.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := TRBRequestSystems(ctx, unlinkedTRBRequest.ID)
+		systemIDs, err := TRBRequestSystems(s.ctxWithNewDataloaders(), unlinkedTRBRequest.ID)
 		s.NoError(err)
 		s.Empty(systemIDs)
 	})
 
 	s.Run("unlink existing trb request", func() {
-		// Create an inital TRBRequest
+		// Create an initial TRBRequest
 		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
 		s.NoError(err)
 		s.NotEqual(trbRequest.ID, uuid.Nil)
@@ -418,18 +418,18 @@ func (s *ResolverSuite) TestUnlinkTRBRequestRelation() {
 		s.Nil(unlinkedTRBRequest.SystemRelationType)
 
 		// Check contract numbers are cleared
-		nums, err := TRBRequestContractNumbers(ctx, unlinkedTRBRequest.ID)
+		nums, err := TRBRequestContractNumbers(s.ctxWithNewDataloaders(), unlinkedTRBRequest.ID)
 		s.NoError(err)
 		s.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := TRBRequestSystems(ctx, unlinkedTRBRequest.ID)
+		systemIDs, err := TRBRequestSystems(s.ctxWithNewDataloaders(), unlinkedTRBRequest.ID)
 		s.NoError(err)
 		s.Empty(systemIDs)
 	})
 
 	s.Run("unlink existing service TRBRequest", func() {
-		// Create an inital TRBRequest
+		// Create an initial TRBRequest
 		trbRequest, err := CreateTRBRequest(ctx, models.TRBTNeedHelp, store)
 		s.NoError(err)
 		s.NotEqual(trbRequest.ID, uuid.Nil)
@@ -454,12 +454,12 @@ func (s *ResolverSuite) TestUnlinkTRBRequestRelation() {
 		s.Nil(unlinkedTRBRequest.SystemRelationType)
 
 		// Check contract numbers are cleared
-		nums, err := TRBRequestContractNumbers(ctx, unlinkedTRBRequest.ID)
+		nums, err := TRBRequestContractNumbers(s.ctxWithNewDataloaders(), unlinkedTRBRequest.ID)
 		s.NoError(err)
 		s.Empty(nums)
 
 		// Check system IDs are cleared
-		systemIDs, err := TRBRequestSystems(ctx, unlinkedTRBRequest.ID)
+		systemIDs, err := TRBRequestSystems(s.ctxWithNewDataloaders(), unlinkedTRBRequest.ID)
 		s.NoError(err)
 		s.Empty(systemIDs)
 	})

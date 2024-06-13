@@ -411,7 +411,7 @@ func IsRecentTRBRequest(ctx context.Context, obj *models.TRBRequest, now time.Ti
 func GetTRBLeadInfo(ctx context.Context, trbLead *string) (*models.UserInfo, error) {
 	var trbLeadInfo *models.UserInfo
 	if trbLead != nil {
-		info, err := dataloaders.GetUserInfo(ctx, *trbLead)
+		info, err := dataloaders.FetchUserInfoByEUAUserID(ctx, *trbLead)
 		if err != nil {
 			return nil, err
 		}
@@ -427,7 +427,7 @@ func GetTRBLeadInfo(ctx context.Context, trbLead *string) (*models.UserInfo, err
 
 // GetTRBRequesterInfo retrieves the user info of a TRB request's requester
 func GetTRBRequesterInfo(ctx context.Context, requesterEUA string) (*models.UserInfo, error) {
-	requesterInfo, err := dataloaders.GetUserInfo(ctx, requesterEUA)
+	requesterInfo, err := dataloaders.FetchUserInfoByEUAUserID(ctx, requesterEUA)
 	if err != nil {
 		return nil, err
 	}

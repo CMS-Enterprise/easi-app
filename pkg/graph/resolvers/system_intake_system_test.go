@@ -49,7 +49,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		})
 		s.NoError(err)
 
-		data, err := SystemIntakeSystems(ctx, createdIDs[0])
+		data, err := SystemIntakeSystems(s.ctxWithNewDataloaders(), createdIDs[0])
 		s.NoError(err)
 		s.Len(data, 3)
 
@@ -78,7 +78,7 @@ func (s *ResolverSuite) TestIntakeRelatedSystems() {
 		s.True(found3)
 
 		// attempt to get systems for a system intake without linked systems
-		data, err = SystemIntakeSystems(ctx, createdIDs[1])
+		data, err = SystemIntakeSystems(s.ctxWithNewDataloaders(), createdIDs[1])
 		s.NoError(err)
 		s.Empty(data)
 	})
