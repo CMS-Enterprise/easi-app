@@ -295,8 +295,7 @@ type DeleteSystemIntakeDocumentPayload struct {
 }
 
 type DeleteSystemIntakeGRBReviewerInput struct {
-	SystemIntakeID uuid.UUID `json:"systemIntakeID"`
-	EuaUserID      string    `json:"euaUserId"`
+	ReviewerID uuid.UUID `json:"reviewerID"`
 }
 
 // Data returned after deleting a document attached to a TRB request
@@ -845,10 +844,9 @@ type UpdateSystemIntakeContractDetailsInput struct {
 }
 
 type UpdateSystemIntakeGRBReviewerInput struct {
-	SystemIntakeID uuid.UUID                         `json:"systemIntakeID"`
-	EuaUserID      string                            `json:"euaUserId"`
-	VotingRole     SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
-	GrbRole        SystemIntakeGRBReviewerRole       `json:"grbRole"`
+	ReviewerID uuid.UUID                         `json:"reviewerID"`
+	VotingRole SystemIntakeGRBReviewerVotingRole `json:"votingRole"`
+	GrbRole    SystemIntakeGRBReviewerRole       `json:"grbRole"`
 }
 
 // Input data for updating a system intake's relationship to a CEDAR system

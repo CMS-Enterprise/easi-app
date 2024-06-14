@@ -10,13 +10,23 @@ var insertSystemIntakeGRBReviewerSQL string
 //go:embed SQL/system_intake_grb_reviewer/get_by_intake_id.sql
 var getSystemIntakeGRBReviewersByIntakeIDsSQL string
 
+//go:embed SQL/system_intake_grb_reviewer/update.sql
+var updateSystemIntakeGRBReviewerByIDSQL string
+
+//go:embed SQL/system_intake_grb_reviewer/delete.sql
+var deleteSystemIntakeGRBReviewerByIDSQL string
+
 // SystemIntakeGRBReviewer holds all SQL scripts for GRB Reviewers
 var SystemIntakeGRBReviewer = systemIntakeGRBReviewerScripts{
 	Create:              insertSystemIntakeGRBReviewerSQL,
 	GetBySystemIntakeID: getSystemIntakeGRBReviewersByIntakeIDsSQL,
+	Update:              updateSystemIntakeGRBReviewerByIDSQL,
+	Delete:              deleteSystemIntakeGRBReviewerByIDSQL,
 }
 
 type systemIntakeGRBReviewerScripts struct {
 	Create              string
 	GetBySystemIntakeID string
+	Update              string
+	Delete              string
 }

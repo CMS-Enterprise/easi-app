@@ -49,6 +49,26 @@ func CreateSystemIntakeGRBReviewer(
 	})
 }
 
+func UpdateSystemIntakeGRBReviewer(
+	ctx context.Context,
+	store *storage.Store,
+	input *models.UpdateSystemIntakeGRBReviewerInput,
+) (*models.SystemIntakeGRBReviewer, error) {
+	return sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*models.SystemIntakeGRBReviewer, error) {
+		return store.UpdateSystemIntakeGRBReviewer(ctx, tx, input.ReviewerID, input.VotingRole, input.GrbRole)
+	})
+}
+
+func DeleteSystemIntakeGRBReviewer(
+	ctx context.Context,
+	store *storage.Store,
+	reviewerID uuid.UUID,
+) error {
+	return sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
+		return store.DeleteSystemIntakeGRBReviewer(ctx, tx, reviewerID)
+	})
+}
+
 func SystemIntakeGRBReviewers(
 	ctx context.Context,
 	store *storage.Store,

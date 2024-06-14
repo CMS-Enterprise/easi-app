@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"slices"
 	"strconv"
 	"time"
@@ -660,12 +659,12 @@ func (r *mutationResolver) CreateSystemIntakeGRBReviewer(ctx context.Context, in
 
 // UpdateSystemIntakeGRBReviewer is the resolver for the updateSystemIntakeGRBReviewer field.
 func (r *mutationResolver) UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
-	panic(fmt.Errorf("not implemented: UpdateSystemIntakeGRBReviewer - updateSystemIntakeGRBReviewer"))
+	return resolvers.UpdateSystemIntakeGRBReviewer(ctx, r.store, &input)
 }
 
 // DeleteSystemIntakeGRBReviewer is the resolver for the deleteSystemIntakeGRBReviewer field.
-func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
-	panic(fmt.Errorf("not implemented: DeleteSystemIntakeGRBReviewer - deleteSystemIntakeGRBReviewer"))
+func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error) {
+	return input.ReviewerID, resolvers.DeleteSystemIntakeGRBReviewer(ctx, r.store, input.ReviewerID)
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.

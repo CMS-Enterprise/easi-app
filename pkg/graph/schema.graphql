@@ -1147,15 +1147,13 @@ input CreateSystemIntakeGRBReviewerInput {
 }
 
 input UpdateSystemIntakeGRBReviewerInput {
-  systemIntakeID: UUID!
-  euaUserId: String!
+  reviewerID: UUID!
   votingRole: SystemIntakeGRBReviewerVotingRole!
   grbRole: SystemIntakeGRBReviewerRole!
 }
 
 input DeleteSystemIntakeGRBReviewerInput {
-  systemIntakeID: UUID!
-  euaUserId: String!
+  reviewerID: UUID!
 }
 
 enum SystemIntakeGRBReviewerRole {
@@ -2410,7 +2408,7 @@ type Mutation {
 
   createSystemIntakeGRBReviewer(input: CreateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer
   updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer
-  deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer
+  deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
 
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
 
