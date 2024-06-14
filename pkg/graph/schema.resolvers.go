@@ -490,6 +490,11 @@ func (r *mutationResolver) CreateSystemIntake(ctx context.Context, input models.
 	return resolvers.CreateSystemIntake(ctx, r.store, input)
 }
 
+// UpdateSystemIntakeRequestType is the resolver for the updateSystemIntakeRequestType field.
+func (r *mutationResolver) UpdateSystemIntakeRequestType(ctx context.Context, id uuid.UUID, newType models.SystemIntakeRequestType) (*models.SystemIntake, error) {
+	return resolvers.UpdateSystemIntakeRequestType(ctx, r.store, id, newType)
+}
+
 // SubmitIntake is the resolver for the submitIntake field.
 func (r *mutationResolver) SubmitIntake(ctx context.Context, input models.SubmitIntakeInput) (*models.UpdateSystemIntakePayload, error) {
 	return resolvers.SubmitIntake(ctx, r.store, r.service.FetchUserInfo, r.service.SubmitIntake, input)

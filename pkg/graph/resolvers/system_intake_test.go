@@ -126,3 +126,26 @@ func (s *ResolverSuite) TestSystemIntakesQueryArchived() {
 	s.NoError(err)
 	s.Len(closedIntakes, 0)
 }
+
+func (s *ResolverSuite) TestUpdateSystemIntakeRequestType() {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+
+	submittedAt := time.Now()
+
+	// Create a "new request" type system intake
+	openIntake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
+		State:       models.SystemIntakeStateOpen,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+		SubmittedAt: &submittedAt,
+	})
+	s.NoError(err)
+	s.NotNil(openIntake)
+	s.Equal(models.SystemIntakeRequestTypeNEW, openIntake.RequestType)
+
+	// Update the request type to SystemIntakeRequestTypeMAJORCHANGES
+	intakeWithNewType, err := UpdateSystemIntakeRequestType(ctx, store, openIntake.ID, models.SystemIntakeRequestTypeMAJORCHANGES)
+	s.NoError(err)
+	s.NotNil(intakeWithNewType)
+	s.Equal(models.SystemIntakeRequestTypeMAJORCHANGES, intakeWithNewType.RequestType)
+}

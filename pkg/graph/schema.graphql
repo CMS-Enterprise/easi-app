@@ -2379,6 +2379,8 @@ type Mutation {
     @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
     @hasRole(role: EASI_USER)
+  updateSystemIntakeRequestType(id: UUID!, newType: SystemIntakeRequestType!): SystemIntake!
+    @hasRole(role: EASI_USER)
 
   submitIntake(
     input: SubmitIntakeInput!
