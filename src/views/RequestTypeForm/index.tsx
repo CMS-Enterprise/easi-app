@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useOktaAuth } from '@okta/okta-react';
 import {
   Breadcrumb,
@@ -17,10 +17,15 @@ import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import { RadioField } from 'components/shared/RadioField';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
   CreateSystemIntake,
   UpdateSystemIntakeRequestType as UpdateSystemIntakeRequestTypeQuery
 } from 'queries/SystemIntakeQueries';
+import {
+  GetSystemIntake,
+  GetSystemIntakeVariables
+} from 'queries/types/GetSystemIntake';
 import {
   UpdateSystemIntakeRequestType,
   UpdateSystemIntakeRequestTypeVariables
@@ -34,22 +39,33 @@ const RequestTypeForm = () => {
     systemId?: string;
   }>();
 
-  const { state } = useLocation<{ isNew?: boolean }>();
-
   // Set isNew from checking loc state false explicitly
   // This is done in such a way as a stop gap to fix the problem where
   // changing Intake Request Types, from the overview page, will create new intake requests
+  const { state } = useLocation<{ isNew?: boolean }>();
   const isNew = state?.isNew !== false;
 
   const { t } = useTranslation('intake');
   const { oktaAuth } = useOktaAuth();
   const history = useHistory();
-  const [mutate] = useMutation(CreateSystemIntake);
+  const [create] = useMutation(CreateSystemIntake);
 
   const [edit] = useMutation<
     UpdateSystemIntakeRequestType,
     UpdateSystemIntakeRequestTypeVariables
   >(UpdateSystemIntakeRequestTypeQuery);
+
+  // Check for an existing intake to prefill the request type option
+  const intakeQuery = useQuery<GetSystemIntake, GetSystemIntakeVariables>(
+    GetSystemIntakeQuery,
+    {
+      variables: {
+        id: systemId || ''
+      },
+      skip: !systemId
+    }
+  );
+  const lastRequestType = intakeQuery.data?.systemIntake?.requestType;
 
   const majorChangesExamples: string[] = t(
     'requestTypeForm.helpAndGuidance.majorChanges.list',
@@ -82,13 +98,13 @@ const RequestTypeForm = () => {
             history.push(navigationLink, { isNew });
             break;
           default:
-            // console.warn(`Unknown request type: ${systemIntake.requestType}`);
+            // console.warn(`Unknown request type: ${requestType}`);
             break;
         }
       };
 
       if (!systemId) {
-        mutate({ variables: { input } }).then(response => {
+        create({ variables: { input } }).then(response => {
           if (!response.errors) {
             const { id } = response.data.createSystemIntake;
             nextPage(id);
@@ -126,7 +142,8 @@ const RequestTypeForm = () => {
       </BreadcrumbBar>
       <PageHeading>{t('requestTypeForm.heading')}</PageHeading>
       <Formik
-        initialValues={{ requestType: '' }}
+        initialValues={{ requestType: lastRequestType || '' }}
+        enableReinitialize
         onSubmit={handleCreateIntake}
         validationSchema={SystemIntakeValidationSchema.requestType}
         validateOnBlur={false}
