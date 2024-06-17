@@ -673,7 +673,7 @@ export const result: { data: GetSystemProfile } = {
       __typename: 'CedarSoftwareProducts'
     },
     cedarSystemDetails: {
-      isMySystem: false,
+      isMySystem: true,
       businessOwnerInformation: {
         isCmsOwned: true,
         numberOfContractorFte: '20',

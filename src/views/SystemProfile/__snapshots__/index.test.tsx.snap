@@ -102,6 +102,30 @@ exports[`System Profile parent request > matches snapshot 1`] = `
                   </span>
                 </h1>
                 <div
+                  class="margin-top-2 margin-bottom-05"
+                >
+                  <a
+                    class="usa-link text-no-underline"
+                    href="/systems/000-100-0/workspace"
+                  >
+                    <span
+                      class="text-underline"
+                    >
+                      Go to system workspace
+                    </span>
+                    <span
+                      aria-hidden="true"
+                    >
+                       
+                    </span>
+                    <span
+                      aria-hidden="true"
+                    >
+                      → 
+                    </span>
+                  </a>
+                </div>
+                <div
                   class="text-normal font-body-md"
                 >
                   <div

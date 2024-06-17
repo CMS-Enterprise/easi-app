@@ -19,6 +19,7 @@ import {
 import classnames from 'classnames';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
+import UswdsReactLink from 'components/LinkWrapper';
 import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageLoading from 'components/PageLoading';
@@ -506,6 +507,21 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                   ({cedarSystem.acronym})
                 </span>
               </PageHeading>
+
+              {systemProfileData.cedarSystemDetails?.isMySystem && (
+                <div className="margin-top-2 margin-bottom-05">
+                  <UswdsReactLink
+                    className="text-no-underline"
+                    to={`/systems/${systemId}/workspace`}
+                  >
+                    <span className="text-underline">
+                      {t('singleSystem.summary.goToWorkspace')}
+                    </span>
+                    <span aria-hidden>&nbsp;</span>
+                    <span aria-hidden>&rarr; </span>
+                  </UswdsReactLink>
+                </div>
+              )}
 
               <div className="text-normal font-body-md">
                 <CollapsableLink
