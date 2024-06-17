@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -20,6 +20,10 @@ const GovernanceOverview = () => {
   const { systemId } = useParams<{
     systemId: string;
   }>();
+
+  const { state } = useLocation<{ isNew?: boolean }>();
+  const isNew = !!state?.isNew;
+
   return (
     <MainContent
       className="easi-governance-overview grid-container margin-bottom-2"
@@ -35,8 +39,11 @@ const GovernanceOverview = () => {
       </BreadcrumbBar>
       <PageHeading className="margin-bottom-2">{t('heading')}</PageHeading>
       <Link
-        to="/system/request-type"
-        className="display-flex flex-align-center"
+        to={{
+          pathname: `/system/request-type/${systemId || ''}`,
+          state: { isNew }
+        }}
+        className="display-flex flex-align-center text-primary"
       >
         <IconNavigateBefore className="text-no-underline" />
         <span>{t('intake:navigation.changeRequestType')}</span>
@@ -56,7 +63,7 @@ const GovernanceOverview = () => {
           variant="unstyled"
           to={{
             pathname: `/system/link/${systemId}`,
-            state: { isNew: true }
+            state: { isNew }
           }}
         >
           {t('getStarted')}

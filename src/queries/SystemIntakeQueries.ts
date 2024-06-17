@@ -112,6 +112,17 @@ export const UpdateSystemIntakeContactDetails = gql`
   }
 `;
 
+export const UpdateSystemIntakeRequestType = gql`
+  mutation UpdateSystemIntakeRequestType(
+    $id: UUID!
+    $requestType: SystemIntakeRequestType!
+  ) {
+    updateSystemIntakeRequestType(id: $id, newType: $requestType) {
+      id
+    }
+  }
+`;
+
 export const SubmitIntake = gql`
   mutation SubmitIntake($input: SubmitIntakeInput!) {
     submitIntake(input: $input) {

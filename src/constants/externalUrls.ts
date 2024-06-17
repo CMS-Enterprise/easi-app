@@ -9,7 +9,7 @@ export const IT_INVESTMENT_EMAIL = 'IT_Investment@cms.hhs.gov';
 export const TRB_DECK_TEMPLATES =
   'https://share.cms.gov/cms-wide/Systems/TRB/Templates/Forms/AllItems.aspx';
 
-export const CFACTS = 'https://cfacts3.cms.cmsnet/';
+export const CFACTS = 'https://cfacts.cms.gov';
 
 export const ATO_LEARN_MORE =
   'https://security.cms.gov/learn/authorization-operate-ato';
