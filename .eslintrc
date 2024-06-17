@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["**/*.d.ts", "serviceWorker.ts",".storybook/**/*"],
+  "ignorePatterns": ["**/*.d.ts", "serviceWorker.ts",".storybook/**/*","src/gql/gen/**/*"],
   "globals" : {
     "JSX" : "readonly",
     "vi": true

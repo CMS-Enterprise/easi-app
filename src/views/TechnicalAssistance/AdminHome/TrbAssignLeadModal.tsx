@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import {
   Button,
   ButtonGroup,
@@ -17,10 +17,9 @@ import {
   Radio
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useGetTrbLeadOptionsQuery } from 'gql/gen/graphql';
 
 import useMessage from 'hooks/useMessage';
-import GetTrbLeadOptionsQuery from 'queries/GetTrbLeadOptionsQuery';
-import { GetTrbLeadOptions } from 'queries/types/GetTrbLeadOptions';
 import {
   UpdateTrbRequestLead,
   UpdateTrbRequestLeadVariables
@@ -101,7 +100,7 @@ function TrbAssignLeadModal({
 
   const { showMessage } = useMessage();
 
-  const { data } = useQuery<GetTrbLeadOptions>(GetTrbLeadOptionsQuery);
+  const { data } = useGetTrbLeadOptionsQuery();
 
   const [mutate] = useMutation<
     UpdateTrbRequestLead,
