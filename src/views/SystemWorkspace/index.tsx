@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button, CardGroup, Grid } from '@trussworks/react-uswds';
 
@@ -61,6 +61,11 @@ export const SystemWorkspace = () => {
   }
 
   const { isBookmarked } = data.cedarSystemDetails.cedarSystem;
+
+  // Redirect to system profile if not a team member for the system
+  if (!data.cedarSystemDetails.isMySystem) {
+    return <Redirect to={`/systems/${systemId}`} />;
+  }
 
   return (
     <MainContent className="grid-container margin-bottom-8">
