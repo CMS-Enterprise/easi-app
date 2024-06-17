@@ -90,7 +90,7 @@ const AppRoutes = () => {
       <SecureRoute path="/system/making-a-request" component={MakingARequest} />
       <SecureRoute
         exact
-        path="/system/request-type"
+        path="/system/request-type/:systemId?"
         component={RequestTypeForm}
       />
       <SecureRoute exact path="/system/link/:id?">
