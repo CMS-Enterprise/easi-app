@@ -155,7 +155,10 @@ const Contracts = ({ system }: SystemProfileSubviewProps) => {
         <CardGroup className="margin-0">
           {system.cedarContractsBySystem?.map(
             (contract): React.ReactNode => (
-              <ContractCard contract={contract} key={contract.id} />
+              <ContractCard
+                contract={contract}
+                key={`${contract.id}${contract.contractNumber}${contract.orderNumber}`}
+              />
             )
           )}
         </CardGroup>
