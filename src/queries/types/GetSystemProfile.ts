@@ -198,6 +198,7 @@ export interface GetSystemProfile_cedarSystemDetails_systemMaintainerInformation
 
 export interface GetSystemProfile_cedarSystemDetails {
   __typename: "CedarSystemDetails";
+  isMySystem: boolean | null;
   businessOwnerInformation: GetSystemProfile_cedarSystemDetails_businessOwnerInformation;
   cedarSystem: GetSystemProfile_cedarSystemDetails_cedarSystem;
   deployments: GetSystemProfile_cedarSystemDetails_deployments[];
