@@ -152,7 +152,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     <>
       {hasErrors && (
         <ErrorAlert
-          testId="contact-details-errors"
+          testId="request-details-errors"
           classNames="margin-top-3"
           heading={t('form:inputError.checkFix')}
         >

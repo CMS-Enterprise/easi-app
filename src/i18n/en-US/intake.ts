@@ -1,15 +1,15 @@
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 
-const hasContractRadioLabels: Record<
-  `hasContractRadio_${SystemIntakeContractStatus}`,
+const hasContractLabels: Record<
+  `hasContract_${SystemIntakeContractStatus}`,
   string
 > = {
-  hasContractRadio_HAVE_CONTRACT:
+  hasContract_HAVE_CONTRACT:
     'I am planning project changes during my existing contract/InterAgency Agreement (IAA) period of performance',
-  hasContractRadio_IN_PROGRESS:
+  hasContract_IN_PROGRESS:
     'I am currently working on my OAGM Acquisition Plan/IAA documents',
-  hasContractRadio_NOT_STARTED: "I haven't started acquisition planning yet",
-  hasContractRadio_NOT_NEEDED: "I don't anticipate needing contractor support"
+  hasContract_NOT_STARTED: "I haven't started acquisition planning yet",
+  hasContract_NOT_NEEDED: "I don't anticipate needing contractor support"
 };
 
 const intake = {
@@ -311,7 +311,7 @@ const intake = {
     periodOfPerformanceHelpText: 'For example: 4/10/2020 - 4/9/2025',
     hasContractRadioHint:
       'Choosing this option will remove previously-entered contract number(s).',
-    ...hasContractRadioLabels
+    ...hasContractLabels
   },
   review: {
     heading: 'Check your answers before sending',

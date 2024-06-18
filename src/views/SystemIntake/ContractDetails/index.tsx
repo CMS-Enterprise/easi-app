@@ -226,7 +226,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     <>
       {hasErrors && (
         <ErrorAlert
-          testId="contact-details-errors"
+          testId="contract-details-errors"
           classNames="margin-top-3"
           heading={t('form:inputError.checkFix')}
         >
@@ -400,7 +400,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 hasContract === SystemIntakeContractStatus.HAVE_CONTRACT
               }
               aria-controls="hasContractBranchWrapper"
-              label={t('contractDetails.hasContractRadio', {
+              label={t('contractDetails.hasContract', {
                 context: SystemIntakeContractStatus.HAVE_CONTRACT
               })}
             />
@@ -421,7 +421,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 hasContract === SystemIntakeContractStatus.IN_PROGRESS
               }
               aria-controls="inProgressBranchWrapper"
-              label={t('contractDetails.hasContractRadio', {
+              label={t('contractDetails.hasContract', {
                 context: SystemIntakeContractStatus.IN_PROGRESS
               })}
             />
@@ -438,12 +438,12 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               id="contractNotStarted"
               value={SystemIntakeContractStatus.NOT_STARTED}
               aria-describedby="hasContractHelpText"
-              label={t('contractDetails.hasContractRadio', {
+              label={t('contractDetails.hasContract', {
                 context: SystemIntakeContractStatus.NOT_STARTED
               })}
               labelDescription={
                 <p className="text-base margin-bottom-0 margin-top-neg-1 font-sans-xs">
-                  {t('contractDetails.hasContractRadioHint')}
+                  {t('contractDetails.hasContractHint')}
                 </p>
               }
             />
@@ -454,12 +454,12 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               id="contractNotNeeded"
               value={SystemIntakeContractStatus.NOT_NEEDED}
               aria-describedby="hasContractHelpText"
-              label={t('contractDetails.hasContractRadio', {
+              label={t('contractDetails.hasContract', {
                 context: SystemIntakeContractStatus.NOT_NEEDED
               })}
               labelDescription={
                 <p className="text-base margin-bottom-0 margin-top-neg-1 font-sans-xs">
-                  {t('contractDetails.hasContractRadioHint')}
+                  {t('contractDetails.hasContractHint')}
                 </p>
               }
             />

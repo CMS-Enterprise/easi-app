@@ -96,7 +96,9 @@ const tableMap = (
 
     // Translate `hasContract` value
     if (hasContract) {
-      hasContract = t(`intake:contractDetails.${hasContract}`);
+      hasContract = t('intake:contractDetails.hasContract', {
+        context: hasContract
+      });
     }
 
     const lastAdminNote = getLastAdminNote(intake.notes);

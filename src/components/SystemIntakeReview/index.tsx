@@ -331,9 +331,9 @@ export const SystemIntakeReview = ({
           <div>
             <DescriptionTerm term={t('review.contract')} />
             <DescriptionDefinition
-              definition={t(
-                `intake:contractDetails.${systemIntake.contract.hasContract}`
-              )}
+              definition={t('intake:contractDetails.hasContract', {
+                context: systemIntake.contract.hasContract
+              })}
             />
           </div>
         </ReviewRow>
