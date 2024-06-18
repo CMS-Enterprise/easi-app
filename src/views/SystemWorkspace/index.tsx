@@ -22,6 +22,7 @@ import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import AtoCard from './components/AtoCard';
 import HelpLinks from './components/HelpLinks';
+import RequestsCard from './components/RequestsCard';
 import SpacesCard from './components/SpacesCard';
 
 export const SystemWorkspace = () => {
@@ -128,6 +129,8 @@ export const SystemWorkspace = () => {
             dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
             isso={isso}
           />
+
+          <RequestsCard systemId={systemId} />
         </CardGroup>
       </Grid>
     </MainContent>
