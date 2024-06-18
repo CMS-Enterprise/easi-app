@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { FieldPath } from 'react-hook-form';
+import { FieldErrors, FieldPath } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -14,7 +14,7 @@ import {
 } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
-import { useEasiForm } from 'components/EasiForm';
+import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import FeedbackBanner from 'components/FeedbackBanner';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
@@ -38,6 +38,8 @@ import flattenFormErrors from 'utils/flattenFormErrors';
 import formatContractNumbers from 'utils/formatContractNumbers';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
+
+import ContractFields from './ContractFields';
 
 import './index.scss';
 
@@ -72,14 +74,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     ]
   });
 
-  const {
-    register,
-    handleSubmit,
-    setError,
-    watch,
-    setFocus,
-    formState: { errors, isSubmitting, isDirty }
-  } = useEasiForm<ContractDetailsForm>({
+  const form = useEasiForm<ContractDetailsForm>({
     resolver: yupResolver(SystemIntakeValidationSchema.contractDetails),
     defaultValues: {
       existingFunding,
@@ -109,6 +104,16 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       }
     }
   });
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    watch,
+    formState: { errors, isSubmitting, isDirty }
+  } = form;
+
+  const hasContract = watch('contract.hasContract');
 
   const saveExitLink = (() => {
     let link = '';
@@ -179,10 +184,17 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const hasErrors = Object.keys(errors).length > 0;
 
   /** Flattened field errors, excluding any root errors */
-  const fieldErrors = useMemo(
-    () => flattenFormErrors<ContractDetailsForm>(errors),
-    [errors]
-  );
+  const fieldErrors = useMemo(() => {
+    return flattenFormErrors<ContractDetailsForm>({
+      ...errors,
+      ...(errors?.contract?.startDate && {
+        'contract.startDate': errors?.contract?.startDate
+      }),
+      ...(errors?.contract?.startDate && {
+        'contract.endDate': errors?.contract?.endDate
+      })
+    } as FieldErrors<ContractDetailsForm>);
+  }, [errors]);
 
   // Scroll errors into view on submit
   useEffect(() => {
@@ -209,10 +221,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 name={key}
                 key={key}
                 render={({ message }) => (
-                  <ErrorAlertMessage
-                    message={message}
-                    onClick={() => setFocus(key)}
-                  />
+                  <ErrorAlertMessage message={message} errorKey={key} />
                 )}
               />
             );
@@ -365,14 +374,19 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               value={SystemIntakeContractStatus.HAVE_CONTRACT}
               aria-describedby="hasContractHelpText"
               aria-expanded={
-                watch('contract.hasContract') ===
-                SystemIntakeContractStatus.HAVE_CONTRACT
+                hasContract === SystemIntakeContractStatus.HAVE_CONTRACT
               }
               aria-controls="hasContractBranchWrapper"
               label={t('contractDetails.hasContractRadio', {
                 context: SystemIntakeContractStatus.HAVE_CONTRACT
               })}
             />
+
+            {hasContract === SystemIntakeContractStatus.HAVE_CONTRACT && (
+              <EasiFormProvider<ContractDetailsForm> {...form}>
+                <ContractFields id="hasContractBranchWrapper" />
+              </EasiFormProvider>
+            )}
 
             <Radio
               {...register('contract.hasContract')}
@@ -381,14 +395,19 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               value={SystemIntakeContractStatus.IN_PROGRESS}
               aria-describedby="hasContractHelpText"
               aria-expanded={
-                watch('contract.hasContract') ===
-                SystemIntakeContractStatus.IN_PROGRESS
+                hasContract === SystemIntakeContractStatus.IN_PROGRESS
               }
               aria-controls="inProgressBranchWrapper"
               label={t('contractDetails.hasContractRadio', {
                 context: SystemIntakeContractStatus.IN_PROGRESS
               })}
             />
+
+            {hasContract === SystemIntakeContractStatus.IN_PROGRESS && (
+              <EasiFormProvider<ContractDetailsForm> {...form}>
+                <ContractFields id="inProgressBranchWrapper" />
+              </EasiFormProvider>
+            )}
 
             <Radio
               {...register('contract.hasContract')}
