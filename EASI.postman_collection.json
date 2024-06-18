@@ -2597,7 +2597,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query {\n  cedarSystems{\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n    isBookmarked\n  }\n}",
+												"query": "query {\n  cedarSystems{\n    id\n    name\n    description\n    acronym\n    atoEffectiveDate\n    atoExpirationDate\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n    isBookmarked\n  }\n}",
 												"variables": ""
 											}
 										},
