@@ -1,6 +1,6 @@
 package formstate
 
-import "github.com/cmsgov/easi-app/pkg/models"
+import "github.com/cms-enterprise/easi-app/pkg/models"
 
 // GetNewStateForUpdatedForm checks if it is valid to set a form as in Progress, or if it is in EDITS_REQUESTED, it leaves it as EDITS_REQUESTED
 func GetNewStateForUpdatedForm(currentState models.SystemIntakeFormState) models.SystemIntakeFormState {

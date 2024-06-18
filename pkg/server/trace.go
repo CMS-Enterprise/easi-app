@@ -3,7 +3,7 @@ package server
 import (
 	"net/http"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 )
 
 const traceHeader = "X-TRACE-ID"

@@ -3,11 +3,11 @@ package local
 import (
 	"context"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // NewCedarEasiClient returns a fake CEDAR Easi Client

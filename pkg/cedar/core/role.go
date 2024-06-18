@@ -12,11 +12,11 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	apiroles "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/role"
-	apimodels "github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
-	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	apiroles "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/role"
+	apimodels "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 const (

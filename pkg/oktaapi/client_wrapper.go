@@ -12,8 +12,8 @@ import (
 	"github.com/okta/okta-sdk-golang/v2/okta/query"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 const maxEUAIDLength = 4

@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 )
 
 // Server holds dependencies for running the EASi server
