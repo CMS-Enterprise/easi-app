@@ -104,4 +104,6 @@ type CedarSystemDetails struct {
 	Threats                     []*CedarThreat     `json:"threats"`
 	URLs                        []*CedarURL        `json:"urls"`
 	IsMySystem                  bool               `json:"isMySystem"`
+	ATOEffectiveDate            zero.Time          `json:"atoEffectiveDate"`
+	ATOExpirationDate           zero.Time          `json:"atoExpirationDate"`
 }
