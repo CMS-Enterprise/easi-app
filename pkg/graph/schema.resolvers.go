@@ -1752,7 +1752,7 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 
 // GrbReviewers is the resolver for the grbReviewers field.
 func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error) {
-	return resolvers.SystemIntakeGRBReviewers(ctx, r.store, obj.ID)
+	return resolvers.SystemIntakeGRBReviewers(ctx, obj.ID)
 }
 
 // Isso is the resolver for the isso field.

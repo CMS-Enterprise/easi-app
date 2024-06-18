@@ -71,7 +71,6 @@ func DeleteSystemIntakeGRBReviewer(
 
 func SystemIntakeGRBReviewers(
 	ctx context.Context,
-	store *storage.Store,
 	intakeID uuid.UUID,
 ) ([]*models.SystemIntakeGRBReviewer, error) {
 	return dataloaders.GetSystemIntakeGRBReviewersBySystemIntakeID(ctx, intakeID)

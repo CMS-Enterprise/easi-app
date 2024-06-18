@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -42,7 +41,6 @@ func (s *Store) UpdateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, 
 		"voting_role": votingRole,
 		"modified_by": appcontext.Principal(ctx).Account().ID,
 	})
-	fmt.Println(reviewer)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("failed to update GRB reviewer", zap.Error(err))
 		return nil, err
