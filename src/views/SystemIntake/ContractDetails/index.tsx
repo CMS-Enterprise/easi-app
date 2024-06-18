@@ -45,6 +45,21 @@ import FundingSources from './FundingSources';
 
 import './index.scss';
 
+/** Converts contract date object to ISO */
+const contractDateToISO = ({
+  month,
+  day,
+  year
+}: ContractDetailsForm['contract']['startDate']) =>
+  DateTime.fromObject(
+    {
+      day: Number(day) || 0,
+      month: Number(month) || 0,
+      year: Number(year) || 0
+    },
+    { zone: 'UTC' }
+  ).toISO();
+
 type ContractDetailsProps = {
   systemIntake: SystemIntake;
 };
@@ -128,52 +143,52 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     return link;
   })();
 
-  const formatContractDetailsPayload = (values: ContractDetailsForm) => {
-    const startDate = DateTime.fromObject(
-      {
-        day: Number(values.contract.startDate.day) || 0,
-        month: Number(values.contract.startDate.month) || 0,
-        year: Number(values.contract.startDate.year) || 0
-      },
-      { zone: 'UTC' }
-    ).toISO();
-
-    const endDate = DateTime.fromObject(
-      {
-        day: Number(values.contract.endDate.day) || 0,
-        month: Number(values.contract.endDate.month) || 0,
-        year: Number(values.contract.endDate.year) || 0
-      },
-      { zone: 'UTC' }
-    ).toISO();
-
-    return {
-      id,
-      fundingSources: {
-        existingFunding: !!(values.fundingSources.length > 0),
-        fundingSources: values.fundingSources
-      },
-      annualSpending: values.annualSpending,
-      contract: {
-        ...values.contract,
-        startDate,
-        endDate,
-        numbers:
-          values.contract.numbers.length > 0
-            ? values.contract.numbers.split(',').map(c => c.trim())
-            : []
-      }
-    };
-  };
-
   const onSubmit = handleSubmit(values => {
     if (!isDirty) history.push('documents');
 
-    // TODO: Clear contract fields if hasContract value is NOT_STARTED or NOT_NEEDED
+    const payload = { ...values };
+
+    // Clear contract subfields
+    if (
+      hasContract === SystemIntakeContractStatus.NOT_STARTED ||
+      hasContract === SystemIntakeContractStatus.NOT_NEEDED
+    ) {
+      payload.contract = {
+        ...values.contract,
+        numbers: '',
+        contractor: '',
+        startDate: {
+          month: '',
+          day: '',
+          year: ''
+        },
+        endDate: {
+          month: '',
+          day: '',
+          year: ''
+        }
+      };
+    }
 
     mutate({
       variables: {
-        input: formatContractDetailsPayload(values)
+        input: {
+          id,
+          fundingSources: {
+            existingFunding: payload.fundingSources.length > 0,
+            fundingSources: payload.fundingSources
+          },
+          annualSpending: payload.annualSpending,
+          contract: {
+            ...payload.contract,
+            startDate: contractDateToISO(payload.contract.startDate),
+            endDate: contractDateToISO(payload.contract.endDate),
+            numbers:
+              payload.contract.numbers.length > 0
+                ? payload.contract.numbers.split(',').map(c => c.trim())
+                : []
+          }
+        }
       }
     })
       .then(() => history.push('documents'))
