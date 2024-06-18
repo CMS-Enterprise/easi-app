@@ -737,7 +737,7 @@ function Basic({
                 <FundingSources
                   id="trb-funding-sources"
                   initialValues={field.value}
-                  setFieldValue={(fieldName, value) => {
+                  setFieldValue={value => {
                     if (value.delete) {
                       deleteFundingSource(value.delete);
                     } else {

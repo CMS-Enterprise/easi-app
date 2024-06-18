@@ -273,7 +273,7 @@ type FundingSourcesProps = {
   id?: string;
   initialValues: FundingSource[];
   fundingSourceOptions: string[];
-  setFieldValue: (field: string, value: any) => void;
+  setFieldValue: (value: any) => void;
   setFieldActive?: (active: boolean) => void;
   combinedFields?: boolean;
 };

@@ -45,7 +45,7 @@ export const formatFundingSourcesForRender = (
 // Custom hook for system intake funding source actions
 export default function useIntakeFundingSources(
   initialFundingSources: FundingSource[],
-  setFieldValue: (field: string, value: any) => void,
+  setFieldValue: (value: any) => void,
   combinedFields?: boolean
 ): UseIntakeFundingSources {
   // Format initial funding sources
@@ -130,16 +130,13 @@ export default function useIntakeFundingSources(
       }
 
       // Set funding sources field value
-      setFieldValue(
-        'fundingSources',
-        formatSourcesForApi(updatedFundingSources)
-      );
+      setFieldValue(formatSourcesForApi(updatedFundingSources));
     } else if (action === 'Delete') {
       // Set funding number as value to delete
-      setFieldValue('fundingSources', { delete: fundingNumber });
+      setFieldValue({ delete: fundingNumber });
     } else {
       // Set funding sources field value for a single combined source
-      setFieldValue('fundingSources', data);
+      setFieldValue(data);
     }
   }
 

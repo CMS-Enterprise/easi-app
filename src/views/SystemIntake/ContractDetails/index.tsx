@@ -24,6 +24,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
+import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -40,6 +41,7 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ContractFields from './ContractFields';
+import FundingSources from './FundingSources';
 
 import './index.scss';
 
@@ -110,6 +112,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     handleSubmit,
     setError,
     watch,
+    setValue,
     formState: { errors, isSubmitting, isDirty }
   } = form;
 
@@ -262,7 +265,12 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
               {t('contractDetails.fundingSources.helpText')}
             </HelpText>
 
-            {/* TODO: Add funding sources component */}
+            <FundingSources
+              id="fundingSources"
+              initialValues={watch('fundingSources')}
+              setFieldValue={value => setValue('fundingSources', value)}
+              fundingSourceOptions={intakeFundingSources}
+            />
           </Fieldset>
         </FieldGroup>
 
