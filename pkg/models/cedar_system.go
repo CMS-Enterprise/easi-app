@@ -10,6 +10,8 @@ type CedarSystem struct {
 	Name                    zero.String `json:"name"`
 	Description             zero.String `json:"description"`
 	Acronym                 zero.String `json:"acronym"`
+	ATOEffectiveDate        zero.Time   `json:"atoEffectiveDate"`
+	ATOExpirationDate       zero.Time   `json:"atoExpirationDate"`
 	State                   zero.String `json:"state"`
 	Status                  zero.String `json:"status"`
 	BusinessOwnerOrg        zero.String `json:"businessOwnerOrg"`
@@ -101,4 +103,7 @@ type CedarSystemDetails struct {
 	Deployments                 []*CedarDeployment `json:"deployments"`
 	Threats                     []*CedarThreat     `json:"threats"`
 	URLs                        []*CedarURL        `json:"urls"`
+	IsMySystem                  bool               `json:"isMySystem"`
+	ATOEffectiveDate            zero.Time          `json:"atoEffectiveDate"`
+	ATOExpirationDate           zero.Time          `json:"atoExpirationDate"`
 }

@@ -44,8 +44,8 @@ exports[`The governance overview page > matches the snapshot (w/ id param) 1`] =
     Add a new system or service
   </h1>
   <a
-    className="display-flex flex-align-center"
-    href="/system/request-type"
+    className="display-flex flex-align-center text-primary"
+    href="/system/request-type/test-intake-guid"
     onClick={[Function]}
   >
     <svg
@@ -358,8 +358,8 @@ exports[`The governance overview page > matches the snapshot (w/o id param) 1`] 
     Add a new system or service
   </h1>
   <a
-    className="display-flex flex-align-center"
-    href="/system/request-type"
+    className="display-flex flex-align-center text-primary"
+    href="/system/request-type/"
     onClick={[Function]}
   >
     <svg

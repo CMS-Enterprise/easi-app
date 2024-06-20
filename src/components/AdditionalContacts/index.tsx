@@ -62,6 +62,7 @@ const Contact = ({
         <Button
           type="button"
           unstyled
+          className="margin-top-0"
           onClick={() => {
             setActiveContact(contact);
           }}
@@ -71,7 +72,7 @@ const Contact = ({
         <Button
           type="button"
           unstyled
-          className="text-error margin-left-2"
+          className="text-error margin-left-2 margin-top-0"
           onClick={() => {
             // Hide contact in UI
             setHideContact(true);

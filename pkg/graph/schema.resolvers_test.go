@@ -172,16 +172,22 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	resolver := NewResolver(store, resolverService, &s3Client, &emailClient, ldClient, cedarCoreClient)
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: resolver, Directives: directives})
+
+	buildDataloaders := func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(
+			store,
+			func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
+			func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
+		)
+	}
+
 	graphQLClient := client.New(
 		handler.NewDefaultServer(schema),
+		addDataloadersToGraphQLClientTest(buildDataloaders),
 	)
 
 	ctx := context.Background()
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(
-		store,
-		func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		func(ctx context.Context) ([]*models.CedarSystem, error) { return nil, nil },
-	))
+	ctx = dataloaders.CTXWithLoaders(ctx, buildDataloaders)
 
 	storeTestSuite := &GraphQLTestSuite{
 		Suite:    suite.Suite{},
@@ -196,28 +202,24 @@ func TestGraphQLTestSuite(t *testing.T) {
 	suite.Run(t, storeTestSuite)
 }
 
-// addDataLoadersToGraphQLClientTest adds all dataloaders into the test context for use in tests
-func addDataLoadersToGraphQLClientTest(loaders *dataloaders.DataLoaders) func(*client.Request) {
+// addDataloadersToGraphQLClientTest adds all dataloaders into the test context for use in tests
+func addDataloadersToGraphQLClientTest(buildDataloaders dataloaders.BuildDataloaders) func(*client.Request) {
 	return func(request *client.Request) {
 		ctx := request.HTTP.Context()
-		ctx = dataloaders.CTXWithLoaders(ctx, loaders)
-		request.HTTP = request.HTTP.WithContext(ctx)
-	}
-}
-
-// addAuthPrincipalToGraphQLClientTest returns a function to add an auth principal to a graphql client test
-func addAuthPrincipalToGraphQLClientTest(principal authentication.EUAPrincipal) func(*client.Request) {
-	return func(request *client.Request) {
-		ctx := appcontext.WithPrincipal(context.Background(), &principal)
+		ctx = dataloaders.CTXWithLoaders(ctx, buildDataloaders)
 		request.HTTP = request.HTTP.WithContext(ctx)
 	}
 }
 
 // addAuthWithAllJobCodesToGraphQLClientTest adds authentication for all job codes
 func addAuthWithAllJobCodesToGraphQLClientTest(euaID string) func(*client.Request) {
-	return addAuthPrincipalToGraphQLClientTest(authentication.EUAPrincipal{
-		EUAID:       euaID,
-		JobCodeEASi: true,
-		JobCodeGRT:  true,
-	})
+	return func(request *client.Request) {
+		ctx := appcontext.WithPrincipal(request.HTTP.Context(), &authentication.EUAPrincipal{
+			EUAID:       euaID,
+			JobCodeEASi: true,
+			JobCodeGRT:  true,
+		})
+
+		request.HTTP = request.HTTP.WithContext(ctx)
+	}
 }

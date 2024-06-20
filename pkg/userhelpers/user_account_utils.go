@@ -11,7 +11,6 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authentication"
-	loaders "github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -237,23 +236,4 @@ func GetUserInfoFromOktaLocal(ctx context.Context, username string) (*OktaAccoun
 		ZoneInfo:          "America/Los_Angeles",
 	}
 	return accountInfo, nil
-
-}
-
-// UserAccountGetByIDLOADER uses a data loader to return a user account from the database
-func UserAccountGetByIDLOADER(ctx context.Context, id uuid.UUID) (*authentication.UserAccount, error) {
-	allLoaders := loaders.Loaders(ctx)
-	userAccountLoader := allLoaders.UserAccountLoader
-
-	key := loaders.NewKeyArgs()
-	key.Args["id"] = id
-
-	thunk := userAccountLoader.Loader.Load(ctx, key)
-	result, err := thunk()
-	if err != nil {
-		return nil, err
-	}
-
-	return result.(*authentication.UserAccount), nil
-
 }

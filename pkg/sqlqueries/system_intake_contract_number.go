@@ -12,20 +12,20 @@ var deleteSystemIntakeContractNumbersSQL string
 //go:embed SQL/system_intake_contract_number/set.sql
 var setSystemIntakeContractNumbersSQL string
 
-// selectContractNumbersBySystemIntakeIDLOADERSQL holds the SQL command to get linked Contract Numbers by System Intake ID via dataloader
+// selectContractNumbersBySystemIntakeIDsSQL holds the SQL command to get linked Contract Numbers by System Intake ID via dataloader
 //
-//go:embed SQL/system_intake_contract_number/get_by_system_intake_id_LOADER.sql
-var selectContractNumbersBySystemIntakeIDLOADERSQL string
+//go:embed SQL/system_intake_contract_number/get_by_system_intake_ids.sql
+var selectContractNumbersBySystemIntakeIDsSQL string
 
 // SystemIntakeContractNumberForm holds all relevant SQL scripts for a System Intake Contract Number
 var SystemIntakeContractNumberForm = systemIntakeContractNumberScripts{
-	Set:                          setSystemIntakeContractNumbersSQL,
-	Delete:                       deleteSystemIntakeContractNumbersSQL,
-	SelectBySystemIntakeIDLOADER: selectContractNumbersBySystemIntakeIDLOADERSQL,
+	Set:                     setSystemIntakeContractNumbersSQL,
+	Delete:                  deleteSystemIntakeContractNumbersSQL,
+	SelectBySystemIntakeIDs: selectContractNumbersBySystemIntakeIDsSQL,
 }
 
 type systemIntakeContractNumberScripts struct {
-	Set                          string
-	Delete                       string
-	SelectBySystemIntakeIDLOADER string
+	Set                     string
+	Delete                  string
+	SelectBySystemIntakeIDs string
 }

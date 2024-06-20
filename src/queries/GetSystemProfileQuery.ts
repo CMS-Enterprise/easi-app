@@ -114,7 +114,7 @@ export default gql`
       usesAiTech
     }
     cedarContractsBySystem(cedarSystemId: $cedarSystemId) {
-      id: systemID
+      systemID
       startDate
       endDate
       contractNumber

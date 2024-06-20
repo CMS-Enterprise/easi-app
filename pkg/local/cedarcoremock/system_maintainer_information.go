@@ -231,8 +231,9 @@ var mockSystemMaintainerInformation = map[string]*models.SystemMaintainerInforma
 	},
 }
 
-func GetSystemMaintainerInformation(cedarSystemId string) *models.SystemMaintainerInformation {
-	if val, ok := mockSystemMaintainerInformation[cedarSystemId]; ok {
+// GetSystemMaintainerInformation returns mocked system maintainer information for a single CEDAR system
+func GetSystemMaintainerInformation(cedarSystemID string) *models.SystemMaintainerInformation {
+	if val, ok := mockSystemMaintainerInformation[cedarSystemID]; ok {
 		return val
 	}
 

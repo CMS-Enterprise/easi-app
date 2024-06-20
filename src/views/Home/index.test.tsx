@@ -11,7 +11,6 @@ import {
   getTrbAdminTeamHomeQuery
 } from 'data/mock/trbRequest';
 import { MessageProvider } from 'hooks/useMessage';
-import GetCedarSystemBookmarksQuery from 'queries/GetCedarSystemBookmarksQuery';
 import GetCedarSystemsQuery from 'queries/GetCedarSystemsQuery';
 import GetSystemIntakesTableQuery from 'queries/GetSystemIntakesTableQuery';
 import {
@@ -83,16 +82,6 @@ const mocks = [
     result: {
       data: {
         cedarSystems: []
-      }
-    }
-  },
-  {
-    request: {
-      query: GetCedarSystemBookmarksQuery
-    },
-    result: {
-      data: {
-        cedarSystemBookmarks: []
       }
     }
   }

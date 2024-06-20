@@ -6,37 +6,37 @@
 cy.systemIntake = {
   contactDetails: {
     fillNonBranchingFields: () => {
-      cy.get('#IntakeForm-RequesterComponent')
+      cy.get('#requesterComponent')
         .select('Center for Medicare')
         .should('have.value', 'Center for Medicare');
 
-      cy.get('#react-select-IntakeForm-BusinessOwnerName-input')
+      cy.get('#react-select-businessOwnerCommonName-input')
         .type('Audrey')
         .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
         .type('{downarrow}{enter}')
         .should('have.value', 'Audrey Abrams, ADMI (audrey.abrams@local.fake)');
 
-      cy.get('#IntakeForm-BusinessOwnerEmail').should(
+      cy.get('#businessOwnerEmail').should(
         'have.value',
         'audrey.abrams@local.fake'
       );
 
-      cy.get('#IntakeForm-BusinessOwnerComponent')
+      cy.get('#businessOwnerComponent')
         .select('CMS Wide')
         .should('have.value', 'CMS Wide');
 
-      cy.get('#react-select-IntakeForm-ProductManagerName-input')
+      cy.get('#react-select-productManagerCommonName-input')
         .type('Delphia')
         .wait(2000) // See Note [Specific Cypress wait duration on Okta search]
         .type('{downArrow}{enter}')
         .should('have.value', 'Delphia Green, GBRG (delphia.green@local.fake)');
 
-      cy.get('#IntakeForm-ProductManagerEmail').should(
+      cy.get('#productManagerEmail').should(
         'have.value',
         'delphia.green@local.fake'
       );
 
-      cy.get('#IntakeForm-ProductManagerComponent')
+      cy.get('#productManagerComponent')
         .select('Office of Legislation')
         .should('have.value', 'Office of Legislation');
     }
