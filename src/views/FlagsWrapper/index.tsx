@@ -32,6 +32,7 @@ const UserTargetingWrapper = ({ children }: WrapperProps) => {
             hash: data?.currentUser?.launchDarkly.signedHash
           },
           flags: {
+            atoProcessList: false,
             downgradeGovTeam: false,
             downgradeTrbAdmin: false,
             systemProfileHiddenFields: false,
