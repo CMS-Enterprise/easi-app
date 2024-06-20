@@ -1,6 +1,7 @@
 package dataloaders
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -9,7 +10,7 @@ import (
 func dataloaderMiddleware(buildDataloaders BuildDataloaders, next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := CTXWithLoaders(r.Context(), buildDataloaders)
-		r = r.WithContext(ctx)
+		r = r.WithContext(context.WithoutCancel(ctx))
 		next.ServeHTTP(w, r)
 	}
 }
