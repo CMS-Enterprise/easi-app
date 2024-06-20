@@ -791,7 +791,7 @@ export const result: { data: GetSystemProfile } = {
     },
     cedarContractsBySystem: [
       {
-        id: '{BC2C09FA-63CD-46e5-99EB-D27DB538FD6A}',
+        systemID: '{BC2C09FA-63CD-46e5-99EB-D27DB538FD6A}',
         startDate: null,
         endDate: null,
         contractNumber: 'GS35F372DA',

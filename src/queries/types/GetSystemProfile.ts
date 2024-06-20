@@ -101,7 +101,7 @@ export interface GetSystemProfile_cedarSoftwareProducts {
 
 export interface GetSystemProfile_cedarContractsBySystem {
   __typename: "CedarContract";
-  id: string | null;
+  systemID: string | null;
   startDate: Time | null;
   endDate: Time | null;
   contractNumber: string | null;

@@ -23,6 +23,16 @@ type SystemSummary struct {
 	// Example: CMSS
 	Acronym string `json:"acronym,omitempty"`
 
+	// ato effective date
+	// Example: 2021-10-13T00:00:00.000Z
+	// Format: date
+	AtoEffectiveDate strfmt.Date `json:"atoEffectiveDate,omitempty"`
+
+	// ato expiration date
+	// Example: 2021-10-13T00:00:00.000Z
+	// Format: date
+	AtoExpirationDate strfmt.Date `json:"atoExpirationDate,omitempty"`
+
 	// belongs to
 	// Example: 326-10-0
 	BelongsTo string `json:"belongsTo,omitempty"`
@@ -92,6 +102,14 @@ type SystemSummary struct {
 func (m *SystemSummary) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAtoEffectiveDate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAtoExpirationDate(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateIctObjectID(formats); err != nil {
 		res = append(res, err)
 	}
@@ -111,6 +129,30 @@ func (m *SystemSummary) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *SystemSummary) validateAtoEffectiveDate(formats strfmt.Registry) error {
+	if swag.IsZero(m.AtoEffectiveDate) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("atoEffectiveDate", "body", "date", m.AtoEffectiveDate.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SystemSummary) validateAtoExpirationDate(formats strfmt.Registry) error {
+	if swag.IsZero(m.AtoExpirationDate) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("atoExpirationDate", "body", "date", m.AtoExpirationDate.String(), formats); err != nil {
+		return err
+	}
+
 	return nil
 }
 

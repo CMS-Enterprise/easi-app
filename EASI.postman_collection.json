@@ -1,9 +1,7 @@
 {
 	"info": {
-		"_postman_id": "a7ab52b4-b7f0-44d5-a9c9-f47a9b7c53ed",
 		"name": "EASI",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12341016"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -2599,7 +2597,7 @@
 										"body": {
 											"mode": "graphql",
 											"graphql": {
-												"query": "query {\n  cedarSystems{\n    id\n    name\n    description\n    acronym\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n    isBookmarked\n  }\n}",
+												"query": "query {\n  cedarSystems{\n    id\n    name\n    description\n    acronym\n    atoEffectiveDate\n    atoExpirationDate\n    status\n    businessOwnerOrg\n    businessOwnerOrgComp\n    systemMaintainerOrg\n    systemMaintainerOrgComp\n    isBookmarked\n  }\n}",
 												"variables": ""
 											}
 										},
