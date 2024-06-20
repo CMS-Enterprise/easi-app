@@ -25,5 +25,5 @@ func GetSystemIntakeSystemsBySystemIntakeID(ctx context.Context, systemIntakeID 
 		return nil, errors.New("unexpected nil loaders in GetSystemIntakeSystemsBySystemIntakeID")
 	}
 
-	return loaders.SystemIntakeSystems.Load(ctx, systemIntakeID)
+	return loaders.SystemIntakeSystems.Load(context.WithoutCancel(ctx), systemIntakeID)
 }

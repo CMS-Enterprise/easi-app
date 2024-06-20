@@ -25,5 +25,5 @@ func GetTRBRequestContractNumbersByTRBRequestID(ctx context.Context, trbRequestI
 		return nil, errors.New("unexpected nil loaders in GetTRBRequestContractNumbersByTRBRequestID")
 	}
 
-	return loaders.TRBRequestContractNumbers.Load(ctx, trbRequestID)
+	return loaders.TRBRequestContractNumbers.Load(context.WithoutCancel(ctx), trbRequestID)
 }

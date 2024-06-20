@@ -25,5 +25,5 @@ func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemI
 		return nil, errors.New("unexpected nil loaders in GetSystemIntakeContractNumbersBySystemIntakeIDs")
 	}
 
-	return loaders.SystemIntakeContractNumbers.Load(ctx, systemIntakeID)
+	return loaders.SystemIntakeContractNumbers.Load(context.WithoutCancel(ctx), systemIntakeID)
 }

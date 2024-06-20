@@ -25,5 +25,5 @@ func GetTRBRequestSystemsByTRBRequestID(ctx context.Context, trbRequestID uuid.U
 		return nil, errors.New("unexpected nil dataloaders in GetTRBRequestSystemsByTRBRequestID")
 	}
 
-	return loaders.TRBRequestSystems.Load(ctx, trbRequestID)
+	return loaders.TRBRequestSystems.Load(context.WithoutCancel(ctx), trbRequestID)
 }

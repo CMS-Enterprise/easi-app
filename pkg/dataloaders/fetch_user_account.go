@@ -45,5 +45,5 @@ func GetUserAccountByID(ctx context.Context, userID uuid.UUID) (*authentication.
 		return nil, errors.New("unexpected nil loaders in GetUserAccountByID")
 	}
 
-	return loaders.GetUserAccount.Load(ctx, userID)
+	return loaders.GetUserAccount.Load(context.WithoutCancel(ctx), userID)
 }
