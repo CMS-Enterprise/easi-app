@@ -120,8 +120,8 @@ const systemProfile = {
       completed: 'Completed on ',
       due: 'Due ',
       noEmailContact: "Please contact this system's business owner.",
-      noATO:
-        'There is no ATO on file for this system. If you believe this to be an error, please contact',
+      noATODisclaimer:
+        'There is no ATO on file for this system. If you believe this to be an error, please contact <link1>EnterpriseArchitecture@cms.hhs.gov</link1>',
       noATOPOAM:
         'Because there is no ATO on file for this system, there is no POAM information available. If you believe this to be an error, please contact',
       noATODates:

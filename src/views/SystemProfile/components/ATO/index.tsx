@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import {
   Card,
   CardFooter,
@@ -15,6 +15,7 @@ import {
   Table
 } from '@trussworks/react-uswds';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import { camelCase } from 'lodash';
 
 import Alert from 'components/shared/Alert';
@@ -85,6 +86,7 @@ function getLongestOpenFinding(
 const ATO = ({ system }: SystemProfileSubviewProps) => {
   const { t } = useTranslation('systemProfile');
   const isMobile = useCheckResponsiveScreen('tablet');
+  const flags = useFlags();
 
   const { ato, atoStatus, cedarThreat } = system;
 
@@ -172,10 +174,27 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
                 </CardFooter>
               )}
             </Card>
-            <HelpText className="display-flex">
-              <IconInfo className="margin-right-1" />
-              {t('singleSystem.ato.atoExpiringSoonLogicInfo')}
-            </HelpText>
+            {/* If ATO exists display HelpText describing ATO expiration logic, otherwise display 'no ATO' disclaimer */}
+            {atoStatus !== 'No ATO' ? (
+              <HelpText
+                className="display-flex"
+                data-testid="atoExpirationLogicHelpText"
+              >
+                <IconInfo className="margin-right-1" />
+                {t('singleSystem.ato.atoExpiringSoonLogicInfo')}
+              </HelpText>
+            ) : (
+              <Alert type="info" data-testid="noATOAlert" slim>
+                <Trans
+                  i18nKey="systemProfile:singleSystem.ato.noATODisclaimer"
+                  components={{
+                    link1: (
+                      <Link href="EnterpriseArchitecture@cms.hhs.gov"> </Link>
+                    )
+                  }}
+                />
+              </Alert>
+            )}
           </CardGroup>
         ) : (
           <Grid row gap className="margin-top-0 margin-bottom-4">
@@ -185,7 +204,8 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
           </Grid>
         )}
 
-        {system.activities !== undefined && (
+        {/* Hide ATO Process List behind feature flag */}
+        {flags.atoProcessList && system.activities !== undefined && (
           <ProcessList>
             {system.activities.map(act => (
               <ProcessListItem key={act.id}>
@@ -305,13 +325,6 @@ const ATO = ({ system }: SystemProfileSubviewProps) => {
               </Grid>
             </Grid>
           </div>
-        )}
-        {atoStatus === 'No ATO' && (
-          <Grid row gap className="margin-top-2">
-            <Grid tablet={{ col: 12 }}>
-              <Alert type="info">{t('singleSystem.ato.noEmailContact')}</Alert>
-            </Grid>
-          </Grid>
         )}
 
         {atoStatus !== 'No ATO' && (
