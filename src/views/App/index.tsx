@@ -143,10 +143,16 @@ const AppRoutes = () => {
 
       <SecureRoute exact path="/systems" component={SystemList} />
 
-      {flags.systemWorkspace && (
+      {flags.systemWorkspace ? (
         <SecureRoute
           path="/systems/:systemId/workspace"
           component={SystemWorkspace}
+        />
+      ) : (
+        <Redirect
+          exact
+          from="/systems/:systemId/workspace"
+          to="/systems/:systemId"
         />
       )}
 

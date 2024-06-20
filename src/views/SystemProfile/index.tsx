@@ -508,20 +508,21 @@ const SystemProfile = ({ id, modal }: SystemProfileProps) => {
                 </span>
               </PageHeading>
 
-              {systemProfileData.cedarSystemDetails?.isMySystem && (
-                <div className="margin-top-2 margin-bottom-05">
-                  <UswdsReactLink
-                    className="text-no-underline"
-                    to={`/systems/${systemId}/workspace`}
-                  >
-                    <span className="text-underline">
-                      {t('singleSystem.summary.goToWorkspace')}
-                    </span>
-                    <span aria-hidden>&nbsp;</span>
-                    <span aria-hidden>&rarr; </span>
-                  </UswdsReactLink>
-                </div>
-              )}
+              {flags.systemWorkspace &&
+                systemProfileData.cedarSystemDetails?.isMySystem && (
+                  <div className="margin-top-2 margin-bottom-05">
+                    <UswdsReactLink
+                      className="text-no-underline"
+                      to={`/systems/${systemId}/workspace`}
+                    >
+                      <span className="text-underline">
+                        {t('singleSystem.summary.goToWorkspace')}
+                      </span>
+                      <span aria-hidden>&nbsp;</span>
+                      <span aria-hidden>&rarr; </span>
+                    </UswdsReactLink>
+                  </div>
+                )}
 
               <div className="text-normal font-body-md">
                 <CollapsableLink
