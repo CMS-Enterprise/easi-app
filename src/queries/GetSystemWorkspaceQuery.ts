@@ -13,6 +13,7 @@ export default gql`
       lastAssessmentDate
     }
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
+      isMySystem
       cedarSystem {
         id
         name
