@@ -37,5 +37,5 @@ func GetCedarSystemByID(ctx context.Context, cedarSystemID string) (*models.Ceda
 		return nil, errors.New("unexpected nil dataloaders in GetCedarSystemByID")
 	}
 
-	return loaders.GetCedarSystem.Load(context.WithoutCancel(ctx), cedarSystemID)
+	return loaders.GetCedarSystem.Load(ctx, cedarSystemID)
 }

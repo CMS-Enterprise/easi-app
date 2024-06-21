@@ -59,7 +59,7 @@ type dataReader struct {
 			return nil, errors.New("unexpected nil loaders in GetSystemIntakeSystemsBySystemIntakeID")
 		}
 
-		return loaders.SystemIntakeSystems.Load(context.WithoutCancel(ctx), systemIntakeID)
+		return loaders.SystemIntakeSystems.Load(ctx, systemIntakeID)
 	}
 */
 // you can then edit NewDataloaders below to include your new dataloader in the return

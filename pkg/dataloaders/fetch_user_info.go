@@ -33,5 +33,5 @@ func FetchUserInfoByEUAUserID(ctx context.Context, euaUserID string) (*models.Us
 		return nil, errors.New("unexpected nil dataloaders in FetchUserInfoByEUAUserID")
 	}
 
-	return loaders.FetchUserInfo.Load(context.WithoutCancel(ctx), euaUserID)
+	return loaders.FetchUserInfo.Load(ctx, euaUserID)
 }

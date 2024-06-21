@@ -22,7 +22,7 @@ func GetCedarSystemIsBookmarked(ctx context.Context, cedarSystemID string, euaUs
 		return false, errors.New("unexpected nil loaders in GetBookmarkedCEDARSystem")
 	}
 
-	return loaders.CedarSystemBookmark.Load(context.WithoutCancel(ctx), models.BookmarkRequest{
+	return loaders.CedarSystemBookmark.Load(ctx, models.BookmarkRequest{
 		CedarSystemID: cedarSystemID,
 		EuaUserID:     euaUserID,
 	})
