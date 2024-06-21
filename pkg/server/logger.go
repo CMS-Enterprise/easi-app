@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"time"
 
 	"go.uber.org/zap"
 
@@ -28,6 +29,11 @@ func loggerMiddleware(logger *zap.Logger, environment appconfig.Environment, nex
 		)
 		ctx = appcontext.WithLogger(ctx, logger)
 
+		start := time.Now()
+		next.ServeHTTP(w, r.WithContext(ctx))
+		durationMS := time.Since(start).Milliseconds()
+
+		// Log these fields after each HTTP request
 		fields := []zap.Field{
 			zap.String("accepted-language", r.Header.Get("accepted-language")),
 			zap.Int64("content-length", r.ContentLength),
@@ -35,13 +41,12 @@ func loggerMiddleware(logger *zap.Logger, environment appconfig.Environment, nex
 			zap.String("method", r.Method),
 			zap.String("protocol-version", r.Proto),
 			zap.String("referer", r.Header.Get("referer")),
+			zap.Int64("response-time-ms", durationMS),
 			zap.String("request-source", r.RemoteAddr),
 			zap.String("url", r.URL.String()),
 			zap.String("user-agent", r.UserAgent()),
 		}
 		logger.Info("Request", fields...)
-
-		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
