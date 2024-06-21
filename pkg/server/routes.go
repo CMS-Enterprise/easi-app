@@ -44,9 +44,11 @@ import (
 )
 
 func (s *Server) routes(
+	contextMiddleware func(handler http.Handler) http.Handler,
 	corsMiddleware func(handler http.Handler) http.Handler,
 	traceMiddleware func(handler http.Handler) http.Handler,
-	loggerMiddleware func(handler http.Handler) http.Handler) {
+	loggerMiddleware func(handler http.Handler) http.Handler,
+) {
 
 	oktaConfig := s.NewOktaClientConfig()
 	jwtVerifier := okta.NewJwtVerifier(oktaConfig.OktaClientID, oktaConfig.OktaIssuer)
@@ -72,6 +74,7 @@ func (s *Server) routes(
 	)
 
 	s.router.Use(
+		contextMiddleware,
 		traceMiddleware, // trace all requests with an ID
 		loggerMiddleware,
 		corsMiddleware,

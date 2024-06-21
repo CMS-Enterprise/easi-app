@@ -50,8 +50,8 @@ func loggerMiddleware(logger *zap.Logger, environment appconfig.Environment, nex
 	})
 }
 
-// NewLoggerMiddleware returns a handler with a request based logger
-func NewLoggerMiddleware(logger *zap.Logger, environment appconfig.Environment) func(http.Handler) http.Handler {
+// newLoggerMiddleware returns a handler with a request based logger
+func newLoggerMiddleware(logger *zap.Logger, environment appconfig.Environment) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return loggerMiddleware(logger, environment, next)
 	}
