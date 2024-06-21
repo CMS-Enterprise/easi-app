@@ -62,7 +62,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 			},
 		)
 		s.Len(reviewers, 3)
-		fetchedReviewers, err := SystemIntakeGRBReviewers(ctx, intake.ID)
+		fetchedReviewers, err := SystemIntakeGRBReviewers(s.ctxWithNewDataloaders(), intake.ID)
 		s.NoError(err)
 		s.Len(fetchedReviewers, 3)
 		for _, eua := range []string{"ABCD", "TEST", "A11Y"} {
