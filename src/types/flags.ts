@@ -1,4 +1,5 @@
 export type Flags = {
+  atoProcessList: boolean;
   downgradeGovTeam: boolean;
   downgradeTrbAdmin: boolean;
   systemProfileHiddenFields: boolean;

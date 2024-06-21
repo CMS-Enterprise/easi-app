@@ -22,11 +22,31 @@ export default gql`
   query GetSystemProfile($cedarSystemId: String!) {
     cedarAuthorityToOperate(cedarSystemID: $cedarSystemId) {
       uuid
-      tlcPhase
-      dateAuthorizationMemoExpires
+      actualDispositionDate
+      containsPersonallyIdentifiableInformation
+      countOfTotalNonPrivilegedUserPopulation
       countOfOpenPoams
-      lastAssessmentDate
+      countOfTotalPrivilegedUserPopulation
+      dateAuthorizationMemoExpires
+      dateAuthorizationMemoSigned
+      eAuthenticationLevel
+      fips199OverallImpactRating
+      fismaSystemAcronym
+      fismaSystemName
+      isAccessedByNonOrganizationalUsers
       isPiiLimitedToUserNameAndPass
+      isProtectedHealthInformation
+      lastActScaDate
+      lastAssessmentDate
+      lastContingencyPlanCompletionDate
+      lastPenTestDate
+      piaCompletionDate
+      primaryCyberRiskAdvisor
+      privacySubjectMatterExpert
+      recoveryPointObjective
+      recoveryTimeObjective
+      systemOfRecordsNotice
+      tlcPhase
     }
     exchanges(cedarSystemId: $cedarSystemId) {
       connectionFrequency
@@ -59,6 +79,7 @@ export default gql`
       }
     }
     cedarThreat(cedarSystemId: $cedarSystemId) {
+      daysOpen
       weaknessRiskLevel
     }
     cedarSoftwareProducts(cedarSystemId: $cedarSystemId) {
