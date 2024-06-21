@@ -104,6 +104,7 @@ export default gql`
       isDeliveryOrg
     }
     cedarSystemDetails(cedarSystemId: $cedarSystemId) {
+      isMySystem
       businessOwnerInformation {
         isCmsOwned
         numberOfContractorFte

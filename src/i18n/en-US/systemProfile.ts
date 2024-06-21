@@ -54,7 +54,8 @@ const systemProfile = {
       subheader2: 'Business Owner',
       subheader2_plural: 'Business Owners',
       subheader3: 'Go live date',
-      subheader4: 'Most recent major change release'
+      subheader4: 'Most recent major change release',
+      goToWorkspace: 'Go to system workspace'
     },
     ato: {
       header: 'Authority to Operate (ATO)',
