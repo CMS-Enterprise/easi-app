@@ -342,6 +342,8 @@ type ComplexityRoot struct {
 	}
 
 	CedarSystem struct {
+		ATOEffectiveDate        func(childComplexity int) int
+		ATOExpirationDate       func(childComplexity int) int
 		Acronym                 func(childComplexity int) int
 		BusinessOwnerOrg        func(childComplexity int) int
 		BusinessOwnerOrgComp    func(childComplexity int) int
@@ -365,6 +367,8 @@ type ComplexityRoot struct {
 	}
 
 	CedarSystemDetails struct {
+		ATOEffectiveDate            func(childComplexity int) int
+		ATOExpirationDate           func(childComplexity int) int
 		BusinessOwnerInformation    func(childComplexity int) int
 		CedarSystem                 func(childComplexity int) int
 		Deployments                 func(childComplexity int) int
@@ -2909,6 +2913,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CedarSubSystem.Name(childComplexity), true
 
+	case "CedarSystem.atoEffectiveDate":
+		if e.complexity.CedarSystem.ATOEffectiveDate == nil {
+			break
+		}
+
+		return e.complexity.CedarSystem.ATOEffectiveDate(childComplexity), true
+
+	case "CedarSystem.atoExpirationDate":
+		if e.complexity.CedarSystem.ATOExpirationDate == nil {
+			break
+		}
+
+		return e.complexity.CedarSystem.ATOExpirationDate(childComplexity), true
+
 	case "CedarSystem.acronym":
 		if e.complexity.CedarSystem.Acronym == nil {
 			break
@@ -3037,6 +3055,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CedarSystemBookmark.EUAUserID(childComplexity), true
+
+	case "CedarSystemDetails.atoEffectiveDate":
+		if e.complexity.CedarSystemDetails.ATOEffectiveDate == nil {
+			break
+		}
+
+		return e.complexity.CedarSystemDetails.ATOEffectiveDate(childComplexity), true
+
+	case "CedarSystemDetails.atoExpirationDate":
+		if e.complexity.CedarSystemDetails.ATOExpirationDate == nil {
+			break
+		}
+
+		return e.complexity.CedarSystemDetails.ATOExpirationDate(childComplexity), true
 
 	case "CedarSystemDetails.businessOwnerInformation":
 		if e.complexity.CedarSystemDetails.BusinessOwnerInformation == nil {
@@ -7730,6 +7762,8 @@ type CedarSystem {
   name: String!
   description: String
   acronym: String
+  atoEffectiveDate: Time
+  atoExpirationDate: Time
   status: String
   businessOwnerOrg: String
   businessOwnerOrgComp: String
@@ -7838,14 +7872,16 @@ type CedarSystemMaintainerInformation {
 This is the Representation of Cedar system with additional related information
 """
 type CedarSystemDetails {
- cedarSystem: CedarSystem!
- systemMaintainerInformation: CedarSystemMaintainerInformation!
- businessOwnerInformation: CedarBusinessOwnerInformation!
- roles: [CedarRole!]!
- deployments: [CedarDeployment!]!
- threats: [CedarThreat!]!
- urls: [CedarURL!]!
- isMySystem: Boolean
+  cedarSystem: CedarSystem!
+  systemMaintainerInformation: CedarSystemMaintainerInformation!
+  businessOwnerInformation: CedarBusinessOwnerInformation!
+  roles: [CedarRole!]!
+  deployments: [CedarDeployment!]!
+  threats: [CedarThreat!]!
+  urls: [CedarURL!]!
+  isMySystem: Boolean
+  atoEffectiveDate: Time
+  atoExpirationDate: Time
 }
 
 """
@@ -8019,34 +8055,34 @@ enum ExchangeDirection {
 CedarExchange represents info about how data is exchanged between a CEDAR system and another system
 """
 type CedarExchange {
-	connectionFrequency: [String!]!
-	containsBankingData: Boolean
-	containsBeneficiaryAddress: Boolean
-	containsPhi: Boolean
-	containsPii: Boolean
+  connectionFrequency: [String!]!
+  containsBankingData: Boolean
+  containsBeneficiaryAddress: Boolean
+  containsPhi: Boolean
+  containsPii: Boolean
   containsHealthDisparityData: Boolean
-	dataExchangeAgreement: String
-	dataFormat: String
-	dataFormatOther: String
-	exchangeDescription: String
-	exchangeEndDate: Time
-	exchangeId: String
-	exchangeName: String
-	exchangeRetiredDate: Time
-	exchangeStartDate: Time
-	exchangeState: String
-	exchangeVersion: String
+  dataExchangeAgreement: String
+  dataFormat: String
+  dataFormatOther: String
+  exchangeDescription: String
+  exchangeEndDate: Time
+  exchangeId: String
+  exchangeName: String
+  exchangeRetiredDate: Time
+  exchangeStartDate: Time
+  exchangeState: String
+  exchangeVersion: String
   exchangeDirection: ExchangeDirection
-	fromOwnerId: String
-	fromOwnerName: String
-	fromOwnerType: String
-	isBeneficiaryMailingFile: Boolean
-	numOfRecords: String
-	sharedViaApi: Boolean
-	toOwnerId: String
-	toOwnerName: String
-	toOwnerType: String
-	typeOfData: [CedarExchangeTypeOfDataItem!]!
+  fromOwnerId: String
+  fromOwnerName: String
+  fromOwnerType: String
+  isBeneficiaryMailingFile: Boolean
+  numOfRecords: String
+  sharedViaApi: Boolean
+  toOwnerId: String
+  toOwnerName: String
+  toOwnerType: String
+  typeOfData: [CedarExchangeTypeOfDataItem!]!
 }
 
 """
@@ -8672,7 +8708,7 @@ type SystemIntakeLCIDExpirationChange {
   newNextSteps: HTML
   previousCostBaseline: String
   newCostBaseline: String
- }
+}
 
 """
 The contact who is associated with an action being done to a system request
@@ -9161,9 +9197,9 @@ Fields explicitly set with NULL will be unset, and omitted fields will be left u
 https://gqlgen.com/reference/changesets/
 """
 input TRBRequestChanges @goModel(model: "map[string]interface{}") {
-    name: String
-    archived: Boolean
-    type: TRBRequestType
+  name: String
+  archived: Boolean
+  type: TRBRequestType
 }
 
 """
@@ -9919,7 +9955,7 @@ type Mutation {
   createSystemIntakeActionRejectIntake(
     input: SystemIntakeRejectIntakeInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-   createSystemIntakeActionReopenRequest(
+  createSystemIntakeActionReopenRequest(
     input: SystemIntakeReopenRequestInput!
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionCloseRequest(
@@ -9930,21 +9966,21 @@ type Mutation {
   ): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
 
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote
-    @hasRole(role: EASI_GOVTEAM)
+  @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeNote(input: UpdateSystemIntakeNoteInput!): SystemIntakeNote!
-    @hasRole(role: EASI_GOVTEAM)
+  @hasRole(role: EASI_GOVTEAM)
   createSystemIntake(input: CreateSystemIntakeInput!): SystemIntake
-    @hasRole(role: EASI_USER)
+  @hasRole(role: EASI_USER)
   updateSystemIntakeRequestType(id: UUID!, newType: SystemIntakeRequestType!): SystemIntake!
-    @hasRole(role: EASI_USER)
+  @hasRole(role: EASI_USER)
 
   submitIntake(
     input: SubmitIntakeInput!
   ): UpdateSystemIntakePayload
   updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
-    @hasRole(role: EASI_GOVTEAM)
+  @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
-    @hasRole(role: EASI_GOVTEAM)
+  @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeContactDetails(input: UpdateSystemIntakeContactDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeRequestDetails(input: UpdateSystemIntakeRequestDetailsInput!): UpdateSystemIntakePayload
   updateSystemIntakeContractDetails(input: UpdateSystemIntakeContractDetailsInput!): UpdateSystemIntakePayload
@@ -9987,11 +10023,11 @@ type Mutation {
   deleteTRBRequestFundingSources(input: DeleteTRBRequestFundingSourcesInput!): [TRBFundingSource!]!
   setRolesForUserOnSystem(input: SetRolesForUserOnSystemInput!): String
   createTRBRequestFeedback(input: CreateTRBRequestFeedbackInput!): TRBRequestFeedback!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestConsultMeetingTime(input: UpdateTRBRequestConsultMeetingTimeInput!): TRBRequest!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   updateTRBRequestTRBLead(input: UpdateTRBRequestTRBLeadInput!): TRBRequest!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
 
   setTRBRequestRelationNewSystem(input: SetTRBRequestRelationNewSystemInput!): TRBRequest
   setTRBRequestRelationExistingSystem(input: SetTRBRequestRelationExistingSystemInput!): TRBRequest
@@ -10000,41 +10036,41 @@ type Mutation {
 
   # separate mutations for each category of admin note
   createTRBAdminNoteGeneralRequest(input: CreateTRBAdminNoteGeneralRequestInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteInitialRequestForm(input: CreateTRBAdminNoteInitialRequestFormInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteSupportingDocuments(input: CreateTRBAdminNoteSupportingDocumentsInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteConsultSession(input: CreateTRBAdminNoteConsultSessionInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdminNoteAdviceLetter(input: CreateTRBAdminNoteAdviceLetterInput!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   setTRBAdminNoteArchived(id: UUID!, isArchived: Boolean!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdviceLetter(trbRequestId: UUID!): TRBAdviceLetter!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetter(input: UpdateTRBAdviceLetterInput!): TRBAdviceLetter!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   requestReviewForTRBAdviceLetter(id: UUID!): TRBAdviceLetter!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   sendTRBAdviceLetter(input: SendTRBAdviceLetterInput!): TRBAdviceLetter!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTRBAdviceLetterRecommendation(input: CreateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetterRecommendation(input: UpdateTRBAdviceLetterRecommendationInput!): TRBAdviceLetterRecommendation!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   updateTRBAdviceLetterRecommendationOrder(input: UpdateTRBAdviceLetterRecommendationOrderInput!): [TRBAdviceLetterRecommendation!]!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   deleteTRBAdviceLetterRecommendation(id: UUID!): TRBAdviceLetterRecommendation!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   closeTRBRequest(input: CloseTRBRequestInput!): TRBRequest!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   reopenTrbRequest(input: ReopenTRBRequestInput!): TRBRequest!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   createTrbLeadOption(eua: String!): UserInfo!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   deleteTrbLeadOption(eua: String!): Boolean!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
 }
 
 """
@@ -10075,7 +10111,7 @@ type Query {
   myTrbRequests(archived: Boolean! = false): [TRBRequest!]!
   trbLeadOptions: [UserInfo!]!
   trbAdminNote(id: UUID!): TRBAdminNote!
-    @hasRole(role: EASI_TRB_ADMIN)
+  @hasRole(role: EASI_TRB_ADMIN)
   userAccount(username: String!): UserAccount
 }
 
@@ -10446,39 +10482,39 @@ enum SystemIntakeLCIDStatus {
 The representation of a User account in the EASI application
 """
 type UserAccount {
-	id: UUID!
+  id: UUID!
   """
   The unique username of this user account
   """
-	username: String!
+  username: String!
   """
   The Common Name of a user. Typically this is a combination of Given and Family name
   """
-	commonName: String!
+  commonName: String!
   """
   The language localization of a user.
   """
-	locale: String!
+  locale: String!
   """
   The email address associated to this user account
   """
-	email: String!
+  email: String!
   """
   A users given name
   """
-	givenName: String!
+  givenName: String!
   """
   A users family name
   """
-	familyName: String!
+  familyName: String!
   """
   The zone information connected with a user account
   """
-	zoneInfo: String!
+  zoneInfo: String!
   """
   Represents if a user has logged in. If the user was added as a result of another action, this will show FALSE. When the user logs in, their account will be updated
   """
-	hasLoggedIn: Boolean
+  hasLoggedIn: Boolean
 }
 `, BuiltIn: false},
 }
@@ -21542,6 +21578,88 @@ func (ec *executionContext) fieldContext_CedarSystem_acronym(_ context.Context, 
 	return fc, nil
 }
 
+func (ec *executionContext) _CedarSystem_atoEffectiveDate(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ATOEffectiveDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.Time)
+	fc.Result = res
+	return ec.marshalOTime2githubᚗcomᚋgureguᚋnullᚋzeroᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSystem_atoEffectiveDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSystem_atoExpirationDate(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ATOExpirationDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.Time)
+	fc.Result = res
+	return ec.marshalOTime2githubᚗcomᚋgureguᚋnullᚋzeroᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSystem_atoExpirationDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CedarSystem_status(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CedarSystem_status(ctx, field)
 	if err != nil {
@@ -22394,6 +22512,10 @@ func (ec *executionContext) fieldContext_CedarSystemDetails_cedarSystem(_ contex
 				return ec.fieldContext_CedarSystem_description(ctx, field)
 			case "acronym":
 				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -22941,6 +23063,88 @@ func (ec *executionContext) fieldContext_CedarSystemDetails_isMySystem(_ context
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSystemDetails_atoEffectiveDate(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemDetails) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSystemDetails_atoEffectiveDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ATOEffectiveDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.Time)
+	fc.Result = res
+	return ec.marshalOTime2githubᚗcomᚋgureguᚋnullᚋzeroᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSystemDetails_atoEffectiveDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystemDetails",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CedarSystemDetails_atoExpirationDate(ctx context.Context, field graphql.CollectedField, obj *models.CedarSystemDetails) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CedarSystemDetails_atoExpirationDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ATOExpirationDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(zero.Time)
+	fc.Result = res
+	return ec.marshalOTime2githubᚗcomᚋgureguᚋnullᚋzeroᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CedarSystemDetails_atoExpirationDate(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CedarSystemDetails",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -34708,6 +34912,10 @@ func (ec *executionContext) fieldContext_Query_cedarSystem(ctx context.Context, 
 				return ec.fieldContext_CedarSystem_description(ctx, field)
 			case "acronym":
 				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -34795,6 +35003,10 @@ func (ec *executionContext) fieldContext_Query_cedarSystems(_ context.Context, f
 				return ec.fieldContext_CedarSystem_description(ctx, field)
 			case "acronym":
 				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -35011,6 +35223,10 @@ func (ec *executionContext) fieldContext_Query_myCedarSystems(_ context.Context,
 				return ec.fieldContext_CedarSystem_description(ctx, field)
 			case "acronym":
 				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -35631,6 +35847,10 @@ func (ec *executionContext) fieldContext_Query_cedarSystemDetails(ctx context.Co
 				return ec.fieldContext_CedarSystemDetails_urls(ctx, field)
 			case "isMySystem":
 				return ec.fieldContext_CedarSystemDetails_isMySystem(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystemDetails_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystemDetails_atoExpirationDate(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CedarSystemDetails", field.Name)
 		},
@@ -40049,6 +40269,10 @@ func (ec *executionContext) fieldContext_SystemIntake_systems(_ context.Context,
 				return ec.fieldContext_CedarSystem_description(ctx, field)
 			case "acronym":
 				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -48034,6 +48258,10 @@ func (ec *executionContext) fieldContext_TRBRequest_systems(_ context.Context, f
 				return ec.fieldContext_CedarSystem_description(ctx, field)
 			case "acronym":
 				return ec.fieldContext_CedarSystem_acronym(ctx, field)
+			case "atoEffectiveDate":
+				return ec.fieldContext_CedarSystem_atoEffectiveDate(ctx, field)
+			case "atoExpirationDate":
+				return ec.fieldContext_CedarSystem_atoExpirationDate(ctx, field)
 			case "status":
 				return ec.fieldContext_CedarSystem_status(ctx, field)
 			case "businessOwnerOrg":
@@ -59148,6 +59376,10 @@ func (ec *executionContext) _CedarSystem(ctx context.Context, sel ast.SelectionS
 			out.Values[i] = ec._CedarSystem_description(ctx, field, obj)
 		case "acronym":
 			out.Values[i] = ec._CedarSystem_acronym(ctx, field, obj)
+		case "atoEffectiveDate":
+			out.Values[i] = ec._CedarSystem_atoEffectiveDate(ctx, field, obj)
+		case "atoExpirationDate":
+			out.Values[i] = ec._CedarSystem_atoExpirationDate(ctx, field, obj)
 		case "status":
 			out.Values[i] = ec._CedarSystem_status(ctx, field, obj)
 		case "businessOwnerOrg":
@@ -59483,6 +59715,10 @@ func (ec *executionContext) _CedarSystemDetails(ctx context.Context, sel ast.Sel
 			}
 		case "isMySystem":
 			out.Values[i] = ec._CedarSystemDetails_isMySystem(ctx, field, obj)
+		case "atoEffectiveDate":
+			out.Values[i] = ec._CedarSystemDetails_atoEffectiveDate(ctx, field, obj)
+		case "atoExpirationDate":
+			out.Values[i] = ec._CedarSystemDetails_atoExpirationDate(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
