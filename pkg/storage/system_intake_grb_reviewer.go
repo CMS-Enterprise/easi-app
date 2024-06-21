@@ -15,7 +15,6 @@ import (
 
 // CreateSystemIntakeGRBReviewer creates a GRB Reviewer
 func (s *Store) CreateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, reviewer *models.SystemIntakeGRBReviewer) error {
-
 	if reviewer.ID == uuid.Nil {
 		reviewer.ID = uuid.New()
 	}
