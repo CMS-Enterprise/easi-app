@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { FieldErrors, FieldPath } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -20,6 +20,7 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import Alert from 'components/shared/Alert';
+import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -143,9 +144,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     return link;
   })();
 
-  const onSubmit = handleSubmit(values => {
-    if (!isDirty) history.push('documents');
-
+  const updateSystemIntake = useCallback(async () => {
+    const values = watch();
     const payload = { ...values };
 
     // Clear contract subfields
@@ -170,7 +170,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       };
     }
 
-    mutate({
+    return mutate({
       variables: {
         input: {
           id,
@@ -190,14 +190,27 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           }
         }
       }
-    })
-      .then(() => history.push('documents'))
-      .catch(() =>
-        setError('root', {
-          message: t('error:encounteredIssueTryAgain')
-        })
-      );
-  });
+    });
+  }, [watch, hasContract, id, mutate]);
+
+  const submit = async (callback?: () => void, validate?: boolean) => {
+    if (!isDirty) callback?.();
+
+    // Update intake
+    const result = await updateSystemIntake();
+
+    if (!result?.errors) return callback?.();
+
+    // If validating form, show error on server error
+    if (validate) {
+      return setError('root', {
+        message: t('error:encounteredIssueTryAgain')
+      });
+    }
+
+    // If skipping errors, return callback
+    return callback?.();
+  };
 
   const hasErrors = Object.keys(errors).length > 0;
 
@@ -265,7 +278,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
       <MandatoryFieldsAlert className="tablet:grid-col-6" />
 
       <Form
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit(() =>
+          submit(() => history.push('documents'), true)
+        )}
         className="maxw-none tablet:grid-col-6 margin-bottom-7"
       >
         <FieldGroup
@@ -472,25 +487,16 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           }}
           back={{
             type: 'button',
-            onClick: () => history.push('request-details')
+            onClick: () => submit(() => history.push('request-details'))
           }}
           border={false}
           taskListUrl={saveExitLink}
-          submit={async () => history.push(saveExitLink)}
+          submit={() => submit(() => history.push('request-details'))}
           className="margin-top-4"
         />
       </Form>
 
-      {/* <AutoSave
-        values={watch()}
-        onSave={() =>
-          partialSubmit({
-            update: updateSystemIntake,
-            clearErrors: false
-          })
-        }
-        debounceDelay={3000}
-      /> */}
+      <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
       <PageNumber currentPage={3} totalPages={5} />
     </>
