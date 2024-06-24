@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button, CardGroup, Grid } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import BookmarkButton from 'components/BookmarkButton';
 import MainContent from 'components/MainContent';
@@ -26,6 +27,7 @@ import RequestsCard from './components/RequestsCard';
 import SpacesCard from './components/SpacesCard';
 
 export const SystemWorkspace = () => {
+  const flags = useFlags();
   const { t } = useTranslation('systemWorkspace');
 
   const [isSystemProfileOpen, toggleSystemProfile] = useState<boolean>(false);
@@ -62,6 +64,11 @@ export const SystemWorkspace = () => {
   }
 
   const { isBookmarked } = data.cedarSystemDetails.cedarSystem;
+
+  // Redirect to system profile if not a team member for the system
+  if (flags.systemWorkspace && !data.cedarSystemDetails.isMySystem) {
+    return <Redirect to={`/systems/${systemId}`} />;
+  }
 
   return (
     <MainContent className="grid-container margin-bottom-8">

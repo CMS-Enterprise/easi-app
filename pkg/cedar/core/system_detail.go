@@ -52,7 +52,9 @@ func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*mo
 	}
 
 	retVal := &models.CedarSystemDetails{
-		CedarSystem: cedarSystem,
+		CedarSystem:       cedarSystem,
+		ATOEffectiveDate:  zero.TimeFrom(time.Time(sys.AtoEffectiveDate)),
+		ATOExpirationDate: zero.TimeFrom(time.Time(sys.AtoExpirationDate)),
 	}
 
 	if busOwnerInfo := sys.BusinessOwnerInformation; busOwnerInfo != nil {
@@ -120,6 +122,7 @@ func (c *Client) GetSystemDetail(ctx context.Context, cedarSystemID string) (*mo
 			YearToRetireReplace:                   zero.StringFrom(sysMaintInfo.YearToRetireReplace),
 		}
 	}
+
 	return retVal, nil
 }
 

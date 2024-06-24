@@ -43,6 +43,7 @@ export interface GetSystemWorkspace_cedarSystemDetails_roles {
 
 export interface GetSystemWorkspace_cedarSystemDetails {
   __typename: "CedarSystemDetails";
+  isMySystem: boolean | null;
   cedarSystem: GetSystemWorkspace_cedarSystemDetails_cedarSystem;
   roles: GetSystemWorkspace_cedarSystemDetails_roles[];
 }

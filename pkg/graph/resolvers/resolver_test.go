@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -17,6 +18,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 	"github.com/cmsgov/easi-app/pkg/upload"
@@ -178,6 +180,22 @@ func (s *ResolverSuite) createNewIntake() *models.SystemIntake {
 	s.NoError(err)
 
 	return newIntake
+}
+
+// utility method to get userAcct in resolver tests
+func (s *ResolverSuite) getOrCreateUserAcct(euaUserID string) *authentication.UserAccount {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+	okta := local.NewOktaAPIClient()
+	userAcct, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*authentication.UserAccount, error) {
+		user, err := userhelpers.GetOrCreateUserAccount(ctx, tx, store, euaUserID, false, userhelpers.GetUserInfoAccountInfoWrapperFunc(okta.FetchUserInfo))
+		if err != nil {
+			return nil, err
+		}
+		return user, nil
+	})
+	s.NoError(err)
+	return userAcct
 }
 
 // ctxWithNewDataloaders sets new Dataloaders on the test suite's existing context and returns that context.
