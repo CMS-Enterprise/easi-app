@@ -97,9 +97,9 @@ const SystemIntakeValidationSchema = {
       )
     }),
     contract: Yup.object().shape({
-      hasContract: Yup.string().required(
-        'Tell us whether you have a contract to support this effort'
-      ),
+      hasContract: Yup.string()
+        .nullable()
+        .required('Tell us whether you have a contract to support this effort'),
       contractor: Yup.string().when('hasContract', {
         is: (val: string) => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.string()

@@ -209,7 +209,7 @@ export const prepareSystemIntakeForApp = (
         systemIntake.plannedYearOneSpendingITPortion || ''
     },
     contract: {
-      hasContract: systemIntake.existingContract || '',
+      hasContract: systemIntake.existingContract || null,
       contractor: systemIntake.contractor || '',
       startDate: {
         month: contractStartDate.month
