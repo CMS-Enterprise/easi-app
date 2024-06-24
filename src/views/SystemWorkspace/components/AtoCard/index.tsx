@@ -67,7 +67,8 @@ function AtoCard({
           <div className="display-flex">
             <Link
               className={classnames('usa-button', {
-                'usa-button--disabled': !isso?.assigneeEmail
+                'usa-button--disabled': !isso?.assigneeEmail,
+                'no-pointer': !isso?.assigneeEmail
               })}
               href={`mailto:${isso?.assigneeEmail}`}
             >
