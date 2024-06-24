@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
+import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 
 import SpacesCard from '../SpacesCard';
 
@@ -13,7 +14,7 @@ type RequestsCardProps = {
 function RequestsCard({ systemId }: RequestsCardProps) {
   const { t } = useTranslation('systemWorkspace');
 
-  const linkSearchParam = `?linkCedarSystemId=${encodeURIComponent(systemId)}`;
+  const linkSearchQuery = linkCedarSystemIdQueryString(systemId);
 
   return (
     <SpacesCard
@@ -28,7 +29,7 @@ function RequestsCard({ systemId }: RequestsCardProps) {
             <UswdsReactLink
               className="margin-left-1 text-primary"
               to={{
-                search: linkSearchParam,
+                search: linkSearchQuery,
                 pathname: '/system/request-type'
               }}
             >
@@ -42,7 +43,7 @@ function RequestsCard({ systemId }: RequestsCardProps) {
             <UswdsReactLink
               className="margin-left-1 text-primary"
               to={{
-                search: linkSearchParam,
+                search: linkSearchQuery,
                 pathname: '/trb/start'
               }}
             >
