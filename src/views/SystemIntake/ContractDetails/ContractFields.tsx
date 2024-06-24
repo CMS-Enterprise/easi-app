@@ -86,7 +86,7 @@ const ContractFields = ({ id }: ContractFieldsProps) => {
         <TextInput
           {...register('contract.numbers')}
           ref={null}
-          id="numbers"
+          id="contractNumbers"
           type="text"
           maxLength={100}
         />

@@ -43,25 +43,23 @@ cy.systemIntake = {
   },
   requestDetails: {
     fillNonBranchingFields: () => {
-      cy.get('#IntakeForm-ContractName')
+      cy.get('#requestName')
         .type('Test Request Name')
         .should('have.value', 'Test Request Name');
 
-      cy.get('#IntakeForm-BusinessNeed')
+      cy.get('#businessNeed')
         .type('This is my business need.')
         .should('have.value', 'This is my business need.');
 
-      cy.get('#IntakeForm-BusinessSolution')
+      cy.get('#businessSolution')
         .type('This is my business solution.')
         .should('have.value', 'This is my business solution.');
 
-      cy.get('#IntakeForm-NeedsEaSupportNo')
+      cy.get('#needsEaSupportFalse')
         .check({ force: true })
         .should('be.checked');
 
-      cy.get('#IntakeForm-HasUiChangesNo')
-        .check({ force: true })
-        .should('be.checked');
+      cy.get('#hasUiChangesFalse').check({ force: true }).should('be.checked');
     }
   },
   contractDetails: {
