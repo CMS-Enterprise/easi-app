@@ -89,7 +89,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const { t } = useTranslation('intake');
   const history = useHistory();
 
-  const taskListUrl =
+  const saveExitLink =
     systemIntake.requestType === SystemIntakeRequestType.SHUTDOWN
       ? '/'
       : `/governance-task-list/${systemIntake.id}`;
@@ -106,7 +106,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     deleteContact
   } = useSystemIntakeContacts(systemIntake.id);
 
-  const [updateSystemIntake] = useMutation<
+  const [mutate] = useMutation<
     UpdateSystemIntakeContactDetails,
     UpdateSystemIntakeContactDetailsVariables
   >(UpdateSystemIntakeContactDetailsQuery, {
@@ -127,10 +127,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const {
     control,
     handleSubmit,
-    partialSubmit,
     setError,
     watch,
-    getValues,
     register,
     setFocus,
     reset,
@@ -186,27 +184,23 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     );
   };
 
-  /** Update contacts and system intake form */
-  const submit = async (values: Partial<ContactDetailsForm>) => {
-    // Update contacts
-    await Promise.all([
-      setContact('requester', values?.requester),
-      setContact('businessOwner', values?.businessOwner),
-      setContact('productManager', values?.productManager),
-      // If ISSO is not present, send undefined `values` prop
-      setContact('isso', values?.isso?.isPresent ? values?.isso : undefined)
-    ]);
-
-    /** Combines existing form values with (possibly partial) submitted values object */
-    const formValuesObject: ContactDetailsForm = { ...getValues(), ...values };
-
+  const updateSystemIntake = async () => {
     const {
       requester,
       businessOwner,
       productManager,
       isso,
       governanceTeams
-    } = formValuesObject;
+    } = watch();
+
+    // Update contacts
+    await Promise.all([
+      setContact('requester', requester),
+      setContact('businessOwner', businessOwner),
+      setContact('productManager', productManager),
+      // If ISSO is not present, send undefined `values` prop
+      setContact('isso', isso?.isPresent ? isso : undefined)
+    ]);
 
     // If ISSO is not present in field values but was previously added, delete contact
     if (!isso?.isPresent && contacts.data.isso.id) {
@@ -214,7 +208,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     }
 
     // Update system intake
-    return updateSystemIntake({
+    return mutate({
       variables: {
         input: {
           id: systemIntake.id,
@@ -238,6 +232,26 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         }
       }
     });
+  };
+
+  /** Update contacts and system intake form */
+  const submit = async (callback?: () => void, validate?: boolean) => {
+    if (!isDirty) return callback?.();
+
+    // Update intake
+    const result = await updateSystemIntake();
+
+    if (!result?.errors) return callback?.();
+
+    // If validating form, show error on server error
+    if (validate) {
+      return setError('root', {
+        message: t('error:encounteredIssueTryAgain')
+      });
+    }
+
+    // If skipping errors, return callback
+    return callback?.();
   };
 
   const requester = watch('requester');
@@ -382,17 +396,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       )}
 
       <Form
-        onSubmit={handleSubmit(values => {
-          if (!isDirty) return history.push('request-details');
-
-          return submit(values)
-            .then(() => history.push('request-details'))
-            .catch(() => {
-              setError('root', {
-                message: t('error:encounteredIssueTryAgain')
-              });
-            });
-        })}
+        onSubmit={handleSubmit(() =>
+          submit(() => history.push('request-details'), true)
+        )}
         className="maxw-none tablet:grid-col-6 margin-bottom-7"
       >
         {/* Requester */}
@@ -782,27 +788,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             type: 'submit'
           }}
           border={false}
-          taskListUrl={taskListUrl}
-          submit={() =>
-            partialSubmit({
-              update: submit,
-              callback: () => history.push(taskListUrl)
-            })
-          }
+          taskListUrl={saveExitLink}
+          submit={() => submit(() => history.push(saveExitLink))}
           className="margin-top-4"
         />
       </Form>
 
-      <AutoSave
-        values={watch()}
-        onSave={() =>
-          partialSubmit({
-            update: submit,
-            clearErrors: false
-          })
-        }
-        debounceDelay={3000}
-      />
+      <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
       <PageNumber currentPage={1} totalPages={5} />
     </>

@@ -491,7 +491,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           }}
           border={false}
           taskListUrl={saveExitLink}
-          submit={() => submit(() => history.push('request-details'))}
+          submit={() => submit(() => history.push(saveExitLink))}
           className="margin-top-4"
         />
       </Form>

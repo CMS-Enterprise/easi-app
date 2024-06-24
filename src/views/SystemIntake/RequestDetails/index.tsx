@@ -20,7 +20,7 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import Alert from 'components/shared/Alert';
-// import AutoSave from 'components/shared/AutoSave';
+import AutoSave from 'components/shared/AutoSave';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -74,8 +74,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     setFocus,
     handleSubmit,
     setError,
-    // partialSubmit,
-    // watch,
+    watch,
     formState: { errors, isSubmitting, isDirty }
   } = useEasiForm<RequestDetailsForm>({
     resolver: yupResolver(SystemIntakeValidationSchema.requestDetails),
@@ -103,24 +102,29 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     ]
   });
 
-  const updateSystemIntake = async (values: Partial<RequestDetailsForm>) =>
-    mutate({
+  const submit = async (callback?: () => void, validate?: boolean) => {
+    if (!isDirty) return callback?.();
+
+    const values = watch();
+
+    const result = await mutate({
       variables: {
         input: { id, ...values }
       }
     });
 
-  const submit = handleSubmit(values => {
-    if (!isDirty) return history.push('contract-details');
+    if (!result?.errors) return callback?.();
 
-    return updateSystemIntake(values)
-      .then(() => history.push('contract-details'))
-      .catch(() => {
-        setError('root', {
-          message: t('error:encounteredIssueTryAgain')
-        });
+    // If validating form, show error on server error
+    if (validate) {
+      return setError('root', {
+        message: t('error:encounteredIssueTryAgain')
       });
-  });
+    }
+
+    // If skipping errors, return callback
+    return callback?.();
+  };
 
   const saveExitLink = (() => {
     let link = '';
@@ -196,7 +200,9 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       <MandatoryFieldsAlert className="tablet:grid-col-6" />
 
       <Form
-        onSubmit={submit}
+        onSubmit={handleSubmit(() =>
+          submit(() => history.push('contract-details'), true)
+        )}
         className="maxw-none tablet:grid-col-6 margin-bottom-7"
       >
         <FieldGroup scrollElement="requestName" error={!!errors.requestName}>
@@ -415,35 +421,16 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           }}
           back={{
             type: 'button',
-            onClick: () => history.push('contact-details')
-            // partialSubmit({
-            //   update: updateSystemIntake,
-            //   callback: () => history.push('contact-details')
-            // })
+            onClick: () => submit(() => history.push('contact-details'))
           }}
           border={false}
           taskListUrl={saveExitLink}
-          submit={
-            async () => history.push(saveExitLink)
-            // partialSubmit({
-            //   update: updateSystemIntake,
-            //   callback: () => history.push(saveExitLink)
-            // })
-          }
+          submit={() => submit(() => history.push(saveExitLink))}
           className="margin-top-4"
         />
       </Form>
 
-      {/* <AutoSave
-        values={watch()}
-        onSave={() =>
-          partialSubmit({
-            update: updateSystemIntake,
-            clearErrors: false
-          })
-        }
-        debounceDelay={3000}
-      /> */}
+      <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
       <PageNumber currentPage={2} totalPages={5} />
     </>
