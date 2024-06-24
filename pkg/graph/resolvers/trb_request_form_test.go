@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -14,6 +15,7 @@ import (
 // TestCreateTRBRequestForm tests the creation a new TRB request form
 func (s *ResolverSuite) TestCreateTRBRequestForm() {
 	ctx := context.Background()
+	ctx = appcontext.WithLogger(ctx, s.testConfigs.Logger)
 
 	config := testhelpers.NewConfig()
 

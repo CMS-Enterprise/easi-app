@@ -1,9 +1,7 @@
 package resolvers
 
 import (
-	"context"
 	"fmt"
-
 	"time"
 
 	"github.com/guregu/null"
@@ -13,7 +11,7 @@ import (
 )
 
 func (s *ResolverSuite) TestSystemIntakeRequestEditsAction() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 	initialSteps := []models.SystemIntakeStep{
 		models.SystemIntakeStepINITIALFORM,
 		models.SystemIntakeStepDRAFTBIZCASE,
@@ -482,7 +480,7 @@ func (s *ResolverSuite) TestIssueLCID() {
 }
 
 func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 	formSteps := []models.SystemIntakeStep{
 		models.SystemIntakeStepINITIALFORM,
 		models.SystemIntakeStepDRAFTBIZCASE,
@@ -671,7 +669,7 @@ func (s *ResolverSuite) TestSystemIntakeCloseRequestAction() {
 }
 
 func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 	formSteps := []models.SystemIntakeStep{
 		models.SystemIntakeStepINITIALFORM,
 		models.SystemIntakeStepDRAFTBIZCASE,
@@ -862,7 +860,7 @@ func (s *ResolverSuite) TestSystemIntakeReopenRequestAction() {
 }
 
 func (s *ResolverSuite) TestSystemIntakeNotITGovRequestAction() {
-	ctx := context.Background()
+	ctx := s.testConfigs.Context
 	formSteps := []models.SystemIntakeStep{
 		models.SystemIntakeStepINITIALFORM,
 		models.SystemIntakeStepDRAFTBIZCASE,

@@ -3767,6 +3767,11 @@
           "type": "string",
           "example": "Enterprise Architecture and Data Group"
         },
+        "atoExpirationDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
+        },
         "belongsTo": {
           "type": "string",
           "example": "326-10-0"
@@ -3774,6 +3779,11 @@
         "status": {
           "type": "string",
           "example": "Approved"
+        },
+        "atoEffectiveDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
         }
       }
     },
@@ -4252,7 +4262,27 @@
           "type": "array",
           "items": {
             "type": "string",
-            "example": "Customer Service"
+            "enum": [
+              "Mailing",
+              "Payment Calculation",
+              "Coordination of Benefits",
+              "Subsidy Calculation",
+              "Premium Calculation",
+              "Risk Adjustment",
+              "Coordination of Care",
+              "Eligibility and Enrollment",
+              "Customer Service",
+              "Education and Outreach",
+              "Innovation",
+              "Research and Demonstrations",
+              "Healthcare Quality Improvement",
+              "Program Oversight",
+              "Actuarial Services",
+              "Regulatory and Policy Development",
+              "Audit Support",
+              "Patient Care Reporting",
+              "Beneficiary Data Access"
+            ]
           }
         },
         "costPerYear": {
@@ -4271,7 +4301,13 @@
           "example": "Customer Service"
         },
         "508UserInterface": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "Yes, UI accessible by external users.",
+            "Yes, UI accessible by internal Federal Employees.",
+            "Yes, UI accessible by both internal Federal Employees and external users.",
+            "No, this system doesn't have a UI."
+          ]
         },
         "numberOfSupportedUsersPerMonth": {
           "type": "string",
@@ -4307,7 +4343,13 @@
         "beneficiaryInformation": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "Beneficiary Address",
+              "Beneficiary email",
+              "Beneficiary Mobile Number",
+              "None of the Above"
+            ]
           }
         }
       }
@@ -4685,7 +4727,12 @@
         },
         "movingToCloud": {
           "type": "string",
-          "example": "Yes"
+          "example": "Yes",
+          "enum": [
+            "Yes",
+            "No",
+            "Plans"
+          ]
         }
       }
     },
@@ -5007,13 +5054,24 @@
       "type": "object",
       "properties": {
         "aiPlan": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "Yes - This system has developed AI capabilities.",
+            "Yes - This system uses a SaaS AI tool like Remesh...",
+            "No – And this system currently has no plans to utilize AI capabilities",
+            "No – But there currently are plans to use AI capabilities in the next two years"
+          ]
         },
         "systemAiTypeOther": {
           "type": "string"
         },
         "apisDeveloped": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "No",
+            "Yes",
+            "API In development but not yet launched."
+          ]
         },
         "apiFHIRUseOther": {
           "type": "string"
@@ -5022,16 +5080,37 @@
           "type": "boolean"
         },
         "apisAccessibility": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "Both",
+            "External Access",
+            "Internal Access"
+          ]
         },
         "apiDataArea": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "Beneficiary and Consumer",
+              "Health Insurance Program",
+              "Healthcare Payment",
+              "Healthcare Quality",
+              "Healthcare Service",
+              "Organization",
+              "Provider",
+              "Supporting Resource"
+            ]
           }
         },
         "apiFHIRUse": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "No",
+            "FHIR",
+            "HL7",
+            "Other Standard"
+          ]
         },
         "systemAiType": {
           "type": "array",
@@ -5336,6 +5415,11 @@
           "type": "string",
           "example": "Enterprise Architecture and Data Group"
         },
+        "atoExpirationDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
+        },
         "belongsTo": {
           "type": "string",
           "example": "326-10-0"
@@ -5343,6 +5427,11 @@
         "status": {
           "type": "string",
           "example": "Approved"
+        },
+        "atoEffectiveDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2021-10-13T00:00:00.000Z"
         }
       }
     },
@@ -5406,7 +5495,13 @@
           "example": true
         },
         "networkTrafficEncryptionKeyManagement": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "We do not encrypt any network traffic.",
+            "We perform ad hoc management of encryption keys.",
+            "We have a process for managing encryption keys.",
+            "We have a process for managing encryption keys and it is automated."
+          ]
         },
         "noPlannedMajorRefresh": {
           "type": "boolean"
@@ -5414,7 +5509,13 @@
         "systemDataLocation": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "Integrated Data Repository (IDR)",
+              "Chronic Condition Warehouse (CCW)",
+              "This system",
+              "Another CMS system - Describe in Notes"
+            ]
           }
         },
         "recordsManagementDisposalPlan": {
@@ -5451,7 +5552,12 @@
         },
         "frontendAccessType": {
           "type": "string",
-          "example": "IPv4 and IPv6"
+          "example": "IPv4 and IPv6",
+          "enum": [
+            "IPv4 Only",
+            "IPv4 and IPv6",
+            "IPv6 Only"
+          ]
         },
         "devCompletionPercent": {
           "type": "string",
@@ -5459,13 +5565,24 @@
         },
         "netAccessibility": {
           "type": "string",
-          "example": "Accessible to a CMS-internal network only"
+          "example": "Accessible to a CMS-internal network only",
+          "enum": [
+            "Accessible to the Public Internet (non-restricted access)",
+            "Accessible to a CMS-internal network only",
+            "Accessible to both public internet and to CMS-internal network"
+          ]
         },
         "systemDataLocationNotes": {
           "type": "string"
         },
         "dataAtRestEncryptionKeyManagement": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "We do not encrypt data at rest.",
+            "We perform ad hoc management of encryption keys.",
+            "We have a process for managing encryption keys.",
+            "We have a process for managing encryption keys and it is automated."
+          ]
         },
         "testPlanOnDemand": {
           "type": "boolean",
@@ -5491,7 +5608,12 @@
         },
         "plansToRetireReplace": {
           "type": "string",
-          "example": "Yes - Retire and Replace"
+          "example": "Yes - Retire and Replace",
+          "enum": [
+            "No",
+            "Yes - Retire and Replace",
+            "Yes - Retire but NOT Replace"
+          ]
         },
         "ipEnabledAssetCount": {
           "type": "integer",
@@ -5508,34 +5630,112 @@
         },
         "ip6TransitionPlan": {
           "type": "string",
-          "example": "Yes, transition to IPv6"
+          "example": "Yes, transition to IPv6",
+          "enum": [
+            "Yes",
+            "transition to IPv6",
+            "No",
+            "decommission/replace before 2026"
+          ]
         },
         "multifactorAuthenticationMethodOther": {
           "type": "string"
         },
         "ip6EnabledAssetPercent": {
           "type": "string",
-          "example": "Between 20% and 49%"
+          "example": "Between 20% and 49%",
+          "enum": [
+            "Less than 20%",
+            "Between 20% and 49%",
+            "Between 50% and 79%",
+            "80% or above"
+          ]
         },
         "recordsUnderLegalHold": {
           "type": "boolean"
         },
         "deploymentFrequency": {
           "type": "string",
-          "example": "Monthly"
+          "example": "Monthly",
+          "enum": [
+            "Annually",
+            "Semi-Annually",
+            "Quarterly",
+            "Monthly",
+            "Every Two Weeks",
+            "Weekly",
+            "Twice a Week",
+            "Daily",
+            "Hourly",
+            "Ad Hoc/As Needed",
+            "Not Applicable",
+            "Other"
+          ]
         },
         "multifactorAuthenticationMethod": {
           "type": "array",
           "example": "\"\"",
           "items": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "One Time Password sent via Email",
+              "One Time Password sent via SMS",
+              "One Time Password or Push from an authenticator app e.g. Google Authenticator DUO",
+              "One time Password from a hardware token e.g. RSA SecurID",
+              "FIDO U2F (e.g. YubiKey as a second factor)",
+              "PIV/certificate",
+              "FIDO2/WebAuthn (passwordless authentication includes Windows Hello)",
+              "None",
+              "Other"
+            ]
           }
         },
         "recordsManagementBucket": {
           "type": "array",
           "items": {
             "type": "string",
-            "example": "Administrative Management"
+            "example": "Administrative Management",
+            "enum": [
+              "Leadership and Operations (Hint=1)",
+              "Policy and Regulations (Hint=2)",
+              "Senior Leadership Records (Administrator) (Hint=2)",
+              "Formal Reports and Studies (Hint=2)",
+              "Committee Files (non FACA) (Hint=2)",
+              "Other Leadership and Operations Records (Hint=2)",
+              "Administrative Management (Hint=1)",
+              "Routine Administrative Records (Hint=2)",
+              "Other Administrative Management Records (Hint=2)",
+              "Financial Records (Hint=1)",
+              "Claims Records (Hint=2)",
+              "Financial Reporting Records (Hint=2)",
+              "Non-perm HCPCS codes (Hint=2)",
+              "Other Financial Records (Hint=2)",
+              "Enrollment Records (Hint=1)",
+              "Beneficiary Records (Hint=1)",
+              "Provider and Health Plan Records (Hint=1)",
+              "Provider Applications and Certifications (Hint=2)",
+              "Records Related to Health Plans (Hint=2)",
+              "Program Review and Audit Records (Hint=2)",
+              "Hearings Files (Hint=2)",
+              "Administrative Records (Hint=2)",
+              "Other Provider and Health Plan Records (Hint=2)",
+              "Research and Program Analysis (Hint=1)",
+              "Public Use Statistical and Summary Files (Hint=2)",
+              "Supporting Records (Hint=2)",
+              "Other Research and Program Analysis",
+              "Public Outreach and Engagement (Hint=1)",
+              "Significant Public Outreach and Engagement Records (Hint=2)",
+              "Photographs and Videos (Hint=2)",
+              "Other Public Outreach and Engagement Records (Hint=2)",
+              "Compliance and Integrity (Hint=1)",
+              "Plans and Agreements (Hint=2)",
+              "Administrative Records (Hint= 2)",
+              "Review / Audit Records (Hint=2)",
+              "Reports (Hint=2)",
+              "Legal Records (Hint=2)",
+              "Clinical Laboratory Improvement Amendments (CLIA) records (Hint=2)",
+              "Other Compliance and Integrity Records (Hint=2)"
+            ]
           }
         },
         "noMajorRefresh": {
@@ -5547,10 +5747,30 @@
         },
         "systemCustomization": {
           "type": "string",
-          "example": "Less Than 20% Customization"
+          "example": "Less Than 20% Customization",
+          "enum": [
+            "COTS - Less than 20% custom coding",
+            "GOTS – less than 20% custom coding",
+            "Mixed – Uses COTS or GOTS and has more than 20% custom coding",
+            "Custom developed"
+          ]
         },
         "adHocAgileDeploymentFrequency": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "Annually",
+            "Semi-Annually",
+            "Quarterly",
+            "Monthly",
+            "Every Two Weeks",
+            "Weekly",
+            "Twice a Week",
+            "Daily",
+            "Hourly",
+            "Ad Hoc/As Needed",
+            "Not Applicable",
+            "Other"
+          ]
         }
       }
     },

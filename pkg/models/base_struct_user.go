@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 )
 
@@ -18,6 +20,7 @@ func NewBaseStructUser(createdBy uuid.UUID) BaseStructUser {
 	return BaseStructUser{
 		createdByRelation: createdByRelation{
 			CreatedBy: createdBy,
+			CreatedAt: time.Now().UTC(),
 		},
 	}
 }

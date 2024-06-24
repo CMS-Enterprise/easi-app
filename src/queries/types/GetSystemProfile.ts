@@ -12,11 +12,31 @@ import { ExchangeDirection, CedarAssigneeType } from "./../../types/graphql-glob
 export interface GetSystemProfile_cedarAuthorityToOperate {
   __typename: "CedarAuthorityToOperate";
   uuid: string;
-  tlcPhase: string | null;
-  dateAuthorizationMemoExpires: Time | null;
+  actualDispositionDate: Time | null;
+  containsPersonallyIdentifiableInformation: boolean | null;
+  countOfTotalNonPrivilegedUserPopulation: number;
   countOfOpenPoams: number;
-  lastAssessmentDate: Time | null;
+  countOfTotalPrivilegedUserPopulation: number;
+  dateAuthorizationMemoExpires: Time | null;
+  dateAuthorizationMemoSigned: Time | null;
+  eAuthenticationLevel: string | null;
+  fips199OverallImpactRating: number | null;
+  fismaSystemAcronym: string | null;
+  fismaSystemName: string | null;
+  isAccessedByNonOrganizationalUsers: boolean | null;
   isPiiLimitedToUserNameAndPass: boolean | null;
+  isProtectedHealthInformation: boolean | null;
+  lastActScaDate: Time | null;
+  lastAssessmentDate: Time | null;
+  lastContingencyPlanCompletionDate: Time | null;
+  lastPenTestDate: Time | null;
+  piaCompletionDate: Time | null;
+  primaryCyberRiskAdvisor: string | null;
+  privacySubjectMatterExpert: string | null;
+  recoveryPointObjective: number | null;
+  recoveryTimeObjective: number | null;
+  systemOfRecordsNotice: string[];
+  tlcPhase: string | null;
 }
 
 export interface GetSystemProfile_exchanges {
@@ -60,6 +80,7 @@ export interface GetSystemProfile_cedarBudgetSystemCost {
 
 export interface GetSystemProfile_cedarThreat {
   __typename: "CedarThreat";
+  daysOpen: number | null;
   weaknessRiskLevel: string | null;
 }
 
@@ -101,7 +122,7 @@ export interface GetSystemProfile_cedarSoftwareProducts {
 
 export interface GetSystemProfile_cedarContractsBySystem {
   __typename: "CedarContract";
-  id: string | null;
+  systemID: string | null;
   startDate: Time | null;
   endDate: Time | null;
   contractNumber: string | null;
@@ -198,6 +219,7 @@ export interface GetSystemProfile_cedarSystemDetails_systemMaintainerInformation
 
 export interface GetSystemProfile_cedarSystemDetails {
   __typename: "CedarSystemDetails";
+  isMySystem: boolean | null;
   businessOwnerInformation: GetSystemProfile_cedarSystemDetails_businessOwnerInformation;
   cedarSystem: GetSystemProfile_cedarSystemDetails_cedarSystem;
   deployments: GetSystemProfile_cedarSystemDetails_deployments[];

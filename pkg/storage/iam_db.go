@@ -14,9 +14,9 @@ import (
 	"github.com/lib/pq"
 )
 
-// iamDb is a custom struct that satisfies the driver.Connector so that it can be used with sql.OpenDB.
+// iamDB is a custom struct that satisfies the driver.Connector so that it can be used with sql.OpenDB.
 // It implements a custom Connect() function that will get a new IAM auth token for each connection.
-type iamDb struct {
+type iamDB struct {
 	config     DBConfig
 	awsSession *session.Session
 }
@@ -25,7 +25,7 @@ type iamDb struct {
 // For this reason, each new connection actually generates a new auth token, as each auth token only lasts 15 minutes
 // Connections made with an auth token will _NOT_ drop when the token expires, so the 15 minute expiry should never matter
 // This function helps satisfy the driver.Connector interface
-func (idb *iamDb) Connect(ctx context.Context) (driver.Conn, error) {
+func (idb *iamDB) Connect(ctx context.Context) (driver.Conn, error) {
 	awsRegion := *idb.awsSession.Config.Region
 	awsCreds := idb.awsSession.Config.Credentials
 	dbEndpoint := fmt.Sprintf("%s:%s", idb.config.Host, idb.config.Port)
@@ -58,20 +58,20 @@ func (idb *iamDb) Connect(ctx context.Context) (driver.Conn, error) {
 
 // Driver returns IAM DB instance, as it satisfies the driver.Driver interface
 // This function helps satisfy the driver.Connector interface
-func (idb *iamDb) Driver() driver.Driver {
+func (idb *iamDB) Driver() driver.Driver {
 	return idb
 }
 
 // Open would normally return a new connection to the DB, but this custom IAM DB
 // doesn't support it in favor of using `sql.OpenDB` in `newConnectionPoolWithIam`
 // This function helps satisfy the driver.Driver interface
-func (idb *iamDb) Open(name string) (driver.Conn, error) {
+func (idb *iamDB) Open(name string) (driver.Conn, error) {
 	return nil, errors.New("driver open method not supported")
 }
 
 // newConnectionPoolWithIam opens a sql.DB using the custom iamDb as a connector.
 // It will wrap that sql.DB and return it as a *sqlx.DB
 func newConnectionPoolWithIam(awsSession *session.Session, config DBConfig) *sqlx.DB {
-	db := sql.OpenDB(&iamDb{config, awsSession})
+	db := sql.OpenDB(&iamDB{config, awsSession})
 	return sqlx.NewDb(db, "postgres")
 }

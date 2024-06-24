@@ -24,11 +24,7 @@ const ContractCard = ({ contract }: { contract: ContractType }) => {
   const { t } = useTranslation('systemProfile');
 
   return (
-    <Card
-      key={contract.id}
-      data-testid="system-contract-card"
-      className="grid-col-12"
-    >
+    <Card data-testid="system-contract-card" className="grid-col-12">
       <CardHeader className="padding-2 padding-bottom-0 text-top">
         <dt>{t('singleSystem.contracts.contractTitle')}</dt>
 
@@ -155,7 +151,10 @@ const Contracts = ({ system }: SystemProfileSubviewProps) => {
         <CardGroup className="margin-0">
           {system.cedarContractsBySystem?.map(
             (contract): React.ReactNode => (
-              <ContractCard contract={contract} key={contract.id} />
+              <ContractCard
+                contract={contract}
+                key={`${contract.systemID}${contract.contractNumber}${contract.orderNumber}`}
+              />
             )
           )}
         </CardGroup>

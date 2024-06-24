@@ -266,12 +266,33 @@ export const result: { data: GetSystemProfile } = {
     cedarAuthorityToOperate: [
       {
         uuid: '00000000-0000-0000-0000-000000000000',
-        tlcPhase: 'Operate',
-        dateAuthorizationMemoExpires: '2022-07-30T00:00:00Z',
+        actualDispositionDate: null,
+        containsPersonallyIdentifiableInformation: true,
+        countOfTotalNonPrivilegedUserPopulation: 15,
         countOfOpenPoams: 7,
+        countOfTotalPrivilegedUserPopulation: 42,
+        dateAuthorizationMemoExpires: '2022-07-30T00:00:00Z',
+        dateAuthorizationMemoSigned: '2022-02-26T00:00:00Z',
+        eAuthenticationLevel: 'Moderate',
+        fips199OverallImpactRating: 1,
+        fismaSystemAcronym: 'MUS',
+        fismaSystemName: 'Made Up System',
+        isAccessedByNonOrganizationalUsers: true,
+        isPiiLimitedToUserNameAndPass: true,
+        isProtectedHealthInformation: false,
+        lastActScaDate: '2022-01-23T00:00:00Z',
         lastAssessmentDate: '2021-11-15T00:00:00Z',
-        __typename: 'CedarAuthorityToOperate',
-        isPiiLimitedToUserNameAndPass: true
+        lastContingencyPlanCompletionDate: '2022-06-11T00:00:00Z',
+        lastPenTestDate: '2022-05-31T00:00:00Z',
+        piaCompletionDate: '2022-12-28T00:00:00Z',
+        primaryCyberRiskAdvisor: 'CRA',
+        privacySubjectMatterExpert: 'SME',
+        recoveryPointObjective: 42,
+        recoveryTimeObjective: 10,
+        systemOfRecordsNotice: ['SORN 1', 'SORN 2'],
+        tlcPhase: 'Operate',
+
+        __typename: 'CedarAuthorityToOperate'
       }
     ],
     cedarBudget: [
@@ -334,266 +355,332 @@ export const result: { data: GetSystemProfile } = {
     cedarThreat: [
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 1,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 10,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 15,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 9,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 4,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 1,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 100,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 24,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 255,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 145,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 11,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 19,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 20,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 10,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 10,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 19,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 57,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 76,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 82,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 38,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 41,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 50,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 19,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 14,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 109,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 116,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 117,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 10,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 7,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 21,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 23,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 25,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 18,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 24,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 48,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 42,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 11,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 19,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 16,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 13,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 10,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 156,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 190,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 10,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 54,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 49,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 46,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 37,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 39,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 29,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 22,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 19,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 11,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 12,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 13,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 7,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'High',
+        daysOpen: 10,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 38,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 109,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 100,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 35,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 15,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 89,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Moderate',
+        daysOpen: 16,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 98,
         __typename: 'CedarThreat'
       },
       {
         weaknessRiskLevel: 'Low',
+        daysOpen: 76,
         __typename: 'CedarThreat'
       }
     ],
@@ -673,6 +760,7 @@ export const result: { data: GetSystemProfile } = {
       __typename: 'CedarSoftwareProducts'
     },
     cedarSystemDetails: {
+      isMySystem: true,
       businessOwnerInformation: {
         isCmsOwned: true,
         numberOfContractorFte: '20',
@@ -790,7 +878,7 @@ export const result: { data: GetSystemProfile } = {
     },
     cedarContractsBySystem: [
       {
-        id: '{BC2C09FA-63CD-46e5-99EB-D27DB538FD6A}',
+        systemID: '{BC2C09FA-63CD-46e5-99EB-D27DB538FD6A}',
         startDate: null,
         endDate: null,
         contractNumber: 'GS35F372DA',

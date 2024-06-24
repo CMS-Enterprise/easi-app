@@ -175,11 +175,12 @@ export const Table = ({
         Header: t<string>('systemTable.header.systemName'),
         accessor: 'name',
         id: 'systemName',
-        Cell: ({ row }: { row: Row<CedarSystem> }) => (
-          <UswdsReactLink to={`/systems/${row.original.id}/home/top`}>
-            {row.original.name}
-          </UswdsReactLink>
-        )
+        Cell: ({ row }: { row: Row<CedarSystem> }) => {
+          const url = `/systems/${row.original.id}/${
+            systemTableType === 'my-systems' ? 'workspace' : 'home/top'
+          }`;
+          return <UswdsReactLink to={url}>{row.original.name}</UswdsReactLink>;
+        }
       },
       {
         Header: t<string>('systemTable.header.systemOwner'),
@@ -212,7 +213,7 @@ export const Table = ({
       }
       */
     ];
-  }, [t, systems, createMutate, deleteMutate]);
+  }, [t, systems, systemTableType, createMutate, deleteMutate]);
 
   // Remove bookmark column if showing My systems table
   if (isMySystems) {

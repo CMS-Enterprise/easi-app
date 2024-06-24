@@ -56,39 +56,11 @@ func (s *Store) SetSystemIntakeSystems(ctx context.Context, tx *sqlx.Tx, systemI
 	return nil
 }
 
-// SystemIntakeSystemsBySystemIntakeIDLOADER gets multiple groups of system ids by System Intake ID
-func (s *Store) SystemIntakeSystemsBySystemIntakeIDLOADER(ctx context.Context, paramTableJSON string) (map[string][]*models.SystemIntakeSystem, error) {
-	stmt, err := s.db.PrepareNamed(sqlqueries.SystemIntakeSystemForm.SelectBySystemIntakeIDLOADER)
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-
-	var systems []*models.SystemIntakeSystem
-	err = stmt.Select(&systems, map[string]interface{}{
-		"param_table_json": paramTableJSON,
+func (s *Store) SystemIntakeSystemsBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeSystem, error) {
+	var systemIntakeSystems []*models.SystemIntakeSystem
+	return systemIntakeSystems, selectNamed(ctx, s, &systemIntakeSystems, sqlqueries.SystemIntakeSystemForm.SelectBySystemIntakeIDs, args{
+		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	ids, err := extractSystemIntakeIDs(paramTableJSON)
-	if err != nil {
-		return nil, err
-	}
-
-	store := map[string][]*models.SystemIntakeSystem{}
-
-	for _, id := range ids {
-		store[id] = []*models.SystemIntakeSystem{}
-	}
-
-	for _, system := range systems {
-		key := system.SystemIntakeID.String()
-		store[key] = append(store[key], system)
-	}
-
-	return store, nil
 }
 
 func (s *Store) SystemIntakesByCedarSystemID(ctx context.Context, cedarSystemID string, state models.SystemIntakeState) ([]*models.SystemIntake, error) {

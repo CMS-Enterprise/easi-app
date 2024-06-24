@@ -3,6 +3,7 @@ package cedarcore
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/guregu/null/zero"
 
@@ -76,6 +77,8 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 				Name:                    zero.StringFromPtr(sys.Name),
 				Description:             zero.StringFrom(sys.Description),
 				Acronym:                 zero.StringFrom(sys.Acronym),
+				ATOEffectiveDate:        zero.TimeFrom(time.Time(sys.AtoEffectiveDate)),
+				ATOExpirationDate:       zero.TimeFrom(time.Time(sys.AtoExpirationDate)),
 				State:                   zero.StringFrom(sys.State),
 				Status:                  zero.StringFrom(sys.Status),
 				BusinessOwnerOrg:        zero.StringFrom(sys.BusinessOwnerOrg),
@@ -141,16 +144,16 @@ func (systemSummaryOpts) WithDeactivatedSystems() systemSummaryParamFilterOpt {
 }
 
 // WithEuaIDFilter sets given EUA onto the params
-func (systemSummaryOpts) WithEuaIDFilter(euaUserId string) systemSummaryParamFilterOpt {
+func (systemSummaryOpts) WithEuaIDFilter(euaUserID string) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
-		params.SetUserName(&euaUserId)
+		params.SetUserName(&euaUserID)
 	}
 }
 
 // WithSubSystems sets given cedar system ID as the parent system for which we are looking for sub-systems
-func (systemSummaryOpts) WithSubSystems(cedarSystemId string) systemSummaryParamFilterOpt {
+func (systemSummaryOpts) WithSubSystems(cedarSystemID string) systemSummaryParamFilterOpt {
 	return func(params *apisystems.SystemSummaryFindListParams) {
-		params.SetBelongsTo(&cedarSystemId)
+		params.SetBelongsTo(&cedarSystemID)
 
 		// we want all sub systems, not just ones included in the survey
 		// TODO: some systems come back only when `nil` is set and do not come back when `true` or `false` is set - why?

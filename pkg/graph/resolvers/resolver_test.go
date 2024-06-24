@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -17,6 +18,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 	"github.com/cmsgov/easi-app/pkg/upload"
@@ -34,18 +36,21 @@ type ResolverSuite struct {
 }
 
 // SetupTest clears the database between each test
-func (suite *ResolverSuite) SetupTest() {
+func (s *ResolverSuite) SetupTest() {
 	// We need to set the *require.Assertions here, as we need to have already called suite.Run() to ensure the
 	// test suite has been constructed before we call suite.Require()
-	suite.Assertions = suite.Require()
+	s.Assertions = s.Require()
 
 	// Clean all tables before each test
-	err := suite.testConfigs.Store.TruncateAllTablesDANGEROUS(suite.testConfigs.Logger)
-	assert.NoError(suite.T(), err)
+	err := s.testConfigs.Store.TruncateAllTablesDANGEROUS(s.testConfigs.Logger)
+	assert.NoError(s.T(), err)
 
 	// Get the user account from the DB fresh for each test
-	princ := getTestPrincipal(suite.testConfigs.Store, suite.testConfigs.UserInfo.Username)
-	suite.testConfigs.Principal = princ
+	princ := getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.UserInfo.Username)
+	s.testConfigs.Principal = princ
+
+	// get new dataloaders to clear any existing cached data
+	s.testConfigs.Context = s.ctxWithNewDataloaders()
 }
 
 // TestResolverSuite runs the resolver test suite
@@ -101,17 +106,7 @@ func (tc *TestConfigs) GetDefaults() {
 	// create the test context
 	// principal is fetched between each test in SetupTest()
 	ctx := appcontext.WithLogger(context.Background(), tc.Logger)
-	ctx = appcontext.WithPrincipal(ctx, getTestPrincipal(tc.Store, tc.UserInfo.Username))
-	coreClient := cedarcore.NewClient(ctx, "", "", "", true, true)
-	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
-		return coreClient.GetSystemSummary(ctx)
-	}
-	// Set up mocked dataloaders for the test context
-	ctx = dataloaders.CTXWithLoaders(ctx, dataloaders.NewDataLoaders(
-		tc.Store,
-		func(ctx context.Context, s []string) ([]*models.UserInfo, error) { return nil, nil },
-		getCedarSystems,
-	))
+	ctx = appcontext.WithPrincipal(ctx, getTestPrincipal(ctx, tc.Store, tc.UserInfo.Username))
 
 	tc.Context = ctx
 
@@ -138,9 +133,9 @@ func NewEmailClient() *email.Client {
 
 }
 
-func getTestPrincipal(store *storage.Store, userName string) *authentication.EUAPrincipal {
+func getTestPrincipal(ctx context.Context, store *storage.Store, userName string) *authentication.EUAPrincipal {
 
-	userAccount, _ := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
 
 	princ := &authentication.EUAPrincipal{
 		EUAID:       userName,
@@ -177,12 +172,51 @@ func newS3Config() upload.Config {
 }
 
 // utility method for creating a valid new system intake, checking for any errors
-func (suite *ResolverSuite) createNewIntake() *models.SystemIntake {
-	newIntake, err := suite.testConfigs.Store.CreateSystemIntake(suite.testConfigs.Context, &models.SystemIntake{
+func (s *ResolverSuite) createNewIntake() *models.SystemIntake {
+	newIntake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
 		// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
-	suite.NoError(err)
+	s.NoError(err)
 
 	return newIntake
+}
+
+// utility method to get userAcct in resolver tests
+func (s *ResolverSuite) getOrCreateUserAcct(euaUserID string) *authentication.UserAccount {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+	okta := local.NewOktaAPIClient()
+	userAcct, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*authentication.UserAccount, error) {
+		user, err := userhelpers.GetOrCreateUserAccount(ctx, tx, store, euaUserID, false, userhelpers.GetUserInfoAccountInfoWrapperFunc(okta.FetchUserInfo))
+		if err != nil {
+			return nil, err
+		}
+		return user, nil
+	})
+	s.NoError(err)
+	return userAcct
+}
+
+// ctxWithNewDataloaders sets new Dataloaders on the test suite's existing context and returns that context.
+// this is necessary in order to avoid the caching feature of the dataloadgen library.
+// that caching feature is great for app code, but in test code, where we often load something,
+// update that thing, and load it again to confirm updates worked, caching the first version breaks that flow
+func (s *ResolverSuite) ctxWithNewDataloaders() context.Context {
+	fetchUserInfos := func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error) {
+		return nil, nil
+	}
+
+	coreClient := cedarcore.NewClient(s.testConfigs.Context, "", "", "", true, true)
+	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
+		return coreClient.GetSystemSummary(ctx)
+	}
+
+	buildDataloaders := func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(s.testConfigs.Store, fetchUserInfos, getCedarSystems)
+	}
+
+	// Set up mocked dataloaders for the test context
+	s.testConfigs.Context = dataloaders.CTXWithLoaders(s.testConfigs.Context, buildDataloaders)
+	return s.testConfigs.Context
 }

@@ -26,6 +26,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/authorization"
 	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/oktaapi"
+	"github.com/cmsgov/easi-app/pkg/userhelpers"
 	"github.com/cmsgov/easi-app/pkg/usersearch"
 
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
@@ -44,9 +45,11 @@ import (
 )
 
 func (s *Server) routes(
+	contextMiddleware func(handler http.Handler) http.Handler,
 	corsMiddleware func(handler http.Handler) http.Handler,
 	traceMiddleware func(handler http.Handler) http.Handler,
-	loggerMiddleware func(handler http.Handler) http.Handler) {
+	loggerMiddleware func(handler http.Handler) http.Handler,
+) {
 
 	oktaConfig := s.NewOktaClientConfig()
 	jwtVerifier := okta.NewJwtVerifier(oktaConfig.OktaClientID, oktaConfig.OktaIssuer)
@@ -72,6 +75,7 @@ func (s *Server) routes(
 	)
 
 	s.router.Use(
+		contextMiddleware,
 		traceMiddleware, // trace all requests with an ID
 		loggerMiddleware,
 		corsMiddleware,
@@ -82,6 +86,9 @@ func (s *Server) routes(
 		localAuthenticationMiddleware := local.NewLocalAuthenticationMiddleware(store)
 		s.router.Use(localAuthenticationMiddleware)
 	}
+
+	userAccountServiceMiddleware := userhelpers.NewUserAccountServiceMiddleware(dataloaders.GetUserAccountByID)
+	s.router.Use(userAccountServiceMiddleware)
 
 	requirePrincipalMiddleware := authorization.NewRequirePrincipalMiddleware()
 
@@ -235,8 +242,15 @@ func (s *Server) routes(
 		return coreClient.GetSystemSummary(ctx, cedarcore.SystemSummaryOpts.WithDeactivatedSystems())
 	}
 
-	dataLoaders := dataloaders.NewDataLoaders(store, userSearchClient.FetchUserInfos, getCedarSystems)
-	dataLoaderMiddleware := dataloaders.NewDataLoaderMiddleware(dataLoaders)
+	buildDataloaders := func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(store, userSearchClient.FetchUserInfos, getCedarSystems)
+	}
+
+	// we need to construct a NEW set of dataloaders for each incoming HTTP request to avoid the forced caching of
+	// the dataloaders
+	// dataloader caches remain indefinitely once constructed, and we do not return the same (potentially stale) piece
+	// of data for every single HTTP request from server start
+	dataLoaderMiddleware := dataloaders.NewDataloaderMiddleware(buildDataloaders)
 	s.router.Use(dataLoaderMiddleware)
 
 	gql.Handle("/query", graphqlServer)

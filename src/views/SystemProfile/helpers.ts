@@ -36,3 +36,17 @@ export function showAtoExpirationDate(
       formatDateUtc(dateAuthorizationMemoExpires, 'MMMM d, yyyy')
   );
 }
+
+// TODO: combine this and above into one? showAtoDate? showDate?
+export function showAtoEffectiveDate(
+  // eslint-disable-next-line camelcase
+  systemProfileAto?: CedarAuthorityToOperate
+): React.ReactNode {
+  return showVal(
+    systemProfileAto?.dateAuthorizationMemoSigned &&
+      formatDateUtc(
+        systemProfileAto.dateAuthorizationMemoSigned,
+        'MMMM d, yyyy'
+      )
+  );
+}

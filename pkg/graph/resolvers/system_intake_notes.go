@@ -70,7 +70,7 @@ func SystemIntakeNoteAuthor(obj *models.SystemIntakeNote) (*models.SystemIntakeN
 func SystemIntakeNoteEditor(ctx context.Context, obj *models.SystemIntakeNote) (*models.UserInfo, error) {
 	var systemIntakeNoteEditorInfo *models.UserInfo
 	if obj.ModifiedBy != nil {
-		info, err := dataloaders.GetUserInfo(ctx, *obj.ModifiedBy)
+		info, err := dataloaders.FetchUserInfoByEUAUserID(ctx, *obj.ModifiedBy)
 		if err != nil {
 			return nil, err
 		}

@@ -90,7 +90,7 @@ const AppRoutes = () => {
       <SecureRoute path="/system/making-a-request" component={MakingARequest} />
       <SecureRoute
         exact
-        path="/system/request-type"
+        path="/system/request-type/:systemId?"
         component={RequestTypeForm}
       />
       <SecureRoute exact path="/system/link/:id?">
@@ -143,10 +143,16 @@ const AppRoutes = () => {
 
       <SecureRoute exact path="/systems" component={SystemList} />
 
-      {flags.systemWorkspace && (
+      {flags.systemWorkspace ? (
         <SecureRoute
           path="/systems/:systemId/workspace"
           component={SystemWorkspace}
+        />
+      ) : (
+        <Redirect
+          exact
+          from="/systems/:systemId/workspace"
+          to="/systems/:systemId"
         />
       )}
 

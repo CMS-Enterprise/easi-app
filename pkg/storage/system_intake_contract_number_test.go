@@ -9,6 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 
+	"github.com/cmsgov/easi-app/pkg/helpers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -53,12 +54,14 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 			s.NoError(err)
 		}
 
-		data, err := s.store.SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx, formatParamTableJSON("system_intake_id", createdIDs))
+		results, err := s.store.SystemIntakeContractNumbersBySystemIntakeIDs(ctx, createdIDs)
 		s.NoError(err)
 
-		for _, systemIntakeID := range createdIDs {
-			contractsFound, ok := data[systemIntakeID.String()]
-			s.True(ok)
+		data := helpers.OneToMany[*models.SystemIntakeContractNumber](createdIDs, results)
+		s.Equal(len(data), len(createdIDs))
+
+		for i, systemIntakeID := range createdIDs {
+			contractsFound := data[i]
 			s.Len(contractsFound, 3)
 
 			var (
@@ -68,6 +71,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 			)
 
 			for _, contract := range contractsFound {
+				s.Equal(systemIntakeID, contract.SystemIntakeID)
 				if contract.ContractNumber == contract1 {
 					found1 = true
 				}
@@ -92,10 +96,12 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		})
 		s.NoError(err)
 
-		data, err = s.store.SystemIntakeContractNumbersBySystemIntakeIDLOADER(ctx, formatParamTableJSON("system_intake_id", []uuid.UUID{createdIDs[0]}))
+		results, err = s.store.SystemIntakeContractNumbersBySystemIntakeIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
-		contractsFound, ok := data[createdIDs[0].String()]
-		s.True(ok)
+
+		data = helpers.OneToMany[*models.SystemIntakeContractNumber]([]uuid.UUID{createdIDs[0]}, results)
+		s.Len(data, 1)
+		contractsFound := data[0]
 		s.Len(contractsFound, 4)
 
 		var (
@@ -104,6 +110,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeContractNumbers() {
 		)
 
 		for _, contract := range contractsFound {
+			s.Equal(createdIDs[0], contract.SystemIntakeID)
 			if contract.ContractNumber == contract1 ||
 				contract.ContractNumber == contract2 ||
 				contract.ContractNumber == contract3 {

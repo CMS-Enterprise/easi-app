@@ -45,7 +45,7 @@ repos:
           )$
 
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.58.1
+    rev: v1.59.1
     hooks:
       - id: golangci-lint
         name: Lint go files
@@ -131,3 +131,12 @@ repos:
       - id: git-secrets
         name: Check for committed secrets
         entry: git-secrets --pre_commit_hook
+
+  - repo: local
+    hooks:
+      - id: remove-postman-ids
+        name: Remove Postman Collection IDs
+        language: script
+        entry: scripts/edit_postman_json.sh
+        always_run: true
+        pass_filenames: false

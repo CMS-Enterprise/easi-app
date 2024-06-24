@@ -16,8 +16,8 @@ func traceMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// NewTraceMiddleware returns a handler with a trace ID in context
-func NewTraceMiddleware() func(http.Handler) http.Handler {
+// newTraceMiddleware returns a handler with a trace ID in context
+func newTraceMiddleware() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return traceMiddleware(next)
 	}

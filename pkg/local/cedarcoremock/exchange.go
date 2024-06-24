@@ -351,8 +351,9 @@ var mockExchanges = map[string][]*models.CedarExchange{
 	},
 }
 
-func GetExchange(cedarSystemId string) []*models.CedarExchange {
-	if val, ok := mockExchanges[cedarSystemId]; ok {
+// GetExchange returns a mock slice of CedarExchange structs
+func GetExchange(cedarSystemID string) []*models.CedarExchange {
+	if val, ok := mockExchanges[cedarSystemID]; ok {
 		return val
 	}
 

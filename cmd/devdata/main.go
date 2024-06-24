@@ -178,6 +178,29 @@ func main() {
 	intakeID = uuid.MustParse("9ab475a8-a691-45e9-b55d-648b6e752efa")
 	makeSystemIntakeAndIssueLCID("LCID issued", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
 
+	intakeID = uuid.MustParse("5af245bc-fc54-4677-bab1-1b3e798bb43c")
+	intake = makeSystemIntakeAndProgressToStep(
+		"System Intake with GRB Reviewers",
+		&intakeID,
+		requesterEUA,
+		logger,
+		store,
+		models.SystemIntakeStepToProgressToGrbMeeting,
+		&progressOptions{
+			meetingDate:        &futureMeetingDate,
+			completeOtherSteps: true,
+			fillForm:           true,
+		},
+	)
+	createSystemIntakeGRBReviewer(
+		logger,
+		store,
+		intake,
+		requesterEUA,
+		models.SystemIntakeGRBReviewerVotingRoleAlternate,
+		models.SystemIntakeGRBReviewerRoleCciioRep,
+	)
+
 	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")
 	makeSystemIntakeAndProgressToStep(
 		"skip to grb meeting with date set in past",
