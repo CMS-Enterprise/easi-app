@@ -541,6 +541,7 @@ type ComplexityRoot struct {
 		CreateSystemIntakeActionUpdateLcid               func(childComplexity int, input models.SystemIntakeUpdateLCIDInput) int
 		CreateSystemIntakeContact                        func(childComplexity int, input models.CreateSystemIntakeContactInput) int
 		CreateSystemIntakeDocument                       func(childComplexity int, input models.CreateSystemIntakeDocumentInput) int
+		CreateSystemIntakeGRBReviewer                    func(childComplexity int, input models.CreateSystemIntakeGRBReviewerInput) int
 		CreateSystemIntakeNote                           func(childComplexity int, input models.CreateSystemIntakeNoteInput) int
 		CreateTRBAdminNoteAdviceLetter                   func(childComplexity int, input models.CreateTRBAdminNoteAdviceLetterInput) int
 		CreateTRBAdminNoteConsultSession                 func(childComplexity int, input models.CreateTRBAdminNoteConsultSessionInput) int
@@ -557,6 +558,7 @@ type ComplexityRoot struct {
 		DeleteCedarSystemBookmark                        func(childComplexity int, input models.CreateCedarSystemBookmarkInput) int
 		DeleteSystemIntakeContact                        func(childComplexity int, input models.DeleteSystemIntakeContactInput) int
 		DeleteSystemIntakeDocument                       func(childComplexity int, id uuid.UUID) int
+		DeleteSystemIntakeGRBReviewer                    func(childComplexity int, input models.DeleteSystemIntakeGRBReviewerInput) int
 		DeleteTRBAdviceLetterRecommendation              func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestAttendee                         func(childComplexity int, id uuid.UUID) int
 		DeleteTRBRequestDocument                         func(childComplexity int, id uuid.UUID) int
@@ -583,6 +585,7 @@ type ComplexityRoot struct {
 		UpdateSystemIntakeContact                        func(childComplexity int, input models.UpdateSystemIntakeContactInput) int
 		UpdateSystemIntakeContactDetails                 func(childComplexity int, input models.UpdateSystemIntakeContactDetailsInput) int
 		UpdateSystemIntakeContractDetails                func(childComplexity int, input models.UpdateSystemIntakeContractDetailsInput) int
+		UpdateSystemIntakeGRBReviewer                    func(childComplexity int, input models.UpdateSystemIntakeGRBReviewerInput) int
 		UpdateSystemIntakeLinkedCedarSystem              func(childComplexity int, input models.UpdateSystemIntakeLinkedCedarSystemInput) int
 		UpdateSystemIntakeNote                           func(childComplexity int, input models.UpdateSystemIntakeNoteInput) int
 		UpdateSystemIntakeRequestDetails                 func(childComplexity int, input models.UpdateSystemIntakeRequestDetailsInput) int
@@ -1183,6 +1186,9 @@ type MutationResolver interface {
 	CreateSystemIntakeContact(ctx context.Context, input models.CreateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error)
 	UpdateSystemIntakeContact(ctx context.Context, input models.UpdateSystemIntakeContactInput) (*models.CreateSystemIntakeContactPayload, error)
 	DeleteSystemIntakeContact(ctx context.Context, input models.DeleteSystemIntakeContactInput) (*models.DeleteSystemIntakeContactPayload, error)
+	CreateSystemIntakeGRBReviewer(ctx context.Context, input models.CreateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error)
+	UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error)
+	DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error)
 	UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error)
 	SendFeedbackEmail(ctx context.Context, input models.SendFeedbackEmailInput) (*string, error)
 	SendCantFindSomethingEmail(ctx context.Context, input models.SendCantFindSomethingEmailInput) (*string, error)
@@ -3975,6 +3981,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateSystemIntakeDocument(childComplexity, args["input"].(models.CreateSystemIntakeDocumentInput)), true
 
+	case "Mutation.createSystemIntakeGRBReviewer":
+		if e.complexity.Mutation.CreateSystemIntakeGRBReviewer == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSystemIntakeGRBReviewer_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateSystemIntakeGRBReviewer(childComplexity, args["input"].(models.CreateSystemIntakeGRBReviewerInput)), true
+
 	case "Mutation.createSystemIntakeNote":
 		if e.complexity.Mutation.CreateSystemIntakeNote == nil {
 			break
@@ -4166,6 +4184,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteSystemIntakeDocument(childComplexity, args["id"].(uuid.UUID)), true
+
+	case "Mutation.deleteSystemIntakeGRBReviewer":
+		if e.complexity.Mutation.DeleteSystemIntakeGRBReviewer == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteSystemIntakeGRBReviewer_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteSystemIntakeGRBReviewer(childComplexity, args["input"].(models.DeleteSystemIntakeGRBReviewerInput)), true
 
 	case "Mutation.deleteTRBAdviceLetterRecommendation":
 		if e.complexity.Mutation.DeleteTRBAdviceLetterRecommendation == nil {
@@ -4478,6 +4508,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateSystemIntakeContractDetails(childComplexity, args["input"].(models.UpdateSystemIntakeContractDetailsInput)), true
+
+	case "Mutation.updateSystemIntakeGRBReviewer":
+		if e.complexity.Mutation.UpdateSystemIntakeGRBReviewer == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSystemIntakeGRBReviewer_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSystemIntakeGRBReviewer(childComplexity, args["input"].(models.UpdateSystemIntakeGRBReviewerInput)), true
 
 	case "Mutation.updateSystemIntakeLinkedCedarSystem":
 		if e.complexity.Mutation.UpdateSystemIntakeLinkedCedarSystem == nil {
@@ -7378,6 +7420,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateCedarSystemBookmarkInput,
 		ec.unmarshalInputCreateSystemIntakeContactInput,
 		ec.unmarshalInputCreateSystemIntakeDocumentInput,
+		ec.unmarshalInputCreateSystemIntakeGRBReviewerInput,
 		ec.unmarshalInputCreateSystemIntakeInput,
 		ec.unmarshalInputCreateSystemIntakeNoteInput,
 		ec.unmarshalInputCreateTRBAdminNoteAdviceLetterInput,
@@ -7390,6 +7433,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateTRBRequestDocumentInput,
 		ec.unmarshalInputCreateTRBRequestFeedbackInput,
 		ec.unmarshalInputDeleteSystemIntakeContactInput,
+		ec.unmarshalInputDeleteSystemIntakeGRBReviewerInput,
 		ec.unmarshalInputDeleteTRBRequestFundingSourcesInput,
 		ec.unmarshalInputEmailNotificationRecipients,
 		ec.unmarshalInputReopenTRBRequestInput,
@@ -7434,6 +7478,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateSystemIntakeContactDetailsInput,
 		ec.unmarshalInputUpdateSystemIntakeContactInput,
 		ec.unmarshalInputUpdateSystemIntakeContractDetailsInput,
+		ec.unmarshalInputUpdateSystemIntakeGRBReviewerInput,
 		ec.unmarshalInputUpdateSystemIntakeLinkedCedarSystemInput,
 		ec.unmarshalInputUpdateSystemIntakeNoteInput,
 		ec.unmarshalInputUpdateSystemIntakeRequestDetailsInput,
@@ -8688,7 +8733,24 @@ type SystemIntakeGRBReviewer {
   modifiedAt: Time
 }
 
-enum SystemIntakeGRBReviewerVotingRole {
+input CreateSystemIntakeGRBReviewerInput {
+  systemIntakeID: UUID!
+  euaUserId: String!
+  votingRole: SystemIntakeGRBReviewerVotingRole!
+  grbRole: SystemIntakeGRBReviewerRole!
+}
+
+input UpdateSystemIntakeGRBReviewerInput {
+  reviewerID: UUID!
+  votingRole: SystemIntakeGRBReviewerVotingRole!
+  grbRole: SystemIntakeGRBReviewerRole!
+}
+
+input DeleteSystemIntakeGRBReviewerInput {
+  reviewerID: UUID!
+}
+
+enum SystemIntakeGRBReviewerRole {
   CO_CHAIR_CIO
   CO_CHAIR_CFO
   CO_CHAIR_HCA
@@ -8703,7 +8765,7 @@ enum SystemIntakeGRBReviewerVotingRole {
   OTHER
 }
 
-enum SystemIntakeGRBReviewerRole {
+enum SystemIntakeGRBReviewerVotingRole {
   VOTING
   ALTERNATE
   NON_VOTING
@@ -9937,7 +9999,13 @@ type Mutation {
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
+
+  createSystemIntakeGRBReviewer(input: CreateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
+  updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
+  deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
+
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
+
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String
@@ -10741,6 +10809,21 @@ func (ec *executionContext) field_Mutation_createSystemIntakeDocument_args(ctx c
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createSystemIntakeGRBReviewer_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 models.CreateSystemIntakeGRBReviewerInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateSystemIntakeGRBReviewerInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBReviewerInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createSystemIntakeNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -10993,6 +11076,21 @@ func (ec *executionContext) field_Mutation_deleteSystemIntakeDocument_args(ctx c
 		}
 	}
 	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteSystemIntakeGRBReviewer_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 models.DeleteSystemIntakeGRBReviewerInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNDeleteSystemIntakeGRBReviewerInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐDeleteSystemIntakeGRBReviewerInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -11387,6 +11485,21 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeContractDetails_arg
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateSystemIntakeContractDetailsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeContractDetailsInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSystemIntakeGRBReviewer_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 models.UpdateSystemIntakeGRBReviewerInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateSystemIntakeGRBReviewerInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeGRBReviewerInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -29549,6 +29662,211 @@ func (ec *executionContext) fieldContext_Mutation_deleteSystemIntakeContact(ctx 
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_deleteSystemIntakeContact_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createSystemIntakeGRBReviewer(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createSystemIntakeGRBReviewer(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateSystemIntakeGRBReviewer(rctx, fc.Args["input"].(models.CreateSystemIntakeGRBReviewerInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeGRBReviewer)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewer2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewer(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createSystemIntakeGRBReviewer(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeGRBReviewer_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeGRBReviewer_userAccount(ctx, field)
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeGRBReviewer_systemIntakeID(ctx, field)
+			case "votingRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_votingRole(ctx, field)
+			case "grbRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewer", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createSystemIntakeGRBReviewer_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateSystemIntakeGRBReviewer(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateSystemIntakeGRBReviewer(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateSystemIntakeGRBReviewer(rctx, fc.Args["input"].(models.UpdateSystemIntakeGRBReviewerInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntakeGRBReviewer)
+	fc.Result = res
+	return ec.marshalNSystemIntakeGRBReviewer2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewer(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateSystemIntakeGRBReviewer(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SystemIntakeGRBReviewer_id(ctx, field)
+			case "userAccount":
+				return ec.fieldContext_SystemIntakeGRBReviewer_userAccount(ctx, field)
+			case "systemIntakeID":
+				return ec.fieldContext_SystemIntakeGRBReviewer_systemIntakeID(ctx, field)
+			case "votingRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_votingRole(ctx, field)
+			case "grbRole":
+				return ec.fieldContext_SystemIntakeGRBReviewer_grbRole(ctx, field)
+			case "createdBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_createdAt(ctx, field)
+			case "modifiedBy":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedBy(ctx, field)
+			case "modifiedAt":
+				return ec.fieldContext_SystemIntakeGRBReviewer_modifiedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntakeGRBReviewer", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateSystemIntakeGRBReviewer_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteSystemIntakeGRBReviewer(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteSystemIntakeGRBReviewer(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteSystemIntakeGRBReviewer(rctx, fc.Args["input"].(models.DeleteSystemIntakeGRBReviewerInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteSystemIntakeGRBReviewer(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type UUID does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteSystemIntakeGRBReviewer_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -54154,6 +54472,54 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeDocumentInput(ctx co
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateSystemIntakeGRBReviewerInput(ctx context.Context, obj interface{}) (models.CreateSystemIntakeGRBReviewerInput, error) {
+	var it models.CreateSystemIntakeGRBReviewerInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"systemIntakeID", "euaUserId", "votingRole", "grbRole"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "systemIntakeID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("systemIntakeID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SystemIntakeID = data
+		case "euaUserId":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("euaUserId"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.EuaUserID = data
+		case "votingRole":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("votingRole"))
+			data, err := ec.unmarshalNSystemIntakeGRBReviewerVotingRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerVotingRole(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.VotingRole = data
+		case "grbRole":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbRole"))
+			data, err := ec.unmarshalNSystemIntakeGRBReviewerRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerRole(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.GrbRole = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateSystemIntakeInput(ctx context.Context, obj interface{}) (models.CreateSystemIntakeInput, error) {
 	var it models.CreateSystemIntakeInput
 	asMap := map[string]interface{}{}
@@ -54668,6 +55034,33 @@ func (ec *executionContext) unmarshalInputDeleteSystemIntakeContactInput(ctx con
 				return it, err
 			}
 			it.ID = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputDeleteSystemIntakeGRBReviewerInput(ctx context.Context, obj interface{}) (models.DeleteSystemIntakeGRBReviewerInput, error) {
+	var it models.DeleteSystemIntakeGRBReviewerInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"reviewerID"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "reviewerID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reviewerID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ReviewerID = data
 		}
 	}
 
@@ -56808,6 +57201,47 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeContractDetailsInput
 				return it, err
 			}
 			it.Contract = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateSystemIntakeGRBReviewerInput(ctx context.Context, obj interface{}) (models.UpdateSystemIntakeGRBReviewerInput, error) {
+	var it models.UpdateSystemIntakeGRBReviewerInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"reviewerID", "votingRole", "grbRole"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "reviewerID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reviewerID"))
+			data, err := ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ReviewerID = data
+		case "votingRole":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("votingRole"))
+			data, err := ec.unmarshalNSystemIntakeGRBReviewerVotingRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerVotingRole(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.VotingRole = data
+		case "grbRole":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbRole"))
+			data, err := ec.unmarshalNSystemIntakeGRBReviewerRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerRole(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.GrbRole = data
 		}
 	}
 
@@ -60550,6 +60984,27 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteSystemIntakeContact(ctx, field)
 			})
+		case "createSystemIntakeGRBReviewer":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createSystemIntakeGRBReviewer(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updateSystemIntakeGRBReviewer":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateSystemIntakeGRBReviewer(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "deleteSystemIntakeGRBReviewer":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteSystemIntakeGRBReviewer(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "updateSystemIntakeLinkedCedarSystem":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateSystemIntakeLinkedCedarSystem(ctx, field)
@@ -67861,6 +68316,11 @@ func (ec *executionContext) unmarshalNCreateSystemIntakeDocumentInput2githubᚗc
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreateSystemIntakeGRBReviewerInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeGRBReviewerInput(ctx context.Context, v interface{}) (models.CreateSystemIntakeGRBReviewerInput, error) {
+	res, err := ec.unmarshalInputCreateSystemIntakeGRBReviewerInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateSystemIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐCreateSystemIntakeInput(ctx context.Context, v interface{}) (models.CreateSystemIntakeInput, error) {
 	res, err := ec.unmarshalInputCreateSystemIntakeInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -67918,6 +68378,11 @@ func (ec *executionContext) unmarshalNCreateTRBRequestFeedbackInput2githubᚗcom
 
 func (ec *executionContext) unmarshalNDeleteSystemIntakeContactInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐDeleteSystemIntakeContactInput(ctx context.Context, v interface{}) (models.DeleteSystemIntakeContactInput, error) {
 	res, err := ec.unmarshalInputDeleteSystemIntakeContactInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNDeleteSystemIntakeGRBReviewerInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐDeleteSystemIntakeGRBReviewerInput(ctx context.Context, v interface{}) (models.DeleteSystemIntakeGRBReviewerInput, error) {
+	res, err := ec.unmarshalInputDeleteSystemIntakeGRBReviewerInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -69033,6 +69498,10 @@ func (ec *executionContext) unmarshalNSystemIntakeFundingSourceInput2ᚕᚖgithu
 func (ec *executionContext) unmarshalNSystemIntakeFundingSourceInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeFundingSourceInput(ctx context.Context, v interface{}) (*models.SystemIntakeFundingSourceInput, error) {
 	res, err := ec.unmarshalInputSystemIntakeFundingSourceInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeGRBReviewer2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewer(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeGRBReviewer) graphql.Marshaler {
+	return ec._SystemIntakeGRBReviewer(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNSystemIntakeGRBReviewer2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeGRBReviewerᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.SystemIntakeGRBReviewer) graphql.Marshaler {
@@ -70343,6 +70812,11 @@ func (ec *executionContext) unmarshalNUpdateSystemIntakeContactInput2githubᚗco
 
 func (ec *executionContext) unmarshalNUpdateSystemIntakeContractDetailsInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeContractDetailsInput(ctx context.Context, v interface{}) (models.UpdateSystemIntakeContractDetailsInput, error) {
 	res, err := ec.unmarshalInputUpdateSystemIntakeContractDetailsInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateSystemIntakeGRBReviewerInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐUpdateSystemIntakeGRBReviewerInput(ctx context.Context, v interface{}) (models.UpdateSystemIntakeGRBReviewerInput, error) {
+	res, err := ec.unmarshalInputUpdateSystemIntakeGRBReviewerInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

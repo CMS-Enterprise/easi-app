@@ -1143,7 +1143,24 @@ type SystemIntakeGRBReviewer {
   modifiedAt: Time
 }
 
-enum SystemIntakeGRBReviewerVotingRole {
+input CreateSystemIntakeGRBReviewerInput {
+  systemIntakeID: UUID!
+  euaUserId: String!
+  votingRole: SystemIntakeGRBReviewerVotingRole!
+  grbRole: SystemIntakeGRBReviewerRole!
+}
+
+input UpdateSystemIntakeGRBReviewerInput {
+  reviewerID: UUID!
+  votingRole: SystemIntakeGRBReviewerVotingRole!
+  grbRole: SystemIntakeGRBReviewerRole!
+}
+
+input DeleteSystemIntakeGRBReviewerInput {
+  reviewerID: UUID!
+}
+
+enum SystemIntakeGRBReviewerRole {
   CO_CHAIR_CIO
   CO_CHAIR_CFO
   CO_CHAIR_HCA
@@ -1158,7 +1175,7 @@ enum SystemIntakeGRBReviewerVotingRole {
   OTHER
 }
 
-enum SystemIntakeGRBReviewerRole {
+enum SystemIntakeGRBReviewerVotingRole {
   VOTING
   ALTERNATE
   NON_VOTING
@@ -2392,7 +2409,13 @@ type Mutation {
   createSystemIntakeContact(input: CreateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   updateSystemIntakeContact(input: UpdateSystemIntakeContactInput!): CreateSystemIntakeContactPayload
   deleteSystemIntakeContact(input: DeleteSystemIntakeContactInput!): DeleteSystemIntakeContactPayload
+
+  createSystemIntakeGRBReviewer(input: CreateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
+  updateSystemIntakeGRBReviewer(input: UpdateSystemIntakeGRBReviewerInput!): SystemIntakeGRBReviewer!
+  deleteSystemIntakeGRBReviewer(input: DeleteSystemIntakeGRBReviewerInput!): UUID!
+
   updateSystemIntakeLinkedCedarSystem(input: UpdateSystemIntakeLinkedCedarSystemInput!): UpdateSystemIntakePayload
+
   sendFeedbackEmail(input: SendFeedbackEmailInput!): String
   sendCantFindSomethingEmail(input: SendCantFindSomethingEmailInput!): String
   sendReportAProblemEmail(input: SendReportAProblemEmailInput!): String

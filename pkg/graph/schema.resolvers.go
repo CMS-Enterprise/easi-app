@@ -27,6 +27,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
+	"github.com/cmsgov/easi-app/pkg/userhelpers"
 )
 
 // AlternativeASolution is the resolver for the alternativeASolution field.
@@ -649,6 +650,21 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	return &models.DeleteSystemIntakeContactPayload{
 		SystemIntakeContact: contact,
 	}, nil
+}
+
+// CreateSystemIntakeGRBReviewer is the resolver for the createSystemIntakeGRBReviewer field.
+func (r *mutationResolver) CreateSystemIntakeGRBReviewer(ctx context.Context, input models.CreateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
+	return resolvers.CreateSystemIntakeGRBReviewer(ctx, r.store, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo), &input)
+}
+
+// UpdateSystemIntakeGRBReviewer is the resolver for the updateSystemIntakeGRBReviewer field.
+func (r *mutationResolver) UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
+	return resolvers.UpdateSystemIntakeGRBReviewer(ctx, r.store, &input)
+}
+
+// DeleteSystemIntakeGRBReviewer is the resolver for the deleteSystemIntakeGRBReviewer field.
+func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error) {
+	return input.ReviewerID, resolvers.DeleteSystemIntakeGRBReviewer(ctx, r.store, input.ReviewerID)
 }
 
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
@@ -1736,7 +1752,7 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 
 // GrbReviewers is the resolver for the grbReviewers field.
 func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error) {
-	return []*models.SystemIntakeGRBReviewer{}, nil
+	return resolvers.SystemIntakeGRBReviewers(ctx, obj.ID)
 }
 
 // Isso is the resolver for the isso field.
