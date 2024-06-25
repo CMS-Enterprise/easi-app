@@ -27,7 +27,7 @@ func (s *Store) CreateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, 
 }
 
 func (s *Store) UpdateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, reviewerID uuid.UUID, votingRole models.SystemIntakeGRBReviewerVotingRole, grbRole models.SystemIntakeGRBReviewerRole) (*models.SystemIntakeGRBReviewer, error) {
-	var updatedReviewer *models.SystemIntakeGRBReviewer
+	updatedReviewer := &models.SystemIntakeGRBReviewer{}
 	if err := namedGet(ctx, tx, updatedReviewer, sqlqueries.SystemIntakeGRBReviewer.Update, args{
 		"reviewer_id": reviewerID,
 		"grb_role":    grbRole,
