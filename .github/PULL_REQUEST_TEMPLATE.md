@@ -29,7 +29,8 @@ REQUIRED
 -->
 
 - [ ] I have provided a detailed description of the changes in this PR
-- [ ] I have provided clear instructions on how to test the changes in this PR
+- [ ] I have provided clear instructions on how to test the changes in this PR.
+- [ ] I have updated tests or written new tests as appropriate in this PR.
 
 
 # PR Reviewer Guidelines
