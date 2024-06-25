@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"fmt"
 	"slices"
 
 	"github.com/google/uuid"
@@ -28,6 +29,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		reviewer, err := CreateSystemIntakeGRBReviewer(
 			ctx,
 			store,
+			s.testConfigs.EmailClient,
 			userhelpers.GetUserInfoAccountInfoWrapperFunc(okta.FetchUserInfo),
 			&models.CreateSystemIntakeGRBReviewerInput{
 				SystemIntakeID: intake.ID,
@@ -41,6 +43,9 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		s.Equal(string(votingRole), string(reviewer.VotingRole))
 		s.Equal(string(grbRole), string(reviewer.GRBRole))
 		s.Equal(intake.ID, reviewer.SystemIntakeID)
+		s.Contains(s.testConfigs.Sender.toAddresses, models.EmailAddress(userAcct.Email))
+		s.Contains(s.testConfigs.Sender.body, fmt.Sprintf("Requester: %s", intake.Requester))
+		s.Contains(s.testConfigs.Sender.body, fmt.Sprintf("Project name: %s", intake.ProjectName.String))
 	})
 
 	s.Run("fetch GRB reviewers", func() {
