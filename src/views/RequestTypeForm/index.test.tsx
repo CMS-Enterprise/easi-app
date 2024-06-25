@@ -4,6 +4,8 @@ import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
+import { QueryParamProvider } from 'use-query-params';
+import { ReactRouter5Adapter } from 'use-query-params/adapters/react-router-5';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
@@ -44,23 +46,25 @@ describe('The request type form page', () => {
   const renderPage = (queries: any[]) =>
     render(
       <MemoryRouter initialEntries={['/system/request-type']}>
-        <Provider store={store}>
-          <MessageProvider>
-            <MockedProvider mocks={queries} addTypename={false}>
-              <Switch>
-                <Route path="/system/request-type">
-                  <RequestTypeForm />
-                </Route>
-                <Route path="/governance-overview/:systemId?">
-                  <GovernanceOverview />
-                </Route>
-                <Route path="/system/link/:id?">
-                  <div data-testid="link-form" />
-                </Route>
-              </Switch>
-            </MockedProvider>
-          </MessageProvider>
-        </Provider>
+        <QueryParamProvider adapter={ReactRouter5Adapter}>
+          <Provider store={store}>
+            <MessageProvider>
+              <MockedProvider mocks={queries} addTypename={false}>
+                <Switch>
+                  <Route path="/system/request-type">
+                    <RequestTypeForm />
+                  </Route>
+                  <Route path="/governance-overview/:systemId?">
+                    <GovernanceOverview />
+                  </Route>
+                  <Route path="/system/link/:id?">
+                    <div data-testid="link-form" />
+                  </Route>
+                </Switch>
+              </MockedProvider>
+            </MessageProvider>
+          </Provider>
+        </QueryParamProvider>
       </MemoryRouter>
     );
 
