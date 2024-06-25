@@ -32,6 +32,7 @@ function RequestsCard({ systemId }: RequestsCardProps) {
                 search: linkSearchQuery,
                 pathname: '/system/request-type'
               }}
+              data-testid="new-request-itgov"
             >
               {t('spaces.requests.start')}
             </UswdsReactLink>
@@ -46,6 +47,7 @@ function RequestsCard({ systemId }: RequestsCardProps) {
                 search: linkSearchQuery,
                 pathname: '/trb/start'
               }}
+              data-testid="new-request-trb"
             >
               {t('spaces.requests.start')}
             </UswdsReactLink>
