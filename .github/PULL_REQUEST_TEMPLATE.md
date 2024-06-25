@@ -3,7 +3,7 @@ REQUIRED
     Ensure that your PR title has the relevant Jira ticket number(s) in the title.
     Follow this pattern: [EASI-1234] [EASI-4567] Title of the PR.
     Use [NOREF] in place of a ticket number when there's no associated Jira ticket.
-    This follows for the heading below, as well.
+    The heading below should just have the ticket numbers (for easy linking in Jira)
 -->
 # EASI-0000
 
