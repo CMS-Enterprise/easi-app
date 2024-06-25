@@ -19,7 +19,6 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
-import { StringParam, useQueryParam } from 'use-query-params';
 
 import MainContent from 'components/MainContent';
 import Modal from 'components/Modal';
@@ -84,6 +83,7 @@ import {
 import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
+import { useLinkCedarSystemIdQueryParam } from 'utils/linkCedarSystemIdQueryString';
 /**
  * This request link relation form is used in the contexts of TRB Requests and System Intakes.
  * There are 3 variables used to configure modes for this component:
@@ -114,7 +114,7 @@ const RequestLinkForm = ({
 
   const { state } = useLocation<{ isNew?: boolean }>();
 
-  const [linkCedarSystemId] = useQueryParam('linkCedarSystemId', StringParam);
+  const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
 
   // Form edit mode is either new or edit
   const isNew = !!state?.isNew;

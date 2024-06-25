@@ -13,7 +13,6 @@ import {
   IconArrowBack,
   IconArrowForward
 } from '@trussworks/react-uswds';
-import { StringParam, useQueryParam } from 'use-query-params';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -24,7 +23,9 @@ import {
 } from 'queries/types/UpdateTrbRequestType';
 import UpdateTrbRequestTypeQuery from 'queries/UpdateTrbRequestTypeQuery';
 import { TRBRequestType } from 'types/graphql-global-types';
-import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
+import linkCedarSystemIdQueryString, {
+  useLinkCedarSystemIdQueryParam
+} from 'utils/linkCedarSystemIdQueryString';
 
 import Breadcrumbs from './Breadcrumbs';
 
@@ -45,7 +46,7 @@ function RequestType() {
     id: string;
   }>();
 
-  const [linkCedarSystemId] = useQueryParam('linkCedarSystemId', StringParam);
+  const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
 
   const [mutate, { data, error, loading }] = useMutation<
     UpdateTrbRequestType,
