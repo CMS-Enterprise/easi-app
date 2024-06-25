@@ -43,7 +43,7 @@ func CreateSystemIntakeGRBReviewer(
 		reviewer.VotingRole = models.SIGRBReviewerVotingRole(input.VotingRole)
 		reviewer.GRBRole = models.SIGRBReviewerRole(input.GrbRole)
 		reviewer.SystemIntakeID = input.SystemIntakeID
-		err = store.CreateSystemIntakeGRBReviewer(ctx, tx, intake.ID, reviewer)
+		err = store.CreateSystemIntakeGRBReviewer(ctx, tx, reviewer)
 		if err != nil {
 			return nil, err
 		}

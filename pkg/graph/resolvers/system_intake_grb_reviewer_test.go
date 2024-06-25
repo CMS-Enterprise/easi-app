@@ -167,7 +167,6 @@ func (s *ResolverSuite) createIntakeAndAddReviewers(reviewers ...reviewerToAdd) 
 			err = store.CreateSystemIntakeGRBReviewer(
 				ctx,
 				tx,
-				intake.ID,
 				createdReviewer,
 			)
 			if err != nil {
