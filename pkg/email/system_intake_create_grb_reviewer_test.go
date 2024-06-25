@@ -44,7 +44,7 @@ func (s *EmailTestSuite) TestCreateSystemIntakeGRBReviewerNotification() {
 
 			<br>
 			<div class="no-margin">
-			  <p>Project title: %s</p>
+			  <p>Project name: %s</p>
 			  <p>Requester: %s</p>
 			</div>
 

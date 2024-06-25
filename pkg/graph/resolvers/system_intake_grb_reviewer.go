@@ -61,7 +61,7 @@ func CreateSystemIntakeGRBReviewer(
 				},
 				intake.ID,
 				intake.ProjectName.String,
-				acct.CommonName,
+				intake.Requester,
 			)
 			if err != nil {
 				appcontext.ZLogger(ctx).Error("unable to send create GRB member notification", zap.Error(err))
