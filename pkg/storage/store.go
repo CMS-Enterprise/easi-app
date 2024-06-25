@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -118,11 +119,11 @@ args{
 */
 type args map[string]any
 
-// selectNamed is a shortcut for using `sqlx` Select (SelectContext) with named arguments to prevent writing out the prepare step each time
-func selectNamed(ctx context.Context, np sqlutils.NamedPreparer, dest interface{}, sqlStatement string, arg args) error {
+// namedSelect is a shortcut for using `sqlx` Select (SelectContext) with named arguments to prevent writing out the prepare step each time
+func namedSelect(ctx context.Context, np sqlutils.NamedPreparer, dest interface{}, sqlStatement string, arguments any) error {
 	if ctx == nil {
 		ctx = context.TODO()
-		appcontext.ZLogger(ctx).Debug("nil ctx passed to selectNamed")
+		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedSelect")
 	}
 
 	stmt, err := np.PrepareNamed(sqlStatement)
@@ -131,5 +132,37 @@ func selectNamed(ctx context.Context, np sqlutils.NamedPreparer, dest interface{
 	}
 	defer stmt.Close()
 
-	return stmt.SelectContext(ctx, dest, arg)
+	return stmt.SelectContext(ctx, dest, arguments)
+}
+
+// namedGet is a shortcut for using `sqlx` Get (GetContext) with named arguments to prevent writing out the prepare step each time
+func namedGet(ctx context.Context, np sqlutils.NamedPreparer, dest interface{}, sqlStatement string, arguments any) error {
+	if ctx == nil {
+		ctx = context.TODO()
+		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedGet")
+	}
+
+	stmt, err := np.PrepareNamed(sqlStatement)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	return stmt.GetContext(ctx, dest, arguments)
+}
+
+// namedExec is a shortcut for using `sqlx` Exec (ExecContext) with named arguments to prevent writing out the prepare step each time
+func namedExec(ctx context.Context, np sqlutils.NamedPreparer, sqlStatement string, arguments any) (sql.Result, error) {
+	if ctx == nil {
+		ctx = context.TODO()
+		appcontext.ZLogger(ctx).Debug("nil ctx passed to namedExec")
+	}
+
+	stmt, err := np.PrepareNamed(sqlStatement)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	return stmt.ExecContext(ctx, arguments)
 }
