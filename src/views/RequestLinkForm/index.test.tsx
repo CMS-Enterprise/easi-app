@@ -7,6 +7,8 @@ import {
   waitForElementToBeRemoved
 } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
+import { QueryParamProvider } from 'use-query-params';
+import { ReactRouter5Adapter } from 'use-query-params/adapters/react-router-5';
 
 import { GetSystemIntakeRelationQuery } from 'queries/SystemIntakeRelationQueries';
 import VerboseMockedProvider from 'utils/testing/VerboseMockedProvider';
@@ -26,42 +28,44 @@ describe('IT Gov Request relation link form', () => {
     const { asFragment } = render(
       <Provider store={store}>
         <MemoryRouter initialEntries={[`/system/link/${id}`]}>
-          <VerboseMockedProvider
-            mocks={[
-              {
-                request: {
-                  query: GetSystemIntakeRelationQuery,
-                  variables: {
-                    id
-                  }
-                },
-                result: {
-                  data: {
-                    systemIntake: {
-                      id,
-                      relationType: null,
-                      contractName: null,
-                      contractNumbers: [],
-                      systems: [],
-                      __typename: 'SystemIntake'
-                    },
-                    cedarSystems: [
-                      {
-                        id: '{11AB1A00-1234-5678-ABC1-1A001B00CC0A}',
-                        name: 'Centers for Management Services',
-                        __typename: 'CedarSystem'
-                      }
-                    ]
+          <QueryParamProvider adapter={ReactRouter5Adapter}>
+            <VerboseMockedProvider
+              mocks={[
+                {
+                  request: {
+                    query: GetSystemIntakeRelationQuery,
+                    variables: {
+                      id
+                    }
+                  },
+                  result: {
+                    data: {
+                      systemIntake: {
+                        id,
+                        relationType: null,
+                        contractName: null,
+                        contractNumbers: [],
+                        systems: [],
+                        __typename: 'SystemIntake'
+                      },
+                      cedarSystems: [
+                        {
+                          id: '{11AB1A00-1234-5678-ABC1-1A001B00CC0A}',
+                          name: 'Centers for Management Services',
+                          __typename: 'CedarSystem'
+                        }
+                      ]
+                    }
                   }
                 }
-              }
-            ]}
-            addTypename={false}
-          >
-            <Route path="/system/link/:id?">
-              <RequestLinkForm requestType="itgov" />
-            </Route>
-          </VerboseMockedProvider>
+              ]}
+              addTypename={false}
+            >
+              <Route path="/system/link/:id?">
+                <RequestLinkForm requestType="itgov" />
+              </Route>
+            </VerboseMockedProvider>
+          </QueryParamProvider>
         </MemoryRouter>
       </Provider>
     );

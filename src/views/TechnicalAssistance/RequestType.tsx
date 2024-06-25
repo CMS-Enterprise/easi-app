@@ -13,6 +13,7 @@ import {
   IconArrowBack,
   IconArrowForward
 } from '@trussworks/react-uswds';
+import { StringParam, useQueryParam } from 'use-query-params';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -23,6 +24,7 @@ import {
 } from 'queries/types/UpdateTrbRequestType';
 import UpdateTrbRequestTypeQuery from 'queries/UpdateTrbRequestTypeQuery';
 import { TRBRequestType } from 'types/graphql-global-types';
+import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 
 import Breadcrumbs from './Breadcrumbs';
 
@@ -42,6 +44,8 @@ function RequestType() {
   const { id } = useParams<{
     id: string;
   }>();
+
+  const [linkCedarSystemId] = useQueryParam('linkCedarSystemId', StringParam);
 
   const [mutate, { data, error, loading }] = useMutation<
     UpdateTrbRequestType,
@@ -126,7 +130,8 @@ function RequestType() {
                 <UswdsReactLink
                   to={{
                     pathname: '/trb/process',
-                    state: { requestType }
+                    state: { requestType },
+                    search: linkCedarSystemIdQueryString(linkCedarSystemId)
                   }}
                   className="usa-button"
                   variant="unstyled"
@@ -160,7 +165,8 @@ function RequestType() {
               <UswdsReactLink
                 to={{
                   pathname: '/trb/process',
-                  state: { requestType: TRBRequestType.OTHER }
+                  state: { requestType: TRBRequestType.OTHER },
+                  search: linkCedarSystemIdQueryString(linkCedarSystemId)
                 }}
               >
                 {t('requestType.services.other')}

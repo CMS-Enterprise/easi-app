@@ -4,6 +4,8 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { MockedProvider } from '@apollo/client/testing';
 import { render } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
+import { QueryParamProvider } from 'use-query-params';
+import { ReactRouter5Adapter } from 'use-query-params/adapters/react-router-5';
 
 import GetTrbRequestsQuery from 'queries/GetTrbRequestsQuery';
 import {
@@ -114,11 +116,13 @@ describe('TRB Subview snapshots', () => {
       <MemoryRouter
         initialEntries={['/trb/type/b1120f6a-87d7-4bcd-b8f2-0835c51b2d52']}
       >
-        <MockedProvider>
-          <Route path="/trb/type/:id">
-            <RequestType />
-          </Route>
-        </MockedProvider>
+        <QueryParamProvider adapter={ReactRouter5Adapter}>
+          <MockedProvider>
+            <Route path="/trb/type/:id">
+              <RequestType />
+            </Route>
+          </MockedProvider>
+        </QueryParamProvider>
       </MemoryRouter>
     );
     expect(asFragment()).toMatchSnapshot();
@@ -127,9 +131,11 @@ describe('TRB Subview snapshots', () => {
   it('matches Process Flow', () => {
     const { asFragment } = render(
       <MemoryRouter initialEntries={[{ state: { requestType: 'NEED_HELP' } }]}>
-        <MockedProvider>
-          <ProcessFlow />
-        </MockedProvider>
+        <QueryParamProvider adapter={ReactRouter5Adapter}>
+          <MockedProvider>
+            <ProcessFlow />
+          </MockedProvider>
+        </QueryParamProvider>
       </MemoryRouter>
     );
     expect(asFragment()).toMatchSnapshot();

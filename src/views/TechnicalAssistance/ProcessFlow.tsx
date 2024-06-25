@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button, GridContainer } from '@trussworks/react-uswds';
+import { StringParam, useQueryParam } from 'use-query-params';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
@@ -12,6 +13,7 @@ import {
   CreateTrbRequestVariables
 } from 'queries/types/CreateTrbRequest';
 import { TRBRequestType } from 'types/graphql-global-types';
+import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 import { StepsInProcessContent } from 'views/Help/TechnicalReviewBoard/StepsInProcess';
 
 import Breadcrumbs from './Breadcrumbs';
@@ -26,6 +28,8 @@ function ProcessFlow() {
 
   const requestType = state?.requestType;
 
+  const [linkCedarSystemId] = useQueryParam('linkCedarSystemId', StringParam);
+
   const [create, createResult] = useMutation<
     CreateTrbRequest,
     CreateTrbRequestVariables
@@ -34,11 +38,16 @@ function ProcessFlow() {
   // Redirect to task list on sucessful trb request creation
   useEffect(() => {
     if (createResult.data) {
-      history.push(`/trb/link/${createResult.data.createTRBRequest.id}`, {
-        isNew: true
-      });
+      history.push(
+        `/trb/link/${
+          createResult.data.createTRBRequest.id
+        }?${linkCedarSystemIdQueryString(linkCedarSystemId)}`,
+        {
+          isNew: true
+        }
+      );
     }
-  }, [createResult, history]);
+  }, [createResult, history, linkCedarSystemId]);
 
   // Redirect to start if `requestType` isn't set
   if (!requestType) return <Redirect to="/trb/start" />;

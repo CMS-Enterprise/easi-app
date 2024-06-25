@@ -19,6 +19,7 @@ import {
   TextInput
 } from '@trussworks/react-uswds';
 import classNames from 'classnames';
+import { StringParam, useQueryParam } from 'use-query-params';
 
 import MainContent from 'components/MainContent';
 import Modal from 'components/Modal';
@@ -112,6 +113,8 @@ const RequestLinkForm = ({
   ]);
 
   const { state } = useLocation<{ isNew?: boolean }>();
+
+  const [linkCedarSystemId] = useQueryParam('linkCedarSystemId', StringParam);
 
   // Form edit mode is either new or edit
   const isNew = !!state?.isNew;
@@ -219,6 +222,16 @@ const RequestLinkForm = ({
     },
     values: (values => {
       if (!values) return undefined;
+
+      if (values.relationType === null && linkCedarSystemId) {
+        return {
+          relationType: RequestRelationType.EXISTING_SYSTEM,
+          cedarSystemIDs: [linkCedarSystemId],
+          contractNumbers: '',
+          contractName: ''
+        };
+      }
+
       return {
         relationType: values.relationType,
         cedarSystemIDs: values.systems.map(v => v.id),
