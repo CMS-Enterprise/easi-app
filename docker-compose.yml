@@ -88,9 +88,9 @@ services:
   minio:
     restart: always
     image: minio/minio:latest
-    entrypoint: minio server /data
+    entrypoint: minio server --address :9004 /data
     ports:
-    - '9000:9000'
+    - '9004:9004'
   minio_mc:
     image: minio/mc:latest
     depends_on:

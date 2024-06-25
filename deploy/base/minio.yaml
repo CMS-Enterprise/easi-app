@@ -26,12 +26,12 @@ spec:
     spec:
       containers:
         - command: ["minio", "server", "/data", "--console-address"]
-          args: [':9001']
+          args: [':9001', '--address', ':9004']
           image: minio/minio:latest
           name: minio
           ports:
-            - containerPort: 9000
-              hostPort: 9000
+            - containerPort: 9004
+              hostPort: 9004
               protocol: TCP
             - containerPort: 9001
               hostPort: 9001
@@ -47,9 +47,9 @@ metadata:
   name: minio
 spec:
   ports:
-    - name: "9000"
-      port: 9000
-      targetPort: 9000
+    - name: "9004"
+      port: 9004
+      targetPort: 9004
     - name: "console"
       port: 9001
       targetPort: 9001
@@ -92,7 +92,7 @@ data:
       "version": "10",
       "aliases": {
         "local": {
-          "url": "http://minio:9000",
+          "url": "http://minio:9004",
           "accessKey": "minioadmin",
           "secretKey": "minioadmin",
           "api": "S3v4",

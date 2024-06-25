@@ -2,7 +2,7 @@
   "version": "10",
   "aliases": {
     "local": {
-      "url": "http://minio:9000",
+      "url": "http://minio:9004",
       "accessKey": "minioadmin",
       "secretKey": "minioadmin",
       "api": "S3v4",
