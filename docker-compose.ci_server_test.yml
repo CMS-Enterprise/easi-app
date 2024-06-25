@@ -20,7 +20,7 @@ services:
     restart: always
     image: minio/minio:latest
     ports:
-      - '9000:9000'
+      - '9004:9004'
     entrypoint: minio server /data
   minio_mc:
     image: minio/mc:latest
