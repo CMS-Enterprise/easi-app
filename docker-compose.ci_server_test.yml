@@ -21,7 +21,7 @@ services:
     image: minio/minio:latest
     ports:
       - '9004:9004'
-    entrypoint: minio server /data
+    entrypoint: minio server --address :9004 /data
   minio_mc:
     image: minio/mc:latest
     depends_on:
