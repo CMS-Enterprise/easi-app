@@ -26,6 +26,7 @@ func createSystemIntakeGRBReviewer(
 	_, err := resolvers.CreateSystemIntakeGRBReviewer(
 		ctx,
 		store,
+		nil, // email client
 		userhelpers.GetUserInfoAccountInfoWrapperFunc(mock.FetchUserInfoMock),
 		&models.CreateSystemIntakeGRBReviewerInput{
 			SystemIntakeID: intake.ID,

@@ -14,11 +14,11 @@ import (
 )
 
 // CreateSystemIntakeGRBReviewer creates a GRB Reviewer
-func (s *Store) CreateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, systemIntakeID uuid.UUID, reviewer *models.SystemIntakeGRBReviewer) error {
+func (s *Store) CreateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, reviewer *models.SystemIntakeGRBReviewer) error {
 	if reviewer.ID == uuid.Nil {
 		reviewer.ID = uuid.New()
 	}
-	if _, err := tx.NamedExec(sqlqueries.SystemIntakeGRBReviewer.Create, reviewer); err != nil {
+	if _, err := namedExec(ctx, tx, sqlqueries.SystemIntakeGRBReviewer.Create, reviewer); err != nil {
 		appcontext.ZLogger(ctx).Error("failed to create GRB reviewer", zap.Error(err))
 		return err
 	}
@@ -27,28 +27,24 @@ func (s *Store) CreateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, 
 }
 
 func (s *Store) UpdateSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, reviewerID uuid.UUID, votingRole models.SystemIntakeGRBReviewerVotingRole, grbRole models.SystemIntakeGRBReviewerRole) (*models.SystemIntakeGRBReviewer, error) {
-	var reviewer models.SystemIntakeGRBReviewer
-	stmt, err := tx.PrepareNamed(sqlqueries.SystemIntakeGRBReviewer.Update)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error("failed to prepare update GRB reviewer query", zap.Error(err))
-		return nil, err
-	}
-	defer stmt.Close()
-	err = stmt.Get(&reviewer, args{
+	updatedReviewer := &models.SystemIntakeGRBReviewer{}
+	if err := namedGet(ctx, tx, updatedReviewer, sqlqueries.SystemIntakeGRBReviewer.Update, args{
 		"reviewer_id": reviewerID,
 		"grb_role":    grbRole,
 		"voting_role": votingRole,
 		"modified_by": appcontext.Principal(ctx).Account().ID,
-	})
-	if err != nil {
-		appcontext.ZLogger(ctx).Error("failed to update GRB reviewer", zap.Error(err))
-		return nil, err
+	}); err != nil {
+		appcontext.ZLogger(ctx).Error(
+			"error updating system intake GRB reviewer",
+			zap.String("reviewer_id", reviewerID.String()),
+		)
 	}
-	return &reviewer, nil
+
+	return updatedReviewer, nil
 }
 
 func (s *Store) DeleteSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, reviewerID uuid.UUID) error {
-	if _, err := tx.NamedExec(sqlqueries.SystemIntakeGRBReviewer.Delete, args{
+	if _, err := namedExec(ctx, tx, sqlqueries.SystemIntakeGRBReviewer.Delete, args{
 		"reviewer_id": reviewerID,
 	}); err != nil {
 		appcontext.ZLogger(ctx).Error("failed to delete GRB reviewer", zap.Error(err))
@@ -59,7 +55,7 @@ func (s *Store) DeleteSystemIntakeGRBReviewer(ctx context.Context, tx *sqlx.Tx, 
 
 func (s *Store) SystemIntakeGRBReviewersBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeGRBReviewer, error) {
 	var systemIntakeGRBReviewers []*models.SystemIntakeGRBReviewer
-	return systemIntakeGRBReviewers, selectNamed(ctx, s, &systemIntakeGRBReviewers, sqlqueries.SystemIntakeGRBReviewer.GetBySystemIntakeID, args{
+	return systemIntakeGRBReviewers, namedSelect(ctx, s, &systemIntakeGRBReviewers, sqlqueries.SystemIntakeGRBReviewer.GetBySystemIntakeID, args{
 		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 }
