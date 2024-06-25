@@ -582,4 +582,12 @@ func sendITGovEmails(ctx context.Context, client *email.Client) {
 		*nextSteps,
 	)
 	noErr(err)
+	err = client.SystemIntake.SendCreateGRBReviewerNotification(
+		ctx,
+		emailNotificationRecipients,
+		intakeID,
+		"Raisinets",
+		"Courage the Cowardly Dog",
+	)
+	noErr(err)
 }

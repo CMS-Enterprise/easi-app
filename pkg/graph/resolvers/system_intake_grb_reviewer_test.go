@@ -28,6 +28,7 @@ func (s *ResolverSuite) TestSystemIntakeGRBReviewer() {
 		reviewer, err := CreateSystemIntakeGRBReviewer(
 			ctx,
 			store,
+			nil,
 			userhelpers.GetUserInfoAccountInfoWrapperFunc(okta.FetchUserInfo),
 			&models.CreateSystemIntakeGRBReviewerInput{
 				SystemIntakeID: intake.ID,
