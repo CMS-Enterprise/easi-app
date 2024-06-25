@@ -1,10 +1,13 @@
 <!--
 REQUIRED
     Ensure that your PR title has the relevant Jira ticket number(s) in the title.
-    Follow this pattern: [EASI-1234] [EASI-4567] Title of the PR
+    Follow this pattern: [EASI-1234] [EASI-4567] Title of the PR.
+    Use [NOREF] in place of a ticket number when there's no associated Jira ticket.
+    This follows for the heading below, as well.
 -->
+# EASI-0000
 
-# Description
+## Description
 <!--
 REQUIRED
     Provide details as to what the PR aims to accomplish
@@ -13,7 +16,7 @@ REQUIRED
 -->
 
 
-# How to test this change
+## How to test this change
 <!--
 REQUIRED
     Add instructions on how to test the changes in this PR
@@ -22,7 +25,7 @@ REQUIRED
 -->
 - 
 
-# PR Author Checklist
+## PR Author Checklist
 <!--
 REQUIRED
     Ensure that each of the following is true before you submit this PR (or before it leaves "draft" status), and check each box to confirm
@@ -33,7 +36,7 @@ REQUIRED
 - [ ] I have updated tests or written new tests as appropriate in this PR.
 
 
-# PR Reviewer Guidelines
+## PR Reviewer Guidelines
 <!--
 This is just some static content to ensure we're following best practices when reviewing.
 There is no need to edit this section.
