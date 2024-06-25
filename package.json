@@ -5,8 +5,8 @@
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@babel/plugin-syntax-class-properties": "^7.12.13",
-    "@hookform/error-message": "^2.0.1",
     "@cypress/code-coverage": "^3.12.39",
+    "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^2.9.8",
     "@okta/okta-auth-js": "^6.1.0",
     "@okta/okta-react": "^6.8.0",
@@ -165,6 +165,7 @@
     "sass-resources-loader": "^2.2.5",
     "text-encoding": "^0.7.0",
     "ts-loader": "^7.0.5",
+    "use-query-params": "^2.2.1",
     "vite": "^4.5.3",
     "vite-plugin-svgr": "^3.2.0",
     "vite-tsconfig-paths": "^4.2.0",
