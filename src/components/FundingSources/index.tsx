@@ -18,7 +18,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import MultiSelect from 'components/shared/MultiSelect';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
-import { ContractDetailsForm } from 'types/systemIntake';
+import { FundingSource } from 'types/systemIntake';
 import { FundingSourcesValidationSchema } from 'validations/systemIntakeSchema';
 
 import {
@@ -45,7 +45,7 @@ const FundingSources = () => {
   ] = useState<FormattedFundingSource | null>(null);
 
   const intakeForm = useEasiFormContext<{
-    fundingSources: ContractDetailsForm['fundingSources'];
+    fundingSources: FundingSource[];
   }>();
 
   const {
@@ -84,11 +84,10 @@ const FundingSources = () => {
 
   /** Update parent form funding sources and reset active funding source */
   const submit = handleSubmit(values => {
-    const formattedFundingSources = formatFundingSourcesForApi(
-      values.fundingSources
+    intakeForm.setValue(
+      'fundingSources',
+      formatFundingSourcesForApi(values.fundingSources)
     );
-
-    intakeForm.setValue('fundingSources', formattedFundingSources);
 
     setActiveFundingSource(null);
   });
@@ -256,7 +255,17 @@ const FundingSources = () => {
 
               <Button
                 unstyled
-                onClick={() => remove(index)}
+                onClick={() => {
+                  remove(index);
+
+                  // Remove from parent form funding sources
+                  intakeForm.setValue(
+                    'fundingSources',
+                    formatFundingSourcesForApi(fundingSources).filter(
+                      value => value.id !== id
+                    )
+                  );
+                }}
                 type="button"
                 className="text-error margin-top-1"
               >
