@@ -84,57 +84,8 @@ export type ContactDetailsForm = {
   };
 };
 
-/** Single funding source */
+/** Funding source formatted for API */
 export type FundingSource = Omit<FundingSourceType, '__typename'>;
-
-/** Funding sources formatted for form */
-export type MultiFundingSource = {
-  fundingNumber: string;
-  sources: string[];
-};
-
-/** Funding sources formatted for form */
-export interface ExistingFundingSource extends MultiFundingSource {
-  initialFundingNumber: string;
-}
-
-/** Funding sources object formatted for display */
-export type FormattedFundingSourcesObject = {
-  [number: string]: {
-    fundingNumber: string;
-    sources: string[];
-  };
-};
-
-/** Add, edit, or delete funding source */
-export type UpdateFundingSources =
-  | {
-      action: 'Add' | 'Delete';
-      data: MultiFundingSource;
-    }
-  | {
-      action: 'Edit';
-      data: ExistingFundingSource;
-    };
-
-/** Update active funding source in form */
-export type UpdateActiveFundingSource = {
-  action: 'Add' | 'Edit' | null;
-  data?: MultiFundingSource;
-};
-
-/** useIntakeFundingSources hook return type */
-export type UseIntakeFundingSources = {
-  fundingSources: [
-    fundingSources: FormattedFundingSourcesObject,
-    updateFundingSources: ({ action, data }: UpdateFundingSources) => void
-  ];
-  activeFundingSource: [
-    activeFundingSource: MultiFundingSource,
-    updateActiveFundingSource: (payload: UpdateActiveFundingSource) => void,
-    action: 'Add' | 'Edit' | null
-  ];
-};
 
 /** Contract details form */
 export type ContractDetailsForm = {

@@ -58,7 +58,7 @@ import {
   // fundingSourcesBasicSchema,
   TrbRequestFormBasic
 } from 'validations/trbRequestSchema';
-import FundingSources from 'views/SystemIntake/ContractDetails/FundingSources';
+import FundingSources from 'views/TechnicalAssistance/RequestForm/FundingSources/FundingSources';
 
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';

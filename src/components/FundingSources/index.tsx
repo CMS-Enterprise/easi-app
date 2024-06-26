@@ -26,16 +26,20 @@ import {
   formatFundingSourcesForApp
 } from './utils';
 
+/** Funding source formatted for app */
 export type FormattedFundingSource = {
   id: string;
   fundingNumber: string | null;
   sources: string[];
 };
 
-type FundingSourcesField = {
+type FundingSourcesForm = {
   fundingSources: FormattedFundingSource[];
 };
 
+/** Funding sources component for system intake form */
+
+// TODO: Refactor to work with both system intake and TRB forms
 const FundingSources = () => {
   const { t } = useTranslation('intake');
 
@@ -54,7 +58,7 @@ const FundingSources = () => {
     register,
     watch,
     formState: { errors }
-  } = useEasiForm<FundingSourcesField>({
+  } = useEasiForm<FundingSourcesForm>({
     resolver: yupResolver(FundingSourcesValidationSchema),
     defaultValues: {
       // Get default values from parent form

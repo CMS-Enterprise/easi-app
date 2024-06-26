@@ -1,15 +1,31 @@
-/** Custom hook for system intake funding sources form */
+/**
+ * This hook was previously used for both the system intake and TRB forms, and will be
+ * deprecated when `/components/FundingSources` is refactored to work with both forms.
+ */
+
 import { useEffect, useMemo, useState } from 'react';
 
+import { GetTrbRequest_trbRequest_form_fundingSources as FundingSource } from 'queries/types/GetTrbRequest';
 import {
   ExistingFundingSource,
   FormattedFundingSourcesObject,
-  FundingSource,
   MultiFundingSource,
   UpdateActiveFundingSource,
-  UpdateFundingSources,
-  UseIntakeFundingSources
-} from 'types/systemIntake';
+  UpdateFundingSources
+} from 'types/technicalAssistance';
+
+/** useIntakeFundingSources hook return type */
+export type UseTrbFundingSources = {
+  fundingSources: [
+    fundingSources: FormattedFundingSourcesObject,
+    updateFundingSources: ({ action, data }: UpdateFundingSources) => void
+  ];
+  activeFundingSource: [
+    activeFundingSource: MultiFundingSource,
+    updateActiveFundingSource: (payload: UpdateActiveFundingSource) => void,
+    action: 'Add' | 'Edit' | null
+  ];
+};
 
 type GenericFundingSourceQueryType = {
   fundingNumber: string;
@@ -42,12 +58,12 @@ export const formatFundingSourcesForRender = (
   ) as MultiFundingSource[];
 };
 
-// Custom hook for system intake funding source actions
-export default function useIntakeFundingSources(
+/** Custom hook for funding sources functionality in TRB request form */
+export default function useTrbFundingSources(
   initialFundingSources: Omit<FundingSource, 'id'>[],
   setFieldValue: (value: any) => void,
   combinedFields?: boolean
-): UseIntakeFundingSources {
+): UseTrbFundingSources {
   // Format initial funding sources
   const fundingSources = useMemo(() => {
     // If no initial funding sources, return empty object
@@ -97,7 +113,7 @@ export default function useIntakeFundingSources(
   // Format funding sources for API
   const formatSourcesForApi = (
     sourcesObject: FormattedFundingSourcesObject
-  ): Omit<FundingSource, 'id'>[] => {
+  ): Omit<FundingSource, 'id' | '__typename'>[] => {
     return Object.values(sourcesObject)
       .map(sourceObj => {
         const { fundingNumber, sources } = sourceObj;
