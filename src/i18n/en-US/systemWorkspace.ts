@@ -89,8 +89,10 @@ const systemWorkspace = {
       description:
         'EASi facilitates IT Governance requests and requests for technical assistance from the Technical Review Board (TRB).',
       start: 'Start a new request',
-      itgCount: '{{count}} open IT Governance requests',
-      trbCount: '{{count}} open technical assistance requests',
+      itgCount: '{{count}} open IT Governance request',
+      itgCount_plural: '{{count}} open IT Governance requests',
+      trbCount: '{{count}} open technical assistance request',
+      trbCount_plural: '{{count}} open technical assistance requests',
       viewAll: 'View all requests'
     }
   }
