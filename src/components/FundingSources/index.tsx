@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Button,
   ButtonGroup,
@@ -18,6 +19,7 @@ import Label from 'components/shared/Label';
 import MultiSelect from 'components/shared/MultiSelect';
 import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import { ContractDetailsForm } from 'types/systemIntake';
+import { FundingSourcesValidationSchema } from 'validations/systemIntakeSchema';
 
 import {
   formatFundingSourcesForApi,
@@ -53,6 +55,7 @@ const FundingSources = () => {
     watch,
     formState: { errors }
   } = useEasiForm<FundingSourcesField>({
+    resolver: yupResolver(FundingSourcesValidationSchema),
     defaultValues: {
       // Get default values from parent form
       fundingSources: formatFundingSourcesForApp(
@@ -126,7 +129,7 @@ const FundingSources = () => {
                 </HelpText>
                 <ErrorMessage
                   errors={errors}
-                  name="fundingSources.fundingNumber"
+                  name={`fundingSources.${index}.fundingNumber`}
                   as={FieldErrorMsg}
                 />
                 <TextInput
@@ -155,7 +158,7 @@ const FundingSources = () => {
                 </Label>
                 <ErrorMessage
                   errors={errors}
-                  name="fundingSources.sources"
+                  name={`fundingSources.${index}.sources`}
                   as={FieldErrorMsg}
                 />
                 <Controller
