@@ -46,6 +46,7 @@ const GovernanceOverview = () => {
       <Link
         to={{
           pathname: `/system/request-type/${systemId || ''}`,
+          search: linkCedarSystemIdQueryString(linkCedarSystemId),
           state: { isNew }
         }}
         className="display-flex flex-align-center text-primary"

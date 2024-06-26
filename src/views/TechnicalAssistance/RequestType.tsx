@@ -83,6 +83,12 @@ function RequestType() {
 
       <UswdsReactLink
         to={isNew ? '/trb' : `/trb/task-list/${id}`}
+        onClick={e => {
+          // Hack to handle more contexts than determined by `to`
+          // This element may not need static hrefs soon
+          e.preventDefault();
+          history.goBack();
+        }}
         className="display-flex flex-align-center margin-top-2"
       >
         <IconArrowBack className="margin-right-1" />

@@ -76,7 +76,12 @@ function ProcessFlow() {
           {requestTypeText[requestType].heading}
         </span>
         <span>
-          <UswdsReactLink to="/trb/start">
+          <UswdsReactLink
+            to={{
+              pathname: '/trb/start',
+              search: linkCedarSystemIdQueryString(linkCedarSystemId)
+            }}
+          >
             {t('steps.changeRequestType')}
           </UswdsReactLink>
         </span>
@@ -86,7 +91,10 @@ function ProcessFlow() {
 
       <div className="margin-top-1">
         <UswdsReactLink
-          to="/trb/start"
+          to={{
+            pathname: '/trb/start',
+            search: linkCedarSystemIdQueryString(linkCedarSystemId)
+          }}
           className="usa-button usa-button--outline margin-bottom-1 tablet:margin-bottom-0"
           variant="unstyled"
         >
