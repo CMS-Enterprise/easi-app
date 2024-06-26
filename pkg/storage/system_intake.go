@@ -15,6 +15,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlqueries"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
@@ -416,6 +417,25 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
 		return models.SystemIntakes{}, err
+	}
+	return intakes, nil
+}
+
+// FetchSystemIntakesWithReviewRequested queries the DB for all open system intakes where user is requested
+func (s *Store) FetchSystemIntakesWithReviewRequested(ctx context.Context, userID uuid.UUID) ([]*models.SystemIntake, error) {
+	intakes, err := sqlutils.WithTransactionRet(ctx, s, func(tx *sqlx.Tx) ([]*models.SystemIntake, error) {
+		intakes := []*models.SystemIntake{}
+		err := namedSelect(ctx, s, &intakes, sqlqueries.SystemIntakeGRBReviewer.GetIntakesWhereReviewRequested, map[string]interface{}{
+			"user_id": userID,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return intakes, nil
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
+		return []*models.SystemIntake{}, err
 	}
 	return intakes, nil
 }
