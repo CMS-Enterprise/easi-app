@@ -223,6 +223,7 @@ const RequestLinkForm = ({
     values: (values => {
       if (!values) return undefined;
 
+      // Condition for prefilling existing systems on new requests
       if (values.relationType === null && linkCedarSystemId) {
         return {
           relationType: RequestRelationType.EXISTING_SYSTEM,
