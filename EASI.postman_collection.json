@@ -1216,6 +1216,39 @@
 					"response": []
 				},
 				{
+					"name": "SystemIntake Get (GRB Review Requested)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query systemIntakeGRBReviewRequested {\n  systemIntakesWithReviewRequested {\n    step\n    state\n    id\n    grbReviewers {\n        id\n        userAccount {\n            commonName\n        }\n    }\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "SystemIntake Get Homepage Admin Table",
 					"event": [
 						{
