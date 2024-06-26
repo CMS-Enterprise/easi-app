@@ -64,10 +64,10 @@ cy.systemIntake = {
   },
   contractDetails: {
     addFundingSource: ({ fundingNumber, sources, restart }) => {
-      if (restart) cy.get('[data-testid="fundingSourcesAction-add"').click();
+      if (restart) cy.get('[data-testid="fundingSourcesAction-add"]').click();
 
       if (fundingNumber) {
-        cy.get('#IntakeForm-FundingNumber')
+        cy.get('#fundingNumber')
           .clear()
           .type(fundingNumber)
           .should('have.value', fundingNumber);
@@ -75,7 +75,7 @@ cy.systemIntake = {
 
       if (sources) {
         sources.forEach(source => {
-          cy.get('#IntakeForm-FundingSources').type(`${source}{enter}{esc}`);
+          cy.get('#sources').type(`${source}{enter}{esc}`);
           cy.get(`[data-testid="multiselect-tag--${source}"]`);
         });
       }

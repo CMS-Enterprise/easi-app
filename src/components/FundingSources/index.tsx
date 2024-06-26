@@ -136,7 +136,7 @@ const FundingSources = () => {
                   {...register(`fundingSources.${index}.fundingNumber`)}
                   ref={null}
                   type="text"
-                  id={`fundingSources.${index}.fundingNumber`}
+                  id="fundingNumber"
                   aria-describedby="fundingNumberHelptext fundingNumberHelpLink"
                 />
 
@@ -200,7 +200,11 @@ const FundingSources = () => {
                   {t('Cancel')}
                 </Button>
 
-                <Button type="button" onClick={submit}>
+                <Button
+                  type="button"
+                  onClick={submit}
+                  data-testid="fundingSourcesAction-save"
+                >
                   {t('Save')}
                 </Button>
               </ButtonGroup>
@@ -260,6 +264,7 @@ const FundingSources = () => {
 
       {!activeFundingSource && (
         <Button
+          data-testid="fundingSourcesAction-add"
           type="button"
           onClick={() => {
             const newSource = {

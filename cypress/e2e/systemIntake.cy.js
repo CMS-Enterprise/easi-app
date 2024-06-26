@@ -207,7 +207,7 @@ describe('The System Intake Form', () => {
       sources: ['Fed Admin', 'Research'],
       restart: true
     });
-    cy.get(`#fundingNumber-${fundingNumber}`);
+    cy.get(`#fundingSource${fundingNumber}`);
 
     cy.get('#currentAnnualSpending')
       .type('Mock Current Annual Spend')
@@ -401,7 +401,7 @@ describe('The System Intake Form', () => {
       'Which existing funding sources will fund this project?'
     )
       .siblings('dd')
-      .get(`li#fundingNumber-${fundingNumber}`);
+      .get(`li#fundingSource${fundingNumber}`);
 
     cy.get('#systemIntakeDocuments').contains('td', 'test.pdf');
   });

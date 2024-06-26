@@ -74,7 +74,11 @@ export const SystemIntakeReview = ({
         {Object.values(fundingSourcesObject).map(
           ({ fundingNumber, sources }) => {
             return (
-              <li key={fundingNumber} className="margin-top-205">
+              <li
+                key={fundingNumber}
+                className="margin-top-205"
+                data-testid={`fundingSource${fundingNumber}`}
+              >
                 <p className="text-bold font-body-sm margin-bottom-0">
                   {t('contractDetails.fundingSources.fundingSource')}
                 </p>
