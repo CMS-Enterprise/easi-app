@@ -77,7 +77,7 @@ export const SystemIntakeReview = ({
               <li
                 key={fundingNumber}
                 className="margin-top-205"
-                data-testid={`fundingSource${fundingNumber}`}
+                id={`fundingSource${fundingNumber}`}
               >
                 <p className="text-bold font-body-sm margin-bottom-0">
                   {t('contractDetails.fundingSources.fundingSource')}
