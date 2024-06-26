@@ -7,7 +7,8 @@ export default function linkCedarSystemIdQueryString(
   return `linkCedarSystemId=${encodeURIComponent(cedarSystemId)}`;
 }
 
-export function useLinkCedarSystemIdQueryParam() {
+export function useLinkCedarSystemIdQueryParam(): string | undefined {
   const [linkCedarSystemId] = useQueryParam('linkCedarSystemId', StringParam);
+  if (!linkCedarSystemId) return undefined;
   return linkCedarSystemId;
 }
