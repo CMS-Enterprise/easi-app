@@ -423,15 +423,9 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 
 // FetchSystemIntakesWithReviewRequested queries the DB for all open system intakes where user is requested
 func (s *Store) FetchSystemIntakesWithReviewRequested(ctx context.Context, userID uuid.UUID) ([]*models.SystemIntake, error) {
-	intakes, err := sqlutils.WithTransactionRet(ctx, s, func(tx *sqlx.Tx) ([]*models.SystemIntake, error) {
-		intakes := []*models.SystemIntake{}
-		err := namedSelect(ctx, s, &intakes, sqlqueries.SystemIntakeGRBReviewer.GetIntakesWhereReviewRequested, args{
-			"user_id": userID,
-		})
-		if err != nil {
-			return nil, err
-		}
-		return intakes, nil
+	intakes := []*models.SystemIntake{}
+	err := namedSelect(ctx, s, &intakes, sqlqueries.SystemIntakeGRBReviewer.GetIntakesWhereReviewRequested, args{
+		"user_id": userID,
 	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
