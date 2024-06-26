@@ -200,7 +200,7 @@ export const FundingSourcesValidationSchema = Yup.object().shape({
       id: Yup.string(),
       fundingNumber: Yup.string()
         .trim()
-        .required('Please enter a funding number')
+        .required('Funding number must be exactly 6 digits')
         .length(6, 'Funding number must be exactly 6 digits')
         .matches(/^\d+$/, 'Funding number can only contain digits'),
       sources: Yup.array().of(Yup.string()).min(1, 'Select a funding source')

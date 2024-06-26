@@ -125,10 +125,7 @@ const FundingSources = () => {
                 className="margin-top-2"
                 error={!!errors?.fundingSources?.[index]?.fundingNumber}
               >
-                <Label
-                  htmlFor={`fundingSources.${index}.fundingNumber`}
-                  className="text-normal"
-                >
+                <Label htmlFor="fundingNumber" className="text-normal">
                   {t('contractDetails.fundingSources.fundingNumber')}
                 </Label>
                 <HelpText id="fundingNumberHelpText">
