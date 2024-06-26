@@ -206,7 +206,11 @@ const FundingSources = () => {
         }
 
         return (
-          <div id={`fundingSource${fundingNumber}`} key={id}>
+          <div
+            id={`fundingSource${fundingNumber}`}
+            key={id}
+            className="margin-top-205"
+          >
             <p className="text-bold font-body-sm margin-bottom-0">
               {t('contractDetails.fundingSources.fundingSource')}
             </p>

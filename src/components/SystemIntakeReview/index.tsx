@@ -13,7 +13,6 @@ import { SystemIntake } from 'queries/types/SystemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { formatContractDate, formatDateLocal } from 'utils/date';
 import formatContractNumbers from 'utils/formatContractNumbers';
-import { FundingSourcesListItem } from 'views/SystemIntake/ContractDetails/FundingSources';
 import DocumentsTable from 'views/SystemIntake/Documents/DocumentsTable';
 
 import './index.scss';
@@ -75,12 +74,21 @@ export const SystemIntakeReview = ({
         {Object.values(fundingSourcesObject).map(
           ({ fundingNumber, sources }) => {
             return (
-              <FundingSourcesListItem
-                className="margin-top-205"
-                key={fundingNumber}
-                fundingNumber={fundingNumber!}
-                sources={sources}
-              />
+              <li key={fundingNumber} className="margin-top-205">
+                <p className="text-bold font-body-sm margin-bottom-0">
+                  {t('contractDetails.fundingSources.fundingSource')}
+                </p>
+                <p className="margin-y-05">
+                  {t('contractDetails.fundingSources.fundingNumberLabel', {
+                    fundingNumber
+                  })}
+                </p>
+                <p className="margin-y-05">
+                  {t('contractDetails.fundingSources.fundingSourcesLabel', {
+                    sources: sources.join(', ')
+                  })}
+                </p>
+              </li>
             );
           }
         )}
