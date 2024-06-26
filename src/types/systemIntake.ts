@@ -85,6 +85,7 @@ export type ContactDetailsForm = {
 
 /** Single funding source */
 export type FundingSource = {
+  id: string;
   source: string | null;
   fundingNumber: string | null;
 };

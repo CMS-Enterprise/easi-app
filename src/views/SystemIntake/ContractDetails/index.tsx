@@ -16,6 +16,7 @@ import { DateTime } from 'luxon';
 
 import { EasiFormProvider, useEasiForm } from 'components/EasiForm';
 import FeedbackBanner from 'components/FeedbackBanner';
+import FundingSources from 'components/FundingSources';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
@@ -25,7 +26,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
-import intakeFundingSources from 'constants/enums/intakeFundingSources';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { UpdateSystemIntakeContractDetails as UpdateSystemIntakeContractDetailsQuery } from 'queries/SystemIntakeQueries';
@@ -42,7 +42,6 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import ContractFields from './ContractFields';
-import FundingSources from './FundingSources';
 
 import './index.scss';
 
@@ -128,7 +127,6 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     handleSubmit,
     setError,
     watch,
-    setValue,
     formState: { errors, isSubmitting, isDirty }
   } = form;
 
@@ -176,7 +174,9 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
           id,
           fundingSources: {
             existingFunding: payload.fundingSources.length > 0,
-            fundingSources: payload.fundingSources
+            fundingSources: payload.fundingSources.map(
+              ({ id: sourceId, ...source }) => source
+            )
           },
           annualSpending: payload.annualSpending,
           contract: {
@@ -277,224 +277,217 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
 
       <MandatoryFieldsAlert className="tablet:grid-col-6" />
 
-      <Form
-        onSubmit={handleSubmit(() =>
-          submit(() => history.push('documents'), true)
-        )}
-        className="maxw-none tablet:grid-col-6 margin-bottom-7"
-      >
-        <FieldGroup
-          scrollElement="fundingSources"
-          error={!!errors.fundingSources}
+      <EasiFormProvider<ContractDetailsForm> {...form}>
+        <Form
+          onSubmit={handleSubmit(() =>
+            submit(() => history.push('documents'), true)
+          )}
+          className="maxw-none tablet:grid-col-6 margin-bottom-7"
         >
-          <Fieldset>
-            <legend className="usa-label">
-              {t('contractDetails.fundingSources.label')}
-            </legend>
-            <HelpText className="margin-top-1" id="fundingSourcesHelpText">
-              {t('contractDetails.fundingSources.helpText')}
-            </HelpText>
+          <FieldGroup
+            scrollElement="fundingSources"
+            error={!!errors.fundingSources}
+          >
+            <Fieldset>
+              <legend className="usa-label">
+                {t('contractDetails.fundingSources.label')}
+              </legend>
+              <HelpText className="margin-top-1" id="fundingSourcesHelpText">
+                {t('contractDetails.fundingSources.helpText')}
+              </HelpText>
 
-            <FundingSources
-              id="fundingSources"
-              initialValues={watch('fundingSources')}
-              setFieldValue={value => setValue('fundingSources', value)}
-              fundingSourceOptions={intakeFundingSources}
-            />
-          </Fieldset>
-        </FieldGroup>
+              <FundingSources />
+            </Fieldset>
+          </FieldGroup>
 
-        <FieldGroup
-          scrollElement="annualSpending.currentAnnualSpending"
-          error={!!errors.annualSpending?.currentAnnualSpending}
-        >
-          <Label htmlFor="annualSpending.currentAnnualSpending">
-            {t('contractDetails.currentAnnualSpending')}
-          </Label>
-          <ErrorMessage
-            errors={errors}
-            name="annualSpending.currentAnnualSpending"
-            as={FieldErrorMsg}
-          />
-          <TextInput
-            {...register('annualSpending.currentAnnualSpending')}
-            ref={null}
-            id="currentAnnualSpending"
-            type="text"
-            maxLength={200}
-          />
-        </FieldGroup>
-
-        <FieldGroup
-          scrollElement="annualSpending.currentAnnualSpendingITPortion"
-          error={!!errors.annualSpending?.currentAnnualSpendingITPortion}
-        >
-          <Label htmlFor="annualSpending.currentAnnualSpendingITPortion">
-            {t('contractDetails.currentAnnualSpendingITPortion')}
-          </Label>
-          <ErrorMessage
-            errors={errors}
-            name="annualSpending.currentAnnualSpendingITPortion"
-            as={FieldErrorMsg}
-          />
-          <TextInput
-            {...register('annualSpending.currentAnnualSpendingITPortion')}
-            ref={null}
-            id="currentAnnualSpendingITPortion"
-            type="text"
-            maxLength={200}
-          />
-        </FieldGroup>
-
-        <FieldGroup
-          scrollElement="annualSpending.plannedYearOneSpending"
-          error={!!errors.annualSpending?.plannedYearOneSpending}
-        >
-          <Label htmlFor="annualSpending.plannedYearOneSpending">
-            {t('contractDetails.plannedYearOneSpending')}
-          </Label>
-          <ErrorMessage
-            errors={errors}
-            name="annualSpending.plannedYearOneSpending"
-            as={FieldErrorMsg}
-          />
-          <TextInput
-            {...register('annualSpending.plannedYearOneSpending')}
-            ref={null}
-            id="plannedYearOneSpending"
-            type="text"
-            maxLength={200}
-          />
-        </FieldGroup>
-
-        <FieldGroup
-          scrollElement="annualSpending.plannedYearOneSpendingITPortion"
-          error={!!errors.annualSpending?.plannedYearOneSpendingITPortion}
-        >
-          <Label htmlFor="annualSpending.plannedYearOneSpendingITPortion">
-            {t('contractDetails.plannedYearOneSpendingITPortion')}
-          </Label>
-          <ErrorMessage
-            errors={errors}
-            name="annualSpending.plannedYearOneSpendingITPortion"
-            as={FieldErrorMsg}
-          />
-          <TextInput
-            {...register('annualSpending.plannedYearOneSpendingITPortion')}
-            ref={null}
-            id="plannedYearOneSpendingITPortion"
-            type="text"
-            maxLength={200}
-          />
-        </FieldGroup>
-
-        <FieldGroup
-          scrollElement="contract.hasContract"
-          error={!!errors.contract?.hasContract}
-        >
-          <Fieldset>
-            <legend className="usa-label">
-              {t('contractDetails.hasContract')}
-            </legend>
-            <HelpText className="margin-top-1" id="haContractHelpText">
-              {t('contractDetails.hasContractHelpText')}
-            </HelpText>
+          <FieldGroup
+            scrollElement="annualSpending.currentAnnualSpending"
+            error={!!errors.annualSpending?.currentAnnualSpending}
+          >
+            <Label htmlFor="annualSpending.currentAnnualSpending">
+              {t('contractDetails.currentAnnualSpending')}
+            </Label>
             <ErrorMessage
               errors={errors}
-              name="contract.hasContract"
+              name="annualSpending.currentAnnualSpending"
               as={FieldErrorMsg}
             />
-
-            <Radio
-              {...register('contract.hasContract')}
+            <TextInput
+              {...register('annualSpending.currentAnnualSpending')}
               ref={null}
-              id="contractHaveContract"
-              value={SystemIntakeContractStatus.HAVE_CONTRACT}
-              aria-describedby="hasContractHelpText"
-              aria-expanded={
-                hasContract === SystemIntakeContractStatus.HAVE_CONTRACT
-              }
-              aria-controls="hasContractBranchWrapper"
-              label={t('contractDetails.hasContract', {
-                context: SystemIntakeContractStatus.HAVE_CONTRACT
-              })}
+              id="currentAnnualSpending"
+              type="text"
+              maxLength={200}
             />
+          </FieldGroup>
 
-            {hasContract === SystemIntakeContractStatus.HAVE_CONTRACT && (
-              <EasiFormProvider<ContractDetailsForm> {...form}>
+          <FieldGroup
+            scrollElement="annualSpending.currentAnnualSpendingITPortion"
+            error={!!errors.annualSpending?.currentAnnualSpendingITPortion}
+          >
+            <Label htmlFor="annualSpending.currentAnnualSpendingITPortion">
+              {t('contractDetails.currentAnnualSpendingITPortion')}
+            </Label>
+            <ErrorMessage
+              errors={errors}
+              name="annualSpending.currentAnnualSpendingITPortion"
+              as={FieldErrorMsg}
+            />
+            <TextInput
+              {...register('annualSpending.currentAnnualSpendingITPortion')}
+              ref={null}
+              id="currentAnnualSpendingITPortion"
+              type="text"
+              maxLength={200}
+            />
+          </FieldGroup>
+
+          <FieldGroup
+            scrollElement="annualSpending.plannedYearOneSpending"
+            error={!!errors.annualSpending?.plannedYearOneSpending}
+          >
+            <Label htmlFor="annualSpending.plannedYearOneSpending">
+              {t('contractDetails.plannedYearOneSpending')}
+            </Label>
+            <ErrorMessage
+              errors={errors}
+              name="annualSpending.plannedYearOneSpending"
+              as={FieldErrorMsg}
+            />
+            <TextInput
+              {...register('annualSpending.plannedYearOneSpending')}
+              ref={null}
+              id="plannedYearOneSpending"
+              type="text"
+              maxLength={200}
+            />
+          </FieldGroup>
+
+          <FieldGroup
+            scrollElement="annualSpending.plannedYearOneSpendingITPortion"
+            error={!!errors.annualSpending?.plannedYearOneSpendingITPortion}
+          >
+            <Label htmlFor="annualSpending.plannedYearOneSpendingITPortion">
+              {t('contractDetails.plannedYearOneSpendingITPortion')}
+            </Label>
+            <ErrorMessage
+              errors={errors}
+              name="annualSpending.plannedYearOneSpendingITPortion"
+              as={FieldErrorMsg}
+            />
+            <TextInput
+              {...register('annualSpending.plannedYearOneSpendingITPortion')}
+              ref={null}
+              id="plannedYearOneSpendingITPortion"
+              type="text"
+              maxLength={200}
+            />
+          </FieldGroup>
+
+          <FieldGroup
+            scrollElement="contract.hasContract"
+            error={!!errors.contract?.hasContract}
+          >
+            <Fieldset>
+              <legend className="usa-label">
+                {t('contractDetails.hasContract')}
+              </legend>
+              <HelpText className="margin-top-1" id="haContractHelpText">
+                {t('contractDetails.hasContractHelpText')}
+              </HelpText>
+              <ErrorMessage
+                errors={errors}
+                name="contract.hasContract"
+                as={FieldErrorMsg}
+              />
+
+              <Radio
+                {...register('contract.hasContract')}
+                ref={null}
+                id="contractHaveContract"
+                value={SystemIntakeContractStatus.HAVE_CONTRACT}
+                aria-describedby="hasContractHelpText"
+                aria-expanded={
+                  hasContract === SystemIntakeContractStatus.HAVE_CONTRACT
+                }
+                aria-controls="hasContractBranchWrapper"
+                label={t('contractDetails.hasContract', {
+                  context: SystemIntakeContractStatus.HAVE_CONTRACT
+                })}
+              />
+
+              {hasContract === SystemIntakeContractStatus.HAVE_CONTRACT && (
                 <ContractFields id="hasContractBranchWrapper" />
-              </EasiFormProvider>
-            )}
+              )}
 
-            <Radio
-              {...register('contract.hasContract')}
-              ref={null}
-              id="contractInProgress"
-              value={SystemIntakeContractStatus.IN_PROGRESS}
-              aria-describedby="hasContractHelpText"
-              aria-expanded={
-                hasContract === SystemIntakeContractStatus.IN_PROGRESS
-              }
-              aria-controls="inProgressBranchWrapper"
-              label={t('contractDetails.hasContract', {
-                context: SystemIntakeContractStatus.IN_PROGRESS
-              })}
-            />
+              <Radio
+                {...register('contract.hasContract')}
+                ref={null}
+                id="contractInProgress"
+                value={SystemIntakeContractStatus.IN_PROGRESS}
+                aria-describedby="hasContractHelpText"
+                aria-expanded={
+                  hasContract === SystemIntakeContractStatus.IN_PROGRESS
+                }
+                aria-controls="inProgressBranchWrapper"
+                label={t('contractDetails.hasContract', {
+                  context: SystemIntakeContractStatus.IN_PROGRESS
+                })}
+              />
 
-            {hasContract === SystemIntakeContractStatus.IN_PROGRESS && (
-              <EasiFormProvider<ContractDetailsForm> {...form}>
+              {hasContract === SystemIntakeContractStatus.IN_PROGRESS && (
                 <ContractFields id="inProgressBranchWrapper" />
-              </EasiFormProvider>
-            )}
+              )}
 
-            <Radio
-              {...register('contract.hasContract')}
-              ref={null}
-              id="contractNotStarted"
-              value={SystemIntakeContractStatus.NOT_STARTED}
-              aria-describedby="hasContractHelpText"
-              label={t('contractDetails.hasContract', {
-                context: SystemIntakeContractStatus.NOT_STARTED
-              })}
-              labelDescription={
-                <p className="text-base margin-bottom-0 margin-top-neg-1 font-sans-xs">
-                  {t('contractDetails.hasContractHint')}
-                </p>
-              }
-            />
+              <Radio
+                {...register('contract.hasContract')}
+                ref={null}
+                id="contractNotStarted"
+                value={SystemIntakeContractStatus.NOT_STARTED}
+                aria-describedby="hasContractHelpText"
+                label={t('contractDetails.hasContract', {
+                  context: SystemIntakeContractStatus.NOT_STARTED
+                })}
+                labelDescription={
+                  <p className="text-base margin-bottom-0 margin-top-neg-1 font-sans-xs">
+                    {t('contractDetails.hasContractHint')}
+                  </p>
+                }
+              />
 
-            <Radio
-              {...register('contract.hasContract')}
-              ref={null}
-              id="contractNotNeeded"
-              value={SystemIntakeContractStatus.NOT_NEEDED}
-              aria-describedby="hasContractHelpText"
-              label={t('contractDetails.hasContract', {
-                context: SystemIntakeContractStatus.NOT_NEEDED
-              })}
-              labelDescription={
-                <p className="text-base margin-bottom-0 margin-top-neg-1 font-sans-xs">
-                  {t('contractDetails.hasContractHint')}
-                </p>
-              }
-            />
-          </Fieldset>
-        </FieldGroup>
+              <Radio
+                {...register('contract.hasContract')}
+                ref={null}
+                id="contractNotNeeded"
+                value={SystemIntakeContractStatus.NOT_NEEDED}
+                aria-describedby="hasContractHelpText"
+                label={t('contractDetails.hasContract', {
+                  context: SystemIntakeContractStatus.NOT_NEEDED
+                })}
+                labelDescription={
+                  <p className="text-base margin-bottom-0 margin-top-neg-1 font-sans-xs">
+                    {t('contractDetails.hasContractHint')}
+                  </p>
+                }
+              />
+            </Fieldset>
+          </FieldGroup>
 
-        <Pager
-          next={{
-            type: 'submit'
-          }}
-          back={{
-            type: 'button',
-            onClick: () => submit(() => history.push('request-details'))
-          }}
-          border={false}
-          taskListUrl={saveExitLink}
-          submit={() => submit(() => history.push(saveExitLink))}
-          className="margin-top-4"
-        />
-      </Form>
+          <Pager
+            next={{
+              type: 'submit'
+            }}
+            back={{
+              type: 'button',
+              onClick: () => submit(() => history.push('request-details'))
+            }}
+            border={false}
+            taskListUrl={saveExitLink}
+            submit={() => submit(() => history.push(saveExitLink))}
+            className="margin-top-4"
+          />
+        </Form>
+      </EasiFormProvider>
 
       <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 

@@ -44,7 +44,7 @@ export const formatFundingSourcesForRender = (
 
 // Custom hook for system intake funding source actions
 export default function useIntakeFundingSources(
-  initialFundingSources: FundingSource[],
+  initialFundingSources: Omit<FundingSource, 'id'>[],
   setFieldValue: (value: any) => void,
   combinedFields?: boolean
 ): UseIntakeFundingSources {
@@ -97,7 +97,7 @@ export default function useIntakeFundingSources(
   // Format funding sources for API
   const formatSourcesForApi = (
     sourcesObject: FormattedFundingSourcesObject
-  ): FundingSource[] => {
+  ): Omit<FundingSource, 'id'>[] => {
     return Object.values(sourcesObject)
       .map(sourceObj => {
         const { fundingNumber, sources } = sourceObj;
