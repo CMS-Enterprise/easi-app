@@ -118,7 +118,10 @@ const FundingSources = () => {
                   action
                 })}
               </legend>
-              <FieldGroup className="margin-top-2">
+              <FieldGroup
+                className="margin-top-2"
+                error={!!errors?.fundingSources?.[index]?.fundingNumber}
+              >
                 <Label
                   htmlFor={`fundingSources.${index}.fundingNumber`}
                   className="text-normal"
@@ -153,7 +156,7 @@ const FundingSources = () => {
                 </HelpText>
               </FieldGroup>
 
-              <FieldGroup>
+              <FieldGroup error={!!errors?.fundingSources?.[index]?.sources}>
                 <Label htmlFor="sources" className="text-normal">
                   {t('contractDetails.fundingSources.fundingSource')}
                 </Label>

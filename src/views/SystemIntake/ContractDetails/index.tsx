@@ -450,7 +450,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 })}
                 labelDescription={
                   <p className="text-base margin-bottom-0 margin-top-neg-1 font-sans-xs">
-                    {t('contractDetails.hasContractHint')}
+                    {t('contractDetails.hasContractRadioHint')}
                   </p>
                 }
               />
@@ -466,7 +466,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 })}
                 labelDescription={
                   <p className="text-base margin-bottom-0 margin-top-neg-1 font-sans-xs">
-                    {t('contractDetails.hasContractHint')}
+                    {t('contractDetails.hasContractRadioHint')}
                   </p>
                 }
               />
