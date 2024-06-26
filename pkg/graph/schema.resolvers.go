@@ -1194,15 +1194,17 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 		return nil, err
 	}
 
-	ok, err := services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode(ctx, intake)
-	if err != nil {
-		return nil, err
-	}
-	if !ok {
-		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
+	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+		return intake, nil
 	}
 
-	return intake, nil
+	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
+		return intake, nil
+	}
+
+	// if grb, ok
+
+	return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
 }
 
 // SystemIntakes is the resolver for the systemIntakes field.

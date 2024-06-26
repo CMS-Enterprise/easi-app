@@ -221,11 +221,7 @@ func (s *Server) routes(
 		coreClient,
 	)
 	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role models.Role) (res interface{}, err error) {
-		hasRole, err := services.HasRole(ctx, role)
-		if err != nil {
-			return nil, err
-		}
-		if !hasRole {
+		if !services.HasRole(ctx, role) {
 			// don't need to log here - services.HasRole() handles logging
 			return nil, &apperrors.UnauthorizedError{
 				Err: fmt.Errorf("not authorized: user does not have role %v", role),
