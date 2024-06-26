@@ -1,12 +1,11 @@
-import { FundingSource } from 'queries/types/FundingSource';
-import { ContractDetailsForm } from 'types/systemIntake';
+import { FundingSource } from 'types/systemIntake';
 
 import { FormattedFundingSource } from '.';
 
 /** Formats funding sources for API */
 export const formatFundingSourcesForApi = (
   fundingSources: FormattedFundingSource[]
-): ContractDetailsForm['fundingSources'] => {
+): FundingSource[] => {
   return fundingSources
     .map(({ id, fundingNumber, sources }) => {
       return sources.map(source => ({
@@ -20,7 +19,7 @@ export const formatFundingSourcesForApi = (
 
 /** Formats funding sources for app by grouping objects by funding number */
 export const formatFundingSourcesForApp = (
-  fundingSources: Omit<FundingSource, '__typename'>[]
+  fundingSources: FundingSource[]
 ): FormattedFundingSource[] => {
   return fundingSources.reduce<FormattedFundingSource[]>(
     (acc, { id, fundingNumber, source }) => {

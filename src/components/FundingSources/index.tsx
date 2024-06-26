@@ -105,6 +105,7 @@ const FundingSources = () => {
       {fundingSources.map((source, index) => {
         const { fundingNumber, sources, id } = source;
 
+        // Show form if adding or editing funding source
         if (id === activeFundingSource?.id) {
           return (
             <Fieldset
@@ -212,6 +213,7 @@ const FundingSources = () => {
           );
         }
 
+        // Display funding source
         return (
           <div
             id={`fundingSource${fundingNumber}`}
@@ -262,31 +264,34 @@ const FundingSources = () => {
         );
       })}
 
-      {!activeFundingSource && (
-        <Button
-          data-testid="fundingSourcesAction-add"
-          type="button"
-          onClick={() => {
-            const newSource = {
-              fundingNumber: '',
-              sources: [],
-              id: ''
-            };
+      {
+        // Add funding source button
+        !activeFundingSource && (
+          <Button
+            data-testid="fundingSourcesAction-add"
+            type="button"
+            onClick={() => {
+              const newSource = {
+                fundingNumber: '',
+                sources: [],
+                id: ''
+              };
 
-            setActiveFundingSource(newSource);
-            append(newSource);
-          }}
-          outline
-        >
-          {t(
-            `contractDetails.fundingSources.${
-              fundingSources.length > 0
-                ? 'addAnotherFundingSource'
-                : 'addFundingSource'
-            }`
-          )}
-        </Button>
-      )}
+              setActiveFundingSource(newSource);
+              append(newSource);
+            }}
+            outline
+          >
+            {t(
+              `contractDetails.fundingSources.${
+                fundingSources.length > 0
+                  ? 'addAnotherFundingSource'
+                  : 'addFundingSource'
+              }`
+            )}
+          </Button>
+        )
+      }
     </div>
   );
 };

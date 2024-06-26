@@ -1,4 +1,5 @@
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
+import { FundingSource as FundingSourceType } from 'queries/types/FundingSource';
 import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 
 import { SystemIntakeStatusAdmin } from './graphql-global-types';
@@ -84,11 +85,7 @@ export type ContactDetailsForm = {
 };
 
 /** Single funding source */
-export type FundingSource = {
-  id: string;
-  source: string | null;
-  fundingNumber: string | null;
-};
+export type FundingSource = Omit<FundingSourceType, '__typename'>;
 
 /** Funding sources formatted for form */
 export type MultiFundingSource = {
