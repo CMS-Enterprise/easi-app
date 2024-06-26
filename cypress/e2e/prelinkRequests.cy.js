@@ -2,7 +2,9 @@ describe('Creating requests from the workspace that are linked to cedar systems'
   const systemName = 'Office of Funny Walks';
 
   it('links a system for new TRB and IT Gov requests', () => {
+    // Must use ABCD user to check against .isMySystem from BE seeded data
     cy.localLogin({ name: 'ABCD' });
+
     cy.visit('/systems?table-type=my-systems#systemsTable');
     cy.contains('a', systemName).click();
 
