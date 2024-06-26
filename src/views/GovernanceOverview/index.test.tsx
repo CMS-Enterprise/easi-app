@@ -2,8 +2,6 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import renderer, { act } from 'react-test-renderer';
 import { shallow } from 'enzyme';
-import { QueryParamProvider } from 'use-query-params';
-import { ReactRouter5Adapter } from 'use-query-params/adapters/react-router-5';
 
 import GovernanceOverview from './index';
 
@@ -39,12 +37,10 @@ describe('The governance overview page', () => {
     await act(async () => {
       tree = renderer.create(
         <MemoryRouter initialEntries={['/governance-overview']}>
-          <QueryParamProvider adapter={ReactRouter5Adapter}>
-            <Route
-              path="/governance-overview/:systemId?"
-              component={GovernanceOverview}
-            />
-          </QueryParamProvider>
+          <Route
+            path="/governance-overview/:systemId?"
+            component={GovernanceOverview}
+          />
         </MemoryRouter>
       );
     });
@@ -59,12 +55,10 @@ describe('The governance overview page', () => {
         <MemoryRouter
           initialEntries={['/governance-overview/test-intake-guid']}
         >
-          <QueryParamProvider adapter={ReactRouter5Adapter}>
-            <Route
-              path="/governance-overview/:systemId?"
-              component={GovernanceOverview}
-            />
-          </QueryParamProvider>
+          <Route
+            path="/governance-overview/:systemId?"
+            component={GovernanceOverview}
+          />
         </MemoryRouter>
       );
     });
