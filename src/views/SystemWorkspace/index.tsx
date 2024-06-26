@@ -137,7 +137,9 @@ export const SystemWorkspace = () => {
             isso={isso}
           />
 
-          <RequestsCard systemId={systemId} />
+          {flags.systemWorkspaceRequestsCard && (
+            <RequestsCard systemId={systemId} />
+          )}
         </CardGroup>
       </Grid>
     </MainContent>
