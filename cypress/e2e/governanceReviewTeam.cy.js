@@ -137,7 +137,7 @@ describe('Governance Review Team', () => {
     cy.get('[data-testid="user-note"]').then(() => {
       cy.get('#GovernanceReviewTeam-EditNoteButton').click();
 
-      const noteFixture = 'Test note';
+      const noteFixture = 'This is my note'; // from seed data
       cy.get('#GovernanceReviewTeam-EditNote').should(
         'have.html',
         `<p>${noteFixture}</p>`
@@ -145,11 +145,13 @@ describe('Governance Review Team', () => {
 
       cy.get('#GovernanceReviewTeam-EditNote')
         .type(' edited', { force: true })
-        .should('have.html', '<p>Test note edited</p>');
+        .should('have.html', '<p>This is my note edited</p>');
 
       cy.get('#GovernanceReviewTeam-SaveEditsButton').click({ force: true });
 
-      cy.get('[data-testid="user-note"]').first().contains('Test note edited');
+      cy.get('[data-testid="user-note"]')
+        .first()
+        .contains('This is my note edited');
     });
   });
 

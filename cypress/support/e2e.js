@@ -34,6 +34,11 @@ if (!app.document.head.querySelector('[data-hide-command-log-request]')) {
   app.document.head.appendChild(style);
 }
 
+beforeEach(() => {
+  cy.exec(`scripts/dev db:clean`);
+  cy.exec(`scripts/dev db:seed`);
+});
+
 afterEach(() => {
   cy.document().toMatchImageSnapshot();
 });
