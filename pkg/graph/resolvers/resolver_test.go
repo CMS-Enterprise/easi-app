@@ -78,6 +78,22 @@ type TestConfigs struct {
 	Principal   *authentication.EUAPrincipal
 	Context     context.Context
 	EmailClient *email.Client
+	Sender      *mockSender
+}
+
+type mockSender struct {
+	toAddresses []models.EmailAddress
+	ccAddresses []models.EmailAddress
+	subject     string
+	body        string
+}
+
+func (s *mockSender) Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error {
+	s.toAddresses = toAddresses
+	s.ccAddresses = ccAddresses
+	s.subject = subject
+	s.body = body
+	return nil
 }
 
 // GetDefaultTestConfigs returns a TestConfigs struct with all the dependencies needed to run a test
@@ -110,12 +126,13 @@ func (tc *TestConfigs) GetDefaults() {
 
 	tc.Context = ctx
 
-	emailClient := NewEmailClient()
+	localSender := mockSender{}
+	tc.Sender = &localSender
+	emailClient := NewEmailClient(&localSender)
 	tc.EmailClient = emailClient
-
 }
 
-func NewEmailClient() *email.Client {
+func NewEmailClient(sender *mockSender) *email.Client {
 	config := testhelpers.NewConfig()
 	emailConfig := email.Config{
 		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
@@ -126,11 +143,9 @@ func NewEmailClient() *email.Client {
 		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
-	localSender := local.NewSender()
 
-	emailClient, _ := email.NewClient(emailConfig, localSender)
+	emailClient, _ := email.NewClient(emailConfig, sender)
 	return &emailClient
-
 }
 
 func getTestPrincipal(ctx context.Context, store *storage.Store, userName string) *authentication.EUAPrincipal {

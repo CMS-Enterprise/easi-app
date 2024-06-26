@@ -6,9 +6,11 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/dataloaders"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -19,6 +21,7 @@ import (
 func CreateSystemIntakeGRBReviewer(
 	ctx context.Context,
 	store *storage.Store,
+	emailClient *email.Client,
 	fetchUser userhelpers.GetAccountInfoFunc,
 	input *models.CreateSystemIntakeGRBReviewerInput,
 ) (*models.SystemIntakeGRBReviewer, error) {
@@ -40,12 +43,32 @@ func CreateSystemIntakeGRBReviewer(
 		reviewer.VotingRole = models.SIGRBReviewerVotingRole(input.VotingRole)
 		reviewer.GRBRole = models.SIGRBReviewerRole(input.GrbRole)
 		reviewer.SystemIntakeID = input.SystemIntakeID
-		err = store.CreateSystemIntakeGRBReviewer(ctx, tx, intake.ID, reviewer)
+		err = store.CreateSystemIntakeGRBReviewer(ctx, tx, reviewer)
 		if err != nil {
 			return nil, err
 		}
 
-		return reviewer, nil
+		// send notification email to reviewer
+		if emailClient != nil {
+			err = emailClient.SystemIntake.SendCreateGRBReviewerNotification(
+				ctx,
+				models.EmailNotificationRecipients{
+					RegularRecipientEmails: []models.EmailAddress{
+						models.EmailAddress(acct.Email),
+					},
+					ShouldNotifyITGovernance: false,
+					ShouldNotifyITInvestment: false,
+				},
+				intake.ID,
+				intake.ProjectName.String,
+				intake.Requester,
+			)
+			if err != nil {
+				appcontext.ZLogger(ctx).Error("unable to send create GRB member notification", zap.Error(err))
+			}
+		}
+
+		return reviewer, err
 	})
 }
 

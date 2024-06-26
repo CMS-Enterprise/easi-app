@@ -654,7 +654,7 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 
 // CreateSystemIntakeGRBReviewer is the resolver for the createSystemIntakeGRBReviewer field.
 func (r *mutationResolver) CreateSystemIntakeGRBReviewer(ctx context.Context, input models.CreateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
-	return resolvers.CreateSystemIntakeGRBReviewer(ctx, r.store, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo), &input)
+	return resolvers.CreateSystemIntakeGRBReviewer(ctx, r.store, r.emailClient, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo), &input)
 }
 
 // UpdateSystemIntakeGRBReviewer is the resolver for the updateSystemIntakeGRBReviewer field.
