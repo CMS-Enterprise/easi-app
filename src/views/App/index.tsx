@@ -10,8 +10,6 @@ import {
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { GovBanner } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
-import { QueryParamProvider } from 'use-query-params';
-import { ReactRouter5Adapter } from 'use-query-params/adapters/react-router-5';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -217,28 +215,26 @@ const App = () => {
         Skip to main content
       </button>
       <BrowserRouter>
-        <QueryParamProvider adapter={ReactRouter5Adapter}>
-          <AuthenticationWrapper>
-            <MessageProvider>
-              <FlagsWrapper>
-                <UserInfoWrapper>
-                  <TimeOutWrapper>
-                    <TableStateWrapper>
-                      <PageWrapper>
-                        <GovBanner />
-                        <Header />
-                        <Navigation>
-                          <AppRoutes />
-                        </Navigation>
-                        <Footer />
-                      </PageWrapper>
-                    </TableStateWrapper>
-                  </TimeOutWrapper>
-                </UserInfoWrapper>
-              </FlagsWrapper>
-            </MessageProvider>
-          </AuthenticationWrapper>
-        </QueryParamProvider>
+        <AuthenticationWrapper>
+          <MessageProvider>
+            <FlagsWrapper>
+              <UserInfoWrapper>
+                <TimeOutWrapper>
+                  <TableStateWrapper>
+                    <PageWrapper>
+                      <GovBanner />
+                      <Header />
+                      <Navigation>
+                        <AppRoutes />
+                      </Navigation>
+                      <Footer />
+                    </PageWrapper>
+                  </TableStateWrapper>
+                </TimeOutWrapper>
+              </UserInfoWrapper>
+            </FlagsWrapper>
+          </MessageProvider>
+        </AuthenticationWrapper>
       </BrowserRouter>
     </>
   );
