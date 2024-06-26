@@ -17,6 +17,7 @@
 import './businessCase';
 import './commands';
 import '@cypress/code-coverage/support';
+import 'cypress-plugin-snapshots/commands';
 import './login';
 import './systemIntake';
 import './trbRequest';
@@ -32,6 +33,10 @@ if (!app.document.head.querySelector('[data-hide-command-log-request]')) {
 
   app.document.head.appendChild(style);
 }
+
+afterEach(() => {
+  cy.document().toMatchImageSnapshot();
+});
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

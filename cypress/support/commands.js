@@ -23,4 +23,20 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
 import 'cypress-file-upload';
+
+// Cypress.Commands.overwrite('visit', (originalFn, ...args) => {
+//   cy.document()
+//     .toMatchImageSnapshot()
+//     .then(() => {
+//       originalFn(...args);
+//     });
+// });
+
+// Cypress.Commands.overwrite('click', (originalFn, ...args) => {
+//   return originalFn(...args).then(s => {
+//     cy.document().toMatchImageSnapshot();
+//     return s;
+//   });
+// });
