@@ -9,9 +9,11 @@ import SpacesCard from '../SpacesCard';
 
 type RequestsCardProps = {
   systemId: string;
+  trbCount: number;
+  itgovCount: number;
 };
 
-function RequestsCard({ systemId }: RequestsCardProps) {
+function RequestsCard({ systemId, trbCount, itgovCount }: RequestsCardProps) {
   const { t } = useTranslation('systemWorkspace');
 
   const linkSearchQuery = linkCedarSystemIdQueryString(systemId);
@@ -24,7 +26,7 @@ function RequestsCard({ systemId }: RequestsCardProps) {
         <div>
           <div>
             <strong className="padding-right-1 border-right-1px border-base-light">
-              {t('spaces.requests.itgCount', { count: 0 })}
+              {t('spaces.requests.itgCount', { count: itgovCount })}
             </strong>
             <UswdsReactLink
               className="margin-left-1 text-primary"
@@ -39,7 +41,7 @@ function RequestsCard({ systemId }: RequestsCardProps) {
           </div>
           <div>
             <strong className="padding-right-1 border-right-1px border-base-light">
-              {t('spaces.requests.trbCount', { count: 0 })}
+              {t('spaces.requests.trbCount', { count: trbCount })}
             </strong>
             <UswdsReactLink
               className="margin-left-1 text-primary"
