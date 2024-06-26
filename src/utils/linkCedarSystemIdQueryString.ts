@@ -1,4 +1,4 @@
-import { StringParam, useQueryParam } from 'use-query-params';
+import { useLocation } from 'react-router-dom';
 
 export default function linkCedarSystemIdQueryString(
   cedarSystemId: string | null | undefined
@@ -8,7 +8,7 @@ export default function linkCedarSystemIdQueryString(
 }
 
 export function useLinkCedarSystemIdQueryParam(): string | undefined {
-  const [linkCedarSystemId] = useQueryParam('linkCedarSystemId', StringParam);
-  if (!linkCedarSystemId) return undefined;
-  return linkCedarSystemId;
+  const loc = useLocation();
+  const par = new URLSearchParams(loc.search);
+  return par.get('linkCedarSystemId') || undefined;
 }
