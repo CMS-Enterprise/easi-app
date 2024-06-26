@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
-import { Button, ButtonGroup, Link, TextInput } from '@trussworks/react-uswds';
+import {
+  Button,
+  ButtonGroup,
+  Fieldset,
+  Link,
+  TextInput
+} from '@trussworks/react-uswds';
 
 import { useEasiForm, useEasiFormContext } from 'components/EasiForm';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -24,9 +30,9 @@ export type FormattedFundingSource = {
   sources: string[];
 };
 
-export interface FundingSourcesField {
+type FundingSourcesField = {
   fundingSources: FormattedFundingSource[];
-}
+};
 
 const FundingSources = () => {
   const { t } = useTranslation('intake');
@@ -48,18 +54,30 @@ const FundingSources = () => {
     formState: { errors }
   } = useEasiForm<FundingSourcesField>({
     defaultValues: {
+      // Get default values from parent form
       fundingSources: formatFundingSourcesForApp(
         intakeForm.getValues().fundingSources
       )
     }
   });
 
-  const { append } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control,
     name: 'fundingSources'
   });
 
   const fundingSources = watch('fundingSources');
+
+  /** Type of action for funding sources form */
+  const action: 'Add' | 'Edit' | null = useMemo(() => {
+    if (!activeFundingSource) return null;
+
+    const isExistingFundingSource = intakeForm
+      .getValues()
+      .fundingSources.some(({ id }) => id === activeFundingSource.id);
+
+    return isExistingFundingSource ? 'Edit' : 'Add';
+  }, [intakeForm, activeFundingSource]);
 
   /** Update parent form funding sources and reset active funding source */
   const submit = handleSubmit(values => {
@@ -80,12 +98,23 @@ const FundingSources = () => {
   }, [fundingSources, activeFundingSource, setActiveFundingSource]);
 
   return (
-    <div>
+    <div id="intakeFundingSources">
       {fundingSources.map((source, index) => {
-        if (source.id === activeFundingSource?.id) {
+        const { fundingNumber, sources, id } = source;
+
+        if (id === activeFundingSource?.id) {
           return (
-            <div key={source.id} id={`fundingSources.${index}.fundingNumber`}>
-              <FieldGroup>
+            <Fieldset
+              key={id}
+              id={`fundingSources.${index}.fundingNumber`}
+              className="margin-top-3"
+            >
+              <legend className="usa-legend text-bold">
+                {t('contractDetails.fundingSources.formLegend', {
+                  action
+                })}
+              </legend>
+              <FieldGroup className="margin-top-2">
                 <Label
                   htmlFor={`fundingSources.${index}.fundingNumber`}
                   className="text-normal"
@@ -105,12 +134,10 @@ const FundingSources = () => {
                   ref={null}
                   type="text"
                   id={`fundingSources.${index}.fundingNumber`}
+                  aria-describedby="fundingNumberHelptext fundingNumberHelpLink"
                 />
 
-                <HelpText
-                  id="IntakeForm-FundingNumberHelp"
-                  className="margin-top-1"
-                >
+                <HelpText id="fundingNumberHelpLink" className="margin-top-1">
                   <Link
                     href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
                     target="_blank"
@@ -123,7 +150,7 @@ const FundingSources = () => {
               </FieldGroup>
 
               <FieldGroup>
-                <Label htmlFor="fundingSources" className="text-normal">
+                <Label htmlFor="sources" className="text-normal">
                   {t('contractDetails.fundingSources.fundingSource')}
                 </Label>
                 <ErrorMessage
@@ -137,7 +164,7 @@ const FundingSources = () => {
                   render={({ field: { ref, ...field } }) => (
                     <MultiSelect
                       {...field}
-                      id="IntakeForm-FundingSources"
+                      id="sources"
                       selectedLabel={t('Funding sources')}
                       options={intakeFundingSources.map(option => ({
                         value: option,
@@ -153,46 +180,101 @@ const FundingSources = () => {
               <ButtonGroup>
                 <Button
                   type="button"
+                  outline
                   onClick={() => {
-                    // TODO: If new, remove from array
+                    // If cancelling new funding source, remove from array
+                    if (action === 'Add') remove(index);
 
+                    // If cancelling edit, restore previous values
+                    if (action === 'Edit') {
+                      update(index, fields[index]);
+                    }
+
+                    // reset active funding source
                     setActiveFundingSource(null);
                   }}
                 >
                   {t('Cancel')}
                 </Button>
+
                 <Button type="button" onClick={submit}>
                   {t('Save')}
                 </Button>
               </ButtonGroup>
-            </div>
+            </Fieldset>
           );
         }
 
         return (
-          <div key={source.id}>
-            {/**
-             * TODO: Display funding sources
-             * */}
+          <div id={`fundingSource${fundingNumber}`} key={id}>
+            <p className="text-bold font-body-sm margin-bottom-0">
+              {t('contractDetails.fundingSources.fundingSource')}
+            </p>
+            <p className="margin-y-05">
+              {t('contractDetails.fundingSources.fundingNumberLabel', {
+                fundingNumber
+              })}
+            </p>
+            <p className="margin-y-05">
+              {t('contractDetails.fundingSources.fundingSourcesLabel', {
+                sources: sources.join(', ')
+              })}
+            </p>
+
+            <ButtonGroup>
+              <Button
+                unstyled
+                onClick={() => {
+                  // If currently adding new funding source, remove from array
+                  if (action === 'Add') {
+                    remove(fields.length - 1);
+                  }
+
+                  setActiveFundingSource(source);
+                }}
+                type="button"
+                className="margin-top-1"
+              >
+                {t('Edit')}
+              </Button>
+
+              <Button
+                unstyled
+                onClick={() => remove(index)}
+                type="button"
+                className="text-error margin-top-1"
+              >
+                {t('Delete')}
+              </Button>
+            </ButtonGroup>
           </div>
         );
       })}
 
-      <Button
-        type="button"
-        onClick={() => {
-          const newSource = {
-            fundingNumber: '',
-            sources: [],
-            id: ''
-          };
-          setActiveFundingSource(newSource);
-          append(newSource);
-        }}
-        outline
-      >
-        {t('contractDetails.fundingSources.addFundingSource')}
-      </Button>
+      {!activeFundingSource && (
+        <Button
+          type="button"
+          onClick={() => {
+            const newSource = {
+              fundingNumber: '',
+              sources: [],
+              id: ''
+            };
+
+            setActiveFundingSource(newSource);
+            append(newSource);
+          }}
+          outline
+        >
+          {t(
+            `contractDetails.fundingSources.${
+              fundingSources.length > 0
+                ? 'addAnotherFundingSource'
+                : 'addFundingSource'
+            }`
+          )}
+        </Button>
+      )}
     </div>
   );
 };

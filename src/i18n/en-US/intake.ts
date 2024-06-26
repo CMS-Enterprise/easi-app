@@ -285,6 +285,9 @@ const intake = {
         'You can find your funding number in the CMS Operating Plan page',
       fundingSource: 'Funding source',
       fundingSources: 'Funding sources',
+      fundingNumberLabel: 'Funding number: {{fundingNumber}}',
+      fundingSourcesLabel: 'Funding sources: {{sources}}',
+      formLegend: '{{action}} funding source',
       errors: {
         fundingNumberMinDigits: 'Funding number must be exactly 6 digits',
         fundingNumberDigits: 'Funding number can only contain digits',
