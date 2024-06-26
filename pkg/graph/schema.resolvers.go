@@ -1194,15 +1194,29 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 		return nil, err
 	}
 
+	// if this user created the intake
 	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
 		return intake, nil
 	}
 
+	// if this user is an admin
 	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
 		return intake, nil
 	}
 
-	// if grb, ok
+	grbUsers, err := r.store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{id})
+	if err != nil {
+		return nil, err
+	}
+
+	principal := appcontext.Principal(ctx)
+
+	// if this user is a GRB viewer/voter for this intake
+	if slices.ContainsFunc(grbUsers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
+		return reviewer.ID.String() == principal.ID()
+	}) {
+		return intake, nil
+	}
 
 	return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
 }
