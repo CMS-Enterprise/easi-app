@@ -47,6 +47,7 @@ function RequestType() {
   }>();
 
   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
+  const linkCedarSystemIdQs = linkCedarSystemIdQueryString(linkCedarSystemId);
 
   const [mutate, { data, error, loading }] = useMutation<
     UpdateTrbRequestType,
@@ -138,7 +139,7 @@ function RequestType() {
                   to={{
                     pathname: '/trb/process',
                     state: { requestType },
-                    search: linkCedarSystemIdQueryString(linkCedarSystemId)
+                    search: linkCedarSystemIdQs
                   }}
                   className="usa-button"
                   variant="unstyled"
@@ -173,7 +174,7 @@ function RequestType() {
                 to={{
                   pathname: '/trb/process',
                   state: { requestType: TRBRequestType.OTHER },
-                  search: linkCedarSystemIdQueryString(linkCedarSystemId)
+                  search: linkCedarSystemIdQs
                 }}
               >
                 {t('requestType.services.other')}

@@ -30,6 +30,7 @@ function ProcessFlow() {
   const requestType = state?.requestType;
 
   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
+  const linkCedarSystemIdQs = linkCedarSystemIdQueryString(linkCedarSystemId);
 
   const [create, createResult] = useMutation<
     CreateTrbRequest,
@@ -40,15 +41,13 @@ function ProcessFlow() {
   useEffect(() => {
     if (createResult.data) {
       history.push(
-        `/trb/link/${
-          createResult.data.createTRBRequest.id
-        }?${linkCedarSystemIdQueryString(linkCedarSystemId)}`,
+        `/trb/link/${createResult.data.createTRBRequest.id}?${linkCedarSystemIdQs}`,
         {
           isNew: true
         }
       );
     }
-  }, [createResult, history, linkCedarSystemId]);
+  }, [createResult, history, linkCedarSystemIdQs]);
 
   // Redirect to start if `requestType` isn't set
   if (!requestType) return <Redirect to="/trb/start" />;
@@ -79,7 +78,7 @@ function ProcessFlow() {
           <UswdsReactLink
             to={{
               pathname: '/trb/start',
-              search: linkCedarSystemIdQueryString(linkCedarSystemId)
+              search: linkCedarSystemIdQs
             }}
           >
             {t('steps.changeRequestType')}
@@ -93,7 +92,7 @@ function ProcessFlow() {
         <UswdsReactLink
           to={{
             pathname: '/trb/start',
-            search: linkCedarSystemIdQueryString(linkCedarSystemId)
+            search: linkCedarSystemIdQs
           }}
           className="usa-button usa-button--outline margin-bottom-1 tablet:margin-bottom-0"
           variant="unstyled"

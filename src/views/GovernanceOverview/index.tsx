@@ -28,6 +28,7 @@ const GovernanceOverview = () => {
   const isNew = !!state?.isNew;
 
   const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
+  const linkCedarSystemIdQs = linkCedarSystemIdQueryString(linkCedarSystemId);
 
   return (
     <MainContent
@@ -46,7 +47,7 @@ const GovernanceOverview = () => {
       <Link
         to={{
           pathname: `/system/request-type/${systemId || ''}`,
-          search: linkCedarSystemIdQueryString(linkCedarSystemId),
+          search: linkCedarSystemIdQs,
           state: { isNew }
         }}
         className="display-flex flex-align-center text-primary"
@@ -69,7 +70,7 @@ const GovernanceOverview = () => {
           variant="unstyled"
           to={{
             pathname: `/system/link/${systemId}`,
-            search: linkCedarSystemIdQueryString(linkCedarSystemId),
+            search: linkCedarSystemIdQs,
             state: { isNew }
           }}
         >
