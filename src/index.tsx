@@ -76,6 +76,8 @@ const authLink = setContext((request, { headers }) => {
 });
 
 const client = new ApolloClient({
+  // TODO: Update package - apollo-upload-client (requires nodejs upgrade - https://jiraent.cms.gov/browse/EASI-3505)
+  // @ts-ignore
   link: authLink.concat(uploadLink),
   cache: new InMemoryCache({
     typePolicies: {
