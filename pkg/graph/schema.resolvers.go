@@ -1211,10 +1211,9 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 
 	principal := appcontext.Principal(ctx)
 
-	// if this user is a GRB viewer/voter for this intake
-	if slices.ContainsFunc(grbUsers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
+	if isGRBViewer := slices.ContainsFunc(grbUsers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
 		return reviewer.UserID == principal.Account().ID
-	}) {
+	}); isGRBViewer {
 		return intake, nil
 	}
 
