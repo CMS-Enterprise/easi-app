@@ -20,6 +20,7 @@ const systemProfile = {
     teamAdditional: 'Additional team members',
     'funding-and-budget': 'Funding and Budget',
     'tools-and-software': 'Tools and Software',
+    'ato-and-security': 'ATO and Security',
     ato: 'ATO',
     atoPoamsAndFindings: 'POA&Ms and findings',
     atoDatesFormsAndTesting: 'Dates, forms, and testing',
