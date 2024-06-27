@@ -280,9 +280,9 @@ describe('Governance Review Team', () => {
   });
 
   it('can update a Life Cycle ID', () => {
-    cy.contains('button', 'Closed requests').click();
+    // cy.contains('button', 'Closed requests').click();
 
-    cy.contains('a', 'Closable Request').should('be.visible').click();
+    cy.contains('a', 'LCID issued').should('be.visible').click();
 
     cy.get('[data-testid="grt-nav-actions-link"]').click();
 
