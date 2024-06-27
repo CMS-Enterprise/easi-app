@@ -1194,15 +1194,30 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 		return nil, err
 	}
 
-	ok, err := services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode(ctx, intake)
+	// if this user created the intake
+	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+		return intake, nil
+	}
+
+	// if this user is an admin
+	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
+		return intake, nil
+	}
+
+	grbUsers, err := r.store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{id})
 	if err != nil {
 		return nil, err
 	}
-	if !ok {
-		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
+
+	principal := appcontext.Principal(ctx)
+
+	if isGRBViewer := slices.ContainsFunc(grbUsers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
+		return reviewer.UserID == principal.Account().ID
+	}); isGRBViewer {
+		return intake, nil
 	}
 
-	return intake, nil
+	return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
 }
 
 // SystemIntakes is the resolver for the systemIntakes field.
