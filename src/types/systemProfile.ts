@@ -60,7 +60,7 @@ export type SubpageKey =
   | 'contracts'
   | 'funding-and-budget'
   | 'tools-and-software'
-  | 'ato'
+  | 'ato-and-security'
   | 'lifecycle-id'
   | 'sub-systems'
   | 'system-data'
