@@ -1226,6 +1226,11 @@ func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([
 	return resolvers.SystemIntakes(ctx, r.store, openRequests)
 }
 
+// SystemIntakesWithReviewRequested is the resolver for the systemIntakesWithReviewRequested field.
+func (r *queryResolver) SystemIntakesWithReviewRequested(ctx context.Context) ([]*models.SystemIntake, error) {
+	return resolvers.SystemIntakesWithReviewRequested(ctx, r.store)
+}
+
 // SystemIntakesWithLcids is the resolver for the systemIntakesWithLcids field.
 func (r *queryResolver) SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error) {
 	return r.store.GetSystemIntakesWithLCIDs(ctx)

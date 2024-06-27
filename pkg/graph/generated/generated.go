@@ -603,36 +603,37 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		CedarAuthorityToOperate  func(childComplexity int, cedarSystemID string) int
-		CedarBudget              func(childComplexity int, cedarSystemID string) int
-		CedarBudgetSystemCost    func(childComplexity int, cedarSystemID string) int
-		CedarContractsBySystem   func(childComplexity int, cedarSystemID string) int
-		CedarPersonsByCommonName func(childComplexity int, commonName string) int
-		CedarSoftwareProducts    func(childComplexity int, cedarSystemID string) int
-		CedarSubSystems          func(childComplexity int, cedarSystemID string) int
-		CedarSystem              func(childComplexity int, cedarSystemID string) int
-		CedarSystemBookmarks     func(childComplexity int) int
-		CedarSystemDetails       func(childComplexity int, cedarSystemID string) int
-		CedarSystems             func(childComplexity int) int
-		CedarThreat              func(childComplexity int, cedarSystemID string) int
-		CurrentUser              func(childComplexity int) int
-		Deployments              func(childComplexity int, cedarSystemID string, deploymentType *string, state *string, status *string) int
-		Exchanges                func(childComplexity int, cedarSystemID string) int
-		MyCedarSystems           func(childComplexity int) int
-		MyTrbRequests            func(childComplexity int, archived bool) int
-		Requests                 func(childComplexity int, first int) int
-		RoleTypes                func(childComplexity int) int
-		Roles                    func(childComplexity int, cedarSystemID string, roleTypeID *string) int
-		SystemIntake             func(childComplexity int, id uuid.UUID) int
-		SystemIntakeContacts     func(childComplexity int, id uuid.UUID) int
-		SystemIntakes            func(childComplexity int, openRequests bool) int
-		SystemIntakesWithLcids   func(childComplexity int) int
-		TrbAdminNote             func(childComplexity int, id uuid.UUID) int
-		TrbLeadOptions           func(childComplexity int) int
-		TrbRequest               func(childComplexity int, id uuid.UUID) int
-		TrbRequests              func(childComplexity int, archived bool) int
-		Urls                     func(childComplexity int, cedarSystemID string) int
-		UserAccount              func(childComplexity int, username string) int
+		CedarAuthorityToOperate          func(childComplexity int, cedarSystemID string) int
+		CedarBudget                      func(childComplexity int, cedarSystemID string) int
+		CedarBudgetSystemCost            func(childComplexity int, cedarSystemID string) int
+		CedarContractsBySystem           func(childComplexity int, cedarSystemID string) int
+		CedarPersonsByCommonName         func(childComplexity int, commonName string) int
+		CedarSoftwareProducts            func(childComplexity int, cedarSystemID string) int
+		CedarSubSystems                  func(childComplexity int, cedarSystemID string) int
+		CedarSystem                      func(childComplexity int, cedarSystemID string) int
+		CedarSystemBookmarks             func(childComplexity int) int
+		CedarSystemDetails               func(childComplexity int, cedarSystemID string) int
+		CedarSystems                     func(childComplexity int) int
+		CedarThreat                      func(childComplexity int, cedarSystemID string) int
+		CurrentUser                      func(childComplexity int) int
+		Deployments                      func(childComplexity int, cedarSystemID string, deploymentType *string, state *string, status *string) int
+		Exchanges                        func(childComplexity int, cedarSystemID string) int
+		MyCedarSystems                   func(childComplexity int) int
+		MyTrbRequests                    func(childComplexity int, archived bool) int
+		Requests                         func(childComplexity int, first int) int
+		RoleTypes                        func(childComplexity int) int
+		Roles                            func(childComplexity int, cedarSystemID string, roleTypeID *string) int
+		SystemIntake                     func(childComplexity int, id uuid.UUID) int
+		SystemIntakeContacts             func(childComplexity int, id uuid.UUID) int
+		SystemIntakes                    func(childComplexity int, openRequests bool) int
+		SystemIntakesWithLcids           func(childComplexity int) int
+		SystemIntakesWithReviewRequested func(childComplexity int) int
+		TrbAdminNote                     func(childComplexity int, id uuid.UUID) int
+		TrbLeadOptions                   func(childComplexity int) int
+		TrbRequest                       func(childComplexity int, id uuid.UUID) int
+		TrbRequests                      func(childComplexity int, archived bool) int
+		Urls                             func(childComplexity int, cedarSystemID string) int
+		UserAccount                      func(childComplexity int, username string) int
 	}
 
 	Request struct {
@@ -1236,6 +1237,7 @@ type QueryResolver interface {
 	Requests(ctx context.Context, first int) (*models.RequestsConnection, error)
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error)
+	SystemIntakesWithReviewRequested(ctx context.Context) ([]*models.SystemIntake, error)
 	SystemIntakesWithLcids(ctx context.Context) ([]*models.SystemIntake, error)
 	CurrentUser(ctx context.Context) (*models.CurrentUser, error)
 	CedarAuthorityToOperate(ctx context.Context, cedarSystemID string) ([]*models.CedarAuthorityToOperate, error)
@@ -4946,6 +4948,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.SystemIntakesWithLcids(childComplexity), true
+
+	case "Query.systemIntakesWithReviewRequested":
+		if e.complexity.Query.SystemIntakesWithReviewRequested == nil {
+			break
+		}
+
+		return e.complexity.Query.SystemIntakesWithReviewRequested(childComplexity), true
 
 	case "Query.trbAdminNote":
 		if e.complexity.Query.TrbAdminNote == nil {
@@ -10084,6 +10093,7 @@ type Query {
   requests(first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
+  systemIntakesWithReviewRequested: [SystemIntake!]!
   @hasRole(role: EASI_GOVTEAM)
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
@@ -34045,32 +34055,8 @@ func (ec *executionContext) _Query_systemIntakes(ctx context.Context, field grap
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().SystemIntakes(rctx, fc.Args["openRequests"].(bool))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.([]*models.SystemIntake); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cmsgov/easi-app/pkg/models.SystemIntake`, tmp)
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SystemIntakes(rctx, fc.Args["openRequests"].(bool))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -34249,6 +34235,216 @@ func (ec *executionContext) fieldContext_Query_systemIntakes(ctx context.Context
 	if fc.Args, err = ec.field_Query_systemIntakes_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_systemIntakesWithReviewRequested(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_systemIntakesWithReviewRequested(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().SystemIntakesWithReviewRequested(rctx)
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*models.SystemIntake); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cmsgov/easi-app/pkg/models.SystemIntake`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.SystemIntake)
+	fc.Result = res
+	return ec.marshalNSystemIntake2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_systemIntakesWithReviewRequested(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "actions":
+				return ec.fieldContext_SystemIntake_actions(ctx, field)
+			case "adminLead":
+				return ec.fieldContext_SystemIntake_adminLead(ctx, field)
+			case "archivedAt":
+				return ec.fieldContext_SystemIntake_archivedAt(ctx, field)
+			case "businessCase":
+				return ec.fieldContext_SystemIntake_businessCase(ctx, field)
+			case "businessNeed":
+				return ec.fieldContext_SystemIntake_businessNeed(ctx, field)
+			case "businessOwner":
+				return ec.fieldContext_SystemIntake_businessOwner(ctx, field)
+			case "businessSolution":
+				return ec.fieldContext_SystemIntake_businessSolution(ctx, field)
+			case "contract":
+				return ec.fieldContext_SystemIntake_contract(ctx, field)
+			case "costs":
+				return ec.fieldContext_SystemIntake_costs(ctx, field)
+			case "annualSpending":
+				return ec.fieldContext_SystemIntake_annualSpending(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_SystemIntake_createdAt(ctx, field)
+			case "currentStage":
+				return ec.fieldContext_SystemIntake_currentStage(ctx, field)
+			case "decisionNextSteps":
+				return ec.fieldContext_SystemIntake_decisionNextSteps(ctx, field)
+			case "eaCollaborator":
+				return ec.fieldContext_SystemIntake_eaCollaborator(ctx, field)
+			case "eaCollaboratorName":
+				return ec.fieldContext_SystemIntake_eaCollaboratorName(ctx, field)
+			case "euaUserId":
+				return ec.fieldContext_SystemIntake_euaUserId(ctx, field)
+			case "existingFunding":
+				return ec.fieldContext_SystemIntake_existingFunding(ctx, field)
+			case "fundingSources":
+				return ec.fieldContext_SystemIntake_fundingSources(ctx, field)
+			case "governanceRequestFeedbacks":
+				return ec.fieldContext_SystemIntake_governanceRequestFeedbacks(ctx, field)
+			case "governanceTeams":
+				return ec.fieldContext_SystemIntake_governanceTeams(ctx, field)
+			case "grbDate":
+				return ec.fieldContext_SystemIntake_grbDate(ctx, field)
+			case "grbReviewers":
+				return ec.fieldContext_SystemIntake_grbReviewers(ctx, field)
+			case "grtDate":
+				return ec.fieldContext_SystemIntake_grtDate(ctx, field)
+			case "id":
+				return ec.fieldContext_SystemIntake_id(ctx, field)
+			case "isso":
+				return ec.fieldContext_SystemIntake_isso(ctx, field)
+			case "lcid":
+				return ec.fieldContext_SystemIntake_lcid(ctx, field)
+			case "lcidIssuedAt":
+				return ec.fieldContext_SystemIntake_lcidIssuedAt(ctx, field)
+			case "lcidExpiresAt":
+				return ec.fieldContext_SystemIntake_lcidExpiresAt(ctx, field)
+			case "lcidScope":
+				return ec.fieldContext_SystemIntake_lcidScope(ctx, field)
+			case "lcidCostBaseline":
+				return ec.fieldContext_SystemIntake_lcidCostBaseline(ctx, field)
+			case "lcidRetiresAt":
+				return ec.fieldContext_SystemIntake_lcidRetiresAt(ctx, field)
+			case "needsEaSupport":
+				return ec.fieldContext_SystemIntake_needsEaSupport(ctx, field)
+			case "notes":
+				return ec.fieldContext_SystemIntake_notes(ctx, field)
+			case "oitSecurityCollaborator":
+				return ec.fieldContext_SystemIntake_oitSecurityCollaborator(ctx, field)
+			case "oitSecurityCollaboratorName":
+				return ec.fieldContext_SystemIntake_oitSecurityCollaboratorName(ctx, field)
+			case "productManager":
+				return ec.fieldContext_SystemIntake_productManager(ctx, field)
+			case "projectAcronym":
+				return ec.fieldContext_SystemIntake_projectAcronym(ctx, field)
+			case "rejectionReason":
+				return ec.fieldContext_SystemIntake_rejectionReason(ctx, field)
+			case "requestName":
+				return ec.fieldContext_SystemIntake_requestName(ctx, field)
+			case "requestType":
+				return ec.fieldContext_SystemIntake_requestType(ctx, field)
+			case "requester":
+				return ec.fieldContext_SystemIntake_requester(ctx, field)
+			case "requesterName":
+				return ec.fieldContext_SystemIntake_requesterName(ctx, field)
+			case "requesterComponent":
+				return ec.fieldContext_SystemIntake_requesterComponent(ctx, field)
+			case "state":
+				return ec.fieldContext_SystemIntake_state(ctx, field)
+			case "step":
+				return ec.fieldContext_SystemIntake_step(ctx, field)
+			case "submittedAt":
+				return ec.fieldContext_SystemIntake_submittedAt(ctx, field)
+			case "trbCollaborator":
+				return ec.fieldContext_SystemIntake_trbCollaborator(ctx, field)
+			case "trbCollaboratorName":
+				return ec.fieldContext_SystemIntake_trbCollaboratorName(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_SystemIntake_updatedAt(ctx, field)
+			case "grtReviewEmailBody":
+				return ec.fieldContext_SystemIntake_grtReviewEmailBody(ctx, field)
+			case "decidedAt":
+				return ec.fieldContext_SystemIntake_decidedAt(ctx, field)
+			case "businessCaseId":
+				return ec.fieldContext_SystemIntake_businessCaseId(ctx, field)
+			case "cedarSystemId":
+				return ec.fieldContext_SystemIntake_cedarSystemId(ctx, field)
+			case "documents":
+				return ec.fieldContext_SystemIntake_documents(ctx, field)
+			case "hasUiChanges":
+				return ec.fieldContext_SystemIntake_hasUiChanges(ctx, field)
+			case "itGovTaskStatuses":
+				return ec.fieldContext_SystemIntake_itGovTaskStatuses(ctx, field)
+			case "requestFormState":
+				return ec.fieldContext_SystemIntake_requestFormState(ctx, field)
+			case "draftBusinessCaseState":
+				return ec.fieldContext_SystemIntake_draftBusinessCaseState(ctx, field)
+			case "grtMeetingState":
+				return ec.fieldContext_SystemIntake_grtMeetingState(ctx, field)
+			case "finalBusinessCaseState":
+				return ec.fieldContext_SystemIntake_finalBusinessCaseState(ctx, field)
+			case "grbMeetingState":
+				return ec.fieldContext_SystemIntake_grbMeetingState(ctx, field)
+			case "decisionState":
+				return ec.fieldContext_SystemIntake_decisionState(ctx, field)
+			case "statusRequester":
+				return ec.fieldContext_SystemIntake_statusRequester(ctx, field)
+			case "statusAdmin":
+				return ec.fieldContext_SystemIntake_statusAdmin(ctx, field)
+			case "lcidStatus":
+				return ec.fieldContext_SystemIntake_lcidStatus(ctx, field)
+			case "trbFollowUpRecommendation":
+				return ec.fieldContext_SystemIntake_trbFollowUpRecommendation(ctx, field)
+			case "contractName":
+				return ec.fieldContext_SystemIntake_contractName(ctx, field)
+			case "relationType":
+				return ec.fieldContext_SystemIntake_relationType(ctx, field)
+			case "systems":
+				return ec.fieldContext_SystemIntake_systems(ctx, field)
+			case "contractNumbers":
+				return ec.fieldContext_SystemIntake_contractNumbers(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SystemIntake", field.Name)
+		},
 	}
 	return fc, nil
 }
@@ -61350,6 +61546,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_systemIntakes(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "systemIntakesWithReviewRequested":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_systemIntakesWithReviewRequested(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}

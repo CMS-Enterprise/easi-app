@@ -350,3 +350,8 @@ func SystemIntakes(ctx context.Context, store *storage.Store, openRequests bool)
 
 	return intakes, nil
 }
+
+func SystemIntakesWithReviewRequested(ctx context.Context, store *storage.Store) ([]*models.SystemIntake, error) {
+	userID := appcontext.Principal(ctx).Account().ID
+	return store.FetchSystemIntakesWithReviewRequested(ctx, userID)
+}
