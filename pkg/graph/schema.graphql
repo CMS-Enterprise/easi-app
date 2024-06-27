@@ -2494,6 +2494,7 @@ type Query {
   requests(first: Int!): RequestsConnection
   systemIntake(id: UUID!): SystemIntake
   systemIntakes(openRequests: Boolean!): [SystemIntake!]!
+  systemIntakesWithReviewRequested: [SystemIntake!]!
   @hasRole(role: EASI_GOVTEAM)
   systemIntakesWithLcids: [SystemIntake!]!
   currentUser: CurrentUser
