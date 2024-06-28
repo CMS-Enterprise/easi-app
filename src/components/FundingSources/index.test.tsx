@@ -60,7 +60,8 @@ describe('Funding sources', () => {
 
     // Renders error messages for empty fields
 
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    const saveButton = await screen.findByRole('button', { name: 'Save' });
+    userEvent.click(saveButton);
 
     expect(
       await screen.findByText('Funding number must be exactly 6 digits')
