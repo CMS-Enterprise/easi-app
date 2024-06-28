@@ -21,6 +21,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/authentication"
 	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -182,7 +183,7 @@ func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.Ceda
 
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
 func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem, state models.TRBRequestState) ([]*models.TRBRequest, error) {
-	return r.store.TRBRequestsByCedarSystemID(ctx, obj.ID.String, state)
+	return dataloaders.GetTRBRequestsByCedarSystemID(ctx, obj.ID.String, state)
 }
 
 // LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.

@@ -24,7 +24,6 @@ func NewTRBRequest(createdBy string) *TRBRequest {
 	return &TRBRequest{
 		BaseStruct: NewBaseStruct(createdBy),
 	}
-
 }
 
 // TRBRequestType represents the types of TRBRequestType types
@@ -114,4 +113,14 @@ func (t *TRBRequest) GetName() string {
 	}
 
 	return "Draft"
+}
+
+type TRBRequestsByCedarSystemIDsRequest struct {
+	CedarSystemID string
+	State         TRBRequestState
+}
+
+type TRBRequestsByCedarSystemIDsResponse struct {
+	CedarSystemID string `db:"system_id"`
+	TRBRequest    *TRBRequest
 }

@@ -71,6 +71,7 @@ type Dataloaders struct {
 	SystemIntakeContractNumbers *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
 	SystemIntakeSystems         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
 	SystemIntakeGRBReviewers    *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewer]
+	TRBRequestsByCedarSystemID  *dataloadgen.Loader[models.TRBRequestsByCedarSystemIDsRequest, []*models.TRBRequest]
 	TRBRequestContractNumbers   *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestContractNumber]
 	TRBRequestSystems           *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestSystem]
 }
@@ -90,6 +91,7 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		SystemIntakeContractNumbers: dataloadgen.NewLoader(dr.batchSystemIntakeContractNumbersBySystemIntakeIDs),
 		SystemIntakeSystems:         dataloadgen.NewLoader(dr.batchSystemIntakeSystemsBySystemIntakeIDs),
 		SystemIntakeGRBReviewers:    dataloadgen.NewLoader(dr.batchSystemIntakeGRBReviewersBySystemIntakeIDs),
+		TRBRequestsByCedarSystemID:  dataloadgen.NewLoader(dr.batchTRBRequestsByCedarSystemIDs),
 		TRBRequestContractNumbers:   dataloadgen.NewLoader(dr.batchTRBRequestContractNumbersByTRBRequestIDs),
 		TRBRequestSystems:           dataloadgen.NewLoader(dr.batchTRBRequestSystemsByTRBRequestIDs),
 	}
