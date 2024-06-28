@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import i18next from 'i18next';
