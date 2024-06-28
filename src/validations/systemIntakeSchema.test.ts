@@ -90,7 +90,7 @@ describe('Funding sources form validation', () => {
       FundingSourcesValidationSchema.validate({
         fundingSources: [{ ...newFundingSource, fundingNumber: '' }]
       })
-    ).rejects.toThrow('Please enter a funding number');
+    ).rejects.toThrow('Funding number must be exactly 6 digits');
 
     // Must be exactly 6 digits
     await expect(

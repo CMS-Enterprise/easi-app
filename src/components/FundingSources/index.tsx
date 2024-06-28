@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
@@ -34,7 +34,7 @@ export type FormattedFundingSource = {
 };
 
 type FundingSourcesForm = {
-  fundingSources: FormattedFundingSource[];
+  fundingSources: Omit<FormattedFundingSource, 'id'>[];
 };
 
 /** Funding sources component for system intake form */
@@ -48,6 +48,8 @@ const FundingSources = () => {
     setActiveFundingSource
   ] = useState<FormattedFundingSource | null>(null);
 
+  const [action, setAction] = useState<'Add' | 'Edit' | null>(null);
+
   const intakeForm = useEasiFormContext<{
     fundingSources: FundingSource[];
   }>();
@@ -56,7 +58,6 @@ const FundingSources = () => {
     control,
     handleSubmit,
     register,
-    watch,
     formState: { errors }
   } = useEasiForm<FundingSourcesForm>({
     resolver: yupResolver(FundingSourcesValidationSchema),
@@ -73,39 +74,38 @@ const FundingSources = () => {
     name: 'fundingSources'
   });
 
-  const fundingSources = watch('fundingSources');
-
-  /** Type of action for funding sources form */
-  const action: 'Add' | 'Edit' | null = useMemo(() => {
-    if (!activeFundingSource) return null;
-
-    const isExistingFundingSource = intakeForm
-      .getValues()
-      .fundingSources.some(({ id }) => id === activeFundingSource.id);
-
-    return isExistingFundingSource ? 'Edit' : 'Add';
-  }, [intakeForm, activeFundingSource]);
-
   /** Update parent form funding sources and reset active funding source */
-  const submit = handleSubmit(values => {
-    intakeForm.setValue(
-      'fundingSources',
-      formatFundingSourcesForApi(values.fundingSources)
-    );
+  const submit = (
+    /** Index of the funding source being added or edited */
+    index: number
+  ) =>
+    handleSubmit(values => {
+      update(index, values.fundingSources[index]);
 
-    setActiveFundingSource(null);
-  });
+      const fundingSourcesWithIds = values.fundingSources.map((source, i) => ({
+        ...source,
+        id: fields[i].id
+      }));
+
+      intakeForm.setValue(
+        'fundingSources',
+        formatFundingSourcesForApi(fundingSourcesWithIds)
+      );
+
+      setActiveFundingSource(null);
+      setAction(null);
+    })();
 
   // For new funding sources, set correct ID
   useEffect(() => {
-    if (fundingSources.length > 0 && activeFundingSource?.id === '') {
-      setActiveFundingSource(fundingSources[fundingSources.length - 1]);
+    if (fields.length > 0 && activeFundingSource?.id === '') {
+      setActiveFundingSource(fields[fields.length - 1]);
     }
-  }, [fundingSources, activeFundingSource, setActiveFundingSource]);
+  }, [fields, activeFundingSource, setActiveFundingSource]);
 
   return (
     <div id="intakeFundingSources">
-      {fundingSources.map((source, index) => {
+      {fields.map((source, index) => {
         const { fundingNumber, sources, id } = source;
 
         // Show form if adding or editing funding source
@@ -197,8 +197,9 @@ const FundingSources = () => {
                       update(index, fields[index]);
                     }
 
-                    // reset active funding source
+                    // reset form
                     setActiveFundingSource(null);
+                    setAction(null);
                   }}
                 >
                   {t('Cancel')}
@@ -206,7 +207,7 @@ const FundingSources = () => {
 
                 <Button
                   type="button"
-                  onClick={submit}
+                  onClick={() => submit(index)}
                   data-testid="fundingSourcesAction-save"
                 >
                   {t('Save')}
@@ -247,6 +248,7 @@ const FundingSources = () => {
                   }
 
                   setActiveFundingSource(source);
+                  setAction('Edit');
                 }}
                 type="button"
                 className="margin-top-1"
@@ -262,7 +264,7 @@ const FundingSources = () => {
                   // Remove from parent form funding sources
                   intakeForm.setValue(
                     'fundingSources',
-                    formatFundingSourcesForApi(fundingSources).filter(
+                    formatFundingSourcesForApi(fields).filter(
                       value => value.id !== id
                     )
                   );
@@ -286,18 +288,18 @@ const FundingSources = () => {
             onClick={() => {
               const newSource = {
                 fundingNumber: '',
-                sources: [],
-                id: ''
+                sources: []
               };
 
-              setActiveFundingSource(newSource);
               append(newSource);
+              setActiveFundingSource({ ...newSource, id: '' });
+              setAction('Add');
             }}
             outline
           >
             {t(
               `contractDetails.fundingSources.${
-                fundingSources.length > 0
+                fields.length > 0
                   ? 'addAnotherFundingSource'
                   : 'addFundingSource'
               }`
