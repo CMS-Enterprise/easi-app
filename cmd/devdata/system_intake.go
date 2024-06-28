@@ -11,6 +11,7 @@ import (
 
 	"github.com/cmsgov/easi-app/cmd/devdata/mock"
 	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
+	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/sqlutils"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -306,7 +307,7 @@ func setSystemIntakeRelationExistingSystem(
 		ctx,
 		store,
 		func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
-			return &models.CedarSystem{}, nil
+			return cedarcoremock.GetSystem(systemID), nil
 		},
 		input,
 	)
