@@ -197,8 +197,24 @@ func main() {
 		store,
 		intake,
 		requesterEUA,
+		models.SystemIntakeGRBReviewerVotingRoleVoting,
+		models.SystemIntakeGRBReviewerRoleCmcsRep,
+	)
+	createSystemIntakeGRBReviewer(
+		logger,
+		store,
+		intake,
+		"ABCD",
 		models.SystemIntakeGRBReviewerVotingRoleAlternate,
 		models.SystemIntakeGRBReviewerRoleCciioRep,
+	)
+	createSystemIntakeGRBReviewer(
+		logger,
+		store,
+		intake,
+		"A11Y",
+		models.SystemIntakeGRBReviewerVotingRoleNonVoting,
+		models.SystemIntakeGRBReviewerRoleFedAdminBdgChair,
 	)
 
 	intakeID = uuid.MustParse("d80cf287-35cb-4e76-b8b3-0467eabd75b8")
