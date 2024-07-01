@@ -21,7 +21,6 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
-	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/flags"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
@@ -183,12 +182,12 @@ func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.Ceda
 
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
 func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem, state models.TRBRequestState) ([]*models.TRBRequest, error) {
-	return dataloaders.GetCedarSystemLinkedTRBRequests(ctx, obj.ID.String, state)
+	return resolvers.CedarSystemLinkedTRBRequests(ctx, obj.ID.String, state)
 }
 
 // LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.
 func (r *cedarSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystem, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
-	return dataloaders.GetCedarSystemLinkedSystemIntakes(ctx, obj.ID.String, state)
+	return resolvers.CedarSystemLinkedSystemIntakes(ctx, obj.ID.String, state)
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.

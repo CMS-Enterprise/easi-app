@@ -76,7 +76,7 @@ func (s *Store) SystemIntakesByCedarSystemIDs(ctx context.Context, requests []mo
 	}
 
 	var systemIntakes []*models.SystemIntakesByCedarSystemIDsResponse
-	return systemIntakes, namedSelect(ctx, s, &systemIntakes, sqlqueries.SystemIntakeSystemForm.SelectBySystemIntakeIDs, args{
+	return systemIntakes, namedSelect(ctx, s, &systemIntakes, sqlqueries.SystemIntakeSystemForm.SelectByCedarSystemIDs, args{
 		"cedar_system_ids": pq.Array(cedarSystemIDs),
 		"states":           pq.Array(states),
 	})

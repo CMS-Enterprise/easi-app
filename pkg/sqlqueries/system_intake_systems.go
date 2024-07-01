@@ -17,11 +17,6 @@ var setSystemIntakeSystemsSQL string
 //go:embed SQL/system_intake_system/get_by_system_intake_ids.sql
 var selectSystemsBySystemIntakeIDsSQL string
 
-// systemIntakeSelectByCedarSystemID holds the SQL query to get System Intakes by their Cedar System ID
-//
-//go:embed SQL/system_intake_system/select_by_cedar_system_id.sql
-var systemIntakeSelectByCedarSystemID string
-
 // systemIntakeSelectByCedarSystemID holds the SQL query to get System Intakes by their Cedar System IDs
 //
 //go:embed SQL/system_intake_system/select_by_cedar_system_ids.sql
@@ -31,7 +26,6 @@ var systemIntakeSelectByCedarSystemIDs string
 var SystemIntakeSystemForm = systemIntakeSystemScripts{
 	Set:                     setSystemIntakeSystemsSQL,
 	Delete:                  deleteSystemIntakeSystemsSQL,
-	SelectByCedarSystemID:   systemIntakeSelectByCedarSystemID,
 	SelectByCedarSystemIDs:  systemIntakeSelectByCedarSystemIDs,
 	SelectBySystemIntakeIDs: selectSystemsBySystemIntakeIDsSQL,
 }
@@ -39,7 +33,6 @@ var SystemIntakeSystemForm = systemIntakeSystemScripts{
 type systemIntakeSystemScripts struct {
 	Set                     string
 	Delete                  string
-	SelectByCedarSystemID   string
 	SelectByCedarSystemIDs  string
 	SelectBySystemIntakeIDs string
 }

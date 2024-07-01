@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (d *dataReader) batchCedarSystemLinkedTRBRequests(ctx context.Context, requests []models.TRBRequestsByCedarSystemIDsRequest) ([][]*models.TRBRequest, []error) {
