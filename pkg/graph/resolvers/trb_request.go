@@ -9,12 +9,12 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/dataloaders"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // CreateTRBRequest makes a new TRB request

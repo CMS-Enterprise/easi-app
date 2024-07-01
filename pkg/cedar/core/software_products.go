@@ -6,10 +6,10 @@ import (
 
 	"github.com/guregu/null/zero"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	software_products "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/software_products"
-	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	software_products "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/software_products"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // GetSoftwareProductsBySystem queries CEDAR for software product/tooling information associated with a particular system, taking the version-independent ID of a system

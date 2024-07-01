@@ -4,12 +4,12 @@ import (
 	"context"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/email"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/email"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 // TestCreateTRBRequestForm tests the creation a new TRB request form

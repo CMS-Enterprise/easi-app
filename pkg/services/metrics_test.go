@@ -8,8 +8,8 @@ import (
 	"github.com/facebookgo/clock"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *ServicesTestSuite) TestNewFetchMetrics() {

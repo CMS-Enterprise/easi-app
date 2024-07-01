@@ -3,11 +3,11 @@ package main
 import (
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/userhelpers"
+	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
 func createSystemIntakeGRBReviewer(

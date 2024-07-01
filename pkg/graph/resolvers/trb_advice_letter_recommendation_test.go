@@ -3,8 +3,8 @@ package resolvers
 import (
 	"github.com/lib/pq"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // TestTRBAdviceLetterRecommendationCRUD tests CRUD for TRB advice letter recommendations

@@ -9,8 +9,8 @@ import (
 
 	"github.com/alecthomas/jsonschema"
 
-	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
-	"github.com/cmsgov/easi-app/pkg/cedar/intake/translation"
+	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/intake/translation"
 )
 
 func generateSchema(object interface{}, version translation.SchemaVersion, filename string) {

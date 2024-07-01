@@ -9,7 +9,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // Config holds EASi application specific configs for SES

@@ -1,6 +1,6 @@
 # CEDAR Intake Asynchronous Approach
 
-The current (at time of writing) approach for sending data to the CEDAR Intake API is to [call the CEDAR Intake client as a part of an action that a user takes](https://github.com/CMSgov/easi-app/blob/5df7edb258addd2e974d797523318b09a4b2e21b/pkg/server/routes.go#L267-L270). This works, but raises a few questions:
+The current (at time of writing) approach for sending data to the CEDAR Intake API is to [call the CEDAR Intake client as a part of an action that a user takes](https://github.com/cms-enterprise/easi-app/blob/5df7edb258addd2e974d797523318b09a4b2e21b/pkg/server/routes.go#L267-L270). This works, but raises a few questions:
 
 - Should a failed call to CEDAR result in an error being returned to the user? (It does at the time of writing)
 - How do we handle if one of these calls to CEDAR fails?

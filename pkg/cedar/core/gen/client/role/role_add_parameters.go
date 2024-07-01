@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/core/gen/models"
+	"github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/models"
 )
 
 // NewRoleAddParams creates a new RoleAddParams object,

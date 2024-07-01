@@ -5,9 +5,9 @@ import (
 
 	"github.com/guregu/null/zero"
 
-	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 var mockRoleTypes = []*models.CedarRoleType{

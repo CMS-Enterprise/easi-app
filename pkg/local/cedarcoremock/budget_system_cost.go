@@ -3,7 +3,7 @@ package cedarcoremock
 import (
 	"github.com/guregu/null/zero"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // GetBudgetSystemCost returns a mock BudgetSystemCost

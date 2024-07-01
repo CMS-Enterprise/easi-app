@@ -9,12 +9,12 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
-	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // creates, fills out the initial request form, and submits a system intake

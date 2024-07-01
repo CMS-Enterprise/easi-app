@@ -3,9 +3,9 @@ package translation
 // import (
 // 	"encoding/json"
 
-// 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
-// 	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
-// 	"github.com/cmsgov/easi-app/pkg/models"
+// 	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
+// 	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
+// 	"github.com/cms-enterprise/easi-app/pkg/models"
 // )
 
 // // TranslatableFeedback is a wrapper around our GRTFeedback model for translating into the CEDAR Intake API schema

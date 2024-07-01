@@ -1,4 +1,4 @@
-module github.com/cmsgov/easi-app
+module github.com/cms-enterprise/easi-app
 
 go 1.22.3
 
