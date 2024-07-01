@@ -5,7 +5,7 @@ import (
 
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // getBaseLCIDAction returns an action with basic entries related to LCID operations set. Action type is handled by the calling action

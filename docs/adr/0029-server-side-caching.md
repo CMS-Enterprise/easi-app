@@ -33,7 +33,7 @@ Additionally, the main con of in-application memory caching (that it's not share
 
 ### In application memory caching
 
-* `+` Very easy to implement. (See [the POC branch](https://github.com/CMSgov/easi-app/compare/EASI-1505/go-cache-poc) for an example of how to implement it.)
+* `+` Very easy to implement. (See [the POC branch](https://github.com/cms-enterprise/easi-app/compare/EASI-1505/go-cache-poc) for an example of how to implement it.)
 * `+` Requires no changes to infrastructure
 * `+` Likely has the lowest response time out of all the available options
 * `+` Can easily be temporarily introduced and later replaced with another solution
