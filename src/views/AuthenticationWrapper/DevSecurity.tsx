@@ -52,12 +52,12 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
     return Promise.resolve(true);
   };
   oktaAuth.getUser = <T extends CustomUserClaims>(): Promise<UserClaims<T>> => {
-    const mockUser = {
+    const mockUser: UserClaims = {
       name: authState.name,
       sub: '',
       euaId: authState.euaId,
       groups: authState.groups
-    } as CustomUserClaims;
+    };
 
     return Promise.resolve(mockUser as UserClaims<T>);
   };
