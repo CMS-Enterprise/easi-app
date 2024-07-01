@@ -67,12 +67,12 @@ func (s *Store) SystemIntakesByCedarSystemIDs(ctx context.Context, requests []mo
 	// build lists for multiple `where` clauses
 	var (
 		cedarSystemIDs = make([]string, len(requests))
-		states         = make([]string, len(requests))
+		states         = make([]models.SystemIntakeState, len(requests))
 	)
 
 	for i, req := range requests {
 		cedarSystemIDs[i] = req.CedarSystemID
-		states[i] = string(req.State)
+		states[i] = req.State
 	}
 
 	var systemIntakes []*models.SystemIntakesByCedarSystemIDsResponse

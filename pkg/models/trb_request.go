@@ -122,5 +122,5 @@ type TRBRequestsByCedarSystemIDsRequest struct {
 
 type TRBRequestsByCedarSystemIDsResponse struct {
 	CedarSystemID string `db:"system_id"`
-	TRBRequest    *TRBRequest
+	*TRBRequest
 }

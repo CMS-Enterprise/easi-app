@@ -241,5 +241,5 @@ type SystemIntakesByCedarSystemIDsRequest struct {
 
 type SystemIntakesByCedarSystemIDsResponse struct {
 	CedarSystemID string `db:"system_id"`
-	SystemIntake  *SystemIntake
+	*SystemIntake
 }
