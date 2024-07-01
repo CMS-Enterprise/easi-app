@@ -17,16 +17,17 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/apperrors"
-	"github.com/cms-enterprise/easi-app/pkg/authentication"
-	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
-	"github.com/cms-enterprise/easi-app/pkg/email"
-	"github.com/cms-enterprise/easi-app/pkg/flags"
-	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
-	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
-	"github.com/cms-enterprise/easi-app/pkg/models"
-	"github.com/cms-enterprise/easi-app/pkg/services"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/authentication"
+	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
+	"github.com/cmsgov/easi-app/pkg/email"
+	"github.com/cmsgov/easi-app/pkg/flags"
+	"github.com/cmsgov/easi-app/pkg/graph/generated"
+	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
+	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/services"
+	"github.com/cmsgov/easi-app/pkg/userhelpers"
 )
 
 // AlternativeASolution is the resolver for the alternativeASolution field.
@@ -651,6 +652,21 @@ func (r *mutationResolver) DeleteSystemIntakeContact(ctx context.Context, input 
 	}, nil
 }
 
+// CreateSystemIntakeGRBReviewer is the resolver for the createSystemIntakeGRBReviewer field.
+func (r *mutationResolver) CreateSystemIntakeGRBReviewer(ctx context.Context, input models.CreateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
+	return resolvers.CreateSystemIntakeGRBReviewer(ctx, r.store, r.emailClient, userhelpers.GetUserInfoAccountInfoWrapperFunc(r.service.FetchUserInfo), &input)
+}
+
+// UpdateSystemIntakeGRBReviewer is the resolver for the updateSystemIntakeGRBReviewer field.
+func (r *mutationResolver) UpdateSystemIntakeGRBReviewer(ctx context.Context, input models.UpdateSystemIntakeGRBReviewerInput) (*models.SystemIntakeGRBReviewer, error) {
+	return resolvers.UpdateSystemIntakeGRBReviewer(ctx, r.store, &input)
+}
+
+// DeleteSystemIntakeGRBReviewer is the resolver for the deleteSystemIntakeGRBReviewer field.
+func (r *mutationResolver) DeleteSystemIntakeGRBReviewer(ctx context.Context, input models.DeleteSystemIntakeGRBReviewerInput) (uuid.UUID, error) {
+	return input.ReviewerID, resolvers.DeleteSystemIntakeGRBReviewer(ctx, r.store, input.ReviewerID)
+}
+
 // UpdateSystemIntakeLinkedCedarSystem is the resolver for the updateSystemIntakeLinkedCedarSystem field.
 func (r *mutationResolver) UpdateSystemIntakeLinkedCedarSystem(ctx context.Context, input models.UpdateSystemIntakeLinkedCedarSystemInput) (*models.UpdateSystemIntakePayload, error) {
 	// If the linked system is not nil, make sure it's a valid CEDAR system, otherwise return an error
@@ -1178,20 +1194,40 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 		return nil, err
 	}
 
-	ok, err := services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode(ctx, intake)
+	// if this user created the intake
+	if ok := services.AuthorizeUserIsIntakeRequester(ctx, intake); ok {
+		return intake, nil
+	}
+
+	// if this user is an admin
+	if ok := services.AuthorizeRequireGRTJobCode(ctx); ok {
+		return intake, nil
+	}
+
+	grbUsers, err := r.store.SystemIntakeGRBReviewersBySystemIntakeIDs(ctx, []uuid.UUID{id})
 	if err != nil {
 		return nil, err
 	}
-	if !ok {
-		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
+
+	principal := appcontext.Principal(ctx)
+
+	if isGRBViewer := slices.ContainsFunc(grbUsers, func(reviewer *models.SystemIntakeGRBReviewer) bool {
+		return reviewer.UserID == principal.Account().ID
+	}); isGRBViewer {
+		return intake, nil
 	}
 
-	return intake, nil
+	return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
 }
 
 // SystemIntakes is the resolver for the systemIntakes field.
 func (r *queryResolver) SystemIntakes(ctx context.Context, openRequests bool) ([]*models.SystemIntake, error) {
 	return resolvers.SystemIntakes(ctx, r.store, openRequests)
+}
+
+// SystemIntakesWithReviewRequested is the resolver for the systemIntakesWithReviewRequested field.
+func (r *queryResolver) SystemIntakesWithReviewRequested(ctx context.Context) ([]*models.SystemIntake, error) {
+	return resolvers.SystemIntakesWithReviewRequested(ctx, r.store)
 }
 
 // SystemIntakesWithLcids is the resolver for the systemIntakesWithLcids field.
@@ -1736,7 +1772,7 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 
 // GrbReviewers is the resolver for the grbReviewers field.
 func (r *systemIntakeResolver) GrbReviewers(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeGRBReviewer, error) {
-	return []*models.SystemIntakeGRBReviewer{}, nil
+	return resolvers.SystemIntakeGRBReviewers(ctx, obj.ID)
 }
 
 // Isso is the resolver for the isso field.

@@ -4,23 +4,25 @@ import (
 	"context"
 	"testing"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
-	"github.com/cms-enterprise/easi-app/pkg/appconfig"
-	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/authentication"
-	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
-	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
-	"github.com/cms-enterprise/easi-app/pkg/email"
-	"github.com/cms-enterprise/easi-app/pkg/local"
-	"github.com/cms-enterprise/easi-app/pkg/models"
-	"github.com/cms-enterprise/easi-app/pkg/storage"
-	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
-	"github.com/cms-enterprise/easi-app/pkg/upload"
-	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
+	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/authentication"
+	cedarcore "github.com/cmsgov/easi-app/pkg/cedar/core"
+	"github.com/cmsgov/easi-app/pkg/dataloaders"
+	"github.com/cmsgov/easi-app/pkg/email"
+	"github.com/cmsgov/easi-app/pkg/local"
+	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
+	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cmsgov/easi-app/pkg/upload"
+	"github.com/cmsgov/easi-app/pkg/userhelpers"
 
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 )
@@ -76,6 +78,22 @@ type TestConfigs struct {
 	Principal   *authentication.EUAPrincipal
 	Context     context.Context
 	EmailClient *email.Client
+	Sender      *mockSender
+}
+
+type mockSender struct {
+	toAddresses []models.EmailAddress
+	ccAddresses []models.EmailAddress
+	subject     string
+	body        string
+}
+
+func (s *mockSender) Send(ctx context.Context, toAddresses []models.EmailAddress, ccAddresses []models.EmailAddress, subject string, body string) error {
+	s.toAddresses = toAddresses
+	s.ccAddresses = ccAddresses
+	s.subject = subject
+	s.body = body
+	return nil
 }
 
 // GetDefaultTestConfigs returns a TestConfigs struct with all the dependencies needed to run a test
@@ -108,12 +126,13 @@ func (tc *TestConfigs) GetDefaults() {
 
 	tc.Context = ctx
 
-	emailClient := NewEmailClient()
+	localSender := mockSender{}
+	tc.Sender = &localSender
+	emailClient := NewEmailClient(&localSender)
 	tc.EmailClient = emailClient
-
 }
 
-func NewEmailClient() *email.Client {
+func NewEmailClient(sender *mockSender) *email.Client {
 	config := testhelpers.NewConfig()
 	emailConfig := email.Config{
 		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
@@ -124,11 +143,9 @@ func NewEmailClient() *email.Client {
 		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
-	localSender := local.NewSender()
 
-	emailClient, _ := email.NewClient(emailConfig, localSender)
+	emailClient, _ := email.NewClient(emailConfig, sender)
 	return &emailClient
-
 }
 
 func getTestPrincipal(ctx context.Context, store *storage.Store, userName string) *authentication.EUAPrincipal {
@@ -178,6 +195,22 @@ func (s *ResolverSuite) createNewIntake() *models.SystemIntake {
 	s.NoError(err)
 
 	return newIntake
+}
+
+// utility method to get userAcct in resolver tests
+func (s *ResolverSuite) getOrCreateUserAcct(euaUserID string) *authentication.UserAccount {
+	ctx := s.testConfigs.Context
+	store := s.testConfigs.Store
+	okta := local.NewOktaAPIClient()
+	userAcct, err := sqlutils.WithTransactionRet(ctx, store, func(tx *sqlx.Tx) (*authentication.UserAccount, error) {
+		user, err := userhelpers.GetOrCreateUserAccount(ctx, tx, store, euaUserID, false, userhelpers.GetUserInfoAccountInfoWrapperFunc(okta.FetchUserInfo))
+		if err != nil {
+			return nil, err
+		}
+		return user, nil
+	})
+	s.NoError(err)
+	return userAcct
 }
 
 // ctxWithNewDataloaders sets new Dataloaders on the test suite's existing context and returns that context.

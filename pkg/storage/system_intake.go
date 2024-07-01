@@ -12,10 +12,11 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
-	"github.com/cms-enterprise/easi-app/pkg/appcontext"
-	"github.com/cms-enterprise/easi-app/pkg/apperrors"
-	"github.com/cms-enterprise/easi-app/pkg/models"
-	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/sqlqueries"
+	"github.com/cmsgov/easi-app/pkg/sqlutils"
 )
 
 // CreateSystemIntake creates a system intake, though without saving values for LCID-related fields
@@ -416,6 +417,19 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
 		return models.SystemIntakes{}, err
+	}
+	return intakes, nil
+}
+
+// FetchSystemIntakesWithReviewRequested queries the DB for all open system intakes where user is requested
+func (s *Store) FetchSystemIntakesWithReviewRequested(ctx context.Context, userID uuid.UUID) ([]*models.SystemIntake, error) {
+	intakes := []*models.SystemIntake{}
+	err := namedSelect(ctx, s, &intakes, sqlqueries.SystemIntakeGRBReviewer.GetIntakesWhereReviewRequested, args{
+		"user_id": userID,
+	})
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
+		return []*models.SystemIntake{}, err
 	}
 	return intakes, nil
 }

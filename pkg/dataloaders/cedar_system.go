@@ -8,7 +8,6 @@ import (
 )
 
 func (d *dataReader) getCedarSystemsByIDs(ctx context.Context, cedarSystemIDs []string) ([]*models.CedarSystem, []error) {
-	// will this have the same effect? TBD
 	data, err := d.getCedarSystems(ctx)
 	if err != nil {
 		return nil, []error{err}

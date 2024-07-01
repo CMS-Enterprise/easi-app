@@ -83,7 +83,7 @@ jobs:
           FLAG_SOURCE: LOCAL
           MINIO_ACCESS_KEY: minioadmin
           MINIO_SECRET_KEY: minioadmin
-          MINIO_ADDRESS: http://localhost:9000 # Server tests run outside of container, so use exposed port on localhost for MinIO
+          MINIO_ADDRESS: http://localhost:9004
         run: |
           docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up -d db
           docker-compose --project-name easi-server-test -f docker-compose.ci_server_test.yml up --exit-code-from db_migrate db_migrate
@@ -131,7 +131,7 @@ jobs:
           name: test-frontend-assets
           path: build/
       - name: Buildx Bake testing images
-        uses: docker/bake-action@v4
+        uses: docker/bake-action@v5
         with:
           files: docker-compose.cypress_ci.yml
           load: true

@@ -44,3 +44,7 @@ func NewSystemIntakeGRBReviewer(userID uuid.UUID, createdBy uuid.UUID) *SystemIn
 		userIDRelation: NewUserIDRelation(userID),
 	}
 }
+
+func (r SystemIntakeGRBReviewer) GetMappingID() uuid.UUID {
+	return r.SystemIntakeID
+}

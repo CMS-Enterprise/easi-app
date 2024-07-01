@@ -1,7 +1,7 @@
 @use 'uswds-core' as *;
 @use 'colors' as *;
 
-#ato {
+#ato-and-security {
     .usa-card__container {
         border: 0;
         border-radius: 0;
@@ -12,9 +12,6 @@
         max-width: none;
     }
 
-    .bg-success-dark {
-        background-color: color(green-cool-50) !important;
-      }
     .border-success-darker {
         background-color: color(green-cool-60) !important;
     }

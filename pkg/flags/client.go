@@ -53,7 +53,7 @@ func Principal(ctx context.Context) lduser.User {
 	// is an Anonymous user. Over time, may want to consider adding
 	// a `func Anonymous() bool` accessor to the authorizaion.Principal interface
 	// definition instead of doing this inference
-	authed := (p.AllowEASi() || p.AllowGRT())
+	authed := p.AllowEASi() || p.AllowGRT()
 
 	return lduser.
 		NewUserBuilder(key).

@@ -3,6 +3,7 @@ package cedarcore
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/guregu/null/zero"
 
@@ -76,6 +77,8 @@ func (c *Client) GetSystemSummary(ctx context.Context, opts ...systemSummaryPara
 				Name:                    zero.StringFromPtr(sys.Name),
 				Description:             zero.StringFrom(sys.Description),
 				Acronym:                 zero.StringFrom(sys.Acronym),
+				ATOEffectiveDate:        zero.TimeFrom(time.Time(sys.AtoEffectiveDate)),
+				ATOExpirationDate:       zero.TimeFrom(time.Time(sys.AtoExpirationDate)),
 				State:                   zero.StringFrom(sys.State),
 				Status:                  zero.StringFrom(sys.Status),
 				BusinessOwnerOrg:        zero.StringFrom(sys.BusinessOwnerOrg),

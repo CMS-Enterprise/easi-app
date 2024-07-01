@@ -58,7 +58,7 @@ func (s *Store) SetTRBRequestSystems(ctx context.Context, tx *sqlx.Tx, trbReques
 
 func (s *Store) TRBRequestSystemsByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestSystem, error) {
 	var trbRequestSystems []*models.TRBRequestSystem
-	return trbRequestSystems, selectNamed(ctx, s, &trbRequestSystems, sqlqueries.TRBRequestSystemForm.SelectByTRBRequestIDs, args{
+	return trbRequestSystems, namedSelect(ctx, s, &trbRequestSystems, sqlqueries.TRBRequestSystemForm.SelectByTRBRequestIDs, args{
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 }
@@ -66,7 +66,7 @@ func (s *Store) TRBRequestSystemsByTRBRequestIDs(ctx context.Context, trbRequest
 // TRBRequestsByCedarSystemID gets TRB Requests related to given Cedar System ID
 func (s *Store) TRBRequestsByCedarSystemID(ctx context.Context, cedarSystemID string, state models.TRBRequestState) ([]*models.TRBRequest, error) {
 	var trbRequests []*models.TRBRequest
-	return trbRequests, selectNamed(ctx, s, &trbRequests, sqlqueries.TRBRequestSystemForm.SelectByCedarSystemID, args{
+	return trbRequests, namedSelect(ctx, s, &trbRequests, sqlqueries.TRBRequestSystemForm.SelectByCedarSystemID, args{
 		"system_id": cedarSystemID,
 		"state":     state,
 	})

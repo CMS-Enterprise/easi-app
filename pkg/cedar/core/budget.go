@@ -21,16 +21,15 @@ func (c *Client) GetBudgetBySystem(ctx context.Context, cedarSystemID string) ([
 		return nil, cedarcoremock.NoSystemFoundError()
 	}
 	cedarSystem, err := c.GetSystem(ctx, cedarSystemID)
+	if err != nil {
+		return nil, err
+	}
 
 	params := budget.NewBudgetFindParams()
 
 	// Construct the parameters
 	params.SetSystemID(cedarSystem.VersionID.Ptr())
 	params.HTTPClient = c.hc
-
-	if err != nil {
-		return nil, err
-	}
 
 	// Make the API call
 	resp, err := c.sdk.Budget.BudgetFind(params, c.auth)
