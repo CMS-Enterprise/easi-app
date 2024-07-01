@@ -7,7 +7,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (d *dataReader) batchTRBRequestsByCedarSystemIDs(ctx context.Context, requests []models.TRBRequestsByCedarSystemIDsRequest) ([][]*models.TRBRequest, []error) {
+func (d *dataReader) batchCedarSystemLinkedTRBRequests(ctx context.Context, requests []models.TRBRequestsByCedarSystemIDsRequest) ([][]*models.TRBRequest, []error) {
 	data, err := d.db.TRBRequestsByCedarSystemIDs(ctx, requests)
 	if err != nil {
 		return nil, []error{err}
@@ -36,13 +36,13 @@ func (d *dataReader) batchTRBRequestsByCedarSystemIDs(ctx context.Context, reque
 	return out, nil
 }
 
-func GetTRBRequestsByCedarSystemID(ctx context.Context, cedarSystemID string, state models.TRBRequestState) ([]*models.TRBRequest, error) {
+func GetCedarSystemLinkedTRBRequests(ctx context.Context, cedarSystemID string, state models.TRBRequestState) ([]*models.TRBRequest, error) {
 	loaders, ok := loadersFromCTX(ctx)
 	if !ok {
-		return nil, errors.New("unexpected nil loaders in GetTRBRequestsByCedarSystemID")
+		return nil, errors.New("unexpected nil loaders in GetCedarSystemLinkedTRBRequests")
 	}
 
-	return loaders.TRBRequestsByCedarSystemID.Load(ctx, models.TRBRequestsByCedarSystemIDsRequest{
+	return loaders.CedarSystemLinkedTRBRequests.Load(ctx, models.TRBRequestsByCedarSystemIDsRequest{
 		CedarSystemID: cedarSystemID,
 		State:         state,
 	})

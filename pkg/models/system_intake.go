@@ -233,3 +233,13 @@ func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatu
 
 	return &issuedStatus
 }
+
+type SystemIntakesByCedarSystemIDsRequest struct {
+	CedarSystemID string
+	State         SystemIntakeState
+}
+
+type SystemIntakesByCedarSystemIDsResponse struct {
+	CedarSystemID string `db:"system_id"`
+	SystemIntake  *SystemIntake
+}
