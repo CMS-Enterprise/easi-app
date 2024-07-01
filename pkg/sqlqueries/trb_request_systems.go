@@ -19,11 +19,6 @@ var selectSystemsByTRBRequestIDsSQL string
 
 // trbRequestSelectByCedarSystemIDs holds the SQL query to get TRB requests by their Cedar System ID
 //
-//go:embed SQL/trb_request_system/select_by_cedar_system_id.sql
-var trbRequestSelectByCedarSystemID string
-
-// trbRequestSelectByCedarSystemIDs holds the SQL query to get TRB requests by their Cedar System ID
-//
 //go:embed SQL/trb_request_system/select_by_cedar_system_ids.sql
 var trbRequestSelectByCedarSystemIDs string
 
@@ -31,7 +26,6 @@ var trbRequestSelectByCedarSystemIDs string
 var TRBRequestSystemForm = trbRequestSystemScripts{
 	Set:                    setTRBRequestSystemsSQL,
 	Delete:                 deleteTRBRequestSystemsSQL,
-	SelectByCedarSystemID:  trbRequestSelectByCedarSystemID,
 	SelectByCedarSystemIDs: trbRequestSelectByCedarSystemIDs,
 	SelectByTRBRequestIDs:  selectSystemsByTRBRequestIDsSQL,
 }
@@ -39,7 +33,6 @@ var TRBRequestSystemForm = trbRequestSystemScripts{
 type trbRequestSystemScripts struct {
 	Set                    string
 	Delete                 string
-	SelectByCedarSystemID  string
 	SelectByCedarSystemIDs string
 	SelectByTRBRequestIDs  string
 }

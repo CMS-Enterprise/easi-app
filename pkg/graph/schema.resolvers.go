@@ -188,7 +188,7 @@ func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models
 
 // LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.
 func (r *cedarSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystem, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
-	return r.store.SystemIntakesByCedarSystemID(ctx, obj.ID.String, state)
+	return dataloaders.GetCedarSystemLinkedSystemIntakes(ctx, obj.ID.String, state)
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
