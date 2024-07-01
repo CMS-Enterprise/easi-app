@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 const noDecisionInvalidStateErrMsg = "issue calculating the requester intake status, intake is in an invalid state - step is DECISION, but decisionState is NO_DECISION"

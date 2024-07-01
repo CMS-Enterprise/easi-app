@@ -3,8 +3,8 @@ package storage
 import (
 	"context"
 
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func (s *StoreTestSuite) TestCreateSystemIntakeContact() {

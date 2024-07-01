@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"strings"
 
-	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
-	intakemodels "github.com/cmsgov/easi-app/pkg/cedar/intake/models"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers"
-	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/models"
+	wire "github.com/cms-enterprise/easi-app/pkg/cedar/intake/gen/models"
+	intakemodels "github.com/cms-enterprise/easi-app/pkg/cedar/intake/models"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // TranslatableSystemIntake is a wrapper around our SystemIntake model for translating into the CEDAR Intake API schema

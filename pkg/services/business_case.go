@@ -7,11 +7,11 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/appvalidation"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/appvalidation"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // NewFetchBusinessCaseByID is a service to fetch the business case by id

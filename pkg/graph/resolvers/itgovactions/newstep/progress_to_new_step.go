@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // IsIntakeValid checks if in an intake and a new step from a Progress to New Step action are valid

@@ -9,7 +9,7 @@ import (
 	"html/template"
 	"io"
 
-	"github.com/cmsgov/easi-app/pkg/sanitization"
+	"github.com/cms-enterprise/easi-app/pkg/sanitization"
 )
 
 // HTML represents html code. It is sanitized when unmarshaled from graphQL or when converted to HTML to only allow specific tags
