@@ -9,8 +9,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 type archiveSystemIntake func(context context.Context, id uuid.UUID) error

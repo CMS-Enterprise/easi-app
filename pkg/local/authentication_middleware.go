@@ -9,10 +9,10 @@ import (
 
 	"github.com/go-openapi/swag"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/userhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
 // DevUserConfig is the set of values that can be passed in a request header

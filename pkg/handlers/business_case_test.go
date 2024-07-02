@@ -12,10 +12,10 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/authentication"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func newMockFetchBusinessCaseByID(err error) func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {

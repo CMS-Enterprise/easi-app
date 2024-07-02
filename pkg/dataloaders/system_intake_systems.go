@@ -6,8 +6,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (d *dataReader) batchSystemIntakeSystemsBySystemIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([][]*models.SystemIntakeSystem, []error) {

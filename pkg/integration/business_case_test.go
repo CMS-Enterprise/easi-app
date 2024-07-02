@@ -12,8 +12,8 @@ import (
 
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 )
 
 func (s *IntegrationTestSuite) TestBusinessCaseEndpoints() {

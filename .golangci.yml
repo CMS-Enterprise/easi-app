@@ -18,7 +18,7 @@ linters-settings:
   goimports:
     # put imports beginning with prefix after 3rd-party packages;
     # it's a comma-separated list of prefixes
-    local-prefixes: github.com/cmsgov/easi-app
+    local-prefixes: github.com/cms-enterprise/easi-app
   revive:
     confidence: 0.1 # Default is 0.8. We want to ignore things that have an extremely low confidence level
   exhaustive:

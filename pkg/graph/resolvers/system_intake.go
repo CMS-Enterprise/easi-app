@@ -8,12 +8,12 @@ import (
 	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/graph/resolvers/systemintake/formstate"
-	"github.com/cmsgov/easi-app/pkg/helpers"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
-	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers/systemintake/formstate"
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
 // CreateSystemIntake creates a system intake.

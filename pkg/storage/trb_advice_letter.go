@@ -10,9 +10,9 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // CreateTRBAdviceLetter creates an advice letter for a TRB request, in the "In Progress" status

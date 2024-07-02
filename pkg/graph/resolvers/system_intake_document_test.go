@@ -6,8 +6,8 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/easiencoding"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {

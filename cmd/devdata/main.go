@@ -9,12 +9,12 @@ import (
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
-	"github.com/cmsgov/easi-app/cmd/devdata/mock"
-	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
-	"github.com/cmsgov/easi-app/pkg/upload"
+	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/storage"
+	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
 
 type seederConfig struct {
@@ -547,7 +547,7 @@ func main() {
 	// Intakes with Relation data
 	// 1. Intake with no related systems/services
 	intakeID = uuid.MustParse("6a825f1d-e935-4d9b-b09f-f3761385d349")
-	makeSystemIntakeAndSubmit("System Intake Relation (New System)", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("System Intake Relation (New System/Contract)", &intakeID, requesterEUA, logger, store)
 	setSystemIntakeRelationNewSystem(
 		logger,
 		store,
@@ -555,29 +555,67 @@ func main() {
 		[]string{"12345", "67890"},
 	)
 
-	// 2. Intake related to CEDAR System(s)
+	// 2. Intakes related to CEDAR System(s)
 	intakeID = uuid.MustParse("29d73aa0-3a29-478e-afb4-374a7594be47")
-	makeSystemIntakeAndSubmit("System Intake Relation (Existing System)", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("System Intake Relation (Existing System 0A)", &intakeID, requesterEUA, logger, store)
 	setSystemIntakeRelationExistingSystem(
 		logger,
 		store,
 		intakeID,
-		[]string{"12345", "67890"},
+		[]string{"00001", "00002"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
 		},
 	)
 
-	// 3. Intake related to an existing contract/service
+	intakeID = uuid.MustParse("28f36737-b5cf-464a-a5a2-f1c89acea4cf")
+	makeSystemIntakeAndSubmit("Related Intake 1 (system 0A)", &intakeID, requesterEUA, logger, store)
+	setSystemIntakeRelationExistingSystem(
+		logger,
+		store,
+		intakeID,
+		[]string{"00003", "00004"},
+		[]string{
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}",
+		},
+	)
+
+	intakeID = uuid.MustParse("dd31c8bd-b677-434c-aa35-56138f0b443b")
+	makeSystemIntakeAndSubmit("Related Intake 2 (system 1B)", &intakeID, requesterEUA, logger, store)
+	setSystemIntakeRelationExistingSystem(
+		logger,
+		store,
+		intakeID,
+		[]string{"00003", "00004"},
+		[]string{
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}",
+		},
+	)
+
+	intakeID = uuid.MustParse("020fba51-9b95-4e87-8cd4-808ae6e3dac8")
+	makeSystemIntakeAndSubmit("Related Intake 3 (contract 01)", &intakeID, requesterEUA, logger, store)
+	setSystemIntakeRelationExistingSystem(
+		logger,
+		store,
+		intakeID,
+		[]string{"00005", "00001"},
+		[]string{
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC6G}",
+		},
+	)
+	// 3. Intakes related to an existing contract/service
 	intakeID = uuid.MustParse("b8e3fbf3-73af-4bac-bac3-fd6167a36166")
-	makeSystemIntakeAndSubmit("System Intake Relation (Existing Contract/Service)", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("System Intake Relation (Existing Contract/Service 01)", &intakeID, requesterEUA, logger, store)
 	setSystemIntakeRelationExistingService(
 		logger,
 		store,
 		intakeID,
 		"My Cool Existing Contract/Service",
-		[]string{"12345", "67890"},
+		[]string{"00001"},
 	)
 
 	// 4. Unlinked from system/contract intake

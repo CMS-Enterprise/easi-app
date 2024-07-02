@@ -7,9 +7,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/sqlutils"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
 // UpdateTRBRequestFundingSources upserts a list of funding sources to a TRB Request Form by funding number

@@ -13,7 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/appconfig"
 )
 
 // AVStatusTagName is the name of the tag that stores virus scan results for uploaded files

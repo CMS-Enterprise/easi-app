@@ -7,8 +7,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // SendTRBAdviceLetterInternalReviewEmailInput contains the data needed to to send the TRB advice

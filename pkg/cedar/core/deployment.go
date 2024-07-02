@@ -8,10 +8,10 @@ import (
 	"github.com/guregu/null/zero"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	apideployments "github.com/cmsgov/easi-app/pkg/cedar/core/gen/client/deployment"
-	"github.com/cmsgov/easi-app/pkg/local/cedarcoremock"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	apideployments "github.com/cms-enterprise/easi-app/pkg/cedar/core/gen/client/deployment"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // GetDeploymentsOptionalParams represents the optional parameters that can be used to filter deployments when searching through the CEDAR API

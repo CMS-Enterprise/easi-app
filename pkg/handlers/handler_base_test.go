@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 )
 
 type failWriter struct {
