@@ -233,3 +233,15 @@ func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatu
 
 	return &issuedStatus
 }
+
+type RelatedSystemIntake struct {
+	SystemIntake
+	relatedRequestID uuid.UUID `db:"related_request_id"`
+}
+
+func (s *RelatedSystemIntake) GetMappingID() uuid.UUID {
+	return s.relatedRequestID
+}
+func (s *RelatedSystemIntake) GetEmbedPtr() *SystemIntake {
+	return &s.SystemIntake
+}

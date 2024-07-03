@@ -807,6 +807,14 @@ type SystemIntake {
   Linked contract numbers
   """
   contractNumbers: [SystemIntakeContractNumber!]!
+  """
+  Other System Intakes that share a CEDAR System or Contract Number
+  """
+  relatedIntakes: [SystemIntake!]!
+  """
+  TRB Requests that share a CEDAR System or Contract Number
+  """
+  relatedTRBRequests: [TRBRequest!]!
 }
 
 type SystemIntakeContractNumber {
@@ -1577,6 +1585,15 @@ type TRBRequest {
   Linked systems
   """
   systems: [CedarSystem!]!
+
+  """
+  System Intakes that share a CEDAR System or Contract Number
+  """
+  relatedIntakes: [SystemIntake!]!
+  """
+  Other TRB Requests that share a CEDAR System or Contract Number
+  """
+  relatedTRBRequests: [TRBRequest!]!
 }
 
 type TRBRequestContractNumber {

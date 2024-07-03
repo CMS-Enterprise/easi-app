@@ -15,6 +15,7 @@ import (
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -38,6 +39,10 @@ func (s *seederConfig) seedTRBRequests(ctx context.Context) error {
 		s.seedTRBCase14,
 		s.seedTRBCase15,
 		s.seedTRBCase16,
+		s.seedTRBCase17,
+		s.seedTRBCase18,
+		s.seedTRBCase19,
+		s.seedTRBCase20,
 	}
 
 	for _, seedFunc := range cases {
@@ -414,10 +419,10 @@ func (s *seederConfig) seedTRBCase14(ctx context.Context) error {
 	_, err = s.addTRBExistingSystemRelation(
 		ctx,
 		trbRequest.ID,
-		[]string{"123", "456"}, // contract numbers
+		[]string{"001", "002"}, // contract numbers
 		[]string{ // cedar system IDs, these mock IDs are from the client helper
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
-			"{11AB1A00-1234-5678-ABC1-1A001B00CC2C}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
 		},
 	)
 	if err != nil {
@@ -446,12 +451,76 @@ func (s *seederConfig) seedTRBCase16(ctx context.Context) error {
 	_, err = s.addTRBExistingSystemRelation(
 		ctx,
 		trbRequest.ID,
-		[]string{"123", "456"}, // contract numbers
+		[]string{"ABC", "DEF"}, // contract numbers
 		[]string{ // cedar system IDs, these mock IDs are from the client helper
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC6G}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
 		},
 	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase17(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 17 - Completed request with related system (0A)").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingSystemRelation(
+		ctx,
+		trbRequest.ID,
+		[]string{"002", "003"}, // contract numbers
+		[]string{ // cedar system IDs, these mock IDs are from the client helper
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}",
+		},
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase18(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 18 - Completed request with related system (1B)").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingSystemRelation(
+		ctx,
+		trbRequest.ID,
+		[]string{"004", "005"}, // contract numbers
+		[]string{ // cedar system IDs, these mock IDs are from the client helper
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
+			"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}",
+		},
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase19(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 19 - Completed request form with related contract (123)").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"123", "006"})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase20(ctx context.Context) error {
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 20 - Completed request form with related contract (456)").Ptr(), true)
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"007", "456"})
 	if err != nil {
 		return err
 	}
@@ -888,7 +957,7 @@ func (s *seederConfig) addTRBExistingSystemRelation(
 		ctx,
 		s.store,
 		func(ctx context.Context, systemID string) (*models.CedarSystem, error) {
-			return &models.CedarSystem{}, nil
+			return cedarcoremock.GetSystem(systemID), nil
 		},
 		models.SetTRBRequestRelationExistingSystemInput{
 			TrbRequestID:    trbRequestID,
