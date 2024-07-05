@@ -16,7 +16,7 @@ func (d *dataReader) batchRelatedSystemIntakesBySystemIntakeIDs(ctx context.Cont
 		return nil, []error{err}
 	}
 
-	intakes := helpers.OneToManyEmbedded[*models.RelatedSystemIntake](intakeIDs, relatedIntakes)
+	intakes := helpers.OneToManyEmbedded(intakeIDs, relatedIntakes)
 
 	return intakes, nil
 }
@@ -37,7 +37,7 @@ func (d *dataReader) batchRelatedTRBRequestsBySystemIntakeIDs(ctx context.Contex
 		return nil, []error{err}
 	}
 
-	TRBRequests := helpers.OneToManyEmbedded[*models.RelatedTRBRequest](intakeIDs, relatedTRBRequests)
+	TRBRequests := helpers.OneToManyEmbedded(intakeIDs, relatedTRBRequests)
 
 	return TRBRequests, nil
 }
@@ -58,7 +58,7 @@ func (d *dataReader) batchRelatedSystemIntakesByTRBRequestIDs(ctx context.Contex
 		return nil, []error{err}
 	}
 
-	intakes := helpers.OneToManyEmbedded[*models.RelatedSystemIntake](trbRequestIDs, relatedIntakes)
+	intakes := helpers.OneToManyEmbedded(trbRequestIDs, relatedIntakes)
 
 	return intakes, nil
 }
@@ -79,7 +79,7 @@ func (d *dataReader) batchRelatedTRBRequestsByTRBRequestIDs(ctx context.Context,
 		return nil, []error{err}
 	}
 
-	TRBRequests := helpers.OneToManyEmbedded[*models.RelatedTRBRequest](trbRequestIDs, relatedTRBRequests)
+	TRBRequests := helpers.OneToManyEmbedded(trbRequestIDs, relatedTRBRequests)
 
 	return TRBRequests, nil
 }

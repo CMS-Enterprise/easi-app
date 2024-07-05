@@ -392,7 +392,7 @@ func (s *seederConfig) seedTRBCase12(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	_, err = s.addTRBNewSystemRelation(ctx, trbRequest.ID, []string{"123", "456"})
+	_, err = s.addTRBNewSystemRelation(ctx, trbRequest.ID, []string{"12345", "67890"})
 	if err != nil {
 		return err
 	}
@@ -404,7 +404,7 @@ func (s *seederConfig) seedTRBCase13(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"123", "456"})
+	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"12345", "67890"})
 	if err != nil {
 		return err
 	}
@@ -419,7 +419,7 @@ func (s *seederConfig) seedTRBCase14(ctx context.Context) error {
 	_, err = s.addTRBExistingSystemRelation(
 		ctx,
 		trbRequest.ID,
-		[]string{"001", "002"}, // contract numbers
+		[]string{"00001", "00002"}, // contract numbers
 		[]string{ // cedar system IDs, these mock IDs are from the client helper
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
@@ -471,7 +471,7 @@ func (s *seederConfig) seedTRBCase17(ctx context.Context) error {
 	_, err = s.addTRBExistingSystemRelation(
 		ctx,
 		trbRequest.ID,
-		[]string{"002", "003"}, // contract numbers
+		[]string{"00002", "00003"}, // contract numbers
 		[]string{ // cedar system IDs, these mock IDs are from the client helper
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC3D}",
@@ -491,7 +491,7 @@ func (s *seederConfig) seedTRBCase18(ctx context.Context) error {
 	_, err = s.addTRBExistingSystemRelation(
 		ctx,
 		trbRequest.ID,
-		[]string{"004", "005"}, // contract numbers
+		[]string{"00004", "00005"}, // contract numbers
 		[]string{ // cedar system IDs, these mock IDs are from the client helper
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC4E}",
@@ -504,11 +504,11 @@ func (s *seederConfig) seedTRBCase18(ctx context.Context) error {
 }
 
 func (s *seederConfig) seedTRBCase19(ctx context.Context) error {
-	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 19 - Completed request form with related contract (123)").Ptr(), true)
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 19 - Completed request form with related contract (12345)").Ptr(), true)
 	if err != nil {
 		return err
 	}
-	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"123", "006"})
+	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"12345", "00006"})
 	if err != nil {
 		return err
 	}
@@ -516,11 +516,11 @@ func (s *seederConfig) seedTRBCase19(ctx context.Context) error {
 }
 
 func (s *seederConfig) seedTRBCase20(ctx context.Context) error {
-	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 20 - Completed request form with related contract (456)").Ptr(), true)
+	trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom("Case 20 - Completed request form with related contract (67890)").Ptr(), true)
 	if err != nil {
 		return err
 	}
-	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"007", "456"})
+	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"00007", "67890"})
 	if err != nil {
 		return err
 	}

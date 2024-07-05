@@ -437,9 +437,9 @@ func updateSystemIntakeContractDetails(
 	plannedYearOneSpendingITPortion := "25%"
 	contractor := "Dr Doom"
 	startDate := time.Now().AddDate(-1, 0, 0)
-	hasContract := "HAVE_CONTRACT"
+	hasContract := "IN_PROGRESS"
 	endDate := time.Now().AddDate(3, 0, 0)
-	contractNumbers := []string{"123456789"}
+	contractNumbers := []string{}
 	input := models.UpdateSystemIntakeContractDetailsInput{
 		ID: intake.ID,
 		FundingSources: &models.SystemIntakeFundingSourcesInput{

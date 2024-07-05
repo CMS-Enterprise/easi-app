@@ -119,11 +119,11 @@ func (t *TRBRequest) GetName() string {
 
 type RelatedTRBRequest struct {
 	TRBRequest
-	relatedRequestID uuid.UUID `db:"related_request_id"`
+	RelatedRequestID uuid.UUID `db:"related_request_id"`
 }
 
 func (t *RelatedTRBRequest) GetMappingID() uuid.UUID {
-	return t.relatedRequestID
+	return t.RelatedRequestID
 }
 func (t *RelatedTRBRequest) GetEmbedPtr() *TRBRequest {
 	return &t.TRBRequest
