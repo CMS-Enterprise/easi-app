@@ -4,6 +4,7 @@ export type Flags = {
   downgradeTrbAdmin: boolean;
   systemProfileHiddenFields: boolean;
   systemWorkspace: boolean;
+  systemWorkspaceRequestsCard: boolean;
 };
 
 export type FlagsState = {

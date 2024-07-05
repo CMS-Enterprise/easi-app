@@ -83,12 +83,15 @@ import {
 import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
+import { useLinkCedarSystemIdQueryParam } from 'utils/linkCedarSystemIdQueryString';
+
 /**
  * This request link relation form is used in the contexts of TRB Requests and System Intakes.
  * There are 3 variables used to configure modes for this component:
  * - `requestType`
  * - `fromAdmin`
  * - `isNew`
+ * The query string var `linkCedarSystemId` is used to prefill the Existing Systems dropdown.
  */
 const RequestLinkForm = ({
   requestType,
@@ -112,6 +115,8 @@ const RequestLinkForm = ({
   ]);
 
   const { state } = useLocation<{ isNew?: boolean }>();
+
+  const linkCedarSystemId = useLinkCedarSystemIdQueryParam();
 
   // Form edit mode is either new or edit
   const isNew = !!state?.isNew;
@@ -219,6 +224,17 @@ const RequestLinkForm = ({
     },
     values: (values => {
       if (!values) return undefined;
+
+      // Condition for prefilling existing systems on new requests
+      if (values.relationType === null && linkCedarSystemId) {
+        return {
+          relationType: RequestRelationType.EXISTING_SYSTEM,
+          cedarSystemIDs: [linkCedarSystemId],
+          contractNumbers: '',
+          contractName: ''
+        };
+      }
+
       return {
         relationType: values.relationType,
         cedarSystemIDs: values.systems.map(v => v.id),
