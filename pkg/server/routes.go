@@ -155,7 +155,7 @@ func (s *Server) routes(
 
 	// override email client to use MailCatcher when running locally
 	if s.environment.Local() {
-		smtpSender := local.NewSMTPSender("host.docker.internal:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
+		smtpSender := local.NewSMTPSender("email:1025") // hardcoded for convenience, can be changed to depend on an environment variable if we need the flexibility
 		emailClient, err = email.NewClient(emailConfig, smtpSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
