@@ -188,13 +188,21 @@ func newS3Config() upload.Config {
 
 // utility method for creating a valid new system intake, checking for any errors
 func (s *ResolverSuite) createNewIntake() *models.SystemIntake {
-	newIntake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
+	newIntake, err := s.testConfigs.Store.CreateSystemIntake(s.ctxWithNewDataloaders(), &models.SystemIntake{
 		// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	s.NoError(err)
 
 	return newIntake
+}
+
+// utility method for creating a valid new system intake, checking for any errors
+func (s *ResolverSuite) createNewTRBRequest() *models.TRBRequest {
+	newTRBRequest, err := CreateTRBRequest(s.ctxWithNewDataloaders(), models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+
+	return newTRBRequest
 }
 
 // utility method to get userAcct in resolver tests
