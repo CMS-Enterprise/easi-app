@@ -8,10 +8,16 @@ const resources = {
   'en-US': enUS
 };
 
-i18n.use(LanguageDetector).use(initReactI18next).init({
-  lng: 'en-US',
-  fallbackLng: 'en-US',
-  resources
-});
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    lng: 'en-US',
+    fallbackLng: 'en-US',
+    resources,
+    interpolation: {
+      escapeValue: false // react already safe from xss => https://www.i18next.com/translation-function/interpolation#unescape
+    }
+  });
 
 export default i18n;
