@@ -23,6 +23,8 @@ const flattenSubfieldErrors = (
   errors: FieldErrors | Array<FieldErrors>,
   flatErrors: FlatErrors = {}
 ): FlatErrors => {
+  if (!errors) return flatErrors;
+
   // Flatten array field type errors
   if (Array.isArray(errors)) {
     return flattenArrayFieldErrors(key, errors, flatErrors);
@@ -34,6 +36,8 @@ const flattenSubfieldErrors = (
   ][];
 
   return entries.reduce<FlatErrors>((acc, [errorKey, error]) => {
+    if (!error) return flatErrors;
+
     // Flatten array field type errors
     if (Array.isArray(error)) {
       return flattenArrayFieldErrors(`${key}.${errorKey}`, error, flatErrors);

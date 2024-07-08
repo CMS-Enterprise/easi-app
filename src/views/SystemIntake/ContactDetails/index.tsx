@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, FieldPath, UseFormSetValue } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -281,10 +281,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const hasErrors = Object.keys(errors).length > 0;
 
   /** Flattened field errors, excluding any root errors */
-  const fieldErrors = useMemo(
-    () => flattenFormErrors<ContactDetailsForm>(errors),
-    [errors]
-  );
+  const fieldErrors = flattenFormErrors<ContactDetailsForm>(errors);
 
   // Scroll errors into view on submit
   useEffect(() => {
