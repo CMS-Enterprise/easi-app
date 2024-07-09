@@ -4,7 +4,6 @@ WITH searched_intake_ids AS (
 related_intakes_by_system AS (
 	SELECT
 		sids.system_intake_id AS searched_intake_id,
-		-- sis_one.system_id AS related_system_id,
 		sis_two.system_intake_id
 	FROM searched_intake_ids sids
 	INNER JOIN system_intake_systems sis_one
@@ -16,7 +15,6 @@ related_intakes_by_system AS (
 related_intakes_by_contract_number AS (
 	SELECT
 		sids.system_intake_id AS searched_intake_id,
-		-- sicn_one.contract_number AS related_contract_number,
 		sicn_two.system_intake_id
 	FROM searched_intake_ids sids
 	INNER JOIN system_intake_contract_numbers sicn_one
@@ -28,19 +26,16 @@ related_intakes_by_contract_number AS (
 related_intakes AS (
 	SELECT
 		searched_intake_id,
--- 		related_intakes_by_system.related_system_id AS related_system_id_or_contract_number,
 		system_intake_id
 	FROM related_intakes_by_system
 	UNION
 	SELECT
 		searched_intake_id,
--- 		related_intakes_by_contract_number.related_contract_number AS related_system_id_or_contract_number,
 		system_intake_id
 	FROM related_intakes_by_contract_number
 )
 SELECT
 	related_intakes.searched_intake_id AS related_request_id,
--- 	related_intakes.related_system_id_or_contract_number,
 	system_intakes.*
 FROM system_intakes
 INNER JOIN related_intakes

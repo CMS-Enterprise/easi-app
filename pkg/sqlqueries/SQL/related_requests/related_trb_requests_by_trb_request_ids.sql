@@ -4,7 +4,6 @@ WITH searched_trb_request_ids AS (
 related_trb_requests_by_system AS (
 	SELECT
 		stids.trb_request_id AS searched_trb_request_id,
-		-- trb_sys_one.system_id AS related_system_id,
 		trb_sys_two.trb_request_id
 	FROM searched_trb_request_ids stids
 	INNER JOIN trb_request_systems trb_sys_one
@@ -16,7 +15,6 @@ related_trb_requests_by_system AS (
 related_trb_requests_by_contract_number AS (
 	SELECT
 		stids.trb_request_id AS searched_trb_request_id,
-		-- trb_cn_one.contract_number AS related_contract_number,
 		trb_cn_two.trb_request_id
 	FROM searched_trb_request_ids stids
 	INNER JOIN trb_request_contract_numbers trb_cn_one
@@ -28,19 +26,16 @@ related_trb_requests_by_contract_number AS (
 related_trb_requests AS (
 	SELECT
 		searched_trb_request_id,
--- 		related_trb_requests_by_system.related_system_id AS related_system_id_or_contract_number,
 		trb_request_id
 	FROM related_trb_requests_by_system
 	UNION
 	SELECT
 		searched_trb_request_id,
--- 		related_trb_requests_by_contract_number.related_contract_number AS related_system_id_or_contract_number,
 		trb_request_id
 	FROM related_trb_requests_by_contract_number
 )
 SELECT
 	related_trb_requests.searched_trb_request_id AS related_request_id,
--- 	related_trb_requests.related_system_id_or_contract_number,
 	trb_request.*
 FROM trb_request
 INNER JOIN related_trb_requests
