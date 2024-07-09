@@ -59,7 +59,7 @@ export const SystemWorkspace = () => {
     return <PageLoading />;
   }
 
-  if (error || !data || !data.cedarSystemDetails) {
+  if (error || !data || !data.cedarSystemDetails || !cedarSystem) {
     return <NotFound />;
   }
 
@@ -138,7 +138,11 @@ export const SystemWorkspace = () => {
           />
 
           {flags.systemWorkspaceRequestsCard && (
-            <RequestsCard systemId={systemId} />
+            <RequestsCard
+              systemId={systemId}
+              trbCount={cedarSystem.linkedTrbRequests.length}
+              itgovCount={cedarSystem.linkedSystemIntakes.length}
+            />
           )}
         </CardGroup>
       </Grid>
