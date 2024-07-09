@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -18,22 +19,7 @@ func (d *dataReader) batchCedarSystemLinkedSystemIntakes(ctx context.Context, re
 		ids[i] = requests[i].CedarSystemID
 	}
 
-	store := map[string][]*models.SystemIntake{}
-
-	for _, req := range requests {
-		store[req.CedarSystemID] = []*models.SystemIntake{}
-	}
-
-	for _, item := range data {
-		store[item.CedarSystemID] = append(store[item.CedarSystemID], item.SystemIntake)
-	}
-
-	var out [][]*models.SystemIntake
-	for _, req := range requests {
-		out = append(out, store[req.CedarSystemID])
-	}
-
-	return out, nil
+	return helpers.OneToManyEmbedded(ids, data), nil
 }
 
 func GetCedarSystemLinkedSystemIntakes(ctx context.Context, cedarSystemID string, state models.SystemIntakeState) ([]*models.SystemIntake, error) {

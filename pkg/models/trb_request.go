@@ -137,3 +137,11 @@ type TRBRequestsByCedarSystemIDsResponse struct {
 	CedarSystemID string `db:"system_id"`
 	*TRBRequest
 }
+
+func (t *TRBRequestsByCedarSystemIDsResponse) GetMappingID() string {
+	return t.CedarSystemID
+}
+
+func (t *TRBRequestsByCedarSystemIDsResponse) GetEmbedPtr() *TRBRequest {
+	return t.TRBRequest
+}

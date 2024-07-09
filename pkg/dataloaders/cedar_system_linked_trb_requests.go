@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -18,22 +19,7 @@ func (d *dataReader) batchCedarSystemLinkedTRBRequests(ctx context.Context, requ
 		ids[i] = requests[i].CedarSystemID
 	}
 
-	store := map[string][]*models.TRBRequest{}
-
-	for _, req := range requests {
-		store[req.CedarSystemID] = []*models.TRBRequest{}
-	}
-
-	for _, item := range data {
-		store[item.CedarSystemID] = append(store[item.CedarSystemID], item.TRBRequest)
-	}
-
-	var out [][]*models.TRBRequest
-	for _, req := range requests {
-		out = append(out, store[req.CedarSystemID])
-	}
-
-	return out, nil
+	return helpers.OneToManyEmbedded(ids, data), nil
 }
 
 func GetCedarSystemLinkedTRBRequests(ctx context.Context, cedarSystemID string, state models.TRBRequestState) ([]*models.TRBRequest, error) {
