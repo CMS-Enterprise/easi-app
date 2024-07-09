@@ -12,6 +12,8 @@ import {
   SystemIntakeStatusAdmin
 } from 'types/graphql-global-types';
 
+import { IsGrbViewContext } from '..';
+
 import Summary from '.';
 
 vi.mock('@okta/okta-react', () => ({
@@ -47,7 +49,8 @@ const summaryProps = {
   submittedAt: DateTime.local().toString(),
   lcid: null,
   requester,
-  contractNumbers: ['123456']
+  contractNumbers: ['123456'],
+  state: SystemIntakeState.OPEN
 };
 
 describe('The GRT Review page', () => {
@@ -55,7 +58,7 @@ describe('The GRT Review page', () => {
     render(
       <MemoryRouter>
         <MockedProvider>
-          <Summary {...summaryProps} state={SystemIntakeState.OPEN} />
+          <Summary {...summaryProps} />
         </MockedProvider>
       </MemoryRouter>
     );
@@ -104,5 +107,20 @@ describe('The GRT Review page', () => {
         `LCID issued: ${lcid}`
       )
     ).toBeInTheDocument();
+  });
+
+  it('hides action buttons for GRB view', async () => {
+    render(
+      <MemoryRouter>
+        <MockedProvider>
+          <IsGrbViewContext.Provider value>
+            <Summary {...summaryProps} />
+          </IsGrbViewContext.Provider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByRole('button', { name: 'Assign' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Take an action' })).toBeNull();
   });
 });
