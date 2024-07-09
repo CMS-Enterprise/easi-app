@@ -1907,6 +1907,16 @@ func (r *systemIntakeResolver) ContractNumbers(ctx context.Context, obj *models.
 	return resolvers.SystemIntakeContractNumbers(ctx, obj.ID)
 }
 
+// RelatedIntakes is the resolver for the relatedIntakes field.
+func (r *systemIntakeResolver) RelatedIntakes(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntake, error) {
+	return resolvers.SystemIntakeRelatedSystemIntakes(ctx, obj.ID)
+}
+
+// RelatedTRBRequests is the resolver for the relatedTRBRequests field.
+func (r *systemIntakeResolver) RelatedTRBRequests(ctx context.Context, obj *models.SystemIntake) ([]*models.TRBRequest, error) {
+	return resolvers.SystemIntakeRelatedTRBRequests(ctx, obj.ID)
+}
+
 // DocumentType is the resolver for the documentType field.
 func (r *systemIntakeDocumentResolver) DocumentType(ctx context.Context, obj *models.SystemIntakeDocument) (*models.SystemIntakeDocumentType, error) {
 	return &models.SystemIntakeDocumentType{
@@ -2070,6 +2080,16 @@ func (r *tRBRequestResolver) ContractNumbers(ctx context.Context, obj *models.TR
 // Systems is the resolver for the systems field.
 func (r *tRBRequestResolver) Systems(ctx context.Context, obj *models.TRBRequest) ([]*models.CedarSystem, error) {
 	return resolvers.TRBRequestSystems(ctx, obj.ID)
+}
+
+// RelatedIntakes is the resolver for the relatedIntakes field.
+func (r *tRBRequestResolver) RelatedIntakes(ctx context.Context, obj *models.TRBRequest) ([]*models.SystemIntake, error) {
+	return resolvers.TRBRequestRelatedSystemIntakes(ctx, obj.ID)
+}
+
+// RelatedTRBRequests is the resolver for the relatedTRBRequests field.
+func (r *tRBRequestResolver) RelatedTRBRequests(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequest, error) {
+	return resolvers.TRBRequestRelatedTRBRequests(ctx, obj.ID)
 }
 
 // UserInfo is the resolver for the userInfo field.
