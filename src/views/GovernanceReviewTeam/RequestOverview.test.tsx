@@ -45,6 +45,27 @@ const waitForPageLoad = async (testId: string = 'grt-submit-action-view') => {
   });
 };
 
+const mockStore = configureMockStore();
+const defaultStore = mockStore({
+  auth: {
+    euaId: 'AAAA',
+    isUserSet: true,
+    groups: ['EASI_D_GOVTEAM']
+  },
+  systemIntake: {
+    systemIntake: {
+      ...systemIntake,
+      businessCaseId: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
+    }
+  },
+  businessCase: {
+    form: {
+      ...businessCaseInitialData,
+      id: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
+    }
+  }
+});
+
 describe('Governance Review Team', () => {
   const adminNotesAndActionsQuery = {
     request: {
@@ -103,27 +124,6 @@ describe('Governance Review Team', () => {
       }
     }
   };
-
-  const mockStore = configureMockStore();
-  const defaultStore = mockStore({
-    auth: {
-      euaId: 'AAAA',
-      isUserSet: true,
-      groups: ['EASI_D_GOVTEAM']
-    },
-    systemIntake: {
-      systemIntake: {
-        ...systemIntake,
-        businessCaseId: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
-      }
-    },
-    businessCase: {
-      form: {
-        ...businessCaseInitialData,
-        id: '51aaa76e-57a6-4bff-ae51-f693b8038ba2'
-      }
-    }
-  });
 
   it('renders without errors (intake request)', async () => {
     render(
@@ -259,5 +259,35 @@ describe('Governance Review Team', () => {
       </MemoryRouter>
     );
     await waitForPageLoad('grt-actions-view');
+  });
+});
+
+describe('Governance Review Board', () => {
+  it('hides GRT navigation items', async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[
+          `/governance-review-board/${systemIntake.id}/intake-request`
+        ]}
+      >
+        <MockedProvider
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
+          addTypename={false}
+        >
+          <Provider store={defaultStore}>
+            <MessageProvider>
+              <Route path="/:reviewerType(governance-review-board)/:systemId/intake-request">
+                <RequestOverview />
+              </Route>
+            </MessageProvider>
+          </Provider>
+        </MockedProvider>
+      </MemoryRouter>
+    );
+
+    await waitForPageLoad('intake-review');
+
+    expect(screen.queryByRole('link', { name: 'Dates' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Action' })).toBeNull();
   });
 });
