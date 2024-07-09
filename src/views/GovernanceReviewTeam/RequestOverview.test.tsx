@@ -6,7 +6,12 @@ import { render, screen, waitFor } from '@testing-library/react';
 import configureMockStore from 'redux-mock-store';
 
 import { businessCaseInitialData } from 'data/businessCase';
-import { getSystemIntakeQuery, systemIntake } from 'data/mock/systemIntake';
+import {
+  getGovernanceTaskListQuery,
+  getSystemIntakeContactsQuery,
+  getSystemIntakeQuery,
+  systemIntake
+} from 'data/mock/systemIntake';
 import { MessageProvider } from 'hooks/useMessage';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
 
@@ -127,10 +132,13 @@ describe('Governance Review Team', () => {
           `/governance-review-team/${systemIntake.id}/intake-request`
         ]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
+        <MockedProvider
+          mocks={[getSystemIntakeQuery(), getSystemIntakeContactsQuery]}
+          addTypename={false}
+        >
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/governance-review-team/:systemId/intake-request">
+              <Route path="/:reviewerType(governance-review-team)/:systemId/intake-request">
                 <RequestOverview />
               </Route>
             </MessageProvider>
@@ -154,7 +162,7 @@ describe('Governance Review Team', () => {
         <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/governance-review-team/:systemId/business-case">
+              <Route path="/:reviewerType(governance-review-team)/:systemId/business-case">
                 <RequestOverview />
               </Route>
             </MessageProvider>
@@ -181,7 +189,7 @@ describe('Governance Review Team', () => {
         >
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/governance-review-team/:systemId/notes">
+              <Route path="/:reviewerType(governance-review-team)/:systemId/notes">
                 <RequestOverview />
               </Route>
             </MessageProvider>
@@ -200,7 +208,7 @@ describe('Governance Review Team', () => {
         <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/governance-review-team/:systemId/dates">
+              <Route path="/:reviewerType(governance-review-team)/:systemId/dates">
                 <RequestOverview />
               </Route>
             </MessageProvider>
@@ -220,7 +228,7 @@ describe('Governance Review Team', () => {
         <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/governance-review-team/:systemId/decision">
+              <Route path="/:reviewerType(governance-review-team)/:systemId/decision">
                 <RequestOverview />
               </Route>
             </MessageProvider>
@@ -236,10 +244,13 @@ describe('Governance Review Team', () => {
       <MemoryRouter
         initialEntries={[`/governance-review-team/${systemIntake.id}/actions`]}
       >
-        <MockedProvider mocks={[getSystemIntakeQuery()]} addTypename={false}>
+        <MockedProvider
+          mocks={[getSystemIntakeQuery(), getGovernanceTaskListQuery()]}
+          addTypename={false}
+        >
           <Provider store={defaultStore}>
             <MessageProvider>
-              <Route path="/governance-review-team/:systemId/actions">
+              <Route path="/:reviewerType(governance-review-team)/:systemId/actions">
                 <RequestOverview />
               </Route>
             </MessageProvider>
