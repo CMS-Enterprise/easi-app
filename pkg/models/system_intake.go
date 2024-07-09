@@ -245,3 +245,21 @@ func (s *RelatedSystemIntake) GetMappingID() uuid.UUID {
 func (s *RelatedSystemIntake) GetEmbedPtr() *SystemIntake {
 	return &s.SystemIntake
 }
+
+type SystemIntakesByCedarSystemIDsRequest struct {
+	CedarSystemID string
+	State         SystemIntakeState
+}
+
+type SystemIntakesByCedarSystemIDsResponse struct {
+	CedarSystemID string `db:"system_id"`
+	*SystemIntake
+}
+
+func (s *SystemIntakesByCedarSystemIDsResponse) GetMappingID() string {
+	return s.CedarSystemID
+}
+
+func (s *SystemIntakesByCedarSystemIDsResponse) GetEmbedPtr() *SystemIntake {
+	return s.SystemIntake
+}

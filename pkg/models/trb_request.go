@@ -25,7 +25,6 @@ func NewTRBRequest(createdBy string) *TRBRequest {
 	return &TRBRequest{
 		BaseStruct: NewBaseStruct(createdBy),
 	}
-
 }
 
 // TRBRequestType represents the types of TRBRequestType types
@@ -127,4 +126,22 @@ func (t *RelatedTRBRequest) GetMappingID() uuid.UUID {
 }
 func (t *RelatedTRBRequest) GetEmbedPtr() *TRBRequest {
 	return &t.TRBRequest
+}
+
+type TRBRequestsByCedarSystemIDsRequest struct {
+	CedarSystemID string
+	State         TRBRequestState
+}
+
+type TRBRequestsByCedarSystemIDsResponse struct {
+	CedarSystemID string `db:"system_id"`
+	*TRBRequest
+}
+
+func (t *TRBRequestsByCedarSystemIDsResponse) GetMappingID() string {
+	return t.CedarSystemID
+}
+
+func (t *TRBRequestsByCedarSystemIDsResponse) GetEmbedPtr() *TRBRequest {
+	return t.TRBRequest
 }

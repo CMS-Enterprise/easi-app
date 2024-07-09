@@ -30,3 +30,7 @@ func SystemIntakeSystems(ctx context.Context, systemIntakeID uuid.UUID) ([]*mode
 	}
 	return systems, nil
 }
+
+func CedarSystemLinkedSystemIntakes(ctx context.Context, cedarSystemID string, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
+	return dataloaders.GetCedarSystemLinkedSystemIntakes(ctx, cedarSystemID, state)
+}

@@ -63,11 +63,21 @@ func (s *Store) TRBRequestSystemsByTRBRequestIDs(ctx context.Context, trbRequest
 	})
 }
 
-// TRBRequestsByCedarSystemID gets TRB Requests related to given Cedar System ID
-func (s *Store) TRBRequestsByCedarSystemID(ctx context.Context, cedarSystemID string, state models.TRBRequestState) ([]*models.TRBRequest, error) {
-	var trbRequests []*models.TRBRequest
-	return trbRequests, namedSelect(ctx, s, &trbRequests, sqlqueries.TRBRequestSystemForm.SelectByCedarSystemID, args{
-		"system_id": cedarSystemID,
-		"state":     state,
+func (s *Store) TRBRequestsByCedarSystemIDs(ctx context.Context, requests []models.TRBRequestsByCedarSystemIDsRequest) ([]*models.TRBRequestsByCedarSystemIDsResponse, error) {
+	// build lists for multiple `where` clauses
+	var (
+		cedarSystemIDs = make([]string, len(requests))
+		states         = make([]models.TRBRequestState, len(requests))
+	)
+
+	for i, req := range requests {
+		cedarSystemIDs[i] = req.CedarSystemID
+		states[i] = req.State
+	}
+
+	var trbRequests []*models.TRBRequestsByCedarSystemIDsResponse
+	return trbRequests, namedSelect(ctx, s, &trbRequests, sqlqueries.TRBRequestSystemForm.SelectByCedarSystemIDs, args{
+		"cedar_system_ids": pq.Array(cedarSystemIDs),
+		"states":           pq.Array(states),
 	})
 }

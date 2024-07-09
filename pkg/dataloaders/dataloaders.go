@@ -65,6 +65,8 @@ type dataReader struct {
 // you can then edit NewDataloaders below to include your new dataloader in the return
 type Dataloaders struct {
 	CedarSystemBookmark              *dataloadgen.Loader[models.BookmarkRequest, bool]
+	CedarSystemLinkedSystemIntakes   *dataloadgen.Loader[models.SystemIntakesByCedarSystemIDsRequest, []*models.SystemIntake]
+	CedarSystemLinkedTRBRequests     *dataloadgen.Loader[models.TRBRequestsByCedarSystemIDsRequest, []*models.TRBRequest]
 	FetchUserInfo                    *dataloadgen.Loader[string, *models.UserInfo]
 	GetUserAccount                   *dataloadgen.Loader[uuid.UUID, *authentication.UserAccount]
 	GetCedarSystem                   *dataloadgen.Loader[string, *models.CedarSystem]
@@ -88,6 +90,8 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 	}
 	return &Dataloaders{
 		CedarSystemBookmark:              dataloadgen.NewLoader(dr.batchCedarSystemIsBookmarked),
+		CedarSystemLinkedTRBRequests:     dataloadgen.NewLoader(dr.batchCedarSystemLinkedTRBRequests),
+		CedarSystemLinkedSystemIntakes:   dataloadgen.NewLoader(dr.batchCedarSystemLinkedSystemIntakes),
 		FetchUserInfo:                    dataloadgen.NewLoader(dr.fetchUserInfosByEUAUserIDs),
 		GetUserAccount:                   dataloadgen.NewLoader(dr.batchUserAccountsByIDs),
 		GetCedarSystem:                   dataloadgen.NewLoader(dr.getCedarSystemsByIDs),

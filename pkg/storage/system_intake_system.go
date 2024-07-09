@@ -63,10 +63,21 @@ func (s *Store) SystemIntakeSystemsBySystemIntakeIDs(ctx context.Context, system
 	})
 }
 
-func (s *Store) SystemIntakesByCedarSystemID(ctx context.Context, cedarSystemID string, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
-	var systemIntakes []*models.SystemIntake
-	return systemIntakes, namedSelect(ctx, s, &systemIntakes, sqlqueries.SystemIntakeSystemForm.SelectByCedarSystemID, args{
-		"system_id": cedarSystemID,
-		"state":     state,
+func (s *Store) SystemIntakesByCedarSystemIDs(ctx context.Context, requests []models.SystemIntakesByCedarSystemIDsRequest) ([]*models.SystemIntakesByCedarSystemIDsResponse, error) {
+	// build lists for multiple `where` clauses
+	var (
+		cedarSystemIDs = make([]string, len(requests))
+		states         = make([]models.SystemIntakeState, len(requests))
+	)
+
+	for i, req := range requests {
+		cedarSystemIDs[i] = req.CedarSystemID
+		states[i] = req.State
+	}
+
+	var systemIntakes []*models.SystemIntakesByCedarSystemIDsResponse
+	return systemIntakes, namedSelect(ctx, s, &systemIntakes, sqlqueries.SystemIntakeSystemForm.SelectByCedarSystemIDs, args{
+		"cedar_system_ids": pq.Array(cedarSystemIDs),
+		"states":           pq.Array(states),
 	})
 }

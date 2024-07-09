@@ -182,12 +182,12 @@ func (r *cedarSystemResolver) IsBookmarked(ctx context.Context, obj *models.Ceda
 
 // LinkedTrbRequests is the resolver for the linkedTrbRequests field.
 func (r *cedarSystemResolver) LinkedTrbRequests(ctx context.Context, obj *models.CedarSystem, state models.TRBRequestState) ([]*models.TRBRequest, error) {
-	return r.store.TRBRequestsByCedarSystemID(ctx, obj.ID.String, state)
+	return resolvers.CedarSystemLinkedTRBRequests(ctx, obj.ID.String, state)
 }
 
 // LinkedSystemIntakes is the resolver for the linkedSystemIntakes field.
 func (r *cedarSystemResolver) LinkedSystemIntakes(ctx context.Context, obj *models.CedarSystem, state models.SystemIntakeState) ([]*models.SystemIntake, error) {
-	return r.store.SystemIntakesByCedarSystemID(ctx, obj.ID.String, state)
+	return resolvers.CedarSystemLinkedSystemIntakes(ctx, obj.ID.String, state)
 }
 
 // SystemMaintainerInformation is the resolver for the systemMaintainerInformation field.
