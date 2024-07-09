@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null/zero"
 )
 
@@ -114,4 +115,16 @@ func (t *TRBRequest) GetName() string {
 	}
 
 	return "Draft"
+}
+
+type RelatedTRBRequest struct {
+	TRBRequest
+	RelatedRequestID uuid.UUID `db:"related_request_id"`
+}
+
+func (t *RelatedTRBRequest) GetMappingID() uuid.UUID {
+	return t.RelatedRequestID
+}
+func (t *RelatedTRBRequest) GetEmbedPtr() *TRBRequest {
+	return &t.TRBRequest
 }
