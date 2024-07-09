@@ -6226,10 +6226,10 @@ axe-core@=4.7.0:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.7.0.tgz#34ba5a48a8b564f67e103f0aa5768d76e15bbbbf"
   integrity sha512-M0JtH+hlOL5pLQwHOLNYZaXuhqmvS8oExsqB1SBYgA4Dk7u/xx+YdGHXaK5pyUfed5mYXdlYiphWq3G8cRi5JQ==
 
-axios@^1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.1.tgz#522145622a09dfaf49359837db9649ff245a35b9"
-  integrity sha512-+LV37nQcd1EpFalkXksWNBiA17NZ5m5/WspmHGmZmdx1qBOg/VNq/c4eRJiA9VQQHBOs+N0ZhhdU10h2TyNK7Q==
+axios@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.2.tgz#b625db8a7051fbea61c35a3cbb3a1daa7b9c7621"
+  integrity sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"
@@ -7182,10 +7182,10 @@ cypress-otp@^1.0.2:
   dependencies:
     otplib "12.0.1"
 
-cypress@^13.9.0:
-  version "13.9.0"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-13.9.0.tgz#b529cfa8f8c39ba163ed0501a25bb5b09c143652"
-  integrity sha512-atNjmYfHsvTuCaxTxLZr9xGoHz53LLui3266WWxXJHY7+N6OdwJdg/feEa3T+buez9dmUXHT1izCOklqG82uCQ==
+cypress@^13.12.0:
+  version "13.12.0"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-13.12.0.tgz#1a4ea89b7fa6855e32bc02eaf5e25fc45b9e273f"
+  integrity sha512-udzS2JilmI9ApO/UuqurEwOvThclin5ntz7K0BtnHBs+tg2Bl9QShLISXpSEMDv/u8b6mqdoAdyKeZiSqKWL8g==
   dependencies:
     "@cypress/request" "^3.0.0"
     "@cypress/xvfb" "^1.2.4"
@@ -7541,10 +7541,10 @@ dompurify@^2.3.3:
   resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.4.7.tgz#277adeb40a2c84be2d42a8bcd45f582bfa4d0cfc"
   integrity sha512-kxxKlPEDa6Nc5WJi+qRgPbOAbgTpSULL+vI3NUXsZMlkJxTqYI9wg5ZTay2sFrdZRWHPWNi+EdAhcJf81WtoMQ==
 
-dompurify@^3.1.4:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.1.4.tgz#42121304b2b3a6bae22f80131ff8a8f3f3c56be2"
-  integrity sha512-2gnshi6OshmuKil8rMZuQCGiUF3cUxHY3NGDzUAdUx/NPEe5DVnO8BDoAQouvgwnx0R/+a6jUn36Z0FSdq8vww==
+dompurify@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.1.5.tgz#2c6a113fc728682a0f55684b1388c58ddb79dc38"
+  integrity sha512-lwG+n5h8QNpxtyrJW/gJWckL+1/DQiYMX8f7t8Z2AZTPw1esVrqjI63i7Zc2Gz0aKzLVMYC1V1PL/ky+aY/NgA==
 
 domutils@1.5.1:
   version "1.5.1"

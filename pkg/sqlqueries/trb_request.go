@@ -41,7 +41,7 @@ type trbRequestScripts struct {
 	Create string
 	// Holds the SQL query to update a TRB Request
 	Update string
-	// Holds the SQL query to get a TRB Request by it's id
+	// Holds the SQL query to get a TRB Request by its id
 	GetByID string
 	// Holds the SQL query to get all TRB Requests
 	CollectionGet string

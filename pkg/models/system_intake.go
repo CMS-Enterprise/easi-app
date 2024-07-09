@@ -233,3 +233,33 @@ func (si *SystemIntake) LCIDStatus(currentTime time.Time) *SystemIntakeLCIDStatu
 
 	return &issuedStatus
 }
+
+type RelatedSystemIntake struct {
+	SystemIntake
+	RelatedRequestID uuid.UUID `db:"related_request_id"`
+}
+
+func (s *RelatedSystemIntake) GetMappingID() uuid.UUID {
+	return s.RelatedRequestID
+}
+func (s *RelatedSystemIntake) GetEmbedPtr() *SystemIntake {
+	return &s.SystemIntake
+}
+
+type SystemIntakesByCedarSystemIDsRequest struct {
+	CedarSystemID string
+	State         SystemIntakeState
+}
+
+type SystemIntakesByCedarSystemIDsResponse struct {
+	CedarSystemID string `db:"system_id"`
+	*SystemIntake
+}
+
+func (s *SystemIntakesByCedarSystemIDsResponse) GetMappingID() string {
+	return s.CedarSystemID
+}
+
+func (s *SystemIntakesByCedarSystemIDsResponse) GetEmbedPtr() *SystemIntake {
+	return s.SystemIntake
+}

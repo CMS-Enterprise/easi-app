@@ -13,15 +13,14 @@ func OneToMany[valT GetMappingID[keyT], keyT comparable](keys []keyT, vals []val
 	// each key will map to a slice of values (of type valT)
 	store := map[keyT][]valT{}
 
-	// populate the map with empty slices for each key
-	for _, key := range keys {
-		store[key] = []valT{}
-	}
-
 	// iterate over each value in the flat slice and append it to the correct key in the map,
 	// based on the value's GetMappingID() method
 	for _, val := range vals {
 		id := val.GetMappingID()
+		// populate map with empty slice if not present yet
+		if _, ok := store[id]; !ok {
+			store[id] = []valT{}
+		}
 		store[id] = append(store[id], val)
 	}
 
@@ -30,6 +29,31 @@ func OneToMany[valT GetMappingID[keyT], keyT comparable](keys []keyT, vals []val
 	//
 	// to do this, we iterate over the keys slice and append the corresponding value slice from the map
 	var out [][]valT
+	for _, key := range keys {
+		out = append(out, store[key])
+	}
+
+	return out
+}
+
+type GetMappingIDAndEmbedPtr[keyT comparable, embedPtr any] interface {
+	GetMappingID() keyT
+	GetEmbedPtr() embedPtr
+}
+
+func OneToManyEmbedded[valT GetMappingIDAndEmbedPtr[keyT, embedPtr], keyT comparable, embedPtr any](keys []keyT, vals []valT) [][]embedPtr {
+	store := map[keyT][]embedPtr{}
+
+	for _, val := range vals {
+		id := val.GetMappingID()
+		if _, ok := store[id]; !ok {
+			store[id] = []embedPtr{}
+		}
+		embeddedVal := val.GetEmbedPtr()
+		store[id] = append(store[id], embeddedVal)
+	}
+
+	var out [][]embedPtr
 	for _, key := range keys {
 		out = append(out, store[key])
 	}

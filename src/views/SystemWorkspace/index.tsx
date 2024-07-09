@@ -23,6 +23,7 @@ import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import AtoCard from './components/AtoCard';
 import HelpLinks from './components/HelpLinks';
+import RequestsCard from './components/RequestsCard';
 import SpacesCard from './components/SpacesCard';
 
 export const SystemWorkspace = () => {
@@ -58,7 +59,7 @@ export const SystemWorkspace = () => {
     return <PageLoading />;
   }
 
-  if (error || !data || !data.cedarSystemDetails) {
+  if (error || !data || !data.cedarSystemDetails || !cedarSystem) {
     return <NotFound />;
   }
 
@@ -135,6 +136,14 @@ export const SystemWorkspace = () => {
             dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
             isso={isso}
           />
+
+          {flags.systemWorkspaceRequestsCard && (
+            <RequestsCard
+              systemId={systemId}
+              trbCount={cedarSystem.linkedTrbRequests.length}
+              itgovCount={cedarSystem.linkedSystemIntakes.length}
+            />
+          )}
         </CardGroup>
       </Grid>
     </MainContent>

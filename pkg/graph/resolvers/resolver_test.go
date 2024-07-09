@@ -197,6 +197,14 @@ func (s *ResolverSuite) createNewIntake() *models.SystemIntake {
 	return newIntake
 }
 
+// utility method for creating a valid new system intake, checking for any errors
+func (s *ResolverSuite) createNewTRBRequest() *models.TRBRequest {
+	newTRBRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
+	s.NoError(err)
+
+	return newTRBRequest
+}
+
 // utility method to get userAcct in resolver tests
 func (s *ResolverSuite) getOrCreateUserAcct(euaUserID string) *authentication.UserAccount {
 	ctx := s.testConfigs.Context
