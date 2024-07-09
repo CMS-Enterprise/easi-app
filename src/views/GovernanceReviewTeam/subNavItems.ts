@@ -1,52 +1,57 @@
 import { Flags } from 'types/flags';
 
+export type ReviewerKey = 'governance-review-team' | 'governance-review-board';
+
 type SubNavItems = {
-  route: `/governance-review-team/${string}/${string}`;
+  route: `/${ReviewerKey}/${string}/${string}`;
   text: string;
   aria?: string;
   /** Value used to designate end of sidenav subgrouping / border-bottom */
   groupEnd?: boolean;
 }[];
 
-const subNavItems = (systemId: string, flags?: Flags): SubNavItems => [
+const subNavItems = (
+  systemId: string,
+  reviewerRoute: ReviewerKey,
+  flags?: Flags
+): SubNavItems => [
   {
-    route: `/governance-review-team/${systemId}/intake-request`,
+    route: `/${reviewerRoute}/${systemId}/intake-request`,
     text: 'general:intake',
     aria: 'aria.openIntake'
   },
   {
-    route: `/governance-review-team/${systemId}/documents`,
+    route: `/${reviewerRoute}/${systemId}/documents`,
     text: 'intake:documents.supportingDocuments',
     aria: 'aria.openDocuments'
   },
   {
-    route: `/governance-review-team/${systemId}/business-case`,
+    route: `/${reviewerRoute}/${systemId}/business-case`,
     text: 'general:businessCase',
     aria: 'aria.openBusiness',
     groupEnd: true
   },
   {
-    route: `/governance-review-team/${systemId}/feedback`,
+    route: `/${reviewerRoute}/${systemId}/feedback`,
     text: 'feedback.title',
     aria: 'aria.openFeedback'
   },
   {
-    route: `/governance-review-team/${systemId}/decision`,
+    route: `/${reviewerRoute}/${systemId}/decision`,
     text: 'decision.title',
-    aria: 'aria.openDecision',
-    groupEnd: true
+    aria: 'aria.openDecision'
   },
   {
-    route: `/governance-review-team/${systemId}/additional-information`,
-    text: 'additionalInformation.title',
-    aria: 'aria.openAdditionalInformation',
-    groupEnd: true
-  },
-  {
-    route: `/governance-review-team/${systemId}/lcid`,
+    route: `/${reviewerRoute}/${systemId}/lcid`,
     text: 'lifecycleID.title',
     aria: 'aria.openLcid',
     groupEnd: true
+  },
+  {
+    route: `/${reviewerRoute}/${systemId}/additional-information`,
+    text: 'additionalInformation.title',
+    aria: 'aria.openAdditionalInformation',
+    groupEnd: reviewerRoute === 'governance-review-team'
   },
   {
     route: `/governance-review-team/${systemId}/actions`,

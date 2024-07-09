@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from '@trussworks/react-uswds';
 import classNames from 'classnames';
@@ -11,6 +11,7 @@ import { SystemIntake } from 'queries/types/SystemIntake';
 import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
+import { IsGrbViewContext } from 'views/GovernanceReviewTeam';
 
 const AdditionalInformation = ({
   request,
@@ -22,6 +23,8 @@ const AdditionalInformation = ({
   const { t } = useTranslation('admin');
 
   const parentRoute = type === 'itgov' ? 'governance-review-team' : 'trb';
+
+  const isGrbView = useContext(IsGrbViewContext);
 
   return (
     <div>
@@ -71,17 +74,18 @@ const AdditionalInformation = ({
         </Alert>
       )}
 
-      {(request.relationType === null ||
-        request.relationType === RequestRelationType.NEW_SYSTEM) && (
-        <UswdsReactLink
-          to={`/${parentRoute}/${request.id}/additional-information/link`}
-          className={classNames('usa-button', {
-            'usa-button--outline': request.relationType !== null
-          })}
-        >
-          {t('linkSystem')}
-        </UswdsReactLink>
-      )}
+      {!isGrbView &&
+        (request.relationType === null ||
+          request.relationType === RequestRelationType.NEW_SYSTEM) && (
+          <UswdsReactLink
+            to={`/${parentRoute}/${request.id}/additional-information/link`}
+            className={classNames('usa-button', {
+              'usa-button--outline': request.relationType !== null
+            })}
+          >
+            {t('linkSystem')}
+          </UswdsReactLink>
+        )}
 
       {type !== 'itgov' && // Hide the contract number field from itgov, see Note [EASI-4160 Disable Contract Number Linking]
         request.relationType !== null &&

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
@@ -30,6 +30,8 @@ import { RequestType } from 'types/systemIntake';
 import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import { translateRequestType } from 'utils/systemIntake';
+
+import { IsGrbViewContext } from '..';
 
 import './index.scss';
 
@@ -68,6 +70,8 @@ const RequestSummary = ({
     }
   );
 
+  const isGrbView = useContext(IsGrbViewContext);
+
   /** Admin lead text and modal trigger button */
   const AdminLead = () => {
     const buttonText = t(
@@ -85,18 +89,20 @@ const RequestSummary = ({
           {!adminLead && <IconError className="text-error margin-right-05" />}
           {adminLead || t('governanceReviewTeam:adminLeads.notAssigned')}
         </span>
-        <Button
-          type="button"
-          className="width-auto"
-          unstyled
-          onClick={() => {
-            // Reset newAdminLead to value in intake
-            resetNewAdminLead();
-            setModalOpen(true);
-          }}
-        >
-          {buttonText}
-        </Button>
+        {!isGrbView && (
+          <Button
+            type="button"
+            className="width-auto"
+            unstyled
+            onClick={() => {
+              // Reset newAdminLead to value in intake
+              resetNewAdminLead();
+              setModalOpen(true);
+            }}
+          >
+            {buttonText}
+          </Button>
+        )}
       </>
     );
   };
@@ -217,12 +223,14 @@ const RequestSummary = ({
                   </p>
                 )
               }
-              <Link
-                to={`/governance-review-team/${id}/actions`}
-                className="usa-link"
-              >
-                {t('action:takeAnAction')}
-              </Link>
+              {!isGrbView && (
+                <Link
+                  to={`/governance-review-team/${id}/actions`}
+                  className="usa-link"
+                >
+                  {t('action:takeAnAction')}
+                </Link>
+              )}
             </Grid>
 
             {/* Admin lead */}
