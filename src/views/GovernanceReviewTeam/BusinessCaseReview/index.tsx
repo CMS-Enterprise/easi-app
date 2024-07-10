@@ -13,7 +13,7 @@ import { GovernanceRequestFeedback } from 'queries/types/GovernanceRequestFeedba
 import { BusinessCaseModel } from 'types/businessCase';
 import { getFiscalYear } from 'utils/date';
 
-import { IsGrbViewContext } from '..';
+import IsGrbViewContext from '../IsGrbViewContext';
 
 type BusinessCaseReviewProps = {
   businessCase: BusinessCaseModel;

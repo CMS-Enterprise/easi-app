@@ -31,7 +31,7 @@ import { formatDateLocal } from 'utils/date';
 import { getPersonNameAndComponentAcronym } from 'utils/getPersonNameAndComponent';
 import { translateRequestType } from 'utils/systemIntake';
 
-import { IsGrbViewContext } from '..';
+import IsGrbViewContext from '../IsGrbViewContext';
 
 import './index.scss';
 

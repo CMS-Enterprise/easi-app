@@ -7,7 +7,7 @@ import PDFExport from 'components/PDFExport';
 import SystemIntakeReview from 'components/SystemIntakeReview';
 import { SystemIntake } from 'queries/types/SystemIntake';
 
-import { IsGrbViewContext } from '..';
+import IsGrbViewContext from '../IsGrbViewContext';
 
 type IntakeReviewProps = {
   systemIntake: SystemIntake;

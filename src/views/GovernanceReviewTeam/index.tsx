@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React from 'react';
 import { Route, Switch, useParams } from 'react-router-dom';
 
 import PageLoading from 'components/PageLoading';
@@ -7,9 +7,8 @@ import RequestOverview from 'views/GovernanceReviewTeam/RequestOverview';
 import NotFound from 'views/NotFound';
 import RequestLinkForm from 'views/RequestLinkForm';
 
+import IsGrbViewContext from './IsGrbViewContext';
 import { ReviewerKey } from './subNavItems';
-
-export const IsGrbViewContext = createContext<boolean>(false);
 
 const GovernanceReviewTeam = () => {
   const { user } = useAuth();

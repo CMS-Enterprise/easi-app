@@ -11,7 +11,7 @@ import { SystemIntake } from 'queries/types/SystemIntake';
 import { RequestRelationType } from 'types/graphql-global-types';
 import { RequestType } from 'types/requestType';
 import formatContractNumbers from 'utils/formatContractNumbers';
-import { IsGrbViewContext } from 'views/GovernanceReviewTeam';
+import IsGrbViewContext from 'views/GovernanceReviewTeam/IsGrbViewContext';
 
 const AdditionalInformation = ({
   request,

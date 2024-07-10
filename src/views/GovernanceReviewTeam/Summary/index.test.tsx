@@ -12,7 +12,7 @@ import {
   SystemIntakeStatusAdmin
 } from 'types/graphql-global-types';
 
-import { IsGrbViewContext } from '..';
+import IsGrbViewContext from '../IsGrbViewContext';
 
 import Summary from '.';
 
