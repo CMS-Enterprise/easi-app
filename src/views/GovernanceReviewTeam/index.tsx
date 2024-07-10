@@ -13,12 +13,11 @@ import { ReviewerKey } from './subNavItems';
 const GovernanceReviewTeam = () => {
   const { user } = useAuth();
 
-  const params = useParams<{
-    reviewerType: ReviewerKey;
+  const { id } = useParams<{
     id: string;
   }>();
 
-  const isGrbReviewer = !!user?.isGrbReviewer(params.id);
+  const isGrbReviewer = !!user?.isGrbReviewer(id);
   const isGrtReviewer = !!user?.isGrtReviewer();
 
   const reviewerType: ReviewerKey = isGrtReviewer
@@ -28,7 +27,10 @@ const GovernanceReviewTeam = () => {
   if (user) {
     if (isGrtReviewer || isGrbReviewer) {
       return (
-        <IsGrbViewContext.Provider value={!isGrtReviewer}>
+        <IsGrbViewContext.Provider
+          // Only show GRB view if user is GRB reviewer without GOVTEAM job code
+          value={!isGrtReviewer}
+        >
           <Switch>
             {isGrtReviewer && (
               /* Defining outside parent route to trigger parent rerender/refetch after mutation */
@@ -38,6 +40,7 @@ const GovernanceReviewTeam = () => {
             )}
 
             <Route
+              // reviewerType differentiates between GRT and GRB views for admin pages
               path={`/:reviewerType(${reviewerType})/:systemId/:activePage/:subPage?`}
               exact
               component={RequestOverview}

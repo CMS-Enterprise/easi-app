@@ -1,5 +1,6 @@
 import { Flags } from 'types/flags';
 
+/** IT Gov reviewer types - used for GRT and GRB view routing */
 export type ReviewerKey = 'governance-review-team' | 'governance-review-board';
 
 type SubNavItems = {
@@ -12,6 +13,7 @@ type SubNavItems = {
 
 const subNavItems = (
   systemId: string,
+  /** Base reviewer route for nav item links */
   reviewerRoute: ReviewerKey,
   flags?: Flags
 ): SubNavItems => [
