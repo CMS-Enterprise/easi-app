@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { AuthTransaction, OktaAuth } from '@okta/okta-auth-js';
+import {
+  AuthnTransaction,
+  CustomUserClaims,
+  OktaAuth,
+  UserClaims
+} from '@okta/okta-auth-js';
 import { OktaContext } from '@okta/okta-react';
 
 import { localAuthStorageKey } from 'constants/localAuth';
@@ -37,22 +42,24 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
       autoRenew: false
     }
   });
-  oktaAuth.signInWithCredentials = (): Promise<AuthTransaction> => {
+  oktaAuth.signInWithCredentials = (): Promise<AuthnTransaction> => {
     setAuthState(getStateFromLocalStorage);
     return new Promise(() => {});
   };
-  oktaAuth.signOut = (): Promise<void> => {
+  oktaAuth.signOut = (): Promise<boolean> => {
     window.localStorage.removeItem(localAuthStorageKey);
     window.location.href = '/';
-    return new Promise(() => {});
+    return Promise.resolve(true);
   };
-  oktaAuth.getUser = () => {
-    return Promise.resolve({
+  oktaAuth.getUser = <T extends CustomUserClaims>(): Promise<UserClaims<T>> => {
+    const mockUser: UserClaims = {
       name: authState.name,
       sub: '',
       euaId: authState.euaId,
       groups: authState.groups
-    });
+    };
+
+    return Promise.resolve(mockUser as UserClaims<T>);
   };
   oktaAuth.tokenManager.off = () => {};
   oktaAuth.tokenManager.on = () => {};
