@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { Route, Switch, useParams } from 'react-router-dom';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
-import useAuth from 'hooks/useAuth';
+import useCacheQuery from 'hooks/useCacheQuery';
+import GetSystemIntakeGrbReviewersQuery from 'queries/GetSystemIntakeGrbReviewersQuery';
+import {
+  GetSystemIntakeGrbReviewers,
+  GetSystemIntakeGrbReviewersVariables
+} from 'queries/types/GetSystemIntakeGrbReviewers';
+import { AppState } from 'reducers/rootReducer';
+import user from 'utils/user';
 import RequestOverview from 'views/GovernanceReviewTeam/RequestOverview';
 import NotFound from 'views/NotFound';
 import RequestLinkForm from 'views/RequestLinkForm';
@@ -11,20 +20,41 @@ import IsGrbViewContext from './IsGrbViewContext';
 import { ReviewerKey } from './subNavItems';
 
 const GovernanceReviewTeam = () => {
-  const { user } = useAuth();
+  const { groups, euaId, isUserSet } = useSelector(
+    (state: AppState) => state.auth
+  );
+
+  const flags = useFlags();
 
   const { id } = useParams<{
     id: string;
   }>();
 
-  const isGrbReviewer = !!user?.isGrbReviewer(id);
-  const isGrtReviewer = !!user?.isGrtReviewer();
+  const { data, loading } = useCacheQuery<
+    GetSystemIntakeGrbReviewers,
+    GetSystemIntakeGrbReviewersVariables
+  >(GetSystemIntakeGrbReviewersQuery, {
+    variables: {
+      id
+    }
+  });
+
+  /** Check if current user is set as GRB reviewer */
+  const isGrbReviewer: boolean = useMemo(() => {
+    const grbReviewers = data?.systemIntake?.grbReviewers || [];
+
+    return grbReviewers.some(
+      reviewer => reviewer.userAccount.username === euaId
+    );
+  }, [data?.systemIntake?.grbReviewers, euaId]);
+
+  const isGrtReviewer = !!user.isGrtReviewer(groups, flags);
 
   const reviewerType: ReviewerKey = isGrtReviewer
     ? 'governance-review-team'
     : 'governance-review-board';
 
-  if (user) {
+  if (isUserSet && !loading) {
     if (isGrtReviewer || isGrbReviewer) {
       return (
         <IsGrbViewContext.Provider
