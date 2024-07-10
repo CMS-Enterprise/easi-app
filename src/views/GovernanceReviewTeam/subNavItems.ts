@@ -11,62 +11,73 @@ type SubNavItems = {
   groupEnd?: boolean;
 }[];
 
+/**
+ * Sub navigation links for IT Gov admin pages
+ *
+ * Returns correct nav links based on `reviewerRoute` prop (ex: excludes GRT-specific links from GRB view)
+ * */
 const subNavItems = (
   systemId: string,
   /** Base reviewer route for nav item links */
   reviewerRoute: ReviewerKey,
   flags?: Flags
-): SubNavItems => [
-  {
-    route: `/${reviewerRoute}/${systemId}/intake-request`,
-    text: 'general:intake',
-    aria: 'aria.openIntake'
-  },
-  {
-    route: `/${reviewerRoute}/${systemId}/documents`,
-    text: 'intake:documents.supportingDocuments',
-    aria: 'aria.openDocuments'
-  },
-  {
-    route: `/${reviewerRoute}/${systemId}/business-case`,
-    text: 'general:businessCase',
-    aria: 'aria.openBusiness',
-    groupEnd: true
-  },
-  {
-    route: `/${reviewerRoute}/${systemId}/feedback`,
-    text: 'feedback.title',
-    aria: 'aria.openFeedback'
-  },
-  {
-    route: `/${reviewerRoute}/${systemId}/decision`,
-    text: 'decision.title',
-    aria: 'aria.openDecision'
-  },
-  {
-    route: `/${reviewerRoute}/${systemId}/lcid`,
-    text: 'lifecycleID.title',
-    aria: 'aria.openLcid',
-    groupEnd: true
-  },
-  {
-    route: `/${reviewerRoute}/${systemId}/additional-information`,
-    text: 'additionalInformation.title',
-    aria: 'aria.openAdditionalInformation',
-    groupEnd: reviewerRoute === 'governance-review-team'
-  },
-  {
-    route: `/governance-review-team/${systemId}/actions`,
-    text: 'actions'
-  },
-  {
-    route: `/governance-review-team/${systemId}/notes`,
-    text: 'notes.heading'
-  },
-  {
-    route: `/governance-review-team/${systemId}/dates`,
-    text: 'dates.heading'
-  }
-];
+): SubNavItems => {
+  const items: SubNavItems = [
+    {
+      route: `/${reviewerRoute}/${systemId}/intake-request`,
+      text: 'general:intake',
+      aria: 'aria.openIntake'
+    },
+    {
+      route: `/${reviewerRoute}/${systemId}/documents`,
+      text: 'intake:documents.supportingDocuments',
+      aria: 'aria.openDocuments'
+    },
+    {
+      route: `/${reviewerRoute}/${systemId}/business-case`,
+      text: 'general:businessCase',
+      aria: 'aria.openBusiness',
+      groupEnd: true
+    },
+    {
+      route: `/${reviewerRoute}/${systemId}/feedback`,
+      text: 'feedback.title',
+      aria: 'aria.openFeedback'
+    },
+    {
+      route: `/${reviewerRoute}/${systemId}/decision`,
+      text: 'decision.title',
+      aria: 'aria.openDecision'
+    },
+    {
+      route: `/${reviewerRoute}/${systemId}/lcid`,
+      text: 'lifecycleID.title',
+      aria: 'aria.openLcid',
+      groupEnd: true
+    },
+    {
+      route: `/${reviewerRoute}/${systemId}/additional-information`,
+      text: 'additionalInformation.title',
+      aria: 'aria.openAdditionalInformation',
+      groupEnd: reviewerRoute === 'governance-review-team'
+    },
+    {
+      route: `/governance-review-team/${systemId}/actions`,
+      text: 'actions'
+    },
+    {
+      route: `/governance-review-team/${systemId}/notes`,
+      text: 'notes.heading'
+    },
+    {
+      route: `/governance-review-team/${systemId}/dates`,
+      text: 'dates.heading'
+    }
+  ];
+
+  // Filter so array only includes nav items with correct routes
+  // Excludes GRT links from GRB view navigation
+  return items.filter(item => item.route.includes(reviewerRoute));
+};
 
 export default subNavItems;

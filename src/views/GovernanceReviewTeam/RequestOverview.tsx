@@ -75,9 +75,7 @@ const RequestOverview = () => {
       'easi-grt__nav-link--active': route.split('/')[3] === activePage
     });
 
-  const navItems = subNavItems(systemId, reviewerType, flags).filter(item =>
-    item.route.includes(reviewerType)
-  );
+  const navItems = subNavItems(systemId, reviewerType, flags);
 
   useEffect(() => {
     if (systemIntake?.businessCaseId) {
