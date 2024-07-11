@@ -2,14 +2,17 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"path/filepath"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/services"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
 )
@@ -88,12 +91,43 @@ func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Cli
 //
 // Does *not* delete the uploaded file from S3, following the example of TRB request documents.
 func DeleteSystemIntakeDocument(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.SystemIntakeDocument, error) {
+	doc, err := store.GetSystemIntakeDocumentByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := canDelete(ctx, doc); err != nil {
+		return nil, err
+	}
 
 	return store.DeleteSystemIntakeDocument(ctx, id)
 }
 
+// canView guards unauthorized views (downloads) of system intake documents
+// admins can view any docuemtn
 func canView(ctx context.Context) {}
 
 func canCreate(ctx context.Context) {}
 
-func canDelete(ctx context.Context, document *models.SystemIntakeDocument) error {}
+// canDelete guards unauthorized deletions of system intake documents
+// an admin is allowed to delete admin-uploaded docs
+// the intake requester is allowed to delete requester-uploaded docs
+func canDelete(ctx context.Context, document *models.SystemIntakeDocument) error {
+	// admins can only delete admin-uploaded docs
+	if services.HasRole(ctx, models.RoleEasiTrbAdmin) && document.UploaderRole == models.AdminUploaderRole {
+		return nil
+	}
+
+	// if the acting user is the requester, they can delete the doc
+	user := appcontext.Principal(ctx).Account()
+	if document.GetCreatedBy() == user.Username {
+		return nil
+	}
+
+	appcontext.ZLogger(ctx).Warn("unauthorized user attempted to delete system intake document",
+		zap.String("username", user.Username),
+		zap.String("system_intake.id", document.SystemIntakeRequestID.String()),
+		zap.String("document.id", document.ID.String()))
+
+	return errors.New("unauthorized attempt to delete system intake document")
+}
