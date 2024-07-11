@@ -85,7 +85,7 @@ const GovernanceTeams = () => {
             as={FieldErrorMsg}
           />
 
-          {cmsGovernanceTeams.map(({ key, value: name, label, acronym }) => {
+          {cmsGovernanceTeams.map(({ key, name, label, acronym }) => {
             const teamIndex = teams.findIndex(team => team.key === key);
 
             const isChecked = teamIndex > -1;

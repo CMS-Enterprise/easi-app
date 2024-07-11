@@ -5,7 +5,7 @@ import { FormattedFundingSource } from 'components/FundingSources';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntakeDocumentCommonType } from 'types/graphql-global-types';
 
-const governanceTeamNames = cmsGovernanceTeams.map(team => team.value);
+const governanceTeamNames = cmsGovernanceTeams.map(team => team.name);
 
 const govTeam = Yup.object().shape({
   name: Yup.string().oneOf(governanceTeamNames),

@@ -159,7 +159,7 @@ export const prepareSystemIntakeForApp = (
     .filter(team => !!systemIntake[team.collaboratorKey])
     .map(team => ({
       collaborator: systemIntake[team.collaboratorKey],
-      name: team.value,
+      name: team.name,
       key: team.key
     }));
 
