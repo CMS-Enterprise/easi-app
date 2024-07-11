@@ -15,26 +15,24 @@ exports[`MultiSelect > matches the snapshot 1`] = `
       aria-live="polite"
       aria-relevant="additions text"
       class="css-1f43avz-a11yText-A11yText"
-      role="log"
     />
     <div
-      class=" css-1vl89cy-control"
+      class=" css-jvusj8-control"
     >
       <div
-        class=" css-1fdsijx-ValueContainer"
+        class=" css-319lph-ValueContainer"
       >
         <div
-          class=" css-1jqq78o-placeholder"
+          class=" css-14el2xx-placeholder"
           id="react-select-2-placeholder"
         >
           0 selected
         </div>
         <div
-          class=" css-qbdosj-Input"
+          class=" css-6j8wv5-Input"
           data-value=""
         >
           <input
-            aria-activedescendant=""
             aria-autocomplete="list"
             aria-describedby="react-select-2-placeholder"
             aria-expanded="false"
@@ -57,11 +55,11 @@ exports[`MultiSelect > matches the snapshot 1`] = `
         class=" css-1hb7zxy-IndicatorsContainer"
       >
         <span
-          class=" css-1umco55-indicatorSeparator"
+          class=" css-tck9v0-indicatorSeparator"
         />
         <div
           aria-hidden="true"
-          class=" css-1ndq4cj-indicatorContainer"
+          class=" css-caintn-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -82,7 +80,6 @@ exports[`MultiSelect > matches the snapshot 1`] = `
       <input
         name="testMultiSelect"
         type="hidden"
-        value=""
       />
     </div>
   </div>

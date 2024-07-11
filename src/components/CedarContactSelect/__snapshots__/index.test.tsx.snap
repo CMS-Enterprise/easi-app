@@ -15,43 +15,34 @@ exports[`CedarContactSelect > selects contact from dropdown 1`] = `
       aria-live="polite"
       aria-relevant="additions text"
       class="css-1f43avz-a11yText-A11yText"
-      role="log"
     >
       <span
         id="aria-selection"
       />
       <span
-        id="aria-focused"
-      />
-      <span
-        id="aria-results"
+        id="aria-context"
       >
-        1 result available for search term Adeline Aarons.
-      </span>
-      <span
-        id="aria-guidance"
-      >
-        Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+        option Adeline Aarons, ABCD (adeline.aarons@local.fake) focused, 1 of 1. 1 result available for search term Adeline Aarons. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
       </span>
     </span>
     <div
-      class="cedar-contact-select__control cedar-contact-select__control--is-focused cedar-contact-select__control--menu-is-open css-13u0srz-control"
+      class="cedar-contact-select__control cedar-contact-select__control--is-focused cedar-contact-select__control--menu-is-open css-1cjrczp-control"
     >
       <div
-        class="cedar-contact-select__value-container css-1fdsijx-ValueContainer"
+        class="cedar-contact-select__value-container css-319lph-ValueContainer"
       >
         <div
-          class="cedar-contact-select__input-container css-166bipr-Input"
+          class="cedar-contact-select__input-container css-1pndypt-Input"
           data-value="Adeline Aarons"
         >
           <input
-            aria-activedescendant="react-select-cedarContactSelect-option-0"
             aria-autocomplete="list"
             aria-controls="react-select-cedarContactSelect-listbox"
             aria-describedby="react-select-cedarContactSelect-placeholder"
             aria-expanded="true"
             aria-haspopup="true"
             aria-label="Cedar-Users"
+            aria-owns="react-select-cedarContactSelect-listbox"
             autocapitalize="none"
             autocomplete="off"
             autocorrect="off"
@@ -71,11 +62,11 @@ exports[`CedarContactSelect > selects contact from dropdown 1`] = `
         class="cedar-contact-select__indicators css-1hb7zxy-IndicatorsContainer"
       >
         <span
-          class="cedar-contact-select__indicator-separator css-1u9des2-indicatorSeparator"
+          class="cedar-contact-select__indicator-separator css-1okebmr-indicatorSeparator"
         />
         <div
           aria-hidden="true"
-          class="cedar-contact-select__indicator cedar-contact-select__dropdown-indicator css-ylv2i7-indicatorContainer"
+          class="cedar-contact-select__indicator cedar-contact-select__dropdown-indicator css-ja6fon-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -93,20 +84,16 @@ exports[`CedarContactSelect > selects contact from dropdown 1`] = `
       </div>
     </div>
     <div
-      class="cedar-contact-select__menu css-1v1oxpf-menu"
+      class="cedar-contact-select__menu css-1met4b5-menu"
+      id="react-select-cedarContactSelect-listbox"
     >
       <div
-        aria-multiselectable="false"
-        class="cedar-contact-select__menu-list css-bgzggo-MenuList"
-        id="react-select-cedarContactSelect-listbox"
-        role="listbox"
+        class="cedar-contact-select__menu-list css-19oqr5x-MenuList"
       >
         <div
           aria-disabled="false"
-          aria-selected="false"
-          class="usa-combo-box__list-option usa-combo-box__list-option--focused cedar-contact-select__option cedar-contact-select__option--is-focused css-10wo9uf-option"
+          class="usa-combo-box__list-option usa-combo-box__list-option--focused cedar-contact-select__option cedar-contact-select__option--is-focused css-yt9ioa-option"
           id="react-select-cedarContactSelect-option-0"
-          role="option"
           tabindex="-1"
         >
           Adeline Aarons, ABCD (adeline.aarons@local.fake)
