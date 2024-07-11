@@ -153,7 +153,7 @@ func canView(ctx context.Context, store *storage.Store, s3Key string) error {
 // canCreate guards unauthorized creation of system intake documents
 // admins can upload documents
 // requesters can upload documents
-// canCreate also returns the role to use for the uploader, if authorized
+// this also returns the role to use for the uploader, if authorized
 func canCreate(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (models.DocumentUploaderRole, error) {
 	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
