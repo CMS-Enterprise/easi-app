@@ -33,6 +33,7 @@ func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 		FileName:              "create_and_get.pdf",
 		Bucket:                "bukkit",
 		S3Key:                 uuid.NewString(),
+		UploaderRole:          models.RequesterUploaderRole,
 	}
 	// documentToCreate.CreatedBy will be set based on principal in test config
 
