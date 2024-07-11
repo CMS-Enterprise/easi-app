@@ -36,7 +36,12 @@ const subNavItems = (
     {
       route: `/${reviewerRoute}/${systemId}/business-case`,
       text: 'general:businessCase',
-      aria: 'aria.openBusiness',
+      aria: 'aria.openBusiness'
+    },
+    {
+      route: `/${reviewerRoute}/${systemId}/grb-review`,
+      text: 'grbReview:title',
+      aria: 'grbReview:aria',
       groupEnd: true
     },
     {

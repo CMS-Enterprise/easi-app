@@ -28,6 +28,7 @@ import Dates from './Dates';
 import Decision from './Decision';
 import Documents from './Documents';
 import Feedback from './Feedback';
+import GRBReview from './GRBReview';
 import IntakeReview from './IntakeReview';
 import LifecycleID from './LifecycleID';
 import Notes from './Notes';
@@ -218,6 +219,11 @@ const RequestOverview = () => {
                 <Route
                   path={`/${reviewerType}/:systemId/lcid`}
                   render={() => <LifecycleID systemIntake={systemIntake} />}
+                />
+
+                <Route
+                  path={`/${reviewerType}/:systemId/grb-review`}
+                  render={() => <GRBReview />}
                 />
 
                 {/* GRT only routes */}
