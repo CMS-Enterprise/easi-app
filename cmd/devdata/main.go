@@ -569,6 +569,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		"SM7H",
 		[]string{"00001", "00002"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
@@ -582,6 +583,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		"KT77",
 		[]string{"00003", "00004"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
@@ -595,6 +597,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		"HYG2",
 		[]string{"00003", "00004"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
@@ -608,6 +611,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		"N60U",
 		[]string{"00005", "00001"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
@@ -632,6 +636,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		"HGDS",
 		[]string{"12345", "67890"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
@@ -647,6 +652,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		"TD4Z",
 		[]string{"12345", "67890"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",

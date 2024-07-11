@@ -285,10 +285,11 @@ func setSystemIntakeRelationExistingSystem(
 	logger *zap.Logger,
 	store *storage.Store,
 	intakeID uuid.UUID,
+	username string,
 	contractNumbers []string,
 	cedarSystemIDs []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, username)
 	input := &models.SetSystemIntakeRelationExistingSystemInput{
 		SystemIntakeID:  intakeID,
 		ContractNumbers: contractNumbers,
