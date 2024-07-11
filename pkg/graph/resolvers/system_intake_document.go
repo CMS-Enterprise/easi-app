@@ -162,7 +162,7 @@ func canCreate(ctx context.Context, store *storage.Store, systemIntakeID uuid.UU
 
 	// check requester first as that role takes precedence over admin role for uploader roles
 	user := appcontext.Principal(ctx).Account()
-	if intake.Requester == user.Username {
+	if intake.EUAUserID.String == user.Username {
 		return models.RequesterUploaderRole, nil
 	}
 
