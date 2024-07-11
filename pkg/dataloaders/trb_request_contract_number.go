@@ -16,7 +16,7 @@ func (d *dataReader) batchTRBRequestContractNumbersByTRBRequestIDs(ctx context.C
 		return nil, []error{err}
 	}
 
-	return helpers.OneToMany[*models.TRBRequestContractNumber](trbRequestIDs, data), nil
+	return helpers.OneToMany(trbRequestIDs, data), nil
 }
 
 func GetTRBRequestContractNumbersByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestContractNumber, error) {

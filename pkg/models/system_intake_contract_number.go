@@ -18,6 +18,9 @@ func NewSystemIntakeContractNumber(createdBy uuid.UUID) SystemIntakeContractNumb
 
 }
 
-func (s SystemIntakeContractNumber) GetMappingID() uuid.UUID {
+func (s SystemIntakeContractNumber) GetMappingKey() uuid.UUID {
 	return s.SystemIntakeID
+}
+func (s SystemIntakeContractNumber) GetMappingVal() *SystemIntakeContractNumber {
+	return &s
 }

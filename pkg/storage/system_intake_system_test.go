@@ -57,7 +57,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		results, err := s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, createdIDs)
 		s.NoError(err)
 
-		data := helpers.OneToMany[*models.SystemIntakeSystem](createdIDs, results)
+		data := helpers.OneToMany(createdIDs, results)
 		s.Equal(len(data), len(createdIDs))
 
 		for i, systemIntakeID := range createdIDs {
@@ -99,7 +99,7 @@ func (s *StoreTestSuite) TestLinkSystemIntakeSystems() {
 		results, err = s.store.SystemIntakeSystemsBySystemIntakeIDs(ctx, []uuid.UUID{createdIDs[0]})
 		s.NoError(err)
 
-		data = helpers.OneToMany[*models.SystemIntakeSystem]([]uuid.UUID{createdIDs[0]}, results)
+		data = helpers.OneToMany([]uuid.UUID{createdIDs[0]}, results)
 		s.Len(data, 1)
 		systemsFound := data[0]
 		s.Len(systemsFound, 4)

@@ -19,7 +19,7 @@ func (d *dataReader) batchCedarSystemLinkedSystemIntakes(ctx context.Context, re
 		ids[i] = requests[i].CedarSystemID
 	}
 
-	return helpers.OneToManyEmbedded(ids, data), nil
+	return helpers.OneToMany(ids, data), nil
 }
 
 func GetCedarSystemLinkedSystemIntakes(ctx context.Context, cedarSystemID string, state models.SystemIntakeState) ([]*models.SystemIntake, error) {

@@ -16,7 +16,7 @@ func (d *dataReader) batchSystemIntakeContractNumbersBySystemIntakeIDs(ctx conte
 		return nil, []error{err}
 	}
 
-	return helpers.OneToMany[*models.SystemIntakeContractNumber](systemIntakeIDs, data), nil
+	return helpers.OneToMany(systemIntakeIDs, data), nil
 }
 
 func GetSystemIntakeContractNumbersBySystemIntakeID(ctx context.Context, systemIntakeID uuid.UUID) ([]*models.SystemIntakeContractNumber, error) {

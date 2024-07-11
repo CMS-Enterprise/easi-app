@@ -121,10 +121,10 @@ type RelatedTRBRequest struct {
 	RelatedRequestID uuid.UUID `db:"related_request_id"`
 }
 
-func (t *RelatedTRBRequest) GetMappingID() uuid.UUID {
+func (t RelatedTRBRequest) GetMappingKey() uuid.UUID {
 	return t.RelatedRequestID
 }
-func (t *RelatedTRBRequest) GetEmbedPtr() *TRBRequest {
+func (t RelatedTRBRequest) GetMappingVal() *TRBRequest {
 	return &t.TRBRequest
 }
 
@@ -135,13 +135,13 @@ type TRBRequestsByCedarSystemIDsRequest struct {
 
 type TRBRequestsByCedarSystemIDsResponse struct {
 	CedarSystemID string `db:"system_id"`
-	*TRBRequest
+	TRBRequest
 }
 
-func (t *TRBRequestsByCedarSystemIDsResponse) GetMappingID() string {
+func (t TRBRequestsByCedarSystemIDsResponse) GetMappingKey() string {
 	return t.CedarSystemID
 }
 
-func (t *TRBRequestsByCedarSystemIDsResponse) GetEmbedPtr() *TRBRequest {
-	return t.TRBRequest
+func (t TRBRequestsByCedarSystemIDsResponse) GetMappingVal() *TRBRequest {
+	return &t.TRBRequest
 }

@@ -11,24 +11,14 @@ type mockMapper struct {
 	idx int
 }
 
-type mockEmbedded struct {
-	mockMapper
-	relatedID int
+// impl GetMappingID interface
+func (m mockMapper) GetMappingKey() uuid.UUID {
+	return m.id
 }
 
 // impl GetMappingID interface
-func (m mockMapper) GetMappingID() uuid.UUID {
-	return m.id
-}
-
-// impl GetMappingID interface for mockEmbedded struct
-func (m mockEmbedded) GetMappingID() uuid.UUID {
-	return m.id
-}
-
-// impl GetEmbedPtr interface
-func (m mockEmbedded) GetEmbedPtr() *mockMapper {
-	return &m.mockMapper
+func (m mockMapper) GetMappingVal() *mockMapper {
+	return &m
 }
 
 func TestOneToMany(t *testing.T) {
@@ -73,6 +63,19 @@ func TestOneToMany(t *testing.T) {
 	}
 }
 
+type mockEmbedded struct {
+	mockMapper
+	relatedID int
+}
+
+func (m mockEmbedded) GetMappingKey() uuid.UUID {
+	return m.id
+}
+
+func (m mockEmbedded) GetMappingVal() *mockMapper {
+	return &m.mockMapper
+}
+
 func TestOneToManyEmbedded(t *testing.T) {
 	var (
 		uuid1 = uuid.New()
@@ -85,12 +88,12 @@ func TestOneToManyEmbedded(t *testing.T) {
 	// create some associations
 	mockMappers := []mockEmbedded{}
 
-	// OneToManyEmbedded groups by id, so relatedID and idx should be the matching index of the slice of ids
+	// OneToMany groups by id, so relatedID and idx should be the matching index of the slice of ids
 	// uuid1 should have idx 0, uuid2 should have idx 1, etc.
 	for i := range 20 {
 		mapper := mockMapper{
 			id:  ids[i%len(ids)],
-			idx: i % len(ids), // mirrors relatedID since OneToManyEmbedded returns the embedded struct
+			idx: i % len(ids), // mirrors relatedID since GetMappingVal returns the embedded struct in this case
 		}
 		embed := mockEmbedded{
 			mockMapper: mapper,
@@ -99,7 +102,7 @@ func TestOneToManyEmbedded(t *testing.T) {
 		mockMappers = append(mockMappers, embed)
 	}
 
-	data := OneToManyEmbedded([]uuid.UUID{uuid1, uuid2, uuid3, uuid4}, mockMappers)
+	data := OneToMany([]uuid.UUID{uuid1, uuid2, uuid3, uuid4}, mockMappers)
 	if len(data) < 1 {
 		t.Error("expected data to not be empty")
 	}

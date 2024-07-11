@@ -239,10 +239,10 @@ type RelatedSystemIntake struct {
 	RelatedRequestID uuid.UUID `db:"related_request_id"`
 }
 
-func (s *RelatedSystemIntake) GetMappingID() uuid.UUID {
+func (s RelatedSystemIntake) GetMappingKey() uuid.UUID {
 	return s.RelatedRequestID
 }
-func (s *RelatedSystemIntake) GetEmbedPtr() *SystemIntake {
+func (s RelatedSystemIntake) GetMappingVal() *SystemIntake {
 	return &s.SystemIntake
 }
 
@@ -253,13 +253,13 @@ type SystemIntakesByCedarSystemIDsRequest struct {
 
 type SystemIntakesByCedarSystemIDsResponse struct {
 	CedarSystemID string `db:"system_id"`
-	*SystemIntake
+	SystemIntake
 }
 
-func (s *SystemIntakesByCedarSystemIDsResponse) GetMappingID() string {
+func (s SystemIntakesByCedarSystemIDsResponse) GetMappingKey() string {
 	return s.CedarSystemID
 }
 
-func (s *SystemIntakesByCedarSystemIDsResponse) GetEmbedPtr() *SystemIntake {
-	return s.SystemIntake
+func (s SystemIntakesByCedarSystemIDsResponse) GetMappingVal() *SystemIntake {
+	return &s.SystemIntake
 }
