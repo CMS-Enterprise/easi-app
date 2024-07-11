@@ -260,9 +260,10 @@ func setSystemIntakeRelationNewSystem(
 	logger *zap.Logger,
 	store *storage.Store,
 	intakeID uuid.UUID,
+	username string,
 	contractNumbers []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, username)
 	input := &models.SetSystemIntakeRelationNewSystemInput{
 		SystemIntakeID:  intakeID,
 		ContractNumbers: contractNumbers,
@@ -321,10 +322,11 @@ func setSystemIntakeRelationExistingService(
 	logger *zap.Logger,
 	store *storage.Store,
 	intakeID uuid.UUID,
+	username string,
 	contractName string,
 	contractNumbers []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, username)
 	input := &models.SetSystemIntakeRelationExistingServiceInput{
 		SystemIntakeID:  intakeID,
 		ContractName:    contractName,
@@ -345,8 +347,8 @@ func setSystemIntakeRelationExistingService(
 	}
 }
 
-func unlinkSystemIntakeRelation(logger *zap.Logger, store *storage.Store, intakeID uuid.UUID) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intakeID.String())
+func unlinkSystemIntakeRelation(logger *zap.Logger, store *storage.Store, intakeID uuid.UUID, username string) {
+	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, username)
 
 	// temp, manually unlink contract numbers
 	// see Note [EASI-4160 Disable Contract Number Linking]

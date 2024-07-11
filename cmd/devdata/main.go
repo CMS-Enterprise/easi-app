@@ -559,6 +559,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		"SM7H",
 		[]string{"12345", "67890"},
 	)
 
@@ -625,6 +626,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		"N60U",
 		"My Cool Existing Contract/Service",
 		[]string{"00001"},
 	)
@@ -643,7 +645,7 @@ func main() {
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
 		},
 	)
-	unlinkSystemIntakeRelation(logger, store, intakeID)
+	unlinkSystemIntakeRelation(logger, store, intakeID, "HGDS")
 
 	// 5. Link deactivated Systems
 	intakeID = uuid.MustParse("04cb8a97-3515-4071-9b80-2710834cd94c")
