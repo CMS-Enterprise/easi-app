@@ -88,5 +88,12 @@ func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Cli
 //
 // Does *not* delete the uploaded file from S3, following the example of TRB request documents.
 func DeleteSystemIntakeDocument(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.SystemIntakeDocument, error) {
+
 	return store.DeleteSystemIntakeDocument(ctx, id)
 }
+
+func canView(ctx context.Context) {}
+
+func canCreate(ctx context.Context) {}
+
+func canDelete(ctx context.Context, document *models.SystemIntakeDocument) error {}

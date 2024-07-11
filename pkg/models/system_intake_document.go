@@ -8,6 +8,8 @@ type SystemIntakeDocumentStatus string
 // SystemIntakeDocumentCommonType represents the document type, including an "OTHER" option for user-specified types
 type SystemIntakeDocumentCommonType string
 
+type DocumentUploaderRole string
+
 const (
 	// SystemIntakeDocumentStatusAvailable means that the document passed the virus scanning
 	SystemIntakeDocumentStatusAvailable SystemIntakeDocumentStatus = "AVAILABLE"
@@ -22,6 +24,11 @@ const (
 	SystemIntakeDocumentCommonTypeDraftICGE SystemIntakeDocumentCommonType = "DRAFT_ICGE"
 	// SystemIntakeDocumentCommonTypeDraftOther means the document is some type other than the common document types
 	SystemIntakeDocumentCommonTypeDraftOther SystemIntakeDocumentCommonType = "OTHER"
+
+	// RequesterUploaderRole signifies a Requester uploaded a document
+	RequesterUploaderRole DocumentUploaderRole = "REQUESTER"
+	// AdminUploaderRole signifies an Admin uploaded a document
+	AdminUploaderRole DocumentUploaderRole = "ADMIN"
 )
 
 // SystemIntakeDocument represents a document attached to a system intake that has been uploaded to S3
@@ -33,4 +40,5 @@ type SystemIntakeDocument struct {
 	FileName              string                         `json:"fileName" db:"file_name"`
 	Bucket                string                         `json:"bucket" db:"bucket"`
 	S3Key                 string                         `json:"s3Key" db:"s3_key"` // The document's key inside an S3 bucket; does *not* include the bucket name.
+	UploaderRole          DocumentUploaderRole           `json:"uploaderRole" db:"uploader_role"`
 }
