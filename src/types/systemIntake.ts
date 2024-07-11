@@ -2,13 +2,10 @@ import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStat
 import { FundingSource as FundingSourceType } from 'queries/types/FundingSource';
 import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 
-import { SystemIntakeStatusAdmin } from './graphql-global-types';
-
-export type GovernanceCollaborationTeam = {
-  collaborator: string;
-  name: string;
-  key: string;
-};
+import {
+  SystemIntakeCollaboratorInput,
+  SystemIntakeStatusAdmin
+} from './graphql-global-types';
 
 export type RequestType = 'NEW' | 'MAJOR_CHANGES' | 'RECOMPETE' | 'SHUTDOWN';
 
@@ -41,7 +38,7 @@ export type SystemIntakeForm = {
   };
   governanceTeams: {
     isPresent: boolean | null;
-    teams: GovernanceCollaborationTeam[];
+    teams: SystemIntakeCollaboratorInput[];
   };
   businessNeed: string;
   businessSolution: string;
