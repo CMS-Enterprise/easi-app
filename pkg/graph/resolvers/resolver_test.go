@@ -155,9 +155,9 @@ func NewEmailClient(sender *mockSender) *email.Client {
 }
 
 // getTestPrincipal gets a user principal from database
-func (suite *ResolverSuite) getTestPrincipal(ctx context.Context, store *storage.Store, userName string) *authentication.EUAPrincipal {
+func (s *ResolverSuite) getTestPrincipal(ctx context.Context, store *storage.Store, userName string) *authentication.EUAPrincipal {
 
-	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(suite.testConfigs.UserSearchClient.FetchUserInfo))
+	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
 
 	princ := &authentication.EUAPrincipal{
 		EUAID:       userName,
