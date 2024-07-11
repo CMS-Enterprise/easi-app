@@ -223,7 +223,7 @@ const RequestOverview = () => {
 
                 <Route
                   path={`/${reviewerType}/:systemId/grb-review`}
-                  render={() => <GRBReview />}
+                  render={() => <GRBReview {...systemIntake} />}
                 />
 
                 {/* GRT only routes */}
