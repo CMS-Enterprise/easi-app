@@ -11,16 +11,19 @@ import (
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
+	"github.com/cms-enterprise/easi-app/pkg/usersearch"
 )
 
 type seederConfig struct {
-	logger   *zap.Logger
-	store    *storage.Store
-	s3Client *upload.S3Client
+	logger           *zap.Logger
+	store            *storage.Store
+	s3Client         *upload.S3Client
+	UserSearchClient usersearch.Client
 }
 
 func main() {
@@ -60,10 +63,14 @@ func main() {
 	s3Client := upload.NewS3Client(s3Cfg)
 
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
+
+	localOktaClient := local.NewOktaAPIClient()
+
 	seederConfig := &seederConfig{
-		logger:   logger,
-		store:    store,
-		s3Client: &s3Client,
+		logger:           logger,
+		store:            store,
+		s3Client:         &s3Client,
+		UserSearchClient: localOktaClient,
 	}
 
 	var intake *models.SystemIntake

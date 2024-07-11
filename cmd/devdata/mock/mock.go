@@ -45,7 +45,9 @@ func CtxWithLoggerAndPrincipal(logger *zap.Logger, store *storage.Store, euaID s
 	if len(euaID) < 1 {
 		euaID = PrincipalUser
 	}
-	userAccount, err := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, euaID, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+
+	//Future Enhancement: consider passing the context with the seeder, and using the seeder.UserSearchClient to return mocked data instead of this data.
+	userAccount, err := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, euaID, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(FetchUserInfoMock))
 	if err != nil {
 		panic(fmt.Errorf("failed to get or create user account for mock data: %w", err))
 	}

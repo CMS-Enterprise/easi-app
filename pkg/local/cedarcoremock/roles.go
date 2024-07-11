@@ -125,7 +125,7 @@ func GetSystemRoles(cedarSystemID string, roleTypeID *string) []*models.CedarRol
 		roleTypeIDStr = *roleTypeID
 	}
 	roleTypes := GetRoleTypes()
-	users := local.GetMockUserData()
+	users := local.GetMockUserDataSlice()
 	mockSystemRoles := []*models.CedarRole{}
 
 	makeMockRoleFromUserAndRoleType := func(

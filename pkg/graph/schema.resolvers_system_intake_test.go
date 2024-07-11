@@ -638,7 +638,7 @@ func (s *GraphQLTestSuite) TestUpdateContactDetails() {
 
 	s.Equal(respIntake.Requester.Name, "Iama Requester")
 	s.Equal(respIntake.Requester.Component, "CMS Office 3")
-	s.Equal(respIntake.Requester.Email, "terry.thompson@local.fake")
+	s.Equal(respIntake.Requester.Email, "Terry.Thompson@local.fake")
 
 	s.Nil(respIntake.Isso.Name.Ptr())
 	s.False(respIntake.Isso.IsPresent)
