@@ -22,6 +22,13 @@ const subNavItems = (
   reviewerRoute: ReviewerKey,
   flags?: Flags
 ): SubNavItems => {
+  const grbReview: SubNavItems[number] = {
+    route: `/${reviewerRoute}/${systemId}/grb-review`,
+    text: 'grbReview:title',
+    aria: 'grbReview:aria',
+    groupEnd: true
+  };
+
   const items: SubNavItems = [
     {
       route: `/${reviewerRoute}/${systemId}/intake-request`,
@@ -36,14 +43,11 @@ const subNavItems = (
     {
       route: `/${reviewerRoute}/${systemId}/business-case`,
       text: 'general:businessCase',
-      aria: 'aria.openBusiness'
+      aria: 'aria.openBusiness',
+      groupEnd: flags && !flags.grbReviewTab
     },
-    {
-      route: `/${reviewerRoute}/${systemId}/grb-review`,
-      text: 'grbReview:title',
-      aria: 'grbReview:aria',
-      groupEnd: true
-    },
+    // Add GRB review tab to nav items if flag is on
+    ...(flags?.grbReviewTab ? [grbReview] : []),
     {
       route: `/${reviewerRoute}/${systemId}/feedback`,
       text: 'feedback.title',

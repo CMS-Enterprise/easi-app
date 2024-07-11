@@ -221,10 +221,12 @@ const RequestOverview = () => {
                   render={() => <LifecycleID systemIntake={systemIntake} />}
                 />
 
-                <Route
-                  path={`/${reviewerType}/:systemId/grb-review`}
-                  render={() => <GRBReview {...systemIntake} />}
-                />
+                {flags?.grbReviewTab && (
+                  <Route
+                    path={`/${reviewerType}/:systemId/grb-review`}
+                    render={() => <GRBReview {...systemIntake} />}
+                  />
+                )}
 
                 {/* GRT only routes */}
 
