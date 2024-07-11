@@ -204,7 +204,7 @@ func (s *ResolverSuite) createNewIntake(ops ...func(*models.SystemIntake)) *mode
 	return newIntake
 }
 
-// utility method for creating a valid new system intake, checking for any errors
+// utility method for creating a valid new TRB Request, checking for any errors
 func (s *ResolverSuite) createNewTRBRequest(ops ...func(*models.TRBRequest)) *models.TRBRequest {
 	newTRBRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
