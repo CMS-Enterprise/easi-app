@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -96,7 +97,7 @@ func (s *Store) FetchSystemIntakeFundingSourcesByIntakeID(ctx context.Context, s
 func (s *Store) FetchSystemIntakeFundingSourcesByIntakeIDs(ctx context.Context, systemIntakeIDs []uuid.UUID) ([]*models.SystemIntakeFundingSource, error) {
 	sources := []*models.SystemIntakeFundingSource{}
 	err := namedSelect(ctx, s, &sources, sqlqueries.SystemIntakeFundingSources.GetAllBySystemIntakeIDs, args{
-		"system_intake_ids": systemIntakeIDs,
+		"system_intake_ids": pq.Array(systemIntakeIDs),
 	})
 
 	if err != nil {

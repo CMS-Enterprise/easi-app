@@ -21,6 +21,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
 	cedarcore "github.com/cms-enterprise/easi-app/pkg/cedar/core"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/flags"
 	"github.com/cms-enterprise/easi-app/pkg/graph/generated"
@@ -1706,7 +1707,7 @@ func (r *systemIntakeResolver) CurrentStage(ctx context.Context, obj *models.Sys
 
 // FundingSources is the resolver for the fundingSources field.
 func (r *systemIntakeResolver) FundingSources(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeFundingSource, error) {
-	return r.store.FetchSystemIntakeFundingSourcesByIntakeID(ctx, obj.ID)
+	return dataloaders.GetSystemIntakeFundingSourceBySystemIntakeID(ctx, obj.ID)
 }
 
 // GovernanceRequestFeedbacks is the resolver for the governanceRequestFeedbacks field.
