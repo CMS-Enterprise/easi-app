@@ -24,7 +24,7 @@ function RequestsCard({ systemId, trbCount, itgovCount }: RequestsCardProps) {
       description={t('spaces.requests.description')}
       body={
         <div>
-          <div>
+          <div className="margin-bottom-2">
             <strong className="padding-right-1 border-right-1px border-base-light">
               {t('spaces.requests.itgCount', { count: itgovCount })}
             </strong>

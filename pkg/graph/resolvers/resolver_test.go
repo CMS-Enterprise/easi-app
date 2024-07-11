@@ -194,21 +194,35 @@ func newS3Config() upload.Config {
 }
 
 // utility method for creating a valid new system intake, checking for any errors
-func (s *ResolverSuite) createNewIntake() *models.SystemIntake {
+func (s *ResolverSuite) createNewIntake(ops ...func(*models.SystemIntake)) *models.SystemIntake {
 	newIntake, err := s.testConfigs.Store.CreateSystemIntake(s.testConfigs.Context, &models.SystemIntake{
 		// these fields are required by the SQL schema for the system_intakes table, and CreateSystemIntake() doesn't set them to defaults
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	s.NoError(err)
+	for _, op := range ops {
+		op(newIntake)
+	}
+	if len(ops) > 0 {
+		newIntake, err = s.testConfigs.Store.UpdateSystemIntake(s.testConfigs.Context, newIntake)
+		s.NoError(err)
+	}
 
 	return newIntake
 }
 
-// utility method for creating a valid new system intake, checking for any errors
-func (s *ResolverSuite) createNewTRBRequest() *models.TRBRequest {
+// utility method for creating a valid new TRB Request, checking for any errors
+func (s *ResolverSuite) createNewTRBRequest(ops ...func(*models.TRBRequest)) *models.TRBRequest {
 	newTRBRequest, err := CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, s.testConfigs.Store)
 	s.NoError(err)
 
+	for _, op := range ops {
+		op(newTRBRequest)
+	}
+	if len(ops) > 0 {
+		newTRBRequest, err = s.testConfigs.Store.UpdateTRBRequest(s.testConfigs.Context, newTRBRequest)
+		s.NoError(err)
+	}
 	return newTRBRequest
 }
 
