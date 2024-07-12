@@ -45,6 +45,9 @@ func NewSystemIntakeGRBReviewer(userID uuid.UUID, createdBy uuid.UUID) *SystemIn
 	}
 }
 
-func (r SystemIntakeGRBReviewer) GetMappingID() uuid.UUID {
+func (r SystemIntakeGRBReviewer) GetMappingKey() uuid.UUID {
 	return r.SystemIntakeID
+}
+func (r SystemIntakeGRBReviewer) GetMappingVal() *SystemIntakeGRBReviewer {
+	return &r
 }

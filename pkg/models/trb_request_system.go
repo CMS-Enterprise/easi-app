@@ -17,6 +17,9 @@ func NewTRBRequestSystem(createdBy uuid.UUID) TRBRequestSystem {
 	}
 }
 
-func (t TRBRequestSystem) GetMappingID() uuid.UUID {
+func (t TRBRequestSystem) GetMappingKey() uuid.UUID {
 	return t.TRBRequestID
+}
+func (t TRBRequestSystem) GetMappingVal() *TRBRequestSystem {
+	return &t
 }
