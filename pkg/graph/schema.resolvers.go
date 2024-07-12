@@ -1571,7 +1571,7 @@ func (r *queryResolver) UserAccount(ctx context.Context, username string) (*auth
 
 // Actions is the resolver for the actions field.
 func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeAction, error) {
-	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
+	actions, actionsErr := dataloaders.GetSystemIntakeActionsBySystemIntakeID(ctx, obj.ID)
 	if actionsErr != nil {
 		return nil, actionsErr
 	}
@@ -1586,6 +1586,7 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 				Name:  action.ActorName,
 				Email: action.ActorEmail.String(),
 			},
+			SystemIntake:           obj,
 			Feedback:               action.Feedback,
 			CreatedAt:              *action.CreatedAt,
 			NewRetirementDate:      action.LCIDRetirementChangeNewDate,
