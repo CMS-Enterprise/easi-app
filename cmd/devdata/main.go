@@ -683,7 +683,7 @@ func main() {
 	intake = makeSystemIntakeAndProgressToStep(
 		"For business case Cypress test",
 		&intakeID,
-		"E2E1",
+		mock.EndToEnd1User,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToDraftBusinessCase,

@@ -14,8 +14,36 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
-// PrincipalUser is the "current user" when seeding the data
-const PrincipalUser = "ABCD"
+// These represent some users who have mocked okta data
+const (
+	// PrincipalUser is the "current user" when seeding the data (Adeline Aarons)
+	PrincipalUser = "ABCD"
+
+	// TestUser is the "TEST user" when seeding the data (Terry Thompson)
+	TestUser = "TEST"
+
+	// EndToEnd1User is the username of the user for some end to end testing
+	EndToEnd1User = "E2E1"
+
+	// EndToEnd2User is the username of the user for some end to end testing
+	EndToEnd2User = "E2E2"
+
+	AllyUser  = "A11Y"
+	GaryUser  = "GRTB"
+	AubryUser = "ADMI"
+	User1User = "USR1"
+	User2User = "USR2"
+	User3User = "USR3"
+	User4User = "USR4"
+	User5User = "USR5"
+	TheoUser  = "CJRW"
+)
+
+var UserNamesForCedarSystemRoles = []string{
+	PrincipalUser, TestUser, EndToEnd1User, EndToEnd2User, AllyUser, GaryUser, AubryUser, User1User, User2User, User3User, User4User, User5User, TheoUser,
+	// Duplicate so we don't run out of users for roles
+	PrincipalUser, TestUser, EndToEnd1User, EndToEnd2User, AllyUser, GaryUser, AubryUser, User1User, User2User, User3User, User4User, User5User, TheoUser,
+	PrincipalUser, TestUser, EndToEnd1User, EndToEnd2User, AllyUser, GaryUser, AubryUser, User1User, User2User, User3User, User4User, User5User, TheoUser}
 
 // FetchUserInfoMock mocks the fetch user info logic
 func FetchUserInfoMock(ctx context.Context, username string) (*models.UserInfo, error) {

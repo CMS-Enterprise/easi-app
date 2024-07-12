@@ -597,17 +597,6 @@ var mockUserDictionary = map[string]*models.UserInfo{
 	},
 }
 
-func GetMockUserDataSlice() []*models.UserInfo {
-	// Create a slice to hold the values
-	userInfos := make([]*models.UserInfo, 0, len(mockUserDictionary))
-
-	// Loop through the map and append the values to the slice
-	for _, userInfo := range mockUserDictionary {
-		userInfos = append(userInfos, userInfo)
-	}
-	return userInfos
-}
-
 // FetchUserInfo fetches a user's personal details
 func (c *client) FetchUserInfo(ctx context.Context, username string) (*models.UserInfo, error) {
 	logger := appcontext.ZLogger(ctx)
