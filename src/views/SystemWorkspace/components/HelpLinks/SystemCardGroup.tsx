@@ -9,9 +9,14 @@ import SystemHelpCard from './SystemHelpCard';
 type OperationalSolutionsHelpProps = {
   className?: string;
   cards: HelpLinkType[];
+  linkSearchQuery: string | undefined;
 };
 
-const HelpCardGroup = ({ className, cards }: OperationalSolutionsHelpProps) => {
+const HelpCardGroup = ({
+  className,
+  cards,
+  linkSearchQuery
+}: OperationalSolutionsHelpProps) => {
   return (
     <div
       className={classNames(
@@ -21,6 +26,15 @@ const HelpCardGroup = ({ className, cards }: OperationalSolutionsHelpProps) => {
     >
       <CardGroup className={className}>
         {cards.map(card => {
+          // Add the `linkSearchQuery` for a couple of starting request cards
+          let { link } = card;
+          if (
+            linkSearchQuery &&
+            (link === '/system/request-type' || link === '/trb/start')
+          ) {
+            link += `?${linkSearchQuery}`;
+          }
+
           return (
             <Grid
               tablet={{ col: 6 }}
@@ -30,7 +44,7 @@ const HelpCardGroup = ({ className, cards }: OperationalSolutionsHelpProps) => {
             >
               <SystemHelpCard
                 header={card.header}
-                link={card.link}
+                link={link}
                 linkText={card.linkText}
                 external={card.external}
               />
