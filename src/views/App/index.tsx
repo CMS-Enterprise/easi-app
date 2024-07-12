@@ -82,7 +82,7 @@ const AppRoutes = () => {
 
       {/* GRT/GRB Routes */}
       <SecureRoute
-        path="/governance-review-team"
+        path="/(governance-review-team|governance-review-board)/:id"
         component={GovernanceReviewTeam}
       />
 
