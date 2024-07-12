@@ -1,3 +1,4 @@
+import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
 import { FundingSource as FundingSourceType } from 'queries/types/FundingSource';
 import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
@@ -64,20 +65,19 @@ export type SystemIntakeForm = {
   hasUiChanges: boolean | null;
 } & ContractDetailsForm;
 
+export type ContactFields = Omit<
+  SystemIntakeContactProps,
+  'role' | 'systemIntakeId'
+>;
+
 export type ContactDetailsForm = {
-  requester: SystemIntakeContactProps;
-  businessOwner: SystemIntakeContactProps;
-  productManager: SystemIntakeContactProps;
-  isso: SystemIntakeContactProps & { isPresent: boolean };
+  requester: ContactFields;
+  businessOwner: ContactFields & { sameAsRequester: boolean };
+  productManager: ContactFields & { sameAsRequester: boolean };
+  isso: ContactFields & { isPresent: boolean };
   governanceTeams: {
-    isPresent: boolean | null;
-    teams:
-      | {
-          collaborator: string;
-          key: string;
-          name: string;
-        }[]
-      | null;
+    isPresent: boolean;
+    teams: CollaboratorFields;
   };
 };
 
@@ -214,3 +214,16 @@ export type SystemIntakeRoleKeys =
   | 'productManager'
   | 'isso'
   | 'requester';
+
+/** System intake governance team field types */
+
+type CmsGovernanceTeams = typeof cmsGovernanceTeams;
+type CmsGovernanceTeam = CmsGovernanceTeams[number];
+
+export type CollaboratorFields = Record<
+  CmsGovernanceTeam['key'],
+  {
+    isPresent: boolean;
+    collaborator: string;
+  }
+>;

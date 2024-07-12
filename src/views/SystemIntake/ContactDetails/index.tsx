@@ -39,34 +39,30 @@ import {
   UpdateSystemIntakeContactDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContactDetails';
 import {
-  SystemIntakeCollaboratorInput,
   SystemIntakeFormState,
+  SystemIntakeGovernanceTeamInput,
   SystemIntakeRequestType
 } from 'types/graphql-global-types';
-import { SystemIntakeContactProps } from 'types/systemIntake';
+import {
+  ContactDetailsForm,
+  ContactFields,
+  SystemIntakeContactProps
+} from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import GovernanceTeams from './GovernanceTeams';
+import {
+  formatContactFields,
+  formatGovernanceTeamsInput,
+  formatGovTeamsField
+} from './utils';
 
 import './index.scss';
 
 type ContactDetailsProps = {
   systemIntake: SystemIntake;
-};
-
-type ContactFields = Omit<SystemIntakeContactProps, 'role' | 'systemIntakeId'>;
-
-type ContactDetailsForm = {
-  requester: ContactFields;
-  businessOwner: ContactFields & { sameAsRequester: boolean };
-  productManager: ContactFields & { sameAsRequester: boolean };
-  isso: ContactFields & { isPresent: boolean };
-  governanceTeams: {
-    isPresent: boolean;
-    teams: SystemIntakeCollaboratorInput[] | null;
-  };
 };
 
 type SystemIntakeRoleKeys = keyof Omit<ContactDetailsForm, 'governanceTeams'>;
@@ -77,13 +73,6 @@ const systemIntakeRolesMap: Record<SystemIntakeRoleKeys, string> = {
   productManager: 'Product Manager',
   isso: 'ISSO'
 };
-
-/** Removes `role` and `systemIntakeId` fields from `SystemIntakeContactProps` type */
-const getContactFields = ({
-  role,
-  systemIntakeId,
-  ...contact
-}: SystemIntakeContactProps): ContactFields => contact;
 
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const { t } = useTranslation('intake');
@@ -185,13 +174,14 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   };
 
   const updateSystemIntake = async () => {
-    const {
-      requester,
-      businessOwner,
-      productManager,
-      isso,
-      governanceTeams
-    } = watch();
+    const values = watch();
+
+    const { requester, businessOwner, productManager, isso } = values;
+
+    const governanceTeams: SystemIntakeGovernanceTeamInput = {
+      isPresent: values.governanceTeams.isPresent,
+      teams: formatGovernanceTeamsInput(values.governanceTeams.teams)
+    };
 
     // Update contacts
     await Promise.all([
@@ -308,31 +298,26 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       const { data } = contacts;
 
       reset({
-        requester: getContactFields(data.requester),
+        requester: formatContactFields(data.requester),
         businessOwner: {
-          ...getContactFields(data.businessOwner),
+          ...formatContactFields(data.businessOwner),
           sameAsRequester:
             data.businessOwner.euaUserId === data.requester.euaUserId &&
             data.businessOwner.component === data.requester.component
         },
         productManager: {
-          ...getContactFields(data.productManager),
+          ...formatContactFields(data.productManager),
           sameAsRequester:
             data.productManager.euaUserId === data.requester.euaUserId &&
             data.productManager.component === data.requester.component
         },
         isso: {
           isPresent: !!systemIntake.isso.isPresent,
-          ...getContactFields(data.isso)
+          ...formatContactFields(data.isso)
         },
         governanceTeams: {
           isPresent: !!systemIntake.governanceTeams.isPresent,
-          teams:
-            systemIntake.governanceTeams.teams?.map(team => ({
-              collaborator: team.collaborator,
-              name: team.name,
-              key: team.key
-            })) || []
+          teams: formatGovTeamsField(systemIntake.governanceTeams.teams)
         }
       });
     }
