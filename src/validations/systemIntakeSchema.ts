@@ -2,31 +2,39 @@ import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
 import { FormattedFundingSource } from 'components/FundingSources';
-import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntakeDocumentCommonType } from 'types/graphql-global-types';
 
-const governanceTeamNames = cmsGovernanceTeams.map(team => team.name);
-
-const govTeam = Yup.object().shape({
-  name: Yup.string().oneOf(governanceTeamNames),
-  collaborator: Yup.string().when('name', (name: string, schema) =>
-    schema.required(
-      `Tell us the name of the person you've been working with from the ${name}`
-    )
-  )
-});
+const govTeam = (name: string) =>
+  Yup.object().shape({
+    isPresent: Yup.boolean(),
+    collaborator: Yup.string().when('isPresent', {
+      is: true,
+      then: Yup.string().required(
+        `Tell us the name of the person you've been working with from the ${name}`
+      )
+    })
+  });
 
 const governanceTeams = Yup.object().shape({
   isPresent: Yup.boolean()
     .nullable()
     .required('Select if you are working with any teams'),
-  teams: Yup.array().when('isPresent', {
-    is: true,
-    then: schema =>
-      schema
-        .min(1, 'Mark all teams you are currently collaborating with')
-        .of(govTeam)
-  })
+  teams: Yup.object()
+    .shape({
+      technicalReviewBoard: govTeam('Technical Review Board'),
+      securityPrivacy: govTeam("OIT's Security and Privacy Group"),
+      enterpriseArchitecture: govTeam('Enterprise Architecture')
+    })
+    .test(
+      'min',
+      'Mark all teams you are currently collaborating with',
+      (teams, context) => {
+        const { isPresent } = context.parent;
+        return isPresent
+          ? Object.values(teams).some(team => team.isPresent)
+          : true;
+      }
+    )
 });
 
 const SystemIntakeValidationSchema = {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
@@ -27,10 +27,22 @@ const GovernanceTeams = () => {
     control,
     watch,
     register,
+    clearErrors,
+    setValue,
     formState: { errors }
   } = useEasiFormContext<ContactDetailsForm>();
 
   const isPresent = watch('governanceTeams.isPresent');
+
+  // Reset team fields when `isPresent` is false
+  useEffect(() => {
+    if (!isPresent) {
+      clearErrors('governanceTeams.teams');
+      setValue('governanceTeams.teams.enterpriseArchitecture.isPresent', false);
+      setValue('governanceTeams.teams.securityPrivacy.isPresent', false);
+      setValue('governanceTeams.teams.technicalReviewBoard.isPresent', false);
+    }
+  }, [isPresent, setValue, clearErrors]);
 
   return (
     <>
@@ -89,7 +101,8 @@ const GovernanceTeams = () => {
                         label={label}
                         disabled={!isPresent}
                         value="true"
-                        onChange={() => field.onChange(true)}
+                        checked={field.value}
+                        onChange={() => field.onChange(!field.value)}
                       />
                     );
                   }}
@@ -113,7 +126,10 @@ const GovernanceTeams = () => {
                     />
 
                     <TextInput
-                      {...register(`governanceTeams.teams.${key}.collaborator`)}
+                      {...register(
+                        `governanceTeams.teams.${key}.collaborator`,
+                        { shouldUnregister: true }
+                      )}
                       ref={null}
                       id={`governanceTeam-${key}-collaborator`}
                       type="text"
