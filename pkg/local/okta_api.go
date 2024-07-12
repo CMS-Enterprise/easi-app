@@ -23,7 +23,7 @@ func NewOktaAPIClient() *client {
 var mockUserDictionary = map[string]*models.UserInfo{
 	"ABCD": {
 		DisplayName: "Adeline Aarons",
-		Email:       "Adeline.Aarons@local.fake",
+		Email:       "adeline.aarons@local.fake",
 		Username:    "ABCD",
 		FirstName:   "Adeline",
 		LastName:    "Aarons",
