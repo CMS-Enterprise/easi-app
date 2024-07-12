@@ -17,6 +17,7 @@ import {
   GetSystemWorkspaceVariables
 } from 'queries/types/GetSystemWorkspace';
 import { RoleTypeName } from 'types/systemProfile';
+import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 import NotFound from 'views/NotFound';
 import { getAtoStatus } from 'views/SystemProfile';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
@@ -54,6 +55,9 @@ export const SystemWorkspace = () => {
         role => role.roleTypeName === RoleTypeName.ISSO
       )
     : undefined;
+
+  /** The `linkSearchQuery` is used on starting new request links throughout workspace */
+  const linkSearchQuery = linkCedarSystemIdQueryString(systemId);
 
   if (loading) {
     return <PageLoading />;
@@ -111,7 +115,10 @@ export const SystemWorkspace = () => {
         />
       </div>
 
-      <HelpLinks classname="margin-top-3 margin-bottom-5" />
+      <HelpLinks
+        classname="margin-top-3 margin-bottom-5"
+        linkSearchQuery={linkSearchQuery}
+      />
 
       <h2>{t('spaces.header')}</h2>
 
@@ -142,6 +149,7 @@ export const SystemWorkspace = () => {
               systemId={systemId}
               trbCount={cedarSystem.linkedTrbRequests.length}
               itgovCount={cedarSystem.linkedSystemIntakes.length}
+              linkSearchQuery={linkSearchQuery}
             />
           )}
         </CardGroup>
