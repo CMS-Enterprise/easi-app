@@ -55,7 +55,7 @@ func SystemIntakeNotes(
 	store *storage.Store,
 	obj *models.SystemIntake,
 ) ([]*models.SystemIntakeNote, error) {
-	return store.FetchNotesBySystemIntakeID(ctx, obj.ID)
+	return dataloaders.GetSystemIntakeNotesBySystemIntakeID(ctx, obj.ID)
 }
 
 // SystemIntakeNoteAuthor returns the system intake note author
