@@ -77,6 +77,7 @@ type Dataloaders struct {
 	SystemIntakeRelatedTRBRequests   *dataloadgen.Loader[uuid.UUID, []*models.TRBRequest]
 	SystemIntakeSystems              *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeSystem]
 	TRBRequestContractNumbers        *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestContractNumber]
+	TRBRequestForm                   *dataloadgen.Loader[uuid.UUID, *models.TRBRequestForm]
 	TRBRequestRelatedSystemIntakes   *dataloadgen.Loader[uuid.UUID, []*models.SystemIntake]
 	TRBRequestRelatedTRBRequests     *dataloadgen.Loader[uuid.UUID, []*models.TRBRequest]
 	TRBRequestSystems                *dataloadgen.Loader[uuid.UUID, []*models.TRBRequestSystem]
@@ -102,6 +103,7 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		SystemIntakeRelatedSystemIntakes: dataloadgen.NewLoader(dr.batchRelatedSystemIntakesBySystemIntakeIDs),
 		SystemIntakeRelatedTRBRequests:   dataloadgen.NewLoader(dr.batchRelatedTRBRequestsBySystemIntakeIDs),
 		SystemIntakeSystems:              dataloadgen.NewLoader(dr.batchSystemIntakeSystemsBySystemIntakeIDs),
+		TRBRequestForm:                   dataloadgen.NewLoader(dr.batchTRBRequestFormsByTRBRequestIDs),
 		TRBRequestContractNumbers:        dataloadgen.NewLoader(dr.batchTRBRequestContractNumbersByTRBRequestIDs),
 		TRBRequestRelatedSystemIntakes:   dataloadgen.NewLoader(dr.batchRelatedSystemIntakesByTRBRequestIDs),
 		TRBRequestRelatedTRBRequests:     dataloadgen.NewLoader(dr.batchRelatedTRBRequestsByTRBRequestIDs),

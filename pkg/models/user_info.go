@@ -8,3 +8,10 @@ type UserInfo struct {
 	Email       EmailAddress
 	Username    string
 }
+
+func (ui UserInfo) GetMappingKey() string {
+	return ui.Username
+}
+func (ui UserInfo) GetMappingVal() *UserInfo {
+	return &ui
+}
