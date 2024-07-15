@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"path/filepath"
@@ -121,6 +122,12 @@ func canView(ctx context.Context, store *storage.Store, s3Key string) error {
 
 	document, err := store.GetSystemIntakeDocumentByS3Key(ctx, s3Key)
 	if err != nil {
+
+		if errors.Is(err, sql.ErrNoRows) {
+			// if the document was deleted, don't error and break
+			return nil
+		}
+
 		return err
 	}
 
