@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 
 	"go.uber.org/zap"
 
@@ -103,11 +104,12 @@ func (s *Store) UpdateTRBRequestForm(ctx context.Context, form *models.TRBReques
 	return &updated, err
 }
 
-// GetTRBRequestFormByTRBRequestID queries the DB for all the TRB request form records
-// matching the given TRB request ID
+// GetTRBRequestFormByTRBRequestID queries the DB for the TRB request form record matching the given TRB request ID
 func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBRequestForm, error) {
-	form := models.TRBRequestForm{}
-	stmt, err := s.db.PrepareNamed(`SELECT * FROM trb_request_forms WHERE trb_request_id=:trb_request_id`)
+	var form models.TRBRequestForm
+	err := namedGet(ctx, s, &form, sqlqueries.TRBRequestForm.GetByID, args{
+		"trb_request_id": trbRequestID,
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request form",
@@ -116,24 +118,23 @@ func (s *Store) GetTRBRequestFormByTRBRequestID(ctx context.Context, trbRequestI
 		)
 		return nil, err
 	}
-	defer stmt.Close()
+	return &form, nil
+}
 
-	arg := map[string]interface{}{"trb_request_id": trbRequestID}
-	err = stmt.Get(&form, arg)
-
+// GetTRBRequestFormsByTRBRequestIDs queries the DB for TRB request form records matching the given TRB request IDs
+func (s *Store) GetTRBRequestFormsByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestForm, error) {
+	var forms []*models.TRBRequestForm
+	err := namedSelect(ctx, s, &forms, sqlqueries.TRBRequestForm.GetByIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch TRB request form",
 			zap.Error(err),
-			zap.String("trbRequestID", trbRequestID.String()),
 		)
-		return nil, &apperrors.QueryError{
-			Err:       err,
-			Model:     form,
-			Operation: apperrors.QueryFetch,
-		}
+		return nil, err
 	}
-	return &form, err
+	return forms, nil
 }
 
 // GetFundingSourcesByRequestID queries the DB for all the TRB request form funding sources

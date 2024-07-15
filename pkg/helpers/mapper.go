@@ -38,3 +38,20 @@ func OneToMany[valT Mapper[keyT, retT], keyT comparable, retT any](keys []keyT, 
 
 	return out
 }
+
+// OneToOne takes a list of keys and a list of values which map one-to-one (key-to-value)
+func OneToOne[valT Mapper[keyT, retT], keyT comparable, retT any](keys []keyT, vals []valT) []retT {
+	store := map[keyT]retT{}
+
+	for _, val := range vals {
+		id := val.GetMappingKey()
+		store[id] = val.GetMappingVal()
+	}
+
+	var out []retT
+	for _, key := range keys {
+		out = append(out, store[key])
+	}
+
+	return out
+}
