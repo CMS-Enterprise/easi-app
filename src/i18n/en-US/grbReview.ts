@@ -13,5 +13,11 @@ export default {
   viewBusinessCase: 'View Business Case',
   viewIntakeRequest: 'View Intake Request',
   viewOtherDocuments: 'View other supporting documents',
-  addGrbReviewer: 'Add a GRB reviewer'
+  addGrbReviewer: 'Add a GRB reviewer',
+  form: {
+    title: 'Add a GRB reviewer',
+    description:
+      'Add details about this Governance Review Board (GRB) reviewer, including their name, voting role, and GRB role such as the Budget Development Group (BDG) they represent.',
+    returnToRequest: 'Don’t add and return to request details'
+  }
 };
