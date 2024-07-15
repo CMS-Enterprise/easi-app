@@ -70,6 +70,7 @@ type Dataloaders struct {
 	FetchUserInfo                    *dataloadgen.Loader[string, *models.UserInfo]
 	GetUserAccount                   *dataloadgen.Loader[uuid.UUID, *authentication.UserAccount]
 	GetCedarSystem                   *dataloadgen.Loader[string, *models.CedarSystem]
+	SystemIntakeActions              *dataloadgen.Loader[uuid.UUID, []*models.Action]
 	SystemIntakeContractNumbers      *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeContractNumber]
 	SystemIntakeFundingSources       *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeFundingSource]
 	SystemIntakeGRBReviewers         *dataloadgen.Loader[uuid.UUID, []*models.SystemIntakeGRBReviewer]
@@ -98,6 +99,7 @@ func NewDataloaders(store *storage.Store, fetchUserInfos fetchUserInfosFunc, get
 		FetchUserInfo:                    dataloadgen.NewLoader(dr.fetchUserInfosByEUAUserIDs),
 		GetUserAccount:                   dataloadgen.NewLoader(dr.batchUserAccountsByIDs),
 		GetCedarSystem:                   dataloadgen.NewLoader(dr.getCedarSystemsByIDs),
+		SystemIntakeActions:              dataloadgen.NewLoader(dr.batchSystemIntakeActionsBySystemIntakeIDs),
 		SystemIntakeContractNumbers:      dataloadgen.NewLoader(dr.batchSystemIntakeContractNumbersBySystemIntakeIDs),
 		SystemIntakeFundingSources:       dataloadgen.NewLoader(dr.batchSystemIntakeFundingSourcesBySystemIntakeIDs),
 		SystemIntakeGRBReviewers:         dataloadgen.NewLoader(dr.batchSystemIntakeGRBReviewersBySystemIntakeIDs),
