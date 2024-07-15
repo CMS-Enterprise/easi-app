@@ -5,6 +5,7 @@ export type Flags = {
   systemProfileHiddenFields: boolean;
   systemWorkspace: boolean;
   systemWorkspaceRequestsCard: boolean;
+  grbReviewTab: boolean;
 };
 
 export type FlagsState = {
