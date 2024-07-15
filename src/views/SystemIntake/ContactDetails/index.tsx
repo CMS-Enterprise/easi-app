@@ -339,6 +339,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           testId="contact-details-errors"
           classNames="margin-top-3"
           heading={t('form:inputError.checkFix')}
+          autoFocus={false}
         >
           {Object.keys(fieldErrors).map(key => {
             return (
