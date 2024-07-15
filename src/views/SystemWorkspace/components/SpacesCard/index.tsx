@@ -48,7 +48,7 @@ const SpacesCard = ({
           {body}
         </CardBody>
 
-        <Divider className="margin-y-2" />
+        <Divider className="margin-top-3 margin-bottom-2" />
 
         <CardFooter className="padding-0 margin-bottom-05">{footer}</CardFooter>
       </Card>

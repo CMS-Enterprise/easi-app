@@ -17,12 +17,14 @@ import {
   GetSystemWorkspaceVariables
 } from 'queries/types/GetSystemWorkspace';
 import { RoleTypeName } from 'types/systemProfile';
+import linkCedarSystemIdQueryString from 'utils/linkCedarSystemIdQueryString';
 import NotFound from 'views/NotFound';
 import { getAtoStatus } from 'views/SystemProfile';
 import Breadcrumbs from 'views/TechnicalAssistance/Breadcrumbs';
 
 import AtoCard from './components/AtoCard';
 import HelpLinks from './components/HelpLinks';
+import RequestsCard from './components/RequestsCard';
 import SpacesCard from './components/SpacesCard';
 
 export const SystemWorkspace = () => {
@@ -54,11 +56,14 @@ export const SystemWorkspace = () => {
       )
     : undefined;
 
+  /** The `linkSearchQuery` is used on starting new request links throughout workspace */
+  const linkSearchQuery = linkCedarSystemIdQueryString(systemId);
+
   if (loading) {
     return <PageLoading />;
   }
 
-  if (error || !data || !data.cedarSystemDetails) {
+  if (error || !data || !data.cedarSystemDetails || !cedarSystem) {
     return <NotFound />;
   }
 
@@ -110,7 +115,10 @@ export const SystemWorkspace = () => {
         />
       </div>
 
-      <HelpLinks classname="margin-top-3 margin-bottom-5" />
+      <HelpLinks
+        classname="margin-top-3 margin-bottom-5"
+        linkSearchQuery={linkSearchQuery}
+      />
 
       <h2>{t('spaces.header')}</h2>
 
@@ -135,6 +143,15 @@ export const SystemWorkspace = () => {
             dateAuthorizationMemoExpires={ato?.dateAuthorizationMemoExpires}
             isso={isso}
           />
+
+          {flags.systemWorkspaceRequestsCard && (
+            <RequestsCard
+              systemId={systemId}
+              trbCount={cedarSystem.linkedTrbRequests.length}
+              itgovCount={cedarSystem.linkedSystemIntakes.length}
+              linkSearchQuery={linkSearchQuery}
+            />
+          )}
         </CardGroup>
       </Grid>
     </MainContent>

@@ -30,3 +30,7 @@ func TRBRequestSystems(ctx context.Context, trbRequestID uuid.UUID) ([]*models.C
 	}
 	return systems, nil
 }
+
+func CedarSystemLinkedTRBRequests(ctx context.Context, cedarSystemID string, state models.TRBRequestState) ([]*models.TRBRequest, error) {
+	return dataloaders.GetCedarSystemLinkedTRBRequests(ctx, cedarSystemID, state)
+}

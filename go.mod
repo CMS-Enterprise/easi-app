@@ -5,7 +5,7 @@ go 1.22.3
 require (
 	github.com/99designs/gqlgen v0.17.49
 	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
-	github.com/aws/aws-sdk-go v1.54.11
+	github.com/aws/aws-sdk-go v1.54.19
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-openapi/errors v0.22.0
 	github.com/go-openapi/runtime v0.28.0
@@ -21,7 +21,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/okta/okta-jwt-verifier-golang v1.3.1
 	github.com/pquerna/otp v1.4.0
-	github.com/samber/lo v1.44.0
+	github.com/samber/lo v1.46.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
@@ -59,9 +59,9 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/go-jose/go-jose/v3 v3.0.3 // indirect
-	github.com/gorilla/css v1.0.0 // indirect
+	github.com/gorilla/css v1.0.1 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0 // indirect
-	github.com/microcosm-cc/bluemonday v1.0.26
+	github.com/microcosm-cc/bluemonday v1.0.27
 	golang.org/x/net v0.26.0 // indirect
 )
 
