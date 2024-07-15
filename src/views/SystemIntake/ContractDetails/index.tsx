@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FieldErrors, FieldPath } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -67,6 +67,8 @@ type ContractDetailsProps = {
 const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
   const history = useHistory();
   const { t } = useTranslation('intake');
+
+  const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
 
   const {
     id,
@@ -296,7 +298,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
                 {t('contractDetails.fundingSources.helpText')}
               </HelpText>
 
-              <FundingSources />
+              <FundingSources disableParentForm={setDisableSubmit} />
             </Fieldset>
           </FieldGroup>
 
@@ -475,7 +477,8 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
 
           <Pager
             next={{
-              type: 'submit'
+              type: 'submit',
+              disabled: disableSubmit
             }}
             back={{
               type: 'button',

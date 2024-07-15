@@ -37,10 +37,15 @@ type FundingSourcesForm = {
   fundingSources: Omit<FormattedFundingSource, 'id'>[];
 };
 
+type FundingSourcesProps = {
+  /** Function to disable submit on parent form when add/edit form is open */
+  disableParentForm?: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 /** Funding sources component for system intake form */
 
 // TODO: Refactor to work with both system intake and TRB forms
-const FundingSources = () => {
+const FundingSources = ({ disableParentForm }: FundingSourcesProps) => {
   const { t } = useTranslation('intake');
 
   const [
@@ -102,6 +107,14 @@ const FundingSources = () => {
       setActiveFundingSource(fields[fields.length - 1]);
     }
   }, [fields, activeFundingSource, setActiveFundingSource]);
+
+  /** Disable parent form while adding/editing funding source */
+  useEffect(() => {
+    // Check if `disableParentForm` prop was provided
+    if (disableParentForm) {
+      disableParentForm(!!activeFundingSource);
+    }
+  }, [activeFundingSource, disableParentForm]);
 
   return (
     <div id="intakeFundingSources">
