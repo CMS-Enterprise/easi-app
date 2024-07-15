@@ -135,7 +135,7 @@ func (s *Store) GetTRBRequestFeedbackByTRBRequestIDs(ctx context.Context, trbReq
 	results := []*models.TRBRequestFeedback{}
 
 	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestFeedback.GetByIDs, args{
-		"trb_request_ids": trbRequestIDs,
+		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
