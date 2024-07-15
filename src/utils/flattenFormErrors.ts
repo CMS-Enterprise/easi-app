@@ -43,7 +43,10 @@ const flattenSubfieldErrors = (
       return flattenArrayFieldErrors(`${key}.${errorKey}`, error, flatErrors);
     }
 
-    if (!isFieldError(error)) return acc;
+    /** Flatten any additional subfields */
+    if (!isFieldError(error)) {
+      return flattenSubfieldErrors(`${key}.${errorKey}`, error, flatErrors);
+    }
 
     return flattenFieldError(`${key}.${errorKey}`, error, acc);
   }, flatErrors);
