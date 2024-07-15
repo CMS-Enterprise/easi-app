@@ -182,8 +182,8 @@ describe('The System Intake Form', () => {
         .should('be.checked');
 
       cy.get(`#governanceTeam-${team.key}-collaborator`)
-        .type(`${team.value} Collaborator`)
-        .should('have.value', `${team.value} Collaborator`);
+        .type(`${team.name} Collaborator`)
+        .should('have.value', `${team.name} Collaborator`);
     });
 
     cy.contains('button', 'Next').click();
