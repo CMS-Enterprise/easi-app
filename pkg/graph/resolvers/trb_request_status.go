@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -33,7 +34,7 @@ func getTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestI
 	var feedback *models.TRBRequestFeedback
 	var errFeedback error
 	errGroup.Go(func() error {
-		feedback, errFeedback = store.GetNewestTRBRequestFeedbackByTRBRequestID(ctx, trbRequestID)
+		feedback, errFeedback = dataloaders.GetNewestTRBRequestFeedbackByTRBRequestID(ctx, trbRequestID)
 		return errFeedback
 	})
 
