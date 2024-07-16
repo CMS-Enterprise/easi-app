@@ -11,16 +11,19 @@ import (
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/appconfig"
+	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
+	"github.com/cms-enterprise/easi-app/pkg/usersearch"
 )
 
 type seederConfig struct {
-	logger   *zap.Logger
-	store    *storage.Store
-	s3Client *upload.S3Client
+	logger           *zap.Logger
+	store            *storage.Store
+	s3Client         *upload.S3Client
+	UserSearchClient usersearch.Client
 }
 
 func main() {
@@ -60,10 +63,14 @@ func main() {
 	s3Client := upload.NewS3Client(s3Cfg)
 
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
+
+	localOktaClient := local.NewOktaAPIClient()
+
 	seederConfig := &seederConfig{
-		logger:   logger,
-		store:    store,
-		s3Client: &s3Client,
+		logger:           logger,
+		store:            store,
+		s3Client:         &s3Client,
+		UserSearchClient: localOktaClient,
 	}
 
 	var intake *models.SystemIntake
@@ -552,6 +559,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		mock.PrincipalUser,
 		[]string{"12345", "67890"},
 	)
 
@@ -562,6 +570,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		mock.PrincipalUser,
 		[]string{"00001", "00002"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
@@ -575,6 +584,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		mock.PrincipalUser,
 		[]string{"00003", "00004"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
@@ -588,6 +598,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		mock.PrincipalUser,
 		[]string{"00003", "00004"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
@@ -601,6 +612,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		mock.PrincipalUser,
 		[]string{"00005", "00001"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
@@ -614,6 +626,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		mock.PrincipalUser,
 		"My Cool Existing Contract/Service",
 		[]string{"00001"},
 	)
@@ -625,13 +638,14 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		mock.PrincipalUser,
 		[]string{"12345", "67890"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC0A}",
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC1B}",
 		},
 	)
-	unlinkSystemIntakeRelation(logger, store, intakeID)
+	unlinkSystemIntakeRelation(logger, store, intakeID, mock.PrincipalUser)
 
 	// 5. Link deactivated Systems
 	intakeID = uuid.MustParse("04cb8a97-3515-4071-9b80-2710834cd94c")
@@ -640,6 +654,7 @@ func main() {
 		logger,
 		store,
 		intakeID,
+		mock.PrincipalUser,
 		[]string{"12345", "67890"},
 		[]string{
 			"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
@@ -668,7 +683,7 @@ func main() {
 	intake = makeSystemIntakeAndProgressToStep(
 		"For business case Cypress test",
 		&intakeID,
-		"E2E1",
+		mock.EndToEnd1User,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToDraftBusinessCase,
