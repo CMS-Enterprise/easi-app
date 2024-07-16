@@ -3,7 +3,7 @@ import {
   SystemIntakeGRBReviewerVotingRole
 } from 'types/graphql-global-types';
 
-export const grbReviewerVotingRoles: Record<
+export const grbReviewerVotingRolesTranslation: Record<
   SystemIntakeGRBReviewerVotingRole,
   string
 > = {
@@ -12,7 +12,10 @@ export const grbReviewerVotingRoles: Record<
   ALTERNATE: 'Alternate'
 };
 
-export const grbReviewerRoles: Record<SystemIntakeGRBReviewerRole, string> = {
+export const grbReviewerRolesTranslation: Record<
+  SystemIntakeGRBReviewerRole,
+  string
+> = {
   CO_CHAIR_CIO: 'Co-Chair - CIO',
   CO_CHAIR_CFO: 'CO-Chair - CFO',
   CO_CHAIR_HCA: 'CO-Chair - HCA',
@@ -66,6 +69,6 @@ export default {
     infoAlert:
       'This individual will be able to see information about this IT Governance request within EASi. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.'
   },
-  votingRoles: grbReviewerVotingRoles,
-  reviewerRoles: grbReviewerRoles
+  votingRoles: grbReviewerVotingRolesTranslation,
+  reviewerRoles: grbReviewerRolesTranslation
 };

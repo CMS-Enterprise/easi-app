@@ -19,7 +19,7 @@ import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
-import { grbReviewerRoles, grbReviewerVotingRoles } from 'i18n/en-US/grbReview';
+import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import { CreateSystemIntakeGRBReviewerQuery } from 'queries/SystemIntakeGRBReviewerQueries';
 import {
   CreateSystemIntakeGRBReviewer,
@@ -140,7 +140,7 @@ const GRBReviewerForm = () => {
           </Label>
           <Dropdown {...register('votingRole')} ref={null} id="votingRole">
             <option value="">{t('form:dropdownInitialSelect')}</option>
-            {Object.keys(grbReviewerVotingRoles).map(key => (
+            {grbReviewerVotingRoles.map(key => (
               <option value={key} key={key}>
                 {t(`votingRoles.${key}`)}
               </option>
@@ -185,7 +185,7 @@ const GRBReviewerForm = () => {
             aria-describedby="grbRoleHelpText"
           >
             <option value="">{t('form:dropdownInitialSelect')}</option>
-            {Object.keys(grbReviewerRoles).map(key => (
+            {grbReviewerRoles.map(key => (
               <option value={key} key={key}>
                 {t(`reviewerRoles.${key}`)}
               </option>
