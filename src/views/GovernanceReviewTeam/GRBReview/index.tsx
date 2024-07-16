@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import { ButtonGroup } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
@@ -14,6 +15,7 @@ type GRBReviewProps = {
 
 const GRBReview = ({ id }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
+  const { pathname } = useLocation();
 
   const isGrbView = useContext(IsGrbViewContext);
 
@@ -74,11 +76,7 @@ const GRBReview = ({ id }: GRBReviewProps) => {
         </div>
       ) : (
         // Add GRB reviewer button
-        <UswdsReactLink
-          className="usa-button"
-          // TODO EASI-4332: link to add GRB reviewer form
-          to="/"
-        >
+        <UswdsReactLink className="usa-button" to={`${pathname}/add`}>
           {t('addGrbReviewer')}
         </UswdsReactLink>
       )}

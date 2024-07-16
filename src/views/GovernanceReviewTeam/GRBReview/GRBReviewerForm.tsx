@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import {
   Dropdown,
@@ -44,6 +44,8 @@ type GRBReviewerFormFields = {
 const GRBReviewerForm = () => {
   const { t } = useTranslation('grbReview');
 
+  const history = useHistory();
+
   const params = useParams<{
     reviewerType: ReviewerKey;
     systemId: string;
@@ -61,7 +63,9 @@ const GRBReviewerForm = () => {
     register
   } = useEasiForm<GRBReviewerFormFields>();
 
-  const submit = handleSubmit(({ userAccount, ...values }) => {
+  const grbReviewPath = `/${reviewerType}/${systemId}/grb-review`;
+
+  const submit = handleSubmit(({ userAccount, ...values }) =>
     createGrbReviewer({
       variables: {
         input: {
@@ -70,8 +74,8 @@ const GRBReviewerForm = () => {
           ...values
         }
       }
-    });
-  });
+    }).then(() => history.push(grbReviewPath))
+  );
 
   return (
     <Grid className="tablet:grid-col-8 padding-y-4">
@@ -88,7 +92,7 @@ const GRBReviewerForm = () => {
 
       <IconLink
         icon={<IconArrowBack />}
-        to={`/${reviewerType}/${systemId}/governance-review`}
+        to={grbReviewPath}
         className="margin-top-3"
       >
         {t('form.returnToRequest')}
@@ -173,7 +177,7 @@ const GRBReviewerForm = () => {
           next={{
             text: t('form.addReviewer')
           }}
-          taskListUrl={`/${reviewerType}/${systemId}/governance-review`}
+          taskListUrl={grbReviewPath}
           saveExitText={t('form.returnToRequest')}
           border={false}
           className="margin-top-4"
