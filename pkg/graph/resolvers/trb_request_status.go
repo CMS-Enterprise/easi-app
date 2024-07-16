@@ -12,33 +12,24 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
-func getTRBFormStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBFormStatus, error) {
-	form, err := store.GetTRBRequestFormByTRBRequestID(ctx, trbRequestID)
+func getTRBFormStatus(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBFormStatus, error) {
+	form, err := dataloaders.GetTRBRequestFormByTRBRequestID(ctx, trbRequestID)
 	if err != nil {
 		return nil, err
 	}
 	return &form.Status, nil
 }
 
-func getTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestID uuid.UUID) (*models.TRBFeedbackStatus, error) {
+func getTRBFeedbackStatus(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBFeedbackStatus, error) {
 	status := models.TRBFeedbackStatusCannotStartYet
-	errGroup := new(errgroup.Group)
 
-	var form *models.TRBRequestForm
-	var errForm error
-	errGroup.Go(func() error {
-		form, errForm = store.GetTRBRequestFormByTRBRequestID(ctx, trbRequestID)
-		return errForm
-	})
+	form, err := dataloaders.GetTRBRequestFormByTRBRequestID(ctx, trbRequestID)
+	if err != nil {
+		return nil, err
+	}
 
-	var feedback *models.TRBRequestFeedback
-	var errFeedback error
-	errGroup.Go(func() error {
-		feedback, errFeedback = dataloaders.GetNewestTRBRequestFeedbackByTRBRequestID(ctx, trbRequestID)
-		return errFeedback
-	})
-
-	if err := errGroup.Wait(); err != nil {
+	feedback, err := dataloaders.GetNewestTRBRequestFeedbackByTRBRequestID(ctx, trbRequestID)
+	if err != nil {
 		return nil, err
 	}
 
@@ -65,9 +56,9 @@ func getTRBFeedbackStatus(ctx context.Context, store *storage.Store, trbRequestI
 	return &status, nil
 }
 
-func getTRBConsultPrepStatus(ctx context.Context, store *storage.Store, trbRequest models.TRBRequest) (*models.TRBConsultPrepStatus, error) {
+func getTRBConsultPrepStatus(ctx context.Context, trbRequest models.TRBRequest) (*models.TRBConsultPrepStatus, error) {
 	status := models.TRBConsultPrepStatusCannotStartYet
-	feedbackStatus, err := getTRBFeedbackStatus(ctx, store, trbRequest.ID)
+	feedbackStatus, err := getTRBFeedbackStatus(ctx, trbRequest.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -82,9 +73,9 @@ func getTRBConsultPrepStatus(ctx context.Context, store *storage.Store, trbReque
 	return &status, nil
 }
 
-func getTRBAttendConsultStatus(ctx context.Context, store *storage.Store, trbRequest models.TRBRequest) (*models.TRBAttendConsultStatus, error) {
+func getTRBAttendConsultStatus(ctx context.Context, trbRequest models.TRBRequest) (*models.TRBAttendConsultStatus, error) {
 	status := models.TRBAttendConsultStatusCannotStartYet
-	feedbackStatus, err := getTRBFeedbackStatus(ctx, store, trbRequest.ID)
+	feedbackStatus, err := getTRBFeedbackStatus(ctx, trbRequest.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -132,28 +123,28 @@ func GetTRBTaskStatuses(ctx context.Context, store *storage.Store, trbRequest mo
 	var formStatus *models.TRBFormStatus
 	var errForm error
 	errGroup.Go(func() error {
-		formStatus, errForm = getTRBFormStatus(ctx, store, trbRequest.ID)
+		formStatus, errForm = getTRBFormStatus(ctx, trbRequest.ID)
 		return errForm
 	})
 
 	var feedbackStatus *models.TRBFeedbackStatus
 	var errFeedback error
 	errGroup.Go(func() error {
-		feedbackStatus, errFeedback = getTRBFeedbackStatus(ctx, store, trbRequest.ID)
+		feedbackStatus, errFeedback = getTRBFeedbackStatus(ctx, trbRequest.ID)
 		return errFeedback
 	})
 
 	var consultPrepStatus *models.TRBConsultPrepStatus
 	var errConsultPrep error
 	errGroup.Go(func() error {
-		consultPrepStatus, errConsultPrep = getTRBConsultPrepStatus(ctx, store, trbRequest)
+		consultPrepStatus, errConsultPrep = getTRBConsultPrepStatus(ctx, trbRequest)
 		return errConsultPrep
 	})
 
 	var attendConsultStatus *models.TRBAttendConsultStatus
 	var errAttendConsult error
 	errGroup.Go(func() error {
-		attendConsultStatus, errAttendConsult = getTRBAttendConsultStatus(ctx, store, trbRequest)
+		attendConsultStatus, errAttendConsult = getTRBAttendConsultStatus(ctx, trbRequest)
 		return errAttendConsult
 	})
 

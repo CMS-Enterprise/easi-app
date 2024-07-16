@@ -69,7 +69,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 	trbRequest, err = CreateTRBRequest(s.testConfigs.Context, models.TRBTBrainstorm, store)
 	s.NoError(err)
 
-	initFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), store, trbRequest.ID)
+	initFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), trbRequest.ID)
 	s.NoError(err)
 	s.EqualValues(models.TRBFeedbackStatusCannotStartYet, *initFeedbackStatus)
 
@@ -95,7 +95,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 		s.NoError(err)
 		s.EqualValues(models.TRBFormStatusCompleted, form.Status)
 
-		reviewFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), store, trbRequest.ID)
+		reviewFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.EqualValues(models.TRBFeedbackStatusInReview, *reviewFeedbackStatus)
 
@@ -124,7 +124,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 		s.EqualValues(toCreate.NotifyEUAIDs[1], created.NotifyEUAIDs[1])
 		s.EqualValues(toCreate.NotifyEUAIDs[2], created.NotifyEUAIDs[2])
 		// Verify that the TRB request feedback status is now "edits requested"
-		updatedFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), store, trbRequest.ID)
+		updatedFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.EqualValues(models.TRBFeedbackStatusEditsRequested, *updatedFeedbackStatus)
 		form, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), store, trbRequest.ID)
@@ -167,7 +167,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 		s.EqualValues(toCreate2.NotifyEUAIDs[2], created2.NotifyEUAIDs[2])
 
 		// Verify that the TRB request feedback status is now "completed"
-		finalFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), store, trbRequest.ID)
+		finalFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.EqualValues(models.TRBFeedbackStatusCompleted, *finalFeedbackStatus)
 	})
