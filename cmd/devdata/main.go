@@ -63,6 +63,7 @@ func main() {
 	s3Client := upload.NewS3Client(s3Cfg)
 
 	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
+	ctx = mock.CtxWithNewDataloaders(ctx, store)
 
 	localOktaClient := local.NewOktaAPIClient()
 
@@ -75,7 +76,6 @@ func main() {
 
 	var intake *models.SystemIntake
 	var intakeID uuid.UUID
-	requesterEUA := "USR1"
 
 	// for setting GRT/GRB meeting dates when progressing
 	futureMeetingDate := time.Now().AddDate(0, 2, 0)
@@ -85,7 +85,7 @@ func main() {
 	intake = makeSystemIntakeAndProgressToStep(
 		"Rejected Request/Not Approved",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrtMeeting,
@@ -100,7 +100,7 @@ func main() {
 	intake = makeSystemIntakeAndSubmit(
 		"Not ITGov Request",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 	)
@@ -110,7 +110,7 @@ func main() {
 	intake = makeSystemIntakeAndProgressToStep(
 		"Closed Request",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToFinalBusinessCase,
@@ -124,72 +124,72 @@ func main() {
 	lcidExpirationDate := time.Now().AddDate(1, 0, 0)
 
 	intakeID = uuid.MustParse("e3fab202-70d8-44e1-9904-5a89588b8615")
-	intake = makeSystemIntakeAndSubmit("LCID issued after initial form submitted and reopened", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndSubmit("LCID issued after initial form submitted and reopened", &intakeID, mock.PrincipalUser, logger, store)
 	intake = issueLCID(logger, store, intake, time.Now().AddDate(1, 0, 0), models.TRBFRStronglyRecommended)
 	reopenIntake(logger, store, intake)
 
 	intakeID = uuid.MustParse("8edb237e-ad48-49b2-91cf-8534362bc6cf")
-	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened and edits requested", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
+	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened and edits requested", &intakeID, mock.PrincipalUser, logger, store, lcidExpirationDate)
 	intake = reopenIntake(logger, store, intake)
 	requestEditsToIntakeForm(logger, store, intake, models.SystemIntakeFormStepFinalBusinessCase)
 
 	intakeID = uuid.MustParse("cd795d09-6afb-4fdd-b0a2-c37716297f41")
-	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened and progressed backward", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
+	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened and progressed backward", &intakeID, mock.PrincipalUser, logger, store, lcidExpirationDate)
 	intake = reopenIntake(logger, store, intake)
 	progressIntake(logger, store, intake, models.SystemIntakeStepToProgressToDraftBusinessCase, nil)
 
 	intakeID = uuid.MustParse("fec8e351-809c-4af2-bd0d-197b6b433206")
-	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
+	intake = makeSystemIntakeAndIssueLCID("LCID issued, but reopened", &intakeID, mock.PrincipalUser, logger, store, lcidExpirationDate)
 	reopenIntake(logger, store, intake)
 
 	intakeID = uuid.MustParse("0f1db17c-9118-4ce2-9491-fa8dd88e60b5")
-	intake = makeSystemIntakeAndIssueLCID("LCID issued, retired, and retirement date changed", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
+	intake = makeSystemIntakeAndIssueLCID("LCID issued, retired, and retirement date changed", &intakeID, mock.PrincipalUser, logger, store, lcidExpirationDate)
 	intake = retireLCID(logger, store, intake, intake.LifecycleExpiresAt.AddDate(1, 0, 0))
 	changeLCIDRetireDate(logger, store, intake, intake.LifecycleRetiresAt.AddDate(1, 0, 0))
 
 	intakeID = uuid.MustParse("c6332484-b661-4c18-a5bb-6186445ccb9f")
-	intake = makeSystemIntakeAndIssueLCID("Retired LCID", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
+	intake = makeSystemIntakeAndIssueLCID("Retired LCID", &intakeID, mock.PrincipalUser, logger, store, lcidExpirationDate)
 	retireLCID(logger, store, intake, intake.LifecycleExpiresAt.AddDate(1, 0, 0))
 
 	intakeID = uuid.MustParse("346d3539-9aac-42c7-bb29-acfd2482455e")
-	intake = makeSystemIntakeAndIssueLCID("Expired LCID", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
+	intake = makeSystemIntakeAndIssueLCID("Expired LCID", &intakeID, mock.PrincipalUser, logger, store, lcidExpirationDate)
 	expireLCID(logger, store, intake)
 
 	intakeID = uuid.MustParse("82d96de6-7746-4081-a07e-15b355a928e3")
-	intake = makeSystemIntakeAndIssueLCID("Confirmed LCID", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
+	intake = makeSystemIntakeAndIssueLCID("Confirmed LCID", &intakeID, mock.PrincipalUser, logger, store, lcidExpirationDate)
 	confirmLCID(logger, store, intake, intake.LifecycleExpiresAt.AddDate(1, 0, 0), models.TRBFRNotRecommended)
 
 	intakeID = uuid.MustParse("4ee45041-b21b-4792-a766-4d861d601bdc")
-	intake = makeSystemIntakeAndIssueLCID("Updated LCID", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
+	intake = makeSystemIntakeAndIssueLCID("Updated LCID", &intakeID, mock.PrincipalUser, logger, store, lcidExpirationDate)
 	updateLCID(logger, store, intake, intake.LifecycleExpiresAt.AddDate(1, 0, 0))
 
 	intakeID = uuid.MustParse("409c68e1-9b38-462f-8023-8e00e0b62d67")
-	intake = makeSystemIntakeAndSubmit("LCID issued after initial form submitted", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndSubmit("LCID issued after initial form submitted", &intakeID, mock.PrincipalUser, logger, store)
 	issueLCID(logger, store, intake, lcidExpirationDate, models.TRBFRStronglyRecommended)
 
 	intakeID = uuid.MustParse("37bd26a1-b0a8-48ee-a080-471e0e581e41")
-	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (121 days)", &intakeID, requesterEUA, logger, store, time.Now().AddDate(0, 0, 121))
+	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (121 days)", &intakeID, mock.PrincipalUser, logger, store, time.Now().AddDate(0, 0, 121))
 
 	intakeID = uuid.MustParse("1aca9946-79df-4fc9-9851-a79f23423236")
-	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (119 days)", &intakeID, requesterEUA, logger, store, time.Now().AddDate(0, 0, 119))
+	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (119 days)", &intakeID, mock.PrincipalUser, logger, store, time.Now().AddDate(0, 0, 119))
 
 	intakeID = uuid.MustParse("969e8ce8-810d-4492-b0b3-422b2f9a91a1")
-	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (59 days)", &intakeID, requesterEUA, logger, store, time.Now().AddDate(0, 0, 59))
+	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (59 days)", &intakeID, mock.PrincipalUser, logger, store, time.Now().AddDate(0, 0, 59))
 
 	intakeID = uuid.MustParse("1fecf78f-e309-4540-9f44-6e41ea686c56")
-	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (45 days)", &intakeID, requesterEUA, logger, store, time.Now().AddDate(0, 0, 45))
+	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (45 days)", &intakeID, mock.PrincipalUser, logger, store, time.Now().AddDate(0, 0, 45))
 
 	intakeID = uuid.MustParse("98edbd5a-f97d-47f2-9ea1-9369509da398")
 	makeSystemIntakeAndIssueLCID("Intake with Expiring LCID (45 days) and no EUA ID", &intakeID, "", logger, store, time.Now().AddDate(0, 0, 45))
 
 	intakeID = uuid.MustParse("9ab475a8-a691-45e9-b55d-648b6e752efa")
-	makeSystemIntakeAndIssueLCID("LCID issued", &intakeID, requesterEUA, logger, store, lcidExpirationDate)
+	makeSystemIntakeAndIssueLCID("LCID issued", &intakeID, mock.PrincipalUser, logger, store, lcidExpirationDate)
 
 	intakeID = uuid.MustParse("5af245bc-fc54-4677-bab1-1b3e798bb43c")
 	intake = makeSystemIntakeAndProgressToStep(
 		"System Intake with GRB Reviewers",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
@@ -203,7 +203,7 @@ func main() {
 		logger,
 		store,
 		intake,
-		requesterEUA,
+		mock.PrincipalUser,
 		models.SystemIntakeGRBReviewerVotingRoleVoting,
 		models.SystemIntakeGRBReviewerRoleCmcsRep,
 	)
@@ -228,7 +228,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"skip to grb meeting with date set in past",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
@@ -241,7 +241,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"skip to grb meeting with date set in future",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
@@ -254,7 +254,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"skip to grb meeting without date set",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
@@ -265,7 +265,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"grb meeting with date set in past",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
@@ -279,7 +279,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"grb meeting with date set in future",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
@@ -293,7 +293,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"grb meeting without date set",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
@@ -306,7 +306,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"skip to final biz case and request edits",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToFinalBusinessCase,
@@ -321,7 +321,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"skip to final biz case and submit",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToFinalBusinessCase,
@@ -335,7 +335,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"skip to final biz case with form filled",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToFinalBusinessCase,
@@ -349,7 +349,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"skip to final biz case",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToFinalBusinessCase,
@@ -362,7 +362,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"Edits requested on final biz case",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToFinalBusinessCase,
@@ -377,7 +377,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"final biz case submitted",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToFinalBusinessCase,
@@ -395,7 +395,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"final biz case with form filled",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToFinalBusinessCase,
@@ -408,7 +408,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"skip to grt without date set",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrtMeeting,
@@ -421,7 +421,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"skip to grt with date set in past",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrtMeeting,
@@ -435,7 +435,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"skip to grt with date set in future",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrtMeeting,
@@ -449,7 +449,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"grt meeting with date set in past",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrtMeeting,
@@ -463,7 +463,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"grt meeting with date set in future",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrtMeeting,
@@ -477,7 +477,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"grt meeting without date set",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrtMeeting,
@@ -490,7 +490,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"Edits requested on draft biz case",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToDraftBusinessCase,
@@ -505,7 +505,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"draft biz case submitted",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToDraftBusinessCase,
@@ -519,7 +519,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"draft biz case filled out",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToDraftBusinessCase,
@@ -534,7 +534,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"starting draft biz case",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToDraftBusinessCase,
@@ -545,7 +545,7 @@ func main() {
 	makeSystemIntakeAndSubmit(
 		"Edits requested on initial request form",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 	)
@@ -554,7 +554,7 @@ func main() {
 	// Intakes with Relation data
 	// 1. Intake with no related systems/services
 	intakeID = uuid.MustParse("6a825f1d-e935-4d9b-b09f-f3761385d349")
-	makeSystemIntakeAndSubmit("System Intake Relation (New System/Contract)", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("System Intake Relation (New System/Contract)", &intakeID, mock.PrincipalUser, logger, store)
 	setSystemIntakeRelationNewSystem(
 		logger,
 		store,
@@ -565,7 +565,7 @@ func main() {
 
 	// 2. Intakes related to CEDAR System(s)
 	intakeID = uuid.MustParse("29d73aa0-3a29-478e-afb4-374a7594be47")
-	makeSystemIntakeAndSubmit("System Intake Relation (Existing System 0A)", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("System Intake Relation (Existing System 0A)", &intakeID, mock.PrincipalUser, logger, store)
 	setSystemIntakeRelationExistingSystem(
 		logger,
 		store,
@@ -579,7 +579,7 @@ func main() {
 	)
 
 	intakeID = uuid.MustParse("28f36737-b5cf-464a-a5a2-f1c89acea4cf")
-	makeSystemIntakeAndSubmit("Related Intake 1 (system 0A)", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("Related Intake 1 (system 0A)", &intakeID, mock.PrincipalUser, logger, store)
 	setSystemIntakeRelationExistingSystem(
 		logger,
 		store,
@@ -593,7 +593,7 @@ func main() {
 	)
 
 	intakeID = uuid.MustParse("dd31c8bd-b677-434c-aa35-56138f0b443b")
-	makeSystemIntakeAndSubmit("Related Intake 2 (system 1B)", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("Related Intake 2 (system 1B)", &intakeID, mock.PrincipalUser, logger, store)
 	setSystemIntakeRelationExistingSystem(
 		logger,
 		store,
@@ -607,7 +607,7 @@ func main() {
 	)
 
 	intakeID = uuid.MustParse("020fba51-9b95-4e87-8cd4-808ae6e3dac8")
-	makeSystemIntakeAndSubmit("Related Intake 3 (contract 01)", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("Related Intake 3 (contract 01)", &intakeID, mock.PrincipalUser, logger, store)
 	setSystemIntakeRelationExistingSystem(
 		logger,
 		store,
@@ -621,7 +621,7 @@ func main() {
 	)
 	// 3. Intakes related to an existing contract/service
 	intakeID = uuid.MustParse("b8e3fbf3-73af-4bac-bac3-fd6167a36166")
-	makeSystemIntakeAndSubmit("System Intake Relation (Existing Contract/Service 01)", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("System Intake Relation (Existing Contract/Service 01)", &intakeID, mock.PrincipalUser, logger, store)
 	setSystemIntakeRelationExistingService(
 		logger,
 		store,
@@ -633,7 +633,7 @@ func main() {
 
 	// 4. Unlinked from system/contract intake
 	intakeID = uuid.MustParse("964cc832-827b-4744-b503-eb1f04af1e10")
-	makeSystemIntakeAndSubmit("System Intake Relation (Unlinked)", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("System Intake Relation (Unlinked)", &intakeID, mock.PrincipalUser, logger, store)
 	setSystemIntakeRelationExistingSystem(
 		logger,
 		store,
@@ -649,7 +649,7 @@ func main() {
 
 	// 5. Link deactivated Systems
 	intakeID = uuid.MustParse("04cb8a97-3515-4071-9b80-2710834cd94c")
-	makeSystemIntakeAndSubmit("System Intake Relation (Deactivated System)", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("System Intake Relation (Deactivated System)", &intakeID, mock.PrincipalUser, logger, store)
 	setSystemIntakeRelationExistingSystem(
 		logger,
 		store,
@@ -664,26 +664,26 @@ func main() {
 
 	// initial intake form
 	intakeID = uuid.MustParse("14ecf18c-8367-402d-a48e-92e7d2853f50")
-	makeSystemIntakeAndSubmit("initial form filled and submitted", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("initial form filled and submitted", &intakeID, mock.PrincipalUser, logger, store)
 
 	intakeID = uuid.MustParse("43fe5a4e-525c-40da-b0f6-3b36b5f84cc1")
 	createSystemIntake(&intakeID, logger, store, "USR1", "User One", models.SystemIntakeRequestTypeNEW)
 
 	intakeID = uuid.MustParse("d2b96357-3a76-42e3-82ab-978a20f5acad")
-	makeSystemIntake("initial form filled but not yet submitted", nil, requesterEUA, logger, store)
+	makeSystemIntake("initial form filled but not yet submitted", nil, mock.PrincipalUser, logger, store)
 
 	must(nil, seederConfig.seedTRBRequests(ctx))
 
 	// For Governance Review Cypress Tests
 	intakeID = uuid.MustParse("af7a3924-3ff7-48ec-8a54-b8b4bc95610b")
-	intake = makeSystemIntakeAndSubmit("A Completed Intake Form", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndSubmit("A Completed Intake Form", &intakeID, mock.PrincipalUser, logger, store)
 	createSystemIntakeNote(logger, store, intake, "This is my note")
 
 	intakeID = uuid.MustParse("cd79738d-d453-4e26-a27d-9d2a303e0262")
 	intake = makeSystemIntakeAndProgressToStep(
 		"For business case Cypress test",
 		&intakeID,
-		mock.EndToEnd1User,
+		mock.EndToEndUserOne,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToDraftBusinessCase,
@@ -716,16 +716,16 @@ func main() {
 	})
 
 	intakeID = uuid.MustParse("20cbcfbf-6459-4c96-943b-e76b83122dbf")
-	makeSystemIntakeAndSubmit("Closable Request", &intakeID, requesterEUA, logger, store)
+	makeSystemIntakeAndSubmit("Closable Request", &intakeID, mock.PrincipalUser, logger, store)
 
 	intakeID = uuid.MustParse("38e46d77-e474-4d15-a7c0-f6411221e2a4")
-	intake = makeSystemIntakeAndSubmit("Intake with no contract vehicle", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndSubmit("Intake with no contract vehicle", &intakeID, mock.PrincipalUser, logger, store)
 	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
 		i.ContractVehicle = null.StringFromPtr(nil)
 	})
 
 	intakeID = uuid.MustParse("2ed89f9f-7fd9-4e92-89d2-cee170a44d0d")
-	intake = makeSystemIntakeAndSubmit("Intake with legacy Contract Vehicle", &intakeID, requesterEUA, logger, store)
+	intake = makeSystemIntakeAndSubmit("Intake with legacy Contract Vehicle", &intakeID, mock.PrincipalUser, logger, store)
 	modifySystemIntake(logger, store, intake, func(i *models.SystemIntake) {
 		i.ContractVehicle = null.StringFrom("Honda")
 	})
@@ -734,7 +734,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"Draft Business Case",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToDraftBusinessCase,
@@ -747,7 +747,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"With GRB scheduled",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrbMeeting,
@@ -761,7 +761,7 @@ func main() {
 	makeSystemIntakeAndProgressToStep(
 		"With GRT scheduled",
 		&intakeID,
-		requesterEUA,
+		mock.PrincipalUser,
 		logger,
 		store,
 		models.SystemIntakeStepToProgressToGrtMeeting,

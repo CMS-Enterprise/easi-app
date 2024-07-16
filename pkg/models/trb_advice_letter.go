@@ -41,3 +41,10 @@ type TRBAdviceLetter struct {
 	// not necessarily a firm date; can be something like "In 6 months or when development is complete"
 	FollowupPoint *string `json:"followupPoint" db:"followup_point"`
 }
+
+func (a TRBAdviceLetter) GetMappingKey() uuid.UUID {
+	return a.TRBRequestID
+}
+func (a TRBAdviceLetter) GetMappingVal() *TRBAdviceLetter {
+	return &a
+}

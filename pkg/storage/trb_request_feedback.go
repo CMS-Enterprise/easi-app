@@ -160,17 +160,16 @@ func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestID(ctx context.Context, t
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
-		} else {
-			appcontext.ZLogger(ctx).Error(
-				"Failed to fetch latest TRB request feedback",
-				zap.Error(err),
-				zap.String("trbRequestID", trbRequestID.String()),
-			)
-			return nil, &apperrors.QueryError{
-				Err:       err,
-				Model:     feedback,
-				Operation: apperrors.QueryFetch,
-			}
+		}
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch latest TRB request feedback",
+			zap.Error(err),
+			zap.String("trbRequestID", trbRequestID.String()),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     feedback,
+			Operation: apperrors.QueryFetch,
 		}
 	}
 	return &feedback, nil

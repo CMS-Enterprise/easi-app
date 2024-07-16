@@ -162,7 +162,7 @@ func UpdateTRBRequestForm(
 }
 
 // GetTRBRequestFormByTRBRequestID retrieves a TRB request form record for a given TRB request ID
-func GetTRBRequestFormByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) (*models.TRBRequestForm, error) {
+func GetTRBRequestFormByTRBRequestID(ctx context.Context, id uuid.UUID) (*models.TRBRequestForm, error) {
 	form, err := dataloaders.GetTRBRequestFormByTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err

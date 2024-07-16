@@ -2,11 +2,9 @@ package local
 
 import (
 	"context"
+	"slices"
 	"strings"
 
-	"go.uber.org/zap"
-
-	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -597,11 +595,18 @@ var mockUserDictionary = map[string]*models.UserInfo{
 	},
 }
 
+// GetMockUsernames returns a slice of usernames
+func GetMockUsernames() []string {
+	var usernames []string
+	for key := range mockUserDictionary {
+		usernames = append(usernames, key)
+	}
+	slices.Sort(usernames)
+	return usernames
+}
+
 // FetchUserInfo fetches a user's personal details
 func (c *client) FetchUserInfo(ctx context.Context, username string) (*models.UserInfo, error) {
-	logger := appcontext.ZLogger(ctx)
-	logger.Info("Mock FetchUserInfo from Okta", zap.String("username", username))
-
 	mockUser, mockUserExists := mockUserDictionary[username]
 	if mockUserExists {
 		return mockUser, nil
@@ -620,14 +625,10 @@ func genericMockUserInfo(username string) *models.UserInfo {
 		Username:  username,
 	}
 	return accountInfo
-
 }
 
 // FetchUserInfos fetches multiple users' personal details
 func (c *client) FetchUserInfos(ctx context.Context, usernames []string) ([]*models.UserInfo, error) {
-	logger := appcontext.ZLogger(ctx)
-	logger.Info("Mock FetchUserInfos from Okta", zap.Strings("usernames", usernames))
-
 	userInfos := make([]*models.UserInfo, len(usernames))
 	for i, username := range usernames {
 		mockUser, err := c.FetchUserInfo(ctx, username)
@@ -636,15 +637,11 @@ func (c *client) FetchUserInfos(ctx context.Context, usernames []string) ([]*mod
 		}
 		userInfos[i] = mockUser
 	}
-
 	return userInfos, nil
 }
 
 // SearchCommonNameContains fetches a user's personal details by their common name
 func (c *client) SearchCommonNameContains(ctx context.Context, commonName string) ([]*models.UserInfo, error) {
-	logger := appcontext.ZLogger(ctx)
-	logger.Info("Mock SearchCommonNameContains from Okta")
-
 	searchResults := []*models.UserInfo{}
 
 	for _, element := range mockUserDictionary {

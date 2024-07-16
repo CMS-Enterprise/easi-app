@@ -6,7 +6,6 @@ import (
 
 	"github.com/guregu/null/zero"
 
-	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/helpers"
 	"github.com/cms-enterprise/easi-app/pkg/local"
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -130,7 +129,7 @@ func GetSystemRoles(cedarSystemID string, roleTypeID *string) []*models.CedarRol
 
 	oktaClient := local.NewOktaAPIClient()
 	//swallow error for mocking
-	users, _ := oktaClient.FetchUserInfos(context.Background(), mock.UserNamesForCedarSystemRoles)
+	users, _ := oktaClient.FetchUserInfos(context.Background(), local.GetMockUsernames())
 
 	mockSystemRoles := []*models.CedarRole{}
 
