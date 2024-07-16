@@ -118,7 +118,7 @@ func (s *Store) GetTRBRequestFeedbackByTRBRequestID(ctx context.Context, trbRequ
 		"trb_request_id": trbRequestID,
 	})
 
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to fetch TRB request feedback by ID", zap.Error(err), zap.String("id", trbRequestID.String()))
 		return nil, &apperrors.QueryError{
 			Err:       err,
@@ -138,7 +138,7 @@ func (s *Store) GetTRBRequestFeedbackByTRBRequestIDs(ctx context.Context, trbReq
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to fetch TRB request feedback by IDs", zap.Error(err))
 		return nil, &apperrors.QueryError{
 			Err:       err,
@@ -184,7 +184,7 @@ func (s *Store) GetNewestTRBRequestFeedbackByTRBRequestIDs(ctx context.Context, 
 		"trb_request_ids": pq.Array(trbRequestIDs),
 	})
 
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			"Failed to fetch latest TRB request feedback by IDs",
 			zap.Error(err),
