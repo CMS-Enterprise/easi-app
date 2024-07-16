@@ -2010,7 +2010,7 @@ func (r *tRBAdviceLetterRecommendationResolver) Author(ctx context.Context, obj 
 
 // Status is the resolver for the status field.
 func (r *tRBRequestResolver) Status(ctx context.Context, obj *models.TRBRequest) (models.TRBRequestStatus, error) {
-	return resolvers.GetTRBRequestStatus(ctx, r.store, *obj)
+	return resolvers.GetTRBRequestStatus(ctx, *obj)
 }
 
 // Attendees is the resolver for the attendees field.
@@ -2020,7 +2020,7 @@ func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBReque
 
 // Feedback is the resolver for the feedback field.
 func (r *tRBRequestResolver) Feedback(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestFeedback, error) {
-	return resolvers.GetTRBRequestFeedbackByTRBRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetTRBRequestFeedbackByTRBRequestID(ctx, obj.ID)
 }
 
 // Documents is the resolver for the documents field.
@@ -2030,17 +2030,17 @@ func (r *tRBRequestResolver) Documents(ctx context.Context, obj *models.TRBReque
 
 // Form is the resolver for the form field.
 func (r *tRBRequestResolver) Form(ctx context.Context, obj *models.TRBRequest) (*models.TRBRequestForm, error) {
-	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetTRBRequestFormByTRBRequestID(ctx, obj.ID)
 }
 
 // AdviceLetter is the resolver for the adviceLetter field.
 func (r *tRBRequestResolver) AdviceLetter(ctx context.Context, obj *models.TRBRequest) (*models.TRBAdviceLetter, error) {
-	return resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, obj.ID)
 }
 
 // TaskStatuses is the resolver for the taskStatuses field.
 func (r *tRBRequestResolver) TaskStatuses(ctx context.Context, obj *models.TRBRequest) (*models.TRBTaskStatuses, error) {
-	return resolvers.GetTRBTaskStatuses(ctx, r.store, *obj)
+	return resolvers.GetTRBTaskStatuses(ctx, *obj)
 }
 
 // TrbLeadInfo is the resolver for the trbLeadInfo field.

@@ -8,6 +8,9 @@ import (
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
+	"github.com/cms-enterprise/easi-app/pkg/local"
+	"github.com/cms-enterprise/easi-app/pkg/local/cedarcoremock"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
@@ -59,4 +62,17 @@ func CtxWithLoggerAndPrincipal(logger *zap.Logger, store *storage.Store, euaID s
 	ctx := appcontext.WithLogger(context.Background(), logger)
 	ctx = appcontext.WithPrincipal(ctx, princ)
 	return ctx
+}
+
+func CtxWithNewDataloaders(ctx context.Context, store *storage.Store) context.Context {
+	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
+		return cedarcoremock.GetActiveSystems(), nil
+	}
+
+	buildDataloaders := func() *dataloaders.Dataloaders {
+		return dataloaders.NewDataloaders(store, local.NewOktaAPIClient().FetchUserInfos, getCedarSystems)
+	}
+
+	// Set up mocked dataloaders for the test context
+	return dataloaders.CTXWithLoaders(ctx, buildDataloaders)
 }

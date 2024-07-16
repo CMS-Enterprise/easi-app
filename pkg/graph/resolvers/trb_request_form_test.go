@@ -37,7 +37,7 @@ func (s *ResolverSuite) TestCreateTRBRequestForm() {
 
 	s.Run("create/update/fetch TRB request forms", func() {
 		// fetch the form
-		fetched, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), s.testConfigs.Store, trbRequest.ID)
+		fetched, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.NotNil(fetched)
 

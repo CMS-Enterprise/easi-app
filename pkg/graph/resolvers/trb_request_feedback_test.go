@@ -81,7 +81,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 	s.NoError(err)
 	s.Nil(latestFeedback)
 
-	form, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), store, trbRequest.ID)
+	form, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 	s.NoError(err)
 
 	s.Run("create/update/fetch TRB request feedback", func() {
@@ -127,7 +127,7 @@ func (s *ResolverSuite) TestCreateTRBRequestFeedback() {
 		updatedFeedbackStatus, err := getTRBFeedbackStatus(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.EqualValues(models.TRBFeedbackStatusEditsRequested, *updatedFeedbackStatus)
-		form, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), store, trbRequest.ID)
+		form, err := GetTRBRequestFormByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.EqualValues(form.Status, models.TRBFormStatusInProgress)
 		s.EqualValues(models.TRBFormStatusInProgress, form.Status)

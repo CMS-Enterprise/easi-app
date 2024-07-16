@@ -845,7 +845,7 @@ func (s *seederConfig) addAdviceLetter(ctx context.Context, trb *models.TRBReque
 		}
 	}
 
-	letter, outsideErr = resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, s.store, trb.ID)
+	letter, outsideErr = resolvers.GetTRBAdviceLetterByTRBRequestID(ctx, trb.ID)
 	if outsideErr != nil {
 		return nil, outsideErr
 	}
