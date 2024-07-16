@@ -1,12 +1,27 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { Grid, IconArrowBack } from '@trussworks/react-uswds';
+import { useMutation } from '@apollo/client';
+import { Form, FormGroup, Grid, IconArrowBack } from '@trussworks/react-uswds';
 
+import { useEasiForm } from 'components/EasiForm';
+import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
+import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import { CreateSystemIntakeGRBReviewerQuery } from 'queries/SystemIntakeGRBReviewerQueries';
+import {
+  CreateSystemIntakeGRBReviewer,
+  CreateSystemIntakeGRBReviewerVariables
+} from 'queries/types/CreateSystemIntakeGRBReviewer';
+import { CreateSystemIntakeGRBReviewerInput } from 'types/graphql-global-types';
 
 import { ReviewerKey } from '../subNavItems';
+
+type GRBReviewerFormFields = Omit<
+  CreateSystemIntakeGRBReviewerInput,
+  'systemIntakeID'
+>;
 
 const GRBReviewerForm = () => {
   const { t } = useTranslation('grbReview');
@@ -15,6 +30,24 @@ const GRBReviewerForm = () => {
     reviewerType: ReviewerKey;
     systemId: string;
   }>();
+
+  const [createGrbReviewer] = useMutation<
+    CreateSystemIntakeGRBReviewer,
+    CreateSystemIntakeGRBReviewerVariables
+  >(CreateSystemIntakeGRBReviewerQuery);
+
+  const { handleSubmit } = useEasiForm<GRBReviewerFormFields>();
+
+  const submit = handleSubmit(values => {
+    createGrbReviewer({
+      variables: {
+        input: {
+          systemIntakeID: systemId,
+          ...values
+        }
+      }
+    });
+  });
 
   return (
     <Grid className="tablet:grid-col-8 padding-y-4">
@@ -36,6 +69,32 @@ const GRBReviewerForm = () => {
       >
         {t('form.returnToRequest')}
       </IconLink>
+
+      <Form onSubmit={submit} className="maxw-none tablet:grid-col-10">
+        <FormGroup>
+          <Label htmlFor="euaUserId" required>
+            {t('form.grbMemberName')}
+          </Label>
+          <HelpText id="grbMemberNameHelpText" className="margin-top-05">
+            {t('form.grbMemberNameHelpText')}
+          </HelpText>
+        </FormGroup>
+
+        <FormGroup>
+          <Label htmlFor="votingRole" required>
+            {t('form.votingRole')}
+          </Label>
+        </FormGroup>
+
+        <FormGroup>
+          <Label htmlFor="grbRole" required>
+            {t('form.grbRole')}
+          </Label>
+          <HelpText id="grbRoleHelpText" className="margin-top-05">
+            {t('form.grbRoleHelpText')}
+          </HelpText>
+        </FormGroup>
+      </Form>
     </Grid>
   );
 };

@@ -18,6 +18,12 @@ export default {
     title: 'Add a GRB reviewer',
     description:
       'Add details about this Governance Review Board (GRB) reviewer, including their name, voting role, and GRB role such as the Budget Development Group (BDG) they represent.',
-    returnToRequest: 'Don’t add and return to request details'
+    returnToRequest: 'Don’t add and return to request details',
+    grbMemberName: 'GRB member name',
+    grbMemberNameHelpText: 'This field searches CMS’ EUA database.',
+    votingRole: 'Voting role',
+    grbRole: 'GRB role',
+    grbRoleHelpText:
+      'Select the role that this reviewer has on the GRB, such as the BDG that they represent.'
   }
 };
