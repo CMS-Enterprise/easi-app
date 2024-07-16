@@ -681,7 +681,7 @@ func (s *seederConfig) seedTRBWithAttendees(ctx context.Context, trbRequestID uu
 	_, err := s.addAttendee(
 		ctx,
 		trbRequestID,
-		"USR1",
+		mock.Batman,
 		models.PersonRoleInformationSystemSecurityAdvisor,
 		"Security Component",
 	)
@@ -691,7 +691,7 @@ func (s *seederConfig) seedTRBWithAttendees(ctx context.Context, trbRequestID uu
 	_, err = s.addAttendee(
 		ctx,
 		trbRequestID,
-		"TEST",
+		mock.TestUser,
 		models.PersonRoleBusinessOwner,
 		"Business Component",
 	)
@@ -701,7 +701,7 @@ func (s *seederConfig) seedTRBWithAttendees(ctx context.Context, trbRequestID uu
 	_, err = s.addAttendee(
 		ctx,
 		trbRequestID,
-		"A11Y",
+		mock.AccessibilityUser,
 		models.PersonRoleCRA,
 		"Cyber Component",
 	)

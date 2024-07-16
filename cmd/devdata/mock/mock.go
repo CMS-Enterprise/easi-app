@@ -16,45 +16,42 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
 )
 
-// PrincipalUser is the "current user" when seeding the data
-const PrincipalUser = "ABCD"
+// corresponds to list in /pkg/local/okta_api.go
+const (
+	PrincipalUser     string = "USR1"
+	EndToEndUserOne   string = "E2E1"
+	TestUser          string = "TEST"
+	AccessibilityUser string = "A11Y"
+	Batman            string = "BTMN"
+)
 
 // FetchUserInfoMock mocks the fetch user info logic
-func FetchUserInfoMock(ctx context.Context, eua string) (*models.UserInfo, error) {
-	return &models.UserInfo{
-		Username:    eua,
-		FirstName:   eua,
-		LastName:    "Doe",
-		DisplayName: eua + "Doe",
-		Email:       models.EmailAddress(eua + "@example.com"),
-	}, nil
+func FetchUserInfoMock(ctx context.Context, username string) (*models.UserInfo, error) {
+	localOktaClient := local.NewOktaAPIClient()
+	return localOktaClient.FetchUserInfo(ctx, username)
 }
 
 // FetchUserInfosMock mocks the fetch user info logic
-func FetchUserInfosMock(ctx context.Context, euas []string) ([]*models.UserInfo, error) {
-	userInfos := make([]*models.UserInfo, 0, len(euas))
-	for _, eua := range euas {
-		userInfo, err := FetchUserInfoMock(ctx, eua)
-		if err != nil {
-			return nil, err
-		}
-		userInfos = append(userInfos, userInfo)
-	}
-	return userInfos, nil
+func FetchUserInfosMock(ctx context.Context, usernames []string) ([]*models.UserInfo, error) {
+	localOktaClient := local.NewOktaAPIClient()
+	return localOktaClient.FetchUserInfos(ctx, usernames)
 }
 
 // CtxWithLoggerAndPrincipal makes a context with a mocked logger and principal
-func CtxWithLoggerAndPrincipal(logger *zap.Logger, store *storage.Store, euaID string) context.Context {
-	if len(euaID) < 1 {
-		euaID = PrincipalUser
+func CtxWithLoggerAndPrincipal(logger *zap.Logger, store *storage.Store, username string) context.Context {
+	//Future Enhancement: Consider adding this to the seederConfig, and also emb
+	if len(username) < 1 {
+		username = PrincipalUser
 	}
-	userAccount, err := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, euaID, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+
+	//Future Enhancement: consider passing the context with the seeder, and using the seeder.UserSearchClient to return mocked data instead of needing to initialize a client for each mock call
+	userAccount, err := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, username, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(FetchUserInfoMock))
 	if err != nil {
 		panic(fmt.Errorf("failed to get or create user account for mock data: %w", err))
 	}
 
 	princ := &authentication.EUAPrincipal{
-		EUAID:       euaID,
+		EUAID:       username,
 		JobCodeEASi: true,
 		JobCodeGRT:  true,
 		UserAccount: userAccount,
