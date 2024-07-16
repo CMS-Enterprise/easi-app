@@ -127,20 +127,32 @@ func GetTRBTaskStatuses(ctx context.Context, trbRequest models.TRBRequest) (*mod
 	if err != nil {
 		return nil, err
 	}
+	if formStatus == nil {
+		return nil, fmt.Errorf("form status is nil for trb request %v", trbRequest.ID)
+	}
 
 	feedbackStatus, err := getTRBFeedbackStatus(ctx, trbRequest.ID)
 	if err != nil {
 		return nil, err
+	}
+	if feedbackStatus == nil {
+		return nil, fmt.Errorf("feedback status is nil for trb request %v", trbRequest.ID)
 	}
 
 	consultPrepStatus, err := getTRBConsultPrepStatus(ctx, trbRequest)
 	if err != nil {
 		return nil, err
 	}
+	if consultPrepStatus == nil {
+		return nil, fmt.Errorf("consult prep status is nil for trb request %v", trbRequest.ID)
+	}
 
 	attendConsultStatus, err := getTRBAttendConsultStatus(ctx, trbRequest)
 	if err != nil {
 		return nil, err
+	}
+	if attendConsultStatus == nil {
+		return nil, fmt.Errorf("attend consult status is nil for trb request %v", trbRequest.ID)
 	}
 
 	adviceLetterStatus, err := getTRBAdviceLetterStatus(ctx, trbRequest)
