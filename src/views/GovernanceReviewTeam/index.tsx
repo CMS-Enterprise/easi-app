@@ -5,11 +5,11 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageLoading from 'components/PageLoading';
 import useCacheQuery from 'hooks/useCacheQuery';
-import GetSystemIntakeGrbReviewersQuery from 'queries/GetSystemIntakeGrbReviewersQuery';
+import { GetSystemIntakeGRBReviewersQuery } from 'queries/SystemIntakeGRBReviewerQueries';
 import {
-  GetSystemIntakeGrbReviewers,
-  GetSystemIntakeGrbReviewersVariables
-} from 'queries/types/GetSystemIntakeGrbReviewers';
+  GetSystemIntakeGRBReviewers,
+  GetSystemIntakeGRBReviewersVariables
+} from 'queries/types/GetSystemIntakeGRBReviewers';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import RequestOverview from 'views/GovernanceReviewTeam/RequestOverview';
@@ -31,9 +31,9 @@ const GovernanceReviewTeam = () => {
   }>();
 
   const { data, loading } = useCacheQuery<
-    GetSystemIntakeGrbReviewers,
-    GetSystemIntakeGrbReviewersVariables
-  >(GetSystemIntakeGrbReviewersQuery, {
+    GetSystemIntakeGRBReviewers,
+    GetSystemIntakeGRBReviewersVariables
+  >(GetSystemIntakeGRBReviewersQuery, {
     variables: {
       id
     }

@@ -2,10 +2,10 @@ import { DateTime } from 'luxon';
 
 import { CMSOffice } from 'constants/enums/cmsDivisionsAndOffices';
 import GetGovernanceTaskListQuery from 'queries/GetGovernanceTaskListQuery';
-import GetSystemIntakeGrbReviewersQuery from 'queries/GetSystemIntakeGrbReviewersQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import GetSystemIntakesWithLCIDS from 'queries/GetSystemIntakesWithLCIDS';
 import { GetSystemIntakeContactsQuery } from 'queries/SystemIntakeContactsQueries';
+import { GetSystemIntakeGRBReviewersQuery } from 'queries/SystemIntakeGRBReviewerQueries';
 import {
   GetGovernanceTaskList,
   GetGovernanceTaskList_systemIntake as TaskListSystemIntake,
@@ -20,9 +20,9 @@ import {
   GetSystemIntakeContactsQueryVariables
 } from 'queries/types/GetSystemIntakeContactsQuery';
 import {
-  GetSystemIntakeGrbReviewers,
-  GetSystemIntakeGrbReviewersVariables
-} from 'queries/types/GetSystemIntakeGrbReviewers';
+  GetSystemIntakeGRBReviewers,
+  GetSystemIntakeGRBReviewersVariables
+} from 'queries/types/GetSystemIntakeGRBReviewers';
 import { GetSystemIntakesTable_systemIntakes as TableSystemIntake } from 'queries/types/GetSystemIntakesTable';
 import {
   GetSystemIntakesWithLCIDS as GetSystemIntakesWithLCIDSType,
@@ -624,12 +624,12 @@ export const getGovernanceTaskListQuery = (
   }
 });
 
-export const getSystemIntakeGrbReviewersQuery: MockedQuery<
-  GetSystemIntakeGrbReviewers,
-  GetSystemIntakeGrbReviewersVariables
+export const getSystemIntakeGRBReviewersQuery: MockedQuery<
+  GetSystemIntakeGRBReviewers,
+  GetSystemIntakeGRBReviewersVariables
 > = {
   request: {
-    query: GetSystemIntakeGrbReviewersQuery,
+    query: GetSystemIntakeGRBReviewersQuery,
     variables: { id: systemIntakeId }
   },
   result: {

@@ -228,6 +228,27 @@ export enum SystemIntakeFormStep {
   INITIAL_REQUEST_FORM = "INITIAL_REQUEST_FORM",
 }
 
+export enum SystemIntakeGRBReviewerRole {
+  ACA_3021_REP = "ACA_3021_REP",
+  CCIIO_REP = "CCIIO_REP",
+  CMCS_REP = "CMCS_REP",
+  CO_CHAIR_CFO = "CO_CHAIR_CFO",
+  CO_CHAIR_CIO = "CO_CHAIR_CIO",
+  CO_CHAIR_HCA = "CO_CHAIR_HCA",
+  FED_ADMIN_BDG_CHAIR = "FED_ADMIN_BDG_CHAIR",
+  OTHER = "OTHER",
+  PROGRAM_INTEGRITY_BDG_CHAIR = "PROGRAM_INTEGRITY_BDG_CHAIR",
+  PROGRAM_OPERATIONS_BDG_CHAIR = "PROGRAM_OPERATIONS_BDG_CHAIR",
+  QIO_REP = "QIO_REP",
+  SUBJECT_MATTER_EXPERT = "SUBJECT_MATTER_EXPERT",
+}
+
+export enum SystemIntakeGRBReviewerVotingRole {
+  ALTERNATE = "ALTERNATE",
+  NON_VOTING = "NON_VOTING",
+  VOTING = "VOTING",
+}
+
 /**
  * The possible statuses that an issued LCID can be in
  */
@@ -542,6 +563,13 @@ export interface CreateSystemIntakeDocumentInput {
   otherTypeDescription?: string | null;
 }
 
+export interface CreateSystemIntakeGRBReviewerInput {
+  systemIntakeID: UUID;
+  euaUserId: string;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
+  grbRole: SystemIntakeGRBReviewerRole;
+}
+
 /**
  * The input data used to initialize an IT governance request for a system
  */
@@ -652,6 +680,10 @@ export interface CreateTRBRequestFeedbackInput {
  */
 export interface DeleteSystemIntakeContactInput {
   id: UUID;
+}
+
+export interface DeleteSystemIntakeGRBReviewerInput {
+  reviewerID: UUID;
 }
 
 export interface DeleteTRBRequestFundingSourcesInput {
@@ -1066,6 +1098,12 @@ export interface UpdateSystemIntakeContractDetailsInput {
   costs?: SystemIntakeCostsInput | null;
   annualSpending?: SystemIntakeAnnualSpendingInput | null;
   contract?: SystemIntakeContractInput | null;
+}
+
+export interface UpdateSystemIntakeGRBReviewerInput {
+  reviewerID: UUID;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
+  grbRole: SystemIntakeGRBReviewerRole;
 }
 
 /**

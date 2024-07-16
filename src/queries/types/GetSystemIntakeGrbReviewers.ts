@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: GetSystemIntakeGrbReviewers
+// GraphQL query operation: GetSystemIntakeGRBReviewers
 // ====================================================
 
-export interface GetSystemIntakeGrbReviewers_systemIntake_grbReviewers_userAccount {
+export interface GetSystemIntakeGRBReviewers_systemIntake_grbReviewers_userAccount {
   __typename: "UserAccount";
   id: UUID;
   /**
@@ -16,22 +16,22 @@ export interface GetSystemIntakeGrbReviewers_systemIntake_grbReviewers_userAccou
   username: string;
 }
 
-export interface GetSystemIntakeGrbReviewers_systemIntake_grbReviewers {
+export interface GetSystemIntakeGRBReviewers_systemIntake_grbReviewers {
   __typename: "SystemIntakeGRBReviewer";
   id: UUID;
-  userAccount: GetSystemIntakeGrbReviewers_systemIntake_grbReviewers_userAccount;
+  userAccount: GetSystemIntakeGRBReviewers_systemIntake_grbReviewers_userAccount;
 }
 
-export interface GetSystemIntakeGrbReviewers_systemIntake {
+export interface GetSystemIntakeGRBReviewers_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
-  grbReviewers: GetSystemIntakeGrbReviewers_systemIntake_grbReviewers[];
+  grbReviewers: GetSystemIntakeGRBReviewers_systemIntake_grbReviewers[];
 }
 
-export interface GetSystemIntakeGrbReviewers {
-  systemIntake: GetSystemIntakeGrbReviewers_systemIntake | null;
+export interface GetSystemIntakeGRBReviewers {
+  systemIntake: GetSystemIntakeGRBReviewers_systemIntake | null;
 }
 
-export interface GetSystemIntakeGrbReviewersVariables {
+export interface GetSystemIntakeGRBReviewersVariables {
   id: UUID;
 }

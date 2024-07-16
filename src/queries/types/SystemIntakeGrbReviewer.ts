@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: SystemIntakeGrbReviewer
+// GraphQL fragment: SystemIntakeGRBReviewer
 // ====================================================
 
-export interface SystemIntakeGrbReviewer_userAccount {
+export interface SystemIntakeGRBReviewer_userAccount {
   __typename: "UserAccount";
   id: UUID;
   /**
@@ -16,8 +16,8 @@ export interface SystemIntakeGrbReviewer_userAccount {
   username: string;
 }
 
-export interface SystemIntakeGrbReviewer {
+export interface SystemIntakeGRBReviewer {
   __typename: "SystemIntakeGRBReviewer";
   id: UUID;
-  userAccount: SystemIntakeGrbReviewer_userAccount;
+  userAccount: SystemIntakeGRBReviewer_userAccount;
 }
