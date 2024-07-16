@@ -23,6 +23,7 @@ import (
 	"github.com/cms-enterprise/easi-app/pkg/testhelpers"
 	"github.com/cms-enterprise/easi-app/pkg/upload"
 	"github.com/cms-enterprise/easi-app/pkg/userhelpers"
+	"github.com/cms-enterprise/easi-app/pkg/usersearch"
 
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 )
@@ -46,11 +47,16 @@ func (s *ResolverSuite) SetupTest() {
 	assert.NoError(s.T(), err)
 
 	// Get the user account from the DB fresh for each test
-	princ := getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.UserInfo.Username)
+	princ := s.getTestPrincipal(s.testConfigs.Context, s.testConfigs.Store, s.testConfigs.UserInfo.Username)
 	s.testConfigs.Principal = princ
 
 	// get new dataloaders to clear any existing cached data
 	s.testConfigs.Context = s.ctxWithNewDataloaders()
+
+	// Since we are recreating the context we need to wrap all expected values on the context (like the principal)
+	s.testConfigs.Context = appcontext.WithLogger(s.testConfigs.Context, s.testConfigs.Logger)
+	s.testConfigs.Context = appcontext.WithPrincipal(s.testConfigs.Context, princ)
+
 }
 
 // TestResolverSuite runs the resolver test suite
@@ -69,16 +75,17 @@ func TestResolverSuite(t *testing.T) {
 
 // TestConfigs is a struct that contains all the dependencies needed to run a test
 type TestConfigs struct {
-	DBConfig    storage.DBConfig
-	LDClient    *ld.LDClient
-	S3Client    *upload.S3Client
-	Logger      *zap.Logger
-	UserInfo    *models.UserInfo
-	Store       *storage.Store
-	Principal   *authentication.EUAPrincipal
-	Context     context.Context
-	EmailClient *email.Client
-	Sender      *mockSender
+	DBConfig         storage.DBConfig
+	LDClient         *ld.LDClient
+	S3Client         *upload.S3Client
+	Logger           *zap.Logger
+	UserInfo         *models.UserInfo
+	Store            *storage.Store
+	Principal        *authentication.EUAPrincipal
+	Context          context.Context
+	EmailClient      *email.Client
+	Sender           *mockSender
+	UserSearchClient usersearch.Client
 }
 
 type mockSender struct {
@@ -119,12 +126,11 @@ func (tc *TestConfigs) GetDefaults() {
 	}
 	tc.Store, _ = storage.NewStore(tc.DBConfig, tc.LDClient)
 
-	// create the test context
-	// principal is fetched between each test in SetupTest()
-	ctx := appcontext.WithLogger(context.Background(), tc.Logger)
-	ctx = appcontext.WithPrincipal(ctx, getTestPrincipal(ctx, tc.Store, tc.UserInfo.Username))
+	localOktaClient := local.NewOktaAPIClient()
+	tc.UserSearchClient = localOktaClient
 
-	tc.Context = ctx
+	// create the test context, note because of the data loaders, the context gets recreated before each test.
+	tc.Context = context.Background()
 
 	localSender := mockSender{}
 	tc.Sender = &localSender
@@ -148,9 +154,10 @@ func NewEmailClient(sender *mockSender) *email.Client {
 	return &emailClient
 }
 
-func getTestPrincipal(ctx context.Context, store *storage.Store, userName string) *authentication.EUAPrincipal {
+// getTestPrincipal gets a user principal from database
+func (s *ResolverSuite) getTestPrincipal(ctx context.Context, store *storage.Store, userName string) *authentication.EUAPrincipal {
 
-	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, store, userName, true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+	userAccount, _ := userhelpers.GetOrCreateUserAccount(ctx, store, store, userName, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(s.testConfigs.UserSearchClient.FetchUserInfo))
 
 	princ := &authentication.EUAPrincipal{
 		EUAID:       userName,
@@ -240,9 +247,6 @@ func (s *ResolverSuite) getOrCreateUserAcct(euaUserID string) *authentication.Us
 // that caching feature is great for app code, but in test code, where we often load something,
 // update that thing, and load it again to confirm updates worked, caching the first version breaks that flow
 func (s *ResolverSuite) ctxWithNewDataloaders() context.Context {
-	fetchUserInfos := func(ctx context.Context, euaUserIDs []string) ([]*models.UserInfo, error) {
-		return nil, nil
-	}
 
 	coreClient := cedarcore.NewClient(s.testConfigs.Context, "", "", "", true, true)
 	getCedarSystems := func(ctx context.Context) ([]*models.CedarSystem, error) {
@@ -250,7 +254,7 @@ func (s *ResolverSuite) ctxWithNewDataloaders() context.Context {
 	}
 
 	buildDataloaders := func() *dataloaders.Dataloaders {
-		return dataloaders.NewDataloaders(s.testConfigs.Store, fetchUserInfos, getCedarSystems)
+		return dataloaders.NewDataloaders(s.testConfigs.Store, s.testConfigs.UserSearchClient.FetchUserInfos, getCedarSystems)
 	}
 
 	// Set up mocked dataloaders for the test context
