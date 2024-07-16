@@ -1,9 +1,11 @@
 import React from 'react';
+import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Form, FormGroup, Grid, IconArrowBack } from '@trussworks/react-uswds';
 
+import CedarContactSelect from 'components/CedarContactSelect';
 import { useEasiForm } from 'components/EasiForm';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
@@ -14,14 +16,21 @@ import {
   CreateSystemIntakeGRBReviewer,
   CreateSystemIntakeGRBReviewerVariables
 } from 'queries/types/CreateSystemIntakeGRBReviewer';
-import { CreateSystemIntakeGRBReviewerInput } from 'types/graphql-global-types';
+import {
+  SystemIntakeGRBReviewerRole,
+  SystemIntakeGRBReviewerVotingRole
+} from 'types/graphql-global-types';
 
 import { ReviewerKey } from '../subNavItems';
 
-type GRBReviewerFormFields = Omit<
-  CreateSystemIntakeGRBReviewerInput,
-  'systemIntakeID'
->;
+type GRBReviewerFormFields = {
+  userAccount: {
+    username: string;
+    commonName: string;
+  };
+  votingRole: SystemIntakeGRBReviewerVotingRole;
+  grbRole: SystemIntakeGRBReviewerRole;
+};
 
 const GRBReviewerForm = () => {
   const { t } = useTranslation('grbReview');
@@ -36,13 +45,14 @@ const GRBReviewerForm = () => {
     CreateSystemIntakeGRBReviewerVariables
   >(CreateSystemIntakeGRBReviewerQuery);
 
-  const { handleSubmit } = useEasiForm<GRBReviewerFormFields>();
+  const { control, handleSubmit } = useEasiForm<GRBReviewerFormFields>();
 
-  const submit = handleSubmit(values => {
+  const submit = handleSubmit(({ userAccount, ...values }) => {
     createGrbReviewer({
       variables: {
         input: {
           systemIntakeID: systemId,
+          euaUserId: userAccount.username,
           ...values
         }
       }
@@ -72,12 +82,34 @@ const GRBReviewerForm = () => {
 
       <Form onSubmit={submit} className="maxw-none tablet:grid-col-10">
         <FormGroup>
-          <Label htmlFor="euaUserId" required>
+          <Label htmlFor="userAccount" required>
             {t('form.grbMemberName')}
           </Label>
-          <HelpText id="grbMemberNameHelpText" className="margin-top-05">
+          <HelpText id="userAccountHelpText" className="margin-top-05">
             {t('form.grbMemberNameHelpText')}
           </HelpText>
+          <Controller
+            control={control}
+            name="userAccount"
+            render={({ field: { ref, ...field } }) => (
+              <CedarContactSelect
+                {...field}
+                id="euaUserId"
+                value={{
+                  euaUserId: field.value.username,
+                  commonName: field.value.commonName
+                }}
+                onChange={contact =>
+                  contact &&
+                  field.onChange({
+                    username: contact.euaUserId,
+                    commonName: contact.commonName
+                  })
+                }
+                ariaDescribedBy="userAccountHelpText"
+              />
+            )}
+          />
         </FormGroup>
 
         <FormGroup>
