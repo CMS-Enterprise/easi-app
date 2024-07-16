@@ -51,6 +51,14 @@ export default {
     grbMemberName: 'GRB member name',
     grbMemberNameHelpText: 'This field searches CMS’ EUA database.',
     votingRole: 'Voting role',
+    votingRolesInfo: {
+      label: 'What voting roles are available?',
+      items: [
+        '<dt>Voting:</dt> <dd>Assign this role to any voting members of the GRB for standard GRB reviews, or to the GRB co-chairs for a waiver or expedited review. Individuals with this role will vote on the merit of this project.</dd>',
+        '<dt>Alternate:</dt> <dd>Assign this role to any backup voting members for standard GRB reviews.</dd>',
+        '<dt>Non-voting:</dt> <dd>Assign this role to any individual who should be able to see the review content but will not vote on the merit of the project.</dd>'
+      ]
+    },
     grbRole: 'GRB role',
     grbRoleHelpText:
       'Select the role that this reviewer has on the GRB, such as the BDG that they represent.',

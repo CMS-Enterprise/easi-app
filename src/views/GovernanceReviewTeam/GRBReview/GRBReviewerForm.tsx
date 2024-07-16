@@ -14,6 +14,7 @@ import {
 import CedarContactSelect from 'components/CedarContactSelect';
 import { useEasiForm } from 'components/EasiForm';
 import Alert from 'components/shared/Alert';
+import CollapsableLink from 'components/shared/CollapsableLink';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
@@ -93,14 +94,14 @@ const GRBReviewerForm = () => {
       <IconLink
         icon={<IconArrowBack />}
         to={grbReviewPath}
-        className="margin-top-3"
+        className="margin-top-3 margin-bottom-5"
       >
         {t('form.returnToRequest')}
       </IconLink>
 
       <Form
         onSubmit={submit}
-        className="maxw-none tablet:grid-col-10 margin-bottom-8"
+        className="maxw-none tablet:grid-col-9 margin-bottom-8"
       >
         <FormGroup>
           <Label htmlFor="userAccount" required>
@@ -146,6 +147,29 @@ const GRBReviewerForm = () => {
             ))}
           </Dropdown>
         </FormGroup>
+
+        <CollapsableLink
+          id="votingRolesInfoList"
+          label={t('form.votingRolesInfo.label')}
+          className="margin-top-2"
+        >
+          <dl className="margin-y-neg-1 padding-left-2">
+            {t<string[]>('form.votingRolesInfo.items', {
+              returnObjects: true
+            }).map(item => (
+              <div className="display-list-item margin-y-1">
+                <Trans
+                  defaults={item}
+                  key={item}
+                  components={{
+                    dt: <dt className="text-bold display-inline" />,
+                    dd: <dd className="margin-0 display-inline" />
+                  }}
+                />
+              </div>
+            ))}
+          </dl>
+        </CollapsableLink>
 
         <FormGroup>
           <Label htmlFor="grbRole" required>
