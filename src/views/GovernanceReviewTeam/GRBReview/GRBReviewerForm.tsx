@@ -13,6 +13,7 @@ import {
 
 import CedarContactSelect from 'components/CedarContactSelect';
 import { useEasiForm } from 'components/EasiForm';
+import Alert from 'components/shared/Alert';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
@@ -163,6 +164,10 @@ const GRBReviewerForm = () => {
             ))}
           </Dropdown>
         </FormGroup>
+
+        <Alert type="info" slim className="margin-top-8">
+          {t('form.infoAlert')}
+        </Alert>
 
         <Pager
           next={{

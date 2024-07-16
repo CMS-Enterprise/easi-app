@@ -54,7 +54,9 @@ export default {
     grbRole: 'GRB role',
     grbRoleHelpText:
       'Select the role that this reviewer has on the GRB, such as the BDG that they represent.',
-    addReviewer: 'Add reviewer'
+    addReviewer: 'Add reviewer',
+    infoAlert:
+      'This individual will be able to see information about this IT Governance request within EASi. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.'
   },
   votingRoles: grbReviewerVotingRoles,
   reviewerRoles: grbReviewerRoles
