@@ -57,7 +57,7 @@ func GetStatusForSystemIntakeDocument(s3Client *upload.S3Client, s3Key string) (
 
 // CreateSystemIntakeDocument uploads a document to S3, then saves its metadata to our database.
 func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input models.CreateSystemIntakeDocumentInput) (*models.SystemIntakeDocument, error) {
-	uploaderRole, err := canCreate(ctx, store, input.RequestID)
+	uploaderRole, err := validateUploader(ctx, store, input.RequestID)
 	if err != nil {
 		return nil, err
 	}
@@ -157,11 +157,10 @@ func canView(ctx context.Context, store *storage.Store, s3Key string) error {
 	return errors.New("unauthorized attempt to view system intake document")
 }
 
-// canCreate guards unauthorized creation of system intake documents
+// validateUploader guards unauthorized creation of system intake documents
 // admins can upload documents
 // requesters can upload documents
-// this also returns the role to use for the uploader, if authorized
-func canCreate(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (models.DocumentUploaderRole, error) {
+func validateUploader(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (models.DocumentUploaderRole, error) {
 	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
 	if err != nil {
 		return "", err
