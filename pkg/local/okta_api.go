@@ -2,6 +2,7 @@ package local
 
 import (
 	"context"
+	"slices"
 	"strings"
 
 	"github.com/cms-enterprise/easi-app/pkg/models"
@@ -600,6 +601,7 @@ func GetMockUsernames() []string {
 	for key := range mockUserDictionary {
 		usernames = append(usernames, key)
 	}
+	slices.Sort(usernames)
 	return usernames
 }
 
