@@ -234,6 +234,22 @@ func (s *seederConfig) seedTRBCase9(ctx context.Context) error {
 		return err
 	}
 
+	_, err = s.addTRBFeedback(ctx, trb, func(fb *models.TRBRequestFeedback) {
+		fb.FeedbackMessage = "This is the earlier feedback"
+		fb.CreatedAt = time.Now().AddDate(0, 0, -7)
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb, func(fb *models.TRBRequestFeedback) {
+		fb.FeedbackMessage = "This is the earliest feedback"
+		fb.CreatedAt = time.Now().AddDate(0, 0, -14)
+	})
+	if err != nil {
+		return err
+	}
+
 	_, err = s.addTRBConsultMeeting(ctx, trb, true)
 	if err != nil {
 		return err
@@ -259,6 +275,14 @@ func (s *seederConfig) seedTRBCase10(ctx context.Context) error {
 	}
 
 	_, err = s.addTRBFeedback(ctx, trb)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb, func(fb *models.TRBRequestFeedback) {
+		fb.FeedbackMessage = "This is the earlier feedback"
+		fb.CreatedAt = time.Now().AddDate(0, 0, -14)
+	})
 	if err != nil {
 		return err
 	}
@@ -289,6 +313,29 @@ func (s *seederConfig) seedTRBCase11(ctx context.Context) error {
 	}
 
 	_, err = s.addTRBFeedback(ctx, trb)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb, func(fb *models.TRBRequestFeedback) {
+		fb.FeedbackMessage = "This is the newest feedback"
+		fb.CreatedAt = time.Now().AddDate(0, 0, 7)
+	})
+	if err != nil {
+		return err
+	}
+	_, err = s.addTRBFeedback(ctx, trb, func(fb *models.TRBRequestFeedback) {
+		fb.FeedbackMessage = "This is the earlier feedback"
+		fb.CreatedAt = time.Now().AddDate(0, 0, -7)
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = s.addTRBFeedback(ctx, trb, func(fb *models.TRBRequestFeedback) {
+		fb.FeedbackMessage = "This is more feedback"
+		fb.CreatedAt = time.Now().AddDate(0, 0, -1)
+	})
 	if err != nil {
 		return err
 	}
@@ -701,13 +748,17 @@ func (s *seederConfig) updateTRBRequestFundingSources(ctx context.Context, trbID
 	return sources, nil
 }
 
-func (s *seederConfig) addTRBFeedback(ctx context.Context, trb *models.TRBRequest) (*models.TRBRequestFeedback, error) {
+func (s *seederConfig) addTRBFeedback(ctx context.Context, trb *models.TRBRequest, ops ...func(fb *models.TRBRequestFeedback)) (*models.TRBRequestFeedback, error) {
 	feedback := &models.TRBRequestFeedback{
 		TRBRequestID:    trb.ID,
 		FeedbackMessage: "This is the most excellent TRB request ever created",
 		CopyTRBMailbox:  false,
 		NotifyEUAIDs:    []string{},
 		Action:          models.TRBFeedbackActionReadyForConsult,
+	}
+
+	for _, op := range ops {
+		op(feedback)
 	}
 
 	feedback, err := resolvers.CreateTRBRequestFeedback(ctx, s.store, nil, mock.FetchUserInfoMock, mock.FetchUserInfosMock, feedback)
