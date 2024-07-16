@@ -225,7 +225,7 @@ const RequestOverview = () => {
                 {flags?.grbReviewTab && (
                   <>
                     <Route
-                      path={`/:reviewerType${reviewerType}/:systemId/grb-review/:action(add|edit)`}
+                      path={`/:reviewerType(${reviewerType})/:systemId/grb-review/:action(add|edit)`}
                       render={() => <GRBReviewerForm />}
                     />
 

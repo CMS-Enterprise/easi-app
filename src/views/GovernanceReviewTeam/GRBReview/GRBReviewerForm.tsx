@@ -3,7 +3,13 @@ import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { Form, FormGroup, Grid, IconArrowBack } from '@trussworks/react-uswds';
+import {
+  Dropdown,
+  Form,
+  FormGroup,
+  Grid,
+  IconArrowBack
+} from '@trussworks/react-uswds';
 
 import CedarContactSelect from 'components/CedarContactSelect';
 import { useEasiForm } from 'components/EasiForm';
@@ -11,6 +17,7 @@ import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
+import { grbReviewerRoles, grbReviewerVotingRoles } from 'i18n/en-US/grbReview';
 import { CreateSystemIntakeGRBReviewerQuery } from 'queries/SystemIntakeGRBReviewerQueries';
 import {
   CreateSystemIntakeGRBReviewer,
@@ -20,6 +27,7 @@ import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'types/graphql-global-types';
+import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import { ReviewerKey } from '../subNavItems';
 
@@ -35,17 +43,22 @@ type GRBReviewerFormFields = {
 const GRBReviewerForm = () => {
   const { t } = useTranslation('grbReview');
 
-  const { reviewerType, systemId } = useParams<{
+  const params = useParams<{
     reviewerType: ReviewerKey;
     systemId: string;
   }>();
+  const { reviewerType, systemId } = params;
 
   const [createGrbReviewer] = useMutation<
     CreateSystemIntakeGRBReviewer,
     CreateSystemIntakeGRBReviewerVariables
   >(CreateSystemIntakeGRBReviewerQuery);
 
-  const { control, handleSubmit } = useEasiForm<GRBReviewerFormFields>();
+  const {
+    control,
+    handleSubmit,
+    register
+  } = useEasiForm<GRBReviewerFormFields>();
 
   const submit = handleSubmit(({ userAccount, ...values }) => {
     createGrbReviewer({
@@ -80,7 +93,10 @@ const GRBReviewerForm = () => {
         {t('form.returnToRequest')}
       </IconLink>
 
-      <Form onSubmit={submit} className="maxw-none tablet:grid-col-10">
+      <Form
+        onSubmit={submit}
+        className="maxw-none tablet:grid-col-10 margin-bottom-8"
+      >
         <FormGroup>
           <Label htmlFor="userAccount" required>
             {t('form.grbMemberName')}
@@ -96,8 +112,8 @@ const GRBReviewerForm = () => {
                 {...field}
                 id="euaUserId"
                 value={{
-                  euaUserId: field.value.username,
-                  commonName: field.value.commonName
+                  euaUserId: field.value?.username,
+                  commonName: field.value?.commonName
                 }}
                 onChange={contact =>
                   contact &&
@@ -116,6 +132,14 @@ const GRBReviewerForm = () => {
           <Label htmlFor="votingRole" required>
             {t('form.votingRole')}
           </Label>
+          <Dropdown {...register('votingRole')} ref={null} id="votingRole">
+            <option value="">{t('form:dropdownInitialSelect')}</option>
+            {Object.keys(grbReviewerVotingRoles).map(key => (
+              <option value={key} key={key}>
+                {t(`votingRoles.${key}`)}
+              </option>
+            ))}
+          </Dropdown>
         </FormGroup>
 
         <FormGroup>
@@ -125,7 +149,31 @@ const GRBReviewerForm = () => {
           <HelpText id="grbRoleHelpText" className="margin-top-05">
             {t('form.grbRoleHelpText')}
           </HelpText>
+          <Dropdown
+            {...register('grbRole')}
+            ref={null}
+            id="grbRoleRole"
+            aria-describedby="grbRoleHelpText"
+          >
+            <option value="">{t('form:dropdownInitialSelect')}</option>
+            {Object.keys(grbReviewerRoles).map(key => (
+              <option value={key} key={key}>
+                {t(`reviewerRoles.${key}`)}
+              </option>
+            ))}
+          </Dropdown>
         </FormGroup>
+
+        <Pager
+          next={{
+            text: t('form.addReviewer')
+          }}
+          taskListUrl={`/${reviewerType}/${systemId}/governance-review`}
+          saveExitText={t('form.returnToRequest')}
+          border={false}
+          className="margin-top-4"
+          submitDisabled
+        />
       </Form>
     </Grid>
   );

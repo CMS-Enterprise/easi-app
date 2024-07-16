@@ -1,3 +1,32 @@
+import {
+  SystemIntakeGRBReviewerRole,
+  SystemIntakeGRBReviewerVotingRole
+} from 'types/graphql-global-types';
+
+export const grbReviewerVotingRoles: Record<
+  SystemIntakeGRBReviewerVotingRole,
+  string
+> = {
+  VOTING: 'Voting',
+  NON_VOTING: 'Non-voting',
+  ALTERNATE: 'Alternate'
+};
+
+export const grbReviewerRoles: Record<SystemIntakeGRBReviewerRole, string> = {
+  CO_CHAIR_CIO: 'Co-Chair - CIO',
+  CO_CHAIR_CFO: 'CO-Chair - CFO',
+  CO_CHAIR_HCA: 'CO-Chair - HCA',
+  ACA_3021_REP: 'ACA 3021 Rep',
+  CCIIO_REP: 'CCIIO Rep',
+  PROGRAM_OPERATIONS_BDG_CHAIR: 'Program Operations BDG Chair',
+  CMCS_REP: 'CMCS Rep',
+  FED_ADMIN_BDG_CHAIR: 'Fed Admin BDG Chair',
+  PROGRAM_INTEGRITY_BDG_CHAIR: 'Program Integrity BDG Chair',
+  QIO_REP: 'QIO Rep',
+  SUBJECT_MATTER_EXPERT: 'Subject Matter Expert (SME)',
+  OTHER: 'OTHER'
+};
+
 export default {
   title: 'GRB review',
   aria: 'Open GRB review',
@@ -24,6 +53,9 @@ export default {
     votingRole: 'Voting role',
     grbRole: 'GRB role',
     grbRoleHelpText:
-      'Select the role that this reviewer has on the GRB, such as the BDG that they represent.'
-  }
+      'Select the role that this reviewer has on the GRB, such as the BDG that they represent.',
+    addReviewer: 'Add reviewer'
+  },
+  votingRoles: grbReviewerVotingRoles,
+  reviewerRoles: grbReviewerRoles
 };
