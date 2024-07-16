@@ -351,7 +351,7 @@ namespace :db do
   end
 
   # Make sure this list of tables matches the list in pkg/storage/truncate.go
-  desc "Deletes all rows from all tables"
+  desc "Deletes all rows from all tables and all files in Minio (S3)"
   task :clean do
     tables = %w{
       cedar_system_bookmarks
@@ -391,6 +391,10 @@ namespace :db do
     sql = tables.map { |table| "DELETE FROM #{table};" }.join
     puts "Cleaning database..."
     `echo "#{sql}" | psql`
+    
+    # Delete all files from Minio
+    puts "Cleaning Minio file storage..."
+    `docker-compose run --entrypoint='mc --quiet rm -r --force local/easi-app-file-uploads/' minio_mc > /dev/null 2>&1`
   end
 end
 
