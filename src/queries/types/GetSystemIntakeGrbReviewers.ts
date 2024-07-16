@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { SystemIntakeGRBReviewerVotingRole, SystemIntakeGRBReviewerRole } from "./../../types/graphql-global-types";
+
 // ====================================================
 // GraphQL query operation: GetSystemIntakeGRBReviewers
 // ====================================================
@@ -14,11 +16,17 @@ export interface GetSystemIntakeGRBReviewers_systemIntake_grbReviewers_userAccou
    * The unique username of this user account
    */
   username: string;
+  /**
+   * The Common Name of a user. Typically this is a combination of Given and Family name
+   */
+  commonName: string;
 }
 
 export interface GetSystemIntakeGRBReviewers_systemIntake_grbReviewers {
   __typename: "SystemIntakeGRBReviewer";
   id: UUID;
+  votingRole: SystemIntakeGRBReviewerVotingRole;
+  grbRole: SystemIntakeGRBReviewerRole;
   userAccount: GetSystemIntakeGRBReviewers_systemIntake_grbReviewers_userAccount;
 }
 

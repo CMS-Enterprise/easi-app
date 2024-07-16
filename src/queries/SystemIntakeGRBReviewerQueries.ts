@@ -3,9 +3,12 @@ import { gql } from '@apollo/client';
 export const SystemIntakeGRBReviewer = gql`
   fragment SystemIntakeGRBReviewer on SystemIntakeGRBReviewer {
     id
+    votingRole
+    grbRole
     userAccount {
       id
       username
+      commonName
     }
   }
 `;
@@ -23,21 +26,23 @@ export const GetSystemIntakeGRBReviewersQuery = gql`
 `;
 
 export const CreateSystemIntakeGRBReviewerQuery = gql`
+  ${SystemIntakeGRBReviewer}
   mutation CreateSystemIntakeGRBReviewer(
     $input: CreateSystemIntakeGRBReviewerInput!
   ) {
     createSystemIntakeGRBReviewer(input: $input) {
-      id
+      ...SystemIntakeGRBReviewer
     }
   }
 `;
 
 export const UpdateSystemIntakeGRBReviewerQuery = gql`
+  ${SystemIntakeGRBReviewer}
   mutation UpdateSystemIntakeGRBReviewer(
     $input: UpdateSystemIntakeGRBReviewerInput!
   ) {
     updateSystemIntakeGRBReviewer(input: $input) {
-      id
+      ...SystemIntakeGRBReviewer
     }
   }
 `;

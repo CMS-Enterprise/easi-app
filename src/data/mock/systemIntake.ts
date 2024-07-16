@@ -43,6 +43,8 @@ import {
   SystemIntakeDocumentCommonType,
   SystemIntakeDocumentStatus,
   SystemIntakeFormState,
+  SystemIntakeGRBReviewerRole,
+  SystemIntakeGRBReviewerVotingRole,
   SystemIntakeRequestType,
   SystemIntakeState,
   SystemIntakeStatusAdmin,
@@ -641,20 +643,25 @@ export const getSystemIntakeGRBReviewersQuery: MockedQuery<
           {
             __typename: 'SystemIntakeGRBReviewer',
             id: '0432800e-2393-4067-b954-0e3671042b6a',
+            votingRole: SystemIntakeGRBReviewerVotingRole.VOTING,
+            grbRole: SystemIntakeGRBReviewerRole.ACA_3021_REP,
             userAccount: {
               __typename: 'UserAccount',
               id: '06296dc5-2e6f-44ad-93d6-971137762cda',
-              username: systemIntake.euaUserId!
+              username: businessOwner.euaUserId,
+              commonName: businessOwner.commonName!
             }
           },
-
           {
             __typename: 'SystemIntakeGRBReviewer',
             id: 'bcf4bc5f-f305-4c23-9d1c-79bf9e9b181c',
+            votingRole: SystemIntakeGRBReviewerVotingRole.NON_VOTING,
+            grbRole: SystemIntakeGRBReviewerRole.SUBJECT_MATTER_EXPERT,
             userAccount: {
               __typename: 'UserAccount',
               id: '629e0090-20b2-431e-a3eb-dd9ce7ce7a45',
-              username: 'TXJK'
+              username: productManager.euaUserId,
+              commonName: productManager.commonName!
             }
           }
         ]
