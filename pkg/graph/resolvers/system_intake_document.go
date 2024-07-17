@@ -57,8 +57,17 @@ func GetStatusForSystemIntakeDocument(s3Client *upload.S3Client, s3Key string) (
 
 // CreateSystemIntakeDocument uploads a document to S3, then saves its metadata to our database.
 func CreateSystemIntakeDocument(ctx context.Context, store *storage.Store, s3Client *upload.S3Client, input models.CreateSystemIntakeDocumentInput) (*models.SystemIntakeDocument, error) {
-	uploaderRole, err := validateUploader(ctx, store, input.RequestID)
+	intake, err := store.FetchSystemIntakeByID(ctx, input.RequestID)
 	if err != nil {
+		return nil, err
+	}
+
+	uploaderRole, err := getUploaderRole(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := canCreate(ctx, uploaderRole, intake); err != nil {
 		return nil, err
 	}
 
@@ -157,15 +166,10 @@ func canView(ctx context.Context, store *storage.Store, s3Key string) error {
 	return errors.New("unauthorized attempt to view system intake document")
 }
 
-// validateUploader guards unauthorized creation of system intake documents
+// getUploaderRole guards unauthorized creation of system intake documents
 // admins can upload documents
 // requesters can upload documents
-func validateUploader(ctx context.Context, store *storage.Store, systemIntakeID uuid.UUID) (models.DocumentUploaderRole, error) {
-	intake, err := store.FetchSystemIntakeByID(ctx, systemIntakeID)
-	if err != nil {
-		return "", err
-	}
-
+func getUploaderRole(ctx context.Context, intake *models.SystemIntake) (models.DocumentUploaderRole, error) {
 	// check requester first as that role takes precedence over admin role for uploader roles
 	user := appcontext.Principal(ctx).Account()
 	if intake.EUAUserID.String == user.Username {
@@ -178,9 +182,21 @@ func validateUploader(ctx context.Context, store *storage.Store, systemIntakeID 
 
 	appcontext.ZLogger(ctx).Warn("unauthorized user attempted to create system intake document",
 		zap.String("username", user.Username),
-		zap.String("system_intake.id", systemIntakeID.String()))
+		zap.String("system_intake.id", intake.ID.String()))
 
 	return "", errors.New("unauthorized attempt to create system intake document")
+}
+
+func canCreate(ctx context.Context, role models.DocumentUploaderRole, intake *models.SystemIntake) error {
+	if role == models.RequesterUploaderRole || role == models.AdminUploaderRole {
+		return nil
+	}
+
+	appcontext.ZLogger(ctx).Warn("unauthorized user attempted to create system intake document",
+		zap.String("username", appcontext.Principal(ctx).Account().Username),
+		zap.String("system_intake.id", intake.ID.String()))
+
+	return errors.New("unauthorized attempt to create system intake document")
 }
 
 // canDelete guards unauthorized deletions of system intake documents
