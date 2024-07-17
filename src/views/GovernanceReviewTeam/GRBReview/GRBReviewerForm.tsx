@@ -1,8 +1,9 @@
 import React from 'react';
-import { Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
+import { ErrorMessage } from '@hookform/error-message';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Dropdown,
   Form,
@@ -15,6 +16,7 @@ import CedarContactSelect from 'components/CedarContactSelect';
 import { useEasiForm } from 'components/EasiForm';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
@@ -29,6 +31,7 @@ import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
 } from 'types/graphql-global-types';
+import CreateGRBReviewerSchema from 'validations/grbReviewerSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import { ReviewerKey } from '../subNavItems';
@@ -59,15 +62,22 @@ const GRBReviewerForm = () => {
   >(CreateSystemIntakeGRBReviewerQuery);
 
   const {
-    control,
     handleSubmit,
-    register
-  } = useEasiForm<GRBReviewerFormFields>();
+    register,
+    watch,
+    setValue,
+    setError,
+    formState: { errors, isValid, isDirty }
+  } = useEasiForm<GRBReviewerFormFields>({
+    resolver: yupResolver(CreateGRBReviewerSchema)
+  });
 
   const grbReviewPath = `/${reviewerType}/${systemId}/grb-review`;
 
-  const submit = handleSubmit(({ userAccount, ...values }) =>
-    createGrbReviewer({
+  const submit = handleSubmit(({ userAccount, ...values }) => {
+    if (!isDirty) return history.push(grbReviewPath);
+
+    return createGrbReviewer({
       variables: {
         input: {
           systemIntakeID: systemId,
@@ -75,15 +85,24 @@ const GRBReviewerForm = () => {
           ...values
         }
       }
-    }).then(() => history.push(grbReviewPath))
-  );
+    })
+      .then(() => history.push(grbReviewPath))
+      .catch(() =>
+        setError('root', {
+          message: t('form.error')
+        })
+      );
+  });
 
   return (
     <Grid className="tablet:grid-col-8 padding-y-4">
+      <ErrorMessage errors={errors} name="root" as={<Alert type="error" />} />
+
       <h1 className="margin-bottom-1">{t('form.title')}</h1>
       <p className="font-body-md line-height-body-4 text-light margin-top-05 margin-bottom-105">
         {t('form.description')}
       </p>
+
       <p className="margin-top-1 text-base">
         <Trans
           i18nKey="action:fieldsMarkedRequired"
@@ -110,27 +129,30 @@ const GRBReviewerForm = () => {
           <HelpText id="userAccountHelpText" className="margin-top-05">
             {t('form.grbMemberNameHelpText')}
           </HelpText>
-          <Controller
-            control={control}
+          <ErrorMessage
+            errors={errors}
             name="userAccount"
-            render={({ field: { ref, ...field } }) => (
-              <CedarContactSelect
-                {...field}
-                id="euaUserId"
-                value={{
-                  euaUserId: field.value?.username,
-                  commonName: field.value?.commonName
-                }}
-                onChange={contact =>
-                  contact &&
-                  field.onChange({
-                    username: contact.euaUserId,
-                    commonName: contact.commonName
-                  })
-                }
-                ariaDescribedBy="userAccountHelpText"
-              />
-            )}
+            as={<FieldErrorMsg />}
+          />
+          <CedarContactSelect
+            {...{ ...register('userAccount'), ref: null }}
+            onChange={contact =>
+              contact?.euaUserId &&
+              setValue(
+                'userAccount',
+                {
+                  username: contact.euaUserId,
+                  commonName: contact.commonName
+                },
+                { shouldValidate: true }
+              )
+            }
+            value={{
+              euaUserId: watch('userAccount.username'),
+              commonName: watch('userAccount.commonName')
+            }}
+            id="userAccount"
+            ariaDescribedBy="userAccountHelpText"
           />
         </FormGroup>
 
@@ -138,6 +160,11 @@ const GRBReviewerForm = () => {
           <Label htmlFor="votingRole" required>
             {t('form.votingRole')}
           </Label>
+          <ErrorMessage
+            errors={errors}
+            name="votingRole"
+            as={<FieldErrorMsg />}
+          />
           <Dropdown {...register('votingRole')} ref={null} id="votingRole">
             <option value="">{t('form:dropdownInitialSelect')}</option>
             {grbReviewerVotingRoles.map(key => (
@@ -157,10 +184,9 @@ const GRBReviewerForm = () => {
             {t<string[]>('form.votingRolesInfo.items', {
               returnObjects: true
             }).map(item => (
-              <div className="display-list-item margin-y-1">
+              <div key={item} className="display-list-item margin-y-1">
                 <Trans
                   defaults={item}
-                  key={item}
                   components={{
                     dt: <dt className="text-bold display-inline" />,
                     dd: <dd className="margin-0 display-inline" />
@@ -178,6 +204,7 @@ const GRBReviewerForm = () => {
           <HelpText id="grbRoleHelpText" className="margin-top-05">
             {t('form.grbRoleHelpText')}
           </HelpText>
+          <ErrorMessage errors={errors} name="grbRole" as={<FieldErrorMsg />} />
           <Dropdown
             {...register('grbRole')}
             ref={null}
@@ -199,7 +226,10 @@ const GRBReviewerForm = () => {
 
         <Pager
           next={{
-            text: t('form.addReviewer')
+            // type: 'button',
+            // onClick: () => setFocus('userAccount'),
+            text: t('form.addReviewer'),
+            disabled: isValid
           }}
           taskListUrl={grbReviewPath}
           saveExitText={t('form.returnToRequest')}

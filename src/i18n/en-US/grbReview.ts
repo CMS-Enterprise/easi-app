@@ -67,7 +67,9 @@ export default {
       'Select the role that this reviewer has on the GRB, such as the BDG that they represent.',
     addReviewer: 'Add reviewer',
     infoAlert:
-      'This individual will be able to see information about this IT Governance request within EASi. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.'
+      'This individual will be able to see information about this IT Governance request within EASi. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
+    error:
+      'There was an issue adding this GRB reviewer. Please try again, and if the error persists, try again at a later date.'
   },
   votingRoles: grbReviewerVotingRolesTranslation,
   reviewerRoles: grbReviewerRolesTranslation
