@@ -19,6 +19,7 @@ export interface GetMyCedarSystems_myCedarSystems {
   systemMaintainerOrg: string | null;
   systemMaintainerOrgComp: string | null;
   isBookmarked: boolean;
+  atoExpirationDate: Time | null;
 }
 
 export interface GetMyCedarSystems {
