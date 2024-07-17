@@ -50,6 +50,7 @@ type GRBReviewerFormFields = {
   userAccount: {
     username: string;
     commonName: string;
+    email: string;
   };
   votingRole: SystemIntakeGRBReviewerVotingRole;
   grbRole: SystemIntakeGRBReviewerRole;
@@ -66,21 +67,25 @@ const GRBReviewerForm = () => {
     SystemIntakeGRBReviewer | undefined
   >();
 
-  const params = useParams<{
+  const { reviewerType, systemId, action } = useParams<{
     reviewerType: ReviewerKey;
     systemId: string;
+    action: 'add' | 'edit';
   }>();
-  const { reviewerType, systemId } = params;
 
   const [createGRBReviewer] = useMutation<
     CreateSystemIntakeGRBReviewer,
     CreateSystemIntakeGRBReviewerVariables
-  >(CreateSystemIntakeGRBReviewerQuery);
+  >(CreateSystemIntakeGRBReviewerQuery, {
+    refetchQueries: ['GetSystemIntakeGRBReviewers']
+  });
 
   const [updateGRBReviewer] = useMutation<
     UpdateSystemIntakeGRBReviewer,
     UpdateSystemIntakeGRBReviewerVariables
-  >(UpdateSystemIntakeGRBReviewerQuery);
+  >(UpdateSystemIntakeGRBReviewerQuery, {
+    refetchQueries: ['GetSystemIntakeGRBReviewers']
+  });
 
   const {
     handleSubmit,
@@ -92,26 +97,34 @@ const GRBReviewerForm = () => {
   } = useEasiForm<GRBReviewerFormFields>({
     resolver: yupResolver(CreateGRBReviewerSchema),
     defaultValues: {
-      ...activeReviewer
+      votingRole: activeReviewer?.votingRole,
+      grbRole: activeReviewer?.grbRole,
+      userAccount: {
+        commonName: activeReviewer?.userAccount?.commonName,
+        username: activeReviewer?.userAccount?.username,
+        email: activeReviewer?.userAccount?.email
+      }
     }
   });
 
   const grbReviewPath = `/${reviewerType}/${systemId}/grb-review`;
 
-  const action = activeReviewer ? 'edit' : 'add';
-
   const submit = handleSubmit(({ userAccount, ...values }) => {
     if (!isDirty) return history.push(grbReviewPath);
-
-    const input = { systemIntakeID: systemId, ...values };
 
     const mutate = () =>
       activeReviewer
         ? updateGRBReviewer({
-            variables: { input: { ...input, reviewerID: activeReviewer.id } }
+            variables: { input: { ...values, reviewerID: activeReviewer.id } }
           })
         : createGRBReviewer({
-            variables: { input: { ...input, euaUserId: userAccount.username } }
+            variables: {
+              input: {
+                ...values,
+                systemIntakeID: systemId,
+                euaUserId: userAccount.username
+              }
+            }
           });
 
     return mutate()
@@ -189,14 +202,16 @@ const GRBReviewerForm = () => {
                 'userAccount',
                 {
                   username: contact.euaUserId,
-                  commonName: contact.commonName
+                  commonName: contact.commonName,
+                  email: contact.email || ''
                 },
                 { shouldValidate: true }
               )
             }
             value={{
               euaUserId: watch('userAccount.username'),
-              commonName: watch('userAccount.commonName')
+              commonName: watch('userAccount.commonName'),
+              email: watch('userAccount.email')
             }}
             id="userAccount"
             ariaDescribedBy="userAccountHelpText"
@@ -275,7 +290,7 @@ const GRBReviewerForm = () => {
         <Pager
           next={{
             text: t('form.submit', { context: action }),
-            disabled: !isValid
+            disabled: !isValid && !errors?.root
           }}
           taskListUrl={grbReviewPath}
           saveExitText={t('form.returnToRequest', { context: action })}

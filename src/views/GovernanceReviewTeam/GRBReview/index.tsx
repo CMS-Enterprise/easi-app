@@ -112,7 +112,41 @@ const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
         </div>
       )}
 
-      {/* TODO EASI-4350: add participants table */}
+      {/**
+       * TODO EASI-4350: add participants table
+       *
+       * This list of reviewers is temporary for testing purposes
+       */}
+      <ul>
+        {grbReviewers.map(reviewer => {
+          return (
+            <li key={reviewer.id}>
+              <span>
+                {reviewer.userAccount.commonName} (
+                {t(`votingRoles.${reviewer.votingRole}`)}) -{' '}
+                {t(`reviewerRoles.${reviewer.grbRole}`)}
+              </span>
+              <ButtonGroup>
+                <Button
+                  type="button"
+                  onClick={() => history.push(`${pathname}/edit`, reviewer)}
+                  unstyled
+                >
+                  {t('Edit')}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => null}
+                  className="text-error"
+                  unstyled
+                >
+                  {t('Remove')}
+                </Button>
+              </ButtonGroup>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };
