@@ -228,23 +228,23 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
                 />
 
                 {flags?.grbReviewTab && (
-                  <>
-                    <Route
-                      path={`/:reviewerType(${reviewerType})/:systemId/grb-review/:action(add|edit)`}
-                      render={() => <GRBReviewerForm />}
-                    />
+                  <Route
+                    path={`/:reviewerType(${reviewerType})/:systemId/grb-review/:action(add|edit)`}
+                    render={() => <GRBReviewerForm />}
+                  />
+                )}
 
-                    <Route
-                      path={`/${reviewerType}/:systemId/grb-review`}
-                      render={() => (
-                        <GRBReview
-                          {...systemIntake}
-                          grbReviewers={grbReviewers}
-                        />
-                      )}
-                      exact
-                    />
-                  </>
+                {flags?.grbReviewTab && (
+                  <Route
+                    path={`/${reviewerType}/:systemId/grb-review`}
+                    render={() => (
+                      <GRBReview
+                        {...systemIntake}
+                        grbReviewers={grbReviewers}
+                      />
+                    )}
+                    exact
+                  />
                 )}
 
                 {/* GRT only routes */}
