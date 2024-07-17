@@ -9,6 +9,7 @@ export const SystemIntakeGRBReviewer = gql`
       id
       username
       commonName
+      email
     }
   }
 `;

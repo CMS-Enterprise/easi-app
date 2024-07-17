@@ -20,6 +20,10 @@ export interface GetSystemIntakeGRBReviewers_systemIntake_grbReviewers_userAccou
    * The Common Name of a user. Typically this is a combination of Given and Family name
    */
   commonName: string;
+  /**
+   * The email address associated to this user account
+   */
+  email: string;
 }
 
 export interface GetSystemIntakeGRBReviewers_systemIntake_grbReviewers {

@@ -649,7 +649,8 @@ export const getSystemIntakeGRBReviewersQuery: MockedQuery<
               __typename: 'UserAccount',
               id: '06296dc5-2e6f-44ad-93d6-971137762cda',
               username: businessOwner.euaUserId,
-              commonName: businessOwner.commonName!
+              commonName: businessOwner.commonName!,
+              email: businessOwner.email!
             }
           },
           {
@@ -661,7 +662,8 @@ export const getSystemIntakeGRBReviewersQuery: MockedQuery<
               __typename: 'UserAccount',
               id: '629e0090-20b2-431e-a3eb-dd9ce7ce7a45',
               username: productManager.euaUserId,
-              commonName: productManager.commonName!
+              commonName: productManager.commonName!,
+              email: productManager.email!
             }
           }
         ]
