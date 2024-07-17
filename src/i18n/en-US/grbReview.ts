@@ -46,11 +46,13 @@ export default {
   viewIntakeRequest: 'View Intake Request',
   viewOtherDocuments: 'View other supporting documents',
   addGrbReviewer: 'Add a GRB reviewer',
+  addAnotherGrbReviewer: 'Add another GRB reviewer',
   form: {
     title: 'Add a GRB reviewer',
     description:
       'Add details about this Governance Review Board (GRB) reviewer, including their name, voting role, and GRB role such as the Budget Development Group (BDG) they represent.',
-    returnToRequest: 'Don’t add and return to request details',
+    returnToRequest_edit: 'Don’t save and return to request details',
+    returnToRequest_add: 'Don’t add and return to request details',
     grbMemberName: 'GRB member name',
     grbMemberNameHelpText: 'This field searches CMS’ EUA database.',
     votingRole: 'Voting role',
@@ -65,7 +67,8 @@ export default {
     grbRole: 'GRB role',
     grbRoleHelpText:
       'Select the role that this reviewer has on the GRB, such as the BDG that they represent.',
-    addReviewer: 'Add reviewer',
+    submit_add: 'Add reviewer',
+    submit_edit: 'Save changes',
     infoAlert:
       'This individual will be able to see information about this IT Governance request within EASi. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
     error:

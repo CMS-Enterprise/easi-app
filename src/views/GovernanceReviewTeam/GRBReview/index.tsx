@@ -6,14 +6,16 @@ import { ButtonGroup } from '@trussworks/react-uswds';
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
+import { SystemIntakeGRBReviewer } from 'queries/types/SystemIntakeGRBReviewer';
 
 import IsGrbViewContext from '../IsGrbViewContext';
 
 type GRBReviewProps = {
   id: string;
+  grbReviewers: SystemIntakeGRBReviewer[];
 };
 
-const GRBReview = ({ id }: GRBReviewProps) => {
+const GRBReview = ({ id, grbReviewers }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const { pathname } = useLocation();
 
@@ -77,7 +79,9 @@ const GRBReview = ({ id }: GRBReviewProps) => {
       ) : (
         // Add GRB reviewer button
         <UswdsReactLink className="usa-button" to={`${pathname}/add`}>
-          {t('addGrbReviewer')}
+          {t(
+            grbReviewers.length > 0 ? 'addAnotherGrbReviewer' : 'addGrbReviewer'
+          )}
         </UswdsReactLink>
       )}
 

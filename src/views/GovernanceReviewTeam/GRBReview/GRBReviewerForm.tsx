@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -24,11 +24,19 @@ import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
 import useMessage from 'hooks/useMessage';
-import { CreateSystemIntakeGRBReviewerQuery } from 'queries/SystemIntakeGRBReviewerQueries';
+import {
+  CreateSystemIntakeGRBReviewerQuery,
+  UpdateSystemIntakeGRBReviewerQuery
+} from 'queries/SystemIntakeGRBReviewerQueries';
 import {
   CreateSystemIntakeGRBReviewer,
   CreateSystemIntakeGRBReviewerVariables
 } from 'queries/types/CreateSystemIntakeGRBReviewer';
+import { SystemIntakeGRBReviewer } from 'queries/types/SystemIntakeGRBReviewer';
+import {
+  UpdateSystemIntakeGRBReviewer,
+  UpdateSystemIntakeGRBReviewerVariables
+} from 'queries/types/UpdateSystemIntakeGRBReviewer';
 import {
   SystemIntakeGRBReviewerRole,
   SystemIntakeGRBReviewerVotingRole
@@ -54,16 +62,25 @@ const GRBReviewerForm = () => {
 
   const history = useHistory();
 
+  const { state: activeReviewer } = useLocation<
+    SystemIntakeGRBReviewer | undefined
+  >();
+
   const params = useParams<{
     reviewerType: ReviewerKey;
     systemId: string;
   }>();
   const { reviewerType, systemId } = params;
 
-  const [createGrbReviewer] = useMutation<
+  const [createGRBReviewer] = useMutation<
     CreateSystemIntakeGRBReviewer,
     CreateSystemIntakeGRBReviewerVariables
   >(CreateSystemIntakeGRBReviewerQuery);
+
+  const [updateGRBReviewer] = useMutation<
+    UpdateSystemIntakeGRBReviewer,
+    UpdateSystemIntakeGRBReviewerVariables
+  >(UpdateSystemIntakeGRBReviewerQuery);
 
   const {
     handleSubmit,
@@ -73,32 +90,38 @@ const GRBReviewerForm = () => {
     setError,
     formState: { errors, isValid, isDirty }
   } = useEasiForm<GRBReviewerFormFields>({
-    resolver: yupResolver(CreateGRBReviewerSchema)
+    resolver: yupResolver(CreateGRBReviewerSchema),
+    defaultValues: {
+      ...activeReviewer
+    }
   });
 
   const grbReviewPath = `/${reviewerType}/${systemId}/grb-review`;
 
+  const action = activeReviewer ? 'edit' : 'add';
+
   const submit = handleSubmit(({ userAccount, ...values }) => {
     if (!isDirty) return history.push(grbReviewPath);
 
-    return createGrbReviewer({
-      variables: {
-        input: {
-          systemIntakeID: systemId,
-          euaUserId: userAccount.username,
-          ...values
-        }
-      }
-    })
+    const input = { systemIntakeID: systemId, ...values };
+
+    const mutate = () =>
+      activeReviewer
+        ? updateGRBReviewer({
+            variables: { input: { ...input, reviewerID: activeReviewer.id } }
+          })
+        : createGRBReviewer({
+            variables: { input: { ...input, euaUserId: userAccount.username } }
+          });
+
+    return mutate()
       .then(() => {
         showMessageOnNextPage(
           <Trans
             i18nKey="grbReview:form.success"
             values={{
               commonName: userAccount.commonName,
-              votingRole: toLower(
-                t<string>(`votingRoles.${values.votingRole}}`)
-              )
+              votingRole: toLower(t<string>(`votingRoles.${values.votingRole}`))
             }}
             tOptions={{
               context: values.votingRole
@@ -139,7 +162,7 @@ const GRBReviewerForm = () => {
         to={grbReviewPath}
         className="margin-top-3 margin-bottom-5"
       >
-        {t('form.returnToRequest')}
+        {t('form.returnToRequest', { context: action })}
       </IconLink>
 
       <Form
@@ -177,6 +200,7 @@ const GRBReviewerForm = () => {
             }}
             id="userAccount"
             ariaDescribedBy="userAccountHelpText"
+            disabled={!!activeReviewer}
           />
         </FormGroup>
 
@@ -250,11 +274,11 @@ const GRBReviewerForm = () => {
 
         <Pager
           next={{
-            text: t('form.addReviewer'),
+            text: t('form.submit', { context: action }),
             disabled: !isValid
           }}
           taskListUrl={grbReviewPath}
-          saveExitText={t('form.returnToRequest')}
+          saveExitText={t('form.returnToRequest', { context: action })}
           border={false}
           className="margin-top-4"
           submitDisabled

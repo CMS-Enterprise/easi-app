@@ -74,7 +74,7 @@ const GovernanceReviewTeam = () => {
               path={`/:reviewerType(${reviewerType})/:systemId/:activePage/:subPage?`}
               exact
             >
-              <RequestOverview />
+              <RequestOverview grbReviewers={grbReviewers || []} />
             </Route>
 
             <Route path="*" component={NotFound} />
