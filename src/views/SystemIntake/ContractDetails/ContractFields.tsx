@@ -32,7 +32,7 @@ const ContractFields = ({ id }: ContractFieldsProps) => {
   } = useEasiFormContext<ContractDetailsForm>();
 
   const startDate = watch('contract.startDate');
-  const endDate = watch('contract.startDate');
+  const endDate = watch('contract.endDate');
 
   const hasStartDateError: boolean = !!errors?.contract?.startDate;
   const hasEndDateError: boolean = !!errors?.contract?.endDate;
