@@ -69,7 +69,11 @@ export default {
     infoAlert:
       'This individual will be able to see information about this IT Governance request within EASi. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
     error:
-      'There was an issue adding this GRB reviewer. Please try again, and if the error persists, try again at a later date.'
+      'There was an issue adding this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
+    success_ALTERNATE:
+      'You added <strong>{{commonName}}</strong> as an <strong>alternate member</strong> for this GRB review.',
+    success:
+      'You added <strong>{{commonName}}</strong> as a <strong>{{votingRole}} member</strong> for this GRB review.'
   },
   votingRoles: grbReviewerVotingRolesTranslation,
   reviewerRoles: grbReviewerRolesTranslation

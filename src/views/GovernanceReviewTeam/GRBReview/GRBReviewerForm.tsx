@@ -11,6 +11,7 @@ import {
   Grid,
   IconArrowBack
 } from '@trussworks/react-uswds';
+import { toLower } from 'lodash';
 
 import CedarContactSelect from 'components/CedarContactSelect';
 import { useEasiForm } from 'components/EasiForm';
@@ -22,6 +23,7 @@ import IconLink from 'components/shared/IconLink';
 import Label from 'components/shared/Label';
 import RequiredAsterisk from 'components/shared/RequiredAsterisk';
 import { grbReviewerRoles, grbReviewerVotingRoles } from 'constants/grbRoles';
+import useMessage from 'hooks/useMessage';
 import { CreateSystemIntakeGRBReviewerQuery } from 'queries/SystemIntakeGRBReviewerQueries';
 import {
   CreateSystemIntakeGRBReviewer,
@@ -47,6 +49,8 @@ type GRBReviewerFormFields = {
 
 const GRBReviewerForm = () => {
   const { t } = useTranslation('grbReview');
+
+  const { showMessageOnNextPage } = useMessage();
 
   const history = useHistory();
 
@@ -86,7 +90,27 @@ const GRBReviewerForm = () => {
         }
       }
     })
-      .then(() => history.push(grbReviewPath))
+      .then(() => {
+        showMessageOnNextPage(
+          <Trans
+            i18nKey="grbReview:form.success"
+            values={{
+              commonName: userAccount.commonName,
+              votingRole: toLower(
+                t<string>(`votingRoles.${values.votingRole}}`)
+              )
+            }}
+            tOptions={{
+              context: values.votingRole
+            }}
+          >
+            Success message
+          </Trans>,
+          { type: 'success' }
+        );
+
+        history.push(grbReviewPath);
+      })
       .catch(() =>
         setError('root', {
           message: t('form.error')
@@ -226,10 +250,8 @@ const GRBReviewerForm = () => {
 
         <Pager
           next={{
-            // type: 'button',
-            // onClick: () => setFocus('userAccount'),
             text: t('form.addReviewer'),
-            disabled: isValid
+            disabled: !isValid
           }}
           taskListUrl={grbReviewPath}
           saveExitText={t('form.returnToRequest')}
