@@ -121,7 +121,7 @@ const IndicatorsContainer = (
 const formatContactLabel = (contact: CedarContactProps) => {
   const { commonName, euaUserId, email } = contact;
   return `${commonName}${euaUserId && `, ${euaUserId}`}${
-    email && ` (${email})`
+    email ? ` (${email})` : ''
   }`;
 };
 
