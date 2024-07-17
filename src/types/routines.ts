@@ -19,8 +19,3 @@ export const clearBusinessCase = createRoutine('CLEAR_BUSINESS_CASE');
 
 // Action routines
 export const postAction = createRoutine<CreateActionPayload>('POST_ACTION');
-
-// File routines
-export const postFileUploadURL = createRoutine('POST_FILE_UPLOAD_URL');
-export const putFileS3 = createRoutine('PUT_FILE_S3');
-export const getFileS3 = createRoutine('GET_FILE_S3');

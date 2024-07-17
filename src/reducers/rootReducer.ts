@@ -5,7 +5,6 @@ import systemIntakesReducer from 'reducers/systemIntakesReducer';
 
 import authReducer from './authReducer';
 import businessCaseReducer from './businessCaseReducer';
-import fileReducer from './fileReducer';
 import systemIntakeReducer from './systemIntakeReducer';
 
 const rootReducer = combineReducers({
@@ -13,8 +12,7 @@ const rootReducer = combineReducers({
   systemIntakes: systemIntakesReducer,
   businessCase: businessCaseReducer,
   action: actionReducer,
-  auth: authReducer,
-  files: fileReducer
+  auth: authReducer
 });
 
 export default rootReducer;

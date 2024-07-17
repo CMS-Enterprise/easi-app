@@ -18,6 +18,7 @@ function* getSystemIntakes(
   const { payload } = action;
   const status = payload && payload.status;
   try {
+    console.info('hello!');
     yield put(fetchSystemIntakes.request());
     const response = yield call(getSystemIntakesRequest, status);
     yield put(fetchSystemIntakes.success(response.data));
