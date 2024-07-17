@@ -1,23 +1,26 @@
 import React, { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
-import { ButtonGroup } from '@trussworks/react-uswds';
+import { useHistory, useLocation } from 'react-router-dom';
+import { Button, ButtonGroup } from '@trussworks/react-uswds';
 
 import UswdsReactLink from 'components/LinkWrapper';
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import { SystemIntakeGRBReviewer } from 'queries/types/SystemIntakeGRBReviewer';
+import { SystemIntakeState } from 'types/graphql-global-types';
 
 import IsGrbViewContext from '../IsGrbViewContext';
 
 type GRBReviewProps = {
   id: string;
+  state: SystemIntakeState;
   grbReviewers: SystemIntakeGRBReviewer[];
 };
 
-const GRBReview = ({ id, grbReviewers }: GRBReviewProps) => {
+const GRBReview = ({ id, state, grbReviewers }: GRBReviewProps) => {
   const { t } = useTranslation('grbReview');
   const { pathname } = useLocation();
+  const history = useHistory();
 
   const isGrbView = useContext(IsGrbViewContext);
 
@@ -78,11 +81,35 @@ const GRBReview = ({ id, grbReviewers }: GRBReviewProps) => {
         </div>
       ) : (
         // Add GRB reviewer button
-        <UswdsReactLink className="usa-button" to={`${pathname}/add`}>
-          {t(
-            grbReviewers.length > 0 ? 'addAnotherGrbReviewer' : 'addGrbReviewer'
+        <div className="desktop:display-flex flex-align-center">
+          <Button
+            type="button"
+            onClick={() => history.push(`${pathname}/add`)}
+            disabled={state === SystemIntakeState.CLOSED}
+          >
+            {t(
+              grbReviewers.length > 0
+                ? 'addAnotherGrbReviewer'
+                : 'addGrbReviewer'
+            )}
+          </Button>
+          {state === SystemIntakeState.CLOSED && (
+            <p className="desktop:margin-y-0 desktop:margin-left-1">
+              <Trans
+                i18nKey="grbReview:closedRequest"
+                components={{
+                  a: (
+                    <UswdsReactLink
+                      to={`/governance-review-team/${id}/resolutions/re-open-request`}
+                    >
+                      re-open
+                    </UswdsReactLink>
+                  )
+                }}
+              />
+            </p>
           )}
-        </UswdsReactLink>
+        </div>
       )}
 
       {/* TODO EASI-4350: add participants table */}

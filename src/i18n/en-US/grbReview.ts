@@ -47,6 +47,8 @@ export default {
   viewOtherDocuments: 'View other supporting documents',
   addGrbReviewer: 'Add a GRB reviewer',
   addAnotherGrbReviewer: 'Add another GRB reviewer',
+  closedRequest:
+    'This request is closed. Please <a>re-open</a> it before adding additional reviewers',
   form: {
     title: 'Add a GRB reviewer',
     description:

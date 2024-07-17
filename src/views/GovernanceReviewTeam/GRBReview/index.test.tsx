@@ -13,7 +13,7 @@ describe('GRB review tab', () => {
     render(
       <MemoryRouter>
         <IsGrbViewContext.Provider value>
-          <GRBReview id={systemIntake.id} grbReviewers={[]} />
+          <GRBReview {...systemIntake} grbReviewers={[]} />
         </IsGrbViewContext.Provider>
       </MemoryRouter>
     );
@@ -27,7 +27,7 @@ describe('GRB review tab', () => {
     render(
       <MemoryRouter>
         <IsGrbViewContext.Provider value={false}>
-          <GRBReview id={systemIntake.id} grbReviewers={[]} />
+          <GRBReview {...systemIntake} grbReviewers={[]} />
         </IsGrbViewContext.Provider>
       </MemoryRouter>
     );
