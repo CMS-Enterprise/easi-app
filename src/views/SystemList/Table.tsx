@@ -120,7 +120,8 @@ export const Table = ({
     }
   }, [systemTableType, systems, mySystems]);
 
-  const columns = useMemo<Column<CedarSystem>[]>(() => {
+  // const columns = useMemo<Column<CedarSystem>[]>(() => {
+  const columns = useMemo<Column<any>[]>(() => {
     const isBookmarked = (cedarSystemId: string): boolean =>
       !!systems.find(system => system.id === cedarSystemId)?.isBookmarked;
 
@@ -193,6 +194,11 @@ export const Table = ({
             )?.acronym || row.original.businessOwnerOrg}
           </p>
         )
+      },
+      {
+        Header: 'ATO Status',
+        // id: 'atoExpirationDate'
+        accessor: 'atoExpirationDate'
       }
       /*
       {
@@ -216,10 +222,10 @@ export const Table = ({
   }, [t, systems, systemTableType, createMutate, deleteMutate]);
 
   // Remove bookmark column if showing My systems table
-  if (isMySystems) {
-    columns.splice(0, 1);
-    columns.pop(); // remove component if isMySystems
-  }
+  // if (isMySystems) {
+  //   columns.splice(0, 1);
+  //   columns.pop(); // remove component if isMySystems
+  // }
 
   const {
     getTableProps,
