@@ -27,7 +27,7 @@ export const grbReviewerRolesTranslation: Record<
   PROGRAM_INTEGRITY_BDG_CHAIR: 'Program Integrity BDG Chair',
   QIO_REP: 'QIO Rep',
   SUBJECT_MATTER_EXPERT: 'Subject Matter Expert (SME)',
-  OTHER: 'OTHER'
+  OTHER: 'Other'
 };
 
 export default {
@@ -71,6 +71,7 @@ export default {
       'Select the role that this reviewer has on the GRB, such as the BDG that they represent.',
     submit_add: 'Add reviewer',
     submit_edit: 'Save changes',
+    removeGrbReviewer: 'Remove GRB reviewer',
     infoAlert:
       'This individual will be able to see information about this IT Governance request within EASi. Please make sure this individual should be able to access this information before you proceed. They will not be able to take any actions on the request or see Admin notes.',
     error:
@@ -81,5 +82,15 @@ export default {
       'You added <strong>{{commonName}}</strong> as a <strong>{{votingRole}} member</strong> for this GRB review.'
   },
   votingRoles: grbReviewerVotingRolesTranslation,
-  reviewerRoles: grbReviewerRolesTranslation
+  reviewerRoles: grbReviewerRolesTranslation,
+  removeSuccess:
+    'You removed <strong>{{commonName}}</strong> as a GRB reviewer.',
+  removeError:
+    'There was an issue removing this GRB reviewer. Please try again, and if the error persists, try again at a later date.',
+  removeModal: {
+    title: 'Remove {{commonName}} as a GRB reviewer?',
+    text:
+      'Removing this reviewer will remove their access to documentation about this request. You may add them again at a later date if necessary.',
+    remove: 'Remove reviewer'
+  }
 };

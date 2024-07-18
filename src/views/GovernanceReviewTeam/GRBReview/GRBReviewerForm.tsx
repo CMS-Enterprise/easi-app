@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client';
 import { ErrorMessage } from '@hookform/error-message';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  Button,
   Dropdown,
   Form,
   FormGroup,
@@ -56,7 +57,11 @@ type GRBReviewerFormFields = {
   grbRole: SystemIntakeGRBReviewerRole;
 };
 
-const GRBReviewerForm = () => {
+type GRBReviewerFormProps = {
+  setReviewerToRemove: (reviewer: SystemIntakeGRBReviewer) => void;
+};
+
+const GRBReviewerForm = ({ setReviewerToRemove }: GRBReviewerFormProps) => {
   const { t } = useTranslation('grbReview');
 
   const { showMessageOnNextPage } = useMessage();
@@ -283,9 +288,22 @@ const GRBReviewerForm = () => {
           </Dropdown>
         </FormGroup>
 
-        <Alert type="info" slim className="margin-top-8">
-          {t('form.infoAlert')}
-        </Alert>
+        {activeReviewer && (
+          <Button
+            type="button"
+            onClick={() => setReviewerToRemove(activeReviewer)}
+            className="text-error margin-bottom-4"
+            unstyled
+          >
+            {t('form.removeGrbReviewer')}
+          </Button>
+        )}
+
+        {action === 'add' && (
+          <Alert type="info" slim className="margin-top-8">
+            {t('form.infoAlert')}
+          </Alert>
+        )}
 
         <Pager
           next={{

@@ -22,7 +22,6 @@ import { clearBusinessCase, fetchBusinessCase } from 'types/routines';
 import AdditionalInformation from 'views/AdditionalInformation';
 import NotFound from 'views/NotFound';
 
-import GRBReviewerForm from './GRBReview/GRBReviewerForm';
 import AccordionNavigation from './AccordionNavigation';
 import Actions from './Actions';
 import BusinessCaseReview from './BusinessCaseReview';
@@ -229,21 +228,13 @@ const RequestOverview = ({ grbReviewers }: RequestOverviewProps) => {
 
                 {flags?.grbReviewTab && (
                   <Route
-                    path={`/:reviewerType(${reviewerType})/:systemId/grb-review/:action(add|edit)`}
-                    render={() => <GRBReviewerForm />}
-                  />
-                )}
-
-                {flags?.grbReviewTab && (
-                  <Route
-                    path={`/${reviewerType}/:systemId/grb-review`}
+                    path={`/:reviewerType(${reviewerType})/:systemId/grb-review/:action(add|edit)?`}
                     render={() => (
                       <GRBReview
                         {...systemIntake}
                         grbReviewers={grbReviewers}
                       />
                     )}
-                    exact
                   />
                 )}
 
