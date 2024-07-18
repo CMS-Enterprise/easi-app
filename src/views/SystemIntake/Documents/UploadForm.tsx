@@ -121,7 +121,7 @@ const UploadForm = () => {
           <Controller
             name="fileData"
             control={control}
-            // eslint-disable-next-line no-shadow
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             render={({ field, fieldState: { error } }) => {
               return (
                 <FormGroup error={!!error} className="margin-top-5">
@@ -154,7 +154,7 @@ const UploadForm = () => {
           <Controller
             name="documentType"
             control={control}
-            // eslint-disable-next-line no-shadow
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             render={({ field, fieldState: { error } }) => (
               <FormGroup error={!!error}>
                 <Fieldset
@@ -192,7 +192,7 @@ const UploadForm = () => {
               <Controller
                 name="otherTypeDescription"
                 control={control}
-                // eslint-disable-next-line no-shadow
+                // eslint-disable-next-line @typescript-eslint/no-shadow
                 render={({ field, fieldState: { error } }) => (
                   <FormGroup
                     className="margin-top-1 margin-left-4"

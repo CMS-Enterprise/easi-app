@@ -71,7 +71,6 @@ export type SubpageKey =
  * So far it is certain team members and points of contact.
  * This is a borrowed set from `API/role/type/alfabet`.
  */
-// eslint-disable-next-line no-shadow
 export enum RoleTypeName {
   API_CONTACT = 'API Contact',
   BUSINESS_OWNER = 'Business Owner',
