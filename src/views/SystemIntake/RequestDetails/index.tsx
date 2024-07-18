@@ -222,7 +222,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
           />
         </FieldGroup>
 
-        <FieldGroup scrollElement="businessNeed" error={!!errors.requestName}>
+        <FieldGroup scrollElement="businessNeed" error={!!errors.businessNeed}>
           <Label htmlFor="businessNeed">
             {t('requestDetails.businessNeed')}
           </Label>
@@ -245,7 +245,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
 
         <FieldGroup
           scrollElement="businessSolution"
-          error={!!errors.requestName}
+          error={!!errors.businessSolution}
         >
           <Label htmlFor="businessSolution">
             {t('requestDetails.businessSolution')}
