@@ -3,9 +3,6 @@ import { createRoutine } from 'redux-saga-routines';
 import { CreateActionPayload } from 'types/action';
 
 // SystemIntake routines
-export const fetchSystemIntake = createRoutine('FETCH_SYSTEM_INTAKE');
-export const saveSystemIntake = createRoutine('PUT_SYSTEM_INTAKE');
-export const clearSystemIntake = createRoutine('CLEAR_SYSTEM_INTAKE');
 export const archiveSystemIntake = createRoutine('ARCHIVE_SYSTEM_INTAKE');
 
 // BusinessCase routines
