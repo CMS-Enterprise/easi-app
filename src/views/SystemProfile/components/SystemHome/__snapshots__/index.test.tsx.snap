@@ -158,7 +158,7 @@ exports[`SystemHome subpage for System Profile > matches snapshot 1`] = `
                 >
                   <a
                     class="usa-link link-header"
-                    href="/systems/000-100-0/ato"
+                    href="/systems/000-100-0/ato-and-security"
                   >
                     View ATO information
                     <span

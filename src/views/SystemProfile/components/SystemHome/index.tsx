@@ -147,7 +147,7 @@ const SystemHome = ({ system }: SystemProfileSubviewProps) => {
                 <div className="margin-bottom-2">
                   <UswdsReactLink
                     className="link-header"
-                    to={`/systems/${system.id}/ato`}
+                    to={`/systems/${system.id}/ato-and-security`}
                   >
                     {t('singleSystem.ato.viewATOInfo')}
                     <span aria-hidden>&nbsp;</span>
