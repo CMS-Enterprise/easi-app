@@ -39,3 +39,10 @@ type TRBRequestAttendee struct {
 	Component    *string     `json:"component" db:"component"`
 	Role         *PersonRole `json:"role" db:"role"`
 }
+
+func (a TRBRequestAttendee) GetMappingKey() uuid.UUID {
+	return a.TRBRequestID
+}
+func (a TRBRequestAttendee) GetMappingVal() *TRBRequestAttendee {
+	return &a
+}

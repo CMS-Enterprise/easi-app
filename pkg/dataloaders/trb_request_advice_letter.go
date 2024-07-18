@@ -22,7 +22,7 @@ func (d *dataReader) batchTRBRequestAdviceLettersByTRBRequestIDs(ctx context.Con
 func GetTRBAdviceLetterByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) (*models.TRBAdviceLetter, error) {
 	loaders, ok := loadersFromCTX(ctx)
 	if !ok {
-		return nil, errors.New("unexpected nil loaders in GetTRBRequestContractNumbersByTRBRequestID")
+		return nil, errors.New("unexpected nil loaders in GetTRBAdviceLetterByTRBRequestID")
 	}
 
 	return loaders.TRBRequestAdviceLetter.Load(ctx, trbRequestID)

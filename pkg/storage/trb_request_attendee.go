@@ -7,12 +7,14 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
+	"github.com/cms-enterprise/easi-app/pkg/sqlqueries"
 	"github.com/cms-enterprise/easi-app/pkg/sqlutils"
 )
 
@@ -102,10 +104,32 @@ func (s *Store) UpdateTRBRequestAttendee(ctx context.Context, attendee *models.T
 func (s *Store) GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, trbRequestID uuid.UUID) ([]*models.TRBRequestAttendee, error) {
 	results := []*models.TRBRequestAttendee{}
 
-	err := s.db.Select(&results, `SELECT * FROM trb_request_attendees WHERE trb_request_id=$1`, trbRequestID)
+	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestAttendees.GetByTRBID, args{
+		"trb_request_id": trbRequestID,
+	})
 
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to fetch TRB request attendees", zap.Error(err), zap.String("id", trbRequestID.String()))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TRBRequestAttendee{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+	return results, nil
+}
+
+// GetTRBRequestAttendeesByTRBRequestIDs queries the DB for all the TRB request attendee records
+// matching the given TRB request IDs
+func (s *Store) GetTRBRequestAttendeesByTRBRequestIDs(ctx context.Context, trbRequestIDs []uuid.UUID) ([]*models.TRBRequestAttendee, error) {
+	results := []*models.TRBRequestAttendee{}
+
+	err := namedSelect(ctx, s, &results, sqlqueries.TRBRequestAttendees.GetByTRBIDs, args{
+		"trb_request_ids": pq.Array(trbRequestIDs),
+	})
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to fetch TRB request attendees", zap.Error(err))
 		return nil, &apperrors.QueryError{
 			Err:       err,
 			Model:     models.TRBRequestAttendee{},

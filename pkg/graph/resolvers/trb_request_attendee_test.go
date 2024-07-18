@@ -51,7 +51,7 @@ func (s *ResolverSuite) TestCreateTRBRequestAttendee() {
 	s.NoError(err)
 
 	s.Run("fetches TRB request attendees (default attendee should exist)", func() {
-		fetched, err := GetTRBRequestAttendeesByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		fetched, err := GetTRBRequestAttendeesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.True(len(fetched) == 1)
 	})
@@ -91,7 +91,7 @@ func (s *ResolverSuite) TestCreateTRBRequestAttendee() {
 	})
 
 	s.Run("fetches TRB request attendees", func() {
-		fetched, err := GetTRBRequestAttendeesByTRBRequestID(ctx, s.testConfigs.Store, trbRequest.ID)
+		fetched, err := GetTRBRequestAttendeesByTRBRequestID(s.ctxWithNewDataloaders(), trbRequest.ID)
 		s.NoError(err)
 		s.True(len(fetched) == 2) // Default attendee, plus the one we created in the previous test!
 	})

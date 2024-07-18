@@ -7,6 +7,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/dataloaders"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
@@ -107,8 +108,8 @@ func DeleteTRBRequestAttendee(ctx context.Context, store *storage.Store, id uuid
 }
 
 // GetTRBRequestAttendeesByTRBRequestID retrieves a list of attendees associated with a TRB request
-func GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, store *storage.Store, id uuid.UUID) ([]*models.TRBRequestAttendee, error) {
-	attendees, err := store.GetTRBRequestAttendeesByTRBRequestID(ctx, id)
+func GetTRBRequestAttendeesByTRBRequestID(ctx context.Context, id uuid.UUID) ([]*models.TRBRequestAttendee, error) {
+	attendees, err := dataloaders.GetTRBAttendeesByTRBRequestID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

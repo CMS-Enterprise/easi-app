@@ -2015,7 +2015,7 @@ func (r *tRBRequestResolver) Status(ctx context.Context, obj *models.TRBRequest)
 
 // Attendees is the resolver for the attendees field.
 func (r *tRBRequestResolver) Attendees(ctx context.Context, obj *models.TRBRequest) ([]*models.TRBRequestAttendee, error) {
-	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, r.store, obj.ID)
+	return resolvers.GetTRBRequestAttendeesByTRBRequestID(ctx, obj.ID)
 }
 
 // Feedback is the resolver for the feedback field.
