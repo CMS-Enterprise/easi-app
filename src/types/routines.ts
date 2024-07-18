@@ -2,9 +2,6 @@ import { createRoutine } from 'redux-saga-routines';
 
 import { CreateActionPayload } from 'types/action';
 
-// SystemIntakes routines
-export const fetchSystemIntakes = createRoutine('FETCH_SYSTEM_INTAKES');
-
 // SystemIntake routines
 export const fetchSystemIntake = createRoutine('FETCH_SYSTEM_INTAKE');
 export const saveSystemIntake = createRoutine('PUT_SYSTEM_INTAKE');
