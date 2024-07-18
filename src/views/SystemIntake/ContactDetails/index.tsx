@@ -225,13 +225,16 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   };
 
   /** Update contacts and system intake form */
-  const submit = async (callback?: () => void, validate?: boolean) => {
-    if (!isDirty) return callback?.();
+  const submit = async (
+    callback: () => void = () => {},
+    validate: boolean = false
+  ) => {
+    if (!isDirty) return callback();
 
     // Update intake
     const result = await updateSystemIntake();
 
-    if (!result?.errors) return callback?.();
+    if (!result?.errors) return callback();
 
     // If validating form, show error on server error
     if (validate) {
@@ -241,7 +244,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     }
 
     // If skipping errors, return callback
-    return callback?.();
+    return callback();
   };
 
   const requester = watch('requester');

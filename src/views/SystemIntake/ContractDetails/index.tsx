@@ -195,13 +195,16 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     });
   }, [watch, hasContract, id, mutate]);
 
-  const submit = async (callback?: () => void, validate?: boolean) => {
-    if (!isDirty) callback?.();
+  const submit = async (
+    callback: () => void = () => {},
+    validate: boolean = false
+  ) => {
+    if (!isDirty) callback();
 
     // Update intake
     const result = await updateSystemIntake();
 
-    if (!result?.errors) return callback?.();
+    if (!result?.errors) return callback();
 
     // If validating form, show error on server error
     if (validate) {
@@ -211,7 +214,7 @@ const ContractDetails = ({ systemIntake }: ContractDetailsProps) => {
     }
 
     // If skipping errors, return callback
-    return callback?.();
+    return callback();
   };
 
   const hasErrors = Object.keys(errors).length > 0;

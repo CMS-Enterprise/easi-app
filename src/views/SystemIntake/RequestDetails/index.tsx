@@ -102,8 +102,11 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     ]
   });
 
-  const submit = async (callback?: () => void, validate?: boolean) => {
-    if (!isDirty) return callback?.();
+  const submit = async (
+    callback: () => void = () => {},
+    validate: boolean = false
+  ) => {
+    if (!isDirty) return callback();
 
     const values = watch();
 
@@ -113,7 +116,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
       }
     });
 
-    if (!result?.errors) return callback?.();
+    if (!result?.errors) return callback();
 
     // If validating form, show error on server error
     if (validate) {
@@ -123,7 +126,7 @@ const RequestDetails = ({ systemIntake }: RequestDetailsProps) => {
     }
 
     // If skipping errors, return callback
-    return callback?.();
+    return callback();
   };
 
   const saveExitLink = (() => {
