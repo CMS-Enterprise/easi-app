@@ -43,6 +43,13 @@ type TRBRequestAttendee struct {
 func (a TRBRequestAttendee) GetMappingKey() uuid.UUID {
 	return a.TRBRequestID
 }
+
 func (a TRBRequestAttendee) GetMappingVal() *TRBRequestAttendee {
 	return &a
+}
+
+// TRBAttendeeByTRBAndEUAIDRequest is used by the dataloaders package to help batch attendee requests by EUA+TRB IDs
+type TRBAttendeeByTRBAndEUAIDRequest struct {
+	EUAUserID    string
+	TRBRequestID uuid.UUID
 }

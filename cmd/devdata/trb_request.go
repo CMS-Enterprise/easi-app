@@ -715,7 +715,16 @@ func (s *seederConfig) addTRBRequest(ctx context.Context, rType models.TRBReques
 	if err != nil {
 		return nil, err
 	}
-
+	attendee, err := s.store.GetAttendeeByEUAIDAndTRBID(ctx, trb.CreatedBy, trb.ID)
+	if err != nil {
+		return nil, err
+	}
+	componentStr := "Center for Medicare (CM)"
+	attendee.Component = &componentStr
+	_, err = resolvers.UpdateTRBRequestAttendee(ctx, s.store, attendee)
+	if err != nil {
+		return nil, err
+	}
 	trb.Name = name
 	trb, err = s.store.UpdateTRBRequest(ctx, trb)
 	if err != nil {
