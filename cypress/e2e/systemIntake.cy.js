@@ -1,8 +1,9 @@
 import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
+import { BASIC_USER_PROD } from '../../src/constants/jobCodes';
 
 describe('The System Intake Form', () => {
   beforeEach(() => {
-    cy.localLogin({ name: 'E2E1' });
+    cy.localLogin({ name: 'E2E1', role: BASIC_USER_PROD });
 
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeRequestDetails') {

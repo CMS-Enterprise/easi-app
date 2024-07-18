@@ -221,19 +221,3 @@ func GetOktaAccountInfo(ctx context.Context, _ string) (*OktaAccountInfo, error)
 	err = json.Unmarshal([]byte(jsonDataFromHTTP), &ret)
 	return &ret, err
 }
-
-// GetUserInfoFromOktaLocal is used to simulate okta user information when testing locally
-func GetUserInfoFromOktaLocal(ctx context.Context, username string) (*OktaAccountInfo, error) {
-	_ = ctx
-
-	accountInfo := &OktaAccountInfo{
-		Name:              username + " Doe",
-		Locale:            "en_US",
-		Email:             username + "@local.cms.gov",
-		PreferredUsername: username,
-		GivenName:         username,
-		FamilyName:        "Doe",
-		ZoneInfo:          "America/Los_Angeles",
-	}
-	return accountInfo, nil
-}

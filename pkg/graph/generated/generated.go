@@ -10245,7 +10245,7 @@ A user role associated with a job code
 """
 enum Role {
   """
-  A member of the GRT
+  An admin on the GRT
   """
   EASI_GOVTEAM
 
