@@ -91,7 +91,7 @@ func (s *ResolverSuite) TestTRBRequestAttendee() {
 		s.Equal(component, *updatedAttendee.Component)
 		s.NotNil(updatedAttendee.Role)
 		s.Equal(role, *updatedAttendee.Role)
-		fetchedRequesterComponent, err := GetTRBAttendeeComponent(s.ctxWithNewDataloaders(), store, &s.testConfigs.Principal.EUAID, trbRequest.ID)
+		fetchedRequesterComponent, err := GetTRBAttendeeComponent(s.ctxWithNewDataloaders(), &s.testConfigs.Principal.EUAID, trbRequest.ID)
 		s.NoError(err)
 		s.NotNil(fetchedRequesterComponent)
 		s.Equal(component, *fetchedRequesterComponent)

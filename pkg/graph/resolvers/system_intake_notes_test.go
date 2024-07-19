@@ -16,7 +16,7 @@ func (s *ResolverSuite) TestSystemIntakeNotes() {
 		intake = s.createNewIntake()
 	})
 	s.Run("intake should be noteless", func() {
-		fetchedNotes, err := SystemIntakeNotes(s.ctxWithNewDataloaders(), store, intake)
+		fetchedNotes, err := SystemIntakeNotes(s.ctxWithNewDataloaders(), intake)
 		s.NoError(err)
 		s.Empty(fetchedNotes)
 	})
@@ -42,7 +42,7 @@ func (s *ResolverSuite) TestSystemIntakeNotes() {
 		s.Len(notes, 2)
 	})
 	s.Run("intake should have added notes", func() {
-		fetchedNotes, err := SystemIntakeNotes(s.ctxWithNewDataloaders(), store, intake)
+		fetchedNotes, err := SystemIntakeNotes(s.ctxWithNewDataloaders(), intake)
 		s.NoError(err)
 		s.Len(fetchedNotes, 2)
 		for _, note := range fetchedNotes {
@@ -77,7 +77,7 @@ func (s *ResolverSuite) TestSystemIntakeNotes() {
 		s.Equal(updatedNote.Content.ValueOrEmptyString(), note.Content.ValueOrEmptyString())
 	})
 	s.Run("archived notes shouldn't be fetched", func() {
-		fetchedNotes, err := SystemIntakeNotes(s.ctxWithNewDataloaders(), store, intake)
+		fetchedNotes, err := SystemIntakeNotes(s.ctxWithNewDataloaders(), intake)
 		s.NoError(err)
 		s.Len(fetchedNotes, 1)
 		// note[0] was archived
