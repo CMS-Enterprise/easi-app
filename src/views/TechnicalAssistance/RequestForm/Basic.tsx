@@ -206,9 +206,11 @@ function Basic({
       if (input.hasSolutionInMind === false) {
         input.proposedSolution = null;
       }
-      if (input.whereInProcess !== 'OTHER') {
+
+      if (input?.whereInProcess && input.whereInProcess !== 'OTHER') {
         input.whereInProcessOther = null;
       }
+
       if (input.hasExpectedStartEndDates === false) {
         input.expectedStartDate = null;
         input.expectedEndDate = null;
