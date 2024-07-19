@@ -3,9 +3,18 @@ import { gql } from '@apollo/client';
 import { GovernanceRequestFeedback } from './GetGovernanceRequestFeedbackQuery';
 import { SystemIntakeDocument } from './SystemIntakeDocumentQueries';
 
+export const FundingSource = gql`
+  fragment FundingSource on SystemIntakeFundingSource {
+    id
+    fundingNumber
+    source
+  }
+`;
+
 export const SystemIntake = gql`
   ${SystemIntakeDocument}
   ${GovernanceRequestFeedback}
+  ${FundingSource}
   fragment SystemIntake on SystemIntake {
     id
     adminLead
@@ -67,8 +76,7 @@ export const SystemIntake = gql`
     }
     existingFunding
     fundingSources {
-      source
-      fundingNumber
+      ...FundingSource
     }
     lcid
     lcidIssuedAt

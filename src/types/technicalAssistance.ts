@@ -147,3 +147,41 @@ export interface TrbRecipientFields {
   notifyEuaIds: string[];
   copyTrbMailbox: boolean;
 }
+
+// Funding sources types
+
+/** Funding sources formatted for form */
+export type MultiFundingSource = {
+  fundingNumber: string;
+  sources: string[];
+};
+
+/** Funding sources formatted for form */
+export interface ExistingFundingSource extends MultiFundingSource {
+  initialFundingNumber: string;
+}
+
+/** Add, edit, or delete funding source */
+export type UpdateFundingSources =
+  | {
+      action: 'Add' | 'Delete';
+      data: MultiFundingSource;
+    }
+  | {
+      action: 'Edit';
+      data: ExistingFundingSource;
+    };
+
+/** Update active funding source in form */
+export type UpdateActiveFundingSource = {
+  action: 'Add' | 'Edit' | null;
+  data?: MultiFundingSource;
+};
+
+/** Funding sources object formatted for display */
+export type FormattedFundingSourcesObject = {
+  [number: string]: {
+    fundingNumber: string;
+    sources: string[];
+  };
+};
