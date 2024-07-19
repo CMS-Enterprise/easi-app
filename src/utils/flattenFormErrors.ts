@@ -14,7 +14,7 @@ type FlatErrors<TFieldValues extends FieldValues = FieldValues> = Partial<
 function isFieldError(
   error: FieldError | FieldErrors | Array<FieldErrors>
 ): error is FieldError {
-  return (error as FieldError).message !== undefined;
+  return (error as FieldError)?.message !== undefined;
 }
 
 /** Flattens nested subfield errors */
