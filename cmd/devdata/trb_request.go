@@ -579,12 +579,8 @@ func (s *seederConfig) seedTRBCase20(ctx context.Context) error {
 }
 
 func (s *seederConfig) seedTRBCase21(ctx context.Context) error {
-	closedRequestsToMake, ok := ctx.Value(closedRequestKey).(int)
-	if !ok {
-		panic("no closed request count on ctx")
-	}
 	g, ctx := errgroup.WithContext(ctx)
-	for i := range closedRequestsToMake {
+	for i := range closedRequestCount {
 		caseNum := i + 20 + 1
 		g.Go(func() error {
 			trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom(fmt.Sprintf("Case %d - Closed request", caseNum)).Ptr(), true)

@@ -31,9 +31,7 @@ type seederConfig struct {
 	UserSearchClient usersearch.Client
 }
 
-type closedKeyType string
-
-const closedRequestKey closedKeyType = "CLOSED_REQUEST_COUNT"
+const closedRequestCount int = 10
 
 func main() {
 	config := testhelpers.NewConfig()
@@ -71,10 +69,7 @@ func main() {
 
 	s3Client := upload.NewS3Client(s3Cfg)
 
-	closedRequestsCt := 10 //number of closed intakes/TRBReqs to generate
 	ctx := context.Background()
-	// this is to prevent refactoring the trb function
-	ctx = context.WithValue(ctx, closedRequestKey, closedRequestsCt)
 
 	ctx = mock.CtxWithNewDataloaders(ctx, store)
 	ctx = mock.CtxWithLoggerAndPrincipal(ctx, logger, store, mock.PrincipalUser)
@@ -97,7 +92,7 @@ func main() {
 
 	// generate closed requests
 	g, gCtx := errgroup.WithContext(ctx)
-	for i := range closedRequestsCt {
+	for i := range closedRequestCount {
 		caseNum := i + 1
 		g.Go(func() error {
 			ID := uuid.New()
