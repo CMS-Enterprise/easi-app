@@ -58,7 +58,7 @@ import {
   // fundingSourcesBasicSchema,
   TrbRequestFormBasic
 } from 'validations/trbRequestSchema';
-import FundingSources from 'views/SystemIntake/ContractDetails/FundingSources';
+import FundingSources from 'views/TechnicalAssistance/RequestForm/FundingSources/FundingSources';
 
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
@@ -737,7 +737,7 @@ function Basic({
                 <FundingSources
                   id="trb-funding-sources"
                   initialValues={field.value}
-                  setFieldValue={(fieldName, value) => {
+                  setFieldValue={value => {
                     if (value.delete) {
                       deleteFundingSource(value.delete);
                     } else {

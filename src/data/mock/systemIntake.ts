@@ -429,7 +429,7 @@ export const initialSystemIntakeForm: SystemIntake = {
   },
   contract: {
     __typename: 'SystemIntakeContract',
-    hasContract: '',
+    hasContract: null,
     contractor: '',
     vehicle: '',
     startDate: {

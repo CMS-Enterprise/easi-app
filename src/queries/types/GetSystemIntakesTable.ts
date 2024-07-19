@@ -28,8 +28,9 @@ export interface GetSystemIntakesTable_systemIntakes_isso {
 
 export interface GetSystemIntakesTable_systemIntakes_fundingSources {
   __typename: "SystemIntakeFundingSource";
-  source: string | null;
+  id: UUID;
   fundingNumber: string | null;
+  source: string | null;
 }
 
 export interface GetSystemIntakesTable_systemIntakes_annualSpending {

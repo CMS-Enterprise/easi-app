@@ -7,11 +7,11 @@ import {
   // eslint-disable-next-line camelcase
   SystemIntake_contractNumbers
 } from 'queries/types/SystemIntake';
-import { SystemIntakeStatusAdmin } from 'types/graphql-global-types';
 import {
-  GovernanceCollaborationTeam,
-  SystemIntakeForm
-} from 'types/systemIntake';
+  SystemIntakeCollaboratorInput,
+  SystemIntakeStatusAdmin
+} from 'types/graphql-global-types';
+import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { cleanCSVData } from 'utils/csv';
 import { formatDateLocal, parseAsUTC } from 'utils/date';
@@ -55,7 +55,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     plannedYearOneSpendingITPortion: ''
   },
   contract: {
-    hasContract: '',
+    hasContract: null,
     contractor: '',
     startDate: {
       month: '',
@@ -154,19 +154,14 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
 export const prepareSystemIntakeForApp = (
   systemIntake: any // TODO: Specify type
 ): SystemIntakeForm => {
-  const governanceTeams = () => {
-    const teams: GovernanceCollaborationTeam[] = [];
-    cmsGovernanceTeams.forEach(team => {
-      if (systemIntake[team.collaboratorKey]) {
-        teams.push({
-          collaborator: systemIntake[team.collaboratorKey],
-          name: team.value,
-          key: team.key
-        });
-      }
-    });
-    return teams;
-  };
+  /** Format governance teams */
+  const governanceTeams: SystemIntakeCollaboratorInput[] = cmsGovernanceTeams
+    .filter(team => !!systemIntake[team.collaboratorKey])
+    .map(team => ({
+      collaborator: systemIntake[team.collaboratorKey],
+      name: team.name,
+      key: team.key
+    }));
 
   const contractStartDate = parseAsUTC(systemIntake.contractStartDate);
   const contractEndDate = parseAsUTC(systemIntake.contractEndDate);
@@ -195,8 +190,8 @@ export const prepareSystemIntakeForApp = (
       name: systemIntake.issoName || ''
     },
     governanceTeams: {
-      isPresent: governanceTeams().length !== 0 || null,
-      teams: governanceTeams() || []
+      isPresent: governanceTeams.length !== 0 || null,
+      teams: governanceTeams
     },
     existingFunding: systemIntake.existingFunding,
     fundingSources: systemIntake.fundingSources || [],
@@ -209,7 +204,7 @@ export const prepareSystemIntakeForApp = (
         systemIntake.plannedYearOneSpendingITPortion || ''
     },
     contract: {
-      hasContract: systemIntake.existingContract || '',
+      hasContract: systemIntake.existingContract || null,
       contractor: systemIntake.contractor || '',
       startDate: {
         month: contractStartDate.month
