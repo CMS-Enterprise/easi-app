@@ -47,9 +47,8 @@ repos:
   - repo: https://github.com/golangci/golangci-lint
     rev: v1.59.1
     hooks:
-      - id: golangci-lint
+      - id: golangci-lint-full
         name: Lint go files
-        entry: golangci-lint run --concurrency -1 -v --timeout=10m
 
   - repo: local
     hooks:

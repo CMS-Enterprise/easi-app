@@ -14,13 +14,14 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/cms-enterprise/easi-app/pkg/authentication"
-	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/guregu/null/zero"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
+
+	"github.com/cms-enterprise/easi-app/pkg/authentication"
+	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
 // region    ************************** generated!.gotpl **************************
