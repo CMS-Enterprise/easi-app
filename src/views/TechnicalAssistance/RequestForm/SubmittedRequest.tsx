@@ -16,7 +16,7 @@ import {
   TRBWhereInProcessOption
 } from 'types/graphql-global-types';
 import { formatDateLocal, formatDateUtc } from 'utils/date';
-import { formatFundingSourcesForRender } from 'views/SystemIntake/ContractDetails/useIntakeFundingSources';
+import { formatFundingSourcesForRender } from 'views/TechnicalAssistance/RequestForm/FundingSources/useTrbFundingSources';
 
 import { AttendeesTable } from './AttendeesForm/components';
 import DocumentsTable from './DocumentsTable';

@@ -1,4 +1,5 @@
 import React from 'react';
+import { RefCallBack } from 'react-hook-form';
 import classnames from 'classnames';
 
 type DateInputProps = {
@@ -6,6 +7,7 @@ type DateInputProps = {
   name: string;
   onChange: () => void;
   value: string;
+  inputRef?: RefCallBack;
   error?: boolean;
   className?: string;
 } & JSX.IntrinsicElements['input'];
@@ -15,6 +17,7 @@ const DateInputMonth = ({
   name,
   value,
   onChange,
+  inputRef,
   error,
   className,
   ...props
@@ -42,6 +45,7 @@ const DateInputMonth = ({
         value={value}
         onChange={onChange}
         aria-describedby="DateMonthHelp"
+        ref={inputRef}
         {...props}
       />
     </>
@@ -53,6 +57,7 @@ const DateInputDay = ({
   name,
   value,
   onChange,
+  inputRef,
   error,
   className,
   ...props
@@ -80,6 +85,7 @@ const DateInputDay = ({
         value={value}
         onChange={onChange}
         aria-describedby="DateDayHelp"
+        ref={inputRef}
         {...props}
       />
     </>
@@ -91,6 +97,7 @@ const DateInputYear = ({
   name,
   value,
   onChange,
+  inputRef,
   error,
   className,
   ...props
@@ -119,6 +126,7 @@ const DateInputYear = ({
         value={value}
         onChange={onChange}
         aria-describedby="DateYearHelp"
+        ref={inputRef}
         {...props}
       />
     </>

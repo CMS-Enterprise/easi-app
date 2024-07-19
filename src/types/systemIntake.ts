@@ -1,12 +1,12 @@
+import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
+import SystemIntakeContractStatus from 'constants/enums/SystemIntakeContractStatus';
+import { FundingSource as FundingSourceType } from 'queries/types/FundingSource';
 import { GetSystemIntakeContactsQuery_systemIntakeContacts_systemIntakeContacts as AugmentedSystemIntakeContact } from 'queries/types/GetSystemIntakeContactsQuery';
 
-import { SystemIntakeStatusAdmin } from './graphql-global-types';
-
-export type GovernanceCollaborationTeam = {
-  collaborator: string;
-  name: string;
-  key: string;
-};
+import {
+  SystemIntakeCollaboratorInput,
+  SystemIntakeStatusAdmin
+} from './graphql-global-types';
 
 export type RequestType = 'NEW' | 'MAJOR_CHANGES' | 'RECOMPETE' | 'SHUTDOWN';
 
@@ -39,7 +39,7 @@ export type SystemIntakeForm = {
   };
   governanceTeams: {
     isPresent: boolean | null;
-    teams: GovernanceCollaborationTeam[];
+    teams: SystemIntakeCollaboratorInput[];
   };
   businessNeed: string;
   businessSolution: string;
@@ -65,77 +65,24 @@ export type SystemIntakeForm = {
   hasUiChanges: boolean | null;
 } & ContractDetailsForm;
 
+export type ContactFields = Omit<
+  SystemIntakeContactProps,
+  'role' | 'systemIntakeId'
+>;
+
 export type ContactDetailsForm = {
-  requester: SystemIntakeContactProps;
-  businessOwner: SystemIntakeContactProps;
-  productManager: SystemIntakeContactProps;
-  isso: SystemIntakeContactProps & { isPresent: boolean };
+  requester: ContactFields;
+  businessOwner: ContactFields & { sameAsRequester: boolean };
+  productManager: ContactFields & { sameAsRequester: boolean };
+  isso: ContactFields & { isPresent: boolean };
   governanceTeams: {
-    isPresent: boolean | null;
-    teams:
-      | {
-          collaborator: string;
-          key: string;
-          name: string;
-        }[]
-      | null;
+    isPresent: boolean;
+    teams: CollaboratorFields;
   };
 };
 
-/** Single funding source */
-export type FundingSource = {
-  source: string | null;
-  fundingNumber: string | null;
-};
-
-/** Funding sources formatted for form */
-export type MultiFundingSource = {
-  fundingNumber: string;
-  sources: string[];
-};
-
-/** Funding sources formatted for form */
-export interface ExistingFundingSource extends MultiFundingSource {
-  initialFundingNumber: string;
-}
-
-/** Funding sources object formatted for display */
-export type FormattedFundingSourcesObject = {
-  [number: string]: {
-    fundingNumber: string;
-    sources: string[];
-  };
-};
-
-/** Add, edit, or delete funding source */
-export type UpdateFundingSources =
-  | {
-      action: 'Add' | 'Delete';
-      data: MultiFundingSource;
-    }
-  | {
-      action: 'Edit';
-      data: ExistingFundingSource;
-    };
-
-/** Update active funding source in form */
-export type UpdateActiveFundingSource = {
-  action: 'Add' | 'Edit' | null;
-  data?: MultiFundingSource;
-};
-
-/** useIntakeFundingSources hook return type */
-export type UseIntakeFundingSources = {
-  fundingSources: [
-    fundingSources: FormattedFundingSourcesObject,
-    updateFundingSources: ({ action, data }: UpdateFundingSources) => void
-  ];
-  activeFundingSource: [
-    activeFundingSource: MultiFundingSource,
-    updateActiveFundingSource: (payload: UpdateActiveFundingSource) => void,
-    action: 'Add' | 'Edit' | null
-  ];
-};
+/** Funding source formatted for API */
+export type FundingSource = Omit<FundingSourceType, '__typename'>;
 
 /** Contract details form */
 export type ContractDetailsForm = {
@@ -148,7 +95,7 @@ export type ContractDetailsForm = {
     plannedYearOneSpendingITPortion: string;
   };
   contract: {
-    hasContract: string;
+    hasContract: SystemIntakeContractStatus | null;
     contractor: string;
     startDate: {
       month: string;
@@ -267,3 +214,16 @@ export type SystemIntakeRoleKeys =
   | 'productManager'
   | 'isso'
   | 'requester';
+
+/** System intake governance team field types */
+
+type CmsGovernanceTeams = typeof cmsGovernanceTeams;
+type CmsGovernanceTeam = CmsGovernanceTeams[number];
+
+export type CollaboratorFields = Record<
+  CmsGovernanceTeam['key'],
+  {
+    isPresent: boolean;
+    collaborator: string;
+  }
+>;
