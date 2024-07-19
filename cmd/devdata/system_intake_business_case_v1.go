@@ -4,20 +4,17 @@ import (
 	"context"
 
 	"github.com/guregu/null"
-	"go.uber.org/zap"
 
-	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
-	"github.com/cms-enterprise/easi-app/pkg/appcontext"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 	"github.com/cms-enterprise/easi-app/pkg/storage"
 )
 
-func makeDraftBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake) *models.SystemIntake {
-	return makeBusinessCaseV1(name, logger, store, intake)
+func makeDraftBusinessCaseV1(ctx context.Context, name string, store *storage.Store, intake *models.SystemIntake) *models.SystemIntake {
+	return makeBusinessCaseV1(ctx, name, store, intake)
 }
 
-func makeFinalBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake) *models.SystemIntake {
-	return makeBusinessCaseV1(name, logger, store, intake, func(b *models.BusinessCase) {
+func makeFinalBusinessCaseV1(ctx context.Context, name string, store *storage.Store, intake *models.SystemIntake) *models.SystemIntake {
+	return makeBusinessCaseV1(ctx, name, store, intake, func(b *models.BusinessCase) {
 		b.CurrentSolutionSummary = null.StringFrom("It's gonna cost a lot")
 		b.CMSBenefit = null.StringFrom("Better Medicare")
 		b.PriorityAlignment = null.StringFrom("It's all gonna make sense later")
@@ -54,11 +51,10 @@ func makeFinalBusinessCaseV1(name string, logger *zap.Logger, store *storage.Sto
 }
 
 func submitBusinessCaseV1(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 		intake.DraftBusinessCaseState = models.SIRFSSubmitted
 	}
@@ -72,10 +68,9 @@ func submitBusinessCaseV1(
 	return intake
 }
 
-func makeBusinessCaseV1(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) *models.SystemIntake {
-	ctx := appcontext.WithLogger(context.Background(), logger)
+func makeBusinessCaseV1(ctx context.Context, name string, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) *models.SystemIntake {
 	if intake == nil {
-		intake = makeSystemIntake(name, nil, "USR1", logger, store)
+		intake = makeSystemIntake(ctx, name, nil, "USR1", store)
 	}
 	if intake.Step == models.SystemIntakeStepDRAFTBIZCASE {
 		intake.DraftBusinessCaseState = models.SIRFSInProgress

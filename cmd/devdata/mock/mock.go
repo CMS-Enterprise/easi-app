@@ -38,14 +38,14 @@ func FetchUserInfosMock(ctx context.Context, usernames []string) ([]*models.User
 }
 
 // CtxWithLoggerAndPrincipal makes a context with a mocked logger and principal
-func CtxWithLoggerAndPrincipal(logger *zap.Logger, store *storage.Store, username string) context.Context {
+func CtxWithLoggerAndPrincipal(ctx context.Context, logger *zap.Logger, store *storage.Store, username string) context.Context {
 	//Future Enhancement: Consider adding this to the seederConfig, and also emb
 	if len(username) < 1 {
 		username = PrincipalUser
 	}
 
 	//Future Enhancement: consider passing the context with the seeder, and using the seeder.UserSearchClient to return mocked data instead of needing to initialize a client for each mock call
-	userAccount, err := userhelpers.GetOrCreateUserAccount(context.Background(), store, store, username, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(FetchUserInfoMock))
+	userAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, username, true, userhelpers.GetUserInfoAccountInfoWrapperFunc(FetchUserInfoMock))
 	if err != nil {
 		panic(fmt.Errorf("failed to get or create user account for mock data: %w", err))
 	}
@@ -56,7 +56,7 @@ func CtxWithLoggerAndPrincipal(logger *zap.Logger, store *storage.Store, usernam
 		JobCodeGRT:  true,
 		UserAccount: userAccount,
 	}
-	ctx := appcontext.WithLogger(context.Background(), logger)
+	ctx = appcontext.WithLogger(ctx, logger)
 	ctx = appcontext.WithPrincipal(ctx, princ)
 	return ctx
 }

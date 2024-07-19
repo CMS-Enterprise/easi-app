@@ -1,11 +1,11 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"time"
 
 	"github.com/google/uuid"
-	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
@@ -14,10 +14,10 @@ import (
 )
 
 func makeSystemIntakeAndIssueLCID(
+	ctx context.Context,
 	requestName string,
 	intakeID *uuid.UUID,
 	requesterEUA string,
-	logger *zap.Logger,
 	store *storage.Store,
 	lcidExpirationDate time.Time,
 ) *models.SystemIntake {
@@ -26,20 +26,20 @@ func makeSystemIntakeAndIssueLCID(
 	// business cases require EUA ID to be set in DB constraint
 	if requesterEUA == "" {
 		intake = makeSystemIntakeAndProgressToStep(
+			ctx,
 			requestName,
 			intakeID,
 			requesterEUA,
-			logger,
 			store,
 			models.SystemIntakeStepToProgressToDraftBusinessCase,
 			nil,
 		)
 	} else {
 		intake = makeSystemIntakeAndProgressToStep(
+			ctx,
 			requestName,
 			intakeID,
 			requesterEUA,
-			logger,
 			store,
 			models.SystemIntakeStepToProgressToGrbMeeting,
 			&progressOptions{
@@ -49,7 +49,7 @@ func makeSystemIntakeAndIssueLCID(
 		)
 	}
 	intake = issueLCID(
-		logger,
+		ctx,
 		store,
 		intake,
 		lcidExpirationDate,
@@ -63,13 +63,12 @@ func makeSystemIntakeAndIssueLCID(
 var lcidToIssue = 0
 
 func issueLCID(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	expiresAt time.Time,
 	trbFollowUp models.SystemIntakeTRBFollowUp,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
 
 	scope := models.HTML("scope for this lcid")
 	nextSteps := models.HTML("next steps for this intake")
@@ -100,13 +99,11 @@ func issueLCID(
 }
 
 func updateLCID(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	expiresAt time.Time,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
-
 	scope := models.HTML("scope for this lcid")
 	nextSteps := models.HTML("next steps for this intake")
 	costBaseline := "cost baseline for this request"
@@ -131,14 +128,12 @@ func updateLCID(
 }
 
 func confirmLCID(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	expiresAt time.Time,
 	trbFollowUp models.SystemIntakeTRBFollowUp,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
-
 	scope := models.HTML("scope for this lcid")
 	nextSteps := models.HTML("next steps for this intake")
 	costBaseline := "cost baseline for this request"
@@ -164,12 +159,10 @@ func confirmLCID(
 }
 
 func expireLCID(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
-
 	reason := models.HTML("reason for expiring this LCID")
 	nextSteps := models.HTML("next steps for this intake")
 	additionalInfo := models.HTML("additional info about expiring this LCID")
@@ -191,13 +184,11 @@ func expireLCID(
 }
 
 func retireLCID(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	retiresAt time.Time,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
-
 	reason := models.HTML("reason for retiring this LCID")
 	additionalInfo := models.HTML("additional info about retiring this LCID")
 	adminNote := models.HTML("admin note about retiring this LCID")
@@ -218,13 +209,11 @@ func retireLCID(
 }
 
 func changeLCIDRetireDate(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	retiresAt time.Time,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
-
 	additionalInfo := models.HTML("additional info about retiring this LCID")
 	adminNote := models.HTML("admin note about retiring this LCID")
 
@@ -243,12 +232,10 @@ func changeLCIDRetireDate(
 }
 
 func closeIntake(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
-
 	reason := models.HTML("reason for closing this intake")
 	additionalInfo := models.HTML("additional info about closing this request")
 	adminNote := models.HTML("admin note about closing this intake")
@@ -268,12 +255,10 @@ func closeIntake(
 }
 
 func reopenIntake(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
-
 	reason := models.HTML("reason for reopening this intake")
 	additionalInfo := models.HTML("additional info about reopening this request")
 	adminNote := models.HTML("admin note about reopening this intake")
@@ -293,13 +278,11 @@ func reopenIntake(
 }
 
 func closeIntakeNotApproved(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	trbFollowUp models.SystemIntakeTRBFollowUp,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
-
 	reason := models.HTML("reason for rejecting this intake")
 	nextSteps := models.HTML("next steps for this rejected intake")
 	additionalInfo := models.HTML("additional info about rejecting this request")
@@ -322,12 +305,10 @@ func closeIntakeNotApproved(
 }
 
 func closeIntakeNotITGovRequest(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
-
 	reason := models.HTML("reason for rejecting this intake")
 	additionalInfo := models.HTML("additional info about rejecting this request")
 	adminNote := models.HTML("admin note about rejecting this intake")

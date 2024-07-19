@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go.uber.org/zap"
+	"context"
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
@@ -11,18 +11,13 @@ import (
 )
 
 func createSystemIntakeGRBReviewer(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	euaUserID string,
 	votingRole models.SystemIntakeGRBReviewerVotingRole,
 	grbRole models.SystemIntakeGRBReviewerRole,
 ) {
-	userEUA := intake.EUAUserID.ValueOrZero()
-	if userEUA == "" {
-		userEUA = mock.PrincipalUser
-	}
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, userEUA)
 	_, err := resolvers.CreateSystemIntakeGRBReviewer(
 		ctx,
 		store,

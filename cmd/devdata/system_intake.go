@@ -7,7 +7,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/jmoiron/sqlx"
-	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/graph/resolvers"
@@ -19,43 +18,43 @@ import (
 
 // creates, fills out the initial request form, and submits a system intake
 func makeSystemIntakeAndSubmit(
+	ctx context.Context,
 	requestName string,
 	intakeID *uuid.UUID,
 	requesterEUAID string,
-	logger *zap.Logger,
 	store *storage.Store,
 ) *models.SystemIntake {
-	intake := makeSystemIntake(requestName, intakeID, requesterEUAID, logger, store)
-	return submitSystemIntake(logger, store, intake)
+	intake := makeSystemIntake(ctx, requestName, intakeID, requesterEUAID, store)
+	return submitSystemIntake(ctx, store, intake)
 }
 
 // creates an intake and fills out the initial request form
 func makeSystemIntake(
+	ctx context.Context,
 	requestName string,
 	intakeID *uuid.UUID,
 	requesterEUAID string,
-	logger *zap.Logger,
 	store *storage.Store,
 ) *models.SystemIntake {
 	intake := createSystemIntake(
+		ctx,
 		intakeID,
-		logger,
 		store,
 		requesterEUAID,
 		"Requester Name",
 		models.SystemIntakeRequestTypeNEW,
 	)
-	return fillOutInitialIntake(requestName, logger, store, intake)
+	return fillOutInitialIntake(ctx, requestName, store, intake)
 }
 
 // updates an intake and fills out the initial request form
 func fillOutInitialIntake(
+	ctx context.Context,
 	requestName string,
-	logger *zap.Logger,
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	intake = updateSystemIntakeRequestDetails(logger, store, intake,
+	intake = updateSystemIntakeRequestDetails(ctx, store, intake,
 		requestName,
 		"An intense business need",
 		"with a great business solution",
@@ -64,27 +63,27 @@ func fillOutInitialIntake(
 		"the current stage",
 		true,
 	)
-	updateSystemIntakeContact(logger, store, intake,
+	updateSystemIntakeContact(ctx, store, intake,
 		"USR1",
 		"Center for Medicare",
 		"Requester",
 	)
-	createSystemIntakeContact(logger, store, intake,
+	createSystemIntakeContact(ctx, store, intake,
 		"A11Y",
 		"Center for Medicare",
 		"Business Owner",
 	)
-	createSystemIntakeContact(logger, store, intake,
+	createSystemIntakeContact(ctx, store, intake,
 		"OQYV",
 		"Center for Medicare",
 		"Product Manager",
 	)
-	createSystemIntakeContact(logger, store, intake,
+	createSystemIntakeContact(ctx, store, intake,
 		"GP87",
 		"Center for Medicare",
 		"ISSO",
 	)
-	intake = updateSystemIntakeContactDetails(logger, store, intake,
+	intake = updateSystemIntakeContactDetails(ctx, store, intake,
 		"User One",
 		"Office of the Actuary",
 		"Ally Anderson",
@@ -94,19 +93,14 @@ func fillOutInitialIntake(
 		true,
 		"Leatha Gorczany",
 	)
-	return updateSystemIntakeContractDetails(logger, store, intake)
+	return updateSystemIntakeContractDetails(ctx, store, intake)
 }
 
 func submitSystemIntake(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	userEUA := intake.EUAUserID.ValueOrZero()
-	if userEUA == "" {
-		userEUA = mock.PrincipalUser
-	}
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, userEUA)
 	// until the submit function is refactored out of services, manually submit
 	// NOTE: does not send emails
 	mockSubmitIntake := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
@@ -137,17 +131,15 @@ func submitSystemIntake(
 
 // This is a v2 function that uses the resolver to create the intake
 func createSystemIntake(
+	ctx context.Context,
 	intakeID *uuid.UUID,
-	logger *zap.Logger,
 	store *storage.Store,
 	requesterEUAID string,
 	requesterName string,
 	requestType models.SystemIntakeRequestType,
 ) *models.SystemIntake {
-	ctx := context.Background()
 	var requesterEUAIDPtr *string
 	if requesterEUAID != "" {
-		ctx = mock.CtxWithLoggerAndPrincipal(logger, store, requesterEUAID)
 		requesterEUAIDPtr = &requesterEUAID
 	}
 	// The resolver requires an EUA ID and creates a random intake ID.
@@ -183,7 +175,7 @@ func createSystemIntake(
 
 // This is a v2 function that uses the resolver to fill in an intake's request details
 func updateSystemIntakeRequestDetails(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	requestName string,
@@ -194,7 +186,6 @@ func updateSystemIntakeRequestDetails(
 	cedarSystemID string,
 	hasUIChanges bool,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	input := models.UpdateSystemIntakeRequestDetailsInput{
 		ID:               intake.ID,
 		RequestName:      &requestName,
@@ -216,14 +207,13 @@ func updateSystemIntakeRequestDetails(
 }
 
 func createSystemIntakeContact(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	euaUserID string,
 	component string,
 	role string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	input := models.CreateSystemIntakeContactInput{
 		Component:      component,
 		Role:           role,
@@ -237,14 +227,13 @@ func createSystemIntakeContact(
 }
 
 func updateSystemIntakeContact(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	euaUserID string,
 	component string,
 	role string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	input := models.UpdateSystemIntakeContactInput{
 		Component: component,
 		Role:      role,
@@ -257,13 +246,12 @@ func updateSystemIntakeContact(
 }
 
 func setSystemIntakeRelationNewSystem(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
 	username string,
 	contractNumbers []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, username)
 	input := &models.SetSystemIntakeRelationNewSystemInput{
 		SystemIntakeID:  intakeID,
 		ContractNumbers: contractNumbers,
@@ -283,14 +271,13 @@ func setSystemIntakeRelationNewSystem(
 }
 
 func setSystemIntakeRelationExistingSystem(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
 	username string,
 	contractNumbers []string,
 	cedarSystemIDs []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, username)
 	input := &models.SetSystemIntakeRelationExistingSystemInput{
 		SystemIntakeID:  intakeID,
 		ContractNumbers: contractNumbers,
@@ -319,14 +306,13 @@ func setSystemIntakeRelationExistingSystem(
 }
 
 func setSystemIntakeRelationExistingService(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intakeID uuid.UUID,
 	username string,
 	contractName string,
 	contractNumbers []string,
 ) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, username)
 	input := &models.SetSystemIntakeRelationExistingServiceInput{
 		SystemIntakeID:  intakeID,
 		ContractName:    contractName,
@@ -347,9 +333,7 @@ func setSystemIntakeRelationExistingService(
 	}
 }
 
-func unlinkSystemIntakeRelation(logger *zap.Logger, store *storage.Store, intakeID uuid.UUID, username string) {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, username)
-
+func unlinkSystemIntakeRelation(ctx context.Context, store *storage.Store, intakeID uuid.UUID, username string) {
 	// temp, manually unlink contract numbers
 	// see Note [EASI-4160 Disable Contract Number Linking]
 	if err := sqlutils.WithTransaction(ctx, store, func(tx *sqlx.Tx) error {
@@ -364,7 +348,7 @@ func unlinkSystemIntakeRelation(logger *zap.Logger, store *storage.Store, intake
 }
 
 func updateSystemIntakeContactDetails(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	requesterName string,
@@ -376,7 +360,6 @@ func updateSystemIntakeContactDetails(
 	issoIsPresent bool,
 	issoName string,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	govTeamsPresent := true
 
 	input := models.UpdateSystemIntakeContactDetailsInput{
@@ -423,11 +406,10 @@ func updateSystemIntakeContactDetails(
 }
 
 func updateSystemIntakeContractDetails(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 ) *models.SystemIntake {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	existingFunding := true
 	fundingNumber1 := "123456"
 	fundingNumber2 := "789012"
@@ -485,12 +467,11 @@ func updateSystemIntakeContractDetails(
 }
 
 func createSystemIntakeNote(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	noteContent string,
 ) *models.SystemIntakeNote {
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, mock.PrincipalUser)
 	content := models.HTML(noteContent)
 	input := models.CreateSystemIntakeNoteInput{
 		Content:    content,
@@ -506,7 +487,7 @@ func createSystemIntakeNote(
 
 // Updates the System Intake through the store method directly instead of using the resolver
 func modifySystemIntake(
-	logger *zap.Logger,
+	ctx context.Context,
 	store *storage.Store,
 	intake *models.SystemIntake,
 	cb func(*models.SystemIntake),
@@ -514,7 +495,6 @@ func modifySystemIntake(
 	if intake == nil {
 		panic("must provide intake to edit")
 	}
-	ctx := mock.CtxWithLoggerAndPrincipal(logger, store, intake.EUAUserID.ValueOrZero())
 	cb(intake)
 	intake, err := store.UpdateSystemIntake(ctx, intake)
 	if err != nil {
