@@ -1849,10 +1849,14 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 		return nil, err
 	}
 
+	// if we can't find the user and there was no error (shouldn't happen normally), omit the email
+	// user is a pointer, so we want to avoid a dereference below with this check
 	if user == nil {
-		return nil, nil
+		return requesterWithoutEmail, nil
 	}
+
 	email := user.Email.String()
+
 	return &models.SystemIntakeRequester{
 		Component: obj.Component.Ptr(),
 		Email:     &email,

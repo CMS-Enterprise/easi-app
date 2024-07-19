@@ -13,4 +13,4 @@ SELECT
   deleted_at
 FROM trb_request_documents
 WHERE trb_request_id = ANY(:trb_request_ids)
-AND deleted_at IS NULL
+AND deleted_at IS NULL;
