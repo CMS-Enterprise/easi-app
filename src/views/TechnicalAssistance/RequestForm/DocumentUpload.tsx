@@ -192,7 +192,7 @@ const DocumentUpload = ({
             <Controller
               name="fileData"
               control={control}
-              // eslint-disable-next-line no-shadow
+              // eslint-disable-next-line @typescript-eslint/no-shadow
               render={({ field, fieldState: { error } }) => {
                 return (
                   <FormGroup error={!!error} className="margin-top-5">
@@ -221,7 +221,7 @@ const DocumentUpload = ({
             <Controller
               name="documentType"
               control={control}
-              // eslint-disable-next-line no-shadow
+              // eslint-disable-next-line @typescript-eslint/no-shadow
               render={({ field, fieldState: { error } }) => (
                 <FormGroup error={!!error}>
                   <Fieldset legend={t('documents.upload.whatType')}>
@@ -254,7 +254,7 @@ const DocumentUpload = ({
                 <Controller
                   name="otherTypeDescription"
                   control={control}
-                  // eslint-disable-next-line no-shadow
+                  // eslint-disable-next-line @typescript-eslint/no-shadow
                   render={({ field, fieldState: { error } }) => (
                     <FormGroup className="margin-top-1" error={!!error}>
                       <Label htmlFor={field.name} error={!!error}>

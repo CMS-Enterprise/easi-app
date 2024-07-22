@@ -5,7 +5,7 @@ go 1.22.3
 require (
 	github.com/99designs/gqlgen v0.17.49
 	github.com/alecthomas/jsonschema v0.0.0-20211228220459-151e3c21f49d
-	github.com/aws/aws-sdk-go v1.54.19
+	github.com/aws/aws-sdk-go v1.54.20
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a
 	github.com/go-openapi/errors v0.22.0
 	github.com/go-openapi/runtime v0.28.0
