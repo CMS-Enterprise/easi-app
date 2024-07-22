@@ -9,7 +9,6 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -48,21 +47,16 @@ func (c Client) SendTRBFormSubmissionNotificationToAdmins(ctx context.Context, r
 	subject := fmt.Sprintf("A new TRB Request has been submitted (%v)", requestName)
 	body, err := c.trbRequestFormSubmissionAdminEmailBody(requestID, requestName, requesterName, component)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = c.sender.Send(
+	return c.sender.Send(
 		ctx,
-		[]models.EmailAddress{c.config.TRBEmail},
-		[]models.EmailAddress{},
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses([]models.EmailAddress{c.config.TRBEmail}).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
 }
 
 type requesterEmailParameters struct {
@@ -104,19 +98,14 @@ func (c Client) SendTRBFormSubmissionNotificationToRequester(
 	subject := fmt.Sprintf("Your TRB Request form has been submitted (%v)", requestName)
 	body, err := c.trbRequestFormSubmissionRequesterEmailBody(requestID, requestName)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = c.sender.Send(
+	return c.sender.Send(
 		ctx,
-		[]models.EmailAddress{requesterEmail},
-		[]models.EmailAddress{},
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses([]models.EmailAddress{requesterEmail}).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
 }

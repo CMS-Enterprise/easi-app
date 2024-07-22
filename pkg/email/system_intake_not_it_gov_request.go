@@ -10,7 +10,6 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -65,25 +64,20 @@ func (sie systemIntakeEmails) SendNotITGovRequestNotification(
 	reason *models.HTML,
 	additionalInfo *models.HTML,
 ) error {
-
 	if requestName == "" {
 		requestName = "Draft System Intake"
 	}
 	subject := fmt.Sprintf("%s is not an IT Governance request", requestName)
 	body, err := sie.SystemIntakeNotITGovRequestBody(systemIntakeID, requestName, requesterName, reason, additionalInfo)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = sie.client.sender.Send(
+	return sie.client.sender.Send(
 		ctx,
-		sie.client.listAllRecipients(recipients),
-		nil,
-		subject,
-		body,
+		NewEmail().
+			WithToAddresses(sie.client.listAllRecipients(recipients)).
+			WithSubject(subject).
+			WithBody(body),
 	)
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-	return nil
 }

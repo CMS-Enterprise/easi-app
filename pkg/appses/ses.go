@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cms-enterprise/easi-app/pkg/appcontext"
+	"github.com/cms-enterprise/easi-app/pkg/email"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -37,33 +38,28 @@ func NewSender(config Config) Sender {
 }
 
 // Send sends an email. It will only return an error if there's an error connecting to SES; an invalid address/bounced email will *not* return an error.
-func (s Sender) Send(
-	ctx context.Context,
-	toAddresses []models.EmailAddress,
-	ccAddresses []models.EmailAddress,
-	subject string,
-	body string,
-) error {
+func (s Sender) Send(ctx context.Context, emailData email.Email) error {
 	// Don't send an email if there's no recipients (even if there are ccAddresses)
-	if len(toAddresses) == 0 {
+	if len(emailData.ToAddresses) == 0 {
 		appcontext.ZLogger(ctx).Warn("attempted to send an email with empty toAddresses")
 		return nil
 	}
 
 	input := &ses.SendEmailInput{
 		Destination: &ses.Destination{
-			ToAddresses: models.EmailAddressesToStringPtrs(toAddresses),
-			CcAddresses: models.EmailAddressesToStringPtrs(ccAddresses),
+			ToAddresses:  models.EmailAddressesToStringPtrs(emailData.ToAddresses),
+			CcAddresses:  models.EmailAddressesToStringPtrs(emailData.CcAddresses),
+			BccAddresses: models.EmailAddressesToStringPtrs(emailData.BccAddresses),
 		},
 		Message: &ses.Message{
 			Subject: &ses.Content{
 				Charset: aws.String("UTF-8"),
-				Data:    aws.String(subject),
+				Data:    aws.String(emailData.Subject),
 			},
 			Body: &ses.Body{
 				Html: &ses.Content{
 					Charset: aws.String("UTF-8"),
-					Data:    aws.String(body),
+					Data:    aws.String(emailData.Body),
 				},
 			},
 		},
@@ -73,9 +69,9 @@ func (s Sender) Send(
 	_, err := s.client.SendEmail(input)
 	if err == nil {
 		appcontext.ZLogger(ctx).Info("Sending email with SES",
-			zap.Strings("To", models.EmailAddressesToStrings(toAddresses)),
-			zap.Strings("CC", models.EmailAddressesToStrings(ccAddresses)),
-			zap.String("Subject", subject),
+			zap.Strings("To", models.EmailAddressesToStrings(emailData.ToAddresses)),
+			zap.Strings("CC", models.EmailAddressesToStrings(emailData.CcAddresses)),
+			zap.String("Subject", emailData.Subject),
 		)
 	}
 	return err

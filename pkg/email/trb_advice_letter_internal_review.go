@@ -7,7 +7,6 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cms-enterprise/easi-app/pkg/apperrors"
 	"github.com/cms-enterprise/easi-app/pkg/models"
 )
 
@@ -42,13 +41,14 @@ func (c Client) SendTRBAdviceLetterInternalReviewEmail(ctx context.Context, inpu
 	err := c.templates.trbAdviceLetterInternalReview.Execute(&b, templateParams)
 
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
+		return err
 	}
 
-	err = c.sender.Send(ctx, []models.EmailAddress{c.config.TRBEmail}, nil, subject, b.String())
-	if err != nil {
-		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
-	}
-
-	return nil
+	return c.sender.Send(
+		ctx,
+		NewEmail().
+			WithToAddresses([]models.EmailAddress{c.config.TRBEmail}).
+			WithSubject(subject).
+			WithBody(b.String()),
+	)
 }
