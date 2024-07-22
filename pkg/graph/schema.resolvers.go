@@ -1867,7 +1867,7 @@ func (r *systemIntakeResolver) RequesterComponent(ctx context.Context, obj *mode
 
 // Documents is the resolver for the documents field.
 func (r *systemIntakeResolver) Documents(ctx context.Context, obj *models.SystemIntake) ([]*models.SystemIntakeDocument, error) {
-	return resolvers.GetSystemIntakeDocumentsByRequestID(ctx, r.store, r.s3Client, obj.ID)
+	return resolvers.GetSystemIntakeDocumentsByRequestID(ctx, r.store, obj.ID)
 }
 
 // ItGovTaskStatuses is the resolver for the itGovTaskStatuses field.
@@ -1937,7 +1937,7 @@ func (r *systemIntakeDocumentResolver) UploadedAt(ctx context.Context, obj *mode
 
 // URL is the resolver for the url field.
 func (r *systemIntakeDocumentResolver) URL(ctx context.Context, obj *models.SystemIntakeDocument) (string, error) {
-	return resolvers.GetURLForSystemIntakeDocument(r.s3Client, obj.S3Key)
+	return resolvers.GetURLForSystemIntakeDocument(ctx, r.store, r.s3Client, obj.S3Key)
 }
 
 // VotingRole is the resolver for the votingRole field.

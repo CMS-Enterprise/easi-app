@@ -78,7 +78,9 @@ func devUserContext(ctx context.Context, authHeader string, store *storage.Store
 		JobCodeGRT:      swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM"),
 		JobCodeTRBAdmin: swag.ContainsStrings(config.JobCodes, "EASI_TRB_ADMIN_D"),
 	}
-	userAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, princ.ID(), true, userhelpers.GetOktaAccountInfoWrapperFunction(userhelpers.GetUserInfoFromOktaLocal))
+	localOktaClient := NewOktaAPIClient()
+
+	userAccount, err := userhelpers.GetOrCreateUserAccount(ctx, store, store, princ.ID(), true, userhelpers.GetUserInfoAccountInfoWrapperFunc(localOktaClient.FetchUserInfo))
 	if err != nil {
 		return nil, err
 	}

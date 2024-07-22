@@ -13,7 +13,6 @@ import (
 func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 	ctx := s.testConfigs.Context
 	store := s.testConfigs.Store
-	s3Client := s.testConfigs.S3Client
 
 	// Create a system intake
 	intake, err := store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -23,7 +22,7 @@ func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 	s.NotNil(intake)
 
 	// Check that there are no docs by default
-	docs, err := GetSystemIntakeDocumentsByRequestID(ctx, store, s3Client, intake.ID)
+	docs, err := GetSystemIntakeDocumentsByRequestID(ctx, store, intake.ID)
 	s.NoError(err)
 	s.Len(docs, 0)
 
@@ -34,6 +33,7 @@ func (s *ResolverSuite) TestSystemIntakeDocumentResolvers() {
 		FileName:              "create_and_get.pdf",
 		Bucket:                "bukkit",
 		S3Key:                 uuid.NewString(),
+		UploaderRole:          models.RequesterUploaderRole,
 	}
 	// documentToCreate.CreatedBy will be set based on principal in test config
 
@@ -75,12 +75,7 @@ func createSystemIntakeDocumentSubtest(s *ResolverSuite, systemIntakeID uuid.UUI
 }
 
 func getSystemIntakeDocumentsByRequestIDSubtest(s *ResolverSuite, systemIntakeID uuid.UUID, createdDocument *models.SystemIntakeDocument) {
-	documents, err := GetSystemIntakeDocumentsByRequestID(
-		s.testConfigs.Context,
-		s.testConfigs.Store,
-		s.testConfigs.S3Client,
-		systemIntakeID,
-	)
+	documents, err := GetSystemIntakeDocumentsByRequestID(s.testConfigs.Context, s.testConfigs.Store, systemIntakeID)
 	s.NoError(err)
 	s.Equal(1, len(documents))
 
@@ -96,12 +91,7 @@ func deleteSystemIntakeDocumentSubtest(s *ResolverSuite, createdDocument *models
 	s.NoError(err)
 	checkSystemIntakeDocumentEquality(s, createdDocument, createdDocument.CreatedBy, createdDocument.SystemIntakeRequestID, deletedDocument)
 
-	remainingDocuments, err := GetSystemIntakeDocumentsByRequestID(
-		s.testConfigs.Context,
-		s.testConfigs.Store,
-		s.testConfigs.S3Client,
-		createdDocument.SystemIntakeRequestID,
-	)
+	remainingDocuments, err := GetSystemIntakeDocumentsByRequestID(s.testConfigs.Context, s.testConfigs.Store, createdDocument.SystemIntakeRequestID)
 	s.NoError(err)
 	s.Equal(0, len(remainingDocuments))
 }

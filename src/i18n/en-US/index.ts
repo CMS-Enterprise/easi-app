@@ -18,6 +18,7 @@ import footer from './footer';
 import form from './form';
 import general from './general';
 import governanceOverview from './governanceOverview';
+import grbReview from './grbReview';
 import header from './header';
 import help from './help';
 import home from './home';
@@ -45,6 +46,7 @@ const enUS = {
   general,
   governanceReviewBoard,
   governanceReviewTeam,
+  grbReview,
   sampleBusinessCase,
   governanceOverview,
   header,

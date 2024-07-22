@@ -35,6 +35,11 @@
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": ["error"],
 
+    // Fixes no-shadow rule so that it works with typescript
+    // See issue here: https://github.com/typescript-eslint/typescript-eslint/issues/2733
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error",
+
     // We mostly use functional components anyhow
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/require-default-props.md
     "react/require-default-props": "off",

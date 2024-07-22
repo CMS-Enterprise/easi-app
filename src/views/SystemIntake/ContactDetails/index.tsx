@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, FieldPath, UseFormSetValue } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -39,34 +39,30 @@ import {
   UpdateSystemIntakeContactDetailsVariables
 } from 'queries/types/UpdateSystemIntakeContactDetails';
 import {
-  SystemIntakeCollaboratorInput,
   SystemIntakeFormState,
+  SystemIntakeGovernanceTeamInput,
   SystemIntakeRequestType
 } from 'types/graphql-global-types';
-import { SystemIntakeContactProps } from 'types/systemIntake';
+import {
+  ContactDetailsForm,
+  ContactFields,
+  SystemIntakeContactProps
+} from 'types/systemIntake';
 import flattenFormErrors from 'utils/flattenFormErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import Pager from 'views/TechnicalAssistance/RequestForm/Pager';
 
 import GovernanceTeams from './GovernanceTeams';
+import {
+  formatContactFields,
+  formatGovernanceTeamsInput,
+  formatGovTeamsField
+} from './utils';
 
 import './index.scss';
 
 type ContactDetailsProps = {
   systemIntake: SystemIntake;
-};
-
-type ContactFields = Omit<SystemIntakeContactProps, 'role' | 'systemIntakeId'>;
-
-type ContactDetailsForm = {
-  requester: ContactFields;
-  businessOwner: ContactFields & { sameAsRequester: boolean };
-  productManager: ContactFields & { sameAsRequester: boolean };
-  isso: ContactFields & { isPresent: boolean };
-  governanceTeams: {
-    isPresent: boolean;
-    teams: SystemIntakeCollaboratorInput[] | null;
-  };
 };
 
 type SystemIntakeRoleKeys = keyof Omit<ContactDetailsForm, 'governanceTeams'>;
@@ -78,18 +74,11 @@ const systemIntakeRolesMap: Record<SystemIntakeRoleKeys, string> = {
   isso: 'ISSO'
 };
 
-/** Removes `role` and `systemIntakeId` fields from `SystemIntakeContactProps` type */
-const getContactFields = ({
-  role,
-  systemIntakeId,
-  ...contact
-}: SystemIntakeContactProps): ContactFields => contact;
-
 const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const { t } = useTranslation('intake');
   const history = useHistory();
 
-  const taskListUrl =
+  const saveExitLink =
     systemIntake.requestType === SystemIntakeRequestType.SHUTDOWN
       ? '/'
       : `/governance-task-list/${systemIntake.id}`;
@@ -106,7 +95,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     deleteContact
   } = useSystemIntakeContacts(systemIntake.id);
 
-  const [updateSystemIntake] = useMutation<
+  const [mutate] = useMutation<
     UpdateSystemIntakeContactDetails,
     UpdateSystemIntakeContactDetailsVariables
   >(UpdateSystemIntakeContactDetailsQuery, {
@@ -127,10 +116,8 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const {
     control,
     handleSubmit,
-    partialSubmit,
     setError,
     watch,
-    getValues,
     register,
     setFocus,
     reset,
@@ -186,27 +173,24 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     );
   };
 
-  /** Update contacts and system intake form */
-  const submit = async (values: Partial<ContactDetailsForm>) => {
+  const updateSystemIntake = async () => {
+    const values = watch();
+
+    const { requester, businessOwner, productManager, isso } = values;
+
+    const governanceTeams: SystemIntakeGovernanceTeamInput = {
+      isPresent: values.governanceTeams.isPresent,
+      teams: formatGovernanceTeamsInput(values.governanceTeams.teams)
+    };
+
     // Update contacts
     await Promise.all([
-      setContact('requester', values?.requester),
-      setContact('businessOwner', values?.businessOwner),
-      setContact('productManager', values?.productManager),
+      setContact('requester', requester),
+      setContact('businessOwner', businessOwner),
+      setContact('productManager', productManager),
       // If ISSO is not present, send undefined `values` prop
-      setContact('isso', values?.isso?.isPresent ? values?.isso : undefined)
+      setContact('isso', isso?.isPresent ? isso : undefined)
     ]);
-
-    /** Combines existing form values with (possibly partial) submitted values object */
-    const formValuesObject: ContactDetailsForm = { ...getValues(), ...values };
-
-    const {
-      requester,
-      businessOwner,
-      productManager,
-      isso,
-      governanceTeams
-    } = formValuesObject;
 
     // If ISSO is not present in field values but was previously added, delete contact
     if (!isso?.isPresent && contacts.data.isso.id) {
@@ -214,7 +198,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
     }
 
     // Update system intake
-    return updateSystemIntake({
+    return mutate({
       variables: {
         input: {
           id: systemIntake.id,
@@ -238,6 +222,29 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
         }
       }
     });
+  };
+
+  /** Update contacts and system intake form */
+  const submit = async (
+    callback: () => void = () => {},
+    validate: boolean = false
+  ) => {
+    if (!isDirty) return callback();
+
+    // Update intake
+    const result = await updateSystemIntake();
+
+    if (!result?.errors) return callback();
+
+    // If validating form, show error on server error
+    if (validate) {
+      return setError('root', {
+        message: t('error:encounteredIssueTryAgain')
+      });
+    }
+
+    // If skipping errors, return callback
+    return callback();
   };
 
   const requester = watch('requester');
@@ -267,10 +274,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
   const hasErrors = Object.keys(errors).length > 0;
 
   /** Flattened field errors, excluding any root errors */
-  const fieldErrors = useMemo(
-    () => flattenFormErrors<ContactDetailsForm>(errors),
-    [errors]
-  );
+  const fieldErrors = flattenFormErrors<ContactDetailsForm>(errors);
 
   // Scroll errors into view on submit
   useEffect(() => {
@@ -297,31 +301,26 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       const { data } = contacts;
 
       reset({
-        requester: getContactFields(data.requester),
+        requester: formatContactFields(data.requester),
         businessOwner: {
-          ...getContactFields(data.businessOwner),
+          ...formatContactFields(data.businessOwner),
           sameAsRequester:
             data.businessOwner.euaUserId === data.requester.euaUserId &&
             data.businessOwner.component === data.requester.component
         },
         productManager: {
-          ...getContactFields(data.productManager),
+          ...formatContactFields(data.productManager),
           sameAsRequester:
             data.productManager.euaUserId === data.requester.euaUserId &&
             data.productManager.component === data.requester.component
         },
         isso: {
           isPresent: !!systemIntake.isso.isPresent,
-          ...getContactFields(data.isso)
+          ...formatContactFields(data.isso)
         },
         governanceTeams: {
           isPresent: !!systemIntake.governanceTeams.isPresent,
-          teams:
-            systemIntake.governanceTeams.teams?.map(team => ({
-              collaborator: team.collaborator,
-              name: team.name,
-              key: team.key
-            })) || []
+          teams: formatGovTeamsField(systemIntake.governanceTeams.teams)
         }
       });
     }
@@ -343,6 +342,7 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
           testId="contact-details-errors"
           classNames="margin-top-3"
           heading={t('form:inputError.checkFix')}
+          autoFocus={false}
         >
           {Object.keys(fieldErrors).map(key => {
             return (
@@ -382,17 +382,9 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
       )}
 
       <Form
-        onSubmit={handleSubmit(values => {
-          if (!isDirty) return history.push('request-details');
-
-          return submit(values)
-            .then(() => history.push('request-details'))
-            .catch(() => {
-              setError('root', {
-                message: t('error:encounteredIssueTryAgain')
-              });
-            });
-        })}
+        onSubmit={handleSubmit(() =>
+          submit(() => history.push('request-details'), true)
+        )}
         className="maxw-none tablet:grid-col-6 margin-bottom-7"
       >
         {/* Requester */}
@@ -782,27 +774,13 @@ const ContactDetails = ({ systemIntake }: ContactDetailsProps) => {
             type: 'submit'
           }}
           border={false}
-          taskListUrl={taskListUrl}
-          submit={() =>
-            partialSubmit({
-              update: submit,
-              callback: () => history.push(taskListUrl)
-            })
-          }
+          taskListUrl={saveExitLink}
+          submit={() => submit(() => history.push(saveExitLink))}
           className="margin-top-4"
         />
       </Form>
 
-      <AutoSave
-        values={watch()}
-        onSave={() =>
-          partialSubmit({
-            update: submit,
-            clearErrors: false
-          })
-        }
-        debounceDelay={3000}
-      />
+      <AutoSave values={watch()} onSave={submit} debounceDelay={3000} />
 
       <PageNumber currentPage={1} totalPages={5} />
     </>

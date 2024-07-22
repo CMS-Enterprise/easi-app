@@ -972,7 +972,7 @@ func (e RequestType) MarshalGQL(w io.Writer) {
 type Role string
 
 const (
-	// A member of the GRT
+	// An admin on the GRT
 	RoleEasiGovteam Role = "EASI_GOVTEAM"
 	// An admin on the TRB
 	RoleEasiTrbAdmin Role = "EASI_TRB_ADMIN"
