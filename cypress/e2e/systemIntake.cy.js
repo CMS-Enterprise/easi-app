@@ -1,8 +1,9 @@
 import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
+import { BASIC_USER_PROD } from '../../src/constants/jobCodes';
 
 describe('The System Intake Form', () => {
   beforeEach(() => {
-    cy.localLogin({ name: 'E2E1' });
+    cy.localLogin({ name: 'E2E1', role: BASIC_USER_PROD });
 
     cy.intercept('POST', '/api/graph/query', req => {
       if (req.body.operationName === 'UpdateSystemIntakeRequestDetails') {
@@ -91,32 +92,30 @@ describe('The System Intake Form', () => {
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
-    cy.get('#IntakeForm-CurrentStage')
+    cy.get('#currentStage')
       .select('Just an idea')
       .should('have.value', 'Just an idea');
 
     cy.contains('button', 'Next').click();
 
     // Contract Details
-    cy.get('#IntakeForm-CurrentAnnualSpending')
+    cy.get('#currentAnnualSpending')
       .type('Mock Current Annual Spend')
       .should('have.value', 'Mock Current Annual Spend');
 
-    cy.get('#IntakeForm-CurrentAnnualSpendingITPortion')
+    cy.get('#currentAnnualSpendingITPortion')
       .type('Mock Current Annual Spend IT Portion')
       .should('have.value', 'Mock Current Annual Spend IT Portion');
 
-    cy.get('#IntakeForm-PlannedYearOneAnnualSpending')
+    cy.get('#plannedYearOneSpending')
       .type('Mock Planned First Year Annual Spend')
       .should('have.value', 'Mock Planned First Year Annual Spend');
 
-    cy.get('#IntakeForm-PlannedYearOneAnnualSpendingITPortion')
+    cy.get('#plannedYearOneSpendingITPortion')
       .type('Mock Planned First Year Annual Spend IT Portion')
       .should('have.value', 'Mock Planned First Year Annual Spend IT Portion');
 
-    cy.get('#IntakeForm-ContractNotNeeded')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#contractNotNeeded').check({ force: true }).should('be.checked');
 
     cy.contains('button', 'Next').click();
 
@@ -184,8 +183,8 @@ describe('The System Intake Form', () => {
         .should('be.checked');
 
       cy.get(`#governanceTeam-${team.key}-collaborator`)
-        .type(`${team.value} Collaborator`)
-        .should('have.value', `${team.value} Collaborator`);
+        .type(`${team.name} Collaborator`)
+        .should('have.value', `${team.name} Collaborator`);
     });
 
     cy.contains('button', 'Next').click();
@@ -195,7 +194,7 @@ describe('The System Intake Form', () => {
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
-    cy.get('#IntakeForm-CurrentStage')
+    cy.get('#currentStage')
       .select('Just an idea')
       .should('have.value', 'Just an idea');
 
@@ -209,55 +208,45 @@ describe('The System Intake Form', () => {
       sources: ['Fed Admin', 'Research'],
       restart: true
     });
-    cy.get(`#fundingNumber-${fundingNumber}`);
+    cy.get(`#fundingSource${fundingNumber}`);
 
-    cy.get('#IntakeForm-CurrentAnnualSpending')
+    cy.get('#currentAnnualSpending')
       .type('Mock Current Annual Spend')
       .should('have.value', 'Mock Current Annual Spend');
 
-    cy.get('#IntakeForm-CurrentAnnualSpendingITPortion')
+    cy.get('#currentAnnualSpendingITPortion')
       .type('Mock Current Annual Spend IT Portion')
       .should('have.value', 'Mock Current Annual Spend IT Portion');
 
-    cy.get('#IntakeForm-PlannedYearOneAnnualSpending')
+    cy.get('#plannedYearOneSpending')
       .type('Mock Planned First Year Annual Spend')
       .should('have.value', 'Mock Planned First Year Annual Spend');
 
-    cy.get('#IntakeForm-PlannedYearOneAnnualSpendingITPortion')
+    cy.get('#plannedYearOneSpendingITPortion')
       .type('Mock Planned First Year Annual Spend IT Portion')
       .should('have.value', 'Mock Planned First Year Annual Spend IT Portion');
 
-    cy.get('#IntakeForm-ContractHaveContract')
-      .check({ force: true })
-      .should('be.checked');
+    cy.get('#contractHaveContract').check({ force: true }).should('be.checked');
 
-    cy.get('#IntakeForm-Contractor')
+    cy.get('#contractor')
       .type('TrussWorks, Inc.')
       .should('have.value', 'TrussWorks, Inc.');
 
-    cy.get('#IntakeForm-Number')
+    cy.get('#contractNumbers')
       .type('123456-7890')
       .should('have.value', '123456-7890');
 
-    cy.get('#IntakeForm-ContractStartMonth')
-      .type('1')
-      .should('have.value', '1');
+    cy.get('#contractStartMonth').type('1').should('have.value', '1');
 
-    cy.get('#IntakeForm-ContractStartDay').type('2').should('have.value', '2');
+    cy.get('#contractStartDay').type('2').should('have.value', '2');
 
-    cy.get('#IntakeForm-ContractStartYear')
-      .type('2020')
-      .should('have.value', '2020');
+    cy.get('#contractStartYear').type('2020').should('have.value', '2020');
 
-    cy.get('#IntakeForm-ContractEndMonth')
-      .type('12')
-      .should('have.value', '12');
+    cy.get('#contractEndMonth').type('12').should('have.value', '12');
 
-    cy.get('#IntakeForm-ContractEndDay').type('29').should('have.value', '29');
+    cy.get('#contractEndDay').type('29').should('have.value', '29');
 
-    cy.get('#IntakeForm-ContractEndYear')
-      .type('2021')
-      .should('have.value', '2021');
+    cy.get('#contractEndYear').type('2021').should('have.value', '2021');
 
     cy.contains('button', 'Next').click();
 
@@ -413,7 +402,7 @@ describe('The System Intake Form', () => {
       'Which existing funding sources will fund this project?'
     )
       .siblings('dd')
-      .get(`li#fundingNumber-${fundingNumber}`);
+      .get(`li#fundingSource${fundingNumber}`);
 
     cy.get('#systemIntakeDocuments').contains('td', 'test.pdf');
   });
@@ -431,7 +420,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('h1', 'Request details');
 
-    cy.get('#IntakeForm-ContractName')
+    cy.get('#requestName')
       .type('Test Request Name')
       .should('have.value', 'Test Request Name');
 

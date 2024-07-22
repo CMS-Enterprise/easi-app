@@ -14,7 +14,7 @@ type FlatErrors<TFieldValues extends FieldValues = FieldValues> = Partial<
 function isFieldError(
   error: FieldError | FieldErrors | Array<FieldErrors>
 ): error is FieldError {
-  return (error as FieldError).message !== undefined;
+  return (error as FieldError)?.message !== undefined;
 }
 
 /** Flattens nested subfield errors */
@@ -23,6 +23,8 @@ const flattenSubfieldErrors = (
   errors: FieldErrors | Array<FieldErrors>,
   flatErrors: FlatErrors = {}
 ): FlatErrors => {
+  if (!errors) return flatErrors;
+
   // Flatten array field type errors
   if (Array.isArray(errors)) {
     return flattenArrayFieldErrors(key, errors, flatErrors);
@@ -34,12 +36,17 @@ const flattenSubfieldErrors = (
   ][];
 
   return entries.reduce<FlatErrors>((acc, [errorKey, error]) => {
+    if (!error) return flatErrors;
+
     // Flatten array field type errors
     if (Array.isArray(error)) {
       return flattenArrayFieldErrors(`${key}.${errorKey}`, error, flatErrors);
     }
 
-    if (!isFieldError(error)) return acc;
+    /** Flatten any additional subfields */
+    if (!isFieldError(error)) {
+      return flattenSubfieldErrors(`${key}.${errorKey}`, error, flatErrors);
+    }
 
     return flattenFieldError(`${key}.${errorKey}`, error, acc);
   }, flatErrors);

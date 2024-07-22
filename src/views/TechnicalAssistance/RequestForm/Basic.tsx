@@ -58,7 +58,7 @@ import {
   // fundingSourcesBasicSchema,
   TrbRequestFormBasic
 } from 'validations/trbRequestSchema';
-import FundingSources from 'views/SystemIntake/ContractDetails/FundingSources';
+import FundingSources from 'views/TechnicalAssistance/RequestForm/FundingSources/FundingSources';
 
 import Pager from './Pager';
 import { FormStepComponentProps, StepSubmit } from '.';
@@ -206,9 +206,11 @@ function Basic({
       if (input.hasSolutionInMind === false) {
         input.proposedSolution = null;
       }
-      if (input.whereInProcess !== 'OTHER') {
+
+      if (input?.whereInProcess && input.whereInProcess !== 'OTHER') {
         input.whereInProcessOther = null;
       }
+
       if (input.hasExpectedStartEndDates === false) {
         input.expectedStartDate = null;
         input.expectedEndDate = null;
@@ -737,7 +739,7 @@ function Basic({
                 <FundingSources
                   id="trb-funding-sources"
                   initialValues={field.value}
-                  setFieldValue={(fieldName, value) => {
+                  setFieldValue={value => {
                     if (value.delete) {
                       deleteFundingSource(value.delete);
                     } else {
