@@ -622,6 +622,8 @@ export const getTrbLeadOptionsQuery: MockedQuery<GetTrbLeadOptionsQuery> = {
     variables: {}
   },
   result: {
+    // readonly __typename is not recognized by ts
+    // @ts-ignore
     data: {
       trbLeadOptions
     }
