@@ -109,7 +109,7 @@ func (c Client) SendLCIDExpirationAlertEmail(
 		return err
 	}
 
-	// TODO: TNo CC b/c we set the ShouldNotifyITGovernance bool as true in recipients.
+	// TODO: No CC b/c we set the ShouldNotifyITGovernance bool as true in recipients.
 	//       This however doesn't cc the governance mailbox but sends directly to it, we should maybe allow for specification between cc'ing and sending directly?
 	return c.sender.Send(
 		ctx,
