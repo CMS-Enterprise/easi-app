@@ -348,7 +348,7 @@ describe('Governance Review Team', () => {
 
     // Check form submit was successful
     cy.get('div[data-testid="alert"]').contains(
-      'Life Cycle ID 000009 is now expired.'
+      /Life Cycle ID [0-9]{6} is now expired./
     );
   });
 

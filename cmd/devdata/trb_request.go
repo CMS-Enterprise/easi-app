@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"time"
@@ -11,6 +12,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"github.com/lib/pq"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/cms-enterprise/easi-app/cmd/devdata/mock"
 	"github.com/cms-enterprise/easi-app/pkg/easiencoding"
@@ -44,6 +46,7 @@ func (s *seederConfig) seedTRBRequests(ctx context.Context) error {
 		s.seedTRBCase18,
 		s.seedTRBCase19,
 		s.seedTRBCase20,
+		s.seedTRBCase21, //closed requests loop
 	}
 
 	for _, seedFunc := range cases {
@@ -570,6 +573,124 @@ func (s *seederConfig) seedTRBCase20(ctx context.Context) error {
 	}
 	_, err = s.addTRBExistingServiceRelation(ctx, trbRequest.ID, "Test Contract Name", []string{"00007", "67890"})
 	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *seederConfig) seedTRBCase21(ctx context.Context) error {
+	g, ctx := errgroup.WithContext(ctx)
+	for i := range closedRequestCount {
+		caseNum := i + 20 + 1
+		g.Go(func() error {
+			trbRequest, err := s.seedTRBWithForm(ctx, null.StringFrom(fmt.Sprintf("Case %d - Closed request", caseNum)).Ptr(), true)
+			if err != nil {
+				return err
+			}
+
+			_, err = s.addTRBFeedback(ctx, trbRequest)
+			if err != nil {
+				return err
+			}
+			_, err = s.addTRBFeedback(ctx, trbRequest, func(fb *models.TRBRequestFeedback) {
+				fb.FeedbackMessage = "This is more feedback"
+				fb.CreatedAt = time.Now().AddDate(0, 0, -1)
+			})
+			if err != nil {
+				return err
+			}
+
+			err = s.seedTRBWithAttendees(ctx, trbRequest.ID)
+			if err != nil {
+				return err
+			}
+
+			_, err = s.addTRBConsultMeeting(ctx, trbRequest, true)
+			if err != nil {
+				return err
+			}
+
+			// draft advice letter, not sent
+			_, err = s.addAdviceLetter(ctx, trbRequest, true, false, false)
+			if err != nil {
+				return err
+			}
+
+			// create 3 documents we can reference in admin notes
+			documentIDs := []uuid.UUID{}
+			scanStatus := "CLEAN"
+			for i := 0; i < 3; i++ {
+				// new error variable to avoid issues with shadowing err from outer scope
+				doc, errAddDocument := s.addDocument(ctx, trbRequest, &scanStatus)
+				if errAddDocument != nil {
+					return err
+				}
+				documentIDs = append(documentIDs, doc.ID)
+			}
+
+			recommendations, err := s.addAdviceLetterRecommendations(ctx, trbRequest)
+			if err != nil {
+				return err
+			}
+
+			adviceLetterNoteInput := models.CreateTRBAdminNoteAdviceLetterInput{
+				TrbRequestID:            trbRequest.ID,
+				NoteText:                "This is an advice letter admin note from seed data",
+				AppliesToMeetingSummary: true,
+				AppliesToNextSteps:      false,
+				RecommendationIDs: []uuid.UUID{
+					recommendations[0].ID,
+					recommendations[1].ID,
+				},
+			}
+
+			_, err = resolvers.CreateTRBAdminNoteAdviceLetter(ctx, s.store, adviceLetterNoteInput)
+			if err != nil {
+				return err
+			}
+
+			supportingDocumentsNoteInput := models.CreateTRBAdminNoteSupportingDocumentsInput{
+				TrbRequestID: trbRequest.ID,
+				NoteText:     "This is a supporting documents admin note from seed data",
+				DocumentIDs: []uuid.UUID{
+					documentIDs[0],
+					documentIDs[1],
+				},
+			}
+			_, err = resolvers.CreateTRBAdminNoteSupportingDocuments(ctx, s.store, supportingDocumentsNoteInput)
+			if err != nil {
+				return err
+			}
+
+			_, err = s.addTRBExistingSystemRelation(
+				ctx,
+				trbRequest.ID,
+				[]string{"11111", "11112"}, // contract numbers
+				[]string{ // cedar system IDs, these mock IDs are from the client helper
+					"{11AB1A00-1234-5678-ABC1-1A001B00CC5F}",
+				},
+			)
+			if err != nil {
+				return err
+			}
+			_, err = resolvers.CloseTRBRequest(
+				ctx,
+				s.store,
+				nil,
+				s.UserSearchClient.FetchUserInfo,
+				s.UserSearchClient.FetchUserInfos,
+				trbRequest.ID,
+				models.HTML("Because it's done!"),
+				false,
+				[]string{},
+			)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
+	}
+	if err := g.Wait(); err != nil {
 		return err
 	}
 	return nil
