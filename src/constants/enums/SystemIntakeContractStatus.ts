@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-shadow
 enum SystemIntakeContractStatus {
   HAVE_CONTRACT = 'HAVE_CONTRACT',
   IN_PROGRESS = 'IN_PROGRESS',
